@@ -49,6 +49,7 @@ msgstr " 使用連接到 IoT 盒的印表機"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "% Disc"
 msgstr "% 折扣"
@@ -375,7 +376,7 @@ msgstr "此POS設定的全球唯一標識符，用於防止客戶產生資料的
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_note_name_unique
 msgid "A note with this name already exists"
-msgstr ""
+msgstr "已有相同名稱的備註"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__login_number
@@ -468,7 +469,7 @@ msgstr "使用PayTM支付終端接受付款"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Razorpay payment terminal"
-msgstr ""
+msgstr "使用 Razorpay 支付終端接受付款"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -869,7 +870,7 @@ msgstr "盡快"
 msgid ""
 "At least one bank account must be defined on the journal to allow "
 "registering QR code payments with Bank apps."
-msgstr ""
+msgstr "日記賬必須定義最少一個銀行賬戶，以允許使用銀行應用程式登記 QR 二維碼付款。"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__closing
@@ -1013,6 +1014,12 @@ msgstr "銀行付款"
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "銀行對帳單明細"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Barcode"
+msgstr "條碼"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1400,6 +1407,12 @@ msgid ""
 msgstr "根據客戶的類型選擇訂單上的具體財務狀況(免稅、現場與外賣等)。"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "City"
+msgstr "縣市"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Click here to close the session"
@@ -1689,7 +1702,7 @@ msgstr "與印表機的連接失敗"
 msgid ""
 "Connection to the server has been lost. Please check your internet "
 "connection."
-msgstr ""
+msgstr "與伺服器的連線已中斷。請檢查你的互聯網連線。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2418,6 +2431,12 @@ msgstr "電子秤"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Email"
+msgstr "電郵"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.js:0
 msgid "Email sent."
 msgstr "發送電子郵件."
@@ -2540,7 +2559,7 @@ msgstr "打印訂單變化時失敗了"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/models.js:0
 msgid "Failure to generate Payment QR Code"
-msgstr ""
+msgstr "未能產生付款二維碼"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3496,6 +3515,12 @@ msgid "Missing Serial/Lot Numbers"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Mobile"
+msgstr "行動電話"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_hr
 msgid "Module Pos Hr"
@@ -3689,7 +3714,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/select_lot_popup/edit_list_input/edit_list_input.xml:0
 msgid "No existing serial/lot number matching..."
-msgstr ""
+msgstr "沒有現存序號/批次號碼相符⋯"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4471,6 +4496,12 @@ msgid ""
 msgstr "使用出銀機的人可以是救援者、學生或者臨時工。"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Phone"
+msgstr "電話"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pick which product PoS categories are available"
 msgstr "選擇可用的產品 PoS 類別"
@@ -4628,19 +4659,19 @@ msgstr "請提供銷售的業務夥伴。"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Please register the voucher number"
-msgstr ""
+msgstr "請登記優惠券號碼"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_template.xml:0
 msgid "Please scan the QR code with"
-msgstr ""
+msgstr "請掃瞄二維碼，以"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/qr_code_popup/qr_code_popup.js:0
 msgid "Please scan the QR code with %s"
-msgstr ""
+msgstr "請以 %s 掃瞄二維碼"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5004,6 +5035,7 @@ msgstr "前一個訂單列表"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Price"
 msgstr "價格"
@@ -5369,6 +5401,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Qty"
 msgstr "數量"
@@ -5823,7 +5856,7 @@ msgstr "掃瞄EAN-13"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "Scan me to get an invoice from the Odoo portal."
-msgstr ""
+msgstr "掃瞄此處即可在 Odoo 客戶頁面查看發票。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_scan_via_proxy
@@ -5905,7 +5938,7 @@ msgstr "已選取屬性"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Self-ordering interfaces are not impacted."
-msgstr ""
+msgstr "自助購物的操作介面不受影響。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6146,7 +6179,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__show_category_images
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_show_category_images
 msgid "Show category images in the Point of Sale interface."
-msgstr ""
+msgstr "在銷售點程式操作介面中顯示類別圖片。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6194,7 +6227,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__show_product_images
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_show_product_images
 msgid "Show product images in the Point of Sale interface."
-msgstr ""
+msgstr "在銷售點程式操作介面中顯示產品圖片。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -6258,6 +6291,9 @@ msgid ""
 "Proceeding anyway will create inconsistency in your inventory, you will need to correct manually. \n"
 "Proceed anyway?"
 msgstr ""
+"部份產品需要設定序號/批次號碼。\n"
+"若不設定便繼續，會造成庫存記錄不一致，你將需要手動更正。\n"
+"繼續操作？"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6370,6 +6406,12 @@ msgstr "%s庫存出貨"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
 msgstr "庫存應在結束時更新"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Street"
+msgstr "街道"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6668,6 +6710,8 @@ msgid ""
 "The existing serial/lot numbers could not be retrieved. \n"
 "Continue without checking the validity of serial/lot numbers ?"
 msgstr ""
+"未能讀取現有的序號/批次號碼。 \n"
+"確定不檢查序號/批次號碼是否有效，而繼續操作嗎？"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6766,7 +6810,7 @@ msgstr "營業點將僅顯示所選類別樹之一內的產品。 如果未指�
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__note_ids
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_note_ids
 msgid "The predefined notes of this point of sale."
-msgstr ""
+msgstr "此銷售點的預先定義備註。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__pricelist_id
@@ -6884,7 +6928,7 @@ msgstr "交易由PayTM處理。在相關付款方式上設置您的PayTM憑證�
 msgid ""
 "The transactions are processed by Razorpay. Set your Razorpay credentials on"
 " the related payment method."
-msgstr ""
+msgstr "交易由 Razorpay 處理。請在相關付款方式上，設定你的 Razorpay 登入資訊。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_six
@@ -7004,7 +7048,7 @@ msgstr "本營業點未設收銀機"
 msgid ""
 "There is no serial/lot number for the selected product, and their creation "
 "is not allowed from the Point of Sale app."
-msgstr ""
+msgstr "所選產品沒有序號/批次號碼，而且不允許在 POS 銷售點管理應用程式建立它們。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7112,7 +7156,7 @@ msgstr "這個訂單還沒有同步到服務器。請確認它已被同步,然�
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "This payment method is not configured to generate QR codes."
-msgstr ""
+msgstr "此付款方式未配置至可以產生二維碼。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
@@ -7372,7 +7416,7 @@ msgstr "類型"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__qr_code_method
 msgid "Type of QR-code to be generated for this payment method."
-msgstr ""
+msgstr "為此付款方式產生的二維碼類型。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_type
@@ -7829,7 +7873,7 @@ msgstr "您必須至少設定一種付款方式才能啟動營業點."
 msgid ""
 "You must select a QR-code method to generate QR-codes for this payment "
 "method."
-msgstr ""
+msgstr "你必須選擇一種 QR 二維碼方式，以為此付款方式產生二維碼。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8070,3 +8114,9 @@ msgstr "使用"
 #: code:addons/point_of_sale/static/src/app/debug/order_import_popup/order_import_popup.xml:0
 msgid "were duplicates of existing orders"
 msgstr "與目前訂單重複"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Zip"
+msgstr "郵遞區號"

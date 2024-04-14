@@ -723,6 +723,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Progress Report\", \"Stand-up Meeting\", ...)"
 msgstr ""
+"「活動計劃」用於簡易分配一系列活動，按幾下便完成。\n"
+"                    （例如：進度報告、站立會議等）"
 
 #. module: project
 #. odoo-javascript
@@ -764,7 +766,7 @@ msgstr "加入額外內容以顯示在電郵中"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add the contacts you would like to share the project with..."
-msgstr ""
+msgstr "加入你想共享專案的聯絡人⋯"
 
 #. module: project
 #. odoo-javascript
@@ -1097,7 +1099,7 @@ msgstr ""
 msgid ""
 "Automatically send an email to customers when a task reaches a specific "
 "stage in a project by setting this template on that stage"
-msgstr ""
+msgstr "在該階段設定此範本，當任務到達專案的特定階段時，會自動向客戶發送電子郵件"
 
 #. module: project
 #. odoo-javascript
@@ -1486,7 +1488,7 @@ msgstr "建立專案"
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_project_task_plan
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_task_plan
 msgid "Create a Task Activity Plan"
-msgstr ""
+msgstr "建立任務活動計劃"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
@@ -1580,7 +1582,7 @@ msgstr "貨幣"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__current_user_same_company_partner
 msgid "Current User Same Company Partner"
-msgstr ""
+msgstr "目前使用者同一公司合作夥伴"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -2087,7 +2089,7 @@ msgid ""
 "Facilitate efficient collaboration with key stakeholders by sharing the "
 "project with them. Collaborators will have the ability to edit tasks, send "
 "messages, and access the Kanban view of tasks."
-msgstr ""
+msgstr "與主要持份者共享專案項目，與他們攜手高效協作。協作者可編輯任務、發送訊息，以及存取任務看板檢視畫面。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project
@@ -2217,6 +2219,7 @@ msgid ""
 "tasks of the project are not included). To grant access to tasks to a portal"
 " user, add them as followers for these tasks."
 msgstr ""
+"將門戶網站使用者新增為專案關注者，以授予對你專案的存取權限（但不會包括專案內的任務）。若要向門戶網站使用者授予任務存取權限，請將他們新增為這些任務的關注者。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
@@ -2822,7 +2825,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Mark the task as <b>Cancelled</b>"
-msgstr ""
+msgstr "將任務標記為<b>已取消</b>"
 
 #. module: project
 #. odoo-javascript
@@ -3135,7 +3138,7 @@ msgstr "找不到活動類型。讓我們創建一個吧！"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
 msgid "No collaborators found. Let's invite them!"
-msgstr ""
+msgstr "沒有找到協作者。讓我們邀請他們吧！"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -3437,6 +3440,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"可檢視此專案及其任務的人員。\n"
+"\n"
+"- 「受邀內部使用者」：關注專案時，內部使用者將無差別地存取其所有任務。否則，他們只能存取他們正在關注的特定任務。\n"
+" 具有「專案 > 管理員」存取權限等級的使用者，仍然可以存取此專案及其任務，即使他們未有明確列為關注者。\n"
+"\n"
+"- 「所有內部使用者」：所有內部使用者都可以無差別地存取專案及其所有任務。\n"
+"\n"
+"- 「受邀窗口網站使用者及所有內部使用者」：所有內部使用者都可以無差別地存取專案及其所有任務。\n"
+"當關注專案時，窗口使用者只能存取他們正在關注的特定任務。\n"
+"\n"
+"若專案以唯讀方式共享，窗口用戶將被重新導向至自己的窗口網頁。他們可以查看正在關注的任務，但不能編輯任務。\n"
+"若以編輯模式共享專案，窗口用戶將被重新導向至任務的看板及列表檢視畫面。他們可修改任務的部份特定欄位。\n"
+"\n"
+"在任何情況下，沒有專案存取權限的內部使用者，仍然可以存取任務，只要他們有相應的 URL 網址。如果專案是私密的，而他們是關注者，也可存取當中任務。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -4358,6 +4375,7 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"使用里程碑、標籤或專用屬性，按衝刺對任務進行排序。在每個衝刺結束時，只需選取清單中的剩餘任務，然後編輯里程碑、標籤或屬性，便可將任務一次過移至下一個衝刺。"
 
 #. module: project
 #. odoo-javascript
@@ -4694,7 +4712,7 @@ msgstr "任務標題..."
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Transferred from Project %s"
-msgstr ""
+msgstr "任務轉移自以下專案：%s"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4911,7 +4929,7 @@ msgstr "由於專案的私隱受到太多限制，因此無法與收件人分享
 msgid ""
 "The task description lacks any past content that could be restored at the "
 "moment."
-msgstr ""
+msgstr "任務描述缺漏目前可恢復的任何過往內容。"
 
 #. module: project
 #. odoo-python
@@ -5906,6 +5924,7 @@ msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
 msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}：滿意度調查"
 
 #. module: project
 #. odoo-javascript

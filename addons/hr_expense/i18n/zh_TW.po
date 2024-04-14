@@ -3,8 +3,8 @@
 # 	* hr_expense
 # 
 # Translators:
-# Wil Odoo, 2024
 # Tony Ng, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1743,6 +1743,13 @@ msgid "Scan"
 msgstr "掃瞄"
 
 #. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/components/qrcode_action.xml:0
+#, python-format
+msgid "Scan this QR code to get the Odoo app:"
+msgstr "掃描此二維碼以獲取 Odoo APP："
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
@@ -2016,7 +2023,7 @@ msgid ""
 "There are unsubmitted expenses linked to this category. Updating the "
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
-msgstr ""
+msgstr "此類別有未提交的開支。更新類別成本將改變開支金額。請確保這是你想要的效果。"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2030,7 +2037,7 @@ msgstr "這就是簡而言之的費用管理！"
 msgid ""
 "This expense report is empty. You cannot submit or approve an empty expense "
 "report."
-msgstr ""
+msgstr "此份開支報告是空白的。不可提交或批准空白的開支報告。"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -2275,7 +2282,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid ""
 "You cannot create accounting entries for an expense report without expenses."
-msgstr ""
+msgstr "沒有開支記錄的開支報告，不可建立會計記項。"
 
 #. module: hr_expense
 #. odoo-python
@@ -2335,7 +2342,7 @@ msgstr ""
 msgid ""
 "You cannot remove all expenses from a submitted, approved or paid expense "
 "report."
-msgstr ""
+msgstr "已提交、已獲批准或已發還款項的開支報告，不可移除所有費用。"
 
 #. module: hr_expense
 #. odoo-python
@@ -2367,13 +2374,13 @@ msgstr "同一項目您不能報支兩次！"
 msgid ""
 "You cannot set the expense total in currency to 0 if it's linked to a "
 "report."
-msgstr ""
+msgstr "若開支是連結至報表，其總金額便不可設為 0（零）。"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot set the expense total to 0 if it's linked to a report."
-msgstr ""
+msgstr "若開支是連結至報表，其總額便不可設為 0（零）。"
 
 #. module: hr_expense
 #. odoo-python

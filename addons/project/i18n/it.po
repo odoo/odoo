@@ -400,6 +400,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Gentile <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br><br>\n"
+"    grazie per averci contattato. Apprezziamo l'interesse nei confronti dei nostri prodotti/servizi.<br>\n"
+"    Il nostro team sta revisionando la tua richiesta e risponderà via e-mail il prima possibile.<br>\n"
+"    Non esitare a contattarci se hai dubbi o altre domande. SIamo qui per aiutarti.<br><br>\n"
+"    Grazie per la pazienza.<br>\n"
+"    Cordiali saluti,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1130,7 +1143,7 @@ msgstr "Valutazione media (%)"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating (1-5)"
-msgstr ""
+msgstr "Valutazione media (1-5)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1318,7 +1331,7 @@ msgstr "Attività chiuse"
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__is_closed
 msgid "Closed state"
-msgstr ""
+msgstr "Stato chiuso"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__closed
@@ -2674,7 +2687,7 @@ msgstr "Ultimo mese"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_value
 msgid "Last Rating (1-5)"
-msgstr ""
+msgstr "Ultima valutazione (1-5)"
 
 #. module: project
 #. odoo-python
@@ -3526,6 +3539,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"Persone alle quali sarà visibile il progetto e le rispettive attività.\n"
+"\n"
+"- Utenti interni invitati: quando si segue un progetto, gli utenti interni avranno accesso a tutte le attività senza distinzioni. In caso contrario, otterranno l'accesso solo alle attività specifiche che stanno seguendo.\n"
+" Un utente con il progetto > Il livello di accesso dell'amministratore può comunque accedere a questo progetto e ai suoi compiti, anche se non fanno esplicitamente parte dei seguaci.\n"
+"\n"
+"- Tutti gli utenti interni: tutti gli utenti interni possono accedere al progetto e a tutte le attività correlate senza distinzioni.\n"
+"\n"
+"- Utenti del portale invitati e tutti gli utenti interni: tutti gli utenti interni possono accedere al progetto e alle attività correlate senza distinzioni.\n"
+"Quando si segue un progetto, gli utenti del portale otterranno l'accesso solo alle attività specifiche che stanno seguendo.\n"
+"\n"
+"Quando un progetto è condiviso nella modalità di sola lettura, l'utente del portale viene reindirizzato al portale. È possibile visualizzare le attività ma non modificarle.\n"
+"Quando un progetto viene condiviso in modalità di modifica, l'utente del portale viene reindirizzato alle viste kanban ed elenco delle attività. Nelle attività è possibile modificare un determinato numero di campi.\n"
+"\n"
+"In ogni caso, un utente interno senza alcun diritto di accesso al progetto può comunque accedere all'attività, a condizione che venga fornito loro l'URL corrispondente (e che facciano parte dei follower se il progetto è privato)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction

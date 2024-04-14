@@ -367,7 +367,7 @@ msgstr "<button>更改偏好設定</button> 以在收件箱中接收新通知。
 msgid ""
 "<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
 "title=\"Steps count\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"步驟數目\" title=\"步驟數目\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -770,6 +770,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Onboarding\", \"Prospect Follow-up\", \"Project Milestone Meeting\", ...)"
 msgstr ""
+"「活動計劃」用於簡易分配一系列活動，按幾下便完成。\n"
+"                    （例如：入職簡介、潛在客戶跟進、專案里程碑會議等）"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
@@ -1750,7 +1752,7 @@ msgid ""
 "Canned response that will automatically be substituted with longer content "
 "in your messages. Type ':' followed by the name of your shortcut (e.g. "
 ":hello) to use in your messages."
-msgstr ""
+msgstr "訊息內的預設回覆，會自動替換成較長內容。輸入「:」然後緊接輸入要使用的捷徑名稱，例如「:hello」。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
@@ -1765,6 +1767,10 @@ msgid ""
 "                    replaced directly in your message, so that you can still edit\n"
 "                    it before sending."
 msgstr ""
+"預設回覆讓你在訊息中插入預先寫好的回覆，\n"
+"                    只需輸入 <i>:shortcut</i> 即可使用。快捷文字會直接\n"
+"                    在你的訊息中替換，以便你在發送訊息前，\n"
+"                    仍可編輯內容。"
 
 #. module: mail
 #. odoo-python
@@ -2223,19 +2229,19 @@ msgstr "容器模型"
 msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel for this user. This includes: creating, joining, pinning"
-msgstr ""
+msgstr "包含此使用者在此頻道中發生的最後一次特定事件的日期和時間，包括：建立、加入、置頂固定。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__last_interest_dt
 msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel. This updates itself when new message posted."
-msgstr ""
+msgstr "包含此頻道發生的最後一次特定事件的日期和時間。發佈新訊息時，它會自行更新。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__unpin_dt
 msgid "Contains the date and time when the channel was unpinned by the user."
-msgstr ""
+msgstr "包含使用者取消置頂固定頻道的日期和時間。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__content
@@ -2273,6 +2279,8 @@ msgid ""
 "Couldn't get your emails. Check out the error message below for more info:\n"
 "%s"
 msgstr ""
+"未能收取你的電子郵件。請參閱以下的錯誤訊息，以獲取更多資訊：\n"
+"%s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_bounce
@@ -2641,7 +2649,7 @@ msgstr "預設值"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Default deadline for the activities..."
-msgstr ""
+msgstr "活動預設截止日期⋯"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__default_from
@@ -2776,12 +2784,12 @@ msgstr "設置從邀請連結打開頻道時默認顯示頻道的方式。無值
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
 msgid "Determines if the canned response can be edited by the current user"
-msgstr ""
+msgstr "決定目前使用者是否可編輯預設回應"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_shared
 msgid "Determines if the canned_response is currently shared with other users"
-msgstr ""
+msgstr "決定 canned_response 目前是否與其他使用者共用"
 
 #. module: mail
 #. odoo-javascript
@@ -5051,7 +5059,7 @@ msgstr "上次可見在線日期"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__last_used
 msgid "Last time this canned_response was used"
-msgstr ""
+msgstr "此 canned_response 上次使用時間"
 
 #. module: mail
 #. odoo-javascript
@@ -6286,7 +6294,7 @@ msgstr "動作數量"
 msgid ""
 "Number of days/week/month before executing the action after or before the "
 "scheduled plan date."
-msgstr ""
+msgstr "在預定計劃日期之後或之前多少天/星期/個月後執行操作。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_count
@@ -6810,7 +6818,7 @@ msgstr "電話通知"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Pick an Activity Plan to launch"
-msgstr ""
+msgstr "選擇要啟動的活動計劃"
 
 #. module: mail
 #. odoo-javascript
