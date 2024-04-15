@@ -135,12 +135,11 @@ export class FormController extends Component {
         preventEdit: { type: Boolean, optional: true },
         onDiscard: { type: Function, optional: true },
         onSave: { type: Function, optional: true },
-        updateResId: { type: Function, optional: true },
     };
     static defaultProps = {
         preventCreate: false,
         preventEdit: false,
-        updateResId: () => {},
+        updateActionState: () => {},
     };
 
     setup() {
@@ -191,7 +190,7 @@ export class FormController extends Component {
             effect(
                 (model) => {
                     if (status(this) === "mounted") {
-                        this.props.updateResId(model.root.resId);
+                        this.props.updateActionState({ resId: model.root.resId });
                     }
                 },
                 [this.model]
