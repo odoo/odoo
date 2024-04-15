@@ -33,6 +33,7 @@ const AGGREGATORS_BY_FIELD_TYPE = {
     boolean: ["count_distinct", "count", "bool_and", "bool_or"],
     char: ["count_distinct", "count"],
     many2one: ["count_distinct", "count"],
+    reference: ["count_distinct", "count"],
 };
 
 export const AGGREGATORS = {};
