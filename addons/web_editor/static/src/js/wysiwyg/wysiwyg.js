@@ -2550,7 +2550,12 @@ export class Wysiwyg extends Component {
                         this.toggleLinkTools({forceDialog: true});
                         // Force the button style after the link modal is open.
                         setTimeout(() => {
-                            $(".o_link_dialog .link-style[value=primary]").click();
+                            const selectEl = document.querySelector('.o_link_dialog .form-select');
+                            selectEl.value = 'primary';
+                            // Dynamically changing value of select option
+                            // doesn't trigger a change event. Trigger
+                            // listeners by dispatching the event manually.
+                            selectEl.dispatchEvent(new Event('change'));
                         }, 150);
                     },
                 },
