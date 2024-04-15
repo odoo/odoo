@@ -320,6 +320,10 @@ STATIC_CACHE_LONG = 60 * 60 * 24 * 365
 # Helpers
 # =========================================================
 
+class RegistryError(RuntimeError):
+    pass
+
+
 class SessionExpiredException(Exception):
     pass
 
@@ -1448,6 +1452,15 @@ class Request:
         session.is_dirty = False
         return session, dbname
 
+    def _open_registry(self):
+        try:
+            registry = Registry(self.db)
+            cr_readonly = registry.cursor(readonly=True)
+            registry = registry.check_signaling(cr_readonly)
+        except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError) as e:
+            raise RegistryError(f"Cannot get registry {self.db}") from e
+        return registry, cr_readonly
+
     # =====================================================
     # Getters and setters
     # =====================================================
@@ -1793,40 +1806,23 @@ class Request:
         Prepare the user session and load the ORM before forwarding the
         request to ``_serve_ir_http``.
         """
-        cr = None
+        cr_readonly = None
         rule = None
         args = None
         not_found = None
 
+        # reuse the same cursor for building+checking the registry and
+        # for matching the controller endpoint
         try:
+            self.registry, cr_readonly = self._open_registry()
+            self.env = odoo.api.Environment(cr_readonly, self.session.uid, self.session.context)
             try:
-                registry = Registry(self.db)
-                cr = registry.cursor(readonly=True)
-                self.registry = registry.check_signaling(cr)
-            except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
-                # psycopg2 error or attribute error while constructing
-                # the registry. That means either
-                #  - the database probably does not exists anymore, or
-                #  - the database is corrupted, or
-                #  - the database version doesn't match the server version.
-                # So remove the database from the cookie
-                self.db = None
-                self.session.db = None
-                root.session_store.save(self.session)
-                if request.httprequest.path == '/web':
-                    # Internal Server Error
-                    raise
-                else:
-                    return self._serve_nodb()
-            ir_http = self.registry['ir.http']
-            self.env = odoo.api.Environment(cr, self.session.uid, self.session.context)
-            try:
-                rule, args = ir_http._match(self.httprequest.path)
+                rule, args = self.registry['ir.http']._match(self.httprequest.path)
             except NotFound as not_found_exc:
                 not_found = not_found_exc
         finally:
-            if cr is not None:
-                cr.close()
+            if cr_readonly is not None:
+                cr_readonly.close()
 
         if not_found:
             # no controller endpoint matched -> fallback or 404
@@ -2307,8 +2303,17 @@ class Application:
                 if self.get_static_file(httprequest.path):
                     response = request._serve_static()
                 elif request.db:
-                    with request._get_profiler_context_manager():
-                        response = request._serve_db()
+                    try:
+                        with request._get_profiler_context_manager():
+                            response = request._serve_db()
+                    except RegistryError as e:
+                        if httprequest.path == '/web':
+                            # Internal Server Error
+                            raise
+                        _logger.warning("Database or registry unusable, trying without", exc_info=e.__cause__)
+                        request.db = None
+                        request.session.logout()
+                        response = request._serve_nodb()
                 else:
                     response = request._serve_nodb()
                 return response(environ, start_response)
