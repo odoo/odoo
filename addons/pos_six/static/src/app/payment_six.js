@@ -93,7 +93,7 @@ export class PaymentSix extends PaymentInterface {
      */
     send_payment_request() {
         super.send_payment_request(...arguments);
-        this.pos.get_order().get_selected_paymentline().set_payment_status("waitingCard");
+        this.pos.get_order().get_selected_paymentline().payment_status = "waitingCard";
         return this._sendTransaction(timapi.constants.TransactionType.purchase);
     }
 
@@ -102,7 +102,7 @@ export class PaymentSix extends PaymentInterface {
      */
     send_payment_reversal() {
         super.send_payment_reversal(...arguments);
-        this.pos.get_order().get_selected_paymentline().set_payment_status("reversing");
+        this.pos.get_order().get_selected_paymentline().payment_status = "reversing";
         return this._sendTransaction(timapi.constants.TransactionType.reversal);
     }
 

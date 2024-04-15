@@ -34,11 +34,11 @@ export class PaymentPaytm extends PaymentInterface {
             timeStamp
         );
         if (!response) {
-            paymentLine.set_payment_status("force_done");
+            paymentLine.payment_status = "force_done";
             this._incrementRetry(order.uuid);
             return false;
         }
-        paymentLine.set_payment_status("waitingCard");
+        paymentLine.payment_status = "waitingCard";
         const pollResponse = await this.pollPayment(transactionId, referenceId, timeStamp);
         if (pollResponse) {
             const retry_remove = true;
@@ -59,7 +59,7 @@ export class PaymentPaytm extends PaymentInterface {
     async send_payment_cancel(order, uuid) {
         await super.send_payment_cancel(...arguments);
         const paymentLine = this.pos.get_order()?.get_selected_paymentline();
-        paymentLine.set_payment_status("retry");
+        paymentLine.payment_status = "retry";
         this._incrementRetry(order.uuid);
         clearTimeout(this.pollTimeout);
         return true;
@@ -111,7 +111,7 @@ export class PaymentPaytm extends PaymentInterface {
             } catch (error) {
                 const order = this.pos.get_order();
                 this._incrementRetry(order.uuid);
-                paymentLine.set_payment_status("force_done");
+                paymentLine.payment_status = "force_done";
                 this._showError(error, "paytmFetchPaymentStatus");
                 return resolve(false);
             }

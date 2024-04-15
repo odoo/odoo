@@ -107,7 +107,7 @@ patch(PosStore.prototype, {
     async couponForProgram(program) {
         const order = this.get_order();
         if (program.is_nominative) {
-            return this.fetchLoyaltyCard(program.id, order.get_partner().id);
+            return this.fetchLoyaltyCard(program.id, order.partner_id.id);
         }
         // This type of coupons don't need to really exist up until validating the order, so no need to cache
         return this.models["loyalty.card"].create({
@@ -155,7 +155,7 @@ patch(PosStore.prototype, {
                 : [];
             // For programs that apply to both (loyalty) we always add a change of 0 points, if there is none, since it makes it easier to
             //  track for claimable rewards, and makes sure to load the partner's loyalty card.
-            if (program.is_nominative && !pointsAdded.length && order.get_partner()) {
+            if (program.is_nominative && !pointsAdded.length && order.partner_id) {
                 pointsAdded.push({ points: 0 });
             }
             const oldChanges = changesPerProgram[program.id] || [];
@@ -234,7 +234,7 @@ patch(PosStore.prototype, {
             if (order.code_activated_coupon_ids.find((coupon) => coupon.code === code)) {
                 return _t("That coupon code has already been scanned and activated.");
             }
-            const customerId = order.get_partner() ? order.get_partner().id : false;
+            const customerId = order.partner_id ? order.partner_id.id : false;
             const { successful, payload } = await this.data.call("pos.config", "use_coupon_code", [
                 [this.config.id],
                 code,
@@ -478,7 +478,7 @@ patch(PosStore.prototype, {
             .get_orderlines()
             .find((line) => line.getEWalletGiftCardProgramType() === "ewallet");
 
-        if (eWalletLine && !currentOrder.get_partner()) {
+        if (eWalletLine && !currentOrder.partner_id) {
             const confirmed = await ask(this.dialog, {
                 title: _t("Customer needed"),
                 body: _t("eWallet requires a customer to be selected"),

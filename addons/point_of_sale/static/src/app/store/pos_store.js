@@ -115,7 +115,6 @@ export class PosStore extends Reactive {
         // Business data; loaded from the server at launch
         this.company_logo = null;
         this.company_logo_base64 = "";
-        this.order_sequence = 1;
         this.printers_category_ids_set = new Set();
 
         // Object mapping the order's name (which contains the uuid) to it's server_id after
@@ -126,25 +125,16 @@ export class PosStore extends Reactive {
         this.ticket_screen_mobile_pane = "left";
         this.productListView = window.localStorage.getItem("productListView") || "grid";
 
-        this.ticketScreenState = {
-            offsetByDomain: {},
-            totalCount: 0,
-        };
-
-        this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
-
-        // Handle offline mode
-        // All of Set of ids
+        // Handle offline mode, All of Set of ids
         this.pendingOrder = {
             write: new Set(),
             delete: new Set(),
             create: new Set(),
         };
 
-        this.synch = { status: "connected", pending: 0 };
+        this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
         this.hardwareProxy = hardware_proxy;
         this.selectedOrderUuid = null;
-        this.selectedPartner = null;
         this.selectedCategory = null;
         this.showResultMobile = false;
         this.searchProductWord = "";
@@ -604,19 +594,6 @@ export class PosStore extends Reactive {
         return line;
     }
 
-    _loadPosPrinters(printers) {
-        this.unwatched.printers = [];
-        // list of product categories that belong to one or more order printer
-        for (const printerConfig of printers) {
-            const printer = this.create_printer(printerConfig);
-            printer.config = printerConfig;
-            this.unwatched.printers.push(printer);
-            for (const cat of printer.product_categories_ids) {
-                this.printers_category_ids_set.add(cat.id);
-            }
-        }
-        this.config.iface_printers = !!this.unwatched.printers.length;
-    }
     create_printer(config) {
         const url = deduceUrl(config.proxy_ip || "");
         return new HWPrinter({ url });
@@ -634,57 +611,6 @@ export class PosStore extends Reactive {
             setTimeout(resolve, 5000);
         });
     }
-    async _loadPictures() {
-        this.company_logo = new Image();
-        return new Promise((resolve, reject) => {
-            this.company_logo.onload = () => {
-                const img = this.company_logo;
-                let ratio = 1;
-                const targetwidth = 300;
-                const maxheight = 150;
-                if (img.width !== targetwidth) {
-                    ratio = targetwidth / img.width;
-                }
-                if (img.height * ratio > maxheight) {
-                    ratio = maxheight / img.height;
-                }
-                const width = Math.floor(img.width * ratio);
-                const height = Math.floor(img.height * ratio);
-                const c = document.createElement("canvas");
-                c.width = width;
-                c.height = height;
-                const ctx = c.getContext("2d");
-                ctx.drawImage(this.company_logo, 0, 0, width, height);
-
-                this.company_logo_base64 = c.toDataURL();
-                resolve();
-            };
-            this.company_logo.onerror = () => {
-                reject();
-            };
-            this.company_logo.crossOrigin = "anonymous";
-            this.company_logo.src = `/web/image?model=res.company&id=${this.company.id}&field=logo`;
-        });
-    }
-
-    loadOpenOrders(openOrders) {
-        // This method is for the demo data
-        let isOrderSet = false;
-        for (const json of openOrders) {
-            if (this.models["pos.order"].find((el) => el.id === json.id)) {
-                continue;
-            }
-            this.add_new_order(json);
-            if (!isOrderSet) {
-                this.selectedOrderUuid = this.pos.models["pos.order"].getFirst().uuid;
-                isOrderSet = true;
-            }
-        }
-    }
-
-    posHasValidProduct() {
-        return this.session._has_available_products;
-    }
 
     setSelectedCategory(categoryId) {
         if (categoryId === this.selectedCategory?.id) {
@@ -698,10 +624,6 @@ export class PosStore extends Reactive {
         }
     }
 
-    /**
-     * Remove the order passed in params from the list of orders
-     * @param order
-     */
     removeOrder(order, removeFromServer = true) {
         if (this.isOpenOrderShareable() || removeFromServer) {
             if (typeof order.id === "number" && !order.finalized) {
@@ -711,11 +633,6 @@ export class PosStore extends Reactive {
 
         return this.data.localDeleteCascade(order, removeFromServer);
     }
-
-    /**
-     * Return the current cashier (in this case, the user)
-     * @returns {name: string, id: int, role: string}
-     */
     get_cashier() {
         return this.user;
     }
@@ -955,25 +872,6 @@ export class PosStore extends Reactive {
     push_single_order(order) {
         return this.pushOrderMutex.exec(() => this.syncAllOrders(order));
     }
-
-    // created this hook for modularity
-    _updateOrder(ordersResponseData, orders) {
-        const order = orders.find((order) => order.name === ordersResponseData.pos_reference);
-        if (order) {
-            order.server_id = ordersResponseData.id;
-            return order;
-        }
-    }
-
-    // load the partners based on the ids
-    async _loadPartners(partnerIds) {
-        if (partnerIds.length > 0) {
-            await this.data.read("res.partner", partnerIds);
-        }
-    }
-    setLoadingOrderState(bool) {
-        this.loadingOrderState = bool;
-    }
     async pay() {
         const currentOrder = this.get_order();
 
@@ -983,7 +881,7 @@ export class PosStore extends Reactive {
 
         if (
             currentOrder.lines.some(
-                (line) => line.get_product().tracking !== "none" && !line.has_valid_product_lot()
+                (line) => line.product_id.tracking !== "none" && !line.has_valid_product_lot()
             ) &&
             (this.pickingType.use_create_lots || this.pickingType.use_existing_lots)
         ) {
@@ -1070,16 +968,6 @@ export class PosStore extends Reactive {
     // return the list of unpaid orders
     get_order_list() {
         return this.models["pos.order"].filter((o) => !o.finalized);
-    }
-
-    getTaxesByIds(taxIds) {
-        const taxes = [];
-        for (let i = 0; i < taxIds.length; i++) {
-            if (this.tax_data_by_id[taxIds[i]]) {
-                taxes.push(this.tax_data_by_id[taxIds[i]]);
-            }
-        }
-        return taxes;
     }
 
     /**
@@ -1215,13 +1103,6 @@ export class PosStore extends Reactive {
         }
     }
 
-    get linesToRefund() {
-        return this.models["pos.order"].reduce((acc, order) => {
-            acc.push(...Object.values(order.uiState.lineToRefund));
-            return acc;
-        }, []);
-    }
-
     isProductQtyZero(qty) {
         const dp = this.models["decimal.precision"].find(
             (dp) => dp.name === "Product Unit of Measure"
@@ -1232,19 +1113,11 @@ export class PosStore extends Reactive {
     disallowLineQuantityChange() {
         return false;
     }
-
-    getCurrencySymbol() {
-        return this.currency ? this.currency.symbol : "$";
-    }
     isOpenOrderShareable() {
         return this.config.raw.trusted_config_ids.length > 0;
     }
     switchPane() {
         this.mobile_pane = this.mobile_pane === "left" ? "right" : "left";
-    }
-    switchPaneTicketScreen() {
-        this.ticket_screen_mobile_pane =
-            this.ticket_screen_mobile_pane === "left" ? "right" : "left";
     }
     async logEmployeeMessage(action, message) {
         await this.data.call("pos.session", "log_partner_message", [
@@ -1435,7 +1308,7 @@ export class PosStore extends Reactive {
         if (!currentOrder) {
             return;
         }
-        const currentPartner = currentOrder.get_partner();
+        const currentPartner = currentOrder.partner_id;
         if (currentPartner && currentOrder.getHasRefundLines()) {
             this.dialog.add(AlertDialog, {
                 title: _t("Can't change customer"),
@@ -1459,27 +1332,6 @@ export class PosStore extends Reactive {
 
         return currentPartner;
     }
-    // FIXME: POSREF, method exist only to be overrided
-    async addProductFromUi(product, options) {
-        return this.get_order().add_product(product, options);
-    }
-    async addProductToCurrentOrder(product, options = {}) {
-        if (Number.isInteger(product)) {
-            product = this.models["product.product"].get(product);
-        }
-        this.get_order() || this.add_new_order();
-
-        options = { ...options, ...(await this.getAddProductOptions(product)) };
-
-        if (!Object.keys(options).length) {
-            return;
-        }
-
-        // Add the product after having the extra information.
-        await this.addProductFromUi(product, options);
-        this.numberBuffer.reset();
-    }
-
     async editLots(product, packLotLinesToEdit) {
         const isAllowOnlyOneLot = product.isAllowOnlyOneLot();
         let canCreateLots = this.pickingType.use_create_lots || !this.pickingType.use_existing_lots;
@@ -1607,10 +1459,6 @@ export class PosStore extends Reactive {
         );
     }
 
-    showSearchButton() {
-        return this.mainScreen.component === ProductScreen && this.mobile_pane === "right";
-    }
-
     doNotAllowRefundAndSales() {
         return false;
     }
@@ -1621,10 +1469,6 @@ export class PosStore extends Reactive {
             cashier: this.get_cashier()?.name,
             header: this.config.receipt_header,
         };
-    }
-
-    isChildPartner(partner) {
-        return partner.parent_name;
     }
 
     async showQR(payment) {

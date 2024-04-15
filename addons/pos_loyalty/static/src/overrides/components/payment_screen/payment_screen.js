@@ -76,7 +76,7 @@ patch(PaymentScreen.prototype, {
         // Compile data for our function
         const ProgramModel = this.pos.models["loyalty.program"];
         const rewardLines = order._get_reward_lines();
-        const partner = order.get_partner();
+        const partner = order.partner_id;
         let couponData = Object.values(order.uiState.couponPointChanges).reduce((agg, pe) => {
             agg[pe.coupon_id] = Object.assign({}, pe, {
                 points: pe.points - order._getPointsCorrection(ProgramModel.get(pe.program_id)),

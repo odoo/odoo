@@ -27,10 +27,10 @@ export class PaymentScreenPaymentLines extends Component {
     }
 
     formatLineAmount(paymentline) {
-        return this.env.utils.formatCurrency(paymentline.get_amount(), false);
+        return this.env.utils.formatCurrency(paymentline.amount, false);
     }
     selectedLineClass(line) {
-        return { "payment-terminal": line.get_payment_status() };
+        return { "payment-terminal": line.payment_status };
     }
     unselectedLineClass(line) {
         return {};
@@ -40,7 +40,7 @@ export class PaymentScreenPaymentLines extends Component {
         if (this.ui.isSmall) {
             this.dialog.add(NumberPopup, {
                 title: _t("New amount"),
-                startingValue: this.env.utils.formatCurrency(paymentline.get_amount(), false),
+                startingValue: this.env.utils.formatCurrency(paymentline.amount, false),
                 getPayload: (num) => {
                     this.props.updateSelectedPaymentline(parseFloat(num));
                 },

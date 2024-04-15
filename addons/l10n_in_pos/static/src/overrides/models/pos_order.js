@@ -12,8 +12,8 @@ import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
 patch(PosOrder.prototype, {
     export_for_printing(baseUrl, headerData) {
         const result = super.export_for_printing(...arguments);
-        if (this.get_partner()) {
-            result.partner = this.get_partner();
+        if (this.partner_id) {
+            result.partner = this.partner_id;
         }
         if (this.company.country_id?.code === "IN") {
             result.l10n_in_hsn_summary = this._prepareL10nInHsnSummary();
@@ -29,7 +29,7 @@ patch(PosOrder.prototype, {
         const fiscalPosition = this.fiscal_position_id;
         const baseLines = [];
         this.orderlines.forEach((line) => {
-            const hsnCode = line.get_product()?.l10n_in_hsn_code;
+            const hsnCode = line.product_id?.l10n_in_hsn_code;
             if (!hsnCode) {
                 return;
             }
@@ -43,7 +43,7 @@ patch(PosOrder.prototype, {
             baseLines.push({
                 l10n_in_hsn_code: hsnCode,
                 price_unit: priceUnit,
-                quantity: line.get_quantity(),
+                quantity: line.qty,
                 uom: null,
                 taxes_data: getTaxesValues(
                     taxes,

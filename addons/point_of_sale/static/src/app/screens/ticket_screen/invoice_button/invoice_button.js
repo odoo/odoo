@@ -74,7 +74,7 @@ export class InvoiceButton extends Component {
 
         // Part 1: Handle missing partner.
         // Write to pos.order the selected partner.
-        if (!order.get_partner()) {
+        if (!order.partner_id) {
             const _confirmed = await ask(this.dialog, {
                 title: _t("Need customer to invoice"),
                 body: _t("Do you want to open the customer list to select customer?"),

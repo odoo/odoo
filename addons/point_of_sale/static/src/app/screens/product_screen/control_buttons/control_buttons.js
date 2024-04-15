@@ -27,7 +27,7 @@ export class ControlButtons extends Component {
         this.notification = useService("notification");
     }
     get partner() {
-        return this.pos.get_order()?.get_partner();
+        return this.pos.get_order()?.partner_id;
     }
     get currentOrder() {
         return this.pos.get_order();
@@ -112,7 +112,7 @@ export class ControlButtons extends Component {
 
     clickRefund() {
         const order = this.pos.get_order();
-        const partner = order.get_partner();
+        const partner = order.partner_id;
         const searchDetails = partner ? { fieldName: "PARTNER", searchTerm: partner.name } : {};
         this.pos.showScreen("TicketScreen", {
             stateOverride: {

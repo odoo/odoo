@@ -875,11 +875,26 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                             if (idx === -1) {
                                 indexedRecords[model][key][keyV.id].push(record);
                             } else {
+                                // Verify if there is uiState on existing records, if so, merge them
+                                const uiState = {
+                                    ...indexedRecords[model][key][keyV.id][idx].uiState,
+                                };
+
                                 indexedRecords[model][key][keyV.id][idx] = record;
+                                if (Object.keys(uiState).length > 0) {
+                                    indexedRecords[model][key][keyV.id][idx].uiState = uiState;
+                                }
                             }
                         }
                     } else {
+                        const uiState = {
+                            ...indexedRecords[model][key][keyVal]?.uiState,
+                        };
+
                         indexedRecords[model][key][keyVal] = record;
+                        if (Object.keys(uiState).length > 0) {
+                            indexedRecords[model][key][keyVal].uiState = uiState;
+                        }
                     }
                 }
             }
@@ -909,6 +924,12 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                     if (index === -1) {
                         valuesToAdd.push(value);
                     } else {
+                        const uiState = {
+                            ...orderedRecords[model][index].uiState,
+                        };
+                        if (Object.keys(uiState).length > 0) {
+                            value.uiState = uiState;
+                        }
                         valuesToUpdate.push([index, value]);
                     }
                 }

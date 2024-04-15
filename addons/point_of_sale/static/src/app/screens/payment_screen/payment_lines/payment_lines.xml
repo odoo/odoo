@@ -12,7 +12,7 @@
                                  <span class="payment-name"><t t-esc="line.payment_method_id.name"/></span>
                                  <div class="payment-amount px-3">
                                     <t t-if="line and line.payment_status and ['done', 'waitingCard', 'waiting', 'reversing', 'reversed'].includes(line.payment_status)">
-                                            <t t-esc="env.utils.formatCurrency(line.get_amount(), false)" />
+                                            <t t-esc="env.utils.formatCurrency(line.amount, false)" />
                                     </t>
                                     <t t-else="">
                                             <t t-esc="formatLineAmount(line)" />
@@ -106,7 +106,7 @@
                                  <t t-esc="line.payment_method_id.name" />
                                  <div class="payment-amount px-3">
                                     <t t-if="line and line.payment_status and ['done', 'waitingCard', 'waiting', 'reversing', 'reversed'].includes(line.payment_status)">
-                                            <t t-esc="env.utils.formatCurrency(line.get_amount(), false)" />
+                                            <t t-esc="env.utils.formatCurrency(line.amount, false)" />
                                     </t>
                                     <t t-else="">
                                             <t t-esc="formatLineAmount(line)" />

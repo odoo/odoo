@@ -70,7 +70,7 @@ export class PaymentStripe extends PaymentInterface {
             const disconnectResult = await this.terminal.disconnectReader();
             if (disconnectResult.error) {
                 this._showError(disconnectResult.error.message, disconnectResult.error.code);
-                line.set_payment_status("retry");
+                line.payment_status = "retry";
                 return false;
             } else {
                 return await this.connectReader();
@@ -102,7 +102,7 @@ export class PaymentStripe extends PaymentInterface {
                     } else {
                         this._showError(error);
                     }
-                    line.set_payment_status("retry");
+                    line.payment_status = "retry";
                     return false;
                 }
             }
@@ -146,27 +146,27 @@ export class PaymentStripe extends PaymentInterface {
             amount
         );
         if (!clientSecret) {
-            line.set_payment_status("retry");
+            line.payment_status = "retry";
             return false;
         }
-        line.set_payment_status("waitingCard");
+        line.payment_status = "waitingCard";
         const collectPaymentMethod = await this.terminal.collectPaymentMethod(clientSecret);
         if (collectPaymentMethod.error) {
             this._showError(collectPaymentMethod.error.message, collectPaymentMethod.error.code);
-            line.set_payment_status("retry");
+            line.payment_status = "retry";
             return false;
         } else {
-            line.set_payment_status("waitingCapture");
+            line.payment_status = "waitingCapture";
             const processPayment = await this.terminal.processPayment(
                 collectPaymentMethod.paymentIntent
             );
             line.transaction_id = collectPaymentMethod.paymentIntent.id;
             if (processPayment.error) {
                 this._showError(processPayment.error.message, processPayment.error.code);
-                line.set_payment_status("retry");
+                line.payment_status = "retry";
                 return false;
             } else if (processPayment.paymentIntent) {
-                line.set_payment_status("waitingCapture");
+                line.payment_status = "waitingCapture";
 
                 const [captured_card_type, captured_transaction_id] =
                     this._getCapturedCardAndTransactionId(processPayment);
@@ -177,7 +177,7 @@ export class PaymentStripe extends PaymentInterface {
                     await this.captureAfterPayment(processPayment, line);
                 }
 
-                line.set_payment_status("done");
+                line.payment_status = "done";
                 return true;
             }
         }
@@ -262,7 +262,7 @@ export class PaymentStripe extends PaymentInterface {
          */
         await super.send_payment_request(...arguments);
         const line = this.pos.get_order().get_selected_paymentline();
-        line.set_payment_status("waiting");
+        line.payment_status = "waiting";
         try {
             if (await this.checkReader()) {
                 return await this.collectPayment(line.amount);
@@ -281,7 +281,7 @@ export class PaymentStripe extends PaymentInterface {
         const line = this.pos.get_order().get_selected_paymentline();
         const stripeCancel = await this.stripeCancel();
         if (stripeCancel) {
-            line.set_payment_status("retry");
+            line.payment_status = "retry";
             return true;
         }
     }

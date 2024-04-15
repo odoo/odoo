@@ -223,7 +223,7 @@ patch(PaymentScreen.prototype, {
         var purchase_amount = 0;
 
         if (swipe_pending_line) {
-            purchase_amount = swipe_pending_line.get_amount();
+            purchase_amount = swipe_pending_line.amount;
         } else {
             purchase_amount = this.pos.get_order().get_due();
         }

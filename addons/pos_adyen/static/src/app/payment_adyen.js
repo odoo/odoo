@@ -34,7 +34,7 @@ export class PaymentAdyen extends PaymentInterface {
         // handle timeout
         var line = this.pending_adyen_line();
         if (line) {
-            line.set_payment_status("retry");
+            line.payment_status = "retry";
         }
         this._show_error(
             _t(
@@ -181,7 +181,7 @@ export class PaymentAdyen extends PaymentInterface {
 
         if (response.error && response.error.status_code == 401) {
             this._show_error(_t("Authentication failed. Please check your Adyen credentials."));
-            line.set_payment_status("force_done");
+            line.payment_status = "force_done";
             return false;
         }
 
@@ -197,11 +197,11 @@ export class PaymentAdyen extends PaymentInterface {
 
             this._show_error(_t("An unexpected error occurred. Message from Adyen: %s", msg));
             if (line) {
-                line.set_payment_status("force_done");
+                line.payment_status = "force_done";
             }
             return false;
         } else {
-            line.set_payment_status("waitingCard");
+            line.payment_status = "waitingCard";
             return this.waitForPaymentConfirmation();
         }
     }
@@ -267,8 +267,8 @@ export class PaymentAdyen extends PaymentInterface {
         });
 
         if (cashier_receipt) {
-            line.set_cashier_receipt(
-                this._convert_receipt_info(cashier_receipt.OutputContent.OutputText)
+            line.cashier_receipt = this._convert_receipt_info(
+                cashier_receipt.OutputContent.OutputText
             );
         }
 

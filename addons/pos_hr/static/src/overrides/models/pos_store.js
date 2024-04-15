@@ -13,7 +13,7 @@ patch(PosStore.prototype, {
     async processServerData() {
         await super.processServerData(...arguments);
         if (this.config.module_pos_hr) {
-            this.reset_cashier();
+            this.cashier = false;
         }
     },
     async actionAfterIdle() {
@@ -35,9 +35,6 @@ patch(PosStore.prototype, {
         }
 
         return order;
-    },
-    reset_cashier() {
-        this.cashier = false;
     },
     set_cashier(employee) {
         this.cashier = employee;

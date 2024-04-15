@@ -132,7 +132,7 @@ export class PaymentScreen extends Component {
         }
         if (
             payment_terminal &&
-            !["pending", "retry"].includes(this.selectedPaymentLine.get_payment_status())
+            !["pending", "retry"].includes(this.selectedPaymentLine.payment_status)
         ) {
             return;
         }
@@ -164,15 +164,15 @@ export class PaymentScreen extends Component {
         });
     }
     async toggleShippingDatePicker() {
-        if (!this.currentOrder.getShippingDate()) {
+        if (!this.currentOrder.shipping_date) {
             this.dialog.add(DatePickerPopup, {
                 title: _t("Select the shipping date"),
                 getPayload: (shippingDate) => {
-                    this.currentOrder.setShippingDate(shippingDate);
+                    this.currentOrder.shipping_date = shippingDate;
                 },
             });
         } else {
-            this.currentOrder.setShippingDate(false);
+            this.currentOrder.shipping_date = false;
         }
     }
     deletePaymentLine(uuid) {
@@ -185,15 +185,15 @@ export class PaymentScreen extends Component {
         // If a paymentline with a payment terminal linked to
         // it is removed, the terminal should get a cancel
         // request.
-        if (["waiting", "waitingCard", "timeout"].includes(line.get_payment_status())) {
-            line.set_payment_status("waitingCancel");
+        if (["waiting", "waitingCard", "timeout"].includes(line.payment_status)) {
+            line.payment_status = "waitingCancel";
             line.payment_method_id.payment_terminal
                 .send_payment_cancel(this.currentOrder, uuid)
                 .then(() => {
                     this.currentOrder.remove_paymentline(line);
                     this.numberBuffer.reset();
                 });
-        } else if (line.get_payment_status() !== "waitingCancel") {
+        } else if (line.payment_status !== "waitingCancel") {
             this.currentOrder.remove_paymentline(line);
             this.numberBuffer.reset();
         }
@@ -355,7 +355,7 @@ export class PaymentScreen extends Component {
         const splitPayments = this.paymentLines.filter(
             (payment) => payment.payment_method_id.split_transactions
         );
-        if (splitPayments.length && !this.currentOrder.get_partner()) {
+        if (splitPayments.length && !this.currentOrder.partner_id) {
             const paymentMethod = splitPayments[0].payment_method_id;
             const confirmed = await ask(this.dialog, {
                 title: _t("Customer Required"),
@@ -384,8 +384,8 @@ export class PaymentScreen extends Component {
         }
 
         if (
-            (this.currentOrder.is_to_invoice() || this.currentOrder.getShippingDate()) &&
-            !this.currentOrder.get_partner()
+            (this.currentOrder.is_to_invoice() || this.currentOrder.shipping_date) &&
+            !this.currentOrder.partner_id
         ) {
             const confirmed = await ask(this.dialog, {
                 title: _t("Please select the Customer"),
@@ -399,9 +399,9 @@ export class PaymentScreen extends Component {
             return false;
         }
 
-        const partner = this.currentOrder.get_partner();
+        const partner = this.currentOrder.partner_id;
         if (
-            this.currentOrder.getShippingDate() &&
+            this.currentOrder.shipping_date &&
             !(partner.name && partner.street && partner.city && partner.country_id)
         ) {
             this.dialog.add(AlertDialog, {
@@ -516,32 +516,32 @@ export class PaymentScreen extends Component {
     }
     async sendPaymentCancel(line) {
         const payment_terminal = line.payment_method_id.payment_terminal;
-        line.set_payment_status("waitingCancel");
+        line.payment_status = "waitingCancel";
         const isCancelSuccessful = await payment_terminal.send_payment_cancel(
             this.currentOrder,
             line.uuid
         );
         if (isCancelSuccessful) {
-            line.set_payment_status("retry");
+            line.payment_status = "retry";
         } else {
-            line.set_payment_status("waitingCard");
+            line.payment_status = "waitingCard";
         }
     }
     async sendPaymentReverse(line) {
         const payment_terminal = line.payment_method_id.payment_terminal;
-        line.set_payment_status("reversing");
+        line.payment_status = "reversing";
 
         const isReversalSuccessful = await payment_terminal.send_payment_reversal(line.uuid);
         if (isReversalSuccessful) {
             line.set_amount(0);
-            line.set_payment_status("reversed");
+            line.payment_status = "reversed";
         } else {
             line.can_be_reversed = false;
-            line.set_payment_status("done");
+            line.payment_status = "done";
         }
     }
     async sendForceDone(line) {
-        line.set_payment_status("done");
+        line.payment_status = "done";
     }
 }
 

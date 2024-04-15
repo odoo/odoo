@@ -214,25 +214,25 @@ export class PosOrder extends Base {
         const orderlineIdx = [];
         this.lines.forEach((line) => {
             if (!line.skip_change) {
-                const note = line.getNote();
+                const note = line.note;
                 const lineKey = `${line.uuid} - ${note}`;
                 orderlineIdx.push(lineKey);
 
                 if (this.last_order_preparation_change[lineKey]) {
-                    this.last_order_preparation_change[lineKey]["quantity"] = line.get_quantity();
+                    this.last_order_preparation_change[lineKey]["quantity"] = line.qty;
                 } else {
                     this.last_order_preparation_change[lineKey] = {
                         attribute_value_ids: line.attribute_value_ids.map((a) =>
                             a.serialize({ orm: true })
                         ),
                         line_uuid: line.uuid,
-                        product_id: line.get_product().id,
+                        product_id: line.product_id.id,
                         name: line.get_full_product_name(),
                         note: note,
-                        quantity: line.get_quantity(),
+                        quantity: line.qty,
                     };
                 }
-                line.setHasChange(false);
+                line.uiState.hasChange = false;
             }
         });
 
@@ -360,7 +360,7 @@ export class PosOrder extends Base {
             return 0;
         } else {
             for (const line of lines) {
-                if (line.get_product() === tip_product) {
+                if (line.product_id.id === tip_product.id) {
                     return line.get_unit_price();
                 }
             }
@@ -382,11 +382,7 @@ export class PosOrder extends Base {
         );
 
         for (const line of lines_to_recompute) {
-            const newPrice = line.product_id.get_price(
-                pricelist,
-                line.get_quantity(),
-                line.get_price_extra()
-            );
+            const newPrice = line.product_id.get_price(pricelist, line.qty, line.price_extra);
             line.set_unit_price(newPrice);
         }
 
@@ -511,7 +507,7 @@ export class PosOrder extends Base {
                 payment_method.payment_terminal ||
                 payment_method.payment_method_type === "qr_code"
             ) {
-                newPaymentline.set_payment_status("pending");
+                newPaymentline.payment_status = "pending";
             }
             return newPaymentline;
         }
@@ -539,7 +535,7 @@ export class PosOrder extends Base {
         const empty = [];
 
         for (const line of lines) {
-            if (!line.get_amount()) {
+            if (!line.amount) {
                 empty.push(line);
             }
         }
@@ -572,18 +568,18 @@ export class PosOrder extends Base {
     stop_electronic_payment() {
         const lines = this.payment_ids;
         const line = lines.find(function (line) {
-            var status = line.get_payment_status();
+            var status = line.payment_status;
             return (
                 status && !["done", "reversed", "reversing", "pending", "retry"].includes(status)
             );
         });
 
         if (line) {
-            line.set_payment_status("waitingCancel");
+            line.payment_status = "waitingCancel";
             line.payment_method_id.payment_terminal
                 .send_payment_cancel(this, line.uuid)
                 .finally(function () {
-                    line.set_payment_status("retry");
+                    line.payment_status = "retry";
                 });
         }
     }
@@ -623,7 +619,7 @@ export class PosOrder extends Base {
                 orderLine.get_taxed_lst_unit_price() -
                 orderLine.getUnitDisplayPriceBeforeDiscount();
         }
-        return sum + discountUnitPrice * orderLine.get_quantity();
+        return sum + discountUnitPrice * orderLine.qty;
     }
 
     get_total_discount() {
@@ -634,12 +630,12 @@ export class PosOrder extends Base {
                     sum +=
                         orderLine.getUnitDisplayPriceBeforeDiscount() *
                         (orderLine.get_discount() / 100) *
-                        orderLine.get_quantity();
+                        orderLine.qty;
                     if (orderLine.display_discount_policy() === "without_discount") {
                         sum +=
                             (orderLine.get_taxed_lst_unit_price() -
                                 orderLine.getUnitDisplayPriceBeforeDiscount()) *
-                            orderLine.get_quantity();
+                            orderLine.qty;
                     }
                 }
                 return sum;
@@ -688,7 +684,7 @@ export class PosOrder extends Base {
         return roundPrecision(
             this.payment_ids.reduce(function (sum, paymentLine) {
                 if (paymentLine.is_done()) {
-                    sum += paymentLine.get_amount();
+                    sum += paymentLine.amount;
                 }
                 return sum;
             }, 0),
@@ -715,7 +711,6 @@ export class PosOrder extends Base {
         return Object.values(taxDetails);
     }
 
-    // FIXME tax_id is an array of number ?
     get_total_for_taxes(tax_id) {
         let total = 0;
 
@@ -730,7 +725,7 @@ export class PosOrder extends Base {
         }
 
         this.lines.forEach((line) => {
-            var taxes_ids = this.tax_ids || line.get_product().taxes_id;
+            var taxes_ids = this.tax_ids || line.product_id.taxes_id;
             for (var i = 0; i < taxes_ids.length; i++) {
                 if (tax_set[taxes_ids[i]]) {
                     total += line.get_price_with_tax();
@@ -750,7 +745,7 @@ export class PosOrder extends Base {
             change = -this.get_total_with_tax();
             var lines = this.payment_ids;
             for (var i = 0; i < lines.length; i++) {
-                change += lines[i].get_amount();
+                change += lines[i].amount;
                 if (lines[i] === paymentline) {
                     break;
                 }
@@ -768,7 +763,7 @@ export class PosOrder extends Base {
 
             for (const payment of this.payment_ids) {
                 if (payment.uuid !== paymentline.uuid) {
-                    due -= payment.get_amount();
+                    due -= payment.amount;
                 }
             }
         }
@@ -905,25 +900,15 @@ export class PosOrder extends Base {
         this.to_invoice = to_invoice;
     }
 
-    // FIXME remove this
+    // NOTE - Overrided in l10n_cl_edi_pos
     is_to_invoice() {
         return this.to_invoice;
     }
 
-    /* ---- Partner --- */
-    // the partner related to the current order.
     set_partner(partner) {
         this.assert_editable();
         this.update({ partner_id: partner });
         this.updatePricelistAndFiscalPosition(partner);
-    }
-
-    get_partner() {
-        return this.partner_id;
-    }
-
-    get_partner_name() {
-        return this.partner_id ? this.partner_id.name : "";
     }
 
     get_cardholder_name() {
@@ -990,16 +975,6 @@ export class PosOrder extends Base {
 
         this.set_pricelist(newPartnerPricelist);
         this.update({ fiscal_position_id: newPartnerFiscalPosition });
-    }
-
-    /* ---- Ship later --- */
-    //FIXME remove this
-    setShippingDate(shippingDate) {
-        this.shipping_date = shippingDate;
-    }
-    //FIXME remove this
-    getShippingDate() {
-        return this.shipping_date;
     }
 
     getHasRefundLines() {

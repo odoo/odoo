@@ -39,15 +39,15 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     // Compares the orderlines of the order with the last ones sent.
     // When one of them has changed, we add the change.
     for (const orderline of order.get_orderlines()) {
-        const product = orderline.get_product();
-        const note = orderline.getNote();
+        const product = orderline.product_id;
+        const note = orderline.note;
         const lineKey = `${orderline.uuid} - ${note}`;
         const productCategoryIds = product.parentPosCategIds.filter((id) =>
             prepaCategoryIds.has(id)
         );
 
         if (prepaCategoryIds.size === 0 || productCategoryIds.length > 0) {
-            const quantity = orderline.get_quantity();
+            const quantity = orderline.qty;
             const quantityDiff = oldChanges[lineKey]
                 ? quantity - oldChanges[lineKey].quantity
                 : quantity;
@@ -66,13 +66,13 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                 changeAbsCount += Math.abs(quantityDiff);
 
                 if (!orderline.skip_change) {
-                    orderline.setHasChange(true);
+                    orderline.uiState.hasChange = true;
                 }
             } else {
-                orderline.setHasChange(false);
+                orderline.uiState.hasChange = false;
             }
         } else {
-            orderline.setHasChange(false);
+            orderline.uiState.hasChange = false;
         }
     }
     // Checks whether an orderline has been deleted from the order since it

@@ -66,35 +66,35 @@
 
     <t t-name="point_of_sale.PaymentScreenButtons">
         <div class="payment-buttons d-flex flex-column flex-wrap">
-            <button class="button partner-button btn btn-light py-3 text-start rounded-0 border-bottom" 
-                t-att-class="{ 'highlight text-bg-primary': currentOrder.get_partner() }" 
+            <button class="button partner-button btn btn-light py-3 text-start rounded-0 border-bottom"
+                t-att-class="{ 'highlight text-bg-primary': currentOrder.partner_id }"
                 t-on-click="() => this.pos.selectPartner()">
                 <i class="fa fa-user me-2" role="img" title="Customer" />
                 <span class="partner-name">
-                    <t t-if="currentOrder.get_partner()" t-esc="currentOrder.get_partner().name"/>
+                    <t t-if="currentOrder.partner_id" t-esc="currentOrder.partner_id.name"/>
                     <t t-else="">Customer</t>
-                </span> 
+                </span>
             </button>
-            <button class="button js_invoice btn btn-light py-3 text-start rounded-0 border-bottom" t-att-class="{ 'highlight text-bg-primary': currentOrder.is_to_invoice() }" 
+            <button class="button js_invoice btn btn-light py-3 text-start rounded-0 border-bottom" t-att-class="{ 'highlight text-bg-primary': currentOrder.is_to_invoice() }"
                 t-on-click="toggleIsToInvoice">
-                <i class="fa fa-file-text-o me-2" />Invoice 
+                <i class="fa fa-file-text-o me-2" />Invoice
             </button>
             <button t-if="pos.config.iface_tipproduct and pos.config.tip_product_id" class="button js_tip btn btn-light py-3 text-start rounded-0 border-bottom" t-att-class="{ 'highlight text-bg-primary': currentOrder.get_tip() }" 
                 t-on-click="addTip">
-                <i class="fa fa-heart me-2" />Tip 
+                <i class="fa fa-heart me-2" />Tip
                 <t t-if="currentOrder.get_tip() != 0">
                     (<t t-esc="env.utils.formatCurrency(currentOrder.get_tip())" />)
                 </t>
             </button>
-            <button t-if="pos.config.iface_cashdrawer" class="button js_cashdrawer btn btn-light py-3 text-start rounded-0 border-bottom" 
+            <button t-if="pos.config.iface_cashdrawer" class="button js_cashdrawer btn btn-light py-3 text-start rounded-0 border-bottom"
                 t-on-click="openCashbox">
-                <i class="fa fa-archive me-2" />Open Cashbox 
+                <i class="fa fa-archive me-2" />Open Cashbox
             </button>
-            <button t-if="pos.config.ship_later" class="button btn btn-light py-3 text-start rounded-0 border-bottom" t-att-class="{ 'highlight text-bg-primary': currentOrder.getShippingDate() }" 
+            <button t-if="pos.config.ship_later" class="button btn btn-light py-3 text-start rounded-0 border-bottom" t-att-class="{ 'highlight text-bg-primary': currentOrder.shipping_date }"
                 t-on-click="toggleShippingDatePicker">
-                <i class="fa fa-clock-o me-2" />Ship Later 
-                <span t-if="currentOrder.getShippingDate()">
-                    (<t t-esc="currentOrder.getShippingDate()" />)
+                <i class="fa fa-clock-o me-2" />Ship Later
+                <span t-if="currentOrder.shipping_date">
+                    (<t t-esc="currentOrder.shipping_date" />)
                 </span>
             </button>
         </div>

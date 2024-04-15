@@ -91,7 +91,7 @@ export class OrderSummary extends Component {
         ) {
             const orderlines = order.lines;
             const lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).uuid;
-            const currentQuantity = this.pos.get_order().get_selected_orderline().get_quantity();
+            const currentQuantity = this.pos.get_order().get_selected_orderline().qty;
 
             if (selectedLine.noDecrease) {
                 this.dialog.add(AlertDialog, {
@@ -151,7 +151,7 @@ export class OrderSummary extends Component {
         if (newQuantity !== null) {
             const order = this.pos.get_order();
             const selectedLine = order.get_selected_orderline();
-            const currentQuantity = selectedLine.get_quantity();
+            const currentQuantity = selectedLine.qty;
             if (newQuantity >= currentQuantity) {
                 selectedLine.set_quantity(newQuantity);
                 return true;

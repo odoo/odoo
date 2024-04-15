@@ -67,7 +67,7 @@ export class Navbar extends Component {
         } else {
             if (this._shouldLoadOrders()) {
                 try {
-                    this.pos.setLoadingOrderState(true);
+                    this.pos.loadingOrderState = true;
                     const orders = await this.pos.getServerOrders();
                     if (orders && orders.length > 0) {
                         const message = _t(
@@ -77,7 +77,7 @@ export class Navbar extends Component {
                         this.notification.add(message);
                     }
                 } finally {
-                    this.pos.setLoadingOrderState(false);
+                    this.pos.loadingOrderState = false;
                     this.pos.showScreen("TicketScreen");
                 }
             } else {

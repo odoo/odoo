@@ -190,7 +190,7 @@ export class ProductScreen extends Component {
     async _barcodePartnerAction(code) {
         const partner = await this._getPartnerByBarcode(code);
         if (partner) {
-            if (this.currentOrder.get_partner() !== partner) {
+            if (this.currentOrder.partner_id !== partner) {
                 this.currentOrder.set_partner(partner);
             }
             return;
@@ -227,7 +227,7 @@ export class ProductScreen extends Component {
         this.dialog.add(ControlButtonsPopup);
     }
     get selectedOrderlineQuantity() {
-        return this.currentOrder.get_selected_orderline()?.get_quantity_str();
+        return this.currentOrder.get_selected_orderline()?.quantityStr;
     }
     get selectedOrderlineDisplayName() {
         return this.currentOrder.get_selected_orderline()?.get_full_product_name();
@@ -349,7 +349,9 @@ export class ProductScreen extends Component {
                 this.pos.session._has_available_products = true;
             }
 
-            this.pos.loadOpenOrders(posOrder);
+            if (!this.pos.selectedOrderUuid) {
+                this.pos.selectedOrderUuid = this.pos.models["pos.order"].getFirst().uuid;
+            }
         } finally {
             this.state.loadingDemo = false;
         }

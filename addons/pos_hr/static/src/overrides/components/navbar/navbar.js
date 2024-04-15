@@ -21,7 +21,7 @@ patch(Navbar.prototype, {
         return cashier._role === "manager" || cashier.user_id?.id === this.pos.user.id;
     },
     async showLoginScreen() {
-        this.pos.reset_cashier();
+        this.pos.cashier = false;
         this.pos.showScreen("LoginScreen");
     },
 });

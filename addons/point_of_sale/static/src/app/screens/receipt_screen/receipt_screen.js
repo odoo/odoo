@@ -23,7 +23,7 @@ export class ReceiptScreen extends Component {
         this.dialog = useService("dialog");
 
         this.currentOrder = this.pos.get_order();
-        const partner = this.currentOrder.get_partner();
+        const partner = this.currentOrder.partner_id;
         this.state = useState({
             inputEmail: (partner && partner.email) || "",
         });
@@ -101,7 +101,7 @@ export class ReceiptScreen extends Component {
         return this.pos.get_order_list().length > 1;
     }
     async _sendReceiptToCustomer() {
-        const partner = this.currentOrder.get_partner();
+        const partner = this.currentOrder.partner_id;
         const orderPartner = {
             email: this.state.inputEmail,
             name: partner ? partner.name : this.state.inputEmail,

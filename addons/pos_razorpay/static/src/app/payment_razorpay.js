@@ -39,7 +39,7 @@ export class PaymentRazorpay extends PaymentInterface {
         // handle timeout
         const line = this.pending_razorpay_line();
         if (line) {
-            line.set_payment_status("retry");
+            line.payment_status = "retry";
         }
         this._showError(
             _t(
@@ -57,14 +57,14 @@ export class PaymentRazorpay extends PaymentInterface {
     _razorpay_handle_response(response) {
         const line = this.pending_razorpay_line();
         if (response.error) {
-            line.set_payment_status("force_done");
+            line.payment_status = "force_done";
             this.payment_stopped
                 ? this._showError(_t("Transaction failed due to inactivity"))
                 : this._showError(response.error);
             this._removePaymentHandler(["p2pRequestId", "referenceId"]);
             return Promise.resolve(false);
         }
-        line.set_payment_status("waitingCard");
+        line.payment_status = "waitingCard";
         localStorage.setItem("p2pRequestId", response.p2pRequestId);
         return this._waitForPaymentConfirmation();
     }
@@ -126,7 +126,7 @@ export class PaymentRazorpay extends PaymentInterface {
             //Within 90 seconds, inactivity will result in transaction cancellation and payment termination.
             if (this.payment_stopped) {
                 this._razorpay_cancel().then(() => {
-                    paymentLine.set_payment_status("force_done");
+                    paymentLine.payment_status = "force_done";
                     this.payment_stopped = false;
                 });
                 return resolve(false);

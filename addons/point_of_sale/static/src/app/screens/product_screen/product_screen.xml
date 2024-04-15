@@ -9,7 +9,7 @@
                     <ControlButtons t-if="!ui.isSmall" onClickMore.bind="displayAllControlPopup"/>
                     <div class="subpads d-flex">
                         <ActionpadWidget
-                            partner="currentOrder?.get_partner()"
+                            partner="currentOrder?.partner_id"
                             actionName="constructor.numpadActionName"
                             actionType="'payment'"
                             onClickMore.bind="displayAllControlPopup" />
@@ -22,7 +22,7 @@
                     <CategorySelector class="'d-grid p-1 gap-1'" style="'grid-template-columns: repeat(4, 1fr);'"
                         categories="getCategoriesAndSub()" onClick="(id) => this.pos.setSelectedCategory(id)"/>
                     <CameraBarcodeScanner t-if="pos.scanning"/>
-                    <div t-elif="productsToDisplay.length != 0 and pos.posHasValidProduct()" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
+                    <div t-elif="productsToDisplay.length != 0 and pos.session._has_available_products" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
                         <ProductCard
                             t-foreach="productsToDisplay" t-as="product" t-key="product.id"
                             class="pos.productViewMode"
@@ -37,7 +37,7 @@
                     </div>
                     <div t-else="" class="flex-grow-1 text-center mt-5">
                         <p t-if="searchWord">No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>
-                        <p t-elif="pos.posHasValidProduct()">There are no products in this category.</p>
+                        <p t-elif="pos.session._has_available_products">There are no products in this category.</p>
                         <p t-elif="!state.loadingDemo" class="text-large">No products available. Explore <a role="button" class="button-no-demo fw-bolder" t-on-click="loadDemoDataProducts">demo data</a> or <a role="button" class="button-no-demo fw-bolder" t-on-click="createNewProducts">create your own</a>.</p>
                         <div t-else="" class="block-top-header position-absolute top-0 start-0 bg-black opacity-50 w-100 h-100 z-1000">
                             <div class="d-flex h-100 w-100 text-white flex-row align-items-center justify-content-center">

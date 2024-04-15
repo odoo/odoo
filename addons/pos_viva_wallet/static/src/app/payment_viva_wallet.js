@@ -38,7 +38,7 @@ export class PaymentVivaWallet extends PaymentInterface {
         // handle timeout
         var line = this.pending_viva_wallet_line();
         if (line) {
-            line.set_payment_status("retry");
+            line.payment_status = "retry";
         }
         this._show_error(
             _t(
@@ -51,7 +51,7 @@ export class PaymentVivaWallet extends PaymentInterface {
 
     _viva_wallet_handle_response(response) {
         var line = this.pending_viva_wallet_line();
-        line.set_payment_status("waitingCard");
+        line.payment_status = "waitingCard";
         if (response.error) {
             this._show_error(response.error);
         }
@@ -66,7 +66,7 @@ export class PaymentVivaWallet extends PaymentInterface {
         var order = this.pos.get_order();
         var line = order.get_selected_paymentline();
         let customerTrns = " ";
-        line.set_payment_status("waitingCard");
+        line.payment_status = "waitingCard";
 
         if (line.amount < 0) {
             this._show_error(_t("Cannot process transactions with negative amount."));

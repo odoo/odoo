@@ -35,14 +35,14 @@ export class SplitBillScreen extends Component {
 
         for (const line of lines) {
             if (!line.is_pos_groupable()) {
-                if (this.qtyTracker[line.uuid] === line.get_quantity()) {
+                if (this.qtyTracker[line.uuid] === line.qty) {
                     this.qtyTracker[line.uuid] = 0;
                 } else {
-                    this.qtyTracker[line.uuid] = line.get_quantity();
+                    this.qtyTracker[line.uuid] = line.qty;
                 }
             } else if (!this.qtyTracker[line.uuid]) {
                 this.qtyTracker[line.uuid] = 1;
-            } else if (this.qtyTracker[line.uuid] === line.get_quantity()) {
+            } else if (this.qtyTracker[line.uuid] === line.qty) {
                 this.qtyTracker[line.uuid] = 0;
             } else {
                 this.qtyTracker[line.uuid] += 1;
@@ -72,10 +72,10 @@ export class SplitBillScreen extends Component {
                     true
                 );
 
-                if (line.get_quantity() === this.qtyTracker[line.uuid]) {
+                if (line.qty === this.qtyTracker[line.uuid]) {
                     lineToDel.push(line);
                 } else {
-                    line.update({ qty: line.get_quantity() - this.qtyTracker[line.uuid] });
+                    line.update({ qty: line.qty - this.qtyTracker[line.uuid] });
                 }
             }
         }
@@ -111,7 +111,7 @@ export class SplitBillScreen extends Component {
             return line.getDisplayData();
         }
 
-        return { ...line.getDisplayData(), qty: `${splitQty} / ${line.get_quantity_str()}` };
+        return { ...line.getDisplayData(), qty: `${splitQty} / ${line.quantityStr}` };
     }
 
     back() {

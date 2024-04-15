@@ -19,8 +19,7 @@ patch(PaymentScreen.prototype, {
     },
     getRemainingOnlinePaymentLines() {
         return this.paymentLines.filter(
-            (line) =>
-                line.payment_method_id.is_online_payment && line.get_payment_status() !== "done"
+            (line) => line.payment_method_id.is_online_payment && line.payment_status !== "done"
         );
     },
     checkRemainingOnlinePaymentLines(unpaidAmount) {
@@ -28,7 +27,7 @@ patch(PaymentScreen.prototype, {
         let remainingAmount = 0;
         let amount = 0;
         for (const line of remainingLines) {
-            amount = line.get_amount();
+            amount = line.amount;
             if (amount <= 0) {
                 this.dialog.add(AlertDialog, {
                     title: _t("Invalid online payment"),
@@ -83,7 +82,7 @@ patch(PaymentScreen.prototype, {
             let prevOnlinePaymentLine = null;
             let lastOrderServerOPData = null;
             for (const onlinePaymentLine of onlinePaymentLines) {
-                const onlinePaymentLineAmount = onlinePaymentLine.get_amount();
+                const onlinePaymentLineAmount = onlinePaymentLine.amount;
                 // The local state is not aware if the online payment has already been done.
                 lastOrderServerOPData = await this.pos.update_online_payments_data_with_server(
                     this.currentOrder,
@@ -109,14 +108,14 @@ patch(PaymentScreen.prototype, {
                     }
                     if (
                         (prevOnlinePaymentLine &&
-                            prevOnlinePaymentLine?.get_payment_status() !== "done") ||
+                            prevOnlinePaymentLine?.payment_status !== "done") ||
                         !this.checkRemainingOnlinePaymentLines(lastOrderServerOPData.amount_unpaid)
                     ) {
                         this.cancelOnlinePayment(this.currentOrder);
                         return false;
                     }
 
-                    onlinePaymentLine.set_payment_status("waiting");
+                    onlinePaymentLine.payment_status = "waiting";
                     this.currentOrder.select_paymentline(onlinePaymentLine);
                     const onlinePaymentData = {
                         formattedAmount: this.env.utils.formatCurrency(onlinePaymentLineAmount),
@@ -139,12 +138,12 @@ patch(PaymentScreen.prototype, {
                     );
                     if (!paymentResult) {
                         this.cancelOnlinePayment(this.currentOrder);
-                        onlinePaymentLine.set_payment_status(undefined);
+                        onlinePaymentLine.payment_status = undefined;
                         return false;
                     }
                     qrCodePopupCloser();
-                    if (onlinePaymentLine.get_payment_status() === "waiting") {
-                        onlinePaymentLine.set_payment_status(undefined);
+                    if (onlinePaymentLine.payment_status === "waiting") {
+                        onlinePaymentLine.payment_status = undefined;
                     }
                     prevOnlinePaymentLine = onlinePaymentLine;
                 }

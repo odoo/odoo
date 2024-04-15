@@ -69,9 +69,11 @@ export class TicketScreen extends Component {
             search: this.pos.getDefaultSearchDetails(),
             selectedOrder: this.pos.get_order() || null,
             selectedOrderlineIds: {},
+            offsetByDomain: {},
+            totalCount: 0,
         });
-        Object.assign(this.state, this.props.stateOverride || {});
 
+        Object.assign(this.state, this.props.stateOverride || {});
         onMounted(this.onMounted);
     }
     onMounted() {
@@ -114,11 +116,6 @@ export class TicketScreen extends Component {
         this.pos.add_new_order();
         this.pos.showScreen("ProductScreen");
     }
-    _selectNextOrder(currentOrder) {
-        const currentOrderIndex = this._getOrderList().indexOf(currentOrder);
-        const orderList = this._getOrderList();
-        this.pos.set_order(orderList[currentOrderIndex + 1] || orderList[currentOrderIndex - 1]);
-    }
     async onDeleteOrder(order) {
         const screen = order.get_screen_data();
 
@@ -140,24 +137,30 @@ export class TicketScreen extends Component {
             if (this.state.selectedOrder === order) {
                 this.state.selectedOrder = null;
             }
+            if (this.state.selectedOrder === order) {
+                this.state.selectedOrder = null;
+            }
         }
         order.uiState.displayed = false;
         if (order && (await this._onBeforeDeleteOrder(order))) {
             if (Object.keys(order.last_order_preparation_change).length > 0) {
                 await this.pos.sendOrderInPreparationUpdateLastChange(order, true);
             }
-            if (order === this.pos.get_order()) {
-                this._selectNextOrder(order);
-            }
-            const deleted = this.pos.removeOrder(order, true);
 
+            const currentOrderUuid = this.pos.get_order()?.uuid;
+            const toDeleteOrderUuid = order.uuid;
+            const deleted = this.pos.removeOrder(order, true);
             if (!deleted) {
                 order.uiState.displayed = true;
+            } else if (
+                this.pos.get_order() &&
+                !this.pos.config.module_pos_restaurant &&
+                currentOrderUuid === toDeleteOrderUuid
+            ) {
+                this.pos.selectNextOrder();
             }
 
-            if (this.pos.get_order_list().length > 0) {
-                this.state.selectedOrder = this.pos.get_order_list()[0];
-            }
+            this.state.selectedOrder = null;
         }
         return true;
     }
@@ -252,7 +255,7 @@ export class TicketScreen extends Component {
             return;
         }
 
-        const partner = order.get_partner();
+        const partner = order.partner_id;
         const allToRefundDetails = this._getRefundableDetails(partner, order);
 
         if (!allToRefundDetails) {
@@ -268,7 +271,7 @@ export class TicketScreen extends Component {
                 (l) =>
                     l.quantity >= 0 || order.lines.some((ol) => ol.id === l.refunded_orderline_id)
             ) &&
-            partner === this.props.destinationOrder.get_partner() &&
+            partner === this.props.destinationOrder.partner_id &&
             !this.pos.doNotAllowRefundAndSales()
                 ? this.props.destinationOrder
                 : this._getEmptyOrder(partner);
@@ -317,7 +320,7 @@ export class TicketScreen extends Component {
         this.closeTicketScreen();
     }
     setPartnerToRefundOrder(partner, destinationOrder) {
-        if (partner && !destinationOrder.get_partner()) {
+        if (partner && !destinationOrder.partner_id) {
             destinationOrder.set_partner(partner);
         }
     }
@@ -414,7 +417,7 @@ export class TicketScreen extends Component {
         return this.env.utils.formatCurrency(order.get_total_with_tax());
     }
     getPartner(order) {
-        return order.get_partner_name();
+        return order.partner_id?.name || "";
     }
     getCardholderName(order) {
         return order.get_cardholder_name();
@@ -454,7 +457,7 @@ export class TicketScreen extends Component {
             (this.ui.isSmall && order != this.state.selectedOrder) ||
             this.isDefaultOrderEmpty(order) ||
             order.payment_ids.some(
-                (payment) => payment.is_electronic() && payment.get_payment_status() === "done"
+                (payment) => payment.is_electronic() && payment.payment_status === "done"
             )
         );
     }
@@ -476,10 +479,10 @@ export class TicketScreen extends Component {
         };
     }
     getNbrPages() {
-        return Math.ceil(this.pos.ticketScreenState.totalCount / NBR_BY_PAGE);
+        return Math.ceil(this.state.totalCount / NBR_BY_PAGE);
     }
     getPageNumber() {
-        if (!this.pos.ticketScreenState.totalCount) {
+        if (!this.state.totalCount) {
             return `1/1`;
         } else {
             return `${this.state.page}/${this.getNbrPages()}`;
@@ -500,8 +503,13 @@ export class TicketScreen extends Component {
 
         return !this.pos.isProductQtyZero(total);
     }
+    switchPaneTicketScreen() {
+        this.ticket_screen_mobile_pane =
+            this.ticket_screen_mobile_pane === "left" ? "right" : "left";
+    }
     switchPane() {
-        this.pos.switchPaneTicketScreen();
+        this.pos.ticket_screen_mobile_pane =
+            this.pos.ticket_screen_mobile_pane === "left" ? "right" : "left";
     }
     closeTicketScreen() {
         this.pos.ticket_screen_mobile_pane = "left";
@@ -520,10 +528,10 @@ export class TicketScreen extends Component {
         let emptyOrder = null;
         for (const order of this.pos.models["pos.order"].filter((order) => !order.finalized)) {
             if (order.get_orderlines().length === 0 && order.payment_ids.length === 0) {
-                if (order.get_partner() === partner) {
+                if (order.partner_id === partner) {
                     emptyOrderForPartner = order;
                     break;
-                } else if (!order.get_partner() && emptyOrder === null) {
+                } else if (!order.partner_id && emptyOrder === null) {
                     // If emptyOrderForPartner is not found, we will use the first empty order.
                     emptyOrder = order;
                 }
@@ -537,7 +545,7 @@ export class TicketScreen extends Component {
             return false;
         }
         const theOrderline = orderlines[0];
-        const refundableQty = theOrderline.get_quantity() - theOrderline.refunded_qty;
+        const refundableQty = theOrderline.qty - theOrderline.refunded_qty;
         return this.pos.isProductQtyZero(refundableQty - 1);
     }
     _prepareAutoRefundOnOrder(order) {
@@ -590,7 +598,12 @@ export class TicketScreen extends Component {
      * @returns {Array} refundableDetails
      */
     _getRefundableDetails(partner, order) {
-        return Object.values(this.pos.linesToRefund).filter(
+        return Object.values(
+            this.pos.models["pos.order"].reduce((acc, order) => {
+                acc.push(...Object.values(order.uiState.lineToRefund));
+                return acc;
+            }, [])
+        ).filter(
             (refund) =>
                 !this.pos.isProductQtyZero(refund.qty) &&
                 refund.line.order_id.uuid === order.uuid &&
@@ -635,7 +648,7 @@ export class TicketScreen extends Component {
                 modelField: "date_order",
             },
             PARTNER: {
-                repr: (order) => order.get_partner_name(),
+                repr: (order) => order.partner_id?.name || "",
                 displayName: _t("Customer"),
                 modelField: "partner_id.complete_name",
             },
@@ -711,7 +724,7 @@ export class TicketScreen extends Component {
      * order is not fetched anymore, instead, we use info from cache.
      */
     async _fetchSyncedOrders() {
-        const screenState = this.pos.ticketScreenState;
+        const screenState = this.state;
         const domain = this._computeSyncedOrdersDomain();
         const offset = screenState.offsetByDomain[JSON.stringify(domain)] || 0;
         const config_id = this.pos.config.id;

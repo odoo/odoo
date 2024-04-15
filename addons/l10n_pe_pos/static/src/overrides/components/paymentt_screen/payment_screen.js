@@ -14,7 +14,7 @@ patch(PaymentScreen.prototype, {
         if (!res) {
             return false;
         }
-        const currentPartner = this.currentOrder.get_partner();
+        const currentPartner = this.currentOrder.partner_id;
         if (currentPartner && !currentPartner.vat) {
             this.pos.editPartner(currentPartner);
             this.dialog.add(AlertDialog, {

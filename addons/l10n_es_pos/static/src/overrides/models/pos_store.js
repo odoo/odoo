@@ -9,7 +9,7 @@ patch(PosStore.prototype, {
         result.simplified_partner_id = this.config.simplified_partner_id.id;
         if (order) {
             result.is_l10n_es_simplified_invoice = order.is_l10n_es_simplified_invoice;
-            result.partner = order.get_partner();
+            result.partner = order.partner_id;
             result.invoice_name = order.invoice_name;
         }
         return result;

@@ -19,7 +19,7 @@
                         placeholder="'Search products...'"
                         icon="{type: 'fa', value: 'fa-search'}"
                         debounceMillis="500"
-                        t-if="pos.showSearchButton()" />
+                        t-if="pos.mainScreen.component === ProductScreen and pos.mobile_pane === 'right'" />
                     <CashierName />
                     <SaleDetailsButton t-if="hardwareProxy.printer" isHeaderButton="true"/>
                     <ProxyStatus t-if="pos.config.use_proxy" />

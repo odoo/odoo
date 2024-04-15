@@ -8,8 +8,8 @@ patch(TicketScreen.prototype, {
         if (this.pos.isArgentineanCompany()) {
             if (
                 partner &&
-                (!destinationOrder.get_partner() ||
-                    destinationOrder.get_partner().id ===
+                (!destinationOrder.partner_id ||
+                    destinationOrder.partner_id.id ===
                         this.pos.session._consumidor_final_anonimo_id)
             ) {
                 destinationOrder.set_partner(partner);

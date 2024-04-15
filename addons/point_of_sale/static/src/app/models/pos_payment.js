@@ -29,32 +29,16 @@ export class PosPayment extends Base {
         );
     }
 
-    get_amount() {
-        return this.amount || 0;
-    }
-
     get_amount_str() {
         return formatFloat(this.amount, {
             digits: [69, this.pos_order_id.currency.decimal_places],
         });
     }
 
-    get_payment_status() {
-        return this.payment_status;
-    }
-
-    set_payment_status(value) {
-        this.payment_status = value;
-    }
-
     is_done() {
-        return this.get_payment_status()
-            ? this.get_payment_status() === "done" || this.get_payment_status() === "reversed"
+        return this.payment_status
+            ? this.payment_status === "done" || this.payment_status === "reversed"
             : true;
-    }
-
-    set_cashier_receipt(value) {
-        this.cashier_receipt = value;
     }
 
     set_receipt_info(value) {
@@ -63,18 +47,18 @@ export class PosPayment extends Base {
 
     export_for_printing() {
         return {
-            amount: this.get_amount(),
+            amount: this.amount,
             name: this.payment_method_id.name,
             ticket: this.ticket,
         };
     }
 
     is_electronic() {
-        return Boolean(this.get_payment_status());
+        return Boolean(this.payment_status);
     }
 
     async pay() {
-        this.set_payment_status("waiting");
+        this.payment_status = "waiting";
 
         return this.handle_payment_response(
             await this.payment_method_id.payment_terminal.send_payment_request(this.uuid)
@@ -83,12 +67,12 @@ export class PosPayment extends Base {
 
     handle_payment_response(isPaymentSuccessful) {
         if (isPaymentSuccessful) {
-            this.set_payment_status("done");
+            this.payment_status = "done";
             if (this.payment_method_id.payment_method_type !== "qr_code") {
                 this.can_be_reversed = this.payment_method_id.payment_terminal.supports_reversals;
             }
         } else {
-            this.set_payment_status("retry");
+            this.payment_status = "retry";
         }
         return isPaymentSuccessful;
     }

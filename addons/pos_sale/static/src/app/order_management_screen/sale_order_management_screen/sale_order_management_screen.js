@@ -57,7 +57,7 @@ export class SaleOrderManagementScreen extends Component {
     }
     get selectedPartner() {
         const order = this.pos.orderManagement.selectedOrder;
-        return order ? order.get_partner() : null;
+        return order ? order.partner_id : null;
     }
     get orders() {
         return this.saleOrderFetcher.get();
@@ -184,7 +184,7 @@ export class SaleOrderManagementScreen extends Component {
                 previousProductLine = newLine;
 
                 if (
-                    newLine.get_product().tracking !== "none" &&
+                    newLine.product_id.tracking !== "none" &&
                     (this.pos.pickingType.use_create_lots ||
                         this.pos.pickingType.use_existing_lots) &&
                     line.pack_lot_ids?.length > 0

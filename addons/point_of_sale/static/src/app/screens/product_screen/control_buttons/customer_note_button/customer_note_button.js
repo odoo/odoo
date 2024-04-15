@@ -40,7 +40,7 @@ export class OrderlineNoteButton extends Component {
             buttons = [];
         }
 
-        const oldNote = selectedOrderline.getNote();
+        const oldNote = selectedOrderline.note;
         const payload = await makeAwaitable(this.dialog, TextInputPopup, {
             title: _t("Add %s", this.props.label),
             buttons,

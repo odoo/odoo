@@ -10,8 +10,8 @@ patch(TicketScreen.prototype, {
         }
         if (
             partner &&
-            (!destinationOrder.get_partner() ||
-                destinationOrder.get_partner().id === this.pos.consumidorFinalAnonimoId)
+            (!destinationOrder.partner_id ||
+                destinationOrder.partner_id.id === this.pos.consumidorFinalAnonimoId)
         ) {
             return destinationOrder.set_partner(partner);
         }

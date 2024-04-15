@@ -111,9 +111,9 @@ patch(PosOrder.prototype, {
      * @override
      */
     set_partner(partner) {
-        const oldPartner = this.get_partner();
+        const oldPartner = this.partner_id;
         super.set_partner(partner);
-        if (this.uiState.couponPointChanges && oldPartner !== this.get_partner()) {
+        if (this.uiState.couponPointChanges && oldPartner !== this.partner_id) {
             // Remove couponPointChanges for cards in is_nominative programs.
             // This makes sure that counting of points on loyalty and ewallet programs is updated after partner changes.
             const loyaltyProgramIds = new Set(
@@ -142,9 +142,9 @@ patch(PosOrder.prototype, {
      */
     export_for_printing(baseUrl, headerData) {
         const result = super.export_for_printing(...arguments);
-        if (this.get_partner()) {
+        if (this.partner_id) {
             result.loyaltyStats = this.getLoyaltyPoints();
-            result.partner = this.get_partner();
+            result.partner = this.partner_id;
         }
         result.new_coupon_info = this.new_coupon_info;
         return result;
@@ -350,7 +350,7 @@ patch(PosOrder.prototype, {
                             0.01
                         );
                     } else if (rule.reward_point_mode === "unit") {
-                        res += rule.reward_point_amount * line.get_quantity();
+                        res += rule.reward_point_amount * line.qty;
                     }
                 }
             }
@@ -427,7 +427,7 @@ patch(PosOrder.prototype, {
         ) {
             return false;
         }
-        if (program.is_nominative && !this.get_partner()) {
+        if (program.is_nominative && !this.partner_id) {
             return false;
         }
         if (program.date_from && program.date_from.startOf("day") > DateTime.now()) {
@@ -531,15 +531,13 @@ patch(PosOrder.prototype, {
                                 continue;
                             }
                         }
-                        const lineQty = line.reward_product_id
-                            ? -line.get_quantity()
-                            : line.get_quantity();
+                        const lineQty = line.reward_product_id ? -line.qty : line.qty;
                         totalProductQty += lineQty;
-                        if (qtyPerProduct[line.reward_product_id?.id || line.get_product().id]) {
-                            qtyPerProduct[line.reward_product_id?.id || line.get_product().id] +=
+                        if (qtyPerProduct[line.reward_product_id?.id || line.product_id.id]) {
+                            qtyPerProduct[line.reward_product_id?.id || line.product_id.id] +=
                                 lineQty;
                         } else {
-                            qtyPerProduct[line.reward_product_id?.id || line.get_product().id] =
+                            qtyPerProduct[line.reward_product_id?.id || line.product_id.id] =
                                 lineQty;
                         }
                         if (!line.is_reward_line) {
@@ -574,20 +572,19 @@ patch(PosOrder.prototype, {
                             if (
                                 line.is_reward_line ||
                                 !valid_product_ids.includes(line.product_id.id) ||
-                                line.get_quantity() <= 0 ||
+                                line.qty <= 0 ||
                                 line.ignoreLoyaltyPoints({ program })
                             ) {
                                 continue;
                             }
                             const pointsPerUnit = roundPrecision(
-                                (rule.reward_point_amount * line.get_price_with_tax()) /
-                                    line.get_quantity(),
+                                (rule.reward_point_amount * line.get_price_with_tax()) / line.qty,
                                 0.01
                             );
                             if (pointsPerUnit > 0) {
                                 splitPoints.push(
-                                    ...Array.apply(null, Array(line.get_quantity())).map(() => {
-                                        if (line.gift_barcode && line.get_quantity() == 1) {
+                                    ...Array.apply(null, Array(line.qty)).map(() => {
+                                        if (line.gift_barcode && line.qty == 1) {
                                             return {
                                                 points: pointsPerUnit,
                                                 barcode: line.gift_barcode,
@@ -642,7 +639,7 @@ patch(PosOrder.prototype, {
                 rule.any_product ||
                 rule.valid_product_ids.find((p) => p.id === line.product_id.id)
             ) {
-                increment = line.get_quantity();
+                increment = line.qty;
             }
             return nItems + increment;
         }, 0);
@@ -821,7 +818,7 @@ patch(PosOrder.prototype, {
         let discountable = 0;
         const discountablePerTax = {};
         for (const line of this.get_orderlines()) {
-            if (!line.get_quantity()) {
+            if (!line.qty) {
                 continue;
             }
             const taxKey = line.tax_ids.map((t) => t.id);
@@ -839,7 +836,7 @@ patch(PosOrder.prototype, {
     _getCheapestLine() {
         let cheapestLine;
         for (const line of this.get_orderlines()) {
-            if (line.reward_id || !line.get_quantity()) {
+            if (line.reward_id || !line.qty) {
                 continue;
             }
             if (!cheapestLine || cheapestLine.price_unit > line.price_unit) {
@@ -871,11 +868,11 @@ patch(PosOrder.prototype, {
         const discountableLines = [];
         const applicableProductIds = new Set(reward.all_discount_product_ids.map((p) => p.id));
         for (const line of this.get_orderlines()) {
-            if (!line.get_quantity()) {
+            if (!line.qty) {
                 continue;
             }
             if (
-                applicableProductIds.has(line.get_product().id) ||
+                applicableProductIds.has(line.product_id.id) ||
                 applicableProductIds.has(line.reward_product_id?.id)
             ) {
                 discountableLines.push(line);
@@ -896,12 +893,12 @@ patch(PosOrder.prototype, {
         const orderLines = this.get_orderlines();
         const remainingAmountPerLine = {};
         for (const line of orderLines) {
-            if (!line.get_quantity() || !line.price_unit) {
+            if (!line.qty || !line.price_unit) {
                 continue;
             }
             remainingAmountPerLine[line.uuid] = line.get_price_with_tax();
             if (
-                applicableProductIds.has(line.get_product().id) ||
+                applicableProductIds.has(line.product_id.id) ||
                 (line.reward_product_id && applicableProductIds.has(line.reward_product_id.id))
             ) {
                 linesToDiscount.push(line);
@@ -941,7 +938,7 @@ patch(PosOrder.prototype, {
                         continue;
                     }
                     if (lineReward.discount_applicability === "cheapest") {
-                        remainingAmountPerLine[line.uuid] *= 1 - discount / line.get_quantity();
+                        remainingAmountPerLine[line.uuid] *= 1 - discount / line.qty;
                     } else {
                         remainingAmountPerLine[line.uuid] *= 1 - discount;
                     }
@@ -1109,11 +1106,11 @@ patch(PosOrder.prototype, {
         let available = 0;
         let shouldCorrectRemainingPoints = false;
         for (const line of this.get_orderlines()) {
-            if (line.get_product() === product) {
-                available += line.get_quantity();
+            if (line.product_id === product) {
+                available += line.qty;
             } else if (line.reward_product_id === product) {
                 if (line.reward_id === reward) {
-                    claimed += line.get_quantity();
+                    claimed += line.qty;
                 } else {
                     shouldCorrectRemainingPoints = true;
                 }

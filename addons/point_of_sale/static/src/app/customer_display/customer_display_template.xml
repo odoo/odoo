@@ -152,10 +152,10 @@
                             <td class="product_text_info">
                                 <ul>
                                     <li t-esc="orderline.get_full_product_name()" />
-                                    <t t-if="orderline.get_discount_str() !== '0'">
+                                    <t t-if="orderline.discountStr !== '0'">
                                         <li class="product_details">
                                             <i class="fa fa-tag" role="img" aria-label="Discount" title="Discount" />
-                                        <t t-esc="orderline.get_discount_str()" />% <span class="gray">discount</span>
+                                        <t t-esc="orderline.discountStr" />% <span class="gray">discount</span>
                                         </li>
                                     </t>
                                     <t t-if="orderline.get_customer_note()">
@@ -167,8 +167,8 @@
                                 </ul>
                             </td>
                             <td class="product_quantity gray">
-                                <span t-esc="orderline.get_quantity_str()" />
-                                <span t-esc="orderline.get_unit().name" />
+                                <span t-esc="orderline.quantityStr" />
+                                <span t-esc="orderline.product_id.uom_id.name" />
                             </td>
                             <td>
                                 <div t-esc="pos.env.utils.formatCurrency(orderline.get_display_price())" />
@@ -201,7 +201,7 @@
                         <div class="spacer" />
                         <div class="pos-spaced-line-container">
                             <div class="spacer" />
-                            <span class="amount" t-esc="pos.env.utils.formatCurrency(paymentline.get_amount())" />
+                            <span class="amount" t-esc="pos.env.utils.formatCurrency(paymentline.amount)" />
                         </div>
                     </div>
                 </t>

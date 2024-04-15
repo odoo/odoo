@@ -12,7 +12,7 @@ patch(PaymentScreen.prototype, {
                 (paymentLine) =>
                     paymentLine.payment_method_id.use_payment_terminal === "adyen" &&
                     !paymentLine.is_done() &&
-                    paymentLine.get_payment_status() !== "pending"
+                    paymentLine.payment_status !== "pending"
             );
             if (!pendingPaymentLine) {
                 return;

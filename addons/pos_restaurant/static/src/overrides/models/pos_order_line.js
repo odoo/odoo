@@ -15,8 +15,8 @@ patch(PosOrderline.prototype, {
         return orderline;
     },
     get_line_diff_hash() {
-        if (this.getNote()) {
-            return this.id + "|" + this.getNote();
+        if (this.note) {
+            return this.id + "|" + this.note;
         } else {
             return "" + this.id;
         }

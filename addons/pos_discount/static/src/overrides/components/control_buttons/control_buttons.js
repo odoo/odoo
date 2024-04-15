@@ -36,7 +36,7 @@ patch(ControlButtons.prototype, {
             return;
         }
         // Remove existing discounts
-        lines.filter((line) => line.get_product() === product).forEach((line) => line.delete());
+        lines.filter((line) => line.product_id === product).forEach((line) => line.delete());
 
         // Add one discount line per tax group
         const linesByTax = order.get_orderlines_grouped_by_tax_ids();

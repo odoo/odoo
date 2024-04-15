@@ -44,7 +44,7 @@ patch(ActionpadWidget.prototype, {
         if (!order) {
             return false;
         } else {
-            return order.lines.reduce((totalQty, line) => totalQty + line.get_quantity(), 0) > 0;
+            return order.lines.reduce((totalQty, line) => totalQty + line.qty, 0) > 0;
         }
     },
     get highlightPay() {

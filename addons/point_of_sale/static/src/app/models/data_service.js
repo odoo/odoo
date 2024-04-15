@@ -475,7 +475,7 @@ export class PosData extends Reactive {
             console.info(
                 `Record ID ${record.id} MODEL ${recordModel}. If you want to delete a record saved on the server, you need to pass the force parameter as true.`
             );
-            return;
+            return false;
         }
 
         const relationsToDelete = Object.values(this.relations[recordModel])
@@ -492,7 +492,8 @@ export class PosData extends Reactive {
         }
 
         this.indexedDB.delete(recordModel, [record.uuid]);
-        return record.delete();
+        record.delete();
+        return true;
     }
 
     deleteUnsyncData(uuid) {

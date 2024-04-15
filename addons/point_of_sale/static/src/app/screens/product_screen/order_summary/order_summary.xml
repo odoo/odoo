@@ -9,7 +9,7 @@
               t-on-click="() => this.selectLine(line)"
               class="{ ...line.getDisplayClasses(), 'selected' : line.isSelected() }">
               <t t-set-slot="product-name">
-                  <i  t-if="line.get_product().isTracked()"
+                  <i  t-if="line.product_id.isTracked()"
                       t-on-click.stop="() => this.editPackLotLines(line)" role="img"
                       t-attf-class="{{ line.has_valid_product_lot() ? 'text-success' : 'text-danger'}} fa fa-list line-lot-icon ms-1"
                       t-attf-title="{{ line.has_valid_product_lot() ? 'Valid product lot' : 'Invalid product lot'}}" />
