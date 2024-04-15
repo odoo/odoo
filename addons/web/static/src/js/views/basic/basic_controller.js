@@ -271,7 +271,13 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         } else {
             await this.model.actionUnarchive(ids, this.handle);
         }
-        return this.update({}, {reload: false});
+        return this.update({}, {reload: false})
+            .then((ret) => {
+                if (this.withSearchPanel) {
+                    this.searchPanelProps.searchModel.dispatch();
+                }
+                return ret;
+            });
     },
     /**
      * When the user clicks on a 'action button', this function determines what
@@ -567,7 +573,11 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {string[]} ids list of deleted ids (basic model local handles)
      */
     _onDeletedRecords: function (ids) {
-        this.update({});
+        this.update({}).then(() => {
+            if (this.withSearchPanel) {
+                this.searchPanelProps.searchModel.dispatch();
+            }
+        });
     },
     /**
      * Saves the record whose ID is given, if necessary. Automatically leaves
