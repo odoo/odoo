@@ -261,7 +261,7 @@ return AbstractRenderer.extend({
      */
     _formatValue: function (value) {
         var measureField = this.fields[this.state.measure];
-        var formatter = fieldUtils.format.float;
+        var formatter = fieldUtils.format.integer;
         var formatedValue = formatter(value, measureField, FORMAT_OPTIONS);
         return formatedValue;
     },
