@@ -433,7 +433,7 @@ export class ListRenderer extends Component {
             // The available space is larger than the necessary space for the current table content,
             // so we'll distribute the available space between all "relative" columns, in order to
             // prevent "absolute" columns from taking more space then what they should.
-            const widths = this.columns.map((col) => this.calculateColumnWidth(col));
+            const widths = this.state.columns.map((col) => this.calculateColumnWidth(col));
             let indicesOfColsToExpand = widths
                 .map(({ type }, index) => ({ index, type }))
                 .filter(({ type }) => type === "relative")
