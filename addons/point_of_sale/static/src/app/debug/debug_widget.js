@@ -4,7 +4,6 @@ import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
 import { Transition } from "@web/core/transition";
 import { constrain, getLimits, useMovable } from "@point_of_sale/app/utils/movable_hook";
-import { OrderImportPopup } from "@point_of_sale/app/debug/order_import_popup/order_import_popup";
 import { useBus, useService } from "@web/core/utils/hooks";
 
 import { useEffect, useRef, useState, Component } from "@odoo/owl";
@@ -22,14 +21,13 @@ export class DebugWidget extends Component {
         this.debug = useService("debug");
         this.barcodeReader = useService("barcode_reader");
         this.hardwareProxy = useService("hardware_proxy");
+        this.notification = useService("notification");
         const numberBuffer = useService("number_buffer");
         this.dialog = useService("dialog");
         useBus(numberBuffer, "buffer-update", this._onBufferUpdate);
         this.state = useState({
             barcodeInput: "",
             weightInput: "",
-            isPaidOrdersReady: false,
-            isUnpaidOrdersReady: false,
             buffer: numberBuffer.get(),
         });
         this.root = useRef("root");
@@ -92,80 +90,89 @@ export class DebugWidget extends Component {
         this.state.barcodeInput = ean;
         await this.barcodeReader.scan(ean);
     }
-    async deleteOrders() {
-        this.dialog.add(ConfirmationDialog, {
-            title: _t("Delete Paid Orders?"),
-            body: _t(
-                "This operation will permanently destroy all paid orders from the local storage. You will lose all the data. This operation cannot be undone."
-            ),
-            confirm: () => {
-                // this.pos.db.remove_all_orders();
-                this.data.resetUnsyncQueue();
-            },
-        });
-    }
-    async deleteUnpaidOrders() {
-        this.dialog.add(ConfirmationDialog, {
-            title: _t("Delete Unpaid Orders?"),
-            body: _t(
-                "This operation will destroy all unpaid orders in the browser. You will lose all the unsaved data and exit the point of sale. This operation cannot be undone."
-            ),
-            confirm: () => {
-                // this.pos.db.remove_all_unpaid_orders();
-                window.location = "/";
-            },
-        });
-    }
     _createBlob(contents) {
         if (typeof contents !== "string") {
             contents = JSON.stringify(contents, null, 2);
         }
         return new Blob([contents]);
     }
-    // IMPROVEMENT: Duplicated codes for downloading paid and unpaid orders.
-    // The implementation can be better.
-    preparePaidOrders() {
-        try {
-            this.paidOrdersBlob = this._createBlob(this.pos.export_paid_orders());
-            this.state.isPaidOrdersReady = true;
-        } catch (error) {
-            console.warn(error);
-        }
+    deleteOrders({ paid = true } = {}) {
+        this.dialog.add(ConfirmationDialog, {
+            title: _t("Delete Orders?"),
+            body: _t(
+                `This operation will destroy all ${
+                    paid ? "paid" : "unpaid"
+                } orders in the browser. You will lose all the data. This operation cannot be undone.`
+            ),
+            confirm: () => {
+                this.pos.data.resetUnsyncQueue();
+                const orders = this.pos.models["pos.order"].filter(
+                    (order) => order.finalized === paid
+                );
+
+                for (const order of orders) {
+                    this.pos.data.localDeleteCascade(order, true);
+                }
+
+                if (!this.pos.get_order()) {
+                    this.pos.add_new_order();
+                }
+            },
+        });
     }
-    get paidOrdersFilename() {
-        return `${_t("paid orders")} ${serializeDateTime(DateTime.now()).replace(
-            /:|\s/gi,
-            "-"
-        )}.json`;
-    }
-    get paidOrdersURL() {
-        var URL = window.URL || window.webkitURL;
-        return URL.createObjectURL(this.paidOrdersBlob);
-    }
-    // FIXME POSREF why is this two steps?
-    prepareUnpaidOrders() {
-        try {
-            this.unpaidOrdersBlob = this._createBlob(this.pos.export_unpaid_orders());
-            this.state.isUnpaidOrdersReady = true;
-        } catch (error) {
-            console.warn(error);
-        }
-    }
-    get unpaidOrdersFilename() {
-        return `${_t("unpaid orders")} ${serializeDateTime(DateTime.now()).replace(
-            /:|\s/gi,
-            "-"
-        )}.json`;
-    }
-    get unpaidOrdersURL() {
-        var URL = window.URL || window.webkitURL;
-        return URL.createObjectURL(this.unpaidOrdersBlob);
+    exportOrders({ paid = true } = {}) {
+        const orders = this.pos.models["pos.order"]
+            .filter((order) => order.finalized === paid)
+            .map((o) => o.serialize({ orm: true }));
+
+        const blob = this._createBlob(orders);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        const fileName = `${paid ? "paid" : "unpaid"}_orders_${serializeDateTime(
+            DateTime.now()
+        ).replace(/:|\s/gi, "-")}.json`;
+
+        a.href = url;
+        a.download = fileName;
+        a.click();
     }
     async importOrders(event) {
         const file = event.target.files[0];
         if (file) {
-            const report = this.pos.import_orders(await file.text());
-            this.dialog.add(OrderImportPopup, { report });
+            const jsonData = JSON.parse(await file.text());
+            const data = {
+                "pos.order": [],
+            };
+            const manyRel = Object.values(this.pos.data.relations["pos.order"]).filter((rel) =>
+                ["one2many", "many2many"].includes(rel.type)
+            );
+
+            for (const order of jsonData) {
+                for (const rel of manyRel) {
+                    const model = this.pos.models[rel.relation];
+
+                    if (!model) {
+                        continue;
+                    }
+
+                    const existingRecords = model.getAllBy("id");
+                    const records = order[rel.name]
+                        .filter((rel) => !existingRecords[rel[2]])
+                        .map((rel) => rel[2]);
+
+                    if (!data[rel.relation]) {
+                        data[rel.relation] = [];
+                    }
+
+                    data[rel.relation].push(...records);
+                }
+
+                data["pos.order"].push(order);
+            }
+
+            const missing = await this.pos.data.missingRecursive(data);
+            this.pos.data.models.loadData(missing, [], true);
+            this.notification.add(_t("%s orders imported", data["pos.order"].length));
         }
     }
     refreshDisplay() {

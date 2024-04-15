@@ -914,7 +914,6 @@ export class PosStore extends Reactive {
                     ...localO.uiState,
                     locked: serverO.finalized && typeof serverO.id === "number",
                 };
-
                 if (serverO && typeof localO.id === "string") {
                     orderToDelete.push(localO);
                 }
@@ -955,10 +954,6 @@ export class PosStore extends Reactive {
 
             return error;
         }
-    }
-
-    push_orders() {
-        return this.pushOrderMutex.exec(() => this.syncAllOrders());
     }
 
     push_single_order(order) {
@@ -1129,7 +1124,7 @@ export class PosStore extends Reactive {
     // If there is an error show a popup
     async push_orders_with_closing_popup(opts = {}) {
         try {
-            await this.push_orders(opts);
+            await this.syncAllOrders(opts);
             return true;
         } catch (error) {
             console.warn(error);
@@ -1154,100 +1149,6 @@ export class PosStore extends Reactive {
             });
             return false;
         }
-    }
-
-    // Exports the paid orders (the ones waiting for internet connection)
-    export_paid_orders() {
-        return JSON.stringify(
-            {
-                paid_orders: this.db.get_orders(),
-                session: this.session.name,
-                session_id: this.session.id,
-                date: new Date().toUTCString(),
-                version: this.server_version.server_version_info,
-            },
-            null,
-            2
-        );
-    }
-
-    // Exports the unpaid orders (the tabs)
-    export_unpaid_orders() {
-        return JSON.stringify(
-            {
-                unpaid_orders: this.db.get_unpaid_orders(),
-                session: this.session.name,
-                session_id: this.session.id,
-                date: new Date().toUTCString(),
-                version: this.server_version.server_version_info,
-            },
-            null,
-            2
-        );
-    }
-
-    // This imports paid or unpaid orders from a json file whose
-    // contents are provided as the string str.
-    // It returns a report of what could and what could not be
-    // imported.
-    import_orders(str) {
-        var json = JSON.parse(str);
-        var report = {
-            // Number of paid orders that were imported
-            paid: 0,
-            // Number of unpaid orders that were imported
-            unpaid: 0,
-            // Orders that were not imported because they already exist (uuid conflict)
-            unpaid_skipped_existing: 0,
-            // Orders that were not imported because they belong to another session
-            unpaid_skipped_session: 0,
-            // The list of session ids to which skipped orders belong.
-            unpaid_skipped_sessions: [],
-        };
-
-        if (json.paid_orders) {
-            for (var i = 0; i < json.paid_orders.length; i++) {
-                this.db.add_order(json.paid_orders[i].data);
-            }
-            report.paid = json.paid_orders.length;
-            this.push_orders();
-        }
-
-        if (json.unpaid_orders) {
-            var orders = [];
-            var existing = this.get_order_list();
-            var existing_uids = {};
-            var skipped_sessions = {};
-
-            for (i = 0; i < existing.length; i++) {
-                existing_uids[existing[i].uuid] = true;
-            }
-
-            for (i = 0; i < json.unpaid_orders.length; i++) {
-                var order = json.unpaid_orders[i];
-                if (order.pos_session_id !== this.session.id) {
-                    report.unpaid_skipped_session += 1;
-                    skipped_sessions[order.pos_session_id] = true;
-                } else if (existing_uids[order.uuid]) {
-                    report.unpaid_skipped_existing += 1;
-                } else {
-                    orders.push(this.createNewOrder(order));
-                }
-            }
-
-            orders = orders.sort(function (a, b) {
-                return a.sequence_number - b.sequence_number;
-            });
-
-            if (orders.length) {
-                report.unpaid = orders.length;
-                this.orders.push(orders);
-            }
-
-            report.unpaid_skipped_sessions = Object.keys(skipped_sessions);
-        }
-
-        return report;
     }
 
     getProductPrice(product, p = false) {

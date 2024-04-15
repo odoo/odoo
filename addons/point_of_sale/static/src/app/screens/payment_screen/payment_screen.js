@@ -241,10 +241,11 @@ export class PaymentScreen extends Component {
         let syncOrderResult;
         try {
             // 1. Save order to server.
-            syncOrderResult = await this.pos.push_single_order(this.currentOrder);
+            syncOrderResult = await this.pos.syncAllOrders();
             if (!syncOrderResult) {
                 return;
             }
+
             // 2. Invoice.
             if (this.shouldDownloadInvoice() && this.currentOrder.is_to_invoice()) {
                 if (syncOrderResult[0]?.raw.account_move) {
