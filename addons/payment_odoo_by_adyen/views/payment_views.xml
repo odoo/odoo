@@ -12,7 +12,7 @@
                         <button name="odoo_adyen_create_account" icon="fa-arrow-right" type="object" class="btn-link" string="Create an account in 1 minute"
                             attrs="{'invisible': [('odoo_adyen_account_id', '!=', False)]}"/>
                         <field name="odoo_adyen_account_id" readonly="1" attrs="{'invisible': [('odoo_adyen_account_id', '=', False)]}"/>
-                        <field name="odoo_adyen_payout_id" attrs="{'invisible': [('odoo_adyen_account_id', '=', False)], 'required':[('provider', '=', 'odoo_adyen'), ('state', '!=', 'disabled')]}"/>
+                        <field name="odoo_adyen_payout_id" attrs="{'invisible': [('odoo_adyen_account_id', '=', False)], 'required':[('provider', '=', 'odoo_adyen'), ('state', '==', 'enabled')]}"/>
                     </group>
                 </xpath>
             </field>

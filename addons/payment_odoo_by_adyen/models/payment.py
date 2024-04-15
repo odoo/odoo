@@ -20,14 +20,15 @@ class AcquirerOdooByAdyen(models.Model):
     provider = fields.Selection(selection_add=[
        ('odoo_adyen', 'Odoo Payments by Adyen')
     ], ondelete={'odoo_adyen': 'set default'})
-    odoo_adyen_account_id = fields.Many2one('adyen.account', required_if_provider='odoo_adyen', related='company_id.adyen_account_id')
-    odoo_adyen_payout_id = fields.Many2one('adyen.payout', required_if_provider='odoo_adyen', string='Adyen Payout', domain="[('adyen_account_id', '=', odoo_adyen_account_id)]")
+    odoo_adyen_account_id = fields.Many2one('adyen.account', related='company_id.adyen_account_id')
+    odoo_adyen_payout_id = fields.Many2one('adyen.payout', string='Adyen Payout', domain="[('adyen_account_id', '=', odoo_adyen_account_id)]")
 
-    @api.constrains('provider', 'state')
+    @api.constrains('provider', 'state', 'odoo_adyen_account_id', 'odoo_adyen_payout_id')
     def _check_odoo_adyen_test(self):
         for payment_acquirer in self:
-            if payment_acquirer.provider == 'odoo_adyen' and payment_acquirer.state == 'test':
-                raise ValidationError(_('Odoo Payments by Adyen is not available in test mode.'))
+            if payment_acquirer.provider == 'odoo_adyen' and payment_acquirer.state == 'enabled' \
+                    and not payment_acquirer.odoo_adyen_account_id and not payment_acquirer.odoo_adyen_payout_id:
+                raise ValidationError(_('Adyen and Payout accounts are required.'))
 
     def _get_feature_support(self):
         res = super(AcquirerOdooByAdyen, self)._get_feature_support()
@@ -57,19 +58,19 @@ class AcquirerOdooByAdyen(models.Model):
         # fake a payment update
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         data = {
-            'adyen_uuid': self.odoo_adyen_account_id.adyen_uuid,
-            'payout': self.odoo_adyen_payout_id.code,
             'amount': self._odoo_adyen_format_amount(values['amount'], values['currency']),
             'reference': values['reference'],
             'shopperLocale': values.get('partner_lang'),
             'metadata': {
                 'merchant_signature': self._odoo_adyen_compute_signature(values['amount'],values['currency'],values['reference']),
                 'notification_url': urls.url_join(base_url, OdooByAdyenController._notification_url),
+                'adyen_uuid': self.odoo_adyen_account_id.adyen_uuid,
+                'payout': self.odoo_adyen_payout_id.code,
             },
             'returnUrl': urls.url_join(self.get_base_url(), '/payment/process'),
         }
 
-        if self.save_token in ['ask', 'always']:
+        if self.save_token in ['ask', 'always'] and self.state == 'enabled':
             data.update({
                 'shopperReference': '%s_%s' % (self.odoo_adyen_account_id.adyen_uuid, values['partner_id']),
                 'storePaymentMethod': True,
@@ -84,7 +85,8 @@ class AcquirerOdooByAdyen(models.Model):
     def odoo_adyen_get_form_action_url(self):
         self.ensure_one()
         proxy_url = self.env['ir.config_parameter'].sudo().get_param('adyen_platforms.proxy_url')
-        return urls.url_join(proxy_url, 'pay_by_link')
+        uri = 'v1/pay_by_link' if self.state == 'enabled' else 'v1/test_pay_by_link'
+        return urls.url_join(proxy_url, uri)
 
     def odoo_adyen_create_account(self):
         return self.env['adyen.account'].action_create_redirect()
@@ -99,7 +101,6 @@ class TxOdooByAdyen(models.Model):
         # fake a payment update
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         data = {
-            'payout': self.acquirer_id.odoo_adyen_payout_id.code,
             'amount': self.acquirer_id._odoo_adyen_format_amount(self.amount, self.currency_id),
             'reference': self.reference,
             'paymentMethod': {
@@ -111,10 +112,12 @@ class TxOdooByAdyen(models.Model):
             'metadata': {
                 'merchant_signature': self.acquirer_id._odoo_adyen_compute_signature(self.amount, self.currency_id, self.reference),
                 'notification_url': urls.url_join(base_url, OdooByAdyenController._notification_url),
+                'adyen_uuid': self.acquirer_id.odoo_adyen_account_id.adyen_uuid,
+                'payout': self.acquirer_id.odoo_adyen_payout_id.code,
             },
             'returnUrl': urls.url_join(self.get_base_url(), '/payment/process'),
         }
-        self.acquirer_id.odoo_adyen_account_id._adyen_rpc('payments', data)
+        self.acquirer_id.odoo_adyen_account_id._adyen_rpc('v1/payments', data)
 
     @api.model
     def _odoo_adyen_form_get_tx_from_data(self, data):
@@ -139,8 +142,8 @@ class TxOdooByAdyen(models.Model):
     def _odoo_adyen_form_get_invalid_parameters(self, data):
         invalid_parameters = []
 
-        if self.acquirer_reference and data.get('pspReference') != self.acquirer_reference:
-            invalid_parameters.append(('pspReference', data.get('pspReference'), self.acquirer_reference))
+        if self.acquirer_reference and data.get('originalReference') != self.acquirer_reference:
+            invalid_parameters.append(('originalReference', data.get('originalReference'), self.acquirer_reference))
 
         return invalid_parameters
 
@@ -153,7 +156,7 @@ class TxOdooByAdyen(models.Model):
         if self.partner_id and not self.payment_token_id and \
                (self.type == 'form_save' or self.acquirer_id.save_token == 'always') \
                and 'recurring.shopperReference' in data['additionalData']:
-            res = self.acquirer_id.odoo_adyen_account_id._adyen_rpc('payment_methods', {
+            res = self.acquirer_id.odoo_adyen_account_id._adyen_rpc('v1/payment_methods', {
                 'shopperReference': data['additionalData']['recurring.shopperReference']
             })
             stored_payment_methods = res['storedPaymentMethods']
@@ -168,16 +171,12 @@ class TxOdooByAdyen(models.Model):
             self.payment_token_id = token_id
 
         # Update status
-        if data['success']:
-            self.write({'acquirer_reference': data.get('pspReference')})
+        if data['success'] == 'true':
+            self.write({'acquirer_reference': data.get('originalReference')})
             self._set_transaction_done()
-            return True
         else:
-            error = _('Odoo Payment by Adyen: feedback error')
-            _logger.info(error)
-            self.write({'state_message': error})
-            self._set_transaction_cancel()
-            return False
+            self._set_transaction_pending()
+        return True
 
 class PaymentToken(models.Model):
     _inherit = 'payment.token'
