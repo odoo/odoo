@@ -235,3 +235,55 @@ registry.category('web_tour.tours').add('test_inventory_adjustment_apply_all', {
         },
     },
 ]});
+
+registry.category("web_tour.tours").add('test_add_new_line', {
+    test: true,
+    steps: () => [
+        {
+            extra_trigger: '.o_form_editable',
+            trigger: '.o_field_x2many_list_row_add > a'
+        },
+        {
+            trigger: ".o_field_widget[name=product_id] input",
+            run: 'edit two',
+        },
+        { trigger: ".ui-menu-item > a:contains('Product two')" },
+        { trigger: ".fa-list:eq(1)" },
+        { trigger: "h4:contains('Stock move')" },
+        { trigger: '.o_field_x2many_list_row_add > a' },
+        {
+            trigger: ".o_field_widget[name=lot_name] input",
+            run: 'edit two',
+        },
+        { trigger: ".o_form_view.modal-content .o_form_button_save" },
+        { trigger: ".o_form_view:not(.modal-content) .o_form_button_save" },
+        {
+            trigger: ".o_form_renderer.o_form_saved",
+            isCheck: true,
+        },
+    ]
+});
+
+registry.category("web_tour.tours").add('test_edit_existing_line', {
+    test: true,
+    steps: () => [
+        { trigger: ".o_data_cell[name=quantity]" },
+        {
+            trigger: ".o_field_widget[name=quantity] input",
+            run: 'edit 2',
+        },
+        { trigger: ".fa-list" },
+        { trigger: "h4:contains('Stock move')" },
+        { trigger: ".o_data_cell[name=quantity]:eq(1)" },
+        {
+            trigger: ".o_field_widget[name=lot_name] input",
+            run: 'edit two',
+        },
+        { trigger: ".o_form_view.modal-content .o_form_button_save" },
+        { trigger: ".o_form_view:not(.modal-content) .o_form_button_save" },
+        {
+            trigger: ".o_form_renderer.o_form_saved",
+            isCheck: true,
+        },
+    ]
+});
