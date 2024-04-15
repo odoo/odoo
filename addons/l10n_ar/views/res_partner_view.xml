@@ -21,12 +21,6 @@
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
 
-            <xpath expr="//page[@name='accounting']/group" position="inside">
-                <group string="Accounting Documents" name="accounting_documents" invisible="'AR' not in fiscal_country_codes">
-                    <field name="l10n_ar_special_purchase_document_type_ids" widget="many2many_tags"/>
-                </group>
-            </xpath>
-
             <field name="property_account_position_id" position="after">
                 <label for="l10n_ar_gross_income_type" string="Gross Income" invisible="'AR' not in fiscal_country_codes"/>
                 <div name="gross_income" invisible="'AR'not in fiscal_country_codes">
