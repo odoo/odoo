@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <menuitem id="account_reports_syscohada_statements_menu" name="Syscohada" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_readonly"/>
+
     <record model="account.account.type" id="account_type_special">
         <field name="name">Comptes spéciaux</field>
         <field name="internal_group">off_balance</field>
@@ -7,9 +9,9 @@
 
     <!-- Chart Template -->
     <record id="syscohada_chart_template" model="account.chart.template">
-        <field name="name">SYSCOHADA - Plan de compte</field>
-        <field name="bank_account_code_prefix">52</field>
-        <field name="cash_account_code_prefix">51</field>
+        <field name="name">SYSCOHADA Révisé - Plan de compte</field>
+        <field name="bank_account_code_prefix">5211</field>
+        <field name="cash_account_code_prefix">5711</field>
         <field name="transfer_account_code_prefix">588</field>
         <field name="code_digits">6</field>
         <field name="currency_id" ref="base.XOF"/>
