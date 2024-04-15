@@ -260,7 +260,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         let dragHelpers = await drag(".item12");
         await dragHelpers.moveTo(".item11", "left");
         await advanceFrame();
-        assertScrolling(50, 0);
+        assertScrolling(50, 1);
         await cancelDrag(dragHelpers.cancel);
 
         // Positive horizontal scrolling.
