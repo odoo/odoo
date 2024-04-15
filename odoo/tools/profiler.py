@@ -11,7 +11,7 @@ import threading
 import re
 import functools
 
-from psycopg2 import sql
+from psycopg2 import sql, OperationalError
 
 from odoo import tools
 
@@ -623,6 +623,8 @@ class Profiler:
                     cr.execute(query, [tuple(values.values())])
                     self.profile_id = cr.fetchone()[0]
                     _logger.info('ir_profile %s (%s) created', self.profile_id, self.profile_session)
+        except OperationalError:
+            _logger.exception("Could not save profile in database")
         finally:
             if self.disable_gc:
                 gc.enable()
