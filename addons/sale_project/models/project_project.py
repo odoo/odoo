@@ -99,7 +99,7 @@ class ProjectProject(models.Model):
         data = self.env['account.move.line']._read_group(
             [('move_id.move_type', 'in', ['out_invoice', 'out_refund']), ('analytic_distribution', 'in', self.analytic_account_id.ids)],
             groupby=['analytic_distribution'],
-            aggregates=['move_id:count_distinct'],
+            aggregates=['__count'],
         )
         data = {int(account_id): move_count for account_id, move_count in data}
         for project in self:
@@ -566,7 +566,11 @@ class ProjectProject(models.Model):
             for move_line in invoices_move_lines:
                 currency = move_line.currency_id
                 price_subtotal = currency._convert(move_line.price_subtotal, self.currency_id, self.company_id)
-                analytic_contribution = move_line.analytic_distribution[str(self.analytic_account_id.id)] / 100.
+                # an analytic account can appear several time in an analytic distribution with different repartition percentage
+                analytic_contribution = sum(
+                    percentage for ids, percentage in move_line.analytic_distribution.items()
+                    if str(self.analytic_account_id.id) in ids.split(',')
+                ) / 100.
                 if move_line.parent_state == 'draft':
                     if move_line.move_type == 'out_invoice':
                         amount_to_invoice += price_subtotal * analytic_contribution
