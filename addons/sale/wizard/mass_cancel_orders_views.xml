@@ -11,22 +11,22 @@
                 <field name="has_confirmed_order" invisible="1"/>
                 <div invisible="not has_confirmed_order">
                     <p class="alert alert-warning fw-bold" role="alert">
-                        Some confirmed sale orders are selected. Their related documents might be
+                        Some confirmed orders are selected. Their related documents might be
                         affected by the cancellation.
                     </p>
                 </div>
                 <div invisible="sale_orders_count &gt; 1">
-                    Are you sure you want to cancel the selected quotation?
+                    Are you sure you want to cancel the selected item?
                 </div>
                 <div invisible="sale_orders_count == 1">
                     Are you sure you want to cancel the <field name="sale_orders_count"/> selected
-                    quotations?
+                    items?
                 </div>
                 <footer>
                     <button class="btn-primary"
                             name="action_mass_cancel"
                             type="object"
-                            string="Cancel quotations"/>
+                            string="Cancel"/>
                     <button string="Discard" special="cancel"/>
                 </footer>
             </form>
@@ -34,7 +34,7 @@
     </record>
 
     <record id="action_mass_cancel_orders" model="ir.actions.act_window">
-        <field name="name">Cancel quotations</field>
+        <field name="name">Cancel</field>
         <field name="res_model">sale.mass.cancel.orders</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="mass_cancel_orders_view_form"/>
