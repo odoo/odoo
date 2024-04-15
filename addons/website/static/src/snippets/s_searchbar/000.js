@@ -148,6 +148,7 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
             delete this._menuScrollAndResizeHandler;
         }
 
+        let pageScrollHeight = null;
         const $prevMenu = this.$menu;
         if (res && this.limit) {
             const results = res['results'];
@@ -186,6 +187,7 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
                 }
             }
 
+            pageScrollHeight = document.querySelector("#wrapwrap").scrollHeight;
             this.$el.append(this.$menu);
 
             this.$el.find('button.extra_link').on('click', function (event) {
@@ -203,6 +205,24 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
         this.$el.toggleClass('dropdown show', !!res);
         if ($prevMenu) {
             $prevMenu.remove();
+        }
+        // Adjust the menu's position based on the scroll height.
+        if (res && this.limit) {
+            this.el.classList.remove("dropup");
+            delete this.$menu[0].dataset.bsPopper;
+            const wrapwrapEl = document.querySelector("#wrapwrap");
+            if (wrapwrapEl.scrollHeight > pageScrollHeight) {
+                // If the menu overflows below the page, we reduce its height.
+                this.$menu[0].style.maxHeight = "40vh";
+                this.$menu[0].style.overflowY = "auto";
+                // We then recheck if the menu still overflows below the page.
+                if (wrapwrapEl.scrollHeight > pageScrollHeight) {
+                    // If the menu still overflows below the page after its height
+                    // has been reduced, we position it above the input.
+                    this.el.classList.add("dropup");
+                    this.$menu[0].dataset.bsPopper = "";
+                }
+            }
         }
     },
 
