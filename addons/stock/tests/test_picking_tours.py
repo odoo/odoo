@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import Command
 from odoo.tests import HttpCase, tagged
 
 
@@ -102,3 +103,63 @@ class TestStockPickingTour(HttpCase):
         # We need a bigger window, so the "Apply All" button is immediately visible
         self.browser_size = '1920,1080'
         self.start_tour(url, 'test_inventory_adjustment_apply_all', login='admin', timeout=60)
+
+    def test_add_new_line(self):
+        product_one, _ = self.env["product.product"].create([
+            {
+                'name': 'Product one',
+                'type': 'product',
+                'tracking': 'serial',
+            },
+            {
+                'name': 'Product two',
+                'type': 'product',
+                'tracking': 'serial',
+            }
+        ])
+
+        self.receipt.write({
+            "move_ids": [Command.create({
+                "name": "test",
+                "product_uom_qty": 1,
+                "product_id": product_one.id,
+                "location_id": self.receipt.location_id.id,
+                "location_dest_id": self.receipt.location_dest_id.id,
+            })]
+        })
+
+        self.receipt.action_confirm()
+        self.receipt.move_ids.move_line_ids.lot_name = "one"
+
+        url = self._get_picking_url(self.receipt.id)
+        self.start_tour(url, 'test_add_new_line', login='admin', timeout=60)
+
+        names = self.receipt.move_ids.move_line_ids.mapped('lot_name')
+        self.assertEqual(names, ["two", "one"])
+
+    def test_edit_existing_line(self):
+        self.uom_unit = self.env.ref('uom.product_uom_unit')
+        product_one = self.env['product.product'].create({
+            'name': 'Product one',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+
+        self.receipt.write({
+            "move_ids": [Command.create({
+                "name": "test",
+                "product_id": product_one.id,
+                "location_id": self.receipt.location_id.id,
+                "location_dest_id": self.receipt.location_dest_id.id,
+                "product_uom_qty": 1,
+            })]
+        })
+
+        self.receipt.action_confirm()
+        self.receipt.move_ids.move_line_ids.lot_name = "one"
+
+        url = self._get_picking_url(self.receipt.id)
+        self.start_tour(url, 'test_edit_existing_line', login='admin', timeout=60)
+
+        names = self.receipt.move_ids.move_line_ids.mapped('lot_name')
+        self.assertEqual(names, ["one", "two"])
