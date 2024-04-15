@@ -539,6 +539,15 @@ class AccountChartTemplate(models.AbstractModel):
                     to_be_removed = []
                     for field_name, field_val in vals.items():
                         if should_delay(created_models, yet_to_be_created_models, model, field_name, field_val):
+                            # Default repartition lines will be created when we create account.tax
+                            # If we delay the creation of repartition_line_ids, then we must get rid of the defaults
+                            if (
+                                model == 'account.tax' and 'repartition_line_ids' in field_name
+                                and not self.ref(xml_id, raise_if_not_found=False)
+                                and all(isinstance(x, tuple | list) for x in field_val)
+                                and all(int(x[0]) in Command for x in field_val)
+                            ):
+                                field_val = [Command.clear()] + field_val
                             to_be_removed.append(field_name)
                             to_delay[xml_id][field_name] = field_val
                     for field_name in to_be_removed:
