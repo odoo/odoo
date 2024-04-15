@@ -135,6 +135,7 @@ class PosSession(models.Model):
             'pos.payment.method': {
                 'domain': ['|', ('active', '=', False), ('active', '=', True)],
                 'fields': ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence', 'payment_method_type', 'default_qr'],
+                'context': {**self.env.context},
             },
             'pos.printer': {
                 'domain': [('id', 'in', config_id.printer_ids.ids)],
@@ -226,6 +227,7 @@ class PosSession(models.Model):
             'uom.uom': {
                 'domain': [],
                 'fields': ['id', 'name', 'category_id', 'factor_inv', 'factor', 'is_pos_groupable', 'uom_type', 'rounding'],
+                'context': {**self.env.context},
             },
             'uom.category': {
                 'domain': lambda data: [('uom_ids', 'in', [uom['category_id'] for uom in data['uom.uom']])],
