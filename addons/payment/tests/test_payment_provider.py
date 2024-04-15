@@ -226,3 +226,35 @@ class TestPaymentProvider(PaymentCommon):
             self.company.id, self.partner.id, self.amount, is_express_checkout=True
         )
         self.assertNotIn(self.provider, compatible_providers)
+
+    def test_validation_currency_is_supported(self):
+        """ Test that only currencies supported by both the provider and the payment method can be
+        used in validation operations. """
+        self.provider.available_currency_ids = [Command.clear()]  # Supports all currencies.
+        self.payment_method.supported_currency_ids = [Command.clear()]  # Supports all currencies.
+        validation_currency = self.provider.with_context(
+            validation_pm=self.payment_method
+        )._get_validation_currency()
+        self.assertEqual(validation_currency, self.provider.company_id.currency_id)
+
+        self.provider.available_currency_ids = [Command.set(self.currency_usd.ids)]
+        self.payment_method.supported_currency_ids = [Command.clear()]  # Supports all currencies.
+        validation_currency = self.provider.with_context(
+            validation_pm=self.payment_method
+        )._get_validation_currency()
+        self.assertIn(validation_currency, self.provider.available_currency_ids)
+
+        self.provider.available_currency_ids = [Command.clear()]  # Supports all currencies.
+        self.payment_method.supported_currency_ids = [Command.set(self.currency_usd.ids)]
+        validation_currency = self.provider.with_context(
+            validation_pm=self.payment_method
+        )._get_validation_currency()
+        self.assertIn(validation_currency, self.payment_method.supported_currency_ids)
+
+        self.provider.available_currency_ids = [Command.set(self.currency_usd.ids)]
+        self.payment_method.supported_currency_ids = [Command.set(self.currency_usd.ids)]
+        validation_currency = self.provider.with_context(
+            validation_pm=self.payment_method
+        )._get_validation_currency()
+        self.assertIn(validation_currency, self.provider.available_currency_ids)
+        self.assertIn(validation_currency, self.payment_method.supported_currency_ids)
