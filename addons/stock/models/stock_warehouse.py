@@ -376,11 +376,15 @@ class Warehouse(models.Model):
 
     def _find_global_route(self, xml_id, route_name):
         """ return a route record set from an xml_id or its name. """
-        route = self.env.ref(xml_id, raise_if_not_found=False)
+        data_route = route = self.env.ref(xml_id, raise_if_not_found=False)
+        if not route or (route.company_id and route.company_id != self.company_id):
+            route = self.env['stock.route'].search([
+                ('name', 'like', route_name), ('company_id', 'in', [False, self.company_id.id])
+            ], order='company_id', limit=1)
         if not route:
-            route = self.env['stock.route'].search([('name', 'like', route_name)], limit=1)
-        if not route:
-            raise UserError(_('Can\'t find any generic route %s.') % (route_name))
+            if not data_route:
+                raise UserError(_('Can\'t find any generic route %s.') % (route_name))
+            route = data_route.copy({'company_id': self.company_id.id, 'rule_ids': False})
         return route
 
     def _get_global_route_rules_values(self):
