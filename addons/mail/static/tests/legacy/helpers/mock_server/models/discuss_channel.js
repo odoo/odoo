@@ -14,16 +14,21 @@ patch(MockServer.prototype, {
      */
     mockWrite(model, args) {
         const notifications = [];
+        const old_info = {};
         if (model == "discuss.channel") {
-            const vals = args[1];
+            Object.assign(old_info, this._mockDiscussChannel__channel_basic_info([args[0][0]]));
+        }
+        const mockWriteResult = super.mockWrite(...arguments);
+        if (model == "discuss.channel") {
             const [channel] = this.getRecords(model, [["id", "=", args[0][0]]]);
-            if (channel) {
-                const diff = {};
-                for (const key in vals) {
-                    if (channel[key] != vals[key] && key !== "image_128") {
-                        diff[key] = vals[key];
-                    }
+            const info = this._mockDiscussChannel__channel_basic_info([channel.id]);
+            const diff = {};
+            for (const key of Object.keys(info)) {
+                if (info[key] !== old_info[key]) {
+                    diff[key] = info[key];
                 }
+            }
+            if (Object.keys(diff).length) {
                 notifications.push([
                     channel,
                     "mail.record/insert",
@@ -37,7 +42,6 @@ patch(MockServer.prototype, {
                 ]);
             }
         }
-        const mockWriteResult = super.mockWrite(...arguments);
         if (notifications.length) {
             this.pyEnv["bus.bus"]._sendmany(notifications);
         }
@@ -551,23 +555,10 @@ patch(MockServer.prototype, {
         const [group_public_id] = this.getRecords("res.groups", [
             ["id", "=", channel.group_public_id],
         ]);
-        const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(
-            channel.id
-        );
         Object.assign(res, {
             authorizedGroupFullName: group_public_id ? group_public_id.name : false,
             defaultDisplayMode: channel.default_display_mode,
             group_based_subscription: channel.group_ids.length > 0,
-            is_editable: (() => {
-                switch (channel.channel_type) {
-                    case "channel":
-                        return channel.create_uid === this.pyEnv.currentUserId;
-                    case "group":
-                        return memberOfCurrentUser;
-                    default:
-                        return false;
-                }
-            })(),
             memberCount: this.pyEnv["discuss.channel.member"].searchCount([
                 ["channel_id", "=", channel.id],
             ]),
@@ -646,6 +637,19 @@ patch(MockServer.prototype, {
                     ],
                 ];
             }
+            let is_editable;
+            switch (channel.channel_type) {
+                case "channel":
+                    is_editable = channel.create_uid === this.pyEnv.currentUserId;
+                    break;
+                case "group":
+                    is_editable = memberOfCurrentUser;
+                    break;
+                default:
+                    is_editable = false;
+                    break;
+            }
+            res.is_editable = is_editable;
             res["rtcSessions"] = [
                 [
                     "ADD",
@@ -657,7 +661,6 @@ patch(MockServer.prototype, {
                     ),
                 ],
             ];
-            res.allow_public_upload = channel.allow_public_upload;
             return res;
         });
     },
