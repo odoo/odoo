@@ -709,7 +709,6 @@ test("chat window header should not have unread counter for non-channel thread",
         body: "not empty",
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
@@ -734,7 +733,6 @@ test("[technical] opening a non-channel chat window should not call channel_fold
         body: "not empty",
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
@@ -809,7 +807,6 @@ test("Opening thread with needaction messages should mark all messages of thread
         needaction: true,
         model: "discuss.channel",
         res_id: channelId,
-        needaction_partner_ids: [serverState.partnerId],
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
