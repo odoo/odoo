@@ -192,3 +192,31 @@ class TestMrpMulticompany(common.TransactionCase):
         })
         with self.assertRaises(UserError):
             shared_product.with_user(self.user_b).property_stock_production = self.stock_location_a
+
+    def test_company_specific_routes_and_company_creation(self):
+        """
+        Setup: company-specific manufacture routes
+        Use case: create a new company
+        A manufacture route should be created for the new company
+        """
+        company = self.env.company
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1)
+
+        manufacture_rule = warehouse.manufacture_pull_id
+        manufacture_route = manufacture_rule.route_id
+
+        # Allocate each company-specific manufacture rule to a new route
+        for rule in manufacture_route.rule_ids.sudo():
+            rule_company = rule.company_id
+            if not rule_company or rule_company == company:
+                continue
+            manufacture_route.copy({
+                'company_id': rule_company.id,
+                'rule_ids': [(4, rule.id)],
+            })
+        # Also specify the company of the "generic route" (the one from the master data)
+        manufacture_route.company_id = company
+
+        new_company = self.env['res.company'].create({'name': 'Super Company'})
+        new_warehouse = self.env['stock.warehouse'].search([('company_id', '=', new_company.id)], limit=1)
+        self.assertEqual(new_warehouse.manufacture_pull_id.route_id.company_id, new_company)
