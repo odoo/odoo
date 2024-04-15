@@ -1834,17 +1834,16 @@ class Request:
                 functools.partial(self._serve_ir_http_fallback, not_found),
                 readonly=True,
             )
-        else:
-            self._set_request_dispatcher(rule)
 
-            ro = rule.endpoint.routing['readonly']
-            if callable(ro):
-                ro = ro(self.registry, request)
-
-            def _serve_ir_http():
-                return self._serve_ir_http(rule, args)
-
-            return self._transactioning(_serve_ir_http, readonly=ro)
+        # a controller endpoint matched -> dispatch it the request
+        self._set_request_dispatcher(rule)
+        readonly = rule.endpoint.routing['readonly']
+        if callable(readonly):
+            readonly = readonly(self.registry, request)
+        return self._transactioning(
+            functools.partial(self._serve_ir_http, rule, args),
+            readonly=readonly,
+        )
 
     def _serve_ir_http_fallback(self, not_found):
         """
