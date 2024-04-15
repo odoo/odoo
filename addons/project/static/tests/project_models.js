@@ -4,10 +4,12 @@ export class ProjectProject extends models.Model {
     _name = "project.project";
 
     name = fields.Char();
+    planned_date_begin = fields.Datetime({ string: "Start Date" });
+    planned_date_stop = fields.Datetime({ string: "stop Date" });
 
     _records = [
-        { id: 1, name: "Project 1" },
-        { id: 2, name: "Project 2" },
+        { id: 1, name: "Project 1", planned_date_begin: "2019-03-12 06:30:00"},
+        { id: 2, name: "Project 2", planned_date_begin: "2019-03-14 06:30:00"},
     ];
 }
 

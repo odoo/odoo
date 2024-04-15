@@ -558,6 +558,25 @@
             </field>
         </record>
 
+        <record id="project_project_view_form_in_calendar" model="ir.ui.view">
+            <field name="name">project.project.view.form.calendar</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="edit_project"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="after">
+                    <footer>
+                        <button string="Save &amp; Close" special="save" data-hotkey="q" class="btn btn-primary" close="1"/>
+                        <button string="Discard" special="cancel" data-hotkey="x" class="btn btn-secondary" close="1"/>
+                        <button name="action_view_project" type="object" title="View project"
+                            class="btn btn-secondary w-md-auto ms-auto">
+                            <i class="fa fa-expand"/>
+                        </button>
+                    </footer>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_project_calendar" model="ir.ui.view">
             <field name="name">project.project.calendar</field>
             <field name="model">project.project</field>
@@ -565,6 +584,7 @@
                 <calendar
                     date_start="date_start"
                     date_stop="date"
+                    form_view_id="%(project.project_project_view_form_in_calendar)d"
                     string="Projects"
                     mode="month"
                     scales="month,year"

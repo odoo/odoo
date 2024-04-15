@@ -820,12 +820,32 @@
             </field>
         </record>
 
+        <record id="project_task_view_form_in_calendar" model="ir.ui.view">
+            <field name="name">project.task.view.form.calendar</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="view_task_form2"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="after">
+                    <footer>
+                        <button string="Save &amp; Close" special="save" data-hotkey="q" class="btn btn-primary" close="1"/>
+                        <button string="Discard" special="cancel" data-hotkey="x" class="btn btn-secondary" close="1"/>
+                        <button name="action_open_task" type="object" title="View task"
+                            class="btn btn-secondary w-md-auto ms-auto">
+                            <i class="fa fa-expand"/>
+                        </button>
+                    </footer>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_task_calendar" model="ir.ui.view">
             <field name="name">project.task.calendar</field>
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar date_start="date_deadline" string="Tasks" mode="month"
+                          form_view_id="%(project_task_view_form_in_calendar)d"
                           color="stage_id" event_limit="5" hide_time="true"
                           event_open_popup="true" quick_create="0" show_unusual_days="True"
                           js_class="project_task_calendar"
