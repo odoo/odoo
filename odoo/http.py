@@ -1793,9 +1793,12 @@ class Request:
         Prepare the user session and load the ORM before forwarding the
         request to ``_serve_ir_http``.
         """
+        cr = None
+        rule = None
+        args = None
+        not_found = None
+
         try:
-            rule = None
-            cr = None
             try:
                 registry = Registry(self.db)
                 cr = registry.cursor(readonly=True)
@@ -1817,27 +1820,20 @@ class Request:
                     return self._serve_nodb()
             ir_http = self.registry['ir.http']
             self.env = odoo.api.Environment(cr, self.session.uid, self.session.context)
-            with contextlib.suppress(NotFound):
+            try:
                 rule, args = ir_http._match(self.httprequest.path)
+            except NotFound as not_found_exc:
+                not_found = not_found_exc
         finally:
             if cr is not None:
                 cr.close()
 
-        if not rule:
-            # _serve_fallback can be readwrite in some rare case, imagine a website.page were the qweb contains insert/update
-            # could be interresting to add a field on website.page to define if it is read/write or not and maybe retry just this part or open another cursor?
-            # todo write a test
-            # also, we need to _handle_error inside _transactioning to se the same cursor, will be close in other case
-            def _serve_fallback():
-                self.params = self.get_http_params()  # todo move outside _serve_fallback
-                request.params = request.get_http_params()
-                response = ir_http._serve_fallback()
-                if response:
-                    self.registry['ir.http']._post_dispatch(response)
-                    return response
-                return self.registry['ir.http']._handle_error(NotFound())
-
-            return self._transactioning(_serve_fallback, readonly=True)
+        if not_found:
+            # no controller endpoint matched -> fallback or 404
+            return self._transactioning(
+                functools.partial(self._serve_ir_http_fallback, not_found),
+                readonly=True,
+            )
         else:
             self._set_request_dispatcher(rule)
 
@@ -1849,6 +1845,24 @@ class Request:
                 return self._serve_ir_http(rule, args)
 
             return self._transactioning(_serve_ir_http, readonly=ro)
+
+    def _serve_ir_http_fallback(self, not_found):
+        """
+        Called when no controller match the request path. Delegate to
+        ``ir.http._serve_fallback`` to give modules the opportunity to
+        find an alternative way to serve the request. In case no module
+        provided a response, a generic 404 - Not Found page is returned.
+        """
+        self.params = self.get_http_params()
+        response = self.registry['ir.http']._serve_fallback()
+        if response:
+            self.registry['ir.http']._post_dispatch(response)
+            return response
+
+        no_fallback = NotFound()
+        no_fallback.__context__ = not_found  # During handling of {not_found}, {no_fallback} occurred:
+        no_fallback.error_response = self.registry['ir.http']._handle_error(no_fallback)
+        raise no_fallback
 
     def _serve_ir_http(self, rule, args):
         """
