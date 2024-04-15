@@ -1476,6 +1476,30 @@ class WebsiteSale(payment_portal.PaymentPortal):
             address_values['type'] = 'delivery'
             address_values['parent_id'] = commercial_partner.id
 
+    def _create_new_address(self, address_values, address_type, use_same, order_sudo):
+        """ Create a new partner, must be called after the data has been verified
+
+        NB: to verify (and preprocess) the data, please call `_parse_form_data` first.
+
+        :param order_sudo: the current cart, as a sudoed `sale.order` recordset
+        :param str address_type: 'billing' or 'shipping'
+        :param bool use_same: whether the address is (to be) used as billing and shipping address.
+        :param dict address_values: values to use to create the partner
+
+        :return: The created address, as a sudoed `res.partner` recordset.
+        """
+        self._complete_address_values(
+            address_values, address_type, use_same, order_sudo
+        )
+        creation_context = clean_context(request.env.context)
+        creation_context.update({
+            'tracking_disable': True,
+            # 'no_vat_validation': True,  # TODO VCR VAT validation or not ?
+        })
+        return request.env['res.partner'].sudo().with_context(
+            creation_context
+        ).create(address_values)
+
     def _get_extra_billing_info_route(self, order_sudo):
         """ Hook for localizations to request additional billing details in a specific page.
 
@@ -1516,16 +1540,20 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # Update the partner with all the information
         self._include_country_and_state_in_address(billing_address)
+        billing_address, _side_values = self._parse_form_data(billing_address)
         if order_sudo._is_anonymous_cart():
-            billing_partner_id = self._create_or_edit_partner(billing_address, type='invoice')
-            order_sudo.partner_id = billing_partner_id
+
             # Pricelist are recomputed every time the partner is changed. We don't want to recompute
             # the price with another pricelist at this state since the customer has already accepted
             # the amount and validated the payment.
-            order_sudo.env.remove_to_compute(
-                order_sudo.env['sale.order']._fields['pricelist_id'], order_sudo
+            new_partner_sudo = self._create_new_address(
+                billing_address, address_type='billing', use_same=False, order_sudo=order_sudo,
             )
-            order_sudo.message_partner_ids = request.env['res.partner'].browse(billing_partner_id)
+            with request.env.protecting(['pricelist_id'], order_sudo):
+                order_sudo.partner_id = new_partner_sudo
+
+            # Add the new partner as follower of the cart
+            order_sudo._message_subscribe(order_sudo.partner_id.ids)
         elif not self._are_same_addresses(billing_address, order_sudo.partner_invoice_id):
             # Check if a child partner doesn't already exist with the same informations. The
             # phone isn't always checked because it isn't sent in shipping information with
@@ -1533,8 +1561,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             child_partner_id = self._find_child_partner(
                 order_sudo.partner_id.commercial_partner_id.id, billing_address
             )
-            order_sudo.partner_invoice_id = child_partner_id or self._create_or_edit_partner(
-                billing_address, type='invoice', parent_id=order_sudo.partner_id.id
+            order_sudo.partner_invoice_id = child_partner_id or self._create_new_address(
+                billing_address, address_type='billing', use_same=False, order_sudo=order_sudo,
             )
 
         # In a non-express flow, `sale_last_order_id` would be added in the session before the
@@ -1545,15 +1573,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if shipping_address:
             #in order to not override shippig address, it's checked separately from shipping option
             self._include_country_and_state_in_address(shipping_address)
+            shipping_address, _side_values = self._parse_form_data(billing_address)
 
             if order_sudo.partner_shipping_id.name.endswith(order_sudo.name):
                 # The existing partner was created by `process_express_checkout_delivery_choice`, it
                 # means that the partner is missing information, so we update it.
-                order_sudo.partner_shipping_id = self._create_or_edit_partner(
-                    shipping_address,
-                    edit=True,
-                    type='delivery',
-                    partner_id=order_sudo.partner_shipping_id.id,
+                order_sudo.partner_shipping_id.write(shipping_address)
+                order_sudo._update_address(
+                    order_sudo.partner_shipping_id.id, ['partner_shipping_id']
                 )
             elif not self._are_same_addresses(shipping_address, order_sudo.partner_shipping_id):
                 # The sale order's shipping partner's address is different from the one received. If
@@ -1563,8 +1590,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 child_partner_id = self._find_child_partner(
                     order_sudo.partner_id.commercial_partner_id.id, shipping_address
                 )
-                order_sudo.partner_shipping_id = child_partner_id or self._create_or_edit_partner(
-                    shipping_address, type='delivery', parent_id=order_sudo.partner_id.id
+                order_sudo.partner_shipping_id = child_partner_id or self._create_new_address(
+                    shipping_address, address_type='shipping', use_same=False, order_sudo=order_sudo,
                 )
             # Process the delivery method.
             if shipping_option:
@@ -1619,48 +1646,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             ('code', '=', address.pop('state', ''))
         ], limit=1)
         address.update(country_id=country.id, state_id=state.id)
-
-    def _create_or_edit_partner(self, partner_details, edit=False, **custom_values):
-        """ Create or update a partner.
-
-        This method makes it possible to create a partner for specific flows like express checkout
-        without relying on the methods of the standard checkout flow, without all the checks usually
-        carried out.
-
-        :param dict partner_details: The values needed to create the partner or to edit the partner.
-        :param bool edit: Whether edit an existing partner or create one, defaults to False.
-        :param dict custom_values: Optional custom values for the creation or edition.
-        :return int: The id of the partner created or edited
-        """
-        request.update_env(context=request.website.env.context)
-        sanitized_values, _side_values = self._parse_form_data(partner_details)
-        sanitized_custom_values = {
-            k: v for k, v in custom_values.items()
-            if k in [*sanitized_values.keys(), 'partner_id', 'parent_id', 'type']
-        }
-
-        if request.website.specific_user_account:
-            sanitized_values['website_id'] = request.website.id
-
-        lang = request.lang.code if request.lang.code in request.website.mapped(
-            'language_ids.code'
-        ) else None
-        if lang:
-            sanitized_values['lang'] = lang
-
-        partner_id = sanitized_custom_values.get('partner_id')
-        if edit and partner_id:
-            request.env['res.partner'].browse(partner_id).sudo().write(sanitized_values)
-        else:
-            sanitized_values = dict(sanitized_values, **{
-                'company_id': request.website.company_id.id,
-                'user_id': request.website.salesperson_id.id,
-                **sanitized_custom_values
-            })
-            partner_id = request.env['res.partner'].sudo().with_context(
-                tracking_disable=True
-            ).create(sanitized_values).id
-        return partner_id
 
     @route('/shop/cart/update_address', type='json', auth='public', website=True)
     def update_cart_address(self, partner_id, address_type='billing', **kw):
