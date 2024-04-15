@@ -29,6 +29,7 @@ class ResConfigSettings(models.TransientModel):
     group_stock_picking_wave = fields.Boolean('Wave Transfers', implied_group='stock.group_stock_picking_wave',
         help="Group your move operations in wave transfer to process them together")
     module_stock_barcode = fields.Boolean("Barcode Scanner")
+    module_stock_barcode_barcodelookup = fields.Boolean("Stock Barcode Database")
     stock_move_email_validation = fields.Boolean(related='company_id.stock_move_email_validation', readonly=False)
     module_stock_sms = fields.Boolean("SMS Confirmation")
     module_delivery = fields.Boolean("Delivery Methods")

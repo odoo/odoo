@@ -7,10 +7,12 @@ import { BarcodeParser } from "@barcodes/js/barcode_parser";
 import { GS1BarcodeError } from "@barcodes_gs1_nomenclature/js/barcode_parser";
 
 export class BarcodeReader {
-    static serviceDependencies = ["dialog", "hardware_proxy", "notification"];
-    constructor(parser, { dialog, hardware_proxy, notification }) {
+    static serviceDependencies = ["dialog", "hardware_proxy", "notification", "action", "orm"];
+    constructor(parser, { dialog, hardware_proxy, notification, action, orm }) {
         this.parser = parser;
         this.dialog = dialog;
+        this.action = action;
+        this.orm = orm;
         this.hardwareProxy = hardware_proxy;
         this.notification = notification;
         this.setup();

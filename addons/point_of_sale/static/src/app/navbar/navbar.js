@@ -7,7 +7,7 @@ import { SaleDetailsButton } from "@point_of_sale/app/navbar/sale_details_button
 import { SyncNotification } from "@point_of_sale/app/navbar/sync_notification/sync_notification";
 import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
-import { Component, useState } from "@odoo/owl";
+import { Component, onMounted, useState } from "@odoo/owl";
 import { ClosePosPopup } from "@point_of_sale/app/navbar/closing_popup/closing_popup";
 import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
@@ -17,6 +17,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { deduceUrl } from "@point_of_sale/utils";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
+import { user } from "@web/core/user";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -39,6 +40,9 @@ export class Navbar extends Component {
         this.notification = useService("notification");
         this.hardwareProxy = useService("hardware_proxy");
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;
+        onMounted(async () => {
+            this.isSystemUser = await user.hasGroup("base.group_system");
+        });
     }
     onClickScan() {
         if (!this.pos.scanning) {
