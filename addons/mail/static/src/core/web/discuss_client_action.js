@@ -1,9 +1,16 @@
 import { Discuss } from "@mail/core/common/discuss";
 
-import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, useState, onMounted, status } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { effect } from "@web/core/utils/reactive";
+
+const boxIds = {
+    1: "inbox",
+    2: "starred",
+    3: "history",
+};
 
 /**
  * @typedef {Object} Props
@@ -18,6 +25,7 @@ export class DiscussClientAction extends Component {
     static components = { Discuss };
     static props = ["*"];
     static template = "mail.DiscussClientAction";
+    static path = "discuss";
 
     setup() {
         super.setup();
@@ -30,17 +38,36 @@ export class DiscussClientAction extends Component {
             // bracket to avoid blocking rendering with restore promise
             this.restoreDiscussThread(nextProps);
         });
-    }
 
-    /**
-     * @param {string} rawActiveId
-     */
-    parseActiveId(rawActiveId) {
-        const [model, id] = rawActiveId.split("_");
-        if (model === "mail.box") {
-            return ["mail.box", id];
-        }
-        return [model, parseInt(id)];
+        let oldThread;
+        onMounted(() => {
+            effect(
+                (store) => {
+                    if (status(this) === "mounted") {
+                        const thread = store.discuss.thread;
+                        if (thread) {
+                            if (thread.pushState) {
+                                const key = Object.keys(boxIds).find(
+                                    (key) => boxIds[key] === thread.id
+                                );
+                                this.props.updateActionState({
+                                    resId: thread.model === "discuss.channel" ? thread.id : false,
+                                    active_id: thread.model === "mail.box" ? parseInt(key) : false,
+                                });
+                            }
+                        } else if (oldThread) {
+                            // unpinned thread
+                            this.props.updateActionState({
+                                resId: false,
+                                active_id: false,
+                            });
+                        }
+                        oldThread = thread;
+                    }
+                },
+                [this.store]
+            );
+        });
     }
 
     /**
@@ -50,12 +77,18 @@ export class DiscussClientAction extends Component {
      * @param {Props} props
      */
     async restoreDiscussThread(props) {
-        const rawActiveId =
-            props.action.context.active_id ??
-            props.action.params?.active_id ??
-            this.store.Thread.localIdToActiveId(this.store.discuss.thread?.localId) ??
-            "mail.box_inbox";
-        const [model, id] = this.parseActiveId(rawActiveId);
+        const { context, params = {} } = props.action;
+        let activeId = context.active_id || params.active_id;
+        if (typeof activeId === "number") {
+            activeId = boxIds[activeId];
+        }
+        const id = activeId ?? props.resId ?? this.store.discuss.thread?.id ?? "inbox";
+        const model = activeId
+            ? "mail.box"
+            : props.resId
+            ? "discuss.channel"
+            : this.store.discuss.thread?.model ?? "mail.box";
+
         const activeThread = await this.store.Thread.getOrFetch({ model, id });
         if (activeThread && activeThread.notEq(this.store.discuss.thread)) {
             activeThread.setAsDiscussThread(false);

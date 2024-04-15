@@ -15,7 +15,9 @@ export class DiscussChannelListController extends ListController {
         if (!this.ui.isSmall) {
             return this.actionService.doAction("mail.action_discuss", {
                 name: _t("Discuss"),
-                additionalContext: { active_id: record.resId },
+                props: {
+                    resId: record.resId,
+                },
             });
         }
         const thread = await this.store.Thread.getOrFetch({

@@ -1,7 +1,6 @@
 import { AND, Record } from "@mail/core/common/record";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 import { compareDatetime, nearestGreaterThanOrEqual, rpcWithEnv } from "@mail/utils/common/misc";
-import { router } from "@web/core/browser/router";
 
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -323,6 +322,8 @@ export class Thread extends Record {
     });
     /** @type {"not_fetched"|"pending"|"fetched"} */
     fetchMembersState = "not_fetched";
+    /** @type {Boolean} */
+    pushState = false;
 
     _computeDiscussAppCategory() {
         if (["group", "chat"].includes(this.channel_type)) {
@@ -1103,18 +1104,14 @@ export class Thread extends Record {
         if (pushState === undefined) {
             pushState = this.notEq(this.store.discuss.thread);
         }
+        this.pushState = pushState;
         this.store.discuss.thread = this;
-        const activeId =
-            typeof this.id === "string" ? `mail.box_${this.id}` : `discuss.channel_${this.id}`;
         this.store.discuss.activeTab =
             !this.store.env.services.ui.isSmall || this.model === "mail.box"
                 ? "main"
                 : ["chat", "group"].includes(this.channel_type)
                 ? "chat"
                 : "channel";
-        if (pushState) {
-            router.pushState({ active_id: activeId });
-        }
     }
 
     /** @param {number} index */
@@ -1127,9 +1124,6 @@ export class Thread extends Record {
 
     async unpin() {
         this.isLocallyPinned = false;
-        if (this.eq(this.store.discuss.thread)) {
-            router.replaceState({ active_id: undefined });
-        }
         if (this.model === "discuss.channel" && this.is_pinned) {
             return this.store.env.services.orm.silent.call(
                 "discuss.channel",
