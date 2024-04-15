@@ -262,15 +262,17 @@ class SaleOrder(models.Model):
             # when processing lines we should not discount more than the order remaining total
             currently_discounted_amount = 0
             for line in lines:
-                discount_line_amount = min(self._get_reward_values_discount_percentage_per_line(program, line), amount_total - currently_discounted_amount)
+                taxes = self.fiscal_position_id.map_tax(line.tax_id)
+                if any(taxe.price_inculde for taxe in taxes):
+                    discount_line_amount = self._get_reward_values_discount_percentage_per_line(program, line)
+                else:
+                    discount_line_amount = min(self._get_reward_values_discount_percentage_per_line(program, line), amount_total - currently_discounted_amount)
 
                 if discount_line_amount:
 
                     if line.tax_id in reward_dict:
                         reward_dict[line.tax_id]['price_unit'] -= discount_line_amount
                     else:
-                        taxes = self.fiscal_position_id.map_tax(line.tax_id)
-
                         reward_dict[line.tax_id] = {
                             'name': _(
                                 "Discount: %(program)s - On product with following taxes: %(taxes)s",
