@@ -418,13 +418,9 @@ hr {
     // Safari 16.5 is known to crash when using that to set the color property.
     border-top: $hr-height solid $hr-color;
     color: inherit;
-    // FIXME before the commit that introduced this background-color the color
-    // of HR was the superposition of:
-    // - background-color = currentColor = see below
-    // - color = $hr-color = transparent mix of currentColor
-    // => So a transparent version of the inherited color, on top of itself
-    // => This line makes it so this stays the same for now.
-    background-color: $hr-color;
+    // Bootstrap sets up a "background-color" on the hr tag. As we may use a
+    // transparent color as $hr-color, we do not want that.
+    background-color: transparent;
 }
 
 h2 {
