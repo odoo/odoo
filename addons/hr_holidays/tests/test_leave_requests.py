@@ -8,7 +8,7 @@ from pytz import timezone
 
 from odoo import fields, Command
 from odoo.exceptions import ValidationError
-from odoo.tools import mute_logger
+from odoo.tools import date_utils, mute_logger
 from odoo.tests import Form, tagged
 
 from odoo.exceptions import UserError
@@ -783,6 +783,29 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_to': '2021-11-19 23:59:59',
         })
         self.assertEqual(time_off.state, 'confirm')
+        self.assertEqual(time_off.number_of_days, 0)
+
+    def test_time_off_irregular_working_schedule(self):
+        # Test a specific case where `_get_attendances` bugged out when a
+        # very specific working schedule was used.
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Irregular Working Schedule (monday morning - wednesday afternoon)',
+            'attendance_ids': [
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            ],
+        })
+        self.employee_emp.resource_calendar_id = calendar
+        # Take a time off on the next tuesday (when the employee is not
+        # supposed to work) Previously this would raise a ValidationError.
+        next_tuesday = date_utils.start_of(fields.Date.today() + relativedelta(days=7), 'week') + relativedelta(days=1)
+        time_off = self.env['hr.leave'].create({
+            'name': 'Holiday Request',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_date_from': next_tuesday,
+            'request_date_to': next_tuesday,
+        })
         self.assertEqual(time_off.number_of_days, 0)
 
     def test_holiday_type_requires_no_allocation(self):

@@ -392,7 +392,6 @@ class HolidaysRequest(models.Model):
                     'pm': 'afternoon'
                 }.get(holiday.request_date_from_period, None) if holiday.request_unit_half else None
 
-                attendance_from, attendance_to = holiday._get_attendances(holiday.request_date_from, holiday.request_date_to, day_period=day_period)
 
                 compensated_request_date_from = holiday.request_date_from
                 compensated_request_date_to = holiday.request_date_to
@@ -401,8 +400,8 @@ class HolidaysRequest(models.Model):
                     hour_from = holiday.request_hour_from
                     hour_to = holiday.request_hour_to
                 else:
-                    hour_from = attendance_from.hour_from
-                    hour_to = attendance_to.hour_to
+                    hour_from, hour_to = holiday._get_hour_from_to(holiday.request_date_from, holiday.request_date_to,
+                        day_period=day_period)
 
                 holiday.date_from = self._to_utc(compensated_request_date_from, hour_from, holiday.employee_id or holiday)
                 holiday.date_to = self._to_utc(compensated_request_date_to, hour_to, holiday.employee_id or holiday)
@@ -1669,7 +1668,14 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         holiday_tz = timezone(resource.tz or self.env.user.tz or 'UTC')
         return holiday_tz.localize(datetime.combine(date, hour)).astimezone(UTC).replace(tzinfo=None)
 
-    def _get_attendances(self, request_date_from, request_date_to, day_period=None):
+    def _get_hour_from_to(self, request_date_from, request_date_to, day_period=None):
+        """
+        Return the hour_from and hour_to for the given request dates, based on
+        the resource calendar.
+
+        If there are no attendances on the exact days of the request, return
+        the earliest hour_from and latest hour_to that exist in the schedule.
+        """
         self.ensure_one()
         domain = [
             ('calendar_id', '=', self.resource_calendar_id.id),
@@ -1679,43 +1685,29 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         if day_period:
             domain.append(('day_period', '=', day_period))
         attendances = self.env['resource.calendar.attendance']._read_group(domain,
-            ['week_type', 'dayofweek', 'day_period'],
+            ['week_type', 'dayofweek'],
             ['hour_from:min', 'hour_to:max'])
 
         # Must be sorted by dayofweek ASC and day_period DESC
-        attendances = sorted([DummyAttendance(hour_from, hour_to, dayofweek, day_period, week_type) for week_type, dayofweek, day_period, hour_from, hour_to in attendances], key=lambda att: (att.dayofweek, att.day_period != 'morning'))
+        attendances = sorted([DummyAttendance(hour_from, hour_to, dayofweek, None, week_type) for week_type, dayofweek, hour_from, hour_to in attendances], key=lambda att: att.dayofweek)
 
-        default_value = DummyAttendance(0, 0, 0, 'morning', False)
+        # If we can't find any attendances on the exact days of the request,
+        # we default to the widest possible range that exists in the schedule.
+        default_start = min((attendance.hour_from for attendance in attendances), default=0)
+        default_end = max((attendance.hour_to for attendance in attendances), default=0)
 
+        start_week_type = 0
+        end_week_type = 0
         if self.resource_calendar_id.two_weeks_calendar:
-            # find week type of start_date
             start_week_type = self.env['resource.calendar.attendance'].get_week_type(request_date_from)
-            attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == start_week_type]
-            attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != start_week_type]
-            # First, add days of actual week coming after date_from
-            attendance_filtred = [att for att in attendance_actual_week if int(att.dayofweek) >= request_date_from.weekday()]
-            # Second, add days of the other type of week
-            attendance_filtred += list(attendance_actual_next_week)
-            # Third, add days of actual week (to consider days that we have remove first because they coming before date_from)
-            attendance_filtred += list(attendance_actual_week)
             end_week_type = self.env['resource.calendar.attendance'].get_week_type(request_date_to)
-            attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == end_week_type]
-            attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != end_week_type]
-            attendance_filtred_reversed = list(reversed([att for att in attendance_actual_week if int(att.dayofweek) <= request_date_to.weekday()]))
-            attendance_filtred_reversed += list(reversed(attendance_actual_next_week))
-            attendance_filtred_reversed += list(reversed(attendance_actual_week))
 
-            # find first attendance coming after first_day
-            attendance_from = attendance_filtred[0]
-            # find last attendance coming before last_day
-            attendance_to = attendance_filtred_reversed[0]
-        else:
-            # find first attendance coming after first_day
-            attendance_from = next((att for att in attendances if int(att.dayofweek) >= request_date_from.weekday()), attendances[0] if attendances else default_value)
-            # find last attendance coming before last_day
-            attendance_to = next((att for att in reversed(attendances) if int(att.dayofweek) <= request_date_to.weekday()), attendances[-1] if attendances else default_value)
+        hour_from = next((att.hour_from for att in attendances if int(att.dayofweek) == request_date_from.weekday() and (int(att.week_type) == start_week_type)),
+                         default_start)
+        hour_to = next((att.hour_to for att in attendances if int(att.dayofweek) == request_date_to.weekday() and (int(att.week_type) == end_week_type)),
+                       default_end)
 
-        return (attendance_from, attendance_to)
+        return (hour_from, hour_to)
 
     ####################################################
     # Cron methods
