@@ -105,7 +105,7 @@ const DEFAULT_DEFAULT_PARAMS = {
     },
     delay: 0,
     tolerance: 10,
-    touch_delay: 300,
+    touchDelay: 300,
 };
 const LEFT_CLICK = 0;
 const MANDATORY_PARAMS = ["ref"];
@@ -572,7 +572,7 @@ export function makeDraggableHook(hookParams) {
              */
             const handleEdgeScrolling = (deltaTime) => {
                 updateRects();
-                const eRect = ctx.current.elementRect;
+                const { x: pointerX, y: pointerY } = ctx.pointer;
                 const xRect = ctx.current.scrollParentXRect;
                 const yRect = ctx.current.scrollParentYRect;
 
@@ -583,18 +583,18 @@ export function makeDraggableHook(hookParams) {
 
                 if (xRect) {
                     const maxWidth = xRect.x + xRect.width;
-                    if (eRect.x - xRect.x < threshold) {
-                        diff.x = [eRect.x - xRect.x, -1];
-                    } else if (maxWidth - eRect.x - eRect.width < threshold) {
-                        diff.x = [maxWidth - eRect.x - eRect.width, 1];
+                    if (pointerX - xRect.x < threshold) {
+                        diff.x = [pointerX - xRect.x, -1];
+                    } else if (maxWidth - pointerX < threshold) {
+                        diff.x = [maxWidth - pointerX, 1];
                     }
                 }
                 if (yRect) {
                     const maxHeight = yRect.y + yRect.height;
-                    if (eRect.y - yRect.y < threshold) {
-                        diff.y = [eRect.y - yRect.y, -1];
-                    } else if (maxHeight - eRect.y - eRect.height < threshold) {
-                        diff.y = [maxHeight - eRect.y - eRect.height, 1];
+                    if (pointerY - yRect.y < threshold) {
+                        diff.y = [pointerY - yRect.y, -1];
+                    } else if (maxHeight - pointerY < threshold) {
+                        diff.y = [maxHeight - pointerY, 1];
                     }
                 }
 
@@ -650,7 +650,7 @@ export function makeDraggableHook(hookParams) {
                 preventClick = false;
                 updatePointerPosition(ev);
 
-                const initiationDelay = ev.pointerType === "touch" ? ctx.touch_delay : ctx.delay;
+                const initiationDelay = ev.pointerType === "touch" ? ctx.touchDelay : ctx.delay;
 
                 // A drag sequence can still be in progress if the pointerup occurred
                 // outside of the window.
@@ -969,7 +969,7 @@ export function makeDraggableHook(hookParams) {
 
                     // Delay & tolerance
                     ctx.delay = actualParams.delay;
-                    ctx.touch_delay = actualParams.delay || actualParams.touch_delay;
+                    ctx.touchDelay = actualParams.delay || actualParams.touchDelay;
                     ctx.tolerance = actualParams.tolerance;
 
                     callBuildHandler("onComputeParams", { params: actualParams });
