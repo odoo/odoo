@@ -2309,7 +2309,7 @@ class MailThread(models.AbstractModel):
 
         :return tuple: res.partner ID (may be False or None), email_from
         """
-        if author_id is None:
+        if not author_id:
             if email_from:
                 author = self._mail_find_partner_from_emails([email_from])[0]
             else:
