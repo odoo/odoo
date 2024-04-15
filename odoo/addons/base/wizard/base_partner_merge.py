@@ -202,7 +202,7 @@ class MergePartnerAutomatic(models.TransientModel):
         update_records = functools.partial(update_records)
 
         for partner in src_partners:
-            update_records('calendar', src=partner, field_model='model_id.model')
+            update_records('calendar.event', src=partner, field_model='res_model')
             update_records('ir.attachment', src=partner, field_model='res_model')
             update_records('mail.followers', src=partner, field_model='res_model')
             update_records('mail.activity', src=partner, field_model='res_model')
