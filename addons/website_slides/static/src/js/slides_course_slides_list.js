@@ -11,7 +11,7 @@ publicWidget.registry.websiteSlidesCourseSlidesList = SlideCoursePage.extend({
     start: function () {
         this._super.apply(this,arguments);
 
-        this.channelId = this.$el.data('channelId');
+        this.channelId = this.el.dataset.channelId;
         this.bindedSortable = [];
 
         this._updateHref();
@@ -82,26 +82,26 @@ publicWidget.registry.websiteSlidesCourseSlidesList = SlideCoursePage.extend({
      * @private
      */
     _checkForEmptySections: function (){
-        this.$('.o_wslides_slide_list_category').each(function (){
-            var $categoryHeader = $(this).find('.o_wslides_slide_list_category_header');
-            var categorySlideCount = $(this).find('.o_wslides_slides_list_slide:not(.o_not_editable)').length;
-            var $emptyFlagContainer = $categoryHeader.find('.o_wslides_slides_list_drag').first();
-            var $emptyFlag = $emptyFlagContainer.find('small');
-            if (categorySlideCount === 0 && $emptyFlag.length === 0){
-                $emptyFlagContainer.append($('<small>', {
-                    'class': "ms-1 text-muted fw-bold",
-                    text: _t("(empty)")
-                }));
-            } else if (categorySlideCount > 0 && $emptyFlag.length > 0){
-                $emptyFlag.remove();
+        this.el.querySelectorAll('.o_wslides_slide_list_category').forEach(function () {
+            const categoryHeader = this.el.querySelector('.o_wslides_slide_list_category_header');
+            const categorySlideCount = this.el.querySelectorAll('.o_wslides_slides_list_slide:not(.o_not_editable)').length;
+            const emptyFlagContainer = categoryHeader.querySelector('.o_wslides_slides_list_drag');
+            const emptyFlag = emptyFlagContainer.querySelector('small');
+            if (categorySlideCount === 0 && $emptyFlag.length === 0) {
+                const smallElement = document.createElement('small');
+                smallElement.className = "ms-1 text-muted fw-bold";
+                smallElement.textContent = _t("(empty)");
+                emptyFlagContainer.appendChild(smallElement);
+            } else if (categorySlideCount > 0 && emptyFlag.length > 0) {
+                emptyFlag.remove();
             }
         });
     },
 
     _getSlides: function (){
-        var categories = [];
-        this.$('.o_wslides_js_list_item').each(function (){
-            categories.push(parseInt($(this).data('slideId')));
+        const categories = [];
+        this.el.querySelectorAll('.o_wslides_js_list_item').forEach(() => {
+            categories.push(parseInt(this.dataset.slide_id));
         });
         return categories;
     },
@@ -126,10 +126,10 @@ publicWidget.registry.websiteSlidesCourseSlidesList = SlideCoursePage.extend({
      * @private
      */
     _updateHref: function () {
-        this.$(".o_wslides_js_slides_list_slide_link").each(function (){
-            var href = $(this).attr('href');
-            var operator = href.indexOf('?') !== -1 ? '&' : '?';
-            $(this).attr('href', href + operator + "fullscreen=1");
+        this.el.querySelectorAll(".o_wslides_js_slides_list_slide_link").forEach(() => {
+            const href = this.getAttribute('href');
+            const operator = href.indexOf('?') !== -1 ? '&' : '?';
+            this.setAttribute('href', href + operator + "fullscreen=1");
         });
     }
 });

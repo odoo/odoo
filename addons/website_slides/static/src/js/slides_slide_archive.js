@@ -15,8 +15,8 @@ publicWidget.registry.websiteSlidesSlideArchive = publicWidget.Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    _openDialog: function ($slideTarget) {
-        const slideId = $slideTarget.data("slideId");
+    _openDialog: function (slideTarget) {
+        const slideId = slideTarget.dataset.slide_id;
         this.call("dialog", "add", ConfirmationDialog, {
             title: _t("Archive Content"),
             body: _t("Are you sure you want to archive this content?"),
@@ -29,23 +29,19 @@ publicWidget.registry.websiteSlidesSlideArchive = publicWidget.Widget.extend({
                     slide_id: slideId,
                 });
                 if (isArchived) {
-                    $slideTarget.closest(".o_wslides_slides_list_slide").remove();
-                    $(".o_wslides_slide_list_category").each(function () {
-                        var $categoryHeader = $(this).find(".o_wslides_slide_list_category_header");
-                        var categorySlideCount = $(this).find(
+                    slideTarget.closest(".o_wslides_slides_list_slide").remove();
+                    this.el.querySelectorAll(".o_wslides_slide_list_category").forEach(() => {
+                        const categoryHeader = this.el.querySelector(".o_wslides_slide_list_category_header");
+                        const categorySlideCount = this.querySelectorAll(
                             ".o_wslides_slides_list_slide:not(.o_not_editable)"
                         ).length;
-                        var $emptyFlagContainer = $categoryHeader
-                            .find(".o_wslides_slides_list_drag")
-                            .first();
-                        var $emptyFlag = $emptyFlagContainer.find("small");
-                        if (categorySlideCount === 0 && $emptyFlag.length === 0) {
-                            $emptyFlagContainer.append(
-                                $("<small>", {
-                                    class: "ms-1 text-muted fw-bold",
-                                    text: _t("(empty)"),
-                                })
-                            );
+                        const emptyFlagContainer = categoryHeader.querySelector(".o_wslides_slides_list_drag");
+                        const emptyFlag = emptyFlagContainer.querySelector("small");
+                        if (categorySlideCount === 0 && emptyFlag.length === 0) {
+                            const smallElement = document.createElement('small');
+                            smallElement.className = "ms-1 text-muted fw-bold";
+                            smallElement.textContent = _t("(empty)");
+                            emptyFlagContainer.appendChild(smallElement);
                         }
                     });
                 }
@@ -64,8 +60,8 @@ publicWidget.registry.websiteSlidesSlideArchive = publicWidget.Widget.extend({
      */
     _onArchiveSlideClick: function (ev) {
         ev.preventDefault();
-        var $slideTarget = $(ev.currentTarget);
-        this._openDialog($slideTarget);
+        const slideTarget = ev.currentTarget;
+        this._openDialog(slideTarget);
     },
 });
 

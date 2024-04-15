@@ -101,11 +101,12 @@ var CourseJoinWidget = publicWidget.Widget.extend({
 
     /**
      * @private
-     * @param {Object} $el
+     * @param {Object} el
      * @param {String} message
      */
-    _popoverAlert: function ($el, message) {
-        $el.popover({
+    _popoverAlert: function (el, message) {
+        // TODO: START FROM HERE
+        const popover = new Popover(el, {
             trigger: 'focus',
             delay: {'hide': 300},
             placement: 'bottom',
@@ -114,7 +115,8 @@ var CourseJoinWidget = publicWidget.Widget.extend({
             content: function () {
                 return message;
             }
-        }).popover('show');
+        });
+        popover.show();
     },
 
     //--------------------------------------------------------------------------
