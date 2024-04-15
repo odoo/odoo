@@ -844,3 +844,30 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
             (datetime(2019, 11, 25, 1, 0), datetime(2019, 11, 27, 18, 0)),
             (datetime(2019, 12, 25, 1, 0), datetime(2019, 12, 27, 18, 0)),
         ])
+
+    def test_update_recurrence_future2(self):
+        event = self.env['calendar.event'].create({
+            'name': 'Test',
+            'start': datetime(2024, 3, 25, 1, 0),
+            'stop': datetime(2024, 3, 25, 3, 0),
+            'recurrency': True,
+            'rrule_type': 'monthly',
+            'interval': 1,
+            'count': 3,
+            'month_by': 'day',
+            'byday': '1',
+            'weekday': 'MON',
+        })
+        old_recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', event.id)])
+        archived_events = old_recurrence.calendar_event_ids
+
+        archived_events[0].write({
+            'recurrence_update': 'future_events',
+            'byday': '2',
+            'weekday': 'TUE'
+        })
+
+        new_recurrence = self.env['calendar.recurrence'].search([('id', '>', old_recurrence.id)])
+        self.assertTrue(new_recurrence)
+        self.assertEqual(new_recurrence.byday, '2')
+        self.assertEqual(new_recurrence.weekday, 'TUE')
