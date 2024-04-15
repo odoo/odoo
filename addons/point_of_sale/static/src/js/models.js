@@ -3201,6 +3201,9 @@ exports.Order = Backbone.Model.extend({
             this.select_paymentline(undefined);
         }
         this.paymentlines.remove(line);
+        if (this.get_total_paid() === 0) {
+            this.amount_return = 0;
+        }
     },
     clean_empty_paymentlines: function() {
         var lines = this.paymentlines.models;
