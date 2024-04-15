@@ -54,3 +54,4 @@ Victor Vermot-Petit-Outhenin victor.vermot@camptocamp.com https://github.com/vic
 Sarah Jallon sarah.jallon@camptocamp.com https://github.com/sarsurgithub
 Ricardo Almeida Soares ricardo.almeidasoares@camptocamp.com https://github.com/ricardoalso
 Italo Lopes italo.lopes@camptocamp.com https://github.com/imlopes
+Paolo Yammouni paolo.yammouni@camptocamp.com https://github.com/paoloyam
