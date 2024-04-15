@@ -97,11 +97,6 @@ class ir_cron(models.Model):
         and exception handling. Note that the user running the server action
         is the user calling this method. """
         try:
-            if self.pool != self.pool.check_signaling():
-                # the registry has changed, reload self in the new registry
-                self.env.reset()
-                self = self.env()[self._name]
-
             log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
             odoo.netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (self._cr.dbname, self._uid, '*', cron_name, server_action_id), depth=log_depth)
             start_time = False
@@ -234,7 +229,7 @@ class ir_cron(models.Model):
                     _logger.info('Starting job `%s`.', job['cron_name'])
                     job_cr = db.cursor()
                     try:
-                        registry = odoo.registry(db_name)
+                        registry = odoo.registry(db_name).check_signaling()
                         registry[cls._name]._process_job(job_cr, job, lock_cr)
                         _logger.info('Job `%s` done.', job['cron_name'])
                     except Exception:
