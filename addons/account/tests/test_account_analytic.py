@@ -29,6 +29,13 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
             'company_id': False,
         })
 
+        cls.cross_plan = cls.env['account.analytic.plan'].create({'name': 'Cross'})
+        cls.analytic_account_c = cls.env['account.analytic.account'].create({
+            'name': 'analytic_account_c',
+            'plan_id': cls.cross_plan.id,
+            'company_id': False,
+        })
+
     def create_invoice(self, partner, product):
         return self.env['account.move'].create([{
             'move_type': 'out_invoice',
@@ -210,3 +217,50 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
         invoice.invoice_line_ids.analytic_distribution = {self.analytic_account_b.id: 0.9}
         invoice.action_post()
         self.assertEqual(invoice.state, 'posted')
+
+    def test_cross_analytics_computing(self):
+
+        out_invoice = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_b.id,
+                'price_unit': 200.0,
+                'analytic_distribution': {
+                    f'{self.analytic_account_a.id},{self.analytic_account_c.id}': 20,
+                    f'{self.analytic_account_a.id},{self.analytic_account_b.id}': 80,
+                },
+            })]
+        }])
+        out_invoice.action_post()
+        in_invoice = self.env['account.move'].create([{
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_b.id,
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 200.0,
+                    'analytic_distribution': {
+                        f'{self.analytic_account_a.id},{self.analytic_account_b.id}': 100,
+                    },
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 200.0,
+                    'analytic_distribution': {
+                        f'{self.analytic_account_a.id},{self.analytic_account_c.id}': 50,
+                        self.analytic_account_b.id: 50,
+                    },
+                })
+            ]
+        }])
+        in_invoice.action_post()
+
+        self.analytic_account_a._compute_invoice_count()
+        self.assertEqual(self.analytic_account_a.invoice_count, 1)
+        self.analytic_account_a._compute_vendor_bill_count()
+        self.assertEqual(self.analytic_account_a.vendor_bill_count, 1)
