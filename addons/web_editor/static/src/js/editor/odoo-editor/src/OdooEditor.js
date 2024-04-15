@@ -2131,17 +2131,19 @@ export class OdooEditor extends EventTarget {
      * @returns {boolean} true if a table was deselected
      */
     deselectTable() {
+        const tds = this.editable.querySelectorAll('.o_selected_table, .o_selected_td');
+        if (!tds.length) {
+            return false;
+        }
         this.observerUnactive('deselectTable');
-        let didDeselectTable = false;
-        for (const td of this.editable.querySelectorAll('.o_selected_table, .o_selected_td')) {
+        for (const td of tds) {
             td.classList.remove('o_selected_td', 'o_selected_table');
             if (!td.classList.length) {
                 td.removeAttribute('class');
             }
-            didDeselectTable = true;
         }
         this.observerActive('deselectTable');
-        return didDeselectTable;
+        return true;
     }
 
     //--------------------------------------------------------------------------
