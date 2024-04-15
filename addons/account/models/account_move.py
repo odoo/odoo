@@ -5111,13 +5111,13 @@ class AccountMove(models.Model):
             return res
 
         odoobot = self.env.ref('base.partner_root')
-        if attachments and self.state != 'draft':
+        if self.state != 'draft':
             self.message_post(body=_('The invoice is not a draft, it was not updated from the attachment.'),
                               message_type='comment',
                               subtype_xmlid='mail.mt_note',
                               author_id=odoobot.id)
             return res
-        if attachments and self.invoice_line_ids:
+        if self.invoice_line_ids:
             self.message_post(body=_('The invoice already contains lines, it was not updated from the attachment.'),
                               message_type='comment',
                               subtype_xmlid='mail.mt_note',
