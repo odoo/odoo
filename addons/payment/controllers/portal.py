@@ -333,7 +333,10 @@ class PaymentPortal(portal.CustomerPortal):
         )
         if is_validation:  # Providers determine the amount and currency in validation operations
             amount = provider_sudo._get_validation_amount()
-            currency_id = provider_sudo._get_validation_currency().id
+            payment_method = request.env['payment.method'].browse(payment_method_id)
+            currency_id = provider_sudo.with_context(
+                validation_pm=payment_method  # Will be converted to a kwarg in master.
+            )._get_validation_currency().id
 
         # Create the transaction
         tx_sudo = request.env['payment.transaction'].sudo().create({
