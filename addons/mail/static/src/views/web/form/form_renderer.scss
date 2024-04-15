@@ -2,23 +2,20 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o-mail-Form-chatter {
+.o-mail-ChatterContainer, .o-mail-Form-chatter {
     --ChatterTopbar-padding-v: #{map-get($spacers, 2)};
     --ChatterTopbar-padding-left: #{$o-horizontal-padding};
     --ChatterTopbar-padding-right: #{$o-horizontal-padding};
+    --Chatter-asideExtraWidth: 0px; // to take into account more items, e.g. "close" chatter feature
 
     &.o-aside {
         flex-shrink: 0;
         flex-grow: 1;
         padding: map-get($spacers, 0);
-        width: $o-mail-Chatter-minWidth;
+        width: calc(#{$o-mail-Chatter-minWidth} + var(--Chatter-asideExtraWidth));
 
         .o-mail-Message.o-not-discussion {
             border-width: $border-width 0;
-        }
-
-        .o_ChatterContainer {
-            width: auto;
         }
     }
 
@@ -37,7 +34,7 @@
 // Style
 // ------------------------------------------------------------------
 
-.o-mail-Form-chatter {
+.o-mail-ChatterContainer, .o-mail-Form-chatter {
     display: flex;
     margin: 0 auto;
     padding-bottom: map-get($spacers, 5);
