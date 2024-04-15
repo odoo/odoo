@@ -92,6 +92,11 @@ ir.http._match
   Beware that there is an important override for portal and website
   inside of the ``http_routing`` module.
 
+ir.http._serve_fallback
+  Find alternative ways to serve a request when its path does not match
+  any controller. The path could be matching an attachment URL, a blog
+  page, etc.
+
 ir.http._authenticate
   Ensure the user on the current environment fulfill the requirement of
   ``@route(auth=...)``. Using the ORM outside of abstract models is
@@ -142,7 +147,6 @@ import threading
 import time
 import traceback
 import warnings
-import zlib
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 from io import BytesIO
@@ -195,7 +199,6 @@ from .service import security, model as service_model
 from .tools import (config, consteq, date_utils, file_path, parse_version,
                     profiler, submap, unique, ustr,)
 from .tools.func import filter_kwargs, lazy_property
-from .tools.mimetypes import guess_mimetype
 from .tools._vendor import sessions
 from .tools._vendor.useragents import UserAgent
 
@@ -320,10 +323,12 @@ STATIC_CACHE_LONG = 60 * 60 * 24 * 365
 class SessionExpiredException(Exception):
     pass
 
+
 def content_disposition(filename):
     return "attachment; filename*=UTF-8''{}".format(
         url_quote(filename, safe='', unsafe='()<>@,;:"/[]?={}\\*\'%') # RFC6266
     )
+
 
 def db_list(force=False, host=None):
     """
@@ -340,6 +345,7 @@ def db_list(force=False, host=None):
     except psycopg2.OperationalError:
         return []
     return db_filter(dbs, host)
+
 
 def db_filter(dbs, host=None):
     """
@@ -762,6 +768,7 @@ def route(route=None, **routing):
         return route_wrapper
     return decorator
 
+
 def _generate_routing_rules(modules, nodb_only, converters=None):
     """
     Two-fold algorithm used to (1) determine which method in the
@@ -898,6 +905,7 @@ def _check_and_complete_route_definition(controller_cls, submethod, merged_routi
             'readonly' if parent_readonly else 'read/write',
         )
         submethod.original_routing['readonly'] = False
+
 
 # =========================================================
 # Session
@@ -1084,7 +1092,6 @@ class Session(collections.abc.MutableMapping):
         self.is_dirty = True
 
 
-
 # =========================================================
 # GeoIP
 # =========================================================
@@ -1191,6 +1198,7 @@ class GeoIP(collections.abc.Mapping):
 
     def __len__(self):
         raise NotImplementedError("The dictionnary GeoIP API is deprecated.")
+
 
 # =========================================================
 # Request and Response
@@ -1843,6 +1851,10 @@ class Request:
             return self._transactioning(_serve_ir_http, readonly=ro)
 
     def _serve_ir_http(self, rule, args):
+        """
+        Called when a controller match the request path. Delegate to
+        ``ir.http`` to serve a response.
+        """
         self.registry['ir.http']._authenticate(rule.endpoint)
         self.registry['ir.http']._pre_dispatch(rule, args)
         response = self.dispatcher.dispatch(rule.endpoint, args)
@@ -1850,6 +1862,24 @@ class Request:
         return response
 
     def _transactioning(self, func, readonly):
+        """
+        Call ``func`` within a new SQL transaction.
+
+        If ``func`` performs a write query (insert/update/delete) on a
+        read-only transaction, the transaction is rolled back, and
+        ``func`` is called again in a read-write transaction.
+
+        Other errors are handled by ``ir.http._handle_error`` within
+        the same transaction.
+
+        Note: This function does not reset any state set on ``request``
+        and ``request.env`` upon returning. Therefore, any recordset
+        set on request during one transaction WILL NOT be usable inside
+        the following transactions unless the recordset is reset with
+        ``with_env(request.env)``. This is especially a concern between
+        ``_match`` and other ``ir.http`` methods, as ``_match`` is
+        called inside its own dedicated transaction.
+        """
         for readonly_cr in (True, False) if readonly else (False,):
             threading.current_thread().cursor_mode = (
                 'ro' if readonly_cr
@@ -1871,6 +1901,7 @@ class Request:
                         raise  # bubble up to werkzeug.debug.DebuggedApplication
                     exc.error_response = self.registry['ir.http']._handle_error(exc)
                     raise
+
 
 # =========================================================
 # Core type-specialized dispatchers
@@ -2060,10 +2091,10 @@ class JsonRPCDispatcher(Dispatcher):
         try:
             self.jsonrequest = self.request.get_json_data()
             self.request_id = self.jsonrequest.get('id')
-        except ValueError as exc:
+        except ValueError:
             # must use abort+Response to bypass handle_error
             werkzeug.exceptions.abort(Response("Invalid JSON data", status=400))
-        except AttributeError as exc:
+        except AttributeError:
             # must use abort+Response to bypass handle_error
             werkzeug.exceptions.abort(Response("Invalid JSON-RPC data", status=400))
 
