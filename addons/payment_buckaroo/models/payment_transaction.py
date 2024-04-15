@@ -4,10 +4,10 @@ import logging
 
 from werkzeug import urls
 
-from odoo import _, api, models
+from odoo import _, models
 from odoo.exceptions import ValidationError
 
-from odoo.addons.payment_buckaroo.const import STATUS_CODES_MAPPING
+from odoo.addons.payment_buckaroo import const
 from odoo.addons.payment_buckaroo.controllers.main import BuckarooController
 
 _logger = logging.getLogger(__name__)
@@ -84,6 +84,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'buckaroo':
             return
 
+        # Update the provider reference.
         transaction_keys = notification_data.get('brq_transactions')
         if not transaction_keys:
             raise ValidationError("Buckaroo: " + _("Received data with missing transaction keys"))
@@ -91,16 +92,24 @@ class PaymentTransaction(models.Model):
         # one reference. So we split for semantic correctness and keep the first transaction key.
         self.provider_reference = transaction_keys.split(',')[0]
 
+        # Update the payment method.
+        payment_method_code = notification_data.get('brq_payment_method')
+        payment_method = self.env['payment.method']._get_from_code(
+            payment_method_code, mapping=const.PAYMENT_METHODS_MAPPING
+        )
+        self.payment_method_id = payment_method or self.payment_method_id
+
+        # Update the payment state.
         status_code = int(notification_data.get('brq_statuscode') or 0)
-        if status_code in STATUS_CODES_MAPPING['pending']:
+        if status_code in const.STATUS_CODES_MAPPING['pending']:
             self._set_pending()
-        elif status_code in STATUS_CODES_MAPPING['done']:
+        elif status_code in const.STATUS_CODES_MAPPING['done']:
             self._set_done()
-        elif status_code in STATUS_CODES_MAPPING['cancel']:
+        elif status_code in const.STATUS_CODES_MAPPING['cancel']:
             self._set_canceled()
-        elif status_code in STATUS_CODES_MAPPING['refused']:
+        elif status_code in const.STATUS_CODES_MAPPING['refused']:
             self._set_error(_("Your payment was refused (code %s). Please try again.", status_code))
-        elif status_code in STATUS_CODES_MAPPING['error']:
+        elif status_code in const.STATUS_CODES_MAPPING['error']:
             self._set_error(_(
                 "An error occurred during processing of your payment (code %s). Please try again.",
                 status_code,
