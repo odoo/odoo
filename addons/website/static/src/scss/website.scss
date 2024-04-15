@@ -412,6 +412,21 @@ $-header-nav-link-height: $nav-link-height;
     }
 }
 
+hr {
+    // Move the set up color as a border color. Indeed, we may use color-mix to
+    // define that color as a function of currentColor, in which case
+    // Safari 16.5 is known to crash when using that to set the color property.
+    border-top: $hr-height solid $hr-color;
+    color: inherit;
+    // FIXME before the commit that introduced this background-color the color
+    // of HR was the superposition of:
+    // - background-color = currentColor = see below
+    // - color = $hr-color = transparent mix of currentColor
+    // => So a transparent version of the inherited color, on top of itself
+    // => This line makes it so this stays the same for now.
+    background-color: $hr-color;
+}
+
 h2 {
     color: map-get($colors, 'o-cc1-h2');
 }
