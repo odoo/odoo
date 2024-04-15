@@ -27,13 +27,7 @@ class AccountMove(models.Model):
 
         landed_costs = self.env['stock.landed.cost'].create({
             'vendor_bill_id': self.id,
-            'cost_lines': [(0, 0, {
-                'product_id': l.product_id.id,
-                'name': l.product_id.name,
-                'account_id': l.product_id.product_tmpl_id.get_product_accounts()['stock_input'].id,
-                'price_unit': l.currency_id._convert(l.price_subtotal, l.company_currency_id, l.company_id, l.move_id.date),
-                'split_method': 'equal',
-            }) for l in landed_costs_lines],
+            'cost_lines': [(0, 0, l._get_cost_line_vals()) for l in landed_costs_lines],
         })
         action = self.env.ref('stock_landed_costs.action_stock_landed_cost').read()[0]
         return dict(action, view_mode='form', res_id=landed_costs.id, views=[(False, 'form')])
