@@ -53,6 +53,8 @@
     // Dashboard content
     .oe_dashboard {
         width: 100%;
+        table-layout: fixed;
+
         .oe_action {
             margin: 0 8px 8px 0;
             background-color: white;
@@ -168,8 +170,6 @@
 
 @include media-breakpoint-down(sm) {
     .o_dashboard .oe_dashboard {
-        table-layout: fixed;
-
         .oe_action .oe_header .oe_header_text {
             display: none;
         }

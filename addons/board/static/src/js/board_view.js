@@ -177,11 +177,11 @@ var BoardRenderer = FormRenderer.extend({
         if (current_layout !== layout) {
             var clayout = current_layout.split('-').length,
                 nlayout = layout.split('-').length,
-                column_diff = clayout - nlayout;
+                column_diff = Math.abs(clayout - nlayout);
             if (column_diff > 0) {
                 var $last_column = $();
                 $dashboard.find('.oe_dashboard_column').each(function (k, v) {
-                    if (k >= nlayout) {
+                    if (k >= (nlayout - 1)) {
                         $(v).find('.oe_action').appendTo($last_column);
                     } else {
                         $last_column = $(v);
