@@ -1731,6 +1731,32 @@ class Request:
             return response.render()
         return response
 
+    def reroute(self, path, query_string=None):
+        """
+        Rewrite the current request URL using the new path and query
+        string. This act as a light redirection, it does not return a
+        3xx responses to the browser but still change the current URL.
+        """
+        # WSGI encoding dance https://peps.python.org/pep-3333/#unicode-issues
+        if isinstance(path, str):
+            path = path.encode('utf-8')
+        path = path.decode('latin1', 'replace')
+
+        if query_string is None:
+            query_string = request.httprequest.environ['QUERY_STRING']
+
+        # Change the WSGI environment
+        environ = self.httprequest._HTTPRequest__environ.copy()
+        environ['PATH_INFO'] = path
+        environ['QUERY_STRING'] = query_string
+        environ['RAW_URI'] = f'{path}?{query_string}'
+        # REQUEST_URI left as-is so it still contains the original URI
+
+        # Create and expose a new request from the modified WSGI env
+        httprequest = HTTPRequest(environ)
+        threading.current_thread().url = httprequest.url
+        self.httprequest = httprequest
+
     def _save_session(self):
         """ Save a modified session on disk. """
         sess = self.session
@@ -2307,12 +2333,14 @@ class Application:
                         with request._get_profiler_context_manager():
                             response = request._serve_db()
                     except RegistryError as e:
-                        if httprequest.path == '/web':
-                            # Internal Server Error
-                            raise
                         _logger.warning("Database or registry unusable, trying without", exc_info=e.__cause__)
                         request.db = None
                         request.session.logout()
+                        if httprequest.path in ('/web', '/web/login', '/test_http/ensure_db'):
+                            # ensure_db() protected routes, remove ?db= from the query string
+                            args_nodb = request.httprequest.args.copy()
+                            args_nodb.pop('db', None)
+                            request.reroute(httprequest.path, url_encode(args_nodb))
                         response = request._serve_nodb()
                 else:
                     response = request._serve_nodb()

@@ -98,7 +98,7 @@ class Website(Home):
 
         homepage_url = request.website._get_cached('homepage_url')
         if homepage_url and homepage_url != '/':
-            request.env['ir.http'].reroute(homepage_url)
+            request.reroute(homepage_url)
 
         # Check for page
         website_page = request.env['ir.http']._serve_page()
