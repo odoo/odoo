@@ -32,6 +32,33 @@ class TestExpensesMailImport(TestExpenseCommon):
             'employee_id': self.expense_employee.id,
         }])
 
+    def test_import_expense_from_email_several_employees(self):
+        """When a user has several employees' profiles from different companies, the right record should be selected"""
+        user = self.expense_user_employee
+        company_2 = user.company_ids[1]
+        user.company_id = company_2.id
+
+        # Create a second employee linked to the user for another company
+        company_2_employee = self.env['hr.employee'].create({
+            'name': 'expense_employee_2',
+            'company_id': company_2.id,
+            'user_id': user.id,
+            'work_email': user.email,
+        })
+
+        message_parsed = {
+            'message_id': "the-world-is-a-ghetto",
+            'subject': 'New expense',
+            'email_from': user.email,
+            'to': 'catchall@yourcompany.com',
+            'body': "Don't you know, that for me, and for you",
+            'attachments': [],
+        }
+        expense = self.env['hr.expense'].message_new(message_parsed)
+        self.assertRecordValues(expense, [{
+            'employee_id': company_2_employee.id,
+        }])
+
     def test_import_expense_from_email_no_product(self):
         message_parsed = {
             'message_id': "the-world-is-a-ghetto",
