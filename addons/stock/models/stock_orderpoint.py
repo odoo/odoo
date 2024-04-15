@@ -476,7 +476,7 @@ class StockWarehouseOrderpoint(models.Model):
             ('qty_to_order', '<=', 0)
         ]
         if self.ids:
-            expression.AND([domain, [('ids', 'in', self.ids)]])
+            domain = expression.AND([domain, [('id', 'in', self.ids)]])
         orderpoints_to_remove = self.env['stock.warehouse.orderpoint'].with_context(active_test=False).search(domain)
         # Remove previous automatically created orderpoint that has been refilled.
         orderpoints_to_remove.unlink()
