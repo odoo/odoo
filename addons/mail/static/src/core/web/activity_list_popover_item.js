@@ -60,11 +60,14 @@ export class ActivityListPopoverItem extends Component {
         }
     }
 
+    get hasCancelButton() {
+        const activity = this.props.activity;
+        return activity.state !== "done" && activity.can_write;
+    }
+
     get hasEditButton() {
         const activity = this.props.activity;
-        return (
-            activity.state !== "done" && activity.chaining_type === "suggest" && activity.can_write
-        );
+        return activity.state !== "done" && activity.can_write;
     }
 
     get hasFileUploader() {
@@ -89,6 +92,13 @@ export class ActivityListPopoverItem extends Component {
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data);
         await this.props.activity.markAsDone([attachmentId]);
         this.props.onActivityChanged?.();
+    }
+
+    unlink() {
+        this.props.activity.remove();
+        this.env.services.orm
+            .unlink("mail.activity", [this.props.activity.id])
+            .then(() => this.props.onActivityChanged?.());
     }
 
     get activityAssigneeAvatar() {
