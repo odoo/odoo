@@ -2,7 +2,8 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o-mail-Form-chatter {
+.o-mail-ChatterContainer, .o-mail-Form-chatter {
+    --Chatter-asideExtraWidth: 0px; // to take into account more items, e.g. "close" chatter feature
     &.o-aside {
         @media (max-width: 1920px) {
             --ChatterAsideForm-padding-left: #{map-get($spacers, 2)};
@@ -11,11 +12,7 @@
         flex-shrink: 0;
         flex-grow: 1;
         padding: map-get($spacers, 0);
-        width: $o-mail-Chatter-minWidth;
-
-        .o_ChatterContainer {
-            width: auto;
-        }
+        width: calc(#{$o-mail-Chatter-minWidth} + var(--Chatter-asideExtraWidth));
     }
 
     &.o-isInFormSheetBg {
@@ -40,7 +37,7 @@
 // Style
 // ------------------------------------------------------------------
 
-.o-mail-Form-chatter {
+.o-mail-ChatterContainer, .o-mail-Form-chatter {
     display: flex;
     margin: 0 auto;
     padding-bottom: map-get($spacers, 5);
