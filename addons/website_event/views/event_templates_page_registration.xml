@@ -39,6 +39,7 @@
             </div>
         </t>
 
+<<<<<<< HEAD
         <section id="o_wevent_event_main" class="h-100" t-cache="event if not editable and event.website_published else None">
             <div class="container overflow-hidden pb-5">
                 <div class="row">
@@ -68,12 +69,103 @@
                                     </span>
                                     <h2 t-field="event.name" itemprop="name" placeholder="Event Title" class="mt-3"/>
                                     <p class="lead" t-field="event.subtitle" placeholder="Event Subtitle"/>
+||||||| parent of c393790e60e4 (temp)
+                                <a href="#" role="button" data-bs-toggle="dropdown" class="btn btn-secondary text-bg-secondary dropdown w-100 mt-3">
+                                    <p class="mb-0"><i class="fa fa-calendar me-2"/>Add to Calendar</p>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a t-att-href="iCal_url" class="dropdown-item">iCal/Outlook</a>
+                                    <a t-att-href="google_url" class="dropdown-item" target="_blank">Google</a>
+=======
+                                <a href="#" role="button" data-bs-toggle="dropdown" class="btn btn-secondary dropdown w-100 mt-3">
+                                    <p class="mb-0"><i class="fa fa-calendar me-2"/>Add to Calendar</p>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a t-att-href="iCal_url" class="dropdown-item">iCal/Outlook</a>
+                                    <a t-att-href="google_url" class="dropdown-item" target="_blank">Google</a>
+>>>>>>> c393790e60e4 (temp)
                                 </div>
                             </t>
                             <div class="o_wevent_event_main_dates_mobile d-lg-none mt-3">
                                 <t t-call="website_event.event_description_dates"/>
                             </div>
+<<<<<<< HEAD
                             <div class="mt-4" t-field="event.description" itemprop="description"/>
+||||||| parent of c393790e60e4 (temp)
+                            <!-- Location -->
+                            <div t-if="event.address_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-3">
+                                <h6 class="o_wevent_sidebar_title">Location</h6>
+                                <h4 t-field="event.address_id" class="font-sans-serif mt-0 mb-1" style="font-size: 1rem" t-options='{
+                                    "widget": "contact",
+                                    "fields": ["name"]
+                                }'/>
+                                <div itemprop="location" class="mb-2 small" t-field="event.address_id" t-options='{
+                                    "widget": "contact",
+                                    "fields": ["address"],
+                                    "no_marker": True
+                                }'/>
+                                <div class="mb-2 small" t-field="event.address_id" t-options='{
+                                    "widget": "contact",
+                                    "fields": ["phone", "mobile", "email"]
+                                }'/>
+                                <a t-att-href="event._google_map_link()" target="_blank" class="btn btn-secondary text-bg-secondary w-100">
+                                    <p class="mb-0"><i class="fa fa-map-marker fa-fw" role="img"/>Get the direction</p>
+                                </a>
+                            </div>
+                            <!-- Organizer -->
+                            <div t-if="event.organizer_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-3">
+                                <h6 class="o_wevent_sidebar_title">Organizer</h6>
+                                <h4 t-field="event.organizer_id" class="font-sans-serif mt-0 mb-1" style="font-size: 1rem"/>
+                                <div class="small" itemprop="location" t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email']}"/>
+                            </div>
+                            <!-- Social -->
+                            <div class="o_wevent_sidebar_block">
+                                <h6 class="o_wevent_sidebar_title">Share</h6>
+                                <p>Find out what people see and say about this event, and join the conversation.</p>
+                                <t t-snippet-call="website.s_share">
+                                    <t t-set="_no_title" t-value="True"/>
+                                    <t t-set="_classes" t-valuef="o_wevent_sidebar_social mx-n1"/>
+                                    <t t-set="_link_classes" t-valuef="o_wevent_social_link"/>
+                                </t>
+                            </div>
+=======
+                            <!-- Location -->
+                            <div t-if="event.address_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-3">
+                                <h6 class="o_wevent_sidebar_title">Location</h6>
+                                <h4 t-field="event.address_id" class="font-sans-serif mt-0 mb-1" style="font-size: 1rem" t-options='{
+                                    "widget": "contact",
+                                    "fields": ["name"]
+                                }'/>
+                                <div itemprop="location" class="mb-2 small" t-field="event.address_id" t-options='{
+                                    "widget": "contact",
+                                    "fields": ["address"],
+                                    "no_marker": True
+                                }'/>
+                                <div class="mb-2 small" t-field="event.address_id" t-options='{
+                                    "widget": "contact",
+                                    "fields": ["phone", "mobile", "email"]
+                                }'/>
+                                <a t-att-href="event._google_map_link()" target="_blank" class="btn btn-secondary w-100">
+                                    <p class="mb-0"><i class="fa fa-map-marker fa-fw" role="img"/>Get the direction</p>
+                                </a>
+                            </div>
+                            <!-- Organizer -->
+                            <div t-if="event.organizer_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-3">
+                                <h6 class="o_wevent_sidebar_title">Organizer</h6>
+                                <h4 t-field="event.organizer_id" class="font-sans-serif mt-0 mb-1" style="font-size: 1rem"/>
+                                <div class="small" itemprop="location" t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email']}"/>
+                            </div>
+                            <!-- Social -->
+                            <div class="o_wevent_sidebar_block">
+                                <h6 class="o_wevent_sidebar_title">Share</h6>
+                                <p>Find out what people see and say about this event, and join the conversation.</p>
+                                <t t-snippet-call="website.s_share">
+                                    <t t-set="_no_title" t-value="True"/>
+                                    <t t-set="_classes" t-valuef="o_wevent_sidebar_social mx-n1"/>
+                                    <t t-set="_link_classes" t-valuef="o_wevent_social_link"/>
+                                </t>
+                            </div>
+>>>>>>> c393790e60e4 (temp)
                         </div>
                     </div>
 
