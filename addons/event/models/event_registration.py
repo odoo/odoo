@@ -209,13 +209,7 @@ class EventRegistration(models.Model):
             values['phone'] = self._phone_format(number=values['phone'], country=related_country) or values['phone']
 
         registrations = super(EventRegistration, self).create(vals_list)
-
-        if not self.env.context.get('install_mode', False):
-            # running the scheduler for demo data can cause an issue where wkhtmltopdf runs during
-            # server start and hangs indefinitely, leading to serious crashes
-            # we currently avoid this by not running the scheduler, would be best to find the actual
-            # reason for this issue and fix it so we can remove this check
-            registrations._update_mail_schedulers()
+        registrations._update_mail_schedulers()
         return registrations
 
     def write(self, vals):
@@ -223,11 +217,7 @@ class EventRegistration(models.Model):
         to_confirm = (self.filtered(lambda registration: registration.state in {'draft', 'cancel'})
                       if confirming else None)
         ret = super(EventRegistration, self).write(vals)
-        if confirming and not self.env.context.get('install_mode', False):
-            # running the scheduler for demo data can cause an issue where wkhtmltopdf runs
-            # during server start and hangs indefinitely, leading to serious crashes we
-            # currently avoid this by not running the scheduler, would be best to find the
-            # actual reason for this issue and fix it so we can remove this check
+        if confirming:
             to_confirm._update_mail_schedulers()
 
         return ret
@@ -296,6 +286,13 @@ class EventRegistration(models.Model):
     def _update_mail_schedulers(self):
         """ Update schedulers to set them as running again, and cron to be called
         as soon as possible. """
+        if self.env.context.get("install_mode", False):
+            # running the scheduler for demo data can cause an issue where wkhtmltopdf runs during
+            # server start and hangs indefinitely, leading to serious crashes
+            # we currently avoid this by not running the scheduler, would be best to find the actual
+            # reason for this issue and fix it so we can remove this check
+            return
+
         open_registrations = self.filtered(lambda registration: registration.state == 'open')
         if not open_registrations:
             return
