@@ -36,7 +36,6 @@ test("rating value displayed on the needaction preview", async () => {
     const messageId = pyEnv["mail.message"].create({
         model: "mail.test.rating",
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: ratingId,
     });
     pyEnv["mail.notification"].create({

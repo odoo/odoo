@@ -445,7 +445,6 @@ test("receive new needaction messages", async () => {
         needaction: true,
         model: "res.partner",
         res_id: partnerId,
-        needaction_partner_ids: [serverState.partnerId],
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId_1,
@@ -466,7 +465,6 @@ test("receive new needaction messages", async () => {
         needaction: true,
         model: "res.partner",
         res_id: partnerId,
-        needaction_partner_ids: [serverState.partnerId],
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId_2,
@@ -608,7 +606,6 @@ test("initially load messages from inbox", async () => {
         body: "not empty",
         message_type: "comment",
         model: "discuss.channel",
-        needaction_partner_ids: [serverState.partnerId],
         needaction: true,
         res_id: channelId,
     });
@@ -656,7 +653,6 @@ test("rendering of inbox message", async () => {
         body: "not empty",
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
@@ -698,7 +694,6 @@ test("Unfollow message", async function () {
             body: "not empty",
             model: "res.partner",
             needaction: true,
-            needaction_partner_ids: [serverState.partnerId],
             res_id: threadId,
         });
         pyEnv["mail.notification"].create({
@@ -798,12 +793,10 @@ test('mark a single message as read should only move this message to "History" m
         {
             body: "not empty 1",
             needaction: true,
-            needaction_partner_ids: [serverState.partnerId],
         },
         {
             body: "not empty 2",
             needaction: true,
-            needaction_partner_ids: [serverState.partnerId],
         },
     ]);
     pyEnv["mail.notification"].create([
@@ -1877,7 +1870,6 @@ test("Chatter notification in messaging menu should open the form view even when
         body: "A needaction message to have it in messaging menu",
         author_id: serverState.odoobotId,
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({

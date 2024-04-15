@@ -31,13 +31,11 @@ test("Message model properties", async () => {
         body: "<p>Test</p>",
         date: deserializeDateTime("2019-05-05 10:00:00"),
         id: 4000,
-        needaction_partner_ids: [serverState.partnerId],
         starredPersonas: { id: serverState.partnerId, type: "partner" },
         model: "res.partner",
         thread: { id: serverState.partnerId, model: "res.partner" },
         res_id: serverState.partnerId,
     });
-    expect(message.isNeedaction).toBe(true);
     expect(message.body).toBe("<p>Test</p>");
     expect(serializeDateTime(message.date)).toBe("2019-05-05 10:00:00");
     expect(message.id).toBe(4000);

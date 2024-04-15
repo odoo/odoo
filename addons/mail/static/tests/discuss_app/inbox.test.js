@@ -28,7 +28,6 @@ test("reply: discard on reply button toggle", async () => {
         body: "not empty",
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
@@ -58,7 +57,6 @@ test("reply: discard on pressing escape [REQUIRE FOCUS]", async () => {
         body: "not empty",
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
@@ -98,7 +96,6 @@ test('"reply to" composer should log note if message replied to is a note', asyn
         is_note: true,
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
@@ -132,7 +129,6 @@ test('"reply to" composer should send message if message replied to is not a not
         is_discussion: true,
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
@@ -164,7 +160,6 @@ test("show subject of message in Inbox", async () => {
         body: "not empty",
         model: "discuss.channel",
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId], // not needed, for consistency
         subject: "Salutations, voyageur",
     });
     pyEnv["mail.notification"].create({
@@ -430,7 +425,6 @@ test("click on (non-channel/non-partner) origin thread link should redirect to f
         body: "not empty",
         model: "res.fake",
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: fakeId,
     });
     pyEnv["mail.notification"].create({
@@ -476,7 +470,6 @@ test("inbox messages are never squashed", async () => {
             message_type: "comment",
             model: "discuss.channel",
             needaction: true,
-            needaction_partner_ids: [serverState.partnerId],
             res_id: channelId,
         },
         {
@@ -486,7 +479,6 @@ test("inbox messages are never squashed", async () => {
             message_type: "comment",
             model: "discuss.channel",
             needaction: true,
-            needaction_partner_ids: [serverState.partnerId],
             res_id: channelId,
         },
     ]);
@@ -520,7 +512,6 @@ test("reply: stop replying button click", async () => {
         body: "not empty",
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
@@ -547,7 +538,6 @@ test("error notifications should not be shown in Inbox", async () => {
         body: "not empty",
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
@@ -597,7 +587,6 @@ test("emptying inbox doesn't display rainbow man in another thread", async () =>
         body: "not empty",
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create([
@@ -631,7 +620,6 @@ test("Counter should be incremented by 1 when receiving a message with a mention
         body: "not empty",
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create([

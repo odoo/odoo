@@ -843,7 +843,6 @@ test("click on preview should mark as read and open the thread", async () => {
         body: "not empty",
         author_id: serverState.odoobotId,
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
@@ -870,7 +869,6 @@ test("click on expand from chat window should close the chat window and open the
         body: "not empty",
         author_id: serverState.odoobotId,
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
@@ -902,7 +900,6 @@ test("preview should display last needaction message preview even if there is a 
         body: "I am the oldest but needaction",
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.message"].create({
@@ -938,7 +935,6 @@ test("single preview for channel if it has unread and needaction messages", asyn
         body: "Message with needaction",
         model: "discuss.channel",
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: channelId,
     });
     pyEnv["mail.notification"].create({
@@ -1071,7 +1067,6 @@ test("messaging menu should show new needaction messages from chatter", async ()
         needaction: true,
         model: "res.partner",
         res_id: partnerId,
-        needaction_partner_ids: [serverState.partnerId],
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
@@ -1129,7 +1124,6 @@ test("Latest needaction is shown in thread preview", async () => {
             message_type: "comment",
             model: "res.partner",
             needaction: true,
-            needaction_partner_ids: [serverState.partnerId],
             res_id: serverState.partnerId,
         });
         pyEnv["mail.notification"].create({

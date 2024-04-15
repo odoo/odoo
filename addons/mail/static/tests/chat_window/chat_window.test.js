@@ -82,7 +82,6 @@ test("Message post in chat window of chatter should log a note", async () => {
         body: "A needaction message to have it in messaging menu",
         author_id: serverState.odoobotId,
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({

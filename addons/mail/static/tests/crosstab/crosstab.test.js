@@ -182,7 +182,6 @@ test("Message delete notification", async () => {
         model: "res.partner",
         res_id: serverState.partnerId,
         needaction: true,
-        needaction_partner_ids: [serverState.partnerId], // not needed, for consistency
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
