@@ -417,6 +417,11 @@ class PurchaseOrderLine(models.Model):
         move_dests = self.move_dest_ids
         if not move_dests:
             move_dests = self.move_ids.move_dest_ids.filtered(lambda m: m.state != 'cancel' and not m.location_dest_id.usage == 'supplier')
+            # Avoid considering direct self.move_ids as move_dests :
+            # 1) They are already taken into account by _get_outgoing_incoming_moves()
+            # 2) In case of subcontract PO, the stock.move returned to the subcontractor
+            # are in `self.move_ids` but are "location_dest_id.usage == 'internal'"
+            move_dests -= self.move_ids
 
         if not move_dests:
             qty_to_attach = 0
