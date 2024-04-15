@@ -3,6 +3,7 @@
 
 from lxml import etree
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo import Command
 from odoo.tests import tagged
 
 
@@ -56,3 +57,19 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         )
 
         self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
+
+    def test_norway_partner_without_vat(self):
+        partner = self.env["res.partner"].create({
+            "name": "Norwegian partner",
+            "country_id": self.env.ref('base.no').id,
+        })
+
+        new_invoice = self.env["account.move"].create({
+            "partner_id": partner.id,
+            "move_type": "out_invoice",
+            "invoice_line_ids": [Command.create({"name": "Test product", "price_unit": 100})],
+        })
+        new_invoice.action_post()
+        xml = self.env['account.edi.xml.ubl_bis3']._export_invoice(new_invoice)[0]
+        root = etree.fromstring(xml)
+        self.assertEqual(root.findtext('./{*}AccountingCustomerParty/{*}Party/{*}EndpointID'), None)
