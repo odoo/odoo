@@ -462,7 +462,9 @@ class PaymentProvider(models.Model):
 
         return stripe_utils.get_publishable_key(self.sudo())
 
-    def _stripe_get_inline_form_values(self, amount, currency, partner_id, is_validation, **kwargs):
+    def _stripe_get_inline_form_values(
+        self, amount, currency, partner_id, is_validation, payment_method_sudo=None, **kwargs
+    ):
         """ Return a serialized JSON of the required values to render the inline form.
 
         Note: `self.ensure_one()`
@@ -471,6 +473,8 @@ class PaymentProvider(models.Model):
         :param res.currency currency: The currency of the transaction.
         :param int partner_id: The partner of the transaction, as a `res.partner` id.
         :param bool is_validation: Whether the operation is a validation.
+        :param payment.method payment_method_sudo: The sudoed payment method record to which the
+                                                   inline form belongs.
         :return: The JSON serial of the required values to render the inline form.
         :rtype: str
         """
@@ -479,7 +483,9 @@ class PaymentProvider(models.Model):
         if not is_validation:
             currency_name = currency and currency.name.lower()
         else:
-            currency_name = self._get_validation_currency().name.lower()
+            currency_name = self.with_context(
+                validation_pm=payment_method_sudo  # Will be converted to a kwarg in master.
+            )._get_validation_currency().name.lower()
         partner = self.env['res.partner'].with_context(show_address=1).browse(partner_id).exists()
         inline_form_values = {
             'publishable_key': self._stripe_get_publishable_key(),
