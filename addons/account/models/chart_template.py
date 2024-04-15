@@ -269,7 +269,7 @@ class AccountChartTemplate(models.AbstractModel):
         unique_tax_name_keys = set(current_taxes.mapped(unique_tax_name_key))
         xmlid2tax = {
             xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env['account.tax'].browse(record)
-            for record, xml_id in current_taxes.get_external_id().items() if xml_id
+            for record, xml_id in current_taxes.get_external_id().items() if xml_id.startswith('account.')
         }
         def tax_template_changed(tax, template):
             return (
