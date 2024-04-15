@@ -537,15 +537,22 @@ class SaleOrderLine(models.Model):
             qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
         return qty
 
+    @api.model
+    def _get_outgoing_incoming_moves_filters(self):
+        return {
+            "outgoing_moves": lambda m: m.location_dest_id.usage == 'customer' and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
+            "incoming_moves": lambda m: m.location_dest_id.usage != 'customer' and m.to_refund
+        }
+
     def _get_outgoing_incoming_moves(self):
         outgoing_moves = self.env['stock.move']
         incoming_moves = self.env['stock.move']
+        filters = self._get_outgoing_incoming_moves_filters()
 
         for move in self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped and self.product_id == r.product_id):
-            if move.location_dest_id.usage == "customer":
-                if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
-                    outgoing_moves |= move
-            elif move.location_dest_id.usage != "customer" and move.to_refund:
+            if filters["outgoing_moves"](move):
+                outgoing_moves |= move
+            elif filters["incoming_moves"](move):
                 incoming_moves |= move
 
         return outgoing_moves, incoming_moves
