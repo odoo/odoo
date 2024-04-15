@@ -542,7 +542,7 @@ class IrHttp(models.AbstractModel):
         elif url_lang_str == request_url_code:
             # Rewrite the URL to remove the lang
             _logger.debug("%r (lang: %r) valid lang in url, rewrite url and continue", path, request_url_code)
-            cls.reroute(path_no_lang)
+            request.reroute(path_no_lang)
             path = path_no_lang
 
         else:
@@ -560,33 +560,6 @@ class IrHttp(models.AbstractModel):
             request.is_frontend = True
             request.is_frontend_multilang = True
             raise
-
-    @classmethod
-    def reroute(cls, path, query_string=None):
-        """
-        Rewrite the current request URL using the new path and query
-        string. This act as a light redirection, it does not return a
-        3xx responses to the browser but still change the current URL.
-        """
-        # WSGI encoding dance https://peps.python.org/pep-3333/#unicode-issues
-        if isinstance(path, str):
-            path = path.encode('utf-8')
-        path = path.decode('latin1', 'replace')
-
-        if query_string is None:
-            query_string = request.httprequest.environ['QUERY_STRING']
-
-        # Change the WSGI environment
-        environ = request.httprequest._HTTPRequest__environ.copy()
-        environ['PATH_INFO'] = path
-        environ['QUERY_STRING'] = query_string
-        environ['RAW_URI'] = f'{path}?{query_string}'
-        # REQUEST_URI left as-is so it still contains the original URI
-
-        # Create and expose a new request from the modified WSGI env
-        httprequest = HTTPRequest(environ)
-        threading.current_thread().url = httprequest.url
-        request.httprequest = httprequest
 
     @classmethod
     def _pre_dispatch(cls, rule, args):
