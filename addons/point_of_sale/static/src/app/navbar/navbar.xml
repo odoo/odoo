@@ -39,7 +39,7 @@
                         <DropdownItem t-if="showToggleProductView" onSelected="() => this.toggleProductView()">
                             Switch Product View
                         </DropdownItem>
-                        <DropdownItem onSelected="() => this.pos.editProduct()">
+                        <DropdownItem  t-if="this.isSystemUser" onSelected="() => this.pos.editProduct()">
                             Create Product
                         </DropdownItem>
                         <DropdownItem onSelected="() => pos.closePos()">
