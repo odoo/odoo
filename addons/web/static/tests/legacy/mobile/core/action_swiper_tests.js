@@ -1,19 +1,21 @@
 /** @odoo-module alias=@web/../tests/mobile/core/action_swiper_tests default=false */
 
-import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
-import { registry } from "@web/core/registry";
-import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
+import { Component, xml } from "@odoo/owl";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-
+import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import {
-    mount,
-    nextTick,
-    triggerEvent,
     getFixture,
     mockTimeout,
+    mount,
+    nextTick,
+    patchWithCleanup,
+    triggerEvent,
 } from "@web/../tests/helpers/utils";
 
-import { Component, xml } from "@odoo/owl";
+import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
+import { localization } from "@web/core/l10n/localization";
+import { registry } from "@web/core/registry";
+
 const serviceRegistry = registry.category("services");
 
 let env;
@@ -21,6 +23,7 @@ let target;
 
 QUnit.module("ActionSwiper", ({ beforeEach }) => {
     beforeEach(async () => {
+        patchWithCleanup(localization, { direction: "ltr" });
         env = await makeTestEnv();
         target = getFixture();
     });
@@ -219,7 +222,7 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
                 static components = { ActionSwiper };
                 static template = xml`
                     <div class="d-flex">
-                        <ActionSwiper 
+                        <ActionSwiper
                             onRightSwipe = "{
                                 action: onRightSwipe,
                                 icon: 'fa-circle',
@@ -356,7 +359,7 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
                 static components = { ActionSwiper };
                 static template = xml`
                     <div class="d-flex">
-                        <ActionSwiper 
+                        <ActionSwiper
                             onRightSwipe = "{
                                 action: onRightSwipe,
                                 icon: 'fa-circle',
@@ -495,7 +498,7 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
                 static components = { ActionSwiper };
                 static template = xml`
                     <div class="d-flex">
-                        <ActionSwiper 
+                        <ActionSwiper
                             onRightSwipe = "{
                                 action: onRightSwipe,
                                 icon: 'fa-circle',

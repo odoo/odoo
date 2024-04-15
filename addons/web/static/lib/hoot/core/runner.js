@@ -896,6 +896,7 @@ export class TestRunner {
                         });
 
                         suite.parent?.reporting.add({ suites: +1 });
+                        suite.callbacks.clear();
 
                         logger.logSuite(suite);
                     }
@@ -912,6 +913,7 @@ export class TestRunner {
             if (test.config.skip) {
                 // Skipped test
                 addTestDone(test);
+                test.setRunFn(null);
                 test.parent.reporting.add({ skipped: +1 });
                 nextJob();
                 continue;
@@ -1012,6 +1014,10 @@ export class TestRunner {
             }
             if (!test.config.multi || test.visited === test.config.multi) {
                 addTestDone(test);
+                test.setRunFn(null);
+                if (this.debug) {
+                    return;
+                }
                 nextJob();
             }
         }

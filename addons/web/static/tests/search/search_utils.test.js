@@ -10,6 +10,7 @@ describe.current.tags("headless");
 
 beforeEach(() => {
     mockTimeZone(0);
+    patchWithCleanup(localization, { direction: "ltr" });
     patchTranslations();
 });
 
