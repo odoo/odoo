@@ -860,7 +860,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             const reward = line.reward_id
               ? this.pos.reward_by_id[line.reward_id]
               : undefined;
-            const isDiscount = reward && reward.reward_type === "discount";
+            const isDiscount = reward && reward.reward_type === 'discount';
             const rewardProgram = reward && reward.program_id;
             // Skip lines for automatic discounts.
             if (isDiscount && rewardProgram.trigger === 'auto') {

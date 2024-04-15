@@ -1,11 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, timedelta
 
-from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
-from odoo.exceptions import ValidationError
 from odoo import Command
+from odoo.exceptions import ValidationError
+
+from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
+
 
 class TestProgramRules(TestSaleCouponCommon):
     # Test all the validity rules to allow a customer to have a reward.
