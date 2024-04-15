@@ -554,6 +554,46 @@ test("activity view: activity widget", async () => {
     await assertSteps(["action_feedback_schedule_next", "serverGeneratedAction"]);
 });
 
+test("activity widget: cancel an activity from the widget", async () => {
+    const [mailActivityId] = pyEnv["mail.activity"].search([["state", "=", "planned"]]);
+    const [mailActivityTypeId] = pyEnv["mail.activity.type"].search([["name", "=", "Email"]]);
+    pyEnv["res.users"].write([serverState.userId], {
+        activity_ids: [mailActivityId],
+        activity_type_id: mailActivityTypeId,
+    });
+    onRpc("unlink", ({ args, route }) => {
+        expect(args).toEqual([[mailActivityId]]);
+        expect(route.includes("mail.activity")).toBe(true);
+        expect(route.includes("unlink")).toBe(true);
+        step("unlink");
+    });
+    await start();
+    registerArchs(archs);
+    await openView({
+        res_model: "mail.test.activity",
+        views: [[false, "activity"]],
+    });
+
+    // Check if activity is scheduled
+    await click(".planned .o-mail-ActivityCell-deadline");
+    await contains(".o-mail-ActivityListPopover");
+
+    const activityListPopoverButtons = document.querySelectorAll(
+        ".overflow-auto.d-flex.align-items-baseline button"
+    );
+    // ensure the buttons are in the same order as in the chatter.
+    expect(activityListPopoverButtons[0]).toHaveClass("o-mail-ActivityListPopoverItem-markAsDone");
+    expect(activityListPopoverButtons[1]).toHaveClass("o-mail-ActivityListPopoverItem-editbtn");
+    expect(activityListPopoverButtons[2]).toHaveClass("o-mail-ActivityListPopoverItem-cancel btn");
+
+    // Cancel the activity
+    await click(".o-mail-ActivityListPopoverItem .o-mail-ActivityListPopoverItem-cancel");
+    await assertSteps(["unlink"]);
+
+    // Verify no activity is scheduled
+    await contains(".planned", { count: 0 });
+});
+
 test("activity view: Mark as done with keep done enabled", async () => {
     const emailActType = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
     pyEnv["mail.activity.type"].write([emailActType], { keep_done: true });
