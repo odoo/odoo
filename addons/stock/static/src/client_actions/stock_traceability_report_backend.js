@@ -59,10 +59,14 @@ export class TraceabilityReport extends Component {
         Object.assign(this.context, {
             active_id: active_id || this.props.action.params.active_id,
             auto_unfold: auto_unfold || false,
-            model: active_model || false,
+            model: active_model || this.props.action.context.params?.active_model || false,
             lot_name: lot_name || false,
             ttype: ttype || false,
         });
+
+        if (this.context.model) {
+            this.props.updateActionState({ active_model: this.context.model });
+        }
 
         this.display = {
             controlPanel: {},
