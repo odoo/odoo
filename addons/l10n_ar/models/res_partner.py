@@ -27,10 +27,6 @@ class ResPartner(models.Model):
         'l10n_ar.afip.responsibility.type', string='AFIP Responsibility Type', index='btree_not_null', help='Defined by AFIP to'
         ' identify the type of responsibilities that a person or a legal entity could have and that impacts in the'
         ' type of operations and requirements they need.')
-    l10n_ar_special_purchase_document_type_ids = fields.Many2many(
-        'l10n_latam.document.type', 'res_partner_document_type_rel', 'partner_id', 'document_type_id',
-        string='Other Purchase Documents', help='Set here if this partner can issue other documents further than'
-        ' invoices, credit notes and debit notes')
 
     @api.depends('l10n_ar_vat')
     def _compute_l10n_ar_formatted_vat(self):
