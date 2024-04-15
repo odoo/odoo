@@ -44,6 +44,17 @@ class StockRule(models.Model):
         if self.action == 'buy':
             self.location_src_id = False
 
+    def _get_po_line_grouping_key(self, po_line):
+        """Construct a grouping key for purchase order lines based on the product_id.
+        This key will be used to group order lines by product.
+        """
+        return po_line.product_id.id
+
+    def _get_groupby_po_line_key(self, procurement):
+        """Extract the key from a procurement object for matching with grouped purchase order lines.
+        """
+        return procurement.product_id.id
+
     @api.model
     def _run_buy(self, procurements):
         procurements_by_po_domain = defaultdict(list)
@@ -122,12 +133,12 @@ class StockRule(models.Model):
             procurements = self._merge_procurements(procurements_to_merge)
 
             po_lines_by_product = {}
-            grouped_po_lines = groupby(po.order_line.filtered(lambda l: not l.display_type and l.product_uom == l.product_id.uom_po_id), key=lambda l: l.product_id.id)
-            for product, po_lines in grouped_po_lines:
-                po_lines_by_product[product] = self.env['purchase.order.line'].concat(*po_lines)
+            grouped_po_lines = groupby(po.order_line.filtered(lambda l: not l.display_type and l.product_uom == l.product_id.uom_po_id), key=self._get_po_line_grouping_key)
+            for key, po_lines in grouped_po_lines:
+                po_lines_by_product[key] = self.env['purchase.order.line'].concat(*po_lines)
             po_line_values = []
             for procurement in procurements:
-                po_lines = po_lines_by_product.get(procurement.product_id.id, self.env['purchase.order.line'])
+                po_lines = po_lines_by_product.get(self._get_groupby_po_line_key(procurement), self.env['purchase.order.line'])
                 po_line = po_lines._find_candidate(*procurement)
 
                 if po_line:
