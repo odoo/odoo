@@ -5,7 +5,7 @@
         <br/>
         <h1 class="tracking-number text-center" style="font-size: 100px" t-if="props.data.trackingNumber and props.data.bigTrackingNumber" t-esc="props.data.trackingNumber" />
         <div class="d-flex flex-column align-items-center">
-            <div class="pos-receipt-contact w-50">
+            <div class="pos-receipt-contact">
                 <!-- contact address -->
                 <div t-if="props.data.company.partner_id?.[1]" t-esc="props.data.company.partner_id[1]" />
                 <t t-if="props.data.company.phone">
