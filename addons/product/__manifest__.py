@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -55,7 +54,11 @@ Print product labels with barcode.
         'report/product_pricelist_report_templates.xml',
     ],
     'demo': [
+        'data/product_attribute_demo.xml',
+        'data/product_category_demo.xml',
         'data/product_demo.xml',
+        'data/product_document_demo.xml',
+        'data/product_supplierinfo_demo.xml',
     ],
     'installable': True,
     'assets': {
