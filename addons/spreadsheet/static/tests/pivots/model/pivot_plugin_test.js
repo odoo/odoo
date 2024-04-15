@@ -30,6 +30,7 @@ import { PIVOT_TABLE_CONFIG } from "@spreadsheet/helpers/constants";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 const { DEFAULT_LOCALE } = spreadsheet.constants;
+const { toNumber } = spreadsheet.helpers;
 
 QUnit.module("spreadsheet > pivot plugin", {}, () => {
     QUnit.test("can get a pivotId from cell formula", async function (assert) {
@@ -897,8 +898,8 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                     <field name="foo" type="measure"/>
                 </pivot>`,
             });
-            assert.strictEqual(getEvaluatedCell(model, "B1").format, undefined);
-            assert.strictEqual(getEvaluatedCell(model, "B1").value, "Q2 2016");
+            assert.strictEqual(getEvaluatedCell(model, "B1").format, "q yyyy");
+            assert.strictEqual(getEvaluatedCell(model, "B1").value, 42461);
             assert.strictEqual(getEvaluatedCell(model, "B1").formattedValue, "Q2 2016");
         }
     );
@@ -914,6 +915,40 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.strictEqual(getEvaluatedCell(model, "B1").format, "0");
         assert.strictEqual(getEvaluatedCell(model, "B1").value, 2016);
         assert.strictEqual(getEvaluatedCell(model, "B1").formattedValue, "2016");
+    });
+
+    QUnit.test("PIVOT functions can accept spreadsheet dates", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+                <pivot>
+                    <field name="date" interval="quarter" type="col"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+        });
+        setCellContent(model, "A1", '=PIVOT.HEADER(1, "date:quarter", DATE(2016, 4, 1))');
+        assert.strictEqual(getEvaluatedCell(model, "A1").format, "q yyyy");
+        assert.strictEqual(
+            getEvaluatedCell(model, "A1").value,
+            toNumber("2016-04-01", DEFAULT_LOCALE)
+        );
+        assert.strictEqual(getEvaluatedCell(model, "A1").formattedValue, "Q2 2016");
+
+        setCellContent(
+            model,
+            "A1",
+            '=PIVOT.VALUE(1, "probability", "date:quarter",DATE(2016, 4, 1))'
+        );
+        assert.strictEqual(getEvaluatedCell(model, "A1").value, 10);
+        assert.strictEqual(getEvaluatedCell(model, "A1").formattedValue, "10.00");
+
+        setCellContent(
+            model,
+            "A1",
+            // not the first day of the quarter
+            '=PIVOT.VALUE(1,"probability","date:quarter",DATE(2016, 4, 2))'
+        );
+        assert.strictEqual(getEvaluatedCell(model, "A1").value, 10);
+        assert.strictEqual(getEvaluatedCell(model, "A1").formattedValue, "10.00");
     });
 
     QUnit.test(

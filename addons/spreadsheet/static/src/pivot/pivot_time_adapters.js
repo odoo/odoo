@@ -7,7 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { user } from "@web/core/user";
 
-const { toNumber, formatValue } = helpers;
+const { toNumber, toJsDate, formatValue } = helpers;
 const { DEFAULT_LOCALE } = constants;
 
 const { DateTime } = luxon;
@@ -177,6 +177,8 @@ const monthAdapter = {
     },
 };
 
+const NORMALIZED_QUARTER_REGEXP = /^[1-4]\/\d{4}$/;
+
 /**
  * @type {PivotTimeAdapter<string>}
  * normalized quarter value is "quarter/year"
@@ -189,8 +191,14 @@ const quarterAdapter = {
         return `${date.quarter}/${date.year}`;
     },
     normalizeFunctionValue(value) {
-        const [quarter, year] = value.split("/");
-        return `${quarter}/${year}`;
+        // spreadsheet normally interprets "4/2020" as the 1st April
+        // but it should be understood as a quarter here.
+        if (typeof value === "string" && NORMALIZED_QUARTER_REGEXP.test(value)) {
+            return value;
+        }
+        // Any other value is interpreted as any date-like spreadsheet value
+        const dateTime = toJsDate(value, DEFAULT_LOCALE);
+        return `${dateTime.getQuarter()}/${dateTime.getFullYear()}`;
     },
     increment(normalizedValue, step) {
         const [quarter, year] = normalizedValue.split("/");
@@ -199,14 +207,16 @@ const quarterAdapter = {
         return `${nextQuarter.quarter}/${nextQuarter.year}`;
     },
     getFormat(locale) {
-        return undefined;
+        return "q yyyy";
     },
     formatValue(normalizedValue, locale) {
-        const [quarter, year] = normalizedValue.split("/");
-        return sprintf(_t("Q%(quarter)s %(year)s"), { quarter, year });
+        const value = this.toCellValue(normalizedValue);
+        return formatValue(value, { locale, format: this.getFormat(locale) });
     },
     toCellValue(normalizedValue) {
-        return this.formatValue(normalizedValue);
+        const [quarter, year] = normalizedValue.split("/");
+        const month = 1 + (Number(quarter) - 1) * 3;
+        return toNumber(`${year}-${month}-1`, DEFAULT_LOCALE);
     },
 };
 /**
