@@ -137,6 +137,9 @@ export class TicketScreen extends Component {
             if (!confirmed) {
                 return false;
             }
+            if (this.state.selectedOrder === order) {
+                this.state.selectedOrder = null;
+            }
         }
         order.uiState.displayed = false;
         if (order && (await this._onBeforeDeleteOrder(order))) {
@@ -152,12 +155,8 @@ export class TicketScreen extends Component {
                 order.uiState.displayed = true;
             }
 
-            if (this.state.selectedOrder === order) {
-                if (this.pos.get_order_list().length > 0) {
-                    this.state.selectedOrder = this.pos.get_order_list()[0];
-                } else {
-                    this.state.selectedOrder = null;
-                }
+            if (this.pos.get_order_list().length > 0) {
+                this.state.selectedOrder = this.pos.get_order_list()[0];
             }
         }
         return true;
