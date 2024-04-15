@@ -1,8 +1,11 @@
 if (!Array.prototype.at) {
-    Array.prototype.at = function (index) {
-        if (index >= 0) {
-            return this[index];
+    Object.defineProperty(Array.prototype, "at", {
+        enumerable: false,
+        value: function (index) {
+            if (index >= 0) {
+                return this[index];
+            }
+            return this[this.length + index];
         }
-        return this[this.length + index];
-    };
+    });
 }
