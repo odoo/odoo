@@ -28,7 +28,7 @@ class AccountAnalyticAccount(models.Model):
                 ('analytic_distribution', 'in', self.ids),
             ],
             ['analytic_distribution'],
-            ['move_id:count_distinct'],
+            ['__count'],
         )
         data = {int(account_id): move_count for account_id, move_count in data}
         for account in self:
@@ -44,7 +44,7 @@ class AccountAnalyticAccount(models.Model):
                 ('analytic_distribution', 'in', self.ids),
             ],
             ['analytic_distribution'],
-            ['move_id:count_distinct'],
+            ['__count'],
         )
         data = {int(account_id): move_count for account_id, move_count in data}
         for account in self:

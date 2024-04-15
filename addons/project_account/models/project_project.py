@@ -41,7 +41,11 @@ class Project(models.Model):
                 price_subtotal = move_line.currency_id._convert(
                     from_amount=move_line.price_subtotal, to_currency=self.currency_id,
                 )
-                analytic_contribution = move_line.analytic_distribution[str(self.analytic_account_id.id)] / 100.
+                # an analytic account can appear several time in an analytic distribution with different repartition percentage
+                analytic_contribution = sum(
+                    percentage for ids, percentage in move_line.analytic_distribution.items()
+                    if str(self.analytic_account_id.id) in ids.split(',')
+                ) / 100.
                 if move_line.parent_state == 'draft':
                     if move_line.move_type == 'in_invoice':
                         amount_to_invoice -= price_subtotal * analytic_contribution
