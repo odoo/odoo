@@ -41,7 +41,7 @@
         .o_survey_results_question_wrapper:has(div.collapsed) {
             display: none !important;
         }
-        .o_survey_user_responses_table_wrapper {
+        .o_survey_results_table_wrapper {
             height: auto !important;
         }
         table {
@@ -116,6 +116,9 @@
 
 .o_survey_results_question {
     .o_survey_results_question_header {
+        .nav .btn:active {
+            box-shadow: none;
+        }
         div[aria-expanded="true"] i.fa-caret-right {
             display: none;
         }
@@ -143,7 +146,7 @@
         cursor:pointer;
 
         &.o_survey_answer_matrix_whitespace {
-            padding-right:18px;
+            padding-right: 16px;
             cursor:default;
         }
     }
@@ -176,8 +179,4 @@
     margin-left: auto;
     margin-right: auto;
     z-index: 1;
-}
-
-.o_survey_user_responses_table_wrapper {
-    overflow: auto;
 }

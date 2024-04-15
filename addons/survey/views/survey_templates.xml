@@ -53,7 +53,7 @@
                         <t t-set="_message"></t>
                         <t t-set="_utm_medium" t-valuef="survey"/>
                     </div>
-                    <div class="o_survey_navigation_wrapper d-inline-block d-print-none" t-call="survey.survey_navigation">
+                    <div t-if="not no_survey_navigation" class="o_survey_navigation_wrapper d-inline-block d-print-none" t-call="survey.survey_navigation">
                     </div>
                 </div>
             </div>
