@@ -10,6 +10,6 @@ registry.category("web_tour.tours").add("chrome_without_cash_move_permission", {
         [
             Dialog.confirm("Open session"),
             Chrome.clickMenuButton(),
-            Chrome.isCashMoveButtonHidden(),
+            Chrome.checkCashMoveButtonIsHidden(),
         ].flat(),
 });

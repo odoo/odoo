@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
                 trigger: `article.product .product-content .product-name:contains("Combo Product 3") ~.price-tag:contains("2.60")`,
                 isCheck: true,
             },
-            combo.isConfirmationButtonDisabled(),
+            combo.checkConfirmationButtonisDisabled(),
             combo.select("Combo Product 5"),
             combo.select("Combo Product 7"),
             combo.isSelected("Combo Product 7"),
@@ -34,13 +34,13 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
             combo.isSelected("Combo Product 8"),
             combo.isNotSelected("Combo Product 7"),
             Dialog.confirm(),
-            ...ProductScreen.selectedOrderlineHas("Office Combo"),
+            ...ProductScreen.checkSelectedOrderlineHas("Office Combo"),
             ...ProductScreen.clickOrderline("Combo Product 3"),
-            ...ProductScreen.selectedOrderlineHas("Combo Product 3", "1.0", "13.43"),
+            ...ProductScreen.checkSelectedOrderlineHas("Combo Product 3", "1.0", "13.43"),
             ...ProductScreen.clickOrderline("Combo Product 5"),
-            ...ProductScreen.selectedOrderlineHas("Combo Product 5", "1.0", "18.67"),
+            ...ProductScreen.checkSelectedOrderlineHas("Combo Product 5", "1.0", "18.67"),
             ...ProductScreen.clickOrderline("Combo Product 8"),
-            ...ProductScreen.selectedOrderlineHas("Combo Product 8", "1.0", "30.00"),
+            ...ProductScreen.checkSelectedOrderlineHas("Combo Product 8", "1.0", "30.00"),
 
             // check that you can select a customer which triggers a recomputation of the price
             ...ProductScreen.clickPartnerButton(),
@@ -52,14 +52,14 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
 
             // check that removing a combo product removes all the combo products
             ...ProductScreen.clickNumpad("⌫"),
-            ...ProductScreen.orderIsEmpty(),
+            ...ProductScreen.checkOrderIsEmpty(),
 
             ...ProductScreen.clickDisplayedProduct("Office Combo"),
             combo.select("Combo Product 3"),
             combo.select("Combo Product 5"),
             combo.select("Combo Product 8"),
             Dialog.confirm(),
-            ...ProductScreen.totalAmountIs("62.10"),
+            ...ProductScreen.checkTotalAmountIs("62.10"),
             ...ProductScreen.clickPayButton(),
             ...PaymentScreen.clickPaymentMethod("Bank"),
             ...PaymentScreen.clickValidate(),
@@ -72,8 +72,8 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
             combo.select("Combo Product 4"),
             combo.select("Combo Product 6"),
             Dialog.confirm(),
-            ...ProductScreen.totalAmountIs("59.17"),
-            ...inLeftSide(Order.hasTax("10.56")),
+            ...ProductScreen.checkTotalAmountIs("59.17"),
+            ...inLeftSide(Order.checkHasTax("10.56")),
             // the split screen is tested in `pos_restaurant`
         ].flat(),
 });

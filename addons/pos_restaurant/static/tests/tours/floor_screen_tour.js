@@ -16,100 +16,100 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
     steps: () =>
         [
             // check floors if they contain their corresponding tables
-            FloorScreen.selectedFloorIs("Main Floor"),
-            FloorScreen.hasTable("2"),
-            FloorScreen.hasTable("4"),
-            FloorScreen.hasTable("5"),
+            FloorScreen.checkSelectedFloorIs("Main Floor"),
+            FloorScreen.checkHasTable("2"),
+            FloorScreen.checkHasTable("4"),
+            FloorScreen.checkHasTable("5"),
             FloorScreen.clickFloor("Second Floor"),
-            FloorScreen.hasTable("3"),
-            FloorScreen.hasTable("1"),
+            FloorScreen.checkHasTable("3"),
+            FloorScreen.checkHasTable("1"),
 
             // clicking table in active mode does not open product screen
             // instead, table is selected
             Chrome.clickMenuOption("Edit Plan"),
             FloorScreen.clickTable("3"),
-            FloorScreen.selectedTableIs("3"),
+            FloorScreen.checkSelectedTableIs("3"),
             FloorScreen.clickTable("1"),
-            FloorScreen.selectedTableIs("1"),
+            FloorScreen.checkSelectedTableIs("1"),
 
             //test copy floor
             FloorScreen.clickFloor("Main Floor"),
             FloorScreen.clickEditButton("Copy"),
-            FloorScreen.selectedFloorIs("Main Floor (copy)"),
-            FloorScreen.hasTable("2"),
-            FloorScreen.hasTable("4"),
-            FloorScreen.hasTable("5"),
+            FloorScreen.checkSelectedFloorIs("Main Floor (copy)"),
+            FloorScreen.checkHasTable("2"),
+            FloorScreen.checkHasTable("4"),
+            FloorScreen.checkHasTable("5"),
             Utils.refresh(),
             Chrome.clickMenuOption("Edit Plan"),
             FloorScreen.clickFloor("Main Floor (copy)"),
-            FloorScreen.hasTable("2"),
-            FloorScreen.hasTable("4"),
-            FloorScreen.hasTable("5"),
+            FloorScreen.checkHasTable("2"),
+            FloorScreen.checkHasTable("4"),
+            FloorScreen.checkHasTable("5"),
             FloorScreen.clickEditButton("Delete"),
             Dialog.confirm(),
             Utils.refresh(),
             Chrome.clickMenuOption("Edit Plan"),
-            Utils.elementDoesNotExist(
+            Utils.checkElementDoesNotExist(
                 ".floor-selector .button-floor:contains('Main Floor (copy)')"
             ),
 
             // test add table
             FloorScreen.clickFloor("Main Floor"),
             FloorScreen.clickEditButton("Add"),
-            FloorScreen.selectedTableIs("1"),
+            FloorScreen.checkSelectedTableIs("1"),
             FloorScreen.clickEditButton("Rename"),
 
             TextInputPopup.inputText("100"),
             Dialog.confirm(),
             FloorScreen.clickTable("100"),
-            FloorScreen.selectedTableIs("100"),
+            FloorScreen.checkSelectedTableIs("100"),
 
             // test duplicate table
             FloorScreen.clickEditButton("Copy"),
             // the name is the first number available on the floor
-            FloorScreen.selectedTableIs("1"),
+            FloorScreen.checkSelectedTableIs("1"),
             FloorScreen.clickEditButton("Rename"),
 
             TextInputPopup.inputText("1111"),
             Dialog.confirm(),
             FloorScreen.clickTable("1111"),
-            FloorScreen.selectedTableIs("1111"),
+            FloorScreen.checkSelectedTableIs("1111"),
 
             // switch floor, switch back and check if
             // the new tables are still there
             FloorScreen.clickFloor("Second Floor"),
-            FloorScreen.hasTable("3"),
-            FloorScreen.hasTable("1"),
+            FloorScreen.checkHasTable("3"),
+            FloorScreen.checkHasTable("1"),
 
             //test duplicate multiple tables
             FloorScreen.clickTable("1"),
-            FloorScreen.selectedTableIs("1"),
+            FloorScreen.checkSelectedTableIs("1"),
             FloorScreen.ctrlClickTable("3"),
-            FloorScreen.selectedTableIs("3"),
+            FloorScreen.checkSelectedTableIs("3"),
             FloorScreen.clickEditButton("Copy"),
-            FloorScreen.selectedTableIs("2"),
-            FloorScreen.selectedTableIs("4"),
+            FloorScreen.checkSelectedTableIs("2"),
+            FloorScreen.checkSelectedTableIs("4"),
 
             //test delete multiple tables
             FloorScreen.clickEditButton("Delete"),
             Dialog.confirm(),
 
             FloorScreen.clickFloor("Main Floor"),
-            FloorScreen.hasTable("2"),
-            FloorScreen.hasTable("4"),
-            FloorScreen.hasTable("5"),
-            FloorScreen.hasTable("100"),
-            FloorScreen.hasTable("1111"),
+            FloorScreen.checkHasTable("2"),
+            FloorScreen.checkHasTable("4"),
+            FloorScreen.checkHasTable("5"),
+            FloorScreen.checkHasTable("100"),
+            FloorScreen.checkHasTable("1111"),
 
             // test delete table
             FloorScreen.clickTable("1111"),
-            FloorScreen.selectedTableIs("1111"),
+            FloorScreen.checkSelectedTableIs("1111"),
             FloorScreen.clickEditButton("Delete"),
             Dialog.confirm(),
 
             // change number of seats
             FloorScreen.clickTable("4"),
-            FloorScreen.selectedTableIs("4"),
+            FloorScreen.checkSelectedTableIs("4"),
             FloorScreen.clickEditButton("Seats"),
             NumberPopup.enterValue("⌫9"),
             NumberPopup.enterValue("9"),
@@ -119,7 +119,7 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
 
             // change number of seat when the input is already selected
             FloorScreen.clickTable("4"),
-            FloorScreen.selectedTableIs("4"),
+            FloorScreen.checkSelectedTableIs("4"),
             FloorScreen.clickEditButton("Seats"),
             NumberPopup.enterValue("15"),
             NumberPopup.isShown("15"),
@@ -139,7 +139,7 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
 
             // Opening product screen in second floor should go back to second floor
             FloorScreen.clickFloor("Second Floor"),
-            FloorScreen.hasTable("3"),
+            FloorScreen.checkHasTable("3"),
             FloorScreen.clickTable("3"),
         ].flat(),
 });

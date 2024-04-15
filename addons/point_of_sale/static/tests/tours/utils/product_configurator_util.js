@@ -39,7 +39,7 @@ export function fillCustomAttribute(value) {
     ];
 }
 
-export function isOptionShown(option) {
+export function checkOptionIsShown(option) {
     return [
         {
             content: `option ${option} is shown`,

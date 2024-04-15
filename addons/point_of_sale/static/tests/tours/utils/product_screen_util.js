@@ -65,7 +65,7 @@ export function clickDisplayedProduct(
     ];
 
     if (isCheckNeed) {
-        step.push(...selectedOrderlineHas(name, nextQuantity, nextPrice));
+        step.push(...checkSelectedOrderlineHas(name, nextQuantity, nextPrice));
     }
 
     return step;
@@ -144,7 +144,7 @@ export function clickPartnerButton() {
 export function clickCustomer(name) {
     return [PartnerList.clickPartner(name), goBackToMainScreen()];
 }
-export function customerIsSelected(name) {
+export function checkCustomerSelectedIs(name) {
     return [
         clickReview(),
         {
@@ -349,7 +349,7 @@ export function isShown() {
         },
     ];
 }
-export function selectedOrderlineHas(productName, quantity, price) {
+export function checkSelectedOrderlineHas(productName, quantity, price) {
     return inLeftSide(
         Order.hasLine({
             withClass: ".selected",
@@ -359,10 +359,10 @@ export function selectedOrderlineHas(productName, quantity, price) {
         })
     );
 }
-export function orderIsEmpty() {
-    return inLeftSide(Order.doesNotHaveLine());
+export function checkOrderIsEmpty() {
+    return inLeftSide(Order.checkDoesNotHaveLine());
 }
-export function productIsDisplayed(name) {
+export function checkProductIsDisplayed(name) {
     return [
         {
             content: `'${name}' should be displayed`,
@@ -371,11 +371,11 @@ export function productIsDisplayed(name) {
         },
     ];
 }
-export function totalAmountIs(amount) {
-    return inLeftSide(Order.hasTotal(amount));
+export function checkTotalAmountIs(amount) {
+    return inLeftSide(Order.checkHasTotal(amount));
 }
-export function modeIsActive(mode) {
-    return inLeftSide(Numpad.isActive(mode));
+export function checkModeIsActive(mode) {
+    return inLeftSide(Numpad.checkIsActive(mode));
 }
 export function checkSecondCashClosingDetailsLineAmount(amount, sign) {
     return [
@@ -399,13 +399,13 @@ export function checkSecondCashClosingDetailsLineAmount(amount, sign) {
         },
     ];
 }
-export function noDiscountApplied(originalPrice) {
+export function checkNoDiscountApplied(originalPrice) {
     return inLeftSide({
         content: "no discount is applied",
         trigger: `.orderline .info-list:not(:contains(${originalPrice}))`,
     });
 }
-export function cashDifferenceIs(val) {
+export function checkCashDifferenceIs(val) {
     return [
         {
             trigger: `.payment-methods-overview tr td:nth-child(4):contains(${val})`,
@@ -414,7 +414,7 @@ export function cashDifferenceIs(val) {
     ];
 }
 // Temporarily put it here. It should be in the utility methods for the backend views.
-export function lastClosingCashIs(val) {
+export function checkLastClosingCashIs(val) {
     return [
         {
             trigger: `[name=last_session_closing_cash]:contains(${val})`,
@@ -458,22 +458,22 @@ export function addOrderline(productName, quantity = 1, unitPrice, expectedTotal
             .toString()
             .split("")
             .flatMap((key) => clickNumpad(mapKey(key)));
-    res.push(...selectedOrderlineHas(productName, "1.00"));
+    res.push(...checkSelectedOrderlineHas(productName, "1.00"));
     if (unitPrice) {
         res.push(
             ...[
                 clickNumpad("Price"),
-                modeIsActive("Price"),
+                checkModeIsActive("Price"),
                 numpadWrite(unitPrice),
                 clickNumpad("Qty"),
-                modeIsActive("Qty"),
+                checkModeIsActive("Qty"),
             ].flat()
         );
     }
     if (quantity.toString() !== "1") {
         res.push(...numpadWrite(quantity));
     }
-    res.push(...selectedOrderlineHas(productName, quantity, expectedTotal));
+    res.push(...checkSelectedOrderlineHas(productName, quantity, expectedTotal));
     return res;
 }
 export function addCustomerNote(note) {

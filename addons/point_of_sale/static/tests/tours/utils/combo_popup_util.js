@@ -30,7 +30,7 @@ export function isNotSelected(productName) {
         in_modal: true,
     };
 }
-export function isConfirmationButtonDisabled() {
+export function checkConfirmationButtonisDisabled() {
     return {
         content: "try to click `confirm` without having made all the selections",
         trigger: `${confirmationButtonTrigger}[disabled]`,

@@ -34,20 +34,20 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
 
             // Create first order
             FloorScreen.clickTable("5"),
-            ProductScreen.orderBtnIsPresent(),
+            ProductScreen.checkOrderBtnIsPresent(),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             inLeftSide(Order.hasLine({ productName: "Coca-Cola", run: "dblclick" })),
             ProductScreen.clickDisplayedProduct("Water", true),
-            ProductScreen.orderlineIsToOrder("Water"),
-            ProductScreen.orderlineIsToSkip("Coca-Cola"),
+            ProductScreen.checkOrderlineIsToOrder("Water"),
+            ProductScreen.checkOrderlineIsToSkip("Coca-Cola"),
             ProductScreen.clickOrderButton(),
             {
                 ...Dialog.confirm(),
                 content:
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
-            ProductScreen.orderlinesHaveNoChange(),
-            ProductScreen.totalAmountIs("4.40"),
+            ProductScreen.checkOrderlinesHaveNoChange(),
+            ProductScreen.checkTotalAmountIs("4.40"),
 
             // Create 2nd order (paid)
             Chrome.clickMenuButton(),
@@ -55,7 +55,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             TicketScreen.clickNewTicket(),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
-            ProductScreen.totalAmountIs("4.40"),
+            ProductScreen.checkTotalAmountIs("4.40"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
@@ -68,9 +68,9 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
 
             // After clicking next order, floor screen is shown.
             // It should have 1 as number of draft synced order.
-            FloorScreen.orderCountSyncedInTableIs("5", "1"),
+            FloorScreen.checkOrderCountSyncedInTableIs("5", "1"),
             FloorScreen.clickTable("5"),
-            ProductScreen.totalAmountIs("4.40"),
+            ProductScreen.checkTotalAmountIs("4.40"),
 
             // Create another draft order and go back to floor
             Chrome.clickMenuButton(),
@@ -81,7 +81,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             FloorScreen.backToFloor(),
 
             // At floor screen, there should be 2 synced draft orders
-            FloorScreen.orderCountSyncedInTableIs("5", "2"),
+            FloorScreen.checkOrderCountSyncedInTableIs("5", "2"),
 
             // Delete the first order then go back to floor
             FloorScreen.clickTable("5"),
@@ -102,7 +102,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             FloorScreen.backToFloor(),
 
             // There should be 1 synced draft order.
-            FloorScreen.orderCountSyncedInTableIs("5", "2"),
+            FloorScreen.checkOrderCountSyncedInTableIs("5", "2"),
         ].flat(),
 });
 
@@ -116,7 +116,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
         [
             // There is one draft synced order from the previous tour
             FloorScreen.clickTable("5"),
-            ProductScreen.totalAmountIs("4.40"),
+            ProductScreen.checkTotalAmountIs("4.40"),
 
             // Test transfering an order
             ProductScreen.clickControlButtonMore(),
@@ -125,9 +125,9 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
 
             // Test if products still get merged after transfering the order
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "2.0"),
-            ProductScreen.totalAmountIs("6.60"),
+            ProductScreen.checkTotalAmountIs("6.60"),
             ProductScreen.clickNumpad("1"),
-            ProductScreen.totalAmountIs("4.40"),
+            ProductScreen.checkTotalAmountIs("4.40"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
@@ -141,14 +141,14 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
 
             FloorScreen.clickTable("2"),
             ProductScreen.isShown(),
-            ProductScreen.orderIsEmpty(),
+            ProductScreen.checkOrderIsEmpty(),
             ProductScreen.clickControlButtonMore(),
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("4"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
-            ProductScreen.totalAmountIs("2.20"),
+            ProductScreen.checkTotalAmountIs("2.20"),
             FloorScreen.backToFloor(),
-            FloorScreen.orderCountSyncedInTableIs("4", "1"),
+            FloorScreen.checkOrderCountSyncedInTableIs("4", "1"),
         ].flat(),
 });
 
@@ -160,7 +160,7 @@ registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1.0"),
             ProductScreen.clickOrderButton(),
-            ProductScreen.orderlinesHaveNoChange(),
+            ProductScreen.checkOrderlinesHaveNoChange(),
             FloorScreen.backToFloor(),
         ].flat(),
 });
@@ -206,7 +206,7 @@ registry.category("web_tour.tours").add("MergeTableTour", {
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
             ReceiptScreen.clickNextOrder(),
-            ...MergeTable.checkMergeTableIsCancelHelpers(),
+            ...MergeTable.checkMergeTableIsCancel(),
             ...MergeTable.mergeTableHelpers("5", "4"),
             Chrome.clickMenuOption("Edit Plan"),
             {
@@ -218,7 +218,7 @@ registry.category("web_tour.tours").add("MergeTableTour", {
                 trigger: '.edit-buttons button:contains("Unlink")',
             },
             Chrome.clickMenuOption("Edit Plan"),
-            ...MergeTable.checkMergeTableIsCancelHelpers(),
+            ...MergeTable.checkMergeTableIsCancel(),
             ...MergeTable.mergeTableHelpers("5", "4"),
             {
                 content: `refresh page`,
@@ -248,7 +248,7 @@ registry.category("web_tour.tours").add("MergeTableTour", {
                 trigger: '.edit-buttons button:contains("Unlink")',
             },
             Chrome.clickMenuOption("Edit Plan"),
-            ...MergeTable.checkMergeTableIsCancelHelpers(),
+            ...MergeTable.checkMergeTableIsCancel(),
             Chrome.clickMenuOption("Edit Plan"),
             FloorScreen.clickTable("4"),
             FloorScreen.ctrlClickTable("5"),

@@ -37,7 +37,7 @@ export function loginScreenIsShown() {
         },
     ];
 }
-export function cashierNameIs(name) {
+export function checkCashierNameIs(name) {
     return [
         {
             content: `logged cashier is '${name}'`,

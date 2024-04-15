@@ -61,10 +61,10 @@ export function hasRewardLine(rewardName, amount, qty) {
         quantity: qty,
     });
 }
-export function orderTotalIs(total_str) {
-    return [Order.hasTotal(total_str)];
+export function checkOrderTotalIs(total_str) {
+    return [Order.checkHasTotal(total_str)];
 }
-export function isRewardButtonHighlighted(isHighlighted) {
+export function checkRewardButtonHighlighted(isHighlighted) {
     return [
         {
             trigger: isHighlighted
@@ -74,7 +74,7 @@ export function isRewardButtonHighlighted(isHighlighted) {
         },
     ];
 }
-export function eWalletButtonState({ highlighted, text = "eWallet" }) {
+export function checkEWalletButtonState({ highlighted, text = "eWallet" }) {
     return [
         {
             trigger: highlighted

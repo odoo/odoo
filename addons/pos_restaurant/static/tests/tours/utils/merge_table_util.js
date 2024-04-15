@@ -29,7 +29,7 @@ export function mergeTableHelpers(childName, parentName) {
     ];
 }
 
-export function checkMergeTableIsCancelHelpers() {
+export function checkMergeTableIsCancel() {
     return [
         {
             content: `Verify table 4 and 5 isn't merge anymore`,

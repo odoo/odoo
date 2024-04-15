@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
         [
             Dialog.confirm("Open session"),
             Chrome.clickMenuButton(),
-            Chrome.isCashMoveButtonShown(),
+            Chrome.checkCashMoveButtonShown(),
             Chrome.clickMenuButton(),
 
             // Order 1 is at Product Screen
@@ -37,7 +37,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             ProductScreen.addOrderline("Whiteboard Pen", "5", "6", "30.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
-            PaymentScreen.validateButtonIsHighlighted(true),
+            PaymentScreen.checkValidateButtonIsHighlighted(true),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
             Chrome.clickMenuButton(),
@@ -47,23 +47,23 @@ registry.category("web_tour.tours").add("ChromeTour", {
             // Select order 1, should be at Product Screen
             TicketScreen.selectOrder("-0001"),
             TicketScreen.loadSelectedOrder(),
-            ProductScreen.productIsDisplayed("Desk Pad"),
-            ProductScreen.selectedOrderlineHas("Desk Pad", "1.0", "2.0"),
+            ProductScreen.checkProductIsDisplayed("Desk Pad"),
+            ProductScreen.checkSelectedOrderlineHas("Desk Pad", "1.0", "2.0"),
 
             // Select order 2, should be at Payment Screen
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
             TicketScreen.selectOrder("-0002"),
             TicketScreen.loadSelectedOrder(),
-            PaymentScreen.emptyPaymentlines("12.0"),
-            PaymentScreen.validateButtonIsHighlighted(false),
+            PaymentScreen.checkEmptyPaymentlines("12.0"),
+            PaymentScreen.checkValidateButtonIsHighlighted(false),
 
             // Select order 3, should be at Receipt Screen
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
             TicketScreen.selectOrder("-0003"),
             TicketScreen.loadSelectedOrder(),
-            ReceiptScreen.totalAmountContains("30.0"),
+            ReceiptScreen.checkTotalAmountContains("30.0"),
 
             // Pay order 1, with change
             Chrome.clickMenuButton(),
@@ -74,9 +74,9 @@ registry.category("web_tour.tours").add("ChromeTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.enterPaymentLineAmount("Cash", "20", true, { remaining: "0.0" }),
-            PaymentScreen.validateButtonIsHighlighted(true),
+            PaymentScreen.checkValidateButtonIsHighlighted(true),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.totalAmountContains("2.0"),
+            ReceiptScreen.checkTotalAmountContains("2.0"),
 
             // Order 1 now should have Receipt status
             Chrome.clickMenuButton(),
@@ -87,12 +87,12 @@ registry.category("web_tour.tours").add("ChromeTour", {
             // and the total amount doesn't change.
             TicketScreen.selectOrder("-0003"),
             TicketScreen.loadSelectedOrder(),
-            ReceiptScreen.totalAmountContains("30.0"),
+            ReceiptScreen.checkTotalAmountContains("30.0"),
 
             // click next screen on order 3
             // then delete the new empty order
             ReceiptScreen.clickNextOrder(),
-            ProductScreen.orderIsEmpty(),
+            ProductScreen.checkOrderIsEmpty(),
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
             TicketScreen.deleteOrder("-0004"),
@@ -100,7 +100,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
 
             // After deleting order 1 above, order 2 became
             // the 2nd-row order and it has payment status
-            TicketScreen.nthRowContains(2, "Payment"),
+            TicketScreen.checkNthRowContains(2, "Payment"),
             TicketScreen.deleteOrder("-0002"),
             Dialog.confirm(),
             TicketScreen.clickNewTicket(),

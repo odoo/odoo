@@ -27,20 +27,20 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
             ProductScreen.clickControlButton("Split"),
 
             // Check if the screen contains all the orderlines
-            SplitBillScreen.orderlineHas("Water", "5", "0"),
-            SplitBillScreen.orderlineHas("Minute Maid", "3", "0"),
-            SplitBillScreen.orderlineHas("Coca-Cola", "1", "0"),
+            SplitBillScreen.checkOrderlineHas("Water", "5", "0"),
+            SplitBillScreen.checkOrderlineHas("Minute Maid", "3", "0"),
+            SplitBillScreen.checkOrderlineHas("Coca-Cola", "1", "0"),
 
             // split 3 water and 1 coca-cola
             SplitBillScreen.clickOrderline("Water"),
-            SplitBillScreen.orderlineHas("Water", "5", "1"),
+            SplitBillScreen.checkOrderlineHas("Water", "5", "1"),
             SplitBillScreen.clickOrderline("Water"),
             SplitBillScreen.clickOrderline("Water"),
-            SplitBillScreen.orderlineHas("Water", "5", "3"),
-            SplitBillScreen.subtotalIs("6.0"),
+            SplitBillScreen.checkOrderlineHas("Water", "5", "3"),
+            SplitBillScreen.checkSubtotalIs("6.0"),
             SplitBillScreen.clickOrderline("Coca-Cola"),
-            SplitBillScreen.orderlineHas("Coca-Cola", "1", "1"),
-            SplitBillScreen.subtotalIs("8.0"),
+            SplitBillScreen.checkOrderlineHas("Coca-Cola", "1", "1"),
+            SplitBillScreen.checkSubtotalIs("8.0"),
 
             // click pay to split, go back to check the lines
             SplitBillScreen.clickPay(),
@@ -74,9 +74,9 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             ProductScreen.clickControlButton("Split"),
 
             SplitBillScreen.clickOrderline("Water"),
-            SplitBillScreen.orderlineHas("Water", "1", "1"),
+            SplitBillScreen.checkOrderlineHas("Water", "1", "1"),
             SplitBillScreen.clickOrderline("Coca-Cola"),
-            SplitBillScreen.orderlineHas("Coca-Cola", "1", "1"),
+            SplitBillScreen.checkOrderlineHas("Coca-Cola", "1", "1"),
             SplitBillScreen.clickPay(),
             PaymentScreen.clickBack(),
             Chrome.clickMenuButton(),
@@ -85,13 +85,13 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             TicketScreen.loadSelectedOrder(),
             ProductScreen.clickOrderline("Coca-Cola", "1.0"),
             ProductScreen.clickOrderline("Water", "1.0"),
-            ProductScreen.totalAmountIs("4.00"),
+            ProductScreen.checkTotalAmountIs("4.00"),
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
             TicketScreen.selectOrder("-0001"),
             TicketScreen.loadSelectedOrder(),
             Order.hasLine({ productName: "Minute Maid", quantity: "1.0", withClass: ".selected" }),
-            ProductScreen.totalAmountIs("2.00"),
+            ProductScreen.checkTotalAmountIs("2.00"),
         ].flat(),
 });
 
@@ -106,12 +106,12 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
             ProductScreen.clickControlButton("Split"),
 
             // Check if the screen contains all the orderlines
-            SplitBillScreen.orderlineHas("Water", "2", "0"),
+            SplitBillScreen.checkOrderlineHas("Water", "2", "0"),
 
             // split 1 water
             SplitBillScreen.clickOrderline("Water"),
-            SplitBillScreen.orderlineHas("Water", "2", "1"),
-            SplitBillScreen.subtotalIs("2.0"),
+            SplitBillScreen.checkOrderlineHas("Water", "2", "1"),
+            SplitBillScreen.checkSubtotalIs("2.0"),
 
             // click pay to split, and pay
             SplitBillScreen.clickPay(),
@@ -122,7 +122,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
 
             // Check if there is still water in the order
             ProductScreen.isShown(),
-            ProductScreen.selectedOrderlineHas("Water", "1.0"),
+            ProductScreen.checkSelectedOrderlineHas("Water", "1.0"),
             ProductScreen.clickPayButton(true),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -160,17 +160,17 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4PosCombo", {
             SplitBillScreen.clickOrderline("Water"),
             SplitBillScreen.clickOrderline("Combo Product 3"),
             // we check that all the lines in the combo are splitted together
-            SplitBillScreen.orderlineHas("Water", "1", "1"),
-            SplitBillScreen.orderlineHas("Office Combo", "1", "1"),
-            SplitBillScreen.orderlineHas("Combo Product 3", "1", "1"),
-            SplitBillScreen.orderlineHas("Combo Product 5", "1", "1"),
-            SplitBillScreen.orderlineHas("Combo Product 8", "1", "1"),
-            SplitBillScreen.orderlineHas("Office Combo", "1", "1"),
-            SplitBillScreen.orderlineHas("Combo Product 2", "1", "0"),
-            SplitBillScreen.orderlineHas("Combo Product 4", "1", "0"),
-            SplitBillScreen.orderlineHas("Combo Product 7", "1", "0"),
+            SplitBillScreen.checkOrderlineHas("Water", "1", "1"),
+            SplitBillScreen.checkOrderlineHas("Office Combo", "1", "1"),
+            SplitBillScreen.checkOrderlineHas("Combo Product 3", "1", "1"),
+            SplitBillScreen.checkOrderlineHas("Combo Product 5", "1", "1"),
+            SplitBillScreen.checkOrderlineHas("Combo Product 8", "1", "1"),
+            SplitBillScreen.checkOrderlineHas("Office Combo", "1", "1"),
+            SplitBillScreen.checkOrderlineHas("Combo Product 2", "1", "0"),
+            SplitBillScreen.checkOrderlineHas("Combo Product 4", "1", "0"),
+            SplitBillScreen.checkOrderlineHas("Combo Product 7", "1", "0"),
 
-            ...SplitBillScreen.subtotalIs("53.80"),
+            ...SplitBillScreen.checkSubtotalIs("53.80"),
             ...SplitBillScreen.clickPay(),
             ...PaymentScreen.clickPaymentMethod("Bank"),
             ...PaymentScreen.clickValidate(),
@@ -178,24 +178,29 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4PosCombo", {
             // Check if there is still water in the order
             ...ProductScreen.isShown(),
             // now we check that all the lines that remained in the order are correct
-            ...ProductScreen.selectedOrderlineHas("Minute Maid", "1.0"),
+            ...ProductScreen.checkSelectedOrderlineHas("Minute Maid", "1.0"),
             ...ProductScreen.clickOrderline("Office Combo"),
             ...ProductScreen.clickOrderline("Combo Product 2"),
-            ...ProductScreen.selectedOrderlineHas("Combo Product 2", "1.0", "6.67", "Office Combo"),
+            ...ProductScreen.checkSelectedOrderlineHas(
+                "Combo Product 2",
+                "1.0",
+                "6.67",
+                "Office Combo"
+            ),
             ...ProductScreen.clickOrderline("Combo Product 4"),
-            ...ProductScreen.selectedOrderlineHas(
+            ...ProductScreen.checkSelectedOrderlineHas(
                 "Combo Product 4",
                 "1.0",
                 "14.66",
                 "Office Combo"
             ),
             ...ProductScreen.clickOrderline("Combo Product 7"),
-            ...ProductScreen.selectedOrderlineHas(
+            ...ProductScreen.checkSelectedOrderlineHas(
                 "Combo Product 7",
                 "1.0",
                 "22.00",
                 "Office Combo"
             ),
-            ...ProductScreen.totalAmountIs("45.53"),
+            ...ProductScreen.checkTotalAmountIs("45.53"),
         ].flat(),
 });

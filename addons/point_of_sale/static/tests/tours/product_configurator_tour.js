@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
 
             // Cancel configuration, not product should be in order
             Dialog.cancel(),
-            ProductScreen.orderIsEmpty(),
+            ProductScreen.checkOrderIsEmpty(),
 
             // Click on Configurable Chair product
             ProductScreen.clickDisplayedProduct("Configurable Chair"),
@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             Dialog.confirm(),
 
             // Check that the product has been added to the order with correct attributes and price
-            ProductScreen.selectedOrderlineHas(
+            ProductScreen.checkSelectedOrderlineHas(
                 "Configurable Chair (Red, Metal, Fabrics: Custom Fabric)",
                 "1.0",
                 "11.0"
@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ProductConfigurator.pickRadio("Other"),
             ProductConfigurator.fillCustomAttribute("Custom Fabric"),
             Dialog.confirm(),
-            ProductScreen.selectedOrderlineHas(
+            ProductScreen.checkSelectedOrderlineHas(
                 "Configurable Chair (Red, Metal, Fabrics: Custom Fabric)",
                 "2.0",
                 "22.0"
@@ -63,7 +63,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ProductConfigurator.pickSelect("Metal"),
             ProductConfigurator.pickRadio("Leather"),
             Dialog.confirm(),
-            ProductScreen.selectedOrderlineHas(
+            ProductScreen.checkSelectedOrderlineHas(
                 "Configurable Chair (Blue, Metal, Leather)",
                 "1.0",
                 "10.0"

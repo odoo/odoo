@@ -23,10 +23,10 @@ function isQRDisplayedinDialog() {
 function addProductandPay() {
     return [
         ProductScreen.addOrderline("Hand Bag", "10"),
-        ProductScreen.selectedOrderlineHas("Hand Bag", "10.0"),
+        ProductScreen.checkSelectedOrderlineHas("Hand Bag", "10.0"),
         ProductScreen.clickPayButton(),
 
-        PaymentScreen.totalIs("48"),
+        PaymentScreen.checkTotalIs("48"),
         PaymentScreen.clickPaymentMethod("QR Code", true, { amount: "48" }),
         {
             content: "Display QR Code Payment dialog",
@@ -56,7 +56,7 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPayment", {
             addProductandPay(),
             isQRDisplayedinDialog(),
             Dialog.cancel(),
-            PaymentScreen.validateButtonIsHighlighted(false),
+            PaymentScreen.checkValidateButtonIsHighlighted(false),
             {
                 content: "Retry to display QR Code Payment dialog",
                 trigger: ".button.send_payment_request.highlight",
@@ -75,17 +75,17 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPaymentSwiss", {
     steps: () =>
         [
             ProductScreen.addOrderline("Hand Bag", "10"),
-            ProductScreen.selectedOrderlineHas("Hand Bag", "10.0"),
+            ProductScreen.checkSelectedOrderlineHas("Hand Bag", "10.0"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Partner Swiss"),
             ProductScreen.clickPayButton(),
-            PaymentScreen.totalIs("48"),
+            PaymentScreen.checkTotalIs("48"),
             PaymentScreen.clickPaymentMethod("QR Code", true, { amount: "48" }),
             {
                 content: "Display QR Code Payment dialog",
                 trigger: ".button.send_payment_request.highlight",
             },
-            PaymentScreen.validateButtonIsHighlighted(false),
+            PaymentScreen.checkValidateButtonIsHighlighted(false),
             isQRDisplayedinDialog(),
             Dialog.confirm(),
             {

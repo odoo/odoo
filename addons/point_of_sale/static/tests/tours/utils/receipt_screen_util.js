@@ -54,7 +54,7 @@ export function isShown() {
         },
     ];
 }
-export function receiptIsThere() {
+export function checkReceiptIsThere() {
     return [
         {
             content: "there should be the receipt",
@@ -63,7 +63,7 @@ export function receiptIsThere() {
         },
     ];
 }
-export function totalAmountContains(value) {
+export function checkTotalAmountContains(value) {
     return [
         {
             trigger: `.receipt-screen .top-content h1:contains("${value}")`,
@@ -77,7 +77,7 @@ export function totalAmountContains(value) {
         },
     ];
 }
-export function emailIsSuccessful() {
+export function checkEmailIsSuccessful() {
     return [
         {
             trigger: `.receipt-screen .notice .successful`,
@@ -85,7 +85,7 @@ export function emailIsSuccessful() {
         },
     ];
 }
-export function trackingMethodIsLot() {
+export function checkTrackingMethodIsLot() {
     return [
         {
             content: `tracking method is Lot`,
@@ -94,7 +94,7 @@ export function trackingMethodIsLot() {
         },
     ];
 }
-export function shippingDateExists() {
+export function checkShippingDateExists() {
     return [
         {
             content: "Shipping date must be printed",

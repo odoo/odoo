@@ -38,10 +38,10 @@ export function clickPaymentMethod(name, isCheckNeeded = false, options = {}) {
 
     if (isCheckNeeded) {
         if (remaining) {
-            step.push(...remainingIs(remaining));
+            step.push(...checkRemainingIs(remaining));
         }
         if (change) {
-            step.push(...changeIs(change));
+            step.push(...checkChangeIs(change));
         }
         if (amount) {
             step.push(...selectedPaymentlineHas(name, amount));
@@ -102,11 +102,11 @@ export function clickValidate() {
  *
  * e.g. :
  *  PaymentScreen.enterPaymentLineAmount("Cash", "70"),
- *  PaymentScreen.remainingIs("2.0"),
+ *  PaymentScreen.checkRemainingIs("2.0"),
  *  PaymentScreen.clickNumpad("0"), <- desktop: add a 0
  *  PaymentScreen.fillPaymentLineAmountMobile("Cash", "700"), <- mobile: rewrite the amount
- *  PaymentScreen.remainingIs("0.00"),
- *  PaymentScreen.changeIs("628.0"),
+ *  PaymentScreen.checkRemainingIs("0.00"),
+ *  PaymentScreen.checkChangeIs("628.0"),
  *
  * @param {String} keys space-separated numpad keys
  */
@@ -158,10 +158,10 @@ export function enterPaymentLineAmount(lineName, keys, isCheckNeeded = false, op
 
     if (isCheckNeeded) {
         if (remaining) {
-            step.push(...remainingIs(remaining));
+            step.push(...checkRemainingIs(remaining));
         }
         if (change) {
-            step.push(...changeIs(change));
+            step.push(...checkChangeIs(change));
         }
         if (amount) {
             step.push(...selectedPaymentlineHas(lineName, amount));
@@ -201,7 +201,7 @@ export function isShown() {
  * Check if change is the provided amount.
  * @param {String} amount
  */
-export function changeIs(amount) {
+export function checkChangeIs(amount) {
     return [
         {
             content: `change is ${amount}`,
@@ -223,7 +223,7 @@ export function isInvoiceOptionSelected() {
  * Check if the remaining is the provided amount.
  * @param {String} amount
  */
-export function remainingIs(amount) {
+export function checkRemainingIs(amount) {
     return [
         {
             content: `remaining amount is ${amount}`,
@@ -236,7 +236,7 @@ export function remainingIs(amount) {
  * Check if validate button is highlighted.
  * @param {Boolean} isHighlighted
  */
-export function validateButtonIsHighlighted(isHighlighted = true) {
+export function checkValidateButtonIsHighlighted(isHighlighted = true) {
     return [
         {
             content: `validate button is ${isHighlighted ? "highlighted" : "not highligted"}`,
@@ -260,7 +260,7 @@ export function validateButtonIsHighlighted(isHighlighted = true) {
  * Check if the paymentlines are empty. Also provide the amount to pay.
  * @param {String} amountToPay
  */
-export function emptyPaymentlines(amountToPay) {
+export function checkEmptyPaymentlines(amountToPay) {
     return [
         {
             content: `there are no paymentlines`,
@@ -293,7 +293,7 @@ export function selectedPaymentlineHas(paymentMethodName, amount) {
         },
     ];
 }
-export function totalIs(amount) {
+export function checkTotalIs(amount) {
     return [
         {
             content: `total is ${amount}`,
@@ -302,7 +302,7 @@ export function totalIs(amount) {
         },
     ];
 }
-export function totalDueIs(amount) {
+export function checkTotalDueIs(amount) {
     return [
         {
             content: `total due is ${amount}`,
@@ -317,7 +317,7 @@ export function pay(method, amount) {
     for (const char of amount.split("")) {
         steps.push(...clickNumpad(char));
     }
-    steps.push(...validateButtonIsHighlighted());
+    steps.push(...checkValidateButtonIsHighlighted());
     steps.push(...clickValidate());
     return steps;
 }
@@ -364,7 +364,7 @@ export function clickCustomer(name) {
     return [PartnerList.clickPartner(name)];
 }
 
-export function shippingLaterHighlighted() {
+export function checkShippingLaterHighlighted() {
     return [
         {
             content: "Shipping later button is highlighted",

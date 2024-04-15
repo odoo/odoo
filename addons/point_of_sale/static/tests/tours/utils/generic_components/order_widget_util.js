@@ -73,21 +73,21 @@ export function hasLine({
  * @param {LineOptions} options
  * @returns {import("@web_tour/tour_service/tour_service").TourStep}
  */
-export function doesNotHaveLine(options = {}) {
+export function checkDoesNotHaveLine(options = {}) {
     const step = hasLine(options)[0];
     return [{ ...step, trigger: negate(step.trigger) }];
 }
 
 // TODO: there are instances where we have no selected orderline. Fix those instances
 
-export function hasTotal(amount) {
+export function checkHasTotal(amount) {
     return {
         content: `order total amount is '${amount}'`,
         trigger: `.product-screen .order-summary .total:contains("${amount}")`,
         isCheck: true,
     };
 }
-export function hasTax(amount) {
+export function checkHasTax(amount) {
     return {
         content: `order total tax is '${amount}'`,
         trigger: `.order-summary .tax:contains("${amount}")`,

@@ -17,7 +17,7 @@ export const click = (buttonValue, options = {}) => ({
     mobile: options.mobile,
 });
 export const enterValue = (keys) => keys.split("").map((key) => click(key));
-export const isActive = (buttonValue) => ({
+export const checkIsActive = (buttonValue) => ({
     content: `check if --${buttonValue}-- mode is activated`,
     trigger: `${buttonTriger(buttonValue)}.active`,
     isCheck: true,

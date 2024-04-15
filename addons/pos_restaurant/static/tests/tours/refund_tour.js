@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1.0"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "2.0"),
             ProductScreen.clickDisplayedProduct("Water", true, "1.0"),
-            ProductScreen.totalAmountIs("6.60"),
+            ProductScreen.checkTotalAmountIs("6.60"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
@@ -35,17 +35,17 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
 
             // Go to another table and refund one of the products
             FloorScreen.clickTable("4"),
-            ProductScreen.orderIsEmpty(),
+            ProductScreen.checkOrderIsEmpty(),
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("-0001"),
             Order.hasLine({
                 productName: "Coca-Cola",
             }),
             ProductScreen.clickNumpad("2"),
-            TicketScreen.toRefundTextContains("To Refund: 2.00"),
+            TicketScreen.checkToRefundTextContains("To Refund: 2.00"),
             TicketScreen.confirmRefund(),
             ProductScreen.isShown(),
-            ProductScreen.selectedOrderlineHas("Coca-Cola"),
-            ProductScreen.totalAmountIs("-4.40"),
+            ProductScreen.checkSelectedOrderlineHas("Coca-Cola"),
+            ProductScreen.checkTotalAmountIs("-4.40"),
         ].flat(),
 });

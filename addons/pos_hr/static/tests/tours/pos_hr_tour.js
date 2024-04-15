@@ -37,10 +37,10 @@ registry.category("web_tour.tours").add("PosHrTour", {
             Dialog.confirm(),
             Dialog.confirm("Open session"),
             ProductScreen.isShown(),
-            PosHr.cashierNameIs("Pos Employee1"),
+            PosHr.checkCashierNameIs("Pos Employee1"),
             PosHr.clickCashierName(),
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
-            PosHr.cashierNameIs("Mitchell Admin"),
+            PosHr.checkCashierNameIs("Mitchell Admin"),
             Chrome.clickMenuButton(),
             PosHr.clickLockButton(),
             PosHr.clickLoginButton(),
@@ -55,10 +55,10 @@ registry.category("web_tour.tours").add("PosHrTour", {
             // Create orders and check if the ticket list has the right employee for each order
             // order for employee 2
             ProductScreen.addOrderline("Desk Pad", "1", "2"),
-            ProductScreen.totalAmountIs("2.0"),
+            ProductScreen.checkTotalAmountIs("2.0"),
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
-            TicketScreen.nthRowContains(2, "Pos Employee2", false),
+            TicketScreen.checkNthRowContains(2, "Pos Employee2", false),
 
             // order for employee 1
             Chrome.clickMenuButton(),
@@ -66,21 +66,21 @@ registry.category("web_tour.tours").add("PosHrTour", {
             PosHr.login("Pos Employee1", "2580"),
             TicketScreen.clickNewTicket(),
             ProductScreen.addOrderline("Desk Pad", "1", "4"),
-            ProductScreen.totalAmountIs("4.0"),
+            ProductScreen.checkTotalAmountIs("4.0"),
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
-            TicketScreen.nthRowContains(2, "Pos Employee2", false),
-            TicketScreen.nthRowContains(3, "Pos Employee1", false),
+            TicketScreen.checkNthRowContains(2, "Pos Employee2", false),
+            TicketScreen.checkNthRowContains(3, "Pos Employee1", false),
 
             // order for admin
             PosHr.clickCashierName(),
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
-            PosHr.cashierNameIs("Mitchell Admin"),
+            PosHr.checkCashierNameIs("Mitchell Admin"),
             TicketScreen.clickNewTicket(),
             ProductScreen.addOrderline("Desk Pad", "1", "8"),
-            ProductScreen.totalAmountIs("8.0"),
+            ProductScreen.checkTotalAmountIs("8.0"),
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
-            TicketScreen.nthRowContains(4, "Mitchell Admin", false),
+            TicketScreen.checkNthRowContains(4, "Mitchell Admin", false),
         ].flat(),
 });

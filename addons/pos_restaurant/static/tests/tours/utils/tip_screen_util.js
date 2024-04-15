@@ -31,7 +31,7 @@ export function isShown() {
         },
     ];
 }
-export function totalAmountIs(amount) {
+export function checkTotalAmountIs(amount) {
     return [
         {
             trigger: `.tip-screen .total-amount:contains("${amount}")`,
@@ -39,7 +39,7 @@ export function totalAmountIs(amount) {
         },
     ];
 }
-export function percentAmountIs(percent, amount) {
+export function checkPercentAmountIs(percent, amount) {
     return [
         {
             trigger: `.tip-screen .percentage:contains("${percent}") ~ .amount:contains("${amount}")`,
@@ -47,7 +47,7 @@ export function percentAmountIs(percent, amount) {
         },
     ];
 }
-export function inputAmountIs(amount) {
+export function checkInputAmountIs(amount) {
     return [
         {
             trigger: `.tip-screen .custom-amount-form input[data-amount="${amount}"]`,

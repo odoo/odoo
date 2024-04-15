@@ -21,8 +21,8 @@ export function table({ name, withClass = "", withoutClass, run = () => {}, numO
     ];
 }
 export const clickTable = (name) => table({ name, run: "click" });
-export const hasTable = (name) => table({ name });
-export const selectedTableIs = (name) => table({ name, withClass: ".selected" });
+export const checkHasTable = (name) => table({ name });
+export const checkSelectedTableIs = (name) => table({ name, withClass: ".selected" });
 export const ctrlClickTable = (name) =>
     table({
         name,
@@ -56,7 +56,7 @@ export function backToFloor() {
         },
     ];
 }
-export function selectedFloorIs(name) {
+export function checkSelectedFloorIs(name) {
     return [
         {
             content: `selected floor is '${name}'`,
@@ -65,7 +65,7 @@ export function selectedFloorIs(name) {
         },
     ];
 }
-export function orderCountSyncedInTableIs(table, count) {
+export function checkOrderCountSyncedInTableIs(table, count) {
     return [
         {
             trigger: `.floor-map .table .label:contains("${table}") ~ .order-count:contains("${count}")`,

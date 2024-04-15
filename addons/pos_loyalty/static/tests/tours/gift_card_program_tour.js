@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add("GiftCardProgramCreateSetTour1", {
         [
             Dialog.confirm("Open session"),
             ProductScreen.clickDisplayedProduct("Gift Card"),
-            PosLoyalty.orderTotalIs("50.00"),
+            PosLoyalty.checkOrderTotalIs("50.00"),
             PosLoyalty.finalizeOrder("Cash", "50"),
         ].flat(),
 });
@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add("GiftCardProgramCreateSetTour2", {
         [
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             PosLoyalty.enterCode("044123456"),
-            PosLoyalty.orderTotalIs("0.00"),
+            PosLoyalty.checkOrderTotalIs("0.00"),
             PosLoyalty.finalizeOrder("Cash", "0"),
         ].flat(),
 });
@@ -39,17 +39,17 @@ registry.category("web_tour.tours").add("GiftCardProgramScanUseTour", {
             ProductScreen.clickDisplayedProduct("Gift Card"),
             TextInputPopup.inputText("043123456"),
             Dialog.confirm(),
-            PosLoyalty.orderTotalIs("5.00"),
+            PosLoyalty.checkOrderTotalIs("5.00"),
             PosLoyalty.finalizeOrder("Cash", "5"),
             // Partially use the gift card. (4$)
             ProductScreen.addOrderline("Desk Pad", "2", "2", "4.0"),
             PosLoyalty.enterCode("043123456"),
-            PosLoyalty.orderTotalIs("0.00"),
+            PosLoyalty.checkOrderTotalIs("0.00"),
             PosLoyalty.finalizeOrder("Cash", "0"),
             // Use the remaining of the gift card. (5$ - 4$ = 1$)
             ProductScreen.addOrderline("Whiteboard Pen", "6", "6", "36.0"),
             PosLoyalty.enterCode("043123456"),
-            PosLoyalty.orderTotalIs("35.00"),
+            PosLoyalty.checkOrderTotalIs("35.00"),
             PosLoyalty.finalizeOrder("Cash", "35"),
         ].flat(),
 });
@@ -60,7 +60,7 @@ registry.category("web_tour.tours").add("GiftCardWithRefundtTour", {
         [
             Dialog.confirm("Open session"),
             ProductScreen.addOrderline("Magnetic Board", "1"), // 1.98
-            PosLoyalty.orderTotalIs("1.98"),
+            PosLoyalty.checkOrderTotalIs("1.98"),
             PosLoyalty.finalizeOrder("Cash", "20"),
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("-0001"),
@@ -71,9 +71,9 @@ registry.category("web_tour.tours").add("GiftCardWithRefundtTour", {
             ProductScreen.clickNumpad("1"),
             TicketScreen.confirmRefund(),
             ProductScreen.isShown(),
-            ProductScreen.selectedOrderlineHas("Magnetic Board", "-1.00"),
+            ProductScreen.checkSelectedOrderlineHas("Magnetic Board", "-1.00"),
             ProductScreen.addOrderline("Gift Card", "1"),
-            ProductScreen.selectedOrderlineHas("Gift Card", "1"),
-            PosLoyalty.orderTotalIs("0.0"),
+            ProductScreen.checkSelectedOrderlineHas("Gift Card", "1"),
+            PosLoyalty.checkOrderTotalIs("0.0"),
         ].flat(),
 });

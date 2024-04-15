@@ -22,13 +22,13 @@ export function clickPay() {
     ];
 }
 
-export function orderlineHas(name, totalQuantity, splitQuantity) {
+export function checkOrderlineHas(name, totalQuantity, splitQuantity) {
     return Order.hasLine({
         productName: name,
         quantity: splitQuantity != 0 ? `${splitQuantity} / ${totalQuantity}` : totalQuantity,
     });
 }
-export function subtotalIs(amount) {
+export function checkSubtotalIs(amount) {
     return [
         {
             content: `total amount of split is '${amount}'`,

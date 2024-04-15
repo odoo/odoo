@@ -13,9 +13,9 @@ registry.category("web_tour.tours").add("PaymentScreenTour", {
     steps: () =>
         [
             ProductScreen.addOrderline("Letter Tray", "10"),
-            ProductScreen.selectedOrderlineHas("Letter Tray", "10.0"),
+            ProductScreen.checkSelectedOrderlineHas("Letter Tray", "10.0"),
             ProductScreen.clickPayButton(),
-            PaymentScreen.emptyPaymentlines("52.8"),
+            PaymentScreen.checkEmptyPaymentlines("52.8"),
 
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.enterPaymentLineAmount("Cash", "11", true, {
@@ -23,17 +23,17 @@ registry.category("web_tour.tours").add("PaymentScreenTour", {
                 remaining: "41.8",
                 change: "0.0",
             }),
-            PaymentScreen.validateButtonIsHighlighted(false),
+            PaymentScreen.checkValidateButtonIsHighlighted(false),
             // remove the selected paymentline with multiple backspace presses
             PaymentScreen.clickNumpad("⌫ ⌫"),
             PaymentScreen.fillPaymentLineAmountMobile("Cash", "0"),
             PaymentScreen.selectedPaymentlineHas("Cash", "0.00"),
             PaymentScreen.clickPaymentlineDelButton("Cash", "0", true),
-            PaymentScreen.emptyPaymentlines("52.8"),
+            PaymentScreen.checkEmptyPaymentlines("52.8"),
 
             // Pay with bank, the selected line should have full amount
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0", change: "0.0" }),
-            PaymentScreen.validateButtonIsHighlighted(true),
+            PaymentScreen.checkValidateButtonIsHighlighted(true),
             // remove the line using the delete button
             PaymentScreen.clickPaymentlineDelButton("Bank", "52.8"),
 
@@ -41,31 +41,31 @@ registry.category("web_tour.tours").add("PaymentScreenTour", {
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickNumpad("+10"),
             PaymentScreen.fillPaymentLineAmountMobile("Cash", "10"),
-            PaymentScreen.remainingIs("42.8"),
-            PaymentScreen.changeIs("0.0"),
-            PaymentScreen.validateButtonIsHighlighted(false),
+            PaymentScreen.checkRemainingIs("42.8"),
+            PaymentScreen.checkChangeIs("0.0"),
+            PaymentScreen.checkValidateButtonIsHighlighted(false),
             PaymentScreen.clickNumpad("+50"),
             PaymentScreen.fillPaymentLineAmountMobile("Cash", "60"),
-            PaymentScreen.remainingIs("0.0"),
-            PaymentScreen.changeIs("7.2"),
-            PaymentScreen.validateButtonIsHighlighted(true),
+            PaymentScreen.checkRemainingIs("0.0"),
+            PaymentScreen.checkChangeIs("7.2"),
+            PaymentScreen.checkValidateButtonIsHighlighted(true),
             PaymentScreen.clickPaymentlineDelButton("Cash", "60.0"),
 
             // Multiple paymentlines
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickNumpad("1"),
             PaymentScreen.fillPaymentLineAmountMobile("Cash", "1"),
-            PaymentScreen.remainingIs("51.8"),
-            PaymentScreen.changeIs("0.0"),
-            PaymentScreen.validateButtonIsHighlighted(false),
+            PaymentScreen.checkRemainingIs("51.8"),
+            PaymentScreen.checkChangeIs("0.0"),
+            PaymentScreen.checkValidateButtonIsHighlighted(false),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.fillPaymentLineAmountMobile("Bank", "5"),
             PaymentScreen.clickNumpad("5"),
-            PaymentScreen.remainingIs("46.8"),
-            PaymentScreen.changeIs("0.0"),
-            PaymentScreen.validateButtonIsHighlighted(false),
+            PaymentScreen.checkRemainingIs("46.8"),
+            PaymentScreen.checkChangeIs("0.0"),
+            PaymentScreen.checkValidateButtonIsHighlighted(false),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0", change: "0.0" }),
-            PaymentScreen.validateButtonIsHighlighted(true),
+            PaymentScreen.checkValidateButtonIsHighlighted(true),
         ].flat(),
 });
 
@@ -79,8 +79,8 @@ registry.category("web_tour.tours").add("PaymentScreenTour2", {
             PaymentScreen.enterPaymentLineAmount("Bank", "99"),
             // trying to put 99 as an amount should throw an error. We thus confirm the dialog.
             Dialog.confirm(),
-            PaymentScreen.remainingIs("0.0"),
-            PaymentScreen.changeIs("0.0"),
+            PaymentScreen.checkRemainingIs("0.0"),
+            PaymentScreen.checkChangeIs("0.0"),
         ].flat(),
 });
 
@@ -92,7 +92,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingUp", {
             ProductScreen.addOrderline("Product Test", "1"),
             ProductScreen.clickPayButton(),
 
-            PaymentScreen.totalIs("2.00"),
+            PaymentScreen.checkTotalIs("2.00"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", change: "0.0" }),
 
             Chrome.clickMenuButton(),
@@ -102,7 +102,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingUp", {
             ProductScreen.addOrderline("Product Test", "-1"),
             ProductScreen.clickPayButton(),
 
-            PaymentScreen.totalIs("-2.00"),
+            PaymentScreen.checkTotalIs("-2.00"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", change: "0.0" }),
         ].flat(),
 });
@@ -115,7 +115,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
             ProductScreen.addOrderline("Product Test", "1"),
             ProductScreen.clickPayButton(),
 
-            PaymentScreen.totalIs("1.95"),
+            PaymentScreen.checkTotalIs("1.95"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", change: "0.0" }),
 
             Chrome.clickMenuButton(),
@@ -125,7 +125,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
             ProductScreen.addOrderline("Product Test", "-1"),
             ProductScreen.clickPayButton(),
 
-            PaymentScreen.totalIs("-1.95"),
+            PaymentScreen.checkTotalIs("-1.95"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", change: "0.0" }),
         ].flat(),
 });
@@ -138,7 +138,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
             ProductScreen.addOrderline("Product Test 1.2", "1"),
             ProductScreen.clickPayButton(),
 
-            PaymentScreen.totalIs("1.00"),
+            PaymentScreen.checkTotalIs("1.00"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", change: "0.0" }),
 
             Chrome.clickMenuButton(),
@@ -148,7 +148,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
             ProductScreen.addOrderline("Product Test 1.25", "1"),
             ProductScreen.clickPayButton(),
 
-            PaymentScreen.totalIs("1.5"),
+            PaymentScreen.checkTotalIs("1.5"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", change: "0.0" }),
 
             Chrome.clickMenuButton(),
@@ -158,7 +158,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
             ProductScreen.addOrderline("Product Test 1.4", "1"),
             ProductScreen.clickPayButton(),
 
-            PaymentScreen.totalIs("1.5"),
+            PaymentScreen.checkTotalIs("1.5"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", change: "0.0" }),
 
             Chrome.clickMenuButton(),
@@ -168,13 +168,13 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
             ProductScreen.addOrderline("Product Test 1.2", "1"),
             ProductScreen.clickPayButton(),
 
-            PaymentScreen.totalIs("1.00"),
+            PaymentScreen.checkTotalIs("1.00"),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickNumpad("2"),
             PaymentScreen.fillPaymentLineAmountMobile("Cash", "2"),
 
-            PaymentScreen.remainingIs("0.0"),
-            PaymentScreen.changeIs("1.0"),
+            PaymentScreen.checkRemainingIs("0.0"),
+            PaymentScreen.checkChangeIs("1.0"),
         ].flat(),
 });
 
@@ -188,16 +188,16 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUpCashAndBank"
             ProductScreen.clickCustomer("Partner Test 1"),
             ProductScreen.clickPayButton(),
 
-            PaymentScreen.totalIs("40.00"),
+            PaymentScreen.checkTotalIs("40.00"),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickNumpad("3 8"),
             PaymentScreen.fillPaymentLineAmountMobile("Bank", "38"),
-            PaymentScreen.remainingIs("2.0"),
+            PaymentScreen.checkRemainingIs("2.0"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", change: "0.0" }),
 
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.receiptIsThere(),
+            ReceiptScreen.checkReceiptIsThere(),
             ReceiptScreen.clickNextOrder(),
 
             ProductScreen.addOrderline("Product Test 41", "1"),
@@ -205,16 +205,16 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUpCashAndBank"
             ProductScreen.clickCustomer("Partner Test 1"),
             ProductScreen.clickPayButton(),
 
-            PaymentScreen.totalIs("41.00"),
+            PaymentScreen.checkTotalIs("41.00"),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickNumpad("3 8"),
             PaymentScreen.fillPaymentLineAmountMobile("Bank", "38"),
-            PaymentScreen.remainingIs("3.0"),
+            PaymentScreen.checkRemainingIs("3.0"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", change: "0.0" }),
 
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.receiptIsThere(),
+            ReceiptScreen.checkReceiptIsThere(),
         ].flat(),
 });
 
@@ -225,13 +225,13 @@ registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", 
             ProductScreen.addOrderline("Product Test", "1"),
             ProductScreen.clickPayButton(),
 
-            PaymentScreen.totalIs("1.95"),
+            PaymentScreen.checkTotalIs("1.95"),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.enterPaymentLineAmount("Cash", "5", true, {
                 remaining: "0.0",
                 change: "3.05",
             }),
-            PaymentScreen.totalDueIs("1.95"),
+            PaymentScreen.checkTotalDueIs("1.95"),
         ].flat(),
 });
 

@@ -30,7 +30,7 @@ export function clickMenuOption(name) {
         },
     ];
 }
-export function isCashMoveButtonHidden() {
+export function checkCashMoveButtonIsHidden() {
     return [
         {
             extraTrigger: ".pos-topheader",
@@ -39,7 +39,7 @@ export function isCashMoveButtonHidden() {
         },
     ];
 }
-export function isCashMoveButtonShown() {
+export function checkCashMoveButtonShown() {
     return [
         {
             trigger: ".pos-topheader:contains(Cash In/Out)",

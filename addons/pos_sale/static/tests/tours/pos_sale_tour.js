@@ -20,9 +20,9 @@ registry.category("web_tour.tours").add("PosSettleOrder", {
             Dialog.confirm("Open session"),
             ProductScreen.clickControlButton("Quotation/Order"),
             ProductScreen.selectFirstOrder(),
-            ProductScreen.selectedOrderlineHas("Pizza Chicken", 9),
+            ProductScreen.checkSelectedOrderlineHas("Pizza Chicken", 9),
             ProductScreen.clickNumpad("Qty", "2"), // Change the quantity of the product to 2
-            ProductScreen.selectedOrderlineHas("Pizza Chicken", 2),
+            ProductScreen.checkSelectedOrderlineHas("Pizza Chicken", 2),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -40,16 +40,16 @@ registry.category("web_tour.tours").add("PosSettleOrderIncompatiblePartner", {
             ProductScreen.clickControlButton("Quotation/Order"),
             // The second item in the list is the first sale.order.
             ProductScreen.selectNthOrder(2),
-            ProductScreen.selectedOrderlineHas("product1", 1),
-            ProductScreen.totalAmountIs("10.00"),
+            ProductScreen.checkSelectedOrderlineHas("product1", 1),
+            ProductScreen.checkTotalAmountIs("10.00"),
 
             ProductScreen.clickControlButton("Quotation/Order"),
             // The first item in the list is the second sale.order.
             // Selecting the 2nd sale.order should use a new order,
             // therefore, the total amount will change.
             ProductScreen.selectNthOrder(1),
-            ProductScreen.selectedOrderlineHas("product2", 1),
-            ProductScreen.totalAmountIs("11.00"),
+            ProductScreen.checkSelectedOrderlineHas("product2", 1),
+            ProductScreen.checkTotalAmountIs("11.00"),
         ].flat(),
 });
 
@@ -61,10 +61,10 @@ registry.category("web_tour.tours").add("PosSettleOrder2", {
             ProductScreen.clickControlButton("Quotation/Order"),
             ProductScreen.selectFirstOrder(),
             ProductScreen.clickOrderline("Product A", "1"),
-            ProductScreen.selectedOrderlineHas("Product A", "1.00"),
+            ProductScreen.checkSelectedOrderlineHas("Product A", "1.00"),
             ProductScreen.clickOrderline("Product B", "1"),
             ProductScreen.clickNumpad("Qty", "0"),
-            ProductScreen.selectedOrderlineHas("Product B", "0.00"),
+            ProductScreen.checkSelectedOrderlineHas("Product B", "0.00"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
             PaymentScreen.clickValidate(),
@@ -85,7 +85,7 @@ registry.category("web_tour.tours").add("PosRefundDownpayment", {
             ReceiptScreen.clickNextOrder(),
             ...ProductScreen.clickRefund(),
             // Filter should be automatically 'Paid'.
-            TicketScreen.filterIs("Paid"),
+            TicketScreen.checkFilterIs("Paid"),
             TicketScreen.selectOrder("-0001"),
             Order.hasLine({
                 productName: "Down Payment",
@@ -108,7 +108,7 @@ registry.category("web_tour.tours").add("PosSettleOrderRealTime", {
             Dialog.confirm("Open session"),
             ProductScreen.clickControlButton("Quotation/Order"),
             ProductScreen.selectFirstOrder(),
-            ProductScreen.totalAmountIs(40),
+            ProductScreen.checkTotalAmountIs(40),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -123,7 +123,7 @@ registry.category("web_tour.tours").add("PosSettleOrder3", {
             Dialog.confirm("Open session"),
             ProductScreen.clickControlButton("Quotation/Order"),
             ProductScreen.selectFirstOrder(),
-            ProductScreen.selectedOrderlineHas("Product A", "1.00"),
+            ProductScreen.checkSelectedOrderlineHas("Product A", "1.00"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
             PaymentScreen.clickValidate(),
@@ -138,8 +138,8 @@ registry.category("web_tour.tours").add("PosSettleOrderNotGroupable", {
             Dialog.confirm("Open session"),
             ProductScreen.clickControlButton("Quotation/Order"),
             ProductScreen.selectFirstOrder(),
-            ProductScreen.totalAmountIs(32.2), // 3.5 * 8 * 1.15
-            ProductScreen.selectedOrderlineHas("Product A", "0.50"),
+            ProductScreen.checkTotalAmountIs(32.2), // 3.5 * 8 * 1.15
+            ProductScreen.checkSelectedOrderlineHas("Product A", "0.50"),
             ProductScreen.checkOrderlinesNumber(4),
         ].flat(),
 });

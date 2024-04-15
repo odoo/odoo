@@ -136,7 +136,7 @@ export function checkStatus(orderName, status) {
  * Note that 1st row is the header-row.
  * @param {boolean | undefined} viewMode true if in mobile view, false if in desktop, undefined if in both views.
  */
-export function nthRowContains(n, string, viewMode) {
+export function checkNthRowContains(n, string, viewMode) {
     return [
         {
             trigger: `.ticket-screen .orders > .order-row:nth-child(${n}):contains("${string}")`,
@@ -153,7 +153,7 @@ export function contains(string) {
         },
     ];
 }
-export function noNewTicketButton() {
+export function checkNoNewTicketButton() {
     return [
         {
             trigger: ".ticket-screen .controls .buttons:nth-child(1):has(.discard)",
@@ -161,7 +161,7 @@ export function noNewTicketButton() {
         },
     ];
 }
-export function filterIs(name) {
+export function checkFilterIs(name) {
     return [
         {
             trigger: `.ticket-screen .pos-search-bar .filter span:contains("${name}")`,
@@ -177,19 +177,19 @@ export function invoicePrinted() {
         },
     ];
 }
-export function toRefundTextContains(text) {
+export function checkToRefundTextContains(text) {
     return inLeftSide({
         trigger: `.ticket-screen .to-refund-highlight:contains("${text}")`,
         run: () => {},
     });
 }
-export function refundedNoteContains(text) {
+export function checkRefundedNoteContains(text) {
     return inLeftSide({
         trigger: `.ticket-screen .refund-note:contains("${text}")`,
         run: () => {},
     });
 }
-export function tipContains(amount) {
+export function checkTipContains(amount) {
     return [
         {
             trigger: `.ticket-screen .tip-cell:contains("${amount}")`,
@@ -197,7 +197,7 @@ export function tipContains(amount) {
         },
     ];
 }
-export function receiptTotalIs(amount) {
+export function checkReceiptTotalIs(amount) {
     return [
         {
             trigger: `.receipt-screen .pos-receipt-amount:contains("${amount}")`,
