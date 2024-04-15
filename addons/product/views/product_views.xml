@@ -434,6 +434,32 @@
             </field>
         </record>
 
+        <record id="product_product_view_form_normalized" model="ir.ui.view">
+            <field name="name">product.product.view.form.normalized</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group name="pricing">
+                        <field name="company_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="cost_currency_id" invisible="1"/>
+                        <field name="name" placeholder="e.g. Cheese Burger" string="Product Name"/>
+                        <field name="barcode" placeholder="e.g. 1234567890"/>
+                        <label for="list_price" class="mt-1"/>
+                        <div name="sales_price">
+                            <field name="list_price" class="oe_inline" widget="monetary"
+                                   options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                        </div>
+                        <field name="image_1920" invisible="1"/>   <!-- Hide the image field for set data in product barcodelookup -->
+                        <field name="description" invisible="1"/>  <!-- Hide the description field for set data in product barcodelookup -->
+                        <field name="weight" invisible="1"/>       <!-- Hide the weight field for set data in product barcodelookup -->
+                        <field name="categ_id" invisible="1"/>     <!-- Hide the categ_id field set data in product barcodelookup -->
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
         <record id="product_kanban_view" model="ir.ui.view">
             <field name="name">Product Kanban</field>
             <field name="model">product.product</field>
