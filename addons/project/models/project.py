@@ -594,6 +594,13 @@ class Task(models.Model):
             else:
                 task.kanban_state_label = task.legend_done
 
+    @api.depends('project_id', 'stage_id')
+    def _check_project_stage_consistance(self):
+        for task in self:
+            if task.stage_id and task.project_id.type_ids and task.stage_id.id not in task.project_id.type_ids.ids:
+                raise UserError(_("You cannot move the task %s to the stage %s while the stage does not belong to the corresponding project of the task.")
+                                % (task.name, task.stage_id.name))
+
     def _compute_access_url(self):
         super(Task, self)._compute_access_url()
         for task in self:
