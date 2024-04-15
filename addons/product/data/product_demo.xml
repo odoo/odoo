@@ -6,39 +6,6 @@
             <field name="implied_ids" eval="[(4, ref('product.group_product_variant'))]"/>
         </record>
 
-        <record id="product_category_2" model="product.category">
-            <field name="parent_id" ref="product.product_category_all"/>
-            <field name="name">Internal</field>
-        </record>
-        <record id="product_category_3" model="product.category">
-            <field name="parent_id" ref="product.product_category_1"/>
-            <field name="name">Services</field>
-        </record>
-        <record id="product_category_6" model="product.category">
-            <field name="parent_id" ref="product.product_category_3"/>
-            <field name="name">Saleable</field>
-        </record>
-        <record id="product_category_4" model="product.category">
-            <field name="parent_id" ref="product.product_category_1"/>
-            <field name="name">Software</field>
-        </record>
-        <record id="product_category_5" model="product.category">
-            <field name="parent_id" ref="product_category_1"/>
-            <field name="name">Office Furniture</field>
-        </record>
-        <record id="product_category_consumable" model="product.category">
-            <field name="parent_id" ref="product_category_all"/>
-            <field name="name">Consumable</field>
-        </record>
-        <record id="product_category_construction" model="product.category">
-            <field name="parent_id" ref="product_category_all"/>
-            <field name="name">Home Construction</field>
-        </record>
-        <record id="product_category_outdoor_furniture" model="product.category">
-            <field name="parent_id" ref="product_category_1"/>
-            <field name="name">Outdoor furniture</field>
-        </record>
-
         <!-- Expensable products -->
         <record id="expense_product" model="product.product">
             <field name="name">Restaurant Expenses</field>
@@ -136,77 +103,6 @@
 
         <!-- Variants -->
 
-        <record id="product_attribute_1" model="product.attribute">
-            <field name="name">Legs</field>
-            <field name="sequence">10</field>
-        </record>
-        <record id="product_attribute_value_1" model="product.attribute.value">
-            <field name="name">Steel</field>
-            <field name="attribute_id" ref="product_attribute_1"/>
-            <field name="sequence">1</field>
-        </record>
-        <record id="product_attribute_value_2" model="product.attribute.value">
-            <field name="name">Aluminium</field>
-            <field name="attribute_id" ref="product_attribute_1"/>
-            <field name="sequence">2</field>
-        </record>
-
-        <record id="product_attribute_2" model="product.attribute">
-            <field name="name">Color</field>
-            <field name="sequence">20</field>
-        </record>
-        <record id="product_attribute_value_color_wood" model="product.attribute.value">
-            <field name="name">Wood</field>
-            <field name="attribute_id" ref="product_attribute_2"/>
-            <field name="sequence">0</field>
-            <field name="image" type="base64" file="product/static/img/wood.jpg"/>
-        </record>
-        <record id="product_attribute_value_3" model="product.attribute.value">
-            <field name="name">White</field>
-            <field name="attribute_id" ref="product_attribute_2"/>
-            <field name="sequence">1</field>
-        </record>
-        <record id="product_attribute_value_4" model="product.attribute.value">
-            <field name="name">Black</field>
-            <field name="attribute_id" ref="product_attribute_2"/>
-            <field name="sequence">2</field>
-        </record>
-
-        <record id="product_attribute_3" model="product.attribute">
-            <field name="name">Duration</field>
-            <field name="sequence">30</field>
-        </record>
-        <record id="product_attribute_value_5" model="product.attribute.value">
-            <field name="name">1 year</field>
-            <field name="attribute_id" ref="product_attribute_3"/>
-        </record>
-        <record id="product_attribute_value_6" model="product.attribute.value">
-            <field name="name">2 year</field>
-            <field name="attribute_id" ref="product_attribute_3"/>
-        </record>
-
-        <record id="pa_extra_options" model="product.attribute">
-            <field name="name">Extra Options</field>
-            <field name="display_type">multi</field>
-            <field name="create_variant">no_variant</field>
-            <field name="sequence">40</field>
-        </record>
-        <record id="pav_warranty" model="product.attribute.value">
-            <field name="name">1 year warranty extension</field>
-            <field name="default_extra_price">50</field>
-            <field name="attribute_id" ref="pa_extra_options"/>
-        </record>
-        <record id="pav_cleaning_kit" model="product.attribute.value">
-            <field name="name">Cleaning kit</field>
-            <field name="default_extra_price">5</field>
-            <field name="attribute_id" ref="pa_extra_options"/>
-        </record>
-        <record id="pav_protection_kit" model="product.attribute.value">
-            <field name="name">Protection kit</field>
-            <field name="default_extra_price">10</field>
-            <field name="attribute_id" ref="pa_extra_options"/>
-        </record>
-
         <record id="product_product_4_product_template" model="product.template">
             <field name="name">Customizable Desk</field>
             <field name="categ_id" ref="product_category_5"/>
@@ -217,14 +113,6 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">160x80cm, with large legs.</field>
-        </record>
-
-        <record id="product_product_4_product_template_document" model="product.document">
-            <field name="name">Customizable Desk Document.pdf</field>
-            <field name="datas" type="base64" file="product/static/demo/customizable_desk_document.pdf"/>
-            <field name="mimetype">application/pdf</field>
-            <field name="res_model">product.template</field>
-            <field name="res_id" ref="product.product_product_4_product_template"/>
         </record>
 
         <!-- the product template attribute lines have to be defined before creating the variants -->
@@ -570,16 +458,6 @@
             ]"/>
         </record>
 
-        <function model="product.template" name="_demo_configure_variants"/>
-
-        <record id="product_product_25_document" model="product.document">
-            <field name="name">Acoustic Bloc Screens Document.pdf</field>
-            <field name="datas" type="base64" file="product/static/demo/acoustic_bloc_screen_document.pdf"/>
-            <field name="mimetype">application/pdf</field>
-            <field name="res_model">product.product</field>
-            <field name="res_id" ref="product.product_product_25"/>
-        </record>
-
         <record id="product_product_27" model="product.product">
             <field name="name">Drawer</field>
             <field name="categ_id" ref="product_category_5"/>
@@ -622,14 +500,6 @@
             <field name="image_1920" type="base64" file="product/static/img/product_product_46-image.jpg"/>
         </record>
 
-        <record id="consu_delivery_02_document" model="product.document">
-            <field name="name">Large Meeting Table Document.pdf</field>
-            <field name="datas" type="base64" file="product/static/demo/large_meeting_table_document.pdf"/>
-            <field name="mimetype">application/pdf</field>
-            <field name="res_model">product.template</field>
-            <field name="res_id" ref="consu_delivery_02_product_template"/>
-        </record>
-
         <record id="consu_delivery_01" model="product.product">
             <field name="name">Three-Seat Sofa</field>
             <field name="categ_id" ref="product_category_5"/>
@@ -657,243 +527,6 @@
             ]"/>
         </record>
 
-        <!--
-    Resource: product.supplierinfo
-    -->
-
-        <record id="product_supplierinfo_1" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_6_product_template"/>
-            <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="delay">3</field>
-            <field name="min_qty">1</field>
-            <field name="price">750</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_2" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_6_product_template"/>
-            <field name="partner_id" ref="base.res_partner_4"/>
-            <field name="delay">3</field>
-            <field name="min_qty">1</field>
-            <field name="price">790</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_2bis" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_6_product_template"/>
-            <field name="partner_id" ref="base.res_partner_4"/>
-            <field name="delay">3</field>
-            <field name="min_qty">3</field>
-            <field name="price">785</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_3" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_7_product_template"/>
-            <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="delay">3</field>
-            <field name="min_qty">1</field>
-            <field name="price">13.0</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_4" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_7_product_template"/>
-            <field name="partner_id" ref="base.res_partner_4"/>
-            <field name="delay">3</field>
-            <field name="min_qty">1</field>
-            <field name="price">14.4</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_5" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_8_product_template"/>
-            <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="delay">2</field>
-            <field name="min_qty">5</field>
-            <field name="price">1299</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_6" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_8_product_template"/>
-            <field name="partner_id" ref="base.res_partner_12"/>
-            <field name="delay">4</field>
-            <field name="min_qty">1</field>
-            <field name="price">1399</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_7" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_10_product_template"/>
-            <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="delay">2</field>
-            <field name="min_qty">1</field>
-            <field name="price">120.50</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_8" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_11_product_template"/>
-            <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="delay">2</field>
-            <field name="min_qty">1</field>
-            <field name="price">28</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_9" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_13_product_template"/>
-            <field name="partner_id" ref="base.res_partner_4"/>
-            <field name="delay">5</field>
-            <field name="min_qty">1</field>
-            <field name="price">78</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_10" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_16_product_template"/>
-            <field name="partner_id" ref="base.res_partner_3"/>
-            <field name="delay">1</field>
-            <field name="min_qty">1</field>
-            <field name="price">20</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_12" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_20_product_template"/>
-            <field name="partner_id" ref="base.res_partner_4"/>
-            <field name="delay">3</field>
-            <field name="min_qty">1</field>
-            <field name="price">1700</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_13" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_20_product_template"/>
-            <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="delay">4</field>
-            <field name="min_qty">5</field>
-            <field name="price">1720</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_14" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_22_product_template"/>
-            <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="delay">3</field>
-            <field name="min_qty">1</field>
-            <field name="price">2010</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_15" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_24_product_template"/>
-            <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="delay">3</field>
-            <field name="min_qty">1</field>
-            <field name="price">876</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_16" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_template_acoustic_bloc_screens"/>
-            <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="delay">8</field>
-            <field name="min_qty">1</field>
-            <field name="price">287</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_17" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_delivery_02_product_template"/>
-            <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="delay">4</field>
-            <field name="min_qty">1</field>
-            <field name="price">390</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_18" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_delivery_01_product_template"/>
-            <field name="partner_id" ref="base.res_partner_3"/>
-            <field name="delay">2</field>
-            <field name="min_qty">12</field>
-            <field name="price">90</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_19" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_delivery_01_product_template"/>
-            <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="delay">4</field>
-            <field name="min_qty">1</field>
-            <field name="price">66</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_20" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_delivery_02_product_template"/>
-            <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="delay">5</field>
-            <field name="min_qty">1</field>
-            <field name="price">35</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_21" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_delivery_01_product_template"/>
-            <field name="partner_id" ref="base.res_partner_12"/>
-            <field name="delay">7</field>
-            <field name="min_qty">1</field>
-            <field name="price">55</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_22" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_9_product_template"/>
-            <field name="partner_id" ref="base.res_partner_12"/>
-            <field name="delay">4</field>
-            <field name="min_qty">0</field>
-            <field name="price">10</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_23" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_27_product_template"/>
-            <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="delay">10</field>
-            <field name="min_qty">0</field>
-            <field name="price">95.50</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_24" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_12_product_template"/>
-            <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="delay">3</field>
-            <field name="min_qty">0</field>
-            <field name="price">120.50</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_25" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_12_product_template"/>
-            <field name="partner_id" ref="base.res_partner_4"/>
-            <field name="delay">2</field>
-            <field name="min_qty">0</field>
-            <field name="price">130.50</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record id="product_supplierinfo_26" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_5_product_template"/>
-            <field name="partner_id" ref="base.res_partner_10"/>
-            <field name="delay">1</field>
-            <field name="min_qty">0</field>
-            <field name="price">145</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
+        <function model="product.template" name="_demo_configure_variants"/>
     </data>
 </odoo>
