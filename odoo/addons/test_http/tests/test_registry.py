@@ -128,16 +128,20 @@ class TestHttpRegistry(BaseCase):
         with self.assertLogs('odoo.http', logging.WARNING) as capture:
             res = self.url_open('/test_http/ensure_db')
             res.raise_for_status()
+            self.authenticate(db=db_duplicate)  # session was drop
+            res_query = self.url_open(f'/test_http/ensure_db?db={db_duplicate}')
+            res_query.raise_for_status()
 
         self.assertEqual(
-            (res.status_code, urlsplit(res.headers.get('Location', '')).path),
-            (303, '/web/database/selector'),
+            [(res.status_code, urlsplit(res.headers.get('Location', '')).path),
+             (res_query.status_code, urlsplit(res_query.headers.get('Location', '')).path)],
+            [(303, '/web/database/selector')] * 2,
             "It should not redirect back on /test_http/ensure_db.",
         )
         self.assertEqual(capture.output, [
             Like("WARNING:odoo.http:Database or registry unusable, trying without\n"
                  f'Traceback...database "{db_duplicate}" does not exist...')
-        ])
+        ] * 2)
 
     @mute_logger('odoo.sql_db')
     def test_corrupt_ir_module_module_table(self):
