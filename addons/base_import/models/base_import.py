@@ -473,7 +473,10 @@ class Import(models.TransientModel):
                 encoding = options['encoding'] = encoding[:-2]
 
         if encoding != 'utf-8':
-            csv_data = csv_data.decode(encoding).encode('utf-8')
+            try:
+                csv_data = csv_data.decode(encoding).encode('utf-8')
+            except UnicodeDecodeError as e:
+                raise ImportValidationError(_("Invalid Encoding option: %s", encoding))
 
         separator = options.get('separator')
         if not separator:
