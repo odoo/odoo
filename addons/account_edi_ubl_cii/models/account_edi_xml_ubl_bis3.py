@@ -118,7 +118,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         if partner.country_code == 'NO':
             if 'l10n_no_bronnoysund_number' in partner._fields:
                 vals['endpoint_id'] = partner.l10n_no_bronnoysund_number
-            else:
+            elif partner.vat:
                 vals['endpoint_id'] = partner.vat.replace("NO", "").replace("MVA", "")
         # [BR-NL-1] Dutch supplier registration number ( AccountingSupplierParty/Party/PartyLegalEntity/CompanyID );
         # With a Dutch supplier (NL), SchemeID may only contain 106 (Chamber of Commerce number) or 190 (OIN number).
