@@ -1123,8 +1123,8 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         }
     }
 }
-export const isLinkEligibleForZwnbsp = link => {
-    return link.isContentEditable && !(
+export const isLinkEligibleForZwnbsp = (editable, link) => {
+    return link.isContentEditable && editable.contains(link) && !(
         [link, ...link.querySelectorAll('*')].some(el => el.nodeName === 'IMG' || isBlock(el)) ||
         link.matches('nav a, a.nav-link')
     )
@@ -1137,7 +1137,7 @@ export const isLinkEligibleForZwnbsp = link => {
  * @param {HTMLAnchorElement} link
  */
 export const padLinkWithZws = (editable, link) => {
-    if (!isLinkEligibleForZwnbsp(link)) {
+    if (!isLinkEligibleForZwnbsp(editable, link)) {
         // Only add the ZWNBSP for simple (possibly styled) text links, and
         // never in a nav.
         return;

@@ -201,7 +201,7 @@ function insert(editor, data, isText = true) {
     selection.removeAllRanges();
     const newRange = new Range();
     let lastPosition;
-    if (currentNode.nodeName === 'A' && isLinkEligibleForZwnbsp(currentNode)) {
+    if (currentNode.nodeName === 'A' && isLinkEligibleForZwnbsp(editor.editable, currentNode)) {
         padLinkWithZws(editor.editable, currentNode);
         currentNode = currentNode.nextSibling;
         lastPosition = getDeepestPosition(...rightPos(currentNode));
