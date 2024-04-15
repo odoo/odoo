@@ -29,17 +29,15 @@ def _call_kw_readonly(registry, request):
 
 class DataSet(http.Controller):
 
-    def _call_kw(self, model, method, args, kwargs):
+    @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='json', auth="user", readonly=_call_kw_readonly)
+    def call_kw(self, model, method, args, kwargs, path=None):
         check_method_name(method)
         return call_kw(request.env[model], method, args, kwargs)
 
-    @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='json', auth="user", readonly=_call_kw_readonly)
-    def call_kw(self, model, method, args, kwargs, path=None):
-        return self._call_kw(model, method, args, kwargs)
-
     @http.route(['/web/dataset/call_button', '/web/dataset/call_button/<path:path>'], type='json', auth="user", readonly=_call_kw_readonly)
     def call_button(self, model, method, args, kwargs, path=None):
-        action = self._call_kw(model, method, args, kwargs)
+        check_method_name(method)
+        action = call_kw(request.env[model], method, args, kwargs)
         if isinstance(action, dict) and action.get('type') != '':
             return clean_action(action, env=request.env)
         return False
