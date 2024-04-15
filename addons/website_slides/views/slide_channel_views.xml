@@ -238,7 +238,9 @@
                                             </a>
                                         </div>
                                         <div t-if="record.tag_ids">
-                                            <field name="tag_ids" widget="many2many_tags"/>
+                                            <span class="oe_kanban_list_many2many">
+                                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
