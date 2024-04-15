@@ -190,7 +190,7 @@ export class Message extends Record {
         return dateDay;
     }
 
-    dateSimple() {
+    get dateSimple() {
         return this.datetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
             locale: user.lang?.replace("_", "-"),
         });
