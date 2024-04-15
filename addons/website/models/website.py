@@ -1723,7 +1723,9 @@ class Website(models.Model):
         for field in fields:
             if '.' not in field:
                 continue
-            direct, indirect = field.split('.')
+            direct, indirect = field.split('.', 1)
+            if '.' in indirect:
+                direct, indirect = indirect.split('.')
             if direct not in model._fields:
                 continue
             direct_field = model._fields[direct]
