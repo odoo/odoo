@@ -36,4 +36,5 @@ export const standardViewProps = {
     selectRecord: { type: Function, optional: true },
     state: { type: Object, optional: true },
     useSampleModel: { type: Boolean },
+    updateActionState: { type: Function, optional: true },
 };
