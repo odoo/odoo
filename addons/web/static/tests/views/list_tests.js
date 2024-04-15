@@ -2021,6 +2021,50 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('controlpanel dropdowns are removed after multi record edition', async function (assert) {
+        assert.expect(5);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree multi_edit="1"><field name="foo"/><field name="bar"/></tree>',
+            toolbar: {
+                action: [{
+                    model_name: 'event',
+                    name: 'Action event',
+                    type: 'ir.actions.server',
+                    usage: 'ir_actions_server',
+                }],
+                print: [],
+            },
+            viewOptions: {
+                hasActionMenus: true,
+            },
+        });
+
+        assert.containsN(list, '.o_data_row', 4,
+            "there should be 4 records");
+        assert.containsNone(list, '.o_cp_action_menus',
+            "control panel action menus should not be displayed");
+
+        // select all records
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+        assert.containsN(list, '.o_data_row .o_list_record_selector input:checked', 4,
+            "all 4 records should be selected");
+        assert.containsOnce(list, '.o_cp_action_menus',
+            "control panel action menus should be displayed");
+
+        // edit selected records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), 'legion');
+        await testUtils.dom.click($('.modal-dialog button.btn-primary'));
+        assert.containsNone(list, '.o_cp_action_menus',
+            "control panel action menus should not be displayed");
+
+        list.destroy();
+    });
+
     QUnit.test('selection is reset on reload', async function (assert) {
         assert.expect(8);
 
