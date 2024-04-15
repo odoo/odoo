@@ -303,6 +303,7 @@
                 <t t-set="title">Opportunities</t>
                 <t t-set="url" t-value="'/my/opportunities'"/>
                 <t t-set="placeholder_count" t-value="'opp_count'"/>
+                <t t-set="config_card" t-value="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id"/>
             </t>
         </div>
     </template>
