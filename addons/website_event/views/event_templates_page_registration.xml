@@ -74,7 +74,7 @@
                                 <span t-else="" t-field="event.date_end" t-options="{'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}" t-att-datetime="event.date_end"/>
                                 (<span t-out="event.date_tz"/>)
 
-                                <a href="#" role="button" data-bs-toggle="dropdown" class="btn btn-secondary text-bg-secondary dropdown w-100 mt-3">
+                                <a href="#" role="button" data-bs-toggle="dropdown" class="btn btn-secondary dropdown w-100 mt-3">
                                     <p class="mb-0"><i class="fa fa-calendar me-2"/>Add to Calendar</p>
                                 </a>
                                 <div class="dropdown-menu">
@@ -98,7 +98,7 @@
                                     "widget": "contact",
                                     "fields": ["phone", "mobile", "email"]
                                 }'/>
-                                <a t-att-href="event._google_map_link()" target="_blank" class="btn btn-secondary text-bg-secondary w-100">
+                                <a t-att-href="event._google_map_link()" target="_blank" class="btn btn-secondary w-100">
                                     <p class="mb-0"><i class="fa fa-map-marker fa-fw" role="img"/>Get the direction</p>
                                 </a>
                             </div>
