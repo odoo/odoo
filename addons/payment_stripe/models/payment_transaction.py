@@ -373,7 +373,9 @@ class PaymentTransaction(models.Model):
             payment_method_type = payment_method.get('type')
             if self.payment_method_id.code == payment_method_type == 'card':
                 payment_method_type = notification_data['payment_method']['card']['brand']
-            payment_method = self.env['payment.method']._get_from_code(payment_method_type)
+            payment_method = self.env['payment.method']._get_from_code(
+                payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
+            )
             self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the provider reference and the payment state.
