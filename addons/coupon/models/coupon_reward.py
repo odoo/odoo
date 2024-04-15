@@ -48,7 +48,7 @@ class CouponReward(models.Model):
         help="Maximum amount of discount that can be provided")
     discount_fixed_amount = fields.Float(string="Fixed Amount", help='The discount in fixed amount')
     reward_product_uom_id = fields.Many2one(related='reward_product_id.product_tmpl_id.uom_id', string='Unit of Measure', readonly=True)
-    discount_line_product_id = fields.Many2one('product.product', string='Reward Line Product', copy=False,
+    discount_line_product_id = fields.Many2one('product.product', string='Reward Line Product', copy=False, ondelete="restrict",
         help="Product used in the sales order to apply the discount. Each coupon program has its own reward product for reporting purpose")
 
     @api.constrains('discount_percentage')
