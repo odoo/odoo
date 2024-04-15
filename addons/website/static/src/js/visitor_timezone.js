@@ -7,6 +7,7 @@ odoo.define('website.visitor_timezone', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');
+var localStorage = require('web.local_storage');
 var utils = require('web.utils');
 var publicWidget = require('web.public.widget');
 
