@@ -1380,7 +1380,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "linkPreviews": [],
                 "message_type": "comment",
                 "model": "discuss.channel",
-                "needaction_partner_ids": [self.users[0].partner_id.id],
+                "needaction": True,
                 "notifications": [
                     {
                         "failure_type": False,
@@ -1441,7 +1441,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "linkPreviews": [],
                 "message_type": "notification",
                 "model": "discuss.channel",
-                "needaction_partner_ids": [],
+                "needaction": False,
                 "notifications": [],
                 "thread": {
                     "id": channel.id,
@@ -1484,7 +1484,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "linkPreviews": [],
                 "message_type": "notification",
                 "model": "discuss.channel",
-                "needaction_partner_ids": [],
+                "needaction": False,
                 "notifications": [],
                 "thread": {
                     "id": channel.id,
@@ -1527,7 +1527,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "linkPreviews": [],
                 "message_type": "notification",
                 "model": "discuss.channel",
-                "needaction_partner_ids": [],
+                "needaction": False,
                 "notifications": [],
                 "thread": {
                     "id": channel.id,
@@ -1569,7 +1569,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "linkPreviews": [],
                 "message_type": "notification",
                 "model": "discuss.channel",
-                "needaction_partner_ids": [],
+                "needaction": False,
                 "notifications": [],
                 "thread": {
                     "id": channel.id,
@@ -1604,7 +1604,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "linkPreviews": [],
                 "message_type": "comment",
                 "model": "discuss.channel",
-                "needaction_partner_ids": [],
+                "needaction": False,
                 "notifications": [],
                 "thread": {
                     "id": channel.id,

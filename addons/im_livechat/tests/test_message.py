@@ -89,7 +89,7 @@ class TestImLivechatMessage(HttpCase):
             'message_type': 'notification',
             'reactions': [],
             'model': 'discuss.channel',
-            'needaction_partner_ids': [],
+            'needaction': False,
             'notifications': [],
             'thread': {
                 'id': channel_livechat_1.id,
