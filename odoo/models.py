@@ -5681,7 +5681,7 @@ Fields:
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise TypeError("Mixing apples and oranges: %s & %s" % (self, other))
         other_ids = set(other._ids)
-        return self.browse(OrderedSet(id for id in self._ids if id in other_ids))
+        return self.browse([id for id in self._ids if id in other_ids])
 
     def __or__(self, other):
         """ Return the union of two recordsets.
@@ -5697,8 +5697,8 @@ Fields:
         for arg in args:
             if not (isinstance(arg, BaseModel) and arg._name == self._name):
                 raise TypeError("Mixing apples and oranges: %s.union(%s)" % (self, arg))
-            ids.extend(arg._ids)
-        return self.browse(OrderedSet(ids))
+            ids.extend([id for id in arg._ids if id not in ids])
+        return self.browse(ids)
 
     def __eq__(self, other):
         """ Test whether two recordsets are equivalent (up to reordering). """
