@@ -201,6 +201,8 @@ odoo.define('web.ControlPanel', function (require) {
         views: [],
         withBreadcrumbs: true,
         withSearchBar: true,
+        withViewSwitcher: true,
+
     };
     ControlPanel.props = {
         action: Object,
@@ -216,6 +218,7 @@ odoo.define('web.ControlPanel', function (require) {
         views: Array,
         withBreadcrumbs: Boolean,
         withSearchBar: Boolean,
+        withViewSwitcher: Boolean,
     };
     ControlPanel.template = 'web.ControlPanel';
 

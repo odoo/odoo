@@ -121,6 +121,9 @@ var ListView = BasicView.extend({
         var inDialog = action.target === 'new';
         var inline = action.target === 'inline';
         params.hasActionMenus = !inDialog && !inline;
+        params.withBreadcrumbs = !inDialog;
+        params.withControlPanelButtons = !inDialog;
+        params.withViewSwitcher = !inDialog;
         return params;
     },
     /**
