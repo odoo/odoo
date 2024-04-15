@@ -540,6 +540,14 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
             }
         }
 
+        for (const key of indexes[model] || []) {
+            const keyVal = record[key];
+            const finds = orderedRecords[model].find((rec) => rec[key] === keyVal);
+
+            if (finds === -1) {
+                delete indexedRecords[model][key][keyVal];
+            }
+        }
         orderedRecords[model] = orderedRecords[model].filter((rec) => rec.id !== record.id);
         delete records[model][id];
         models[model].triggerEvents("delete", id);
@@ -817,10 +825,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                     }
                     // Connect existing records in case of post-loading
                     if (name.includes("<-")) {
-                        const toConenct = Object.values(records[field.relation]).filter(
+                        const toConnect = Object.values(records[field.relation]).filter(
                             (r) => r.raw[field.inverse_name] === rawRec.id
                         );
-                        for (const rec of toConenct) {
+                        for (const rec of toConnect) {
                             connect(field, recorded, rec);
                         }
                     }
