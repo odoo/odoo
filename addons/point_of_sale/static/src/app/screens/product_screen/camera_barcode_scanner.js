@@ -25,7 +25,9 @@ export class CameraBarcodeScanner extends BarcodeDialog {
         this.sound.play("beep");
         clearInterval(this.interval);
         setTimeout(() => {
-            this.interval = setInterval(this.detectCode.bind(this), 100);
+            if (this.videoPreviewRef.el) {
+                this.interval = setInterval(this.detectCode.bind(this), 100);
+            }
         }, 2000);
     }
 }

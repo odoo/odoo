@@ -54,6 +54,12 @@
                             <setting id="process_operations_barcodes" help="Process operations faster with barcodes" company_dependent="1" documentation="/applications/inventory_and_mrp/inventory/barcode/setup/software.html">
                                 <field name="module_stock_barcode" widget="upgrade_boolean"/>
                             </setting>
+                            <setting id="process_stock_barcodelookup" string="Stock Barcode Database" help="" documentation="https://www.barcodelookup.com/api-documentation">
+                                <field name="module_stock_barcode_barcodelookup" placeholder="e.g. d7vctmiv2rwgenebha8bxq7irooudn"/>
+                                <span class="text-muted">
+                                    Create products easily by scanning using <a href="https://www.barcodelookup.com" target="_blank">barcodelookup.com</a> in barcode.
+                                </span>
+                            </setting>
                         </block>
                         <block title="Shipping" name="shipping_setting_container">
                             <setting id="stock_move_email" company_dependent="1" string="Email Confirmation" help="Send an automatic confirmation email when Delivery Orders are done">
