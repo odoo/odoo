@@ -595,6 +595,10 @@ class Users(models.Model):
             user.partner_id.active = user.active
         return users
 
+    @api.model
+    def name_create(self, name):
+        raise ValidationError(_("You cannot create a new User from here."))
+
     def _apply_groups_to_existing_employees(self):
         """ Should new groups be added to existing employees?
 
