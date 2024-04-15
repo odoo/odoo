@@ -869,3 +869,51 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertEqual(stock_quants.filtered(lambda q: q.location_id == final_loc).quantity, 2.0)
         self.assertEqual(stock_quants.filtered(lambda q: q.location_id == subcontract_loc).quantity, 0.0)
         self.assertEqual(stock_quants.filtered(lambda q: q.location_id == production_loc).quantity, -2.0)
+
+    def test_purchase_delivery_mixed_subcontracting(self):
+        """
+        Check that recording components of a subcontracting process linked to a PO
+        via the UI does not generate a back order for the other products.
+        """
+        # buy 1 subcontracted and 1 non-subcontracted product
+        subcontracted_product = self.finished
+        subcontracted_product.write({
+            'route_ids': [Command.link(self.ref('mrp.route_warehouse0_manufacture'))],
+        })
+        bom = subcontracted_product.bom_ids
+        bom.write({
+                'product_qty': 1.0,
+                'type': 'subcontract',
+                'subcontractor_ids': [Command.link(self.subcontractor_partner1.id)],
+                'bom_line_ids': [Command.create({'product_id': self.comp1.id, 'product_qty': 1.0})],
+                'consumption': 'warning',
+            })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [
+                Command.create({
+                    'name': "Subcontracted product",
+                    'product_id': subcontracted_product.id,
+                    'product_qty': 1.0,
+                    'price_unit': 1.0,
+                }),
+                Command.create({
+                'name': "Regular product",
+                'product_id': self.comp1.id,
+                'product_qty': 1.0,
+                'price_unit': 1.0,
+                })],
+        })
+        po.button_confirm()
+        receipt = po.picking_ids
+        action = receipt.action_record_components()
+        mo = self.env['mrp.production'].browse(action['res_id'])
+        mo_form = Form(mo.with_context(**action['context']), view=action['view_id'])
+        mo_form.qty_producing = 1
+        with mo_form.move_line_raw_ids.edit(0) as ml:
+            ml.quantity = 1
+        mo = mo_form.save()
+        mo.subcontracting_record_component()
+        receipt.button_validate()
+        self.assertTrue(all(receipt.move_ids.mapped(lambda m: m.picked)))
+
