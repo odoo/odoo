@@ -7,6 +7,7 @@ class Evaluacion(models.Model):
     _inherit = ["mail.thread"]
 
     nombre = fields.Char(required=True)
+    descripcion = fields.Char(required=False)
     estado = fields.Selection(
         [
             ("borrador", "Borrador"),
