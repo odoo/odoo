@@ -4174,6 +4174,57 @@ class BaseModel(metaclass=MetaModel):
                 })
             raise UserError("\n".join(lines))
 
+    def check_access(self, operation: str) -> None:
+        """ Verify that the current user is allowed to perform ``operation`` on
+        all the records in ``self``.  The method raises some :class:`AccessError`
+        if the operation is forbidden on any record in ``self``.
+        """
+        if self.env.su:
+            return
+
+        # check for the existence of permissions first
+        if self.env['ir.access']._get_access_domain(self._name, operation) is None:
+            raise self.env['ir.access']._make_access_error(self.browse(), operation)
+
+        if not self:
+            return
+
+        accessible = self._filter_access(operation)
+        if len(accessible) < len(self):
+            forbidden = self - accessible
+            raise self.env['ir.access']._make_access_error(forbidden, operation)
+
+    def has_access(self, operation: str) -> bool:
+        """ Return whether the current user is allowed to perform ``operation``
+        on all the records in ``self``.  In particular, when ``self`` is empty,
+        this returns whether the current user has some permission to perform
+        ``operation`` on the model in general.
+        """
+        if self.env.su:
+            return True
+        if self.env['ir.access']._get_access_domain(self._name, operation) is None:
+            return False
+        if not self:
+            return True
+        return len(self._filter_access(operation)) == len(self)
+
+    def _filter_access(self, operation):
+        """ Return the subset of ``self`` for which ``operation`` is allowed for
+        the current user.
+        """
+        if self.env.su or not any(self._ids):
+            # by convention new records are accessible
+            return self
+
+        # we don't support a mix of real records and new records
+        assert all(self._ids), "Unexpected mix of real and new records"
+
+        domain = self.env['ir.access']._get_access_domain(self._name, operation)
+        if domain is None:
+            return self.browse()
+
+        return self.sudo().filtered_domain(domain).with_env(self.env)
+
     @api.model
     def check_access_rights(self, operation, raise_exception=True):
         """ Verify that the given operation is allowed for the current user accord to ir.model.access.
