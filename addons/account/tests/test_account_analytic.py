@@ -264,3 +264,31 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
         self.assertEqual(self.analytic_account_a.invoice_count, 1)
         self.analytic_account_a._compute_vendor_bill_count()
         self.assertEqual(self.analytic_account_a.vendor_bill_count, 1)
+
+    def test_applicability_score(self):
+        """ Tests which applicability is chosen if several ones are valid """
+        applicability_without_company, applicability_with_company = self.env['account.analytic.applicability'].create([
+            {
+                'business_domain': 'invoice',
+                'product_categ_id': self.product_a.categ_id.id,
+                'applicability': 'mandatory',
+                'analytic_plan_id': self.default_plan.id,
+                'company_id': False,
+            },
+            {
+                'business_domain': 'invoice',
+                'applicability': 'unavailable',
+                'analytic_plan_id': self.default_plan.id,
+                'company_id': self.env.company.id,
+            },
+        ])
+
+        applicability = self.default_plan._get_applicability(business_domain='invoice', company_id=self.env.company.id, product=self.product_a.id)
+        self.assertEqual(applicability, 'mandatory', "product takes precedence over company")
+
+        # If the model that asks for a validation does not have a company_id,
+        # the score shouldn't take into account the company of the applicability
+        score = applicability_without_company._get_score(business_domain='invoice', product=self.product_a.id)
+        self.assertEqual(score, 2)
+        score = applicability_with_company._get_score(business_domain='invoice', product=self.product_a.id)
+        self.assertEqual(score, 1)
