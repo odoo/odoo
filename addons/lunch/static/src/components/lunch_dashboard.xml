@@ -99,11 +99,16 @@
                 <div class="col-12 col-md-5" t-if="hasLines">
                     <h4 class="mb-0">
                         Your Order
-                        <button t-if="state.infos.raw_state != 'confirmed'" class="btn btn-sm btn-icon btn-link fa fa-trash" t-on-click.prevent="emptyCart"/>
+                        <button t-if="state.infos.raw_state != 'confirmed' and state.infos.paid_subtotal == 0" class="btn btn-sm btn-icon btn-link fa fa-trash" t-on-click.prevent="emptyCart"/>
                     </h4>
                     <ul class="o_lunch_widget_lines overflow-auto list-unstyled">
                         <li t-foreach="state.infos.lines" t-as="line" t-key="line.id">
-                            <LunchOrderLine line="line" currency="currency" onUpdateQuantity.bind="onUpdateQuantity" openOrderLine.bind="props.openOrderLine"/>
+                            <t t-if="(line.raw_state == 'ordered' and state.infos.paid_subtotal) or line.raw_state == 'confirmed'">
+                                <LunchOrderLine line="line" currency="currency" onUpdateQuantity.bind="onUpdateQuantityDonT" openOrderLine.bind="props.openOrderLine"/>
+                            </t>
+                            <t t-else="">
+                                <LunchOrderLine line="line" currency="currency" onUpdateQuantity.bind="onUpdateQuantity" openOrderLine.bind="props.openOrderLine"/>
+                            </t>
                         </li>
                     </ul>
                 </div>
