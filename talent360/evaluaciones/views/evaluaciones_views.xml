@@ -104,21 +104,24 @@
         <field name="arch" type="xml">
             <form string="Test">
                 <sheet>
+					<h1>Encuesta NOM 035</h1>
+					<p>La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.</p>
                     <group>
                         <group>
 							<field name="nombre"/>
-                            <field name="descripcion"/>
                         </group>
                         <group>
                             <field name="estado"/>
                         </group>
-                        <!--<notebook>
-                            <page string="Description">
-                                <field name="description"/>
+                        <notebook>
+                            <page string="Preguntas">
+                                <field name="pregunta_ids"/>
                             </page>
+							<page string="Asignados">
+								<field name="usuario_ids"/>
+							</page>
                         </notebook>
-                        -->
-                    </group>
+					</group>					
                 </sheet>
             </form>
         </field>

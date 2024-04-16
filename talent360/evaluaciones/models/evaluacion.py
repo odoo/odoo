@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import api, models, fields
 
 
 class Evaluacion(models.Model):
@@ -7,7 +7,6 @@ class Evaluacion(models.Model):
     _inherit = ["mail.thread"]
 
     nombre = fields.Char(required=True)
-    descripcion = fields.Char(required=False)
     estado = fields.Selection(
         [
             ("borrador", "Borrador"),
@@ -59,3 +58,18 @@ class Evaluacion(models.Model):
                         partner_ids=[partner_id],
                     )
         return res
+    
+        # Método para copiar preguntas de la plantilla a la evaluación
+    def copiar_preguntas_de_template(self):
+        if self.template_id:
+            self.pregunta_ids = [(5,)]
+
+            if self.template_id:
+                self.pregunta_ids = [(6, 0, self.template_id.pregunta_ids.ids)]
+            else:
+                self.pregunta_ids = [(5,)]
+            
+    # Actualiza las preguntas cuando se selecciona una plantilla
+    @api.onchange('template_id')
+    def onchange_template_id(self):
+        self.copiar_preguntas_de_template()
