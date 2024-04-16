@@ -44,11 +44,17 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
             ...ProductScreen.clickPartnerButton(),
             ...ProductScreen.clickCustomer("Partner Test 1"),
 
-            // check that you cannot change the quantity of a combo product
+            // check that you can change the quantity of a combo product
             ...ProductScreen.clickNumpad("2"),
-            Dialog.confirm(),
+            ...ProductScreen.clickOrderline("Combo Product 3", "2.0"),
+            ...ProductScreen.selectedOrderlineHas("Combo Product 3", "2.0", "26.86"),
+            ...ProductScreen.clickOrderline("Combo Product 5", "2.0"),
+            ...ProductScreen.selectedOrderlineHas("Combo Product 5", "2.0", "37.34"),
+            ...ProductScreen.clickOrderline("Combo Product 8", "2.0"),
+            ...ProductScreen.selectedOrderlineHas("Combo Product 8", "2.0", "60.00"),
 
             // check that removing a combo product removes all the combo products
+            ...ProductScreen.clickNumpad("⌫"),
             ...ProductScreen.clickNumpad("⌫"),
             ...ProductScreen.orderIsEmpty(),
 

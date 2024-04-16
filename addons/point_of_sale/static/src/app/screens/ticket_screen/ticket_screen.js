@@ -278,6 +278,7 @@ export class TicketScreen extends Component {
 
         destinationOrder.takeaway = order.takeaway;
         // Add orderline for each toRefundDetail to the destinationOrder.
+        const lines = [];
         for (const refundDetail of allToRefundDetails) {
             const refundLine = refundDetail.line;
             const line = this.pos.models["pos.order.line"].create({
@@ -293,7 +294,20 @@ export class TicketScreen extends Component {
             line.setOptions({
                 uiState: { price_type: "automatic" },
             });
+            lines.push(line);
             refundDetail.destination_order_uuid = destinationOrder.uuid;
+        }
+        // link the refund combo lines
+        const refundComboParentLines = lines.filter(
+            (l) => l.refunded_orderline_id.combo_line_ids.length > 0
+        );
+        for (const refundComboParent of refundComboParentLines) {
+            const children = refundComboParent.refunded_orderline_id.combo_line_ids
+                .map((l) => l.refund_orderline_ids)
+                .flat();
+            refundComboParent.update({
+                combo_line_ids: [["link", ...children]],
+            });
         }
 
         //Add a check too see if the fiscal position exist in the pos
