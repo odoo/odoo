@@ -899,7 +899,7 @@ const Wysiwyg = Widget.extend({
                         res_model: resModel,
                         res_id: parseInt(resId),
                         data: (isBackground ? el.dataset.bgSrc : el.getAttribute('src')).split(',')[1],
-                        mimetype: el.dataset.mimetype,
+                        mimetype: (isBackground ? el.dataset.mimetype : el.getAttribute('src').split(":")[1].split(";")[0]),
                         name: (el.dataset.fileName ? el.dataset.fileName : null),
                     },
                 });
