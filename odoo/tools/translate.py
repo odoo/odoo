@@ -150,7 +150,7 @@ TRANSLATED_ELEMENTS = {
 TRANSLATED_ATTRS = dict.fromkeys({
     'string', 'add-label', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
-    'value_label', 'data-tooltip', 'data-editor-message',
+    'value_label', 'data-tooltip', 'data-editor-message', 'label',
 }, lambda e: True)
 
 def translate_attrib_value(node):
@@ -899,7 +899,7 @@ def _extract_translatable_qweb_terms(element, callback):
             # https://www.w3schools.com/html/html5_syntax.asp
             # https://github.com/odoo/owl/blob/master/doc/reference/component.md#composition
             if not el.tag[0].isupper() and 't-component' not in el.attrib and 't-set-slot' not in el.attrib:
-                for att in ('title', 'alt', 'label', 'placeholder', 'aria-label'):
+                for att in TRANSLATED_ATTRS:
                     if att in el.attrib:
                         _push(callback, el.attrib[att], el.sourceline)
             _extract_translatable_qweb_terms(el, callback)
