@@ -90,11 +90,12 @@
             </form>
         </field>
     </record>
-        <!-- NOM 035 -->
+    <!-- NOM 035 -->
     <record id="nom035_action" model="ir.actions.act_window">
         <field name="name">NOM 035</field>
         <field name="res_model">evaluacion</field>
         <field name="view_mode">form</field>
+		<field name="view_id" ref="nom035_form"/>
     </record>
 
     <record id="nom035_form" model="ir.ui.view">
@@ -105,6 +106,7 @@
                 <sheet>
                     <group>
                         <group>
+							<field name="nombre"/>
                             <field name="descripcion"/>
                         </group>
                         <group>
