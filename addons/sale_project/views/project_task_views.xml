@@ -172,6 +172,7 @@
                 <field name="sale_order_id" invisible="True" groups="sales_team.group_sale_salesman"/>
                 <label for="sale_line_id" invisible="not allow_billable or not project_id or not partner_id"/>
                 <div 
+                    name="sale_line_div"
                     class="o_row"
                     invisible="not allow_billable or not project_id or not partner_id">
                     <field name="sale_line_id"
