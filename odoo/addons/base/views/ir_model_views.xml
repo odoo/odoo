@@ -154,28 +154,17 @@
                         <page string="Access Rights" name="access_rights">
                             <field name="access_ids">
                                 <list string="Access Rights" editable="top"
-                                      decoration-warning="not group_id and
-                                                         (perm_read or perm_write or
-                                                          perm_create or perm_unlink)">
+                                      decoration-warning="not group_id and operation">
+                                    <field name="kind"/>
                                     <field name="name"/>
-                                    <field name="group_id"/>
-                                    <field name="perm_read"/>
-                                    <field name="perm_write"/>
-                                    <field name="perm_create"/>
-                                    <field name="perm_unlink"/>
-                                </list>
-                            </field>
-                        </page>
-                        <page string="Record Rules" name="record_rules">
-                            <field name="rule_ids">
-                                <list string="Record Rules" editable="top" decoration-info="not groups">
-                                    <field name="name"/>
-                                    <field name="groups" widget="many2many_tags" options="{'no_create':True}"/>
-                                    <field name="domain_force"/>
-                                    <field name="perm_read"/>
-                                    <field name="perm_write"/>
-                                    <field name="perm_create"/>
-                                    <field name="perm_unlink"/>
+                                    <field name="group_id" readonly="is_standard"/>
+                                    <field name="for_create" readonly="is_standard"/>
+                                    <field name="for_read" readonly="is_standard"/>
+                                    <field name="for_write" readonly="is_standard"/>
+                                    <field name="for_unlink" readonly="is_standard"/>
+                                    <field name="domain" readonly="is_standard"/>
+                                    <button name="customize" type="object" invisible="not is_standard"
+                                        string="Customize" help="Duplicate this access to customize it"/>
                                 </list>
                             </field>
                         </page>

@@ -3117,7 +3117,8 @@ class BaseModel(metaclass=MetaModel):
             else:
                 # avoid cache pollution
                 forbidden.invalidate_recordset([f.name for f in fields_to_fetch])
-                raise env['ir.rule']._make_access_error('read', forbidden)
+                domain = self._access_domain('read')
+                raise forbidden._make_access_error_message('read', domain)  # noqa: EM101
 
     def _determine_fields_to_fetch(
             self,
@@ -3553,21 +3554,16 @@ class BaseModel(metaclass=MetaModel):
         If the user has no model access, return the false domain.
         Otherwise, the default implementation returns the access rule domain.
         """
-        if self._name not in self.env['ir.model.access']._get_allowed_models(operation):
-            return Domain.FALSE
-
-        return self.env['ir.rule']._compute_domain(self._name, operation)
+        return self.env['ir.access']._get_domain_for(self._name, operation)
 
     def _make_access_error_message(self, operation: str, domain: Domain) -> AccessError:
         """Create the access error for the given operation.
         :param operation: operation performed
         :param domain: security domain from :meth:`_access_domain`
         """
-        Access = self.env['ir.model.access']
-        if domain.is_false() and self._name not in Access._get_allowed_models(operation):
-            return Access._make_access_error(self._name, operation)
-
-        return self.env['ir.rule']._make_access_error(operation, self)
+        if domain.is_false():
+            return self.env['ir.access']._make_model_access_error(self._name, operation)
+        return self.env['ir.access']._make_record_access_error(self, operation)
 
     def unlink(self) -> typing.Literal[True]:
         """ Delete the records in ``self``.
@@ -5248,7 +5244,7 @@ class BaseModel(metaclass=MetaModel):
         the allowed_company_ids in the context. This method can be
         overridden, for example on the hr.leave model, where the
         most suited company is the company of the leave type, as
-        specified by the ir.rule.
+        specified by the access rules.
         """
         if 'company_id' in self:
             return self.company_id

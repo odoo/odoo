@@ -1899,7 +1899,6 @@ def _operator_parent_of_domain(comodel: BaseModel, parent):
 
 @operator_optimization(['access'], level=OptimizationLevel.DYNAMIC_VALUES)
 def _operator_access_rule_domain(condition, model):
-    operation = condition.value
     field = condition._field(model)
     if condition.field_expr != field.name:
         condition._raise("The 'access' operator does not work for properties")
@@ -1912,12 +1911,14 @@ def _operator_access_rule_domain(condition, model):
         condition._raise("The 'access' operator works only for many2one and 'id' fields")
         assert False, "no return above"  # for pylint
 
+    operation = condition.value
+    if operation not in ('read', 'write', 'create', 'unlink'):
+        condition._raise("Invalid value for 'access' operator")
+
     comodel = comodel.sudo(False)
     access_domain = comodel._access_domain(operation)
     if access_domain.is_false():
         # no access to the comodel for any record
-        if operation not in model.env.registry['ir.rule']._MODES:
-            condition._raise("Invalid value for 'access' operator")
         return Domain.FALSE
     if access_domain.is_true() or comodel.env.su:
         # access to all or edge-case for super user
