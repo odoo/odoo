@@ -113,7 +113,7 @@ class HrWorkEntry(models.Model):
         Try to validate work entries.
         If some errors are found, set `state` to conflict for conflicting work entries
         and validation fails.
-        :return: True if validation succeded
+        :return: True if validation succeeded
         """
         work_entries = self.filtered(lambda work_entry: work_entry.state != 'validated')
         if not work_entries._check_if_error():

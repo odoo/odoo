@@ -106,7 +106,7 @@ export const close = [
         },
     },
     {
-        content: "Is the Test succeded ?",
+        content: "Is the Test succeeded ?",
         trigger: "body.tour_success",
         shadow_dom: false,
         isCheck: true,
