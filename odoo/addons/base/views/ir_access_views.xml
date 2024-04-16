@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ir.access -->
+    <record id="ir_access_list_view" model="ir.ui.view">
+        <field name="name">ir.access.view.list</field>
+        <field name="model">ir.access</field>
+        <field name="arch" type="xml">
+            <list string="Access Rights"
+                  decoration-warning="not group_id and operation">
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="group_id"/>
+                <field name="for_read"/>
+                <field name="for_write"/>
+                <field name="for_create"/>
+                <field name="for_unlink"/>
+                <field name="domain"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ir_access_editable_list_view" model="ir.ui.view">
+        <field name="name">ir.access.view.list.editable</field>
+        <field name="model">ir.access</field>
+        <field name="arch" type="xml">
+            <list string="Access Rights" editable="top"
+                  decoration-warning="not group_id and operation">
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="group_id"/>
+                <field name="for_read"/>
+                <field name="for_write"/>
+                <field name="for_create"/>
+                <field name="for_unlink"/>
+                <field name="domain"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ir_access_form_view" model="ir.ui.view">
+        <field name="model">ir.access</field>
+        <field name="arch" type="xml">
+            <form string="Access Rights">
+                <sheet>
+                    <div class="alert alert-warning text-center" role="alert">
+                        Please note that modifications will be applied for all users of the specified group
+                    </div>
+                    <group>
+                        <group string="General">
+                            <field name="name"/>
+                            <field name="model_id"/>
+                            <field name="group_id"/>
+                            <field name="active" widget='boolean_toggle'/>
+                        </group>
+                        <group string="Operations">
+                            <field name="for_read"/>
+                            <field name="for_write"/>
+                            <field name="for_create"/>
+                            <field name="for_unlink"/>
+                        </group>
+                    </group>
+                    <separator string="Domain"/>
+                    <field name="domain"/>
+                </sheet>
+
+                <i class="fa fa-info fa-3x text-info float-start" role="img" aria-label="Info" title="Info"/>
+                <h3>Interaction between accesses</h3>
+                <div>
+                  <p>
+                    Global accesses (non group-specific) are restrictions, and cannot be bypassed.
+                    Group-specific access grant permissions, but are constrained within the bounds of global ones.
+                  </p>
+                  <p>
+                    Detailed algorithm:
+                    <ol>
+                      <li>Global accesses are combined together with a logical AND operator, and with the result of the following steps.</li>
+                      <li>Group-specific accesses are combined together with a logical OR operator.</li>
+                      <li>If the user belongs to several groups, the results from step 2 are combined with a logical OR operator.</li>
+                    </ol>
+                  </p>
+                  <p>Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 OR GROUP_A_RULE_2) OR (GROUP_B_RULE_1 OR GROUP_B_RULE_2) )</p>
+                </div>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="ir_access_search_view" model="ir.ui.view">
+        <field name="model">ir.access</field>
+        <field name="arch" type="xml">
+            <search string="Access Rights">
+                <field name="name" string="Access Rights"/>
+                <filter string="Global" name="global" domain="[('group_id', '=', False)]"/>
+                <separator/>
+                <filter string="Full Access" name="full_access" domain="[('operation', '=', 'rwcd')]"/>
+                <filter string="Read Access" name="read_access" domain="[('for_read', '=', True)]"/>
+                <filter string="Write Access" name="write_access" domain="[('for_write', '=', True)]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <field name="model_id"/>
+                <field name="group_id"/>
+                <group expand="0" string="Group By" colspan="11" col="11" groups="base.group_no_one">
+                    <filter string="Model" name="group_by_model" domain="[]" context="{'group_by': 'model_id'}"/>
+                    <filter string="Group" name="group_by_group" domain="[]" context="{'group_by': 'group_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="ir_access_action" model="ir.actions.act_window">
+        <field name="name">Access Rights</field>
+        <field name="res_model">ir.access</field>
+        <field name="path">access</field>
+        <field name="view_id" ref="ir_access_editable_list_view"/>
+        <field name="search_view_id" ref="ir_access_search_view"/>
+    </record>
+
+    <menuitem id="menu_ir_access" parent="base.menu_security" action="ir_access_action"/>
+
+</odoo>
