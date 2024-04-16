@@ -605,11 +605,13 @@ export class AnalyticDistribution extends Component {
 
     onWindowClick(ev) {
         //TODO: dragging the search more dialog should not close the popup either
-        const modal = document.querySelector(".modal");
+        const modal = document.querySelector('.modal:not(.o_inactive_modal)');
         const clickedInSearchMoreDialog = modal && modal.querySelector('.o_list_view') && modal.contains(ev.target);
+        const clickedInKanbanSelectorDialog = modal && modal.querySelector('.o_kanban_view') && modal.contains(ev.target);
         if (this.isDropdownOpen
             && !this.widgetRef.el.contains(ev.target)
             && !clickedInSearchMoreDialog
+            && !clickedInKanbanSelectorDialog
            ) {
             this.forceCloseEditor();
         }
