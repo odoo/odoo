@@ -6377,6 +6377,15 @@ class BaseModel(metaclass=MetaModel):
             self._flush(fnames)
 
     def _flush(self, fnames=None):
+
+        def convert(record, field, value):
+            if field.translate:
+                return field._convert_from_cache_to_column(value)
+            return field.convert_to_column(
+                field.convert_to_write(value, record),
+                record,
+            )
+
         if fnames is None:
             fields = self._fields.values()
         else:
@@ -6389,26 +6398,52 @@ class BaseModel(metaclass=MetaModel):
         # if any field is context-dependent, the values to flush should
         # be found with a context where the context keys are all None
         model = self.with_context({})
-        id_vals = defaultdict(dict)
-        for field in self._fields.values():
-            ids = self.env.cache.clear_dirty_field(field)
-            if not ids:
-                continue
-            records = model.browse(ids)
-            values = list(self.env.cache.get_values(records, field))
-            assert len(values) == len(records), \
-                f"Could not find all values of {field} to flush them\n" \
-                f"    Cache: {self.env.cache!r}"
-            for record, value in zip(records, values):
-                if not field.translate:
-                    value = field.convert_to_write(value, record)
-                    value = field.convert_to_column(value, record)
-                else:
-                    value = field._convert_from_cache_to_column(value)
-                id_vals[record.id][field.name] = value
 
-        # update all records
-        model.browse(id_vals)._write_multi(id_vals.values())
+        # pop dirty fields and their corresponding record ids from cache
+        dirty_field_ids = {
+            field: self.env.cache.clear_dirty_field(field)
+            for field in model._fields.values()
+            if field in dirty_fields
+        }
+        # Memory optimization: get a reference to each dirty field's cache.
+        # This avoids allocating extra memory for storing the data taken
+        # from cache. Beware that this breaks the cache abstraction!
+        dirty_field_cache = {
+            field: self.env.cache._get_field_cache(model, field)
+            for field in dirty_field_ids
+        }
+
+        # sort dirty record ids so that records with the same set of modified
+        # fields are grouped together; for that purpose, map each dirty id to
+        # an integer that represents its subset of dirty fields (bitmask)
+        dirty_ids = sorted(
+            OrderedSet(id_ for ids in dirty_field_ids.values() for id_ in ids),
+            key=lambda id_: sum(
+                2 ** field_index
+                for field_index, ids in enumerate(dirty_field_ids.values())
+                if id_ in ids
+            ),
+        )
+
+        # perform updates in batches in order to limit memory footprint
+        BATCH_SIZE = 1000
+        for some_ids in split_every(BATCH_SIZE, dirty_ids):
+            vals_list = []
+            try:
+                for id_ in some_ids:
+                    record = model.browse(id_)
+                    vals_list.append({
+                        f.name: convert(record, f, dirty_field_cache[f][id_])
+                        for f, ids in dirty_field_ids.items()
+                        if id_ in ids
+                    })
+            except KeyError:
+                raise AssertionError(
+                    f"Could not find all values of {record} to flush them\n"
+                    f"    Context: {self.env.context}\n"
+                    f"    Cache: {self.env.cache!r}"
+                )
+            model.browse(some_ids)._write_multi(vals_list)
 
     #
     # New records - represent records that do not exist in the database yet;
