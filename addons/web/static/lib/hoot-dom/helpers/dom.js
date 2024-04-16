@@ -176,7 +176,7 @@ const filterUniqueNodes = (nodesToFilter) => {
     /** @type {Node[]} */
     const nodes = [];
     for (const node of nodesToFilter) {
-        if (isNode(node) && !nodes.includes(node)) {
+        if (isQueryableNode(node) && !nodes.includes(node)) {
             nodes.push(node);
         }
     }
@@ -350,6 +350,11 @@ const isNodeVisible = (node) => {
 
     return visible;
 };
+
+/**
+ * @param {Node} node
+ */
+const isQueryableNode = (node) => QUERYABLE_NODE_TYPES.includes(node.nodeType);
 
 /**
  * @param {Element} [el]
@@ -759,6 +764,8 @@ const FOCUSABLE_SELECTOR = [
     .map((sel) => `${sel}:not([tabindex="-1"])`)
     .join(",");
 
+const QUERYABLE_NODE_TYPES = [Node.ELEMENT_NODE, Node.DOCUMENT_NODE, Node.DOCUMENT_FRAGMENT_NODE];
+
 const parser = new DOMParser();
 
 // Node getters
@@ -984,7 +991,7 @@ export function getDocument(node) {
  * property.
  *
  * @see {@link isFocusable} for more information
- * @param {Document | DocumentFragment | Element} [parent] default: current fixture
+ * @param {Node} [parent] default: current fixture
  * @returns {Element[]}
  * @example
  *  getFocusableElements();
@@ -1030,7 +1037,7 @@ export function getHeight(dimensions) {
  * contained in the given parent.
  *
  * @see {@link getFocusableElements}
- * @param {Document | DocumentFragment | Element} [parent] default: current fixture
+ * @param {Node} [parent] default: current fixture
  * @returns {Element | null}
  * @example
  *  getPreviousFocusableElement();
@@ -1084,6 +1091,7 @@ export function getNodeRect(node, options) {
         return new DOMRect();
     }
 
+    /** @type {DOMRect} */
     const rect = node.getBoundingClientRect();
     const parentFrame = getParentFrame(node);
     if (parentFrame) {
@@ -1147,7 +1155,7 @@ export function getParentFrame(node) {
  * contained in the given parent.
  *
  * @see {@link getFocusableElements}
- * @param {Document | DocumentFragment | Element} [parent] default: current fixture
+ * @param {Node} [parent] default: current fixture
  * @returns {Element | null}
  * @example
  *  getPreviousFocusableElement();
@@ -1559,7 +1567,7 @@ export function parsePosition(position) {
  *
  * @param {Target} target
  * @param {QueryOptions} [options]
- * @returns {Node[]}
+ * @returns {Element[]}
  * @example
  *  // regular selectors
  *  queryAll`window`; // -> []
@@ -1727,7 +1735,7 @@ export function queryAllValues(target, options) {
  *
  * @param {Target} target
  * @param {QueryOptions} options
- * @returns {Node | null}
+ * @returns {Element | null}
  */
 export function queryFirst(target, options) {
     return queryAll(target, options)[0] || null;
@@ -1739,7 +1747,7 @@ export function queryFirst(target, options) {
  *
  * @param {Target} target
  * @param {QueryOptions} options
- * @returns {Node | null}
+ * @returns {Element | null}
  */
 export function queryLast(target, options) {
     return queryAll(target, options).at(-1) || null;
@@ -1753,7 +1761,7 @@ export function queryLast(target, options) {
  *
  * @param {Target} target
  * @param {Omit<QueryOptions, "exact">} [options]
- * @returns {Node}
+ * @returns {Element}
  */
 export function queryOne(target, options) {
     if (target.raw) {
@@ -1863,7 +1871,7 @@ export function toSelector(node, options) {
  * @see {@link waitUntil}
  * @param {Target} target
  * @param {QueryOptions & WaitOptions} [options]
- * @returns {Promise<Node>}
+ * @returns {Promise<Element>}
  * @example
  *  const button = await waitFor(`button`);
  *  button.click();
