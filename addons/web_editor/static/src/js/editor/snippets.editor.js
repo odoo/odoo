@@ -2428,7 +2428,9 @@ var SnippetsMenu = Widget.extend({
 
         let iframeOffset;
         const bodyWindow = this.$body[0].ownerDocument.defaultView;
-        if (bodyWindow.frameElement && bodyWindow !== this.ownerDocument.defaultView) {
+        if (bodyWindow.frameElement
+                && bodyWindow !== this.ownerDocument.defaultView
+                && this.ownerDocument.querySelector(".ui-draggable-dragging")) {
             iframeOffset = bodyWindow.frameElement.getBoundingClientRect();
         }
 
