@@ -307,7 +307,7 @@ QUnit.module("homeworking", ({ beforeEach }) => {
 
         await click(target.querySelector(".o_cw_popover_close"));
         await click(workLocations.at(-2), '.o_worklocation_line');
-        assert.verifySteps(["hr_homeworking.set_location_wizard_action", "2020-12-11"]);
+        assert.verifySteps(["hr_homeworking_calendar.set_location_wizard_action", "2020-12-11"]);
         mockRegistry.add("get_worklocation", previousMock, { force: true });
     });
 
@@ -365,7 +365,7 @@ QUnit.module("homeworking", ({ beforeEach }) => {
         });
         assert.equal(target.querySelector(".fc-col-header-cell[data-date='2020-12-11'] .o_worklocation_btn").textContent, "Home");
         await click(target, ".fc-col-header-cell[data-date='2020-12-10'] .o_worklocation_text");
-        assert.verifySteps(["hr_homeworking.set_location_wizard_action", "2020-12-10"]);
+        assert.verifySteps(["hr_homeworking_calendar.set_location_wizard_action", "2020-12-10"]);
         mockRegistry.add("get_worklocation", previousMock, { force: true });
     });
 
@@ -410,7 +410,7 @@ QUnit.module("homeworking", ({ beforeEach }) => {
         assert.containsOnce(target, ".fc-col-header-cell[data-date='2020-12-11'] .add_wl");
 
         await click(target, ".fc-col-header-cell[data-date='2020-12-11'] .add_wl");
-        assert.verifySteps(["hr_homeworking.set_location_wizard_action", "2020-12-11"]);
+        assert.verifySteps(["hr_homeworking_calendar.set_location_wizard_action", "2020-12-11"]);
         mockRegistry.add("get_worklocation", previousMock, { force: true });
     });
 });
