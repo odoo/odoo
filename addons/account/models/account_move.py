@@ -4813,6 +4813,12 @@ class AccountMoveLine(models.Model):
             :param lines:                   The account.move.lines to which fix the residual amounts.
             :param exchange_diff_move_vals: The current vals of the exchange difference journal entry.
             '''
+            skip_fx_on_caba_base_lines = self.env['ir.config_parameter'].sudo().get_param('account.skip_fx_on_caba_base_lines', '')
+            skip_fx_on_caba_base_lines = [int(x) for x in  skip_fx_on_caba_base_lines.split(',') if x.isnumeric()]
+            if skip_fx_on_caba_base_lines and lines.move_id.company_id.id in skip_fx_on_caba_base_lines:
+                # /!\ Note: Some l10n_** might no need these extra lines as it causes to unbalance the taxes.
+                # Taxes are already balanced in the method `_create_tax_cash_basis_moves` in account_reconcile_partial
+                return
             for move in lines.move_id:
                 account_vals_to_fix = {}
 
