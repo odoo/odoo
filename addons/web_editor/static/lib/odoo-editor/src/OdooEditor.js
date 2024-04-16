@@ -2545,18 +2545,43 @@ export class OdooEditor extends EventTarget {
             ev.inputType === 'insertText' &&
             ev.data === null &&
             this._lastBeforeInputType === 'insertParagraph';
+        const isComposing =
+            ev.inputType === "insertCompositionText" ||
+            (ev.inputType === "insertText" &&
+                this.keyboardType === KEYBOARD_TYPES.VIRTUAL);
+        if (isComposing) {
+            this._fromCompositionText = true;
+        }
         if (this.keyboardType === KEYBOARD_TYPES.PHYSICAL || !wasCollapsed) {
-            if (ev.inputType === 'deleteContentBackward') {
+            // Detect a prior selection across different blocks and change
+            // the behavior only in that case, since it is the only text
+            // insertion case that may cause problems.
+            const anchorNode = this.idFind(anchorNodeOid);
+            const focusNode = this.idFind(focusNodeOid);
+            const wasSelectingAcrossDifferentBlocks =
+                anchorNode &&
+                focusNode &&
+                closestBlock(anchorNode) !== closestBlock(focusNode);
+            if (
+                ev.inputType === 'deleteContentBackward' &&
+                wasSelectingAcrossDifferentBlocks
+            ) {
                 this._compositionStep();
                 this.historyRollback();
                 ev.preventDefault();
                 this._applyCommand('oDeleteBackward');
-            } else if (ev.inputType === 'deleteContentForward' || isChromeDeleteforward) {
+            } else if (
+                (ev.inputType === 'deleteContentForward' || isChromeDeleteforward) &&
+                wasSelectingAcrossDifferentBlocks
+            ) {
                 this._compositionStep();
                 this.historyRollback();
                 ev.preventDefault();
                 this._applyCommand('oDeleteForward');
-            } else if (ev.inputType === 'insertParagraph' || isChromeInsertParagraph) {
+            } else if (
+                (ev.inputType === 'insertParagraph' || isChromeInsertParagraph) &&
+                (wasSelectingAcrossDifferentBlocks || wasCollapsed)
+            ) {
                 this._compositionStep();
                 this.historyRollback();
                 ev.preventDefault();
@@ -2564,23 +2589,17 @@ export class OdooEditor extends EventTarget {
                     this._applyCommand('oShiftEnter');
                 }
             } else if (['insertText', 'insertCompositionText'].includes(ev.inputType)) {
-                // insertCompositionText, courtesy of Samsung keyboard.
                 const selection = this.document.getSelection();
-                // Detect a prior selection across different blocks and change
-                // the behavior only in that case, since it is the only text
-                // insertion case that may cause problems.
-                const anchorNode = this.idFind(anchorNodeOid);
-                const focusNode = this.idFind(focusNodeOid);
-                const wasSelectingAcrossDifferentBlocks =
-                    anchorNode &&
-                    focusNode &&
-                    closestBlock(anchorNode) !== closestBlock(focusNode);
                 // Unit tests events are not trusted by the browser,
                 // the insertText has to be done manualy.
                 const isUnitTests = !ev.isTrusted && this.testMode;
                 // we cannot trust the browser to keep the selection inside empty tags.
                 const latestSelectionInsideEmptyTag = this._isLatestComputedSelectionInsideEmptyInlineTag();
-                if (wasSelectingAcrossDifferentBlocks || isUnitTests || latestSelectionInsideEmptyTag) {
+                if (
+                    wasSelectingAcrossDifferentBlocks ||
+                    latestSelectionInsideEmptyTag ||
+                    isUnitTests
+                ) {
                     ev.preventDefault();
                     if (!isUnitTests) {
                         // First we need to undo the character inserted by the browser.
@@ -2642,8 +2661,9 @@ export class OdooEditor extends EventTarget {
             } else {
                 this.historyStep();
             }
-        } else if (['insertText', 'insertCompositionText'].includes(ev.inputType)) {
-            this._fromCompositionText = true;
+        }
+        if (!isComposing) {
+            this._fromCompositionText = false;
         }
     }
 
@@ -2669,7 +2689,7 @@ export class OdooEditor extends EventTarget {
             // deleteBackward input event with a collapsed selection in front of
             // a contentEditable="false" (eg: font awesome).
             const selection = this.document.getSelection();
-            if (selection.isCollapsed) {
+            if (selection.isCollapsed && !this._fromCompositionText) {
                 ev.preventDefault();
                 this._applyCommand('oDeleteBackward');
             }
