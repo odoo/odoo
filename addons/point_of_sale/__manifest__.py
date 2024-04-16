@@ -156,7 +156,6 @@
             # barcode scanner
             'barcodes/static/src/barcode_service.js',
             'barcodes/static/src/js/barcode_parser.js',
-            'barcodes_gs1_nomenclature/static/src/js/barcode_parser.js',
             'barcodes_gs1_nomenclature/static/src/js/barcode_service.js',
             'web/static/src/views/fields/parsers.js',
             # report download utils
