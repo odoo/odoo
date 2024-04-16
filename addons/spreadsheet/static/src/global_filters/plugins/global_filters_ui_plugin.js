@@ -340,37 +340,44 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
      */
     _getDateFilterDisplayValue(filter) {
         const value = this.getGlobalFilterValue(filter.id);
-        if (filter.rangeType === "from_to") {
-            const locale = this.getters.getLocale();
-            const from = {
-                value: value.from ? toNumber(value.from, locale) : "",
-                format: locale.dateFormat,
-            };
-            const to = {
-                value: value.to ? toNumber(value.to, locale) : "",
-                format: locale.dateFormat,
-            };
-            return [[from], [to]];
-        }
-        if (value && typeof value === "string") {
-            const type = RELATIVE_DATE_RANGE_TYPES.find((type) => type.type === value);
-            if (!type) {
-                return [[{ value: "" }]];
+        switch (filter.rangeType) {
+            case "from_to": {
+                const locale = this.getters.getLocale();
+                const from = {
+                    value: value.from ? toNumber(value.from, locale) : "",
+                    format: locale.dateFormat,
+                };
+                const to = {
+                    value: value.to ? toNumber(value.to, locale) : "",
+                    format: locale.dateFormat,
+                };
+                return [[from], [to]];
             }
-            return [[{ value: type.description.toString() }]];
+            case "relative": {
+                const type = RELATIVE_DATE_RANGE_TYPES.find((type) => type.type === value);
+                if (!type) {
+                    return [[{ value: "" }]];
+                }
+                return [[{ value: type.description.toString() }]];
+            }
+            case "fixedPeriod": {
+                if (!value || value.yearOffset === undefined) {
+                    return [[{ value: "" }]];
+                }
+                const periodOptions = getPeriodOptions(DateTime.local());
+                const year = String(DateTime.local().year + value.yearOffset);
+                const period = periodOptions.find(({ id }) => value.period === id);
+                let periodStr = period && period.description;
+                // Named months aren't in getPeriodOptions
+                if (!period) {
+                    periodStr =
+                        MONTHS[value.period] && String(MONTHS[value.period].value).padStart(2, "0");
+                }
+                return [[{ value: periodStr ? periodStr + "/" + year : year }]];
+            }
+            default:
+                return [[{ value: "" }]];
         }
-        if (!value || value.yearOffset === undefined) {
-            return [[{ value: "" }]];
-        }
-        const periodOptions = getPeriodOptions(DateTime.local());
-        const year = String(DateTime.local().year + value.yearOffset);
-        const period = periodOptions.find(({ id }) => value.period === id);
-        let periodStr = period && period.description;
-        // Named months aren't in getPeriodOptions
-        if (!period) {
-            periodStr = MONTHS[value.period] && String(MONTHS[value.period].value).padStart(2, "0");
-        }
-        return [[{ value: periodStr ? periodStr + "/" + year : year }]];
     }
 
     /**
