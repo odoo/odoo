@@ -886,6 +886,17 @@ class Message(models.Model):
     # MESSAGE READ / FETCH / FAILURE API
     # ------------------------------------------------------
 
+    def _record_by_message(self):
+        record_ids_by_model_name = defaultdict(set)
+        for message in self:
+            if message.model and message.res_id:
+                record_ids_by_model_name[message.model].add(message.res_id)
+        record_by_message = {}
+        for message in self:
+            if message.model and message.res_id:
+                record_by_message[message] = self.env[message.model].browse(message.res_id).with_prefetch(record_ids_by_model_name[message.model])
+        return record_by_message
+
     def _message_format(self, format_reply=True, msg_vals=None):
         """ Get the message values in the format for web client. Since message
         values can be broadcasted, computed fields MUST NOT BE READ and
@@ -956,10 +967,7 @@ class Message(models.Model):
             ])
             for scheduler in schedulers:
                 scheduled_dt_by_msg_id[scheduler.mail_message_id.id] = scheduler.scheduled_datetime
-        thread_ids_by_model_name = defaultdict(set)
-        for message in self:
-            if message.model and message.res_id:
-                thread_ids_by_model_name[message.model].add(message.res_id)
+        record_by_message = self._record_by_message()
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
             author = False
@@ -967,13 +975,14 @@ class Message(models.Model):
                 author = message_sudo.author_guest_id._guest_format(fields={"id": True, "name": True}).get(message_sudo.author_guest_id)
             elif message_sudo.author_id:
                 author = message_sudo.author_id.mail_partner_format({'id': True, 'name': True, 'is_company': True, 'user': {"id": True}, "write_date": True}).get(message_sudo.author_id)
-            record_sudo = False
-            if message_sudo.model and message_sudo.res_id:
-                record_sudo = self.env[message_sudo.model].browse(message_sudo.res_id).sudo()
-                record_name = record_sudo.with_prefetch(thread_ids_by_model_name[message_sudo.model]).display_name
+            record = record_by_message.get(message_sudo)
+            if record:
+                # sudo: if mentionned in a non accessible thread, user should be able to see the name
+                record_name = record.sudo().display_name
                 default_subject = record_name
-                if hasattr(record_sudo, '_message_compute_subject'):
-                    default_subject = record_sudo._message_compute_subject()
+                if hasattr(record, '_message_compute_subject'):
+                    # sudo: if mentionned in a non accessible thread, user should be able to see the subject
+                    default_subject = record.sudo()._message_compute_subject()
             else:
                 record_name = False
                 default_subject = False
@@ -988,8 +997,8 @@ class Message(models.Model):
             } for content, reactions in reactions_per_content.items()]
             allowed_tracking_ids = message_sudo.tracking_value_ids._filter_tracked_field_access(self.env)
             displayed_tracking_ids = allowed_tracking_ids
-            if record_sudo and hasattr(record_sudo, '_track_filter_for_display'):
-                displayed_tracking_ids = record_sudo._track_filter_for_display(displayed_tracking_ids)
+            if record and hasattr(record, '_track_filter_for_display'):
+                displayed_tracking_ids = record._track_filter_for_display(displayed_tracking_ids)
             notifs = message_sudo.notification_ids.filtered("res_partner_id")
             vals.update(message_sudo._message_format_extras(format_reply))
             vals.pop("starred_partner_ids", None)
@@ -1159,13 +1168,13 @@ class Message(models.Model):
         """Send bus notifications to update status of notifications in the web
         client. Purpose is to send the updated status per author."""
         messages = self.env['mail.message']
+        record_by_message = self._record_by_message()
         for message in self:
             # Check if user has access to the record before displaying a notification about it.
             # In case the user switches from one company to another, it might happen that they don't
             # have access to the record related to the notification. In this case, we skip it.
             # YTI FIXME: check allowed_company_ids if necessary
-            if message.model and message.res_id:
-                record = self.env[message.model].browse(message.res_id)
+            if record := record_by_message.get(message):
                 try:
                     record.check_access_rights('read')
                     record.check_access_rule('read')
