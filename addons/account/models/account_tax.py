@@ -2113,7 +2113,7 @@ class AccountTax(models.Model):
             amount_total_currency += sum(x['tax_group_amount'] for x in groups_by_subtotal[subtotal_title])
             amount_total += sum(x['tax_group_amount_company_currency'] for x in groups_by_subtotal[subtotal_title])
 
-        return {
+        results = {
             'amount_untaxed': currency.round(amount_untaxed_currency),
             'amount_total': currency.round(amount_total_currency),
             'formatted_amount_total': formatLang(self.env, amount_total_currency, currency_obj=currency),
@@ -2123,6 +2123,9 @@ class AccountTax(models.Model):
             'subtotals_order': subtotals_order,
             'display_tax_base': len(encountered_base_amounts) != 1 or len(groups_by_subtotal) > 1,
         }
+        if currency != comp_curr:
+            results['amount_total_company_currency'] = comp_curr.round(amount_total)
+        return results
 
     @api.model
     def _fix_tax_included_price(self, price, prod_taxes, line_taxes):

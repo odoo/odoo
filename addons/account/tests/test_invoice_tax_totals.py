@@ -718,6 +718,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
 
         self.assert_document_tax_totals(invoice, {
             'amount_total': 470,
+            'amount_total_company_currency': 2350,
             'amount_untaxed': 400,
             'display_tax_base': True,
             'groups_by_subtotal': {
