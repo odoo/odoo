@@ -81,7 +81,7 @@
         content: "comparelist contains 4th product with correct variant",
         extra_trigger: '.o_product_circle:contains(4)',
         trigger: '.o_product_row:contains("Customizable Desk (Steel, Black)")',
-        run: function () {},
+        isCheck: true,
     },
     {
         content: "check limit is not reached",
