@@ -186,7 +186,7 @@
             <h1 class="mb-4">
                 Job Application Form
             </h1>
-            <span class="hidden" data-for="hr_recruitment_form" t-att-data-values="{'department_id': job and job.department_id.id or '', 'job_id': job and job.id or ''}" />
+            <span class="hidden" data-for="hr_recruitment_form" t-att-data-values="{'department_id': job and job.department_id.id or '', 'job_id': job and job.id or '', 'job_name': job and job.name or ''}" />
             <div id="jobs_section" class="container">
                 <div class="row">
                     <section id="forms" class="col-12 col-md-9 s_website_form" data-vcss="001" data-snippet="s_website_form">
@@ -312,6 +312,20 @@
                                                 <input id="recruitment8" type="hidden"
                                                     class="form-control s_website_form_input"
                                                     name="department_id"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-0 py-2 s_website_form_field" style="display: none;"
+                                        data-type="char" data-name="Field">
+                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                            <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment9">
+                                                <span class="s_website_form_label_content">Job Position</span>
+                                            </label>
+                                            <div class="col-sm">
+                                                <input id="recruitment9" type="text"
+                                                    class="form-control s_website_form_input"
+                                                    name="job_name" required=""
+                                                    data-fill-with="job_name"/>
                                             </div>
                                         </div>
                                     </div>
