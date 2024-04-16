@@ -33,6 +33,7 @@ test("send", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-Message-content", { text: "Hello World!" });
     await click(".o-mail-ChatWindow-command[title*='Close']");
+    await click(".o-livechat-CloseConfirmation-leave");
     await contains(".form-text", { text: "Receive a copy of this conversation." });
     await contains("button[data-action='sendTranscript']:disabled");
     await insertText("input[placeholder='mail@example.com']", "odoobot@odoo.com");
@@ -54,6 +55,7 @@ test("send failed", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-Message-content", { text: "Hello World!" });
     await click(".o-mail-ChatWindow-command[title*='Close']");
+    await click(".o-livechat-CloseConfirmation-leave");
     await insertText("input[placeholder='mail@example.com']", "odoobot@odoo.com");
     await click("button[data-action='sendTranscript']:enabled");
     await contains(".form-text", { text: "An error occurred. Please try again." });
