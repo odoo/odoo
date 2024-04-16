@@ -10,8 +10,8 @@ class PaymentTransaction(models.Model):
 
     is_donation = fields.Boolean(string="Is donation")
 
-    def _finalize_post_processing(self):
-        super()._finalize_post_processing()
+    def _post_process(self):
+        super()._post_process()
         for tx in self.filtered('is_donation'):
             tx._send_donation_email()
             msg = [_('Payment received from donation with following details:')]

@@ -48,9 +48,9 @@ class PaymentPostProcessing(http.Controller):
 
         # Finalize the post-processing of the transaction before redirecting the user to the landing
         # route and its document.
-        if monitored_tx.state == 'done' and not monitored_tx.is_post_processed:
+        if not monitored_tx.is_post_processed:
             try:
-                monitored_tx._finalize_post_processing()
+                monitored_tx._post_process()
             except psycopg2.OperationalError:  # The database cursor could not be committed.
                 request.env.cr.rollback()  # Rollback and try later.
                 raise Exception('retry')

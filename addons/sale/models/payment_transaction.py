@@ -34,40 +34,54 @@ class PaymentTransaction(models.Model):
         for trans in self:
             trans.sale_order_ids_nbr = len(trans.sale_order_ids)
 
-    def _set_pending(self, state_message=None, **kwargs):
-        """ Override of `payment` to send the quotations automatically.
+    def _post_process(self):
 
-        :param str state_message: The reason for which the transaction is set in 'pending' state.
-        :return: updated transactions.
-        :rtype: `payment.transaction` recordset.
-        """
-        txs_to_process = super()._set_pending(state_message=state_message, **kwargs)
+        super()._post_process()
+        for tx in self:
+            if tx.state == 'done':
+                confirmed_orders = self._check_amount_and_confirm_order()
+                confirmed_orders._send_order_confirmation_mail()  # in case of validation it is empty
+                (
+                            self.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()  # this is problematic for subscription but maubr not if in confirmed orders will be tje order we are doing
+                # if addind payment method then there is no sale_order
 
-        for tx in txs_to_process:  # Consider only transactions that are indeed set pending.
-            sales_orders = tx.sale_order_ids.filtered(lambda so: so.state in ['draft', 'sent'])
-            sales_orders.filtered(
-                lambda so: so.state == 'draft'
-            ).with_context(tracking_disable=True).action_quotation_sent()
+                auto_invoice = str2bool(
+                    self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'))
+                if auto_invoice:
+                    # Invoice the sale orders in self instead of in confirmed_orders to create the invoice
+                    # even if only a partial payment was made.
+                    self._invoice_sale_orders()
+                if auto_invoice:
+                    # Must be called after the super() call to make sure the invoice are correctly posted.
+                    self._send_invoice()
+            if tx.state == 'pending':  # Consider only transactions that are indeed set pending.
+                sales_orders = tx.sale_order_ids.filtered(lambda so: so.state in ['draft', 'sent'])
+                sales_orders.filtered(
+                    lambda so: so.state == 'draft'
+                ).with_context(tracking_disable=True).action_quotation_sent()
 
-            if tx.provider_id.code == 'custom':
-                for so in tx.sale_order_ids:
-                    so.reference = tx._compute_sale_order_reference(so)
+                if tx.provider_id.code == 'custom':
+                    for so in tx.sale_order_ids:
+                        so.reference = tx._compute_sale_order_reference(so)
 
-            if tx.operation == 'validation':
-                continue
-            # Send the payment status email.
-            # The transactions are manually cached while in a sudoed environment to prevent an
-            # AccessError: In some circumstances, sending the mail would generate the report assets
-            # during the rendering of the mail body, causing a cursor commit, a flush, and forcing
-            # the re-computation of the pending computed fields of the `mail.compose.message`,
-            # including part of the template. Since that template reads the order's transactions and
-            # the re-computation of the field is not done with the same environment, reading fields
-            # that were not already available in the cache could trigger an AccessError (e.g., if
-            # the payment was initiated by a public user).
-            sales_orders.mapped('transaction_ids')
-            sales_orders._send_payment_succeeded_for_order_mail()
+                if tx.operation == 'validation':
+                    continue
+                # Send the payment status email.
+                # The transactions are manually cached while in a sudoed environment to prevent an
+                # AccessError: In some circumstances, sending the mail would generate the report assets
+                # during the rendering of the mail body, causing a cursor commit, a flush, and forcing
+                # the re-computation of the pending computed fields of the `mail.compose.message`,
+                # including part of the template. Since that template reads the order's transactions and
+                # the re-computation of the field is not done with the same environment, reading fields
+                # that were not already available in the cache could trigger an AccessError (e.g., if
+                # the payment was initiated by a public user).
+                sales_orders.mapped('transaction_ids')
+                sales_orders._send_payment_succeeded_for_order_mail()
 
-        return txs_to_process
+            elif tx.state == 'authorized':
+                confirmed_orders = tx._check_amount_and_confirm_order()
+                confirmed_orders._send_order_confirmation_mail()
+                (self.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
 
     def _check_amount_and_confirm_order(self):
         """ Confirm the sales order based on the amount of a transaction.
@@ -90,13 +104,6 @@ class PaymentTransaction(models.Model):
                     confirmed_orders |= quotation
         return confirmed_orders
 
-    def _set_authorized(self, state_message=None, **kwargs):
-        """ Override of payment to confirm the quotations automatically. """
-        super()._set_authorized(state_message=state_message, **kwargs)
-        confirmed_orders = self._check_amount_and_confirm_order()
-        confirmed_orders._send_order_confirmation_mail()
-        (self.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
-
     def _log_message_on_linked_documents(self, message):
         """ Override of payment to log a message on the sales orders linked to the transaction.
 
@@ -110,22 +117,6 @@ class PaymentTransaction(models.Model):
         for order in self.sale_order_ids or self.source_transaction_id.sale_order_ids:
             order.message_post(body=message)
 
-    def _reconcile_after_done(self):
-        """ Override of payment to automatically confirm quotations and generate invoices. """
-        confirmed_orders = self._check_amount_and_confirm_order()
-        confirmed_orders._send_order_confirmation_mail()
-        (self.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
-
-        auto_invoice = str2bool(
-            self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'))
-        if auto_invoice:
-            # Invoice the sale orders in self instead of in confirmed_orders to create the invoice
-            # even if only a partial payment was made.
-            self._invoice_sale_orders()
-        super()._reconcile_after_done()
-        if auto_invoice:
-            # Must be called after the super() call to make sure the invoice are correctly posted.
-            self._send_invoice()
 
     def _send_invoice(self):
         template_id = int(self.env['ir.config_parameter'].sudo().get_param(

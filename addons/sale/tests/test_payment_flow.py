@@ -69,7 +69,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         self.assertEqual(self.sale_order.state, 'draft')
         self.assertEqual(tx_sudo.sale_order_ids.transaction_ids, tx_sudo)
         tx_sudo._set_done()
-        tx_sudo._finalize_post_processing()
+        tx_sudo._post_process()
         self.assertEqual(self.sale_order.state, 'sale')
         self.assertTrue(tx_sudo.payment_id)
         self.assertEqual(tx_sudo.payment_id.state, 'posted')
@@ -123,7 +123,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         tx_sudo._set_done()
         with mute_logger('odoo.addons.sale.models.payment_transaction'):
-            tx_sudo._finalize_post_processing()
+            tx_sudo._post_process()
         self.assertEqual(self.sale_order.state, 'draft') # Only a partial amount was paid
 
         # Pay the remaining amount
@@ -193,7 +193,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         tx_sudo._set_done()
         with mute_logger('odoo.addons.sale.models.payment_transaction'):
-            tx_sudo._finalize_post_processing()
+            tx_sudo._post_process()
 
         self.assertEqual(self.sale_order.state, 'draft', 'a partial transaction with automatic invoice and invoice_policy = delivery should not validate a quote')
 
