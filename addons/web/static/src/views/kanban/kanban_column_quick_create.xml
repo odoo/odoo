@@ -23,9 +23,9 @@
                             Add
                         </button>
                     </div>
-                    <small t-if="!env.isSmall and state.hasInputFocused" class="o_discard_msg text-muted float-end">
+                    <div t-if="!env.isSmall and state.hasInputFocused" t-attf-class="o_discard_msg small text-muted {{ canShowExamples ? 'float-end' : 'text-end'}}">
                         Press <kbd>Esc</kbd> to discard
-                    </small>
+                    </div>
                     <t t-if="canShowExamples and !env.isSmall">
                         <button type="button" class="btn btn-link o_kanban_examples p-0" t-on-click="showExamples">See examples</button>
                     </t>
