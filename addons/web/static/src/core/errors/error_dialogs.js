@@ -2,10 +2,12 @@ import { browser } from "../browser/browser";
 import { Dialog } from "../dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "../registry";
+import { Tooltip } from "@web/core/tooltip/tooltip";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { capitalize } from "../utils/strings";
 
-import { Component, useState, markup } from "@odoo/owl";
+import { Component, useRef, useState, markup } from "@odoo/owl";
 
 // This props are added by the error handler
 export const standardErrorDialogProps = {
@@ -46,11 +48,20 @@ export class ErrorDialog extends Component {
         this.state = useState({
             showTraceback: false,
         });
+        this.copyButtonRef = useRef("copyButton");
+        this.popover = usePopover(Tooltip);
     }
+
+    showTooltip() {
+        this.popover.open(this.copyButtonRef.el, { tooltip: _t("Copied") });
+        browser.setTimeout(this.popover.close, 800);
+    }
+
     onClickClipboard() {
         browser.navigator.clipboard.writeText(
             `${this.props.name}\n${this.props.message}\n${this.props.traceback}`
         );
+        this.showTooltip();
     }
 }
 
@@ -105,6 +116,7 @@ export class RPCErrorDialog extends ErrorDialog {
         browser.navigator.clipboard.writeText(
             `${this.props.name}\n${this.props.message}\n${this.traceback}`
         );
+        this.showTooltip();
     }
 }
 
