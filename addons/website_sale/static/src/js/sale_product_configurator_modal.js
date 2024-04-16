@@ -79,7 +79,7 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
     willStart: function () {
         const self = this;
 
-        const getModalContent = rpc("/sale_product_configurator/show_advanced_configurator", {
+        let getModalContent = rpc("/sale_product_configurator/show_advanced_configurator", {
             mode: self.mode,
             product_id: self.rootProduct.product_id,
             variant_values: self.rootProduct.variant_values,
@@ -90,8 +90,9 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
             no_attribute: self.rootProduct.no_variant_attribute_values,
             custom_attribute: self.rootProduct.product_custom_attribute_values,
             context: Object.assign({'quantity': self.rootProduct.quantity}, this.context),
-        })
-        .then(function (modalContent) {
+        }).then(function (modalContent) {
+            modalContent = new DOMParser().parseFromString(modalContent, 'text/html');
+            modalContent = modalContent.querySelector('main.modal-body');
             if (modalContent) {
                 modalContent = self._postProcessContent(modalContent);
                 self.content = modalContent;
@@ -119,12 +120,12 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
 
         const self = this;
         let div = document.createElement('div');
-        this.append(div).then(function () {
+        this.appendTo(div).then(function () {
             if (!self.preventOpening) {
-                self.modal.querySelector(".modal-body").replaceWith(self.el);
-                self.modal.setAttribute('open', true);
-                self.container.append(self.modal);
-                const modal = new Modal(self.modal, {
+                self.$modal[0].querySelector(".modal-body").replaceWith(self.content);
+                self.$modal[0].setAttribute('open', true);
+                self.$modal.appendTo(self.container);
+                const modal = new Modal(self.$modal[0], {
                     focus: true,
                 });
                 modal.show();
@@ -145,11 +146,10 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
     start: function () {
         const def = this._super.apply(this, arguments);
         const self = this;
-
-        this.el.querySelector('input[name="add_qty"]').value = this.rootProduct.quantity;
+        this.container.querySelector('input[name="add_qty"]').value = this.rootProduct.quantity;
 
         // set a unique id to each row for options hierarchy
-        const products = this.el.querySelectorAll('tr.js_product');
+        const products = this.container.querySelectorAll('tr.js_product');
         products.forEach((el) => {
             const uniqueId = self._getUniqueId(el);
 
@@ -227,7 +227,7 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
      */
     _postProcessContent: function (modalContent) {
         const productId = this.rootProduct.product_id;
-        let firstImg = modalContent.querySelector('img:first');
+        let firstImg = modalContent.querySelector('img:first-child');
         firstImg.src = "/web/image/product.product/" + productId + "/image_128";
 
         if (this.rootProduct &&
@@ -392,7 +392,6 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
             }).then(function (addedItem) {
                 const lastTr = modal.querySelector('tr:last-child');
                 lastTr.parentNode.insertBefore(addedItem, lastTr.nextSibling);
-
                 const inputElement = self.el.querySelector('input[name="add_qty"]');
                 const event = new Event('change');
                 inputElement.dispatchEvent(event);

@@ -26,11 +26,10 @@ publicWidget.registry.WebsiteSale.include({
             context: this._getContext(),
             forceDialog: this.forceDialog,
         }).open();
-
-        this.optionalProductsModal.addEventListener('options_empty', this._submitForm.bind(this));
-        this.optionalProductsModal.addEventListener('update_quantity', this._onOptionsUpdateQuantity.bind(this));
-        this.optionalProductsModal.addEventListener('confirm', this._onModalSubmit.bind(this, true));
-        this.optionalProductsModal.addEventListener('back', this._onModalSubmit.bind(this, false));
+        this.optionalProductsModal.on('options_empty', null, this._submitForm.bind(this));
+        this.optionalProductsModal.on('update_quantity', null, this._onOptionsUpdateQuantity.bind(this));
+        this.optionalProductsModal.on('confirm', null, this._onModalSubmit.bind(this, true));
+        this.optionalProductsModal.on('back', null, this._onModalSubmit.bind(this, false));
 
         return this.optionalProductsModal.opened();
     },

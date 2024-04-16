@@ -66,9 +66,9 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
 
         this._applyHashFromSearch();
 
-        this.querySelectorAll("div.js_product").forEach((product) => {
+        this.el.querySelectorAll("div.js_product").forEach((product) => {
             const productChangeEL = product.querySelector('input.js_product_change')
-            productChangeEL.dispatchEvent(new Event('change'));
+            productChangeEL?.dispatchEvent(new Event('change'));
         });
 
         // This has to be triggered to compute the "out of stock" feature and the hash variant changes
@@ -107,7 +107,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @override
      */
     getSelectedVariantValues: function (container) {
-        const combination = container.querySelector('input.js_product_change:checked').dataset.combination;
+        const combination = container.querySelector('input.js_product_change:checked')?.dataset.combination;
 
         if (combination) {
             return combination;
@@ -177,7 +177,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @private
      */
     _setUrlHash: function (parent) {
-        const attributes = parent.querySelectorAll('input.js_variant_change:checked, select.js_variant_change option:selected');
+        const attributes = parent.querySelectorAll('input.js_variant_change:checked', 'select.js_variant_change option:selected');
         if (!attributes.length) {
             return;
         }
@@ -192,9 +192,10 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      */
     _changeAttribute: function (valueSelectors) {
         valueSelectors.forEach((selector) => {
-            selector.classList.remove("active")
-            if (selector.querySelector("input:checked")) {
-                selector.classList.add("active");
+            const el = document.querySelector(selector);
+            el?.classList.remove("active")
+            if (el?.querySelector("input:checked")) {
+                el.classList.add("active");
             }
         });
     },
@@ -416,7 +417,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         );
 
         return productReady.then(function (productId) {
-            form.querySelector(productSelector.join(', ')).valuer = productId;
+            form.querySelector(productSelector.join(', ')).value = productId;
             self._updateRootProduct(form, productId);
             return self._onProductReady();
         });
@@ -437,7 +438,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
     _submitForm: function () {
         const params = this.rootProduct;
 
-        const product = this.el.querySelector('#product_detail');
+        const product = document.querySelector('#product_detail');
         const productTrackingInfo = product.dataset.productTrackingInfo;
         if (productTrackingInfo) {
             productTrackingInfo.quantity = params.quantity;
@@ -491,7 +492,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         let dom_optional = [];
         let sibling = dom.nextElementSibling;
         while (sibling && sibling.classList.contains('optional_product') && sibling.classList.contains('info')) {
-            domOptional.push(sibling);
+            dom_optional.push(sibling);
             sibling = sibling.nextElementSibling;
         }
         const line_id = parseInt(input.dataset.line_id, 10);
@@ -604,12 +605,10 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
     onChangeVariant: function (ev) {
         const component = ev.currentTarget.closest('.js_product');
         component.querySelectorAll('input').forEach(() => {
-            const el = this;
-            el.setAttribute('checked', el.checked);
+            this.el.setAttribute('checked', this.el.checked);
         });
         component.querySelectorAll('select option').forEach(() => {
-            const el = this;
-            el.setAttribute('selected', el.selected);
+            this.el.setAttribute('selected', this.el.selected);
         });
 
         this._setUrlHash(component);
@@ -659,9 +658,11 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @private
      */
     _onClickConfirmOrder: function () {
-        const submitFormButton = this.el.querySelector('form[name="o_wsale_confirm_order"]').querySelector('button[type="submit"]');
-        submitFormButton.setAttribute('disabled', true);
-        setTimeout(() => submitFormButton.setAttribute('disabled', false), 5000);
+        const submitFormButton = this.el.querySelector('form[name="o_wsale_confirm_order"]')?.querySelector('button[type="submit"]');
+        if (submitFormButton) {
+            submitFormButton.setAttribute('disabled', true);
+            setTimeout(() => submitFormButton.setAttribute('disabled', false), 5000);
+        }
     },
 
     // -------------------------------------
@@ -677,10 +678,10 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
     _updateRootProduct(form, productId) {
         this.rootProduct = {
             product_id: productId,
-            quantity: parseFloat(form.el.querySelector('input[name="add_qty"]').value || 1),
-            product_custom_attribute_values: this.getCustomVariantValues(form.el.querySelector('.js_product')),
-            variant_values: this.getSelectedVariantValues(form.el.querySelector('.js_product')),
-            no_variant_attribute_values: this.getNoVariantAttributeValues(form.el.querySelector('.js_product'))
+            quantity: parseFloat(form.querySelector('input[name="add_qty"]').value || 1),
+            product_custom_attribute_values: this.getCustomVariantValues(form.querySelector('.js_product')),
+            variant_values: this.getSelectedVariantValues(form.querySelector('.js_product')),
+            no_variant_attribute_values: this.getNoVariantAttributeValues(form.querySelector('.js_product'))
         };
     },
 });
@@ -755,7 +756,7 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
         this._updateCarouselPosition();
         this.throttleOnResize = throttleForAnimation(this._onSlideCarouselProduct.bind(this));
         extraMenuUpdateCallbacks.push(this._updateCarouselPosition.bind(this));
-        if (this.el.querySelector('.carousel-indicators').length > 0) {
+        if (this.el.querySelector('.carousel-indicators')?.length > 0) {
             this.el.addEventListener('slide.bs.carousel.carousel_product_slider', this._onSlideCarouselProduct.bind(this));
             window.addEventListener('resize.carousel_product_slider', this.throttleOnResize);
             this._updateJustifyContent();
@@ -839,7 +840,7 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
      */
     _onMouseWheel: function (ev) {
         ev.preventDefault();
-        const carousel = new Caraousel(this.el);
+        const carousel = new Carousel(this.el);
         if (ev.originalEvent.deltaY > 0) {
         // TODO VISP: remove this when the carousel is fixed
             carousel.next();

@@ -112,7 +112,7 @@ async function autoHideMenu(el, options) {
     }
 
     function _adapt() {
-        const wysiwyg = window.$ && this.el.querySelector('#wrapwrap').dataset.wysiwyg;
+        const wysiwyg = document.querySelector('#wrapwrap').dataset.wysiwyg;
         const odooEditor = wysiwyg && wysiwyg.odooEditor;
         if (odooEditor) {
             odooEditor.observerUnactive("adapt");

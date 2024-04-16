@@ -105,7 +105,6 @@ var CourseJoinWidget = publicWidget.Widget.extend({
      * @param {String} message
      */
     _popoverAlert: function (el, message) {
-        // TODO: START FROM HERE
         const popover = new Popover(el, {
             trigger: 'focus',
             delay: {'hide': 300},
@@ -127,7 +126,7 @@ var CourseJoinWidget = publicWidget.Widget.extend({
      * @param {integer} channelId
      */
     joinChannel: function (channelId) {
-        var self = this;
+        const self = this;
         rpc('/slides/channel/join', {
             channel_id: channelId,
         }).then(function (data) {
@@ -141,11 +140,11 @@ var CourseJoinWidget = publicWidget.Widget.extend({
                         errorSignupAllowed: data.error_signup_allowed,
                         widget: self,
                     });
-                    self._popoverAlert(self.$el, popupContent);
+                    self._popoverAlert(self.el, popupContent);
                 } else if (data.error === 'join_done') {
-                    self._popoverAlert(self.$el, _t('You have already joined this channel'));
+                    self._popoverAlert(self.el, _t('You have already joined this channel'));
                 } else {
-                    self._popoverAlert(self.$el, _t('Unknown error'));
+                    self._popoverAlert(self.el, _t('Unknown error'));
                 }
             }
         });
@@ -160,10 +159,10 @@ publicWidget.registry.websiteSlidesCourseJoin = publicWidget.Widget.extend({
      * @param {Object} parent
      */
     start: function () {
-        var self = this;
-        var proms = [this._super.apply(this, arguments)];
-        var data = self.$el.data();
-        var options = {
+        const self = this;
+        const proms = [this._super.apply(this, arguments)];
+        const data = self.el.dataset;
+        const options = {
             channel: {
                 channelEnroll: data.channelEnroll,
                 channelId: data.channelId
@@ -174,8 +173,8 @@ publicWidget.registry.websiteSlidesCourseJoin = publicWidget.Widget.extend({
             isMemberOrInvited: data.isMemberOrInvited,
             isPartnerWithoutUser: data.isPartnerWithoutUser
         };
-        $('.o_wslides_js_course_join').each(function () {
-            proms.push(new CourseJoinWidget(self, options).attachTo($(this)));
+        [...this.el.querySelectorAll('.o_wslides_js_course_join')].forEach(() => {
+            proms.push(new CourseJoinWidget(self, options).attachTo(this));
         });
         return Promise.all(proms);
     },

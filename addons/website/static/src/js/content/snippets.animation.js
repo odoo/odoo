@@ -255,7 +255,7 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
      * animation to be played or paused.
      */
     stop: function () {
-        this.startTarget.removeEventListener(this.startEvents);
+        this.startTarget.removeEventListener(this.startEvents, this.throttleOnStartEvents);
         if (this.endEvents) {
             this.endTarget.removeEventListener(this.endEvents);
         }
@@ -469,8 +469,10 @@ registry.slider = publicWidget.Widget.extend({
         this._computeHeights();
 
         // Initialize carousel and pause if in edit mode.
-        // Note: this assumes you have a method this.carousel() that works similarly to jQuery's .carousel().
-        this.carousel(this.editableMode ? 'pause' : undefined);
+        this.carousel = new Carousel(this.el);
+        if (this.editableMode) {
+            this.carousel.pause();
+        }
 
         // Add an event listener for the 'resize' event on the window
         window.addEventListener('resize.slider', debounce(() => this._computeHeights(), 250));
@@ -1156,7 +1158,7 @@ registry.FullScreenHeight = publicWidget.Widget.extend({
      */
     destroy() {
         this._super(...arguments);
-        window.removeEventListener('resize.FullScreenHeight');
+        window.removeEventListener('resize.FullScreenHeight', debounce(() => this._adaptSize(), 250));
         this.el.style.setProperty('min-height', '');
     },
 
@@ -1177,12 +1179,12 @@ registry.FullScreenHeight = publicWidget.Widget.extend({
     _computeIdealHeight() {
         const windowHeight = window.outerHeight;
         if (this.inModal) {
-            return (windowHeight - this.el.querySelector('#wrapwrap').style.top);
+            return (windowHeight - document.querySelector('#wrapwrap').style.top);
         }
 
         // Doing it that way allows to considerer fixed headers, hidden headers,
         // connected users, ...
-        const firstContentEl = this.el.querySelector('#wrapwrap > main > :first-child'); // first child to consider the padding-top of main
+        const firstContentEl = document.querySelector('#wrapwrap > main > :first-child'); // first child to consider the padding-top of main
         // When a modal is open, we remove the "modal-open" class from the body.
         // This is because this class sets "#wrapwrap" and "<body>" to
         // "overflow: hidden," preventing the "closestScrollable" function from

@@ -8022,7 +8022,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
         // When we change the target of this option we need to transfer the
         // background-image and the dataset information relative to this image
         // from the old target to the new one.
-        const oldBgURL = getBgImageURL(this.$target);
+        const oldBgURL = getBgImageURL(this.$target[0]);
         const isModifiedImage = this.$target[0].classList.contains("o_modified_image_to_save");
         const filteredOldDataset = Object.entries(this.$target[0].dataset).filter(([key]) => {
             return isBackgroundImageAttribute(key);

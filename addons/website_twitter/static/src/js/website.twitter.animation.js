@@ -20,15 +20,17 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        var self = this;
-        var $timeline = this.$('.twitter_timeline');
+        const self = this;
+        let timeline = this.el.querySelector('.twitter_timeline');
 
-        $timeline.append('<center><div><img src="/website_twitter/static/src/img/loadtweet.gif"></div></center>');
-        var def = rpc('/website_twitter/get_favorites').then(function (data) {
-            $timeline.empty();
+        const newElement = document.createElement('center');
+        newElement.innerHTML = '<div><img src="/website_twitter/static/src/img/loadtweet.gif"></div>';
+        timeline.appendChild(newElement);
+        const def = rpc('/website_twitter/get_favorites').then(function (data) {
+            timeline.innerHTML = '';
 
             if (data.error) {
-                $timeline.append(renderToElement('website.Twitter.Error', {data: data}));
+                timeline.append(renderToElement('website.Twitter.Error', {data: data}));
                 return;
             }
 
@@ -74,23 +76,27 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
                 }
             });
 
-            var f = Math.floor(tweets.length / 3);
-            var tweetSlices = [tweets.slice(0, f).join(' '), tweets.slice(f, f * 2).join(' '), tweets.slice(f * 2, tweets.length).join(' ')];
+            let f = Math.floor(tweets.length / 3);
+            let tweetSlices = [tweets.slice(0, f).join(' '), tweets.slice(f, f * 2).join(' '), tweets.slice(f * 2, tweets.length).join(' ')];
 
-            self.$scroller = $(renderToElement('website.Twitter.Scroller')).appendTo($timeline);
-            self.$scroller.find('div[id^="scroller"]').toArray().forEach((element, index) => {
-                var $scrollWrapper = $('<div/>', {class: 'scrollWrapper'});
-                var $scrollableArea = $('<div/>', {class: 'scrollableArea'});
-                $scrollWrapper.append($scrollableArea)
-                              .data('scrollableArea', $scrollableArea);
-                $scrollableArea.append(tweetSlices[index]);
-                $(element).append($scrollWrapper);
-                var totalWidth = 0;
-                $scrollableArea.children().forEach((area) => {
-                    totalWidth += $(area).outerWidth(true);
+            self.scroller = timeline.appendChild(renderToElement('website.Twitter.Scroller'));
+            [...self.scroller.querySelectorAll('div[id^="scroller"]')].forEach((element, index) => {
+                const scrollWrapper = document.createElement('div');
+                scrollWrapper.className = 'scrollWrapper';
+                const scrollableArea = document.createElement('div');
+                scrollableArea.className = 'scrollableArea';
+                scrollWrapper.appendChild(scrollableArea);
+                scrollWrapper.dataset.scrollableArea = scrollableArea;;
+                scrollableArea.append(tweetSlices[index]);
+                element.append(scrollWrapper);
+                let totalWidth = 0;
+                scrollableArea.childNodes.forEach((area) => {
+                    // TODO_VISP: debug this as i'm not sure
+                    totalWidth += area.offsetWidth + parseFloat(window.getComputedStyle(area).marginLeft) + parseFloat(window.getComputedStyle(area).marginRight);
                 });
-                $scrollableArea.width(totalWidth);
-                $scrollWrapper.scrollLeft(index*180);
+                scrollableArea.style.width = totalWidth;
+                // TODO-VISP: debug this as we need to create method
+                scrollWrapper.scrollLeft = index * 180;
             });
             self._startScrolling();
         });
@@ -113,37 +119,40 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
      * @private
      */
     _startScrolling: function () {
-        if (!this.$scroller) {
+        if (!this.scroller) {
             return;
         }
-        this.$scroller.find('.scrollWrapper').toArray().forEach((el) => {
-            var $wrapper = $(el);
-            $wrapper.data('getNextElementWidth', true);
-            $wrapper.data('autoScrollingInterval', setInterval(function () {
-                $wrapper.scrollLeft($wrapper.scrollLeft() + 1);
-                if ($wrapper.data('getNextElementWidth')) {
-                    $wrapper.data('swapAt', $wrapper.data('scrollableArea').children(':first').outerWidth(true));
-                    $wrapper.data('getNextElementWidth', false);
+        [...this.scroller.querySelectorAll('.scrollWrapper')].forEach((el) => {
+            const wrapper = el;
+            wrapper.dataset.getNextElementWidth = true;
+            wrapper.dataset.autoScrollingInterval = setInterval(function () {
+                const firstChild = wrapper.querySelector('.scrollableArea').firstElementChild;
+                wrapper.scrollLeft = wrapper.scrollLeft + 1;
+                if (wrapper.dataset.getNextElementWidth) {
+                    // TODO_VISP: debug this as we need to create method
+                    const totalWidth = firstChild.offsetWidth + parseFloat(window.getComputedStyle(firstChild).marginLeft) + parseFloat(window.getComputedStyle(firstChild).marginRight);
+                    wrapper.dataset.swapAt = totalWidth;
+                    wrapper.dataset.getNextElementWidth = false;
                 }
-                if ($wrapper.data('swapAt') <= $wrapper.scrollLeft()) {
-                    var swap_el = $wrapper.data('scrollableArea').children(':first').detach();
-                    $wrapper.data('scrollableArea').append(swap_el);
-                    $wrapper.scrollLeft($wrapper.scrollLeft() - swap_el.outerWidth(true));
-                    $wrapper.data('getNextElementWidth', true);
+                if (wrapper.dataset.swapAt <= wrapper.scrollLeft) {
+                    const swap_el = firstChild.remove();
+                    wrapper.querySelector('.scrollableArea').append(swap_el);
+                    wrapper.scrollLeft = (wrapper.scrollLeft - swap_el.offsetWidth + parseFloat(window.getComputedStyle(swap_el).marginLeft) + parseFloat(window.getComputedStyle(swap_el).marginRight));
+                    wrapper.dataset.getNextElementWidth = true;
                 }
-            }, 20));
+            }, 20);
         });
     },
     /**
      * @private
      */
     _stopScrolling: function (wrapper) {
-        if (!this.$scroller) {
+        if (!this.scroller) {
             return;
         }
-        this.$scroller.find('.scrollWrapper').toArray().forEach((el) => {
-            var $wrapper = $(el);
-            clearInterval($wrapper.data('autoScrollingInterval'));
+        [...this.scroller.querySelectorAll('.scrollWrapper')].forEach((el) => {
+            const wrapper = el;
+            clearInterval(wrapper.dataset.autoScrollingInterval);
         });
     },
 
@@ -171,7 +180,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
         if (ev.target.tagName === 'A') {
             return;
         }
-        var url = $(ev.currentTarget).data('url');
+        var url = ev.currentTarget.dataset.url;
         if (url) {
             window.open(url, '_blank');
         }

@@ -87,7 +87,7 @@ publicWidget.registry.websiteSlidesCourseSlidesList = SlideCoursePage.extend({
             const categorySlideCount = this.el.querySelectorAll('.o_wslides_slides_list_slide:not(.o_not_editable)').length;
             const emptyFlagContainer = categoryHeader.querySelector('.o_wslides_slides_list_drag');
             const emptyFlag = emptyFlagContainer.querySelector('small');
-            if (categorySlideCount === 0 && $emptyFlag.length === 0) {
+            if (categorySlideCount === 0 && emptyFlag.length === 0) {
                 const smallElement = document.createElement('small');
                 smallElement.className = "ms-1 text-muted fw-bold";
                 smallElement.textContent = _t("(empty)");

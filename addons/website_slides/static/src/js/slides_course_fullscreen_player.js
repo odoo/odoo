@@ -575,7 +575,7 @@
                     this.trigger_up('widgets_start_request', {
                         target: content,
                     });
-                    this.websiteAnimateWidget.attachTo($wpContainer);
+                    this.websiteAnimateWidget.attachTo(wpContainer);
                 }
                 unhideConditionalElements();
             } finally {

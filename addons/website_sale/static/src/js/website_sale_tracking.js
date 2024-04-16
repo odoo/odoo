@@ -22,7 +22,7 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
 
         // ...
         const confirmation = this.el.querySelector('div.oe_website_sale_tx_status');
-        if (confirmation.length) {
+        if (confirmation && confirmation.length) {
             const orderID = confirmation.dataset.orderID;
             const json = confirmation.getAttribute('data-order-tracking-info');
             this._vpv('/stats/ecom/order_confirmed/' + orderID);

@@ -179,7 +179,7 @@ var VariantMixin = {
         var min = parseFloat(input.dataset.min || 0);
         var max = parseFloat(input.dataset.max || Infinity);
         var previousQty = parseFloat(input.value || 0, 10);
-        var quantity = (link.querySelector('.fa-minus').length ? -1 : 1) + previousQty;
+        var quantity = (link.querySelector('i.fa-minus') ? -1 : 1) + previousQty;
         var newQty = quantity > min ? (quantity < max ? quantity : max) : min;
 
         if (newQty !== previousQty) {
@@ -214,9 +214,9 @@ var VariantMixin = {
      * @param {Element} container
      */
     triggerVariantChange: function (container) {
-        container.querySelector('ul[data-attribute_exclusions]').dispatchEvent(new Event('change'));
+        container.querySelector('ul[data-attribute_exclusions]')?.dispatchEvent(new Event('change'));
         container.querySelectorAll('input.js_variant_change:checked, select.js_variant_change').forEach(() => {
-            VariantMixin.handleCustomValues(this);
+            VariantMixin.handleCustomValues(this.el);
         });
     },
 

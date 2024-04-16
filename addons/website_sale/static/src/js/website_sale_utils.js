@@ -35,7 +35,7 @@ export const cartHandlerMixin = {
             display: false,
             force_create: true,
         });
-        if (data.cart_quantity && (data.cart_quantity !== parseInt(this.el.querySelector(".my_cart_quantity").textContent))) {
+        if (data.cart_quantity && (data.cart_quantity !== parseInt(document.querySelector(".my_cart_quantity").textContent))) {
             updateCartNavBar(data);
         };
         showCartNotification(this.call.bind(this), data.notification_info);
@@ -47,7 +47,7 @@ function animateClone(cart, elem, offsetTop, offsetLeft) {
     if (!cart.length) {
         return Promise.resolve();
     }
-    const cart = document.querySelector('.cart');
+
     cart.classList.remove('d-none');
     const animateBlink = cart.querySelector('.o_animate_blink');
     animateBlink.classList.add('o_red_highlight', 'o_shadow_animation');
@@ -71,14 +71,13 @@ function animateClone(cart, elem, offsetTop, offsetLeft) {
             document.body.appendChild(imgclone);
             imgclone.style.width = imgtodrag.offsetWidth + 'px';
             imgclone.style.height = imgtodrag.offsetHeight + 'px';
-
-            imgclone.animate([
-                { top: imgtodrag.offsetTop + 'px', left: imgtodrag.offsetLeft + 'px', width: imgtodrag.offsetWidth + 'px', height: imgtodrag.offsetHeight + 'px' },
-                { top: cart.offsetTop + offsetTop + 'px', left: cart.offsetLeft + offsetLeft + 'px', width: '75px', height: '75px' }
-            ], {
-                duration: 500,
-                fill: 'forwards'
-            });
+            //TODO_VISP: to check if we create animate function here
+            imgclone.style.transition = 'all 0.5s ease-in-out';
+            imgclone.style.top = cart.offsetTop + offsetTop + 'px';
+            imgclone.style.left = cart.offsetLeft + offsetLeft + 'px';
+            imgclone.style.width = '75px';
+            imgclone.style.height = '75px';
+            // TODO-visp: remove animate
             imgclone.animate({
                 width: 0,
                 height: 0,
@@ -98,13 +97,10 @@ function animateClone(cart, elem, offsetTop, offsetLeft) {
  */
 function updateCartNavBar(data) {
     sessionStorage.setItem('website_sale_cart_quantity', data.cart_quantity);
-    let myCartQuantity = this.el.querySelector(".my_cart_quantity");
+    let myCartQuantity = document.querySelector(".my_cart_quantity");
     let parentLi = myCartQuantity.closest('li.o_wsale_my_cart');
 
-    parentLi.forEach ((el) => {
-        el.classList.remove('d-none');
-    });
-
+    parentLi.classList.remove('d-none');
     myCartQuantity.classList.toggle('d-none', data.cart_quantity === 0);
     myCartQuantity.classList.add('o_mycart_zoom_animation');
 
@@ -118,9 +114,11 @@ function updateCartNavBar(data) {
         myCartQuantity.textContent = data.cart_quantity || '';
         myCartQuantity.classList.remove('o_mycart_zoom_animation');
     }, 300);
-    this.el.querySelector(".js_cart_lines").insertAdjacentHTML('beforebegin', data['website_sale.cart_lines']);
-    this.el.querySelector('.js_cart_lines').remove();
-    this.el.querySelector("#cart_total").outerHTML = data['website_sale.total'];
+    document.querySelector(".js_cart_lines")?.insertAdjacentHTML('beforebegin', data['website_sale.cart_lines']);
+    document.querySelector('.js_cart_lines')?.remove();
+    if (document.querySelector("#cart_total")) {
+        document.querySelector("#cart_total").outerHTML = data['website_sale.total'];
+    }
     if (data.cart_ready) {
         document.querySelector("a[name='website_sale_main_button']")?.classList.remove('disabled');
     } else {
