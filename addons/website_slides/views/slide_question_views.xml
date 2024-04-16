@@ -12,10 +12,10 @@
                     </div>
                 </div>
                 <sheet>
-                    <label for="question" string="Question Name"/>
-                    <h1>
-                        <field name="question" default_focus="1" placeholder="e.g. What powers a computer?"/>
-                    </h1>
+                    <div class="oe_title">
+                        <label for="question" string="Question Name"/>
+                        <h1><field options="{'line_breaks': False}" widget="text" name="question" default_focus="1" placeholder="e.g. What powers a computer?"/></h1>
+                    </div>
                     <field name="answer_ids">
                         <tree editable="bottom" create="true" delete="true">
                             <field name="display_name" column_invisible="True"/>
