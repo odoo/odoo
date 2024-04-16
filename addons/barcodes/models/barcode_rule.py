@@ -25,7 +25,7 @@ class BarcodeRule(models.Model):
             ('product', 'Unit Product'),
         ], default='product')
     pattern = fields.Char(string='Barcode Pattern', help="The barcode matching pattern", required=True, default='.*')
-    alias = fields.Char(string='Alias', default='0', help='The matched pattern will alias to this barcode', required=True)
+    alias = fields.Char(string='Alias', default='', help='The matched pattern will alias to this barcode')
 
     @api.constrains('pattern')
     def _check_pattern(self):
