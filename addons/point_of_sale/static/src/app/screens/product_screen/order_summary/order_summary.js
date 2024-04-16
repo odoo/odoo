@@ -69,19 +69,6 @@ export class OrderSummary extends Component {
             }
             return;
         }
-        if (this.pos.numpadMode === "quantity" && selectedLine?.isPartOfCombo()) {
-            if (key === "Backspace") {
-                this._setValue("remove");
-            } else {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Invalid action"),
-                    body: _t(
-                        "The quantity of a combo item cannot be changed. A combo can only be deleted."
-                    ),
-                });
-            }
-            return;
-        }
         if (
             selectedLine &&
             this.pos.numpadMode === "quantity" &&
@@ -118,14 +105,22 @@ export class OrderSummary extends Component {
 
     _setValue(val) {
         const { numpadMode } = this.pos;
-        const selectedLine = this.currentOrder.get_selected_orderline();
+        let selectedLine = this.currentOrder.get_selected_orderline();
         if (selectedLine) {
             if (numpadMode === "quantity") {
+                if (selectedLine.combo_parent_id) {
+                    selectedLine = selectedLine.combo_parent_id;
+                }
                 if (val === "remove") {
                     this.currentOrder.removeOrderline(selectedLine);
                 } else {
-                    const result = selectedLine.set_quantity(val);
-
+                    const result = selectedLine.set_quantity(
+                        val,
+                        Boolean(selectedLine.combo_line_ids?.length)
+                    );
+                    for (const line of selectedLine.combo_line_ids) {
+                        line.set_quantity(val, true);
+                    }
                     if (result !== true) {
                         this.dialog.add(AlertDialog, result);
                         this.numberBuffer.reset();
