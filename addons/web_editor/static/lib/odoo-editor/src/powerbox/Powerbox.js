@@ -208,7 +208,7 @@ export class Powerbox {
                 initialTarget.textContent.split(''),
                 true,
             );
-            this._lastText = diff.bMove.join('');
+            this._lastText = diff.bMove.join('').replaceAll('\ufeff', '');
             const selection = this.options.document.getSelection();
             if (
                 (this._lastText.match(/\s/) && this._currentOpenOptions.closeOnSpace !== false) ||
