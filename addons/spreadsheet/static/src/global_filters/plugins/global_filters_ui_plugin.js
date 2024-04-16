@@ -243,40 +243,8 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
         switch (filter.type) {
             case "text":
                 return [[{ value: value || "" }]];
-            case "date": {
-                if (filter.rangeType === "from_to") {
-                    const locale = this.getters.getLocale();
-                    const from = {
-                        value: value.from ? toNumber(value.from, locale) : "",
-                        format: locale.dateFormat,
-                    };
-                    const to = {
-                        value: value.to ? toNumber(value.to, locale) : "",
-                        format: locale.dateFormat,
-                    };
-                    return [[from], [to]];
-                }
-                if (value && typeof value === "string") {
-                    const type = RELATIVE_DATE_RANGE_TYPES.find((type) => type.type === value);
-                    if (!type) {
-                        return [[{ value: "" }]];
-                    }
-                    return [[{ value: type.description.toString() }]];
-                }
-                if (!value || value.yearOffset === undefined) {
-                    return [[{ value: "" }]];
-                }
-                const periodOptions = getPeriodOptions(DateTime.local());
-                const year = String(DateTime.local().year + value.yearOffset);
-                const period = periodOptions.find(({ id }) => value.period === id);
-                let periodStr = period && period.description;
-                // Named months aren't in getPeriodOptions
-                if (!period) {
-                    periodStr =
-                        MONTHS[value.period] && String(MONTHS[value.period].value).padStart(2, "0");
-                }
-                return [[{ value: periodStr ? periodStr + "/" + year : year }]];
-            }
+            case "date":
+                return this._getDateFilterDisplayValue(filter);
             case "relation":
                 if (!value?.length || !this.orm) {
                     return [[{ value: "" }]];
@@ -365,6 +333,44 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
      */
     _setGlobalFilterValue(id, value) {
         this.values[id] = { value: value, rangeType: this.getters.getGlobalFilter(id).rangeType };
+    }
+
+    /**
+     * @param {GlobalFilter} filter
+     */
+    _getDateFilterDisplayValue(filter) {
+        const value = this.getGlobalFilterValue(filter.id);
+        if (filter.rangeType === "from_to") {
+            const locale = this.getters.getLocale();
+            const from = {
+                value: value.from ? toNumber(value.from, locale) : "",
+                format: locale.dateFormat,
+            };
+            const to = {
+                value: value.to ? toNumber(value.to, locale) : "",
+                format: locale.dateFormat,
+            };
+            return [[from], [to]];
+        }
+        if (value && typeof value === "string") {
+            const type = RELATIVE_DATE_RANGE_TYPES.find((type) => type.type === value);
+            if (!type) {
+                return [[{ value: "" }]];
+            }
+            return [[{ value: type.description.toString() }]];
+        }
+        if (!value || value.yearOffset === undefined) {
+            return [[{ value: "" }]];
+        }
+        const periodOptions = getPeriodOptions(DateTime.local());
+        const year = String(DateTime.local().year + value.yearOffset);
+        const period = periodOptions.find(({ id }) => value.period === id);
+        let periodStr = period && period.description;
+        // Named months aren't in getPeriodOptions
+        if (!period) {
+            periodStr = MONTHS[value.period] && String(MONTHS[value.period].value).padStart(2, "0");
+        }
+        return [[{ value: periodStr ? periodStr + "/" + year : year }]];
     }
 
     /**
