@@ -6,8 +6,9 @@
                 <div class="d-flex flex-column flex-grow-1 text-start w-100 w-sm-25">
                     <span t-esc="props.product.display_name" class="global-info-title fs-2 fw-bolder text-truncate"/>
                     <span class="fs-3"><t t-if="props.product.default_code" t-esc="props.product.default_code"/> <t t-if="props.product.default_code and props.product.barcode"> - </t> <t t-if="props.product.barcode" t-esc="props.product.barcode"/></span>
+                    <pre t-if="props.product.description_sale" t-esc="props.product.description_sale" class="text-break" style="white-space: break-spaces; font-family: var(--body-font-family); color: #000000; font-size: 14px;"/>
                 </div>
-                <div class="d-flex flex-column justify-content-center text-start text-sm-end w-100 w-sm-25">
+                <div class="d-flex flex-column justify-content-start text-start text-sm-end w-100 w-sm-25">
                     <span t-esc="env.utils.formatCurrency(props.info.productInfo.all_prices.price_with_tax)" class="global-info-title fs-2 fw-bolder" />
                     <span class="fs-3">
                         <t t-foreach="props.info.productInfo.all_prices.tax_details" t-as="tax" t-key="tax.name">
