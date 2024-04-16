@@ -87,6 +87,8 @@ class ResPartnerBank(models.Model):
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         """ Return an error for emv_qr if the account's country does no match any methods found in inheriting modules."""
         if qr_method == 'emv_qr':
+            if not self:
+                return _("A bank account is required for EMV QR Code generation.")
             return _("No EMV QR Code is available for the country of the account %(account_number)s.", account_number=self.acc_number)
 
         return super()._get_error_messages_for_qr(qr_method, debtor_partner, currency)
