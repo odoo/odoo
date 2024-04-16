@@ -191,9 +191,7 @@ function getCurrentComplexCondition(index, target) {
 
 export function getConditionText(index, target) {
     const condition = get(SELECTORS.condition, index, target);
-    if (condition) {
-        return queryAllTexts(condition.childNodes).filter(Boolean).join(" ");
-    }
+    return queryText(condition).replace(/\n/g, " ");
 }
 
 function getCurrentCondition(index, target) {
