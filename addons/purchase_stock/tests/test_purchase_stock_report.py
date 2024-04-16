@@ -121,7 +121,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         draft_picking_qty_in = docs['draft_picking_qty']['in']
         draft_purchase_qty = docs['draft_purchase_qty']
         pending_qty_in = docs['qty']['in']
-        self.assertEqual(len(lines), 0)
+        self.assertEqual(len(lines), 1)
         self.assertEqual(draft_picking_qty_in, 0)
         self.assertEqual(draft_purchase_qty, 0)
         self.assertEqual(pending_qty_in, 0)
@@ -138,7 +138,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         pending_qty_in = docs['qty']['in']
         self.assertEqual(len(lines), 1)
         self.assertEqual(lines[0]['document_in']['id'], po.id)
-        self.assertEqual(lines[0]['quantity'], 6)
+        self.assertEqual(lines[0]['quantity'], 10)
         self.assertEqual(draft_picking_qty_in, 0)
         self.assertEqual(draft_purchase_qty, 0)
         self.assertEqual(pending_qty_in, 0)

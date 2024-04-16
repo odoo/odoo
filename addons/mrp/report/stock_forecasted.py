@@ -22,6 +22,15 @@ class StockForecasted(models.AbstractModel):
         out_domain += [('raw_material_production_id', '=', False)]
         return in_domain, out_domain
 
+    def _get_inventory_link_move_domain(self, wh_internal_location):
+        domain = super()._get_inventory_link_move_domain(wh_internal_location)
+        domain.remove(('picking_id.group_id.stock_move_ids', '!=', False))
+        domain += ["|",
+                    ('picking_id.group_id.stock_move_ids', '!=', False),
+                    ('group_id.mrp_production_ids', '!=', False),
+        ]
+        return domain
+
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
         res = super()._get_report_header(product_template_ids, product_ids, wh_location_ids)
         res['draft_production_qty'] = {}

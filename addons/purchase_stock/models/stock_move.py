@@ -179,7 +179,8 @@ class StockMove(models.Model):
 
     def _get_source_document(self):
         res = super()._get_source_document()
-        return self.purchase_line_id.order_id or res
+        order_id = self.env['stock.move'].browse(self._rollup_move_origs()).purchase_line_id.order_id
+        return order_id or self.purchase_line_id.order_id or res
 
     def _get_valuation_price_and_qty(self, related_aml, to_curr):
         valuation_price_unit_total = 0
