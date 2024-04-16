@@ -56,9 +56,6 @@ Help your customers with this chat, and analyse their feedback.
     'installable': True,
     'application': True,
     'assets': {
-        'web._assets_primary_variables': [
-            'im_livechat/static/src/primary_variables.scss',
-        ],
         'web.assets_frontend': [
             'web/static/src/views/fields/file_handler.*',
             'web/static/src/views/fields/formatters.js',
