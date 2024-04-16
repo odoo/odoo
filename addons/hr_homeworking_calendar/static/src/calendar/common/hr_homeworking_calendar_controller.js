@@ -14,7 +14,7 @@ patch(AttendeeCalendarController.prototype, {
     },
     async editRecord(record, context = {}, shouldFetchFormViewId = true) {
         if (record.homeworking && 'start' in record) {
-            return this.action.doAction('hr_homeworking.set_location_wizard_action', {
+            return this.action.doAction('hr_homeworking_calendar.set_location_wizard_action', {
                 additionalContext: {
                     'default_date': serializeDate(record.start),
                     'default_work_location_id' : record.work_location_id,
@@ -33,13 +33,10 @@ patch(AttendeeCalendarController.prototype, {
                 this.displayDialog(ConfirmationDialog, {
                     title: _t("Confirmation"),
                     body: _t("Are you sure you want to delete this location?"),
-                    confirm: () => {
+                    confirm: async () => {
                         const dayName = record.start.setLocale("en").weekdayLong.toLowerCase();
                         const locationField = `${dayName}_location_id`;
-                        this.orm.call('hr.employee', "write", [
-                            [record.rawRecord.employee_id],
-                            {[locationField]: false}
-                        ]);
+                        await this.orm.write('hr.employee', [record.rawRecord.employee_id], {[locationField]: false})
                         this.model.load();
                     },
                     cancel: () => {
@@ -49,10 +46,8 @@ patch(AttendeeCalendarController.prototype, {
                 this.displayDialog(ConfirmationDialog, {
                     title: _t("Confirmation"),
                     body: _t("Are you sure you want to delete this exception?"),
-                    confirm: () => {
-                        this.orm.call('hr.employee.location', "unlink", [
-                            record.id,
-                        ]);
+                    confirm: async () => {
+                        await this.orm.unlink("hr.employee.location", [parseInt(record.id)]);
                         this.model.load();
                     },
                     cancel: () => {
@@ -64,7 +59,7 @@ patch(AttendeeCalendarController.prototype, {
         }
     },
     openWorkLocationWizard(startDate) {
-        this.action.doAction('hr_homeworking.set_location_wizard_action',{
+        this.action.doAction('hr_homeworking_calendar.set_location_wizard_action',{
             additionalContext: {
                 'default_date': serializeDate(startDate),
                 'dialog_size': 'medium',
