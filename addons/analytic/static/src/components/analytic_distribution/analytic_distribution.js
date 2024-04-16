@@ -25,6 +25,7 @@ import {
     useExternalListener,
     onWillStart,
     onPatched,
+    onMounted,
 } from "@odoo/owl";
 
 export class AnalyticDistribution extends Component {
@@ -68,6 +69,9 @@ export class AnalyticDistribution extends Component {
         onWillStart(this.willStart);
         useRecordObserver(this.willUpdateRecord.bind(this));
         onPatched(this.patched);
+        onMounted(async () => {
+            if (this.pendingSave) this.save(true)
+        })
 
         useExternalListener(window, "click", this.onWindowClick, true);
         useExternalListener(window, "resize", this.onWindowResized);
@@ -254,7 +258,7 @@ export class AnalyticDistribution extends Component {
         this.state.formattedData = distribution;
         if (accountNotFound) {
             // Analytic accounts in the json were not found, save the json without them
-            await this.save();
+            this.pendingSave = true
         }
     }
 
@@ -452,8 +456,8 @@ export class AnalyticDistribution extends Component {
         return result;
     }
 
-    async save() {
-        await this.props.record.update({ [this.props.name]: this.dataToJson() });
+    async save(actualSave=false) {
+        await this.props.record.update({ [this.props.name]: this.dataToJson() }, { save: actualSave });
     }
 
     onSaveNew() {
