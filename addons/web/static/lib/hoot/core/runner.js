@@ -1291,6 +1291,11 @@ export class TestRunner {
                     this.debug = job;
                 // Falls through
                 case Tag.ONLY:
+                    if (!this.#dry) {
+                        logger.warn(
+                            `"${job.fullName}" is marked as "${tag.name}". This is not suitable for CI`
+                        );
+                    }
                     this.#include(job instanceof Suite ? "suites" : "tests", [job.id], true);
                     ignoreSkip = true;
                     break;
