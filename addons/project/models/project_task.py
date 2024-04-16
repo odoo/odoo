@@ -367,6 +367,8 @@ class Task(models.Model):
         for task in self:
             if task.state in CLOSED_STATES and task.id == last_task_id_per_recurrence_id.get(task.recurrence_id.id):
                 task.recurrence_id._create_next_occurrence(task)
+            if task.state == '1_canceled':
+                task.date_deadline = False
 
     @api.depends_context('uid')
     @api.depends('user_ids')
