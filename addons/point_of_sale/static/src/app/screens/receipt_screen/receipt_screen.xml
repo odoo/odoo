@@ -29,7 +29,7 @@
                             <div class="notice mt-2">
                                 <t t-set="usedMethod" t-value="sendReceipt.lastArgs?.[0]?.name" />
                                 <div t-if="sendReceipt.status === 'loading'" class="text-info">Sending <t t-esc="usedMethod"/> in progress</div>
-                                <div t-if="sendReceipt.status === 'success'" class="text-success"><t t-esc="usedMethod"/> sent</div>
+                                <div t-if="sendReceipt.status === 'success'" class="text-success"><t t-esc="usedMethod"/> is sent successfully</div>
                                 <div t-if="sendReceipt.status === 'error'" class="text-danger">Sending <t t-esc="usedMethod"/> failed. Please try again</div>
                             </div>
                         </div>
