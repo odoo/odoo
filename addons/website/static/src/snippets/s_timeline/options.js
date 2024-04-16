@@ -25,8 +25,10 @@ options.registry.Timeline = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    timelineCard: function (previewMode, widgetValue, params) {
-        const $timelineRow = this.$target.closest('.s_timeline_row');
-        $timelineRow.toggleClass('flex-row-reverse flex-row');
+    timelineCard(previewMode, widgetValue, params) {
+        const timelineRowEl = this.$target[0].closest(".s_timeline_row");
+        timelineRowEl.classList.toggle("flex-md-row-reverse");
+        timelineRowEl.classList.toggle("flex-md-row");
+        this.$target[0].classList.toggle("text-md-end");
     },
 });
