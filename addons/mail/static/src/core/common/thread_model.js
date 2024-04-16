@@ -853,15 +853,11 @@ export class Thread extends Record {
             rpc("/discuss/channel/set_last_seen_message", {
                 channel_id: this.id,
                 last_message_id: newestPersistentMessage.id,
-            })
-                .then(() => {
-                    this.updateSeen(newestPersistentMessage);
-                })
-                .catch((e) => {
-                    if (e.code !== 404) {
-                        throw e;
-                    }
-                });
+            }).catch((e) => {
+                if (e.code !== 404) {
+                    throw e;
+                }
+            });
         } else if (newestPersistentMessage) {
             this.updateSeen();
         }
@@ -1112,13 +1108,9 @@ export class Thread extends Record {
     updateSeen(lastSeen = this.newestPersistentOfAllMessage) {
         const lastReadIndex = this.messages.findIndex((message) => message.eq(lastSeen));
         let newNeedactionCounter = 0;
-        let newUnreadCounter = 0;
         for (const message of this.messages.slice(lastReadIndex + 1)) {
             if (message.isNeedaction) {
                 newNeedactionCounter++;
-            }
-            if (Number.isInteger(message.id)) {
-                newUnreadCounter++;
             }
         }
         if (this.selfMember) {
@@ -1126,7 +1118,6 @@ export class Thread extends Record {
         }
         Object.assign(this, {
             message_needaction_counter: newNeedactionCounter,
-            message_unread_counter: newUnreadCounter,
         });
     }
 

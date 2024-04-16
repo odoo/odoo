@@ -110,12 +110,12 @@ export class DiscussCoreCommon {
             });
         });
         this.busService.subscribe("discuss.channel.member/seen", (payload) => {
-            const { channel_id, guest_id, id, last_message_id, partner_id } = payload;
+            const { channel, guest_id, id, last_message_id, partner_id } = payload;
             const member = this.store.ChannelMember.insert({
                 id,
                 seen_message_id: last_message_id ? { id: last_message_id } : null,
                 persona: { type: partner_id ? "partner" : "guest", id: partner_id ?? guest_id },
-                thread: { id: channel_id, model: "discuss.channel" },
+                thread: this.store.Thread.insert(channel),
             });
             if (member?.persona.eq(this.store.self)) {
                 member.thread.updateSeen(

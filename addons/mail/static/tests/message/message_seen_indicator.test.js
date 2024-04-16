@@ -237,7 +237,7 @@ test("'channel_seen' notification received is correctly handled", async () => {
             ["channel_id", "=", channelId],
             ["partner_id", "=", partnerId],
         ])[0],
-        channel_id: channelId,
+        channel: { id: channelId, model: "discuss.channel" },
         last_message_id: 100,
         partner_id: partnerId,
     });
@@ -283,7 +283,7 @@ test("'channel_fetch' notification then 'channel_seen' received are correctly ha
             ["channel_id", "=", channelId],
             ["partner_id", "=", partnerId],
         ])[0],
-        channel_id: channelId,
+        channel: { id: channelId, model: "discuss.channel" },
         last_message_id: 100,
         partner_id: partnerId,
     });

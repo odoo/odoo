@@ -205,6 +205,7 @@ class TestChannelInternals(MailCommon, HttpCase):
     @users('employee')
     def test_set_last_seen_message_should_send_notification_only_once(self):
         chat = self.env['discuss.channel'].with_user(self.user_admin).channel_get((self.partner_employee | self.user_admin.partner_id).ids)
+        member = self.env['discuss.channel.member'].search([('partner_id', '=', self.user_admin.partner_id.id), ('channel_id', '=', chat.id)])
         msg_1 = self._add_messages(chat, 'Body1', author=self.user_employee.partner_id)
 
         self.env['bus.bus'].sudo().search([]).unlink()
@@ -213,7 +214,12 @@ class TestChannelInternals(MailCommon, HttpCase):
             [{
                 "type": "discuss.channel.member/seen",
                 "payload": {
-                    'channel_id': chat.id,
+                    'channel': {
+                        'id': chat.id,
+                        'model': 'discuss.channel',
+                        'message_unread_counter': 0,
+                        'message_unread_counter_bus_id': self.env["bus.bus"].sudo()._bus_last_id(),
+                    },
                     'id': chat.channel_member_ids.filtered(lambda m: m.partner_id == self.user_admin.partner_id).id,
                     'last_message_id': msg_1.id,
                     'partner_id': self.user_admin.partner_id.id,

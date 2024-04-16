@@ -1065,7 +1065,13 @@ class Channel(models.Model):
         })
         if notify:
             data = {
-                'channel_id': self.id,
+                'channel': {
+                    'id': self.id,
+                    'model': 'discuss.channel',
+                    'message_unread_counter': member.message_unread_counter,
+                    # sudo - bus.bus: reading non sensitive last id
+                    'message_unread_counter_bus_id': self.env["bus.bus"].sudo()._bus_last_id()
+                },
                 'id': member.id,
                 'last_message_id': last_message.id,
             }

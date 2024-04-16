@@ -955,7 +955,12 @@ patch(MockServer.prototype, {
             target = channel;
         }
         this.pyEnv["bus.bus"]._sendone(target, "discuss.channel.member/seen", {
-            channel_id: channel.id,
+            channel: {
+                id: channel.id,
+                model: "discuss.channel",
+                message_unread_counter: memberOfCurrentUser.message_unread_counter,
+                message_unread_counter_bus_id: this.lastBusNotificationId,
+            },
             id: memberOfCurrentUser?.id,
             last_message_id: message_id,
             [guest ? "guest_id" : "partner_id"]: guest?.id ?? partner.id,
