@@ -5,8 +5,13 @@ import { rpc } from "@web/core/network/rpc";
 
 export const PurchaseDatePicker = PublicWidget.Widget.extend({
     selector: ".o-purchase-datetimepicker",
+    disabledInEditableMode: true,
+
+    /**
+     * @override
+     */
     start() {
-        this.call("datetime_picker", "create", {
+        this.disableDateTimePicker = this.call("datetime_picker", "create", {
             target: this.el,
             onChange: (newDate) => {
                 const { accessToken, orderId, lineId } = this.el.dataset;
@@ -19,6 +24,13 @@ export const PurchaseDatePicker = PublicWidget.Widget.extend({
                 value: luxon.DateTime.fromISO(this.el.dataset.value),
             },
         }).enable();
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this.disableDateTimePicker();
+        return this._super(...arguments);
     },
 });
 
