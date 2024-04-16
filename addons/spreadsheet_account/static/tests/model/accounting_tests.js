@@ -11,6 +11,7 @@ import { makeServerError } from "@web/../tests/helpers/mock_server";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
+const { toNumber } = spreadsheet.helpers;
 const { DEFAULT_LOCALE: locale } = spreadsheet.constants;
 
 let serverData;
@@ -77,7 +78,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A6", `=ODOO.BALANCE("100", 1900, -1)`);
         setCellContent(model, "A7", `=ODOO.DEBIT("100", 1899)`);
         await waitForDataLoaded(model);
-        const errorMessage = `'%s' is not a valid period. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`;
+        const errorMessage = `'%s' is not a valid period. Supported values are dates or strings formatted as "21/12/2022", "Q1/2022", "12/2022", and "2022".`;
         assert.equal(getEvaluatedCell(model, "A1").message, "0 is not a valid year.");
         assert.equal(getEvaluatedCell(model, "A2").message, "0 is not a valid year.");
         assert.equal(getEvaluatedCell(model, "A3").message, "-1 is not a valid year.");
@@ -160,7 +161,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         assert.verifySteps([
             JSON.stringify(
                 camelToSnakeObject({
-                    dateRange: parseAccountingDate("2022", locale),
+                    dateRange: parseAccountingDate({ value: "2022" }, locale),
                     codes: ["100"],
                     companyId: null,
                     includeUnposted: false,
@@ -168,7 +169,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             ),
             JSON.stringify(
                 camelToSnakeObject({
-                    dateRange: parseAccountingDate("01/2022", locale),
+                    dateRange: parseAccountingDate({ value: "01/2022" }, locale),
                     codes: ["100"],
                     companyId: null,
                     includeUnposted: false,
@@ -176,7 +177,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             ),
             JSON.stringify(
                 camelToSnakeObject({
-                    dateRange: parseAccountingDate("Q2/2022", locale),
+                    dateRange: parseAccountingDate({ value: "Q2/2022" }, locale),
                     codes: ["100"],
                     companyId: null,
                     includeUnposted: false,
@@ -184,7 +185,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             ),
             JSON.stringify(
                 camelToSnakeObject({
-                    dateRange: parseAccountingDate("2021", locale),
+                    dateRange: parseAccountingDate({ value: "2021" }, locale),
                     codes: ["10"],
                     companyId: null,
                     includeUnposted: false,
@@ -192,7 +193,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             ),
             JSON.stringify(
                 camelToSnakeObject({
-                    dateRange: parseAccountingDate("2021", locale),
+                    dateRange: parseAccountingDate({ value: "2021" }, locale),
                     codes: ["5"],
                     companyId: 2,
                     includeUnposted: false,
@@ -200,7 +201,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             ),
             JSON.stringify(
                 camelToSnakeObject({
-                    dateRange: parseAccountingDate("05/04/2022", locale),
+                    dateRange: parseAccountingDate({ value: "05/04/2022" }, locale),
                     codes: ["5"],
                     companyId: null,
                     includeUnposted: false,
@@ -208,7 +209,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             ),
             JSON.stringify(
                 camelToSnakeObject({
-                    dateRange: parseAccountingDate("2022", locale),
+                    dateRange: parseAccountingDate({ value: "2022" }, locale),
                     codes: ["5"],
                     companyId: null,
                     includeUnposted: false,
@@ -216,7 +217,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             ),
             JSON.stringify(
                 camelToSnakeObject({
-                    dateRange: parseAccountingDate("05/05/2022", locale),
+                    dateRange: parseAccountingDate({ value: "05/05/2022" }, locale),
                     codes: ["100"],
                     companyId: null,
                     includeUnposted: true,
@@ -246,7 +247,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             "spreadsheet_fetch_debit_credit",
             JSON.stringify(
                 camelToSnakeObject({
-                    dateRange: parseAccountingDate("2022", locale),
+                    dateRange: parseAccountingDate({ value: "2022" }, locale),
                     codes: ["100", "200"],
                     companyId: null,
                     includeUnposted: false,
@@ -279,7 +280,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             "spreadsheet_fetch_debit_credit",
             JSON.stringify(
                 camelToSnakeObject({
-                    dateRange: parseAccountingDate("2022", locale),
+                    dateRange: parseAccountingDate({ value: "2022" }, locale),
                     codes: ["100104", "200104"],
                     companyId: null,
                     includeUnposted: false,
@@ -319,7 +320,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             "spreadsheet_fetch_debit_credit",
             JSON.stringify(
                 camelToSnakeObject({
-                    dateRange: parseAccountingDate("2022", locale),
+                    dateRange: parseAccountingDate({ value: "2022" }, locale),
                     codes: ["100"],
                     companyId: null,
                     includeUnposted: false,
@@ -328,7 +329,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             "spreadsheet_fetch_debit_credit",
             JSON.stringify(
                 camelToSnakeObject({
-                    dateRange: parseAccountingDate("2022", locale),
+                    dateRange: parseAccountingDate({ value: "2022" }, locale),
                     codes: ["100104", "200104"],
                     companyId: null,
                     includeUnposted: false,
@@ -338,34 +339,87 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
     });
 
     QUnit.test("parseAccountingDate", (assert) => {
-        assert.deepEqual(parseAccountingDate("2022", locale), {
+        assert.deepEqual(parseAccountingDate({ value: "2022" }, locale), {
             rangeType: "year",
             year: 2022,
         });
-        assert.deepEqual(parseAccountingDate("11/10/2022", locale), {
+        assert.deepEqual(parseAccountingDate({ value: 2022 }, locale), {
+            rangeType: "year",
+            year: 2022,
+        });
+        assert.deepEqual(parseAccountingDate({ value: 2022, format: "0" }, locale), {
+            rangeType: "year",
+            year: 2022,
+        });
+        assert.deepEqual(parseAccountingDate({ value: "11/10/2022" }, locale), {
             rangeType: "day",
             year: 2022,
             month: 11,
             day: 10,
         });
-        assert.deepEqual(parseAccountingDate("10/2022", locale), {
+        assert.deepEqual(parseAccountingDate({ value: toNumber("11/10/2022", locale) }, locale), {
+            rangeType: "day",
+            year: 2022,
+            month: 11,
+            day: 10,
+        });
+        assert.deepEqual(parseAccountingDate({ value: "10/2022" }, locale), {
             rangeType: "month",
             year: 2022,
             month: 10,
         });
-        assert.deepEqual(parseAccountingDate("Q1/2022", locale), {
+        assert.deepEqual(
+            parseAccountingDate(
+                { value: toNumber("2022-10-11", locale), format: "mm yyyy" },
+                locale
+            ),
+            {
+                rangeType: "month",
+                year: 2022,
+                month: 10,
+            }
+        );
+        assert.deepEqual(
+            parseAccountingDate(
+                { value: toNumber("2022-10-11", locale), format: "mmmm yyyy" },
+                locale
+            ),
+            {
+                rangeType: "month",
+                year: 2022,
+                month: 10,
+            }
+        );
+        assert.deepEqual(parseAccountingDate({ value: "Q1/2022" }, locale), {
             rangeType: "quarter",
             year: 2022,
             quarter: 1,
         });
-        assert.deepEqual(parseAccountingDate("q4/2022", locale), {
+        assert.deepEqual(parseAccountingDate({ value: "q4/2022" }, locale), {
             rangeType: "quarter",
             year: 2022,
             quarter: 4,
         });
+        assert.deepEqual(
+            parseAccountingDate(
+                { value: toNumber("2022-10-11", locale), format: "q yyyy" },
+                locale
+            ),
+            {
+                rangeType: "quarter",
+                year: 2022,
+                quarter: 4,
+            }
+        );
         // A number below 3000 is interpreted as a year.
         // It's interpreted as a regular spreadsheet date otherwise
-        assert.deepEqual(parseAccountingDate("3005", locale), {
+        assert.deepEqual(parseAccountingDate({ value: "3005" }, locale), {
+            rangeType: "day",
+            year: 1908,
+            month: 3,
+            day: 23,
+        });
+        assert.deepEqual(parseAccountingDate({ value: 3005 }, locale), {
             rangeType: "day",
             year: 1908,
             month: 3,

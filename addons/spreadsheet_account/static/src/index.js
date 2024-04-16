@@ -26,7 +26,8 @@ cellMenuRegistry.add("move_lines_see_records", {
             .map((arg) => env.model.getters.evaluateFormula(sheetId, arg));
         codes = toString(codes).split(",");
         const locale = env.model.getters.getLocale();
-        const dateRange = parseAccountingDate(date_range, locale);
+        // TODO format
+        const dateRange = parseAccountingDate({ value: date_range }, locale);
         offset = parseInt(offset) || 0;
         dateRange.year += offset || 0;
         companyId = parseInt(companyId) || null;
