@@ -53,6 +53,7 @@ from . import res_users_settings
 from . import res_users_settings_volumes
 
 # odoo models
+from . import ir_access
 from . import ir_action_act_window
 from . import ir_actions_server
 from . import ir_attachment

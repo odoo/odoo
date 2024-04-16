@@ -207,7 +207,7 @@ class Environment(Mapping[str, "BaseModel"]):
     @property
     def _access_context(self):
         """Return the context values used by the access caches."""
-        return (self.uid, *self['ir.rule']._compute_domain_context_values())
+        return (self.uid, *self['ir.access']._get_access_context())
 
     @functools.cached_property
     def _access_cache(self):
