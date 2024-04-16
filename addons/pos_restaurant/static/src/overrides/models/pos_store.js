@@ -266,6 +266,9 @@ patch(PosStore.prototype, {
             if (currentOrder) {
                 this.set_order(currentOrder);
             } else {
+                this.pos_session.sequence_number = await this.env.services.rpc("/pos/get-sequence", {
+                    access_token: this.config.access_token,
+                });
                 this.add_new_order();
             }
         }

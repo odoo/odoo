@@ -8,6 +8,7 @@ import { Component, useState } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
 import { groupBy } from "@web/core/utils/arrays";
+import { _t } from "@web/core/l10n/translation";
 
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
@@ -61,7 +62,7 @@ export class SplitBillScreen extends Component {
         if (!this._isFullPayOrder()) {
             this._setQuantityOnCurrentOrder();
 
-            this.newOrder.set_screen_data({ name: "PaymentScreen" });
+            this.newOrder.set_screen_data({name: "PaymentScreen"});
 
             // for the kitchen printer we assume that everything
             // has already been sent to the kitchen before splitting
@@ -76,13 +77,28 @@ export class SplitBillScreen extends Component {
 
             this.newOrder.setCustomerCount(1);
             this.newOrder.originalSplittedOrder = this.currentOrder;
+            this.newOrder.sequence_number = this.newOrder.pos.pos_session.sequence_number;
+            if (this.newOrder.sequence_number === this.currentOrder.sequence_number){
+                this.newOrder.sequence_number++;
+            }
+            this.newOrder.uid = this.newOrder.generate_unique_id()
+            this.newOrder.name = _t("Order %s", this.newOrder.uid)
+            this.newOrder.trackingNumber = (
+                (this.newOrder.pos_session_id % 10) * 100 +
+                (this.newOrder.sequence_number % 100)
+            ).toString();
             const newCustomerCount = this.currentOrder.getCustomerCount() - 1;
             this.currentOrder.setCustomerCount(newCustomerCount || 1);
-            this.currentOrder.set_screen_data({ name: "ProductScreen" });
+            this.currentOrder.set_screen_data({name: "ProductScreen"});
 
             const reactiveNewOrder = this.pos.makeOrderReactive(this.newOrder);
             this.pos.orders.add(reactiveNewOrder);
             this.pos.selectedOrder = reactiveNewOrder;
+            // Just a dummy call to update the sequence number
+            // to avoid duplicating the sequence number with future orders
+            this.env.services.rpc("/pos/get-sequence", {
+                access_token: this.newOrder.pos.config.access_token,
+            });
         }
         this.pos.showScreen("PaymentScreen");
     }

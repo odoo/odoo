@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
+import re
+
+from werkzeug.exceptions import Unauthorized
 
 from odoo import http, _
 from odoo.http import request
@@ -257,3 +260,29 @@ class PosController(PortalAccount):
         # Allowing default values for moves is important for some localizations that would need specific fields to be set on the invoice, such as Mexico.
         pos_order.with_context(with_context).action_pos_order_invoice()
         return request.redirect('/my/invoices/%s?access_token=%s' % (pos_order.account_move.id, pos_order.account_move._portal_ensure_token()))
+
+    @http.route('/pos/get-sequence', auth='public', type='json', website=True)
+    def get_sequence_number(self, access_token, delete_empty_record=False):
+        pos_config = request.env['pos.config'].sudo().search([('access_token', '=', access_token)], limit=1)
+        if not pos_config.has_active_session:
+            raise Unauthorized("Invalid access token")
+        company = pos_config.company_id
+        user = pos_config.current_session_id.user_id or pos_config.self_ordering_default_user_id
+        pos_config = pos_config.sudo(False).with_company(company).with_user(user).with_context(
+            allowed_company_ids=company.ids)
+
+        pos_session = pos_config.current_session_id
+
+        if pos_config.module_pos_restaurant and not delete_empty_record:
+            seq_id = pos_config.env['ir.sequence'].search([('code', '=', f'pos.order_{pos_session.id}'),
+                                                           ('company_id', '=', pos_config.company_id.id)])
+
+            order = request.env['pos.order'].sudo().search([('sequence_number', '=', seq_id.number_next_actual - 1),
+                                                            ('session_id', '=', pos_session.id)], limit=1)
+            if not order:
+                return seq_id.number_next_actual - 1
+
+        ir_sequence_session = pos_config.env['ir.sequence'].with_context(
+            company_id=pos_config.company_id.id).next_by_code(f'pos.order_{pos_session.id}')
+        sequence_number = re.findall(r'\d+', ir_sequence_session)[0]
+        return sequence_number

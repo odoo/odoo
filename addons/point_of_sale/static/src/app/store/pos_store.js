@@ -1838,7 +1838,13 @@ export class PosStore extends Reactive {
 
     addOrderIfEmpty() {
         if (!this.get_order()) {
+            this.pos_session.sequence_number++;
             this.add_new_order();
+            // Just a dummy call to update the sequence number
+            // to avoid duplicating the sequence number with future orders
+            this.env.services.rpc("/pos/get-sequence", {
+                access_token: this.config.access_token,
+            });
         }
     }
 

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from datetime import datetime
 from uuid import uuid4
 import pytz
@@ -568,7 +567,11 @@ class PosConfig(models.Model):
     # Methods to open the POS
     def _action_to_open_ui(self):
         if not self.current_session_id:
-            self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
+            session = self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
+            # Start the sequence to avoid duplicating the sequence number
+            # in the first order
+            self.env['ir.sequence'].with_context(
+                company_id=self.company_id.id).next_by_code(f'pos.order_{session.id}')
         path = '/pos/web' if self._force_http() else '/pos/ui'
         return {
             'type': 'ir.actions.act_url',

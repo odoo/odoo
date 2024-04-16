@@ -101,10 +101,15 @@ export class ReceiptScreen extends Component {
     get ticketScreen() {
         return { name: "TicketScreen" };
     }
-    orderDone() {
+    async orderDone() {
         this.pos.removeOrder(this.currentOrder);
+        if (!this.pos.config.module_pos_restaurant) {
+            this.pos.pos_session.sequence_number = await this.env.services.rpc("/pos/get-sequence", {
+                access_token: this.pos.config.access_token,
+            });
+        }
         this._addNewOrder();
-        const { name, props } = this.nextScreen;
+        const {name, props} = this.nextScreen;
         this.pos.showScreen(name, props);
     }
     resumeOrder() {
