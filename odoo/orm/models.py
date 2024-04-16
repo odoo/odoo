@@ -522,7 +522,19 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     def _post_model_setup__(self):
         """ Method called after the model has been setup. """
-        pass
+        cls = self.env.registry[self._name]
+        if (
+                cls._check_company_auto
+                and cls._name != 'res.company'
+                and 'company_id' not in cls._fields
+                and 'company_ids' not in cls._fields
+                and not any(f.check_company for f in cls._fields.values() if f.relational and f.company_dependent)
+        ):
+            _logger.warning(
+                "%s._check_company_auto attribute will be ignored because the model doesn't have a "
+                "company_id/s field nor any company-dependent relational field with check_company=True",
+                self._name,
+            )
 
     @property
     def _table_sql(self) -> SQL:

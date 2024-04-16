@@ -616,7 +616,6 @@ class MrpWorkcenterProductivity(models.Model):
 class MrpWorkcenterCapacity(models.Model):
     _name = 'mrp.workcenter.capacity'
     _description = 'Work Center Capacity'
-    _check_company_auto = True
 
     def _default_time_start(self):
         workcenter_id = self.workcenter_id.id or self.env.context.get('default_workcenter_id')
