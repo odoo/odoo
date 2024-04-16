@@ -10,6 +10,7 @@ import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { errorService } from "@web/core/errors/error_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { popoverService } from "@web/core/popover/popover_service";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { registry } from "@web/core/registry";
@@ -27,6 +28,7 @@ QUnit.module("base_automation", {}, function () {
     QUnit.module("Error Dialog", {
         async beforeEach() {
             serviceRegistry.add("dialog", dialogService);
+            serviceRegistry.add("popover", popoverService);
             serviceRegistry.add("ui", uiService);
             serviceRegistry.add("error", errorService);
             serviceRegistry.add("hotkey", hotkeyService);
