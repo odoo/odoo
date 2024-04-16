@@ -19,16 +19,10 @@ class ProjectTags(models.Model):
     name = fields.Char('Name', required=True, translate=True)
     color = fields.Integer(string='Color', default=_get_default_color,
         help="Transparent tags are not visible in the kanban view of your projects and tasks.")
-    project_ids = fields.Many2many('project.project', 'project_project_project_tags_rel', string='Projects')
-    task_ids = fields.Many2many('project.task', string='Tasks')
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "A tag with the same name already exists."),
     ]
-
-    def _get_project_tags_domain(self, domain, project_id):
-        # TODO: Remove in master
-        return domain
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
