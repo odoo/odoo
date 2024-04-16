@@ -3983,7 +3983,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_uom_id': self.bom_1.product_uom_id.id,
         })
 
-        dt = datetime(2024, 1, 17, 11)
+        dt = datetime(2024, 1, 17, 8)
         wo = self.env['mrp.workorder'].create([
             {
                 'name': 'Test order',
@@ -3996,11 +3996,11 @@ class TestMrpOrder(TestMrpCommon):
             }
         ])
         self.assertEqual(wo.date_start, dt)
-        self.assertEqual(wo.date_finished, dt + timedelta(hours=1, minutes=30))
+        self.assertEqual(wo.date_finished, dt + timedelta(hours=0, minutes=30))
 
         # We change the date finished and make sure the duration expected is adapted
         wo.write({
-            'date_finished': dt + timedelta(hours=2),
+            'date_finished': dt + timedelta(hours=1),
         })
         self.assertEqual(wo.duration_expected, 60.0)
 
@@ -4011,4 +4011,4 @@ class TestMrpOrder(TestMrpCommon):
         })
         self.assertEqual(wo.duration_expected, 30.0)
         self.assertEqual(wo.date_start, dt)
-        self.assertEqual(wo.date_finished, dt + timedelta(hours=1, minutes=30))
+        self.assertEqual(wo.date_finished, dt + timedelta(hours=0, minutes=30))
