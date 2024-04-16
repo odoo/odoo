@@ -5,36 +5,44 @@
             <field name="name">Weight Barcodes 3 Decimals</field>
             <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
             <field name="sequence">36</field>
-            <field name="type">weight</field>
+            <!-- TODO: check with POS if `weight` can be replace with `measure` (linked to an UoM ?)
+            <field name="type">weight</field> -->
+            <field name="type">measure</field>
             <field name="encoding">ean13</field>
-            <field name="pattern">21.....{NNDDD}</field>
+            <field name="rule_part_ids">
+                <record id="barcode_rule_group_weight_three_dec_product" model="barcode.rule.part">
+                    <field name="sequence" eval="1"/>
+                    <field name="type">product</field>
+                    <field name="pattern">(21\d{5})</field>
+                </record>
+                <record id="barcode_rule_group_weight_three_dec_measure" model="barcode.rule.part">
+                    <field name="sequence" eval="2"/>
+                    <field name="type">measure</field>
+                    <!-- Last char outside of the capture group to not catch the checksum with the measure -->
+                    <field name="pattern">(\d{5})\d</field>
+                    <field name="decimal_position">3</field>
+                </record>
+            </field>
         </record>
-        
+
         <record id="barcode_rule_package" model="barcode.rule">
             <field name="name">Package barcodes</field>
             <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
             <field name="sequence">70</field>
             <field name="type">package</field>
             <field name="encoding">any</field>
-            <field name="pattern">PACK</field>
-        </record>
-
-        <record id="barcode_rule_lot" model="barcode.rule">
-            <field name="name">Lot barcodes</field>
-            <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
-            <field name="sequence">80</field>
-            <field name="type">lot</field>
-            <field name="encoding">any</field>
-            <field name="pattern">10</field>
-        </record>
-
-        <record id="barcode_rule_location" model="barcode.rule">
-            <field name="name">Location barcodes</field>
-            <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
-            <field name="sequence">60</field>
-            <field name="type">location</field>
-            <field name="encoding">any</field>
-            <field name="pattern">414</field>
+            <field name="rule_part_ids">
+                <!-- <record id="barcode_rule_group_package_prefix" model="barcode.rule.part">
+                    <field name="sequence" eval="1"/>
+                    <field name="type">prefix</field>
+                    <field name="pattern">(PACK)</field>
+                </record> -->
+                <record id="barcode_rule_group_package" model="barcode.rule.part">
+                    <field name="sequence" eval="1"/>
+                    <field name="type">package</field>
+                    <field name="pattern">(PACK[!"%-/0-9:-?A-Z_a-z]+)</field>
+                </record>
+            </field>
         </record>
     </data>
 </odoo>

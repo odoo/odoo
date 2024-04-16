@@ -3,8 +3,7 @@ import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { BarcodeParser } from "@barcodes/js/barcode_parser";
-import { GS1BarcodeError } from "@barcodes_gs1_nomenclature/js/barcode_parser";
+import { BarcodeParser, BarcodeParserError } from "@barcodes/js/barcode_parser";
 
 export class BarcodeReader {
     static serviceDependencies = ["dialog", "hardware_proxy", "notification", "action", "orm"];
@@ -59,10 +58,10 @@ export class BarcodeReader {
                 Array.isArray(parseBarcode) &&
                 !parseBarcode.some((element) => element.type === "product")
             ) {
-                throw new GS1BarcodeError("The GS1 barcode must contain a product.");
+                throw new BarcodeParserError("The GS1 barcode must contain a product.");
             }
         } catch (error) {
-            if (this.fallbackParser && error instanceof GS1BarcodeError) {
+            if (this.fallbackParser && error instanceof BarcodeParserError) {
                 parseBarcode = this.fallbackParser.parse_barcode(code);
             } else {
                 throw error;

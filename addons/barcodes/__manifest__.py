@@ -6,7 +6,8 @@
     'depends': ['web'],
     'data': [
         'data/barcodes_data.xml',
-        'views/barcodes_view.xml',
+        'views/barcodes_nomenclature_views.xml',
+        'views/barcodes_rule_views.xml',
         'security/ir.model.access.csv',
         ],
     'installable': True,

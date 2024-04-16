@@ -11,8 +11,8 @@ QUnit.module('Barcode GS1 Parser', {
             id: 2,
             name: "GS1",
             upc_ean_conv: "always",
-            is_gs1_nomenclature: true,
-            gs1_separator_fnc1: '',
+            is_combined: true,
+            separator_expr: '',
             rules: [
                 {
                     id: 2,
@@ -240,7 +240,7 @@ QUnit.module('Barcode GS1 Parser', {
         }
 
         // Reload the nomenclature but this time using '#' as separator.
-        this.nomenclature.gs1_separator_fnc1 = '#';
+        this.nomenclature.separator_expr = '#';
         barcodeNomenclature = new BarcodeParser({ nomenclature: this.nomenclature });
         await barcodeNomenclature.loaded;
         res = barcodeNomenclature.gs1_decompose_extanded(barcodeService.cleanBarcode(code128));

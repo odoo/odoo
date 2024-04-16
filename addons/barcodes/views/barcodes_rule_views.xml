@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<odoo>
+  <!-- Barcode Rule Views -->
+    <record id="barcode_rule_view_form" model="ir.ui.view">
+        <field name="name">barcode.rule.view.form</field>
+        <field name="model">barcode.rule</field>
+        <field name="arch" type="xml">
+            <form string="Barcode Rule">
+                <group>
+                    <field name="name"/>
+                    <field name="sequence"/>
+                    <field name="type"/>
+                    <field name="encoding" invisible="type == 'alias'"/>
+                    <field name="pattern"/>
+                    <field name="alias" invisible="type != 'alias'"/>
+                    <field name="rule_part_ids" invisible="type == 'alias'" context="{'default_rule_id': id}"/>
+                    <!-- Fields used for combined rules only. -->
+                    <field name="required_rule_ids" widget="many2many_tags"
+                           domain="[('barcode_nomenclature_id', '=', barcode_nomenclature_id)]"
+                           invisible="not is_combined"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+  <!-- Catching Group Views -->
+    <record id="barcode_rule_group_view_form" model="ir.ui.view">
+        <field name="name">barcode.rule.part.view.form</field>
+        <field name="model">barcode.rule.part</field>
+        <field name="arch" type="xml">
+            <form string="Barcode Rule - Catching Group">
+                <group>
+                    <field name="type"/>
+                    <field name="decimal_position" invisible="hide_decimal_position"/>
+                    <field name="associated_uom_id" invisible="type != 'measure'"/>
+                    <field name="encoding"/>
+                    <field name="pattern"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="barcode_rule_group_view_tree" model="ir.ui.view">
+        <field name="name">barcode.rule.part.view.tree</field>
+        <field name="model">barcode.rule.part</field>
+        <field name="arch" type="xml">
+            <tree string="Catching Group">
+                <field name="sequence" widget="handle"/>
+                <field name="type"/>
+                <field name="associated_uom_id" groups="uom.group_uom"/>
+                <field name="pattern"/>
+                <field name="encoding"/>
+            </tree>
+        </field>
+    </record>
+</odoo>
