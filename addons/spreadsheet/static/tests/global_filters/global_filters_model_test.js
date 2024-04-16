@@ -884,13 +884,13 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         await addGlobalFilter(model, {
             id: "42",
             type: "date",
+            rangeType: "fixedPeriod",
             label: "Date Filter",
         });
         await nextTick();
         const [filter] = model.getters.getGlobalFilters();
         await setGlobalFilterValue(model, {
             id: filter.id,
-            rangeType: "fixedPeriod",
             value: {
                 yearOffset: 0,
                 period: "first_quarter",
@@ -900,7 +900,6 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(getCellValue(model, "A10"), `Q1/${DateTime.now().year}`);
         await setGlobalFilterValue(model, {
             id: filter.id,
-            rangeType: "fixedPeriod",
             value: {
                 yearOffset: 0,
             },
@@ -909,7 +908,6 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(getCellValue(model, "A10"), `${DateTime.now().year}`);
         await setGlobalFilterValue(model, {
             id: filter.id,
-            rangeType: "fixedPeriod",
             value: {
                 period: "january",
                 yearOffset: 0,
@@ -919,7 +917,6 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(getCellValue(model, "A10"), `01/${DateTime.now().year}`);
         await setGlobalFilterValue(model, {
             id: filter.id,
-            rangeType: "fixedPeriod",
             value: {},
         });
         await nextTick();
@@ -1083,6 +1080,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 id: "42",
                 type: "date",
                 label: "Cuillère",
+                rangeType: "relative",
             });
             setCellContent(
                 model,
