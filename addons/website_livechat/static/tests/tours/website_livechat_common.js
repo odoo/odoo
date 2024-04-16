@@ -41,10 +41,18 @@ export const start = [
     },
 ];
 
-export const endDiscussion = [
+export const closeChat = [
     {
         content: "Close the chat window",
         trigger: ".o-livechat-root:shadow .o-mail-ChatWindow-command[title*=Close]",
+        run: "click",
+    },
+];
+
+export const confirmnClose = [
+    {
+        content: "Close confirmation",
+        trigger: ".o-livechat-root:shadow .o-livechat-CloseConfirmation-leave",
         run: "click",
     },
 ];

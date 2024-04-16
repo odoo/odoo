@@ -1,5 +1,11 @@
 import { queryAll } from "@odoo/hoot-dom";
-import { endDiscussion, okRating, feedback, transcript, close } from "./website_livechat_common";
+import {
+    closeChat,
+    okRating,
+    feedback,
+    transcript,
+    confirmnClose,
+} from "./website_livechat_common";
 import { registry } from "@web/core/registry";
 
 const chatRequest = [
@@ -48,5 +54,5 @@ registry.category("web_tour.tours").add("website_livechat_chat_request_part_1_no
 registry.category("web_tour.tours").add("website_livechat_chat_request_part_2_end_session_tour", {
     test: true,
     url: "/",
-    steps: () => [].concat(endDiscussion, okRating, feedback, transcript, close),
+    steps: () => [].concat(closeChat, confirmnClose, okRating, feedback, transcript),
 });
