@@ -16,7 +16,7 @@ class SaleOrder(models.Model):
         string="Quotation Template",
         compute='_compute_sale_order_template_id',
         store=True, readonly=False, check_company=True, precompute=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    )
     sale_order_option_ids = fields.One2many(
         comodel_name='sale.order.option', inverse_name='order_id',
         string="Optional Products Lines",

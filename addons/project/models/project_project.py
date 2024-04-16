@@ -71,7 +71,7 @@ class Project(models.Model):
     company_id = fields.Many2one('res.company', string='Company', compute="_compute_company_id", inverse="_inverse_company_id", store=True, readonly=False)
     currency_id = fields.Many2one('res.currency', compute="_compute_currency_id", string="Currency", readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
-        domain="['|', ('company_id', '=', False), ('company_id', '=?', company_id)]", check_company=True,
+        check_company=True,
         help="Analytic account to which this project, its tasks and its timesheets are linked. \n"
             "Track the costs and revenues of your project by setting this analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
             "This analytic account can be changed on each task individually if necessary.\n"
