@@ -37,7 +37,6 @@ $o-system-fonts: (-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvet
 $o-font-weight-normal: 400 !default;
 $o-font-weight-medium: 500 !default;
 $o-font-weight-bold: 700 !default;
-$o-font-weight-extrabold: 800 !default;
 
 // Colors
 // This is BS default
@@ -114,7 +113,6 @@ $o-headings-font-family: o-add-unicode-support-font(("SF Pro Display", $o-system
 
 // Font colors
 $o-main-text-color: $o-gray-700 !default;
-$o-main-bg-color: #f0eeee !default;
 $o-main-color-muted: rgba($o-main-text-color, $o-opacity-muted) !default;
 $o-main-headings-color: $o-gray-900 !default;
 $o-main-link-color: darken($o-brand-primary, 5%) !default;
@@ -163,7 +161,6 @@ $o-input-padding-x: 4px !default;
 $o-input-bg: transparent !default;
 $o-input-invalid-bg: mix($o-danger, $o-input-bg, 10%) !default;
 $o-input-border-required: $o-brand-primary !default;
-$o-input-hover-border-color: $o-gray-300 !default;
 
 // Layout
 //
@@ -182,16 +179,13 @@ $o-extra-grid-breakpoints: (
     xxl: 1534px,
 ) !default;
 $o-spacer: 16px !default; // = 1rem
-$o-form-group-cols: 12 !default;
 $o-form-spacing-unit: 5px !default;
 $o-horizontal-padding: $o-spacer !default;
-$o-innergroup-rpadding: 45px !default;
 $o-dropdown-hpadding: 20px !default;
 $o-dropdown-vpadding: 3px !default;
 $o-dropdown-max-height: 70vh !default;
 
 $o-statbutton-height: 44px !default;
-$o-statbutton-vpadding: 0px !default;
 $o-statbutton-spacing: 6px !default;
 
 $o-modal-lg: 980px !default;
@@ -217,16 +211,7 @@ $o-list-group-active-bg: lighten(saturate(adjust-hue($o-info, 15), 1.8), 50) !de
 // Define a minimum width. This value is arbitrary and strictly font-related.
 $o-badge-min-width: 3ch !default;
 
-$o-nb-calendar-colors: 24 !default;
-
 $o-base-settings-mobile-tabs-height: 40px !default;
-$o-base-settings-mobile-tabs-overflow-gap: 3% !default;
-
-$o-cp-breadcrumb-height: 30px !default;
-
-$o-cp-button-sm-no-border-padding: 0.4rem;
-
-$o-datepicker-week-color: #8f8f8f !default;
 
 $o-card-body-bg-opacity: 0.9 !default;
 
