@@ -1180,6 +1180,7 @@ var SnippetEditor = Widget.extend({
             canBeSanitizedUnless: canBeSanitizedUnless,
             toInsertInline: toInsertInline,
             selectorGrids: selectorGrids,
+            fromIframe: true,
         });
 
         this.$body.addClass('move-important');
@@ -2348,7 +2349,7 @@ var SnippetsMenu = Widget.extend({
      *        elements which are in grid mode and for which a grid dropzone
      *        needs to be inserted
      */
-    _activateInsertionZones($selectorSiblings, $selectorChildren, canBeSanitizedUnless, toInsertInline, selectorGrids = []) {
+    _activateInsertionZones($selectorSiblings, $selectorChildren, canBeSanitizedUnless, toInsertInline, selectorGrids = [], fromIframe = false) {
         var self = this;
 
         // If a modal or a dropdown is open, the drop zones must be created
@@ -2498,7 +2499,7 @@ var SnippetsMenu = Widget.extend({
 
         let iframeOffset;
         const bodyWindow = this.$body[0].ownerDocument.defaultView;
-        if (bodyWindow.frameElement && bodyWindow !== this.ownerDocument.defaultView) {
+        if (bodyWindow.frameElement && bodyWindow !== this.ownerDocument.defaultView && !fromIframe) {
             iframeOffset = bodyWindow.frameElement.getBoundingClientRect();
         }
 
@@ -3840,7 +3841,7 @@ var SnippetsMenu = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onActivateInsertionZones: function (ev) {
-        this._activateInsertionZones(ev.data.$selectorSiblings, ev.data.$selectorChildren, ev.data.canBeSanitizedUnless, ev.data.toInsertInline, ev.data.selectorGrids);
+        this._activateInsertionZones(ev.data.$selectorSiblings, ev.data.$selectorChildren, ev.data.canBeSanitizedUnless, ev.data.toInsertInline, ev.data.selectorGrids, ev.data.fromIframe);
     },
     /**
      * Called when a child editor asks to deactivate the current snippet
