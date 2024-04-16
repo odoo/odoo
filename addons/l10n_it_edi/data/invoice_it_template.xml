@@ -58,17 +58,9 @@
         </DatiTrasmissione>
         <CedentePrestatore>
             <DatiAnagrafici>
-                <IdFiscaleIVA t-if="seller.vat and in_eu(seller)">
-                    <IdPaese t-esc="get_vat_country(seller.vat)"/>
-                    <IdCodice t-esc="get_vat_number(seller.vat)"/>
-                </IdFiscaleIVA>
-                <IdFiscaleIVA t-if="seller.vat and not in_eu(seller)">
-                    <IdPaese t-esc="seller.country_id.code"/>
-                    <IdCodice t-esc="'OO99999999999'"/>
-                </IdFiscaleIVA>
-                <IdFiscaleIVA t-if="not seller.vat and seller.country_id.code != 'IT'">
-                    <IdPaese t-esc="seller.country_id.code"/>
-                    <IdCodice t-esc="'0000000'"/>
+                <IdFiscaleIVA>
+                    <IdPaese t-out="seller_info['country_code']"/>
+                    <IdCodice t-out="seller_info['vat']"/>
                 </IdFiscaleIVA>
                 <CodiceFiscale t-if="seller.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(seller.l10n_it_codice_fiscale)"/>
                 <Anagrafica>
@@ -107,17 +99,9 @@
         </RappresentanteFiscale>
         <CessionarioCommittente>
             <DatiAnagrafici>
-                <IdFiscaleIVA t-if="buyer.vat and in_eu(buyer)">
-                    <IdPaese t-esc="get_vat_country(buyer.vat)"/>
-                    <IdCodice t-esc="get_vat_number(buyer.vat)"/>
-                </IdFiscaleIVA>
-                <IdFiscaleIVA t-if="buyer.vat and not in_eu(buyer)">
-                    <IdPaese t-esc="buyer.country_id.code"/>
-                    <IdCodice t-esc="'OO99999999999'"/>
-                </IdFiscaleIVA>
-                <IdFiscaleIVA t-if="not buyer.vat and buyer.country_id.code != 'IT'">
-                    <IdPaese t-esc="buyer.country_id.code"/>
-                    <IdCodice t-esc="'0000000'"/>
+                <IdFiscaleIVA>
+                    <IdPaese t-out="buyer_info['country_code']"/>
+                    <IdCodice t-out="buyer_info['vat']"/>
                 </IdFiscaleIVA>
                 <CodiceFiscale t-if="buyer.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(buyer.l10n_it_codice_fiscale)"/>
                 <Anagrafica>
@@ -213,4 +197,3 @@
 
     </data>
 </odoo>
-
