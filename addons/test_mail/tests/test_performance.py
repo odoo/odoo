@@ -111,46 +111,47 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
 @tagged('mail_performance', 'post_install', '-at_install')
 class TestBaseMailPerformance(BaseMailPerformance):
 
-    def setUp(self):
-        super(TestBaseMailPerformance, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.res_partner_3 = self.env['res.partner'].create({
+        cls.res_partner_3 = cls.env['res.partner'].create({
             'name': 'Gemini Furniture',
             'email': 'gemini.furniture39@example.com',
         })
-        self.res_partner_4 = self.env['res.partner'].create({
+        cls.res_partner_4 = cls.env['res.partner'].create({
             'name': 'Ready Mat',
             'email': 'ready.mat28@example.com',
         })
-        self.res_partner_10 = self.env['res.partner'].create({
+        cls.res_partner_10 = cls.env['res.partner'].create({
             'name': 'The Jackson Group',
             'email': 'jackson.group82@example.com',
         })
-        self.res_partner_12 = self.env['res.partner'].create({
+        cls.res_partner_12 = cls.env['res.partner'].create({
             'name': 'Azure Interior',
             'email': 'azure.Interior24@example.com',
         })
-        self.env['mail.performance.thread'].create([
+        cls.env['mail.performance.thread'].create([
             {
                 'name': 'Object 0',
                 'value': 0,
-                'partner_id': self.res_partner_3.id,
+                'partner_id': cls.res_partner_3.id,
             }, {
                 'name': 'Object 1',
                 'value': 10,
-                'partner_id': self.res_partner_3.id,
+                'partner_id': cls.res_partner_3.id,
             }, {
                 'name': 'Object 2',
                 'value': 20,
-                'partner_id': self.res_partner_4.id,
+                'partner_id': cls.res_partner_4.id,
             }, {
                 'name': 'Object 3',
                 'value': 30,
-                'partner_id': self.res_partner_10.id,
+                'partner_id': cls.res_partner_10.id,
             }, {
                 'name': 'Object 4',
                 'value': 40,
-                'partner_id': self.res_partner_12.id,
+                'partner_id': cls.res_partner_12.id,
             }
         ])
 
@@ -252,11 +253,12 @@ class TestBaseMailPerformance(BaseMailPerformance):
 @tagged('mail_performance', 'post_install', '-at_install')
 class TestBaseAPIPerformance(BaseMailPerformance):
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         # automatically follow activities, for backward compatibility concerning query count
-        self.env.ref('mail.mt_activities').write({'default': True})
+        cls.env.ref('mail.mt_activities').write({'default': True})
 
     @users('admin', 'employee')
     @warmup
@@ -439,7 +441,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 'default_template_id': test_template.id,
             }).create({})
 
-        with self.assertQueryCount(admin=88, employee=91), self.mock_mail_gateway():
+        with self.assertQueryCount(admin=88, employee=89), self.mock_mail_gateway():
             composer._action_send_mail()
 
         self.assertEqual(len(self._new_mails), 10)
@@ -461,7 +463,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 'partner_ids': [(4, customer_id)],
             })
 
-        with self.assertQueryCount(admin=39, employee=39):  # com 35/35
+        with self.assertQueryCount(admin=39, employee=39):
             composer._action_send_mail()
 
     @users('admin', 'employee')
@@ -471,7 +473,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         test_record, test_template = self._create_test_records()
         test_template.write({'attachment_ids': [(5, 0)]})
 
-        with self.assertQueryCount(admin=28, employee=28):  # tm 16/16 / com 26/26
+        with self.assertQueryCount(admin=28, employee=28):  # tm 16/16
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -479,7 +481,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 'default_template_id': test_template.id,
             }).create({})
 
-        with self.assertQueryCount(admin=41, employee=41):  # com 36/36
+        with self.assertQueryCount(admin=41, employee=41):
             composer._action_send_mail()
 
         # notifications
@@ -495,7 +497,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_mail_composer_w_template_attachments(self):
         test_record, test_template = self._create_test_records()
 
-        with self.assertQueryCount(admin=29, employee=29):  # tm 17/17 / com 27/27
+        with self.assertQueryCount(admin=29, employee=29):  # tm 17/17
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -503,7 +505,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 'default_template_id': test_template.id,
             }).create({})
 
-        with self.assertQueryCount(admin=50, employee=50):  # com 43/43
+        with self.assertQueryCount(admin=50, employee=50):
             composer._action_send_mail()
 
         # notifications
@@ -524,7 +526,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         test_template.write({'attachment_ids': [(5, 0)]})
 
         customer = self.env['res.partner'].browse(self.customer.ids)
-        with self.assertQueryCount(admin=35, employee=35):  # tm 23/23 / com 33/33
+        with self.assertQueryCount(admin=35, employee=35):  # tm 23/23
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -535,7 +537,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=51, employee=51):  # com 45/45
+        with self.assertQueryCount(admin=51, employee=51):
             composer._action_send_mail()
 
         # notifications
@@ -554,7 +556,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         test_record, test_template = self._create_test_records()
 
         customer = self.env['res.partner'].browse(self.customer.ids)
-        with self.assertQueryCount(admin=35, employee=35):  # tm 23/23 / com 32/32
+        with self.assertQueryCount(admin=35, employee=35):  # tm 23/23
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -565,7 +567,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=70, employee=70):  # com 62/62
+        with self.assertQueryCount(admin=70, employee=70):
             composer._action_send_mail()
 
         # notifications
@@ -860,7 +862,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             unlinked_mails |= set(records.ids)
         unlinked_mails = set()
 
-        with self.assertQueryCount(admin=31, employee=31), \
+        with self.assertQueryCount(admin=30, employee=30), \
              patch.object(type(self.env['mail.mail']), 'unlink', _patched_unlink):
             self.env['mail.mail'].sudo().browse(mails.ids).send()
 
@@ -1008,7 +1010,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(admin=101, employee=101):
+        with self.assertQueryCount(admin=100, employee=100):
             rec = self.env['mail.test.ticket'].create({
                 'name': 'Test',
                 'container_id': container_id,
@@ -1315,56 +1317,57 @@ class TestMailFormattersPerformance(BaseMailPerformance):
 @tagged('mail_performance', 'post_install', '-at_install')
 class TestPerformance(BaseMailPerformance):
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         # record
-        self.record_container = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({
+        cls.record_container = cls.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({
             'name': 'Test record',
-            'customer_id': self.customer.id,
+            'customer_id': cls.customer.id,
             'alias_name': 'test-alias',
         })
         # followers
-        self.user_follower_email = self.env['res.users'].with_context(self._test_context).create({
+        cls.user_follower_email = cls.env['res.users'].with_context(cls._test_context).create({
             'name': 'user_follower_email',
             'login': 'user_follower_email',
             'email': 'user_follower_email@example.com',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
         })
-        self.user_follower_inbox = self.env['res.users'].with_context(self._test_context).create({
+        cls.user_follower_inbox = cls.env['res.users'].with_context(cls._test_context).create({
             'name': 'user_follower_inbox',
             'login': 'user_follower_inbox',
             'email': 'user_follower_inbox@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
         })
-        self.partner_follower = self.env['res.partner'].with_context(self._test_context).create({
+        cls.partner_follower = cls.env['res.partner'].with_context(cls._test_context).create({
             'name': 'partner_follower',
             'email': 'partner_follower@example.com',
         })
-        self.record_container.message_subscribe([
-            self.partner_follower.id,
-            self.user_follower_inbox.partner_id.id,
-            self.user_follower_email.partner_id.id
+        cls.record_container.message_subscribe([
+            cls.partner_follower.id,
+            cls.user_follower_inbox.partner_id.id,
+            cls.user_follower_email.partner_id.id
         ])
 
         # partner_ids
-        self.user_inbox = self.env['res.users'].with_context(self._test_context).create({
+        cls.user_inbox = cls.env['res.users'].with_context(cls._test_context).create({
             'name': 'user_inbox',
             'login': 'user_inbox',
             'email': 'user_inbox@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
         })
-        self.user_email = self.env['res.users'].with_context(self._test_context).create({
+        cls.user_email = cls.env['res.users'].with_context(cls._test_context).create({
             'name': 'user_email',
             'login': 'user_email',
             'email': 'user_email@example.com',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
         })
-        self.partner = self.env['res.partner'].with_context(self._test_context).create({
+        cls.partner = cls.env['res.partner'].with_context(cls._test_context).create({
             'name': 'partner',
             'email': 'partner@example.com',
         })
