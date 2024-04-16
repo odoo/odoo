@@ -9,5 +9,8 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
 
     def _get_alternative_values(self):
         vals = super(PurchaseRequisitionCreateAlternative, self)._get_alternative_values()
-        vals['picking_type_id'] = self.origin_po_id.picking_type_id.id
+        vals.update({
+            'picking_type_id': self.origin_po_id.picking_type_id.id,
+            'group_id': self.origin_po_id.group_id.id,
+        })
         return vals
