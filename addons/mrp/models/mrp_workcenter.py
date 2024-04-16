@@ -72,7 +72,7 @@ class MrpWorkcenter(models.Model):
         'mrp_workcenter_alternative_rel',
         'workcenter_id',
         'alternative_workcenter_id',
-        domain="[('id', '!=', id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]",
+        domain="[('id', '!=', id)]",
         string="Alternative Workcenters", check_company=True,
         help="Alternative workcenters that can be substituted to this one in order to dispatch production"
     )

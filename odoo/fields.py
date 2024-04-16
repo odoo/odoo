@@ -3000,6 +3000,8 @@ class _Relational(Field[M], typing.Generic[M]):
         super().setup(model)
         if self.check_company and ('company_id' not in model._fields and not 'company_ids' in model._fields) and model._name != 'res.company' and self.comodel_name != 'res.users' and not self.company_dependent:
             _logger.warning("%s: check_company attribute will be ignored because the model doesn't have a company_id/s field", self)
+        elif self.check_company and ('company_id' in model._fields or 'company_ids' in model._fields) and model._name != 'res.company' and self.comodel_name != 'res.users' and isinstance(self.domain, str) and 'company_id' in self.domain:
+            _logger.warning("%s: company_id/s in domain deprecated, already has check_company attribute", self)
 
     def get_domain_list(self, model):
         """ Return a list domain from the domain parameter. """

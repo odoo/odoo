@@ -15,11 +15,7 @@ class Project(models.Model):
         "Timesheets", compute='_compute_allow_timesheets', store=True, readonly=False,
         default=True)
     account_id = fields.Many2one(
-        # note: replaces ['|', ('company_id', '=', False), ('company_id', '=', company_id)]
-        domain="""[
-            '|', ('company_id', '=', False), ('company_id', '=?', company_id),
-            ('partner_id', '=?', partner_id),
-        ]"""
+        domain="[('partner_id', '=?', partner_id)]",
     )
     analytic_account_active = fields.Boolean("Active Account", related="account_id.active", export_string_translation=False)
 

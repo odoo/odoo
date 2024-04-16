@@ -187,14 +187,13 @@ class SaleOrder(models.Model):
         string="Payment Terms",
         compute='_compute_payment_term_id',
         store=True, readonly=False, precompute=True, check_company=True,  # Unrequired company
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    )
     pricelist_id = fields.Many2one(
         comodel_name='product.pricelist',
         string="Pricelist",
         compute='_compute_pricelist_id',
         store=True, readonly=False, precompute=True, check_company=True,  # Unrequired company
         tracking=1,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="If you change the pricelist, only newly added lines will be affected.")
     currency_id = fields.Many2one(
         comodel_name='res.currency',
@@ -224,7 +223,7 @@ class SaleOrder(models.Model):
         store=True, readonly=False, precompute=True, ondelete="set null",
         change_default=True, check_company=True,  # Unrequired company
         tracking=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    )
 
     # Lines and line based computes
     order_line = fields.One2many(

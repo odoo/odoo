@@ -118,7 +118,7 @@ class MrpWorkorder(models.Model):
         help="Inventory moves for which you must scan a lot number at this work order")
     finished_lot_id = fields.Many2one(
         'stock.lot', string='Lot/Serial Number', related='production_id.lot_producing_id',
-        domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]",
+        domain="[('product_id', '=', product_id)]",
         readonly=False, check_company=True)
     time_ids = fields.One2many(
         'mrp.workcenter.productivity', 'workorder_id', copy=False)
