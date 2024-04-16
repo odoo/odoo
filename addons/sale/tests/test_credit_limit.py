@@ -139,6 +139,11 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
     def test_credit_limit_multicurrency(self):
         self.partner_a.credit_limit = 50
 
+        self.assertRecordValues(self.partner_a, [{
+            'credit': 0.0,
+            'credit_to_invoice': 0.0,
+        }])
+
         order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'pricelist_id': self.buck_pricelist.id,
@@ -170,3 +175,27 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
             "partner_a has reached its credit limit of: $\xa050.00\n"
             "Total amount due (including this document): $\xa055.00"
         )
+
+        # Make sure partner_a's credit_to_invoice includes the newly confirmed SO in the correct currency
+        order.action_confirm()
+        self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
+        self.assertRecordValues(self.partner_a, [{
+            'credit': 0.0,
+            'credit_to_invoice': 55.0,
+        }])
+
+        # Make sure the invoice amount is converted correctly for the warning
+        invoice = order._create_invoices(final=True)
+        self.assertEqual(
+            invoice.partner_credit_warning,
+            "partner_a has reached its credit limit of: $\xa050.00\n"
+            "Total amount due (including this document): $\xa055.00"
+        )
+
+        # Make sure the invoice amount is converted correctly for the partner.credit computation
+        invoice.action_post()
+        self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
+        self.assertRecordValues(self.partner_a, [{
+            'credit': 55.0,
+            'credit_to_invoice': 0.0,
+        }])
