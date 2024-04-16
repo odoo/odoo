@@ -36,7 +36,19 @@ registry.category("web_tour.tours").add("task_create_sol_tour", {
         content: "Select the product in the autocomplete dropdown",
     }, {
         trigger: ".o_form_button_save",
+        content: "Save Sales Order Item",
+        in_modal: true,
+    }, {
+        trigger: ".o_form_button_save",
         content: "Save task",
+    }, {
+        trigger: ".o_field_widget[name='sale_line_id'] input",
+        content: "Check if the Sales Order Item is saved correctly.",
+        run: function ({ anchor }) {
+            if (!anchor.value) {
+                console.error("Sales Order Item is not saved correctly.");
+            }
+        },
     },
     // Those steps are currently needed in order to prevent the following issue:
     // "Form views in edition mode are automatically saved when the page is closed, which leads to stray network requests and inconsistencies."
