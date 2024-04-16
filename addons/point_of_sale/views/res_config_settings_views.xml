@@ -11,7 +11,6 @@
                     <field name="is_kiosk_mode" invisible="1"/>
                     <field name="pos_selectable_categ_ids" invisible="1"/>
                     <field name="pos_has_active_session" invisible="1"/>
-                    <field name="pos_allowed_pricelist_ids" invisible="1"/>
                     <field name="pos_cash_control" invisible="1"/>
                     <field name="pos_iface_print_via_proxy" invisible="1"/>
                     <field name="pos_company_has_template" invisible="1"/>
@@ -224,7 +223,7 @@
                                     </div>
                                     <div class="row mt16">
                                         <label string="Default" for="pos_pricelist_id" class="col-lg-3 o_light_label"/>
-                                        <field name="pos_pricelist_id" domain="[('id', 'in', pos_allowed_pricelist_ids)]" options="{'no_create': True}"/>
+                                        <field name="pos_pricelist_id" options="{'no_create': True}"/>
                                     </div>
                                     <div class="mt8">
                                         <button name="%(product.product_pricelist_action2)d" icon="oi-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>

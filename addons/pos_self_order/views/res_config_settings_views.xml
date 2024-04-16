@@ -81,9 +81,13 @@
                 <attribute name="invisible">is_kiosk_mode</attribute>
             </setting>
 
-            <setting id="multiple_prices_setting" position="attributes">
+            <xpath expr="//div[label[@for='pos_available_pricelist_ids']]" position="attributes">
                 <attribute name="invisible">is_kiosk_mode</attribute>
-            </setting>
+            </xpath>
+
+            <xpath expr="//field[@name='pos_pricelist_id']" position="attributes">
+                <attribute name="domain">[('id', '!=', False)]</attribute>
+            </xpath>
 
             <setting id="multiple_employee_session" position="attributes">
                 <attribute name="invisible">is_kiosk_mode</attribute>
