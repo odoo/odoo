@@ -66,7 +66,7 @@ class TestImLivechatMessage(HttpCase):
             % (record_rating.rating_image_url, record_rating.rating, record_rating.feedback),
             rating_id=record_rating.id,
         )
-        self.assertEqual(message._message_format(), [{
+        self.assertEqual(message._message_format(for_current_user=True), [{
             'attachments': [],
             'author': {
                 'id': self.users[1].partner_id.id,

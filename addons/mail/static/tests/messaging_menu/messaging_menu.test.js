@@ -1079,7 +1079,7 @@ test("messaging menu should show new needaction messages from chatter", async ()
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    const [formattedMessage] = pyEnv["mail.message"]._message_format(messageId);
+    const [formattedMessage] = pyEnv["mail.message"]._message_format(messageId, true);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", formattedMessage);
     await contains(".o-mail-NotificationItem-text", { text: "Frodo Baggins: @Mitchel Admin" });
