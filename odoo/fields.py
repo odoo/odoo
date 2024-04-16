@@ -2996,6 +2996,11 @@ class _Relational(Field[M], typing.Generic[M]):
             _logger.warning("Field %s with unknown comodel_name %r", self, self.comodel_name)
             self.comodel_name = '_unknown'
 
+    def setup(self, model):
+        super().setup(model)
+        if self.check_company and ('company_id' not in model._fields and not 'company_ids' in model._fields) and model._name != 'res.company' and self.comodel_name != 'res.users' and not self.company_dependent:
+            _logger.warning("%s: check_company attribute will be ignored because the model doesn't have a company_id/s field", self)
+
     def get_domain_list(self, model):
         """ Return a list domain from the domain parameter. """
         domain = self.domain

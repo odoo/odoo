@@ -19,6 +19,7 @@ class AnalyticPlanFields(models.AbstractModel):
         index=True,
         check_company=True,
     )
+    company_id = fields.Many2one('res.company', 'Company', readonly=True)
     # Magic column that represents all the plans at the same time, except for the compute
     # where it is context dependent, and needs the id of the desired plan.
     # Used as a syntactic sugar for search views, and magic field for one2many relation
