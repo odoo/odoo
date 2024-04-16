@@ -339,7 +339,10 @@ async function discuss_channel_messages(request) {
     }
     return {
         ...res,
-        messages: MailMessage._message_format(res.messages.map((message) => message.id)),
+        messages: MailMessage._message_format(
+            res.messages.map((message) => message.id),
+            true
+        ),
     };
 }
 
@@ -408,7 +411,7 @@ async function discuss_channel_pins(request) {
         ["res_id", "=", channel_id],
         ["pinned_at", "!=", false],
     ]);
-    return MailMessage._message_format(messageIds);
+    return MailMessage._message_format(messageIds, true);
 }
 
 registerRoute("/discuss/channel/set_last_seen_message", discuss_channel_mark_as_seen);
@@ -450,7 +453,8 @@ async function discuss_history_messages(request) {
     return {
         ...res,
         messages: MailMessage._message_format(
-            messagesWithNotification.map((message) => message.id)
+            messagesWithNotification.map((message) => message.id),
+            true
         ),
     };
 }
@@ -631,7 +635,7 @@ async function mail_message_update_content(request) {
             pinned_at: message.pinned_at,
         },
     });
-    return MailMessage._message_format([message_id])[0];
+    return MailMessage._message_format([message_id], true)[0];
 }
 
 registerRoute("/discuss/channel/:cid/partner/:pid/avatar_128", partnerAvatar128);
@@ -727,7 +731,10 @@ async function discuss_starred_messages(request) {
     const res = MailMessage._message_fetch(domain, search_term, before, after, false, limit);
     return {
         ...res,
-        messages: MailMessage._message_format(res.messages.map((message) => message.id)),
+        messages: MailMessage._message_format(
+            res.messages.map((message) => message.id),
+            true
+        ),
     };
 }
 
@@ -758,7 +765,10 @@ async function mail_thread_messages(request) {
     MailMessage.set_message_done(res.messages.map((message) => message.id));
     return {
         ...res,
-        messages: MailMessage._message_format(res.messages.map((message) => message.id)),
+        messages: MailMessage._message_format(
+            res.messages.map((message) => message.id),
+            true
+        ),
     };
 }
 
@@ -870,7 +880,9 @@ async function processRequest(request) {
                         }
                         return lastMessage;
                     }, channelMessages[0]);
-                    return lastMessage ? MailMessage._message_format([lastMessage.id])[0] : false;
+                    return lastMessage
+                        ? MailMessage._message_format([lastMessage.id], true)[0]
+                        : false;
                 })
                 .filter((lastMessage) => lastMessage),
             Thread: DiscussChannel._channel_info(channels.map((channel) => channel.id)),
