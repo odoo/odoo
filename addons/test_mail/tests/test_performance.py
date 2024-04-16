@@ -1269,7 +1269,7 @@ class TestMailFormattersPerformance(BaseMailPerformance):
         messages_all = self.messages_all.with_env(self.env)
 
         with self.assertQueryCount(employee=26):
-            res = messages_all._message_format()
+            res = messages_all._message_format(for_current_user=True)
 
         self.assertEqual(len(res), 2*2)
         for message in res:
@@ -1282,7 +1282,7 @@ class TestMailFormattersPerformance(BaseMailPerformance):
         message = self.messages_all[0].with_env(self.env)
 
         with self.assertQueryCount(employee=23):
-            res = message._message_format()
+            res = message._message_format(for_current_user=True)
 
         self.assertEqual(len(res), 1)
         self.assertEqual(len(res[0]['attachments']), 2)
@@ -1303,14 +1303,14 @@ class TestMailFormattersPerformance(BaseMailPerformance):
         } for record in records])
 
         with self.assertQueryCount(employee=7):
-            res = messages._message_format()
+            res = messages._message_format(for_current_user=True)
             self.assertEqual(len(res), 6)
 
         self.env.flush_all()
         self.env.invalidate_all()
 
         with self.assertQueryCount(employee=15):
-            res = messages._message_format()
+            res = messages._message_format(for_current_user=True)
             self.assertEqual(len(res), 6)
 
 

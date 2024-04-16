@@ -921,7 +921,7 @@ test("Opening thread with needaction messages should mark all messages of thread
         res_partner_id: serverState.partnerId,
     });
     // simulate receiving a new needaction message
-    const [formattedMessage] = pyEnv["mail.message"]._message_format(messageId);
+    const [formattedMessage] = pyEnv["mail.message"]._message_format(messageId, true);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", formattedMessage);
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });

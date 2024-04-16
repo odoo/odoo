@@ -113,7 +113,7 @@ export class MailThread extends models.ServerModel {
         }
         MailThread._notify_thread.call(this, ids, messageId, kwargs.context?.temporary_id);
         return {
-            ...MailMessage._message_format([messageId])[0],
+            ...MailMessage._message_format([messageId], true)[0],
             temporary_id: kwargs.context?.temporary_id,
         };
     }

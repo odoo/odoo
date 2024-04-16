@@ -897,7 +897,7 @@ class Message(models.Model):
                 record_by_message[message] = self.env[message.model].browse(message.res_id).with_prefetch(record_ids_by_model_name[message.model])
         return record_by_message
 
-    def _message_format(self, format_reply=True, msg_vals=None):
+    def _message_format(self, format_reply=True, msg_vals=None, for_current_user=False):
         """ Get the message values in the format for web client. Since message
         values can be broadcasted, computed fields MUST NOT BE READ and
         broadcasted.
@@ -995,11 +995,6 @@ class Message(models.Model):
                 'personas': [{'id': guest.id, 'name': guest.name, 'type': "guest"} for guest in reactions.guest_id] + [{'id': partner.id, 'name': partner.name, 'type': "partner"} for partner in reactions.partner_id],
                 'message': {'id': message_sudo.id},
             } for content, reactions in reactions_per_content.items()]
-            allowed_tracking_ids = message_sudo.tracking_value_ids._filter_tracked_field_access(self.env)
-            displayed_tracking_ids = allowed_tracking_ids
-            if record and hasattr(record, '_track_filter_for_display'):
-                displayed_tracking_ids = record._track_filter_for_display(displayed_tracking_ids)
-            notifs = message_sudo.notification_ids.filtered("res_partner_id")
             vals.update(message_sudo._message_format_extras(format_reply))
             vals.pop("starred_partner_ids", None)
             vals.update({
@@ -1007,15 +1002,12 @@ class Message(models.Model):
                 'default_subject': default_subject,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachments': sorted(message_sudo.attachment_ids._attachment_format(), key=lambda a: a["id"]),
-                'trackingValues': displayed_tracking_ids._tracking_value_format(),
                 'linkPreviews': message_sudo.link_preview_ids.filtered(lambda preview: not preview.is_hidden)._link_preview_format(),
                 'reactions': reaction_groups,
                 'pinned_at': message_sudo.pinned_at,
                 'record_name': record_name,
                 'create_date': message_sudo.create_date,
                 'write_date': message_sudo.write_date,
-                "needaction_partner_ids": notifs.filtered(lambda n: not n.is_read).res_partner_id.ids,
-                "starredPersonas": [{"id": partner_id, "type": "partner"} for partner_id in message_sudo.starred_partner_ids.ids],
                 "is_note": message_sudo.subtype_id.id == note_id,
                 "is_discussion": message_sudo.subtype_id.id == com_id,
                 "subtype_description": message_sudo.subtype_id.description,
@@ -1029,6 +1021,15 @@ class Message(models.Model):
                 if self.env[message_sudo.model]._original_module:
                     thread["module_icon"] = modules.module.get_module_icon(self.env[message_sudo.model]._original_module)
                 vals["thread"] = thread
+            if for_current_user:
+                notifs = message_sudo.notification_ids.filtered("res_partner_id")
+                allowed_tracking_ids = message_sudo.tracking_value_ids._filter_tracked_field_access(self.env)
+                displayed_tracking_ids = allowed_tracking_ids
+                if record and hasattr(record, '_track_filter_for_display'):
+                    displayed_tracking_ids = record._track_filter_for_display(displayed_tracking_ids)
+                vals["needaction_partner_ids"] = notifs.filtered(lambda n: not n.is_read).res_partner_id.ids
+                vals["starredPersonas"] = [{"id": partner_id, "type": "partner"} for partner_id in message_sudo.starred_partner_ids.ids]
+                vals["trackingValues"] = displayed_tracking_ids._tracking_value_format()
         return vals_list
 
     def _message_format_extras(self, format_reply):
@@ -1120,7 +1121,7 @@ class Message(models.Model):
         :return: list of messages_formatted personalized for the partner
         """
         if not messages_formatted:
-            messages_formatted = self._message_format(format_reply=format_reply, msg_vals=msg_vals)
+            messages_formatted = self._message_format(format_reply=format_reply, msg_vals=msg_vals, for_current_user=True)
             self._message_format_personalized_prepare(messages_formatted, [partner_id])
         for vals in messages_formatted:
             # set value for user being a follower, fallback to False if not prepared

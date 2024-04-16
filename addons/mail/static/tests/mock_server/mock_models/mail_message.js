@@ -67,7 +67,7 @@ export class MailMessage extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    _message_format(ids) {
+    _message_format(ids, for_current_user=false) {
         /** @type {import("mock_models").IrAttachment} */
         const IrAttachment = this.env["ir.attachment"];
         /** @type {import("mock_models").MailGuest} */
@@ -111,23 +111,12 @@ export class MailMessage extends models.ServerModel {
             const allNotifications = MailNotification._filter([
                 ["mail_message_id", "=", message.id],
             ]);
-            const historyPartnerIds = allNotifications
-                .filter((notification) => notification.is_read)
-                .map((notification) => notification.res_partner_id);
-            const needactionPartnerIds = allNotifications
-                .filter((notification) => !notification.is_read)
-                .map((notification) => notification.res_partner_id);
             let notifications = MailNotification._filtered_for_web_client(
                 allNotifications.map((notification) => notification.id)
             );
             notifications = MailNotification._notification_format(
                 notifications.map((notification) => notification.id)
             );
-            const trackingValues = MailTrackingValue._filter([
-                ["id", "in", message.tracking_value_ids],
-            ]);
-            const formattedTrackingValues =
-                MailTrackingValue._tracking_value_format(trackingValues);
             const partners = ResPartner._filter([["id", "in", message.partner_ids]]);
             const linkPreviews = MailLinkPreview._filter([["id", "in", message.link_preview_ids]]);
             const linkPreviewsFormatted = linkPreviews.map((linkPreview) =>
@@ -170,7 +159,6 @@ export class MailMessage extends models.ServerModel {
                 ...message,
                 attachments: formattedAttachments,
                 author,
-                history_partner_ids: historyPartnerIds,
                 default_subject:
                     message.model &&
                     message.res_id &&
@@ -180,7 +168,6 @@ export class MailMessage extends models.ServerModel {
                     ).get(message.res_id),
                 linkPreviews: linkPreviewsFormatted,
                 reactions: reactionGroups,
-                needaction_partner_ids: needactionPartnerIds,
                 notifications,
                 parentMessage: message.parent_id
                     ? this._message_format([message.parent_id])[0]
@@ -188,8 +175,6 @@ export class MailMessage extends models.ServerModel {
                 recipients: partners.map((p) => ({ id: p.id, name: p.name, type: "partner" })),
                 record_name:
                     thread && (thread.name !== undefined ? thread.name : thread.display_name),
-                starredPersonas: message.starred_partner_ids.map((id) => ({ id, type: "partner" })),
-                trackingValues: formattedTrackingValues,
                 pinned_at: message.pinned_at,
             };
             delete response.author_id;
@@ -213,6 +198,23 @@ export class MailMessage extends models.ServerModel {
                     thread.name = response.record_name;
                 }
                 Object.assign(response, { thread });
+            }
+            if (for_current_user) {
+                const needactionPartnerIds = allNotifications
+                    .filter((notification) => !notification.is_read)
+                    .map((notification) => notification.res_partner_id);
+                response["needaction_partner_ids"] = needactionPartnerIds;
+                const historyPartnerIds = allNotifications
+                    .filter((notification) => notification.is_read)
+                    .map((notification) => notification.res_partner_id);
+                response["history_partner_ids"] = historyPartnerIds;
+                response["starredPersonas"] = message.starred_partner_ids.map((id) => ({ id, type: "partner" }));
+                const trackingValues = MailTrackingValue._filter([
+                    ["id", "in", message.tracking_value_ids],
+                ]);
+                const formattedTrackingValues =
+                    MailTrackingValue._tracking_value_format(trackingValues);
+                response["trackingValues"] = formattedTrackingValues;
             }
             return response;
         });
@@ -469,7 +471,7 @@ export class MailMessage extends models.ServerModel {
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
 
-        const messages = this._message_format(ids);
+        const messages = this._message_format(ids, true);
         messages.forEach((message) => {
             if (message.model && message.res_id) {
                 const follower = MailFollowers._filter([
