@@ -122,7 +122,13 @@ class OAuthController(http.Controller):
     @http.route('/auth_oauth/signin', type='http', auth='none')
     @fragment_to_query_string
     def signin(self, **kw):
-        state = json.loads(kw['state'])
+        st = kw.get('state')
+        if not(st or isinstance(st, str)):
+            return BadRequest()
+        try:
+            state = json.loads(st)
+        except json.decoder.JSONDecodeError:
+            return BadRequest()
         dbname = state['d']
         if not http.db_filter([dbname]):
             return BadRequest()
