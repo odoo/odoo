@@ -323,6 +323,18 @@
             <div id="wrap" class="js_sale o_wsale_products_page">
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_products_1"/>
                 <div class="container oe_website_sale pt-2">
+                    <t t-if="category">
+                        <t t-set='wide_header_editor_message'>
+                            Drag building blocks here to customize the wide header for
+                            "<t t-esc='category.name'/>" category.
+                        </t>
+                        <div
+                            class="mb16"
+                            id="category_wide_header"
+                            t-att-data-editor-message="wide_header_editor_message"
+                            t-field="category.website_wide_header"
+                        />
+                    </t>
                     <div class="row o_wsale_products_main_row align-items-start flex-nowrap">
                         <aside t-if="hasLeftColumn" id="products_grid_before" class="d-none d-lg-block position-sticky col-3 px-3 clearfix">
                             <div class="o_wsale_products_grid_before_rail vh-100 ms-n2 mt-n2 pt-2 pe-lg-2 pb-lg-5 ps-2 overflow-y-scroll">
@@ -430,9 +442,33 @@
                             <div class="products_pager d-flex justify-content-center pt-5 pb-3">
                                 <t t-call="website.pager"/>
                             </div>
+                            <t t-if="category">
+                                <t t-set='footer_editor_message'>
+                                    Drag building blocks here to customize the footer for
+                                    "<t t-esc='category.name'/>" category.
+                                </t>
+                                <div
+                                    class="mb16"
+                                    id="category_wide_footer"
+                                    t-att-data-editor-message="footer_editor_message"
+                                    t-field="category.website_footer"
+                                />
+                            </t>
                         </div>
                     </div>
 
+                    <t t-if="category">
+                        <t t-set='wide_footer_editor_message'>
+                            Drag building blocks here to customize the wide footer for
+                            "<t t-esc='category.name'/>" category.
+                        </t>
+                        <div
+                            class="mb16"
+                            id="category_wide_footer"
+                            t-att-data-editor-message="wide_footer_editor_message"
+                            t-field="category.website_wide_footer"
+                        />
+                    </t>
                     <t t-call="website_sale.o_wsale_offcanvas"/>
                 </div>
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_products_2"/>
