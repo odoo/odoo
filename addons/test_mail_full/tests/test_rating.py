@@ -11,6 +11,7 @@ from odoo.tools import mute_logger
 
 
 class TestRatingCommon(TestMailFullCommon, TestSMSRecipients):
+
     @classmethod
     def setUpClass(cls):
         super(TestRatingCommon, cls).setUpClass()
@@ -147,6 +148,7 @@ class TestRatingMixin(TestRatingCommon):
 
 @tagged('rating', 'mail_performance', 'post_install', '-at_install')
 class TestRatingPerformance(TestRatingCommon):
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -172,25 +174,27 @@ class TestRatingPerformance(TestRatingCommon):
     @users('employee')
     @warmup
     def test_rating_last_value_perfs(self):
-        with self.assertQueryCount(employee=1612):  # tmf 1612 / com 1612
+        with self.assertQueryCount(employee=1612):
             self.create_ratings('mail.test.rating.thread')
 
-        with self.assertQueryCount(employee=2002):  # tmf 2002
+        with self.assertQueryCount(employee=2002):
             self.apply_ratings(1)
 
-        with self.assertQueryCount(employee=1801):  # tmf 1801
+        with self.assertQueryCount(employee=1801):
             self.apply_ratings(5)
 
     @users('employee')
     @warmup
     def test_rating_last_value_perfs_with_rating_mixin(self):
-        with self.assertQueryCount(employee=1715):  # tmf 1715 / com 1715
+
+        with self.assertQueryCount(employee=1715):
             self.create_ratings('mail.test.rating')
 
-        with self.assertQueryCount(employee=2304):  # tmf 2304
+        with self.assertQueryCount(employee=2304):
             self.apply_ratings(1)
 
-        with self.assertQueryCount(employee=2203):  # tmf 2203
+        with self.assertQueryCount(employee=2203):
+
             self.apply_ratings(5)
 
         with self.assertQueryCount(employee=1):
