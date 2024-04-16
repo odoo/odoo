@@ -58,15 +58,20 @@ QUnit.module("M2MAvatarResourceWidgetTests", {
             phone: "+32487898933",
         }]);
 
-        // Task linked to those resources 
-        this.data.task1Id = pyEnv["resource.task"].create({
+        // Task linked to those resources
+        [ this.data.task1Id, this.data.task12d ] = pyEnv["resource.task"].create([{
             display_name: "Task with three resources",
             resource_ids: [
                 this.data.resourceComputerId,
                 this.data.resourceMarieId,
                 this.data.resourcePierreId,
             ],
-        });
+        }, {
+            display_name: "Task with one resources",
+            resource_ids: [
+                this.data.resourcePierreId,
+            ],
+        }]);
     },
 }, () => {
     QUnit.test("many2many_avatar_resource widget in form view", async function (assert) {
@@ -137,8 +142,84 @@ QUnit.module("M2MAvatarResourceWidgetTests", {
             views: [[false, "list"]],
         });
 
-        assert.containsN(document.body, ".o_m2m_avatar", 2, "Two human resources with avatar should be displayed");
-        assert.containsN(document.body, "i.fa-wrench", 1, "Two material resources with fa-wrench icon should be displayed");
+        const [ row1, row2 ] = document.querySelectorAll(".o_data_row");
+        assert.containsN(row1, "img.o_m2m_avatar", 2, "Two human resources with avatar should be displayed");
+        assert.containsOnce(row1, "i.fa-wrench.o_m2m_avatar", "One material resource with fa-wrench icon should be displayed");
+        assert.containsNone(row1, "div.o_tag_badge_text", "No text should be displayed on any avatar");
+
+        assert.containsOnce(row2, "img.o_m2m_avatar", "One human resource with avatar should be displayed");
+        assert.containsOnce(row2, "div.o_tag_badge_text", "The text should be displayed on the avatar");
+
+        // Second and third records in widget should display employee avatars
+        assert.strictEqual(
+            document.querySelector(".many2many_tags_avatar_field_container .o_tag img").getAttribute("data-src"),
+            "/web/image/resource.resource/" + this.data.resourceMarieId + "/avatar_128",
+        );
+        assert.strictEqual(
+            document.querySelectorAll(".many2many_tags_avatar_field_container .o_tag img")[1].getAttribute("data-src"),
+            "/web/image/resource.resource/" + this.data.resourcePierreId + "/avatar_128",
+        );
+
+        // 1. Clicking on material resource's icon
+        await click(document.querySelector(".many2many_tags_avatar_field_container .o_tag i.fa-wrench"));
+        assert.containsNone(document.body, ".o_avatar_card");
+
+        // 2. Clicking on human resource's avatar with no user associated
+        await click(document.querySelector(".many2many_tags_avatar_field_container .o_tag img"));
+        await contains(".o_card_user_infos span", { text: "Marie" });
+        await contains(".o_avatar_card", { count: 1 }, "Only one popover resource card should be opened at a time");
+        await contains(
+            ".o_avatar_card_buttons button",
+            { text: "Send message", count: 0 },
+            'No "Send Message" button should be displayed for this employee as it is linked to no user',
+        );
+
+        // 3. Clicking on human resource's avatar with one user associated
+        await click(document.querySelectorAll(".many2many_tags_avatar_field_container .o_tag img")[1]);
+        await contains(".o_card_user_infos span", { text: "Pierre" });
+        await contains(".o_avatar_card", { count: 1 }, "Only one popover resource card should be opened at a time");
+        await contains(".o_card_user_infos > a", { text: "Pierre@odoo.test" });
+        await contains(".o_card_user_infos > a", { text: "+32487898933" });
+        assert.strictEqual(document.querySelector(".o_avatar_card_buttons button").textContent, "Send message");
+        await click(document.querySelector(".o_avatar_card_buttons button"));
+        await contains(".o-mail-ChatWindow");
+        assert.strictEqual(
+            document.querySelector(".o-mail-ChatWindow-header").textContent,
+            "Pierre"
+        );
+    });
+
+    QUnit.test("many2many_avatar_resource widget in kanban view", async function (assert) {
+        this.serverData.views = {
+            "resource.task,false,kanban": `
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div class="oe_kanban_global_click container">
+                                    <div class="oe_kanban_content">
+                                        <field name="display_name"/>
+                                        <div class="o_kanban_record_bottom">
+                                            <field name="resource_ids" widget="many2many_avatar_resource"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>`,
+        };
+        const { openView } = await start({ serverData: this.serverData });
+        await openView({
+            res_model: "resource.task",
+            views: [[false, "kanban"]],
+        });
+
+        const [ row1, row2 ] = document.querySelectorAll(".oe_kanban_content");
+        assert.containsN(row1, "img.o_m2m_avatar", 2, "Two human resources with avatar should be displayed");
+        assert.containsOnce(row1, "i.fa-wrench.o_m2m_avatar", "One material resource with fa-wrench icon should be displayed");
+        assert.containsNone(row1, "div.o_tag_badge_text", "No text should be displayed on any avatar");
+
+        assert.containsOnce(row2, "img.o_m2m_avatar", "One human resource with avatar should be displayed");
+        assert.containsNone(row2, "div.o_tag_badge_text", "No text should be displayed on the avatar");
 
         // Second and third records in widget should display employee avatars
         assert.strictEqual(
