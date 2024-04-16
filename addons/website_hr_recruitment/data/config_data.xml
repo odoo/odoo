@@ -10,6 +10,12 @@
             <field name="action_id" ref="action_open_website"/>
             <field name="state">open</field>
         </record>
+        <record id="website_menu_jobs" model="website.menu">
+            <field name="name">Jobs</field>
+            <field name="url">/jobs</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">59</field>
+        </record>
     </data>
     <data>
         <record id="hr_recruitment.model_hr_applicant" model="ir.model">
