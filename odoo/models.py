@@ -6317,14 +6317,26 @@ class BaseModel(metaclass=MetaModel):
             self._flush(fnames)
 
     def _flush(self, fnames=None):
-        def process(model, id_vals):
-            # group record ids by vals, to update in batch when possible
-            updates = defaultdict(list)
-            for id_, vals in id_vals.items():
-                updates[frozendict(vals)].append(id_)
-
+        def process(model, updates):
             for vals, ids in updates.items():
                 model.browse(ids)._write(vals)
+
+        def get_cache_value(field, record):
+            record.ensure_one()
+            try:
+                value = next(self.env.cache.get_values(record, field))
+                if not field.translate:
+                    value = field.convert_to_write(value, record)
+                    value = field.convert_to_column(value, record)
+                else:
+                    value = field._convert_from_cache_to_column(value)
+                return value
+            except StopIteration:
+                raise AssertionError(
+                    f"Could not find the cache value of {field} for {record} to flush it\n"
+                    f"    Context: {self.env.context}\n"
+                    f"    Cache: {self.env.cache!r}"
+                )
 
         # DLE P76: test_onchange_one2many_with_domain_on_related_field
         # ```
@@ -6356,25 +6368,34 @@ class BaseModel(metaclass=MetaModel):
                     for key in self.pool.field_depends_context[field]
                 )
                 model = self.env(context=context_none)[model_name]
-                id_vals = defaultdict(dict)
+                # consume all record ids from all dirty fields of the model
+                fields_recs = dict()
                 for field in model._fields.values():
-                    ids = self.env.cache.clear_dirty_field(field)
-                    if not ids:
-                        continue
-                    records = model.browse(ids)
-                    values = list(self.env.cache.get_values(records, field))
-                    assert len(values) == len(records), \
-                        f"Could not find all values of {field} to flush them\n" \
-                        f"    Context: {self.env.context}\n" \
-                        f"    Cache: {self.env.cache!r}"
-                    for record, value in zip(records, values):
-                        if not field.translate:
-                            value = field.convert_to_write(value, record)
-                            value = field.convert_to_column(value, record)
-                        else:
-                            value = field._convert_from_cache_to_column(value)
-                        id_vals[record.id][field.name] = value
-                process(model, id_vals)
+                    if (ids := self.env.cache.clear_dirty_field(field)):
+                        # set.pop() used in a loop is in O(1) while OrderedSet.pop() is in O(n),
+                        # the ids are subject to `sorted()` later in _write() anyway.
+                        fields_recs[field] = set(ids)
+                if not fields_recs:
+                    continue
+                # re-arrange cache data into record updates batched by same fields and values,
+                # while consuming it to keep space complexity low
+                updates = defaultdict(list)
+                while (field := next(iter(fields_recs), None)):
+                    ids = fields_recs.pop(field)
+                    while ids:
+                        id = ids.pop()
+                        record = model.browse(id)
+                        vals = {field.name: get_cache_value(field, record)}
+                        for other_field in fields_recs:
+                            try:
+                                fields_recs[other_field].remove(id)
+                            except KeyError:
+                                continue
+                            vals[other_field.name] = get_cache_value(other_field, record)
+                        updates[frozendict(vals)].append(id)
+                    # prune drained id sets
+                    fields_recs = {f: fields_recs[f] for f in fields_recs if not fields_recs[f]}
+                process(model, updates)
 
         # flush the inverse of one2many fields, too
         for field in fields:
