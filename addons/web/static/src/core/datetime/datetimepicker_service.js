@@ -465,6 +465,14 @@ export const datetimePickerService = {
                                 editableInputs++;
                             }
                         }
+                        const calendarIconGroupEl = getInput(0)?.parentElement
+                            .querySelector(".o_input_group_date_icon");
+                        if (calendarIconGroupEl) {
+                            calendarIconGroupEl.classList.add("cursor-pointer");
+                            cleanups.push(addListener(calendarIconGroupEl, "click", () => {
+                                openPicker(0);
+                            }));
+                        }
                         if (!editableInputs && popover.isOpen) {
                             saveAndClose();
                         }

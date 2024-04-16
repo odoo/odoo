@@ -109,19 +109,22 @@ import wUtils from '@website/js/utils';
             this.$el.on('input.s_website_form', '.s_website_form_field', this._onFieldInputDebounced);
 
             this.$allDates = this.$el.find('.s_website_form_datetime, .o_website_form_datetime, .s_website_form_date, .o_website_form_date');
-            for (const field of this.$allDates) {
-                const input = field.querySelector("input");
-                const defaultValue = input.getAttribute("value");
-                this.call("datetime_picker", "create", {
-                    target: input,
-                    onChange: () => input.dispatchEvent(new Event("input", { bubbles: true })),
-                    pickerProps: {
-                        type: field.matches('.s_website_form_date, .o_website_form_date') ? 'date' : 'datetime',
-                        value: defaultValue && DateTime.fromSeconds(parseInt(defaultValue)),
-                    },
-                }).enable();
+            this.disableDateTimePickers = [];
+            if (!this.editableMode) {
+                for (const field of this.$allDates) {
+                    const input = field.querySelector("input");
+                    const defaultValue = input.getAttribute("value");
+                    this.disableDateTimePickers.push(this.call("datetime_picker", "create", {
+                        target: input,
+                        onChange: () => input.dispatchEvent(new Event("input", { bubbles: true })),
+                        pickerProps: {
+                            type: field.matches('.s_website_form_date, .o_website_form_date') ? 'date' : 'datetime',
+                            value: defaultValue && DateTime.fromSeconds(parseInt(defaultValue)),
+                        },
+                    }).enable());
+                }
+                this.$allDates.addClass('s_website_form_datepicker_initialized');
             }
-            this.$allDates.addClass('s_website_form_datepicker_initialized');
 
             // Display form values from tag having data-for attribute
             // It's necessary to handle field values generated on server-side
@@ -204,6 +207,9 @@ import wUtils from '@website/js/utils';
             return this._super(...arguments).then(() => this.__startResolve());
         },
 
+        /**
+         * @override
+         */
         destroy: function () {
             this._super.apply(this, arguments);
             this.$el.find('button').off('click');
@@ -258,6 +264,9 @@ import wUtils from '@website/js/utils';
             }
 
             this.$el.off('.s_website_form');
+            for (const disableDateTimePicker of this.disableDateTimePickers) {
+                disableDateTimePicker();
+            }
         },
 
         send: async function (e) {
