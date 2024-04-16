@@ -112,30 +112,19 @@
                             <field name="view_access" groups="base.group_system"/>
                         </page>
                         <page string="Access Rights" name="access_rights">
-                            <field name="model_access">
+                            <field name="access_ids">
                                 <list string="Access Rights" editable="top">
                                     <field name="name"/>
                                     <field name="model_id"/>
-                                    <field name="perm_read"/>
-                                    <field name="perm_write"/>
-                                    <field name="perm_create"/>
-                                    <field name="perm_unlink"/>
+                                    <field name="for_read"/>
+                                    <field name="for_write"/>
+                                    <field name="for_create"/>
+                                    <field name="for_unlink"/>
+                                    <field name="domain"/>
                                 </list>
                             </field>
                         </page>
-                        <page string="Record Rules" name="record_rules">
-                            <field name="rule_groups">
-                                <list string="Record Rules" editable="top">
-                                    <field name="name"/>
-                                    <field name="model_id"/>
-                                    <field name="domain_force"/>
-                                    <field name="perm_read"/>
-                                    <field name="perm_write"/>
-                                    <field name="perm_create"/>
-                                    <field name="perm_unlink"/>
-                                </list>
-                            </field>
-                        </page><page string="Notes" name="notes">
+                        <page string="Notes" name="notes">
                             <field name="comment"/>
                         </page>
                     </notebook>

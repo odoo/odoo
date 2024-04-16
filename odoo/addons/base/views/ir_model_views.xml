@@ -148,28 +148,14 @@
                         <page string="Access Rights" name="access_rights">
                             <field name="access_ids">
                                 <list string="Access Rights" editable="top"
-                                      decoration-warning="not group_id and
-                                                         (perm_read or perm_write or
-                                                          perm_create or perm_unlink)">
+                                      decoration-warning="not group_id and operation">
                                     <field name="name"/>
                                     <field name="group_id"/>
-                                    <field name="perm_read"/>
-                                    <field name="perm_write"/>
-                                    <field name="perm_create"/>
-                                    <field name="perm_unlink"/>
-                                </list>
-                            </field>
-                        </page>
-                        <page string="Record Rules" name="record_rules">
-                            <field name="rule_ids">
-                                <list string="Record Rules" editable="top" decoration-info="not groups">
-                                    <field name="name"/>
-                                    <field name="groups" widget="many2many_tags" options="{'no_create':True}"/>
-                                    <field name="domain_force"/>
-                                    <field name="perm_read"/>
-                                    <field name="perm_write"/>
-                                    <field name="perm_create"/>
-                                    <field name="perm_unlink"/>
+                                    <field name="for_read"/>
+                                    <field name="for_write"/>
+                                    <field name="for_create"/>
+                                    <field name="for_unlink"/>
+                                    <field name="domain"/>
                                 </list>
                             </field>
                         </page>
