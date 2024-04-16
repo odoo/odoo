@@ -165,10 +165,6 @@ class MrpProduction(models.Model):
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material', readonly=False,
         domain="""[
-        '&',
-            '|',
-                ('company_id', '=', False),
-                ('company_id', '=', company_id),
             '&',
                 '|',
                     ('product_id','=',product_id),

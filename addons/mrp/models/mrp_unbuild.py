@@ -42,9 +42,6 @@ class MrpUnbuild(models.Model):
                 ('product_tmpl_id.product_variant_ids', '=', product_id),
                 ('product_id','=',False),
         ('type', '=', 'normal'),
-        '|',
-            ('company_id', '=', company_id),
-            ('company_id', '=', False)
         ]""",
         compute='_compute_bom_id', store=True,
         check_company=True)
