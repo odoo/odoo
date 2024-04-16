@@ -286,6 +286,10 @@
                  invisible="partner_credit_warning == ''">
                 <field name="partner_credit_warning"/>
             </div>
+            <div class="alert alert-warning p-3 text-center" role="alert"
+                invisible="state not in ['draft', 'sent'] or not has_archived_products">
+                <span>Warning: This quote contains archived product(s)</span>
+            </div>
             <sheet>
                 <div class="oe_button_box" name="button_box">
                     <button name="action_view_invoice"
@@ -377,13 +381,26 @@
                                 <group>
                                     <group invisible="display_type">
                                         <field name="product_updatable" invisible="1"/>
-                                        <field name="product_id"
-                                            domain="[('sale_ok', '=', True)]"
-                                            context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
-                                            readonly="not product_updatable"
-                                            required="not display_type and not is_downpayment"
-                                            force_save="1"
-                                            widget="many2one_barcode"/>
+                                        <div class="d-flex align-items-baseline">
+                                            <span class="fa fa-exclamation-triangle text-warning me-1"
+                                                title="This product is archived"
+                                                invisible="state not in ['draft', 'sent'] or not is_product_archived"
+                                            />
+                                            <field name="product_id"
+                                                domain="[('sale_ok', '=', True)]"
+                                                context="{
+                                                    'partner_id': parent.partner_id,
+                                                    'quantity': product_uom_qty,
+                                                    'pricelist': parent.pricelist_id,
+                                                    'uom': product_uom,
+                                                    'company_id': parent.company_id
+                                                }"
+                                                readonly="not product_updatable"
+                                                required="not display_type and not is_downpayment"
+                                                force_save="1"
+                                                widget="many2one_barcode"
+                                            />
+                                        </div>
                                         <field name="product_type" invisible="1"/>
                                         <field name="invoice_status" invisible="1"/>
                                         <field name="qty_to_invoice" invisible="1"/>
@@ -458,6 +475,7 @@
                                 string="Sales Order Lines"
                                 editable="bottom"
                                 limit="200"
+                                decoration-warning="state in ['draft', 'sent'] and is_product_archived"
                             >
                                 <control>
                                     <create name="add_product_control" string="Add a product"/>
@@ -633,6 +651,10 @@
                                                     <div class="col-10">
                                                         <div class="row">
                                                             <div class="col">
+                                                                <span class="fa fa-exclamation-triangle text-warning me-1"
+                                                                    title="This product is archived"
+                                                                    invisible="state not in ['draft', 'sent'] or not is_product_archived"
+                                                                />
                                                                 <strong t-out="record.product_id.value" />
                                                             </div>
                                                             <div class="col-auto">

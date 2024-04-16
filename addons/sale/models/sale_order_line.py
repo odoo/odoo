@@ -115,6 +115,7 @@ class SaleOrderLine(models.Model):
         string="Extra Values",
         compute='_compute_no_variant_attribute_values',
         store=True, readonly=False, precompute=True, ondelete='restrict')
+    is_product_archived = fields.Boolean(compute="_compute_is_product_archived")
 
     name = fields.Text(
         string="Description",
@@ -289,6 +290,11 @@ class SaleOrderLine(models.Model):
 
     def _search_product_template_id(self, operator, value):
         return [('product_id.product_tmpl_id', operator, value)]
+
+    @api.depends('product_id')
+    def _compute_is_product_archived(self):
+        for line in self:
+            line.is_product_archived = line.product_id and not line.product_id.active
 
     @api.depends('product_id')
     def _compute_custom_attribute_values(self):
