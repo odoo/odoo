@@ -89,6 +89,18 @@ class _Relational(Field[BaseModel]):
         """
         raise NotImplementedError
 
+    def setup(self, model):
+        super().setup(model)
+        if (
+                self.check_company
+                and not model._abstract
+                and 'company_id' not in model._fields
+                and 'company_ids' not in model._fields
+                and model._name != 'res.company'
+                and not self.company_dependent
+        ):
+            _logger.warning("%s: check_company attribute will be ignored because the model doesn't have a company_id/s field", self)
+
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
         assert self.comodel_name in model.pool, \
