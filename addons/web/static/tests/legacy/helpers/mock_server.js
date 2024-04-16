@@ -2160,7 +2160,11 @@ export class MockServer {
      */
     getOrderByField(modelName, fieldNameSpec) {
         const { fields } = this.models[modelName];
-        const fieldName = fieldNameSpec || ("sequence" in fields ? "sequence" : "id");
+        const fieldName = fieldNameSpec
+            ? fieldNameSpec.split(":")[0]
+            : "sequence" in fields
+            ? "sequence"
+            : "id";
         if (!(fieldName in fields)) {
             throw new Error(
                 `Mock: cannot sort records of model "${modelName}" by field "${fieldName}": field not found`
