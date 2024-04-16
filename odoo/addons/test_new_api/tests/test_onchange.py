@@ -914,3 +914,26 @@ class TestComputeOnchange(common.TransactionCase):
             {'name': 'foo', 'count': 1},
             {'name': 'bar', 'count': 1},
         ])
+
+    def test_onchange_decimal_precision(self):
+        """Performing onchange on float fields wich is used in other
+        computed field should be rounded before computation. Otherwise
+        there is inconsistency state before and after saving data
+        as after saving data the float value is rounded result
+        wouldn't be the same.
+        """
+        with Form(self.env["decimal.precision.test"]) as form:
+            form.float = 1.123456789
+            form.float_2 = 1.123456789
+            form.float_4 = 1.123456789
+            form.float_string = 1.123456789
+            unsaved_computed_float = form.computed_float
+            unsaved_computed_float_2 = form.computed_float_2
+            unsaved_computed_float_4 = form.computed_float_4
+            unsaved_computed_float_string = form.computed_float_string
+            rec = form.save()
+
+        self.assertEqual(unsaved_computed_float, rec.computed_float)
+        self.assertEqual(unsaved_computed_float_2, rec.computed_float_2)
+        self.assertEqual(unsaved_computed_float_4, rec.computed_float_4)
+        self.assertEqual(unsaved_computed_float_string, rec.computed_float_string)
