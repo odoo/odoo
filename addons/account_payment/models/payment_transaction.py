@@ -116,7 +116,7 @@ class PaymentTransaction(models.Model):
                 and not tx.payment_id
                 and not any(child.state in ['done', 'cancel'] for child in tx.child_transaction_ids)
             ):
-                tx._create_payment()
+                tx.with_company(tx.company_id)._create_payment()
 
             if tx.payment_id:
                 message = _(

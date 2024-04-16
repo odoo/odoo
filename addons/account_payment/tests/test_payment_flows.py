@@ -98,3 +98,42 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
         }
         with self.assertRaises(JsonRpcException, msg='odoo.exceptions.ValidationError'):
             self.make_jsonrpc_request(url, route_kwargs)
+
+    def test_public_user_new_company(self):
+        """ Test that the payment of an invoice is correctly processed when
+        using public user with a new company. """
+        self.amount = 1000.0
+
+        invoice = self.init_invoice(
+            "out_invoice", self.partner, amounts=[self.amount], currency=self.currency,
+        )
+        invoice.action_post()
+        self.assertEqual(invoice.payment_state, 'not_paid')
+
+        route_values = self._prepare_pay_values()
+        route_values['invoice_id'] = invoice.id
+        tx_context = self._get_portal_pay_context(**route_values)
+
+        tx_route_values = {
+            'provider_id': self.provider.id,
+            'payment_method_id': self.payment_method_id,
+            'token_id': None,
+            'amount': tx_context['amount'],
+            'flow': 'direct',
+            'tokenization_requested': False,
+            'landing_route': tx_context['landing_route'],
+            'access_token': tx_context['access_token'],
+        }
+        with mute_logger('odoo.addons.payment.models.payment_transaction'):
+            processing_values = self._get_processing_values(
+                tx_route=tx_context['transaction_route'], **tx_route_values
+            )
+        tx_sudo = self._get_tx(processing_values['reference'])
+        tx_sudo._set_done()
+
+        url = self._build_url('/payment/status/poll')
+        resp = self.make_jsonrpc_request(url, {})
+        self.assertTrue(tx_sudo.is_post_processed)
+
+        self.assertEqual(resp['state'], 'done')
+        self.assertTrue(invoice.payment_state in ('in_payment', 'paid'))
