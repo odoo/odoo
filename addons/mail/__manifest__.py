@@ -69,6 +69,7 @@ For more specific needs, you may also assign custom-defined actions
         'wizard/mail_followers_edit_views.xml',
         'wizard/mail_template_reset_views.xml',
         'views/fetchmail_views.xml',
+        'views/ir_access_views.xml',
         'views/ir_cron_views.xml',
         'views/ir_filters_views.xml',
         'views/ir_mail_server_views.xml',
