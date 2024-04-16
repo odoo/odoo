@@ -490,6 +490,7 @@ class SaleOrder(models.Model):
             # name, street, city, state, zip, country
             name = order.partner_shipping_id.name
             street = order_location['pick_up_point_address']
+            house_number = order_location['house_number']
             city = order_location['pick_up_point_town']
             zip_code = order_location['pick_up_point_postal_code']
             country = order.env['res.country'].search([('code', '=', order_location['pick_up_point_country'])]).id
@@ -500,7 +501,7 @@ class SaleOrder(models.Model):
 
             # we can check if the current partner has a partner of type "delivery" that has the same address
             existing_partner = order.env['res.partner'].search(['&', '&', '&', '&',
-                                                                ('street', '=', street),
+                                                                ('street', '=', street + ' ' + house_number),
                                                                 ('city', '=', city),
                                                                 ('state_id', '=', state),
                                                                 ('country_id', '=', country),
@@ -514,7 +515,7 @@ class SaleOrder(models.Model):
                     'parent_id': parent_id,
                     'type': 'delivery',
                     'name': name,
-                    'street': street,
+                    'street': street + ' ' + house_number,
                     'city': city,
                     'state_id': state,
                     'zip': zip_code,
