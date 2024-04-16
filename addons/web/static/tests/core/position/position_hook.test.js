@@ -580,6 +580,89 @@ test("iframe: both popper and target inside", async () => {
     expect(popperBox.left).toBe(onPositionedArgs.solution.left);
 });
 
+test("iframe: default container is the popper owner's document", async () => {
+    expect.assertions(1);
+    // Prepare an outer iframe, that will hold the popper element
+    let def = new Deferred();
+    const outerIframe = document.createElement("iframe");
+    Object.assign(outerIframe.style, { height: "450px", width: "450px" });
+    outerIframe.onload = () => def.resolve();
+    getFixture().prepend(outerIframe);
+    // registerCleanup(() => outerIframe.remove());
+    await def;
+    Object.assign(outerIframe.contentDocument.body.style, {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        backgroundColor: "salmon",
+        height: "450px",
+        width: "450px",
+        margin: "0",
+    });
+
+    def = new Deferred();
+    const iframeSheet = outerIframe.contentDocument.createElement("style");
+    iframeSheet.onload = () => def.resolve();
+    iframeSheet.textContent = `
+            #popper {
+                background-color: plum;
+                height: 100px;
+                width: 100px;
+            }
+        `;
+    outerIframe.contentDocument.head.appendChild(iframeSheet);
+    await def; // wait for the iframe's stylesheet to be loaded
+
+    // Prepare the inner iframe, that will hold the target element
+    def = new Deferred();
+    const innerIframe = document.createElement("iframe");
+    innerIframe.srcdoc = `<div id="target" />`;
+    Object.assign(innerIframe.style, {
+        height: "300px",
+        width: "120px",
+        marginLeft: "10px",
+    });
+    innerIframe.onload = () => def.resolve();
+    outerIframe.contentDocument.body.appendChild(innerIframe);
+    await def;
+    Object.assign(innerIframe.contentDocument.body.style, {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "300px",
+        width: "120px",
+        margin: "0",
+    });
+
+    // Prepare the target element
+    const target = innerIframe.contentDocument.getElementById("target");
+    Object.assign(target.style, {
+        backgroundColor: "tomato",
+        height: "50px",
+        width: "50px",
+    });
+
+    // Mount the popper component and check its position
+    class Popper extends Component {
+        static props = ["*"];
+        static template = xml`<div id="popper" t-ref="popper" />`;
+        setup() {
+            usePosition("popper", () => target, {
+                position: "top-start",
+                onPositioned: (_, { direction, variant }) => {
+                    expect(`${direction}-${variant}`).toBe("top-start");
+                    // the style setup in this test leaves enough space in the inner iframe
+                    // for the popper to be positioned at top-middle, but this is exactly
+                    // what we want to avoid: the popper's base container should not be the
+                    // inner iframe, but the outer iframe, so the popper should be positioned
+                    // at top-start.
+                },
+            });
+        }
+    }
+    await mountWithCleanup(Popper, { target: outerIframe.contentDocument.body });
+});
+
 test("popper as child of another", async () => {
     class Child extends Component {
         static template = /* xml */ xml`
