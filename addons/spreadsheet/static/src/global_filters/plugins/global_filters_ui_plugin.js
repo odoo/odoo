@@ -11,9 +11,9 @@ import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
-import { constructDateRange, getPeriodOptions, QUARTER_OPTIONS } from "@web/search/utils/dates";
+import { constructDateRange, QUARTER_OPTIONS } from "@web/search/utils/dates";
 
-import { EvaluationError, helpers } from "@odoo/o-spreadsheet";
+import { EvaluationError, helpers, constants } from "@odoo/o-spreadsheet";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import { isEmpty } from "@spreadsheet/helpers/helpers";
@@ -43,6 +43,7 @@ const MONTHS = {
     december: { value: 12, granularity: "month" },
 };
 
+const { DEFAULT_LOCALE } = constants;
 const { UuidGenerator, createEmptyExcelSheet, createEmptySheet, toXC, toNumber } = helpers;
 const uuidGenerator = new UuidGenerator();
 
@@ -364,16 +365,37 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
                 if (!value || value.yearOffset === undefined) {
                     return [[{ value: "" }]];
                 }
-                const periodOptions = getPeriodOptions(DateTime.local());
-                const year = String(DateTime.local().year + value.yearOffset);
-                const period = periodOptions.find(({ id }) => value.period === id);
-                let periodStr = period && period.description;
-                // Named months aren't in getPeriodOptions
-                if (!period) {
-                    periodStr =
-                        MONTHS[value.period] && String(MONTHS[value.period].value).padStart(2, "0");
+                const year = DateTime.local().year + value.yearOffset;
+                if (value.period?.endsWith("_quarter")) {
+                    const first_months = {
+                        // [quarter]: first_month
+                        first_quarter: 1,
+                        second_quarter: 4,
+                        third_quarter: 7,
+                        fourth_quarter: 10,
+                    };
+                    const month = first_months[value.period];
+                    return [
+                        [
+                            {
+                                value: toNumber(`${year}-${month}-1`, DEFAULT_LOCALE),
+                                format: "q yyyy",
+                            },
+                        ],
+                    ];
+                } else if (value.period in MONTHS) {
+                    const month = MONTHS[value.period].value;
+                    return [
+                        [
+                            {
+                                value: toNumber(`${year}-${month}-1`, DEFAULT_LOCALE),
+                                format: "mmmm yyyy",
+                            },
+                        ],
+                    ];
+                } else {
+                    return [[{ value: year }]];
                 }
-                return [[{ value: periodStr ? periodStr + "/" + year : year }]];
             }
             default:
                 return [[{ value: "" }]];
