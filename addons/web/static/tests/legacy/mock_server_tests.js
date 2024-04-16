@@ -838,6 +838,41 @@ QUnit.module("MockServer", (hooks) => {
         ]);
     });
 
+    QUnit.test("performRPC: read_group, order by date with granularity", async function (assert) {
+        const server = new MockServer(data, {});
+        let result = await server.performRPC("", {
+            model: "bar",
+            method: "read_group",
+            args: [[]],
+            kwargs: {
+                fields: ["foo"],
+                domain: [],
+                groupby: ["date:day"],
+                orderby: "date:day ASC",
+            },
+        });
+        assert.deepEqual(
+            result.map((x) => x["date:day"]),
+            ["2016-04-11", "2016-10-26", "2016-12-14", "2016-12-15", "2019-12-30"]
+        );
+
+        result = await server.performRPC("", {
+            model: "bar",
+            method: "read_group",
+            args: [[]],
+            kwargs: {
+                fields: ["foo"],
+                domain: [],
+                groupby: ["date:day"],
+                orderby: "date:day DESC",
+            },
+        });
+        assert.deepEqual(
+            result.map((x) => x["date:day"]),
+            ["2019-12-30", "2016-12-15", "2016-12-14", "2016-10-26", "2016-04-11"]
+        );
+    });
+
     QUnit.test("performRPC: read_group, group by m2o", async function (assert) {
         data.models.partner.fields.sequence = { type: "integer" };
         data.models.partner.records[0].sequence = 1;
