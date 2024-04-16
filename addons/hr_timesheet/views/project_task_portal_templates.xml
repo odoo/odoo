@@ -54,12 +54,12 @@
         </xpath>
         <xpath expr="//thead/tr/th[@name='project_portal_milestones']" position="after">
             <t t-if="allow_timesheets">
-                <th t-if="is_uom_day" class="text-end">Days Spent</th>
-                <th t-else="" class="text-end">Hours Spent</th>
+                <th t-if="is_uom_day" class="text-start">Days Spent</th>
+                <th t-else="" class="text-start">Hours Spent</th>
             </t>
         </xpath>
         <xpath expr="//tbody/t/tr/td[@name='project_portal_milestones']" position="after">
-            <td t-if="not project or project.allow_timesheets" class="text-end">
+            <td t-if="not project or project.allow_timesheets" class="text-start">
                 <t t-if="task.allow_timesheets">
                     <t t-if="is_uom_day">
                         <t t-out="timesheet_ids._convert_hours_to_days(task.total_hours_spent)"/>
@@ -74,6 +74,29 @@
                     </t>
                 </t>
             </td>
+        </xpath>
+        <xpath expr="//th[@name='header_group_project']" position="after">
+            <th t-if="groupby == 'project'" t-attf-colspan="3">
+                <div class="d-flex w-100 align-items-center text-muted fw-normal">
+                    <t t-set="total_effective_hours" t-value="tasks._get_total_effective_hours()" />
+                    <t t-set="total_allocated_hours" t-value="tasks._get_total_allocated_hours()" />
+                    <t t-if="is_uom_day">
+                        <span>Total:
+                            <t t-out="tasks._convert_hours_to_days(total_effective_hours)" t-options='{"widget": "float_time"}'/>
+                            <span t-if="total_allocated_hours > 0"> / <t t-out="tasks._convert_hours_to_days(total_allocated_hours)" t-options='{"widget": "float_time"}'/> </span>
+                        </span>
+                    </t>
+                    <t t-else="">
+                        <span>Total:
+                            <t t-out="total_effective_hours" t-options='{"widget": "float_time"}'/>
+                            <span t-if="total_allocated_hours > 0"> / <t t-out="total_allocated_hours" t-options='{"widget": "float_time"}'/> </span>
+                        </span>
+                    </t>
+                </div>
+            </th>
+        </xpath>
+        <xpath expr="//th[@name='header_group_project']" position="attributes">
+            <attribute name="t-attf-colspan">{{grouped_tasks_colspan - (3 if tasks.project_id and 'allow_timesheets' in tasks.project_id and tasks.project_id.allow_timesheets else 0)}}</attribute>
         </xpath>
     </template>
 
