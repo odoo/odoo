@@ -77,7 +77,7 @@ class TestKeMoveExport(AccountTestInvoicingCommon):
             'name': b'Infinite Improbability Drive        ',
             'price': b'1432.09', # This is the unit price, tax included
             'quantity': b'10.0',
-            'discount': b'-25.0%',
+            'discount': b'-25%',
         })
         expected_messages = [
             # open invoice
@@ -147,7 +147,7 @@ class TestKeMoveExport(AccountTestInvoicingCommon):
             'quantity': b'10.0',
             # The discount is -20%, because there is an existing discount on the line of 10%, and
             # another negative line with the amount -10 would be another -10% discount.
-            'discount': b'-20.0%',
+            'discount': b'-20%',
         })
         expected_messages = [
             b'01;     0;0;1;Sirius Cybernetics Corporation;A000123456F   ;Test StreetFurther Test Street;Test StreetFurther Test Street;00500Nairobi                  ;                              ;INV202300001   ',
@@ -220,6 +220,6 @@ class TestKeMoveExport(AccountTestInvoicingCommon):
             'name': b'Infinite Improbability Drive        ',
             'price': b'1160',  # This is the unit price, tax included, but only the 16% VAT
             'quantity': b'10.0',
-            'discount': b'-25.0%',
+            'discount': b'-25%',
         })
         self.assertEqual(generated_messages, [expected_sale_line])

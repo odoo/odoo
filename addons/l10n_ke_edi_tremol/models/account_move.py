@@ -207,8 +207,8 @@ class AccountMove(models.Model):
             line_data += b'*' + str(abs(line.quantity)).encode('cp1251')[:10]
             if discount_dict.get(line.id):
                 # 1 to 7 symbols for percentage of discount/addition
-                discount_sign = b'-' if discount_dict[line.id] > 0 else b'+'
-                discount = discount_sign + str(abs(discount_dict[line.id])).encode('cp1251')[:6]
+                discount_sign = b'-' if discount_dict[line.id] > 0 else b''
+                discount = discount_sign + (str(abs(discount_dict[line.id]))).rstrip('0').rstrip('.').encode('cp1251')[:6]
                 line_data += b',' + discount + b'%'
 
             # Command: Sale of article (0x31)
