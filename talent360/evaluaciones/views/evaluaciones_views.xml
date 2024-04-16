@@ -19,27 +19,6 @@
         </field>
     </record>
 
-    <!-- EVALUACION -->
-    <record id="evaluacion_action" model="ir.actions.act_window">
-        <field name="name">evaluacion.action</field>
-        <field name="res_model">evaluacion</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-
-    <record id="evaluacion_tree" model="ir.ui.view">
-        <field name="name">evaluacion.tree</field>
-        <field name="model">evaluacion</field>
-
-        <field name="arch" type="xml">
-            <tree>
-                <field name="nombre"/>
-                <field name="estado"/>
-                <field name="pregunta_ids"/>
-                <field name="competencia_ids"/>
-                <field name="usuario_ids"/>
-            </tree>
-        </field>
-    </record>
 
     <!-- OPCION -->
     <record id="opcion_action" model="ir.actions.act_window">
