@@ -216,6 +216,62 @@ class AccountMove(models.Model):
         def format_alphanumeric(text_to_convert):
             return text_to_convert.encode('latin-1', 'replace').decode('latin-1') if text_to_convert else False
 
+        def get_vat_values(partner):
+            """ Generate the VAT and country code needed by l10n_it_edi XML export.
+
+                VAT number:
+                If there is a VAT number and the partner is not in EU and San Marino, then the exported value is 'OO99999999999'
+                If there is a VAT number and the partner is in EU or San Marino, then remove the country prefix
+                If there is no VAT and the partner is not in Italy, then the exported value is '0000000'
+                If there is no VAT and the partner is in Italy, the VAT is not set and Codice Fiscale will be relevant in the XML.
+                If there is no VAT and no Codice Fiscale, the invoice is not even exported, so this case is not handled.
+
+                Country:
+                First, try and deduct the country from the VAT number.
+                If not, take the country directly from the partner.
+                If there's a codice fiscale, the country is 'IT'.
+            """
+            europe = self.env.ref('base.europe', raise_if_not_found=False)
+            in_eu = europe and partner.country_id and partner.country_id in europe.country_ids
+            is_sm = partner.country_code == 'SM'
+
+            normalized_vat = partner.vat
+            normalized_country = False
+            if partner.vat:
+                normalized_vat = partner.vat.replace(' ', '')
+                if in_eu:
+                    # If there is no country-code prefix, it's domestic to Italy
+                    if normalized_vat[:2].isdecimal():
+                        normalized_country = 'IT'
+                    # If the partner is from the EU, the country-code prefix of the VAT must be taken away
+                    else:
+                        normalized_country = normalized_vat[:2].upper()
+                        normalized_vat = normalized_vat[2:]
+                # If customer is from San Marino
+                elif is_sm:
+                    normalized_country = 'SM'
+                    normalized_vat = normalized_vat if normalized_vat[:2].isdecimal() else normalized_vat[2:]
+                # The Tax Agency arbitrarily decided that non-EU VAT are not interesting,
+                # so this default code is used instead
+                # Detect the country code from the partner country instead
+                else:
+                    normalized_vat = 'OO99999999999'
+
+            if not normalized_country:
+                if partner.country_id:
+                    normalized_country = partner.country_id.code
+                # If it has a codice fiscale (and no country), it's an Italian partner
+                elif partner.l10n_it_codice_fiscale:
+                    normalized_country = 'IT'
+            elif not partner.vat and partner.country_id and partner.country_id.code != 'IT':
+                normalized_vat = '0000000'
+                normalized_country = partner.country_id.code
+
+            return {
+                'vat': normalized_vat,
+                'country_code': normalized_country,
+            }
+
         formato_trasmissione = "FPA12" if self._is_commercial_partner_pa() else "FPR12"
 
         # Flags
@@ -245,6 +301,10 @@ class AccountMove(models.Model):
         seller = company if not is_self_invoice else partner
         codice_destinatario = (
             (is_self_invoice and company.partner_id.l10n_it_pa_index)
+            # San Marino is externally integrated with the SdI.
+            # The country as a whole has a single fixed Destination Code (i.e. "2R4GTO8").
+            # https://www.agenziaentrate.gov.it/portale/documents/20143/3788702/Modifiche+ProvvedimentonSanMarino+0248717-2021.pdf/429b5571-17b9-0cce-7f62-f79cf53086d7
+            or (partner.country_code == 'SM' and '2R4GTO8')
             or partner.l10n_it_pa_index
             or (partner.country_id.code == 'IT' and '0000000')
             or 'XXXXXXX')
@@ -316,6 +376,8 @@ class AccountMove(models.Model):
             'invoice_lines': invoice_lines,
             'tax_lines': tax_lines,
             'conversion_rate': conversion_rate,
+            'buyer_info': get_vat_values(buyer),
+            'seller_info': get_vat_values(seller),
         }
         return template_values
 
