@@ -43,9 +43,6 @@ up a management by affair.
         'wizard/hr_employee_delete_wizard_views.xml',
         'views/hr_timesheet_menus.xml',
     ],
-    'demo': [
-        'data/hr_timesheet_demo.xml',
-    ],
     'installable': True,
     'post_init_hook': 'create_internal_project',
     'uninstall_hook': '_uninstall_hook',

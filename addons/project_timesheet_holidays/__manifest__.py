@@ -21,9 +21,6 @@ on leaves. Project and task can be configured company-wide.
         'security/ir.model.access.csv',
 
     ],
-    'demo': [
-        'data/holiday_timesheets_demo.xml',
-    ],
     'installable': True,
     'auto_install': True,
     'post_init_hook': 'post_init',

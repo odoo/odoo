@@ -58,7 +58,6 @@
     ],
     'demo': [
         'data/mail_template_demo.xml',
-        'data/project_demo.xml',
     ],
     'installable': True,
     'application': True,
