@@ -1,5 +1,5 @@
 from odoo import models, fields
-
+import base64
 
 class Evaluacion(models.Model):
     _name = "evaluacion"
@@ -58,3 +58,37 @@ class Evaluacion(models.Model):
                         partner_ids=[partner_id],
                     )
         return res
+
+    def printReport(self):
+        # do something
+        preguntas_tabuladas = []
+
+        for pregunta in self.pregunta_ids:
+            pregunta_tabulada = {"pregunta": pregunta.pregunta_texto, "respuestas": {}}
+            for respuesta in pregunta.respuesta_ids:
+                if respuesta.respuesta_texto not in pregunta_tabulada["respuestas"]:
+                    pregunta_tabulada["respuestas"][respuesta.respuesta_texto] = 0
+                pregunta_tabulada["respuestas"][respuesta.respuesta_texto] += 1
+            preguntas_tabuladas.append(pregunta_tabulada)
+
+        print(preguntas_tabuladas)
+
+        exportText = str(preguntas_tabuladas)
+
+        # encode the text to bytes, then to base64
+        exportText = base64.b64encode(exportText.encode())
+
+        # create an 'ir.attachment' record to hold the download data
+        attachment = self.env['ir.attachment'].create({
+            'name': 'Export.txt',
+            'type': 'binary',
+            'datas': exportText,
+            'store_fname': 'Export.txt'
+        })
+
+        # return an action to download the file
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/web/content/%s?download=true' % (attachment.id),
+            'target': 'self',
+        }
