@@ -5,6 +5,7 @@
         "security/ir.model.access.csv",
         "views/evaluaciones_views.xml",
         "views/evaluaciones_menus.xml",
+        "data/cr_preguntas.xml"
     ],
     "depends": ["base", "mail"],
 }
