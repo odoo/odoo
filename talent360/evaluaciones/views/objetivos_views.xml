@@ -45,17 +45,25 @@
           <notebook>
             <page string="Detalles">
               <div style="display: flex; flex-direction: column;">
-                <label for="metrica" string="Métrica" />
-                <field name="metrica" />
-                <br />
-                <label for="fecha_fin" string="Fecha final" />
-                <field name="fecha_fin" />
-                <br />
-                <label for="tipo" string="Tipo" />
-                <field name="tipo" />
-                <br />
-                <label for="peso" string="Peso" />
-                <field name="peso" />
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="fecha_fin" string="Fecha final" />
+                        <field name="fecha_fin" />
+                        <br />
+                        <label for="tipo" string="Tipo" />
+                        <field name="tipo" />
+                        <br />
+                        <label for="peso" string="Peso" />
+                        <field name="peso" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="metrica" string="Métrica" />
+                        <field name="metrica" />
+                        <br />
+                        <label for="orden" string="Orden" />
+                        <field name="orden" />
+                    </div>
+                </div>
                 <group col="2" style="margin-top: 20px;">
                   <group>
                     <field name="piso_minimo" />
