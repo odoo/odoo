@@ -318,7 +318,7 @@ const getDateSortingValue = (group, fieldName) => {
  * @param {string} [fieldNameSpec]
  */
 const getOrderByField = ({ _fields, _name }, fieldNameSpec) => {
-    const fieldName = fieldNameSpec || ("sequence" in _fields ? "sequence" : "id");
+    const fieldName = fieldNameSpec?.split(":")[0] || ("sequence" in _fields ? "sequence" : "id");
     if (!(fieldName in _fields)) {
         throw fieldNotFoundError(_name, fieldName, "could not order records");
     }
