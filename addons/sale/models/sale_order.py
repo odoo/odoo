@@ -665,7 +665,7 @@ class SaleOrder(models.Model):
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             order.tax_totals = self.env['account.tax']._prepare_tax_totals(
                 [x._convert_to_tax_base_line_dict() for x in order_lines],
-                order.currency_id or order.company_id.currency_id,
+                order.currency_id or order.company_id.currency_id or self.env.company.currency_id,
                 order.company_id,
             )
 

@@ -504,6 +504,15 @@ class TestSaleOrder(SaleCommon):
             self.sale_order.order_line.flush_recordset(['discount'])
             patched.assert_not_called()
 
+    def test_so_company_empty(self):
+        """Check emptying company on SO form"""
+        company_2 = self.env['res.company'].create({
+            'name': 'Company 2'
+        })
+        self.env.companies = [self.env.company, company_2]
+        so_form = Form(self.env['sale.order'])
+        so_form.company_id = self.env['res.company']
+
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
