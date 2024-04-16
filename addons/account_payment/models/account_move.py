@@ -17,6 +17,9 @@ class AccountMove(models.Model):
         string="Authorized Transactions", comodel_name='payment.transaction',
         compute='_compute_authorized_transaction_ids', readonly=True, copy=False,
         compute_sudo=True)
+    transaction_count = fields.Integer(
+        string="Transaction Count", compute='_compute_transaction_count'
+    )
     amount_paid = fields.Monetary(
         string="Amount paid",
         compute='_compute_amount_paid'
@@ -28,6 +31,11 @@ class AccountMove(models.Model):
             invoice.authorized_transaction_ids = invoice.transaction_ids.filtered(
                 lambda tx: tx.state == 'authorized'
             )
+
+    @api.depends('transaction_ids')
+    def _compute_transaction_count(self):
+        for invoice in self:
+            invoice.transaction_count = len(invoice.transaction_ids)
 
     @api.depends('transaction_ids')
     def _compute_amount_paid(self):

@@ -312,7 +312,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
             reference='partial_tx_done',
         )
         with mute_logger('odoo.addons.sale.models.payment_transaction'):
-            partial_tx_done._reconcile_after_done()
+            partial_tx_done._post_process()
         partial_tx_pending = self._create_transaction(
             flow='direct',
             amount=2,
@@ -352,7 +352,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         msg = "The payment shouldn't be reconciled yet."
         self.assertFalse(partial_tx_done.payment_id.is_reconciled, msg=msg)
 
-        partial_tx_done._reconcile_after_done()
+        partial_tx_done._post_process()
 
         msg = "The payment should now be reconciled."
         self.assertTrue(partial_tx_done.payment_id.is_reconciled, msg=msg)
