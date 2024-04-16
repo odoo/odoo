@@ -140,14 +140,6 @@ class PrinterDriver(Driver):
         status = 'connected' if any(iot_devices[d].device_type == "printer" and iot_devices[d].device_connection == 'direct' for d in iot_devices) else 'disconnected'
         return {'status': status, 'messages': ''}
 
-    def action(self, data):
-        action = data.get('action')
-        if action:
-            self._actions.get(action, '')(data)
-        else:
-            super().action(data)
-        send_to_controller(self.connection_type, {'print_id': data['print_id'], 'device_identifier': self.device_identifier})
-
     def disconnect(self):
         self.update_status('disconnected', 'Printer was disconnected')
         super(PrinterDriver, self).disconnect()
@@ -382,6 +374,7 @@ class PrinterDriver(Driver):
 
     def _action_default(self, data):
         self.print_raw(b64decode(data['document']))
+        send_to_controller(self.connection_type, {'print_id': data['print_id'], 'device_identifier': self.device_identifier})
 
 
 class PrinterController(http.Controller):
