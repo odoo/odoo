@@ -24,8 +24,8 @@
                                     widget="many2many_tags_email"
                                     placeholder="Add contacts..."
                                     required="send_email"
-                                    options="{'no_create_edit': True, 'no_quick_create': True}"
-                                    context="{'show_email': True}"/>
+                                    options="{'no_quick_create': True}"
+                                    context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                             </group>
                             <group col="2" invisible="not send_email">
                                 <field name="lang" invisible="1"/>
