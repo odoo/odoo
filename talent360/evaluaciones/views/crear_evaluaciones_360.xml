@@ -2,11 +2,11 @@
 <odoo>
 
     <!-- EVALUACION -->
-    <record id="evaluacion_action" model="ir.actions.act_window">
+    <record id="evaluacion_360_action" model="ir.actions.act_window">
         <field name="name">Evaluaciones 360</field>
         <field name="res_model">evaluacion</field>
         <field name="view_mode">tree,form</field>
-
+        <field name="context">{'default_tipo': '360'}</field>
     </record>
 
     <record id="evaluacion_tree" model="ir.ui.view">
@@ -16,7 +16,6 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="nombre"/>
-                <field name="estado"/>
                 <field name="pregunta_ids"/>
                 <field name="competencia_ids"/>
                 <field name="usuario_ids"/>
@@ -36,33 +35,36 @@
                             <field name="nombre" field_id="nombre_0"/>
                         </group>
                         <group>
-                            <field name="estado" field_id="estado_0"/>
+                            <group>
+                                <field name="tipo" field_id="tipo de evaluacion_0" options="{'no_create_edit': True}"/>
+
+                            </group>
                         </group>
-                    </group>
-                    <group>
-                        <field name="competencia_ids" can_create="True" can_write="True" field_id="competencia_ids_0">
-                            <tree>
-                                <field name="nombre"/>
-                                <field name="descripcion"/>
-                                <field name="company_id"/>
-                                <field name="pregunta_ids"/>
-                            </tree>
-                        </field>
-                    </group>
-                    <group>
-                        <field name="usuario_ids" can_create="True" can_write="True" field_id="usuario_ids_0">
-                            <tree string="Users" multi_edit="1">
-                                <field name="name" readonly="1" on_change="1"/>
-                                <field name="login" readonly="1" on_change="1"/>
-                                <field name="lang" on_change="1"/>
-                                <field name="login_date" readonly="1"/>
-                                <field name="state" widget="badge" decoration-info="state == 'new'" decoration-success="state == 'active'"/>
-                            </tree>
-                        </field>
-                    </group>
-                    <group/>
-                    <group>
-                        <separator/>
+                        <group>
+                            <field name="competencia_ids" can_create="True" can_write="True" field_id="competencia_ids_0">
+                                <tree>
+                                    <field name="nombre"/>
+                                    <field name="descripcion"/>
+                                    <field name="company_id"/>
+                                    <field name="pregunta_ids"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group>
+                            <field name="usuario_ids" can_create="True" can_write="True" field_id="usuario_ids_0">
+                                <tree string="Users" multi_edit="1">
+                                    <field name="name" readonly="1" on_change="1"/>
+                                    <field name="login" readonly="1" on_change="1"/>
+                                    <field name="lang" on_change="1"/>
+
+                                    <field name="state" widget="badge" decoration-info="state == 'new'" decoration-success="state == 'active'"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group/>
+                        <group>
+                            <separator/>
+                        </group>
                     </group>
                 </sheet>
             </form>
