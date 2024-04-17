@@ -1347,8 +1347,6 @@ class TestDiscussFullPerformance(HttpCase):
         members = channel.channel_member_ids
         member_g = members.filtered(lambda m: m.guest_id)
         guest = member_g.guest_id
-        mt_note_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_note")
-        mt_comment_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
         if channel == self.channel_channel_public_1:
             return {
                 "attachments": [],
@@ -1408,7 +1406,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "starredPersonas": [{"id": self.users[0].partner_id.id, "type": "partner"}],
                 "subject": False,
                 "subtype_description": False,
-                "subtype_id": [mt_note_id, "Note"],
                 "trackingValues": [],
                 "write_date": write_date,
             }
@@ -1453,7 +1450,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "starredPersonas": [],
                 "subject": False,
                 "subtype_description": False,
-                "subtype_id": [mt_comment_id, "Discussions"],
                 "trackingValues": [],
                 "write_date": write_date,
             }
@@ -1498,7 +1494,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "starredPersonas": [],
                 "subject": False,
                 "subtype_description": False,
-                "subtype_id": [mt_comment_id, "Discussions"],
                 "trackingValues": [],
                 "write_date": write_date,
             }
@@ -1543,7 +1538,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "starredPersonas": [],
                 "subject": False,
                 "subtype_description": False,
-                "subtype_id": [mt_comment_id, "Discussions"],
                 "trackingValues": [],
                 "write_date": write_date,
             }
@@ -1587,7 +1581,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "starredPersonas": [],
                 "subject": False,
                 "subtype_description": False,
-                "subtype_id": [mt_note_id, "Note"],
                 "trackingValues": [],
                 "write_date": write_date,
             }
@@ -1624,7 +1617,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "starredPersonas": [],
                 "subject": False,
                 "subtype_description": False,
-                "subtype_id": [mt_note_id, "Note"],
                 "trackingValues": [],
                 "write_date": write_date,
             }

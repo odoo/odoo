@@ -111,6 +111,5 @@ class TestImLivechatMessage(HttpCase):
             'starredPersonas': [],
             'subject': False,
             'subtype_description': False,
-            'subtype_id': (self.env.ref('mail.mt_note').id, 'Note'),
             'trackingValues': [],
         }])
