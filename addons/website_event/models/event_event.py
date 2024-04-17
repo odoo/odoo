@@ -507,6 +507,13 @@ class Event(models.Model):
             return self.env.ref('website_event.mt_event_unpublished', raise_if_not_found=False)
         return super(Event, self)._track_subtype(init_values)
 
+    def _get_external_description(self):
+        """ Adding the URL of the event into the description """
+        self.ensure_one()
+        event_url = f'<a href="{self.event_register_url}">{self.name}</a>'
+        description = event_url + '\n' + super()._get_external_description()
+        return description
+
     def _get_event_resource_urls(self):
         url_date_start = self.date_begin.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')
         url_date_stop = self.date_end.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')
@@ -515,7 +522,7 @@ class Event(models.Model):
             'text': self.name,
             'dates': f'{url_date_start}/{url_date_stop}',
             'ctz': self.date_tz,
-            'details': self.name,
+            'details': self._get_external_description(),
         }
         if self.address_id:
             params.update(location=self.address_inline)
