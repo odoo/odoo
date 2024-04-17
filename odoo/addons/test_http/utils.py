@@ -24,6 +24,9 @@ TEST_IP_GEOIP_COUNTRY = geoip2.models.Country(
      'traits': {'ip_address': TEST_IP, 'prefix_len': 21},
     }, ['en']
 )
+USER_AGENT_linux_chrome = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
+USER_AGENT_linux_firefox = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:126.0) Gecko/20100101 Firefox/126.0'
+USER_AGENT_android_chrome = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Mobile Safari/537.36'
 
 
 class MemoryGeoipResolver:
@@ -59,6 +62,14 @@ class MemorySessionStore(SessionStore):
 
     def delete(self, session):
         self.store.pop(session.sid, None)
+
+    def delete_from_identifiers(self, identifiers):
+        sid_to_remove = []
+        for sid in self.store:
+            if any(sid.startswith(identifier) for identifier in identifiers):
+                sid_to_remove.append(sid)
+        for sid in sid_to_remove:
+            self.store.pop(sid)
 
     def rotate(self, session, env):
         FilesystemSessionStore.rotate(self, session, env)

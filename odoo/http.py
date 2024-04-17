@@ -149,6 +149,7 @@ import traceback
 import warnings
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
+from hashlib import sha512
 from io import BytesIO
 from os.path import join as opj
 from pathlib import Path
@@ -251,6 +252,7 @@ def get_default_session():
         'login': None,
         'uid': None,
         'session_token': None,
+        '_trace': [],
     }
 
 DEFAULT_MAX_CONTENT_LENGTH = 128 * 1024 * 1024  # 128MiB
@@ -902,10 +904,13 @@ def _check_and_complete_route_definition(controller_cls, submethod, merged_routi
 # Session
 # =========================================================
 
+_base64_urlsafe_re = re.compile(r'^[A-Za-z0-9_-]{84}$')
+
+
 class FilesystemSessionStore(sessions.FilesystemSessionStore):
     """ Place where to load and save session objects. """
     def get_session_filename(self, sid):
-        # scatter sessions across 256 directories
+        # scatter sessions across 4096 (64^2) directories
         if not self.is_valid_key(sid):
             raise ValueError(f'Invalid session id {sid!r}')
         sha_dir = sid[:2]
@@ -949,6 +954,43 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
             with contextlib.suppress(OSError):
                 if os.path.getmtime(path) < threshold:
                     os.unlink(path)
+
+    def generate_key(self, salt=None):
+        # The generated key is case sensitive (base64) and the length is 84 chars.
+        # In the worst-case scenario, i.e. in an insensitive filesystem (NTFS for example)
+        # taking into account the proportion of characters in the pool and a length
+        # of 42 (stored part in the database), the entropy for the base64 generated key
+        # is 217.875 bits which is better than the 160 bits entropy of a hexadecimal key
+        # with a length of 40 (method ``generate_key`` of ``SessionStore``).
+        # The risk of collision is negligible in practice.
+        # Formulas:
+        #   - L: length of generated word
+        #   - p_char: probability of obtaining the character in the pool
+        #   - n: size of the pool
+        #   - k: number of generated word
+        #   Entropy = - L * sum(p_char * log2(p_char))
+        #   Collision ~= (1 - exp((-k * (k - 1)) / (2 * (n**L))))
+        key = str(time.time()).encode() + os.urandom(64)
+        hash_key = sha512(key).digest()[:-1]  # prevent base64 padding
+        return base64.urlsafe_b64encode(hash_key).decode('utf-8')
+
+    def is_valid_key(self, key):
+        return _base64_urlsafe_re.match(key) is not None
+
+    def delete_from_identifiers(self, identifiers):
+        files_to_unlink = []
+        for identifier in identifiers:
+            # Avoid to remove a session if less than 42 chars.
+            # This prevent malicious user to delete sessions from a different
+            # database by specifying a ``res.device.log`` with only 2 characters.
+            if len(identifier) < 42:
+                continue
+            normalized_path = os.path.normpath(os.path.join(self.path, identifier[:2], identifier + '*'))
+            if normalized_path.startswith(self.path):
+                files_to_unlink.extend(glob.glob(normalized_path))
+        for fn in files_to_unlink:
+            with contextlib.suppress(OSError):
+                os.unlink(fn)
 
 
 class Session(collections.abc.MutableMapping):
@@ -1084,6 +1126,34 @@ class Session(collections.abc.MutableMapping):
 
     def touch(self):
         self.is_dirty = True
+
+    def update_trace(self, request):
+        """
+            :return: dict if a device log has to be inserted, ``None`` otherwise
+        """
+        user_agent = request.httprequest.user_agent
+        platform = user_agent.platform
+        browser = user_agent.browser
+        ip_address = request.httprequest.remote_addr
+        now = int(datetime.now().timestamp())
+        for trace in self._trace:
+            if trace['platform'] == platform and trace['browser'] == browser and trace['ip_address'] == ip_address:
+                # If the device logs are not up to date (i.e. not updated for one hour or more)
+                if bool(now - trace['last_activity'] >= 3600):
+                    trace['last_activity'] = now
+                    self.is_dirty = True
+                    return trace
+                return
+        new_trace = {
+            'platform': platform,
+            'browser': browser,
+            'ip_address': ip_address,
+            'first_activity': now,
+            'last_activity': now
+        }
+        self._trace.append(new_trace)
+        self.is_dirty = True
+        return new_trace
 
 
 # =========================================================

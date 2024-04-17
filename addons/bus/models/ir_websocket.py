@@ -44,7 +44,7 @@ class IrWebsocket(models.AbstractModel):
     @classmethod
     def _authenticate(cls):
         if wsrequest.session.uid is not None:
-            if not security.check_session(wsrequest.session, wsrequest.env):
+            if not security.check_session(wsrequest.session, wsrequest.env, wsrequest):
                 wsrequest.session.logout(keep_db=True)
                 raise SessionExpiredException()
         else:
