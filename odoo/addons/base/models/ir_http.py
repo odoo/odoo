@@ -156,7 +156,7 @@ class IrHttp(models.AbstractModel):
 
         try:
             if request.session.uid is not None:
-                if not security.check_session(request.session, request.env):
+                if not security.check_session(request.session, request.env, request):
                     request.session.logout(keep_db=True)
                     request.env = api.Environment(request.env.cr, None, request.session.context)
             getattr(cls, f'_auth_method_{auth}')()
