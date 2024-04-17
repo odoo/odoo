@@ -11,7 +11,7 @@ from werkzeug.urls import url_quote
 from odoo.exceptions import UserError
 from odoo.tools import image_to_base64
 
-from odoo import api, fields, models, _, service, Command
+from odoo import api, fields, models, _, service
 from odoo.tools import file_open, split_every
 
 
@@ -346,7 +346,7 @@ class PosConfig(models.Model):
             "pos_config_id": self.id,
             "pos_session": self.current_session_id.read(["id", "access_token"])[0] if self.current_session_id and self.current_session_id.state == 'opened' else False,
             "company": {
-                **self.company_id.read(["name", "color", "email", "website", "vat", "name", "phone", "point_of_sale_use_ticket_qr_code", "point_of_sale_ticket_unique_code"])[0],
+                **self.company_id.read(["name", "email", "website", "vat", "name", "phone", "point_of_sale_use_ticket_qr_code", "point_of_sale_ticket_unique_code"])[0],
                 "partner_id": [None, self.company_id.partner_id.contact_address],
                 "country": self.company_id.country_id.read(["vat_label"])[0],
             },
