@@ -30,7 +30,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
                     'product_qty': 10.0,
                     'product_uom': product.uom_id.id,
                     'price_unit': product.list_price,
-                    'taxes_id': False,
+                    'tax_ids': False,
                 }),
             ]
         })

@@ -411,14 +411,14 @@ class TestSaleOrder(SaleCommon):
                     'product_uom_qty': 1,
                     'price_unit': 6.7,
                     'discount': 0,
-                    'tax_id': tax_a.ids,
+                    'tax_ids': tax_a.ids,
                 }),
                 Command.create({
                     'product_id': self.product.id,
                     'product_uom_qty': 1,
                     'price_unit': 6.7,
                     'discount': 0,
-                    'tax_id': tax_a.ids,
+                    'tax_ids': tax_a.ids,
                 }),
             ],
         })
@@ -434,14 +434,14 @@ class TestSaleOrder(SaleCommon):
                     'product_uom_qty': 1,
                     'price_unit': 6.7,
                     'discount': 0,
-                    'tax_id': tax_a.ids,
+                    'tax_ids': tax_a.ids,
                 }),
                 Command.create({
                     'product_id': self.product.id,
                     'product_uom_qty': 1,
                     'price_unit': 6.7,
                     'discount': 0,
-                    'tax_id': tax_a.ids,
+                    'tax_ids': tax_a.ids,
                 }),
             ],
         })
@@ -653,10 +653,10 @@ class TestSaleOrder(SaleCommon):
             line.product_id = product_no_tax
         so = so_form.save()
         self.assertRecordValues(so.order_line, [
-            {'product_id': product_all_taxes.id, 'tax_id': tax_xx.ids},
-            {'product_id': product_no_xx_tax.id, 'tax_id': tax_x.ids},
-            {'product_id': product_no_branch_tax.id, 'tax_id': (tax_a + tax_b).ids},
-            {'product_id': product_no_tax.id, 'tax_id': []},
+            {'product_id': product_all_taxes.id, 'tax_ids': tax_xx.ids},
+            {'product_id': product_no_xx_tax.id, 'tax_ids': tax_x.ids},
+            {'product_id': product_no_branch_tax.id, 'tax_ids': (tax_a + tax_b).ids},
+            {'product_id': product_no_tax.id, 'tax_ids': []},
         ])
 
 
@@ -823,11 +823,11 @@ class TestSalesTeam(SaleCommon):
             'name': product.name,
             'product_id': product.id,
             'order_id': sale_order.id,
-            'tax_id': tax_a,
+            'tax_ids': tax_a,
         })
 
         with self.assertRaises(UserError):
-            sol.tax_id = tax_b
+            sol.tax_ids = tax_b
 
     def test_assign_tax_multi_company(self):
         root_company = self.env['res.company'].create({'name': 'B0 company'})
@@ -868,15 +868,15 @@ class TestSalesTeam(SaleCommon):
             'name': product.name,
             'product_id': product.id,
             'order_id': sale_order.id,
-            'tax_id': tax_b1,
+            'tax_ids': tax_b1,
         })
 
         # should not raise anything
-        sol_b1.tax_id = tax_b0
-        sol_b1.tax_id = tax_b1
+        sol_b1.tax_ids = tax_b0
+        sol_b1.tax_ids = tax_b1
         # should raise (b2 is not on the same branch lineage as b1)
         with self.assertRaises(UserError):
-            sol_b1.tax_id = tax_b2
+            sol_b1.tax_ids = tax_b2
 
     def test_downpayment_amount_constraints(self):
         """Down payment amounts should be in the interval ]0, 1]."""
