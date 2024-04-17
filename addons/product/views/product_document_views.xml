@@ -13,14 +13,19 @@
                         <field name="name" readonly="not datas and type != 'url'"/>
                     </h1>
                     <group>
-                        <field name="type" readonly="datas or id" class="oe_inline"/>
-                        <field name="datas"
-                               filename="name"
-                               invisible="type == 'url'"
-                               required="type == 'binary'"
-                               class="oe_inline"/>
-                        <field name="url" widget="url" invisible="type == 'binary'" required="type == 'url'"/>
-                        <field name="res_name" string="Product Variant" invisible="res_model != 'product.product'"/>
+                        <group>
+                            <field name="type" readonly="datas or id" class="oe_inline"/>
+                            <label for="datas"/>
+                            <div class="o_row">
+                                <field name="datas"
+                                       filename="name"
+                                       invisible="type == 'url'"
+                                       required="type == 'binary'"
+                                       class="oe_inline"/>
+                            </div>
+                            <field name="url" widget="url" invisible="type == 'binary'" required="type == 'url'"/>
+                            <field name="res_name" string="Product Variant" invisible="res_model != 'product.product'"/>
+                        </group>
                     </group>
                     <group string="Attached To" groups="base.group_no_one">
                         <field name="res_name"/>

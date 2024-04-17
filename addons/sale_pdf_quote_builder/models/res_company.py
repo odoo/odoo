@@ -15,6 +15,8 @@ class ResCompany(models.Model):
     sale_footer = fields.Binary(string="Footer pages")
     sale_footer_name = fields.Char()
 
+    # === CONSTRAINT METHODS ===#
+
     @api.constrains('sale_header')
     def _ensure_header_not_encrypted(self):
         for company in self:

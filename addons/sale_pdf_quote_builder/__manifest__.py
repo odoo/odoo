@@ -5,8 +5,16 @@
     'description': "Build nice quotations",
     'depends': ['sale_management'],
     'data': [
+        'data/ir_config_parameters.xml',
+
         'report/ir_actions_report.xml',
+
+        'security/ir.model.access.csv',
+
+        'views/product_document_views.xml',
         'views/sale_order_template_views.xml',
+
+        'wizards/dynamic_fields_wizard_views.xml',
         'wizards/res_config_settings_views.xml',
     ],
     'demo': [
