@@ -5,6 +5,8 @@ import { Record } from "@mail/core/record";
 export class Composer extends Record {
     /** @type {import("@mail/attachments/attachment_model").Attachment[]} */
     attachments = [];
+    /** @type {import("@mail/core/canned_response_model").CannedResponse[]} */
+    cannedResponses = [];
     /** @type {import("@mail/core/message_model").Message} */
     message;
     rawMentions = {
