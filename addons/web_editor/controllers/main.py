@@ -915,7 +915,6 @@ class Web_Editor(http.Controller):
             response = iap_tools.iap_jsonrpc(olg_api_endpoint + "/api/olg/1/chat", params={
                 'prompt': prompt,
                 'conversation_history': conversation_history or [],
-                'version': release.version,
                 'database_id': database_id,
             }, timeout=30)
             if response['status'] == 'success':
