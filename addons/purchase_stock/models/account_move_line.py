@@ -21,7 +21,7 @@ class AccountMoveLine(models.Model):
             return 0
         aml_qty = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
         invoiced_qty = sum(line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)
-                           for line in self.purchase_line_id.invoice_lines - self)
+                           for line in self.purchase_line_id.account_move_line_ids - self)
         layers = in_moves.stock_valuation_layer_ids
         layers_qty = sum(layers.mapped('quantity'))
         out_qty = layers_qty - sum(layers.mapped('remaining_qty'))
@@ -66,7 +66,7 @@ class AccountMoveLine(models.Model):
         # we use this to get an order between posted AML and layers
         history = [(layer.create_date, False, layer) for layer in layers]
         am_state_field = self.env['ir.model.fields'].search([('model', '=', 'account.move'), ('name', '=', 'state')], limit=1)
-        for aml in po_line.invoice_lines:
+        for aml in po_line.account_move_line_ids:
             move = aml.move_id
             if move.state != 'posted':
                 continue

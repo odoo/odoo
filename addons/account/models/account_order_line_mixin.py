@@ -14,7 +14,7 @@ class AccountOrderLineMixin(models.AbstractModel):
         help="Down payments are made when creating account moves from an order. They are not copied when duplicating an order."
     )
 
-    invoice_lines = fields.One2many('account.move.line')  # To override
+    account_move_line_ids = fields.One2many('account.move.line')  # To override
     display_type = fields.Selection(
         [('line_section', "Section"), ('line_note', "Note")],
         help="Technical field for UX purpose.",
@@ -57,11 +57,11 @@ class AccountOrderLineMixin(models.AbstractModel):
     def _get_invoice_lines(self):
         self.ensure_one()
         if self._context.get('accrual_entry_date'):
-            return self.invoice_lines.filtered(
+            return self.account_move_line_ids.filtered(
                 lambda l: l.move_id.invoice_date and l.move_id.invoice_date <= self._context['accrual_entry_date']
             )
         else:
-            return self.invoice_lines
+            return self.account_move_line_ids
 
     def _get_downpayment_state(self):
         self.ensure_one()
