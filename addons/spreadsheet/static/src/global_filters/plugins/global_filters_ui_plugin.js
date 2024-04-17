@@ -11,9 +11,9 @@ import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
-import { constructDateRange, getPeriodOptions, QUARTER_OPTIONS } from "@web/search/utils/dates";
+import { constructDateRange, QUARTER_OPTIONS } from "@web/search/utils/dates";
 
-import { EvaluationError, helpers } from "@odoo/o-spreadsheet";
+import { EvaluationError, helpers, constants } from "@odoo/o-spreadsheet";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import { isEmpty } from "@spreadsheet/helpers/helpers";
@@ -43,6 +43,7 @@ const MONTHS = {
     december: { value: 12, granularity: "month" },
 };
 
+const { DEFAULT_LOCALE } = constants;
 const { UuidGenerator, createEmptyExcelSheet, createEmptySheet, toXC, toNumber } = helpers;
 const uuidGenerator = new UuidGenerator();
 
@@ -243,40 +244,8 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
         switch (filter.type) {
             case "text":
                 return [[{ value: value || "" }]];
-            case "date": {
-                if (filter.rangeType === "from_to") {
-                    const locale = this.getters.getLocale();
-                    const from = {
-                        value: value.from ? toNumber(value.from, locale) : "",
-                        format: locale.dateFormat,
-                    };
-                    const to = {
-                        value: value.to ? toNumber(value.to, locale) : "",
-                        format: locale.dateFormat,
-                    };
-                    return [[from], [to]];
-                }
-                if (value && typeof value === "string") {
-                    const type = RELATIVE_DATE_RANGE_TYPES.find((type) => type.type === value);
-                    if (!type) {
-                        return [[{ value: "" }]];
-                    }
-                    return [[{ value: type.description.toString() }]];
-                }
-                if (!value || value.yearOffset === undefined) {
-                    return [[{ value: "" }]];
-                }
-                const periodOptions = getPeriodOptions(DateTime.local());
-                const year = String(DateTime.local().year + value.yearOffset);
-                const period = periodOptions.find(({ id }) => value.period === id);
-                let periodStr = period && period.description;
-                // Named months aren't in getPeriodOptions
-                if (!period) {
-                    periodStr =
-                        MONTHS[value.period] && String(MONTHS[value.period].value).padStart(2, "0");
-                }
-                return [[{ value: periodStr ? periodStr + "/" + year : year }]];
-            }
+            case "date":
+                return this._getDateFilterDisplayValue(filter);
             case "relation":
                 if (!value?.length || !this.orm) {
                     return [[{ value: "" }]];
@@ -365,6 +334,72 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
      */
     _setGlobalFilterValue(id, value) {
         this.values[id] = { value: value, rangeType: this.getters.getGlobalFilter(id).rangeType };
+    }
+
+    /**
+     * @param {GlobalFilter} filter
+     */
+    _getDateFilterDisplayValue(filter) {
+        const value = this.getGlobalFilterValue(filter.id);
+        switch (filter.rangeType) {
+            case "from_to": {
+                const locale = this.getters.getLocale();
+                const from = {
+                    value: value.from ? toNumber(value.from, locale) : "",
+                    format: locale.dateFormat,
+                };
+                const to = {
+                    value: value.to ? toNumber(value.to, locale) : "",
+                    format: locale.dateFormat,
+                };
+                return [[from], [to]];
+            }
+            case "relative": {
+                const type = RELATIVE_DATE_RANGE_TYPES.find((type) => type.type === value);
+                if (!type) {
+                    return [[{ value: "" }]];
+                }
+                return [[{ value: type.description.toString() }]];
+            }
+            case "fixedPeriod": {
+                if (!value || value.yearOffset === undefined) {
+                    return [[{ value: "" }]];
+                }
+                const year = DateTime.local().year + value.yearOffset;
+                if (value.period?.endsWith("_quarter")) {
+                    const first_months = {
+                        // [quarter]: first_month
+                        first_quarter: 1,
+                        second_quarter: 4,
+                        third_quarter: 7,
+                        fourth_quarter: 10,
+                    };
+                    const month = first_months[value.period];
+                    return [
+                        [
+                            {
+                                value: toNumber(`${year}-${month}-1`, DEFAULT_LOCALE),
+                                format: "q yyyy",
+                            },
+                        ],
+                    ];
+                } else if (value.period in MONTHS) {
+                    const month = MONTHS[value.period].value;
+                    return [
+                        [
+                            {
+                                value: toNumber(`${year}-${month}-1`, DEFAULT_LOCALE),
+                                format: "mmmm yyyy",
+                            },
+                        ],
+                    ];
+                } else {
+                    return [[{ value: year }]];
+                }
+            }
+            default:
+                return [[{ value: "" }]];
+        }
     }
 
     /**

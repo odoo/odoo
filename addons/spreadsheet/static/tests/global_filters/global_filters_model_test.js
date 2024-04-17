@@ -2,7 +2,7 @@
 
 import { nextTick, patchDate } from "@web/../tests/helpers/utils";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
-import { Model, DispatchResult, helpers, tokenize } from "@odoo/o-spreadsheet";
+import { Model, DispatchResult, helpers, tokenize, constants } from "@odoo/o-spreadsheet";
 import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
 import { getBasicPivotArch } from "@spreadsheet/../tests/utils/data";
 import { createSpreadsheetWithPivotAndList } from "@spreadsheet/../tests/utils/pivot_list";
@@ -48,7 +48,8 @@ import { PivotUIGlobalFilterPlugin } from "@spreadsheet/pivot/index";
 import { getEvaluatedCell } from "../utils/getters";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 const { DateTime } = luxon;
-const { toZone } = helpers;
+const { toZone, toNumber } = helpers;
+const { DEFAULT_LOCALE } = constants;
 
 /**
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").GlobalFilter} GlobalFilter
@@ -876,50 +877,55 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
     });
 
     QUnit.test("ODOO.FILTER.VALUE date filter", async function (assert) {
-        assert.expect(4);
-
         const model = await createModelWithDataSource();
         setCellContent(model, "A10", `=ODOO.FILTER.VALUE("Date Filter")`);
         await nextTick();
         await addGlobalFilter(model, {
             id: "42",
             type: "date",
+            rangeType: "fixedPeriod",
             label: "Date Filter",
         });
         await nextTick();
         const [filter] = model.getters.getGlobalFilters();
         await setGlobalFilterValue(model, {
             id: filter.id,
-            rangeType: "fixedPeriod",
             value: {
                 yearOffset: 0,
                 period: "first_quarter",
             },
         });
         await nextTick();
-        assert.equal(getCellValue(model, "A10"), `Q1/${DateTime.now().year}`);
+        const year = DateTime.now().year;
+        assert.equal(
+            getEvaluatedCell(model, "A10").value,
+            toNumber(`${year}-01-01`, DEFAULT_LOCALE)
+        );
+        assert.equal(getEvaluatedCell(model, "A10").format, "q yyyy");
         await setGlobalFilterValue(model, {
             id: filter.id,
-            rangeType: "fixedPeriod",
             value: {
                 yearOffset: 0,
             },
         });
         await nextTick();
-        assert.equal(getCellValue(model, "A10"), `${DateTime.now().year}`);
+        assert.equal(getEvaluatedCell(model, "A10").value, year);
+        assert.equal(getEvaluatedCell(model, "A10").format, undefined);
         await setGlobalFilterValue(model, {
             id: filter.id,
-            rangeType: "fixedPeriod",
             value: {
                 period: "january",
                 yearOffset: 0,
             },
         });
         await nextTick();
-        assert.equal(getCellValue(model, "A10"), `01/${DateTime.now().year}`);
+        assert.equal(
+            getEvaluatedCell(model, "A10").value,
+            toNumber(`${year}-01-01`, DEFAULT_LOCALE)
+        );
+        assert.equal(getEvaluatedCell(model, "A10").format, "mmmm yyyy");
         await setGlobalFilterValue(model, {
             id: filter.id,
-            rangeType: "fixedPeriod",
             value: {},
         });
         await nextTick();
@@ -1083,6 +1089,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 id: "42",
                 type: "date",
                 label: "Cuillère",
+                rangeType: "relative",
             });
             setCellContent(
                 model,
@@ -1471,13 +1478,13 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(model.getters.getGlobalFilterValue(filter.id), defaultValue);
     });
 
-    QUnit.test("filter display value of year filter is a string", async function (assert) {
+    QUnit.test("filter display value of year filter is a number", async function (assert) {
         const { model } = await createSpreadsheetWithPivotAndList();
         await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
         const [filter] = model.getters.getGlobalFilters();
         assert.strictEqual(
             model.getters.getFilterDisplayValue(filter.label)[0][0].value,
-            String(new Date().getFullYear())
+            new Date().getFullYear()
         );
     });
 

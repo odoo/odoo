@@ -108,22 +108,42 @@ function parseAccountingDay(dateRange, locale) {
  * @param {string | number} dateRange
  * @returns {DateRange}
  */
-export function parseAccountingDate(dateRange, locale) {
+export function parseAccountingDate(dateRange = { value: null }, locale) {
+    let { value, format } = dateRange;
+    if (typeof value === "number" && format) {
+        const day = parseAccountingDay(value, locale);
+        if (format.includes("d")) {
+            return day;
+        } else if (format.includes("m")) {
+            return {
+                rangeType: "month",
+                year: day.year,
+                month: day.month,
+            };
+        } else if (format.includes("q")) {
+            return {
+                rangeType: "quarter",
+                year: day.year,
+                quarter: Math.ceil(day.month / 3),
+            };
+        }
+        return { rangeType: "year", year: value };
+    }
     try {
-        dateRange = toString(dateRange).trim();
+        value = toString(value).trim();
         return (
-            parseAccountingQuarter(dateRange) ||
-            parseAccountingMonth(dateRange) ||
-            parseAccountingYear(dateRange, locale) ||
-            parseAccountingDay(dateRange, locale)
+            parseAccountingQuarter(value) ||
+            parseAccountingMonth(value) ||
+            parseAccountingYear(value, locale) ||
+            parseAccountingDay(value, locale)
         );
     } catch {
         throw new EvaluationError(
             sprintf(
                 _t(
-                    `'%s' is not a valid period. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`
+                    `'%s' is not a valid period. Supported values are dates or strings formatted as "21/12/2022", "Q1/2022", "12/2022", and "2022".`
                 ),
-                dateRange
+                value
             )
         );
     }
@@ -133,7 +153,9 @@ const ODOO_FIN_ARGS = () => [
     arg("account_codes (string)", _t("The prefix of the accounts.")),
     arg(
         "date_range (string, date)",
-        _t(`The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
+        _t(
+            `The date range. Supported values are dates or strings formatted as "21/12/2022", "Q1/2022", "12/2022", and "2022".`
+        )
     ),
     arg("offset (number, default=0)", _t("Year offset applied to date_range.")),
     arg("company_id (number, optional)", _t("The company to target (Advanced).")),
@@ -160,7 +182,7 @@ functionRegistry.add("ODOO.CREDIT", {
             .map((code) => code.trim())
             .sort();
         const _offset = toNumber(offset, this.locale);
-        const _dateRange = parseAccountingDate(dateRange?.value, this.locale);
+        const _dateRange = parseAccountingDate(dateRange, this.locale);
         const _companyId = companyId?.value;
         const _includeUnposted = toBoolean(includeUnposted);
         return {
@@ -193,7 +215,7 @@ functionRegistry.add("ODOO.DEBIT", {
             .map((code) => code.trim())
             .sort();
         const _offset = toNumber(offset, this.locale);
-        const _dateRange = parseAccountingDate(dateRange?.value, this.locale);
+        const _dateRange = parseAccountingDate(dateRange, this.locale);
         const _companyId = companyId?.value;
         const _includeUnposted = toBoolean(includeUnposted);
         return {
@@ -226,7 +248,7 @@ functionRegistry.add("ODOO.BALANCE", {
             .map((code) => code.trim())
             .sort();
         const _offset = toNumber(offset, this.locale);
-        const _dateRange = parseAccountingDate(dateRange?.value, this.locale);
+        const _dateRange = parseAccountingDate(dateRange, this.locale);
         const _companyId = companyId?.value;
         const _includeUnposted = toBoolean(includeUnposted);
         const value =
