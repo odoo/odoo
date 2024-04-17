@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': "Import/Export electronic invoices with UBL/CII",
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Accounting/Accounting',
     'description': """
 Electronic invoicing module

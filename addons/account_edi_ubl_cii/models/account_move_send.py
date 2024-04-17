@@ -8,6 +8,7 @@ from xml.sax.saxutils import escape, quoteattr
 
 from odoo import _, api, fields, models, tools, SUPERUSER_ID
 from odoo.tools import cleanup_xml_node
+from odoo.tools.parse_version import parse_version
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 
 _logger = logging.getLogger(__name__)
@@ -66,6 +67,16 @@ class AccountMoveSend(models.Model):
 
     @api.depends('move_ids')
     def _compute_ubl_warnings(self):
+        # This part is there to ensure the peppol warning will be displayed if the ubl_cii module isn't up to date
+        is_peppol_installed = 'peppol_warning' in self._fields
+        if is_peppol_installed:
+            ubl_cii_module = self.env['ir.module.module'].search([('name', '=', 'account_edi_ubl_cii')])
+            ubl_cii_version = ubl_cii_module.latest_version[2:]
+            if parse_version(ubl_cii_version) < parse_version('1.1'):
+                self.show_ubl_company_warning = False
+                self.ubl_partner_warning = False
+                return
+
         for wizard in self:
             wizard.show_ubl_company_warning = False
             wizard.ubl_partner_warning = False
