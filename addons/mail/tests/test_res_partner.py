@@ -263,3 +263,12 @@ class TestPartner(MailCommon):
         all_msg = p2_msg_ids_init + p1_msg_ids_init + p1_msg1
         self.assertEqual(len(p2.message_ids), len(all_msg) + 1, 'Should have original messages + a log')
         self.assertTrue(all(msg in p2.message_ids for msg in all_msg))
+
+    def test_partner_no_name_suggested_recipient(self):
+        # Partner without name and email is not considered for suggested recipient
+        Partner = self.env['res.partner']
+
+        parent = Partner.create({'name': 'Customer1', 'email': 'test1@test.example.com'})
+        delivery_address = Partner.create({'parent_id': parent.id, 'name': '', 'email': ''})
+        res = delivery_address._message_add_suggested_recipient({delivery_address.id: []}, partner=delivery_address)
+        self.assertFalse(res[delivery_address.id])
