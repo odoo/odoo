@@ -3994,12 +3994,14 @@ class BaseModel(metaclass=MetaModel):
             # the query may involve several tables: we need fully-qualified names
             sql_terms = [SQL.identifier(self._table, 'id')]
             for field in column_fields:
-                # flushing is necessary to retrieve the en_US value of fields without a translation
-                sql = self._field_to_sql(self._table, field.name, query, flush=field.translate)
                 if field.type == 'binary' and (
                         context.get('bin_size') or context.get('bin_size_' + field.name)):
                     # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
+                    sql = self._field_to_sql(self._table, field.name, query)
                     sql = SQL("pg_size_pretty(length(%s)::bigint)", sql)
+                else:
+                    # flushing is necessary to retrieve the en_US value of fields without a translation
+                    sql = self._field_to_sql(self._table, field.name, query, flush=field.translate)
                 sql_terms.append(sql)
 
             # select the given columns from the rows in the query
