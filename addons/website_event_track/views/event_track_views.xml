@@ -100,10 +100,13 @@
             <search string="Event Tracks">
                 <field name="name"/>
                 <field name="tag_ids"/>
-                <field name="event_id"/>
+                <field name="partner_id" string="Speaker" filter_domain="[
+                    '|', '|', '|', '|',
+                    ('partner_id', 'ilike', self), ('partner_name', 'ilike', self),
+                    ('contact_email', 'ilike', self), ('partner_email', 'ilike', self), ('partner_company_name', 'ilike', self)]"/>
                 <field name="location_id"/>
+                <field name="event_id"/>
                 <field name="stage_id"/>
-                <field name="partner_id"/>
                 <filter string="My Tracks" name="my_tracks" domain="[('user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Published" name="filter_published" domain="[('website_published', '=', True)]"/>
@@ -161,7 +164,7 @@
                         <div class="flex-grow-1">
                             <label for="name"/>
                             <h1>
-                                <field name="name" placeholder="e.g. Inspiring Business Talk"/>
+                                <field name="name" placeholder="e.g. Inspiring Business Talk" class="w-sm-75"/>
                             </h1>
                         </div>
                         <field name="website_image" widget="image" class="oe_avatar"/>
