@@ -30,5 +30,6 @@
         'web.assets_backend': [
             'account_peppol/static/src/components/**/*',
         ],
-    }
+    },
+    'pre_init_hook': 'pre_init_hook',
 }
