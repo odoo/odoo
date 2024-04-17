@@ -21,6 +21,12 @@ class TestUtm(TestUTMCommon):
         self.assertNotIn(source_4, source_1 | source_2)
         self.assertEqual(source_4.name, 'Source 3')
 
+        # Create a new record when there are already duplicates
+        self.env['utm.source'].create({'name': 'Source 5 [2]'})
+        source_5 = self.env['utm.mixin']._find_or_create_record('utm.source', 'Source 5')
+        self.assertNotIn(source_5, source_1 | source_2 | source_4)
+        self.assertEqual(source_5.name, 'Source 5')
+
     def test_name_generation(self):
         """Test that the name is always unique.
 
@@ -53,8 +59,11 @@ class TestUtm(TestUTMCommon):
 
             (utm_0 | utm_3 | utm_4).unlink()
 
-            utm_6 = self.env[utm_model].create({'name': 'UTM dup'})
-            self.assertEqual(utm_6.name, 'UTM dup [5]')
+            utm_6 = self.env[utm_model].create([{'name': 'UTM dup'} for _ in range(4)])
+            self.assertListEqual(
+                utm_6.mapped('name'),
+                ['UTM dup'] + [f'UTM dup [{counter}]' for counter in [2, 3, 5]],
+                'Duplicate counters should be filled in order of missing.')
 
             utm_7 = self.env[utm_model].create({'name': 'UTM d'})
             self.assertEqual(utm_7.name, 'UTM d', msg='Even if this name has the same prefix as the other, it is still unique')

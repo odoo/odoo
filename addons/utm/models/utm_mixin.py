@@ -3,6 +3,7 @@
 
 import re
 from collections import defaultdict
+import itertools
 
 from odoo import api, fields, models
 from odoo.http import request
@@ -113,15 +114,14 @@ class UtmMixin(models.AbstractModel):
 
         # Count for each names, based on the names list given in argument
         # and the record names in database
-        count_per_names = defaultdict(lambda: 0)
-        count_per_names.update({
-            name: max((
-                _split_name_and_count(existing_name)[1] + 1
+        counters_per_name = {
+            name: {
+                _split_name_and_count(existing_name)[1]
                 for existing_name in existing_names
                 if existing_name == name or existing_name.startswith(f'{name} [')
-            ), default=1)
-            for name in names_without_counter
-        })
+            } for name in names_without_counter
+        }
+        count_per_names = defaultdict(lambda: itertools.count(1))
 
         result = []
         for name in names:
@@ -130,8 +130,10 @@ class UtmMixin(models.AbstractModel):
                 continue
 
             name_without_counter = _split_name_and_count(name)[0]
-            counter = count_per_names[name_without_counter]
-            result.append(f'{name_without_counter} [{counter}]' if counter > 1 else name)
-            count_per_names[name_without_counter] += 1
+            # keep going until the count is not already used
+            for count in count_per_names[name_without_counter]:
+                if count not in counters_per_name.get(name_without_counter, set()):
+                    break
+            result.append(f'{name_without_counter} [{count}]' if count > 1 else name)
 
         return result
