@@ -110,6 +110,9 @@ class StockRule(models.Model):
                     # We use SUPERUSER_ID since we don't want the current user to be follower of the PO.
                     # Indeed, the current user may be a user without access to Purchase, or even be a portal user.
                     po = self.env['purchase.order'].with_company(company_id).with_user(SUPERUSER_ID).create(vals)
+                else:
+                    # Then we have no PO to process
+                    continue
             else:
                 """EXTRACT : update_po """
                 # If a purchase order is found, adapt its `origin` field.
@@ -125,9 +128,6 @@ class StockRule(models.Model):
 
             """ EXTRACT : create_or_update_purchase_order_procurement_group"""
             # Here, in all case there's a purchase order
-            # TODO: in specific method ?.. if mtso and 'group_id' in procurement.values =>
-            #   (?) Create PG if not set on PO ?
-            #   ( ) Link procurement.values.group_id.id in PO.group_id.group_dest_ids
             group_dest_ids = self.env['procurement.group']
             for procurement in procurements:
                 move_dest_ids = procurement.values.get('move_dest_ids')

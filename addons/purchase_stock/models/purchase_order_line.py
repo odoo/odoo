@@ -131,6 +131,7 @@ class PurchaseOrderLine(models.Model):
         self.move_ids._action_cancel()
 
         # Unlink move_dests that have other created_purchase_line_ids instead of cancelling them
+        # TODO : Extend for MTSO
         for line in self:
             moves_to_unlink = line.move_dest_ids.filtered(lambda m: len(m.created_purchase_line_ids.ids) > 1)
             if moves_to_unlink:

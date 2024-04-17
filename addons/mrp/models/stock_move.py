@@ -405,7 +405,9 @@ class StockMove(models.Model):
             # when updating consumed qty need to update related pickings
             # context no_procurement means we don't want the qty update to modify stock i.e create new pickings
             # ex. when spliting MO to backorders we don't want to move qty from pre prod to stock in 2/3 step config
-            self.filtered(lambda m: m.raw_material_production_id.state == 'confirmed')._run_procurement(old_demand)
+            moves_to_run = self.filtered(lambda m: m.raw_material_production_id.state == 'confirmed')
+            if moves_to_run:  # Avoid useless function call on empty sets
+                moves_to_run._run_procurement(old_demand)
         return res
 
     def _run_procurement(self, old_qties=False):
@@ -418,16 +420,18 @@ class StockMove(models.Model):
                     and move.procure_method == 'make_to_order'\
                     and all(m.state == 'done' for m in move.move_orig_ids):
                 continue
+            #QTY is more than before
             if float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding) > 0:
                 if move._should_bypass_reservation() \
                         or move.picking_type_id.reservation_method == 'at_confirm' \
                         or (move.reservation_date and move.reservation_date <= fields.Date.today()):
                     to_assign |= move
 
-            if move.procure_method == 'make_to_order':
+            if move.procure_method == 'make_to_order' or move._is_mtso():
                 procurement_qty = move.product_uom_qty - old_qties.get(move.id, 0)
-                possible_reduceable_qty = -sum(move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.product_uom_qty).mapped('product_uom_qty'))
-                procurement_qty = max(procurement_qty, possible_reduceable_qty)
+                if move.procure_method == 'make_to_order':
+                    possible_reduceable_qty = -sum(move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.product_uom_qty).mapped('product_uom_qty'))
+                    procurement_qty = max(procurement_qty, possible_reduceable_qty)
                 values = move._prepare_procurement_values()
                 origin = move._prepare_procurement_origin()
                 procurements.append(self.env['procurement.group'].Procurement(

@@ -21,7 +21,11 @@ class PurchaseOrder(models.Model):
             purchase.mrp_production_count = len(purchase._get_mrp_productions())
 
     def _get_mrp_productions(self, **kwargs):
-        return self.order_line.move_dest_ids.group_id.mrp_production_ids | self.order_line.move_ids.move_dest_ids.group_id.mrp_production_ids
+        return (
+            self.order_line.move_dest_ids.group_id.mrp_production_ids |
+            self.order_line.move_ids.move_dest_ids.group_id.mrp_production_ids |
+            self.group_id.group_dest_ids.mrp_production_ids
+        )
 
     def action_view_mrp_productions(self):
         self.ensure_one()

@@ -25,8 +25,7 @@ class SaleOrder(models.Model):
             sale.mrp_production_count = len(sale.mrp_production_ids)
 
     def _get_mtso_manufacturing_orders(self):
-        domain = [('sale_ids', 'in', self.ids), ('mrp_production_ids', '!=', False)]
-        return self.env['procurement.group'].search_fetch(domain, ['mrp_production_ids']).mrp_production_ids
+        return self.procurement_group_id.group_orig_ids.mrp_production_ids
 
     def _action_cancel(self):
         """When Sale Orders have MTSO moves that have triggered the creation of Manufacturing Orders,

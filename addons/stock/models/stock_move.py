@@ -1076,6 +1076,7 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     def _clean_merged(self):
         """Cleanup hook used when merging moves"""
+        self.filtered(lambda m: m._is_mtso()).write({'product_uom_qty': 0})
         self.write({'propagate_cancel': False})
 
     def _update_candidate_moves_list(self, candidate_moves_set):
@@ -1881,12 +1882,20 @@ Please change the quantity done or the rounding precision of your unit of measur
         # self cannot contain moves that are either cancelled or done, therefore we can safely
         # unlink all associated move_line_ids
         moves_to_cancel._do_unreserve()
+        procurements = []
 
         for move in moves_to_cancel:
             siblings_states = (move.move_dest_ids.mapped('move_orig_ids') - move).mapped('state')
+            if move._is_mtso() and not float_is_zero(move.product_uom_qty, precision_digits=move.product_uom.rounding):
+                values = move._prepare_procurement_values()
+                origin = move._prepare_procurement_origin()
+                procurements.append(self.env['procurement.group'].Procurement(
+                    move.product_id, -move.product_uom_qty, move.product_uom,
+                    move.location_id, move.name, origin, move.company_id, values))
             if move.propagate_cancel:
                 # only cancel the next move if all my siblings are also cancelled
                 if all(state == 'cancel' for state in siblings_states):
+                    # N.B : a move_dest can't be MTSO as a 'make_to_stock' move can't have an move_orig
                     move.move_dest_ids.filtered(lambda m: m.state != 'done' and m.location_dest_id == m.move_dest_ids.location_id)._action_cancel()
             else:
                 if all(state in ('done', 'cancel') for state in siblings_states):
@@ -1900,6 +1909,8 @@ Please change the quantity done or the rounding precision of your unit of measur
             'move_orig_ids': [(5, 0, 0)],
             'procure_method': 'make_to_stock',
         })
+        if procurements:
+            self.env['procurement.group'].run(procurements)
         return True
 
     def _skip_push(self):
@@ -2221,45 +2232,35 @@ Please change the quantity done or the rounding precision of your unit of measur
                                                          order='priority desc, date asc, id asc')
         moves_to_reserve._action_assign()
 
-    def _rollup_move_dests_fetch(self):
-        seen = set(self.ids)
-        self.fetch(['move_dest_ids'])
-        move_dest_ids = set(self.move_dest_ids.ids)
-        while not move_dest_ids.issubset(seen):
-            seen |= move_dest_ids
-            to_visit = self.browse(move_dest_ids)
-            to_visit.fetch(['move_dest_ids'])
-            move_dest_ids = set(to_visit.move_dest_ids.ids)
-
-    def _rollup_move_origs_fetch(self):
-        seen = set(self.ids)
-        self.fetch(['move_orig_ids'])
-        move_orig_ids = set(self.move_orig_ids.ids)
-        while not move_orig_ids.issubset(seen):
-            seen |= move_orig_ids
-            to_visit = self.browse(move_orig_ids)
-            to_visit.fetch(['move_orig_ids'])
-            move_orig_ids = set(to_visit.move_orig_ids.ids)
-
-    def _rollup_move_dests(self, seen=False):
+    def _rollup_move_dests(self, seen=False, depth=False):
         if not seen:
             seen = OrderedSet()
         unseen = OrderedSet(self.ids) - seen
         if not unseen:
             return seen
-        seen.update(unseen)
-        self.filtered(lambda m: m.id in unseen).move_dest_ids._rollup_move_dests(seen)
+        if depth >= 0:  # N.B False == 0
+            seen.update(unseen)
+            moves_to_unroll = self.filtered(lambda m: m.id in unseen)
+            (moves_to_unroll.move_dest_ids | moves_to_unroll.group_id.group_dest_ids.stock_move_ids)._rollup_move_dests(seen, self._get_rollup_depth(depth))
         return seen
 
-    def _rollup_move_origs(self, seen=False):
+    def _rollup_move_origs(self, seen=False, depth=False):
         if not seen:
             seen = OrderedSet()
         unseen = OrderedSet(self.ids) - seen
         if not unseen:
             return seen
-        seen.update(unseen)
-        self.filtered(lambda m: m.id in unseen).move_orig_ids._rollup_move_origs(seen)
+        if depth >= 0:
+            seen.update(unseen)
+            moves_to_unroll = self.filtered(lambda m: m.id in unseen)
+            (moves_to_unroll.move_orig_ids | moves_to_unroll.group_id.group_orig_ids.stock_move_ids)._rollup_move_origs(seen, self._get_rollup_depth(depth))
         return seen
+
+    @api.model
+    def _get_rollup_depth(self, depth):
+        if type(depth) is int:
+            return depth - 1
+        return depth
 
     def _get_forecast_availability_outgoing(self, warehouse):
         """ Get forcasted information (sum_qty_expected, max_date_expected) of self for the warehouse's locations.
