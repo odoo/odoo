@@ -11,9 +11,29 @@
                     <group>
                         <group>
                             <field name="sale_header_name" invisible="1"/>
-                            <field name="sale_header" filename="sale_header_name" options="{'accepted_file_extensions': '.pdf'}"/>
+                            <field
+                                name="sale_header"
+                                filename="sale_header_name"
+                                options="{'accepted_file_extensions': '.pdf'}"
+                            />
                             <field name="sale_footer_name" invisible="1"/>
-                            <field name="sale_footer" filename="sale_footer_name" options="{'accepted_file_extensions': '.pdf'}"/>
+                            <field
+                                name="sale_footer"
+                                filename="sale_footer_name"
+                                options="{'accepted_file_extensions': '.pdf'}"
+                            />
+                        </group>
+                        <group>
+                        <button
+                            name="action_open_dynamic_fields_wizard"
+                            type="object"
+                            string="Configure dynamic fields"
+                            help="Configure the path to fill the form fields."
+                            class="btn-link"
+                            icon="fa-pencil"
+                            colspan="2"
+                            groups="base.group_system"
+                        />
                         </group>
                         <p class="text-muted">
                             The quotation is made by assembling header pages, product descriptions,<br/>
@@ -24,7 +44,11 @@
                             3. set the visibility to "Inside Quotes"<br/>
                             Data of the quotation (customer name, quotation reference, ... ) are injected in<br/>
                             documents using pdf form fields. (see
-                            <widget name="documentation_link" path="/applications/sales/sales/send_quotations/pdf_quote_builder.html" label="documentation"/>
+                            <widget
+                                name="documentation_link"
+                                path="/applications/sales/sales/send_quotations/pdf_quote_builder.html"
+                                label="documentation"
+                            />
                             for detailed explanations)
                             <div>
                                 <a
@@ -34,7 +58,12 @@
                                     <i class="fa fa-arrow-right"/> Watch Video
                                 </a>
                                 <br/>
-                                <widget name="documentation_link" path="/_downloads/56a93429515b36105d952e1d2b802f9e/sample_quotation.pdf" label=" Preview Sample Quote" icon="fa-arrow-right"/>
+                                <widget
+                                    name="documentation_link"
+                                    path="/_downloads/56a93429515b36105d952e1d2b802f9e/sample_quotation.pdf"
+                                    label=" Preview Sample Quote"
+                                    icon="fa-arrow-right"
+                                />
                             </div>
                         </p>
                     </group>
