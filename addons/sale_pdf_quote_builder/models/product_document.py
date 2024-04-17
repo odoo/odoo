@@ -18,12 +18,14 @@ class ProductDocument(models.Model):
              "On quote: the document will be sent to and accessible by customers at any time.\n"
              "e.g. this option can be useful to share Product description files.\n"
              "On order confirmation: the document will be sent to and accessible by customers.\n"
-             "e.g. this option can be useful to share User Manual or digital content bought"
-             " on ecommerce. \n"
-             "Inside quote pdf: The document will be included in the pdf of the quotation between the "
-             "header pages and the quote table. ",
+             "e.g. this option can be useful to share User Manual or digital content bought on"
+             " ecommerce. \n"
+             "Inside quote pdf: The document will be included in the pdf of the quotation between"
+             " the header pages and the quote table. ",
         ondelete={'inside': 'set default'},
     )
+
+    # === CONSTRAINT METHODS ===#
 
     @api.constrains('attached_on_sale', 'datas', 'type')
     def _check_attached_on_and_datas_compatibility(self):
@@ -35,3 +37,15 @@ class ProductDocument(models.Model):
             if doc.datas and not doc.mimetype.endswith('pdf'):
                 raise ValidationError(_("Only PDF documents can be attached inside a quote."))
             utils._ensure_document_not_encrypted(base64.b64decode(doc.datas))
+
+    # === ACTION METHODS ===#
+
+    def action_open_dynamic_fields_wizard(self):
+        self.ensure_one()
+        return {
+            'name': _("Configure Dynamic Fields"),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'sale.pdf.quote.builder.dynamic.fields.wizard',
+            'target': 'new',
+        }
