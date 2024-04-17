@@ -3477,9 +3477,9 @@ var SnippetsMenu = Widget.extend({
                     });
                     // If a modal is open, the scroll target must be that modal
                     const $openModal = self.getEditableArea().find('.modal:visible');
-                    if ($openModal.length) {
-                        self.draggableComponent.$scrollTarget = $openModal;
-                    }
+                    self.draggableComponent.$scrollTarget = $openModal.length
+                        ? $openModal
+                        : self.$scrollingElement;
 
                     // Trigger a scroll on the draggable element so that jQuery updates
                     // the position of the drop zones.
