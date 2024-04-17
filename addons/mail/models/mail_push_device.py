@@ -5,7 +5,11 @@ import json
 import logging as logger
 
 from odoo import api, fields, models
-from ..tools.jwt import generate_vapid_keys, InvalidVapidError
+from odoo.addons.mail.tools.web_push import push_to_end_point
+from odoo.addons.mail.tools.jwt import generate_vapid_keys, InvalidVapidError
+from odoo.addons.mail.tools.web_push import DeviceUnreachableError
+
+from requests import Session
 
 _logger = logger.getLogger(__name__)
 
@@ -42,43 +46,69 @@ class MailPushDevice(models.Model):
         return public_key_value
 
     @api.model
-    def register_devices(self, **kw):
-        sw_vapid_public_key = kw.get('vapid_public_key')
-        valid_sub = self._verify_vapid_public_key(sw_vapid_public_key)
+    def register_devices(self, endpoint=None, keys=None, vapid_public_key='',
+                         expirationTime=False, previousEndpoint=None):
+        valid_sub = self._verify_vapid_public_key(vapid_public_key)
         if not valid_sub:
             raise InvalidVapidError("Invalid VAPID public key")
-        endpoint = kw.get('endpoint')
-        browser_keys = kw.get('keys')
-        if not endpoint or not browser_keys:
+        if not endpoint or not keys:
             return
-        search_endpoint = kw.get('previousEndpoint', endpoint)
-        mail_push_device = self.sudo().search([('endpoint', '=', search_endpoint)])
-        if mail_push_device:
-            if mail_push_device.partner_id is not self.env.user.partner_id:
-                mail_push_device.write({
-                    'endpoint': endpoint,
-                    'expiration_time': kw.get('expirationTime'),
-                    'keys': json.dumps(browser_keys),
-                    'partner_id': self.env.user.partner_id,
-                })
-        else:
-            self.sudo().create([{
-                'endpoint': endpoint,
-                'expiration_time': kw.get('expirationTime'),
-                'keys': json.dumps(browser_keys),
-                'partner_id': self.env.user.partner_id.id,
-            }])
+        mail_push_device = self.env['mail.push.device'].sudo()
+        if previousEndpoint:
+            mail_push_device = self.sudo().search([('endpoint', '=', previousEndpoint)])
+        update_values = {
+            'endpoint': endpoint,
+            'expiration_time': expirationTime,
+            'keys': json.dumps(keys),
+            'partner_id': self.env.user.partner_id.id,
+        }
+        if not mail_push_device:
+            self.sudo().create(update_values)
+        elif mail_push_device.partner_id is not self.env.user.partner_id:
+            mail_push_device.write(update_values)
 
     @api.model
-    def unregister_devices(self, **kw):
-        endpoint = kw.get('endpoint')
+    def unregister_devices(self, endpoint):
         if not endpoint:
             return
-        mail_push_device = self.sudo().search([
-            ('endpoint', '=', endpoint)
-        ])
+        mail_push_device = self.sudo().search([('endpoint', '=', endpoint)])
         if mail_push_device:
             mail_push_device.unlink()
+
+    def _push_to_end_point(self, payload_by_device, base_url=None):
+        """ Low-level API to push payloads to endpoints. """
+        ICP = self.env['ir.config_parameter'].sudo()
+        vapid_private_key = ICP.get_param('mail.web_push_vapid_private_key')
+        vapid_public_key = ICP.get_param('mail.web_push_vapid_public_key')
+        if not vapid_private_key or not vapid_public_key:
+            return None
+
+        session = Session()
+        unreachable = self.env['mail.push.device']
+
+        for device in self:
+            payloads = payload_by_device.get(device.id)
+            for payload in payloads:
+                try:
+                    push_to_end_point(
+                        base_url=base_url or device.get_base_url(),
+                        device={
+                            'id': device.id,
+                            'endpoint': device.endpoint,
+                            'keys': device.keys
+                        },
+                        payload=payload,
+                        vapid_private_key=vapid_private_key,
+                        vapid_public_key=vapid_public_key,
+                        session=session,
+                    )
+                except DeviceUnreachableError:
+                    unreachable |= device
+                except Exception as e:  # pylint: disable=broad-except
+                    # Avoid blocking the whole request just for a notification
+                    _logger.error('An error occurred while contacting the endpoint: %s', e)
+
+        return unreachable
 
     def _verify_vapid_public_key(self, sw_public_key):
         ir_params_sudo = self.env['ir.config_parameter'].sudo()
