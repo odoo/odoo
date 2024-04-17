@@ -6301,3 +6301,32 @@ class StockMove(TransactionCase):
             line_form.lot_ids.add(sn01)
         picking = picking_form.save()
         self.assertEqual(picking.move_ids_without_package.lot_ids, sn01)
+
+    def test_change_move_line_uom(self):
+        """Check the reserved_quantity of the quant is correctly updated when changing the UOM in the move line"""
+        Quant = self.env['stock.quant']
+        Quant._update_available_quantity(self.product, self.stock_location, 100)
+        quant = Quant._gather(self.product, self.stock_location)
+        move = self.env['stock.move'].create({
+            'name': 'Test move',
+            'product_id': self.product.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product.uom_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        move._action_confirm()
+        move._action_assign()
+        ml = move.move_line_ids
+
+        # The product's uom is in units, which means we currently have 1 reserved unit
+        self.assertEqual(quant.reserved_quantity, 1)
+
+        # Firstly, we test changing the quantity and the uom together: 2 dozens = 24 reserved units
+        ml.write({'reserved_uom_qty': 2, 'product_uom_id': self.uom_dozen.id})
+        self.assertEqual(quant.reserved_quantity, 24)
+        self.assertEqual(ml.reserved_uom_qty * self.uom_dozen.ratio, 24)
+        # Secondly, we test changing only the uom: 2 units -> expected 2 units
+        ml.write({'product_uom_id': self.uom_unit.id})
+        self.assertEqual(quant.reserved_quantity, 2)
+        self.assertEqual(ml.reserved_uom_qty * self.uom_unit.ratio, 2)
