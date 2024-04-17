@@ -3518,7 +3518,91 @@ var SnippetsMenu = Widget.extend({
                     $toInsert.detach();
                 }
 
+<<<<<<< HEAD
                 this.options.wysiwyg.odooEditor.observerActive('dragAndDropCreateSnippet');
+||||||| parent of f0c1b5efd9b9 (temp)
+                    // TODO Done this way in stable but should be a parameter in
+                    // master.
+                    const forbidSanitize = $snippet.data('oeForbidSanitize');
+                    self._insertDropzoneCanBeSanitizedUnless = forbidSanitize === 'form' ? 'form' : !forbidSanitize;
+                    self._activateInsertionZones($selectorSiblings, $selectorChildren);
+                    delete self._insertDropzoneCanBeSanitizedUnless;
+                    $dropZones = self.getEditableArea().find('.oe_drop_zone');
+                    if (forbidSanitize === 'form') {
+                        $dropZones = $dropZones.filter((i, el) => !el.closest('[data-oe-sanitize]:not([data-oe-sanitize="allow_form"]) .oe_drop_zone'));
+                    } else if (forbidSanitize) {
+                        $dropZones = $dropZones.filter((i, el) => !el.closest('[data-oe-sanitize] .oe_drop_zone'));
+                    }
+                    $dropZones.droppable({
+                        over: function () {
+                            if (dropped) {
+                                $toInsert.detach();
+                                $toInsert.addClass('oe_snippet_body');
+                                $('.oe_drop_zone').removeClass('invisible');
+                            }
+                            dropped = true;
+                            $(this).first().after($toInsert).addClass('invisible');
+                            $toInsert.removeClass('oe_snippet_body');
+                            self.trigger_up('drop_zone_over');
+                        },
+                        out: function () {
+                            var prev = $toInsert.prev();
+                            if (this === prev[0]) {
+                                dropped = false;
+                                $toInsert.detach();
+                                $(this).removeClass('invisible');
+                                $toInsert.addClass('oe_snippet_body');
+                            }
+                            self.trigger_up('drop_zone_out');
+                        },
+                    });
+                    // If a modal is open, the scroll target must be that modal
+                    const $openModal = self.getEditableArea().find('.modal:visible');
+                    if ($openModal.length) {
+                        self.draggableComponent.$scrollTarget = $openModal;
+                    }
+=======
+                    // TODO Done this way in stable but should be a parameter in
+                    // master.
+                    const forbidSanitize = $snippet.data('oeForbidSanitize');
+                    self._insertDropzoneCanBeSanitizedUnless = forbidSanitize === 'form' ? 'form' : !forbidSanitize;
+                    self._activateInsertionZones($selectorSiblings, $selectorChildren);
+                    delete self._insertDropzoneCanBeSanitizedUnless;
+                    $dropZones = self.getEditableArea().find('.oe_drop_zone');
+                    if (forbidSanitize === 'form') {
+                        $dropZones = $dropZones.filter((i, el) => !el.closest('[data-oe-sanitize]:not([data-oe-sanitize="allow_form"]) .oe_drop_zone'));
+                    } else if (forbidSanitize) {
+                        $dropZones = $dropZones.filter((i, el) => !el.closest('[data-oe-sanitize] .oe_drop_zone'));
+                    }
+                    $dropZones.droppable({
+                        over: function () {
+                            if (dropped) {
+                                $toInsert.detach();
+                                $toInsert.addClass('oe_snippet_body');
+                                $('.oe_drop_zone').removeClass('invisible');
+                            }
+                            dropped = true;
+                            $(this).first().after($toInsert).addClass('invisible');
+                            $toInsert.removeClass('oe_snippet_body');
+                            self.trigger_up('drop_zone_over');
+                        },
+                        out: function () {
+                            var prev = $toInsert.prev();
+                            if (this === prev[0]) {
+                                dropped = false;
+                                $toInsert.detach();
+                                $(this).removeClass('invisible');
+                                $toInsert.addClass('oe_snippet_body');
+                            }
+                            self.trigger_up('drop_zone_out');
+                        },
+                    });
+                    // If a modal is open, the scroll target must be that modal
+                    const $openModal = self.getEditableArea().find('.modal:visible');
+                    self.draggableComponent.$scrollTarget = $openModal.length
+                        ? $openModal
+                        : self.$scrollingElement;
+>>>>>>> f0c1b5efd9b9 (temp)
 
                 if (dropped) {
                     if (prev) {
