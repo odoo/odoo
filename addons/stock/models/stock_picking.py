@@ -1042,6 +1042,7 @@ class Picking(models.Model):
                                 and len(move.move_line_ids.package_level_id) == 1:
                             move.package_level_id = move.move_line_ids.package_level_id
 
+<<<<<<< HEAD
     def _get_lot_move_lines_for_sanity_check(self, none_done_picking_ids, separate_pickings=True):
         """ Get all move_lines with tracked products that need to be checked over in the sanity check.
             :param none_done_picking_ids: Set of all pickings ids that have no quantity set on any move_line.
@@ -1053,6 +1054,15 @@ class Picking(models.Model):
                 return picking.move_line_ids.filtered(lambda ml: ml.product_id and ml.product_id.tracking != 'none').ids
             else:
                 return get_line_with_done_qty_ids(picking.move_line_ids)
+||||||| parent of ac39b69aaed1 (temp)
+                        move_lines_without_package_level.package_level_id: package_level_ids[0]
+                        for pl in package_level_ids:
+                            pl.location_dest_id = self._get_entire_pack_location_dest(pl.move_line_ids) or picking.location_dest_id.id
+=======
+                        move_lines_without_package_level.package_level_id = package_level_ids[0]
+                        for pl in package_level_ids:
+                            pl.location_dest_id = self._get_entire_pack_location_dest(pl.move_line_ids) or picking.location_dest_id.id
+>>>>>>> ac39b69aaed1 (temp)
 
         def get_line_with_done_qty_ids(move_lines):
             # Get only move_lines that has some quantity set.
