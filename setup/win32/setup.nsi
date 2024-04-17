@@ -307,7 +307,6 @@ Section $(TITLE_IOT) IOT
     nsExec::ExecToStack '"$INSTDIR\python\python.exe" "$INSTDIR\server\odoo-bin" genproxytoken'
     pop $0
     pop $ProxyTokenPwd
-    Call RestartOdooService
 SectionEnd
 
 
@@ -363,6 +362,7 @@ Section $(TITLE_Ghostscript) SectionGhostscript
     ExecWait '"$TEMP\$ghostscript_exe_filename" \
         /S \
         /D=$INSTDIR\Ghostscript'
+    Call RestartOdooService
 SectionEnd
 
 Section -Post
