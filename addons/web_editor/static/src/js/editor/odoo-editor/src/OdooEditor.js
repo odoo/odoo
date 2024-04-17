@@ -3546,7 +3546,7 @@ export class OdooEditor extends EventTarget {
         // and trigger manually the input event to simulate the correct flow.
         if (ev.inputType ==="insertParagraph") {
             const banner = closestElement(ev.target, ".o_editor_banner");
-            if (banner && closestElement(banner, "ul")) {
+            if (banner && closestElement(banner, "ul, ol")) {
                 ev.preventDefault();
                 this._onInput(ev);
                 return;
