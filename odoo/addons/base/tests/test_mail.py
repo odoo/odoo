@@ -10,7 +10,7 @@ from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
 from odoo.tests import tagged
 from odoo.tests.common import BaseCase
 from odoo.tools import (
-    is_html_empty, html_to_inner_content, html_sanitize, append_content_to_html, plaintext2html,
+    is_html_empty, html2plaintext, html_to_inner_content, html_sanitize, append_content_to_html, plaintext2html,
     email_domain_normalize, email_normalize, email_re,
     email_split, email_split_and_format, email_split_tuples,
     single_email_re,
@@ -837,3 +837,30 @@ class TestEmailTools(BaseCase):
                 res, exp,
                 'Seems single_email_re is broken with %s (expected %r, received %r)' % (src, exp, res)
             )
+
+
+class TestMailTools(BaseCase):
+    """ Test mail utility methods. """
+
+    def test_html2plaintext(self):
+        self.assertEqual(html2plaintext(False), '')
+        self.assertEqual(html2plaintext('\t'), '')
+        self.assertEqual(html2plaintext('  '), '')
+        self.assertEqual(html2plaintext("""<h1>Title</h1>
+<h2>Sub title</h2>
+<br/>
+<h3>Sub sub title</h3>
+<h4>Sub sub sub title</h4>
+<p>Paragraph <em>with</em> <b>bold</b></p>
+<table><tr><td>table element 1</td></tr><tr><td>table element 2</td></tr></table>
+<p><special-chars>0 &lt; 10 &amp;  &nbsp; 10 &gt; 0</special-chars></p>"""),
+                         """**Title**
+**Sub title**
+
+*Sub sub title*
+Sub sub sub title
+Paragraph /with/ *bold*
+
+table element 1
+table element 2
+0 < 10 & \N{NO-BREAK SPACE} 10 > 0""")
