@@ -898,7 +898,7 @@ export class ThreadService {
      * @param {Thread} thread
      * @param {string} body
      */
-    async post(thread, body, { attachments = [], isNote = false, parentId, rawMentions }) {
+    async post(thread, body, { attachments = [], isNote = false, parentId, rawMentions, cannedResponseIds, }) {
         let tmpMsg;
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions = this.store.user
@@ -935,6 +935,7 @@ export class ThreadService {
                 subtype_xmlid: subtype,
                 partner_emails: recipientEmails,
                 partner_additional_values: recipientAdditionalValues,
+                canned_response_ids: cannedResponseIds,
             },
             thread_id: thread.id,
             thread_model: thread.model,

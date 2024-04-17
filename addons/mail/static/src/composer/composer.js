@@ -311,6 +311,7 @@ export class Composer extends Component {
                     options: suggestions.map((suggestion) => {
                         return {
                             name: suggestion.name,
+                            cannedResponse: suggestion,
                             label: suggestion.substitution,
                             classList: "o-mail-Composer-suggestion",
                         };
@@ -520,6 +521,7 @@ export class Composer extends Component {
                 attachments: this.props.composer.attachments,
                 isNote: this.props.type === "note",
                 rawMentions: this.props.composer.rawMentions,
+                cannedResponseIds: this.props.composer.cannedResponses.map((c) => c.id),
                 parentId: this.props.messageToReplyTo?.message?.id,
             };
             await this.threadService.post(this.thread, value, postData);
@@ -527,6 +529,7 @@ export class Composer extends Component {
                 this.notifySendFromMailbox();
             }
             this.suggestion?.clearRawMentions();
+            this.suggestion?.clearCannedReponses();
             this.props.messageToReplyTo?.cancel();
         });
     }
