@@ -251,7 +251,7 @@ let PaymentStripe = PaymentInterface.extend({
             }
             return data.client_secret;
         } catch (error) {
-            const message = error.message.code === 200 ? error.message.data.message : error.message.message;
+            const message = error.message.code === 200 ? error.message.data.message : error.message.message || error.message;
             this._showError(message, 'Fetch Secret');
             return false;
         };
