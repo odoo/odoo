@@ -841,8 +841,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         picking_form = Form(delivery)
         with picking_form.move_ids_without_package.edit(0) as move:
             move.quantity = 10
-        with picking_form.move_ids_without_package.new() as new_move:
-            new_move.product_id = product_inv_on_order
+        with picking_form.move_ids_without_package.edit(1) as new_move:
             new_move.quantity = 10
         delivery = picking_form.save()
         delivery.move_ids.picked = True
