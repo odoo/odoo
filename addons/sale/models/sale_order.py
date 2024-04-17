@@ -454,14 +454,14 @@ class SaleOrder(models.Model):
                 )
             order.team_id = cached_teams[key]
 
-    @api.depends('order_line.move_line_ids')
+    @api.depends('order_line.account_move_line_ids')
     def _get_invoiced(self):
         # The invoice_ids are obtained thanks to the invoice lines of the SO
         # lines, and we also search for possible refunds created directly from
         # existing invoices. This is necessary since such a refund is not
         # directly linked to the SO.
         for order in self:
-            invoices = order.order_line.invoice_lines.move_id.filtered(lambda r: r.move_type in ('out_invoice', 'out_refund'))
+            invoices = order.order_line.account_move_line_ids.move_id.filtered(lambda r: r.move_type in ('out_invoice', 'out_refund'))
             order.invoice_ids = invoices
             order.invoice_count = len(invoices)
 
@@ -483,7 +483,7 @@ class SaleOrder(models.Model):
         elif operator == '=' and not value:
             # special case for [('invoice_ids', '=', False)], i.e. "Invoices is not set"
             #
-            # We cannot just search [('order_line.invoice_lines', '=', False)]
+            # We cannot just search [('order_line.account_move_line_ids', '=', False)]
             # because it returns orders with uninvoiced lines, which is not
             # same "Invoices is not set" (some lines may have invoices and some
             # doesn't)
@@ -491,14 +491,14 @@ class SaleOrder(models.Model):
             # A solution is making inverted search first ("orders with invoiced
             # lines") and then invert results ("get all other orders")
             #
-            # Domain below returns subset of ('order_line.invoice_lines', '!=', False)
+            # Domain below returns subset of ('order_line.account_move_line_ids', '!=', False)
             order_ids = self._search([
-                ('order_line.invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund'))
+                ('order_line.account_move_line_ids.move_id.move_type', 'in', ('out_invoice', 'out_refund'))
             ])
             return [('id', 'not in', order_ids)]
         return [
-            ('order_line.invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund')),
-            ('order_line.invoice_lines.move_id', operator, value),
+            ('order_line.account_move_line_ids.move_id.move_type', 'in', ('out_invoice', 'out_refund')),
+            ('order_line.account_move_line_ids.move_id', operator, value),
         ]
 
     @api.depends('state', 'order_line.invoice_status')
@@ -1362,7 +1362,7 @@ class SaleOrder(models.Model):
                     if not order_line.is_downpayment:
                         continue
                     inv_amt = order_amt = 0
-                    for invoice_line in order_line.invoice_lines:
+                    for invoice_line in order_line.account_move_line_ids:
                         sign = 1 if invoice_line.move_id.is_inbound() else -1
                         if invoice_line.move_id == move:
                             inv_amt += invoice_line.price_total * sign

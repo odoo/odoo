@@ -166,10 +166,10 @@ class PurchaseOrderLine(models.Model):
                     raise UserError(_('You cannot decrease the ordered quantity below the received quantity.\n'
                                       'Create a return first.'))
 
-                if float_compare(line.product_qty, line.qty_invoiced, precision_rounding=rounding) < 0 and line.invoice_lines:
+                if float_compare(line.product_qty, line.qty_invoiced, precision_rounding=rounding) < 0 and line.account_move_line_ids:
                     # If the quantity is now below the invoiced quantity, create an activity on the vendor bill
                     # inviting the user to create a refund.
-                    line.invoice_lines[0].move_id.activity_schedule(
+                    line.account_move_line_ids[0].move_id.activity_schedule(
                         'mail.mail_activity_data_warning',
                         note=_('The quantities on your purchase order indicate less than billed. You should ask for a refund.'))
 
@@ -261,7 +261,7 @@ class PurchaseOrderLine(models.Model):
     def _check_orderpoint_picking_type(self):
         warehouse_loc = self.order_id.picking_type_id.warehouse_id.view_location_id
         dest_loc = self.move_dest_ids.location_id or self.orderpoint_id.location_id
-        if warehouse_loc and dest_loc and dest_loc.warehouse_id and not warehouse_loc.parent_path in dest_loc[0].parent_path:
+        if warehouse_loc and dest_loc and dest_loc.warehouse_id and warehouse_loc.parent_path not in dest_loc[0].parent_path:
             raise UserError(_('The warehouse of operation type (%(operation_type)s) is inconsistent with location (%(location)s) of reordering rule (%(reordering_rule)s) for product %(product)s. Change the operation type or cancel the request for quotation.',
                               product=self.product_id.display_name, operation_type=self.order_id.picking_type_id.display_name, location=self.orderpoint_id.location_id.display_name, reordering_rule=self.orderpoint_id.display_name))
 
