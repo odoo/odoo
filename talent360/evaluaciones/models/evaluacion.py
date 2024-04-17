@@ -64,15 +64,43 @@ class Evaluacion(models.Model):
     
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
-        if self.template_id:
-            self.pregunta_ids = [(5,)]
+        if not self:
+            new_evaluation = self.env['evaluacion'].create({
+                'nombre': 'Evaluacion Clima',
+            })
+            self = new_evaluation
 
-            if self.template_id:
-                self.pregunta_ids = [(6, 0, self.template_id.pregunta_ids.ids)]
-            else:
-                self.pregunta_ids = [(5,)]
+        self.pregunta_ids = [(5,)]
+
+        template_id_hardcoded = 5
+
+        if template_id_hardcoded:
+            template = self.env['template'].browse(template_id_hardcoded)
+            if template:
+                pregunta_ids = template.pregunta_ids.ids
+                print("IDs de preguntas:", pregunta_ids)
+                self.pregunta_ids = [(6, 0, pregunta_ids)]
+
+    @api.model
+    def action_clima(self):
+        self.copiar_preguntas_de_template()
+        view = self.env['ir.ui.view'].search([('name', '=', 'Evaluaciones.clima_form')])
+        view_id = view.id
+
+        print(view_id)
+
+        return {
+            'name': 'Clima',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'evaluacion',
+            'view_id': view_id,
+            'type': 'ir.actions.act_window',
+            'target': 'current',
+        }
+
             
     # Actualiza las preguntas cuando se selecciona una plantilla
-    @api.onchange('template_id')
-    def onchange_template_id(self):
-        self.copiar_preguntas_de_template()
+    # @api.onchange('template_id')
+    # def onchange_template_id(self):
+    #     self.copiar_preguntas_de_template()
