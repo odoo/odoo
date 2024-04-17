@@ -171,6 +171,9 @@ function factory(dependencies) {
                 case 'mail.partner':
                     Object.assign(updateData, { mentionedPartners: link(this.activeSuggestedRecord) });
                     break;
+                case 'mail.canned_response':
+                    Object.assign(updateData, { cannedResponses: link(this.activeSuggestedRecord) });
+                    break;
             }
             this.composer.update(updateData);
         }
@@ -756,6 +759,7 @@ function factory(dependencies) {
                 body,
                 message_type: 'comment',
                 partner_ids: this.composer.recipients.map(partner => partner.id),
+                canned_response_ids: this.composer.cannedResponses.map(response => response.id),
             };
         }
 
