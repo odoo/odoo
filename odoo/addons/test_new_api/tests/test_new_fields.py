@@ -2707,6 +2707,9 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(record_bin_size.image, b'31.54 Kb')
         self.assertEqual(record_bin_size.image_512, b'1.02 Kb')
         self.assertEqual(record_bin_size.image_256, b'424.00 bytes')
+        # non-attachment binary fields: value returned as str in a different
+        # form, because coming from PostgreSQL instead of filestore
+        self.assertEqual(record_bin_size.image_64, '148 bytes')
 
         # ensure image_data_uri works (value must be bytes and not string)
         self.assertEqual(record.image_256[:8], b'iVBORw0K')

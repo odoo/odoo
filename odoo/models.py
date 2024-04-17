@@ -3893,11 +3893,16 @@ class BaseModel(metaclass=MetaModel):
             (column_fields if field.column_type else other_fields).add(field)
 
         # necessary to retrieve the en_US value of fields without a translation
-        translated_field_names = [field.name for field in column_fields if field.translate]
-        if translated_field_names:
-            self.flush_model(translated_field_names)
-
         context = self.env.context
+        field_names_to_flush = [
+            field.name for field in column_fields
+            if field.translate or (
+                field.type == 'binary'
+                and (context.get('bin_size') or context.get('bin_size_' + field.name))
+            )
+        ]
+        if field_names_to_flush:
+            self.flush_model(field_names_to_flush)
 
         if column_fields:
             # the query may involve several tables: we need fully-qualified names
