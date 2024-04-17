@@ -101,9 +101,9 @@ patch(PosStore.prototype, {
                 qty: line.product_uom_qty,
                 price_unit: line.price_unit,
                 tax_ids:
-                    orderFiscalPos || !line.tax_id
+                    orderFiscalPos || !line.tax_ids
                         ? undefined
-                        : line.tax_id.map((t) => ["link", t]),
+                        : line.tax_ids.map((t) => ["link", t]),
                 sale_order_origin_id: sale_order,
                 sale_order_line_id: line,
                 customer_note: line.customer_note,
