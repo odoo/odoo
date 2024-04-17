@@ -801,7 +801,9 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                     target = ', '.join(leave.employee_ids.mapped('name'))
                 display_date = format_date(self.env, date_from_utc) or ""
                 if leave.number_of_days > 1 and date_from_utc and date_to_utc:
-                    display_date += ' - %s' % format_date(self.env, date_to_utc) or ""
+                    display_date += _(' to %(date_to_utc)s',
+                        date_to_utc=format_date(self.env, date_to_utc) or ""
+                    )
                 if not target or self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
                     leave.display_name = _("%(leave_type)s: %(duration)s (%(start)s)",
                         leave_type=time_off_type_display,
@@ -1624,8 +1626,11 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         self.ensure_one()
         hr_actions = []
         if self.state == 'confirm':
-            app_action = self._notify_get_action_link('controller', controller='/leave/validate', **local_msg_vals)
+            app_action = self._notify_get_action_link('controller', controller='/leave/approve', **local_msg_vals)
             hr_actions += [{'url': app_action, 'title': _('Approve')}]
+        if self.state == 'validate1':
+            app_action = self._notify_get_action_link('controller', controller='/leave/validate', **local_msg_vals)
+            hr_actions += [{'url': app_action, 'title': _('Validate')}]
         if self.state in ['confirm', 'validate', 'validate1']:
             ref_action = self._notify_get_action_link('controller', controller='/leave/refuse', **local_msg_vals)
             hr_actions += [{'url': ref_action, 'title': _('Refuse')}]

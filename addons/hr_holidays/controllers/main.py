@@ -7,12 +7,22 @@ from odoo import http
 
 class HrHolidaysController(http.Controller):
 
+    @http.route('/leave/approve', type='http', auth='user', methods=['GET'])
+    def hr_holidays_request_approve(self, res_id, token):
+        comparison, record, redirect = MailController._check_token_and_record_or_redirect('hr.leave', int(res_id), token)
+        if comparison and record:
+            try:
+                record.action_approve()
+            except Exception:
+                return MailController._redirect_to_messaging()
+        return redirect
+
     @http.route('/leave/validate', type='http', auth='user', methods=['GET'])
     def hr_holidays_request_validate(self, res_id, token):
         comparison, record, redirect = MailController._check_token_and_record_or_redirect('hr.leave', int(res_id), token)
         if comparison and record:
             try:
-                record.action_approve()
+                record.action_validate()
             except Exception:
                 return MailController._redirect_to_messaging()
         return redirect
