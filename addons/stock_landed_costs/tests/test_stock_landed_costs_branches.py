@@ -74,7 +74,7 @@ class TestStockLandedCostsBranches(TestStockValuationLCCommon):
             po_line.product_id = self.product1
             po_line.product_qty = 1
             po_line.price_unit = 10
-            po_line.taxes_id.clear()
+            po_line.tax_ids.clear()
         po = po_form.save()
         po.button_confirm()
 

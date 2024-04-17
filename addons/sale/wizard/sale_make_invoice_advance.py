@@ -30,9 +30,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _get_product_account_internal_group(self):
         return 'income'
 
-    def _taxes_field_name(self):
-        return 'tax_id'
-
     def _create_down_payment_invoice(self):
         invoice = super()._create_down_payment_invoice()
         poster = self.env.user._is_internal() and self.env.user.id or SUPERUSER_ID

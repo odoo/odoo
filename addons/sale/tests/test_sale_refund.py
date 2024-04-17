@@ -24,22 +24,22 @@ class TestSaleRefund(TestSaleCommon):
                 Command.create({
                     'product_id': cls.company_data['product_order_no'].id,
                     'product_uom_qty': 5,
-                    'tax_id': False,
+                    'tax_ids': False,
                 }),
                 Command.create({
                     'product_id': cls.company_data['product_service_delivery'].id,
                     'product_uom_qty': 4,
-                    'tax_id': False,
+                    'tax_ids': False,
                 }),
                 Command.create({
                     'product_id': cls.company_data['product_service_order'].id,
                     'product_uom_qty': 3,
-                    'tax_id': False,
+                    'tax_ids': False,
                 }),
                 Command.create({
                     'product_id': cls.company_data['product_delivery_no'].id,
                     'product_uom_qty': 2,
-                    'tax_id': False,
+                    'tax_ids': False,
                 }),
             ]
         })
@@ -263,7 +263,7 @@ class TestSaleRefund(TestSaleCommon):
             'product_id': self.company_data['product_order_no'].id,
             'product_uom_qty': 5,
             'order_id': sale_order_refund.id,
-            'tax_id': False,
+            'tax_ids': False,
         })
 
         self.assertRecordValues(sol_product, [{
