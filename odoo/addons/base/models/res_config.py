@@ -306,18 +306,7 @@ class ResConfigInstaller(models.TransientModel, ResConfigModuleInstallationMixin
 
         IrModule = self.env['ir.module.module']
         modules = IrModule.search([('name', 'in', to_install)])
-        module_names = {module.name for module in modules}
-        to_install_missing_names = [name for name in to_install if name not in module_names]
-
-        result = self._install_modules(modules)
-        #FIXME: if result is not none, the corresponding todo will be skipped because it was just marked done
-        if to_install_missing_names:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'apps',
-                'params': {'modules': to_install_missing_names},
-            }
-        return result
+        return self._install_modules(modules)
 
 
 class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin):
