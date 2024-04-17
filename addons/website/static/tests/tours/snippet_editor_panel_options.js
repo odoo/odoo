@@ -182,5 +182,25 @@ wTourUtils.changeOption("layout_column", 'we-button[data-name="normal_mode"]'),
         }
     },
 },
+// Test close dropdowns if click anywhere outside the dropdown
+{
+    content: "Open text style dropdown.",
+    trigger: "#style button.dropdown-toggle",
+}, {
+    content: "Check if dropdown opened correctly.",
+    trigger: "#style button[data-bs-toggle=dropdown][aria-expanded=true]",
+    // TODO: convert the next two "run: () => {}" to "isCheck: true" but make
+    // sure that the test is failing without its fix. More precisely, make sure
+    // that the tour system does not select invisible DOM elements when
+    // "isCheck: true" is used.
+    run: () => {}, // It's a check.
+}, {
+    content: "Click on the first paragraph again.",
+    trigger: ":iframe .s_text_block p",
+}, {
+    content: "Check if dropdown closed correctly.",
+    trigger: "#style button[data-bs-toggle=dropdown][aria-expanded=false]",
+    run: () => {}, // It's a check.
+},
 ...wTourUtils.clickOnSave(),
 ]);
