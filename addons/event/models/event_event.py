@@ -3,6 +3,7 @@
 
 import logging
 import pytz
+import textwrap
 
 from datetime import timedelta
 
@@ -10,7 +11,7 @@ from odoo import _, api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import format_datetime, is_html_empty
+from odoo.tools import format_datetime, html_to_inner_content, is_html_empty
 from odoo.tools.misc import formatLang
 from odoo.tools.translate import html_translate
 
@@ -644,6 +645,18 @@ class EventEvent(models.Model):
             for attendee in event.registration_ids.filtered(filter_func):
                 self.env['mail.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
 
+    def _get_external_description(self):
+        """
+        Description of the event shortened to maximum 1900 characters to
+        leave some space for addition by sub-modules, such as the even link.
+        Meant to be used for external content (ics/icalc/Gcal).
+
+        Reference Docs for URL limit -: https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
+        """
+        self.ensure_one()
+        description = html_to_inner_content(self.description)
+        return textwrap.shorten(description, 1900)
+
     def _get_ics_file(self):
         """ Returns iCalendar file for the event invitation.
             :returns a dict of .ics file content for each event
@@ -660,6 +673,7 @@ class EventEvent(models.Model):
             cal_event.add('dtstart').value = event.date_begin.astimezone(pytz.timezone(event.date_tz))
             cal_event.add('dtend').value = event.date_end.astimezone(pytz.timezone(event.date_tz))
             cal_event.add('summary').value = event.name
+            cal_event.add('description').value = event._get_external_description()
             if event.address_id:
                 cal_event.add('location').value = event.address_inline
 
