@@ -88,8 +88,8 @@ class SaleOrderOption(models.Model):
             new_sol = self.env['sale.order.line'].new(values)
             new_sol._compute_price_unit()
             option.price_unit = new_sol.price_unit
-            # Drop the temporary record from the cache
-            new_sol.invalidate_recordset(flush=False)
+            # Avoid attaching the new line when called on template change
+            new_sol.order_id = False
 
     @api.depends('product_id', 'uom_id', 'quantity')
     def _compute_discount(self):
@@ -101,8 +101,8 @@ class SaleOrderOption(models.Model):
             new_sol = self.env['sale.order.line'].new(values)
             new_sol._compute_discount()
             option.discount = new_sol.discount
-            # Drop the temporary record from the cache
-            new_sol.invalidate_recordset(flush=False)
+            # Avoid attaching the new line when called on template change
+            new_sol.order_id = False
 
     def _get_values_to_add_to_order(self):
         self.ensure_one()
