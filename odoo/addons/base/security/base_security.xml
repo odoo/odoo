@@ -225,5 +225,33 @@
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="True"/>
         </record>
+
+        <!-- Record Rules For User Devices -->
+        <record id="user_device" model="ir.rule">
+            <field name="name">Users can read only their own devices</field>
+            <field name="model_id" ref="model_res_device"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+        </record>
+        <record id="user_device_admin" model="ir.rule">
+            <field name="name">Administrators can read all devices</field>
+            <field name="model_id" ref="model_res_device"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+        </record>
+
+        <record id="user_device_logs" model="ir.rule">
+            <field name="name">Users can read only their own device logs</field>
+            <field name="model_id" ref="model_res_device_log"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+        </record>
+        <record id="user_device_logs_admin" model="ir.rule">
+            <field name="name">Administrators can read all device logs</field>
+            <field name="model_id" ref="model_res_device_log"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+        </record>
+
     </data>
 </odoo>
