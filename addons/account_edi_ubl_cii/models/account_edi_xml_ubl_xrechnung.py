@@ -23,11 +23,7 @@ class AccountEdiXmlUBLDE(models.AbstractModel):
     def _export_invoice_vals(self, invoice):
         # EXTENDS account.edi.xml.ubl_bis3
         vals = super()._export_invoice_vals(invoice)
-
-        vals['vals'].update({
-            'customization_id': 'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.3#conformant#urn:xoev-de:kosit:extension:xrechnung_2.3',
-        })
-
+        vals['vals']['customization_id'] = 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0'
         return vals
 
     def _export_invoice_constraints(self, invoice, vals):
