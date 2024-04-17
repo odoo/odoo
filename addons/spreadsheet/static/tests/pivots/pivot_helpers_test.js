@@ -110,6 +110,12 @@ QUnit.module("spreadsheet > toNormalizedPivotValue", {}, () => {
             assert.strictEqual(toNormalizedPivotValue(field, 1, "month"), "12/1899");
             assert.strictEqual(toNormalizedPivotValue(field, "false", "month"), false);
             assert.strictEqual(toNormalizedPivotValue(field, false, "month"), false);
+
+            // quarter
+            assert.strictEqual(toNormalizedPivotValue(field, "1/2020", "quarter"), "1/2020");
+            assert.strictEqual(toNormalizedPivotValue(field, "1/1/2020", "quarter"), "1/2020");
+            assert.strictEqual(toNormalizedPivotValue(field, "2020/1/1", "quarter"), "1/2020");
+
             // year
             assert.strictEqual(toNormalizedPivotValue(field, "2020", "year"), 2020);
             assert.strictEqual(toNormalizedPivotValue(field, 2020, "year"), 2020);
