@@ -86,8 +86,9 @@ class SlideChannelInvite(models.TransientModel):
 
     def _prepare_mail_values(self, slide_channel_partner):
         """ Create mail specific for recipient """
-        subject = self._render_field('subject', slide_channel_partner.ids)[slide_channel_partner.id]
-        body = self._render_field('body', slide_channel_partner.ids)[slide_channel_partner.id]
+        lang = self._render_lang(slide_channel_partner.ids)[slide_channel_partner.id]
+        subject = self._render_field('subject', slide_channel_partner.ids, set_lang=lang)[slide_channel_partner.id]
+        body = self._render_field('body', slide_channel_partner.ids, set_lang=lang)[slide_channel_partner.id]
         # post the message
         mail_values = {
             'attachment_ids': [(4, att.id) for att in self.attachment_ids],
@@ -112,7 +113,7 @@ class SlideChannelInvite(models.TransientModel):
                 'company': self.env.company,
                 'signature': self.channel_id.user_id.signature,
             }
-            body = self.env['ir.qweb']._render(email_layout_xmlid, template_ctx, engine='ir.qweb', minimal_qcontext=True, raise_if_not_found=False)
+            body = self.env['ir.qweb']._render(email_layout_xmlid, template_ctx, engine='ir.qweb', minimal_qcontext=True, raise_if_not_found=False, lang=lang)
             if body:
                 mail_values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
             else:
