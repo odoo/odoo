@@ -478,7 +478,7 @@ class AccountPaymentRegister(models.TransientModel):
             if len(lines.company_id) > 1:
                 raise UserError(_("You can't create payments for entries belonging to different companies."))
             if len(set(available_lines.mapped('account_internal_type'))) > 1:
-                raise UserError(_("You can't register payments for journal items being either all inbound, either all outbound."))
+                raise UserError(_("You can't register payments for both inbound and outbound moves at the same time."))
 
             res['line_ids'] = [(6, 0, available_lines.ids)]
 
