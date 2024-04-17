@@ -68,7 +68,7 @@ class UseSuggestion {
         this.composer.mentionedChannels.length = 0;
         this.composer.mentionedPartners.length = 0;
     }
-    clearCannedReponses() {
+    clearCannedResponses() {
         this.composer.cannedResponses = [];
     }
     clearSearch() {
