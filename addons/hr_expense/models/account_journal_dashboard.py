@@ -9,6 +9,7 @@ class AccountJournal(models.Model):
 
     def _prepare_expense_sheet_data_domain(self):
         return [
+            *self.env['hr.expense.sheet']._check_company_domain(self.env.companies),
             ('state', '=', 'post'),
             ('journal_id', 'in', self.ids),
         ]
@@ -23,7 +24,7 @@ class AccountJournal(models.Model):
             return
         field_list = [
             "hr_expense_sheet.journal_id",
-            "hr_expense_sheet.total_amount AS amount_total",
+            "hr_expense_sheet.amount_residual AS amount_total_company",
             "hr_expense_sheet.currency_id AS currency",
         ]
         query, params = sale_purchase_journals._get_expense_to_pay_query().select(*field_list)
