@@ -1793,17 +1793,6 @@ Please change the quantity done or the rounding precision of your unit of measur
         })
         return True
 
-    def _prepare_extra_move_vals(self, qty):
-        vals = {
-            'procure_method': 'make_to_stock',
-            'origin_returned_move_id': self.origin_returned_move_id.id,
-            'product_uom_qty': qty,
-            'picking_id': self.picking_id.id,
-            'price_unit': self.price_unit,
-            'date_deadline': self.date_deadline,
-        }
-        return vals
-
     def _skip_push(self):
         return self.is_inventory or self.move_dest_ids and any(m.location_id._child_of(self.location_dest_id) for m in self.move_dest_ids) or\
             self.location_final_id and self.location_final_id._child_of(self.location_dest_id)
