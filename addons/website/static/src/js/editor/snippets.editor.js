@@ -290,6 +290,18 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         this._toggleHighlightAnimatedTextButton();
     },
     /**
+    * @override
+    */
+    _checkEditorToolbarVisibility: function (e) {
+        this._super(...arguments);
+        // Close the option's dropdowns manually on outside click if any open.
+        if (this._$toolbarContainer && this._$toolbarContainer.length) {
+            this._$toolbarContainer[0].querySelectorAll(".dropdown-toggle.show").forEach(toggleEl => {
+                Dropdown.getOrCreateInstance(toggleEl).hide();
+            });
+        }
+    },
+    /**
      * Activates the button to animate text if the selection is in an
      * animated text element or deactivates the button if not.
      *
