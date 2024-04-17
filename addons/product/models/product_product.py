@@ -304,9 +304,12 @@ class ProductProduct(models.Model):
 
     def _compute_variant_item_count(self):
         for product in self:
-            domain = ['|',
-                '&', ('product_tmpl_id', '=', product.product_tmpl_id.id), ('applied_on', '=', '1_product'),
-                '&', ('product_id', '=', product.id), ('applied_on', '=', '0_product_variant')]
+            domain = [
+                ('pricelist_id.active', '=', True),
+                '|',
+                    '&', ('product_tmpl_id', '=', product.product_tmpl_id.id), ('applied_on', '=', '1_product'),
+                    '&', ('product_id', '=', product.id), ('applied_on', '=', '0_product_variant'),
+            ]
             product.pricelist_item_count = self.env['product.pricelist.item'].search_count(domain)
 
     def _compute_product_document_count(self):
