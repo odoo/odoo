@@ -63,7 +63,7 @@ class MrpWorkorder(models.Model):
         ('done', 'Finished'),
         ('cancel', 'Cancelled')], string='Status',
         compute='_compute_state', store=True,
-        default='pending', copy=False, readonly=True, recursive=True, index=True)
+        default='pending', copy=False, readonly=True, index=True)
     leave_id = fields.Many2one(
         'resource.calendar.leaves',
         help='Slot into workcenter calendar once planned',
@@ -148,12 +148,11 @@ class MrpWorkorder(models.Model):
                                      domain="[('allow_workorder_dependencies', '=', True), ('id', '!=', id), ('production_id', '=', production_id)]",
                                      copy=False)
 
-    @api.depends('production_availability', 'blocked_by_workorder_ids.state')
+    @api.depends('production_availability', 'blocked_by_workorder_ids')
     def _compute_state(self):
         # Force to compute the production_availability right away.
         # It is a trick to force that the state of workorder is computed at the end of the
         # cyclic depends with the mo.state, mo.reservation_state and wo.state and avoid recursion error
-        self.mapped('production_availability')
         for workorder in self:
             if workorder.state == 'pending':
                 if all([wo.state in ('done', 'cancel') for wo in workorder.blocked_by_workorder_ids]):
@@ -302,9 +301,8 @@ class MrpWorkorder(models.Model):
     def unlink(self):
         # Removes references to workorder to avoid Validation Error
         (self.mapped('move_raw_ids') | self.mapped('move_finished_ids')).write({'workorder_id': False})
-        self.mapped('leave_id').unlink()
+        self.action_cancel()
         mo_dirty = self.production_id.filtered(lambda mo: mo.state in ("confirmed", "progress", "to_close"))
-
         for workorder in self:
             workorder.blocked_by_workorder_ids.needed_by_workorder_ids = workorder.needed_by_workorder_ids
         res = super().unlink()
@@ -704,7 +702,9 @@ class MrpWorkorder(models.Model):
     def action_cancel(self):
         self.leave_id.unlink()
         self.end_all()
-        return self.write({'state': 'cancel'})
+        self.write({'state': 'cancel'})
+        self.needed_by_workorder_ids._compute_state()
+        return True
 
     def action_replan(self):
         """Replan a work order.
