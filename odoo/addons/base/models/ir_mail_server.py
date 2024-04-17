@@ -242,7 +242,7 @@ class IrMailServer(models.Model):
                 # Testing the RCPT TO step should detect most relaying problems
                 (code, repl) = smtp.rcpt(email_to)
                 if code not in (250, 251):
-                    raise UserError(_('The server refused the test recipient (%(email_to)s) with error %(repl)s', email_from=email_from, repl=repl))
+                    raise UserError(_('The server refused the test recipient (%(email_to)s) with error %(repl)s', email_to=email_to, repl=repl))  # noqa: TRY301
                 # Beginning the DATA step should detect some deferred rejections
                 # Can't use self.data() as it would actually send the mail!
                 smtp.putcmd("data")
