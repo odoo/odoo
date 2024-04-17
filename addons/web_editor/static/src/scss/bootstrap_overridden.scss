@@ -2,6 +2,9 @@
 // cause of color issues. It will be reviewed in master (probably removed from
 // backend bundles and simplified).
 
+// Prefix for :root CSS variables
+$variable-prefix: '' !default;
+
 // Automatically update bootstrap colors map (unused by BS itself)
 $colors: () !default;
 @each $name, $color in $o-color-palette {
