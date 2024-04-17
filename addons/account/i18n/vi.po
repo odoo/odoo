@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Nancy Momoland <thanh.np2502@gmail.com>, 2024
-# Thi Huong Nguyen, 2024
 # Wil Odoo, 2024
 # Tâm Doãn Bắc, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tâm Doãn Bắc, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7080,6 +7080,8 @@ msgid ""
 "Gaps due to canceled invoices, deleted entries or manual errors in open "
 "period."
 msgstr ""
+"Có khoảng trống do hóa đơn bị hủy, bút toán bị xóa hoặc lỗi thủ công trong "
+"kỳ còn mở."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8007,7 +8009,7 @@ msgstr "\"Mã bưu điện\" không hợp lệ, vui lòng cấu hình lại cho 
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Invalid domain for expression '%s' of line '%s': %s"
-msgstr ""
+msgstr "Miền không hợp lệ cho biểu thức '%s' của dòng '%s': %s"
 
 #. module: account
 #. odoo-python
@@ -8296,7 +8298,7 @@ msgstr "Thống kê hóa đơn"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Invoices are being sent in the background."
-msgstr ""
+msgstr "Hóa đơn đang được gửi trong nền."
 
 #. module: account
 #. odoo-python
@@ -8318,7 +8320,7 @@ msgstr "Hoá đơn cần thu tiền"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices sent"
-msgstr ""
+msgstr "Đã gửi hoá đơn"
 
 #. module: account
 #. odoo-python
@@ -10250,7 +10252,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once your invoice is ready, confirm it."
-msgstr ""
+msgstr "Khi hóa đơn của bạn đã sẵn sàng, hãy xác nhận."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -10264,7 +10266,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "One or more invoices couldn't be processed."
-msgstr ""
+msgstr "Không thể xử lý một hoặc nhiều hóa đơn."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -10846,14 +10848,14 @@ msgstr "Đối tác"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "Partners that are used in hashed entries cannot be merged."
-msgstr ""
+msgstr "Không thể gộp các đối tác được sử dụng trong các bút toán được hash."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Partners without email"
-msgstr ""
+msgstr "Đối tác không có email"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11267,6 +11269,8 @@ msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
 msgstr ""
+"Phương thức thanh toán đã chọn không khả dụng cho khoản thanh toán này, vui "
+"lòng chọn lại phương thức thanh toán."
 
 #. module: account
 #. odoo-python
@@ -11306,7 +11310,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "Please specify an email address on the"
-msgstr ""
+msgstr "Vui lòng nêu một địa chỉ email trên"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -16327,6 +16331,8 @@ msgid ""
 "We can't leave this document without any company. Please select a company "
 "for this document."
 msgstr ""
+"Công ty là yếu tố bắt buộc cho chứng từ này. Vui lòng chọn một công ty cho "
+"chứng từ."
 
 #. module: account
 #. odoo-python
@@ -16886,7 +16892,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot create recursive groups."
-msgstr ""
+msgstr "Bạn không thể tạo nhóm đệ quy."
 
 #. module: account
 #. odoo-python
@@ -16925,6 +16931,19 @@ msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
 msgstr ""
+"Bạn không thể xóa báo cáo (%s) này, vì công cụ tạo PDF kế toán đang sử dụng "
+"nó."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
+"Bạn không thể xóa thẻ tài khoản (%s) này, vì nó được sử dụng trong định "
+"nghĩa hệ thống tài khoản."
 
 #. module: account
 #. odoo-python
@@ -17032,7 +17051,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot merge accounts."
-msgstr ""
+msgstr "Bạn không thể gộp các tài khoản."
 
 #. module: account
 #. odoo-python
@@ -17526,7 +17545,7 @@ msgstr "VD: domain.com"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "following partners."
-msgstr ""
+msgstr "đối tác sau."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

@@ -10,6 +10,7 @@
 # Bartłomiej Chojnacki, 2024
 # Wil Odoo, 2024
 # Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2024
+# Baptiste bve, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2024\n"
+"Last-Translator: Baptiste bve, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -417,7 +418,7 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\"><div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        <t t-set=\"doc_name\" t-value=\"'oferta' if object.state in ('draft', 'sent') else 'zamówienie'\"></t>\n"
 "        Dzień dobry,\n"
@@ -428,14 +429,14 @@ msgstr ""
 "            <t t-if=\"object.origin\">\n"
 "                (z referencją: <t t-out=\"object.origin or ''\"></t> )\n"
 "            </t>\n"
-"            na kwotę <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> jest dostępna.\n"
+"            na kwotę <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> jest dostępna.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            <t t-out=\"doc_name or ''\">oferta</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (z referencją: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
-"            na kwotę <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> jest gotowa do sprawdzenia.\n"
+"            na kwotę <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> jest gotowa do sprawdzenia.\n"
 "        </t>\n"
 "        <br><br>\n"
 "        W razie pytań, skontaktuj się z nami.\n"
@@ -497,6 +498,11 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
 msgstr ""
 
 #. module: sale
@@ -5242,6 +5248,13 @@ msgstr ""
 #, python-format
 msgid "You cannot cancel a locked order. Please unlock it first."
 msgstr "Nie możesz anulować zablokowanego zamówienia. Odblokuj je najpierw."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "You cannot change the pricelist of a confirmed order !"
+msgstr ""
 
 #. module: sale
 #. odoo-python

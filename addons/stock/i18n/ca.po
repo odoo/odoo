@@ -21,7 +21,6 @@
 # martioodo hola, 2023
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
 # Martin Trigaux, 2023
-# Óscar Fonseca <tecnico@pyming.com>, 2023
 # Josep Anton Belchi, 2023
 # Jonatan Gk, 2023
 # Arnau Ros, 2023
@@ -30,6 +29,7 @@
 # Harcogourmet, 2024
 # Iván Infantes Castarnado, 2024
 # Santiago Payà <santiagopim@gmail.com>, 2024
+# Óscar Fonseca <tecnico@pyming.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Santiago Payà <santiagopim@gmail.com>, 2024\n"
+"Last-Translator: Óscar Fonseca <tecnico@pyming.com>, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3547,8 +3547,8 @@ msgstr "Agrupar per..."
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_picking_wave
 msgid "Group your move operations in wave transfer to process them together"
 msgstr ""
-"Agrupa les operacions de moviment en una transferència d'ona per processar- "
-"les juntes"
+"Agrupa els moviments d'estoc en transferències per onades per executar-los "
+"tots junts"
 
 #. module: stock
 #. odoo-javascript
@@ -4751,6 +4751,13 @@ msgstr "Ubicació: quan arribi a"
 #, python-format
 msgid "Locations"
 msgstr "Ubicacions"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_toggle_is_locked
@@ -6352,7 +6359,7 @@ msgstr "Processar operacions més ràpid amb codis de barres"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process operations in wave transfers"
-msgstr "Operacions de procés en transferències d' ona"
+msgstr "Processar les transferències per onades"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10127,7 +10134,7 @@ msgstr "Advertències per estoc"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_picking_wave
 msgid "Wave Transfers"
-msgstr "Transferències d' ona"
+msgstr "Transferències per onades"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__website_message_ids
@@ -11085,7 +11092,7 @@ msgstr "report_stock_ quantaticity_graph"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "reserved"
-msgstr ""
+msgstr "reservat"
 
 #. module: stock
 #. odoo-javascript

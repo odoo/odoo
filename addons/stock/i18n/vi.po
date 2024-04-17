@@ -3,9 +3,9 @@
 # 	* stock
 # 
 # Translators:
-# Thi Huong Nguyen, 2023
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,7 +110,7 @@ msgstr "# Trả hàng"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "%(name)s (copy)(%(id)s)"
-msgstr ""
+msgstr "%(name)s (bản sao)(%(id)s)"
 
 #. module: stock
 #. odoo-python
@@ -522,7 +522,7 @@ msgstr "<span class=\"o_stat_text\">Phân bổ</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Detailed Operations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Hoạt động chi tiết</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -1247,7 +1247,7 @@ msgstr "Khi xác nhận"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 msgid "At Customer"
-msgstr ""
+msgstr "Tại khách hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_attachment_count
@@ -3501,7 +3501,7 @@ msgstr "Tạo số sê-ri"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "Generate Serials/Lots"
-msgstr ""
+msgstr "Tạo sê-ri/lô"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3996,7 +3996,7 @@ msgstr "Mẫu nhập cho điều chỉnh tồn kho"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "In Stock"
-msgstr ""
+msgstr "Còn hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
@@ -4432,7 +4432,7 @@ msgstr "Giữ chênh lệch"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "Keep current lines"
-msgstr ""
+msgstr "Giữ dòng hiện tại"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -4699,7 +4699,7 @@ msgstr "Dịch chuyển liên kết"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "List view of detailed operations"
-msgstr ""
+msgstr "Chế độ xem danh sách của hoạt động chi tiết"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -4786,6 +4786,13 @@ msgid "Locations"
 msgstr "Vị trí"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.server,name:stock.action_toggle_is_locked
 msgid "Lock/Unlock"
 msgstr "Khoá/Mở khoá"
@@ -4810,7 +4817,7 @@ msgstr "Định dạng nhãn lô để tự động in"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_label_lot_template_view
 msgid "Lot Label Report"
-msgstr ""
+msgstr "Báo cáo nhãn lô"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
@@ -7660,7 +7667,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Rule %s belongs to %s while the route belongs to %s."
-msgstr ""
+msgstr "Quy tắc %s thuộc về %s trong khi tuyến cung ứng thuộc về %s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8643,7 +8650,7 @@ msgstr "Vị trí lưu kho"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Store To"
-msgstr ""
+msgstr "Lưu vào"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_multi_locations
@@ -8804,7 +8811,7 @@ msgstr "Vị trí đầu tiên trong trình tự là mặc định."
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "The following replenishment order have been generated"
-msgstr ""
+msgstr "Đơn đặt hàng bổ sung sau đây đã được tạo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
@@ -10667,6 +10674,8 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types."
 msgstr ""
+"Bạn không thể đóng gói các sản phẩm vào cùng một kiện hàng khi chúng được "
+"chuyển đến từ các điều chuyển khác nhau với các loại hoạt động khác nhau."
 
 #. module: stock
 #. odoo-python
@@ -10858,7 +10867,7 @@ msgstr ""
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "You need to select a route to replenish your products"
-msgstr ""
+msgstr "Bạn cần chọn một tuyến cung ứng để bổ sung sản phẩm"
 
 #. module: stock
 #. odoo-python
@@ -11038,7 +11047,7 @@ msgstr "VD: Phiếu nhập kho"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "e.g. SN000001"
-msgstr ""
+msgstr "VD: SN000001"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form

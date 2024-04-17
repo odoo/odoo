@@ -4891,6 +4891,12 @@ msgid "Routing"
 msgstr "Routing"
 
 #. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr "Torna al magazzino"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
 msgid "Routing Lines"
 msgstr "Linee della rotta"
@@ -7098,6 +7104,17 @@ msgid "You should provide a lot number for the final product."
 msgstr "Fornire un numero di lotto per il prodotto finale."
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid ""
+"You should update the components quantity instead of directly updating the "
+"quantity of the kit product."
+msgstr ""
+"È necessario aggiornare la quantità dei componenti invece di aggiornare "
+"direttamente la quantità del prodotto kit."
+
+#. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__zpl
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__generated_mrp_lot_label_to_print__zpl
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__mrp_product_label_to_print__zpl
@@ -7218,7 +7235,7 @@ msgstr "durata reale"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "split"
-msgstr "crepa"
+msgstr "divisi"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view

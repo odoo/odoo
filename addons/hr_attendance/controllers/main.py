@@ -52,14 +52,20 @@ class HrAttendance(http.Controller):
 
     @http.route('/hr_attendance/kiosk_mode_menu', auth='user', type='http')
     def kiosk_menu_item_action(self):
+        # better use route with company_id suffix
         if request.env.user.user_has_groups("hr_attendance.group_hr_attendance_manager"):
             # Auto log out will prevent users from forgetting to log out of their session
             # before leaving the kiosk mode open to the public. This is a prevention security
             # measure.
             request.session.logout(keep_db=True)
-            return request.redirect(request.env.user.company_id.attendance_kiosk_url)
+            return request.redirect(request.env.company.attendance_kiosk_url)
         else:
             return request.not_found()
+
+    @http.route('/hr_attendance/kiosk_mode_menu/<int:company_id>', auth='user', type='http')
+    def kiosk_menu_item_action2(self, company_id):
+        request.update_context(allowed_company_ids=[company_id])
+        return self.kiosk_menu_item_action()
 
     @http.route('/hr_attendance/kiosk_keepalive', auth='user', type='json')
     def kiosk_keepalive(self):

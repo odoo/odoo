@@ -3,8 +3,8 @@
 # 	* mrp
 # 
 # Translators:
-# Thi Huong Nguyen, 2023
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2054,7 +2054,7 @@ msgstr "Hiển thị số lô/sê-ri đã sử dụng."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Displays the produced Lot/Serial Numbers."
-msgstr ""
+msgstr "Hiển thị số lô/sê-ri đã sản xuất."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
@@ -4859,6 +4859,12 @@ msgid "Routing"
 msgstr "Tuyến"
 
 #. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
 msgid "Routing Lines"
 msgstr "Chi tiết quy trình"
@@ -7022,7 +7028,7 @@ msgstr "Bạn cần cung cấp số lô cho thành phẩm. "
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You need to supply Lot/Serial Number for products and 'consume' them:"
-msgstr ""
+msgstr "Bạn cần cung cấp số lô/sê-ri cho sản phẩm và 'tiêu thụ' chúng:"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
@@ -7035,6 +7041,15 @@ msgstr "Bạn đã sản xuất ít hơn nhu cầu ban đầu"
 #, python-format
 msgid "You should provide a lot number for the final product."
 msgstr "Bạn nên cung cấp số lô cho thành phẩm. "
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid ""
+"You should update the components quantity instead of directly updating the "
+"quantity of the kit product."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__zpl
@@ -7057,7 +7072,7 @@ msgstr "ngày"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "e.g. SN0000001"
-msgstr ""
+msgstr "VD: SN0000001"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit

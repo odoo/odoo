@@ -235,7 +235,7 @@ msgstr "987654321098"
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid ": Insufficient Quantity To Unbuild"
-msgstr ":cantidad insuficiente para desmantelar"
+msgstr ": cantidad insuficiente a desmontar"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
@@ -264,9 +264,9 @@ msgid ""
 "                    </p>"
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Cargar archivos a tu producto\n"
+"                        Suba archivos a su producto\n"
 "                    </p><p>\n"
-"                        Usar esta función para guardar cualquier archivo, como diagramas o especificaciones.\n"
+"                        Use esta función para guardar cualquier archivo, como diagramas o especificaciones.\n"
 "                    </p>"
 
 #. module: mrp
@@ -432,7 +432,7 @@ msgstr "<span>minutos</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<strong class=\"mr8 oe_inline\">to</strong>"
-msgstr "<strong class=\"mr8 oe_inline\">para</strong>"
+msgstr "<strong class=\"mr8 oe_inline\">a</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -713,7 +713,7 @@ msgstr "Permitir dependencias de orden de trabajo"
 #: model:ir.model.fields,help:mrp.field_mrp_production__use_auto_consume_components_lots
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__use_auto_consume_components_lots
 msgid "Allow automatic consumption of tracked components that are reserved"
-msgstr "Permitir consumo automático de componentes con seguimiento reservados"
+msgstr "Permita consumo automático de componentes con seguimiento reservados"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -774,8 +774,8 @@ msgid ""
 "An unbuild order is used to break down a finished product into its "
 "components."
 msgstr ""
-"Una orden de desconstrucción se utiliza para deshacer un producto terminado "
-"en sus componentes."
+"Una orden de desmontaje se utiliza para deshacer un producto terminado en "
+"sus componentes."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
@@ -944,11 +944,11 @@ msgid ""
 "case the product is subcontracted, this can be used to determine the date at"
 " which components should be sent to the subcontractor."
 msgstr ""
-"Tiempo medio de entrega en días para fabricar este producto. En el caso de "
-"una LdM de varios niveles, se agregarán los plazos de fabricación de los "
-"componentes. En caso de que el producto sea subcontratado, esto puede "
-"utilizarse para determinar la fecha en la que los componentes deben enviarse"
-" al subcontratista."
+"Tiempo promedio de entrega en días para fabricar este producto. En el caso "
+"de una lista de materiales de varios niveles se agregarán los plazos de "
+"fabricación de los componentes. Si el producto se subcontrata, esto puede "
+"utilizarse para determinar la fecha en la que debe enviar los productos al "
+"subcontratista."
 
 #. module: mrp
 #. odoo-javascript
@@ -1554,7 +1554,7 @@ msgstr "Líneas de desmontaje consumidas"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__consume_unbuild_id
 msgid "Consumed Disassembly Order"
-msgstr "Orden de desmontaje consumido"
+msgstr "Orden de desmontaje consumida"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__operation_id
@@ -1833,9 +1833,9 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
 "Cantidad actual de los productos.\n"
-"En un contexto de una sola ubicación de Stock, esto incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijas.\n"
-"En un contexto de un solo almacén, esto incluye los bienes almacenados en la ubicación de Stock de ese almacén, o cualquiera de sus hijas.\n"
-"En cualquier otro caso, esto incluye los bienes almacenados en cualquier ubicación de Stock de tipo 'Interna'."
+"En un contexto de una sola ubicación de stock, esto incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijas.\n"
+"En un contexto de un solo almacén, esto incluye los bienes almacenados en la ubicación de stock de ese almacén, o cualquiera de sus hijas.\n"
+"En cualquier otro caso, esto incluye los bienes almacenados en cualquier ubicación de stock de tipo 'Interna'."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_producing
@@ -1878,8 +1878,8 @@ msgstr ""
 msgid ""
 "Date you plan to start production or date you actually started production."
 msgstr ""
-"Fecha prevista de inicio de la producción o fecha de inicio efectivo de la "
-"producción."
+"La fecha prevista de inicio de la producción o fecha de inicio efectivo de "
+"la producción."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -2066,7 +2066,7 @@ msgstr "Mostrar la acción del asistente de producción en serie"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_lot_ids
 msgid "Display the serial number shortcut on the moves"
-msgstr "Mostrar el atajo de número de serie en los movimientos"
+msgstr "Mostrar el acceso rápido de número de serie en los movimientos"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2081,7 +2081,7 @@ msgstr "Muestra los números de lote/serie producidos."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
 msgid "Do you confirm you want to unbuild"
-msgstr "¿Confirma que desea desmantelar?"
+msgstr "¿Confirma que desea desmontar?"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
@@ -2168,7 +2168,7 @@ msgstr "Cálculo de duración"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_percent
 msgid "Duration Deviation (%)"
-msgstr "Desviación duración (%)"
+msgstr "Desviación de duración (%)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_unit
@@ -2403,10 +2403,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"Cantidad prevista (calculada como cantidad a mano - saliente + entrante)\n"
-"En un contexto de una sola ubicación de stock, esto incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijas.\n"
-"En un contexto de un solo almacén, esto incluye los bienes almacenados en la ubicación de stock de ese almacén, o cualquiera de sus hijas.\n"
-"En cualquier otro caso, esto incluye los bienes almacenados en cualquier ubicación de stock de tipo 'Interna'."
+"Cantidad pronosticada (calculada como cantidad a la mano - saliente + entrante)\n"
+"En un contexto de una sola ubicación de stock, esto incluye los artículos que se almacenan en esta ubicación o cualquier ubicación secundaria.\n"
+"En un contexto de un solo almacén, esto incluye los artículos que se almacenan en la ubicación de stock de ese almacén o cualquier almacén secundario.\n"
+"En cualquier otro caso, esto incluye los artículos que se almacenan en cualquier ubicación de stock de tipo 'Interna'."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -2728,12 +2728,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_height
 msgid "Image Height"
-msgstr "Altura de imagen"
+msgstr "Altura de la imagen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_src
 msgid "Image Src"
-msgstr "Fuente de Imagen"
+msgstr "Fuente de la imagen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_width
@@ -2988,7 +2988,7 @@ msgstr "Último usuario que trabajó en esta orden de trabajo."
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Late"
-msgstr "Retrasado"
+msgstr "Atrasado"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -2999,7 +2999,7 @@ msgstr "Actividades retrasadas"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Late Components"
-msgstr "Componentes atrasados"
+msgstr "Componentes retrasados"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -3054,7 +3054,7 @@ msgstr "Ubicación"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_id
 msgid "Location where the product you want to unbuild is."
-msgstr "Ubicación donde se encuentra el producto que desea reconstruir. "
+msgstr "Ubicación donde se encuentra el producto que desea desmontar."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_src_id
@@ -3072,8 +3072,8 @@ msgid ""
 "Location where you want to send the components resulting from the unbuild "
 "order."
 msgstr ""
-"Ubicación donde desea enviar los componentes resultantes del orden "
-"desensamblado."
+"Ubicación donde desea enviar los componentes resultantes de la orden de "
+"desmontaje"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3271,7 +3271,7 @@ msgstr "Fabricación (1 paso)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_mto_pull_id
 msgid "Manufacture MTO Rule"
-msgstr "Regla de fabricación por demanda"
+msgstr "Regla de fabricación sobre pedido"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_pull_id
@@ -3651,7 +3651,7 @@ msgstr "No hay pérdida de productividad para este equipo"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "No unbuild order found"
-msgstr "No se encontró ninguna orden de desarmado"
+msgstr "No se encontró ninguna orden de desmontaje"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -3981,25 +3981,25 @@ msgstr "LdM obsoleta"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee_target
 msgid "Overall Effective Efficiency Target in percentage"
-msgstr "Objetivo de la eficienca general de los equipos en porcentaje"
+msgstr "Objetivo de la eficiencia general de los equipos en porcentaje"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_oee
 #: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_productivity_report
 msgid "Overall Equipment Effectiveness"
-msgstr "Eficienca general de los equipos"
+msgstr "Eficiencia general de los equipos"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee
 msgid "Overall Equipment Effectiveness, based on the last month"
-msgstr "Eficienca general de los equipos, basado en el último mes"
+msgstr "Eficiencia general de los equipos, basado en el último mes"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_oee
 msgid "Overall Equipment Effectiveness: no working or blocked time"
-msgstr "Eficienca general de los equipos: sin tiempo de trabajo o bloqueo"
+msgstr "Eficiencia general de los equipos: sin tiempo de trabajo o bloqueo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet
@@ -4099,7 +4099,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
 msgid "Picking Before Manufacturing MTO Rule"
-msgstr "Elegir antes de la regla de fabricación de MTO "
+msgstr "Regla de recolección antes de fabricación sobre pedido"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_type_id
@@ -4817,7 +4817,7 @@ msgstr "Reponer"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Replenish on Order (MTO)"
-msgstr "Obtener bajo pedido (MTO)"
+msgstr "Obtener bajo pedido (fabricación sobre pedido)"
 
 #. module: mrp
 #. odoo-javascript
@@ -4895,6 +4895,12 @@ msgstr "Ruta"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Routing"
 msgstr "Ruta de producción"
+
+#. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
@@ -5691,7 +5697,7 @@ msgstr "¡La cantidad a producir debe ser positiva!"
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_unbuild_qty_positive
 msgid "The quantity to unbuild must be positive!"
-msgstr "¡La cantidad a desmantelar debe ser positiva!"
+msgstr "¡La cantidad a desmontar debe ser positiva!"
 
 #. module: mrp
 #. odoo-python
@@ -5953,7 +5959,7 @@ msgstr "A consumir"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "To Do"
-msgstr "Por hacer"
+msgstr "Pendiente"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -6137,28 +6143,28 @@ msgstr "Desbloquear"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view_simplified
 msgid "Unbuild"
-msgstr "Desconstruir"
+msgstr "Desmontar"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view_simplified
 msgid "Unbuild Order"
-msgstr "Orden de desconstrucción"
+msgstr "Orden de desmontaje"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_unbuild
 #: model:ir.ui.menu,name:mrp.menu_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Orders"
-msgstr "Órdenes de desconstrucción"
+msgstr "Órdenes de desmontaje"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Unbuild: %s"
-msgstr "Desmantelar: %s"
+msgstr "Desmontar: %s"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unbuild_ids
@@ -6462,7 +6468,7 @@ msgstr "Almacén"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
 msgid "Warn Insufficient Unbuild Quantity"
-msgstr "Advertir cantidad insuficiente de destrucción"
+msgstr "Advertir cantidad insuficiente de desmontaje"
 
 #. module: mrp
 #. odoo-python
@@ -6513,7 +6519,7 @@ msgid ""
 "manufacturing orders with different BoMs."
 msgstr ""
 "Cuando un abastecimiento tiene una ruta de \"fabricación\" con un tipo de "
-"operación, intentará crear una Orden de Fabricación para ese producto "
+"operación, intentará crear una orden de fabricación para ese producto "
 "utilizando una LdM del mismo tipo de operación. Eso permite definir reglas "
 "de almacén que desencadenan diferentes órdenes de fabricación con diferentes"
 " LdM."
@@ -6944,7 +6950,7 @@ msgstr "No puede crear una dependencia cíclica."
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
-msgstr "No puede eliminar una orden de destrucción si el estado es 'Listo'."
+msgstr "No puede eliminar una orden de desmontaje si el estado es 'hecho'."
 
 #. module: mrp
 #. odoo-python
@@ -6980,7 +6986,7 @@ msgstr "No puede producir el mismo número de serie dos veces."
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr "No puede deshacer una orden de fabricación deshecha."
+msgstr "No puede desmontar una orden de fabricación deshecha."
 
 #. module: mrp
 #. odoo-python
@@ -7100,6 +7106,15 @@ msgstr "Produjo menos que la demanda inicial"
 #, python-format
 msgid "You should provide a lot number for the final product."
 msgstr "Debe proporcionar un número de lote para el producto final."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid ""
+"You should update the components quantity instead of directly updating the "
+"quantity of the kit product."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__zpl

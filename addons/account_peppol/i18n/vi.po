@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,6 +65,17 @@ msgstr ""
 "<span>\n"
 "                                    Tôi muốn di chuyển kết nối Peppol của mình sang Odoo (tùy chọn):\n"
 "                                </span>"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"A participant with these details has already been registered on the network."
+" If you have previously registered to an alternative Peppol service, please "
+"deregister from that service, or request a migration key before trying "
+"again."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -215,6 +226,13 @@ msgstr "Cài đặt cấu hình"
 #, python-format
 msgid "Confirm"
 msgstr "Xác nhận"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Connection error, please try again later."
+msgstr "Lỗi kết nối, vui lòng thử lại sau."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_partner
@@ -568,6 +586,13 @@ msgstr "Vui lòng điền mã EAS và mã ID đối tượng tham gia."
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/models/res_company.py:0
+#, python-format
+msgid "Please install the phonenumbers library."
+msgstr "Vui lòng cài đặt danh bạ."
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "Please verify partner configuration in partner settings."
@@ -616,6 +641,13 @@ msgstr "Bị từ chối"
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_verification_code
 msgid "SMS verification code"
 msgstr "Mã xác minh SMS"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+#, python-format
+msgid "Send again"
+msgstr "Gửi lại"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_move_send__checkbox_send_peppol
@@ -733,6 +765,7 @@ msgid ""
 "The recommended EAS code for Belgium is 0208. The Endpoint should be the "
 "Company Registry number."
 msgstr ""
+"Mã EAS được đề xuất cho Bỉ là 0208. Endpoint phải là mã số đăng ký công ty."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -748,8 +781,29 @@ msgstr "ID duy nhất định danh người dùng này, thường là vat"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
+msgid "The verification code is not correct"
+msgstr "Mã xác thực không chính xác"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
 msgid "The verification code should contain six digits."
 msgstr "Mã xác minh phải chứa sáu chữ số."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "This verification code has expired. Please request a new one."
+msgstr "Mã xác thực này đã hết hạn. Vui lòng yêu cầu một mã mới."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Too many attempts to request an SMS code. Please try again later."
+msgstr "Bạn đã yêu cầu mã SMS quá nhiều lần. Vui lòng thử lại sau."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
@@ -830,7 +884,9 @@ msgid "Verify partner's PEPPOL endpoint"
 msgstr "Xác minh endpoint PEPPOL của đối tác"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+#, python-format
 msgid "Verify phone number"
 msgstr "Xác minh số điện thoại"
 
@@ -878,3 +934,8 @@ msgstr "Mã xác nhận của bạn là"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your migration key is:"
 msgstr "Mã khoá di chuyển của bạn là:"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Your registration should be activated within a day."
+msgstr "Đăng ký của bạn sẽ được kích hoạt trong vòng một ngày."

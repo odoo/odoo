@@ -19,10 +19,10 @@
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2023
 # F Hariri <fhari1234@gmail.com>, 2023
 # Hamid Darabi, 2024
-# Hanna Kheradroosta, 2024
 # Abbas Ebadian, 2024
 # Hamed Mohammadi <hamed@dehongi.com>, 2024
 # Martin Trigaux, 2024
+# Hanna Kheradroosta, 2024
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Hanna Kheradroosta, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -707,7 +707,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mail.mail_activity_plan_action
 #: model:ir.ui.menu,name:mail.menu_mail_activity_plan
 msgid "Activity Plans"
-msgstr ""
+msgstr "برنامه های فعالیت"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -838,7 +838,7 @@ msgstr "افزودن یک %(document)s یا ارسال ایمیل به %(email_l
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
 msgid "Add a new plan"
-msgstr ""
+msgstr "ثبت یک برنامه جدید"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
@@ -968,7 +968,7 @@ msgstr "نام مستعار دامنه"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_optional__alias_domain
 #: model:ir.model.fields,field_description:mail.field_res_company__alias_domain_name
 msgid "Alias Domain Name"
-msgstr ""
+msgstr "دامین مستعار"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_alias_domain_action
@@ -981,7 +981,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_full_name
 msgid "Alias Email"
-msgstr ""
+msgstr "ایمیل مستعار"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_name
@@ -993,7 +993,7 @@ msgstr "نام مستعار"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "وضعیت ایمیل مستعار"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
@@ -1003,7 +1003,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "وضعیت نام مستعار در آخرین پیام دریافتی ارزیابی شد."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_model_id
@@ -1521,7 +1521,7 @@ msgstr "بدنه"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__body_has_template_value
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "محتوای بدنه همان الگو است"
 
 #. module: mail
 #. odoo-javascript
@@ -2520,7 +2520,7 @@ msgstr "ضرب الاجل:"
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "Deadline: %s"
-msgstr ""
+msgstr "موعد نهایی: %s"
 
 #. module: mail
 #. odoo-javascript
@@ -4712,7 +4712,7 @@ msgstr "قابل ویرایش است"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_mail_template_editor
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "ویرایشگر است"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_is_follower
@@ -6597,6 +6597,9 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"زبان ترجمه اختیاری (کد ISO) برای انتخاب هنگام ارسال ایمیل. اگر تنظیم نشود، "
+"از نسخه انگلیسی استفاده خواهد شد. این معمولاً باید یک عبارت نگهدارنده باشد "
+"که زبان مناسب را ارائه می دهد، به عنوان مثال. {{ object.partner_id.lang }}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_mode
@@ -7446,7 +7449,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__render_model
 #: model:ir.model.fields,field_description:mail.field_mail_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "مدل رندرینگ"
 
 #. module: mail
 #. odoo-python
@@ -8414,7 +8417,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_duration_mixin__duration_tracking
 msgid "Status time"
-msgstr ""
+msgstr "زمان وضعیت"
 
 #. module: mail
 #. odoo-javascript

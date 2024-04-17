@@ -100,7 +100,7 @@ msgstr "66 porcentaje"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "<b class=\"w-100\">Order summary</b>"
-msgstr "<b class=\"w-100\">Resumen de la orden</b>"
+msgstr "<b class=\"w-100\">Resumen del pedido</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -234,7 +234,7 @@ msgstr "<i class=\"fw-light fa fa-angle-left me-2\"/>Descartar"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
 msgid "<option value=\"\" selected=\"true\">-</option>"
-msgstr "<option value=\"\" selected=\"true\">-</option>"
+msgstr "<option value=\"\" selected=\"verdadero\">-</option>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -257,8 +257,8 @@ msgid ""
 "                    "
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Aquí puede encontrar todos los carritos abandonados, esto es, los carritos generados por visitantes a su sitio hace más de una hora que aún no confirman su compra.</p>\n"
-"                        <p>¡Envíeles un email para alentarlos!</p>\n"
+"                        Aquí puede encontrar todos las cestas abandonadas, es decir, las cestas que crearon los visitantes a un sitio web hace más de una hora y todavía no se han confirmado.</p>\n"
+"                        <p>Envíe un correo electrónico a sus clientes para animarles a confirmar la compra. </p>\n"
 "                    "
 
 #. module: website_sale
@@ -405,8 +405,8 @@ msgid ""
 "<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
 "                        Please contact the responsible of the shop for more information.</span>"
 msgstr ""
-"<span>Lamentablemente, su pedido no se puede confirmar ya que el monto de su pago no coincide con el monto de su carrito.\n"
-"                        Por favor, póngase en contacto con el responsable de la tienda para obtener más información.</span>"
+"<span>No podemos confirmar su orden ya que el importe pagado es diferente al total de la cesta.\n"
+"                        Póngase en contacto con la tienda para obtener más información.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -581,7 +581,7 @@ msgstr "Abandonado"
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__is_abandoned_cart
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__is_abandoned_cart
 msgid "Abandoned Cart"
-msgstr "Carrito abandonado"
+msgstr "Cesta abandonada"
 
 #. module: website_sale
 #. odoo-python
@@ -590,7 +590,7 @@ msgstr "Carrito abandonado"
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandoned_orders
 #, python-format
 msgid "Abandoned Carts"
-msgstr "Carritos abandonados"
+msgstr "Cestas abandonadas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.crm_team_view_kanban_dashboard
@@ -854,7 +854,7 @@ msgstr "Calificación promedio"
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Back to cart"
-msgstr "Regresar al carrito"
+msgstr "Regresar a la cesta"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -948,7 +948,7 @@ msgid ""
 "products."
 msgstr ""
 "Aumente sus ventas con múltiples tipos de programas: cupones, promociones, "
-"tarjetas de regalo y lealtad. Puede establecer condiciones específicas "
+"tarjetas de regalo y fidelidad. Puede establecer condiciones específicas "
 "(productos, clientes, importe de compra mínimo, periodo). Las recompensas "
 "pueden ser descuentos (% o un importe) o productos gratis."
 
@@ -1045,12 +1045,12 @@ msgstr "Carrusel"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Cart"
-msgstr "Carrito"
+msgstr "Cesta"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__cart_quantity
 msgid "Cart Quantity"
-msgstr "Cantidad en el carrito"
+msgstr "Cantidad en la cesta"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_recovery_mail_template
@@ -1066,7 +1066,7 @@ msgstr "Correo electrónico de recuperación de cesta ya enviado"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Carts are flagged as abandoned after this delay."
-msgstr "Los carritos se consideran abandonados después de este plazo"
+msgstr "Las cestas se consideran abandonadas después de este plazo."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1379,7 +1379,7 @@ msgstr "Contenido"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 #, python-format
 msgid "Continue checkout"
-msgstr "Continuar finalización de la compra"
+msgstr "Continuar al pago"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -1541,7 +1541,7 @@ msgstr "Métodos de envío DHL"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
-msgstr "ARRASTRE BLOQUES AQUÍ PARA MOSTRARLOS EN TODOS LOS PRODUCTOS"
+msgstr "MUEVA BLOQUES AQUÍ PARA MOSTRARLOS EN TODOS LOS PRODUCTOS"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1670,7 +1670,7 @@ msgstr "Código de descuento..."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
-msgstr "Descuentos y tarjetas de lealtad y regalo"
+msgstr "Descuentos, tarjetas de fidelidad y de regalo"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__display_name
@@ -1753,7 +1753,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Drag building blocks here to customize the header for \""
-msgstr "Arrastre componentes aquí para personalizar el encabezado de \""
+msgstr "Mueva componentes aquí para personalizar el encabezado de \""
 
 #. module: website_sale
 #. odoo-javascript
@@ -1814,7 +1814,7 @@ msgstr "Métodos de envío Easypost"
 #. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_cart_recovery
 msgid "Ecommerce: Cart Recovery"
-msgstr "Comercio electrónico: recuperación del carrito"
+msgstr "Comercio electrónico: recuperación de la cesta"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -2005,7 +2005,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__go_to_cart
 #, python-format
 msgid "Go to cart"
-msgstr "Ir al carrito"
+msgstr "Ir a la cesta"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_layout__grid
@@ -2098,7 +2098,7 @@ msgid ""
 "cart"
 msgstr ""
 "Si la configuración está definida, se envía a los visitantes autenticados "
-"que abandonaron su carrito"
+"que abandonaron su cesta"
 
 #. module: website_sale
 #. odoo-python
@@ -2411,7 +2411,7 @@ msgid ""
 " cart."
 msgstr ""
 "Correo enviado solo a clientes registrados con artículos disponibles para la"
-" venta en su carrito."
+" venta en su cesta."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2493,7 +2493,7 @@ msgstr "Multimedia"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
 msgid "My Cart"
-msgstr "Mi carrito"
+msgstr "Mi cesta"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__name
@@ -2561,7 +2561,7 @@ msgstr "No"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "No abandoned carts found"
-msgstr "No se encontraron carritos abandonados"
+msgstr "No se encontraron cestas abandonadas"
 
 #. module: website_sale
 #. odoo-python
@@ -2681,7 +2681,7 @@ msgstr "Sobre ruedas"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Once you click on <b>Save</b>, your product is updated."
-msgstr "Una vez que haga clic en <b>Guardar</b>, su producto es actualizado."
+msgstr "Una vez que haga clic en <b>Guardar</b>, se actualizará su producto."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2768,7 +2768,7 @@ msgstr "Opciones relacionadas"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "Or scan me with your banking app."
-msgstr "O escanéame con tu aplicación bancaria."
+msgstr "O escanéeme desde su aplicación bancaria."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2786,7 +2786,7 @@ msgstr "Líneas de pedido mostradas en el sitio web"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Order overview"
-msgstr "Resumen de la orden"
+msgstr "Resumen del pedido"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
@@ -2798,7 +2798,7 @@ msgstr "Pedidos"
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
 msgid "Orders To Invoice"
-msgstr "Pedidos para facturar"
+msgstr "Pedidos a facturar"
 
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.out_of_stock_ribbon
@@ -2891,12 +2891,12 @@ msgstr "Píldoras"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Please enter a valid Video URL."
-msgstr "Por favor introduzca un URL de vídeo válido."
+msgstr "Introduzca un URL de vídeo válido."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Please proceed your current cart."
-msgstr "Continúe con su carro actual."
+msgstr "Continúe con su cesta actual."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3024,7 +3024,7 @@ msgstr "Atributo de producto"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
 msgid "Product Carousel"
-msgstr "Carrusel del Producto"
+msgstr "Carrusel de producto"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -3062,7 +3062,7 @@ msgstr "Nombre del producto"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Product Page"
-msgstr "Página del producto"
+msgstr "Página de producto"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_website_sale_website_form
@@ -3449,7 +3449,7 @@ msgstr "Clase de cinta"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__html
 msgid "Ribbon html"
-msgstr "Cinta html"
+msgstr "HTML de la cinta"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__text_color
@@ -3616,8 +3616,7 @@ msgstr "Enviar por correo electrónico"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__send_abandoned_cart_email
 msgid "Send email to customers who abandoned their cart."
-msgstr ""
-"Envíe un correo electrónico a los clientes que abandonaron su carrito."
+msgstr "Envíe un correo electrónico a los clientes que abandonaron su cesta."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__seo_name
@@ -3717,7 +3716,7 @@ msgstr "Clasificación predeterminada de tienda"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_add_to_cart
 msgid "Shopping cart"
-msgstr "Carrito de compras"
+msgstr "Cesta de compras"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3742,7 +3741,7 @@ msgstr "Mostrar en la página del producto"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show/hide shopping cart"
-msgstr "Mostrar/ocultar carrito de compras"
+msgstr "Mostrar/ocultar cesta de compras"
 
 #. module: website_sale
 #. odoo-python
@@ -3892,7 +3891,7 @@ msgstr "Accesorios sugeridos"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Suggested accessories in the eCommerce cart"
-msgstr "Accesorios sugeridos en el carrito de comercio electrónico"
+msgstr "Accesorios sugeridos en la cesta de comercio electrónico"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4052,7 +4051,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "The time to mark a cart as abandoned can be changed in the settings."
 msgstr ""
-"El tiempo transcurrido para marcar un carrito como abandonado puede fijarse "
+"El tiempo transcurrido para marcar una cesta como abandonada puede fijarse "
 "en la configuración."
 
 #. module: website_sale
@@ -4096,9 +4095,9 @@ msgid ""
 "updated on that cart. Also, the cart might not be visible for the customer "
 "until you update the pricelist of that cart."
 msgstr ""
-"Este socio tiene un carrito abierto. Tenga en cuenta que la lista de precios"
-" no se actualizará en ese carrito. Además, es posible que el cliente no "
-"pueda ver el carrito hasta que actualice la lista de precios de ese carrito."
+"La cesta de este cliente está abierto. Tome en cuenta que no se actualizará "
+"la lista de precios en esa cesta. Además, es probable que el cliente no "
+"pueda ver la cesta hasta que actualice la lista de precios de la cesta."
 
 #. module: website_sale
 #. odoo-javascript
@@ -4273,7 +4272,7 @@ msgstr "Variante"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__ribbon_id
 msgid "Variant Ribbon"
-msgstr "Listón de variante"
+msgstr "Cinta de la variante"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4302,7 +4301,7 @@ msgstr "Ver producto"
 #: code:addons/website_sale/static/src/js/notification/add_to_cart_notification/add_to_cart_notification.xml:0
 #, python-format
 msgid "View cart"
-msgstr "Ver carrito"
+msgstr "Ver cesta"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_view_detail
@@ -4607,7 +4606,7 @@ msgstr "Su nombre"
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "Your cart is empty!"
-msgstr "¡Su carrito está vacío!"
+msgstr "¡Su cesta está vacía!"
 
 #. module: website_sale
 #. odoo-python

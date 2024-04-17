@@ -1076,6 +1076,22 @@ class TestMailgateway(MailCommon):
         # No bounce email
         self.assertNotSentEmail()
 
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_message_route_write_to_catchall_other_recipients_invalid(self):
+        """ Writing to catchall and other unroutable recipients should bounce. """
+        # Test: no group created, email bounced
+        with self.mock_mail_gateway():
+            record = self.format_and_process(
+                MAIL_TEMPLATE, self.partner_1.email_formatted,
+                f'"My Super Catchall" <{self.alias_catchall}@{self.alias_domain}>, Unroutable <unroutable@{self.alias_domain}>',
+                subject='Should Bounce')
+        self.assertFalse(record)
+        self.assertSentEmail(
+            self.mailer_daemon_email,
+            ['whatever-2a840@postmaster.twitter.com'],
+            subject='Re: Should Bounce'
+        )
+
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_bounce_alias(self):
         """ Writing to bounce alias is considered as a bounce even if not multipart/report bounce structure """
@@ -1557,6 +1573,10 @@ class TestMailgateway(MailCommon):
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_message_process_reply_to_new_thread(self):
         """ Test replies not being considered as replies but use destination information instead (aka, mass post + specific reply to using aliases) """
+        # shorten company name to prevent 68 character formatting from
+        # triggering and making the assert missmatch.
+        # See _notify_get_reply_to_formatted_email method
+        self.user_employee.company_id.name = "Forced"
         first_record = self.env['mail.test.simple'].with_user(self.user_employee).create({'name': 'Replies to Record'})
         record_msg = first_record.message_post(
             subject='Discussion',

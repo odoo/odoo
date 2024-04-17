@@ -3,8 +3,8 @@
 # 	* sale
 # 
 # Translators:
-# Thi Huong Nguyen, 2024
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -733,12 +733,17 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Authorized"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> Đã ủy quyền"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> Đã thanh toán"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
+msgstr "<i class=\"fa fa-fw fa-check\"/> Đã hoàn lại"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -748,7 +753,7 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Hết hạn"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Waiting Payment"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Đang chờ thanh toán"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
@@ -815,7 +820,7 @@ msgstr "<span class=\"flex-grow-1\">/Tháng</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span class=\"mx-3\" invisible=\"not require_payment\">of</span>"
-msgstr ""
+msgstr "<span class=\"mx-3\" invisible=\"not require_payment\">của</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -886,7 +891,7 @@ msgstr "<span>Thuế</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_document_kanban
 msgid "<span>Visibility</span>"
-msgstr ""
+msgstr "<span>Hiển thị</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2207,7 +2212,7 @@ msgstr "Khoản trả trước <br/>"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment invoice"
-msgstr ""
+msgstr "Hoá đơn khoản trả trước"
 
 #. module: sale
 #. odoo-python
@@ -2807,7 +2812,7 @@ msgstr "Ngôn ngữ"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Last Invoices"
-msgstr ""
+msgstr "Hóa đơn cuối cùng"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_uid
@@ -4051,7 +4056,7 @@ msgstr " Số đơn bán hàng"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
 msgid "Sale Order Plans"
-msgstr ""
+msgstr "Kế hoạch đơn bán hàng"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
@@ -5532,6 +5537,13 @@ msgstr ""
 #, python-format
 msgid "You cannot cancel a locked order. Please unlock it first."
 msgstr "Bạn không thể hủy một đơn hàng đã khóa. Vui lòng mở khóa trước."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "You cannot change the pricelist of a confirmed order !"
+msgstr "Bạn không thể thay đổi bảng giá của đơn hàng đã được xác nhận!"
 
 #. module: sale
 #. odoo-python

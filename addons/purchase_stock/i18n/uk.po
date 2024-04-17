@@ -3,17 +3,17 @@
 # 	* purchase_stock
 # 
 # Translators:
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,6 +54,7 @@ msgstr "<span class=\"o_stat_value\">%</span>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
 msgstr ""
+"<span invisible=\"on_time_rate &gt;= 0\">Немає даних вчасної доставки</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -63,7 +64,7 @@ msgstr "<span> дні</span>"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<span>Forecasted: </span>"
-msgstr ""
+msgstr "<span>Прогнозовано: </span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
@@ -84,6 +85,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Відповідно до налаштувань товару, отримана кількість може бути автоматично обчислена механізмом:\n"
+"- Вручну: кількість встановлюється вручну на рядку\n"
+"- Переміщення запасів: кількість надходить із підтверджених комплектувань\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -145,7 +149,7 @@ msgstr "Відповідну квитанцію не знайдено."
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_ids
 msgid "Created Purchase Order Lines"
-msgstr ""
+msgstr "Створені рядки замовлення на купівлю"
 
 #. module: purchase_stock
 #. odoo-python
@@ -210,7 +214,7 @@ msgstr "Назва для відображення"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_dest_ids
 msgid "Downstream moves alt"
-msgstr ""
+msgstr "Рухи alt за течією"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__dest_address_id
@@ -285,13 +289,6 @@ msgstr "Створіть чернетку рахунка постачальни�
 msgid "Go back to the purchase order to generate the vendor bill."
 msgstr ""
 "Поверніться до замовлення на купівлю, щоби створити рахунок постачальника."
-
-#. module: purchase_stock
-#. odoo-python
-#: code:addons/purchase_stock/wizard/product_replenish.py:0
-#, python-format
-msgid "Go on the product form and add the list of vendors"
-msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__id
@@ -444,6 +441,9 @@ msgid ""
 " number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
+"За останні x днів; кількість products, отриманих вчасно, поділена на "
+"кількість замовлених products.x є системним параметром "
+"purchase_stock.on_time_delivery_days або 365 за замовчуванням"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
@@ -641,9 +641,8 @@ msgstr "Показати кнопку Установити постачальн�
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__show_vendor
-#: model_terms:ir.ui.view,arch_db:purchase_stock.view_product_replenish_form_inherit_stock
 msgid "Show Vendor"
-msgstr ""
+msgstr "Показати постачальника"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier
@@ -844,13 +843,6 @@ msgstr "Звіт затримки постачальника"
 #, python-format
 msgid "Vendor Lead Time"
 msgstr "Термін виконання постачальника"
-
-#. module: purchase_stock
-#. odoo-python
-#: code:addons/purchase_stock/wizard/product_replenish.py:0
-#, python-format
-msgid "Vendor Not Found in Product %s"
-msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report

@@ -846,7 +846,7 @@ class PurchaseOrder(models.Model):
     def _get_product_catalog_order_data(self, products, **kwargs):
         res = super()._get_product_catalog_order_data(products, **kwargs)
         for product in products:
-            res[product.id] += self._get_product_price_and_data(product)
+            res[product.id] |= self._get_product_price_and_data(product)
         return res
 
     def _get_product_catalog_record_lines(self, product_ids):

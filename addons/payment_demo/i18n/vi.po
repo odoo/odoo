@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,51 +38,65 @@ msgid ""
 "                    </option>\n"
 "                </select>"
 msgstr ""
+"<select id=\"simulated_payment_state\" class=\"form-select\">\n"
+"                    <option value=\"done\" title=\"Thanh toán thành công\">\n"
+"                        Thành công\n"
+"                    </option>\n"
+"                    <option value=\"pending\" title=\"Đang xử lý thanh toán\">\n"
+"                        Đang chờ\n"
+"                    </option>\n"
+"                    <option value=\"cancel\" title=\"Thanh toán được huỷ bởi khách hàng\">\n"
+"                        Đã huỷ\n"
+"                    </option>\n"
+"                    <option value=\"error\" title=\"Lỗi xử lý\">\n"
+"                        Lỗi\n"
+"                    </option>\n"
+"                </select>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>City</b></small>"
-msgstr ""
+msgstr "<small><b>Thành phố</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Country</b></small>"
-msgstr ""
+msgstr "<small><b>Quốc gia</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Name</b></small>"
-msgstr ""
+msgstr "<small><b>Tên</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Street and Number</b></small>"
-msgstr ""
+msgstr "<small><b>Đường và số nhà</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Zip Code</b></small>"
-msgstr ""
+msgstr "<small><b>Mã Zip</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small>Email</small>"
-msgstr ""
+msgstr "<small>Email</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "<small>Payment Details (test data)</small>"
-msgstr ""
+msgstr "<small>Thông tin thanh toán (dữ liệu kiểm thử)</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "<small>Payment Status</small>"
-msgstr ""
+msgstr "<small>Trạng thái thanh toán</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small>Street 2</small>"
-msgstr ""
+msgstr "<small>Đường 2</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -143,7 +157,7 @@ msgstr "Demo"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
 msgid "Demo Express Checkout"
-msgstr ""
+msgstr "Demo thanh toán nhanh"
 
 #. module: payment_demo
 #. odoo-python
@@ -172,7 +186,7 @@ msgstr "Thanh toán"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
 msgid "Pay with Demo"
-msgstr ""
+msgstr "Thanh toán bằng Demo"
 
 #. module: payment_demo
 #: model:ir.model,name:payment_demo.model_payment_provider
