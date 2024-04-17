@@ -269,11 +269,6 @@ class StockMove(models.Model):
     def _has_tracked_subcontract_components(self):
         return any(m.has_tracking != 'none' for m in self._get_subcontract_production().move_raw_ids)
 
-    def _prepare_extra_move_vals(self, qty):
-        vals = super(StockMove, self)._prepare_extra_move_vals(qty)
-        vals['location_id'] = self.location_id.id
-        return vals
-
     def _prepare_move_split_vals(self, qty):
         vals = super(StockMove, self)._prepare_move_split_vals(qty)
         if self.is_subcontract:
