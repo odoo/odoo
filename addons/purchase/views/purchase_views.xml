@@ -228,7 +228,7 @@
                                     <field name="product_type" column_invisible="True"/>
                                     <field name="product_uom" column_invisible="True" groups="!uom.group_uom"/>
                                     <field name="product_uom_category_id" column_invisible="True"/>
-                                    <field name="invoice_lines" column_invisible="True"/>
+                                    <field name="account_move_line_ids" column_invisible="True"/>
                                     <field name="is_downpayment" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
                                     <field
@@ -306,7 +306,7 @@
                                                     <field name="name"/>
                                                 </page>
                                                 <page string="Invoices and Incoming Shipments" name="invoices_incoming_shiptments">
-                                                    <field name="invoice_lines"/>
+                                                    <field name="account_move_line_ids"/>
                                                 </page>
                                             </notebook>
                                             </group>
@@ -787,7 +787,7 @@
                         </group>
                         <field name="name"/>
                         <separator string="Manual Invoices"/>
-                        <field name="invoice_lines"/>
+                        <field name="account_move_line_ids"/>
                     </sheet>
                 </form>
             </field>
