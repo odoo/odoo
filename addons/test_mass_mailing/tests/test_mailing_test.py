@@ -62,6 +62,31 @@ class TestMailingTest(TestMassMailCommon):
         with self.mock_mail_gateway(), self.assertRaises(Exception):
             mailing_test.send_mail_test()
 
+        # Test if link snippets are correctly converted
+        mailing.write({
+            'subject': 'Subject {{ object.name }}',
+            'preview': 'Preview {{ object.name }}',
+            'body_html':
+                '''<p>
+                Hello
+                    <div class="o_snippet_view_in_browser o_mail_snippet_general pt16 pb16" style="text-align: center; padding-left: 15px; padding-right: 15px;">
+                        <a href="/view">
+                            View Online
+                        </a>
+                    </div>
+                    <div class="o_mail_footer_links">
+                        <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
+                    </div>
+                </p>'''
+        })
+
+        with self.mock_mail_gateway():
+            mailing_test.send_mail_test()
+
+        body_html = self._mails.pop()['body']
+        self.assertIn(f'/mailing/{mailing.id}/view', body_html)
+        self.assertNotIn('/unsubscribe_from_list', body_html)
+
     def test_mailing_test_equals_reality(self):
         """
         Check that both test and real emails will format the qweb and inline placeholders correctly in body and subject.
