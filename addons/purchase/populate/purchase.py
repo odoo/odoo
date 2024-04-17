@@ -85,7 +85,7 @@ class PurchaseOrderLine(models.Model):
             ('name', populate.constant("PO-line-{counter}")),
             ('product_id', populate.randomize(product_ids)),
             ('product_uom', populate.compute(get_product_uom)),
-            ('taxes_id', populate.constant(False)),  # to avoid slow _prepare_add_missing_fields
+            ('tax_ids', populate.constant(False)),  # to avoid slow _prepare_add_missing_fields
             ('date_planned', populate.compute(get_date_planned)),
             ('product_qty', populate.randint(1, 10)),
             ('price_unit', populate.randint(10, 100)),

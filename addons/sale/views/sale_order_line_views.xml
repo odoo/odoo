@@ -69,7 +69,7 @@
                             <field name="price_unit"/>
                             <field name="discount" groups="sale.group_discount_per_so_line"/>
                             <field name="price_subtotal" widget="monetary"/>
-                            <field name="tax_id"
+                            <field name="tax_ids"
                                 widget="many2many_tags"
                                 options="{'no_create': True}"
                                 context="{'search_view_ref': 'account.account_tax_view_search'}"

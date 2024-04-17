@@ -125,7 +125,7 @@ class SaleOrder(models.Model):
                     continue
                 new_lines += self.env['sale.order.line'].new({
                     'product_id': lines[0].product_id.id,
-                    'tax_id': False,
+                    'tax_ids': False,
                     'price_unit': sum(lines.mapped('price_unit')),
                     'price_subtotal': sum(lines.mapped('price_subtotal')),
                     'price_total': sum(lines.mapped('price_total')),
