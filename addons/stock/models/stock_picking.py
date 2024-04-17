@@ -1031,7 +1031,7 @@ class Picking(models.Model):
                         for ml in move_lines_in_package_level:
                             ml.package_level_id = ml.move_id.package_level_id.id
 
-                        move_lines_without_package_level.package_level_id: package_level_ids[0]
+                        move_lines_without_package_level.package_level_id = package_level_ids[0]
                         for pl in package_level_ids:
                             pl.location_dest_id = self._get_entire_pack_location_dest(pl.move_line_ids) or picking.location_dest_id.id
 
