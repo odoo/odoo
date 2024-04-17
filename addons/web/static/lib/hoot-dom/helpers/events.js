@@ -1049,6 +1049,30 @@ const _keyDown = (target, eventInit) => {
             }
             break;
         }
+        case "Enter": {
+            const tag = getTag(target);
+            const parentForm = target.closest("form");
+            if (parentForm && target.type !== "button") {
+                /**
+                 * Special action: <form> 'Enter'
+                 *  On: unprevented 'Enter' keydown on any element that
+                 *      is not a <button type="button"/> in a form element
+                 *  Do: triggers a 'submit' event on the form
+                 */
+                dispatch(parentForm, "submit");
+            } else if (
+                !keyDownEvent.repeat &&
+                (tag === "a" || tag === "button" || (tag === "input" && target.type === "button"))
+            ) {
+                /**
+                 * Special action: <a>, <button> or <input type="button"> 'Enter'
+                 *  On: unprevented and unrepeated 'Enter' keydown on mentioned elements
+                 *  Do: triggers a 'click' event on the element
+                 */
+                dispatch(target, "click", { button: 0 });
+            }
+            break;
+        }
         case "Escape": {
             runTime.isDragging = false;
             break;
@@ -1124,25 +1148,6 @@ const _keyUp = (target, eventInit) => {
 
     registerSpecialKey(eventInit, false);
 
-    if (eventInit.key === "Enter") {
-        let parentForm;
-        if (getTag(target) === "button" && target.type === "button") {
-            /**
-             * Special action: button 'Enter'
-             *  On: unprevented 'Enter' keydown on a <button type="button"/>
-             *  Do: triggers a 'click' event on the button
-             */
-            triggerClick(target, { button: 0 });
-        } else if ((parentForm = target.closest("form"))) {
-            /**
-             * Special action: form 'Enter'
-             *  On: unprevented 'Enter' keydown on any element that
-             *      is not a <button type="button"/> in a form element
-             *  Do: triggers a 'submit' event on the form
-             */
-            dispatch(parentForm, "submit");
-        }
-    }
     if (eventInit.key === " " && getTag(target) === "input" && target.type === "checkbox") {
         /**
          * Special action: input[type=checkbox] 'Space'
