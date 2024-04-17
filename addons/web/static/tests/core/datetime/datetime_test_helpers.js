@@ -1,4 +1,4 @@
-import { click, queryAll, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
+import { click, queryAll, queryAllTexts, queryAllValues, queryFirst } from "@odoo/hoot-dom";
 import { expect } from "@odoo/hoot";
 
 const PICKER_ROWS = 6;
@@ -151,4 +151,13 @@ export function getPickerApplyButton() {
 
 export function zoomOut() {
     return click(".o_zoom_out");
+}
+
+export function getTimePickers({ parse = false } = {}) {
+    return queryAll(".o_time_picker").map((timePickerEl) => {
+        if (parse) {
+            return queryAllValues(".o_time_picker_select", { root: timePickerEl });
+        }
+        return queryAll(".o_time_picker_select", { root: timePickerEl });
+    });
 }
