@@ -13,8 +13,16 @@ class MailBot(models.AbstractModel):
             if odoobot_state == "onboarding_attachement" and values.get("attachment_ids"):
                 self.env.user.odoobot_failed = False
                 self.env.user.odoobot_state = "onboarding_canned"
+<<<<<<< HEAD
                 return Markup(_("That's me! 🎉<br/>Try typing %s to use canned responses.", "<span class=\"o_odoobot_command\">:</span>"))
             elif odoobot_state == "onboarding_canned" and self.env.context.get("canned_response_ids"):
+||||||| parent of 4daa39b30320 (temp)
+                return _("That's me! 🎉<br/>Try typing <span class=\"o_odoobot_command\">:</span> to use canned responses.")
+            elif odoobot_state == "onboarding_canned" and values.get("canned_response_ids"):
+=======
+                return _("That's me! 🎉<br/>Try typing <span class=\"o_odoobot_command\">:</span> to use canned responses.")
+            elif odoobot_state == "onboarding_canned" and self.env.context.get("canned_response_ids"):
+>>>>>>> 4daa39b30320 (temp)
                 self.env.user.odoobot_failed = False
                 self.env.user.odoobot_state = "idle"
                 return Markup(_("Good, you can customize canned responses in the live chat application.<br/><br/><b>It's the end of this overview</b>, enjoy discovering Odoo!"))
