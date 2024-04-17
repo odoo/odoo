@@ -42,7 +42,7 @@ cellMenuRegistry.add(
         },
         isVisible: (env) => {
             const position = env.model.getters.getActivePosition();
-            return SEE_RECORD_LIST_VISIBLE(position, env);
+            return SEE_RECORD_LIST_VISIBLE(position, env.model.getters);
         },
         icon: "o-spreadsheet-Icon.SEE_RECORDS",
     })
