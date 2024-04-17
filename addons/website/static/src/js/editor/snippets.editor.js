@@ -391,6 +391,18 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         this.options.wysiwyg.odooEditor.computeFontSizeSelectorValues();
     },
     /**
+    * @override
+    */
+    _checkEditorToolbarVisibility: function (e) {
+        this._super(...arguments);
+        // Close the option's dropdowns manually on outside click if any open.
+        if (this._$toolbarContainer && this._$toolbarContainer.length) {
+            this._$toolbarContainer[0].querySelectorAll(".dropdown-toggle.show").forEach(toggleEl => {
+                Dropdown.getOrCreateInstance(toggleEl).hide();
+            });
+        }
+    },
+    /**
      * Activates & deactivates the button used to add text options, depending
      * on the selected element.
      *
