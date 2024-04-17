@@ -47,6 +47,16 @@ class TestHttp(http.Controller):
         assert request.env.user, "ORM should be initialized"
         return "Tek'ma'te"
 
+    @http.route('/test_http/greeting-public-rw', type='http', auth='public')
+    def greeting_public_rw(self):
+        assert request.env.user, "ORM should be initialized"
+        return "Tek'ma'te"
+
+    @http.route('/test_http/greeting-user-rw', type='http', auth='user')
+    def greeting_user_rw(self):
+        assert request.env.user, "ORM should be initialized"
+        return "Tek'ma'te"
+
     @http.route('/test_http/wsgi_environ', type='http', auth='none')
     def wsgi_environ(self):
         environ = {

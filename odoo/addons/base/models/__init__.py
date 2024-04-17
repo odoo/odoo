@@ -46,5 +46,6 @@ from . import res_company
 from . import res_users
 from . import res_users_settings
 from . import res_users_deletion
+from . import res_device
 
 from . import decimal_precision

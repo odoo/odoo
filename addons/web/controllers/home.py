@@ -44,7 +44,7 @@ class Home(http.Controller):
             return request.redirect_query('/web/login', query={'redirect': request.httprequest.full_path}, code=303)
         if kw.get('redirect'):
             return request.redirect(kw.get('redirect'), 303)
-        if not security.check_session(request.session, request.env):
+        if not security.check_session(request.session, request.env, request):
             raise http.SessionExpiredException("Session expired")
         if not is_user_internal(request.session.uid):
             return request.redirect('/web/login_successful', 303)
