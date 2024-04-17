@@ -656,7 +656,7 @@ class Website(models.Model):
 
         if translated_ratio > 0.8:
             try:
-                database_id = request.env['ir.config_parameter'].sudo().get_param('database.uuid')
+                database_id = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
                 response = self._OLG_api_rpc('/api/olg/1/generate_placeholder', {
                     'placeholders': list(generated_content.keys()),
                     'lang': website.default_lang_id.name,
