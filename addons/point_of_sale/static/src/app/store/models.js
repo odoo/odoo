@@ -1095,8 +1095,12 @@ export class Orderline extends PosModel {
     }
     findAttribute(values, customAttributes) {
         const listOfAttributes = [];
+        const addedPtal_id = [];
         for (const value of values){
             for (const ptal_id of this.pos.ptal_ids_by_ptav_id[value]){
+                if (addedPtal_id.includes(ptal_id)){
+                    continue;
+                }
                 const attribute = this.pos.attributes_by_ptal_id[ptal_id]
                 const attFound = attribute.values.filter((target) => {
                     return Object.values(values).includes(target.id);
@@ -1115,6 +1119,7 @@ export class Orderline extends PosModel {
                     valuesForOrderLine: attFound,
                 };
                 listOfAttributes.push(modifiedAttribute);
+                addedPtal_id.push(ptal_id);
             }
         }
         return listOfAttributes;
