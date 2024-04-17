@@ -608,6 +608,7 @@ export function makeDraggableHook(hookParams) {
                 if ((!direction || direction === "horizontal") && diff.x) {
                     ctx.current.scrollParentX.scrollBy({ left: diffToScroll(diff.x) });
                 }
+                callBuildHandler("onDrag");
             };
 
             /**
