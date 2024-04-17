@@ -1,4 +1,4 @@
-from odoo import fields, models, api, _
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -32,3 +32,23 @@ class Project(models.Model):
         for record in self:
             if record.src_lang_id in record.target_lang_ids:
                 raise ValidationError(_("A project's target languages must be different from its source language."))
+
+    @api.model
+    def get_projects(self):
+        projects_records = self.search([])
+        return [{
+                "id": record.id,
+                "name": record.name,
+                "src_lang": {
+                    "id": record.src_lang_id.id,
+                    "name": record.src_lang_id.name if record.src_lang_id.name else "",
+                },
+                "resources": [{
+                    "id": resource.id,
+                    "file_name": resource.file_name,
+                } for resource in record.resource_ids],
+                "target_langs": [{
+                        "id": lang.id,
+                        "name": lang.name,
+                    } for lang in record.target_lang_ids],
+            } for record in projects_records]
