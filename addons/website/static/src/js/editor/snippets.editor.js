@@ -409,6 +409,16 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
         this.options.wysiwyg.odooEditor.computeFontSizeSelectorValues();
     }
     /**
+    * @override
+    */
+    _checkEditorToolbarVisibility(e) {
+        super._checkEditorToolbarVisibility(...arguments);
+        // Close the option's dropdowns manually on outside click if any open.
+        this._toolbarWrapperEl.querySelectorAll(".dropdown-toggle.show").forEach(toggleEl => {
+            Dropdown.getOrCreateInstance(toggleEl).hide();
+        });
+    }
+    /**
      * Returns true if the selected text matches the selector.
      *
      * @private
