@@ -20,7 +20,6 @@ import {
     Component,
     EventBus,
     markup,
-    markRaw,
     onMounted,
     onWillStart,
     onWillUnmount,
@@ -3155,9 +3154,7 @@ class SnippetsMenu extends Component {
                     snippet.isRenaming = false;
                 }
 
-                // Mark any snippet that is not custom as raw as they should
-                // not change during edition.
-                this.snippets.set(snippet.id, snippet.isCustom ? snippet : markRaw(snippet));
+                this.snippets.set(snippet.id, snippet);
             }
         }
         // Register the text nodes that needs to be auto-selected on click
