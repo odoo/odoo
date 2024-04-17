@@ -1184,6 +1184,9 @@ mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
 # Add potentially missing (detected on windows) svg mime types
 mimetypes.add_type('image/svg+xml', '.svg')
+# this one can be present on windows with the value 'text/plain' which breaks
+# loading js files from an addon's static folder
+mimetypes.add_type('text/javascript', '.js')
 
 
 def make_request_wrap_methods(attr):
