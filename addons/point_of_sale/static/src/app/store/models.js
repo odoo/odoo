@@ -852,9 +852,25 @@ export class Orderline extends PosModel {
     }
     findAttribute(values, customAttributes) {
         const listOfAttributes = [];
+<<<<<<< HEAD
         Object.values(this.pos.models['product.template.attribute.line'].getAll()).filter(
             (attribute) => {
                 const attFound = attribute.product_template_value_ids.filter((target) => {
+||||||| parent of 9f4894a7c265 (temp)
+        for (const value of values){
+            for (const ptal_id of this.pos.ptal_ids_by_ptav_id[value]){
+                const attribute = this.pos.attributes_by_ptal_id[ptal_id]
+                const attFound = attribute.values.filter((target) => {
+=======
+        const addedPtal_id = [];
+        for (const value of values){
+            for (const ptal_id of this.pos.ptal_ids_by_ptav_id[value]){
+                if (addedPtal_id.includes(ptal_id)){
+                    continue;
+                }
+                const attribute = this.pos.attributes_by_ptal_id[ptal_id]
+                const attFound = attribute.values.filter((target) => {
+>>>>>>> 9f4894a7c265 (temp)
                     return Object.values(values).includes(target.id);
                 }).map(att => ({...att})); // make a copy
                 attFound.forEach((att) => {
@@ -866,6 +882,7 @@ export class Orderline extends PosModel {
                         });
                     }
                 });
+<<<<<<< HEAD
                 if (attFound.length > 0) {
                     const modifiedAttribute = {
                         ...attribute,
@@ -875,6 +892,20 @@ export class Orderline extends PosModel {
                     return true;
                 }
                 return false;
+||||||| parent of 9f4894a7c265 (temp)
+                const modifiedAttribute = {
+                    ...attribute,
+                    valuesForOrderLine: attFound,
+                };
+                listOfAttributes.push(modifiedAttribute);
+=======
+                const modifiedAttribute = {
+                    ...attribute,
+                    valuesForOrderLine: attFound,
+                };
+                listOfAttributes.push(modifiedAttribute);
+                addedPtal_id.push(ptal_id);
+>>>>>>> 9f4894a7c265 (temp)
             }
         );
         return listOfAttributes;
