@@ -92,41 +92,18 @@
         </field>
     </record>
 
-    <!-- TEMPLATES -->
-    <record id="clima_action" model="ir.actions.act_window">
-        <field name="name">Templates</field>
-        <field name="res_model">template</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-
-    <record id="clima_tree" model="ir.ui.view">
-        <field name="name">template.tree</field>
-        <field name="model">template</field>
-
-        <field name="arch" type="xml">
-            <tree>
-                <field name="nombre"/>
-                <field name="descripcion"/>
-                <field name="tipo"/>
-                <field name="pregunta_ids"/>
-            </tree>
-        </field>
-    </record>
-    <record id="nom035_action" model="ir.actions.act_window">
-        <field name="name">NOM 035</field>
-        <field name="res_model">evaluacion</field>
-        <field name="view_mode">form</field>
-    </record>
-
-    <record id="nom035_form" model="ir.ui.view">
+    <!-- CLIMA -->
+    <record id="clima_form" model="ir.ui.view">
         <field name="name">evaluacion.form</field>
         <field name="model">evaluacion</field>
         <field name="arch" type="xml">
-            <form string="Test">
+            <form string="Clima">
                 <sheet>
+					<h1>Encuesta Clima</h1>
+					<p>Hola</p>
                     <group>
                         <group>
-                            <field name="descripcion"/>
+							<field name="nombre"/>
                         </group>
                         <group>
                             <field name="estado"/>
@@ -135,10 +112,20 @@
                             <page string="Preguntas">
                                 <field name="pregunta_ids"/>
                             </page>
+							<page string="Asignados">
+								<field name="usuario_ids"/>
+							</page>
                         </notebook>
-                    </group>
+					</group>					
                 </sheet>
             </form>
         </field>
+    </record>
+
+    <record id="nom035_action" model="ir.actions.act_window">
+        <field name="name">Clima</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">form</field>
+		<field name="view_id" ref="clima_form"/>
     </record>
 </odoo>
