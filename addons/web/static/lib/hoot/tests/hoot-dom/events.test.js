@@ -979,10 +979,9 @@ describe(parseUrl(import.meta.url), () => {
             // Enter
             "input.keydown",
             "form.keydown",
+            "form.submit",
             "input.keyup",
             "form.keyup",
-            // Form submit
-            "form.submit",
         ]).toVerifySteps();
     });
 
@@ -1009,11 +1008,10 @@ describe(parseUrl(import.meta.url), () => {
             // Enter
             "button.keydown",
             "form.keydown",
-            "button.keyup",
-            "form.keyup",
-            // Click triggered by Enter
             "button.click",
             "form.click",
+            "button.keyup",
+            "form.keyup",
         ]).toVerifySteps();
     });
 
@@ -1040,10 +1038,9 @@ describe(parseUrl(import.meta.url), () => {
             // Enter
             "button.keydown",
             "form.keydown",
+            "form.submit",
             "button.keyup",
             "form.keyup",
-            // Form submit
-            "form.submit",
         ]).toVerifySteps();
     });
 
