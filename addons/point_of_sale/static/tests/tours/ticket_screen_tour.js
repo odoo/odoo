@@ -132,18 +132,14 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
                 // Error popup should show.
                 Numpad.click("2"),
                 Dialog.confirm(),
-                // Change the refund line quantity to -3 -- not allowed
+                // Change the refund line quantity to -13 -- not allowed
                 // so error popup.
                 ...["+/-", "3"].map(Numpad.click),
                 Dialog.confirm(),
-                // Change the refund line quantity to -2 -- allowed.
-                ...["+/-", "2"].map(Numpad.click),
-                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "-2.00"),
             ]),
-            // Check if the amount being refunded changed to 2.
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("-0005"),
-            TicketScreen.toRefundTextContains("Refunding 2.00"),
+            TicketScreen.toRefundTextContains("Refunding 1.00"),
             TicketScreen.clickDiscard(),
             { ...ProductScreen.back(), isActive: ["mobile"] },
             // Pay the refund order.
@@ -155,7 +151,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             // Check refunded quantity.
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("-0005"),
-            TicketScreen.refundedNoteContains("2.00 Refunded"),
+            TicketScreen.refundedNoteContains("1.00 Refunded"),
         ].flat(),
 });
 

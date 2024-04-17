@@ -275,14 +275,6 @@ class NumberBuffer extends EventBus {
             if (this.state.buffer[0] === "-") {
                 this.state.buffer = this.state.buffer.substring(1, this.state.buffer.length);
             }
-        } else if (input === "-") {
-            if (isFirstInput) {
-                this.state.buffer = "-0";
-            } else if (this.state.buffer[0] === "-") {
-                this.state.buffer = this.state.buffer.substring(1, this.state.buffer.length);
-            } else {
-                this.state.buffer = "-" + this.state.buffer;
-            }
         } else if (input[0] === "+" && !isNaN(parseFloat(input))) {
             // when input is like '+10', '+50', etc
             const inputValue = oParseFloat(input.slice(1));
