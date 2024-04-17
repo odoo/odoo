@@ -104,14 +104,20 @@ class Objetivo(models.Model):
     @api.depends("resultado", "piso_maximo")
     def _compute_estado(self):
         for record in self:
-            if record.piso_maximo and record.resultado:
-                ratio = record.resultado / record.piso_maximo
-                if 0 <= ratio <= 0.6:
-                    record.estado = "rojo"
-                elif 0.61 <= ratio <= 0.85:
-                    record.estado = "amarillo"
-                elif 0.851 <= ratio <= 1:
-                    record.estado = "verde"
-                elif ratio > 1:
-                    record.estado = "azul"
+            if record.piso_maximo and record.piso_minimo and record.resultado and record.orden:
+                if record.orden == "descendente": 
+                    ratio = (record.piso_minimo - record.resultado) / (record.piso_minimo - record.piso_maximo)
+                    
+                if record.orden == "ascendente":
+                    ratio = 1 - (record.piso_maximo - record.resultado) / (record.piso_maximo - record.piso_minimo)
+                    
+                if record.orden == "ascendente":
+                    if 0 <= ratio <= 0.6:
+                        record.estado = "rojo"
+                    elif 0.61 <= ratio <= 0.85:
+                        record.estado = "amarillo"
+                    elif 0.851 <= ratio <= 1:
+                        record.estado = "verde"
+                    elif ratio > 1:
+                        record.estado = "azul"
             
