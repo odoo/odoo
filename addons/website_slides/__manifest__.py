@@ -122,11 +122,14 @@ Featuring
             # TODO this bundle now includes 'assets_common' files directly, but
             # most of these files are useless in this context, clean this up.
             ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_frontend_helpers'),
 
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
+
+            ('include', 'web._assets_bootstrap_frontend'),
 
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/lib/odoo_ui_icons/*',
@@ -187,12 +190,6 @@ Featuring
             'web/static/src/libs/pdfjs.js',
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
 
-            ('include', 'web._assets_helpers'),
-            'web/static/src/scss/pre_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables-dark.scss',
-            'web/static/lib/bootstrap/scss/_maps.scss',
-            ('include', 'web._assets_bootstrap_frontend'),
             'website_slides/static/src/scss/website_slides.scss',
             'website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js',
             'website_slides/static/src/js/slides_embed.js',
