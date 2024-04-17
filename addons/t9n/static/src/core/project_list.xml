@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<templates>
+    <t t-name="t9n.ProjectList">
+        <div class="container mt-3">
+            <div class="input-group">
+                <div class="form-outline">
+                    <input type="text" class="form-control" placeholder="Search projects" t-model="state.filters.searchText"/>
+                </div>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th t-on-click="() => this.onClickColumnName('name')">Project Name <i t-attf-class="btn btn-link fa fa-sort-{{this.state.sorting.column === 'name' and this.state.sorting.order === 'asc' ? 'up' : 'down'}}"></i>
+                        </th>
+                        <th>Source Language</th>
+                        <th>Target Languages</th>
+                        <th>Resource Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="this.projects" t-as="project" t-key="project.id">
+                        <tr>
+                            <td>
+                                <button class="btn btn-link " t-on-click="() => this.onClickProject(project.id)">
+                                    <t t-esc="project.name"/>
+                                </button>
+                            </td>
+                            <td t-esc="project.srcLang"/>
+                            <td t-esc="project.formattedTargetLanguages"/>
+                            <td t-esc="project.resourceCount"/>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </t>
+</templates>
