@@ -15,7 +15,7 @@ export function useSuggestion() {
             comp.props.composer.rawMentions.partnerIds.length = 0;
             comp.props.composer.rawMentions.threadIds.length = 0;
         },
-        clearCannedReponses() {
+        clearCannedResponses() {
             comp.props.composer.cannedResponseIds.clear();
         },
         clearSearch() {
