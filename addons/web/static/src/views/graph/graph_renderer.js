@@ -370,6 +370,13 @@ export class GraphRenderer extends Component {
             } else {
                 dataset.borderColor = getColor(index, this.cookies.current.color_scheme);
             }
+            if (cumulated) {
+                let accumulator = dataset.cumulatedStart;
+                dataset.data = dataset.data.map((value) => {
+                    accumulator += value;
+                    return accumulator;
+                });
+            }
             if (data.labels.length === 1) {
                 // shift of the real value to right. This is done to
                 // center the points in the chart. See data.labels below in
@@ -382,13 +389,6 @@ export class GraphRenderer extends Component {
             dataset.pointBorderColor = "rgba(0,0,0,0.2)";
             if (stacked) {
                 dataset.backgroundColor = hexToRGBA(dataset.borderColor, LINE_FILL_TRANSPARENCY);
-            }
-            if (cumulated) {
-                let accumulator = dataset.cumulatedStart;
-                dataset.data = dataset.data.map((value) => {
-                    accumulator += value;
-                    return accumulator;
-                });
             }
         }
         if (data.datasets.length === 1 && data.datasets[0].originIndex === 0) {
