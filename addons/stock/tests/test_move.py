@@ -6634,3 +6634,41 @@ class StockMove(TransactionCase):
             total_qty <= storage_category.product_capacity_ids.quantity,
             f'On-hand quantity = {total_qty}'
         )
+
+    def test_correct_quantity_autofilled(self):
+        """
+         Check if the quantity is correctly computed when:
+            - The product uom differs from the move uom.
+            - Move lines are manually removed and added back.
+            - The quantity is manually divided into different move lines.
+        """
+        self.product.uom_id = self.env.ref('uom.product_uom_gram')
+        quant = self.env['stock.quant'].create({
+            'product_id': self.product.id,
+            'location_id': self.stock_location.id,
+            'quantity': 1000000,
+        })
+        move = self.env['stock.move'].create({
+            'name': 'Test move',
+            'product_id': self.product.id,
+            'product_uom_qty': 2,
+            'product_uom': self.env.ref('uom.product_uom_kgm').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        move._action_confirm()
+        # remove the exsiting ml
+        move.move_line_ids.unlink()
+        # add a ml
+        line1 = self.env['stock.move.line'].create({
+            'move_id': move.id,
+        })
+        line1.quant_id = quant
+        self.assertEqual(move.move_line_ids.quantity, 2.0)
+        # assign half the quantity to the first ml and add another one
+        line1.quantity = 1.0
+        line2 = self.env['stock.move.line'].create({
+            'move_id': move.id,
+        })
+        line2.quant_id = quant
+        self.assertEqual(move.move_line_ids[1].quantity, 1.0)
