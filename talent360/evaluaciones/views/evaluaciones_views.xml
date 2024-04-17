@@ -24,7 +24,6 @@
         <field name="name">evaluacion.action</field>
         <field name="res_model">evaluacion</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="evaluacion_tree"/>
     </record>
 
     <record id="evaluacion_tree" model="ir.ui.view">
@@ -94,7 +93,7 @@
     </record>
 
     <!-- CLIMA -->
-    <!-- <record id="clima_form" model="ir.ui.view">
+    <record id="clima_form" model="ir.ui.view">
         <field name="name">evaluacion.form</field>
         <field name="model">evaluacion</field>
         <field name="arch" type="xml">
@@ -124,7 +123,7 @@
                 </sheet>
             </form>
         </field>
-    </record> -->
+    </record>
 
     <record id="action_clima" model="ir.actions.server">
         <field name="name">Clima</field>
@@ -133,4 +132,11 @@
         <field name="code">model.action_clima()</field>
         <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
+
+    <!-- <record id="clima_action" model="ir.actions.act_window">
+        <field name="name">Clima</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">form</field>
+		<field name="view_id" ref="clima_form"/>
+    </record> -->
 </odoo>

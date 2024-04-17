@@ -72,7 +72,7 @@ class Evaluacion(models.Model):
 
         self.pregunta_ids = [(5,)]
 
-        template_id_hardcoded = 5
+        template_id_hardcoded = 4
 
         if template_id_hardcoded:
             template = self.env['template'].browse(template_id_hardcoded)
@@ -84,23 +84,19 @@ class Evaluacion(models.Model):
     @api.model
     def action_clima(self):
         self.copiar_preguntas_de_template()
-        view = self.env['ir.ui.view'].search([('name', '=', 'Evaluaciones.clima_form')])
-        view_id = view.id
+
+        # # Obtener el ID de la vista clima_form
+        view_id = self.env.ref('evaluaciones.clima_form').id
 
         print(view_id)
 
+        # # Retornar la acción con la vista como destino
         return {
-            'name': 'Clima',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'evaluacion',
-            'view_id': view_id,
             'type': 'ir.actions.act_window',
-            'target': 'current',
+            'name': 'Evaluación Clima',
+            'res_model': 'evaluacion',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_id': self.id,
         }
 
-            
-    # Actualiza las preguntas cuando se selecciona una plantilla
-    # @api.onchange('template_id')
-    # def onchange_template_id(self):
-    #     self.copiar_preguntas_de_template()
