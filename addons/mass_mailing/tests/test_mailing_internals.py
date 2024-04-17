@@ -464,9 +464,8 @@ class TestMassMailUTM(MassMailCommon):
 
         # should generate same name (coming from same subject)
         mailing_0.subject = 'First subject'
-        with self.subTest(reason="FIXME: receives First subject (Mass Mailing created on 2022-01-02) [4], always incrementing"):
-            self.assertEqual(mailing_0.name, 'First subject (Mass Mailing created on 2022-01-02)',
-                msg='The name should not be updated')
+        self.assertEqual(mailing_0.name, 'First subject (Mass Mailing created on 2022-01-02)',
+            msg='The name should not be updated')
 
         # take a (long) existing name -> should increment
         mailing_0.name = 'Second subject (Mass Mailing created on 2022-01-02)'
@@ -475,9 +474,8 @@ class TestMassMailUTM(MassMailCommon):
 
         # back to first subject: not linked to any record so should take it back
         mailing_0.subject = 'First subject'
-        with self.subTest(reason="FIXME: should take first available, instead receives First subject (Mass Mailing created on 2022-01-02) [4]"):
-            self.assertEqual(mailing_0.name, 'First subject (Mass Mailing created on 2022-01-02)',
-                msg='The name should be back to first one')
+        self.assertEqual(mailing_0.name, 'First subject (Mass Mailing created on 2022-01-02)',
+            msg='The name should be back to first one')
 
 
 @tagged('mass_mailing')

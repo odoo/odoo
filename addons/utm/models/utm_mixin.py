@@ -3,6 +3,7 @@
 
 import re
 from collections import defaultdict
+import itertools
 
 from odoo import api, fields, models
 from odoo.http import request
@@ -104,17 +105,18 @@ class UtmMixin(models.AbstractModel):
             ])
         existing_names = {vals['name'] for vals in self.env[model_name].search_read(search_domain, ['name'])}
 
-        # Count for each names, based on the names list given in argument
+        # Counter for each names, based on the names list given in argument
         # and the record names in database
-        count_per_names = defaultdict(lambda: 0)
-        count_per_names.update({
-            name: max((
-                self._split_name_and_count(existing_name)[1] + 1
+        used_counters_per_name = {
+            name: {
+                self._split_name_and_count(existing_name)[1]
                 for existing_name in existing_names
                 if existing_name == name or existing_name.startswith(f'{name} [')
-            ), default=1)
-            for name in names_without_counter
-        })
+            } for name in names_without_counter
+        }
+        # Automatically incrementing counters for each name, will be used
+        # to fill holes in used_counters_per_name
+        current_counter_per_name = defaultdict(lambda: itertools.count(1))
 
         result = []
         for name in names:
@@ -123,9 +125,11 @@ class UtmMixin(models.AbstractModel):
                 continue
 
             name_without_counter = self._split_name_and_count(name)[0]
-            counter = count_per_names[name_without_counter]
-            result.append(f'{name_without_counter} [{counter}]' if counter > 1 else name)
-            count_per_names[name_without_counter] += 1
+            # keep going until the count is not already used
+            for count in current_counter_per_name[name_without_counter]:
+                if count not in used_counters_per_name.get(name_without_counter, set()):
+                    break
+            result.append(f'{name_without_counter} [{count}]' if count > 1 else name)
 
         return result
 
