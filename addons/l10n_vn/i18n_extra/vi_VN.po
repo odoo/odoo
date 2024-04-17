@@ -16,6 +16,72 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_vn
+#: model:ir.model.fields.selection,name:l10n_vn.selection__res_partner_bank__proxy_type__atm_card
+msgid "ATM Card Number"
+msgstr "Số thẻ ATM"
+
+#. module: l10n_vn
+#: model:ir.model,name:l10n_vn.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Mẫu hệ thống tài khoản"
+
+#. module: l10n_vn
+#: model:account.report.column,name:l10n_vn.tax_report_balance
+msgid "Balance"
+msgstr "Số dư"
+
+#. module: l10n_vn
+#: model:ir.model.fields.selection,name:l10n_vn.selection__res_partner_bank__proxy_type__bank_acc
+msgid "Bank Account"
+msgstr "Số TK ngân hàng"
+
+#. module: l10n_vn
+#: model:ir.model,name:l10n_vn.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Tài khoản Ngân hàng"
+
+#. module: l10n_vn
+#. odoo-python
+#: code:addons/l10n_vn/models/res_bank.py:0
+#, python-format
+msgid ""
+"Can't generate a Vietnamese QR banking code with a currency other than VND."
+msgstr ""
+"Không thể tạo mã QR ngân hàng với tiền tệ khác Việt Nam Đồng."
+
+#. module: l10n_vn
+#: model_terms:ir.ui.view,arch_db:l10n_vn.view_partner_bank_form_inherit_account
+msgid "Documentation"
+msgstr "Tài liệu"
+
+#. module: l10n_vn
+#: model:ir.model.fields.selection,name:l10n_vn.selection__res_partner_bank__proxy_type__merchant_id
+msgid "Merchant ID"
+msgstr "ID Người bán"
+
+#. module: l10n_vn
+#. odoo-python
+#: code:addons/l10n_vn/models/res_bank.py:0
+#, python-format
+msgid ""
+"Missing Bank Identifier Code.\n"
+"Please configure the Bank Identifier Code inside the bank settings."
+msgstr ""
+"Thiếu mã định danh ngân hàng.\n"
+"Hãy cấu hình nó ở trong phần thiết lập ngân hàng."
+
+#. module: l10n_vn
+#: model:ir.model.fields.selection,name:l10n_vn.selection__res_partner_bank__proxy_type__payment_service
+msgid "Payment Service"
+msgstr "Dịch vụ Thanh toán"
+
+#. module: l10n_vn
+#: model:ir.model.fields,field_description:l10n_vn.field_account_setup_bank_manual_config__proxy_type
+#: model:ir.model.fields,field_description:l10n_vn.field_res_partner_bank__proxy_type
+msgid "Proxy Type"
+msgstr "Loại proxy"
+
+#. module: l10n_vn
 #: model:account.report.line,name:l10n_vn.account_tax_report_line_01_vn
 msgid "Purchase of Goods and Services"
 msgstr "HHDV Mua vào"
@@ -26,27 +92,56 @@ msgid "Sales of Goods and Services"
 msgstr "HHDV Bán ra"
 
 #. module: l10n_vn
+#: model:account.report,name:l10n_vn.tax_report
+msgid "Tax Report"
+msgstr "Báo cáo Thuế"
+
+#. module: l10n_vn
+#. odoo-python
+#: code:addons/l10n_vn/models/res_bank.py:0
+#, python-format
+msgid ""
+"The QR Code Type must be either Merchant ID, ATM Card Number or Bank Account"
+" to generate a Vietnam Bank QR code for account number %s."
+msgstr ""
+"Loại mã QR phải là ID người bán, số thẻ ATM hoặc tài khoản ngân hàng"
+" để tạo mã QR Ngân hàng Việt Nam cho số tài khoản %s."
+
+#. module: l10n_vn
+#. odoo-python
+#: code:addons/l10n_vn/models/res_bank.py:0
+#, python-format
+msgid ""
+"The proxy type %s is not supported for Vietnamese partners. It must be "
+"either Merchant ID, ATM Card Number or Bank Account"
+msgstr ""
+"Loại proxy %s không được hỗ trợ cho khách hàng Việt Nam. Nó phải là "
+"ID người bán, số thẻ ATM hoặc tài khoản ngân hàng"
+
+#. module: l10n_vn
 #: model:account.report.line,name:l10n_vn.account_tax_report_line_02_01_vn
 msgid "Untaxed Purchase of Goods and Services"
 msgstr "Giá trị HHDV Mua vào"
 
 #. module: l10n_vn
 #: model:account.report.line,name:l10n_vn.account_tax_report_line_01_02_01_vn
-#: model:account.report.line,tag_name:l10n_vn.account_tax_report_line_01_02_01_vn
 msgid "Untaxed Purchase of Goods and Services taxed 0%"
 msgstr "Giá trị HHDV Mua vào chịu thuế 0%"
 
 #. module: l10n_vn
 #: model:account.report.line,name:l10n_vn.account_tax_report_line_03_02_01_vn
-#: model:account.report.line,tag_name:l10n_vn.account_tax_report_line_03_02_01_vn
 msgid "Untaxed Purchase of Goods and Services taxed 10%"
 msgstr "Giá trị HHDV Mua vào chịu thuế 10%"
 
 #. module: l10n_vn
 #: model:account.report.line,name:l10n_vn.account_tax_report_line_02_02_01_vn
-#: model:account.report.line,tag_name:l10n_vn.account_tax_report_line_02_02_01_vn
 msgid "Untaxed Purchase of Goods and Services taxed 5%"
 msgstr "Giá trị HHDV Mua vào chịu thuế 5%"
+
+#. module: l10n_vn
+#: model:account.report.line,name:l10n_vn.account_tax_report_line_04_02_01_vn
+msgid "Untaxed Purchase of Goods and Services taxed VAT Exemption"
+msgstr "Giá trị HHDV mua vào không chịu thuế GTGT"
 
 #. module: l10n_vn
 #: model:account.report.line,name:l10n_vn.account_tax_report_line_02_02_vn
@@ -55,21 +150,23 @@ msgstr "Giá trị HHDV Bán ra"
 
 #. module: l10n_vn
 #: model:account.report.line,name:l10n_vn.account_tax_report_line_01_02_02_vn
-#: model:account.report.line,tag_name:l10n_vn.account_tax_report_line_01_02_02_vn
 msgid "Untaxed sales of goods and services taxed 0%"
 msgstr "Giá trị HHDV Bán ra chịu thuế 0%"
 
 #. module: l10n_vn
 #: model:account.report.line,name:l10n_vn.account_tax_report_line_03_02_02_vn
-#: model:account.report.line,tag_name:l10n_vn.account_tax_report_line_03_02_02_vn
 msgid "Untaxed sales of goods and services taxed 10%"
 msgstr "Giá trị HHDV Bán ra chịu thuế 10%"
 
 #. module: l10n_vn
 #: model:account.report.line,name:l10n_vn.account_tax_report_line_02_02_02_vn
-#: model:account.report.line,tag_name:l10n_vn.account_tax_report_line_02_02_02_vn
 msgid "Untaxed sales of goods and services taxed 5%"
 msgstr "Giá trị HHDV Bán ra chịu thuế 5%"
+
+#. module: l10n_vn
+#: model:account.report.line,name:l10n_vn.account_tax_report_line_04_02_02_vn
+msgid "Untaxed sales of goods and services taxed VAT Exemption"
+msgstr "Giá trị HHDV bán ra không chịu thuế GTGT"
 
 #. module: l10n_vn
 #: model:account.report.line,name:l10n_vn.account_tax_report_line_01_01_vn
@@ -78,19 +175,16 @@ msgstr "Thuế GTGT HHDV mua vào"
 
 #. module: l10n_vn
 #: model:account.report.line,name:l10n_vn.account_tax_report_line_01_01_01_vn
-#: model:account.report.line,tag_name:l10n_vn.account_tax_report_line_01_01_01_vn
 msgid "VAT on purchase of goods and services 0%"
 msgstr "Thuế GTGT HHDV mua vào chịu thuế 0%"
 
 #. module: l10n_vn
 #: model:account.report.line,name:l10n_vn.account_tax_report_line_03_01_01_vn
-#: model:account.report.line,tag_name:l10n_vn.account_tax_report_line_03_01_01_vn
 msgid "VAT on purchase of goods and services 10%"
 msgstr "Thuế GTGT HHDV mua vào chịu thuế 10%"
 
 #. module: l10n_vn
 #: model:account.report.line,name:l10n_vn.account_tax_report_line_02_01_01_vn
-#: model:account.report.line,tag_name:l10n_vn.account_tax_report_line_02_01_01_vn
 msgid "VAT on purchase of goods and services 5%"
 msgstr "Thuế GTGT HHDV mua vào chịu thuế 5%"
 
@@ -101,23 +195,15 @@ msgstr "Thuế GTGT HHDV bán ra"
 
 #. module: l10n_vn
 #: model:account.report.line,name:l10n_vn.account_tax_report_line_01_01_02_vn
-#: model:account.report.line,tag_name:l10n_vn.account_tax_report_line_01_01_02_vn
 msgid "VAT on sales of goods and services 0%"
 msgstr "Thuế GTGT HHDV bán ra chịu thuế 0%"
 
 #. module: l10n_vn
 #: model:account.report.line,name:l10n_vn.account_tax_report_line_03_01_02_vn
-#: model:account.report.line,tag_name:l10n_vn.account_tax_report_line_03_01_02_vn
 msgid "VAT on sales of goods and services 10%"
 msgstr "Thuế GTGT HHDV bán ra chịu thuế 10%"
 
 #. module: l10n_vn
 #: model:account.report.line,name:l10n_vn.account_tax_report_line_02_01_02_vn
-#: model:account.report.line,tag_name:l10n_vn.account_tax_report_line_02_01_02_vn
 msgid "VAT on sales of goods and services 5%"
 msgstr "Thuế GTGT HHDV bán ra chịu thuế 5%"
-
-#. module: l10n_vn
-#: model:ir.ui.menu,name:l10n_vn.account_reports_vn_statements_menu
-msgid "Vietnam"
-msgstr "Việt Nam"
