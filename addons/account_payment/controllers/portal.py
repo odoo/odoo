@@ -64,6 +64,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             'landing_route': invoice.get_portal_url(),
             'access_token': access_token,
         }
+        kwargs['access_token'] = access_token  # Needed by _get_extra_payment_form_values.
         # Merge the dictionaries while allowing the redefinition of keys.
         new_values = portal_page_values | payment_form_values | payment_context | self._get_extra_payment_form_values(**kwargs)
         values |= new_values
