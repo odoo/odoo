@@ -124,9 +124,7 @@ class Web_Editor(http.Controller):
         image = Image.new("RGBA", (width, height), color)
         draw = ImageDraw.Draw(image)
 
-        box = draw.textbbox((0, 0), icon, font=font_obj)
-        boxw = box[2] - box[0]
-        boxh = box[3] - box[1]
+        boxw, boxh = draw.textsize(icon, font=font_obj)
         draw.text((0, 0), icon, font=font_obj)
         left, top, right, bottom = image.getbbox()
 
