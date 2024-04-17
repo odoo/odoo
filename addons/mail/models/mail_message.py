@@ -1138,7 +1138,7 @@ class Message(models.Model):
     def _get_message_format_fields(self):
         return [
             'id', 'body', 'date', 'email_from',  # base message fields
-            'message_type', 'subtype_id', 'subject',  # message specific
+            'message_type', 'subject',  # message specific
             'model', 'res_id', 'record_name',  # document related FIXME need to be kept for mobile app as iOS app cannot be updated
             'starred_partner_ids',  # list of partner ids for whom the message is starred (legacy)
         ]
