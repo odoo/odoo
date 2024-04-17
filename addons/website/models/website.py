@@ -199,7 +199,9 @@ class Website(models.Model):
         Checks if the website menu contains a record like url.
         :return: True if the menu contains a record like url
         """
-        return any(self.env['website.menu'].browse(self._get_menu_ids()).filtered(lambda menu: re.search(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", menu.url)))
+        return any(self.env['website.menu'].browse(self._get_menu_ids()).filtered(
+            lambda menu: menu.url and re.search(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", menu.url))
+        )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -986,9 +988,11 @@ class Website(models.Model):
         # there is one on request) or return a random one.
 
         # The format of `httprequest.host` is `domain:port`
-        domain_name = (request and request.httprequest.host
+        domain_name = (
+            request and request.httprequest.host
             or hasattr(threading.current_thread(), 'url') and threading.current_thread().url
-            or '')
+            or ''
+        )
         website_id = self._get_current_website_id(domain_name, fallback=fallback)
         return self.browse(website_id)
 

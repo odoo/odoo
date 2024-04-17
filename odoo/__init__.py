@@ -81,10 +81,18 @@ try:
         zobj = zlib.decompressobj()
         return zobj.decompress(data)
 
+    import PyPDF2.filters  # needed after PyPDF2 2.0.0 and before 2.11.0
     PyPDF2.filters.decompress = _decompress
 except ImportError:
     pass # no fix required
 
+# ---------------------------------------------------------
+# some charset are known by Python under a different name
+# ---------------------------------------------------------
+import encodings.aliases  # noqa: E402
+
+encodings.aliases.aliases['874'] = 'cp874'
+encodings.aliases.aliases['windows_874'] = 'cp874'
 
 #----------------------------------------------------------
 # alias hebrew iso-8859-8-i and iso-8859-8-e on iso-8859-8

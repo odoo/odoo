@@ -2100,6 +2100,7 @@ msgstr "Attiva per creare la ricevuta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__active
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,field_description:account.field_account_incoterms__active
 #: model:ir.model.fields,field_description:account.field_account_journal__active
 #: model:ir.model.fields,field_description:account.field_account_payment_term__active
@@ -2708,6 +2709,7 @@ msgstr "Contabilità analitica"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Analytic Accounts"
 msgstr "Conti analitici"
 
@@ -4814,6 +4816,7 @@ msgstr "Data creazione"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #, python-format
 msgid "Credit"
@@ -4926,6 +4929,7 @@ msgstr "Valute"
 
 #. module: account
 #: model:ir.model,name:account.model_res_currency
+#: model:ir.model.fields,field_description:account.field_account_account__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template__currency_id
@@ -5325,6 +5329,7 @@ msgstr "Giorni da aggiungere dopo la fine del mese"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #, python-format
 msgid "Debit"
@@ -9781,16 +9786,6 @@ msgid "Newest first"
 msgstr "Prima i più recenti"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Prossimo evento del calendario delle attività"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_journal__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_move__activity_date_deadline
@@ -10395,8 +10390,7 @@ msgstr "Movimento di apertura confermato"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid "Opening balance"
 msgstr "Saldo di apertura"
@@ -11260,17 +11254,6 @@ msgstr "Crea nuovi conti dal menu del piano contabile."
 #, python-format
 msgid "Please define a payment method line on your payment."
 msgstr "Definisci una linea di metodo di pagamento sul tuo pagamento."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment.py:0
-#, python-format
-msgid ""
-"The selected payment method is not available for this payment, please select"
-" the payment method again."
-msgstr ""
-"Il metodo di pagamento selezionato non è disponibile, seleziona di nuovo il "
-"metodo di pagamento."
 
 #. module: account
 #. odoo-python
@@ -12226,6 +12209,7 @@ msgstr "Storna movimenti"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__reversed
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
@@ -12867,6 +12851,7 @@ msgstr ""
 "Per nascondere il registro senza rimuoverlo, impostare Attivo a falso."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,help:account.field_account_tax__active
 #: model:ir.model.fields,help:account.field_account_tax_template__active
 msgid "Set active to false to hide the tax without removing it."
@@ -13458,6 +13443,11 @@ msgstr "Riga bersaglio"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
 msgid "Tax"
 msgstr "Imposta"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Tax 15%"
+msgstr "Imposta 15%"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
@@ -14850,6 +14840,17 @@ msgid ""
 msgstr ""
 "Il conto di destinazione selezionato è impostato per usare una particolare valuta. Le registrazioni trasferite verranno convertite causando\n"
 "                        la perdita di tutti gli importi in valuta straniera preesistenti."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"Il metodo di pagamento selezionato non è disponibile, seleziona di nuovo il "
+"metodo di pagamento."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -16952,6 +16953,17 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
+"Non è possibile eliminare il tag del conto (%s) perché è utilizzato nella "
+"definizione del piano dei conti."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -16971,17 +16983,6 @@ msgid ""
 msgstr ""
 "Non è possibile eliminare questo rendiconto (%s). È utilizzato dal "
 "generatore PDF della contabilità."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account_tag.py:0
-#, python-format
-msgid ""
-"You cannot delete this account tag (%s), it is used on the chart of account "
-"definition."
-msgstr ""
-"Non è possibile eliminare il tag del conto (%s) perché è utilizzato nella "
-"definizione del piano dei conti."
 
 #. module: account
 #. odoo-python
@@ -17073,17 +17074,17 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted.                 If you are absolutely sure you want to "
+"modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
 "Non è possibile importare \"openning_balance\" se il movimento di apertura "
-"(%s) è già stato registrato.                         Se sei convinto di "
-"voler modificare il saldo di apertura dei tuoi conti, riporta il movimento "
-"allo stato di bozza."
+"(%s) è già stato registrato.                 Se sei convinto di voler "
+"modificare il saldo di apertura dei tuoi conti, riporta il movimento allo "
+"stato di bozza."
 
 #. module: account
 #. odoo-python

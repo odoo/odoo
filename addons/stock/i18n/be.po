@@ -812,7 +812,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "All"
-msgstr ""
+msgstr "Усе"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
@@ -933,7 +933,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "Apply"
-msgstr ""
+msgstr "Прымяніць"
 
 #. module: stock
 #. odoo-javascript
@@ -1045,7 +1045,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__auto
 msgid "Auto"
-msgstr ""
+msgstr "Аўтаматычна"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -1447,7 +1447,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Clear"
-msgstr ""
+msgstr "Ачысціць"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -1642,7 +1642,7 @@ msgstr ""
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #, python-format
 msgid "Control panel buttons"
-msgstr ""
+msgstr "Кнопкі панэлі кіравання"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
@@ -1652,6 +1652,11 @@ msgstr ""
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.server,name:stock.stock_quant_stock_move_line_desynchronization
+msgid "Correct inconsistencies for reservation"
 msgstr ""
 
 #. module: stock
@@ -1671,7 +1676,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__set_count
 msgid "Count"
-msgstr ""
+msgstr "Падлік"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking
@@ -1978,7 +1983,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -2436,7 +2441,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_orderpoint_snooze
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "Discard"
-msgstr ""
+msgstr "Скасаваць"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -2537,7 +2542,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Documentation"
-msgstr ""
+msgstr "Дакументацыя"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__qty_done
@@ -2766,6 +2771,13 @@ msgstr "Фільтры"
 #: model:ir.model.fields,field_description:stock.field_stock_assign_serial__next_serial_number
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial
 msgid "First SN"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Fix discrepancies"
 msgstr ""
 
 #. module: stock
@@ -3782,6 +3794,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -4210,6 +4223,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 #, python-format
 msgid "Locations"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
 msgstr ""
 
 #. module: stock
@@ -9453,6 +9473,24 @@ msgstr ""
 msgid ""
 "You cannot move the same package content more than once in the same transfer"
 " or split the same package into two location."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from both "
+"immediate and planned transfers."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
 msgstr ""
 
 #. module: stock

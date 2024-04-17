@@ -444,31 +444,31 @@
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-1.0</field>
-            <field name="description">312</field>
-            <field name="l10n_ec_code_applied">362</field>
-            <field name="l10n_ec_code_base">312</field>
+            <field name="description">3120</field>
+            <field name="l10n_ec_code_applied">3620</field>
+            <field name="l10n_ec_code_base">3120</field>
             <field name="l10n_ec_code_ats">312A</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'repartition_type': 'base',
-                    'plus_report_expression_ids': [ref('tax_report_line_103_312_tag')],
+                    'plus_report_expression_ids': [ref('tax_report_line_103_3120_tag')],
                 }),
                 (0,0, {
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ret_ir_1x100'),
-                    'plus_report_expression_ids': [ref('tax_report_line_103_362_tag')],
+                    'plus_report_expression_ids': [ref('tax_report_line_103_3620_tag')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'repartition_type': 'base',
-                    'minus_report_expression_ids': [ref('tax_report_line_103_312_tag')],
+                    'minus_report_expression_ids': [ref('tax_report_line_103_3120_tag')],
                 }),
                 (0,0, {
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ret_ir_1x100'),
-                    'minus_report_expression_ids': [ref('tax_report_line_103_362_tag')],
+                    'minus_report_expression_ids': [ref('tax_report_line_103_3620_tag')],
                 })]"/>
         </record>
         <record id="tax_withhold_profit_314A" model="account.tax.template">
@@ -605,6 +605,39 @@
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ret_ir_8x100'),
                     'minus_report_expression_ids': [ref('tax_report_line_103_364_tag')],
+                })]"/>
+        </record>
+        <record id="tax_withhold_profit_3482" model="account.tax.template">
+            <field name="name">3482 3% Comisiones a sociedades, nacionales o extranjeras residentes y establecimientos permanentes domiciliados en el país</field>
+            <field name="type_tax_use">none</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">70</field>
+            <field name="amount">-3.0</field>
+            <field name="description">3140</field>
+            <field name="l10n_ec_code_applied">3640</field>
+            <field name="l10n_ec_code_base">3140</field>
+            <field name="l10n_ec_code_ats">3482</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_103_3140_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_3x100'),
+                    'plus_report_expression_ids': [ref('tax_report_line_103_3640_tag')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_103_3140_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_3x100'),
+                    'minus_report_expression_ids': [ref('tax_report_line_103_3640_tag')],
                 })]"/>
         </record>
         <record id="tax_withhold_profit_319" model="account.tax.template">
@@ -775,6 +808,7 @@
         <record id="tax_withhold_profit_332A" model="account.tax.template">
             <field name="name">332A 0% Enajenacion de Derechos Representativos de Capital y Otros Derechos Exentos (mayo 2016)</field>
             <field name="type_tax_use">none</field>
+            <field name="active">False</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">0.0</field>
@@ -1725,31 +1759,31 @@
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-3</field>
-            <field name="description">303</field>
-            <field name="l10n_ec_code_applied">353</field>
-            <field name="l10n_ec_code_base">303</field>
+            <field name="description">3030</field>
+            <field name="l10n_ec_code_applied">3530</field>
+            <field name="l10n_ec_code_base">3030</field>
             <field name="l10n_ec_code_ats">303A</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'repartition_type': 'base',
-                    'plus_report_expression_ids': [ref('tax_report_line_103_303_tag')],
+                    'plus_report_expression_ids': [ref('tax_report_line_103_3030_tag')],
                 }),
                 (0,0, {
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ret_ir_3x100'),
-                    'plus_report_expression_ids': [ref('tax_report_line_103_353_tag')],
+                    'plus_report_expression_ids': [ref('tax_report_line_103_3530_tag')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'repartition_type': 'base',
-                    'minus_report_expression_ids': [ref('tax_report_line_103_303_tag')],
+                    'minus_report_expression_ids': [ref('tax_report_line_103_3030_tag')],
                 }),
                 (0,0, {
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ret_ir_3x100'),
-                    'minus_report_expression_ids': [ref('tax_report_line_103_353_tag')],
+                    'minus_report_expression_ids': [ref('tax_report_line_103_3530_tag')],
                 })]"/>
         </record>
         <record id="tax_withhold_profit_312C" model="account.tax.template">
@@ -1758,31 +1792,31 @@
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-1.75</field>
-            <field name="description">312</field>
-            <field name="l10n_ec_code_applied">362</field>
-            <field name="l10n_ec_code_base">312</field>
+            <field name="description">3121</field>
+            <field name="l10n_ec_code_applied">3621</field>
+            <field name="l10n_ec_code_base">3121</field>
             <field name="l10n_ec_code_ats">312C</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'repartition_type': 'base',
-                    'plus_report_expression_ids': [ref('tax_report_line_103_312_tag')],
+                    'plus_report_expression_ids': [ref('tax_report_line_103_3121_tag')],
                 }),
                 (0,0, {
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ret_ir_1_75x100'),
-                    'plus_report_expression_ids': [ref('tax_report_line_103_362_tag')],
+                    'plus_report_expression_ids': [ref('tax_report_line_103_3621_tag')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'repartition_type': 'base',
-                    'minus_report_expression_ids': [ref('tax_report_line_103_312_tag')],
+                    'minus_report_expression_ids': [ref('tax_report_line_103_3121_tag')],
                 }),
                 (0,0, {
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ret_ir_1_75x100'),
-                    'minus_report_expression_ids': [ref('tax_report_line_103_362_tag')],
+                    'minus_report_expression_ids': [ref('tax_report_line_103_3621_tag')],
                 })]"/>
         </record>
         <record id="tax_withhold_profit_314A_10" model="account.tax.template">
@@ -2022,31 +2056,31 @@
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-2</field>
-            <field name="description">343</field>
-            <field name="l10n_ec_code_applied">393</field>
-            <field name="l10n_ec_code_base">343</field>
+            <field name="description">344</field>
+            <field name="l10n_ec_code_applied">394</field>
+            <field name="l10n_ec_code_base">344</field>
             <field name="l10n_ec_code_ats">343C</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'repartition_type': 'base',
-                    'plus_report_expression_ids': [ref('tax_report_line_103_343_tag')],
+                    'plus_report_expression_ids': [ref('tax_report_line_103_344_tag')],
                 }),
                 (0,0, {
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ret_ir_2x100'),
-                    'plus_report_expression_ids': [ref('tax_report_line_103_393_tag')],
+                    'plus_report_expression_ids': [ref('tax_report_line_103_394_tag')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'repartition_type': 'base',
-                    'minus_report_expression_ids': [ref('tax_report_line_103_343_tag')],
+                    'minus_report_expression_ids': [ref('tax_report_line_103_344_tag')],
                 }),
                 (0,0, {
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ret_ir_2x100'),
-                    'minus_report_expression_ids': [ref('tax_report_line_103_393_tag')],
+                    'minus_report_expression_ids': [ref('tax_report_line_103_394_tag')],
                 })]"/>
         </record>
 

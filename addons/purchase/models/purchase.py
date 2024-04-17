@@ -1245,6 +1245,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             if not line.product_id or line.invoice_lines or not line.company_id:
                 continue
+            line = line.with_company(line.company_id)
             params = {'order_id': line.order_id}
             seller = line.product_id._select_seller(
                 partner_id=line.partner_id,

@@ -178,3 +178,20 @@ class StockPicking(models.Model):
             finished_move.write({'move_dest_ids': [(4, move.id, False)]})
 
         all_mo.action_assign()
+
+    @api.onchange('location_id', 'location_dest_id')
+    def _onchange_locations(self):
+        moves = self.move_ids | self.move_ids_without_package
+        moves.filtered(lambda m: m.is_subcontract).update({
+            "location_dest_id": self.location_dest_id,
+        })
+        moves.filtered(lambda m: not m.is_subcontract).update({
+            "location_id": self.location_id,
+            "location_dest_id": self.location_dest_id,
+        })
+        if any(line.reserved_qty or line.qty_done for line in self.move_ids.move_line_ids):
+            return {'warning': {
+                    'title': _("Locations to update"),
+                    'message': _("You might want to update the locations of this transfer's operations"),
+                }
+            }

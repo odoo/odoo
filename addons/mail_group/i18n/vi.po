@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Vo Thanh Thuy, 2022
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +66,7 @@ msgstr ""
 msgid ""
 "<div>\n"
 "                <p>Hello <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
-"                <p>Please find below the guidelines of the {{ object.mail_group_id.name }} mailing list.</p>\n"
+"                <p>Please find below the guidelines of the <t t-out=\"object.mail_group_id.name\"></t> mailing list.</p>\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
 "            </div>\n"
 "        "
@@ -135,6 +135,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Bí danh\" "
+"title=\"Bí danh\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
@@ -699,12 +701,12 @@ msgstr "Quản trị nhóm thư"
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_subscribe
 msgid "Mail Group: Mailing List Subscription"
-msgstr ""
+msgstr "Nhóm thư: Đăng ký danh sách gửi thư"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_unsubscribe
 msgid "Mail Group: Mailing List Unsubscription"
-msgstr ""
+msgstr "Nhóm thư: Huỷ đăng ký danh sách gửi thư"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_guidelines
@@ -1223,11 +1225,12 @@ msgstr "Gửi hướng dẫn cho người đăng ký mới"
 #: model:mail.template,description:mail_group.mail_template_guidelines
 msgid "Sent to people who subscribed to a mailing group with group guidelines"
 msgstr ""
+"Gửi tới những người đã đăng ký vào nhóm gửi thư theo các nguyên tắc của nhóm"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_unsubscribe
 msgid "Sent to people who unsubscribed from a mailing group"
-msgstr ""
+msgstr "Gửi tới những người đã hủy đăng ký khỏi nhóm gửi thư"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
@@ -1259,7 +1262,7 @@ msgstr "Đăng ký nhận tin"
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_subscribe
 msgid "Subscription confirmation to a mailing group"
-msgstr ""
+msgstr "Xác nhận đăng ký vào một nhóm gửi thư"
 
 #. module: mail_group
 #. odoo-python

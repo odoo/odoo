@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
 
+<t t-name="website.DuplicatePageDialog" owl="1">
+    <WebsiteDialog close="props.close" primaryClick="() => this.duplicate()">
+        <div class="mb-3 row">
+            <label class="col-form-label col-md-3">
+                Page Name
+            </label>
+            <div class="col-md-9">
+                <input type="text" t-model="state.name" class="form-control" required="required" t-ref="autofocus"/>
+            </div>
+        </div>
+    </WebsiteDialog>
+</t>
+
 <t t-name="website.PageDependencies" owl="1">
     <t t-if="!!Object.keys(dependencies).length">
         <t t-if="props.mode === 'popover'">

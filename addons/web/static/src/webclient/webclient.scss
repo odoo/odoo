@@ -315,14 +315,6 @@ select {
 // Misc.
 //------------------------------------------------------------------------------
 
-// By default, <b> and <strong> are set to `$font-weight-bolder`.
-// Override with `$font-weight-bold` in order to ensure consistency with default
-// bold text, while keeping `$font-weight-bolder` variable untouched for specific
-// uses (eg. '.fw-bolder' class).
-b, strong {
-  font-weight: $font-weight-bold;
-}
-
 //== Titles
 @include media-breakpoint-down(md) {
   h1 {

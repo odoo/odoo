@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import odoo.tests
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 from odoo.tools import float_round
@@ -1583,3 +1584,60 @@ class TestPacking(TestPackingCommon):
         internal_picking_2.immediate_transfer = False
         move_lines_to_pack = (internal_picking_1 | internal_picking_2)._package_move_lines()
         self.assertEqual(len(move_lines_to_pack), 2, "all move lines in pickings should have been selected to pack")
+
+
+@odoo.tests.tagged('post_install', '-at_install')
+class TestPackagePropagation(TestPackingCommon):
+
+    def test_reusable_package_propagation(self):
+        """ Test a reusable package should not be propagated to the next picking
+        of a mto chain """
+        reusable_package = self.env['stock.quant.package'].create({
+            'name': 'Reusable Package',
+            'package_use': 'reusable',
+        })
+        disposable_package = self.env['stock.quant.package'].create({
+            'name': 'disposable Package',
+            'package_use': 'disposable',
+        })
+        self.productA = self.env['product.product'].create({
+            'name': 'productA',
+            'type': 'product',
+            'tracking': 'none',
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 2)
+        pg = self.env['procurement.group'].create({'name': 'propagation_test'})
+        self.env['procurement.group'].run([
+            pg.Procurement(
+                self.productA,
+                2.0,
+                self.productA.uom_id,
+                self.customer_location,
+                'propagation_test',
+                'propagation_test',
+                self.warehouse.company_id,
+                {
+                    'warehouse_id': self.warehouse,
+                    'group_id': pg
+                }
+            )
+        ])
+        picking = self.env['stock.picking'].search([
+            ('group_id', '=', pg.id),
+            ('location_id', '=', self.stock_location.id),
+        ])
+        picking.action_assign()
+        picking.move_ids.move_line_ids.result_package_id = reusable_package
+        picking.move_ids.move_line_ids.copy({'result_package_id': disposable_package.id})
+        picking.move_ids.move_line_ids.qty_done = 1
+        picking.button_validate()
+        self.assertEqual(picking.state, 'done')
+        pack_lines = self.env['stock.picking'].search([
+            ('group_id', '=', pg.id),
+            ('location_id', '=', self.pack_location.id),
+        ]).move_line_ids
+
+        self.assertEqual(len(pack_lines), 2, 'Should have only 2 stock move line')
+        self.assertFalse(pack_lines[0].result_package_id, 'Should not have the reusable package')
+        self.assertEqual(pack_lines[1].result_package_id, disposable_package, 'Should have only the disposable package')
+

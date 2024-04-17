@@ -8,8 +8,8 @@
 # Dao Nguyen <trucdao.uel@gmail.com>, 2022
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2024
 # Thi Huong Nguyen, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2082,6 +2082,7 @@ msgstr "Kích hoạt để tạo biên lai bán hàng"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__active
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,field_description:account.field_account_incoterms__active
 #: model:ir.model.fields,field_description:account.field_account_journal__active
 #: model:ir.model.fields,field_description:account.field_account_payment_term__active
@@ -2689,6 +2690,7 @@ msgstr "Kế toán phân tích"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Analytic Accounts"
 msgstr "Các tài khoản phân tích"
 
@@ -4782,6 +4784,7 @@ msgstr "Ngày tạo"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #, python-format
 msgid "Credit"
@@ -4895,6 +4898,7 @@ msgstr "Tiền tệ"
 
 #. module: account
 #: model:ir.model,name:account.model_res_currency
+#: model:ir.model.fields,field_description:account.field_account_account__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template__currency_id
@@ -5292,6 +5296,7 @@ msgstr "Số ngày cần thêm sau khi kết thúc tháng"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #, python-format
 msgid "Debit"
@@ -6994,6 +6999,8 @@ msgid ""
 "Gaps due to canceled invoices, deleted entries or manual errors in open "
 "period."
 msgstr ""
+"Có khoảng trống do hóa đơn bị hủy, bút toán bị xóa hoặc lỗi thủ công trong "
+"kỳ còn mở."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7895,7 +7902,7 @@ msgstr "Không đúng \"Mã bưu điện\", vui lòng cấu hình lại cho đú
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Invalid domain for expression '%s' of line '%s': %s"
-msgstr ""
+msgstr "Miền không hợp lệ cho biểu thức '%s' của dòng '%s': %s"
 
 #. module: account
 #. odoo-python
@@ -9718,16 +9725,6 @@ msgid "Newest first"
 msgstr "Mới nhất trước tiên"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Sự kiện theo lịch cho hoạt động tiếp theo"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_journal__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_move__activity_date_deadline
@@ -10328,8 +10325,7 @@ msgstr "Chi tiết bút toán đầu kỳ đã vào sổ"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid "Opening balance"
 msgstr "Số dư đầu kỳ"
@@ -10783,7 +10779,7 @@ msgstr "Đối tác"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "Partners that are used in hashed entries cannot be merged."
-msgstr ""
+msgstr "Không thể gộp các đối tác được sử dụng trong các bút toán được hash."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12136,6 +12132,7 @@ msgstr "Phát sinh đảo"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__reversed
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
@@ -12770,6 +12767,7 @@ msgid "Set active to false to hide the Journal without removing it."
 msgstr "Chọn không kích hoạt để ẩn đi sổ nhật ký nhằm tránh việc phải xóa nó."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,help:account.field_account_tax__active
 #: model:ir.model.fields,help:account.field_account_tax_template__active
 msgid "Set active to false to hide the tax without removing it."
@@ -13357,6 +13355,11 @@ msgstr "Dòng mục tiêu"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
 msgid "Tax"
 msgstr "Thuế"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Tax 15%"
+msgstr "Thuế 15%"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
@@ -14721,6 +14724,17 @@ msgid ""
 msgstr ""
 "Tài khoản đích đã chọn được cài để sử dụng một đơn vị tiền tệ khác. Mọi bút toán liên quan đến nó sẽ được chuyển đổi thành đơn vị tiền tệ này, làm\n"
 "                        mất bất kỳ khoản ngoại tệ nào đã có từ trước."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"Phương thức thanh toán đã chọn không khả dụng cho khoản thanh toán này, vui "
+"lòng chọn lại phương thức thanh toán."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -16758,7 +16772,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot create recursive groups."
-msgstr ""
+msgstr "Bạn không thể tạo nhóm đệ quy."
 
 #. module: account
 #. odoo-python
@@ -16787,6 +16801,17 @@ msgstr "Bạn không thể xóa chi tiết bút toán một khi nó đã đượ
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
+"Bạn không thể xóa thẻ tài khoản (%s) này, vì nó được sử dụng trong định "
+"nghĩa hệ thống tài khoản."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -16795,6 +16820,17 @@ msgid ""
 msgstr ""
 "Bạn không thể xóa nút toán này, vì nó đã sử dụng một số thứ tự và không phải"
 " là mục cuối cùng trong chuỗi. Bạn có thể nên hoàn nguyên nó để thay thế."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
+"Bạn không thể xóa báo cáo (%s) này, vì công cụ tạo PDF kế toán đang sử dụng "
+"nó."
 
 #. module: account
 #. odoo-python
@@ -16885,23 +16921,20 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted.                 If you are absolutely sure you want to "
+"modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
-"Bạn không thể nhập \"openning_balance\" nếu bút toán đầu kỳ (%s) đã được vào"
-" sổ. Nếu bạn hoàn toàn chắc chắn rằng bạn muốn sửa đổi số dư đầu kỳ của các "
-"tài khoản của mình, hãy bút toán về trạng thái nháp."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot merge accounts."
-msgstr ""
+msgstr "Bạn không thể gộp các tài khoản."
 
 #. module: account
 #. odoo-python

@@ -187,7 +187,8 @@ class StockLandedCost(models.Model):
                 for product in cost.cost_lines.product_id:
                     accounts = product.product_tmpl_id.get_product_accounts()
                     input_account = accounts['stock_input']
-                    all_amls.filtered(lambda aml: aml.account_id == input_account and not aml.reconciled).reconcile()
+                    all_amls.filtered(lambda aml: aml.account_id == input_account and not aml.reconciled\
+                         and not aml.display_type in ('line_section', 'line_note')).reconcile()
 
     def get_valuation_lines(self):
         self.ensure_one()

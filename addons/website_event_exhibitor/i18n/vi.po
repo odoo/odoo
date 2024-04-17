@@ -6,15 +6,15 @@
 # Martin Trigaux, 2022
 # fanha99 <fanha99@hotmail.com>, 2022
 # Vo Thanh Thuy, 2022
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:24+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_event_exhibitor
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_exhibitor/static/src/xml/event_exhibitor_connect.xml:0
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 #, python-format
@@ -37,7 +37,7 @@ msgstr ""
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
 msgid "<i class=\"fa fa-ban me-2\"/>Unpublished"
-msgstr ""
+msgstr "<i class=\"fa fa-ban me-2\"/>Đã huỷ đăng"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_topbar_country
@@ -76,7 +76,7 @@ msgstr ""
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
 msgid "<small class=\"badge text-bg-danger\">Unpublished</small>"
-msgstr ""
+msgstr "<small class=\"badge text-bg-danger\">Đã huỷ đăng</small>"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_search_tag
@@ -86,7 +86,7 @@ msgstr "<span class=\"btn border-0 py-1\">×</span>"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
 msgid "<span class=\"h5 m-3\">Other exhibitors</span>"
-msgstr ""
+msgstr "<span class=\"h5 m-3\">Các nhà triển lãm khác</span>"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
@@ -115,6 +115,10 @@ msgid ""
 "                    aerospace, environmental and applied fluid dynamics, and\n"
 "                    turbomachinery and propulsion)."
 msgstr ""
+"Một tổ chức khoa học và giáo dục quốc tế phi\n"
+"                      lợi nhuận, có ba khoa (hàng không và vũ trụ,\n"
+"                      động lực học chất lỏng ứng dụng và môi trường,\n"
+"                       và máy tuabin và động cơ đẩy)."
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
@@ -217,7 +221,7 @@ msgid "Chat Room"
 msgstr "Phòng chat"
 
 #. module: website_event_exhibitor
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_exhibitor/static/src/xml/event_exhibitor_connect.xml:0
 #, python-format
 msgid "Come back between"
@@ -343,6 +347,8 @@ msgstr "Tên hiển thị"
 msgid ""
 "Display exhibitors on website, in the footer of every page of the event."
 msgstr ""
+"Hiển thị các đơn vị triển lãm trên trang web, ở phần footer của mỗi trang sự"
+" kiện."
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
@@ -361,7 +367,7 @@ msgid "End hour"
 msgstr "Giờ kết thúc"
 
 #. module: website_event_exhibitor
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_exhibitor/static/src/xml/event_exhibitor_connect.xml:0
 #: code:addons/website_event_exhibitor/static/src/xml/event_exhibitor_connect.xml:0
 #: model:ir.model,name:website_event_exhibitor.model_event_event
@@ -375,7 +381,7 @@ msgstr "Sự kiện"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.snippet_options
 msgid "Event Page"
-msgstr ""
+msgstr "Trang sự kiện"
 
 #. module: website_event_exhibitor
 #: model:ir.model,name:website_event_exhibitor.model_event_sponsor
@@ -411,6 +417,7 @@ msgid "Exhibitor"
 msgstr "Nhà triển lãm"
 
 #. module: website_event_exhibitor
+#. odoo-python
 #: code:addons/website_event_exhibitor/models/event_event.py:0
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_search
 #, python-format
@@ -446,7 +453,7 @@ msgstr "Font biểu tượng ví dụ: fa-tasks"
 #. module: website_event_exhibitor
 #: model:ir.model.fields.selection,name:website_event_exhibitor.selection__event_sponsor__exhibitor_type__sponsor
 msgid "Footer Logo Only"
-msgstr ""
+msgstr "Footer chỉ có logo"
 
 #. module: website_event_exhibitor
 #: model:event.sponsor.type,name:website_event_exhibitor.event_sponsor_type3
@@ -546,6 +553,11 @@ msgid ""
 "                    series) and encourages \"training in research through\n"
 "                    research\"."
 msgstr ""
+"Tổ chức này đào tạo sau đại học về động lực học chất lỏng\n"
+"                    (thạc sĩ nghiên cứu về động lực học chất lỏng, trước đây là\n"
+"                    \"Khóa học văn bằng\", chương trình tiến sĩ, chương trình stagiaire\n"
+"                    và các bài giảng) và khuyến khích \"đào tạo nghiên cứu thông qua\n"
+"                    nghiên cứu\"."
 
 #. module: website_event_exhibitor
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_2
@@ -561,6 +573,15 @@ msgid ""
 "                    mainly by governmental and international agencies as well\n"
 "                    as industries."
 msgstr ""
+"Tổ chức này đảm nhận và thúc đẩy nghiên cứu trong lĩnh vực\n"
+"                   động lực học chất lỏng. Họ sở hữu khoảng 50 đường hầm gió\n"
+"                   khác nhau, máy tuabin và các cơ sở thử nghiệm chuyên dụng khác,\n"
+"                   một số trong đó là duy nhất hoặc lớn nhất trên thế giới. Hoạt động\n"
+"                   nghiên cứu sâu rộng về các khía cạnh thực nghiệm, tính toán và lý\n"
+"                   thuyết của dòng khí cũng như chất lỏng được thực hiện dưới sự chỉ\n"
+"                   đạo của giảng viên và kỹ sư nghiên cứu. Nguồn tài trợ chủ yếu đến\n"
+"                   từ các cơ quan chính phủ, tổ chức quốc tế, và các ngành\n"
+"                   công nghiệp."
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
@@ -568,7 +589,7 @@ msgid "Jitsi Name"
 msgstr "Tên Jitsi"
 
 #. module: website_event_exhibitor
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_exhibitor/static/src/xml/event_exhibitor_connect.xml:0
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 #, python-format
@@ -770,6 +791,11 @@ msgid ""
 "                installed IT software into account. That is why Idealis\n"
 "                Consulting delivers excellence in HR and SC Management."
 msgstr ""
+"Các chuyên viên của chúng tôi phát minh, tưởng tượng và phát triển\n"
+"                các giải pháp đáp ứng yêu cầu kinh doanh của bạn. Họ vừa tạo\n"
+"                dựng một môi trường kỹ thuật mới cho công ty bạn vừa cân nhắc\n"
+"                cả phần mềm CNTT đã được cài đặt sẵn. Đó là lý do tại sao Idealis\n"
+"                Consulting tạo ra sự xuất sắc trong Quản lý Nhân sự và SC."
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__room_participant_count
@@ -793,7 +819,7 @@ msgstr "Số người tham dự tối đa "
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
 msgid "Personnel Administration"
-msgstr ""
+msgstr "Quản trị nhân sự"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__partner_phone
@@ -859,7 +885,7 @@ msgstr "Lỗi gửi SMS"
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
 msgid "Sales and Distribution"
-msgstr ""
+msgstr "Bán hàng và phân phối"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__sequence
@@ -871,7 +897,7 @@ msgstr "Trình tự"
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__exhibitor_menu
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_type__exhibitor_menu
 msgid "Showcase Exhibitors"
-msgstr "Triển lãm nhà tài trợ"
+msgstr "Hiển thị nhà triển lãm"
 
 #. module: website_event_exhibitor
 #: model:event.sponsor.type,name:website_event_exhibitor.event_sponsor_type2
@@ -885,6 +911,7 @@ msgid "Slogan"
 msgstr "Slogan"
 
 #. module: website_event_exhibitor
+#. odoo-python
 #: code:addons/website_event_exhibitor/models/event_sponsor.py:0
 #, python-format
 msgid "Sponsor"
@@ -967,7 +994,7 @@ msgstr "Chương trình tài trợ "
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__sponsor_type_id
 msgid "Sponsorship Level"
-msgstr ""
+msgstr "Cấp độ tài trợ"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__activity_state
@@ -988,9 +1015,10 @@ msgstr ""
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
 msgid "Talent Management"
-msgstr ""
+msgstr "Quản lý nhân tài"
 
 #. module: website_event_exhibitor
+#. odoo-python
 #: code:addons/website_event_exhibitor/controllers/website_event_main.py:0
 #, python-format
 msgid ""
@@ -1008,7 +1036,7 @@ msgstr "URL đầy đủ để truy cập tài liệu thông qua trang web."
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 msgid "The sponsor website description is missing."
-msgstr ""
+msgstr "Thiếu mô tả trang web của nhà tài trợ."
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__event_date_tz
@@ -1018,7 +1046,7 @@ msgstr "Múi giờ"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.snippet_options
 msgid "Top Bar Filter"
-msgstr ""
+msgstr "Bộ lọc thanh trên"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__activity_exception_decoration
@@ -1072,18 +1100,18 @@ msgid "Within opening hours"
 msgstr "Trong giờ mở cửa"
 
 #. module: website_event_exhibitor
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_exhibitor/static/src/xml/event_exhibitor_connect.xml:0
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 #, python-format
 msgid "a few seconds"
-msgstr ""
+msgstr "vài giây"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 msgid "e.g. \"Openwood specializes in home decoration...\""
-msgstr ""
+msgstr "VD: \"Openwood chuyên về trang trí nhà cửa...\""
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
@@ -1106,7 +1134,7 @@ msgid "e.g. Your best choice for your home"
 msgstr "vd. Lựa chọn tốt nhất cho ngôi nhà của bạn"
 
 #. module: website_event_exhibitor
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_exhibitor/static/src/xml/event_exhibitor_connect.xml:0
 #: code:addons/website_event_exhibitor/static/src/xml/event_exhibitor_connect.xml:0
 #, python-format
@@ -1114,7 +1142,7 @@ msgid "is not available right now."
 msgstr "hiện chưa sẵn sàng. "
 
 #. module: website_event_exhibitor
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_exhibitor/static/src/xml/event_exhibitor_connect.xml:0
 #, python-format
 msgid "is over."
@@ -1135,7 +1163,7 @@ msgid "search."
 msgstr "tìm kiếm của bạn. "
 
 #. module: website_event_exhibitor
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_exhibitor/static/src/xml/event_exhibitor_connect.xml:0
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 #, python-format
@@ -1143,7 +1171,7 @@ msgid "starts in"
 msgstr "bắt đầu lúc"
 
 #. module: website_event_exhibitor
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_exhibitor/static/src/xml/event_exhibitor_connect.xml:0
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 #, python-format
