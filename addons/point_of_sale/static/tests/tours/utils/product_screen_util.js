@@ -379,14 +379,7 @@ export function modeIsActive(mode) {
 }
 export function checkSecondCashClosingDetailsLineAmount(amount, sign) {
     return [
-        {
-            content: "Open menu",
-            trigger: ".menu-button",
-        },
-        {
-            content: "Click close session button",
-            trigger: ".close-button",
-        },
+        ...Chrome.clickMenuOption("Close Register"),
         {
             content: "Check closing details",
             trigger: `.cash-overview tr:nth-child(2) td:contains("${amount}")`,
@@ -506,11 +499,7 @@ export function checkOrderlinesNumber(number) {
 
 export function closePos() {
     return [
-        Chrome.clickMenuButton(),
-        {
-            content: "open closing the Point of Sale frontend popup",
-            trigger: ".close-button",
-        },
+        ...Chrome.clickMenuOption("Close Register"),
         {
             content: "close the Point of Sale frontend",
             trigger: ".close-pos-popup .button:contains('Discard')",

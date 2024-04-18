@@ -12,14 +12,6 @@ export function clickLoginButton() {
         },
     ];
 }
-export function clickLockButton() {
-    return [
-        {
-            content: "click lock button",
-            trigger: ".lock-button",
-        },
-    ];
-}
 export function clickCashierName() {
     return [
         {
