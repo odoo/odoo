@@ -29,6 +29,36 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
             'currency_id': buck_currency.id,
         })
 
+    def test_credit_limit_multi_company(self):
+        # multi-company setup
+        company2 = self.company_data_2['company']
+
+        # Activate the Credit Limit feature and set a value for partner_a.
+        self.env.company.account_use_credit_limit = True
+        self.partner_a.credit_limit = 1000.0
+
+        # Create and confirm a SO for another company
+        sale_order = company2.env['sale.order'].create({
+            'company_id': company2.id,
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data_2['default_pricelist'].id,
+            'order_line': [Command.create({
+                'product_id': self.company_data_2['product_order_no'].id,
+                'price_unit': 1000.0,
+            })]
+        })
+
+        self.assertEqual(self.partner_a.credit_to_invoice, 0.0)
+        sale_order.action_confirm()
+
+        self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
+        self.assertEqual(self.partner_a.with_company(company2).credit_to_invoice, 1000.0)
+        partner_a_multi_company = self.partner_a.with_context(allowed_company_ids=[self.env.company.id, company2.id])
+        self.assertEqual(partner_a_multi_company.credit_to_invoice, 0.0)
+        self.assertEqual(self.partner_a.credit_to_invoice, 0.0)
+
     def test_warning_on_invoice_with_downpayment(self):
         # Activate the Credit Limit feature and set a value for partner_a.
         self.env.company.account_use_credit_limit = True
