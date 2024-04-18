@@ -15,7 +15,7 @@ export function mergeTableHelpers(childName, parentName) {
             trigger: 'i[aria-label="Merge"]',
         },
         FloorScreen.clickTable(parentName),
-        FloorScreen.backToFloor(),
+        ProductScreen.back(),
         {
             content: `Verify table ${childName} is merged into table ${parentName}`,
             trigger: `div.table div.label:contains("${parentName}")`,

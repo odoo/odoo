@@ -116,7 +116,6 @@ export class PosStore extends Reactive {
         this.selectedOrderUuid = null;
         this.selectedPartner = null;
         this.selectedCategory = null;
-        this.showResultMobile = false;
         this.searchProductWord = "";
         this.ready = new Promise((resolve) => {
             this.markReady = resolve;

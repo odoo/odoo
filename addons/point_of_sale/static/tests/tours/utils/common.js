@@ -1,3 +1,9 @@
+export function back() {
+    return {
+        content: "go back to the products",
+        trigger: ".pos-rightheader .back-button",
+    };
+}
 export function inLeftSide(steps) {
     return [
         {
@@ -6,11 +12,7 @@ export function inLeftSide(steps) {
             mobile: true,
         },
         ...[steps].flat(),
-        {
-            content: "go back to the products",
-            trigger: ".pos-rightheader .floor-button",
-            mobile: true,
-        },
+        { ...back(), mobile: true },
     ];
 }
 
