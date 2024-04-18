@@ -198,7 +198,7 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
         const sheetId = position.sheetId;
         if (cell && cell.isFormula) {
             const pivotFunction = getFirstPivotFunction(cell.content);
-            if (pivotFunction) {
+            if (pivotFunction && pivotFunction.args[0]) {
                 const content = astToFormula(pivotFunction.args[0]);
                 return this.getters.evaluateFormula(sheetId, content).toString();
             }
