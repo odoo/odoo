@@ -174,10 +174,12 @@ class AccountPaymentRegister(models.TransientModel):
         :param lines:           A recordset of the `account.move.line`'s that will be reconciled.
         :return:                A string representing a communication to be set on payment.
         '''
-        if lines:
-            labels = {line.name or line.move_id.ref or line.move_id.name for line in lines}
-            return ' '.join(sorted(labels))
-        return ''
+        if len(lines) == 1:
+            line = lines[0]
+            label = line.name or line.move_id.ref or line.move_id.name
+        else:
+            label = self.company_id.get_next_batch_payment_communication()
+        return label
 
     @api.model
     def _get_batch_available_journals(self, batch_result):

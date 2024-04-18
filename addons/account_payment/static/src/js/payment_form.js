@@ -51,6 +51,8 @@ PaymentForm.include({
             }
         }
 
+        transactionRouteParams.payment_reference = this.paymentContext.paymentReference;
+
         return transactionRouteParams;
     },
 });
