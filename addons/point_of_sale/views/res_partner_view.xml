@@ -43,4 +43,11 @@
                 </xpath>
             </field>
         </record>
+        <record id="res_partner_action_edit_pos" model="ir.actions.act_window">
+            <field name="name">Edit Partner</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="base.view_partner_form"/>
+        </record>
 </odoo>
