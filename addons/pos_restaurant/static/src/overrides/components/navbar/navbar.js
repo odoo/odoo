@@ -3,8 +3,7 @@ import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product
 import { TipScreen } from "@pos_restaurant/app/tip_screen/tip_screen";
 import { patch } from "@web/core/utils/patch";
 import { ListContainer } from "@point_of_sale/app/generic_components/list_container/list_container";
-import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
-import { _t } from "@web/core/l10n/translation";
+import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 
 patch(Navbar, {
     components: { ...Navbar.components, ListContainer },
@@ -15,7 +14,8 @@ patch(Navbar.prototype, {
             if (
                 (this.pos.mainScreen.component === ProductScreen &&
                     this.pos.mobile_pane == "right") ||
-                this.pos.mainScreen.component === TipScreen
+                this.pos.mainScreen.component === TipScreen ||
+                this.pos.mainScreen.component === ActionScreen
             ) {
                 this.pos.showScreen("FloorScreen", { floor: this.floor });
             } else {
@@ -43,32 +43,8 @@ patch(Navbar.prototype, {
         localStorage.setItem("floorPlanStyle", mode);
         this.pos.floorPlanStyle = mode;
     },
-    newFloatingOrder() {
-        this.pos.add_new_order();
-        this.pos.showScreen("ProductScreen");
-    },
-    getFloatingOrders() {
-        return this.pos.get_open_orders().filter((order) => !order.table_id);
-    },
-    selectFloatingOrder(order) {
-        this.pos.set_order(order);
-        this.pos.showScreen("ProductScreen");
-    },
-    editOrderNote(order) {
-        this.dialog.add(TextInputPopup, {
-            title: _t("Edit order note"),
-            placeholder: _t("Emma's Birthday Party"),
-            startingValue: order.note,
-            getPayload: async (newName) => {
-                if (typeof order.id == "number") {
-                    this.pos.data.write("pos.order", [order.id], {
-                        note: newName,
-                    });
-                } else {
-                    order.note = newName;
-                }
-            },
-        });
+    showTabs() {
+        return !this.pos.selectedTable;
     },
     get showEditPlanButton() {
         return true;

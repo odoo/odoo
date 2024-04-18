@@ -6,7 +6,6 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
-import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 
 const NON_IDLE_EVENTS = [
     "mousemove",
@@ -180,11 +179,8 @@ patch(PosStore.prototype, {
     },
     showBackButton() {
         if (this.config.module_pos_restaurant) {
-            const screenWoBackBtn = [ReceiptScreen, FloorScreen, TicketScreen];
-            return (
-                !screenWoBackBtn.includes(this.mainScreen.component) ||
-                (this.ui.isSmall && this.mainScreen.component === TicketScreen)
-            );
+            const screenWoBackBtn = [ReceiptScreen, FloorScreen];
+            return !screenWoBackBtn.includes(this.mainScreen.component) || this.ui.isSmall;
         } else {
             return super.showBackButton(...arguments);
         }

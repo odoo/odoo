@@ -2,7 +2,6 @@ import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
-import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import * as PosSale from "@pos_sale/../tests/tours/utils/pos_sale_utils";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
@@ -59,34 +58,6 @@ registry.category("web_tour.tours").add("PosSettleOrder2", {
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("PosRefundDownpayment", {
-    test: true,
-    steps: () =>
-        [
-            Dialog.confirm("Open session"),
-            PosSale.downPaymentFirstOrder(),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.clickValidate(),
-            ReceiptScreen.clickNextOrder(),
-            ...ProductScreen.clickRefund(),
-            // Filter should be automatically 'Paid'.
-            TicketScreen.filterIs("Paid"),
-            TicketScreen.selectOrder("-0001"),
-            Order.hasLine({
-                productName: "Down Payment",
-                withClass: ".selected",
-                quantity: "1.0",
-            }),
-            ProductScreen.clickNumpad("1"),
-            TicketScreen.confirmRefund(),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.clickValidate(),
-            ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
 

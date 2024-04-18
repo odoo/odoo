@@ -38,7 +38,6 @@ export class PosOrder extends Base {
 
         // !!Keep all uiState in one object!!
         this.uiState = {
-            lineToRefund: {},
             displayed: true,
             booked: false,
             screen_data: {},
@@ -433,10 +432,6 @@ export class PosOrder extends Base {
     removeOrderline(line) {
         const linesToRemove = line.getAllLinesInCombo();
         for (const lineToRemove of linesToRemove) {
-            if (lineToRemove.refunded_orderline_id?.uuid in this.uiState.lineToRefund) {
-                delete this.uiState.lineToRefund[lineToRemove.refunded_orderline_id.uuid];
-            }
-
             if (this.assert_editable()) {
                 lineToRemove.delete();
             }
@@ -446,6 +441,7 @@ export class PosOrder extends Base {
     }
 
     _isRefundOrder() {
+        // FIXME: what if the first line is not a refund but the second is?
         if (this.lines.length > 0 && this.lines[0].refunded_orderline_id) {
             return true;
         }
@@ -1060,6 +1056,12 @@ export class PosOrder extends Base {
             })),
             change: this.get_change() && formatCurrency(this.get_change()),
         };
+    }
+    getFloatingOrderName() {
+        return this.note || this.tracking_number;
+    }
+    isRefund() {
+        return Boolean(this.raw.refunded_order_id);
     }
 }
 

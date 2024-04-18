@@ -7,8 +7,8 @@ import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
-import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import * as MergeTable from "@pos_restaurant/../tests/tours/utils/merge_table_util";
+import { List } from "@point_of_sale/../tests/tours/utils/generic_components/web_views_util";
 import { inLeftSide, negateStep } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 
@@ -88,7 +88,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
 
             // Create 2nd order (paid)
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            Chrome.newOrder(),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             ProductScreen.totalAmountIs("4.40"),
@@ -140,7 +140,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
 
             // Create another draft order and go back to floor
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            Chrome.newOrder(),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             ProductScreen.back(),
@@ -152,7 +152,8 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             FloorScreen.clickTable("5"),
             ProductScreen.isShown(),
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.deleteOrder("-0001"),
+            // TODO: how should we now delete draft orders, given that they don't appear in the orders list?
+            List.delete("-0001"),
             Dialog.confirm(),
             {
                 ...Dialog.confirm(),
@@ -160,8 +161,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
             isSyncStatusConnected(),
-            TicketScreen.selectOrder("-0004"),
-            TicketScreen.loadSelectedOrder(),
+            Chrome.openTab("04"),
             ProductScreen.isShown(),
             ProductScreen.back(),
 
