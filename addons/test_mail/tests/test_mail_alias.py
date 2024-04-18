@@ -681,10 +681,10 @@ class TestMailAliasDomain(TestMailAliasCommon):
         # falsy values
         for config_value in [False, None, '', ' ']:
             with self.subTest(config_value=config_value):
-                alias_domain.write({'bounce_alias': config_value})
-                self.assertFalse(alias_domain.bounce_alias)
-                alias_domain.write({'catchall_alias': config_value})
-                self.assertFalse(alias_domain.catchall_alias)
+                with self.assertRaises(exceptions.ValidationError):
+                    alias_domain.write({'bounce_alias': config_value})
+                with self.assertRaises(exceptions.ValidationError):
+                    alias_domain.write({'catchall_alias': config_value})
                 alias_domain.write({'default_from': config_value})
                 self.assertFalse(alias_domain.default_from)
 

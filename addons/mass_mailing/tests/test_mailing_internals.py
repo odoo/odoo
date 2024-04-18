@@ -411,7 +411,7 @@ class TestMassMailValues(MassMailCommon):
             'model': recipient._name,
             'res_id': recipient.id,
         })
-        with self.assertRaises(IntegrityError):
+        with self.assertRaises(ValidationError):
             activity.write({'model': False})
             self.env.flush_all()
         with self.assertRaises(IntegrityError):

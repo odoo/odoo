@@ -3,8 +3,6 @@ from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import mute_logger
-import psycopg2
 from freezegun import freeze_time
 
 @tagged('post_install', '-at_install')
@@ -172,7 +170,7 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         with self.assertRaises(UserError):
             self.env['account.account'].name_create('550003 Existing Account')
         # account code is mandatory and providing a name without a code should raise an error
-        with self.assertRaises(psycopg2.DatabaseError), mute_logger('odoo.sql_db'):
+        with self.assertRaisesRegex(ValidationError, "must have a value"):
             self.env['account.account'].with_context(import_file=True).name_create('Existing Account')
         account_id = self.env['account.account'].with_context(import_file=True).name_create('550003 Existing Account')[0]
         account = self.env['account.account'].browse(account_id)
@@ -328,7 +326,7 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         self.assertEqual(account.name, "A new account")
 
         # name split is only possible through name_create, so an error should be raised
-        with self.assertRaises(psycopg2.DatabaseError), mute_logger('odoo.sql_db'):
+        with self.assertRaisesRegex(ValidationError, "must have a value"):
             account = self.env['account.account'].create({
                 'name': '314159 A new account',
                 'account_type': 'expense',

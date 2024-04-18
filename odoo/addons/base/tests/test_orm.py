@@ -5,7 +5,7 @@ from collections import defaultdict
 
 import psycopg2
 
-from odoo.exceptions import AccessError, MissingError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
 from odoo import Command
@@ -89,7 +89,7 @@ class TestORM(TransactionCase):
         with self.assertRaises(AccessError):
             p1.with_user(user).unlink()
 
-        # Prepare mixed case 
+        # Prepare mixed case
         p2.unlink()
         # read mixed records: some deleted and some filtered
         with self.assertRaises(AccessError):
@@ -241,6 +241,19 @@ class TestORM(TransactionCase):
         self.assertCountEqual(foo.mapped('state_ids.code'), ['NF', 'SF', 'WF', 'EF'])
         self.assertEqual(bar.name, 'Bar')
         self.assertCountEqual(bar.mapped('state_ids.code'), ['NB', 'SB'])
+
+    def test_required(self):
+        """Test that we have a nice ValidationError when required field is missing."""
+        # Can't create a record without setting a required field
+        with self.assertRaises(ValidationError):
+            self.env['res.partner.category'].create({'name': False})
+
+        # Can't update a record by setting a required field to False
+        partner_category = self.env['res.partner.category'].create({'name': 'Good'})
+        with self.assertRaises(ValidationError):
+            partner_category.name = False
+        with self.assertRaises(ValidationError):
+            partner_category.write({'name': False})
 
 
 class TestInherits(TransactionCase):

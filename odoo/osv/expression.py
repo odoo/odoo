@@ -1452,7 +1452,7 @@ class expression(object):
                     model_raw_trans = model.with_context(prefetch_langs=True)
                     sql_field = model_raw_trans._field_to_sql(alias, field.name, self.query)
                     sql_operator = SQL_OPERATORS[operator]
-                    params = [it for it in right if it is not False and it is not None]
+                    params = [it for it in right if it]
                     check_null = len(params) < len(right)
                     if params:
                         params = [field.convert_to_column(p, model, validate=False).adapted['en_US'] for p in params]

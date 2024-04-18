@@ -643,6 +643,8 @@ class ResPartner(models.Model):
 
     @api.model
     def _commercial_fields(self):
+        if not self.env['ir.property']._get('property_account_payable_id', 'res.partner'):
+            return super()._commercial_fields()  # Not using accounting on current company
         return super(ResPartner, self)._commercial_fields() + \
             ['debit_limit', 'property_account_payable_id', 'property_account_receivable_id', 'property_account_position_id',
              'property_payment_term_id', 'property_supplier_payment_term_id', 'last_time_entries_checked', 'credit_limit']

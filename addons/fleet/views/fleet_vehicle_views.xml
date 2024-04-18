@@ -177,7 +177,7 @@
         <field name="name">fleet.vehicle.tree</field>
         <field name="model">fleet.vehicle</field>
         <field name="arch" type="xml">
-            <tree string="Vehicle" 
+            <tree string="Vehicle"
                 decoration-warning="contract_renewal_due_soon and not contract_renewal_overdue"
                 decoration-danger="contract_renewal_overdue"
                 multi_edit="1"
@@ -465,7 +465,6 @@
         <field name="name">Odometers</field>
         <field name="res_model">fleet.vehicle.odometer</field>
         <field name="view_mode">tree,kanban,form,graph</field>
-        <field name="context"></field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Create a new odometer log

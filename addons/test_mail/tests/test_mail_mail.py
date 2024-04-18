@@ -313,11 +313,10 @@ class TestMailMail(MailCommon):
             self.assertEqual(notification.notification_status, 'exception')
 
         # MailServer.send_email(): _prepare_email_message: unexpected ASCII / Malformed 'Return-Path' or 'From' address
-        # Force bounce alias to void, will force usage of email_from
-        self.mail_alias_domain.bounce_alias = False
-        self.env.company.invalidate_recordset(fnames={'bounce_email', 'bounce_formatted'})
         for email_from in ['strange@example¢¡.com', 'robert']:
             self._reset_data()
+            # Force bounce alias to same_value as email_from to disable default bounce
+            mail = mail.with_context(domain_bounce_address=email_from)
             mail.write({'email_from': email_from})
             with self.mock_mail_gateway():
                 mail.send(raise_exception=False)

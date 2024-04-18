@@ -40,7 +40,7 @@ from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
 from .tools.mimetypes import guess_mimetype
 
-from odoo.exceptions import CacheMiss
+from odoo.exceptions import CacheMiss, ValidationError
 from odoo.osv import expression
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
@@ -969,9 +969,14 @@ class Field(MetaField('DummyField', (object,), {})):
     # Conversion of values
     #
 
+    def _is_null_value(self, value, record, validate):
+        if not value and validate and self.required:
+            raise ValidationError(_("%s must have a value.", self._description_string(record.env)))
+        return not value
+
     def convert_to_column(self, value, record, values=None, validate=True):
         """ Convert ``value`` from the ``write`` format to the SQL format. """
-        if value is None or value is False:
+        if self._is_null_value(value, record, validate):
             return None
         return pycompat.to_text(value)
 
@@ -986,6 +991,7 @@ class Field(MetaField('DummyField', (object,), {})):
         :param bool validate: when True, field-specific validation of ``value``
             will be performed
         """
+        self._is_null_value(value, record, validate)
         return value
 
     def convert_to_record(self, value, record):
@@ -1487,6 +1493,8 @@ class Integer(Field):
         return res
 
     def convert_to_column(self, value, record, values=None, validate=True):
+        # if self._is_null_value(value, record, validate):
+        #     return None
         return int(value or 0)
 
     def convert_to_cache(self, value, record, validate=True):
@@ -1586,6 +1594,8 @@ class Float(Field):
         return self.get_digits(env)
 
     def convert_to_column(self, value, record, values=None, validate=True):
+        # if self._is_null_value(value, record, validate):
+        #     return None
         result = float(value or 0.0)
         digits = self.get_digits(record.env)
         if digits:
@@ -1675,6 +1685,8 @@ class Monetary(Field):
             currency = currency.with_env(record.env)
 
         value = float(value or 0.0)
+        # if self._is_null_value(value, record, validate):
+        #     return None
         if currency:
             return float_repr(currency.round(value), currency.decimal_places)
         return value
@@ -1742,7 +1754,7 @@ class _String(Field):
 
     def convert_to_column(self, value, record, values=None, validate=True):
         cache_value = self.convert_to_cache(value, record, validate)
-        if cache_value is None:
+        if self._is_null_value(cache_value, record, validate):
             return None
         if callable(self.translate):
             # pylint: disable=not-callable
@@ -1753,14 +1765,9 @@ class _String(Field):
 
     def _convert_from_cache_to_column(self, value):
         """ Convert from cache_raw value to column value """
-        if value is None:
+        if not value:
             return None
         return PsycopgJson(value) if self.translate else value
-
-    def convert_to_cache(self, value, record, validate=True):
-        if value is None or value is False:
-            return None
-        return value
 
     def convert_to_record(self, value, record):
         if value is None:
@@ -1983,16 +1990,14 @@ class Char(_String):
     _description_trim = property(attrgetter('trim'))
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        if value is None or value is False:
-            return None
         # we need to convert the string to a unicode object to be able
         # to evaluate its length (and possibly truncate it) reliably
-        return super().convert_to_column(pycompat.to_text(value)[:self.size], record, values, validate)
+        value = pycompat.to_text(value)[:self.size] or None
+        return super().convert_to_column(value, record, values, validate)
 
     def convert_to_cache(self, value, record, validate=True):
-        if value is None or value is False:
-            return None
-        return pycompat.to_text(value)[:self.size]
+        value = super().convert_to_cache(pycompat.to_text(value), record, validate)
+        return value and value[:self.size] or ''
 
 
 class Text(_String):
@@ -2013,9 +2018,7 @@ class Text(_String):
         return ('jsonb', 'jsonb') if self.translate else ('text', 'text')
 
     def convert_to_cache(self, value, record, validate=True):
-        if value is None or value is False:
-            return None
-        return ustr(value)
+        return super().convert_to_cache(value and ustr(value) or None, record, validate)
 
 
 class Html(_String):
@@ -2074,10 +2077,10 @@ class Html(_String):
         return super().convert_to_column(self._convert(value, record, validate=True), record, values, validate=False)
 
     def convert_to_cache(self, value, record, validate=True):
-        return self._convert(value, record, validate)
+        return super().convert_to_cache(self._convert(value, record, validate), record, validate)
 
     def _convert(self, value, record, validate):
-        if value is None or value is False:
+        if not value:
             return None
 
         if not validate or not self.sanitize:
@@ -2238,13 +2241,11 @@ class Date(Field):
         return value.strftime(DATE_FORMAT) if value else False
 
     def convert_to_cache(self, value, record, validate=True):
-        if not value:
-            return None
         if isinstance(value, datetime):
             # TODO: better fix data files (crm demo data)
             value = value.date()
             # raise TypeError("%s (field %s) must be string or date, not datetime." % (value, self))
-        return self.to_date(value)
+        return super().convert_to_cache(value and self.to_date(value), record, validate)
 
     def convert_to_export(self, value, record):
         if not value:
@@ -2392,7 +2393,7 @@ class Binary(Field):
         # unicode in some circumstances, hence the str() cast here.
         # This str() coercion will only work for pure ASCII unicode strings,
         # on purpose - non base64 data must be passed as a 8bit byte strings.
-        if not value:
+        if self._is_null_value(value, record, validate):
             return None
         # Detect if the binary content is an SVG for restricting its upload
         # only to system users.
@@ -2420,12 +2421,12 @@ class Binary(Field):
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, _BINARY):
-            return bytes(value)
-        if isinstance(value, str):
+            value = bytes(value)
+        elif isinstance(value, str):
             # the cache must contain bytes or memoryview, but sometimes a string
             # is given when assigning a binary field (test `TestFileSeparator`)
-            return value.encode()
-        if isinstance(value, int) and \
+            value = value.encode()
+        elif isinstance(value, int) and \
                 (record._context.get('bin_size') or
                  record._context.get('bin_size_' + self.name)):
             # If the client requests only the size of the field, we return that
@@ -2433,8 +2434,8 @@ class Binary(Field):
             # to read the actual content, if necessary.
             value = human_size(value)
             # human_size can return False (-> None) or a string (-> encoded)
-            return value.encode() if value else None
-        return None if value is False else value
+            value = value and value.encode()
+        return super().convert_to_cache(value, record, validate)
 
     def convert_to_record(self, value, record):
         if isinstance(value, _BINARY):
@@ -2877,13 +2878,9 @@ class Selection(Field):
         return super(Selection, self).convert_to_column(value, record, values, validate)
 
     def convert_to_cache(self, value, record, validate=True):
-        if not validate or self._selection is None:
-            return value or None
-        if value in self._selection:
-            return value
-        if not value:
-            return None
-        raise ValueError("Wrong value for %s: %r" % (self, value))
+        if validate and self._selection is not None and value and value not in self._selection:
+            raise ValueError("Wrong value for %s: %r" % (self, value))
+        return super().convert_to_cache(value, record, validate)
 
     def convert_to_export(self, value, record):
         if not isinstance(self.selection, list):
@@ -2920,9 +2917,8 @@ class Reference(Selection):
             if not validate or res_model in self.get_values(record.env):
                 if record.env[res_model].browse(int(res_id)).exists():
                     return value
-                else:
-                    return None
-        elif not value:
+                value = None
+        if self._is_null_value(value, record, validate):
             return None
         raise ValueError("Wrong value for %s: %r" % (self, value))
 
@@ -3109,7 +3105,9 @@ class Many2one(_Relational):
             cache.set(record, self, self.convert_to_cache(value, record, validate=False))
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        return value or None
+        if self._is_null_value(value, record, validate):
+            return None
+        return value
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: id or None
@@ -3320,12 +3318,10 @@ class Json(Field):
         return False if value is None else copy.deepcopy(value)
 
     def convert_to_cache(self, value, record, validate=True):
-        if not value:
-            return None
-        return json.loads(json.dumps(value))
+        return super().convert_to_cache(value and json.loads(json.dumps(value)), record, validate)
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        if not value:
+        if self._is_null_value(value, record, validate):
             return None
         return PsycopgJson(value)
 
@@ -3411,7 +3407,7 @@ class Properties(Field):
     #       }
     #
     def convert_to_column(self, value, record, values=None, validate=True):
-        if not value:
+        if self._is_null_value(value, record, validate):
             return None
 
         value = self.convert_to_cache(value, record, validate=validate)
@@ -3935,7 +3931,7 @@ class PropertiesDefinition(Field):
             'default': [1337, 'Bob'],
         }]
         """
-        if not value:
+        if self._is_null_value(value, record, validate):
             return None
 
         if isinstance(value, str):
