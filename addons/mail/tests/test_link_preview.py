@@ -30,13 +30,8 @@ def _patch_head_html(*args, **kwargs):
     response.headers["Content-Type"] = 'text/html'
     return response
 
-def _patched_get_no_content_type(*args, **kwargs):
-    response = requests.Response()
-    response.status_code = 200
-    response._content = b""""""
-    return response
 
-def _patched_head_no_content_type(*args, **kwargs):
+def _patch_no_content_type(*args, **kwargs):
     response = requests.Response()
     response.status_code = 200
     return response
@@ -101,7 +96,7 @@ class TestLinkPreview(MailCommon):
             )
 
     def test_03_link_preview_create_no_content_type(self):
-        with patch.object(requests.Session, 'head', _patched_get_no_content_type), patch.object(requests.Session, 'head', _patched_head_no_content_type):
+        with patch.object(requests.Session, 'request', _patch_no_content_type):
             message = self.env['mail.message'].create({
                 'model': 'mail.channel',
                 'res_id': self.public_channel.id,
