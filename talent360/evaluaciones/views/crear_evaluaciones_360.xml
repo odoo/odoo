@@ -2,15 +2,15 @@
     <!-- EVALUACION -->
     <record id="evaluacion_360_action" model="ir.actions.act_window">
         <field name="name">Evaluaciones 360</field>
-        <field name="res_model">evaluacion</field>
+        <field name="res_model">evaluacion_360</field>
         <field name="view_mode">tree,form</field>
-        <field name="target">inline</field>
         <field name="context">{'default_tipo': '360'}</field>
+
     </record>
 
-    <record id="evaluacion_tree" model="ir.ui.view">
-        <field name="name">evaluacion.tree</field>
-        <field name="model">evaluacion</field>
+    <record id="evaluacion_360_tree" model="ir.ui.view">
+        <field name="name">evaluacion_360.tree</field>
+        <field name="model">evaluacion_360</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="nombre"/>
@@ -21,11 +21,12 @@
         </field>
     </record>
 
-    <record id="evaluacion_form" model="ir.ui.view">
-        <field name="name">evaluacion.form</field>
-        <field name="model">evaluacion</field>
+
+    <record id="evaluacion_360_form" model="ir.ui.view">
+        <field name="name">evaluacion_360.form</field>
+        <field name="model">evaluacion_360</field>
         <field name="arch" type="xml">
-            <form create="false">
+            <form>
                 <sheet string="Evaluacion de personal">
                     <group>
                         <group>
