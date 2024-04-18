@@ -1,11 +1,12 @@
 /** @odoo-module */
-import { nextTick } from "@web/../tests/helpers/utils";
+import { makeDeferred, nextTick } from "@web/../tests/helpers/utils";
 
 import { selectCell } from "@spreadsheet/../tests/utils/commands";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
 
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import { registry } from "@web/core/registry";
+import { setCellContent } from "../utils/commands";
 
 const { cellMenuRegistry } = spreadsheet.registries;
 
@@ -90,3 +91,29 @@ QUnit.test("Can open see records on measure headers", async function (assert) {
     assert.verifySteps(["doAction"]);
 });
 
+QUnit.test(
+    "See records is not visible if the pivot is not loaded, even if the cell has a value",
+    async function (assert) {
+        let deferred = undefined;
+        const { env, model } = await createSpreadsheetWithPivot({
+            arch: /*xml*/ `
+            <pivot>
+                <field name="probability" type="measure"/>
+            </pivot>
+        `,
+            mockRPC: async function (route, args) {
+                if (deferred && args.method === "read_group" && args.model === "partner") {
+                    await deferred;
+                }
+            },
+        });
+        setCellContent(model, "A1", '=IFERROR(ODOO.PIVOT("1","probability"), 42)');
+        deferred = makeDeferred();
+        model.dispatch("REFRESH_ALL_DATA_SOURCES");
+        const action = cellMenuRegistry.getAll().find((item) => item.id === "pivot_see_records");
+        assert.strictEqual(action.isVisible(env), false);
+        deferred.resolve();
+        await nextTick();
+        assert.strictEqual(action.isVisible(env), true);
+    }
+);
