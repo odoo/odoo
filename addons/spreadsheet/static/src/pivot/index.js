@@ -36,7 +36,7 @@ cellMenuRegistry.add("pivot_see_records", {
     },
     isVisible: (env) => {
         const cell = env.model.getters.getActiveCell();
-        return SEE_RECORDS_PIVOT_VISIBLE(cell);
+        return SEE_RECORDS_PIVOT_VISIBLE(cell, env);
     },
 });
 

@@ -35,9 +35,16 @@ export const SEE_RECORDS_PIVOT = async (cell, env) => {
     });
 };
 
-export const SEE_RECORDS_PIVOT_VISIBLE = (cell) => {
+export const SEE_RECORDS_PIVOT_VISIBLE = (cell, env) => {
+    const { sheetId, col, row } = env.model.getters.getCellPosition(cell.id);
+    const pivotId = env.model.getters.getPivotIdFromPosition(sheetId, col, row);
+    if (!env.model.getters.isExistingPivot(pivotId)) {
+        return false;
+    }
+    const dataSource = env.model.getters.getPivotDataSource(pivotId);
     return (
         cell &&
+        dataSource.isReady() &&
         cell.evaluated.value !== "" &&
         !cell.evaluated.error &&
         getNumberOfPivotFormulas(cell.content) === 1
