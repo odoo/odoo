@@ -47,14 +47,6 @@ export function clickEditButton(button) {
         },
     ];
 }
-export function backToFloor() {
-    return [
-        {
-            content: "back to floor",
-            trigger: ".floor-button",
-        },
-    ];
-}
 export function selectedFloorIs(name) {
     return [
         {

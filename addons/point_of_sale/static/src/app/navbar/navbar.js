@@ -7,7 +7,6 @@ import { SaleDetailsButton } from "@point_of_sale/app/navbar/sale_details_button
 import { SyncNotification } from "@point_of_sale/app/navbar/sync_notification/sync_notification";
 import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
-import { BackButton } from "@point_of_sale/app/navbar/back_button/back_button";
 import { Component, useState } from "@odoo/owl";
 import { ClosePosPopup } from "@point_of_sale/app/navbar/closing_popup/closing_popup";
 import { _t } from "@web/core/l10n/translation";
@@ -17,6 +16,7 @@ import { isBarcodeScannerSupported } from "@web/webclient/barcode/barcode_scanne
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { deduceUrl } from "@point_of_sale/utils";
+import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -26,7 +26,6 @@ export class Navbar extends Component {
         ProxyStatus,
         SaleDetailsButton,
         SyncNotification,
-        BackButton,
         Input,
         Dropdown,
         DropdownItem,
@@ -54,6 +53,21 @@ export class Navbar extends Component {
     onCashMoveButtonClick() {
         this.hardwareProxy.openCashbox(_t("Cash in / out"));
         this.dialog.add(CashMovePopup);
+    }
+    async onClickBackButton() {
+        if (this.pos.mainScreen.component === TicketScreen) {
+            if (this.pos.ticket_screen_mobile_pane == "left") {
+                this.pos.closeScreen();
+            } else {
+                this.pos.ticket_screen_mobile_pane = "left";
+            }
+        } else if (
+            this.pos.mobile_pane == "left" ||
+            this.pos.mainScreen.component === PaymentScreen
+        ) {
+            this.pos.mobile_pane = "right";
+            this.pos.showScreen("ProductScreen");
+        }
     }
     async onTicketButtonClick() {
         if (this.isTicketScreenShown) {
@@ -101,12 +115,6 @@ export class Navbar extends Component {
         }
     }
 
-    showBackButton() {
-        return this.pos.showBackButton();
-    }
-    showBackButtonMobile() {
-        return this.pos.showBackButton() && this.ui.isSmall && !this.pos.scanning;
-    }
     toggleProductView() {
         const newView = this.pos.productListView === "grid" ? "list" : "grid";
         window.localStorage.setItem("productListView", newView);

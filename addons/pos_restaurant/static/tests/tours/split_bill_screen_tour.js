@@ -65,7 +65,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             ProductScreen.addOrderline("Water", "1", "2.0"),
             ProductScreen.addOrderline("Minute Maid", "1", "2.0"),
             ProductScreen.addOrderline("Coca-Cola", "1", "2.0"),
-            FloorScreen.backToFloor(),
+            ProductScreen.back(),
             FloorScreen.clickTable("2"),
             ProductScreen.clickControlButtonMore(),
             ProductScreen.clickControlButton("Split"),

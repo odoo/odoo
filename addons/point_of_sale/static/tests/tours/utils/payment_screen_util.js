@@ -2,6 +2,7 @@ import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as PartnerList from "@point_of_sale/../tests/tours/utils/partner_list_util";
 import * as NumberPopup from "@point_of_sale/../tests/tours/utils/number_popup_util";
+import { back } from "@point_of_sale/../tests/tours/utils/common";
 
 /**
  * Clicks on the payment method and then performs checks if necessary.
@@ -118,11 +119,7 @@ export function clickBack() {
             trigger: ".payment-screen .button.back",
             mobile: false,
         },
-        {
-            content: "click mobile back button",
-            trigger: ".order-button",
-            mobile: true,
-        },
+        { ...back(), mobile: true },
     ];
 }
 export function clickTipButton() {
