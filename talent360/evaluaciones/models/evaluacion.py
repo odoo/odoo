@@ -42,8 +42,6 @@ class Evaluacion(models.Model):
         string="Asignados",
     )
 
-    template_id = fields.Many2one("template", string="Plantilla")
-
     # do something on new usuario assigned
 
     def write(self, vals):
@@ -81,22 +79,19 @@ class Evaluacion(models.Model):
                 print("IDs de preguntas:", pregunta_ids)
                 self.pregunta_ids = [(6, 0, pregunta_ids)]
 
-    @api.model
+        return self
+
     def action_clima(self):
-        self.copiar_preguntas_de_template()
+        self = self.copiar_preguntas_de_template()
 
-        # # Obtener el ID de la vista clima_form
-        view_id = self.env.ref('evaluaciones.clima_form').id
-
-        print(view_id)
-
-        # # Retornar la acción con la vista como destino
+        # Retornar la acción con la vista como destino
         return {
             'type': 'ir.actions.act_window',
             'name': 'Evaluación Clima',
             'res_model': 'evaluacion',
             'view_mode': 'form',
-            'view_id': view_id,
+            'view_id': self.env.ref('evaluaciones.clima_form').id,
+            'target': 'current',
             'res_id': self.id,
         }
 
