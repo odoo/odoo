@@ -1,6 +1,8 @@
 import { Component } from "@odoo/owl";
+import { TagsList } from "@web/core/tags_list/tags_list";
 
 export class Orderline extends Component {
+    static components = { TagsList };
     static template = "point_of_sale.Orderline";
     static props = {
         class: { type: Object, optional: true },
@@ -17,7 +19,7 @@ export class Orderline extends Component {
                 comboParent: { type: String, optional: true },
                 oldUnitPrice: { type: String, optional: true },
                 customerNote: { type: String, optional: true },
-                internalNote: { type: String, optional: true },
+                internalNote: { type: Array, optional: true },
                 imageSrc: { type: String, optional: true },
                 packLotLines: { type: Array, optional: true },
                 price_without_discount: { type: String, optional: true },

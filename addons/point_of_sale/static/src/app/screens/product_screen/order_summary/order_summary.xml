@@ -4,7 +4,7 @@
     <OrderWidget lines="currentOrder.getSortedOrderlines()" t-slot-scope="scope" class="'bg-light'"
       taxTotals="currentOrder.taxTotals"
       generalCustomerNote="currentOrder.general_customer_note or ''"
-      internalNote="currentOrder.internal_note or ''">
+      internalNote="currentOrder.internal_note or '[]'">
           <t t-set="line" t-value="scope.line" />
           <Orderline line="line.getDisplayData()"
               t-on-click="(event) => this.clickLine(event, line)"
