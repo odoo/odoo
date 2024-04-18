@@ -234,9 +234,9 @@
         </record>
 
         <record id="mail_template_employee_rule" model="ir.rule">
-            <field name="name">Employees can only change their own templates</field>
+            <field name="name">Employees can only modify templates they have created or been assigned</field>
             <field name="model_id" ref="model_mail_template"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="domain_force">['|', ('create_uid', '=', user.id), ('user_id', '=', user.id)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_read" eval="False"/>
