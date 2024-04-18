@@ -7,6 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class ProductCategory(models.Model):
     _name = "product.category"
+    _inherit = ['mail.thread']
     _description = "Product Category"
     _parent_name = "parent_id"
     _parent_store = True

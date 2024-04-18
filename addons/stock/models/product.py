@@ -1037,7 +1037,8 @@ class ProductCategory(models.Model):
              "Closest location: products/lots closest to the target location will be moved out first.\n"
              "FEFO: products/lots with the closest removal date will be moved out first "
              "(the availability of this method depends on the \"Expiration Dates\" setting).\n"
-             "Least Packages: FIFO but with the least number of packages possible when there are several packages containing the same product."
+             "Least Packages: FIFO but with the least number of packages possible when there are several packages containing the same product.",
+        tracking=True,
     )
     total_route_ids = fields.Many2many(
         'stock.route', string='Total routes', compute='_compute_total_route_ids',
