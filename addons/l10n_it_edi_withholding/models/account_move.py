@@ -3,6 +3,7 @@
 
 import logging
 from collections import namedtuple
+from markupsafe import Markup
 from odoo import _, api, fields, models
 
 _logger = logging.getLogger(__name__)
@@ -149,7 +150,7 @@ class AccountMove(models.Model):
             if withholding_tax:
                 withholding_taxes.append(withholding_tax)
             else:
-                message_to_log.append("%s<br/>%s" % (
+                message_to_log.append(Markup("%s<br/>%s") % (
                     _("Withholding tax not found"),
                     self.env['account.move']._compose_info_message(body_tree, '.'),
                 ))
@@ -173,7 +174,7 @@ class AccountMove(models.Model):
             if pension_fund_tax:
                 pension_fund_taxes.append(pension_fund_tax)
             else:
-                message_to_log.append("%s<br/>%s" % (
+                message_to_log.append(Markup("%s<br/>%s") % (
                     _("Pension Fund tax not found"),
                     self.env['account.move']._compose_info_message(body_tree, '.'),
                 ))
@@ -219,7 +220,7 @@ class AccountMove(models.Model):
             if enasarco_tax:
                 move_line_form.tax_ids |= enasarco_tax
             else:
-                messages_to_log.append("%s<br/>%s" % (
+                messages_to_log.append(Markup("%s<br/>%s") % (
                     _("Enasarco tax not found for line with description '%s'", move_line_form.name),
                     self.env['account.move']._compose_info_message(other_data_element, '.'),
                 ))
