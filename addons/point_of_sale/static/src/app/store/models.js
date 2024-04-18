@@ -373,12 +373,13 @@ export class Orderline extends PosModel {
         if (options.json) {
             try {
                 this.init_from_JSON(options.json);
-            } catch {
+            } catch (error) {
                 console.error(
                     "ERROR: attempting to recover product ID",
                     options.json.product_id[0],
                     "not available in the point of sale. Correct the product or clean the browser cache."
                 );
+                throw error;
             }
             return;
         }
