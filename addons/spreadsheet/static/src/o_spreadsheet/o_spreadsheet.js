@@ -19338,6 +19338,243 @@
         }
     }
 
+    function interactiveFreezeColumnsRows(env, dimension, base) {
+        const sheetId = env.model.getters.getActiveSheetId();
+        const cmd = dimension === "COL" ? "FREEZE_COLUMNS" : "FREEZE_ROWS";
+        const result = env.model.dispatch(cmd, { sheetId, quantity: base });
+        if (result.isCancelledBecause(68 /* CommandResult.MergeOverlap */)) {
+            env.raiseError(MergeErrorMessage);
+        }
+    }
+
+    const hideCols = {
+        name: HIDE_COLUMNS_NAME,
+        execute: (env) => {
+            const columns = env.model.getters.getElementsFromSelection("COL");
+            env.model.dispatch("HIDE_COLUMNS_ROWS", {
+                sheetId: env.model.getters.getActiveSheetId(),
+                dimension: "COL",
+                elements: columns,
+            });
+        },
+        isVisible: NOT_ALL_VISIBLE_COLS_SELECTED,
+        icon: "o-spreadsheet-Icon.HIDE_COL",
+    };
+    const unhideCols = {
+        name: _lt("Unhide columns"),
+        execute: (env) => {
+            const columns = env.model.getters.getElementsFromSelection("COL");
+            env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
+                sheetId: env.model.getters.getActiveSheetId(),
+                dimension: "COL",
+                elements: columns,
+            });
+        },
+        isVisible: (env) => {
+            const hiddenCols = env.model.getters
+                .getHiddenColsGroups(env.model.getters.getActiveSheetId())
+                .flat();
+            const currentCols = env.model.getters.getElementsFromSelection("COL");
+            return currentCols.some((col) => hiddenCols.includes(col));
+        },
+    };
+    const unhideAllCols = {
+        name: _lt("Unhide all columns"),
+        execute: (env) => {
+            const sheetId = env.model.getters.getActiveSheetId();
+            env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
+                sheetId,
+                dimension: "COL",
+                elements: Array.from(Array(env.model.getters.getNumberCols(sheetId)).keys()),
+            });
+        },
+        isVisible: (env) => env.model.getters.getHiddenColsGroups(env.model.getters.getActiveSheetId()).length > 0,
+    };
+    const hideRows = {
+        name: HIDE_ROWS_NAME,
+        execute: (env) => {
+            const rows = env.model.getters.getElementsFromSelection("ROW");
+            env.model.dispatch("HIDE_COLUMNS_ROWS", {
+                sheetId: env.model.getters.getActiveSheetId(),
+                dimension: "ROW",
+                elements: rows,
+            });
+        },
+        isVisible: NOT_ALL_VISIBLE_ROWS_SELECTED,
+        icon: "o-spreadsheet-Icon.HIDE_ROW",
+    };
+    const unhideRows = {
+        name: _lt("Unhide rows"),
+        execute: (env) => {
+            const columns = env.model.getters.getElementsFromSelection("ROW");
+            env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
+                sheetId: env.model.getters.getActiveSheetId(),
+                dimension: "ROW",
+                elements: columns,
+            });
+        },
+        isVisible: (env) => {
+            const hiddenRows = env.model.getters
+                .getHiddenRowsGroups(env.model.getters.getActiveSheetId())
+                .flat();
+            const currentRows = env.model.getters.getElementsFromSelection("ROW");
+            return currentRows.some((col) => hiddenRows.includes(col));
+        },
+    };
+    const unhideAllRows = {
+        name: _lt("Unhide all rows"),
+        execute: (env) => {
+            const sheetId = env.model.getters.getActiveSheetId();
+            env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
+                sheetId,
+                dimension: "ROW",
+                elements: Array.from(Array(env.model.getters.getNumberRows(sheetId)).keys()),
+            });
+        },
+        isVisible: (env) => env.model.getters.getHiddenRowsGroups(env.model.getters.getActiveSheetId()).length > 0,
+    };
+    const unFreezePane = {
+        name: _lt("Unfreeze"),
+        isVisible: (env) => {
+            const { xSplit, ySplit } = env.model.getters.getPaneDivisions(env.model.getters.getActiveSheetId());
+            return xSplit + ySplit > 0;
+        },
+        execute: (env) => env.model.dispatch("UNFREEZE_COLUMNS_ROWS", {
+            sheetId: env.model.getters.getActiveSheetId(),
+        }),
+        icon: "o-spreadsheet-Icon.UNFREEZE",
+    };
+    const freezePane = {
+        name: _lt("Freeze"),
+        icon: "o-spreadsheet-Icon.FREEZE",
+    };
+    const unFreezeRows = {
+        name: _lt("No rows"),
+        execute: (env) => env.model.dispatch("UNFREEZE_ROWS", {
+            sheetId: env.model.getters.getActiveSheetId(),
+        }),
+        isReadonlyAllowed: true,
+        isVisible: (env) => !!env.model.getters.getPaneDivisions(env.model.getters.getActiveSheetId()).ySplit,
+    };
+    const freezeFirstRow = {
+        name: _lt("1 row"),
+        execute: (env) => interactiveFreezeColumnsRows(env, "ROW", 1),
+        isReadonlyAllowed: true,
+    };
+    const freezeSecondRow = {
+        name: _lt("2 rows"),
+        execute: (env) => interactiveFreezeColumnsRows(env, "ROW", 2),
+        isReadonlyAllowed: true,
+    };
+    const freezeCurrentRow = {
+        name: _lt("Up to current row"),
+        execute: (env) => {
+            const { bottom } = env.model.getters.getSelectedZone();
+            interactiveFreezeColumnsRows(env, "ROW", bottom + 1);
+        },
+        isReadonlyAllowed: true,
+    };
+    const unFreezeCols = {
+        name: _lt("No columns"),
+        execute: (env) => env.model.dispatch("UNFREEZE_COLUMNS", {
+            sheetId: env.model.getters.getActiveSheetId(),
+        }),
+        isReadonlyAllowed: true,
+        isVisible: (env) => !!env.model.getters.getPaneDivisions(env.model.getters.getActiveSheetId()).xSplit,
+    };
+    const freezeFirstCol = {
+        name: _lt("1 column"),
+        execute: (env) => interactiveFreezeColumnsRows(env, "COL", 1),
+        isReadonlyAllowed: true,
+    };
+    const freezeSecondCol = {
+        name: _lt("2 columns"),
+        execute: (env) => interactiveFreezeColumnsRows(env, "COL", 2),
+        isReadonlyAllowed: true,
+    };
+    const freezeCurrentCol = {
+        name: _lt("Up to current column"),
+        execute: (env) => {
+            const { right } = env.model.getters.getSelectedZone();
+            interactiveFreezeColumnsRows(env, "COL", right + 1);
+        },
+        isReadonlyAllowed: true,
+    };
+    const viewGridlines = {
+        name: (env) => env.model.getters.getGridLinesVisibility(env.model.getters.getActiveSheetId())
+            ? _lt("Hide gridlines")
+            : _lt("Show gridlines"),
+        execute: (env) => {
+            const sheetId = env.model.getters.getActiveSheetId();
+            env.model.dispatch("SET_GRID_LINES_VISIBILITY", {
+                sheetId,
+                areGridLinesVisible: !env.model.getters.getGridLinesVisibility(sheetId),
+            });
+        },
+        icon: "o-spreadsheet-Icon.SHOW_HIDE_GRID",
+    };
+    const viewFormulas = {
+        name: (env) => env.model.getters.shouldShowFormulas() ? _lt("Hide formulas") : _lt("Show formulas"),
+        execute: (env) => env.model.dispatch("SET_FORMULA_VISIBILITY", { show: !env.model.getters.shouldShowFormulas() }),
+        isReadonlyAllowed: true,
+        icon: "o-spreadsheet-Icon.SHOW_HIDE_FORMULA",
+    };
+    const createRemoveFilter = {
+        name: (env) => selectionContainsFilter(env) ? _lt("Remove selected filters") : _lt("Create filter"),
+        isActive: (env) => selectionContainsFilter(env),
+        isEnabled: (env) => !cannotCreateFilter(env),
+        execute: (env) => createRemoveFilterAction(env),
+        icon: "o-spreadsheet-Icon.FILTER_ICON_INACTIVE",
+    };
+    function selectionContainsFilter(env) {
+        const sheetId = env.model.getters.getActiveSheetId();
+        const selectedZones = env.model.getters.getSelectedZones();
+        return env.model.getters.doesZonesContainFilter(sheetId, selectedZones);
+    }
+    function cannotCreateFilter(env) {
+        return !areZonesContinuous(...env.model.getters.getSelectedZones());
+    }
+    function createRemoveFilterAction(env) {
+        if (selectionContainsFilter(env)) {
+            env.model.dispatch("REMOVE_FILTER_TABLE", {
+                sheetId: env.model.getters.getActiveSheetId(),
+                target: env.model.getters.getSelectedZones(),
+            });
+            return;
+        }
+        if (cannotCreateFilter(env)) {
+            return;
+        }
+        env.model.selection.selectTableAroundSelection();
+        const sheetId = env.model.getters.getActiveSheetId();
+        const selection = env.model.getters.getSelectedZones();
+        interactiveAddFilter(env, sheetId, selection);
+    }
+
+    var ACTION_VIEW = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        hideCols: hideCols,
+        unhideCols: unhideCols,
+        unhideAllCols: unhideAllCols,
+        hideRows: hideRows,
+        unhideRows: unhideRows,
+        unhideAllRows: unhideAllRows,
+        unFreezePane: unFreezePane,
+        freezePane: freezePane,
+        unFreezeRows: unFreezeRows,
+        freezeFirstRow: freezeFirstRow,
+        freezeSecondRow: freezeSecondRow,
+        freezeCurrentRow: freezeCurrentRow,
+        unFreezeCols: unFreezeCols,
+        freezeFirstCol: freezeFirstCol,
+        freezeSecondCol: freezeSecondCol,
+        freezeCurrentCol: freezeCurrentCol,
+        viewGridlines: viewGridlines,
+        viewFormulas: viewFormulas,
+        createRemoveFilter: createRemoveFilter,
+        createRemoveFilterAction: createRemoveFilterAction
+    });
+
     const sortRange = {
         name: _lt("Sort range"),
         isVisible: IS_ONLY_ONE_RANGE,
@@ -19361,30 +19598,13 @@
         },
         icon: "o-spreadsheet-Icon.SORT_DESCENDING",
     };
-    const addDataFilter = {
-        name: _lt("Create filter"),
-        execute: (env) => {
-            const sheetId = env.model.getters.getActiveSheetId();
-            const selection = env.model.getters.getSelection().zones;
-            interactiveAddFilter(env, sheetId, selection);
-        },
-        isVisible: (env) => !SELECTION_CONTAINS_FILTER(env),
+    const addRemoveDataFilter = {
+        name: (env) => SELECTION_CONTAINS_FILTER(env) ? _lt("Remove filter") : _lt("Create filter"),
+        execute: (env) => createRemoveFilterAction(env),
         isEnabled: (env) => {
             const selectedZones = env.model.getters.getSelectedZones();
             return areZonesContinuous(...selectedZones);
         },
-        icon: "o-spreadsheet-Icon.MENU_FILTER_ICON",
-    };
-    const removeDataFilter = {
-        name: _lt("Remove filter"),
-        execute: (env) => {
-            const sheetId = env.model.getters.getActiveSheetId();
-            env.model.dispatch("REMOVE_FILTER_TABLE", {
-                sheetId,
-                target: env.model.getters.getSelectedZones(),
-            });
-        },
-        isVisible: SELECTION_CONTAINS_FILTER,
         icon: "o-spreadsheet-Icon.MENU_FILTER_ICON",
     };
     const splitToColumns = {
@@ -19764,242 +19984,6 @@
         fillColor: fillColor,
         formatCF: formatCF,
         clearFormat: clearFormat
-    });
-
-    function interactiveFreezeColumnsRows(env, dimension, base) {
-        const sheetId = env.model.getters.getActiveSheetId();
-        const cmd = dimension === "COL" ? "FREEZE_COLUMNS" : "FREEZE_ROWS";
-        const result = env.model.dispatch(cmd, { sheetId, quantity: base });
-        if (result.isCancelledBecause(68 /* CommandResult.MergeOverlap */)) {
-            env.raiseError(MergeErrorMessage);
-        }
-    }
-
-    const hideCols = {
-        name: HIDE_COLUMNS_NAME,
-        execute: (env) => {
-            const columns = env.model.getters.getElementsFromSelection("COL");
-            env.model.dispatch("HIDE_COLUMNS_ROWS", {
-                sheetId: env.model.getters.getActiveSheetId(),
-                dimension: "COL",
-                elements: columns,
-            });
-        },
-        isVisible: NOT_ALL_VISIBLE_COLS_SELECTED,
-        icon: "o-spreadsheet-Icon.HIDE_COL",
-    };
-    const unhideCols = {
-        name: _lt("Unhide columns"),
-        execute: (env) => {
-            const columns = env.model.getters.getElementsFromSelection("COL");
-            env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
-                sheetId: env.model.getters.getActiveSheetId(),
-                dimension: "COL",
-                elements: columns,
-            });
-        },
-        isVisible: (env) => {
-            const hiddenCols = env.model.getters
-                .getHiddenColsGroups(env.model.getters.getActiveSheetId())
-                .flat();
-            const currentCols = env.model.getters.getElementsFromSelection("COL");
-            return currentCols.some((col) => hiddenCols.includes(col));
-        },
-    };
-    const unhideAllCols = {
-        name: _lt("Unhide all columns"),
-        execute: (env) => {
-            const sheetId = env.model.getters.getActiveSheetId();
-            env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
-                sheetId,
-                dimension: "COL",
-                elements: Array.from(Array(env.model.getters.getNumberCols(sheetId)).keys()),
-            });
-        },
-        isVisible: (env) => env.model.getters.getHiddenColsGroups(env.model.getters.getActiveSheetId()).length > 0,
-    };
-    const hideRows = {
-        name: HIDE_ROWS_NAME,
-        execute: (env) => {
-            const rows = env.model.getters.getElementsFromSelection("ROW");
-            env.model.dispatch("HIDE_COLUMNS_ROWS", {
-                sheetId: env.model.getters.getActiveSheetId(),
-                dimension: "ROW",
-                elements: rows,
-            });
-        },
-        isVisible: NOT_ALL_VISIBLE_ROWS_SELECTED,
-        icon: "o-spreadsheet-Icon.HIDE_ROW",
-    };
-    const unhideRows = {
-        name: _lt("Unhide rows"),
-        execute: (env) => {
-            const columns = env.model.getters.getElementsFromSelection("ROW");
-            env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
-                sheetId: env.model.getters.getActiveSheetId(),
-                dimension: "ROW",
-                elements: columns,
-            });
-        },
-        isVisible: (env) => {
-            const hiddenRows = env.model.getters
-                .getHiddenRowsGroups(env.model.getters.getActiveSheetId())
-                .flat();
-            const currentRows = env.model.getters.getElementsFromSelection("ROW");
-            return currentRows.some((col) => hiddenRows.includes(col));
-        },
-    };
-    const unhideAllRows = {
-        name: _lt("Unhide all rows"),
-        execute: (env) => {
-            const sheetId = env.model.getters.getActiveSheetId();
-            env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
-                sheetId,
-                dimension: "ROW",
-                elements: Array.from(Array(env.model.getters.getNumberRows(sheetId)).keys()),
-            });
-        },
-        isVisible: (env) => env.model.getters.getHiddenRowsGroups(env.model.getters.getActiveSheetId()).length > 0,
-    };
-    const unFreezePane = {
-        name: _lt("Unfreeze"),
-        isVisible: (env) => {
-            const { xSplit, ySplit } = env.model.getters.getPaneDivisions(env.model.getters.getActiveSheetId());
-            return xSplit + ySplit > 0;
-        },
-        execute: (env) => env.model.dispatch("UNFREEZE_COLUMNS_ROWS", {
-            sheetId: env.model.getters.getActiveSheetId(),
-        }),
-        icon: "o-spreadsheet-Icon.UNFREEZE",
-    };
-    const freezePane = {
-        name: _lt("Freeze"),
-        icon: "o-spreadsheet-Icon.FREEZE",
-    };
-    const unFreezeRows = {
-        name: _lt("No rows"),
-        execute: (env) => env.model.dispatch("UNFREEZE_ROWS", {
-            sheetId: env.model.getters.getActiveSheetId(),
-        }),
-        isReadonlyAllowed: true,
-        isVisible: (env) => !!env.model.getters.getPaneDivisions(env.model.getters.getActiveSheetId()).ySplit,
-    };
-    const freezeFirstRow = {
-        name: _lt("1 row"),
-        execute: (env) => interactiveFreezeColumnsRows(env, "ROW", 1),
-        isReadonlyAllowed: true,
-    };
-    const freezeSecondRow = {
-        name: _lt("2 rows"),
-        execute: (env) => interactiveFreezeColumnsRows(env, "ROW", 2),
-        isReadonlyAllowed: true,
-    };
-    const freezeCurrentRow = {
-        name: _lt("Up to current row"),
-        execute: (env) => {
-            const { bottom } = env.model.getters.getSelectedZone();
-            interactiveFreezeColumnsRows(env, "ROW", bottom + 1);
-        },
-        isReadonlyAllowed: true,
-    };
-    const unFreezeCols = {
-        name: _lt("No columns"),
-        execute: (env) => env.model.dispatch("UNFREEZE_COLUMNS", {
-            sheetId: env.model.getters.getActiveSheetId(),
-        }),
-        isReadonlyAllowed: true,
-        isVisible: (env) => !!env.model.getters.getPaneDivisions(env.model.getters.getActiveSheetId()).xSplit,
-    };
-    const freezeFirstCol = {
-        name: _lt("1 column"),
-        execute: (env) => interactiveFreezeColumnsRows(env, "COL", 1),
-        isReadonlyAllowed: true,
-    };
-    const freezeSecondCol = {
-        name: _lt("2 columns"),
-        execute: (env) => interactiveFreezeColumnsRows(env, "COL", 2),
-        isReadonlyAllowed: true,
-    };
-    const freezeCurrentCol = {
-        name: _lt("Up to current column"),
-        execute: (env) => {
-            const { right } = env.model.getters.getSelectedZone();
-            interactiveFreezeColumnsRows(env, "COL", right + 1);
-        },
-        isReadonlyAllowed: true,
-    };
-    const viewGridlines = {
-        name: (env) => env.model.getters.getGridLinesVisibility(env.model.getters.getActiveSheetId())
-            ? _lt("Hide gridlines")
-            : _lt("Show gridlines"),
-        execute: (env) => {
-            const sheetId = env.model.getters.getActiveSheetId();
-            env.model.dispatch("SET_GRID_LINES_VISIBILITY", {
-                sheetId,
-                areGridLinesVisible: !env.model.getters.getGridLinesVisibility(sheetId),
-            });
-        },
-        icon: "o-spreadsheet-Icon.SHOW_HIDE_GRID",
-    };
-    const viewFormulas = {
-        name: (env) => env.model.getters.shouldShowFormulas() ? _lt("Hide formulas") : _lt("Show formulas"),
-        execute: (env) => env.model.dispatch("SET_FORMULA_VISIBILITY", { show: !env.model.getters.shouldShowFormulas() }),
-        isReadonlyAllowed: true,
-        icon: "o-spreadsheet-Icon.SHOW_HIDE_FORMULA",
-    };
-    const createRemoveFilter = {
-        name: (env) => selectionContainsFilter(env) ? _lt("Remove selected filters") : _lt("Create filter"),
-        isActive: (env) => selectionContainsFilter(env),
-        isEnabled: (env) => !cannotCreateFilter(env),
-        execute: (env) => createRemoveFilterAction(env),
-        icon: "o-spreadsheet-Icon.FILTER_ICON_INACTIVE",
-    };
-    function selectionContainsFilter(env) {
-        const sheetId = env.model.getters.getActiveSheetId();
-        const selectedZones = env.model.getters.getSelectedZones();
-        return env.model.getters.doesZonesContainFilter(sheetId, selectedZones);
-    }
-    function cannotCreateFilter(env) {
-        return !areZonesContinuous(...env.model.getters.getSelectedZones());
-    }
-    function createRemoveFilterAction(env) {
-        if (selectionContainsFilter(env)) {
-            env.model.dispatch("REMOVE_FILTER_TABLE", {
-                sheetId: env.model.getters.getActiveSheetId(),
-                target: env.model.getters.getSelectedZones(),
-            });
-            return;
-        }
-        if (cannotCreateFilter(env)) {
-            return;
-        }
-        env.model.selection.selectTableAroundSelection();
-        const sheetId = env.model.getters.getActiveSheetId();
-        const selection = env.model.getters.getSelectedZones();
-        interactiveAddFilter(env, sheetId, selection);
-    }
-
-    var ACTION_VIEW = /*#__PURE__*/Object.freeze({
-        __proto__: null,
-        hideCols: hideCols,
-        unhideCols: unhideCols,
-        unhideAllCols: unhideAllCols,
-        hideRows: hideRows,
-        unhideRows: unhideRows,
-        unhideAllRows: unhideAllRows,
-        unFreezePane: unFreezePane,
-        freezePane: freezePane,
-        unFreezeRows: unFreezeRows,
-        freezeFirstRow: freezeFirstRow,
-        freezeSecondRow: freezeSecondRow,
-        freezeCurrentRow: freezeCurrentRow,
-        unFreezeCols: unFreezeCols,
-        freezeFirstCol: freezeFirstCol,
-        freezeSecondCol: freezeSecondCol,
-        freezeCurrentCol: freezeCurrentCol,
-        viewGridlines: viewGridlines,
-        viewFormulas: viewFormulas,
-        createRemoveFilter: createRemoveFilter
     });
 
     const colMenuRegistry = new MenuItemRegistry();
@@ -20576,12 +20560,8 @@
         sequence: 20,
         separator: true,
     })
-        .addChild("add_data_filter", ["data"], {
-        ...addDataFilter,
-        sequence: 30,
-    })
-        .addChild("remove_data_filter", ["data"], {
-        ...removeDataFilter,
+        .addChild("add_remove_data_filter", ["data"], {
+        ...addRemoveDataFilter,
         sequence: 30,
     });
 
@@ -46753,7 +46733,6 @@
     cursor: pointer;
   }
 `;
-    let tKey = 1;
     class SpreadsheetDashboard extends owl.Component {
         static template = "o-spreadsheet-SpreadsheetDashboard";
         static components = {
@@ -46831,13 +46810,9 @@
                         coordinates: rect,
                         position: { col, row },
                         action,
-                        // we can't rely on position only because a row or a column could
-                        // be inserted at any time.
-                        tKey: `${tKey}-${col}-${row}`,
                     });
                 }
             }
-            tKey++;
             return cells;
         }
         getClickableAction(position) {
@@ -51785,9 +51760,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.29';
-    __info__.date = '2024-04-10T12:35:15.062Z';
-    __info__.hash = 'c022445';
+    __info__.version = '16.4.30';
+    __info__.date = '2024-04-18T16:54:52.677Z';
+    __info__.hash = '39b015c';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
