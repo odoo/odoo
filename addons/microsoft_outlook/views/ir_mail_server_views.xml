@@ -33,10 +33,7 @@
                 </div>
             </field>
             <field name="smtp_authentication_info" position="after">
-                <a href="https://www.odoo.com/documentation/15.0/applications/general/email_communication/email_servers.html?highlight=outgoing email server#use-a-default-from-email-address"
-                    invisible="smtp_authentication != 'outlook'" target="_blank">
-                    Read More
-                </a>
+                <widget invisible="smtp_authentication != 'outlook'" name="documentation_link" path="/applications/general/email_communication/email_servers.html?highlight=outgoing email server#use-a-default-from-email-address" label="Read More"/>
             </field>
         </field>
     </record>

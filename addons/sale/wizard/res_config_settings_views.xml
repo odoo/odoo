@@ -64,12 +64,12 @@
                     </block>
                     <block title="Quotations &amp; Orders" name="quotation_order_setting_container">
                         <setting id="online_signature" company_dependent="1"
-                                 documentation="https://www.odoo.com/documentation/17.0/applications/sales/sales/send_quotations/get_signature_to_validate.html"
+                                 documentation="/applications/sales/sales/send_quotations/get_signature_to_validate.html"
                                  help="Request customers to sign quotations to validate orders. The default can be changed per order or template.">
                             <field name="portal_confirmation_sign"/>
                         </setting>
                         <setting id="online_payment" company_dependent="1"
-                                 documentation="https://www.odoo.com/documentation/17.0/applications/sales/sales/send_quotations/get_paid_to_validate.html"
+                                 documentation="/applications/sales/sales/send_quotations/get_paid_to_validate.html"
                                  help="Request a payment to confirm orders, in full (100%) or partial. The default can be changed per order or template.">
                             <field name="portal_confirmation_pay"/>
                             <div invisible="not portal_confirmation_pay" class="oe_row fw-bold">
