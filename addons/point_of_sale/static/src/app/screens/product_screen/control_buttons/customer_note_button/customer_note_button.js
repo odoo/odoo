@@ -33,7 +33,6 @@ export class OrderlineNoteButton extends Component {
         const selectedNote = this.props.getter(selectedOrderline);
         const oldNote = selectedOrderline.getNote();
         const payload = await this.openTextInput(selectedNote);
-
         var quantity_with_note = 0;
         const changes = this.pos.getOrderChanges();
         for (const key in changes.orderlines) {
@@ -68,6 +67,7 @@ export class OrderlineNoteButton extends Component {
         if (this._isInternalNote() || this.props.label == _t("General Note")) {
             buttons = this.pos.models["pos.note"].getAll().map((note) => ({
                 label: note.name,
+                class: note.color ? `o_colorlist_item_color_${note.color}` : "",
                 isSelected: selectedNote.split("\n").includes(note.name), // Check if the note is already selected
             }));
         }
