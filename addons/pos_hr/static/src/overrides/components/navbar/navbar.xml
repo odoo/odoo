@@ -2,24 +2,20 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_hr.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
-        <xpath expr="//li[hasclass('backend-button')]" position="attributes">
+        <xpath expr="//DropdownItem[contains(text(), 'Backend')]" position="attributes">
             <attribute name="t-if">
                 !pos.config.module_pos_hr or employeeIsAdmin()
             </attribute>
         </xpath>
-
-        <xpath expr="//li[hasclass('close-button')]" position="attributes">
-            <attribute name="t-if">
-                !pos.config.module_pos_hr or employeeIsAdmin()
-            </attribute>
-        </xpath>
-
-        <xpath expr="//li[hasclass('backend-button')]" position="after">
-            <li t-if="pos.config.module_pos_hr" class="menu-item navbar-button lock-button" t-on-click="showLoginScreen">
-                <a class="dropdown-item py-2">
+        <xpath expr="//DropdownItem[contains(text(), 'Backend')]" position="after">
+            <DropdownItem t-if="pos.config.module_pos_hr" onSelected="() => this.showLoginScreen()">
                 Lock
-                </a>
-            </li>
+            </DropdownItem>
+        </xpath>
+        <xpath expr="//DropdownItem[contains(text(), 'Close Register')]" position="attributes">
+            <attribute name="t-if">
+                !pos.config.module_pos_hr or employeeIsAdmin()
+            </attribute>
         </xpath>
     </t>
 
