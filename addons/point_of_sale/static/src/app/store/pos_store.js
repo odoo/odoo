@@ -712,30 +712,20 @@ export class PosStore extends Reactive {
         await this._loadMissingPartners(jsons);
         var orders = [];
 
-        for (var i = 0; i < jsons.length; i++) {
-            var json = jsons[i];
-            if (json.pos_session_id === this.session.id) {
-                try {
-                    orders.push(this.createReactiveOrder(json));
-                } catch (error) {
-                    console.warn(error);
-                }
-            }
-        }
-        for (i = 0; i < jsons.length; i++) {
-            json = jsons[i];
+        for (const json of jsons) {
             if (
-                json.pos_session_id !== this.session.id &&
-                (json.lines.length > 0 || json.statement_ids.length > 0)
+                json.pos_session_id === this.session.id ||
+                json.lines.length > 0 ||
+                json.statement_ids.length > 0
             ) {
                 try {
                     orders.push(this.createReactiveOrder(json));
+                    continue;
                 } catch (error) {
-                    console.warn(error);
+                    console.error("There was an error while loading the order", json, error);
                 }
-            } else if (json.pos_session_id !== this.session.id) {
-                this.db.remove_unpaid_order(jsons[i]);
             }
+            this.db.remove_unpaid_order(json);
         }
 
         orders = orders.sort(function (a, b) {
