@@ -51,10 +51,17 @@
                 <h2 class="h4 my-0 me-auto pe-sm-4">Events</h2>
                     <t t-foreach="categories" t-as="category">
                         <div t-if="category.is_published and category.tag_ids and any(tag.color for tag in category.tag_ids)" class="dropdown d-none d-lg-block">
+                            <t t-set="searched_category_tags" t-value="search_tags.filtered(lambda tag: tag.category_id == category)"/>
                             <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
                                 <t t-out="category.name"/>
+                                <span t-if="len(searched_category_tags)" t-out="len(searched_category_tags)"
+                                    class="badge rounded-pill text-bg-primary ms-1"/>
                             </a>
                             <div class="dropdown-menu">
+                                <span t-att-data-post="'/event?%s' % keep_query('*', tags=str((search_tags - searched_category_tags).ids), prevent_redirect=True)"
+                                   t-attf-class="post_link cursor-pointer dropdown-item d-flex align-items-center justify-content-between #{'active' if not searched_category_tags else ''}">
+                                   All
+                                </span>
                                 <t t-foreach="category.tag_ids" t-as="tag">
                                     <span t-if="tag.color"
                                         t-att-data-post="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids), prevent_redirect=True)"
@@ -127,7 +134,7 @@
 </template>
 
 <template id="searched_tags" name="Searched tags">
-    <div class="d-flex align-items-center flex-wrap gap-2 mt-2">
+    <div class="d-lg-none d-flex align-items-center flex-wrap gap-2 mt-2">
         <t t-foreach="search_tags" t-as="tag">
             <span t-attf-class="d-inline-flex align-items-baseline rounded border ps-2 #{'o_badge_color_%s' % tag.color if tag.color else ''}">
                 <t t-out="tag.display_name"/>
