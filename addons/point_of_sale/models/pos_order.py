@@ -73,7 +73,13 @@ class PosOrder(models.Model):
     @api.depends('sequence_number', 'session_id')
     def _compute_tracking_number(self):
         for record in self:
-            record.tracking_number = str((record.session_id.id % 10) * 100 + record.sequence_number % 100).zfill(3)
+            record.tracking_number = (
+                str(
+                    (record.session_id.id % 10) * 100 + record.sequence_number % 100
+                ).zfill(3)
+                if not record.refunded_order_id
+                else _("Refund") + " " + record.refunded_order_id.name
+            )
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -470,6 +476,11 @@ class PosOrder(models.Model):
             session = self.env['pos.session'].browse(vals['session_id'])
             vals = self._complete_values_from_session(session, vals)
         return super().create(vals_list)
+
+    def unlink(self):
+        for order in self:
+            order.config_id._notify('ORDER_UNLINKED', {'id': order.id})
+        return super().unlink()
 
     @api.model
     def _complete_values_from_session(self, session, values):
@@ -1056,40 +1067,31 @@ class PosOrder(models.Model):
             'attachment_ids': self._add_mail_attachment(self.name, ticket),
         }
 
-    def _refund(self):
-        """ Create a copy of order to refund them.
-
-        return The newly created refund orders.
-        """
-        refund_orders = self.env['pos.order']
-        for order in self:
-            # When a refund is performed, we are creating it in a session having the same config as the original
-            # order. It can be the same session, or if it has been closed the new one that has been opened.
-            current_session = order.session_id.config_id.current_session_id
-            if not current_session:
-                raise UserError(_('To return product(s), you need to open a session in the POS %s', order.session_id.config_id.display_name))
-            refund_order = order.copy(
-                order._prepare_refund_values(current_session)
-            )
-            for line in order.lines:
-                PosOrderLineLot = self.env['pos.pack.operation.lot']
-                for pack_lot in line.pack_lot_ids:
-                    PosOrderLineLot += pack_lot.copy()
-                line.copy(line._prepare_refund_data(refund_order, PosOrderLineLot))
-            refund_orders |= refund_order
-        return refund_orders
-
     def refund(self):
-        return {
-            'name': _('Return Products'),
-            'view_mode': 'form',
-            'res_model': 'pos.order',
-            'res_id': self._refund().ids[0],
-            'view_id': False,
-            'context': self.env.context,
-            'type': 'ir.actions.act_window',
-            'target': 'current',
-        }
+        """
+        return: The newly created refund order.
+        """
+        self.ensure_one()
+        # When a refund is performed, we are creating it in a session having the same config as the original
+        # order. It can be the same session, or if it has been closed the new one that has been opened.
+        current_session = self.session_id.config_id.current_session_id
+        if not current_session:
+            raise UserError(_('To return product(s), you need to open a session in the POS %s', self.session_id.config_id.display_name))
+        if not self._is_refundable():
+            raise UserError(_('The order is not refundable.'))
+        refund_order = self.copy(
+            self._prepare_refund_values(current_session)
+        )
+        for line in [l for l in self.lines if l._is_refundable()]:
+            PosOrderLineLot = self.env['pos.pack.operation.lot']
+            for pack_lot in line.pack_lot_ids:
+                PosOrderLineLot += pack_lot.copy()
+            line.copy(line._prepare_refund_data(refund_order, PosOrderLineLot))
+        return refund_order.id
+
+    def _is_refundable(self):
+        self.ensure_one()
+        return any(line._is_refundable() for line in self.lines)
 
     def action_send_mail(self):
         template_id = self.env['ir.model.data']._xmlid_to_res_id('point_of_sale.pos_email_marketing_template', raise_if_not_found=False)
@@ -1232,6 +1234,7 @@ class PosOrderLine(models.Model):
     refunded_qty = fields.Float('Refunded Quantity', compute='_compute_refund_qty', help='Number of items refunded in this orderline.')
     uuid = fields.Char(string='Uuid', readonly=True, copy=False)
     note = fields.Char('Internal Note')
+    order_state = fields.Selection(related='order_id.state', string='Order State', readonly=True)
 
     combo_parent_id = fields.Many2one('pos.order.line', string='Combo Parent') # FIXME rename to parent_line_id
     combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines') # FIXME rename to child_line_ids
@@ -1275,7 +1278,8 @@ class PosOrderLine(models.Model):
         self.ensure_one()
         return {
             'name': self.name + _(' REFUND'),
-            'qty': -(self.qty - self.refunded_qty),
+            # 'qty': -(self.qty - self.refunded_qty),
+            'qty': 0,
             'order_id': refund_order.id,
             'price_subtotal': -self.price_subtotal,
             'price_subtotal_incl': -self.price_subtotal_incl,
@@ -1283,6 +1287,10 @@ class PosOrderLine(models.Model):
             'is_total_cost_computed': False,
             'refunded_orderline_id': self.id,
         }
+
+    def _is_refundable(self):
+        self.ensure_one()
+        return True
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -3,8 +3,6 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_scre
 import * as TextInputPopup from "@point_of_sale/../tests/tours/utils/text_input_popup_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import { registry } from "@web/core/registry";
-import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
-import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 
 registry.category("web_tour.tours").add("GiftCardProgramCreateSetTour1", {
     test: true,

@@ -227,10 +227,6 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         self.pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour('ControlButtonsTour', login="pos_admin")
 
-    def test_04_ticket_screen(self):
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('PosResTicketScreenTour')
-
     def test_05_tip_screen(self):
         self.pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True, 'tip_product_id': self.env.ref('point_of_sale.product_product_tip')})
         self.pos_config.with_user(self.pos_user).open_ui()
@@ -255,10 +251,6 @@ class TestFrontend(TestPointOfSaleHttpCommon):
     def test_07_split_bill_screen(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour3')
-
-    def test_08_refund_stay_current_table(self):
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('RefundStayCurrentTableTour')
 
     def test_09_combo_split_bill(self):
         setup_product_combo_items(self)

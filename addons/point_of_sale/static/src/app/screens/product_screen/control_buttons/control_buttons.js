@@ -105,15 +105,8 @@ export class ControlButtons extends Component {
     }
 
     clickRefund() {
-        const order = this.pos.get_order();
-        const partner = order.get_partner();
-        const searchDetails = partner ? { fieldName: "PARTNER", searchTerm: partner.name } : {};
-        this.pos.showScreen("TicketScreen", {
-            stateOverride: {
-                filter: "SYNCED",
-                search: searchDetails,
-                destinationOrder: order,
-            },
+        this.pos.goToOrders({
+            search_default_partner_id: this.pos.get_order().get_partner().id,
         });
     }
     get internalNoteLabel() {
@@ -124,6 +117,14 @@ export class ControlButtons extends Component {
         return this.props.showRemainingButtons
             ? "btn btn-secondary btn-lg py-5"
             : "btn btn-light btn-lg lh-lg";
+    }
+    onClickDelete() {
+        if (typeof this.pos.get_order().id === "number") {
+            this.pos.data.delete("pos.order", [this.pos.get_order().id]);
+        } else {
+            this.pos.get_order().delete();
+        }
+        this.pos.set_order(this.pos.get_open_orders()[0] || this.pos.add_new_order());
     }
 }
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="point_of_sale.PosOrderFormView" t-inherit="web.FormView">
+        <xpath expr="//Layout" position="inside" t-inherit-mode="primary">
+        </xpath>
+    </t>
+    <t t-name="point_of_sale.PosOrderStatusBarButtons" t-inherit="web.StatusBarButtons">
+        <xpath expr="//div[hasclass('o_statusbar_buttons')]" position="inside" t-inherit-mode="primary">
+            <t t-if="!env.isSmall">
+                <button t-on-click="print" class="btn btn-secondary">Print Receipt</button>
+                <button t-if="posState.order?.state === 'draft'" t-on-click="loadOrder" class="btn btn-primary">Load Order</button>
+                <button t-if="posState.order?.state !== 'draft'" t-on-click="refund" class="btn btn-primary">Return Items</button>
+            </t>
+        </xpath>
+        <xpath expr="//Dropdown/t[@t-set-slot='content']" position="inside" t-inherit-mode="primary">
+            <t t-if="env.isSmall">
+                <DropdownItem class="'o_statusbar_button_dropdown_item'" t-on-click="print">Print Receipt</DropdownItem>
+                <DropdownItem class="'o_statusbar_button_dropdown_item'" t-if="posState.order?.state === 'draft'" t-on-click="loadOrder">Load Order</DropdownItem>
+                <DropdownItem class="'o_statusbar_button_dropdown_item'" t-if="posState.order?.state !== 'draft'" t-on-click="refund">Return Items</DropdownItem>
+            </t>
+        </xpath>
+    </t>
+</templates>

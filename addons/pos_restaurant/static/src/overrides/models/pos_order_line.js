@@ -27,8 +27,14 @@ patch(PosOrderline.prototype, {
     getDisplayClasses() {
         return {
             ...super.getDisplayClasses(),
-            "has-change": this.uiState.hasChange && this.config.module_pos_restaurant,
-            "skip-change": this.skip_change && this.config.module_pos_restaurant,
+            ...(this.order_id.isRefund()
+                ? {}
+                : {
+                      "has-change text-success border-start border-success border-4":
+                          this.uiState.hasChange && this.config.module_pos_restaurant,
+                      "skip-change text-primary border-start border-primary border-4":
+                          this.skip_change && this.config.module_pos_restaurant,
+                  }),
         };
     },
 });

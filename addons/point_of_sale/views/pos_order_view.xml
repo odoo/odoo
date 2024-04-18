@@ -4,13 +4,10 @@
         <field name="name">pos.order.form</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <form string="Point of Sale Orders" create="0">
+            <form string="Point of Sale Orders" create="0" js_class="pos_order_form">
                 <header>
-                    <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" invisible="state != 'draft'" />
                     <button name="action_pos_order_invoice" string="Invoice" type="object"
-                            invisible="state != 'paid'"/>
-                    <button name="refund" string="Return Products" type="object"
-                        invisible="state == 'draft' or not has_refundable_lines"/>
+                            invisible="account_move"/>
                     <field name="state" widget="statusbar" invisible="state == 'cancel'" statusbar_visible="draft,paid,done"/>
                     <field name="state" widget="statusbar" invisible="state != 'cancel'" statusbar_visible="draft,cancel"/>
                     <field name="has_refundable_lines" invisible="1" />

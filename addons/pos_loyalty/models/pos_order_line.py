@@ -27,3 +27,16 @@ class PosOrderLine(models.Model):
         params = super()._load_pos_data_fields(config_id)
         params += ['is_reward_line', 'reward_id', 'reward_identifier_code', 'points_cost', 'coupon_id']
         return params
+
+    def _is_refundable(self):
+        return super()._is_refundable() and not self._is_ewallet_gift_card()
+
+    def _is_ewallet_gift_card(self):
+        self.ensure_one()
+        return (
+            self.env['loyalty.program'].search([('trigger_product_ids', 'in', self.product_id.id)])
+            or self.is_reward_line
+            and self.reward_id
+            and self.reward_id.program_id
+            and self.reward_id.program_id.program_type in ["gift_card", "ewallet"]
+        )

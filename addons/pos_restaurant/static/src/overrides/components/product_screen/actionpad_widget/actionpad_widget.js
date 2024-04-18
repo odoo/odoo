@@ -1,6 +1,5 @@
 import { patch } from "@web/core/utils/patch";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
-import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 /**
  * @props partner
  */
@@ -9,10 +8,11 @@ patch(ActionpadWidget.prototype, {
     setup() {
         super.setup();
     },
+    canOrder() {
+        return !this.currentOrder.isRefund();
+    },
     get swapButton() {
-        return (
-            this.pos.config.module_pos_restaurant && this.pos.mainScreen.component !== TicketScreen
-        );
+        return this.pos.config.module_pos_restaurant;
     },
     get currentOrder() {
         return this.pos.get_order();
@@ -40,9 +40,10 @@ patch(ActionpadWidget.prototype, {
     },
     get highlightPay() {
         return (
-            this.currentOrder?.lines?.length &&
-            !this.hasChangesToPrint &&
-            this.hasQuantity(this.currentOrder)
+            this.currentOrder.isRefund ||
+            (this.currentOrder?.lines?.length &&
+                !this.hasChangesToPrint &&
+                this.hasQuantity(this.currentOrder))
         );
     },
     get displayCategoryCount() {

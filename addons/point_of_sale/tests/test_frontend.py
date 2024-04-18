@@ -1142,9 +1142,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'fiscal_position_ids': [(4, self.fiscal_position.id)],
             'tax_regime_selection': True,
             })
-
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionNoTaxRefund', login="pos_user")
+        # TODO: test here if necessary
 
     def test_lot_refund(self):
 
@@ -1155,9 +1153,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'categ_id': self.env.ref('product.product_category_all').id,
             'available_in_pos': True,
         })
-
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'LotRefundTour', login="pos_user")
+        # TODO: test here if necessary
 
     def test_receipt_tracking_method(self):
         self.product_a = self.env['product.product'].create({

@@ -104,7 +104,9 @@ export class PosOrderline extends Base {
 
     // To be overrided
     getDisplayClasses() {
-        return {};
+        return {
+            "text-muted": this.isRefund() && this.qty === 0,
+        };
     }
 
     getPackLotLinesToEdit(isAllowOnlyOneLot) {
@@ -192,31 +194,33 @@ export class PosOrderline extends Base {
     // sets the qty of the product. The qty will be rounded according to the
     // product's unity of measure properties. Quantities greater than zero will not get
     // rounded to zero
-    set_quantity(quantity, keep_price) {
+    set_quantity(rawQty, keep_price) {
         this.order_id.assert_editable();
-        const quant =
-            typeof quantity === "number" ? quantity : parseFloat("" + (quantity ? quantity : 0));
 
-        const allLineToRefundUuids = this.models["pos.order"].reduce((acc, order) => {
-            Object.assign(acc, order.uiState.lineToRefund);
-            return acc;
-        }, {});
+        const round = (qty) => {
+            const unit = this.product_id.uom_id;
+            if (!unit) {
+                return qty;
+            }
+            if (!unit.rounding) {
+                return roundPrecision(qty, 1);
+            }
+            const decimals = this.models["decimal.precision"].find(
+                (dp) => dp.name === "Product Unit of Measure"
+            ).digits;
+            const rounding = Math.max(unit.rounding, Math.pow(10, -decimals));
+            return roundPrecision(qty, rounding);
+        };
+        // If the orderline is a refund, the quantity should be negative,
+        // so we assume that even if the user supposedly entered a positive
+        // quantity, they meant for it to be negative.
+        const setSign = (qty) => (this.isRefund() ? -Math.abs(qty) : qty);
 
-        if (this.refunded_orderline_id?.uuid in allLineToRefundUuids) {
-            const refundDetails = allLineToRefundUuids[this.refunded_orderline_id.uuid];
-            const maxQtyToRefund = refundDetails.line.qty - refundDetails.line.refunded_qty;
-            if (quant > 0) {
-                return {
-                    title: _t("Positive quantity not allowed"),
-                    body: _t(
-                        "Only a negative quantity is allowed for this refund line. Click on +/- to modify the quantity to be refunded."
-                    ),
-                };
-            } else if (quant == 0) {
-                refundDetails.qty = 0;
-            } else if (-quant <= maxQtyToRefund) {
-                refundDetails.qty = -quant;
-            } else {
+        const qty = setSign(round(parseFloat(rawQty)));
+
+        if (this.isRefund()) {
+            const maxQtyToRefund = this.refunded_orderline_id.qty;
+            if (Math.abs(qty) > maxQtyToRefund) {
                 return {
                     title: _t("Greater than allowed"),
                     body: _t(
@@ -225,20 +229,7 @@ export class PosOrderline extends Base {
                 };
             }
         }
-        const unit = this.product_id.uom_id;
-        if (unit) {
-            if (unit.rounding) {
-                const decimals = this.models["decimal.precision"].find(
-                    (dp) => dp.name === "Product Unit of Measure"
-                ).digits;
-                const rounding = Math.max(unit.rounding, Math.pow(10, -decimals));
-                this.qty = roundPrecision(quant, rounding);
-            } else {
-                this.qty = roundPrecision(quant, 1);
-            }
-        } else {
-            this.qty = quant;
-        }
+        this.qty = qty;
 
         // just like in sale.order changing the qty will recompute the unit price
         if (!keep_price && this.price_type === "original") {
@@ -679,7 +670,13 @@ export class PosOrderline extends Base {
         return this.qty;
     }
     get_quantity_str() {
-        return this.quantityStr;
+        if (!this.isRefund()) {
+            return this.quantityStr;
+        }
+        // FIXME: why is `refunded_orderline_id` sometimes undefined here ?
+        return `Returning ${
+            this.quantityStr[0] === "-" ? this.quantityStr.slice(1) : this.quantityStr
+        } out of ${this.refunded_orderline_id?.qty}`;
     }
     get_unit() {
         return this.product_id.uom_id;
@@ -693,6 +690,9 @@ export class PosOrderline extends Base {
     }
     isSelected() {
         return this.order_id?.uiState?.selected_orderline_uuid === this.uuid;
+    }
+    isRefund() {
+        return Boolean(this.raw.refunded_orderline_id);
     }
 }
 

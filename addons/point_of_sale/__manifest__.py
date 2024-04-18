@@ -73,6 +73,7 @@
         # web assets
         'web.assets_backend': [
             'point_of_sale/static/src/scss/pos_dashboard.scss',
+            'point_of_sale/static/src/backend/pos_order_form_controller_backend.js',
             'point_of_sale/static/src/backend/tours/point_of_sale.js',
             'point_of_sale/static/src/backend/debug_manager.js',
             'point_of_sale/static/src/backend/pos_kanban_view/*',

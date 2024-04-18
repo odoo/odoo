@@ -8,7 +8,6 @@ import * as ProductScreenPos from "@point_of_sale/../tests/tours/utils/product_s
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import * as SplitBillScreen from "@pos_restaurant/../tests/tours/utils/split_bill_screen_util";
-import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import * as combo from "@point_of_sale/../tests/tours/utils/combo_popup_util";
 import { registry } from "@web/core/registry";
 
@@ -45,9 +44,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
             ProductScreen.clickOrderline("Coca-Cola", "1.0"),
 
             // go back to the original order and see if the order is changed
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.selectOrder("-0001"),
-            TicketScreen.loadSelectedOrder(),
+            Chrome.openTab("01"),
             ProductScreen.isShown(),
             ProductScreen.clickOrderline("Water", "2.0"),
             ProductScreen.clickOrderline("Minute Maid", "3.0"),
@@ -73,15 +70,11 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             SplitBillScreen.orderlineHas("Coca-Cola", "1", "1"),
             SplitBillScreen.clickPay(),
             PaymentScreen.clickBack(),
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.selectOrder("-0002"),
-            TicketScreen.loadSelectedOrder(),
+            Chrome.openTab("02"),
             ProductScreen.clickOrderline("Coca-Cola", "1.0"),
             ProductScreen.clickOrderline("Water", "1.0"),
             ProductScreen.totalAmountIs("4.00"),
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.selectOrder("-0001"),
-            TicketScreen.loadSelectedOrder(),
+            Chrome.openTab("01"),
             Order.hasLine({ productName: "Minute Maid", quantity: "1.0", withClass: ".selected" }),
             ProductScreen.totalAmountIs("2.00"),
         ].flat(),

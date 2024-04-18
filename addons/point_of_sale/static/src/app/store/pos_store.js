@@ -13,7 +13,6 @@ import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/
 import { _t } from "@web/core/l10n/translation";
 import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
-import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { EditListPopup } from "@point_of_sale/app/store/select_lot_popup/select_lot_popup";
 import { ProductConfiguratorPopup } from "./product_configurator_popup/product_configurator_popup";
@@ -23,7 +22,7 @@ import {
     ask,
     makeActionAwaitable,
 } from "@point_of_sale/app/store/make_awaitable_dialog";
-import { deserializeDate } from "@web/core/l10n/dates";
+import { deserializeDate, deserializeDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
@@ -33,7 +32,6 @@ import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
 import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 
 const { DateTime } = luxon;
-
 export class PosStore extends Reactive {
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
@@ -88,6 +86,10 @@ export class PosStore extends Reactive {
         this.notification = notification;
         this.unwatched = markRaw({});
         this.pushOrderMutex = new Mutex();
+        this.parseDateTime = parseDateTime;
+        this.des = deserializeDateTime;
+
+        this.registry = registry;
 
         // Business data; loaded from the server at launch
         this.company_logo = null;
@@ -100,13 +102,7 @@ export class PosStore extends Reactive {
         this.validated_orders_name_server_id_map = {};
         this.numpadMode = "quantity";
         this.mobile_pane = "right";
-        this.ticket_screen_mobile_pane = "left";
         this.productListView = window.localStorage.getItem("productListView") || "grid";
-
-        this.ticketScreenState = {
-            offsetByDomain: {},
-            totalCount: 0,
-        };
 
         this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
 
@@ -117,7 +113,6 @@ export class PosStore extends Reactive {
             delete: new Set(),
             create: new Set(),
         };
-
         this.synch = { status: "connected", pending: 0 };
         this.hardwareProxy = hardware_proxy;
         this.hiddenProductIds = new Set();
@@ -133,10 +128,26 @@ export class PosStore extends Reactive {
         // the hardware proxy should just be part of the pos service?
         this.hardwareProxy.pos = this;
         await this.initServerData();
+        this.onNotified = getOnNotified(this.bus, this.config.access_token);
+        this.onNotified("ORDER_UNLINKED", ({ id }) => {
+            const deletedOrder = this.models["pos.order"].get(id);
+            if (deletedOrder) {
+                deletedOrder.delete();
+                this.set_order(this.get_open_orders()[0] || this.add_new_order());
+            }
+        });
         if (this.useProxy()) {
             await this.connectToProxy();
         }
         this.closeOtherTabs();
+
+        // FIXME: can we make it so whenever we load an order we load the refund lines as well?
+        await this.data.read(
+            "pos.order.line",
+            this.models["pos.order.line"]
+                .filter((line) => line.raw.refunded_orderline_id && !line.refunded_orderline_id)
+                .map((line) => line.raw.refunded_orderline_id)
+        );
         this.showScreen("ProductScreen");
     }
 
@@ -152,7 +163,6 @@ export class PosStore extends Reactive {
 
     async initServerData() {
         await this.processServerData();
-        this.onNotified = getOnNotified(this.bus, this.config.access_token);
         return await this.afterProcessServerData();
     }
 
@@ -1044,8 +1054,6 @@ export class PosStore extends Reactive {
                 const refundedOrderLine = line.refunded_orderline_id;
 
                 if (refundedOrderLine) {
-                    const order = refundedOrderLine.order_id;
-                    delete order.uiState.lineToRefund[refundedOrderLine.uuid];
                     refundedOrderLine.refunded_qty += Math.abs(line.qty);
                 }
             }
@@ -1076,6 +1084,8 @@ export class PosStore extends Reactive {
         if (!currentOrder.canPay()) {
             return;
         }
+
+        currentOrder.lines = currentOrder.lines.filter((line) => !line.isRefund() || line.qty != 0);
 
         if (
             currentOrder.lines.some(
@@ -1258,13 +1268,6 @@ export class PosStore extends Reactive {
         );
     }
 
-    get linesToRefund() {
-        return this.models["pos.order"].reduce((acc, order) => {
-            acc.push(...Object.values(order.uiState.lineToRefund));
-            return acc;
-        }, []);
-    }
-
     isProductQtyZero(qty) {
         const dp = this.models["decimal.precision"].find(
             (dp) => dp.name === "Product Unit of Measure"
@@ -1284,10 +1287,6 @@ export class PosStore extends Reactive {
     }
     switchPane() {
         this.mobile_pane = this.mobile_pane === "left" ? "right" : "left";
-    }
-    switchPaneTicketScreen() {
-        this.ticket_screen_mobile_pane =
-            this.ticket_screen_mobile_pane === "left" ? "right" : "left";
     }
     async logEmployeeMessage(action, message) {
         await this.data.call("pos.session", "log_partner_message", [
@@ -1311,17 +1310,17 @@ export class PosStore extends Reactive {
         const baseUrl = this.session._base_url;
         return order.export_for_printing(baseUrl, headerData);
     }
-    async printReceipt() {
+    async printReceipt(order = this.get_order()) {
         const isPrinted = await this.printer.print(
             OrderReceipt,
             {
-                data: this.orderExportForPrinting(this.get_order()),
+                data: this.orderExportForPrinting(order),
                 formatCurrency: this.env.utils.formatCurrency,
             },
             { webPrintFallback: true }
         );
         if (isPrinted) {
-            this.get_order()._printed = true;
+            order._printed = true;
         }
     }
     getOrderChanges(skipped = false, order = this.get_order()) {
@@ -1464,7 +1463,6 @@ export class PosStore extends Reactive {
         await this.get_order().set_pricelist(pricelist);
     }
     async selectPartner() {
-        // FIXME, find order to refund when we are in the ticketscreen.
         const currentOrder = this.get_order();
         if (!currentOrder) {
             return;
@@ -1598,20 +1596,8 @@ export class PosStore extends Reactive {
         );
     }
 
-    showBackButton() {
-        return (
-            (this.ui.isSmall && this.mainScreen.component !== ProductScreen) ||
-            (this.mobile_pane === "left" && this.mainScreen.component === ProductScreen)
-        );
-    }
     async onClickBackButton() {
-        if (this.mainScreen.component === TicketScreen) {
-            if (this.ticket_screen_mobile_pane == "left") {
-                this.closeScreen();
-            } else {
-                this.ticket_screen_mobile_pane = "left";
-            }
-        } else if (
+        if (
             this.mobile_pane == "left" ||
             [PaymentScreen, ActionScreen].includes(this.mainScreen.component)
         ) {
@@ -1624,6 +1610,12 @@ export class PosStore extends Reactive {
         return this.mainScreen.component === ProductScreen && this.mobile_pane === "right";
     }
 
+    showBackButton() {
+        return (
+            (this.ui.isSmall && this.mainScreen.component !== ProductScreen) ||
+            (this.mobile_pane === "left" && this.mainScreen.component === ProductScreen)
+        );
+    }
     doNotAllowRefundAndSales() {
         return false;
     }
@@ -1678,33 +1670,23 @@ export class PosStore extends Reactive {
         );
     }
 
-    async onTicketButtonClick() {
-        if (this.isTicketScreenShown) {
-            this.closeScreen();
-        } else {
-            if (this._shouldLoadOrders()) {
-                try {
-                    this.setLoadingOrderState(true);
-                    const orders = await this.getServerOrders();
-                    if (orders && orders.length > 0) {
-                        const message = _t(
-                            "%s orders have been loaded from the server. ",
-                            orders.length
-                        );
-                        this.notification.add(message);
-                    }
-                } finally {
-                    this.setLoadingOrderState(false);
-                    this.showScreen("TicketScreen");
-                }
-            } else {
-                this.showScreen("TicketScreen");
+    async goToOrders(context = {}) {
+        this.showScreen("ActionScreen", { actionName: "Orders" });
+        this.action.doAction(
+            {
+                type: "ir.actions.act_window",
+                res_model: "pos.order",
+                views: [this.ui.isSmall ? [false, "kanban"] : [false, "list"], [false, "form"]],
+                name: _t("Orders"),
+                context: {
+                    search_default_config_id: this.config.id,
+                    ...context,
+                },
+            },
+            {
+                clearBreadcrumbs: true,
             }
-        }
-    }
-
-    get isTicketScreenShown() {
-        return this.mainScreen.component === TicketScreen;
+        );
     }
 
     _shouldLoadOrders() {

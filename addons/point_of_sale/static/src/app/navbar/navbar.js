@@ -12,7 +12,6 @@ import {
 import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
 import { Component, onMounted, useState } from "@odoo/owl";
 import { ClosePosPopup } from "@point_of_sale/app/navbar/closing_popup/closing_popup";
-import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
@@ -22,6 +21,7 @@ import { deduceUrl } from "@point_of_sale/utils";
 import { user } from "@web/core/user";
 import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
 import { ListContainer } from "@point_of_sale/app/generic_components/list_container/list_container";
+import { _t } from "@web/core/l10n/translation";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -45,6 +45,7 @@ export class Navbar extends Component {
         this.notification = useService("notification");
         this.hardwareProxy = useService("hardware_proxy");
         this.isDisplayStandalone = isDisplayStandalone();
+        this.action = useService("action");
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;
         onMounted(async () => {
             this.isSystemUser = await user.hasGroup("base.group_system");
@@ -96,10 +97,6 @@ export class Navbar extends Component {
     onCashMoveButtonClick() {
         this.hardwareProxy.openCashbox(_t("Cash in / out"));
         this.dialog.add(CashMovePopup);
-    }
-
-    get orderCount() {
-        return this.pos.get_open_orders().length;
     }
 
     get appUrl() {

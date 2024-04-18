@@ -53,3 +53,7 @@ export function clickPlanButton() {
         run: "click",
     };
 }
+export const openTab = (order) => ({
+    content: `Open the tab ( the draft order ) with tracking number ${order}`,
+    trigger: `pos-topheader button.tab:contains(${order})`,
+});

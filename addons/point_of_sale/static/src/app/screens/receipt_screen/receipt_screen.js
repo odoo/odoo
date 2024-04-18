@@ -72,22 +72,12 @@ export class ReceiptScreen extends Component {
     get nextScreen() {
         return { name: "ProductScreen" };
     }
-    get ticketScreen() {
-        return { name: "TicketScreen" };
-    }
     orderDone() {
         this.currentOrder.uiState.screen_data.value = "";
         this.currentOrder.uiState.locked = true;
         this._addNewOrder();
         this.pos.resetProductScreenSearch();
         const { name, props } = this.nextScreen;
-        this.pos.showScreen(name, props);
-    }
-    resumeOrder() {
-        this.currentOrder.uiState.screen_data.value = "";
-        this.currentOrder.uiState.locked = true;
-        this.pos.selectNextOrder();
-        const { name, props } = this.ticketScreen;
         this.pos.showScreen(name, props);
     }
     isResumeVisible() {

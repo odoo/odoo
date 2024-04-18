@@ -4,7 +4,7 @@ import { patch } from "@web/core/utils/patch";
 patch(PaymentScreen.prototype, {
     get nextScreen() {
         const order = this.currentOrder;
-        if (!this.pos.config.set_tip_after_payment || order.is_tipped) {
+        if (!this.pos.config.set_tip_after_payment || order.is_tipped || order.isRefund()) {
             return super.nextScreen;
         }
         // Take the first payment method as the main payment.

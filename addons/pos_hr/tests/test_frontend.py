@@ -70,3 +70,11 @@ class TestUi(TestPosHrHttpCommon):
             "CashierStayLogged",
             login="pos_admin",
         )
+        user_quantities_bought = {
+            "2": self.emp2,
+            "4": self.emp1,
+            "8": self.admin,
+        }
+        lines = self.env['pos.order.line'].search([])
+        for line in lines:
+            self.assertTrue(user_quantities_bought[str(line.qty)] == line.order_id.employee_id, "All order lines should have an employee assigned")

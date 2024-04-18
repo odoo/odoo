@@ -9,7 +9,7 @@ export class ActionScreen extends Component {
     };
     static storeOnOrder = false;
     static template = xml`
-        <div class="o_web_client">
+        <div class="o_web_client" style="background-color: #F9FAFB;">
             <ActionContainer/>
         </div>
     `;

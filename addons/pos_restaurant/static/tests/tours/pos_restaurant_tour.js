@@ -12,6 +12,7 @@ import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/o
 import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import { inLeftSide, negateStep } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
+import { List } from "addons/point_of_sale/static/tests/tours/utils/generic_components/web_views_util";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
@@ -88,7 +89,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
 
             // Create 2nd order (paid)
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            Chrome.newOrder(),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             ProductScreen.totalAmountIs("4.40"),
@@ -166,6 +167,25 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
             Chrome.clickPlanButton(),
+            // Delete the first order then go back to floor
+            FloorScreen.clickTable("5"),
+            ProductScreen.isShown(),
+            Chrome.clickMenuOption("Orders"),
+            // The order ref ends with -0002 because it is actually the 2nd order made in the session.
+            // The first order made in the session is a floating order.
+            TicketScreen.deleteOrder("-0002"),
+            // TODO: how should we now delete draft orders, given that they don't appear in the orders list?
+            List.delete("-0001"),
+            Dialog.confirm(),
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
+            // isSyncStatusConnected(),
+            Chrome.openTab("05"),
+            ProductScreen.isShown(),
+            Chrome.clickPlanButton(),
 
             // There should be 1 synced draft order.
             FloorScreen.orderCountSyncedInTableIs("5", "2"),
@@ -184,7 +204,8 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             FloorScreen.clickTable("5"),
             ProductScreen.totalAmountIs("4.40"),
 
-            // Test transfering an order
+            //             // Test transfering an order
+            ProductScreen.clickControlButtonMore(),
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("4"),
 
@@ -207,11 +228,12 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             FloorScreen.clickTable("2"),
             ProductScreen.isShown(),
             ProductScreen.orderIsEmpty(),
+            ProductScreen.clickControlButtonMore(),
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("4"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.totalAmountIs("2.20"),
-            Chrome.clickPlanButton(),
+            ProductScreen.back(),
             FloorScreen.orderCountSyncedInTableIs("4", "1"),
         ].flat(),
 });
@@ -225,7 +247,7 @@ registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1.0"),
             ProductScreen.clickOrderButton(),
             ProductScreen.orderlinesHaveNoChange(),
-            Chrome.clickPlanButton(),
+            ProductScreen.back(),
         ].flat(),
 });
 
