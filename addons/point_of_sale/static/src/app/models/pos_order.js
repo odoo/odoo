@@ -994,7 +994,7 @@ export class PosOrder extends Base {
         this.setDirty();
     }
     setInternalNote(note) {
-        this.internal_note = note || "";
+        this.internal_note = note || "[]";
         this.setDirty();
     }
 
