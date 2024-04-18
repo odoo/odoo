@@ -568,7 +568,7 @@ class Event(models.Model):
             if country == 'online':
                 domain.append([("country_id", "=", False)])
             elif country != 'all':
-                domain.append(['|', ("country_id", "=", int(country)), ("country_id", "=", False)])
+                domain.append([("country_id", "=", int(country))])
 
         no_date_domain = domain.copy()
         dates = self._search_build_dates()
