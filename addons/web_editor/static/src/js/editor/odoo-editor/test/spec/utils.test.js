@@ -1249,6 +1249,163 @@ describe('Utils', () => {
                 },
             });
         });
+        it('selection does not have an edge with a br element', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '[<p>ab</p><p>cd<br></p>]',
+                stepFunction: editor => {
+                    const editable = editor.editable;
+                    const ab = editable.firstChild.firstChild;
+                    const p2 = editable.lastChild;
+                    const cd = p2.firstChild;
+                    const br = p2.lastChild;
+                    const result = getTraversedNodes(editable);
+                    window.chai.expect(result).to.eql([ab, p2, cd, br]);
+                },
+            });
+        });
+        it('selection ends before br element at start of p element', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '[<p>ab</p><p>]<br>cd<br></p>',
+                stepFunction: editor => {
+                    const editable = editor.editable;
+                    const ab = editable.firstChild.firstChild;
+                    const p2 = editable.firstChild.nextSibling;
+                    const result = getTraversedNodes(editable);
+                    window.chai.expect(result).to.eql([ab, p2]);
+                },
+            });
+        });
+        it('selection ends before a br in middle of p element', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '[<p>ab</p><p><br>cd]<br>ef<br></p>',
+                stepFunction: editor => {
+                    const editable = editor.editable;
+                    const ab = editable.firstChild.firstChild;
+                    const p2 = editable.lastChild;
+                    const firstBr = p2.firstChild;
+                    const cd = firstBr.nextSibling;
+                    const result = getTraversedNodes(editable);
+                    window.chai.expect(result).to.eql([ab, p2, firstBr, cd]);
+                },
+            });
+        });
+        it('selection end after a br in middle of p elemnt', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '[<p>ab</p><p><br>cd<br>]ef<br></p>',
+                stepFunction: editor => {
+                    const editable = editor.editable;
+                    const ab = editable.firstChild.firstChild;
+                    const p2 = editable.lastChild;
+                    const br1 = p2.firstChild;
+                    const cd = br1.nextSibling;
+                    const br2 = cd.nextSibling;
+                    const result = getTraversedNodes(editable);
+                    window.chai.expect(result).to.eql([ab, p2, br1, cd, br2]);
+                },
+            });
+        });
+        it('selection ends after a br at end of p elemnt', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '[<p>ab</p><p><br>cd<br>]</p>',
+                stepFunction: editor => {
+                    const editable = editor.editable;
+                    const ab = editable.firstChild.firstChild;
+                    const p2 = editable.lastChild;
+                    const br1 = p2.firstChild;
+                    const cd = br1.nextSibling;
+                    const br2 = cd.nextSibling;
+                    const result = getTraversedNodes(editable);
+                    window.chai.expect(result).to.eql([ab, p2, br1, cd, br2]);
+                },
+            });
+        });
+        it('selection ends between 2 br elements', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '[<p>ab</p><p>cd<br>]<br>ef</p>',
+                stepFunction: editor => {
+                    const editable = editor.editable;
+                    const ab = editable.firstChild.firstChild;
+                    const p2 =  editable.firstChild.nextSibling;
+                    const cd = p2.firstChild;
+                    const br1 = cd.nextSibling;
+                    const result = getTraversedNodes(editable);
+                    window.chai.expect(result).to.eql([ab, p2, cd, br1]);
+                },
+            });
+        });
+        it('selection starts before a br in middle of p element', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab[<br>cd</p><p>ef</p>]',
+                stepFunction: editor => {
+                    const editable = editor.editable;
+                    const ab = editable.firstChild.firstChild;
+                    const br = ab.nextSibling;
+                    const cd = br.nextSibling;
+                    const p2 = editable.lastChild;
+                    const ef = p2.firstChild;
+                    const result = getTraversedNodes(editable);
+                    window.chai.expect(result).to.eql([br, cd, p2, ef]);
+                },
+            });
+        });
+        it('selection starts before a br in start of p element', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>[ab<br>cd</p><p>ef</p>]',
+                stepFunction: editor => {
+                    const editable = editor.editable;
+                    const ab = editable.firstChild.firstChild;
+                    const br = ab.nextSibling;
+                    const cd = br.nextSibling;
+                    const p2 = editable.lastChild;
+                    const ef = p2.firstChild;
+                    const result = getTraversedNodes(editable);
+                    window.chai.expect(result).to.eql([ab, br, cd, p2, ef]);
+                },
+            });
+        });
+        it('selection starts after a br at end of p element', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab<br>[</p><p>cd</p>]',
+                stepFunction: editor => {
+                    const editable = editor.editable;
+                    const p2 = editable.lastChild;
+                    const cd = p2.firstChild;
+                    const result = getTraversedNodes(editable);
+                    window.chai.expect(result).to.eql([p2, cd]);
+                },
+            });
+        });
+        it('selection starts after a br in middle of p element', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab<br>[cd</p><p>ef</p>]',
+                stepFunction: editor => {
+                    const editable = editor.editable;
+                    const ab = editable.firstChild.firstChild;
+                    const br = ab.nextSibling;
+                    const cd = br.nextSibling;
+                    const p2 = editable.lastChild;
+                    const ef = p2.firstChild;
+                    const result = getTraversedNodes(editable);
+                    window.chai.expect(result).to.eql([cd, p2, ef]);
+                },
+            });
+        });
+        it('selection starts between 2 br elements', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab<br>[<br>cd</p><p>ef</p>]',
+                stepFunction: editor => {
+                    const editable = editor.editable;
+                    const ab = editable.firstChild.firstChild;
+                    const br1 = ab.nextSibling;
+                    const br2 = br1.nextSibling;
+                    const cd = br2.nextSibling;
+                    const p2 =  editable.firstChild.nextSibling;
+                    const ef = p2.firstChild;
+                    const result = getTraversedNodes(editable);
+                    window.chai.expect(result).to.eql([br2, cd, p2, ef]);
+                },
+            });
+        });
     });
     describe('getSelectedNodes', () => {
         it('should return nothing if the range is collapsed', async () => {
