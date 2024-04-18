@@ -101,8 +101,8 @@ export class PivotUIPlugin extends OdooUIPlugin {
         const cell = this.getters.getCorrespondingFormulaCell(position);
         if (cell && cell.isFormula) {
             const pivotFunction = this.getters.getFirstPivotFunction(cell.compiledFormula.tokens);
-            if (pivotFunction) {
-                return this.getters.getPivotId(pivotFunction.args[0]?.toString());
+            if (pivotFunction && pivotFunction.args[0]) {
+                return this.getters.getPivotId(pivotFunction.args[0].toString());
             }
         }
         return undefined;
