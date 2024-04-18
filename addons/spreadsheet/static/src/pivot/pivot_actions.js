@@ -47,7 +47,14 @@ export const SEE_RECORDS_PIVOT_VISIBLE = (position, env) => {
     const cell = env.model.getters.getCorrespondingFormulaCell(position);
     const evaluatedCell = env.model.getters.getEvaluatedCell(position);
     const argsDomain = env.model.getters.getPivotDomainArgsFromPosition(position);
+    const pivotId = env.model.getters.getPivotIdFromPosition(position);
+    if (!env.model.getters.isExistingPivot(pivotId)) {
+        return false;
+    }
+    const dataSource = env.model.getters.getPivot(pivotId);
+    const loadingError = dataSource.assertIsValid({ throwOnError: false })
     return (
+        !loadingError &&
         evaluatedCell.type !== "empty" &&
         evaluatedCell.type !== "error" &&
         evaluatedCell.value !== "" &&
