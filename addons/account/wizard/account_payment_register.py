@@ -149,8 +149,12 @@ class AccountPaymentRegister(models.TransientModel):
         :param batch_result:    A batch returned by '_get_batches'.
         :return:                A string representing a communication to be set on payment.
         '''
-        labels = set(line.name or line.move_id.ref or line.move_id.name for line in batch_result['lines'])
-        return ' '.join(sorted(labels))
+        if len(batch_result['lines']) == 1:
+            line = batch_result['lines'][0]
+            label = line.name or line.move_id.ref or line.move_id.name
+        else:
+            label = self.company_id.get_next_batch_payment_communication()
+        return label
 
     @api.model
     def _get_batch_available_journals(self, batch_result):
