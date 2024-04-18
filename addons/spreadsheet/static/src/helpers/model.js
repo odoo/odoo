@@ -41,7 +41,7 @@ export async function waitForOdooSources(model) {
     promises.push(
         ...model.getters
             .getPivotIds()
-            .filter((pivotId) => model.getters.getPivotDefinition(pivotId).type === "ODOO")
+            .filter((pivotId) => model.getters.getPivotCoreDefinition(pivotId).type === "ODOO")
             .map((pivotId) => model.getters.getPivot(pivotId))
             .map((pivot) => pivot.load())
     );
@@ -92,7 +92,7 @@ export async function freezeOdooData(model) {
                 const sheetId = sheet.id;
                 const position = { sheetId, col, row };
                 const pivotId = model.getters.getPivotIdFromPosition(position);
-                if (pivotId && model.getters.getPivotDefinition(pivotId).type !== "ODOO") {
+                if (pivotId && model.getters.getPivotCoreDefinition(pivotId).type !== "ODOO") {
                     continue;
                 }
                 const evaluatedCell = model.getters.getEvaluatedCell(position);

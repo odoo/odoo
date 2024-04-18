@@ -5,12 +5,10 @@ import { Domain } from "@web/core/domain";
 import { sprintf } from "@web/core/utils/strings";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 
-import { helpers, constants, EvaluationError } from "@odoo/o-spreadsheet";
-import { SpreadsheetPivotTable } from "@spreadsheet/pivot/pivot_table";
-import { pivotTimeAdapter } from "./pivot_time_adapters";
-import { isDateField, parseGroupField } from "./pivot_helpers";
+import { helpers, constants, EvaluationError, SpreadsheetPivotTable } from "@odoo/o-spreadsheet";
+import { parseGroupField } from "./pivot_helpers";
 
-const { toString, toNumber, toBoolean } = helpers;
+const { toString, toNumber, toBoolean, isDateField, pivotTimeAdapter } = helpers;
 const { DEFAULT_LOCALE } = constants;
 
 /**

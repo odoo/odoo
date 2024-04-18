@@ -318,7 +318,7 @@ QUnit.test("edit pivot groups", async function (assert) {
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
-            ...model.getters.getPivotDefinition(pivotId),
+            ...model.getters.getPivotCoreDefinition(pivotId),
             columns: [],
             rows: [],
         },

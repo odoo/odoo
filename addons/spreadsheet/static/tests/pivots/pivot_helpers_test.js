@@ -1,9 +1,8 @@
 /** @odoo-module */
-import { getFirstPivotFunction, getNumberOfPivotFormulas } from "@spreadsheet/pivot/pivot_helpers";
 import { getFirstListFunction, getNumberOfListFormulas } from "@spreadsheet/list/list_helpers";
 import { toNormalizedPivotValue } from "@spreadsheet/pivot/pivot_model";
-import { pivotTimeAdapter } from "@spreadsheet/pivot/pivot_time_adapters";
-import { constants, tokenize } from "@odoo/o-spreadsheet";
+import { constants, tokenize, helpers } from "@odoo/o-spreadsheet";
+const { getFirstPivotFunction, getNumberOfPivotFunctions, pivotTimeAdapter } = helpers;
 const { DEFAULT_LOCALE } = constants;
 
 function stringArg(value) {
@@ -42,11 +41,11 @@ QUnit.module("spreadsheet > pivot_helpers", {}, () => {
 
     QUnit.test("Number of formulas", async function (assert) {
         const formula = `=PIVOT.VALUE("1", "test") + PIVOT.VALUE("2", "hello", "bla") + ODOO.LIST("1", "bla")`;
-        assert.strictEqual(getNumberOfPivotFormulas(tokenize(formula)), 2);
+        assert.strictEqual(getNumberOfPivotFunctions(tokenize(formula)), 2);
         assert.strictEqual(getNumberOfListFormulas(tokenize(formula)), 1);
-        assert.strictEqual(getNumberOfPivotFormulas(tokenize("=1+1")), 0);
+        assert.strictEqual(getNumberOfPivotFunctions(tokenize("=1+1")), 0);
         assert.strictEqual(getNumberOfListFormulas(tokenize("=1+1")), 0);
-        assert.strictEqual(getNumberOfPivotFormulas(tokenize("=bla")), 0);
+        assert.strictEqual(getNumberOfPivotFunctions(tokenize("=bla")), 0);
         assert.strictEqual(getNumberOfListFormulas(tokenize("=bla")), 0);
     });
 

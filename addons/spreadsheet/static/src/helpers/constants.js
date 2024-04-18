@@ -7,17 +7,6 @@ export const DEFAULT_LINES_NUMBER = 20;
 
 export const TOP_LEVEL_STYLE = { bold: true, fillColor: "#E6F2F3" };
 
-export const PIVOT_TABLE_CONFIG = {
-    hasFilters: false,
-    totalRow: false,
-    firstColumn: true,
-    lastColumn: false,
-    numberOfHeaders: 1,
-    bandedRows: true,
-    bandedColumns: false,
-    styleId: "TableStyleMedium5",
-};
-
 export const UNTITLED_SPREADSHEET_NAME = _t("Untitled spreadsheet");
 
 export const RELATIVE_DATE_RANGE_TYPES = [

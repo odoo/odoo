@@ -7,7 +7,8 @@ import { OdooPivot } from "@spreadsheet/pivot/pivot_data_source";
 import { getBasicServerData, getBasicPivotArch } from "./data";
 import { createModelWithDataSource } from "./model";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
-import { parseDimension } from "@spreadsheet/pivot/pivot_helpers";
+import { helpers } from "@odoo/o-spreadsheet";
+const { parseDimension } = helpers;
 
 /** @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model */
 
