@@ -132,7 +132,7 @@ PortalComposer.include({
               this.trigger_up('reload_rating_popup_composer', result);
             });
             $modal.modal('hide');
-        });
+        }, () => {});
     },
 
     /**
