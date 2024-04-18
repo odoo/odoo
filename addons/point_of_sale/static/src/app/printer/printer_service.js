@@ -43,7 +43,11 @@ export class PrinterService extends Reactive {
     async print(component, props, options) {
         this.state.isPrinting = true;
         const el = await this.renderer.toHtml(component, props);
-        await loadAllImages(el);
+        try {
+            await loadAllImages(el);
+        } catch (e) {
+            console.error("Images could not be loaded correctly", e);
+        }
         try {
             return await this.printHtml(el, options);
         } finally {
