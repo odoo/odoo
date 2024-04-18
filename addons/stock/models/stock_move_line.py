@@ -408,9 +408,10 @@ class StockMoveLine(models.Model):
             for ml in self:
                 if ml.product_id.type != 'product' or ml.state == 'done':
                     continue
-                if 'quantity' in vals:
-                    new_reserved_qty = ml.product_uom_id._compute_quantity(
-                        vals['quantity'], ml.product_id.uom_id, rounding_method='HALF-UP')
+                if 'quantity' in vals or 'product_uom_id' in vals:
+                    new_ml_uom = updates.get('product_uom_id', ml.product_uom_id)
+                    new_reserved_qty = new_ml_uom._compute_quantity(
+                        vals.get('quantity', ml.quantity), ml.product_id.uom_id, rounding_method='HALF-UP')
                     # Make sure `reserved_uom_qty` is not negative.
                     if float_compare(new_reserved_qty, 0, precision_rounding=ml.product_id.uom_id.rounding) < 0:
                         raise UserError(_('Reserving a negative quantity is not allowed.'))
@@ -428,7 +429,7 @@ class StockMoveLine(models.Model):
                         lot=updates.get('lot_id', ml.lot_id), package=updates.get('package_id', ml.package_id),
                         owner=updates.get('owner_id', ml.owner_id))
 
-                if 'quantity' in vals and vals['quantity'] != ml.quantity:
+                if ('quantity' in vals and vals['quantity'] != ml.quantity) or 'product_uom_id' in vals:
                     moves_to_recompute_state |= ml.move_id
 
         # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `_action_assign` on the concerned moves.
