@@ -37,10 +37,7 @@
                                 Two-factor Authentication ("2FA") is a system of double authentication.
                                 The first one is done with your password and the second one with a code you get from a dedicated mobile app.
                                 Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.
-                                <a href="https://www.odoo.com/documentation/master/applications/general/auth/2fa.html" title="Learn More" target="_blank">
-                                    <i title="Documentation" class="fa fa-fw o_button_icon fa-info-circle"></i>
-                                    Learn More
-                                </a>
+                                <widget name="documentation_link" path="/applications/general/auth/2fa.html" icon="fa-fw o_button_icon fa-info-circle" label="Learn More"/>
                                 </span>
                                 <span invisible="not totp_enabled" class="text-muted">This account is protected!</span>
                             </div>
@@ -82,10 +79,7 @@
                         Two-factor Authentication ("2FA") is a system of double authentication.
                         The first one is done with your password and the second one with a code you get from a dedicated mobile app.
                         Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.
-                        <a href="https://www.odoo.com/documentation/master/applications/general/auth/2fa.html" title="Learn More" target="_blank">
-                            <i title="Documentation" class="fa fa-fw o_button_icon fa-info-circle"></i>
-                            Learn More
-                        </a>
+                        <widget name="documentation_link" path="/applications/general/auth/2fa.html" icon="fa-fw o_button_icon fa-info-circle" label="Learn More"/>
                     </span>
                     <group name="auth_devices" string="Trusted Devices" invisible="not totp_trusted_device_ids">
                         <div colspan="2">

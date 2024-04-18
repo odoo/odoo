@@ -466,10 +466,7 @@
                             <group string="API Keys">
                                 <div class="text-muted" colspan="2">
                                     API Keys are used to connect to Odoo from external tools without the need for a password or Two-factor Authentication.
-                                    <a href="https://www.odoo.com/documentation/master/developer/misc/api/external_api.html#api-keys" target="_blank">
-                                        <i title="Documentation" class="fa fa-fw o_button_icon fa-info-circle"></i>
-                                        Learn more
-                                    </a>
+                                    <widget name="documentation_link" path="/developer/misc/api/external_api.html#api-keys" lable="Learn more" icon="fa-fw o_button_icon fa-info-circle"/>
                                 </div>
                                 <div colspan="2" invisible="not api_key_ids">
                                     <field name="api_key_ids" nolabel="1" colspan="4" readonly="0">

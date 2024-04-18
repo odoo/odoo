@@ -4,10 +4,11 @@ import { registry } from "@web/core/registry";
 import { Layout } from "@web/search/layout";
 import { Component, useEffect, useState } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
 
 class WebsiteDashboard extends Component {
     static template = "website.WebsiteDashboardMain";
-    static components = { Layout };
+    static components = { Layout, DocumentationLink };
     static props = ["*"];
     setup() {
         super.setup();
