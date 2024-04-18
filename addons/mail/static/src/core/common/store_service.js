@@ -72,6 +72,13 @@ export class Store extends BaseStore {
 
     /** @type {number} */
     action_discuss_id;
+    /**
+     * Defines channel types that have the message seen indicator/info feature.
+     * @see `discuss.channel`._types_allowing_seen_infos()
+     *
+     * @type {string[]}
+     */
+    channel_types_with_seen_infos = [];
     /** This is the current logged partner / guest */
     self = Record.one("Persona");
     /**
