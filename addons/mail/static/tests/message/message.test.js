@@ -1788,3 +1788,41 @@ test("chatter - font size unchanged when there is only emoji", async () => {
         parseFloat(getComputedStyle(textMessage).getPropertyValue("font-size"))
     );
 });
+
+test("Delete starred message decrements starred counter once", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create([
+        {
+            author_id: serverState.partnerId,
+            body: "delete me",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+            starred_partner_ids: [serverState.partnerId],
+        },
+        {
+            author_id: serverState.partnerId,
+            body: "Hello World!",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+            starred_partner_ids: [serverState.partnerId],
+        },
+        {
+            author_id: serverState.partnerId,
+            body: "test",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+            starred_partner_ids: [serverState.partnerId],
+        },
+    ]);
+    await start();
+    await openDiscuss(channelId);
+    await contains("button", { count: 1, text: "Starred3" });
+    await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
+    await click(".o-mail-Message-moreMenu [title='Delete']");
+    await click("button", { text: "Confirm" });
+    await contains("button", { count: 1, text: "Starred2" });
+});
