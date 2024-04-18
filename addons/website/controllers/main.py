@@ -648,7 +648,11 @@ class Website(Home):
     @http.route('/website/toggle_switchable_view', type='json', auth='user', website=True)
     def toggle_switchable_view(self, view_key):
         if request.website.user_has_groups('website.group_website_designer'):
-            request.website.viewref(view_key).toggle_active()
+            view = request.website.viewref(view_key)
+            # TODO: In master, set the priority in XML directly.
+            if view_key == 'website_blog.opt_blog_cover_post':
+                view.priority = 17
+            view.toggle_active()
         else:
             return werkzeug.exceptions.Forbidden()
 
