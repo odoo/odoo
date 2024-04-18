@@ -42,6 +42,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             extra_trigger: ':iframe html:not(:has(.o_mail_theme_selector_new))',
             run: () => null, // no click, just check
         },
+        ...stepUtils.saveForm(),
         {
             content: "Click on the New button to create another mailing",
             trigger: 'button.o_form_button_create',
@@ -70,13 +71,10 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             trigger: '#oe_snippets',
             run: () => null, // no click, just check
         },
-        {
-            content: 'Save form',
-            trigger: '.o_form_button_save',
-        },
+        ...stepUtils.discardForm(),
         {
             content: 'Go back to previous mailing',
-            trigger: 'button.o_pager_previous',
+            trigger: 'td[name="subject"]:contains(Test Basic Theme)',
         },
         {
             content: "Make sure the snippets menu is hidden",
@@ -117,10 +115,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             trigger: ':iframe p font.text-o-color-1',
             run: () => null,
         },
-        {
-            content: 'Save changes',
-            trigger: '.o_form_button_save',
-        },
+        ...stepUtils.saveForm(),
         {
             content: "Go to 'Mailings' list view",
             trigger: '.breadcrumb a:contains(Mailings)'
