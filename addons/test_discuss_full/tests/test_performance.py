@@ -162,6 +162,7 @@ class TestDiscussFullPerformance(HttpCase):
         xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
         return {
             "Store": {
+                "channel_types_with_seen_infos": ["chat", "group", "livechat"],
                 "action_discuss_id": xmlid_to_res_id("mail.action_discuss"),
                 "hasGifPickerFeature": False,
                 "hasLinkPreviewFeature": True,
