@@ -199,7 +199,7 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
         const cell = this.getters.getCorrespondingFormulaCell(position);
         if (cell && cell.isFormula) {
             const pivotFunction = this.getters.getFirstPivotFunction(cell.compiledFormula.tokens);
-            if (pivotFunction) {
+            if (pivotFunction && pivotFunction.args[0]) {
                 return pivotFunction.args[0].toString();
             }
         }
