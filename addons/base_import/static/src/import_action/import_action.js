@@ -12,6 +12,7 @@ import { ImportDataSidepanel } from "../import_data_sidepanel/import_data_sidepa
 import { Layout } from "@web/search/layout";
 import { router } from "@web/core/browser/router";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
+import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
 
 export class ImportAction extends Component {
     static template = "ImportAction";
@@ -21,6 +22,7 @@ export class ImportAction extends Component {
         ImportDataContent,
         ImportDataSidepanel,
         Layout,
+        DocumentationLink,
     };
     static props = { ...standardActionServiceProps };
 

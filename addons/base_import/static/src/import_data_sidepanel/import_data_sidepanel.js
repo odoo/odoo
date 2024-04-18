@@ -2,10 +2,11 @@
 
 import { Component } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
+import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
 
 export class ImportDataSidepanel extends Component {
     static template = "ImportDataSidepanel";
-    static components = { CheckBox };
+    static components = { CheckBox, DocumentationLink };
     static props = {
         filename: { type: String },
         formattingOptions: { type: Object, optional: true },

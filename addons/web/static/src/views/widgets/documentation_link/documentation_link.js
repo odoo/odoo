@@ -11,6 +11,8 @@ export class DocumentationLink extends Component {
         ...standardWidgetProps,
         record: { type: Object, optional: 1 }, // The record is not needed in this widget
         path: { type: String },
+        label: { type: String, optional: 1 },
+        icon: { type: String, optional: 1 },
     };
 
     get url() {
@@ -31,9 +33,11 @@ export class DocumentationLink extends Component {
 export const documentationLink = {
     component: DocumentationLink,
     extractProps: ({ attrs }) => {
-        const { path } = attrs;
+        const { path, label, icon } = attrs;
         return {
             path,
+            label,
+            icon,
         };
     },
     additionalClasses: ["d-inline"],

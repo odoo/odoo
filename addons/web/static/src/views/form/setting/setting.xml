@@ -13,7 +13,7 @@
                     <span class="o_form_label"><t t-esc="labelString"/></span>
                 </t>
                 <t t-if="labelString and props.documentation">
-                    <DocumentationLink path="props.documentation"/>
+                    <DocumentationLink path="props.documentation" icon="'fa-question-circle'"/>
                 </t>
                 <t t-if="displayCompanyDependentIcon">
                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
