@@ -1,48 +1,28 @@
-/** @odoo-module */
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 
 export function confirmPopup() {
     return [Dialog.confirm()];
 }
-export function clickTicketButton() {
-    return [
-        {
-            trigger: ".pos-topheader .ticket-button",
-        },
-        {
-            trigger: ".screen.ticket-screen",
-            run: () => {},
-        },
-    ];
-}
 export function clickMenuButton() {
     return {
         content: "Click on the menu button",
-        trigger: ".menu-button",
+        trigger: ".pos-rightheader button.fa-bars",
     };
 }
 export function clickMenuOption(name) {
-    return [
-        clickMenuButton(),
-        {
-            content: `click on something in the burger menu`,
-            trigger: `a.dropdown-item:contains(${name})`,
-        },
-    ];
+    return [clickMenuButton(), clickMenuDropdownOption(name)];
+}
+export function clickMenuDropdownOption(name) {
+    return {
+        content: `click on something in the burger menu`,
+        trigger: `span.dropdown-item:contains(${name})`,
+    };
 }
 export function isCashMoveButtonHidden() {
     return [
         {
             extraTrigger: ".pos-topheader",
             trigger: ".pos-topheader:not(:contains(Cash In/Out))",
-            run: () => {},
-        },
-    ];
-}
-export function isCashMoveButtonShown() {
-    return [
-        {
-            trigger: ".pos-topheader:contains(Cash In/Out)",
             run: () => {},
         },
     ];

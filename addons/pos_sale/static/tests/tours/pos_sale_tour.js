@@ -27,8 +27,7 @@ registry.category("web_tour.tours").add("PosSettleOrder", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
-            Chrome.clickMenuButton(),
-            Chrome.clickTicketButton(),
+            Chrome.clickMenuOption("Orders"),
         ].flat(),
 });
 

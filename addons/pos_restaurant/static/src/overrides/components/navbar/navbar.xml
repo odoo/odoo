@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
-        <xpath expr="//li[hasclass('backend-button')]" position="before">
-            <li t-if="pos.mainScreen.component.name == 'FloorScreen'" class="menu-item navbar-button" t-on-click="() => this.pos.toggleEditMode()">
-                <a class="dropdown-item py-2">Edit Plan</a>
-            </li>
-            <li t-if="pos.mainScreen.component.name == 'FloorScreen'" class="menu-item navbar-button" t-on-click="onSwitchButtonClick">
-                <a class="dropdown-item py-2">Switch Floor View</a>
-            </li>
+        <xpath expr="//DropdownItem[contains(text(), 'Backend')]" position="before">
+            <DropdownItem t-if="pos.mainScreen.component.name == 'FloorScreen'" onSelected="() => this.pos.toggleEditMode()">
+                Edit Plan
+            </DropdownItem>
+            <DropdownItem t-if="pos.mainScreen.component.name == 'FloorScreen'" onSelected="() => this.onSwitchButtonClick()">
+                Switch Floor View
+            </DropdownItem>
         </xpath>
         <xpath expr="//BackButton" position="before">
             <span t-if="pos.selectedTable?.name" t-esc="pos.selectedTable.name" t-attf-style="background-color: {{pos.selectedTable.color}};border-radius: 0.25rem;" class="text-white fw-bolder my-2 px-3 d-flex align-items-center" />

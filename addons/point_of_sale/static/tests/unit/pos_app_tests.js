@@ -61,6 +61,7 @@ QUnit.module("Chrome", {
             "sound",
             "action",
             "hotkey",
+            "popover",
         ]) {
             registry.category("services").add(service, {
                 start() {
