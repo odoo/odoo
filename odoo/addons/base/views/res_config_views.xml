@@ -16,19 +16,5 @@
             </field>
         </record>
 
-        <record id="res_config_installer" model="ir.ui.view">
-            <field name="name">Inheritable view for installer objects</field>
-            <field name="model">res.config.installer</field>
-            <field name="arch" type="xml">
-                <form string="Configuration Installer">
-                    <separator string="title" colspan="4"/>
-                    <footer>
-                        <button name="action_next" type="object" string="Install Apps" class="btn-primary" data-hotkey="q"/>
-                        <button string="Skip" class="btn-secondary" special="cancel" data-hotkey="x"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
     </data>
 </odoo>
