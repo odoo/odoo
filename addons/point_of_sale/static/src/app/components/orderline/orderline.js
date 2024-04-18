@@ -1,7 +1,9 @@
 import { Component } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
+import { TagsList } from "@web/core/tags_list/tags_list";
 
 export class Orderline extends Component {
+    static components = { TagsList };
     static template = "point_of_sale.Orderline";
     static props = {
         line: Object,
@@ -36,5 +38,8 @@ export class Orderline extends Component {
                     .filter((label) => label)
             ),
         ].join(" ");
+    }
+    getInternalNotes() {
+        return JSON.parse(this.line.note || "[]");
     }
 }

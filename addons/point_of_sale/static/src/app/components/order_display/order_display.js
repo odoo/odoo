@@ -3,11 +3,12 @@ import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/center
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { formatCurrency } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
+import { TagsList } from "@web/core/tags_list/tags_list";
 
 // This methods is service-less, see PoS knowledges for more information
 export class OrderDisplay extends Component {
     static template = "point_of_sale.OrderDisplay";
-    static components = { CenteredIcon, Orderline };
+    static components = { CenteredIcon, Orderline, TagsList };
     static props = {
         order: Object,
         slots: Object,
@@ -36,5 +37,9 @@ export class OrderDisplay extends Component {
 
     get order() {
         return this.props.order;
+    }
+
+    getInternalNotes() {
+        return JSON.parse(this.props.order.internal_note || "[]");
     }
 }
