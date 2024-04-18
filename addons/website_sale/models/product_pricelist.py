@@ -44,7 +44,27 @@ class ProductPricelist(models.Model):
         tracking=20,
     )
 
-    selectable = fields.Boolean(help="Allow the end user to choose this price list")
+    selectable = fields.Boolean(
+        help="Allow the end user to choose this price list",
+        compute='_compute_selectable',
+        store=True,
+    )
+
+    # === COMPUTE METHODS === #
+
+    @api.depends('website_ids', 'website_id')
+    def _compute_selectable(self):
+        for pricelist in self:
+            # To remove website_id
+            pricelist.selectable = pricelist.website_id or pricelist.website_ids
+
+    @api.onchange('website_ids')
+    def onchange_website_ids(self):
+        for pricelist in self:
+            res_config_settings = self.env['res.config.settings'].search([(
+                'website_id','in', pricelist.website_ids
+            )])
+            res_config_settings.selected_pricelists |= pricelist
 
     #=== CONSTRAINT METHODS ===#
 

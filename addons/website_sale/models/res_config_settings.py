@@ -96,7 +96,7 @@ class ResConfigSettings(models.TransientModel):
         comodel_name='product.pricelist',
         relation='selectable_pricelists',
         related='website_id.selectable_pricelist_ids',
-        string='Available Pricelists',
+        string='Selectable Pricelists',
         readonly=False,
     )
 
@@ -118,24 +118,26 @@ class ResConfigSettings(models.TransientModel):
             else:
                 record.website_id.auth_signup_uninvited = 'b2b'
 
-    #=== ONCHANGE METHODS ===#
+    # === ONCHANGE METHODS === #
 
     @api.onchange('selectable_pricelist_ids')
     def onchange_selectable_pricelist_ids(self):
         for res_config in self:
             ProductPricelist = self.env['product.pricelist']
-            website_id = res_config.website_id.id
-            selectable_pricelists = ProductPricelist.search([
+            website_id = res_config.website_id
+            selected_pricelists = ProductPricelist.search([
                 ('id', 'in', res_config.selectable_pricelist_ids.ids),
             ])
-            selectable_pricelists.update({
-                'selectable': True,
-                'website_id': website_id,
-            })
+            for pricelist in selected_pricelists:
+                pricelist.website_ids |= website_id
+                pricelist.website_id = website_id
             unselected_pricelists = ProductPricelist.search(
-                [('website_id', '=', website_id)]) - selectable_pricelists
-            unselected_pricelists.update({'selectable': False})
-
+                ['|', ('website_id', '=', website_id.id),
+                ('website_ids', 'any', [('id', '=', website_id.id)])]
+            ) - selected_pricelists
+            for pricelist in unselected_pricelists:
+                pricelist.website_ids -= website_id
+                pricelist.website_id = False
 
     #=== CRUD METHODS ===#
 

@@ -9,6 +9,7 @@
             <field name="currency_id" position="after">
                 <field name="selectable"/>
                 <field name="website_id" groups="website.group_multi_website"/>
+                <field name="website_ids" groups="website.group_multi_website" widget="many2many_tags"/>
             </field>
         </field>
     </record>

@@ -288,7 +288,8 @@ class PricelistItem(models.Model):
     @api.onchange('price_discount_surcharge')
     def _onchange_price_discount_surcharge(self):
         for item in self:
-            item.price_discount = -item.price_discount_surcharge
+            if item.price_discount_surcharge:
+                item.price_discount = -item.price_discount_surcharge
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

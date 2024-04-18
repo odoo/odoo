@@ -961,9 +961,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['product.pricelist.item'].create({
             'pricelist_id': base_pricelist.id,
             'product_tmpl_id': test_product.product_tmpl_id.id,
-            'compute_price': 'fixed',
+            'compute_price': 'percentage',
             'applied_on': '1_product',
-            'fixed_price': 7,
+            'percent_price': 30,
         })
 
         special_pricelist = self.env['product.pricelist'].create({
@@ -984,7 +984,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenDiscountWithPricelistTour', login="pos_user",watch=True)
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenDiscountWithPricelistTour', login="pos_user")
 
     def test_07_pos_combo(self):
         setup_pos_combo_items(self)

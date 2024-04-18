@@ -91,11 +91,3 @@ export function hasTax(amount) {
         trigger: `.order-summary .tax:contains("${amount}")`,
     };
 }
-
-export function debug(){
-    return {
-        content: `order total amount is `,
-        trigger: `.product-screens .order-summasry .total:contains("")`,
-        run: () =>{}
-    };
-}

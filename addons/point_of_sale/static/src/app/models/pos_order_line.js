@@ -517,7 +517,14 @@ export class PosOrderline extends Base {
     }
 
     display_discount_policy() {
-        return this.discount_policy;
+        if (this.order_id.pricelist_id &&
+            this.order_id.pricelist_id.item_ids
+                .map((rule) => rule.compute_price)
+                .includes("percentage")
+        ) {
+            return "without_discount";
+        }
+        return "with_discount";
     }
 
     get_lst_price() {

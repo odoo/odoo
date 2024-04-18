@@ -127,17 +127,17 @@
                             <field name="price" invisible="1"/>
                             <group class="o_row" invisible="compute_price != 'fixed'">
                                 <field name="fixed_price"
-                                widget="monetary"
-                                options="{'field_digits': True}"/>
+                                    widget="monetary"
+                                    options="{'field_digits': True}"/>
                             </group>
                             <span class="d-flex gap-2 p-0" invisible="not product_uom or compute_price != 'fixed'">per<field name="product_uom"/></span>
                             <span class="p-0" invisible="product_uom or compute_price != 'fixed'">per Unit</span>
                             <group invisible="compute_price != 'percentage'">
-                                <field name="percent_price"
-                                    style="width:50%;"
-                                    string="Discount"
-                                    widget="percentage"
-                                />
+                                <label for="percent_price" string="Discount"/>
+                                <div class="o_row">
+                                    <field name="percent_price"/>
+                                    <span>%</span>
+                                </div>
                             </group>
                             <group invisible="compute_price != 'formula'">
                                 <field name="base"/>
@@ -146,8 +146,16 @@
                                     readonly="base != 'pricelist'"
                                     required="compute_price == 'formula' and base == 'pricelist'"/>
                                 <field name="price_round" string="Round off to"/>
-                                <field name="price_discount" widget="percentage" invisible="base == 'standard_price'"/>
-                                <field name="price_discount_surcharge" widget="percentage" invisible="base != 'standard_price'"/>
+                                <label for="price_discount" string="Discount" invisible="base == 'standard_price'"/>
+                                <div class="o_row" invisible="base == 'standard_price'">
+                                    <field name="price_discount"/>
+                                    <span>%</span>
+                                </div>
+                                <label for="price_discount_surcharge" string="Discount" invisible="base != 'standard_price'"/>
+                                <div class="o_row" invisible="base != 'standard_price'">
+                                    <field name="price_discount_surcharge"/>
+                                    <span>%</span>
+                                </div>
                                 <field name="price_surcharge" widget="monetary"/>
                                 <label string="Margins" for="price_min_margin"  groups="base.group_no_one"/>
                                 <div class="d-flex align-items-baseline" groups="base.group_no_one">
