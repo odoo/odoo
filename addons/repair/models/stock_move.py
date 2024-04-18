@@ -64,7 +64,7 @@ class StockMove(models.Model):
                 vals['location_id'] = src_location.id
             if not vals.get('location_dest_id'):
                 vals['location_dest_id'] = dest_location.id
-        moves = super().create(vals_list)
+        moves = super(StockMove, self.with_context(default_picking_id=False)).create(vals_list)
         repair_moves = self.env['stock.move']
         for move in moves:
             if not move.repair_id:
