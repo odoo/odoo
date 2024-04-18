@@ -340,6 +340,13 @@ $-seen-urls: ();
         }
     }
     @include o-add-gradient('menu-gradient');
+
+    a.nav-link {
+        color: var(--#{$variable-prefix}nav-link-color);
+        &:hover {
+            color: var(--#{$variable-prefix}nav-link-hover-color);
+        }
+    }
 }
 
 // TODO this should be reviewed. While it allowed to choose a color for the
