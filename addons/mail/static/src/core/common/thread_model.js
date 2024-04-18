@@ -526,28 +526,49 @@ export class Thread extends Record {
         return this.isChatChannel ? "@" : "#";
     }
 
-    get lastSelfMessageSeenByEveryone() {
-        const otherMembers = this.channelMembers.filter((member) =>
-            member.persona.notEq(this.store.self)
-        );
-        if (otherMembers.length === 0) {
-            return false;
-        }
-        const otherLastSeenMessageIds = otherMembers
-            .filter((member) => member.seen_message_id)
-            .map((member) => member.seen_message_id.id);
-        if (otherLastSeenMessageIds.length === 0) {
-            return false;
-        }
-        const lastMessageSeenByAllId = Math.min(...otherLastSeenMessageIds);
-        const orderedSelfSeenMessages = this.persistentMessages.filter((message) => {
-            return message.author?.eq(this.store.self) && message.id <= lastMessageSeenByAllId;
-        });
-        if (!orderedSelfSeenMessages || orderedSelfSeenMessages.length === 0) {
-            return false;
-        }
-        return orderedSelfSeenMessages.slice().pop();
-    }
+    /** @type {undefined|number[]} */
+    lastMessageSeenByAllId = Record.attr(undefined, {
+        compute() {
+            if (!this.store.channel_types_with_seen_infos.includes(this.channel_type)) {
+                return;
+            }
+            const otherMembers = this.channelMembers.filter((member) =>
+                member.persona.notEq(this.store.self)
+            );
+            if (otherMembers.length === 0) {
+                return;
+            }
+            const otherLastSeenMessageIds = otherMembers
+                .filter((member) => member.seen_message_id)
+                .map((member) => member.seen_message_id.id);
+            if (otherLastSeenMessageIds.length === 0) {
+                return;
+            }
+            return Math.min(...otherLastSeenMessageIds);
+        },
+    });
+
+    lastSelfMessageSeenByEveryone = Record.one("Message", {
+        compute() {
+            if (!this.lastMessageSeenByAllId) {
+                return false;
+            }
+            let res;
+            // starts from most recent persistent messages to find early
+            for (let i = this.persistentMessages.length - 1; i >= 0; i--) {
+                const message = this.persistentMessages[i];
+                if (!message.isSelfAuthored) {
+                    continue;
+                }
+                if (message.id > this.lastMessageSeenByAllId) {
+                    continue;
+                }
+                res = message;
+                break;
+            }
+            return res;
+        },
+    });
 
     onlineMembers = Record.many("ChannelMember", {
         /** @this {import("models").Thread} */

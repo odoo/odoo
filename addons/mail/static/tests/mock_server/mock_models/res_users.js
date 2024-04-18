@@ -7,6 +7,8 @@ export class ResUsers extends webModels.ResUsers {
 
     /** Simulates `_init_store_data` on `res.users`. */
     _init_store_data() {
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").MailGuest} */
         const MailGuest = this.env["mail.guest"];
         /** @type {import("mock_models").ResPartner} */
@@ -17,6 +19,7 @@ export class ResUsers extends webModels.ResUsers {
         const res = {
             Store: {
                 action_discuss_id: DISCUSS_ACTION_ID,
+                channel_types_with_seen_infos: DiscussChannel._types_allowing_seen_infos(),
                 hasGifPickerFeature: true,
                 hasLinkPreviewFeature: true,
                 hasMessageTranslationFeature: true,

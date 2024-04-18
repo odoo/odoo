@@ -51,6 +51,7 @@ class ResUsers(models.Model):
             "Store": {
                 "hasGifPickerFeature": get_param("discuss.tenor_api_key"),
                 "hasMessageTranslationFeature": get_param("mail.google_translate_api_key"),
+                "channel_types_with_seen_infos": self.env["discuss.channel"]._types_allowing_seen_infos(),
             },
         })
 

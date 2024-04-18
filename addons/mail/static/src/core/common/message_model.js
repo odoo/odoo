@@ -212,12 +212,17 @@ export class Message extends Record {
         return this.isSelfMentioned && this.thread?.model === "discuss.channel";
     }
 
-    get isSelfAuthored() {
-        if (!this.author) {
-            return false;
-        }
-        return this.author.eq(this.store.self);
-    }
+    isSelfAuthored = Record.attr(false, {
+        compute() {
+            if (!this.author) {
+                return false;
+            }
+            return this.author.eq(this.store.self);
+        },
+        // FIXME necessary to not trigger double-rendering of messages
+        // lazy-compute on-the-fly notifies the current reactive again
+        eager: true,
+    });
 
     get isStarred() {
         return this.store.self.in(this.starredPersonas);

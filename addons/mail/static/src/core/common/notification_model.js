@@ -27,7 +27,7 @@ export class Notification extends Record {
         /** @this {import("models").Notification} */
         compute() {
             const thread = this.message?.thread;
-            if (!this.message?.author?.eq(this.store.self)) {
+            if (!this.message?.isSelfAuthored) {
                 return;
             }
             const failure = Object.values(this.store.Failure.records).find((f) => {

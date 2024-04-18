@@ -11,6 +11,7 @@ patch(MockServer.prototype, {
         const res = {
             Store: {
                 action_discuss_id: DISCUSS_ACTION_ID,
+                channel_types_with_seen_infos: this._mockDiscussChannel__typesAllowingSeenInfos(),
                 hasGifPickerFeature: true,
                 hasLinkPreviewFeature: true,
                 hasMessageTranslationFeature: true,
