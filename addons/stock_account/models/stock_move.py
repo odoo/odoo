@@ -528,7 +528,7 @@ class StockMove(models.Model):
         analytic_lines_vals = []
         moves_to_link = []
         for move in self:
-            analytic_line_vals = move._prepare_analytic_line()
+            analytic_line_vals = move.sudo()._prepare_analytic_line()
             if not analytic_line_vals:
                 continue
             moves_to_link.append(move.id)
