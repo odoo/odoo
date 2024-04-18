@@ -43102,7 +43102,6 @@
     cursor: pointer;
   }
 `;
-    let tKey = 1;
     class SpreadsheetDashboard extends owl.Component {
         static template = "o-spreadsheet-SpreadsheetDashboard";
         static components = {
@@ -43180,13 +43179,9 @@
                         coordinates: rect,
                         position: { col, row },
                         action,
-                        // we can't rely on position only because a row or a column could
-                        // be inserted at any time.
-                        tKey: `${tKey}-${col}-${row}`,
                     });
                 }
             }
-            tKey++;
             return cells;
         }
         getClickableAction(position) {
@@ -48096,9 +48091,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.32';
-    __info__.date = '2024-04-10T12:34:13.525Z';
-    __info__.hash = '692623d';
+    __info__.version = '16.3.33';
+    __info__.date = '2024-04-18T16:54:26.487Z';
+    __info__.hash = '89f04ea';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
