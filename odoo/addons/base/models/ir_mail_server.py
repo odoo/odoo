@@ -388,7 +388,7 @@ class IrMailServer(models.Model):
                       "You could use STARTTLS instead. "
                        "If SSL is needed, an upgrade to Python 2.6 on the server-side "
                        "should do the trick."))
-            connection = smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=SMTP_TIMEOUT)
+            connection = smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=SMTP_TIMEOUT, context=ssl_context)
         else:
             connection = smtplib.SMTP(smtp_server, smtp_port, timeout=SMTP_TIMEOUT)
 
