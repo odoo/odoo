@@ -978,6 +978,174 @@ export class PosStore extends Reactive {
             return order;
         }
     }
+<<<<<<< HEAD
+||||||| parent of 37fd30988a66 (temp)
+    /**
+     * Load the locally saved unpaid orders for this PoS Config.
+     *
+     * First load all orders belonging to the current session.
+     * Second load all orders belonging to the same config but from other sessions,
+     * Only if tho order has orderlines.
+     */
+    async load_orders() {
+        this.loadingOrderState = true;
+        var jsons = this.db.get_unpaid_orders();
+        await this._loadMissingProducts(jsons);
+        await this._loadMissingPartners(jsons);
+        var orders = [];
+
+        for (var i = 0; i < jsons.length; i++) {
+            var json = jsons[i];
+            if (json.pos_session_id === this.session.id) {
+                try {
+                    orders.push(this.createReactiveOrder(json));
+                } catch (error) {
+                    console.warn(error);
+                }
+            }
+        }
+        for (i = 0; i < jsons.length; i++) {
+            json = jsons[i];
+            if (
+                json.pos_session_id !== this.session.id &&
+                (json.lines.length > 0 || json.statement_ids.length > 0)
+            ) {
+                try {
+                    orders.push(this.createReactiveOrder(json));
+                } catch (error) {
+                    console.warn(error);
+                }
+            } else if (json.pos_session_id !== this.session.id) {
+                this.db.remove_unpaid_order(jsons[i]);
+            }
+        }
+
+        orders = orders.sort(function (a, b) {
+            return a.sequence_number - b.sequence_number;
+        });
+
+        if (orders.length) {
+            for (const order of orders) {
+                this.orders.push(order);
+            }
+        }
+        this.loadingOrderState = false;
+    }
+    load_server_orders() {
+        if (!this.open_orders_json) {
+            return;
+        }
+        this.loadOpenOrders(this.open_orders_json);
+    }
+    async _loadMissingProducts(orders) {
+        const missingProductIds = new Set([]);
+
+        for (const order of orders) {
+            for (const line of order.lines) {
+                const productId = line[2].product_id;
+                if (missingProductIds.has(productId)) {
+                    continue;
+                }
+                if (!this.models["product.product"].get(productId)) {
+                    missingProductIds.add(productId);
+                }
+            }
+        }
+
+        await this.loadProducts([...missingProductIds]);
+    }
+    async _loadMissingPricelistItems(products) {
+        if (!products.length) {
+            return;
+        }
+
+        const product_tmpl_ids = products.map((product) => product.raw.product_tmpl_id);
+        const product_ids = products.map((product) => product.id);
+        await this.data.callRelated("pos.session", "get_pos_ui_product_pricelist_item_by_product", [
+            odoo.pos_session_id,
+            product_tmpl_ids,
+            product_ids,
+        ]);
+    }
+=======
+    /**
+     * Load the locally saved unpaid orders for this PoS Config.
+     *
+     * First load all orders belonging to the current session.
+     * Second load all orders belonging to the same config but from other sessions,
+     * Only if tho order has orderlines.
+     */
+    async load_orders() {
+        this.loadingOrderState = true;
+        var jsons = this.db.get_unpaid_orders();
+        await this._loadMissingProducts(jsons);
+        await this._loadMissingPartners(jsons);
+        var orders = [];
+
+        for (const json of jsons) {
+            if (
+                json.pos_session_id === this.session.id ||
+                json.lines.length > 0 ||
+                json.statement_ids.length > 0
+            ) {
+                try {
+                    orders.push(this.createReactiveOrder(json));
+                    continue;
+                } catch (error) {
+                    console.error("There was an error while loading the order", json, error);
+                }
+            }
+            this.db.remove_unpaid_order(json);
+        }
+
+        orders = orders.sort(function (a, b) {
+            return a.sequence_number - b.sequence_number;
+        });
+
+        if (orders.length) {
+            for (const order of orders) {
+                this.orders.push(order);
+            }
+        }
+        this.loadingOrderState = false;
+    }
+    load_server_orders() {
+        if (!this.open_orders_json) {
+            return;
+        }
+        this.loadOpenOrders(this.open_orders_json);
+    }
+    async _loadMissingProducts(orders) {
+        const missingProductIds = new Set([]);
+
+        for (const order of orders) {
+            for (const line of order.lines) {
+                const productId = line[2].product_id;
+                if (missingProductIds.has(productId)) {
+                    continue;
+                }
+                if (!this.models["product.product"].get(productId)) {
+                    missingProductIds.add(productId);
+                }
+            }
+        }
+
+        await this.loadProducts([...missingProductIds]);
+    }
+    async _loadMissingPricelistItems(products) {
+        if (!products.length) {
+            return;
+        }
+
+        const product_tmpl_ids = products.map((product) => product.raw.product_tmpl_id);
+        const product_ids = products.map((product) => product.id);
+        await this.data.callRelated("pos.session", "get_pos_ui_product_pricelist_item_by_product", [
+            odoo.pos_session_id,
+            product_tmpl_ids,
+            product_ids,
+        ]);
+    }
+>>>>>>> 37fd30988a66 (temp)
 
     // load the partners based on the ids
     async _loadPartners(partnerIds) {
