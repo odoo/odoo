@@ -497,6 +497,7 @@ class Task(models.Model):
         if tasks_with_dependency:
             group_dependent = self.env['project.task']._read_group([
                 ('depend_on_ids', 'in', tasks_with_dependency.ids),
+                ('is_closed', '=', False),
             ], ['depend_on_ids'], ['__count'])
             dependent_tasks_count_dict = {
                 depend_on.id: count
@@ -1793,20 +1794,14 @@ class Task(models.Model):
 
     def action_dependent_tasks(self):
         self.ensure_one()
-        action = {
+        return {
             'res_model': 'project.task',
             'type': 'ir.actions.act_window',
-            'context': {**self._context, 'default_depend_on_ids': [Command.link(self.id)], 'show_project_update': False},
+            'context': {**self._context, 'default_depend_on_ids': [Command.link(self.id)], 'show_project_update': False, 'search_default_open_tasks': True},
+            'domain': [('depend_on_ids', '=', self.id)],
+            'name': _('Dependent Tasks'),
+            'view_mode': 'tree,form,kanban,calendar,pivot,graph,activity',
         }
-        if self.dependent_tasks_count == 1:
-            action['view_mode'] = 'form'
-            action['res_id'] = self.dependent_ids.id
-            action['views'] = [(False, 'form')]
-        else:
-            action['domain'] = [('depend_on_ids', '=', self.id)]
-            action['name'] = _('Dependent Tasks')
-            action['view_mode'] = 'tree,form,kanban,calendar,pivot,graph,activity'
-        return action
 
     def action_recurring_tasks(self):
         return {
