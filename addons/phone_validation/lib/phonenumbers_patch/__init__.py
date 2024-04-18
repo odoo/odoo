@@ -40,6 +40,12 @@ try:
         # region_PA.py in the current directory was copied from external source:
         # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.12.43/python/phonenumbers/data/region_PA.py
         phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('PA', _local_load_region)
+    # Patching phonemetadata of Senegal if using old phonenumbers version
+    if parse_version(phonenumbers.__version__) < parse_version('8.12.29'):
+        # region_SN.py in the current directory was copied from external source:
+        # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.12.57/python/phonenumbers/data/region_SN.py
+        phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('SN', _local_load_region)
+
     # MONKEY PATCHING phonemetadata to fix Brazilian phonenumbers following 2016 changes
     def _hook_load_region(code):
         phonenumbers.data._load_region(code)
@@ -52,5 +58,6 @@ try:
                 )
             )
     phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('BR', _hook_load_region)
+
 except ImportError:
     pass
