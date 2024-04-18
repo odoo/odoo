@@ -334,9 +334,21 @@ class Website(Home):
             action_url += '&step=' + str(step)
         return request.redirect(action_url)
 
+    def _get_social_default_urls(self):
+        """ Return the default URLs for social networks. """
+        return {
+            'facebook': 'https://www.facebook.com/Odoo',
+            'github': 'https://github.com/odoo',
+            'linkedin': 'https://www.linkedin.com/company/odoo',
+            'youtube': 'https://www.youtube.com/user/OpenERPonline',
+            'instagram': 'https://www.instagram.com/odoo.official',
+            'twitter': 'https://twitter.com/Odoo',
+            'tiktok': 'https://www.tiktok.com/@odoo',
+        }
+
     @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
     def social(self, social, **kwargs):
-        url = getattr(request.website, 'social_%s' % social, False)
+        url = getattr(request.website, 'social_%s' % social, False) or self._get_social_default_urls().get(social)
         if not url:
             raise werkzeug.exceptions.NotFound()
         return request.redirect(url, local=False)
