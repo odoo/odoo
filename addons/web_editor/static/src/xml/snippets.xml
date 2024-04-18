@@ -174,12 +174,15 @@
                                     t-att-name="snippet.displayName"
                                     t-att-data-oe-snippet-id="snippet.id"
                                     t-att-data-module-id="snippet.moduleId"
-                                    t-on-click="_onSnippetClick"
-                                    data-tooltip="This block cannot be dropped anywhere on this page.">
+                                    t-on-click="_onSnippetClick">
                                     <t t-if="snippet.disabled">
                                         <img src="/web_editor/static/src/img/snippet_disabled.svg" class="o_snippet_undroppable"/>
                                     </t>
-                                    <div class="oe_snippet_thumbnail" t-att-class="{ 'o_we_already_dragging': snippet.renaming }" t-att-data-snippet="snippet.baseBody.dataset.snippet">
+                                    <div class="oe_snippet_thumbnail"
+                                        t-att-class="{ 'o_we_already_dragging': snippet.renaming }"
+                                        t-att-data-snippet="snippet.baseBody.dataset.snippet"
+                                        t-att-style="snippet.disabled ? 'pointer-events: auto; cursor: not-allowed;' : false"
+                                        t-att-data-tooltip="snippet.disabled ? 'This block cannot be dropped anywhere on this page.' : false">
                                         <div class="oe_snippet_thumbnail_img" t-attf-style="background-image: url({{snippet.thumbnailSrc}});"/>
                                         <t t-if="snippet.isCustom and snippet.renaming">
                                             <we-input class="o_we_user_value_widget w-100 mx-1">
