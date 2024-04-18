@@ -210,3 +210,84 @@ class TestRepairTraceability(TestMrpCommon):
         wizard.process()
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.move_raw_ids.lot_ids, sn_lot)
+
+    def test_mo_with_used_sn_component_03(self):
+        """
+        Suppose a tracked-by-usn component has been used to produce a product. Then, using a repair order,
+        this component is removed from the product and moved to the virtual/scraped location. If it is
+        unscrapped by an internal transfer, the user should be able to use the component in a new MO
+        """
+        def produce_one(product, component):
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.product_id = product
+            with mo_form.move_raw_ids.new() as raw_line:
+                raw_line.product_id = component
+                raw_line.product_uom_qty = 1
+            mo = mo_form.save()
+            mo.action_confirm()
+            mo.action_assign()
+            action = mo.button_mark_done()
+            wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+            wizard.process()
+            return mo
+
+        picking_type = self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')])[0]
+        picking_type.use_auto_consume_components_lots = True
+
+        stock_location = self.env.ref('stock.stock_location_stock')
+
+        finished, component = self.env['product.product'].create([{
+            'name': 'Finished Product',
+            'type': 'product',
+        }, {
+            'name': 'SN Componentt',
+            'type': 'product',
+            'tracking': 'serial',
+        }])
+
+        sn_lot = self.env['stock.lot'].create({
+            'product_id': component.id,
+            'name': 'USN01',
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.quant']._update_available_quantity(component, stock_location, 1, lot_id=sn_lot)
+
+        mo = produce_one(finished, component)
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.move_raw_ids.lot_ids, sn_lot)
+
+        ro_form = Form(self.env['repair.order'])
+        ro_form.product_id = finished
+        scrap_location = self.env['stock.location'].search([('company_id', '=', self.env.company.id), ('scrap_location', '=', True)], limit=1)
+        with ro_form.operations.new() as ro_line:
+            ro_line.type = 'remove'
+            ro_line.product_id = component
+            ro_line.lot_id = sn_lot
+            ro_line.location_dest_id = scrap_location
+        ro = ro_form.save()
+        ro.action_validate()
+        ro.action_repair_start()
+        ro.action_repair_end()
+
+        internal_move = self.env['stock.move'].create({
+            'name': component.name,
+            'location_id': scrap_location.id,
+            'location_dest_id': stock_location.id,
+            'product_id': component.id,
+            'product_uom': component.uom_id.id,
+            'product_uom_qty': 1.0,
+            'move_line_ids': [(0, 0, {
+                'product_id': component.id,
+                'location_id': scrap_location.id,
+                'location_dest_id': stock_location.id,
+                'product_uom_id': component.uom_id.id,
+                'qty_done': 1.0,
+                'lot_id': sn_lot.id,
+            })],
+        })
+        internal_move._action_confirm()
+        internal_move._action_done()
+
+        mo = produce_one(finished, component)
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.move_raw_ids.lot_ids, sn_lot)

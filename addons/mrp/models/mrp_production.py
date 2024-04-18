@@ -2223,6 +2223,11 @@ class MrpProduction(models.Model):
                 if duplicates:
                     # Maybe some move lines have been compensated by unbuild
                     duplicates_returned = move.product_id._count_returned_sn_products(move_line.lot_id)
+                    scrapped = self.env['stock.move.line'].search_count([
+                        ('lot_id', '=', move_line.lot_id.id),
+                        ('state', '=', 'done'),
+                        ('location_dest_id.scrap_location', '=', True)
+                    ])
                     removed = self.env['stock.move.line'].search_count([
                         ('lot_id', '=', move_line.lot_id.id),
                         ('state', '=', 'done'),
@@ -2236,7 +2241,7 @@ class MrpProduction(models.Model):
                         ('location_dest_id.scrap_location', '=', False),
                     ])
                     # Either removed or unbuild
-                    if not ((duplicates_returned or removed) and duplicates - duplicates_returned - removed + unremoved == 0):
+                    if not ((duplicates_returned or scrapped) and duplicates - duplicates_returned + removed - unremoved == 0):
                         raise UserError(message)
                 # Check presence of same sn in current production
                 duplicates = co_prod_move_lines.filtered(lambda ml: ml.qty_done and ml.lot_id == move_line.lot_id) - move_line
