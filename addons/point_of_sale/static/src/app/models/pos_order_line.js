@@ -559,7 +559,7 @@ export class PosOrderline extends Base {
     }
 
     getCustomerNote() {
-        return this.customer_note;
+        return this.customer_note || "";
     }
 
     getTotalCost() {
