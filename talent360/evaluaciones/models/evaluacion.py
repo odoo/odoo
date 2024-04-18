@@ -57,6 +57,13 @@ class Evaluacion(models.Model):
         string="Asignados",
     )
 
+    @api.onchange('competencia_ids')
+    def _onchange_competencia_ids(self):
+        if self.competencia_ids:
+            competencia_preguntas = self.competencia_ids.mapped('pregunta_ids')
+            self.pregunta_ids = competencia_preguntas
+        else:
+            self.pregunta_ids = False
     # # do something on new usuario assigned
 
     # def write(self, vals):

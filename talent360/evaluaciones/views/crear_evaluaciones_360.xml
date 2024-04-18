@@ -1,18 +1,16 @@
-<?xml version="1.0"?>
 <odoo>
-
     <!-- EVALUACION -->
     <record id="evaluacion_360_action" model="ir.actions.act_window">
         <field name="name">Evaluaciones 360</field>
         <field name="res_model">evaluacion</field>
         <field name="view_mode">tree,form</field>
+        <field name="target">inline</field>
         <field name="context">{'default_tipo': '360'}</field>
     </record>
 
     <record id="evaluacion_tree" model="ir.ui.view">
         <field name="name">evaluacion.tree</field>
         <field name="model">evaluacion</field>
-
         <field name="arch" type="xml">
             <tree>
                 <field name="nombre"/>
@@ -24,24 +22,22 @@
     </record>
 
     <record id="evaluacion_form" model="ir.ui.view">
-        <field name="name">evaluacion.tree</field>
+        <field name="name">evaluacion.form</field>
         <field name="model">evaluacion</field>
-
         <field name="arch" type="xml">
-            <form>
-                <sheet string="Evaluacion de pesonal">
+            <form create="false">
+                <sheet string="Evaluacion de personal">
                     <group>
                         <group>
                             <field name="nombre" field_id="nombre_0"/>
                         </group>
                         <group>
                             <group>
-                                <field name="tipo" field_id="tipo de evaluacion_0" options="{'no_create_edit': True}"/>
-
+                                <field name="tipo" field_id="tipo_de_evaluacion_0" options="{'no_create_edit': True}"/>
                             </group>
                         </group>
                         <group>
-                            <field name="competencia_ids" can_create="True" can_write="True" field_id="competencia_ids_0">
+                            <field name="competencia_ids" can_create="True" can_write="True" field_id="competencia_ids_0" on_change="1">
                                 <tree>
                                     <field name="nombre"/>
                                     <field name="descripcion"/>
@@ -50,28 +46,13 @@
                                 </tree>
                             </field>
                         </group>
-                        <group>
-                            <field name="usuario_ids" can_create="True" can_write="True" field_id="usuario_ids_0">
-                                <tree string="Users" multi_edit="1">
-                                    <field name="name" readonly="1" on_change="1"/>
-                                    <field name="login" readonly="1" on_change="1"/>
-                                    <field name="lang" on_change="1"/>
+                    </group>
 
-                                    <field name="state" widget="badge" decoration-info="state == 'new'" decoration-success="state == 'active'"/>
-                                </tree>
-                            </field>
-                        </group>
-                        <group/>
-                        <group>
-                            <separator/>
-                        </group>
+                    <group>
+                        <field name="pregunta_ids" domain="[('id', 'in', pregunta_ids.ids)]" readonly="true"/>
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
-
 </odoo>
-
-
-
