@@ -570,13 +570,18 @@ class TestRepair(common.TransactionCase):
         self.assertEqual(return_picking.state, 'done')
 
         res_dict = return_picking.action_repair_return()
-        repair_form = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context']))
+        repair_form = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context']), view=self.env.ref('repair.view_repair_order_form'))
         repair_form.product_id = product
+        with repair_form.move_ids.new() as move:
+            move.product_id = self.product_product_5
+            move.product_uom_qty = 1.0
+            move.quantity_done = 1.0
+            move.repair_line_type = 'add'
         repair = repair_form.save()
         repair.action_repair_start()
         repair.action_repair_end()
         self.assertEqual(repair.state, 'done')
-        self.assertEqual(len(return_picking.move_ids), 1)
+        self.assertEqual(len(return_picking.move_ids), 1, "Parts added to the repair order shoudln't be added to the return picking")
 
     def test_repair_with_product_in_package(self):
         """

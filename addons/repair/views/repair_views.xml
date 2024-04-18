@@ -107,7 +107,7 @@
                 <notebook>
                     <page string="Parts" name="parts">
                         <field name="move_ids" attrs="{'readonly': ['|', ('state', '=', 'cancel'), ('state', '=', 'done')]}"
-                        context="{'default_repair_id': id, 'default_product_uom_qty': product_qty, 'default_company_id': company_id, 'default_date': schedule_date, 'default_repair_line_type': 'add'}">
+                        context="{'default_repair_id': id, 'default_product_uom_qty': product_qty, 'default_company_id': company_id, 'default_date': schedule_date, 'default_repair_line_type': 'add', 'default_picking_id': False}">
                             <tree string="Operations" editable="bottom">
                                 <field name="company_id" invisible="1"/>
                                 <field name="name" invisible="1"/>
