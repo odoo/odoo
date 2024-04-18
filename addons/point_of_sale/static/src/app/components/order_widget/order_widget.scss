@@ -2,3 +2,12 @@
     padding: map-get($spacers, 2);
     gap: map-get($spacers, 1);
 }
+
+// External CSS to wrap long notes coming from another component (TagsList)
+.internal-note-container span {
+    text-align: start;
+}
+
+.internal-note-container span > div {
+    white-space: normal;
+}

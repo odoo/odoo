@@ -47,7 +47,7 @@ export function hasLine({
         trigger += `:has(.info-list .customer-note:contains("${customerNote}"))`;
     }
     if (internalNote) {
-        trigger += `:has(.info-list .internal-note:contains("${internalNote}"))`;
+        trigger += `:has(.info-list .o_tag_badge_text:contains("${internalNote}"))`;
     }
     if (comboParent) {
         trigger += `:has(.info-list .combo-parent-name:contains("${comboParent}"))`;
@@ -105,7 +105,7 @@ export function hasInternalNote(note) {
     return [
         {
             content: `Order internal note is '${note}'`,
-            trigger: `.order-container .internal-note-container li.internal-note.badge:contains("${note}")`,
+            trigger: `.order-container .internal-note-container span div:contains("${note}")`,
         },
     ];
 }
