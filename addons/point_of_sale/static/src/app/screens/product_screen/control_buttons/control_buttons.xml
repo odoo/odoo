@@ -4,10 +4,7 @@
         <!-- All buttons always displayed -->
         <SelectPartnerButton partner="partner" t-if="!props.showRemainingButtons"/>
         <t t-if="!props.showRemainingButtons || (ui.isSmall and props.showRemainingButtons)">
-            <NoteButton
-                label="internalNoteLabel()"
-                type="'internal'"
-                class="buttonClass"/>
+            <InternalNoteButton label.translate="Note" class="buttonClass"/>
         </t>
         <button t-if="pos.config.use_presets and !props.showRemainingButtons"
             class="btn btn-light btn-lg flex-shrink-0 border-0"
@@ -23,7 +20,6 @@
             <div class="control-buttons control-buttons-modal d-grid gap-2 mt-2">
                 <NoteButton
                     label.translate="Customer Note"
-                    type="'customer'"
                     class="buttonClass"
                     icon="'fa fa-sticky-note'"/>
                 <button t-if="this.pos.cashier._role != 'minimal'" class="o_pricelist_button btn btn-secondary btn-lg py-5" t-on-click="() => this.clickPricelist()">

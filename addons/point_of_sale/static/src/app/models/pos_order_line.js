@@ -577,7 +577,7 @@ export class PosOrderline extends Base {
     }
 
     getCustomerNote() {
-        return this.customer_note;
+        return this.customer_note || "";
     }
 
     getTotalCost() {
@@ -675,11 +675,11 @@ export class PosOrderline extends Base {
         this.price_extra = parseFloat(price_extra) || 0.0;
     }
     getNote() {
-        return this.note || "";
+        return this.note || "[]";
     }
     setNote(note) {
         this.setDirty();
-        this.note = note;
+        this.note = note || "[]";
     }
     setHasChange(isChange) {
         this.uiState.hasChange = isChange;
