@@ -77,6 +77,10 @@ class TestLinkPreview(MailCommon):
         """
         return self._patched_get_html('image/png', content)
 
+    def _patch_with_no_content_type(self, *args, **kwargs):
+        content = b""""""
+        return self._patched_get_html(None, content)
+
     def test_01_link_preview_throttle(self):
         with patch.object(requests.Session, 'get', self._patch_with_og_properties), patch.object(requests.Session, 'head', self._patch_head_html):
             throttle = int(self.env['ir.config_parameter'].sudo().get_param('mail.link_preview_throttle', 99))
@@ -155,3 +159,9 @@ class TestLinkPreview(MailCommon):
             with self.subTest(get_patch=get_patch, url=url, expected=expected), patch.object(requests.Session, 'get', get_patch):
                 preview = link_preview.get_link_preview_from_url(url, session)
                 self.assertEqual(preview, expected)
+
+    def test_link_preview_no_content_type(self):
+        with patch.object(requests.Session, 'request', self._patch_with_no_content_type):
+            url = self.source_url
+            session = requests.Session()
+            link_preview.get_link_preview_from_url(url, session)
