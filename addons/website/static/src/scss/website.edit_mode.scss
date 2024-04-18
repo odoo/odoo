@@ -281,3 +281,11 @@ body.editor_enable {
     padding-bottom: 128px;
     font-family: $o-font-family-sans-serif;
 }
+// offcanvas backdrop
+body.editor_enable {
+    // We prevent selection to avoid the powerbox hint from being added to the
+    // backdrop by clicking on it in edit mode.
+    .offcanvas-backdrop {
+        user-select: none;
+    }
+}
