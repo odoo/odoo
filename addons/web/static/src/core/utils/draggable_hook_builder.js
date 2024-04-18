@@ -1,4 +1,5 @@
 import { clamp } from "@web/core/utils/numbers";
+import { omit } from "@web/core/utils/objects";
 import { closestScrollableX, closestScrollableY } from "@web/core/utils/scrolling";
 import { setRecurringAnimationFrame } from "@web/core/utils/timing";
 import { browser } from "../browser/browser";
@@ -64,6 +65,7 @@ import { hasTouch, isBrowserFirefox, isIOS } from "../browser/feature_detection"
  * @property {boolean} [enabled=true]
  * @property {number} [speed=10]
  * @property {number} [threshold=20]
+ * @property {"horizontal"|"vertical"} [direction]
  *
  * @typedef Position
  * @property {number} x
@@ -576,7 +578,7 @@ export function makeDraggableHook(hookParams) {
                 const xRect = ctx.current.scrollParentXRect;
                 const yRect = ctx.current.scrollParentYRect;
 
-                const { speed, threshold } = ctx.edgeScrolling;
+                const { direction, speed, threshold } = ctx.edgeScrolling;
                 const correctedSpeed = (speed / 16) * deltaTime;
 
                 const diff = {};
@@ -600,10 +602,10 @@ export function makeDraggableHook(hookParams) {
 
                 const diffToScroll = ([delta, sign]) =>
                     (1 - clamp(delta, 0, threshold) / threshold) * correctedSpeed * sign;
-                if (diff.y) {
+                if ((!direction || direction === "vertical") && diff.y) {
                     ctx.current.scrollParentY.scrollBy({ top: diffToScroll(diff.y) });
                 }
-                if (diff.x) {
+                if ((!direction || direction === "horizontal") && diff.x) {
                     ctx.current.scrollParentX.scrollBy({ left: diffToScroll(diff.x) });
                 }
             };
@@ -934,7 +936,15 @@ export function makeDraggableHook(hookParams) {
             // Effect depending on the params to update them.
             setupHooks.setup(
                 (...deps) => {
-                    const actualParams = { ...defaultParams, ...Object.fromEntries(deps) };
+                    const params = Object.fromEntries(deps);
+                    const actualParams = { ...defaultParams, ...omit(params, "edgeScrolling") };
+                    if (params.edgeScrolling) {
+                        actualParams.edgeScrolling = {
+                            ...actualParams.edgeScrolling,
+                            ...params.edgeScrolling,
+                        };
+                    }
+
                     if (!ctx.ref.el) {
                         return;
                     }
