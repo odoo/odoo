@@ -283,11 +283,6 @@ class PosSession(models.Model):
                 'domain': [('id', '=', config_id.note_ids.ids)] if config_id.note_ids else [],
                 'fields': ['name'],
             },
-            'ir.ui.view': {
-                'domain': [],
-                'fields': ['id', 'name'],
-                'load_manually': True,
-            },
         }
 
     def load_data(self, models_to_load, only_data=False):
@@ -405,7 +400,6 @@ class PosSession(models.Model):
                 response['fields']['account.fiscal.position'],
                 response['relations']['account.fiscal.position']
             )
-        response['data']['ir.ui.view'] = self.env.ref('base.view_partner_form').sudo().read(params['ir.ui.view']['fields'])
         return response
 
     def _process_pos_ui_account_tax(self, account_tax, account_fields, account_relations):

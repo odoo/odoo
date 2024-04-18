@@ -32,7 +32,6 @@ import {
 } from "../models/utils/tax_utils";
 import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
 import { ConnectionLostError } from "@web/core/network/rpc";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 const { DateTime } = luxon;
 
@@ -1377,13 +1376,15 @@ export class PosStore extends Reactive {
      * @param {import("@point_of_sale/app/models/res_partner").ResPartner?} partner leave undefined to create a new partner
      */
     editPartner(partner) {
-        this.dialog.add(FormViewDialog, {
-            resModel: "res.partner",
-            viewId: this.models["ir.ui.view"].find((r) => r.name === "res.partner.form").id,
-            resId: partner?.id,
-            context: { target: "new" },
-            onRecordSaved: (record) => {
-                this.data.read("res.partner", record.config.resIds);
+        this.action.doAction("point_of_sale.res_partner_action_edit_pos", {
+            props: {
+                resId: partner?.id,
+                onSave: (record) => {
+                    this.data.read("res.partner", record.config.resIds);
+                    this.action.doAction({
+                        type: "ir.actions.act_window_close",
+                    });
+                },
             },
         });
     }
