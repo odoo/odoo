@@ -119,6 +119,8 @@ export { installLanguages, patchTranslations } from "./_framework/translation_te
 export {
     clickButton,
     clickCancel,
+    clickFieldDropdown,
+    clickFieldDropdownItem,
     clickModalButton,
     clickSave,
     clickViewButton,
@@ -126,6 +128,7 @@ export {
     fieldInput,
     mountView,
     mountViewInDialog,
+    selectFieldDropdownItem,
 } from "./_framework/view_test_helpers";
 export { useTestClientAction } from "./_framework/webclient_test_helpers";
 
