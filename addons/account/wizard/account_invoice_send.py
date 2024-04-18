@@ -114,15 +114,6 @@ class AccountInvoiceSend(models.TransientModel):
 
     def _send_email(self):
         if self.is_email:
-            # with_context : we don't want to reimport the file we just exported.
-            self.composer_id.with_context(no_new_invoice=True,
-                                          mail_notify_author=self.env.user.partner_id in self.composer_id.partner_ids,
-                                          mailing_document_based=True,
-                                          )._action_send_mail()
-            if self.env.context.get('mark_invoice_as_sent'):
-                #Salesman send posted invoice, without the right to write
-                #but they should have the right to change this flag
-                self.mapped('invoice_ids').sudo().write({'is_move_sent': True})
             for invoice in self.invoice_ids:
                 prioritary_attachments = False
                 if self.composition_mode == 'comment':
@@ -134,6 +125,16 @@ class AccountInvoiceSend(models.TransientModel):
                 if prioritary_attachments:
                     main_attachment = prioritary_attachments[0]
                     invoice.with_context(tracking_disable=True).sudo().write({'message_main_attachment_id': main_attachment.id})
+            # with_context : we don't want to reimport the file we just exported.
+            self.composer_id.with_context(
+                no_new_invoice=True,
+                mail_notify_author=self.env.user.partner_id in self.composer_id.partner_ids,
+                mailing_document_based=True,
+            )._action_send_mail()
+            if self.env.context.get('mark_invoice_as_sent'):
+                # Salesman send posted invoice, without the right to write
+                # but they should have the right to change this flag
+                self.mapped('invoice_ids').sudo().write({'is_move_sent': True})
 
 
     def _print_document(self):
