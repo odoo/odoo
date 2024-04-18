@@ -20,10 +20,10 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             ProductScreen.clickControlButtonMore(),
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("4"),
-            FloorScreen.backToFloor(),
+            ProductScreen.back(),
             FloorScreen.clickTable("2"),
             ProductScreen.orderIsEmpty(),
-            FloorScreen.backToFloor(),
+            ProductScreen.back(),
             FloorScreen.clickTable("4"),
 
             // Test SplitBillButton

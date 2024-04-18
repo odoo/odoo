@@ -78,7 +78,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.clickControlButton("Print Receipt"),
             TicketScreen.receiptTotalIs("8.00"),
             ReceiptScreen.clickBack(),
-            TicketScreen.clickBackToMainTicketScreen(),
+            { ...ProductScreen.back(), mobile: true },
             // Pay the order that was in PaymentScreen.
             TicketScreen.selectFilter("Payment"),
             TicketScreen.selectOrder("-0004"),
@@ -100,12 +100,12 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             Dialog.confirm(),
             PartnerList.clickPartner("Partner Test 3"),
             TicketScreen.invoicePrinted(),
-            TicketScreen.clickBackToMainTicketScreen(),
+            { ...ProductScreen.back(), mobile: true },
             // Reprint receipt
             TicketScreen.clickControlButton("Print Receipt"),
             ReceiptScreen.isShown(),
             ReceiptScreen.clickBack(),
-            TicketScreen.clickBackToMainTicketScreen(),
+            { ...ProductScreen.back(), mobile: true },
             // When going back, the ticket screen should be in its previous state.
             TicketScreen.filterIs("Paid"),
             // Test refund //
@@ -122,7 +122,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
                 Dialog.confirm(),
             ]),
             TicketScreen.clickDiscard(),
-            ProductScreen.goBackToMainScreen(),
+            { ...ProductScreen.back(), mobile: true },
             ProductScreen.isShown(),
             ProductScreen.orderIsEmpty(),
             ...ProductScreen.clickRefund(),
@@ -131,7 +131,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             ProductScreen.clickNumpad("1"),
             TicketScreen.toRefundTextContains("To Refund: 1.00"),
             TicketScreen.confirmRefund(),
-            ProductScreen.goBackToMainScreen(),
+            { ...ProductScreen.back(), mobile: true },
             ProductScreen.isShown(),
             ProductScreen.selectedOrderlineHas("Desk Pad", "-1.00"),
             inLeftSide([
@@ -152,7 +152,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.selectOrder("-0005"),
             TicketScreen.toRefundTextContains("Refunding 2.00"),
             TicketScreen.clickDiscard(),
-            ProductScreen.goBackToMainScreen(),
+            { ...ProductScreen.back(), mobile: true },
             // Pay the refund order.
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
@@ -186,7 +186,7 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
             TicketScreen.toRefundTextContains("To Refund: 1.00"),
             TicketScreen.confirmRefund(),
             ProductScreen.isShown(),
-            ProductScreen.goBackToMainScreen(),
+            { ...ProductScreen.back(), mobile: true },
             ProductScreen.totalAmountIs("-86.96"),
         ].flat(),
 });

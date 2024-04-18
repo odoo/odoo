@@ -133,7 +133,7 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             FloorScreen.table({ name: "4", withoutClass: ".selected" }),
             FloorScreen.clickTable("4"),
             ProductScreen.isShown(),
-            FloorScreen.backToFloor(),
+            ProductScreen.back(),
 
             // Opening product screen in second floor should go back to second floor
             FloorScreen.clickFloor("Second Floor"),
