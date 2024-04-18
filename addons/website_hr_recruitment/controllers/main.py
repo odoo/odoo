@@ -75,7 +75,7 @@ class WebsiteHrRecruitment(http.Controller):
             """
             return sorted(
                 records_list,
-                key=lambda item: (item is None, item and item[field_name] or ''),
+                key=lambda item: (item is None, item.sudo()[field_name] if item else ''),
             )
 
         # Countries
