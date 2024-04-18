@@ -398,10 +398,6 @@ export class Message extends Record {
             body: "",
             message_id: this.id,
         });
-        if (this.isStarred) {
-            this.store.discuss.starred.counter--;
-            this.store.discuss.starred.messages.delete(this);
-        }
         this.body = "";
         this.attachments = [];
     }
