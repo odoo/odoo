@@ -11,6 +11,20 @@ from odoo.tools.parse_version import parse_version
 from odoo.addons.phone_validation.lib import phonenumbers_patch
 
 class TestPhonenumbersPatch(BaseCase):
+
+    def _assert_region_numbers_validity(self, region_code: str, numbers: list):
+        """Helper function checking validity of all given phone numbers for a given region.
+            :param str region_code: The region code, e.g., 'MA' for Morocco.
+            :param list numbers: A list of strings representing phone numbers that should be valid."""
+        if not phonenumbers:
+            self.skipTest(f'Cannot test "{region_code}" numbers validity without phonenumbers module installed.')
+
+        for phone in numbers:
+            phone_obj = phonenumbers.parse(phone, region=region_code, keep_raw_input=True)
+            self.assertTrue(phonenumbers.is_valid_number(phone_obj),
+                f'The number {phone} is not valid (should be) for region "{region_code}"')
+
+
     def test_region_CI_monkey_patch(self):
         """Test if the  patch is apply on the good version of the lib
         And test some phonenumbers"""
@@ -75,3 +89,17 @@ class TestPhonenumbersPatch(BaseCase):
         parsed = phonenumbers.parse('+507 833 8744')
         self.assertTrue(phonenumbers.is_valid_number(parsed))
         self.assertEqual(parsed.national_number, 8338744)
+
+    def test_region_SN_monkey_patch(self):
+        """Makes sure that patch for Senegalese phone numbers work"""
+        version_to_patch_up_to = '8.12.29'
+        region_code='SN'
+        correct_SN_numbers = [
+            '+221750142092',
+            '+22176 707 0065'
+        ]
+        self._assert_region_numbers_validity(region_code, numbers=correct_SN_numbers)
+
+        if not parse_version(phonenumbers.__version__) < parse_version(version_to_patch_up_to):
+            self.assertNotEqual(phonenumbers.PhoneMetadata._region_available[region_code], phonenumbers_patch._local_load_region,
+                f'The phonenumbers module should not get patched after version {version_to_patch_up_to}')
