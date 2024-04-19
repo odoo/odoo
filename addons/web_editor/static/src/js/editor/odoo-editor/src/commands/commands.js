@@ -189,6 +189,7 @@ export const editorCommands = {
         const shouldUnwrapBlock = (node) => (
             block.nodeName === node.nodeName || ['BLOCKQUOTE', 'PRE'].includes(block.nodeName)
         );
+        const direction = block.getAttribute('dir');
 
         // Empty block must contain a br element.
         if (
@@ -320,6 +321,9 @@ export const editorCommands = {
                         currentNode = currentNode.parentElement;
                     }
                 }
+            }
+            if (direction && nodeToInsert.nodeType === Node.ELEMENT_NODE) {
+                nodeToInsert.setAttribute('dir', direction);
             }
             if (insertBefore) {
                 currentNode.before(nodeToInsert);

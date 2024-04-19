@@ -2647,4 +2647,59 @@ describe('Paste', () => {
             });
         });
     });
+    describe('Pasting on blocks with direction', () => {
+        it('should paste text as rtl when pasting on block with direction rtl', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p dir="rtl">[]<br></p>',
+                stepFunction: async editor => {
+                    await pasteHtml(editor, '<p>abc</p><p>def</p><p>ghi</p>');
+                },
+                contentAfter: '<p dir="rtl">abc</p><p dir="rtl">def</p><p dir="rtl">ghi[]</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p dir="rtl">[]<br></p>',
+                stepFunction: async editor => {
+                    await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
+                },
+                contentAfter: '<h1 dir="rtl">abc</h1><h2 dir="rtl">def</h2><h3 dir="rtl">ghi[]</h3>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p dir="rtl">x[]<br></p>',
+                stepFunction: async editor => {
+                    await pasteHtml(editor, '<p>abc</p><p>def</p><p>ghi</p>');
+                },
+                contentAfter: '<p dir="rtl">xabc</p><p dir="rtl">def</p><p dir="rtl">ghi[]</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p dir="rtl">[]<br></p>',
+                stepFunction: async editor => {
+                    await pasteHtml(editor, '<ul><li>abc</li><li>def</li><li>ghi</li></ul>');
+                },
+                contentAfter: '<ul dir="rtl"><li>abc</li><li>def</li><li>ghi[]</li></ul>',
+            });
+        });
+        it('should paste text as ltr when pasting on block with direction ltr', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p dir="ltr">[]<br></p>',
+                stepFunction: async editor => {
+                    await pasteHtml(editor, '<p dir="rtl">abc</p><p dir="rtl">def</p><p dir="rtl">ghi</p>');
+                },
+                contentAfter: '<p dir="ltr">abc</p><p dir="ltr">def</p><p dir="ltr">ghi[]</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p dir="ltr">[]<br></p>',
+                stepFunction: async editor => {
+                    await pasteHtml(editor, '<h1 dir="rtl">abc</h1><h2 dir="rtl">def</h2><h3 dir="rtl">ghi</h3>');
+                },
+                contentAfter: '<h1 dir="ltr">abc</h1><h2 dir="ltr">def</h2><h3 dir="ltr">ghi[]</h3>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p dir="ltr">x[]<br></p>',
+                stepFunction: async editor => {
+                    await pasteHtml(editor, '<p dir="rtl">abc</p><p dir="rtl">def</p><p dir="rtl">ghi</p>');
+                },
+                contentAfter: '<p dir="ltr">xabc</p><p dir="ltr">def</p><p dir="ltr">ghi[]</p>',
+            });
+        });
+    });
 });
