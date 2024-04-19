@@ -154,6 +154,12 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
         self.start_tour("/", 'website_media_dialog_undraw', login='admin')
 
 
+@odoo.tests.tagged('external', '-standard', '-at_install', 'post_install')
+class TestUiHtmlEditorWithExternal(HttpCaseWithUserDemo):
+    def test_media_dialog_external_library(self):
+        self.start_tour("/", 'website_media_dialog_external_library', login='admin')
+
+
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestUiTranslate(odoo.tests.HttpCase):
     def test_admin_tour_rte_translator(self):
