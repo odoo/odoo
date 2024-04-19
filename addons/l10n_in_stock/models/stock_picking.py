@@ -10,3 +10,9 @@ class StockPicking(models.Model):
     def _should_generate_commercial_invoice(self):
         super(StockPicking, self)._should_generate_commercial_invoice()
         return True
+
+    def _get_l10n_in_purchase(self):
+        pass
+
+    def _get_l10n_in_sale(self):
+        pass

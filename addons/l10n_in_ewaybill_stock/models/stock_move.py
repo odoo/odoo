@@ -16,34 +16,26 @@ class StockMove(models.Model):
 
     # Need to store values because we send it to the ewaybill and we need to keep the same value
     ewaybill_price_unit = fields.Monetary(
-        compute='_compute_ewaybill_price_unit',
+        compute='_compute_l10n_in_ewaybill_price_unit',
         currency_field='company_currency_id',
         store=True
     )
     ewaybill_tax_ids = fields.Many2many(
         comodel_name='account.tax',
         string="Taxes",
-        compute='_compute_tax_ids',
+        compute='_compute_l10n_in_tax_ids',
         store=True
     )
 
     @api.depends('product_id.uom_id', 'product_id.standard_price', 'l10n_in_ewaybill_id')
-    def _compute_ewaybill_price_unit(self):
+    def _compute_l10n_in_ewaybill_price_unit(self):
         for line in self.filtered(lambda line: line.l10n_in_ewaybill_id.state == 'pending'):
-            line.ewaybill_price_unit = line.product_id.uom_id._compute_price(
-                line.product_id.with_company(line.company_id).standard_price, line.product_uom
-            )
+            line.ewaybill_price_unit = line._l10n_in_compute_ewaybill_price_unit()
 
     @api.depends('product_id.supplier_taxes_id', 'product_id.taxes_id', 'l10n_in_ewaybill_id')
-    def _compute_tax_ids(self):
+    def _compute_l10n_in_tax_ids(self):
         for line in self.filtered(lambda line: line.l10n_in_ewaybill_id.state == 'pending'):
-            taxes = (
-                line.picking_code == "incoming" and
-                line.product_id.supplier_taxes_id or line.product_id.taxes_id
-            )
-            line.ewaybill_tax_ids = line._get_l10n_in_fiscal_position(
-                taxes.filtered_domain(self.env['account.tax']._check_company_domain(self.company_id))
-            )
+            line.ewaybill_tax_ids = line._l10n_in_compute_line_tax()
 
     def _get_l10n_in_fiscal_position(self, taxes):
         fiscal_position = self.env['account.chart.template'].ref('fiscal_position_in_inter_state', raise_if_not_found=False)

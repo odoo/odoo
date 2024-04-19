@@ -5,7 +5,7 @@
     "version": "1.0",
     "category": "Accounting/Localizations/EDI",
     "depends": [
-        "stock", "l10n_in_edi_ewaybill",
+        "l10n_in_stock", "l10n_in_edi_ewaybill",
     ],
     "description": """Ewaybill for Stock Picking""",
     "data": [
