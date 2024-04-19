@@ -17,13 +17,13 @@ export class PortalFileInput extends FileInput {
      */
     get httpParams() {
         const {
-            model: res_model,
-            id: res_id,
+            model: thread_model,
+            id: thread_id,
             ...otherParams
         } = super.httpParams;
         return {
-            res_model,
-            res_id,
+            thread_model,
+            thread_id,
             access_token: this.props.accessToken,
             ...otherParams,
         }
