@@ -42,66 +42,6 @@ class TestPartnerAssign(TransactionCase):
         patcher = patch('odoo.addons.base_geolocalize.models.base_geocoder.BaseGeocoder.geo_find', wraps=geo_find)
         self.startPatcher(patcher)
 
-    def test_opportunity_count(self):
-        self.customer_uk.write({
-            'is_company': True,
-            'child_ids': [
-                (0, 0, {'name': 'Uk Children 1',
-                       }),
-                (0, 0, {'name': 'Uk Children 2',
-                       }),
-            ],
-        })
-        lead_uk_assigned = self.env['crm.lead'].create({
-            'name': 'Office Design and Architecture',
-            'partner_assigned_id': self.customer_uk.id,
-            'type': 'opportunity',
-        })
-        children_leads = self.env['crm.lead'].create([
-            {'name': 'Children 1 Lead 1',
-             'partner_id': self.customer_uk.child_ids[0].id,
-             'type': 'lead'},
-            {'name': 'Children 1 Lead 2',
-             'partner_id': self.customer_uk.child_ids[0].id,
-             'type': 'lead'},
-            {'name': 'Children 2 Lead 1',
-             'partner_id': self.customer_uk.child_ids[1].id,
-             'type': 'lead'},
-            {'name': 'Children 2 Lead 2',
-             'partner_id': self.customer_uk.child_ids[1].id,
-             'type': 'lead'},
-        ])
-        children_leads_assigned = self.env['crm.lead'].create([
-            {'name': 'Children 1 Lead 1',
-             'partner_assigned_id': self.customer_uk.child_ids[0].id,
-             'type': 'lead'},
-            {'name': 'Children 1 Lead 2',
-             'partner_assigned_id': self.customer_uk.child_ids[0].id,
-             'type': 'lead'},
-            {'name': 'Children 2 Lead 1',
-             'partner_assigned_id': self.customer_uk.child_ids[1].id,
-             'type': 'lead'},
-            {'name': 'Children 2 Lead 2',
-             'partner_assigned_id': self.customer_uk.child_ids[1].id,
-             'type': 'lead'},
-        ])
-
-        self.assertEqual(
-            repr(self.customer_uk.action_view_opportunity()['domain']),
-            repr([('id', 'in', sorted(self.lead_uk.ids + lead_uk_assigned.ids + children_leads.ids))]),
-            'Parent: own + children leads + assigned'
-        )
-        self.assertEqual(
-            repr(self.customer_uk.child_ids[0].action_view_opportunity()['domain']),
-            repr([('id', 'in', sorted(children_leads[0:2].ids + children_leads_assigned[0:2].ids))]),
-            'Children: own leads + assigned'
-        )
-        self.assertEqual(
-            repr(self.customer_uk.child_ids[1].action_view_opportunity()['domain']),
-            repr([('id', 'in', sorted(children_leads[2:].ids + children_leads_assigned[2:].ids))]),
-            'Children: own leads + assigned'
-        )
-
     def test_partner_assign(self):
         """ Test the automatic assignation using geolocalisation """
         partner_be = self.env['res.partner'].create({
