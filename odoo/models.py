@@ -2792,7 +2792,7 @@ class BaseModel(metaclass=MetaModel):
             return model._field_to_sql(alias, field.name, query)
 
         if not field.store or not field.column_type:
-            raise ValueError(f"Cannot convert field {field} to SQL")
+            raise ValueError(f"Cannot convert {field} to SQL because it is not stored")
 
         if field.type == 'properties' and property_name:
             return SQL("%s -> %s", self._field_to_sql(alias, fname, query, flush), property_name)
@@ -3046,7 +3046,7 @@ class BaseModel(metaclass=MetaModel):
         field_name, property_name = full_name.split(".")
         check_property_field_value_name(property_name)
         if field_name not in self._fields:
-            raise ValueError(f"Wrong field name {field_name!r}.")
+            raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
 
         field = self._fields[field_name]
         target_model = self.env[self._fields[field.definition_record].comodel_name]
