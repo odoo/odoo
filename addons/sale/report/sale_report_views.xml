@@ -64,7 +64,7 @@
                 <field name="price_subtotal" optional="hide" sum="Sum of Untaxed Total"/>
                 <field name="price_total" optional="show" sum="Sum of Total"/>
                 <field name="state" optional="hide"/>
-                <field name="invoice_status" optional="hide"/>
+                <field name="line_invoice_status" optional="hide"/>
                 <field name="currency_id" column_invisible="True"/>
             </tree>
         </field>
@@ -88,8 +88,8 @@
                 <field name="product_id"/>
                 <field name="product_tmpl_id"/>
                 <field name="categ_id"/>
-                <filter name="to_invoice" string="To Invoice" domain="[('invoice_status', '=', 'to invoice')]"/>
-                <filter name="fully_invoiced" string="Fully Invoiced" domain="[('invoice_status', '=', 'invoiced')]"/>
+                <filter name="to_invoice" string="To Invoice" domain="[('line_invoice_status', '=', 'to invoice')]"/>
+                <filter name="fully_invoiced" string="Fully Invoiced" domain="[('line_invoice_status', '=', 'invoiced')]"/>
                 <field name="partner_id"/>
                 <field name="country_id"/>
                 <field name="industry_id"/>
@@ -122,7 +122,7 @@
     <record id="action_order_report_all" model="ir.actions.act_window">
         <field name="name">Sales Analysis</field>
         <field name="res_model">sale.report</field>
-        <field name="view_mode">graph,pivot,tree</field>
+        <field name="view_mode">graph,pivot,tree,form</field>
         <field name="view_id"></field>  <!-- force empty -->
         <field name="search_view_id" ref="view_order_product_search"/>
         <field name="domain">[('state', '!=', 'cancel')]</field>
