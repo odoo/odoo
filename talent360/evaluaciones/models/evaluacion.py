@@ -62,6 +62,18 @@ class Evaluacion(models.Model):
     
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
+        """
+        Copia preguntas de un template de evaluación predeterminado a una nueva evaluación.
+
+        Este método verifica si el objeto actual está vacío (self). Si lo está, crea una nueva
+        evaluación con un nombre predeterminado y asigna este nuevo objeto a self. Luego, limpia
+        las preguntas existentes y copia todas las preguntas de un template con ID predefinido 
+        (en este caso, 332) al objeto evaluación actual.
+
+        Returns:
+        object: Retorna el objeto evaluación actualizado con las preguntas copiadas del template.
+        """
+
         if not self:
             new_evaluation = self.env['evaluacion'].create({
                 'nombre': 'Evaluacion Clima',
@@ -70,7 +82,7 @@ class Evaluacion(models.Model):
 
         self.pregunta_ids = [(5,)]
 
-        template_id_hardcoded = 4
+        template_id_hardcoded = 332
 
         if template_id_hardcoded:
             template = self.env['template'].browse(template_id_hardcoded)
@@ -82,6 +94,20 @@ class Evaluacion(models.Model):
         return self
 
     def action_clima(self):
+        """
+        Ejecuta la acción de copiar preguntas de un template a la evaluación actual y devuelve
+        un diccionario con los parámetros necesarios para abrir una ventana de acción en Odoo.
+
+        Este método utiliza `copiar_preguntas_de_template_nom035` para asegurarse de que la evaluación
+        actual tenga las preguntas correctas, y luego configura y devuelve un diccionario con
+        los detalles para abrir esta evaluación en una vista de formulario específica.
+
+        Returns:
+        dict: Un diccionario que contiene todos los parámetros necesarios para abrir la
+        evaluación en una vista de formulario específica de Odoo.
+        
+        """
+
         self = self.copiar_preguntas_de_template()
 
         # Retornar la acción con la vista como destino
