@@ -72,11 +72,13 @@ export class ChatterComposer extends Component {
             attachment_tokens.push(attachment.access_token);
         }
         return {
-            message: this.state.message,
-            attachment_ids,
+            thread_model: this.props.resModel,
+            thread_id: this.props.resId,
+            post_data: {
+                body: this.state.message,
+                attachment_ids,
+            },
             attachment_tokens,
-            res_model: this.props.resModel,
-            res_id: this.props.resId,
             project_sharing_id: this.props.projectSharingId,
         };
     }
