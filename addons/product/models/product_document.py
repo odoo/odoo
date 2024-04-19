@@ -13,6 +13,10 @@ class ProductDocument(models.Model):
     }
     _order = 'sequence, name'
 
+    @api.model
+    def _lang_get(self):
+        return self.env['res.lang'].get_installed()
+
     ir_attachment_id = fields.Many2one(
         'ir.attachment',
         string="Related attachment",
@@ -21,6 +25,8 @@ class ProductDocument(models.Model):
 
     active = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
+    lang = fields.Selection(_lang_get, string='Language')
+    active_lang_count = fields.Integer(compute='_compute_active_lang_count')
 
     @api.onchange('url')
     def _onchange_url(self):
@@ -31,6 +37,11 @@ class ProductDocument(models.Model):
                     "Please enter a valid URL.\nExample: https://www.odoo.com\n\nInvalid URL: %s",
                     attachment.url
                 ))
+
+    @api.depends('lang')
+    def _compute_active_lang_count(self):
+        lang_count = len(self.env['res.lang'].get_installed())
+        self.active_lang_count = lang_count
 
     #=== CRUD METHODS ===#
 
