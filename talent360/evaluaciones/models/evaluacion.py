@@ -2,6 +2,19 @@ from odoo import api, models, fields
 
 
 class Evaluacion(models.Model):
+    """
+    Modelo para representar una evaluación de personal en Odoo.
+
+    Atributos:
+        _name (str): Nombre del modelo en Odoo.
+        _description (str): Descripción del modelo en Odoo.
+        nombre (fields.Char): Nombre de la evaluación. Es un campo obligatorio.
+        estado (fields.Selection): Estado de la evaluación con opciones 'borrador', 'publicado' y 'finalizado'. Por defecto, es 'borrador'.
+        pregunta_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'pregunta' para almacenar las preguntas asociadas a la evaluación.
+        competencia_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'competencia' para almacenar las competencias asociadas a la evaluación.
+        usuario_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'res.users' para asignar usuarios a la evaluación.
+    """
+
     _name = "evaluacion"
     _description = "Evaluacion de pesonal"
     _inherit = ["mail.thread"]
@@ -41,9 +54,19 @@ class Evaluacion(models.Model):
         string="Asignados",
     )
 
-    # do something on new usuario assigned
+
 
     def write(self, vals):
+        """
+        Actualiza registros de la evaluación y maneja notificaciones relacionadas con los usuarios asignados.
+
+        Este método extiende el comportamiento estándar de 'write' para agregar funcionalidad de notificación cuando se modifican los usuarios asignados. 
+        En caso de que se añada un usuario, se emite una notificación a través del sistema de mensajería.
+
+        Returns:
+            bool: True si la actualización fue exitosa, False en caso contrario.
+            
+        """
         res = super(Evaluacion, self).write(vals)
         if "usuario_ids" in vals:
             for user_change in vals["usuario_ids"]:
@@ -52,15 +75,25 @@ class Evaluacion(models.Model):
                 partner_id = user.partner_id.id
                 if action == 4:
                     print(f"Se ha asignado la evaluación {self.nombre} a {partner_id}")
-                    # Send email to assigned user
                     self.message_post(
                         body=f"Se te ha asignado la evaluación {self.nombre}",
                         partner_ids=[partner_id],
                     )
         return res
     
-    # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template_nom035(self):
+        """
+        Copia preguntas de un template de evaluación predeterminado a una nueva evaluación.
+
+        Este método verifica si el objeto actual está vacío (self). Si lo está, crea una nueva
+        evaluación con un nombre predeterminado y asigna este nuevo objeto a self. Luego, limpia
+        las preguntas existentes y copia todas las preguntas de un template con ID predefinido 
+       (en este caso, 331) al objeto evaluación actual.
+
+        Returns:
+        object: Retorna el objeto evaluación actualizado con las preguntas copiadas del template.
+        """
+        
         if not self:
             new_evaluation = self.env['evaluacion'].create({
                 'nombre': 'Escribe el nombre de tu evaluación',
@@ -69,7 +102,7 @@ class Evaluacion(models.Model):
 
         self.pregunta_ids = [(5,)]
 
-        template_id_hardcoded = 4
+        template_id_hardcoded = 4 #CAMBIAR ID A 331
 
         if template_id_hardcoded:
             template = self.env['template'].browse(template_id_hardcoded)
@@ -81,6 +114,19 @@ class Evaluacion(models.Model):
         return self
 
     def action_nom035(self):
+        """
+        Ejecuta la acción de copiar preguntas de un template a la evaluación actual y devuelve
+        un diccionario con los parámetros necesarios para abrir una ventana de acción en Odoo.
+
+        Este método utiliza `copiar_preguntas_de_template_nom035` para asegurarse de que la evaluación
+        actual tenga las preguntas correctas, y luego configura y devuelve un diccionario con
+        los detalles para abrir esta evaluación en una vista de formulario específica.
+
+        Returns:
+        dict: Un diccionario que contiene todos los parámetros necesarios para abrir la
+        evaluación en una vista de formulario específica de Odoo.
+        
+        """
         self = self.copiar_preguntas_de_template_nom035()
 
         return {
