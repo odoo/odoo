@@ -1,6 +1,6 @@
-import { expect, test } from "@odoo/hoot";
+import { afterEach, expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, mockDate, runAllTimers } from "@odoo/hoot-mock";
 import { onRendered } from "@odoo/owl";
 
 import {
