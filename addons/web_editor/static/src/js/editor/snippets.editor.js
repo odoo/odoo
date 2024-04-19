@@ -1915,6 +1915,22 @@ class SnippetsMenu extends Component {
             this.callPostSnippetDrop(detail.$snippet).then(detail.onSuccess);
         });
 
+        useBus(this.props.bus, "INSERT_SNIPPET", ({ detail }) => {
+            const { snippetSelector, block } = detail;
+            this._execWithLoadingEffect(() => {
+                const snippet = [...this.snippets.values()].find((snippet) => {
+                    return snippet.baseBody.matches(snippetSelector);
+                });
+                if (snippet && block) {
+                    const clonedBody = snippet.baseBody.cloneNode(true);
+                    clonedBody.classList.remove(".oe_snippet_body");
+                    block.after(clonedBody);
+                    // This call will block the mutex so it is not awaited.
+                    this.callPostSnippetDrop($(clonedBody));
+                }
+            });
+        });
+
         useBus(this.props.bus, "CLEAN_FOR_SAVE", ({ detail }) => {
             detail.proms.push(this.cleanForSave());
         });

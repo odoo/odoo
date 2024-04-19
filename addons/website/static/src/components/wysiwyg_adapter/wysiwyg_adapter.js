@@ -743,13 +743,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      */
     _getSnippetsPowerboxItems() {
         const snippetCommandCallback = (selector) => {
-            const $separatorBody = $(selector);
-            const $clonedBody = $separatorBody.clone().removeClass('oe_snippet_body');
             const range = this.getDeepRange();
             const block = this.closestElement(range.endContainer, 'p, div, ol, ul, cl, h1, h2, h3, h4, h5, h6');
             if (block) {
-                block.after($clonedBody[0]);
-                this.snippetsMenuBus.trigger("CALL_POST_SNIPPET_DROPPED", { $snippet: $clonedBody });
+                this.snippetsMenuBus.trigger("INSERT_SNIPPET", { snippetSelector: selector, block });
             }
         };
         const commands = [

@@ -615,3 +615,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_focus_on_input_search(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'focus_on_input_search', login='admin')
+
+    def test_powerbox_snippet(self):
+        self.start_tour('/', 'website_powerbox_snippet', login='admin')
