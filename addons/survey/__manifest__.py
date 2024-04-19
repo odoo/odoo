@@ -76,6 +76,8 @@ sent mails with personal token for the invitation of the survey.
             ('include', 'web._assets_frontend_helpers'),
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables-dark.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
             'survey/static/src/scss/survey_templates_form.scss',
             'survey/static/src/scss/survey_templates_results.scss',
             'survey/static/src/xml/survey_breadcrumb_templates.xml',

@@ -23,7 +23,7 @@
         </div>
         <div
             class="flex-grow-1 p-2 log_into"
-            t-att-class="{'alert-primary': isCurrent, 'text-muted': !isCompanyAllowed}" t-on-click="() => this.logIntoCompany()"
+            t-att-class="{'bg-primary-subtle': isCurrent, 'text-muted': !isCompanyAllowed}" t-on-click="() => this.logIntoCompany()"
         >
             <span
                 t-esc="props.company.name" class="company_label"

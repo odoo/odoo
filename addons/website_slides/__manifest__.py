@@ -122,9 +122,14 @@ Featuring
             # TODO this bundle now includes 'assets_common' files directly, but
             # most of these files are useless in this context, clean this up.
             ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_frontend_helpers'),
 
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables-dark.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
+
+            ('include', 'web._assets_bootstrap_frontend'),
 
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/lib/odoo_ui_icons/*',
@@ -150,10 +155,19 @@ Featuring
             'web/static/lib/owl/odoo_module.js',
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/popper/popper.js',
+            'web/static/lib/bootstrap/js/dist/util/index.js',
             'web/static/lib/bootstrap/js/dist/dom/data.js',
             'web/static/lib/bootstrap/js/dist/dom/event-handler.js',
             'web/static/lib/bootstrap/js/dist/dom/manipulator.js',
             'web/static/lib/bootstrap/js/dist/dom/selector-engine.js',
+            'web/static/lib/bootstrap/js/dist/util/config.js',
+            'web/static/lib/bootstrap/js/dist/util/component-functions.js',
+            'web/static/lib/bootstrap/js/dist/util/backdrop.js',
+            'web/static/lib/bootstrap/js/dist/util/focustrap.js',
+            'web/static/lib/bootstrap/js/dist/util/sanitizer.js',
+            'web/static/lib/bootstrap/js/dist/util/scrollbar.js',
+            'web/static/lib/bootstrap/js/dist/util/swipe.js',
+            'web/static/lib/bootstrap/js/dist/util/template-factory.js',
             'web/static/lib/bootstrap/js/dist/base-component.js',
             'web/static/lib/bootstrap/js/dist/alert.js',
             'web/static/lib/bootstrap/js/dist/button.js',
@@ -176,10 +190,6 @@ Featuring
             'web/static/src/libs/pdfjs.js',
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
 
-            ('include', 'web._assets_helpers'),
-            'web/static/src/scss/pre_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables.scss',
-            ('include', 'web._assets_bootstrap_frontend'),
             'website_slides/static/src/scss/website_slides.scss',
             'website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js',
             'website_slides/static/src/js/slides_embed.js',

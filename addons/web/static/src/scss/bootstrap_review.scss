@@ -9,34 +9,6 @@
     clear: both;
 }
 
-%-card-body-reviewed {
-    // BS4 colored cards do not have a very popular design. This will reset them
-    // to a BS3-like one: only the header and footer are colored and the body
-    // will use the color of a default card background with a light opacity.
-    // Limitation: bg-* utilities cannot be used on card-body elements anymore.
-    // Note: these rules need grays utilities to be defined before so that the
-    // related o-bg-color text-muted rules work. Since backend and fronted
-    // generate these classes differently, this pseudo-class is called in the
-    // respective 'bootstrap_review_x' file immediately after gray classes
-    // generation.
-    @include o-bg-color(rgba($card-bg, $o-card-body-bg-opacity));
-
-    &:first-child {
-        @include border-top-radius($card-inner-border-radius);
-    }
-    &:last-child {
-        @include border-bottom-radius($card-inner-border-radius);
-    }
-
-    &.row {
-        // The 'row' class should not be used on a 'card-body' element but if
-        // it is done, our custom bg color would overflow the card. As a fix
-        // for those cases (normally only one at the time this fix is made),
-        // remove the background color.
-        // TODO remove me in master.
-        background-color: transparent !important;
-    }
-}
 .accordion {
     .collapsing, .collapse.show {
         > .card-body:first-child {
@@ -49,10 +21,6 @@
 
 .toast-header {
     background-clip: border-box;
-}
-.toast-body {
-    // Same as card-body, see explanation above
-    @include o-bg-color(opacify($toast-background-color, 0.08));
 }
 
 // Modify modals so that their scrollable element is the modal-body (except in
@@ -120,4 +88,9 @@
             text-decoration: none;
         }
     }
+}
+
+// Disable markers when using Carousel's indicators on list
+.carousel-indicators {
+    list-style: none;
 }

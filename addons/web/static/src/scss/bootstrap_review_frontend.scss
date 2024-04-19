@@ -15,11 +15,6 @@
     @include text-emphasis-variant(".text-#{$color}", $value);
 }
 
-// Cards
-.card-body {
-    @extend %-card-body-reviewed; // See bootstrap_review.scss
-}
-
 // Generating bootstrap color buttons was disabled (see import_bootstrap.scss).
 // We do it ourself here with a tweak: we introduce btn-fill-* (working as the
 // normal btn-* classes (in opposition to btn-outline-* classes). We then map
