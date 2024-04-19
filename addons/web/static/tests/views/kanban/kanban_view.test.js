@@ -7960,6 +7960,39 @@ test("edit the kanban color with the colorpicker", async () => {
     expect(getKanbanRecord({ index: 0 })).toHaveClass("oe_kanban_color_9");
 });
 
+test("kanban with colorpicker and node with color attribute", async () => {
+    Category._fields.colorpickerField = fields.Integer();
+    Category._records[0].colorpickerField = 3;
+
+    onRpc("web_save", ({ args }) => {
+        expect.step(`write-color-${args[1].colorpickerField}`);
+    });
+
+    await mountView({
+        type: "kanban",
+        resModel: "category",
+        arch: `
+            <kanban>
+                <field name="colorpickerField"/>
+                <templates>
+                    <t t-name="kanban-menu">
+                        <div class="oe_kanban_colorpicker" data-field="colorpickerField"/>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div color="colorpickerField">
+                            <field name="name"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+    expect(getKanbanRecord({ index: 0 })).toHaveClass("oe_kanban_color_3");
+    await toggleKanbanRecordDropdown(0);
+    await contains(`.oe_kanban_colorpicker li[title="Raspberry"] a.oe_kanban_color_9`).click();
+    expect(["write-color-9"]).toVerifySteps({ message: "should write on the color field" });
+    expect(getKanbanRecord({ index: 0 })).toHaveClass("oe_kanban_color_9");
+})
+
 test("edit the kanban color with translated colors resulting in the same terms", async () => {
     Category._records[0].color = 12;
 
