@@ -227,6 +227,7 @@ test("project.task (kanban): check subtask creation", async () => {
             MockServer.env["project.task"].write(parent_id, {
                 child_ids: [Command.link(newSubtaskId)],
             });
+            return [newSubtaskId];
         }
     });
     await mountView({

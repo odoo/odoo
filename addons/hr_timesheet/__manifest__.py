@@ -53,8 +53,12 @@ up a management by affair.
         'web.assets_backend': [
             'hr_timesheet/static/src/**/*',
         ],
+        'web.assets_unit_tests': [
+            'hr_timesheet/static/tests/**/hr_timesheet_models.js',
+            'hr_timesheet/static/tests/**/*.test.js',
+        ],
         'web.qunit_suite_tests': [
-            'hr_timesheet/static/tests/**/*',
+            'hr_timesheet/static/tests/legacy/**/*',
         ],
         'project.webclient': [
             'hr_timesheet/static/src/services/**/*',
