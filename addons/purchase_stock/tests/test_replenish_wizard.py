@@ -451,3 +451,44 @@ class TestReplenishWizard(TestStockCommon):
 
         self.assertEqual(last_po_id.partner_id, vendor)
         self.assertEqual(last_po_id.order_line.price_unit, 60)
+
+    def test_correct_supplier(self):
+        self.env['stock.warehouse'].search([], limit=1).reception_steps = 'two_steps'
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'route_ids': [(6, 0, [
+                self.env.ref('purchase_stock.route_warehouse0_buy').id
+            ])],
+        })
+        partner_a, partner_b = self.env['res.partner'].create([
+            {'name': "partner_a"},
+            {'name': "partner_b"},
+        ])
+        self.env['product.supplierinfo'].create([{
+            'partner_id': partner_a.id,
+            'product_id': product.id,
+            'price': 1.0,
+        }, {
+            'partner_id': partner_b.id,
+            'product_id': product.id,
+            'price': 10.0,
+        }, {
+            'partner_id': partner_b.id,
+            'product_id': product.id,
+            'price': 100.0,
+        }])
+
+        replenish_wizard = self.env['product.replenish'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'quantity': 1,
+            'warehouse_id': self.wh.id,
+            'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
+            'supplier_id': product.seller_ids[2].id  # partner_b price 100$
+        })
+        replenish_wizard.launch_replenishment()
+        po = self.env['purchase.order'].search([
+            ('partner_id', '=', partner_b.id)
+        ])
+        self.assertEqual(po.amount_untaxed, 10, "best price is 10$")
