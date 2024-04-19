@@ -49,3 +49,13 @@ class MailActivity(models.Model):
         res = self.unlink()
         events.unlink()
         return res
+
+    def activity_format(self):
+        activities = super().activity_format()
+        calendar_events = self.env['calendar.event']
+        for activity in activities:
+            if activity['calendar_event_id']:
+                calendar_event = calendar_events.browse(activity['calendar_event_id'][0])
+                activity['start'] = calendar_event.start
+                activity['stop'] = calendar_event.stop
+        return activities

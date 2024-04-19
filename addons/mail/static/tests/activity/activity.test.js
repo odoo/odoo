@@ -15,7 +15,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import { mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
-import { deserializeDateTime, serializeDate, today } from "@web/core/l10n/dates";
+import { deserializeDateTime,  serializeDate, today } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
@@ -121,7 +121,7 @@ test("activity info layout when planned after tomorrow", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity span.text-success", { text: "Due in 5 days:" });
+    await contains(".o-mail-Activity span.text-success", { text: `${today().plus({ days: 5 }).toLocaleString(luxon.DateTime.DATE_SHORT)}:` });
 });
 
 test("activity info layout when planned tomorrow", async () => {
@@ -492,7 +492,7 @@ test("Activity are sorted by deadline", async () => {
     await openFormView("res.partner", partnerId);
     await contains(":nth-child(1 of .o-mail-Activity)", { text: "5 days overdue:" });
     await contains(":nth-child(2 of .o-mail-Activity)", { text: "Today:" });
-    await contains(":nth-child(3 of .o-mail-Activity)", { text: "Due in 4 days:" });
+    await contains(":nth-child(3 of .o-mail-Activity)", { text: `${dateAfter.toLocaleString(luxon.DateTime.DATE_SHORT)}:` });
 });
 
 test("chatter 'activities' button open the activity schedule wizard", async () => {

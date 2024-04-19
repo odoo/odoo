@@ -18,11 +18,11 @@
         </div>
         <div class="flex-grow px-3">
             <div class="o-mail-Activity-info lh-1">
-                <span class="fw-bolder text-success" t-if="delay === 1">Tomorrow:</span>
-                <span class="fw-bolder text-success" t-elif="delay gt 0">Due in <t t-esc="delay"/> days:</span>
-                <span class="fw-bolder text-danger" t-elif="delay === -1">Yesterday:</span>
-                <span class="fw-bolder text-danger" t-elif="delay lt 0"><t t-esc="-delay"/> days overdue:</span>
-                <span class="fw-bolder text-warning" t-else="">Today:</span>
+                <span class="fw-bolder text-success" t-if="delay === 1">Tomorrow<t t-esc="this.props.activity.activityTime"/>:</span>
+                <span class="fw-bolder text-success" t-elif="delay gt 0"><t t-esc="props.activity.dateDeadlineFormatted"/><t t-esc="this.props.activity.activityTime" />:</span>
+                <span class="fw-bolder text-danger" t-elif="delay === -1">Yesterday<t t-esc="this.props.activity.activityTime"/>:</span>
+                <span class="fw-bolder text-danger" t-elif="delay lt 0"><t t-esc="-delay"/> days overdue<t t-esc="this.props.activity.activityTime"/>:</span>
+                <span class="fw-bolder text-warning" t-else="">Today<t t-esc="this.props.activity.activityTime"/>:</span>
                 <span class="fw-bolder px-2 text-break"><t t-esc="displayName"/></span>
                 <span class="o-mail-Activity-user px-1">for <t t-esc="props.activity.persona.nameOrDisplayName"/></span>
                 <i class="fa fa-info-circle btn-link btn-primary cursor-pointer ms-1" role="img" title="Info" aria-label="Info" t-on-click="toggleDetails"></i>
