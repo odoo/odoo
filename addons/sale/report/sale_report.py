@@ -33,7 +33,7 @@ class SaleReport(models.Model):
             ('invoiced', "Fully Invoiced"),
             ('to invoice', "To Invoice"),
             ('no', "Nothing to Invoice"),
-        ], string="Invoice Status", readonly=True)
+        ], string="Order Invoice Status", readonly=True)
 
     campaign_id = fields.Many2one(comodel_name='utm.campaign', string="Campaign", readonly=True)
     medium_id = fields.Many2one(comodel_name='utm.medium', string="Medium", readonly=True)
@@ -68,6 +68,13 @@ class SaleReport(models.Model):
     price_total = fields.Monetary(string="Total", readonly=True)
     untaxed_amount_to_invoice = fields.Monetary(string="Untaxed Amount To Invoice", readonly=True)
     untaxed_amount_invoiced = fields.Monetary(string="Untaxed Amount Invoiced", readonly=True)
+    line_invoice_status = fields.Selection(
+        selection=[
+            ('upselling', "Upselling Opportunity"),
+            ('invoiced', "Fully Invoiced"),
+            ('to invoice', "To Invoice"),
+            ('no', "Nothing to Invoice"),
+        ], string="Invoice Status", readonly=True)
 
     weight = fields.Float(string="Gross Weight", readonly=True)
     volume = fields.Float(string="Volume", readonly=True)
@@ -90,6 +97,7 @@ class SaleReport(models.Model):
         select_ = f"""
             MIN(l.id) AS id,
             l.product_id AS product_id,
+            l.invoice_status AS line_invoice_status,
             t.uom_id AS product_uom,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.product_uom_qty / u.factor * u2.factor) ELSE 0 END AS product_uom_qty,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.qty_delivered / u.factor * u2.factor) ELSE 0 END AS qty_delivered,
@@ -188,6 +196,7 @@ class SaleReport(models.Model):
         return """
             l.product_id,
             l.order_id,
+            l.invoice_status,
             t.uom_id,
             t.categ_id,
             s.name,
