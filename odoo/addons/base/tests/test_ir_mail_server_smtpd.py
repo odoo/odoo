@@ -4,9 +4,6 @@ import shutil
 import smtplib
 import socket
 import ssl
-import subprocess
-import sys
-import tempfile
 import unittest
 import warnings
 from base64 import b64encode
@@ -52,47 +49,11 @@ def _smtp_authenticate(server, session, enveloppe, mechanism, data):
 
 class Certificate:
     def __init__(self, key, cert):
-        self.key = key
-        self.cert = cert
+        self.key = key and Path(file_path(key, filter_ext='.pem'))
+        self.cert = Path(file_path(cert, filter_ext='.pem'))
 
     def __repr__(self):
         return f"Certificate({self.key=}, {self.cert=})"
-
-
-def _generate_certificates(tempdir):
-    """Generate and sign a few RSA key pairs inside a temporary directory.
-
-    It invokes the openssl command line to create a new Certification
-    Authority and then use that CA to generate extra keys and
-    certificates for a user, a server.
-
-    It also creates a self-signed certificate, to test that invalid
-    certificates are correctly rejected.
-
-    It returns 4 Certificate: CA, client, server, self-signed. Each
-    Certificate has two attributes: key and cert, both are paths.
-    """
-    certdir = Path(tempdir.name)
-
-    # Create a fake certificate authority and use it to generate a few
-    # signed certificates.
-    shutil.copy(file_path('base/tests/ssl/openssl.conf'), certdir)
-    shutil.copy(file_path('base/tests/ssl/gencert.sh'), certdir)
-    subprocess.run(
-        [shutil.which('sh'), certdir / 'gencert.sh'],
-        check=True,
-        cwd=certdir,
-        stdout=sys.stdout if _logger.isEnabledFor(logging.DEBUG) else subprocess.DEVNULL,
-        stderr=subprocess.STDOUT,
-    )
-
-    # Collect files and return them
-    return (
-        Certificate(key=None, cert=certdir / 'ca.cert.pem'),
-        Certificate(key=certdir / 'client.key.pem', cert=certdir / 'client.cert.pem'),
-        Certificate(key=certdir / 'server.key.pem', cert=certdir / 'server.cert.pem'),
-        Certificate(key=certdir / 'self_signed.key.pem', cert=certdir / 'self_signed.cert.pem'),
-    )
 
 
 # skip when optional dependencies are not found
@@ -141,15 +102,19 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
         # decrease aiosmtpd verbosity, odoo INFO = aiosmtpd WARNING
         logging.getLogger('mail.log').setLevel(_logger.getEffectiveLevel() + 10)
 
-        # create a few certificates for ssl/tls+starttls and mock the
-        # various smtplib classes into trusting the created root CA.
-        _logger.info("Using openssl to generate fake certificates, show "
-                     "subprocess output with: --log-handler %s:DEBUG", __name__)
-        tempdir = tempfile.TemporaryDirectory(prefix='odoo-test-smtpd-')
-        cls.addClassCleanup(tempdir.cleanup)
-        cls.ssl_ca, cls.ssl_client, cls.ssl_server, cls.ssl_self_signed = \
-            _generate_certificates(tempdir)
+        # Get various TLS keys and certificates. CA was used to sign
+        # both client and server. self_signed is... self signed.
+        cls.ssl_ca, cls.ssl_client, cls.ssl_server, cls.ssl_self_signed = [
+            Certificate(None, 'base/tests/ssl/ca.cert.pem'),
+            Certificate('base/tests/ssl/client.key.pem',
+                        'base/tests/ssl/client.cert.pem'),
+            Certificate('base/tests/ssl/server.key.pem',
+                        'base/tests/ssl/server.cert.pem'),
+            Certificate('base/tests/ssl/self_signed.key.pem',
+                        'base/tests/ssl/self_signed.cert.pem'),
+        ]
 
+        # Patch the two SMTP client classes into trusting the above CA
         class TEST_SMTP(smtplib.SMTP):
             def starttls(self, *, context):
                 if context is None:
@@ -157,15 +122,14 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
                     # context = ssl.create_default_context()  # what it should do
                 context.load_verify_locations(cafile=str(cls.ssl_ca.cert))
                 super().starttls(context=context)
-        patcher = patch('smtplib.SMTP', TEST_SMTP)
-        patcher.start()
-        cls.addClassCleanup(patcher.stop)
-
         class TEST_SMTP_SSL(smtplib.SMTP_SSL):
             def _get_socket(self, *args, **kwargs):
                 # self.context = ssl.create_default_context()  # what it should do
                 self.context.load_verify_locations(cafile=str(cls.ssl_ca.cert))
                 return super()._get_socket(*args, **kwargs)
+        patcher = patch('smtplib.SMTP', TEST_SMTP)
+        patcher.start()
+        cls.addClassCleanup(patcher.stop)
         patcher = patch('smtplib.SMTP_SSL', TEST_SMTP_SSL)
         patcher.start()
         cls.addClassCleanup(patcher.stop)
