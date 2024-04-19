@@ -343,6 +343,10 @@ class ResPartner(models.Model):
         where_params = [tuple(self.ids)] + where_params
         if where_clause:
             where_clause = 'AND ' + where_clause
+        self.env['account.move.line'].flush_model(
+            ['account_id', 'amount_residual', 'company_id', 'parent_state', 'partner_id', 'reconciled']
+        )
+        self.env['account.account'].flush_model(['account_type'])
         self._cr.execute("""SELECT account_move_line.partner_id, a.account_type, SUM(account_move_line.amount_residual)
                       FROM """ + tables + """
                       LEFT JOIN account_account a ON (account_move_line.account_id=a.id)
