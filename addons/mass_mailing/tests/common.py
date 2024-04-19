@@ -174,7 +174,7 @@ class MassMailCase(MailCase, MockLinkTracker):
             if link_info:
                 trace_mail = self._find_mail_mail_wrecord(record)
                 for (anchor_id, url, is_shortened, add_link_params) in link_info:
-                    link_params = {'utm_medium': 'Email', 'utm_source': mailing.name}
+                    link_params = {'utm_medium': 'email', 'utm_source': mailing.name}
                     if add_link_params:
                         link_params.update(**add_link_params)
                     self.assertLinkShortenedHtml(

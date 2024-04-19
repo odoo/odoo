@@ -449,20 +449,20 @@ class TestMassMailValues(MassMailCommon):
             'subject': 'Second subject',
         }])
 
-        self.assertEqual(mailing_0.name, 'First subject (Mass Mailing created on 2022-01-02)')
-        self.assertEqual(mailing_1.name, 'First subject (Mass Mailing created on 2022-01-02) [2]')
-        self.assertEqual(mailing_2.name, 'First subject (Mass Mailing created on 2022-01-02) [3]')
-        self.assertEqual(mailing_3.name, 'Custom Source')
-        self.assertEqual(mailing_4.name, 'Mailing')
-        self.assertEqual(mailing_5.name, 'Mailing [2]')
-        self.assertEqual(mailing_6.name, 'Second subject (Mass Mailing created on 2022-01-02)')
+        self.assertEqual(mailing_0.name, 'first subject (mass mailing created on 2022-01-02)')
+        self.assertEqual(mailing_1.name, 'first subject (mass mailing created on 2022-01-02) [2]')
+        self.assertEqual(mailing_2.name, 'first subject (mass mailing created on 2022-01-02) [3]')
+        self.assertEqual(mailing_3.name, 'custom source')
+        self.assertEqual(mailing_4.name, 'mailing')
+        self.assertEqual(mailing_5.name, 'mailing [2]')
+        self.assertEqual(mailing_6.name, 'second subject (mass mailing created on 2022-01-02)')
 
         mailing_0.subject = 'First subject'
-        self.assertEqual(mailing_0.name, 'First subject (Mass Mailing created on 2022-01-02) [4]',
+        self.assertEqual(mailing_0.name, 'first subject (mass mailing created on 2022-01-02) [4]',
             msg='The name must have been re-generated')
 
-        mailing_0.name = 'Second subject (Mass Mailing created on 2022-01-02)'
-        self.assertEqual(mailing_0.name, 'Second subject (Mass Mailing created on 2022-01-02) [2]',
+        mailing_0.name = 'second subject (mass mailing created on 2022-01-02)'
+        self.assertEqual(mailing_0.name, 'second subject (mass mailing created on 2022-01-02) [2]',
             msg='The name must be unique')
 
 
@@ -658,7 +658,7 @@ Email: <a id="url5" href="mailto:test@odoo.com">test@odoo.com</a></div>""",
                               ('url4', 'https://www.example.com/foo/bar?baz=qux', True),
                               ('url5', 'mailto:test@odoo.com', False)]:
                 # TDE FIXME: why going to mail message id ? mail.body_html seems to fail, check
-                link_params = {'utm_medium': 'Email', 'utm_source': mailing.name}
+                link_params = {'utm_medium': 'email', 'utm_source': mailing.name}
                 if link_info[0] == 'url4':
                     link_params['baz'] = 'qux'
                 self.assertLinkShortenedHtml(

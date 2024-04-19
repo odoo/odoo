@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class UtmMedium(models.Model):
@@ -20,10 +21,15 @@ class UtmMedium(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        new_names = self.env['utm.mixin']._get_unique_names(self._name, [vals.get('name') for vals in vals_list])
-        for vals, new_name in zip(vals_list, new_names):
-            vals['name'] = new_name
-        return super().create(vals_list)
+        for vals in vals_list:
+            if name := vals.get('name'):
+                vals['name'] = name.lower()
+        try:
+            return super().create(vals_list)
+        except Exception as e:
+            pattern = r"Key \(name\)=\((.*?)\)"
+            match = re.search(pattern, str(e))
+            raise ValidationError(f'The operation cannot be completed: The Medium "{match.group(1)}" already exists!')
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_utm_medium_email(self):

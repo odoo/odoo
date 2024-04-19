@@ -25,12 +25,12 @@ registry.category("web_tour.tours").add('website_links_tour', {
                 document.querySelector(".o_website_links_utm_forms input#campaign-select").value = campaignId;
                 const channelId = Object.entries(document.querySelector("#s2id_channel-select"))
                     .find(([key, value]) => value.select2)[1]
-                    .select2.opts.data.find((d) => d.text === "Website").id;
+                    .select2.opts.data.find((d) => d.text === "test website").id;
                 document.querySelector(".o_website_links_utm_forms input#channel-select").value =
                     channelId;
                 const sourceId = Object.entries(document.querySelector("#s2id_source-select"))
                     .find(([key, value]) => value.select2)[1]
-                    .select2.opts.data.find((d) => d.text === "Search engine").id;
+                    .select2.opts.data.find((d) => d.text === "test search engine").id;
                 document.querySelector(".o_website_links_utm_forms input#source-select").value =
                     sourceId;
                 // Patch and ignore write on clipboard in tour as we don't have permissions
@@ -55,7 +55,7 @@ registry.category("web_tour.tours").add('website_links_tour', {
             content: "check that we landed on correct page with correct query strings",
             trigger: ".s_title h1:contains(/^Contact us$/)",
             run: function () {
-                var expectedUrl = "/contactus?utm_campaign=Sale&utm_source=Search+engine&utm_medium=Website";
+                var expectedUrl = "/contactus?utm_campaign=Sale&utm_source=test+search+engine&utm_medium=test+website";
                 if (window.location.pathname + window.location.search !== expectedUrl) {
                     console.error("The link was not correctly created. " + window.location.search);
                 }

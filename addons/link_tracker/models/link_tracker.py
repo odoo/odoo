@@ -102,7 +102,7 @@ class LinkTracker(models.Model):
                 continue
 
             utms = {}
-            for key, field_name, cook in self.env['utm.mixin'].tracking_fields():
+            for key, field_name, __, __ in self.env['utm.mixin'].tracking_fields():
                 field = self._fields[field_name]
                 attr = tracker[field_name]
                 if field.type == 'many2one':
@@ -172,7 +172,7 @@ class LinkTracker(models.Model):
                 vals['title'] = self._get_title_from_url(vals['url'])
 
             # Prevent the UTMs to be set by the values of UTM cookies
-            for (__, fname, __) in self.env['utm.mixin'].tracking_fields():
+            for (__, fname, __, __) in self.env['utm.mixin'].tracking_fields():
                 if fname not in vals:
                     vals[fname] = False
 

@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 
 from odoo import _, api, fields, models, tools
+from odoo.exceptions import ValidationError
 
 
 class UtmSource(models.Model):
@@ -17,10 +19,15 @@ class UtmSource(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        new_names = self.env['utm.mixin']._get_unique_names(self._name, [vals.get('name') for vals in vals_list])
-        for vals, new_name in zip(vals_list, new_names):
-            vals['name'] = new_name
-        return super().create(vals_list)
+        for vals in vals_list:
+            if name := vals.get('name'):
+                vals['name'] = name.lower()
+        try:
+            return super().create(vals_list)
+        except Exception as e:
+            pattern = r"Key \(name\)=\((.*?)\)"
+            match = re.search(pattern, str(e))
+            raise ValidationError(f'The operation cannot be completed: The Source "{match.group(1)}" already exists!')
 
     def _generate_name(self, record, content):
         """Generate the UTM source name based on the content of the source."""
@@ -54,11 +61,13 @@ class UtmSourceMixin(models.AbstractModel):
     def create(self, vals_list):
         """Create the UTM sources if necessary, generate the name based on the content in batch."""
         # Create all required <utm.source>
-        utm_sources = self.env['utm.source'].create([
-            {'name': values.get('name') or self.env['utm.source']._generate_name(self, values.get(self._rec_name))}
+        source_names = [
+            values.get('name') or self.env['utm.source']._generate_name(self, values.get(self._rec_name))
             for values in vals_list
             if not values.get('source_id')
-        ])
+        ]
+        unique_source_names = self.env['utm.mixin']._get_unique_names('utm.source', [name.lower() for name in source_names])
+        utm_sources = self.env['utm.source'].create([{'name': name} for name in unique_source_names])
 
         # Update "vals_list" to add the ID of the newly created source
         vals_list_missing_source = [values for values in vals_list if not values.get('source_id')]
