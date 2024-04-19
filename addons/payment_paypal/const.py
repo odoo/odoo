@@ -41,6 +41,6 @@ DEFAULT_PAYMENT_METHODS_CODES = [
 # See https://developer.paypal.com/docs/api-basics/notifications/ipn/IPNandPDTVariables/
 PAYMENT_STATUS_MAPPING = {
     'pending': ('Pending',),
-    'done': ('Processed', 'Completed'),
+    'done': ('Processed', 'Completed', 'Cleared'),  # cleared status is required fo echeck
     'cancel': ('Voided', 'Expired'),
 }
