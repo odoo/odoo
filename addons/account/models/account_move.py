@@ -33,6 +33,7 @@ from odoo.tools import (
     index_exists,
     is_html_empty,
     create_index,
+    OrderedSet,
 )
 
 _logger = logging.getLogger(__name__)
@@ -614,6 +615,8 @@ class AccountMove(models.Model):
 
     abnormal_amount_warning = fields.Text(compute='_compute_abnormal_warnings')
     abnormal_date_warning = fields.Text(compute='_compute_abnormal_warnings')
+
+    taxes_legal_notes = fields.Html(string='Taxes Legal Notes', compute='_compute_taxes_legal_notes')
 
     _sql_constraints = [(
         'unique_name', "", "Another entry with the same name already exists.",
@@ -1787,6 +1790,15 @@ class AccountMove(models.Model):
                 partner_name=move.partner_id.display_name,
                 mean=move.currency_id.format(amount_mean),
                 wiggle=move.currency_id.format(wiggle_room_amount),
+            )
+
+    @api.depends('line_ids.tax_ids')
+    def _compute_taxes_legal_notes(self):
+        for move in self:
+            move.taxes_legal_notes = ''.join(
+                tax.invoice_legal_notes
+                for tax in OrderedSet(move.line_ids.tax_ids)
+                if not is_html_empty(tax.invoice_legal_notes)
             )
 
     # -------------------------------------------------------------------------

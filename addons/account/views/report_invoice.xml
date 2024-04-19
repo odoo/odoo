@@ -228,6 +228,11 @@
                                         <span t-field="o.fiscal_position_id.note"/>
                                     </p>
                                 </div>
+                                <div class="justify-text">
+                                    <p t-if="not is_html_empty(o.taxes_legal_notes)" name="taxes_legal_notes" class="mb-2">
+                                        <span t-field="o.taxes_legal_notes"/>
+                                    </p>
+                                </div>
                                 <t t-set="payment_term_details" t-value="o.payment_term_details"/>
                                 <div class="mb-3">
                                     <span id="payment_terms_note_id"
