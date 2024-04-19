@@ -118,6 +118,12 @@ export function clickBack() {
         {
             content: "click back button",
             trigger: ".payment-screen .button.back",
+            mobile: false,
+        },
+        {
+            content: "click mobile back button",
+            trigger: ".order-button",
+            mobile: true,
         },
     ];
 }

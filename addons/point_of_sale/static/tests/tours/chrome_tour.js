@@ -116,3 +116,24 @@ registry.category("web_tour.tours").add("ChromeTour", {
             ReceiptScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("OrderModificationAfterValidationError", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickDisplayedProduct("Test Product", true, "1.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
+            PaymentScreen.clickValidate(),
+
+            // Dialog showing the error
+            Dialog.confirm(),
+
+            PaymentScreen.clickBack(),
+            ProductScreen.isShown(),
+
+            // Allow order changes after the error
+            ProductScreen.clickDisplayedProduct("Test Product", true, "2.00"),
+        ].flat(),
+});

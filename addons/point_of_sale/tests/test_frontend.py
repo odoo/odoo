@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from unittest.mock import patch
 from odoo import Command
 
 from odoo.api import Environment
@@ -11,6 +12,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_pos_combo_items
 from datetime import date, timedelta
 from odoo.addons.point_of_sale.tests.common import archive_products
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -1203,6 +1205,31 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'BarcodeScanPartnerTour', login="pos_user")
+
+    def test_allow_order_modification_after_validation_error(self):
+        """
+        User error as a result of validation should block the order.
+        Taking action by order modification should be allowed.
+        """
+
+        self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 10.00,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        def sync_from_ui_patch(*_args, **_kwargs):
+            raise UserError('Test Error')
+
+        with patch.object(self.env.registry.models['pos.order'], "sync_from_ui", sync_from_ui_patch):
+            # If there is problem in the tour, remove the log catcher to debug.
+            with self.assertLogs(level="WARNING") as log_catcher:
+                self.main_pos_config.with_user(self.pos_user).open_ui()
+                self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'OrderModificationAfterValidationError', login="pos_user")
+
+            warning_outputs = [o for o in log_catcher.output if 'WARNING' in o]
+            self.assertEqual(len(warning_outputs), 1, "Exactly one warning should be logged")
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
