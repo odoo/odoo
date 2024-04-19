@@ -608,6 +608,12 @@ export class PosStore extends Reactive {
 
         this.numberBuffer.reset();
 
+        this.hasJustAddedProduct = true;
+        clearTimeout(this.productReminderTimeout);
+        this.productReminderTimeout = setTimeout(() => {
+            this.hasJustAddedProduct = false;
+        }, 3000);
+
         // FIXME: If merged with another line, this returned object is useless.
         return line;
     }
