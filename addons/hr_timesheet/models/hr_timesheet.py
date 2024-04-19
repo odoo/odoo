@@ -351,6 +351,9 @@ class AccountAnalyticLine(models.Model):
         company_uom = self.env.company.timesheet_encode_uom_id
         return company_uom == self.env.ref('uom.product_uom_day')
 
+    def _is_updatable_timesheet(self):
+        return True
+
     @api.model
     def _convert_hours_to_days(self, time):
         uom_hour = self.env.ref('uom.product_uom_hour')
