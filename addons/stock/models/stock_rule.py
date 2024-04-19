@@ -224,19 +224,30 @@ class StockRule(models.Model):
         # isolate the products we would need to read the forecasted quantity,
         # in order to to batch the read. We also make a sanitary check on the
         # `location_src_id` field.
+        scheduled_dates = []
         for procurement, rule in procurements:
             if not rule.location_src_id:
                 msg = _('No source location defined on stock rule: %s!') % (rule.name, )
                 raise ProcurementException([(procurement, msg)])
 
             if rule.procure_method == 'mts_else_mto':
+                date_planned = procurement[7].get('date_planned')
+                if date_planned:
+                    scheduled_date = date_planned - relativedelta(days=self.delay or 0)
+                    if scheduled_date.date() >= fields.Date.today():
+                        scheduled_dates.append(scheduled_date)
                 mtso_products_by_locations[rule.location_src_id].append(procurement.product_id.id)
 
         # Get the forecasted quantity for the `mts_else_mto` procurement.
         forecasted_qties_by_loc = {}
         for location, product_ids in mtso_products_by_locations.items():
             products = self.env['product.product'].browse(product_ids).with_context(location=location.id)
-            forecasted_qties_by_loc[location] = {product.id: product.free_qty for product in products}
+            if scheduled_dates:
+                scheduled_date = min(scheduled_dates)
+                products = products.with_context(to_date=scheduled_date)
+                forecasted_qties_by_loc[location] = {product.id: product.virtual_available for product in products}
+            else:
+                forecasted_qties_by_loc[location] = {product.id: product.free_qty for product in products}
 
         # Prepare the move values, adapt the `procure_method` if needed.
         procurements = sorted(procurements, key=lambda proc: float_compare(proc[0].product_qty, 0.0, precision_rounding=proc[0].product_uom.rounding) > 0)
