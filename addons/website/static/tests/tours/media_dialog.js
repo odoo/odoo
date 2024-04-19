@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { TourError } from "@web_tour/tour_service/tour_utils";
 import wTourUtils from '@website/js/tours/tour_utils';
 
 wTourUtils.registerWebsitePreviewTour("website_media_dialog_undraw", {
@@ -24,6 +25,55 @@ wTourUtils.dragNDrop({
     trigger: '.o_select_media_dialog:has(.o_we_search_select option[value="media-library"])',
     isCheck: true,
 },
+]);
+
+wTourUtils.registerWebsitePreviewTour("website_media_dialog_external_library", {
+    test: true,
+    url: "/",
+    edition: true,
+}, () => [
+    wTourUtils.dragNDrop({
+        id: "s_text_image",
+        name: "Text - Image",
+    }),
+    {
+        content: "Open the media dialog from the snippet",
+        trigger: "iframe .s_text_image img",
+        run: "dblclick",
+    }, {
+        content: "Dummy search to call the media library",
+        trigger: ".o_select_media_dialog .o_we_search",
+        run: "text a",
+    }, {
+        content: "Choose the media library to only show its media",
+        trigger: ".o_select_media_dialog .o_we_search_select",
+        // This is a standard <select>: we can't simulate a click on the option
+        // directly.
+        run: function (actions) {
+            actions.click();
+            actions.text("Illustrations");
+            this.$anchor.trigger($.Event("keydown", {key: 'Enter', keyCode: 13}));
+        },
+    }, {
+        content: "Double click on the first image",
+        trigger: ".o_select_media_dialog img.o_we_attachment_highlight",
+        run: "dblclick",
+    }, {
+        content: "Reopen the media dialog",
+        trigger: "iframe .s_text_image img",
+        run: "dblclick",
+    }, {
+        content: "Check that the image was created only once",
+        trigger: ".o_select_media_dialog .o_we_existing_attachments",
+        run: function () {
+            const selector = ".o_existing_attachment_cell img[src^='/web_editor/shape/illustration/']";
+            const imgName = this.$anchor[0].querySelector(selector).title;
+            const uploadedImgs = this.$anchor[0].querySelectorAll(`${selector}[title='${imgName}']`);
+            if (uploadedImgs.length !== 1) {
+                throw new TourError(`${uploadedImgs.length} attachment(s) were found. Exactly 1 should have been created.`);
+            }
+        },
+    },
 ]);
 
 wTourUtils.registerWebsitePreviewTour('website_media_dialog_icons', {
