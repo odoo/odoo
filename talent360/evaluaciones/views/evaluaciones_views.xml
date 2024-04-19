@@ -91,7 +91,7 @@
         </field>
     </record>
 
-<!-- NOM 035 -->
+    <!-- NOM035 -->
     <record id="nom035_form" model="ir.ui.view">
         <field name="name">evaluacion.form</field>
         <field name="model">evaluacion</field>
@@ -121,10 +121,12 @@
         </field>
     </record>
 
-    <record id="nom035_action" model="ir.actions.act_window">
-        <field name="name">NOM 0035</field>
-        <field name="res_model">evaluacion</field>
-        <field name="view_mode">form</field>
-		<field name="view_id" ref="nom035_form"/>
+    <record id="action_nom035" model="ir.actions.server">
+        <field name="name">NOM 035</field>
+        <field name="model_id" ref="model_evaluacion"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_nom035()</field>
+        <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
+     
 </odoo>

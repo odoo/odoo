@@ -59,17 +59,36 @@ class Evaluacion(models.Model):
                     )
         return res
     
-        # Método para copiar preguntas de la plantilla a la evaluación
-    def copiar_preguntas_de_template(self):
-        if self.template_id:
-            self.pregunta_ids = [(5,)]
+    # Método para copiar preguntas de la plantilla a la evaluación
+    def copiar_preguntas_de_template_nom035(self):
+        if not self:
+            new_evaluation = self.env['evaluacion'].create({
+                'nombre': 'Escribe el nombre de tu evaluación',
+            })
+            self = new_evaluation
 
-            if self.template_id:
-                self.pregunta_ids = [(6, 0, self.template_id.pregunta_ids.ids)]
-            else:
-                self.pregunta_ids = [(5,)]
-            
-    # Actualiza las preguntas cuando se selecciona una plantilla
-    @api.onchange('template_id')
-    def onchange_template_id(self):
-        self.copiar_preguntas_de_template()
+        self.pregunta_ids = [(5,)]
+
+        template_id_hardcoded = 4
+
+        if template_id_hardcoded:
+            template = self.env['template'].browse(template_id_hardcoded)
+            if template:
+                pregunta_ids = template.pregunta_ids.ids
+                print("IDs de preguntas:", pregunta_ids)
+                self.pregunta_ids = [(6, 0, pregunta_ids)]
+
+        return self
+
+    def action_nom035(self):
+        self = self.copiar_preguntas_de_template_nom035()
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Nombre de tu evaluación',
+            'res_model': 'evaluacion',
+            'view_mode': 'form',
+            'view_id': self.env.ref('evaluaciones.nom035_form').id,
+            'target': 'current',
+            'res_id': self.id,
+        }
