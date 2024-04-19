@@ -254,7 +254,6 @@
             'website/static/src/snippets/s_rating/options.js',
             'website/static/src/snippets/s_tabs/options.js',
             'website/static/src/snippets/s_progress_bar/options.js',
-            'website/static/src/snippets/s_blockquote/options.js',
             'website/static/src/snippets/s_showcase/options.js',
             'website/static/src/snippets/s_table_of_content/options.js',
             'website/static/src/snippets/s_timeline/options.js',
