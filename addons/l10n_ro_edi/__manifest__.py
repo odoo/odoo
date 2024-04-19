@@ -11,6 +11,13 @@ E-invoice implementation for Romania
         'account_edi_ubl_cii',
         'l10n_ro',
     ],
+    'data': [
+        'data/ir_cron.xml',
+        'security/ir.model.access.csv',
+        'views/account_move_views.xml',
+        'views/res_config_settings_views.xml',
+        'wizard/account_move_send_views.xml',
+    ],
     'installable': True,
     'auto_install': True,
     'license': 'LGPL-3',
