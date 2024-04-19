@@ -480,7 +480,7 @@ class Website(models.Model):
         addr = partner_sudo.address_get(['delivery', 'invoice'])
         if not request.website.is_public_user():
             last_sale_order = self.env['sale.order'].sudo().search(
-                [('partner_id', '=', partner_sudo.id)],
+                [('partner_id', '=', partner_sudo.id), ('website_id', '=', self.id)],
                 limit=1,
                 order='date_order desc, id desc',
             )
