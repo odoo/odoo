@@ -6,14 +6,11 @@ class Template(models.Model):
     _description = "Plantilla para una evaluación"
 
     nombre = fields.Char(required=True)
-    descripcion = fields.Text("Descripción")
     tipo = fields.Selection(
         [
-            ("nom_085", "NOM 085"),
-            ("90_grados", "90 grados"),
-            ("180_grados", "180 grados"),
+            ("nom_035", "NOM 035"),
+            ("clima", "Clima"),
         ],
-        default="90_grados",
         required=True,
     )
 
