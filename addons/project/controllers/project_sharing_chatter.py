@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from werkzeug.exceptions import Forbidden
@@ -82,14 +81,16 @@ class ProjectSharingChatter(PortalChatter):
         return super().portal_chatter_init(res_model, res_id, domain=domain, limit=limit, **kwargs)
 
     @route()
-    def portal_chatter_post(self, res_model, res_id, message, attachment_ids=None, attachment_tokens=None, **kw):
-        project_sharing_id = kw.get('project_sharing_id')
+    def portal_chatter_post(self, thread_model, thread_id, post_data, **kwargs):
+        project_sharing_id = kwargs.get("project_sharing_id")
         if project_sharing_id:
-            token = self._check_project_access_and_get_token(project_sharing_id, res_model, res_id, kw.get('token'))
+            token = self._check_project_access_and_get_token(
+                project_sharing_id, thread_model, thread_id, kwargs.get("token")
+            )
             if token:
-                del kw['project_sharing_id']
-                kw['token'] = token
-        return super().portal_chatter_post(res_model, res_id, message, attachment_ids=attachment_ids, attachment_tokens=attachment_tokens, **kw)
+                del kwargs["project_sharing_id"]
+                kwargs["token"] = token
+        return super().portal_chatter_post(thread_model, thread_id, post_data, **kwargs)
 
     @route()
     def portal_message_fetch(self, res_model, res_id, domain=False, limit=10, offset=0, **kw):

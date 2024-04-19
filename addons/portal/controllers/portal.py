@@ -296,7 +296,7 @@ class CustomerPortal(Controller):
         })
 
     @http.route('/portal/attachment/add', type='http', auth='public', methods=['POST'], website=True)
-    def attachment_add(self, name, file, res_model, res_id, access_token=None, **kwargs):
+    def attachment_add(self, name, file, thread_model, thread_id, access_token=None):
         """Process a file uploaded from the portal chatter and create the
         corresponding `ir.attachment`.
 
@@ -309,13 +309,13 @@ class CustomerPortal(Controller):
         :param file: the file to save
         :type file: werkzeug.FileStorage
 
-        :param res_model: name of the model of the original document.
+        :param thread_model: name of the model of the original document.
             To check access rights only, it will not be saved here.
-        :type res_model: string
+        :type thread_model: string
 
-        :param res_id: id of the original document.
+        :param thread_id: id of the original document.
             To check access rights only, it will not be saved here.
-        :type res_id: int
+        :type thread_id: int
 
         :param access_token: access_token of the original document.
             To check access rights only, it will not be saved here.
@@ -325,7 +325,7 @@ class CustomerPortal(Controller):
         :rtype: dict
         """
         try:
-            self._document_check_access(res_model, int(res_id), access_token=access_token)
+            self._document_check_access(thread_model, int(thread_id), access_token=access_token)
         except (AccessError, MissingError) as e:
             raise UserError(_("The document does not exist or you do not have the rights to access it."))
 

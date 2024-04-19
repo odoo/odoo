@@ -42,8 +42,8 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/portal/attachment/add',
             data={
                 'name': "new attachment",
-                'res_model': self.out_invoice._name,
-                'res_id': self.out_invoice.id,
+                'thread_model': self.out_invoice._name,
+                'thread_id': self.out_invoice.id,
                 'csrf_token': http.Request.csrf_token(self),
             },
             files=[('file', ('test.txt', b'test', 'plain/text'))],
@@ -56,8 +56,8 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/portal/attachment/add',
             data={
                 'name': "new attachment",
-                'res_model': self.out_invoice._name,
-                'res_id': self.out_invoice.id,
+                'thread_model': self.out_invoice._name,
+                'thread_id': self.out_invoice.id,
                 'csrf_token': http.Request.csrf_token(self),
                 'access_token': self.out_invoice._portal_ensure_token(),
             },
@@ -80,8 +80,8 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/portal/attachment/add',
             data={
                 'name': "new attachment",
-                'res_model': self.out_invoice._name,
-                'res_id': self.out_invoice.id,
+                'thread_model': self.out_invoice._name,
+                'thread_id': self.out_invoice.id,
                 'csrf_token': http.Request.csrf_token(self),
                 'access_token': self.out_invoice._portal_ensure_token(),
             },
@@ -174,12 +174,13 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/mail/chatter_post',
             json={
                 'params': {
-                    'res_model': self.out_invoice._name,
-                    'res_id': self.out_invoice.id,
-                    'message': "test message 1",
-                    'attachment_ids': [attachment.id],
+                    'thread_model': self.out_invoice._name,
+                    'thread_id': self.out_invoice.id,
+                    'post_data': {
+                        'body': "test message 1",
+                        'attachment_ids': [attachment.id],
+                    },
                     'attachment_tokens': ['false'],
-                    'csrf_token': http.Request.csrf_token(self),
                 },
             },
         )
@@ -191,12 +192,10 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/mail/chatter_post',
             json={
                 'params': {
-                    'res_model': self.out_invoice._name,
-                    'res_id': self.out_invoice.id,
-                    'message': "test message 1",
-                    'attachment_ids': [attachment.id],
+                    'thread_model': self.out_invoice._name,
+                    'thread_id': self.out_invoice.id,
+                    'post_data': {'body': "test message 1", 'attachment_ids': [attachment.id]},
                     'attachment_tokens': [attachment.access_token],
-                    'csrf_token': http.Request.csrf_token(self),
                 },
             },
         )
@@ -210,12 +209,10 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/mail/chatter_post',
             json={
                 'params': {
-                    'res_model': self.out_invoice._name,
-                    'res_id': self.out_invoice.id,
-                    'message': "test message 1",
-                    'attachment_ids': [attachment.id],
+                    'thread_model': self.out_invoice._name,
+                    'thread_id': self.out_invoice.id,
+                    'post_data': {'body': "test message 1", 'attachment_ids': [attachment.id]},
                     'attachment_tokens': [attachment.access_token],
-                    'csrf_token': http.Request.csrf_token(self),
                     'token': self.out_invoice._portal_ensure_token(),
                 },
             },
@@ -232,12 +229,10 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/mail/chatter_post',
             json={
                 'params': {
-                    'res_model': self.out_invoice._name,
-                    'res_id': self.out_invoice.id,
-                    'message': "test message 2",
-                    'attachment_ids': [attachment.id],
+                    'thread_model': self.out_invoice._name,
+                    'thread_id': self.out_invoice.id,
+                    'post_data': {'body': "test message 2", 'attachment_ids': [attachment.id]},
                     'attachment_tokens': [attachment.access_token],
-                    'csrf_token': http.Request.csrf_token(self),
                     'token': self.out_invoice._portal_ensure_token(),
                 },
             },
@@ -255,8 +250,8 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/portal/attachment/add',
             data={
                 'name': "final attachment",
-                'res_model': self.out_invoice._name,
-                'res_id': self.out_invoice.id,
+                'thread_model': self.out_invoice._name,
+                'thread_id': self.out_invoice.id,
                 'csrf_token': http.Request.csrf_token(self),
                 'access_token': self.out_invoice._portal_ensure_token(),
             },
@@ -270,12 +265,10 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/mail/chatter_post',
             json={
                 'params': {
-                    'res_model': self.out_invoice._name,
-                    'res_id': self.out_invoice.id,
-                    'message': "test message 3",
-                    'attachment_ids': [create_res['id']],
+                    'thread_model': self.out_invoice._name,
+                    'thread_id': self.out_invoice.id,
+                    'post_data': {'body': "test message 3", 'attachment_ids': [create_res['id']]},
                     'attachment_tokens': [create_res['access_token']],
-                    'csrf_token': http.Request.csrf_token(self),
                     'token': self.out_invoice._portal_ensure_token(),
                 },
             },
