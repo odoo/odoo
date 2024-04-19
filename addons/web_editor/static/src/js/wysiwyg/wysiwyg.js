@@ -67,6 +67,8 @@ const getRangePosition = OdooEditorLib.getRangePosition;
 const childNodeIndex = OdooEditorLib.childNodeIndex;
 const fillEmpty = OdooEditorLib.fillEmpty;
 const isVisible = OdooEditorLib.isVisible;
+const getDeepestPosition = OdooEditorLib.getDeepestPosition;
+const paragraphRelatedElements = OdooEditorLib.paragraphRelatedElements;
 
 function getJqueryFromDocument(doc) {
     if (doc.defaultView && doc.defaultView.$) {
@@ -450,8 +452,14 @@ export class Wysiwyg extends Component {
             getPowerboxElement: () => {
                 const selection = (this.options.document || document).getSelection();
                 if (selection.isCollapsed && selection.rangeCount) {
-                    const baseNode = closestElement(selection.anchorNode, 'P:not([t-field]), DIV:not([t-field]):not(.o_not_editable)');
-                    const fieldContainer = closestElement(selection.anchorNode, '[data-oe-field]');
+                    const [deepestNode] = getDeepestPosition(selection.anchorNode, selection.anchorOffset);
+                    const elementSelectors = [
+                        'LI:not([t-field])',
+                        'DIV:not([t-field]):not(.o_not_editable)',
+                        ...paragraphRelatedElements.map(tag => `${tag}:not([t-field])`),
+                    ];
+                    const baseNode = closestElement(deepestNode, elementSelectors.join(', '));
+                    const fieldContainer = closestElement(deepestNode, '[data-oe-field]');
                     if (!baseNode ||
                         (
                             fieldContainer &&
