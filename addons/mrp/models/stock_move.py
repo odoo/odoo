@@ -414,31 +414,43 @@ class StockMove(models.Model):
         procurements = []
         old_qties = old_qties or {}
         to_assign = self.env['stock.move']
+        to_procure = self.env['stock.move']
+        old_mtso_qties = dict()
         self._adjust_procure_method()
         for move in self:
             if float_compare(move.product_uom_qty - old_qties.get(move.id, 0), 0, precision_rounding=move.product_uom.rounding) < 0\
                     and move.procure_method == 'make_to_order'\
                     and all(m.state == 'done' for m in move.move_orig_ids):
                 continue
-            #QTY is more than before
+            # QTY is more than before
             if float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding) > 0:
                 if move._should_bypass_reservation() \
                         or move.picking_type_id.reservation_method == 'at_confirm' \
-                        or (move.reservation_date and move.reservation_date <= fields.Date.today()):
+                        or (move.reservation_date and move.reservation_date <= fields.Date.today()) \
+                        or move._is_mtso():
                     to_assign |= move
-
             if move.procure_method == 'make_to_order' or move._is_mtso():
-                procurement_qty = move.product_uom_qty - old_qties.get(move.id, 0)
-                if move.procure_method == 'make_to_order':
-                    possible_reduceable_qty = -sum(move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.product_uom_qty).mapped('product_uom_qty'))
-                    procurement_qty = max(procurement_qty, possible_reduceable_qty)
-                values = move._prepare_procurement_values()
-                origin = move._prepare_procurement_origin()
-                procurements.append(self.env['procurement.group'].Procurement(
-                    move.product_id, procurement_qty, move.product_uom,
-                    move.location_id, move.name, origin, move.company_id, values))
-
+                to_procure |= move
+                if move._is_mtso():
+                    old_mtso_qties[move.id] = move.quantity
         to_assign._action_assign()
+
+        # Now that we may also run procurement for mtso moves, we need to first do the assignement
+        for move in to_procure:
+            if move.procure_method == 'make_to_order':
+                procurement_qty = move.product_uom_qty - old_qties.get(move.id, 0)
+                possible_reduceable_qty = -sum(move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.product_uom_qty).mapped('product_uom_qty'))
+                procurement_qty = max(procurement_qty, possible_reduceable_qty)
+            elif move._is_mtso():
+                if float_compare(move.product_uom_qty, move.quantity, precision_rounding=move.product_uom.rounding) <= 0:
+                    continue
+                procurement_qty = (move.product_uom_qty - old_qties.get(move.id, 0)) - (move.quantity - old_mtso_qties.get(move.id, 0))
+            values = move._prepare_procurement_values()
+            origin = move._prepare_procurement_origin()
+            procurements.append(self.env['procurement.group'].Procurement(
+                move.product_id, procurement_qty, move.product_uom,
+                move.location_id, move.name, origin, move.company_id, values))
+
         if procurements:
             self.env['procurement.group'].run(procurements)
 

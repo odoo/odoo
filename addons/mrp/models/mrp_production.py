@@ -1297,13 +1297,13 @@ class MrpProduction(models.Model):
         self.ensure_one()
         procurement_moves = self.procurement_group_id.stock_move_ids
         child_moves = procurement_moves.move_orig_ids
-        return (procurement_moves | child_moves).created_production_id.procurement_group_id.mrp_production_ids.filtered(lambda p: p.origin != self.origin) - self
+        return ((procurement_moves | child_moves).created_production_id.procurement_group_id | self.procurement_group_id.group_orig_ids).mrp_production_ids.filtered(lambda p: p.origin != self.origin) - self
 
     def _get_sources(self):
         self.ensure_one()
         dest_moves = self.procurement_group_id.mrp_production_ids.move_dest_ids
         parent_moves = self.procurement_group_id.stock_move_ids.move_dest_ids
-        return (dest_moves | parent_moves).group_id.mrp_production_ids.filtered(lambda p: p.origin != self.origin) - self
+        return ((dest_moves | parent_moves).group_id | self.procurement_group_id.group_dest_ids).mrp_production_ids.filtered(lambda p: p.origin != self.origin) - self
 
     def set_qty_producing(self):
         # This method is used to call `_set_lot_producing` when the onchange doesn't apply.

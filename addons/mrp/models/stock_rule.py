@@ -5,7 +5,7 @@ from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, Command, fields, models, SUPERUSER_ID, _
 from odoo.osv import expression
 from odoo.tools import float_compare, OrderedSet
 
@@ -17,11 +17,12 @@ class StockRule(models.Model):
     ], ondelete={'manufacture': 'cascade'})
 
     def _get_linked_mo_id(self, procurement, rule, bom):
-        mo = self.env['mrp.production']
-        if procurement.origin != 'MPS':
+        group_id = procurement.values.get('group_id', self.env['procurement.group'])
+        mo = next((p for p in group_id.group_orig_ids.mrp_production_ids if p.state == 'confirmed'), False)
+        if not mo and procurement.origin != 'MPS':
             gpo = rule.group_propagation_option
             group = (gpo == 'fixed' and rule.group_id) or \
-                    (gpo == 'propagate' and 'group_id' in procurement.values and procurement.values['group_id']) or False
+                    (gpo == 'propagate' and group_id) or False
             domain = (
                 ('bom_id', '=', bom.id),
                 ('product_id', '=', procurement.product_id.id),
@@ -86,7 +87,6 @@ class StockRule(models.Model):
         for company_id, productions_values in new_productions_values_by_company.items():
             # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
             productions = self.env['mrp.production'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(productions_values)
-
             productions.filtered(self._should_auto_confirm_procurement_mo).action_confirm()
 
             for production in productions:
@@ -157,10 +157,22 @@ class StockRule(models.Model):
             return values['orderpoint_id'].bom_id
         return self.env['mrp.bom']._bom_find(product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)[product_id]
 
+    @api.model
+    def _filter_dests(self, move_dest_ids):
+        group_dest_ids = self.env['procurement.group']
+        clean_move_dest_ids = move_dest_ids or self.env['stock.move']
+        for m in move_dest_ids:
+            if m.procure_method != 'make_to_stock':
+                continue
+            clean_move_dest_ids -= m
+            group_dest_ids |= m.group_id
+        return clean_move_dest_ids, group_dest_ids
+
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, bom):
         date_planned = self._get_date_planned(bom, values)
         date_deadline = values.get('date_deadline') or date_planned + relativedelta(days=bom.produce_delay)
         picking_type = self.picking_type_id or values['warehouse_id'].manu_type_id
+        move_dest_ids, group_dest_ids = self._filter_dests(values.get('move_dest_ids'))
         mo_values = {
             'origin': origin,
             'product_id': product_id.id,
@@ -179,20 +191,25 @@ class StockRule(models.Model):
             'orderpoint_id': values.get('orderpoint_id', False) and values.get('orderpoint_id').id,
             'picking_type_id': picking_type.id,
             'company_id': company_id.id,
-            'move_dest_ids': values.get('move_dest_ids') and [(4, x.id) for x in values['move_dest_ids']] or False,  # .filtered(lambda m: m.procure_method != 'make_to_stock')
+            'move_dest_ids': (move_dest_ids and Command.set(move_dest_ids.ids)) or False,
             'user_id': False,
         }
         # Use the procurement group created in _run_pull mrp override
         # Preserve the origin from the original stock move, if available
 
-        # TODO : extend : if mtso in group rules (coming from so or any else...), force mtso in new procurement group
-        if values.get('move_dest_ids') and values.get('group_id') and location_dest_id.warehouse_id.manufacture_steps == 'pbm_sam' and values['move_dest_ids'][0].origin != values['group_id'].name:
-            origin = values['move_dest_ids'][0].origin
-            mo_values.update({
-                'name': values['group_id'].name,
-                'procurement_group_id': values['group_id'].id,
-                'origin': origin,
-            })
+        if values.get('move_dest_ids') and values.get('group_id'):
+            if location_dest_id.warehouse_id.manufacture_steps == 'pbm_sam' and values['move_dest_ids'][0].origin != values['group_id'].name:
+                origin = values['move_dest_ids'][0].origin
+                mo_values.update({
+                    'name': values['group_id'].name,
+                    'procurement_group_id': values['group_id'].id,
+                    'origin': origin,
+                })
+            elif group_dest_ids:
+                mo_values['name'] = picking_type.sequence_id.next_by_id()
+                group_values = self.env['mrp.production']._prepare_procurement_group_vals(mo_values)
+                group_values['group_dest_ids'] = [Command.set(group_dest_ids.ids)]
+                mo_values['procurement_group_id'] = self.env["procurement.group"].create(group_values).id
         return mo_values
 
     def _get_date_planned(self, bom_id, values):

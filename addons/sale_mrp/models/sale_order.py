@@ -21,19 +21,11 @@ class SaleOrder(models.Model):
     @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_ids(self):
         for sale in self:
-            sale.mrp_production_ids = sale.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids
+            sale.mrp_production_ids = (
+                sale.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id |
+                sale.procurement_group_id.group_orig_ids
+            ).mrp_production_ids
             sale.mrp_production_count = len(sale.mrp_production_ids)
-
-    def _get_mtso_manufacturing_orders(self):
-        return self.procurement_group_id.group_orig_ids.mrp_production_ids
-
-    def _action_cancel(self):
-        """When Sale Orders have MTSO moves that have triggered the creation of Manufacturing Orders,
-        on the cancellation of those Sale Orders, cancel the Manufacturing Orders."""
-        linked_mo_ids = self._get_mtso_manufacturing_orders().filtered(lambda mo: mo.state not in ('done', 'cancel'))
-        if linked_mo_ids:
-            linked_mo_ids._action_cancel()
-        return super()._action_cancel()
 
     def action_view_mrp_production(self):
         self.ensure_one()
