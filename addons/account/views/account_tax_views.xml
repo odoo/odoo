@@ -188,6 +188,7 @@
                                     <field name="analytic" invisible="amount_type == 'group'" groups="analytic.group_analytic_accounting" />
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field name="country_id" required="True"/>
+                                    <field name="invoice_legal_notes" placeholder="Legal Notes ..."/>
                                 </group>
                                 <group name="advanced_booleans">
                                     <field name="price_include" invisible="amount_type == 'group'"/>
