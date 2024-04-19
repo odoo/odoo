@@ -425,11 +425,11 @@ class HolidaysType(models.Model):
                     lt_info[1]['virtual_excess_data'].update({
                         excess_date.strftime('%Y-%m-%d'): excess_days
                     }),
+                    lt_info[1]['total_virtual_excess'] += amount
                     if not leave_type.allows_negative:
                         continue
                     lt_info[1]['virtual_leaves_taken'] += amount
                     lt_info[1]['virtual_remaining_leaves'] -= amount
-                    lt_info[1]['total_virtual_excess'] += amount
                     if excess_days['is_virtual']:
                         lt_info[1]['leaves_requested'] += amount
                     else:
