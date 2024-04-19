@@ -819,6 +819,9 @@ class Website(Home):
 
         if enable:
             records = self._get_customize_data(enable, is_view_data)
+            if 'website_blog.opt_blog_cover_post' in enable:
+                # TODO: In master, set the priority in XML directly.
+                records.filtered_domain([('key', '=', 'website_blog.opt_blog_cover_post')]).priority = 17
             records.filtered(lambda x: not x.active).write({'active': True})
 
     @http.route(['/website/theme_customize_bundle_reload'], type='json', auth='user', website=True)
