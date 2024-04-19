@@ -363,7 +363,7 @@
                         <page string="Components" name="components">
                             <field name="move_raw_ids"
                                 widget="mrp_production_components_x2many"
-                                context="{'default_date': date_start, 'default_date_deadline': date_start, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_warehouse_id': warehouse_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'stock.view_stock_move_operations'}"
+                                context="{'default_date': date_start, 'default_date_deadline': date_start, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_warehouse_id': warehouse_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'stock.view_stock_move_operations', 'active_mo_id': id}"
                                 readonly="state == 'cancel' or (state == 'done' and is_locked)" options="{'delete': [('state', '=', 'draft')]}">
                                 <tree default_order="is_done, manual_consumption desc, sequence" editable="bottom">
                                     <field name="product_id" force_save="1" context="{'default_detailed_type': 'product'}" required="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)" domain="['&amp;', ('type', 'in', ['product', 'consu']), ('id', '!=', parent.product_id)]"/>
