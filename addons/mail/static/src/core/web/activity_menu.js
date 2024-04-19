@@ -58,7 +58,7 @@ export class ActivityMenu extends Component {
         ];
     }
 
-    openActivityGroup(group) {
+    openActivityGroup(group, filter="all") {
         document.body.click(); // hack to close dropdown
         const context = {
             // Necessary because activity_ids of mail.activity.mixin has auto_join
@@ -83,6 +83,22 @@ export class ActivityMenu extends Component {
                 });
             return;
         }
+
+        if (filter === "all") {
+            context["search_default_activities_overdue"] = 1;
+            context["search_default_activities_today"] = 1;
+        }
+        else if (filter === "overdue") {
+            context["search_default_activities_overdue"] = 1;
+        }
+        else if (filter === "today") {
+            context["search_default_activities_today"] = 1;
+        }
+        else if (filter === "upcoming_all") {
+            context["search_default_activities_upcoming_all"] = 1;
+        }
+
+
         let domain = [["activity_user_id", "=", this.userId]];
         if (group.domain) {
             domain = Domain.and([domain, group.domain]).toList();
