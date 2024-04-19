@@ -34,43 +34,40 @@ class ResPartner(models.Model):
                 )
         return rec
 
+    def _fetch_children_partners_for_hierarchy(self):
+        # retrieve all children partners and prefetch 'parent_id' on them, saving
+        # queries for recursive parent_id browse
+        return self.with_context(active_test=False).search_fetch(
+            [('id', 'child_of', self.ids)], ['parent_id'],
+        )
+
+    def _get_contact_opportunities_domain(self):
+        return [('partner_id', 'in', self._fetch_children_partners_for_hierarchy().ids)]
+
     def _compute_opportunity_count(self):
         self.opportunity_count = 0
         if not self.env.user.has_group('sales_team.group_sale_salesman'):
             return
-
-        # retrieve all children partners and prefetch 'parent_id' on them
-        all_partners = self.with_context(active_test=False).search_fetch(
-            [('id', 'child_of', self.ids)], ['parent_id'],
-        )
-
         opportunity_data = self.env['crm.lead'].with_context(active_test=False)._read_group(
-            domain=[('partner_id', 'in', all_partners.ids)],
+            domain=self._get_contact_opportunities_domain(),
             groupby=['partner_id'], aggregates=['__count']
         )
-        self_ids = set(self._ids)
-
+        current_pids = set(self._ids)
         for partner, count in opportunity_data:
             while partner:
-                if partner.id in self_ids:
+                if partner.id in current_pids:
                     partner.opportunity_count += count
                 partner = partner.parent_id
 
     def action_view_opportunity(self):
-        '''
-        This function returns an action that displays the opportunities from partner.
-        '''
         action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_opportunities')
         action['context'] = {
             'search_default_filter_won': 1,
             'search_default_filter_ongoing': 1,
-            'search_default_filter_lost': 1
+            'search_default_filter_lost': 1,
+            'active_test': False,
         }
         # we want the list view first
         action['views'] = sorted(action['views'], key=lambda view: view[1] != 'list')
-        if self.is_company:
-            action['domain'] = [('partner_id.commercial_partner_id', '=', self.id)]
-        else:
-            action['domain'] = [('partner_id', '=', self.id)]
-        action['domain'] = expression.AND([action['domain'], [('active', 'in', [True, False])]])
+        action['domain'] = self._get_contact_opportunities_domain()
         return action
