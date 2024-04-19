@@ -33,9 +33,9 @@
                 <div class="mt-1">
                     <t t-if="props.activity.user_id[0]">
                         <small class="text-truncate" t-esc="props.activity.user_id[1]"/>
-                        <small t-if="props.activity.state !== 'today'" class="mx-1">-</small>
+                        <small t-if="props.activity.state !== 'today'" class="o-mail-ActivityListPopoverItem-hyphen mx-1">-</small>
                     </t>
-                    <small t-if="['overdue', 'planned'].includes(props.activity.state)" class="fw-bold" t-att-title="props.activity.dateDeadlineFormatted" t-esc="delayLabel"/>
+                    <small t-if="['overdue', 'planned'].includes(props.activity.state)" class="fw-bold o-mail-ActivityListPopoverItem-deadline" t-att-title="props.activity.dateDeadlineFormatted" t-esc="delayLabel"/>
                     <small t-if="props.activity.state === 'done'" class="fw-bold" t-att-title="dateDoneFormatted" t-esc="props.activity.dateDoneFormatted"/>
                 </div>
             </div>

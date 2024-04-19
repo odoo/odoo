@@ -8,23 +8,17 @@
                 <img class="w-100 h-100 rounded o_object_fit_cover" t-att-src="props.activity.persona.avatarUrl" />
             </a>
             <div
-                class="o-mail-Activity-iconContainer position-absolute top-100 start-100 translate-middle d-flex align-items-center justify-content-center mt-n1 ms-n1 rounded-circle w-50 h-50"
-                t-att-class="{
-                       'text-bg-success': props.activity.state === 'planned',
-                       'text-bg-warning': props.activity.state === 'today',
-                       'text-bg-danger': props.activity.state === 'overdue',
-                       }"
-            >
+                class="o-mail-Activity-iconContainer position-absolute top-100 start-100 translate-middle d-flex align-items-center justify-content-center mt-n1 ms-n1 rounded-circle w-50 h-50" t-att-class="getActivityIconAttClass()">
                 <i class="fa small" t-attf-class="{{ props.activity.icon }}"/>
             </div>
         </div>
         <div class="flex-grow px-3">
             <div class="o-mail-Activity-info lh-1">
-                <span class="fw-bolder text-success" t-if="delay === 1">Tomorrow:</span>
-                <span class="fw-bolder text-success" t-elif="delay gt 0">Due in <t t-esc="delay"/> days:</span>
-                <span class="fw-bolder text-danger" t-elif="delay === -1">Yesterday:</span>
-                <span class="fw-bolder text-danger" t-elif="delay lt 0"><t t-esc="-delay"/> days overdue:</span>
-                <span class="fw-bolder text-warning" t-else="">Today:</span>
+                <span class="fw-bolder text-success o-mail-Activity-tomorrow" t-if="delay === 1">Tomorrow:</span>
+                <span class="fw-bolder text-success o-mail-Activity-future" t-elif="delay gt 0"><t t-esc="props.activity.dateDeadlineMED"/>:</span>
+                <span class="fw-bolder text-danger o-mail-Activity-yesterday" t-elif="delay === -1">Yesterday:</span>
+                <span class="fw-bolder text-danger o-mail-Activity-overDue" t-elif="delay lt 0"><t t-esc="-delay"/> days overdue:</span>
+                <span class="fw-bolder text-warning o-mail-Activity-today" t-else="">Today:</span>
                 <span class="fw-bolder px-2 text-break"><t t-esc="displayName"/></span>
                 <span class="o-mail-Activity-user px-1">for <t t-esc="props.activity.persona.name"/></span>
                 <button class="btn btn-link btn-primary p-0 lh-1 border-0">

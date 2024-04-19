@@ -10,6 +10,38 @@
                 <i class="fa fa-calendar"/> Reschedule
             </button>
         </xpath>
+        <xpath expr="//span[hasclass('o-mail-Activity-tomorrow')]" position="replace">
+            <span t-if="delay === 1" class="fw-bolder text-success">
+                <t t-if="props.activity.activityTime">Tomorrow <t t-esc="props.activity.activityTime"/>:</t>
+                <t t-else="">Tomorrow:</t>
+            </span>
+        </xpath>
+        <xpath expr="//span[hasclass('o-mail-Activity-future')]" position="replace">
+            <span class="fw-bolder text-success" t-elif="delay gt 0">
+                <t t-if="props.activity.activityTime">
+                    <t t-if="!props.activity.isLongActivity" t-esc="props.activity.dateDeadlineMED"/> <t t-esc="props.activity.activityTime"/>:
+                </t>
+                <t t-else=""><t t-esc="props.activity.dateDeadlineMED"/>:</t>
+            </span>
+        </xpath>
+        <xpath expr="//span[hasclass('o-mail-Activity-yesterday')]" position="replace">
+            <span class="fw-bolder" t-att-class="props.activity.activityStatus === 'overdue' ? 'text-danger' : 'text-warning'" t-elif="delay === -1">
+                <t t-if="props.activity.activityTime and props.activity.activityStatus === 'ongoing'">Yesterday <t t-esc="props.activity.activityTime"/>:</t>
+                <t t-else="">Yesterday:</t>
+            </span>
+        </xpath>
+        <xpath expr="//span[hasclass('o-mail-Activity-overDue')]" position="replace">
+            <span class="fw-bolder" t-att-class="props.activity.activityStatus === 'overdue' ? 'text-danger' : 'text-warning'" t-elif="delay lt 0">
+                <t t-if="props.activity.activityTime and props.activity.activityStatus === 'ongoing'"><t t-esc="props.activity.activityTime"/>:</t>
+                <t t-else=""><t t-esc="-delay"/> days overdue:</t>
+            </span>
+        </xpath>
+        <xpath expr="//span[hasclass('o-mail-Activity-today')]" position="replace">
+            <span class="fw-bolder" t-att-class="props.activity.activityStatus === 'overdue' ? 'text-danger' : 'text-warning'" t-else="">
+                <t t-if="props.activity.activityTime">Today <t t-esc="props.activity.activityTime"/>:</t>
+                <t t-else="">Today:</t>
+            </span>
+        </xpath>
     </t>
 
 </templates>

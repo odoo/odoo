@@ -56,7 +56,7 @@ export class ActivityListPopoverItem extends Component {
         } else if (diff === 1) {
             return _t("Tomorrow");
         } else {
-            return _t("Due in %s days", Math.round(Math.abs(diff)));
+            return this.props.activity.dateDeadlineMED;
         }
     }
 
