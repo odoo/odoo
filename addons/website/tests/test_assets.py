@@ -252,7 +252,12 @@ class TestWebAssets(odoo.tests.HttpCase):
         )
 
         # generate base assets
-        self.assertEqual(self.url_open(base_url, allow_redirects=False).status_code, 200)
+        with self.assertLogs() as logs:
+            self.assertEqual(self.url_open(base_url, allow_redirects=False).status_code, 200)
+        self.assertEqual(
+            f'Found a similar attachment for /web/assets/{unique}/web.assets_frontend.min.js, copying from /web/assets/{website_id}/{unique}/web.assets_frontend.min.js',
+            logs.records[0].message,
+            'The attachment was expected to be linked to an existing one')
         self.assertEqual(
             self.env['ir.attachment'].search([('url', '=like', '%web.assets_frontend.min.js')]).mapped('url'),
             [base_url_versioned, website_url_versioned],
