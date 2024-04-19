@@ -6,7 +6,7 @@ import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component, onMounted, useExternalListener, useState, reactive } from "@odoo/owl";
+import { Component, onMounted, useState, reactive } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/generic_components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 import { Numpad, getButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
@@ -23,6 +23,7 @@ import {
 } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { pick } from "@web/core/utils/objects";
 import { unaccent } from "@web/core/utils/strings";
+import { CameraBarcodeScanner } from "@point_of_sale/app/screens/product_screen/camera_barcode_scanner";
 
 export class ProductScreen extends Component {
     static template = "point_of_sale.ProductScreen";
@@ -36,6 +37,7 @@ export class ProductScreen extends Component {
         ControlButtons,
         OrderSummary,
         ProductCard,
+        CameraBarcodeScanner,
     };
     static numpadActionName = _t("Payment");
     static props = {};
@@ -48,7 +50,6 @@ export class ProductScreen extends Component {
         this.notification = useService("notification");
         this.numberBuffer = useService("number_buffer");
         this.state = useState({
-            showProductReminder: false,
             loadingDemo: false,
             previousSearchWord: "",
             currentOffset: 0,
@@ -66,7 +67,6 @@ export class ProductScreen extends Component {
             this.numberBuffer.reset();
         });
         this.barcodeReader = useService("barcode_reader");
-        useExternalListener(window, "click", this.clickEvent.bind(this));
 
         useBarcodeReader({
             product: this._barcodeProductAction,
@@ -135,31 +135,6 @@ export class ProductScreen extends Component {
         }
         this.numberBuffer.sendKey(buttonValue);
     }
-
-    clickEvent(e) {
-        if (!this.ui.isSmall) {
-            return;
-        }
-
-        const isProductCard = (() => {
-            let element = e.target;
-            // 3 because product DOM dept is 3
-            for (let i = 0; i < 3; i++) {
-                if (element.classList.contains("product")) {
-                    return true;
-                } else {
-                    element = element.parentElement;
-                }
-            }
-            return false;
-        })();
-
-        this.state.showProductReminder =
-            this.currentOrder &&
-            this.currentOrder.get_selected_orderline() &&
-            this.selectedOrderlineQuantity &&
-            isProductCard;
-    }
     get currentOrder() {
         return this.pos.get_order();
     }
@@ -198,12 +173,8 @@ export class ProductScreen extends Component {
         const product = await this._getProductByBarcode(code);
 
         if (!product) {
-            return this.dialog.add(AlertDialog, {
-                title: `Unknown Barcode: ${this.barcodeReader.codeRepr(code)}`,
-                body: _t(
-                    "The Point of Sale could not find any product, customer, employee or action associated with the scanned barcode."
-                ),
-            });
+            this.barcodeReader.showNotFoundNotification(code);
+            return;
         }
 
         await this.pos.addLineToCurrentOrder({ product_id: product }, { code });
@@ -224,12 +195,7 @@ export class ProductScreen extends Component {
             }
             return;
         }
-        return this.dialog.add(AlertDialog, {
-            title: `Unknown Barcode: ${this.barcodeReader.codeRepr(code)}`,
-            body: _t(
-                "The Point of Sale could not find any product, customer, employee or action associated with the scanned barcode."
-            ),
-        });
+        this.barcodeReader.showNotFoundNotification(code);
     }
     _barcodeDiscountAction(code) {
         var last_orderline = this.currentOrder.get_last_orderline();
@@ -248,13 +214,10 @@ export class ProductScreen extends Component {
         const product = await this._getProductByBarcode(productBarcode);
 
         if (!product) {
-            const productBarcode = parsed_results.find((element) => element.type === "product");
-            return this.dialog.add(AlertDialog, {
-                title: `Unknown Barcode: ${this.barcodeReader.codeRepr(productBarcode)}`,
-                body: _t(
-                    "The Point of Sale could not find any product, customer, employee or action associated with the scanned barcode."
-                ),
-            });
+            this.barcodeReader.showNotFoundNotification(
+                parsed_results.find((element) => element.type === "product")
+            );
+            return;
         }
 
         await this.pos.addLineToCurrentOrder({ product_id: product }, { code: lotBarcode });
@@ -290,10 +253,8 @@ export class ProductScreen extends Component {
         ].join(",");
     }
 
-    get showProductReminder() {
-        return this.currentOrder.get_selected_orderline() && this.selectedOrderlineQuantity;
-    }
     switchPane() {
+        this.pos.scanning = false;
         this.pos.switchPane();
     }
     get searchWord() {

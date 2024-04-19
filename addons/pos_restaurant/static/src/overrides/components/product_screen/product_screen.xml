@@ -3,26 +3,28 @@
     <t t-name="pos_restaurant.ProductScreen" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension">
         <!-- add a showOrderButton here (using the computeOrderChange method) -->
         <xpath expr="//button[hasclass('pay-button')]" position="replace">
-            <button
-                t-if="this.swapButton"
-                class="btn-switchpane btn flex-fill rounded-0 fw-bolder position-relative overflow-hidden"
-                t-on-click="submitOrder"
-                t-attf-class="{{ primaryOrderButton ? 'btn-primary' : 'btn-secondary' }}">
-                <div t-if="this.uiState.clicked and this.displayCategoryCount.length" class="h-100 w-100 position-absolute top-0 start-0 d-flex align-items-center justify-content-center" style="backdrop-filter: blur(5px);">
-                    <img src="/web/static/img/spin.svg" style="height:35px; width:35px" alt="Loading..."/>
-                </div>
-                <!-- Replace the payment button by the order button -->
-                <span class="fs-1 d-block">Order</span>
-                <span><t t-esc="nbrOfChanges"/> changes</span>
-            </button>
-            <t t-else="">
+            <t t-if="!pos.scanning">
                 <button
-                    class="btn-switchpane btn flex-fill rounded-0 fw-bolder"
-                    t-attf-class="{{ currentOrder.is_empty() ? 'btn-secondary' : 'btn-primary' }}"
-                    t-on-click="() => this.pos.pay()">
-                    <span class="fs-1 d-block">Pay</span>
-                    <span><t t-esc="total" /></span>
+                    t-if="this.swapButton"
+                    class="btn-switchpane btn flex-fill rounded-0 fw-bolder position-relative overflow-hidden"
+                    t-on-click="submitOrder"
+                    t-attf-class="{{ primaryOrderButton ? 'btn-primary' : 'btn-secondary' }}">
+                    <div t-if="this.uiState.clicked and this.displayCategoryCount.length" class="h-100 w-100 position-absolute top-0 start-0 d-flex align-items-center justify-content-center" style="backdrop-filter: blur(5px);">
+                        <img src="/web/static/img/spin.svg" style="height:35px; width:35px" alt="Loading..."/>
+                    </div>
+                    <!-- Replace the payment button by the order button -->
+                    <span class="fs-1 d-block">Order</span>
+                    <span><t t-esc="nbrOfChanges"/> changes</span>
                 </button>
+                <t t-else="">
+                    <button
+                        class="btn-switchpane btn flex-fill rounded-0 fw-bolder"
+                        t-attf-class="{{ currentOrder.is_empty() ? 'btn-secondary' : 'btn-primary' }}"
+                        t-on-click="() => this.pos.pay()">
+                        <span class="fs-1 d-block">Pay</span>
+                        <span><t t-esc="total" /></span>
+                    </button>
+                </t>
             </t>
         </xpath>
         <xpath expr="//button[hasclass('review-button')]" position="replace">
