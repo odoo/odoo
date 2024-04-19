@@ -48,7 +48,7 @@ class Base(models.AbstractModel):
         return self._format_web_search_read_results(domain, values_records, offset, limit, count_limit)
 
     def _format_web_search_read_results(self, domain, records, offset=0, limit=None, count_limit=None):
-        if not records:
+        if not records and not offset:
             return {
                 'length': 0,
                 'records': [],
@@ -236,7 +236,7 @@ class Base(models.AbstractModel):
         """
         groups = self._web_read_group(domain, fields, groupby, limit, offset, orderby, lazy)
 
-        if not groups:
+        if not groups and not offset:
             length = 0
         elif limit and len(groups) == limit:
             length = limit + len(self._read_group(

@@ -332,7 +332,12 @@ export class RelationalModel extends Model {
             return this._loadRecords({ ...config, resIds });
         }
         if (config.groupBy.length) {
-            return this._loadGroupedList(config);
+            const groupedList = await this._loadGroupedList(config);
+            if (groupedList.length > 0 && groupedList.groups.length === 0) {
+                config.offset =  Math.max(0, groupedList.length - config.limit);
+                return this._loadData(config);
+            }
+            return groupedList;
         }
         Object.assign(config, {
             limit: config.limit || this.initialLimit,
@@ -342,13 +347,18 @@ export class RelationalModel extends Model {
         if (config.countLimit !== Number.MAX_SAFE_INTEGER) {
             config.countLimit = Math.max(config.countLimit, config.offset + config.limit);
         }
-        return this._loadUngroupedList({
+        const ungroupedList = await this._loadUngroupedList({
             ...config,
             context: {
                 ...config.context,
                 current_company_id: config.currentCompanyId,
             },
         });
+        if (ungroupedList.length > 0 && ungroupedList.records.length === 0) {
+            config.offset =  Math.max(0, ungroupedList.length - config.limit);
+            return this._loadData(config);
+        }
+        return ungroupedList;
     }
 
     /**
@@ -633,10 +643,6 @@ export class RelationalModel extends Model {
         let data;
         if (reload) {
             data = await this._loadData(tmpConfig);
-            if (data.records?.length === 0 && tmpConfig.offset) {
-                tmpConfig.offset = Math.max(tmpConfig.offset - tmpConfig.limit, 0)
-                data = await this._loadData(tmpConfig);
-            }
         }
         Object.assign(config, tmpConfig);
         if (data && commit) {
