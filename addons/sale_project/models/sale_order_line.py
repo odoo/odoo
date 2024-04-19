@@ -244,14 +244,15 @@ class SaleOrderLine(models.Model):
             'company_id': project.company_id.id,
             'user_ids': False,  # force non assigned task, as created as sudo()
         }
-        if 'calendar_event_id' in self\
-                and 'planned_date_begin' in self.env["project.task"]\
-                and 'date_deadline' in self.env["project.task"]\
-                and self.calendar_event_id.start\
-                and self.calendar_event_id.stop:
+        if (
+           'calendar_event_id' in self
+           and self.calendar_event_id.start
+           and self.calendar_event_id.stop
+        ):
             res.update({
                 'planned_date_begin': self.calendar_event_id.start,
                 'date_deadline': self.calendar_event_id.stop,
+                'allocated_hours': self.calendar_event_id.duration,
             })
         return res
 
