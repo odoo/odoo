@@ -10,6 +10,9 @@
             <div class="pos-rightheader d-flex flex-grow-1 w-60 h-100" t-if="pos.shouldShowNavbarButtons()">
                 <BackButton t-if="showBackButtonMobile()"/>
                 <div class="status-buttons d-flex flex-grow-1  justify-content-end h-100">
+                    <button class="btn btn-outline my-2" t-if="isBarcodeScannerSupported() and pos.mainScreen.component.name == 'ProductScreen'" t-on-click="onClickScan">
+                        <i class="fa fa-barcode" /><span t-if="this.pos.scanning" class="ms-1">Stop</span>
+                    </button>
                     <Input tModel="[pos, 'searchProductWord']"
                         class="'p-2'"
                         isSmall="ui.isSmall"

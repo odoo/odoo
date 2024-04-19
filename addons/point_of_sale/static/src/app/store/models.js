@@ -1874,6 +1874,11 @@ export class Order extends PosModel {
             });
         }
 
+        this.hasJustAddedProduct = true;
+        clearTimeout(this.productReminderTimeout);
+        this.productReminderTimeout = setTimeout(() => {
+            this.hasJustAddedProduct = false;
+        }, 3000);
         return this.selected_orderline;
     }
 
