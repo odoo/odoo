@@ -290,6 +290,30 @@ describe('Link', () => {
                     contentAfter: '<p>a<a href="https://google.com">google.vvv[]</a>b</p>',
                 });
             });
+            it('should replace all the contents of a link', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="#">[bcd]</a>e</p>',
+                    contentBeforeEdit: '<p>a\ufeff<a href="#" class="o_link_in_selection">\ufeff[bcd]\ufeff</a>\ufeffe</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'fg');
+                    },
+                    contentAfterEdit: '<p>a\ufeff<a href="#" class="o_link_in_selection">\ufefffg[]\ufeff</a>\ufeffe</p>',
+                    contentAfter: '<p>a<a href="#">fg[]</a>e</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="#">bcd</a>e</p>',
+                    contentBeforeEdit: '<p>a\ufeff<a href="#">\ufeffbcd\ufeff</a>\ufeffe</p>',
+                    stepFunction: async editor => {
+                        const link = editor.editable.querySelector('a');
+                        // Select the whole link, including the ZWNBSP.
+                        setSelection(link.firstChild, 0, link.lastChild, 3);
+                        await new Promise(resolve => setTimeout(resolve, 0)); // Wait for selectionchange
+                        await insertText(editor, 'fg');
+                    },
+                    contentAfterEdit: '<p>a\ufeff<a href="#" class="o_link_in_selection">\ufefffg[]\ufeff</a>\ufeffe</p>',
+                    contentAfter: '<p>a<a href="#">fg[]</a>e</p>',
+                });
+            });
         });
     });
     describe('remove link', () => {
