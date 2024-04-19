@@ -33,7 +33,7 @@ test("delete title part", () => {
     titleService.setParts({ one: "MyOdoo" });
     expect(titleService.current).toBe("MyOdoo");
     titleService.setParts({ one: null });
-    expect(titleService.current).toBe("");
+    expect(titleService.current).toBe("Odoo");
 });
 
 test("all at once", () => {
