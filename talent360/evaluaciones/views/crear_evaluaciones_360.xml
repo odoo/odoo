@@ -2,15 +2,16 @@
     <!-- EVALUACION -->
     <record id="evaluacion_360_action" model="ir.actions.act_window">
         <field name="name">Evaluaciones 360</field>
-        <field name="res_model">evaluacion_360</field>
+        <field name="res_model">evaluacion</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{'default_tipo': '360'}</field>
-
+        <field name="view_id" ref="evaluacion_360_tree"/>
+        <field name="view_id" ref= "evaluacion_360_form"/>
     </record>
 
     <record id="evaluacion_360_tree" model="ir.ui.view">
         <field name="name">evaluacion_360.tree</field>
-        <field name="model">evaluacion_360</field>
+        <field name="model">evaluacion</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="nombre"/>
@@ -24,7 +25,7 @@
 
     <record id="evaluacion_360_form" model="ir.ui.view">
         <field name="name">evaluacion_360.form</field>
-        <field name="model">evaluacion_360</field>
+        <field name="model">evaluacion</field>
         <field name="arch" type="xml">
             <form>
                 <sheet string="Evaluacion de personal">
@@ -37,16 +38,16 @@
                                 <field name="tipo" field_id="tipo_de_evaluacion_0" options="{'no_create_edit': True}"/>
                             </group>
                         </group>
-                        <group>
-                            <field name="competencia_ids" can_create="True" can_write="True" field_id="competencia_ids_0" on_change="1">
-                                <tree>
-                                    <field name="nombre"/>
-                                    <field name="descripcion"/>
-                                    <field name="company_id"/>
-                                    <field name="pregunta_ids"/>
-                                </tree>
-                            </field>
-                        </group>
+                    </group>
+                    <group>
+                        <field name="competencia_ids" can_create="True" can_write="True" field_id="competencia_ids_0" on_change="1">
+                            <tree>
+                                <field name="nombre"/>
+                                <field name="descripcion"/>
+                                <field name="company_id"/>
+                                <field name="pregunta_ids"/>
+                            </tree>
+                        </field>
                     </group>
 
                     <group>

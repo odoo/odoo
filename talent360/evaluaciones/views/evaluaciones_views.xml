@@ -69,4 +69,15 @@
             </form>
         </field>
     </record>
+
+
+    <!-- EVALUACION -->
+    <record id="evaluacion_action" model="ir.actions.act_window">
+        <field name="name">evaluacion.action</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_tipo': '360'}</field>
+        
+
+    </record>
 </odoo>
