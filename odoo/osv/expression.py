@@ -809,7 +809,7 @@ class expression(object):
                     # determine ids2 in comodel
                     ids2 = to_ids(right, comodel, leaf)
                     domain = HIERARCHY_FUNCS[operator]('id', ids2, comodel)
-                    ids2 = comodel._search(domain, order='id')
+                    ids2 = comodel.with_context(**field.context)._search(domain, order='id')
 
                     # rewrite condition in terms of ids2
                     if comodel == model:
