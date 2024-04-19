@@ -98,14 +98,14 @@ describe('List', () => {
                                 <table class="table table-bordered o_selected_table">
                                     <tbody>
                                         <tr>
-                                            <td class="o_selected_td">[<ul><li placeholder="List" class="oe-hint"><br></li></ul></td>
-                                            <td class="o_selected_td"><ul><li placeholder="List" class="oe-hint"><br></li></ul></td>
-                                            <td class="o_selected_td"><ul><li placeholder="List" class="oe-hint"><br></li></ul></td>
+                                            <td class="o_selected_td">[<ul><li><br></li></ul></td>
+                                            <td class="o_selected_td"><ul><li><br></li></ul></td>
+                                            <td class="o_selected_td"><ul><li><br></li></ul></td>
                                         </tr>
                                         <tr>
-                                            <td class="o_selected_td"><ul><li placeholder="List" class="oe-hint"><br></li></ul></td>
-                                            <td class="o_selected_td"><ul><li placeholder="List" class="oe-hint"><br></li></ul></td>
-                                            <td class="o_selected_td"><ul><li placeholder="List" class="oe-hint"><br></li></ul>]</td>
+                                            <td class="o_selected_td"><ul><li><br></li></ul></td>
+                                            <td class="o_selected_td"><ul><li><br></li></ul></td>
+                                            <td class="o_selected_td"><ul><li><br></li></ul>]</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -381,14 +381,14 @@ describe('List', () => {
                                 <table class="table table-bordered o_selected_table">
                                     <tbody>
                                         <tr>
-                                            <td class="o_selected_td">[<ol><li placeholder="List" class="oe-hint"><br></li></ol></td>
-                                            <td class="o_selected_td"><ol><li placeholder="List" class="oe-hint"><br></li></ol></td>
-                                            <td class="o_selected_td"><ol><li placeholder="List" class="oe-hint"><br></li></ol></td>
+                                            <td class="o_selected_td">[<ol><li><br></li></ol></td>
+                                            <td class="o_selected_td"><ol><li><br></li></ol></td>
+                                            <td class="o_selected_td"><ol><li><br></li></ol></td>
                                         </tr>
                                         <tr>
-                                            <td class="o_selected_td"><ol><li placeholder="List" class="oe-hint"><br></li></ol></td>
-                                            <td class="o_selected_td"><ol><li placeholder="List" class="oe-hint"><br></li></ol></td>
-                                            <td class="o_selected_td"><ol><li placeholder="List" class="oe-hint"><br></li></ol>]</td>
+                                            <td class="o_selected_td"><ol><li><br></li></ol></td>
+                                            <td class="o_selected_td"><ol><li><br></li></ol></td>
+                                            <td class="o_selected_td"><ol><li><br></li></ol>]</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -744,14 +744,14 @@ describe('List', () => {
                                 <table class="table table-bordered o_selected_table">
                                     <tbody>
                                         <tr>
-                                            <td class="o_selected_td">[<ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul></td>
-                                            <td class="o_selected_td"><ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul></td>
-                                            <td class="o_selected_td"><ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul></td>
+                                            <td class="o_selected_td">[<ul class="o_checklist"><li><br></li></ul></td>
+                                            <td class="o_selected_td"><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td class="o_selected_td"><ul class="o_checklist"><li><br></li></ul></td>
                                         </tr>
                                         <tr>
-                                            <td class="o_selected_td"><ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul></td>
-                                            <td class="o_selected_td"><ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul></td>
-                                            <td class="o_selected_td"><ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul>]</td>
+                                            <td class="o_selected_td"><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td class="o_selected_td"><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td class="o_selected_td"><ul class="o_checklist"><li><br></li></ul>]</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -5933,7 +5933,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li>ab</li><li class="o_checked"><a href="#">[cd</a></li><li>ef]</li><li>gh</li></ul>',
                             stepFunction: deleteBackward,
                             contentAfterEdit:
-                                '<ul class="o_checklist"><li>ab</li><li placeholder="List" class="oe-hint">[]<br></li><li>gh</li></ul>',
+                                '<ul class="o_checklist"><li>ab</li><li placeholder="List" class="oe-hint oe-command-temporary-hint">[]<br></li><li>gh</li></ul>',
                             contentAfter:
                                 '<ul class="o_checklist"><li>ab</li><li>[]<br></li><li>gh</li></ul>',
                         });
@@ -6265,7 +6265,7 @@ describe('List', () => {
                         await testEditor(BasicEditor, {
                             contentBefore,
                             stepFunction: deleteBackward,
-                            contentAfterEdit: '<ul><li>ab</li><li placeholder="List" class="oe-hint">[]<br></li><li>ij</li></ul>',
+                            contentAfterEdit: '<ul><li>ab</li><li placeholder="List" class="oe-hint oe-command-temporary-hint">[]<br></li><li>ij</li></ul>',
                             contentAfter: '<ul><li>ab</li><li>[]<br></li><li>ij</li></ul>',
                         });
                     });
