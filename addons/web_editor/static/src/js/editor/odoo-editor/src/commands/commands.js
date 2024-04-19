@@ -49,6 +49,10 @@ import {
     fillEmpty,
     isEmptyBlock,
     getCursorDirection,
+    paragraphRelatedElements,
+    firstLeaf,
+    lastLeaf,
+    convertList,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
@@ -172,9 +176,21 @@ export const editorCommands = {
 
         // In case the html inserted starts with a list and will be inserted within
         // a list, unwrap the list elements from the list.
-        if (closestElement(selection.anchorNode, 'UL, OL') &&
-            (container.firstChild.nodeName === 'UL' || container.firstChild.nodeName === 'OL')) {
-            container.replaceChildren(...container.firstChild.childNodes);
+        const isList = node => ['UL', 'OL'].includes(node.nodeName);
+        const hasSingleChild = container.childNodes.length === 1;
+        if (
+            closestElement(selection.anchorNode, 'UL, OL') &&
+            isList(container.firstChild)
+        ) {
+            unwrapContents(container.firstChild);
+        }
+        // Similarly if the html inserted ends with a list.
+        if (
+            closestElement(selection.focusNode, 'UL, OL') &&
+            isList(container.lastChild) &&
+            !hasSingleChild
+        ) {
+            unwrapContents(container.lastChild);
         }
 
         startNode = startNode || editor.document.getSelection().anchorNode;
@@ -182,21 +198,40 @@ export const editorCommands = {
         // In case the html inserted is all contained in a single root <p> or <li>
         // tag, we take the all content of the <p> or <li> and avoid inserting the
         // <p> or <li>. The same is true for a <pre> inside a <pre>.
-        if (container.childElementCount === 1 && (
-            container.firstChild.nodeName === 'P' ||
-            container.firstChild.nodeName === 'LI' ||
-            container.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
-        )) {
+        const isBlockElement = (node) => isBlock(node) && !['TABLE', 'UL', 'OL', 'DIV'].includes(node.nodeName);
+
+        if (
+            container.childElementCount === 1 &&
+            (
+                ['P', 'LI'].includes(container.firstChild.nodeName) ||
+                container.firstChild.nodeName === closestBlock(startNode).nodeName ||
+                (isBlockElement(container.firstChild) && startNode.textContent !== '')
+            )
+        ) {
             const p = container.firstElementChild;
             container.replaceChildren(...p.childNodes);
         } else if (container.childElementCount > 1) {
             // Grab the content of the first child block and isolate it.
-            if (isBlock(container.firstChild) && !['TABLE', 'UL', 'OL'].includes(container.firstChild.nodeName)) {
+            if (isBlockElement(container.firstChild) && startNode.textContent !== '') {
+                // Unwrap the deepest nested first <li> element in the
+                // container to extract and paste the text content of the list.
+                if (container.firstChild.nodeName === 'LI') {
+                    const deepestBlock = closestBlock(firstLeaf(container.firstChild));
+                    splitAroundUntil(deepestBlock, container.firstChild);
+                    container.firstElementChild.replaceChildren(...deepestBlock.childNodes);
+                }
                 containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
                 container.firstElementChild.remove();
             }
             // Grab the content of the last child block and isolate it.
-            if (isBlock(container.lastChild) && !['TABLE', 'UL', 'OL'].includes(container.lastChild.nodeName)) {
+            if (isBlockElement(container.lastChild) && startNode.textContent !== '') {
+                // Unwrap the deepest nested last <li> element in the container
+                // to extract and paste the text content of the list.
+                if (container.lastChild.nodeName === 'LI') {
+                    const deepestBlock = closestBlock(lastLeaf(container.lastChild));
+                    splitAroundUntil(deepestBlock, container.lastChild);
+                    container.lastElementChild.replaceChildren(...deepestBlock.childNodes);
+                }
                 containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
                 container.lastElementChild.remove();
             }
@@ -220,6 +255,9 @@ export const editorCommands = {
         // element if it's a block then we insert the content in the right places.
         let currentNode = startNode;
         let lastChildNode = false;
+        const currentList = currentNode && closestElement(currentNode, 'UL, OL');
+        const mode = currentList && getListMode(currentList);
+
         const _insertAt = (reference, nodes, insertBefore) => {
             for (const child of (insertBefore ? nodes.reverse() : nodes)) {
                 reference[insertBefore ? 'before' : 'after'](child);
@@ -248,7 +286,7 @@ export const editorCommands = {
                 // If we arrive here, the o_enter index should always be 0.
                 const parent = currentNode.nextSibling.parentElement;
                 const index = [...parent.childNodes].indexOf(currentNode.nextSibling);
-                currentNode.nextSibling.parentElement.oEnter(index);
+                parent.oEnter(index);
             }
         }
 
@@ -274,11 +312,23 @@ export const editorCommands = {
                     }
                     if (offset) {
                         const [left, right] = splitElement(currentNode.parentElement, offset);
+                        if (isEmptyBlock(right) && !isUnbreakable(nodeToInsert)) {
+                            right.remove();
+                        }
                         currentNode = insertBefore ? right : left;
                     } else {
                         currentNode = currentNode.parentElement;
                     }
                 }
+            }
+            // Ensure that all adjacent paragraph elements are converted to
+            // <li> when inserting in a list.
+            if (
+                isBlock(nodeToInsert) &&
+                currentNode.nodeName === 'LI' &&
+                paragraphRelatedElements.includes(nodeToInsert.nodeName)
+            ) {
+                setTagName(nodeToInsert, 'LI');
             }
             if (insertBefore) {
                 currentNode.before(nodeToInsert);
@@ -286,17 +336,27 @@ export const editorCommands = {
             } else {
                 currentNode.after(nodeToInsert);
             }
+            let convertedList;
+            if (
+                currentList &&
+                (
+                    (nodeToInsert.nodeName === 'LI' && nodeToInsert.classList.contains('oe-nested')) ||
+                    isList(nodeToInsert)
+                )
+            ) {
+                convertedList = convertList(nodeToInsert, mode);
+            }
             if (currentNode.tagName !== 'BR' && isShrunkBlock(currentNode)) {
                 currentNode.remove();
             }
-            currentNode = nodeToInsert;
+            currentNode = convertedList || nodeToInsert;
         }
 
         currentNode = lastChildNode || currentNode;
         selection.removeAllRanges();
         const newRange = new Range();
         let lastPosition = rightPos(currentNode);
-        if (lastPosition[0] === editor.editable) {
+        if (lastPosition[0] === editor.editable || ['UL', 'OL', 'LI'].includes(lastPosition[0].nodeName)) {
             // Correct the position if it happens to be in the editable root.
             lastPosition = getDeepestPosition(...lastPosition);
         }

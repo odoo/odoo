@@ -9,6 +9,7 @@ import {
     pasteText,
     pasteHtml,
     pasteOdooEditorHtml,
+    unformat,
 } from "../utils.js";
 import {CLIPBOARD_WHITELISTS} from "../../src/OdooEditor.js";
 
@@ -305,7 +306,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, `<meta charset="utf-8"><b style="font-weight:normal;" id="docs-internal-guid-ddad60c5-7fff-0a8f-fdd5-c1107201fe26"><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">test1</span></p><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">test2</span></p></b>`);
                     },
-                    contentAfter: '<p>test1</p><p>test2[]<br></p>',
+                    contentAfter: '<p>test1</p><p>test2[]</p>',
                 });
             });
             it('should remove unwanted b tag and p tag with unwanted styles when pasting list from gdocs', async () => {
@@ -314,7 +315,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<meta charset="utf-8"><b style="font-weight:normal;" id="docs-internal-guid-5d8bcf85-7fff-ebec-8604-eedd96f2d601"><ul style="margin-top:0;margin-bottom:0;padding-inline-start:48px;"><li dir="ltr" style="list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;" role="presentation"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">Google</span></p></li><li dir="ltr" style="list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;" role="presentation"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">Test</span></p></li><li dir="ltr" style="list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;" role="presentation"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">test2</span></p></li></ul></b>');
                     },
-                    contentAfter: '<ul><li>Google</li><li>Test</li><li>test2</li></ul><p>[]<br></p>',
+                    contentAfter: '<ul><li>Google</li><li>Test</li><li>test2[]</li></ul>',
                 });
             });
             it('should remove unwanted styles and keep tags when pasting list from gdoc', async () => {
@@ -323,7 +324,30 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<meta charset="utf-8"><b style="font-weight:normal;" id="docs-internal-guid-477946a8-7fff-f959-18a4-05014997e161"><ul style="margin-top:0;margin-bottom:0;padding-inline-start:48px;"><li dir="ltr" style="list-style-type:disc;font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><h1 dir="ltr" style="line-height:1.38;margin-top:20pt;margin-bottom:0pt;" role="presentation"><span style="font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">Google</span></h1></li><li dir="ltr" style="list-style-type:disc;font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><h1 dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:6pt;" role="presentation"><span style="font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">Test</span></h1></li><li dir="ltr" style="list-style-type:disc;font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><h1 dir="ltr" style="line-height:1.38;margin-top:20pt;margin-bottom:0pt;" role="presentation"><span style="font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">test2</span></h1></li></ul></b>');
                     },
-                    contentAfter: '<ul><li><h1>Google</h1></li><li><h1>Test</h1></li><li><h1>test2</h1></li></ul><p>[]<br></p>',
+                    contentAfter: '<ul><li><h1>Google</h1></li><li><h1>Test</h1></li><li><h1>test2[]</h1></li></ul>',
+                });
+            });
+            it('should paste checklist from gdoc', async () => {
+                await testEditor(BasicEditor, {
+                    removeCheckIds: true,
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, unformat(`
+                            <b style="font-weight:normal;" id="docs-internal-guid-5c9e50d3-7fff-c129-6dcc-e76588942722">
+                                <ul style="margin-top:0;margin-bottom:0;padding-inline-start:28px;">
+                                    <li dir="ltr" role="checkbox" aria-checked="false" style="list-style-type:none;font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1">
+                                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAA1ElEQVR4Ae3bMQ4BURSFYY2xBuwQ7BIkTGxFRj9Oo9RdkXn5TvL3L19u+2ZmZmZmZhVbpH26pFcaJ9IrndMudb/CWadHGiden1bll9MIzqd79SUd0thY20qga4NA50qgoUGgoRJo/NL/V/N+QIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIEyFeEZyXQpUGgUyXQrkGgTSVQl/qGcG5pnkq3Sn0jOMv0k3Vpm05pmNjfsGPalFyOmZmZmdkbSS9cKbtzhxMAAAAASUVORK5CYII=" width="17.599999999999998px" height="17.599999999999998px" alt="unchecked" aria-roledescription="checkbox" style="margin-right:3px;" />
+                                        <p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;display:inline-block;vertical-align:top;margin-top:0;" role="presentation"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">Abc</span></p>
+                                    </li>
+                                    <li dir="ltr" role="checkbox" aria-checked="false" style="list-style-type:none;font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1">
+                                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAA1ElEQVR4Ae3bMQ4BURSFYY2xBuwQ7BIkTGxFRj9Oo9RdkXn5TvL3L19u+2ZmZmZmZhVbpH26pFcaJ9IrndMudb/CWadHGiden1bll9MIzqd79SUd0thY20qga4NA50qgoUGgoRJo/NL/V/N+QIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIEyFeEZyXQpUGgUyXQrkGgTSVQl/qGcG5pnkq3Sn0jOMv0k3Vpm05pmNjfsGPalFyOmZmZmdkbSS9cKbtzhxMAAAAASUVORK5CYII=" width="17.599999999999998px" height="17.599999999999998px" alt="checked" aria-roledescription="checkbox" style="margin-right:3px;" />
+                                        <p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;display:inline-block;vertical-align:top;margin-top:0;" role="presentation"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">def</span></p>
+                                    </li>
+                                </ul>
+                            </b>
+                        `));
+                    },
+                    contentAfter: `<ul class="o_checklist"><li>Abc</li><li class="o_checked">def[]</li></ul>`,
                 });
             });
         });
@@ -1602,6 +1626,411 @@ describe('Paste', () => {
                     contentAfter: '<ul><li>123</li><li>456[]abc</li><li>def</li><li>ghi</li></ul>',
                 });
             });
+            it('should correctly paste nested UL or OL elements copied from GDocs', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p>[]<br></p>`,
+                    stepFunction:  async editor => {
+                        await pasteHtml(editor, unformat(`
+                            <ul>
+                                <li>abc</li>
+                                <li>def</li>
+                                <ul>
+                                    <li>ghi</li>
+                                    <li>jkl</li>
+                                </ul>
+                                <ol>
+                                    <li>mno</li>
+                                    <li>pqr</li>
+                                </ol>
+                            </ul>
+                        `));
+                    },
+                    contentAfter: unformat(`
+                        <ul>
+                            <li>abc</li>
+                            <li>def</li>
+                            <li class="oe-nested">
+                                <ul>
+                                    <li>ghi</li>
+                                    <li>jkl</li>
+                                </ul>
+                            </li>
+                            <li class="oe-nested">
+                                <ol>
+                                    <li>mno</li>
+                                    <li>pqr[]</li>
+                                </ol>
+                            </li>
+                        </ul>
+                    `),
+                });
+            });
+            it('should convert multiple paragraphs into a checklist', async () => {
+                await testEditor(BasicEditor, {
+                    removeCheckIds: true,
+                    contentBefore: `<ul class="o_checklist"><li>[]<br></li></ul>`,
+                    stepFunction:  async editor => {
+                        await pasteHtml(editor, unformat(`
+                            <p>abc</p>
+                            <p>def</p>
+                            <p>ghi</p>
+                            <p>jkl</p>
+                            <p>mno</p>
+                        `));
+                    },
+                    contentAfter: unformat(`
+                        <ul class="o_checklist">
+                            <li>abc</li>
+                            <li>def</li>
+                            <li>ghi</li>
+                            <li>jkl</li>
+                            <li>mno[]</li>
+                        </ul>
+                    `),
+                });
+            });
+            it('should insert a list and a p tag inside a new list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>[]<br></li></ul>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<ul><li>abc</li><li>def</li></ul><p>ghi</p>');
+                    },
+                    contentAfter: '<ul><li>abc</li><li>def</li><li>ghi[]</li></ul>',
+                });
+            });
+            it('should insert content ending with a list inside a new list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>[]<br></li></ul>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<p>abc</p><ul><li>def</li><li>ghi</li></ul>');
+                    },
+                    contentAfter: '<ul><li>abc</li><li>def</li><li>ghi[]</li></ul>',
+                });
+            });
+            it('should convert a mixed list containing a paragraph into a checklist', async () => {
+                await testEditor(BasicEditor, {
+                    removeCheckIds: true,
+                    contentBefore: `<ul class="o_checklist"><li>[]<br></li></ul>`,
+                    stepFunction:  async editor => {
+                        await pasteHtml(editor, unformat(`
+                            <ul>
+                                <li>abc</li>
+                                <li>def</li>
+                                <li>ghi</li>
+                            </ul>
+                            <p>jkl</p>
+                            <ol>
+                                <li>mno</li>
+                                <li>pqr</li>
+                                <li>stu</li>
+                            </ol>
+                        `));
+                    },
+                    contentAfter: unformat(`
+                        <ul class="o_checklist">
+                            <li>abc</li>
+                            <li>def</li>
+                            <li>ghi</li>
+                            <li>jkl</li>
+                            <li>mno</li>
+                            <li>pqr</li>
+                            <li>stu[]</li>
+                        </ul>
+                    `),
+                });
+            });
+            it('should not unwrap a list twice when pasting on new list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>[]<br></li></ul>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<ul><ul><li>abc</li><li>def</li></ul></ul>');
+                    },
+                    contentAfter: '<ul><li class="oe-nested"><ul><li>abc</li><li>def[]</li></ul></li></ul>',
+                });
+            });
+            it('should paste a nested list into another list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ol><li>Alpha</li><li>[]<br></li></ol>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, unformat(`
+                            <ul>
+                                <li>abc</li>
+                                <li>def</li>
+                                <li class="oe-nested">
+                                    <ul>
+                                        <li>123</li>
+                                        <li>456</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        `));
+                    },
+                    contentAfter: unformat(`
+                        <ol>
+                            <li>Alpha</li>
+                            <li>abc</li>
+                            <li>def</li>
+                            <li class="oe-nested">
+                                <ol>
+                                    <li>123</li>
+                                    <li>456[]</li>
+                                </ol>
+                            </li>
+                        </ol>
+                    `),
+                });
+            });
+            it('should paste a nested list into another list (2)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>Alpha</li><li>[]<br></li></ul>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, unformat(`
+                            <ol>
+                                <li class="oe-nested">
+                                    <ul>
+                                        <li class="oe-nested">
+                                            <ol>
+                                                <li class="oe-nested">
+                                                    <ul class="o_checklist">
+                                                        <li>abc</li>
+                                                    </ul>
+                                                </li>
+                                                <li>def</li>
+                                            </ol>
+                                        </li>
+                                        <li>ghi</li>
+                                    </ul>
+                                </li>
+                                <li>jkl</li>
+                            </ol>
+                        `));
+                    },
+                    contentAfter: unformat(`
+                        <ul>
+                            <li>Alpha</li>
+                            <li class="oe-nested">
+                                <ul>
+                                    <li class="oe-nested">
+                                        <ul>
+                                            <li class="oe-nested">
+                                                <ul>
+                                                    <li>abc</li>
+                                                </ul>
+                                            </li>
+                                            <li>def</li>
+                                        </ul>
+                                    </li>
+                                    <li>ghi</li>
+                                </ul>
+                            </li>
+                            <li>jkl[]</li>
+                        </ul>
+                    `),
+                });
+            });
+            it('should convert a mixed list into a ordered list', async () => {
+                await testEditor(BasicEditor, {
+                    removeCheckIds: true,
+                    contentBefore: `<ol><li>[]<br></li></ol>`,
+                    stepFunction:  async editor => {
+                        await pasteHtml(editor, unformat(
+                            `<ul>
+                                <li>ab</li>
+                                <li>cd</li>
+                                <li class="oe-nested">
+                                    <ol>
+                                        <li>ef</li>
+                                        <li>gh</li>
+                                        <li class="oe-nested">
+                                            <ul class="o_checklist">
+                                                <li>ij</li>
+                                                <li>kl</li>
+                                            </ul>
+                                        </li>
+                                    </ol>
+                                </li>
+                            </ul>
+                        `));
+                    },
+                    contentAfter: unformat(`
+                        <ol>
+                            <li>ab</li>
+                            <li>cd</li>
+                            <li class="oe-nested">
+                                <ol>
+                                    <li>ef</li>
+                                    <li>gh</li>
+                                    <li class="oe-nested">
+                                        <ol>
+                                            <li>ij</li>
+                                            <li>kl[]</li>
+                                        </ol>
+                                    </li>
+                                </ol>
+                            </li>
+                        </ol>
+                    `),
+                });
+            });
+            it('should convert a mixed list starting with bullet list into a bullet list', async () => {
+                await testEditor(BasicEditor, {
+                    removeCheckIds: true,
+                    contentBefore: `<ul><li>[]<br></li></ul>`,
+                    stepFunction:  async editor => {
+                        await pasteHtml(editor, unformat(`
+                            <ul>
+                                <li>ab</li>
+                                <li>cd</li>
+                                <li class="oe-nested">
+                                    <ol>
+                                        <li>ef</li>
+                                        <li>gh</li>
+                                        <li class="oe-nested">
+                                            <ul class="o_checklist">
+                                                <li>ij</li>
+                                                <li>kl</li>
+                                            </ul>
+                                        </li>
+                                    </ol>
+                                </li>
+                            </ul>
+                        `));
+                    },
+                    contentAfter: unformat(`
+                        <ul>
+                            <li>ab</li>
+                            <li>cd</li>
+                            <li class="oe-nested">
+                                <ul>
+                                    <li>ef</li>
+                                    <li>gh</li>
+                                    <li class="oe-nested">
+                                        <ul>
+                                            <li>ij</li>
+                                            <li>kl[]</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    `),
+                });
+            });
+            it('should paste a mixed list starting with deeply nested bullet list into a bullet list', async () => {
+                await testEditor(BasicEditor, {
+                    removeCheckIds: true,
+                    contentBefore: `<ul><li>[]<br></li></ul>`,
+                    stepFunction:  async editor => {
+                        await pasteHtml(editor, unformat(`
+                            <ul>
+                                <li class="oe-nested">
+                                    <ul>
+                                        <li class="oe-nested">
+                                            <ul>
+                                                <li class="oe-nested">
+                                                    <ul>
+                                                        <li>ab</li>
+                                                        <li>cd</li>
+                                                    </ul>
+                                                </li>
+                                                <li>ef</li>
+                                                <li>gh</li>
+                                            </ul>
+                                        </li>
+                                        <li>ij</li>
+                                        <li>kl</li>
+                                    </ul>
+                                </li>
+                                <li>mn</li>
+                                <li>op</li>
+                            </ul>
+                        `));
+                    },
+                    contentAfter: unformat(`
+                        <ul>
+                            <li class="oe-nested">
+                                <ul>
+                                    <li class="oe-nested">
+                                        <ul>
+                                            <li class="oe-nested">
+                                                <ul>
+                                                    <li>ab</li>
+                                                    <li>cd</li>
+                                                </ul>
+                                            </li>
+                                            <li>ef</li>
+                                            <li>gh</li>
+                                        </ul>
+                                    </li>
+                                    <li>ij</li>
+                                    <li>kl</li>
+                                </ul>
+                            </li>
+                            <li>mn</li>
+                            <li>op[]</li>
+                        </ul>
+                    `),
+                });
+            });
+            it('should paste a deeply nested list copied outside from odoo', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>[]<br></li></ul>',
+                    stepFunction:  async editor => {
+                        await pasteHtml(editor, unformat(`
+                            <ol>
+                                <li>ab</li>
+                                <ol>
+                                    <li>cd</li>
+                                    <li>ef</li>
+                                    <ul>
+                                        <li>gh</li>
+                                        <li>ij</li>
+                                    </ul>
+                                    <ol>
+                                        <li>kl</li>
+                                        <li>mn</li>
+                                    </ol>
+                                </ol>
+                                <ul>
+                                    <li>op</li>
+                                    <li>qr</li>
+                                    <ol>
+                                        <li>st</li>
+                                        <li>uv</li>
+                                    </ol>
+                                </ul>
+                            </ol>
+                        `));
+                    },
+                    contentAfter: unformat(`
+                        <ul>
+                            <li>ab</li>
+                            <li class="oe-nested">
+                                <ul>
+                                    <li>cd</li>
+                                    <li>ef</li>
+                                    <li class="oe-nested">
+                                        <ul>
+                                            <li>gh</li>
+                                            <li>ij</li>
+                                            <li>kl</li>
+                                            <li>mn</li>
+                                        </ul>
+                                    </li>
+                                    <li>op</li>
+                                    <li>qr</li>
+                                    <li class="oe-nested">
+                                        <ul>
+                                            <li>st</li>
+                                            <li>uv[]</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    `),
+                });
+            });
         });
     });
 
@@ -2152,6 +2581,66 @@ describe('Paste', () => {
                         editor.historyUndo();
                     },
                     contentAfter: '<p>[abc]</p>',
+                });
+            });
+        });
+    });
+    describe('Pasting h1', () => {
+        describe('range collapsed', async () => {
+            it('should paste h1 when pasting in empty p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a</h1><h1>b</h1><h1>c</h1>');
+                    },
+                    contentAfter: '<h1>a</h1><h1>b</h1><h1>c[]</h1>',
+                });
+            });
+            it('should paste first and last child into p when pasting h1 in p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>te[]st</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a</h1><h1>b</h1><h1>c</h1>');
+                    },
+                    contentAfter: '<p>tea</p><h1>b</h1><p>c[]st</p>',
+                });
+            });
+            it('should convert single h1 into p if p has content', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>te[]st</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a<br>b<br>c</h1>');
+                    },
+                    contentAfter: '<p>tea<br>b<br>c[]st</p>',
+                });
+            });
+        });
+        describe('range not collapsed', async () => {
+            it('should paste h1 when pasting in empty p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[test]</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a</h1><h1>b</h1><h1>c</h1>');
+                    },
+                    contentAfter: '<h1>a</h1><h1>b</h1><h1>c[]</h1>',
+                });
+            });
+            it('should paste first and last child into p when pasting h1 in p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>te[xx]st</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a</h1><h1>b</h1><h1>c</h1>');
+                    },
+                    contentAfter: '<p>tea</p><h1>b</h1><p>c[]st</p>',
+                });
+            });
+            it('should convert single h1 into p if p has content', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>te[xx]st</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a<br>b<br>c</h1>');
+                    },
+                    contentAfter: '<p>tea<br>b<br>c[]st</p>',
                 });
             });
         });
