@@ -410,9 +410,8 @@ class Website(models.Model):
         self.ensure_one()
         addr = partner_sudo.address_get(['delivery'])
         if not request.website.is_public_user():
-            # FIXME VFE why not use last_website_so_id field ?
             last_sale_order = self.env['sale.order'].sudo().search(
-                [('partner_id', '=', partner_sudo.id)],
+                [('partner_id', '=', partner_sudo.id), ('website_id', '=', self.id)],
                 limit=1,
                 order="date_order desc, id desc",
             )
