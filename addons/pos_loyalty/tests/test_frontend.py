@@ -351,7 +351,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(len(reward_orderline.ids), 0, msg='Reference: Order4_no_reward. Last order should have no reward line.')
 
         # Part 3
-        partner_ddd = self.env['res.partner'].create({'name': 'Test Partner DDD'})
+        partner_ddd = self.env['res.partner'].create({'name': 'DDD Test Partner'})
         self.env['loyalty.card'].create({
             'partner_id': partner_ddd.id,
             'program_id': loyalty_program.id,

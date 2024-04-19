@@ -141,7 +141,7 @@ registry.category("web_tour.tours").add("PosLoyaltyChangeRewardQty", {
         [
             Chrome.startPoS(),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner DDD"),
+            ProductScreen.clickCustomer("DDD Test Partner"),
             ProductScreen.addOrderline("Desk Organizer", "1"),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
