@@ -93,7 +93,10 @@ list of filtered posts (by date or tag).
 <!-- (Option) Blog: Show latest-post as top banner
     Replace top-banner content with the latest published post
 -->
-<template id="opt_blog_cover_post" name="Top banner - Name / Latest Post" inherit_id="website_blog.blog_post_short" active="True">
+<!-- A priority is set so that this is applied after `oe_structure`
+     customizations. This is needed if a block has been dropped in the
+     `#oe_structure_blog_all_header.oe_structure`. -->
+<template id="opt_blog_cover_post" name="Top banner - Name / Latest Post" inherit_id="website_blog.blog_post_short" active="True" priority="17">
     <xpath expr="//div[@id='o_wblog_blog_top_droppable']" position="replace">
         <div t-if="first_post or blog" class="container">
             <div class="row py-4">
