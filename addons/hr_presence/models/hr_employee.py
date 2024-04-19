@@ -24,6 +24,7 @@ class Employee(models.AbstractModel):
         ('to_define', 'To Define'),
         ('present', 'Present'),
         ('absent', 'Absent'),
+        ('not_working', 'Not working')
         ])
 
     @api.model
