@@ -72,6 +72,7 @@ class WebsiteEventSaleController(WebsiteEventController):
                         if not partner.phone and first_registration.get('phone'):
                             partner.phone = first_registration['phone']
                         order_sudo.partner_id = partner
+                request.session['sale_last_order_id'] = order_sudo.id
                 return request.redirect("/shop/checkout")
             # free tickets -> order with amount = 0: auto-confirm, no checkout
             elif order_sudo:
