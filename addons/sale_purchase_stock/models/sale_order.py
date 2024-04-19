@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
-from odoo.tools.float_utils import float_compare
 
 
 class SaleOrder(models.Model):

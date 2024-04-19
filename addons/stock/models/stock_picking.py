@@ -825,7 +825,7 @@ class Picking(models.Model):
                     if relevant_move_state == 'partially_available':
                         picking.state = 'assigned'
                     else:
-                        picking.state = relevant_move_state
+                        picking.state = relevant_move_state  # TODO : MTSO
 
     @api.depends('move_ids.state', 'move_ids.date', 'move_type')
     def _compute_scheduled_date(self):
@@ -1704,7 +1704,7 @@ class Picking(models.Model):
                 if move not in explored_moves:
                     impacted_pickings |= move.picking_id
                     explored_moves |= move
-                    moves_to_explore |= move.move_dest_ids
+                    moves_to_explore |= move.move_dest_ids  # TODO : MTSO
             moves_to_explore = moves_to_explore - explored_moves
             if moves_to_explore:
                 return _explore(impacted_pickings, explored_moves, moves_to_explore)
@@ -1793,7 +1793,11 @@ class Picking(models.Model):
             move_line_ids = move_line_ids & move_lines_to_pack
         return move_line_ids
 
+<<<<<<< HEAD
     def action_put_in_pack(self, move_lines_to_pack=False):
+=======
+    def action_put_in_pack(self):  # TODO : Extend to MTSO
+>>>>>>> 2dc0990db881 ([WIP] Cleanup)
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
             move_line_ids = self._package_move_lines(move_lines_to_pack=move_lines_to_pack)

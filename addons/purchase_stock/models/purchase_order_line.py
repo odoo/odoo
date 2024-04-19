@@ -111,6 +111,13 @@ class PurchaseOrderLine(models.Model):
         if 'product_qty' in values:
             lines = lines.filtered(lambda l: float_compare(previous_product_qty[l.id], l.product_qty, precision_rounding=l.product_uom.rounding) != 0)
             lines.with_context(previous_product_qty=previous_product_uom_qty)._create_or_update_picking()
+            for so in lines.order_id:
+                if all(l.product_qty == 0 for l in so.order_line):
+                    try:
+                        so.button_cancel()
+                    except Exception as e:
+                        print("DEBUG : Exception occured \n%s" % (e))
+                        # TODO : write to chatter
         return result
 
     def action_product_forecast_report(self):

@@ -380,14 +380,14 @@ class TestOldRules(TestStockCommon):
         ship_move._assign_picking()
         ship_move._action_confirm()
         pack_move = ship_move.move_orig_ids[0]
-        # pick_move = pack_move.move_orig_ids[0] FIXME
+        pick_move = pack_move.group_id.stock_move_ids.filtered(lambda m: m.location_dest_id == pack_move.picking_id.location_id)[0]
 
-        # picking = pick_move.picking_id
-        # picking.action_confirm()
-        # picking.action_put_in_pack()
-        # self.assertTrue(picking.move_line_ids.result_package_id)
-        # picking.button_validate()
-        # self.assertEqual(pack_move.move_line_ids.result_package_id, picking.move_line_ids.result_package_id)
+        picking = pick_move.picking_id
+        picking.action_confirm()
+        picking.action_put_in_pack()
+        self.assertTrue(picking.move_line_ids.result_package_id)
+        picking.button_validate()
+        self.assertEqual(pack_move.move_line_ids.result_package_id, picking.move_line_ids.result_package_id)
 
     def test_procurement_group_merge(self):
         """ Enable the pick ship route, force a procurement group on the
@@ -562,11 +562,13 @@ class TestOldRules(TestStockCommon):
         # create chained pick/pack moves to test with
         ship_move._assign_picking()
         ship_move._action_confirm()
-        pack_move = ship_move.move_orig_ids[0]
-        # pick_move = pack_move.move_orig_ids[0] FIXME
 
-        self.assertEqual(pack_move.state, 'waiting', "Pack move wasn't created...")
-        # self.assertEqual(pick_move.state, 'confirmed', "Pick move wasn't created...")
+        pack_move = ship_move.move_orig_ids[0]
+        pick_move = pack_move.group_id.stock_move_ids.filtered(lambda m: m.location_dest_id == pack_move.picking_id.location_id)[0]
+
+        self.assertEqual(ship_move.state, 'waiting', "Ship move wasn't created...") # MTO -> Waiting for pack_move
+        self.assertEqual(pack_move.state, 'confirmed', "Pack move wasn't created...") # MTSO -> Waiting is not appliable
+        self.assertEqual(pick_move.state, 'confirmed', "Pick move wasn't created...")
 
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner

@@ -302,11 +302,11 @@ class StockRule(models.Model):
             group_id = values.get('group_id', False) and values['group_id'].id
         elif self.group_propagation_option == 'fixed':
             group_id = self.group_id.id
-
-        # if not group_id and not values.get('orderpoint_id') and self.procure_method == 'mts_else_mto':
-            # group_id = self.env['procurement.group'].create({
-                # 'name': self.name,
-            # }).id
+        if self.procure_method == 'mts_else_mto' and group_id is False and len(self.route_id.rule_ids) > 1:  #move created without parent (SO/MO/PO)
+            group_id = self.group_id.create({
+                'name': self.route_id.name,  # TODO : What name ?
+            }).id
+            # Create group based on route
 
         date_scheduled = fields.Datetime.to_string(
             fields.Datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0)

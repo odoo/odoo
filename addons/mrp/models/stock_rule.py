@@ -18,7 +18,7 @@ class StockRule(models.Model):
 
     def _get_linked_mo_id(self, procurement, rule, bom):
         group_id = procurement.values.get('group_id', self.env['procurement.group'])
-        mo = next((p for p in group_id.group_orig_ids.mrp_production_ids if p.state == 'confirmed'), False)
+        mo = next((p for p in group_id.group_orig_ids.mrp_production_ids if p.state == 'confirmed'), False) if group_id else False
         if not mo and procurement.origin != 'MPS':
             gpo = rule.group_propagation_option
             group = (gpo == 'fixed' and rule.group_id) or \
@@ -160,12 +160,13 @@ class StockRule(models.Model):
     @api.model
     def _filter_dests(self, move_dest_ids):
         group_dest_ids = self.env['procurement.group']
-        clean_move_dest_ids = move_dest_ids or self.env['stock.move']
-        for m in move_dest_ids:
-            if m.procure_method != 'make_to_stock':
-                continue
-            clean_move_dest_ids -= m
-            group_dest_ids |= m.group_id
+        clean_move_dest_ids = self.env['stock.move']
+        if move_dest_ids:
+            for m in move_dest_ids:
+                if m.procure_method != 'make_to_stock':
+                    clean_move_dest_ids |= move_dest_ids
+                else:
+                    group_dest_ids |= m.group_id
         return clean_move_dest_ids, group_dest_ids
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, bom):
@@ -191,7 +192,7 @@ class StockRule(models.Model):
             'orderpoint_id': values.get('orderpoint_id', False) and values.get('orderpoint_id').id,
             'picking_type_id': picking_type.id,
             'company_id': company_id.id,
-            'move_dest_ids': (move_dest_ids and Command.set(move_dest_ids.ids)) or False,
+            'move_dest_ids': (move_dest_ids and [Command.set(move_dest_ids.ids)]) or False,
             'user_id': False,
         }
         # Use the procurement group created in _run_pull mrp override

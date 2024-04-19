@@ -595,29 +595,29 @@ class TestProcurement(TestMrpCommon):
         # Check manufacturing order data.
         self.assertEqual(manufacturing_order.product_qty, 10, 'The manufacturing order qty should be the same as the move.')
 
-        # Create procurement to decrease quantity in the initial move but not in the related MO.
+        # Create procurement to decrease the initial quantity.
         create_run_procurement(product, -5.00)
         self.assertEqual(customer_move.product_uom_qty, 5, 'The demand on the initial move should have been decreased when merged with the procurement.')
-        self.assertEqual(manufacturing_order.product_qty, 10, 'The demand on the manufacturing order should not have been decreased.')
+        self.assertEqual(manufacturing_order.product_qty, 5, 'The demand on the manufacturing order should have been decreased.')
 
-        # Create procurement to increase initial move quantity under the MO product_qty, should use the existing MO for the missing qty.
+        # Create procurement to increase the quantity.
         create_run_procurement(product, 3.00)
-        self.assertEqual(customer_move.product_uom_qty, 5, 'The demand on the initial move should not have changed since it should be a new move.')
-        self.assertEqual(manufacturing_order.product_qty, 10, 'The demand on the initial manufacturing order should not have been increased.')
+        self.assertEqual(customer_move.product_uom_qty, 8, 'The demand on the initial move should have changed.')
+        self.assertEqual(manufacturing_order.product_qty, 8, 'The demand on the initial manufacturing order should have been increased.')
         current_demand = sum(self.env['stock.move'].search([('group_id', '=', procurement_group.id)]).mapped('product_uom_qty'))
-        self.assertEqual(float_compare(current_demand, manufacturing_order.product_uom_qty, precision_rounding=product.uom_id.rounding), -1, 'The current demand should be less than the original MO production')
+        self.assertEqual(float_compare(current_demand, manufacturing_order.product_uom_qty, precision_rounding=product.uom_id.rounding), 0, 'The current demand should equal the MO production')
         manufacturing_orders = self.env['mrp.production'].search([('product_id', '=', product.id)])
         self.assertEqual(len(manufacturing_orders), 1, 'Initial MO should be sufficient to cover missing demand.')
 
-        # Create procurement to increase quantity on the initial move and should create a new MO for the missing qty.
+        # Create procurement to increase quantity on the initial move
         create_run_procurement(product, 3.00)
-        self.assertEqual(customer_move.product_uom_qty, 5, 'The demand on the initial move should not have been increased since it should be a new move.')
-        self.assertEqual(manufacturing_order.product_qty, 10, 'The demand on the initial manufacturing order should not have been increased.')
+        self.assertEqual(customer_move.product_uom_qty, 11, 'The demand on the initial move should have been increased')
+        self.assertEqual(manufacturing_order.product_qty, 11, 'The demand on the initial manufacturing order should have been increased.')
         current_demand = sum(self.env['stock.move'].search([('group_id', '=', procurement_group.id)]).mapped('product_uom_qty'))
-        self.assertEqual(float_compare(current_demand, manufacturing_order.product_uom_qty, precision_rounding=product.uom_id.rounding), 1, 'The current demand should be greater than the original MO production')
+        self.assertEqual(float_compare(current_demand, manufacturing_order.product_uom_qty, precision_rounding=product.uom_id.rounding), 0, 'The current demand should still equals MO production')
         manufacturing_orders = self.env['mrp.production'].search([('product_id', '=', product.id)])
-        self.assertEqual(len(manufacturing_orders), 2, 'A new MO should have been created for missing demand.')
-        self.assertEqual(float_compare(current_demand, sum(manufacturing_orders.mapped('product_uom_qty')), precision_rounding=product.uom_id.rounding), 0, 'The current demand should equals the whole MOs production')
+        self.assertEqual(len(manufacturing_orders), 1, 'The initial MO should have been updated for missing demand.')
+        self.assertEqual(float_compare(current_demand, manufacturing_orders.product_uom_qty, precision_rounding=product.uom_id.rounding), 0, 'The current demand should equals the whole MOs production')
 
 
         # Secondary test
