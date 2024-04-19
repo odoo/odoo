@@ -155,6 +155,7 @@
                     <field name="workorder_count"/>
                     <field name="working_state"/>
                     <field name="oee_target"/>
+                    <field name="kanban_dashboard_graph"/>
                     <templates>
                         <t t-name="kanban-menu">
                             <div class="container">
@@ -280,6 +281,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <field name="kanban_dashboard_graph" graph_type="bar" widget="dashboard_graph"/>
                                     </div>
                                 </div>
                             </div>
