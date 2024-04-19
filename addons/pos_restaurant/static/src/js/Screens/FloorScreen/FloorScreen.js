@@ -141,6 +141,10 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                 });
                 result.forEach((table) => {
                     const table_obj = this.env.pos.tables_by_id[table.id];
+                    if (table_obj === undefined) {
+                        console.warn(`Table with id ${table.id} is not found in the POS`);
+                        return; // skip the table
+                    }
                     const unsynced_orders = this.env.pos
                         .getTableOrders(table_obj.id)
                         .filter(
