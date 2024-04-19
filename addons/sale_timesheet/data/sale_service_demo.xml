@@ -20,6 +20,12 @@
             <field name="contract_type_id" ref="hr.contract_type_permanent"/>
         </record>
 
+        <record id="work_contact_jjo" model="res.partner">
+            <field name="name">Jessica Johnson</field>
+            <field name="email">jessica.johnson45@example.com</field>
+            <field name="image_1920" type="base64" file="sale_timesheet/static/img/employee_jjo-image.jpg"/>
+        </record>
+
         <record id="employee_jjo" model="hr.employee">
             <field name="name">Jessica Johnson</field>
             <field name="parent_id" ref="hr.employee_al"/>
@@ -28,9 +34,15 @@
             <field name="category_ids" eval="[(6, 0, [ref('hr.employee_category_4')])]"/>
             <field name="work_location_id" ref="hr.work_location_1"/>
             <field name="work_phone">(535)-495-4164</field>
-            <field name="work_contact_id" ref="hr.work_contact_al"/>
+            <field name="work_contact_id" ref="sale_timesheet.work_contact_jjo"/>
             <field name="image_1920" type="base64" file="sale_timesheet/static/img/employee_jjo-image.jpg"/>
             <field name="create_date">2020-02-02 00:00:00</field>
+        </record>
+
+        <record id="work_contact_awa" model="res.partner">
+            <field name="name">Amy Watson</field>
+            <field name="email">amy.watson21@example.com</field>
+            <field name="image_1920" type="base64" file="sale_timesheet/static/img/employee_awa-image.jpg"/>
         </record>
 
         <record id="employee_awa" model="hr.employee">
@@ -41,9 +53,15 @@
             <field name="category_ids" eval="[(6, 0, [ref('hr.employee_category_4')])]"/>
             <field name="work_location_id" ref="hr.work_location_1"/>
             <field name="work_phone">(535)-495-4222</field>
-            <field name="work_contact_id" ref="hr.work_contact_mit"/>
+            <field name="work_contact_id" ref="sale_timesheet.work_contact_awa"/>
             <field name="image_1920" type="base64" file="sale_timesheet/static/img/employee_awa-image.jpg"/>
             <field name="create_date">2020-01-01 00:00:00</field>
+        </record>
+
+        <record id="work_contact_jsm" model="res.partner">
+            <field name="name">Justin Smith</field>
+            <field name="email">justin.smith57@example.com</field>
+            <field name="image_1920" type="base64" file="sale_timesheet/static/img/employee_jsm-image.jpg"/>
         </record>
 
         <record id="employee_jsm" model="hr.employee">
@@ -54,7 +72,7 @@
             <field name="category_ids" eval="[(6, 0, [ref('hr.employee_category_4')])]"/>
             <field name="work_location_id" ref="hr.work_location_1"/>
             <field name="work_phone">(535)-495-4444</field>
-            <field name="work_contact_id" ref="hr.work_contact_niv"/>
+            <field name="work_contact_id" ref="sale_timesheet.work_contact_jsm"/>
             <field name="image_1920" type="base64" file="sale_timesheet/static/img/employee_jsm-image.jpg"/>
             <field name="create_date">2020-02-02 00:00:00</field>
         </record>
