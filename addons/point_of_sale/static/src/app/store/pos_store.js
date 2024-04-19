@@ -942,12 +942,11 @@ export class PosStore extends Reactive {
             this.postSyncAllOrders(serverOrders);
             return serverOrders;
         } catch (error) {
-            console.warn("Offline mode active, order will be synced later");
-
             if (options.throw) {
                 throw error;
             }
 
+            console.warn("Offline mode active, order will be synced later");
             return error;
         }
     }
