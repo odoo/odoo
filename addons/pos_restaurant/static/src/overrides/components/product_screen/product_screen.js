@@ -34,11 +34,6 @@ patch(ProductScreen.prototype, {
         }
         return super.selectedOrderlineQuantity;
     },
-    get selectedOrderlineTotal() {
-        return this.env.utils.formatCurrency(
-            this.pos.get_order().get_selected_orderline().get_display_price()
-        );
-    },
     get nbrOfChanges() {
         return this.pos.getOrderChanges().nbrOfChanges;
     },

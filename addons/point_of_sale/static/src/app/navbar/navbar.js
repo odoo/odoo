@@ -16,6 +16,7 @@ import { ClosePosPopup } from "@point_of_sale/app/navbar/closing_popup/closing_p
 import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
+import { isBarcodeScannerSupported } from "@web/webclient/barcode/barcode_scanner";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -39,15 +40,22 @@ export class Navbar extends Component {
         this.hardwareProxy = useService("hardware_proxy");
         this.state = useState({ isMenuOpened: false });
         useExternalListener(window, "mouseup", this.onOutsideClick);
+        this.isBarcodeScannerSupported = isBarcodeScannerSupported;
     }
     onOutsideClick() {
         if (this.state.isMenuOpened) {
             this.state.isMenuOpened = false;
         }
     }
-
     get customerFacingDisplayButtonIsShown() {
         return this.pos.config.iface_customer_facing_display;
+    }
+    onClickScan() {
+        if (!this.pos.scanning) {
+            this.pos.showScreen("ProductScreen");
+            this.pos.mobile_pane = "right";
+        }
+        this.pos.scanning = !this.pos.scanning;
     }
     get showCashMoveButton() {
         return Boolean(this.pos.config.cash_control && this.pos.has_cash_move_perm);
@@ -118,7 +126,7 @@ export class Navbar extends Component {
         return this.pos.showBackButton();
     }
     showBackButtonMobile() {
-        return this.pos.showBackButton() && this.ui.isSmall;
+        return this.pos.showBackButton() && this.ui.isSmall && !this.pos.scanning;
     }
     toggleProductView() {
         const newView = this.pos.productListView === "grid" ? "list" : "grid";

@@ -21,7 +21,8 @@
                 <div class="overflow-y-auto flex-grow-1">
                     <CategorySelector class="'d-grid p-1 gap-1'" style="'grid-template-columns: repeat(4, 1fr);'"
                         categories="getCategoriesAndSub()" onClick="(id) => this.pos.setSelectedCategory(id)"/>
-                    <div t-if="productsToDisplay.length != 0 and pos.posHasValidProduct()" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
+                    <CameraBarcodeScanner t-if="pos.scanning"/>
+                    <div t-elif="productsToDisplay.length != 0 and pos.posHasValidProduct()" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
                         <ProductCard
                             t-foreach="productsToDisplay" t-as="product" t-key="product.id"
                             class="pos.productViewMode"
@@ -52,17 +53,20 @@
                     </div>
                 </div>
                 <t t-if="ui.isSmall">
-                    <div class="product-reminder d-flex justify-content-center align-items-center py-1 text-bg-warning bg-opacity-50 fw-bolder" t-if="state.showProductReminder" t-key="animationKey" >
+                    <div class="product-reminder d-flex justify-content-center align-items-center py-1 text-bg-warning bg-opacity-50 fw-bolder" t-if="pos.get_order().get_selected_orderline() and pos.hasJustAddedProduct" t-key="animationKey" >
                         <span><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/> <t t-esc="selectedOrderlineTotal"/></span>
                     </div>
                     <div class="switchpane d-flex">
-                        <button class="btn-switchpane pay-button btn w-50 rounded-0 fw-bolder" t-attf-class="{{ currentOrder.is_empty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => pos.pay()">
+                        <button t-if="!pos.scanning" class="btn-switchpane pay-button btn w-50 rounded-0 fw-bolder" t-attf-class="{{ currentOrder.is_empty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => this.pos.pay()">
                             <span class="fs-1 d-block">Pay</span>
                             <span t-esc="total" />
                         </button>
                         <button class="btn-switchpane btn w-50 btn-secondary rounded-0 fw-bolder review-button" t-on-click="switchPane">
-                            <span class="fs-1 d-block">Review</span>
+                            <span class="fs-1 d-block">Cart</span>
                             <span><t t-esc="items"/> items</span>
+                        </button>
+                        <button t-if="pos.scanning" class="btn-switchpane btn w-50 btn-secondary rounded-0 fw-bolder" t-on-click="() => this.pos.scanning = false">
+                            <span class="fs-1 d-block">Products</span>
                         </button>
                     </div>
                 </t>
