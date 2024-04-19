@@ -488,7 +488,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             powerboxItems: powerboxItems[0],
             powerboxCategories: powerboxItems[1],
             bindLinkTool: true,
-            showEmptyElementHint: false,
             getReadOnlyAreas: this._getReadOnlyAreas.bind(this),
             getUnremovableElements: this._getUnremovableElements.bind(this),
             direction: this.websiteService.currentWebsite.metadata.direction,
