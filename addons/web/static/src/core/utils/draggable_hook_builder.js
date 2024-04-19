@@ -57,6 +57,7 @@ import { hasTouch, isBrowserFirefox, isIOS } from "../browser/feature_detection"
  * @property {DOMRect | null} [current.scrollParentXRect]
  * @property {HTMLElement | null} [current.scrollParentY]
  * @property {DOMRect | null} [current.scrollParentYRect]
+ * @property {"left"|"right"|"top"|"bottom"|null} [scrollingEdge]
  * @property {number} [timeout]
  * @property {Position} [initialPosition]
  * @property {Position} [offset={ x: 0, y: 0 }]
@@ -582,21 +583,25 @@ export function makeDraggableHook(hookParams) {
                 const correctedSpeed = (speed / 16) * deltaTime;
 
                 const diff = {};
-
+                ctx.current.scrollingEdge = null;
                 if (xRect) {
                     const maxWidth = xRect.x + xRect.width;
                     if (pointerX - xRect.x < threshold) {
                         diff.x = [pointerX - xRect.x, -1];
+                        ctx.current.scrollingEdge = "left";
                     } else if (maxWidth - pointerX < threshold) {
                         diff.x = [maxWidth - pointerX, 1];
+                        ctx.current.scrollingEdge = "right";
                     }
                 }
                 if (yRect) {
                     const maxHeight = yRect.y + yRect.height;
                     if (pointerY - yRect.y < threshold) {
                         diff.y = [pointerY - yRect.y, -1];
+                        ctx.current.scrollingEdge = "top";
                     } else if (maxHeight - pointerY < threshold) {
                         diff.y = [maxHeight - pointerY, 1];
+                        ctx.current.scrollingEdge = "bottom";
                     }
                 }
 
