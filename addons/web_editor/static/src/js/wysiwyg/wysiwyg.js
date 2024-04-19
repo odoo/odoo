@@ -35,12 +35,11 @@ const getInSelection = OdooEditorLib.getInSelection;
 const rgbToHex = OdooEditorLib.rgbToHex;
 const preserveCursor = OdooEditorLib.preserveCursor;
 const closestElement = OdooEditorLib.closestElement;
+const closestBlock = OdooEditorLib.closestBlock;
 const setSelection = OdooEditorLib.setSelection;
 const endPos = OdooEditorLib.endPos;
 const hasValidSelection = OdooEditorLib.hasValidSelection;
 const parseHTML = OdooEditorLib.parseHTML;
-const getCursorDirection = OdooEditorLib.getCursorDirection;
-const DIRECTIONS = OdooEditorLib.DIRECTIONS;
 
 var id = 0;
 const basicMediaSelector = 'img, .fa, .o_image, .media_iframe_video';
@@ -275,7 +274,7 @@ const Wysiwyg = Widget.extend({
             plugins: options.editorPlugins,
             direction: options.direction || localization.direction || 'ltr',
             collaborationClientAvatarUrl: this._getCollaborationClientAvatarUrl(),
-            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
+            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading', 'o_link_in_selection'],
             foldSnippets: !!options.foldSnippets,
         }, editorCollaborationOptions));
 
@@ -1264,17 +1263,8 @@ const Wysiwyg = Widget.extend({
                         anchorOffset = focusOffset = index;
                     }
                 } else {
-                    const isDirectionRight = getCursorDirection(selection.anchorNode, 0, selection.focusNode, 0) === DIRECTIONS.RIGHT;
-                    if (
-                        closestElement(selection.anchorNode, 'a') === link &&
-                        closestElement(selection.focusNode, 'a') === link
-                    ) {
-                        [anchorNode, focusNode] = isDirectionRight
-                            ? [selection.anchorNode, selection.focusNode]
-                            : [selection.focusNode, selection.anchorNode];
-                    } else {
-                        [anchorNode, focusNode] = [link, link];
-                    }
+                    const commonBlock = selection.rangeCount && closestBlock(selection.getRangeAt(0).commonAncestorContainer);
+                    [anchorNode, focusNode] = commonBlock && link.contains(commonBlock) ? [commonBlock, commonBlock] : [link, link];
                 }
                 if (!focusOffset) {
                     focusOffset = focusNode.childNodes.length || focusNode.length;

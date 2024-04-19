@@ -33,6 +33,35 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         run: 'text odoo.com'
     },
     clickOnImgStep,
+    // Remove the link.
+    {
+        content: "Click on the newly created link",
+        trigger: 'iframe #wrap .s_text_image a[href="http://odoo.com"]:contains("odoo.com")',
+    },
+    {
+        content: "Remove the link.",
+        trigger: 'iframe .popover:contains("http://odoo.com") a .fa-chain-broken',
+    },
+    {
+        content: "Check that the link was removed",
+        trigger: 'iframe #wrap .s_text_image p:contains("Go to odoo:"):not(:has(a))',
+        run: () => {}, // It's a check.
+    },
+    // Recreate the link.
+    {
+        content: "Select first paragraph, to insert a new link",
+        trigger: 'iframe #wrap .s_text_image p',
+    },
+    {
+        content: "Open link tools",
+        trigger: "#toolbar #create-link",
+    },
+    {
+        content: "Type the link URL odoo.com",
+        trigger: '#o_link_dialog_url_input',
+        run: 'text odoo.com'
+    },
+    clickOnImgStep,
     // 2. Edit the link with the link tools.
     {
         content: "Click on the newly created link, change content to odoo website",
@@ -103,7 +132,28 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: 'iframe .popover div a:contains("http://odoo.com")',
         run: () => {}, // It's a check.
     },
+    ...wTourUtils.clickOnSave(),
+    {
+        content: "Check that the first image was saved.",
+        trigger: 'iframe .s_three_columns .row > :nth-child(1) div > a > img',
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Check that the second image was saved.",
+        trigger: 'iframe .s_three_columns .row > :nth-child(2) div > img',
+        run: () => {}, // It's a check.
+    },
     // 5. Remove link from image.
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    {
+        content: "Reselect the first image.",
+        trigger: 'iframe .s_three_columns .row > :nth-child(1) div > a > img',
+    },
+    {
+        content: "Check that link tools appear.",
+        trigger: 'iframe .popover div a:contains("http://odoo.com")',
+        run: () => {}, // It's a check.
+    },
     {
         content: "Remove link.",
         trigger: 'iframe .popover:contains("http://odoo.com") a .fa-chain-broken',

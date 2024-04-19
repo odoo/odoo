@@ -62,6 +62,9 @@ export const EMAIL_REGEX = /^(mailto:)?[\w-.]+@(?:[\w-]+\.)+[\w-]{2,4}$/i;
 
 export const PROTECTED_BLOCK_TAG = ['TR','TD','TABLE','TBODY','UL','OL','LI'];
 
+export const ZERO_WIDTH_CHARS = ['\u200b', '\ufeff'];
+export const ZERO_WIDTH_CHARS_REGEX = new RegExp(`[${ZERO_WIDTH_CHARS.join('')}]`, 'g');
+
 //------------------------------------------------------------------------------
 // Position and sizes
 //------------------------------------------------------------------------------
@@ -549,6 +552,84 @@ export function getNormalizedCursorPosition(node, offset, full = true) {
 
     return [node, offset];
 }
+export function insertSelectionChars(anchorNode, anchorOffset, focusNode, focusOffset, startChar='[', endChar=']') {
+    // If the range characters have to be inserted within the same parent and
+    // the anchor range character has to be before the focus range character,
+    // the focus offset needs to be adapted to account for the first insertion.
+    if (anchorNode === focusNode && anchorOffset <= focusOffset) {
+        focusOffset += (focusNode.nodeType === Node.TEXT_NODE ? startChar.length : 1);
+    }
+    insertCharsAt(startChar, anchorNode, anchorOffset);
+    insertCharsAt(endChar, focusNode, focusOffset);
+}
+/**
+ * Log the contents of the given root, with the characters "[" and "]" around
+ * the selection.
+ *
+ * @param {Element} root
+ * @param {Object} [options={}]
+ * @param {Selection} [options.selection] if undefined, the current selection is used.
+ * @param {boolean} [options.doFormat] if true, the HTML is formatted.
+ * @param {boolean} [options.includeOids] if true, the HTML is formatted.
+ */
+export function logSelection(root, options = {}) {
+    const sel = options.selection || root.ownerDocument.getSelection();
+    if (!root.contains(sel.anchorNode) || !root.contains(sel.focusNode)) {
+        console.warn('The selection is not contained in the root.');
+        return;
+    }
+
+    // Clone the root and its contents.
+    let anchorClone, focusClone;
+    const cloneTree = node => {
+        const clone = node.cloneNode();
+        if (options.includeOids) {
+            clone.oid = node.oid;
+        }
+        anchorClone = anchorClone || (node === sel.anchorNode && clone);
+        focusClone = focusClone || (node === sel.focusNode && clone);
+        for (const child of node.childNodes || []) {
+            clone.append(cloneTree(child));
+        }
+        return clone;
+    }
+    const rootClone = cloneTree(root);
+
+    // Insert the selection characters.
+    insertSelectionChars(anchorClone, sel.anchorOffset, focusClone, sel.focusOffset, '%c[%c', '%c]%c');
+
+    // Remove information that is not useful for the log.
+    rootClone.removeAttribute('data-last-history-steps');
+
+    // Format the HTML by splitting and indenting to highlight the structure.
+    if (options.doFormat) {
+        const formatHtml = (node, spaces = 0) => {
+            node.before(document.createTextNode('\n' + ' '.repeat(spaces)));
+            for (const child of [...node.childNodes]) {
+                formatHtml(child, spaces + 4);
+            }
+            if (node.nodeType !== Node.TEXT_NODE) {
+                node.appendChild(document.createTextNode('\n' + ' '.repeat(spaces)));
+            }
+            if (options.includeOids) {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    node.textContent += ` (${node.oid})`;
+                } else {
+                    node.setAttribute('oid', node.oid);
+                }
+            }
+        }
+        formatHtml(rootClone);
+    }
+
+    // Style and log the result.
+    const selectionCharacterStyle = 'color: #75bfff; font-weight: 700;';
+    const defaultStyle = 'color: inherit; font-weight: inherit;';
+    console.log(
+        makeZeroWidthCharactersVisible(rootClone.outerHTML),
+        selectionCharacterStyle, defaultStyle, selectionCharacterStyle, defaultStyle,
+    );
+}
 /**
  * Guarantee that the focus is on element or one of its children.
  *
@@ -826,8 +907,41 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
     return range;
 }
 
-function getNextVisibleNode(node) {
-    while (node && !isVisible(node)) {
+export function getAdjacentCharacter(editable, side) {
+    let { focusNode, focusOffset } = editable.ownerDocument.getSelection();
+    const originalBlock = closestBlock(focusNode);
+    let adjacentCharacter;
+    while (!adjacentCharacter && focusNode) {
+        if (side === 'previous') {
+            adjacentCharacter = focusOffset > 0 && focusNode.textContent[focusOffset - 1];
+        } else {
+            adjacentCharacter = focusNode.textContent[focusOffset];
+        }
+        if (!adjacentCharacter) {
+            if (side === 'previous') {
+                focusNode = previousLeaf(focusNode, editable);
+                focusOffset = focusNode && nodeSize(focusNode);
+            } else {
+                focusNode = nextLeaf(focusNode, editable);
+                focusOffset = 0;
+            }
+            const characterIndex = side === 'previous' ? focusOffset - 1 : focusOffset;
+            adjacentCharacter = focusNode && focusNode.textContent[characterIndex];
+        }
+    }
+    return closestBlock(focusNode) === originalBlock ? adjacentCharacter : undefined;
+}
+
+function isZwnbsp(node) {
+    return node.nodeType === Node.TEXT_NODE && node.textContent === '\ufeff';
+}
+
+function isTangible(node) {
+    return isVisible(node) || isZwnbsp(node);
+}
+
+function getNextTangibleNode(node) {
+    while (node && !isTangible(node)) {
         node = node.nextSibling;
     }
     return node;
@@ -838,7 +952,7 @@ export function getDeepestPosition(node, offset) {
     while (node.hasChildNodes()) {
         let newNode = node.childNodes[offset];
         if (newNode) {
-            newNode = getNextVisibleNode(newNode);
+            newNode = getNextTangibleNode(newNode);
             if (!newNode || isVisibleEmpty(newNode)) break;
             found = true;
             node = newNode;
@@ -850,7 +964,7 @@ export function getDeepestPosition(node, offset) {
     if (!found) {
         while (node.hasChildNodes()) {
             let newNode = node.childNodes[offset - 1];
-            newNode = getNextVisibleNode(newNode);
+            newNode = getNextTangibleNode(newNode);
             if (!newNode || isVisibleEmpty(newNode)) break;
             node = newNode;
             offset = nodeSize(node);
@@ -858,13 +972,13 @@ export function getDeepestPosition(node, offset) {
     }
     let didMove = false;
     let reversed = false;
-    while (!isVisible(node) && (node.previousSibling || (!reversed && node.nextSibling))) {
+    while (!isTangible(node) && (node.previousSibling || (!reversed && node.nextSibling))) {
         reversed = reversed || !node.nextSibling;
         node = reversed ? node.previousSibling : node.nextSibling;
         offset = reversed ? nodeSize(node) : 0;
         didMove = true;
     }
-    return didMove && isVisible(node) ? getDeepestPosition(node, offset) : [node, offset];
+    return didMove && isTangible(node) ? getDeepestPosition(node, offset) : [node, offset];
 }
 
 export function getCursors(document) {
@@ -1138,6 +1252,73 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         }
     }
 }
+export const isLinkEligibleForZwnbsp = (editable, link) => {
+    return link.isContentEditable && editable.contains(link) && !(
+        [link, ...link.querySelectorAll('*')].some(el => el.nodeName === 'IMG' || isBlock(el)) ||
+        link.matches('nav a, a.nav-link')
+    );
+}
+/**
+ * Take a link and pad it with non-break zero-width spaces to ensure that it is
+ * always possible to place the cursor at its inner and outer edges.
+ *
+ * @param {HTMLElement} editable
+ * @param {HTMLAnchorElement} link
+ */
+export const padLinkWithZws = (editable, link) => {
+    if (!isLinkEligibleForZwnbsp(editable, link)) {
+        // Only add the ZWNBSP for simple (possibly styled) text links, and
+        // never in a nav.
+        return;
+    }
+    const selection = editable.ownerDocument.getSelection() || {};
+    const { anchorOffset, focusOffset } = selection;
+    let extraAnchorOffset = 0;
+    let extraFocusOffset = 0;
+    if (!link.textContent.startsWith('\uFEFF')) {
+        if (selection.anchorNode === link && anchorOffset) {
+            extraAnchorOffset += 1;
+        }
+        if (selection.focusNode === link && focusOffset) {
+            extraFocusOffset += 1;
+        }
+        link.prepend(document.createTextNode('\uFEFF'));
+    }
+    if (!link.textContent.endsWith('\uFEFF')) {
+        if (selection.anchorNode === link && anchorOffset + extraAnchorOffset === nodeSize(link)) {
+            extraAnchorOffset += 1;
+        }
+        if (selection.focusNode === link && focusOffset + extraFocusOffset === nodeSize(link)) {
+            extraFocusOffset += 1;
+        }
+        link.append(document.createTextNode('\uFEFF'));
+    }
+    const linkIndex = childNodeIndex(link);
+    if (!(link.previousSibling && link.previousSibling.textContent.endsWith('\uFEFF'))) {
+        if (selection.anchorNode === link.parentElement && anchorOffset + extraAnchorOffset > linkIndex) {
+            extraAnchorOffset += 1;
+        }
+        if (selection.focusNode === link.parentElement && focusOffset + extraFocusOffset > linkIndex) {
+            extraFocusOffset += 1;
+        }
+        link.before(document.createTextNode('\uFEFF'));
+    }
+    if (!(link.nextSibling && link.nextSibling.textContent.startsWith('\uFEFF'))) {
+        if (selection.anchorNode === link.parentElement && anchorOffset + extraAnchorOffset > linkIndex + 1) {
+            extraAnchorOffset += 1;
+        }
+        if (selection.focusNode === link.parentElement && focusOffset + extraFocusOffset > linkIndex + 1) {
+            extraFocusOffset += 1;
+        }
+        link.after(document.createTextNode('\uFEFF'));
+    }
+    if (extraAnchorOffset || extraFocusOffset) {
+        setSelection(
+            selection.anchorNode, anchorOffset + extraAnchorOffset,
+            selection.focusNode, focusOffset + extraFocusOffset,
+        );
+    }
+}
 
 //------------------------------------------------------------------------------
 // DOM Info utils
@@ -1397,6 +1578,14 @@ export const ICON_SELECTOR = iconTags.map(tag => {
     }).join(', ');
 }).join(', ');
 
+/**
+ * Return true if the given node is a zero-width breaking space (200b), false
+ * otherwise. Note that this will return false for a zero-width NON-BREAK space
+ * (feff)!
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
 export function isZWS(node) {
     return (
         node &&
@@ -1606,11 +1795,11 @@ export function isInPre(node) {
  * Returns whether the given string (or given text node value)
  * has at least one visible character or one non colapsed whitespace characters in it.
  */
-const nonWhitespaces = '\\S\\u00A0\\u0009';
+const nonWhitespaces = '\\S\\u00A0\\u0009\\uFEFF';
 const nonWhitespacesRegex = new RegExp(`[${nonWhitespaces}]`);
 export function isVisibleStr(value) {
     const str = typeof value === 'string' ? value : value.nodeValue;
-    return nonWhitespacesRegex.test(str);
+    return nonWhitespacesRegex.test(str) && str !== '\ufeff';
 }
 /**
  * @param {Node} node
@@ -1648,6 +1837,9 @@ export function isVisibleTextNode(testedNode) {
     }
     if (isVisibleStr(testedNode)) {
         return true;
+    }
+    if (testedNode.textContent === '\ufeff') {
+        return false; // a ZWNBSP is _always_ invisible, regardless of context.
     }
     // The following assumes node is made entirely of whitespace and is not
     // preceded of followed by a block.
@@ -1760,6 +1952,10 @@ export function toggleClass(node, className) {
     if (!node.className) {
         node.removeAttribute('class');
     }
+}
+
+export function makeZeroWidthCharactersVisible(text) {
+    return text.replaceAll('\u200B', '//ZWSP//').replaceAll('\uFEFF', '//ZWNBSP//');
 }
 
 /**
@@ -1947,6 +2143,33 @@ export function insertText(sel, content) {
     restore();
     setSelection(...boundariesOut(txt), false);
     return txt;
+}
+
+/**
+ * Inserts the given characters at the given offset of the given node.
+ *
+ * @param {string} chars
+ * @param {Node} node
+ * @param {number} offset
+ */
+export function insertCharsAt(chars, node, offset) {
+    if (node.nodeType === Node.TEXT_NODE) {
+        const startValue = node.nodeValue;
+        if (offset < 0 || offset > startValue.length) {
+            throw new Error(`Invalid ${chars} insertion in text node`);
+        }
+        node.nodeValue = startValue.slice(0, offset) + chars + startValue.slice(offset);
+    } else {
+        if (offset < 0 || offset > node.childNodes.length) {
+            throw new Error(`Invalid ${chars} insertion in non-text node`);
+        }
+        const textNode = document.createTextNode(chars);
+        if (offset < node.childNodes.length) {
+            node.insertBefore(textNode, node.childNodes[offset]);
+        } else {
+            node.appendChild(textNode);
+        }
+    }
 }
 
 /**
@@ -2189,7 +2412,7 @@ export function prepareUpdate(...args) {
         const right = getState(el, offset, DIRECTIONS.RIGHT, left.cType);
         if (options.debug) {
             const editable = el && closestElement(el, '.odoo-editor-editable');
-            const oldEditableHTML = editable && editable.innerHTML.replaceAll(' ', '_').replaceAll('\u200B', 'ZWS') || '';
+            const oldEditableHTML = editable && makeZeroWidthCharactersVisible(editable.innerHTML).replaceAll(' ', '_') || '';
             left.oldEditableHTML = oldEditableHTML;
             right.oldEditableHTML = oldEditableHTML;
         }
@@ -2483,12 +2706,12 @@ export function restoreState(prevStateData, debug=false) {
     if (debug) {
         const editable = closestElement(node, '.odoo-editor-editable');
         console.log(
-            '%c' + node.textContent.replaceAll(' ', '_').replaceAll('\u200B', 'ZWS') + '\n' +
+            '%c' + makeZeroWidthCharactersVisible(node.textContent).replaceAll(' ', '_') + '\n' +
             '%c' + (direction === DIRECTIONS.LEFT ? 'left' : 'right') + '\n' +
             '%c' + ctypeToString(cType1) + '\n' +
             '%c' + ctypeToString(cType2) + '\n' +
             '%c' + 'BEFORE: ' + (oldEditableHTML || '(unavailable)') + '\n' +
-            '%c' + 'AFTER:  ' + (editable ? editable.innerHTML.replaceAll(' ', '_').replaceAll('\u200B', 'ZWS') : '(unavailable)') + '\n',
+            '%c' + 'AFTER:  ' + (editable ? makeZeroWidthCharactersVisible(editable.innerHTML).replaceAll(' ', '_') : '(unavailable)') + '\n',
             'color: white; display: block; width: 100%;',
             'color: ' + (direction === DIRECTIONS.LEFT ? 'magenta' : 'lightgreen') + '; display: block; width: 100%;',
             'color: pink; display: block; width: 100%;',
@@ -2829,6 +3052,7 @@ export function isMacOS() {
 
 /**
  * Remove zero-width spaces from the provided node and its descendants.
+ * Note: Does NOT remove zero-width NON-BREAK spaces (feff)!
  *
  * @param {Node} node
  */
