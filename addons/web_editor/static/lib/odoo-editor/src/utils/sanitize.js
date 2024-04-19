@@ -280,7 +280,7 @@ class Sanitize {
                         node.setAttribute('href', urlInfo[0].url);
                     }
                 }
-                padLinkWithZws(this.root, node);
+                padLinkWithZws(node);
             }
             node = node.nextSibling;
         }

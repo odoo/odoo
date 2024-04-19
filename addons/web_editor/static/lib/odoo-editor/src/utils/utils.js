@@ -1123,26 +1123,25 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         }
     }
 }
-export const isLinkEligibleForZwnbsp = (editable, link) => {
-    return link.isContentEditable && editable.contains(link) && !(
+export const isLinkEligibleForZwnbsp = link => {
+    return link.isContentEditable && !(
         [link, ...link.querySelectorAll('*')].some(el => el.nodeName === 'IMG' || isBlock(el)) ||
         link.matches('nav a, a.nav-link')
-    )
+    );
 }
 /**
  * Take a link and pad it with non-break zero-width spaces to ensure that it is
  * always possible to place the cursor at its inner and outer edges.
  *
- * @param {HTMLElement} editable
  * @param {HTMLAnchorElement} link
  */
-export const padLinkWithZws = (editable, link) => {
-    if (!isLinkEligibleForZwnbsp(editable, link)) {
+export const padLinkWithZws = link => {
+    if (!isLinkEligibleForZwnbsp(link)) {
         // Only add the ZWNBSP for simple (possibly styled) text links, and
         // never in a nav.
         return;
     }
-    const selection = editable.ownerDocument.getSelection() || {};
+    const selection = link.ownerDocument.getSelection() || {};
     const { anchorOffset, focusOffset } = selection;
     let extraAnchorOffset = 0;
     let extraFocusOffset = 0;
