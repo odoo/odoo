@@ -419,7 +419,7 @@ class HrEmployee(models.Model):
         for allocation in allocations:
             allocations_per_employee_type[allocation.employee_id][allocation.holiday_status_id] |= allocation
 
-        # allocation_leaves_consumed is a tuple of two dictionnaries.
+        # _get_consumed_leaves returns a tuple of two dictionnaries.
         # 1) The first is a dictionary to map the number of days/hours of leaves taken per allocation
         # The structure is the following:
         # - KEYS:
@@ -434,9 +434,12 @@ class HrEmployee(models.Model):
         #              |--max_leaves
         #              |--accrual_bonus
         # - VALUES:
-        # Integer representing the number of (virtual) remaining leaves, (virtual) leaves taken or max leaves for each allocation.
+        # Integer representing the number of (virtual) remaining leaves, (virtual) leaves taken or max leaves
+        # for each allocation.
         # leaves_taken and remaining_leaves only take into account validated leaves, while the "virtual" equivalent are
         # also based on leaves in "confirm" or "validate1" state.
+        # Accrual bonus gives the amount of additional leaves that will have been granted at the given
+        # target_date in comparison to today.
         # The unit is in hour or days depending on the leave type request unit
         # 2) The second is a dictionary mapping the remaining days per employee and per leave type that are either
         # not taken into account by the allocations, mainly because accruals don't take future leaves into account.
@@ -460,7 +463,6 @@ class HrEmployee(models.Model):
                     'amount': 0,
                     'is_virtual': True,
                 }),
-                'total_virtual_excess': 0,
                 'exceeding_duration': 0,
                 'to_recheck_leaves': self.env['hr.leave']
             })
