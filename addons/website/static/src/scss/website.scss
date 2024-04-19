@@ -79,6 +79,9 @@ $-seen-urls: ();
         $i: $i + 1;
     }
 
+    // restore non-responsive body-font-size like in Bootstrap 5.1
+    --#{$variable-prefix}body-font-size: #{$font-size-base};
+
     // Note: font-size are not needed as already added by web_editor for the
     // font-size dropdown
     @include print-variable('paragraph-margin-top', $paragraph-margin-top);
@@ -337,6 +340,13 @@ $-seen-urls: ();
         }
     }
     @include o-add-gradient('menu-gradient');
+
+    a.nav-link {
+        color: var(--#{$variable-prefix}nav-link-color);
+        &:hover {
+            color: var(--#{$variable-prefix}nav-link-hover-color);
+        }
+    }
 }
 
 // TODO this should be reviewed. While it allowed to choose a color for the
@@ -350,15 +360,15 @@ $-seen-urls: ();
 }
 
 .o_navlink_background {
-    background: var(--NavLinkWithBackground-bg-color, rgba($navbar-light-active-color, .05));
+    background: var(--NavLinkWithBackground-bg-color, rgba(var(--#{$variable-prefix}emphasis-color-rgb), .05));
 
     &:hover {
-        background: var(--NavLinkWithBackground-bg-color--hover, rgba($navbar-light-active-color, .1));
+        background: var(--NavLinkWithBackground-bg-color--hover, rgba(var(--#{$variable-prefix}emphasis-color-rgb), .1));
     }
 }
 
 .o_navlink_background_hover:hover {
-    background: var(--NavLinkWithBackground-bg-color, rgba($navbar-light-active-color, .05));
+    background: var(--NavLinkWithBackground-bg-color, rgba(var(--#{$variable-prefix}emphasis-color-rgb), .05));
 }
 
 // Apply background color to the offcanvas menu
@@ -1176,7 +1186,7 @@ header {
     }
     #wrapwrap > header .o_extra_menu_items {
         height: 100%;
-        border-left: $border-width solid var(--NavLinkWithBackground-bg-color--hover, rgba($navbar-light-active-color, .1));
+        border-left: $border-width solid var(--NavLinkWithBackground-bg-color--hover, rgba(var(--#{$variable-prefix}emphasis-color-rgb), .1));
 
         > .nav-link {
             display: flex;
@@ -1225,13 +1235,13 @@ header {
     width: $border-width * 2;
     height: 50%;
     margin: auto (map-get($spacers, 2) * -1) auto auto;
-    background: var(--HeaderSeparator-bg-color, rgba($navbar-light-active-color, .1));
+    background: var(--HeaderSeparator-bg-color, rgba(var(--#{$variable-prefix}emphasis-color-rgb), .1));
 }
 
 // Default border color didn't match with background custom colors.
 // This allows to use the same contrast system than the text but for borders.
 .o_border_contrast {
-    border-color: var(--NavLinkWithBackground-bg-color--hover, rgba($navbar-light-active-color, .1)) !important;
+    border-color: var(--NavLinkWithBackground-bg-color--hover, rgba(var(--#{$variable-prefix}emphasis-color-rgb), .1)) !important;
 }
 
 // Mega menu

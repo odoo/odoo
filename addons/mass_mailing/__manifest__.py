@@ -95,7 +95,7 @@
         'mass_mailing.iframe_css_assets_edit': [
             ('include', 'mass_mailing.assets_mail_themes'),
             ('include', 'web.assets_frontend'),
-            ('after', 'web/static/lib/bootstrap/scss/_variables.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
+            ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
             ('include', 'web_editor.backend_assets_wysiwyg'),
             ('include', 'mass_mailing.assets_snippets_menu'),
 
@@ -140,6 +140,8 @@
             ('include', 'web._assets_helpers'),
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables-dark.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
             'mass_mailing/static/src/scss/mass_mailing.ui.scss',
         ],
         'mass_mailing.assets_wysiwyg': [

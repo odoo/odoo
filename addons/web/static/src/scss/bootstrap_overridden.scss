@@ -56,6 +56,9 @@ $enable-negative-margins: true !default;
 // Enable CSS Grid classes
 $enable-cssgrid: true !default;
 
+// Disable BS5's dark mode until we actually use it for our own dark mode implementation
+$enable-dark-mode: false !default;
+
 // Spacing
 $spacer: $o-spacer !default;
 
@@ -91,7 +94,7 @@ $grid-gutter-width: $o-horizontal-padding * 2 !default;
 //
 // Define common padding and border radius sizes and more.
 
-$border-color: $o-border-color !default;
+$border-color: $o-gray-300 !default;
 
 $border-radius: $o-border-radius !default;
 $border-radius-sm: $o-border-radius-sm !default;
@@ -257,6 +260,7 @@ $modal-lg: $o-modal-lg !default;
 $modal-md: $o-modal-md !default;
 
 $modal-content-border-radius: $border-radius !default;
+$modal-content-bg: $o-view-background-color !default;
 
 $modal-scale-transform: none !default;
 

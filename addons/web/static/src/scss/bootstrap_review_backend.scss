@@ -8,6 +8,10 @@
 // Generating bootstrap color buttons was disabled (see import_bootstrap.scss).
 // We do it ourself here generating each btn design type individually.
 
+.btn {
+    --#{$variable-prefix}btn-disabled-border-color: transparent;
+}
+
 // 1. Render buttons defined in '$o-btns-bs-override' and '$o-btns-bs-outline-override'
 //    maps.
 @each $-name, $-value in $o-btns-bs-override {
@@ -89,10 +93,11 @@
         &:active, &.active, &:active:hover, &.active:hover {
             z-index: 2;
         }
+    }
 
-        &:not(:first-child) {
-            margin-left: var(--btn-group-gap, $btn-border-width); 
-        }
+    > :not(.btn-check:first-child) + .btn,
+    > .btn-group:not(:first-child) {
+        margin-left: var(--btn-group-gap, $btn-border-width);
     }
 }
 
@@ -272,12 +277,6 @@ $-o-bg-colors-custom: null;
     background-color: inherit;
 }
 
-// Cards
-// ============================================================================
-.card-body {
-    @extend %-card-body-reviewed; // See bootstrap_review.scss
-}
-
 // Alert
 // ==============================================================================
 .alert {
@@ -323,5 +322,13 @@ $-o-bg-colors-custom: null;
 
     &:disabled, &.disabled, &[disabled] {
         opacity: $o-opacity-disabled;
+    }
+}
+
+// Switches
+// ============================================================================
+.table {
+    > :not(caption) > * > * {
+        color: unset;
     }
 }
