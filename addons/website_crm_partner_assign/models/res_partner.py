@@ -55,32 +55,30 @@ class ResPartner(models.Model):
         for partner in self:
             partner.partner_weight = partner.grade_id.partner_weight if partner.grade_id else 0
 
+    def _get_contact_opportunities_domain(self):
+        all_partners = self._fetch_children_partners_for_hierarchy().ids
+        return ['|', ('partner_assigned_id', 'in', all_partners), ('partner_id', 'in', all_partners)]
+
     def _compute_opportunity_count(self):
-        super()._compute_opportunity_count()
-        if not self.env.user.has_group('sales_team.group_sale_salesman'):
-            return
+        if not self.ids or not self.env.user.has_group('sales_team.group_sale_salesman'):
+            return super()._compute_opportunity_count()
 
+        self.opportunity_count = 0
         opportunity_data = self.env['crm.lead'].with_context(active_test=False)._read_group(
-            [('partner_assigned_id', 'in', self.ids)],
-            ['partner_assigned_id'], ['__count']
+            self._get_contact_opportunities_domain(),
+            ['partner_assigned_id', 'partner_id'], ['__count']
         )
-        assign_counts = {partner_assigned.id: count for partner_assigned, count in opportunity_data}
-        for partner in self:
-            partner.opportunity_count += assign_counts.get(partner.id, 0)
+        current_pids = set(self._ids)
 
-    def action_view_opportunity(self):
-        self.ensure_one()  # especially here as we are doing an id, in, IDS domain
-        action = super().action_view_opportunity()
-        action_domain_origin = action.get('domain')
-        action_context_origin = action.get('context') or {'active_test': False}
-        action_domain_assign = [('partner_assigned_id', '=', self.id)]
-        if not action_domain_origin:
-            action['domain'] = action_domain_assign
-            return action
-        # perform searches independently as having OR with those leaves seems to
-        # be counter productive
-        Lead = self.env['crm.lead'].with_context(**action_context_origin)
-        ids_origin = Lead.search(action_domain_origin).ids
-        ids_new = Lead.search(action_domain_assign).ids
-        action['domain'] = [('id', 'in', sorted(list(set(ids_origin) | set(ids_new))))]
-        return action
+        for assign_partner, partner, count in opportunity_data:
+            # this variable is used to keep the track of the partner
+            seen_partners = set()
+            while partner or assign_partner:
+                if assign_partner and assign_partner.id in current_pids and assign_partner not in seen_partners:
+                    assign_partner.opportunity_count += count
+                    seen_partners.add(assign_partner)
+                if partner and partner.id in current_pids and partner not in seen_partners:
+                    partner.opportunity_count += count
+                    seen_partners.add(partner)
+                assign_partner = assign_partner.parent_id
+                partner = partner.parent_id
