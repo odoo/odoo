@@ -245,6 +245,16 @@ class StockMove(models.Model):
         super()._compute_show_info()
         self.filtered(lambda m: m.byproduct_id or m in self.production_id.move_finished_ids).show_quant = False
 
+    @api.depends('picking_type_id.use_create_components_lots')
+    def _compute_display_assign_serial(self):
+        super()._compute_display_assign_serial()
+        for move in self:
+            if move.display_import_lot \
+                    and move.raw_material_production_id \
+                    and not move.raw_material_production_id.picking_type_id.use_create_components_lots:
+                move.display_import_lot = False
+                move.display_assign_serial = False
+
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
         if self.raw_material_production_id and self.has_tracking == 'none':
