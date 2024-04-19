@@ -4331,7 +4331,6 @@ export class OdooEditor extends EventTarget {
 
             if (isMouseInsideCheckboxBox) {
                 toggleClass(node, 'o_checked');
-                ev.preventDefault();
                 this.historyStep();
                 if (!document.getSelection().isCollapsed) {
                     this._updateToolbar(true);
