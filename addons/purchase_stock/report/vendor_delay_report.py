@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, tools
+from odoo.osv import expression
 from odoo.tools import SQL
 
 
@@ -57,8 +58,14 @@ GROUP  BY m.id
         if aggregate_spec == 'on_time_rate:sum':
             # Make a weigthed average instead of simple average for these fields
             return SQL(
-                'SUM(%s) / SUM(%s) * 100',
+                'CASE WHEN SUM(%s) !=0 THEN SUM(%s) / SUM(%s) * 100 ELSE 100 END',
+                self._field_to_sql(self._table, 'qty_total', query),
                 self._field_to_sql(self._table, 'qty_on_time', query),
                 self._field_to_sql(self._table, 'qty_total', query),
             )
         return super()._read_group_select(aggregate_spec, query)
+
+    def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
+        if 'on_time_rate:sum' in aggregates:
+            having = expression.AND([having, [('qty_total:sum', '>', '0')]])
+        return super()._read_group(domain, groupby, aggregates, having, offset, limit, order)
