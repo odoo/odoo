@@ -9,6 +9,7 @@ class Template(models.Model):
     descripcion = fields.Text("Descripción")
     tipo = fields.Selection(
         [
+            ("Clima", "Clima"),
             ("nom_085", "NOM 085"),
             ("90_grados", "90 grados"),
             ("180_grados", "180 grados"),
