@@ -60,7 +60,7 @@ class StockRule(models.Model):
                 supplier = procurement.values['orderpoint_id'].supplier_id
             else:
                 supplier = procurement.product_id.with_company(procurement.company_id.id)._select_seller(
-                    partner_id=procurement.values.get("supplierinfo_name"),
+                    partner_id=procurement.values.get("supplierinfo_name") or (procurement.values.get("group_id") and procurement.values.get("group_id").partner_id),
                     quantity=procurement.product_qty,
                     date=max(procurement_date_planned.date(), fields.Date.today()),
                     uom_id=procurement.product_uom)
