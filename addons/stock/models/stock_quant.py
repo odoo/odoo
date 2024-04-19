@@ -680,6 +680,8 @@ class StockQuant(models.Model):
         else:
             availaible_quantities = {lot_id: 0.0 for lot_id in list(set(quants.mapped('lot_id'))) + ['untracked']}
             for quant in quants:
+                if not quant.lot_id and strict and lot_id:
+                    continue
                 if not quant.lot_id:
                     availaible_quantities['untracked'] += quant.quantity - quant.reserved_quantity
                 else:
@@ -835,7 +837,7 @@ class StockQuant(models.Model):
                 'owner_id': owner_id and owner_id.id,
                 'in_date': in_date,
             })
-        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=False, allow_negative=True), in_date
+        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True, allow_negative=True), in_date
 
     def _raise_fix_unreserve_action(self, product_id):
         action = self.env.ref('stock.stock_quant_stock_move_line_desynchronization', raise_if_not_found=False)
