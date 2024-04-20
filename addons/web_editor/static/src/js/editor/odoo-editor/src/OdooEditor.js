@@ -1707,6 +1707,7 @@ export class OdooEditor extends EventTarget {
             caretAvatar.append(image);
             image.onload = () => caretAvatar.style.removeProperty('display');
             image.setAttribute('src', clientAvatarUrl);
+            image.classList.add('o_object_fit_cover');
             caretAvatar.setAttribute('data-selection-client-id', clientId);
             this._collabSelectionsContainer.append(caretAvatar);
         }
