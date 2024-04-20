@@ -121,3 +121,22 @@ class Evaluacion(models.Model):
             'res_id': self.id,
         }
 
+    def action_redirect_to_evaluacion(self):
+        """
+        Ejecuta la acción de redireccionar a la lista de evaluaciones y devuelve un diccionario
+
+        Este método utiliza los parámetros necesarios para redireccionar a la lista de evaluaciones
+
+        Returns:
+        dict: Un diccionario que contiene todos los parámetros necesarios para redireccionar la
+        a una vista de la lista de las evaluaciones.
+        
+        """
+
+        return {
+            'name': 'Evaluación',
+            'type': 'ir.actions.act_window',
+            'res_model': 'evaluacion',
+            'view_mode': 'tree,form',
+            'target': 'current',
+        }

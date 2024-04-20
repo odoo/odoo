@@ -115,7 +115,12 @@
 								<field name="usuario_ids"/>
 							</page>
                         </notebook>
-					</group>					
+					</group>
+
+                    <div>
+                        <button name="action_redirect_to_evaluacion" string="Finalizar" type="object" class="btn-primary"/>
+                    </div>
+
                 </sheet>
             </form>
         </field>
@@ -126,6 +131,14 @@
         <field name="model_id" ref="model_evaluacion"/>
         <field name="state">code</field>
         <field name="code">action = model.action_clima()</field>
+        <field name="binding_model_id" ref="model_evaluacion"/>
+    </record>
+
+    <record id="action_redirect_to_evaluacion" model="ir.actions.server">
+        <field name="name">Redirigir a Evaluación</field>
+        <field name="model_id" ref="model_evaluacion"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_redirect_to_evaluacion()</field>
         <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
 </odoo>
