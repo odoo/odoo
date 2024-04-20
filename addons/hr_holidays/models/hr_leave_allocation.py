@@ -831,7 +831,7 @@ class HolidaysAllocation(models.Model):
     # call of the cron job.
     @api.onchange('date_from', 'accrual_plan_id', 'date_to')
     def _onchange_date_from(self):
-        if self.allocation_type != 'accrual' or self.state == 'validate' or not self.accrual_plan_id\
+        if not self.date_from or self.allocation_type != 'accrual' or self.state == 'validate' or not self.accrual_plan_id\
            or not self.employee_id:
             return
         self.lastcall = self.date_from
