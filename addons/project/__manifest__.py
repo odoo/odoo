@@ -202,6 +202,7 @@
 
             'mail/static/src/scss/variables/*.scss',
             'mail/static/src/chatter/web/form_renderer.scss',
+            'mail/static/src/views/fields/**/*',
 
             'project/static/src/components/project_task_name_with_subtask_count_char_field/*',
             'project/static/src/components/project_task_state_selection/*',
