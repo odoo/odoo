@@ -1,9 +1,6 @@
 from odoo.tests.common import TransactionCase
 from datetime import date, timedelta
 
-# 4. Se crea un objetivo con valores invalidos
-# 5. Se crea un objetivo sin asignar a nadie
-
 class TestCrearObjetivos(TransactionCase):
     
     def setUp(self):
