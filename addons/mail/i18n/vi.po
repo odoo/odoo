@@ -122,6 +122,10 @@ msgid ""
 "%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
 "%(bold_start)s/command%(bold_end)s to execute a command."
 msgstr ""
+"%(new_line)s%(new_line)sNhập %(bold_start)s@username%(bold_end)s để nhắc đến"
+" ai đó và thu hút sự chú ý của họ.%(new_line)sNhập "
+"%(bold_start)s#channel%(bold_end)s để nhắc đến một kênh.%(new_line)sNhập "
+"%(bold_start)s/command%(bold_end)s để thực thi một lệnh."
 
 #. module: mail
 #. odoo-javascript
@@ -131,6 +135,7 @@ msgid ""
 "%(open_button)s%(icon)s%(open_em)sDiscard "
 "editing%(close_em)s%(close_button)s"
 msgstr ""
+"%(open_button)s%(icon)s%(open_em)sHuỷ chỉnh sửa%(close_em)s%(close_button)s"
 
 #. module: mail
 #. odoo-javascript
@@ -142,6 +147,9 @@ msgid ""
 "Enter%(close_samp)s %(open_em)sto "
 "%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
+"%(open_samp)sThoát%(close_samp)s %(open_em)sđể "
+"%(open_cancel)shuỷ%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-"
+"Enter%(close_samp)s %(open_em)sđể %(open_save)slưu%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -153,6 +161,10 @@ msgid ""
 "%(open_samp)sEnter%(close_samp)s %(open_em)sto "
 "%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
+"%(open_samp)sThoát%(close_samp)s %(open_em)sđể "
+"%(open_cancel)shuỷ%(close_cancel)s%(close_em)s, "
+"%(open_samp)sNhập%(close_samp)s %(open_em)sđể "
+"%(open_save)slưu%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -1221,7 +1233,7 @@ msgstr "Bạn có chắc chắn muốn bỏ hạn chế Địa chỉ email này 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
 msgid "Ask at launch"
-msgstr ""
+msgstr "Hỏi khi triển khai"
 
 #. module: mail
 #. odoo-javascript
@@ -1876,7 +1888,7 @@ msgstr "Loại kênh"
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "Channel full"
-msgstr ""
+msgstr "Channel full"
 
 #. module: mail
 #. odoo-python
@@ -2676,6 +2688,9 @@ msgid ""
 " local-part e.g. 'notifications' either a complete email address e.g. "
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
+"Mặc định từ khi nó không khớp với bộ lọc máy chủ thư đi. Có thể là một phần "
+"cục bộ, ví dụ: 'thông báo' hoặc địa chỉ email đầy đủ, ví dụ: "
+"'notifications@example.com' để ghi đè tất cả các email gửi đi."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
@@ -3547,7 +3562,7 @@ msgstr "Tải gif không thành công..."
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "Failed to load the SFU server, falling back to peer-to-peer"
-msgstr ""
+msgstr "Không tải được máy chủ SFU, quay lại peer-to-peer"
 
 #. module: mail
 #. odoo-python
@@ -4682,7 +4697,7 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "Invalid field “%(field_name)s” when creating a channel with members."
-msgstr ""
+msgstr "Trường “%(field_name)s” không hợp lệ khi tạo kênh với các thành viên."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_from_invalid
@@ -5301,6 +5316,8 @@ msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
 msgstr ""
+"Phần cục bộ của email được sử dụng cho Trả lời để nhận thư trả lời, ví dụ: "
+"'catchall' trong 'catchall@example.com'"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -5308,6 +5325,8 @@ msgid ""
 "Local-part of email used for Return-Path used when emails bounce e.g. "
 "'bounce' in 'bounce@example.com'"
 msgstr ""
+"Phần cục bộ của email được sử dụng cho Đường dẫn trả về khi email bị trả "
+"lại, ví dụ: 'bounce' trong 'bounce@example.com'"
 
 #. module: mail
 #. odoo-javascript
@@ -7079,7 +7098,7 @@ msgstr "Kế hoạch khả dụng"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_date_deadline
 msgid "Plan Date"
-msgstr ""
+msgstr "Ngày kế hoạch"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -7090,12 +7109,12 @@ msgstr "Tên kế hoạch"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__assignation_summary
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_assignation_summary
 msgid "Plan Summary"
-msgstr ""
+msgstr "Tóm tắt kế hoạch"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Plan summary"
-msgstr ""
+msgstr "Tóm tắt kế hoạch"
 
 #. module: mail
 #. odoo-javascript
@@ -7379,7 +7398,7 @@ msgstr "Phiên RTC"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "RTC Session ID:"
-msgstr ""
+msgstr "ID phiên RTC:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__rtc_session_ids
@@ -10694,7 +10713,7 @@ msgstr "(các) tệp đính kèm của email này."
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "available bitrate:"
-msgstr ""
+msgstr "tốc độ bit khả dụng:"
 
 #. module: mail
 #. odoo-javascript
@@ -10754,7 +10773,7 @@ msgstr "kênh"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "clock rate:"
-msgstr ""
+msgstr "Tần số xung đồng hồ"
 
 #. module: mail
 #. odoo-javascript
@@ -10831,14 +10850,14 @@ msgstr "hoàn thành"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "down DTLS:"
-msgstr ""
+msgstr "down DTLS:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "down ICE:"
-msgstr ""
+msgstr "down ICE:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -10866,12 +10885,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"bounce\""
-msgstr ""
+msgstr "VD: \"bounce\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"catchall\""
-msgstr ""
+msgstr "VD: \"catchall\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -10881,7 +10900,7 @@ msgstr "VD: \"mycompany.com\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"notifications\""
-msgstr ""
+msgstr "VD: \"notifications\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -11138,8 +11157,8 @@ msgid ""
 "reply to missing document (%(model)s,%(thread)s), fall back on document "
 "creation"
 msgstr ""
-"phản hồi dữ liệu bị thiếu (%(mô hình)s,%(thread)s), rơi vào việc tạo dữ liệu"
-" mới"
+"phản hồi tài liệu bị thiếu (%(model)s,%(thread)s), có thể sử dụng tạo tài "
+"liệu"
 
 #. module: mail
 #. odoo-python
@@ -11156,14 +11175,14 @@ msgstr ""
 #: code:addons/mail/models/models.py:0
 #, python-format
 msgid "restricted to followers"
-msgstr "giới hạn người theo dõi"
+msgstr "giới hạn chỉ cho người theo dõi"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/models.py:0
 #, python-format
 msgid "restricted to known authors"
-msgstr "giới hạn tác giả đã biết"
+msgstr "giới hạn chỉ cho tác giả đã biết"
 
 #. module: mail
 #. odoo-javascript
@@ -11243,14 +11262,14 @@ msgstr "mô hình mục tiêu không xác định %s"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "up DTLS:"
-msgstr ""
+msgstr "up DTLS:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "up ICE:"
-msgstr ""
+msgstr "up ICE:"
 
 #. module: mail
 #. odoo-javascript

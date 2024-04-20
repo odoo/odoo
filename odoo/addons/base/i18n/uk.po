@@ -6,6 +6,7 @@
 # Wil Odoo, 2023
 # Martin Trigaux, 2024
 # Roman Dereka <rode@odoo.com>, 2024
+# Yaroslav Husyar, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
@@ -129,6 +130,60 @@ msgid ""
 "For more specific needs, you may also assign custom-defined actions\n"
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 msgstr ""
+"\n"
+"\n"
+"Чат, поштовий шлюз і приватний канал.\n"
+"=======================================\n"
+"\n"
+"Спілкуйтеся зі своїми колегами/клієнтами/гостями в Odoo.\n"
+"\n"
+"Обговорення/Чат\n"
+"------------\n"
+"Зручні функції «Обговорення», які дозволяють спілкуватися наодинці або в групі (текстовий чат/\n"
+"голосовий дзвінок/відеодзвінок), запрошувати гостей і \n"
+"ділитися з ними документами в реальному часі.\n"
+"\n"
+"Поштовий шлюз\n"
+"------------\n"
+"Спрощений обмін інформацією та документообіг. Ви можете надсилати електронні листи з самої Odoo, і це\n"
+"також є великою можливістю. Наприклад,\n"
+"створіть красивий шаблон електронної пошти для рахунків-\n"
+"фактур і використовуйте той самий для всіх своїх \n"
+"клієнтів, не потрібно щоразу виконувати ті ж дії.\n"
+"\n"
+"Чатер\n"
+"-------\n"
+"Виконуйте контекстне обговорення в документі. Наприклад,\n"
+"публікуйте оновлення безпосередньо на заявці кандидата, щоби надіслати заявнику електронний лист, \n"
+"запланувати наступну співбесіду, додати договір, додати \n"
+"співробітника відділу кадрів\n"
+"до списку підписників, щоби повідомляти його про важливі події (за допомогою\n"
+" підтипів)....\n"
+"\n"
+"\n"
+"Отримуйте вхідну електронну пошту на серверах POP/IMAP.\n"
+"============================================\n"
+"Введіть параметри своїх облікових записів POP/IMAP, і будь-які вхідні електронні листи з цих облікових записів будуть автоматично завантажені у вашу систему Odoo. \n"
+"Всі\n"
+"POP3/IMAP-сумісні сервери підтримуються, включно з тими, які потребують\n"
+"зашифрованого SSL/TLS з’єднання.\n"
+"Це може бути використано для легкого створення робочих процесів, що базуються на використанні електронної \n"
+"пошти для багатьох документів Odoo, які підтримують електронну пошту, наприклад:\n"
+"----------------------------------------------------------------------------------------------------------\n"
+"    * CRM Ліди/Нагоди\n"
+"    * Заявка CRM\n"
+"    * Проблеми на проєкті\n"
+"    * Задачі в проєкті\n"
+"    * Підбір персоналу (Заявники)\n"
+"Просто встановіть відповідний модуль, і ви зможете призначити будь-який із цих типів\n"
+"документів (ліди, проблеми на проєкті) своїм обліковим записам вхідної електронної пошти. Нові електронні листи\n"
+"автоматично створюватимуть нові документи вибраного типу, тож створити інтеграцію \n"
+"поштової скриньки з Odoo дуже просто. Ще краще: ці документи безпосередньо діють як міні\n"
+"-розмови, що синхронізовані з електронною поштою. Ви можете відповісти в Odoo, і \n"
+"відповіді будуть автоматично зібрані, коли вони повернуться, та \n"
+"будуть прикріплені до того самого документа *розмови*.\n"
+"Для більш конкретних потреб ви також можете призначити спеціальні дії \n"
+"(технічно: Дії на сервері), які будуть запускатися для кожного вхідного листа.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk
@@ -432,6 +487,9 @@ msgid ""
 "* Timesheet submission and validation\n"
 "* Activate grid view for timesheets\n"
 msgstr ""
+"\n"
+"* Подання та перевірка табелів\n"
+"* Увімкніть перегляд сітки для табелів\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_timesheet
@@ -440,6 +498,9 @@ msgid ""
 "- Allow to set project for Helpdesk team\n"
 "- Track timesheet for a task from a ticket\n"
 msgstr ""
+"\n"
+"- Дозвольте створити проєкт для команди Служби Підтримки\n"
+"- Відстежуйте табель для завдання із заявки\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_peppol
@@ -448,6 +509,9 @@ msgid ""
 "- Register as a PEPPOL participant\n"
 "- Send and receive documents via PEPPOL network in Peppol BIS Billing 3.0 format\n"
 msgstr ""
+"\n"
+"- Зареєструватися як учасник PEPPOL\n"
+"- Надсилайте та отримуйте документи через мережу PEPPOL у форматі Peppol BIS Billing 3.0\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -460,6 +524,13 @@ msgid ""
 "- the users security settings if the user is internal.\n"
 "- the portal security settings page if the user is not internal.\n"
 msgstr ""
+"\n"
+"2FA Запрошення на електронну пошту\n"
+"===============\n"
+"Дозвольте користувачам запрошувати інших користувачів використовувати двофакторну автентифікацію,\n"
+"надіславши електронного листа цільовому користувачеві. Цей лист перенаправляє їх:\n"
+"- на сторінку налаштувань безпеки користувача, якщо це внутрішній користувач.\n"
+"- на сторінку налаштувань безпеки порталу, якщо користувач не є внутрішнім.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail_enforce
@@ -472,6 +543,13 @@ msgid ""
 "To enforce users to use a two-factor authentication by default,\n"
 "and encourage users to configure their 2FA using an authenticator app.\n"
 msgstr ""
+"\n"
+"2FA поштою\n"
+"===============\n"
+"Двофакторна автентифікація шляхом надсилання коду на електронну поштову скриньку користувача\n"
+"якщо не налаштовано 2FA з використанням модуля аутентифікатора.\n"
+"Змусьте користувачів використовувати двофакторну аутентифікацію за замовчуванням,\n"
+"і заохочуйте користувачів налаштовувати 2FA за допомогою модуля аутентифікатора.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_external_tax
@@ -1391,6 +1469,10 @@ msgid ""
 "================================================\n"
 "Auto installed for users in Australia and New Zealand as it is customary there.\n"
 msgstr ""
+"\n"
+"Додавання виписок клієнтів до модуля Бухоблік\n"
+"================================================\n"
+"Автоматично встановлюється для користувачів з Австралії та Нової Зеландії, як це прийнято там.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account_enterprise
@@ -1407,6 +1489,8 @@ msgid ""
 "\n"
 "Add a dynamic report about contracts and employees.\n"
 msgstr ""
+"\n"
+"Додайте динамічний звіт про контракти та співробітників.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_reports
@@ -1414,6 +1498,8 @@ msgid ""
 "\n"
 "Add a dynamic report about recruitment.\n"
 msgstr ""
+"\n"
+"Додайте динамічний звіт про працевлаштування.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_base
@@ -1472,6 +1558,16 @@ msgid ""
 "\n"
 "You can assign several contracts per employee.\n"
 msgstr ""
+"\n"
+"Додайте всю інформацію у форму співробітника, щоби керувати контрактами.\n"
+"=============================================================\n"
+"\n"
+"* Контракт\n"
+"* Місце народження,\n"
+"* Дата медичного огляду\n"
+"* Службовий автомобіль\n"
+"\n"
+"Ви можете призначити декілька контрактів на одного працівника.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_website_sale
@@ -1515,6 +1611,12 @@ msgid ""
 "With this module, link your products to a template to send complete information and tools to your customer.\n"
 "For instance when invoicing a training, the training agenda and materials will automatically be sent to your customers.'\n"
 msgstr ""
+"\n"
+"Додайте шаблони електронних листів до товарів, які будуть відправлені в момент підтвердження рахунка-фактури\n"
+"==================================================================\n"
+"\n"
+"За допомогою цього модуля ви можете прив'язати свої товари до шаблону, щоби надсилати клієнтам повну інформацію та інструменти.\n"
+"Наприклад, коли ви виставляєте рахунок за тренінг, програма тренінгу та матеріали будуть автоматично надіслані вашим клієнтам.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase_stock
@@ -1569,6 +1671,8 @@ msgid ""
 "\n"
 "Adds Quality Control to workorders with IoT.\n"
 msgstr ""
+"\n"
+"Додає Контроль якості до робочих замовлень з IoT.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder
@@ -1576,6 +1680,8 @@ msgid ""
 "\n"
 "Adds Quality Control to workorders.\n"
 msgstr ""
+"\n"
+"Додає Контроль якості до робочих замовлень.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_margin
@@ -1607,6 +1713,8 @@ msgid ""
 "\n"
 "Adds approvals data to documents\n"
 msgstr ""
+"\n"
+"Додає дані про затвердження до документів\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_fleet
@@ -1643,6 +1751,8 @@ msgid ""
 "\n"
 "Adds workcenters to Quality Control\n"
 msgstr ""
+"\n"
+"Додає робочі центри до Контролю якості\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_enterprise
@@ -1676,6 +1786,8 @@ msgid ""
 "\n"
 "Allow clients to Schedule Appointments through the Portal\n"
 msgstr ""
+"\n"
+"Дозвольте клієнтам планувати зустрічі через Портал\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment
@@ -1707,6 +1819,18 @@ msgid ""
 "* Cashback\n"
 "* Supported cards: Visa, MasterCard, American Express, Discover\n"
 msgstr ""
+"\n"
+"Дозвольте платежі кредитними картками в точці продажу\n"
+"==============================\n"
+"\n"
+"Цей модуль дозволяє клієнтам оплачувати свої замовлення кредитними\n"
+"картками. Операції обробляються Vantiv (розроблений банком Wells\n"
+"Fargo). Потрібен рахунок продавця Vantiv. Він дозволяє наступне:\n"
+"\n"
+"* Швидка оплата, просто протягнувши кредитну карту, перебуваючи на екрані платежів\n"
+"* Поєднання готівкових платежів та платежів кредитною карткою\n"
+"* Кешбек\n"
+"* Підтримувані картки: Visa, MasterCard, American Express, Discover\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_install_request
@@ -1715,6 +1839,9 @@ msgid ""
 "Allow internal users requesting a module installation\n"
 "=====================================================\n"
 msgstr ""
+"\n"
+"Дозвольте внутрішнім користувачам запити на встановлення модуля\n"
+"=====================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_wishlist
@@ -1722,6 +1849,8 @@ msgid ""
 "\n"
 "Allow shoppers of your eCommerce store to create personalized collections of products they want to buy and save them for future reference.\n"
 msgstr ""
+"\n"
+"Дозвольте покупцям вашого інтернет-магазину створювати персоналізовані колекції товарів, які вони хочуть придбати, і зберігати їх для використання в майбутньому.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_stock_wishlist
@@ -1729,6 +1858,9 @@ msgid ""
 "\n"
 "Allow the user to select if he wants to receive email notifications when a product of his wishlist gets back in stock.\n"
 msgstr ""
+"\n"
+"Дозвольте користувачу вибрати, чи хоче він отримувати сповіщення електронною поштою, коли товар з його списку бажань знову з'явиться на складі.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_crm
@@ -1761,6 +1893,9 @@ msgid ""
 "Allow users to sign up and reset their password\n"
 "===============================================\n"
 msgstr ""
+"\n"
+"Дозвольте користувачам реєструватися та скидати пароль\n"
+"===============================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_livechat
@@ -1768,6 +1903,9 @@ msgid ""
 "\n"
 "Allow website visitors to chat with the collaborators. This module also brings a feedback tool for the livechat and web pages to display your channel with its ratings on the website.\n"
 msgstr ""
+"\n"
+"Дозвольте відвідувачам сайту спілкуватися в чаті з учасниками. Цей модуль також надає інструмент зворотного зв'язку для чату і веб-сторінок, щоб відображати ваш канал з його рейтингами на веб-сайті.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_picking
@@ -1794,6 +1932,9 @@ msgid ""
 "Allows the outsourcing of services. This module allows one to sell services provided\n"
 "by external providers and will automatically generate purchase orders directed to the service seller.\n"
 msgstr ""
+"\n"
+"Дозволяє передавати послуги на аутсорсинг. Цей модуль дозволяє продавати послуги надані\n"
+"зовнішніми постачальниками і автоматично генерує замовлення на купівлю, спрямовані до продавця послуг.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet_margin
@@ -1827,6 +1968,11 @@ msgid ""
 "===========================================================\n"
 "Additional information is displayed in the name of the SOL when it is used in services apps (project and planning). \n"
 msgstr ""
+"\n"
+"Дозволяє відображати інформацію про продажі в додатках сервісів SOL\n"
+"===========================================================\n"
+"Додаткова інформація відображається в назві SOL, коли він використовується в сервісних програмах (проєкт і планування). \n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet
@@ -1872,6 +2018,10 @@ msgid ""
 "Allows users to send documents by post\n"
 "=====================================================\n"
 msgstr ""
+"\n"
+"Дозволяє користувачам надсилати документи поштою\n"
+"=====================================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_snailmail_account
@@ -1880,6 +2030,10 @@ msgid ""
 "Allows users to send invoices by post\n"
 "=====================================================\n"
 msgstr ""
+"\n"
+"Дозволяє користувачам надсилати рахунки-фактури поштою\n"
+"=====================================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_iot
@@ -1899,6 +2053,12 @@ msgid ""
 "\n"
 "When creating invoices from picking, the system is able to add and compute the shipping line.\n"
 msgstr ""
+"\n"
+"Дозволяє додавати способи доставки в комплектуванні.\n"
+"===============================================\n"
+"\n"
+"При створенні рахунків-фактури з комплектування система може додавати і розраховувати рядок доставки.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery
@@ -1909,6 +2069,12 @@ msgid ""
 "You can define your own carrier for prices.\n"
 "The system is able to add and compute the shipping line.\n"
 msgstr ""
+"\n"
+"Дозволяє додавати способи доставки в замовленні на продаж.\n"
+"==================================================\n"
+"Ви можете визначити власного перевізника за цінами.\n"
+"Система вміє додавати і розраховувати рядок доставки.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_account_enterprise
@@ -1956,6 +2122,9 @@ msgid ""
 "\n"
 "App to upload and manage your documents.\n"
 msgstr ""
+"\n"
+"Додаток для завантаження та керування вашими документами.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_invoice
@@ -1963,6 +2132,8 @@ msgid ""
 "\n"
 "Arabic/English for GCC\n"
 msgstr ""
+"\n"
+"Арабська/англійська для країн Перської затоки\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_invoice_stock_account
@@ -1970,6 +2141,8 @@ msgid ""
 "\n"
 "Arabic/English for GCC + lot/SN numbers\n"
 msgstr ""
+"\n"
+"Арабська/англійська для країн Перської затоки + партійні/серійні номери\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_forum
@@ -1977,6 +2150,8 @@ msgid ""
 "\n"
 "Ask questions, get answers, no distractions\n"
 msgstr ""
+"\n"
+"Ставте питання, отримуйте відповіді, не відволікаючись\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_test
@@ -2009,6 +2184,12 @@ msgid ""
 "Keeps track of depreciations, and creates corresponding journal entries.\n"
 "\n"
 msgstr ""
+"\n"
+"Управління активами\n"
+"=================\n"
+"Керуйте активами, що належать компанії або фізичній особі.\n"
+"Відстежує амортизацію та створює відповідні бухгалтерські записи.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_attachment_indexation
@@ -2078,6 +2259,9 @@ msgid ""
 "Australian Payroll Rules.\n"
 "=========================\n"
 msgstr ""
+"\n"
+"Австралійські правила нарахування заробітної плати.\n"
+"=========================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_partner_autocomplete
@@ -2085,6 +2269,8 @@ msgid ""
 "\n"
 "Auto-complete partner companies' data\n"
 msgstr ""
+"\n"
+"Автоматичне заповнення даних компаній-партнерів\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_dimona
@@ -2133,6 +2319,8 @@ msgid ""
 "\n"
 "Automatic accounting for MRP\n"
 msgstr ""
+"\n"
+"Автоматичний облік для виробництва\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_booth_exhibitor
@@ -2140,6 +2328,8 @@ msgid ""
 "\n"
 "Automatically create a sponsor when renting a booth.\n"
 msgstr ""
+"\n"
+"Автоматичне створення спонсора при оренді стенду.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_images
@@ -2151,6 +2341,12 @@ msgid ""
 "This module integrates with the Google Custom Search API to set images on products based on the\n"
 "barcode.\n"
 msgstr ""
+"\n"
+"Автоматичне встановлення зображень товару на основі штрих-коду\n"
+"=====================================================\n"
+"\n"
+"Цей модуль інтегрується з API кастомного пошуку Google, щоби встановлювати зображення товарів на основі\n"
+"штрих-коду.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_fsm
@@ -2158,6 +2354,8 @@ msgid ""
 "\n"
 "Avoid auto-enabling the documents feature on fsm projects.\n"
 msgstr ""
+"\n"
+"Уникайте автоматичного ввімкнення функції документів на проєктах fsm.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
@@ -2179,6 +2377,8 @@ msgid ""
 "\n"
 "Base module for Bolivian reports\n"
 msgstr ""
+"\n"
+"Базовий модуль для болівійських звітів\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bg_reports
@@ -2186,6 +2386,9 @@ msgid ""
 "\n"
 "Base module for Bulgarian reports\n"
 msgstr ""
+"\n"
+"Базовий модуль для болгарських звітів\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mz_reports
@@ -2193,6 +2396,8 @@ msgid ""
 "\n"
 "Base module for Mozambican reports\n"
 msgstr ""
+"\n"
+"Базовий модуль для звітів Мозамбіку\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_saft
@@ -2202,6 +2407,10 @@ msgid ""
 "===============================\n"
 "This is meant to be used with localization specific modules.\n"
 msgstr ""
+"\n"
+"Базовий модуль для звітності SAF-T\n"
+"===============================\n"
+"Він призначений для використання з локалізацією конкретних модулів.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br
@@ -2344,6 +2553,8 @@ msgid ""
 "\n"
 "Bill timesheets logged on helpdesk tickets.\n"
 msgstr ""
+"\n"
+"Виставляйте в рахунку табелі, записані в заявці служби підтримки.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -2354,6 +2565,11 @@ msgid ""
 "Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes\n"
 "\n"
 msgstr ""
+"\n"
+"Болівійський план рахунків та податкова локалізація.\n"
+"\n"
+"Болівійський план рахунків та оподаткування згідно з чинним законодавством.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br_edi
@@ -2363,6 +2579,10 @@ msgid ""
 "========================\n"
 "Provides electronic invoicing for Brazil through Avatax.\n"
 msgstr ""
+"\n"
+"Бразильський бухгалтерський EDI\n"
+"========================\n"
+"Забезпечує електронне виставлення рахунків для Бразилії через Avatax.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br_edi_sale
@@ -2372,6 +2592,10 @@ msgid ""
 "=================================\n"
 "Adds some fields to sale orders that will be carried over the invoice.\n"
 msgstr ""
+"\n"
+"Бразильський бухгалтерський EDI для Продажів\n"
+"=================================\n"
+"Додає деякі поля до замовлень на продаж, які будуть перенесені в рахунок-фактуру.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_livechat
@@ -2379,6 +2603,8 @@ msgid ""
 "\n"
 "Bridge between HR and Livechat."
 msgstr ""
+"\n"
+"Мостовий модуль між HR та Онлайн-чатом."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_maintenance
@@ -2386,6 +2612,8 @@ msgid ""
 "\n"
 "Bridge between HR and Maintenance."
 msgstr ""
+"\n"
+"Мостовий модуль між HR та Обслуговуванням."
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_fsm_sale
@@ -2393,6 +2621,8 @@ msgid ""
 "\n"
 "Bridge between Helpdesk and Industry FSM Sale\n"
 msgstr ""
+"\n"
+"Мостовий модуль між Службою підтримки та Індустріями FSM Продажами.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal_rating
@@ -2401,6 +2631,10 @@ msgid ""
 "Bridge module adding rating capabilities on portal. It includes notably\n"
 "inclusion of rating directly within the customer portal discuss widget.\n"
 msgstr ""
+"\n"
+"Мостовий модуль додає можливості рейтингу на порталі. Це, зокрема, включає в себе\n"
+"рейтинг безпосередньо у віджет обговорення на порталі клієнта.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_qr_code_emv
@@ -13678,7 +13912,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Choose a value..."
-msgstr ""
+msgstr "Оберіть значення..."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_encryption

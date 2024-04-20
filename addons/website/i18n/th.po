@@ -259,8 +259,6 @@ msgid "...and switch the timeline contents to fit your needs."
 msgstr "...และเปลี่ยนเนื้อหาไทม์ไลน์ให้เหมาะกับความต้องการของคุณ"
 
 #. module: website
-#: model:website,contact_us_button_url:website.default_website
-#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -1619,11 +1617,6 @@ msgstr "โทเค็นการเข้าถึง"
 #: model_terms:ir.ui.view,arch_db:website.protected_403
 msgid "Access to this page"
 msgstr "เข้าถึงหน้านี้"
-
-#. module: website
-#: model:ir.model.constraint,message:website.constraint_website_visitor_access_token_unique
-msgid "Access token should be unique."
-msgstr "การเข้าถึงโทเค็นควรแตกต่างกัน"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -6304,17 +6297,6 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
-#, python-format
-msgid ""
-"If you need to add analytics or marketing tags, inject code in your header "
-"or body instead."
-msgstr ""
-"หากคุณต้องการเพิ่มแท็กการวิเคราะห์หรือการตลาด "
-"ให้แทรกโค้ดในส่วนหัวหรือเนื้อหาของคุณแทน"
-
-#. module: website
-#. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor.js:0
 #, python-format
 msgid ""
@@ -6935,7 +6917,6 @@ msgstr "เว้นว่างไว้เพื่อใช้ค่าเร
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_asset__key
 #: model:ir.model.fields,field_description:website.field_ir_attachment__key
-#: model:ir.model.fields,field_description:website.field_product_document__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_attachment__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__key
@@ -8297,12 +8278,6 @@ msgid "None"
 msgstr "ไม่มี"
 
 #. module: website
-#: model:website,prevent_zero_price_sale_text:website.default_website
-#: model:website,prevent_zero_price_sale_text:website.website2
-msgid "Not Available For Sale"
-msgstr "ไม่มีจำหน่าย"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Not Published"
 msgstr "ไม่เผยแพร่"
@@ -8876,7 +8851,10 @@ msgid "Page Layout"
 msgstr "เค้าโครงหน้า"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#, python-format
 msgid "Page Name"
 msgstr "ชื่อเพจ"
 
@@ -9222,6 +9200,13 @@ msgstr "นำหน้า"
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "Preset"
 msgstr "พรีเซ็ต"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
+#, python-format
+msgid "Press %(key)s to exit full string"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -11399,7 +11384,6 @@ msgstr "สีธีม"
 #: model:ir.model.fields,field_description:website.field_ir_asset__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_attachment__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__theme_template_id
-#: model:ir.model.fields,field_description:website.field_product_document__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_controller_page__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_menu__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_page__theme_template_id
@@ -12780,7 +12764,6 @@ msgstr "ผู้เข้าชมเว็บ"
 #: model:ir.model.fields,field_description:website.field_ir_asset__website_id
 #: model:ir.model.fields,field_description:website.field_ir_attachment__website_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_id
-#: model:ir.model.fields,field_description:website.field_product_document__website_id
 #: model:ir.model.fields,field_description:website.field_res_company__website_id
 #: model:ir.model.fields,field_description:website.field_res_partner__website_id
 #: model:ir.model.fields,field_description:website.field_res_users__website_id
@@ -12826,11 +12809,6 @@ msgstr "ฟีเจอร์ตัวกำหนดค่าเว็บไซ
 #: model:ir.model.fields,field_description:website.field_website__domain
 msgid "Website Domain"
 msgstr "เว็บไซต์โดเมน"
-
-#. module: website
-#: model:ir.model.constraint,message:website.constraint_website_domain_unique
-msgid "Website Domain should be unique."
-msgstr "โดเมนเว็บไซต์ไม่ควรซ้ำกัน"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__favicon
@@ -13259,7 +13237,6 @@ msgstr "คุณสามารถแก้ไข ทำซ้ำ..."
 #. module: website
 #. odoo-python
 #: code:addons/website/models/res_users.py:0
-#: model:ir.model.constraint,message:website.constraint_res_users_login_key
 #, python-format
 msgid "You can not have two users with the same login!"
 msgstr "คุณไม่สามารถมีผู้ใช้สองคนสำหรับการเข้าสู่ระบบเดียวกันได้!"
@@ -13294,6 +13271,15 @@ msgid ""
 msgstr "คุณไม่สามารถลบเว็บไซต์เริ่มต้น %s ได้ ลองเปลี่ยนการตั้งค่าแทน"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
@@ -13323,13 +13309,6 @@ msgid ""
 " engines."
 msgstr ""
 "คุณได้ซ่อนหน้านี้จากผลการค้นหา มันจะไม่ถูกสจัดทำดัชนีโดยเครื่องมือค้นหา"
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-#, python-format
-msgid "You haven't defined your domain"
-msgstr "คุณยังไม่ได้กำหนดโดเมนของคุณ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy

@@ -3,8 +3,8 @@
 # 	* snailmail_account
 # 
 # Translators:
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # Wil Odoo, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +27,9 @@ msgid ""
 "title=\"The address is unknown on the partner\" invisible=\"not "
 "send_by_post_readonly\"/>"
 msgstr ""
+"<i class=\"fa fa-question-circle\" role=\"img\" aria-label=\"Warning\" "
+"title=\"The address is unknown on the partner\" invisible=\"not "
+"send_by_post_readonly\"/>"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.res_config_settings_view_form
@@ -45,7 +48,7 @@ msgstr "Надіслати проводку"
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__checkbox_send_by_post
 msgid "By Post"
-msgstr ""
+msgstr "Поштою"
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_res_company
@@ -60,7 +63,7 @@ msgstr "Налаштування"
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__enable_send_by_post
 msgid "Enable Send By Post"
-msgstr ""
+msgstr "Увімкніть Надіслати поштою."
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_account_move
@@ -70,12 +73,12 @@ msgstr "Запис у журналі"
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__send_by_post_readonly
 msgid "Send By Post Readonly"
-msgstr ""
+msgstr "Надіслати поштою лише для читання"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__send_by_post_warning_message
 msgid "Send By Post Warning Message"
-msgstr ""
+msgstr "Надіслати поштою сповіщення"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_res_company__invoice_is_snailmail
@@ -96,3 +99,5 @@ msgid ""
 "The partners on the following invoices have no valid address, so those "
 "invoices will not be sent: %s"
 msgstr ""
+"Партнери, указані в наведених нижче рахунках-фактурах, не мають дійсної "
+"адреси, тому ці рахунки-фактури не буде надіслано: %s"

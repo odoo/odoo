@@ -200,6 +200,10 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
 "<b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>Tạo ghi chú</b> để trao đổi nội bộ <i>(những người theo dõi nhiệm vụ này "
+"sẽ không được thông báo về ghi chú bạn tạo trừ khi bạn gắn thẻ họ)</i>. Dùng"
+" @ <b>đề cập</b> để thông báo cho một đồng nghiệp hoặc # <b>đề cập</b> để "
+"thông báo cho cả bộ phận."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -545,6 +549,11 @@ msgid ""
 "                                                    <span invisible=\"rating_status == 'stage'\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span invisible=\"rating_status == 'periodic'\">Yêu cầu đánh giá sẽ được gửi ngay khi nhiệm vụ đạt đến giai đoạn mà Mẫu email đánh giá được chỉ định.</span>\n"
+"                                                    <span invisible=\"rating_status == 'stage'\">Yêu cầu đánh giá sẽ được gửi nếu nhiệm vụ vẫn ở giai đoạn mà Mẫu email đánh giá được chỉ định.</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1248,6 +1257,8 @@ msgid ""
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
 msgstr ""
+"Chọn một <b>tên</b> cho dự án. <i>Có thể là bất kỳ tên nào bạn muốn: tên của"
+" khách hàng, sản phẩm, một bộ phận, hay tên một công trường,...</i>"
 
 #. module: project
 #. odoo-javascript
@@ -2589,7 +2600,7 @@ msgstr "Quá mốc thời gian"
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #, python-format
 msgid "Is toggle mode"
-msgstr ""
+msgstr "Chế độ bật tắt"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
@@ -4578,7 +4589,7 @@ msgstr "Nhiệm vụ phụ"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_allocated_hours
 msgid "Sub-tasks Allocated Time"
-msgstr ""
+msgstr "Thời gian đã phân bổ cho nhiệm vụ phụ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -4699,7 +4710,7 @@ msgstr "Nhật kí công việc"
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_task_plan
 msgid "Task Plans"
-msgstr ""
+msgstr "Kế hoạch nhiệm vụ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_properties_definition
@@ -5026,6 +5037,10 @@ msgid ""
 "mode on your website. This includes leads/opportunities, quotations/sales "
 "orders, purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
+"Họ có thể chỉnh sửa các nhiệm vụ dự án được chia sẻ và xem các tài liệu cụ "
+"thể ở chế độ chỉ đọc trên trang web của bạn. Những tài liệu này bao gồm "
+"lead/cơ hội, báo giá/đơn bán hàng, đơn mua hàng, hóa đơn và hóa đơn thanh "
+"toán, bảng chấm công và phiếu hỗ trợ."
 
 #. module: project
 #. odoo-python
@@ -5065,6 +5080,10 @@ msgid ""
 "update the company information for these records to align them under the "
 "same company."
 msgstr ""
+"Dự án này được liên kết với %s, trong khi giai đoạn đã chọn thuộc về %s. Bạn"
+" có thể cân nhắc một số lựa chọn sau: xóa công ty khỏi dự án hoặc giai đoạn."
+" Ngoài ra, bạn có thể cập nhật thông tin công ty cho các tập dữ liệu này để "
+"chúng thuộc về cùng một công ty."
 
 #. module: project
 #. odoo-python
@@ -5076,6 +5095,10 @@ msgid ""
 "project's company to align with the stage's company or remove the company "
 "designation from the stage"
 msgstr ""
+"Dự án này không liên kết với bất kỳ công ty nào, trong khi giai đoạn này "
+"liên kết với %s. Bạn có thể cân nhắc một số lựa chọn sau: thay đổi công ty "
+"của dự án cho phù hợp với công ty của giai đoạn hoặc xóa công ty khỏi giai "
+"đoạn"
 
 #. module: project
 #. odoo-javascript
@@ -5174,6 +5197,9 @@ msgid ""
 "leave the parent task field blank to convert a sub-task into a standalone "
 "task."
 msgstr ""
+"Để chuyển một nhiệm vụ thành một nhiệm vụ phụ, hãy chọn một nhiệm vụ chính. "
+"Ngược lại, hãy để trống trường nhiệm vụ chính để chuyển đổi một nhiệm vụ phụ"
+" thành nhiệm vụ độc lập."
 
 #. module: project
 #. odoo-python
@@ -5420,6 +5446,9 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
+"Dùng cửa sổ chat để <b>gửi email</b> và giao tiếp hiệu quả với khách hàng. "
+"Thêm người mới vào danh sách người theo dõi để họ biết được những thay đổi "
+"chính của nhiệm vụ này."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5538,6 +5567,8 @@ msgid ""
 "When sharing a project in edit mode, you are giving people access to the kanban and list views of your tasks.\n"
 "                    Collaborators will be able to view and modify part of the tasks' information."
 msgstr ""
+"Khi chia sẻ dự án ở chế độ chỉnh sửa, bạn đang cấp cho mọi người quyền truy cập vào chế độ xem danh sách và kanban của các nhiệm vụ.\n"
+"                     Cộng tác viên sẽ có thể xem và sửa đổi một phần thông tin của nhiệm vụ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -5545,6 +5576,8 @@ msgid ""
 "When sharing a project in read-only mode, you are giving people access to the tasks in their portal.\n"
 "                    These people will be able to view the tasks, but not edit them."
 msgstr ""
+"Khi chia sẻ dự án ở chế độ chỉ đọc, bạn đang cấp cho mọi người quyền truy cập dự án trên cổng thông tin của họ.\n"
+"                   Họ sẽ có thể xem nhiệm vụ, nhưng không thể chỉnh sửa chúng."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -5637,6 +5670,10 @@ msgid ""
 "%(project_company_name)s. Please ensure that this stage exclusively consists"
 " of projects linked to %(company_name)s."
 msgstr ""
+"Bạn không thể chuyển công ty trong giai đoạn này thành %(company_name)s vì "
+"nó hiện bao gồm các dự án được liên kết với %(project_company_name)s. Vui "
+"lòng đảm bảo rằng giai đoạn này chỉ bao gồm các dự án được liên kết với "
+"%(company_name)s."
 
 #. module: project
 #. odoo-python

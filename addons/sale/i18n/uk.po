@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2023
 # Wil Odoo, 2024
+# Kseina Tyshchenko, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
@@ -792,6 +793,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Відповідно до налаштування товару, доставлена кількість може автоматично обчислюватися за допомогою одного з механізмів:\n"
+"- Вручну: кількість встановлюється вручну на рядку\n"
+"- Аналітика з витрат: кількість - сума від проведених витрат\n"
+"- Табель: кількість - це сума годин, записаних на завданні, пов'язаному з цим рядком продажу\n"
+"- Складські переміщення: кількість надходить від підтверджених комплектувань\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__acc_number
@@ -3262,7 +3268,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_sale_order__prepayment_percent
 msgid "Prepayment percentage"
-msgstr ""
+msgstr "Відсоток передоплати"
 
 #. module: sale
 #. odoo-python
@@ -3270,7 +3276,7 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Prepayment percentage must be a valid percentage."
-msgstr ""
+msgstr "Відсоток передоплати має бути коректним."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4637,6 +4643,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr ""
+"Відсоток від суми, який необхідно сплатити для підтвердження комерційної "
+"пропозиції."
 
 #. module: sale
 #. odoo-python

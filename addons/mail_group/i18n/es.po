@@ -47,7 +47,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Hola,<br><br>\n"
-"                Pidió suscribierse a la lista de envíos <strong t-out=\"object.name or ''\"></strong>.\n"
+"                Ha solicitado ser suscrito a la lista de correo <strong t-out=\"object.name or ''\"></strong>.\n"
 "                <br><br>\n"
 "                Para confirmar visite el siguiente enlace: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
 "                <br><br>\n"
@@ -320,7 +320,7 @@ msgstr "Siempre permitir"
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #, python-format
 msgid "An email with instructions has been sent."
-msgstr "Se envió un correo con instrucciones."
+msgstr "Se ha enviado un correo con instrucciones."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
@@ -735,7 +735,7 @@ msgstr "Grupo de correo "
 #. module: mail_group
 #: model:res.groups,name:mail_group.group_mail_group_manager
 msgid "Mail Group Administrator"
-msgstr "Enviar correo al administrador del grupo"
+msgstr "Administrador del grupo de correo"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_subscribe
@@ -1123,7 +1123,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Post to:"
-msgstr "ublicar en:"
+msgstr "Publicar en:"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_date
@@ -1185,7 +1185,7 @@ msgstr "Rechazar el mensaje"
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__rejected
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 msgid "Rejected"
-msgstr "Rechazada"
+msgstr "Rechazado"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form

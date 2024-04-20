@@ -3,9 +3,9 @@
 # 	* hr_contract
 # 
 # Translators:
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Lucia Pacheco, 2023
 # Wil Odoo, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -133,8 +133,8 @@ msgid ""
 "According to Employee's Working Permit Expiration Date, this contract has "
 "been put in red on the %s. Please advise and correct."
 msgstr ""
-"Según la fecha de vencimiento del permiso de trabajo del empleado, se han "
-"hecho cambios en este contrato el %s, infórmelo y corríjalo."
+"Este contrato se puso en rojo el %s debido a la fecha de vencimiento del "
+"permiso de trabajo del empleado. Notifique esto y corríjalo."
 
 #. module: hr_contract
 #. odoo-python
@@ -144,8 +144,8 @@ msgid ""
 "According to the contract's end date, this contract has been put in red on "
 "the %s. Please advise and correct."
 msgstr ""
-"Según la fecha de término del contrato, se han hecho cambios en este "
-"contrato el %s, infórmelo y corríjalo."
+"Este contrato se puso en rojo el %s debido a la fecha de rescisión del "
+"contrato laboral. Notifique esto y corríjalo."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction
@@ -207,7 +207,7 @@ msgid ""
 "\n"
 "Employee: %(employee_name)s"
 msgstr ""
-"Un empleado solo puede tener un contrato al mismo tiempo. (Sin incluir contratos en estado de borrador y cancelados).\n"
+"Un empleado solo puede tener un contrato al mismo tiempo (sin incluir contratos en estado de borrador y cancelados).\n"
 "\n"
 "Empleado: %(employee_name)s"
 
@@ -230,7 +230,7 @@ msgstr "Número de cuenta bancaria"
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee_base
 msgid "Basic Employee"
-msgstr "Empleado de base"
+msgstr "Empleado básico"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__calendar_mismatch
@@ -477,7 +477,7 @@ msgstr "Contrato actual del empleado"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 msgid "Currently Under Contract"
-msgstr "Actualmente bajo contrato"
+msgstr "Actualmente sujeto a contrato"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__default_resource_calendar_id
@@ -696,7 +696,7 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__is_under_contract
 msgid "Is Currently Under Contract"
-msgstr "Actualmente bajo contrato"
+msgstr "Actualmente sujeto a contrato"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_is_follower
@@ -792,7 +792,7 @@ msgstr "No hay datos para mostrar"
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__blocked
 msgid "Not Under Contract"
-msgstr "No se encuentra bajo contrato"
+msgstr "No está sujeto a contrato"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__notes
@@ -811,7 +811,7 @@ msgid ""
 "Number of days prior to the contract end date that a contract expiration "
 "warning is triggered."
 msgstr ""
-"Número de días antes de la fecha de finalización del contrato en que se "
+"Número de días antes de la fecha de terminación del contrato en los que se "
 "activa una advertencia de vencimiento del contrato."
 
 #. module: hr_contract
@@ -821,7 +821,7 @@ msgid ""
 "triggered."
 msgstr ""
 "Número de días antes de la fecha de vencimiento del permiso de trabajo en "
-"que se activa una advertencia."
+"los que se activa una advertencia."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error_counter
@@ -1025,7 +1025,7 @@ msgstr "Tipo de la actividad de excepción registrada."
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__done
 msgid "Under Contract"
-msgstr "Bajo contrato"
+msgstr "Sujeto a contrato"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_res_users

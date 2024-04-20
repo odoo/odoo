@@ -16297,9 +16297,9 @@ msgstr "결제를 등록할 수 없습니다. 선택한 전표에 결제할 항�
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
-"You can't register payments for journal items being either all inbound, "
-"either all outbound."
-msgstr "전표 항목 전체가 인바운드 또는 아웃바운드인 경우에는 결제 등록을 할 수 없습니다."
+"You can't register payments for both inbound and outbound moves at the same "
+"time."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -16414,6 +16414,15 @@ msgstr ""
 msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
 msgstr ""
 
 #. module: account

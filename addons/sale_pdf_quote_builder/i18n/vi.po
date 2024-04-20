@@ -52,7 +52,7 @@ msgstr ""
 "VD: tùy chọn này có thể hữu ích khi chia sẻ tệp mô tả Sản phẩm.\n"
 "Xác nhận đơn hàng: tài liệu sẽ được gửi và khách hàng có thể truy cập.\n"
 "VD: tùy chọn này có thể hữu ích khi chia sẻ Hướng dẫn sử dụng hoặc nội dung kỹ thuật số được mua trên sàn thương mại điện tử.\n"
-"Báo giá nội bộ: Tài liệu sẽ có trong tệp pdf của báo giá, nằm giữa trang mở đầu và bảng báo giá."
+"Bên trong báo giá: Tài liệu sẽ có trong tệp pdf của báo giá, nằm giữa trang mở đầu và bảng báo giá."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_company
@@ -81,7 +81,7 @@ msgstr "Trang mở đầu"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
 msgid "Inside quote"
-msgstr "Báo giá"
+msgstr "Bên trong báo giá"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -128,6 +128,11 @@ msgid ""
 "                            in the quote, if the product has an \"inside quotes\" document, this document\n"
 "                            will be added after header pages and before the quotation details."
 msgstr ""
+"Mô tả sản phẩm là tài liệu pdf mà bạn có thể thêm trực tiếp vào sản phẩm.\n"
+"                           Để tiến hành, hãy truy cập sản phẩm, tìm nút \"tài liệu sản phẩm\", sau đó\n"
+"                           thêm tài liệu pdf mới với cài đặt hiển thị là \"Bên trong báo giá\". Đối với mỗi\n"
+"                           sản phẩm trong báo giá, nếu sản phẩm có tài liệu “bên trong báo giá”, thì\n"
+"                           tài liệu này sẽ được thêm vào sau các trang mở đầu và trước chi tiết báo giá."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -138,6 +143,11 @@ msgid ""
 "                            product descriptions, details of the quote and then the footer pages.\n"
 "                            If empty, it will use those define in the company settings.<br/>"
 msgstr ""
+"Cung cấp các trang mở đầu và kết thúc để soạn một báo giá hấp dẫn\n"
+"                            với nhiều thông tin hơn về công ty, sản phẩm và dịch vụ của bạn.\n"
+"                            Bản pdf báo giá của bạn sẽ được tạo bằng cách tập hợp các trang mở đầu,\n"
+"                            mô tả sản phẩm, chi tiết báo giá và sau đó là các trang kết thúc. \n"
+"                            Nếu trống, thông tin được xác định trong cài đặt công ty sẽ được sử dụng.<br/>"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
@@ -159,14 +169,14 @@ msgstr "Hành động báo cáo"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer_name
 msgid "Sale Footer Name"
-msgstr ""
+msgstr "Sale Footer Name"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header_name
 msgid "Sale Header Name"
-msgstr ""
+msgstr "Sale Header Name"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
@@ -180,6 +190,9 @@ msgid ""
 "                            can be injected in these documents using pdf forms.\n"
 "                            Refer to the documentation to know more about this feature."
 msgstr ""
+"Một số thông tin cụ thể của báo giá (tên khách hàng, mã số báo giá,...)\n"
+"                             có thể được đưa vào các tài liệu này bằng biểu mẫu pdf.\n"
+"                             Tham khảo tài liệu để tìm hiểu thêm về tính năng này."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on

@@ -751,6 +751,30 @@ msgid "Odoo"
 msgstr "Odoo"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"Peppol EAS code 9901 is deprecated. Please use a different Danish EAS code "
+"instead."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid "Peppol EAS code 9955 is deprecated. Please use 0007 instead."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"Peppol EAS codes 0212 and 0213 are deprecated. Please use 0216 instead."
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__peppol_endpoint
 msgid "Peppol Endpoint"
@@ -858,6 +882,9 @@ msgid ""
 "Please check those in their Accounting tab. Otherwise, the generated files "
 "will be incomplete."
 msgstr ""
+"Các đối tác sau thiếu trường Peppol EAS hoặc Peppol Endpoint: %s. Vui lòng "
+"kiểm tra chúng trong tab Kế toán của họ. Nếu không, các tệp được tạo sẽ "
+"không đầy đủ."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -867,6 +894,8 @@ msgid ""
 "The invoice contains line(s) with a negative unit price, which is not "
 "allowed. You might need to set a negative quantity instead."
 msgstr ""
+"Hóa đơn chứa (các) dòng có đơn giá âm, và điều này không được phép xảy ra. "
+"Thay vào đó, bạn có thể thiết lập số lượng âm."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -886,6 +915,8 @@ msgid ""
 "This partner is missing Peppol EAS or Peppol Endpoint field. Please check "
 "those in its Accounting tab or the generated file will be incomplete."
 msgstr ""
+"Đối tác này thiếu trường Peppol EAS hoặc Peppol Endpoint. Vui lòng kiểm tra "
+"chúng trong tab Kế toán, nếu không tệp được tạo sẽ không đầy đủ."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
