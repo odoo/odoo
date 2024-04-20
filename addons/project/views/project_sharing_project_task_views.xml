@@ -131,7 +131,7 @@
         <field name="arch" type="xml">
             <form string="Project Sharing: Task" class="o_form_project_tasks">
                 <header>
-                    <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not project_id and not stage_id" />
+                    <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not project_id and not stage_id" />
                 </header>
                 <div groups="base.group_user" role="status" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
                     <div class="text-center">This is a preview of how the project will look when it's shared with customers and they have editing access.
