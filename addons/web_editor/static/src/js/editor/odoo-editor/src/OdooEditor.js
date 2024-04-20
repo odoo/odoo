@@ -1954,6 +1954,7 @@ export class OdooEditor extends EventTarget {
             avatarElement.append(image);
             image.onload = () => avatarElement.style.removeProperty('display');
             image.setAttribute('src', clientAvatarUrl);
+            image.classList.add('o_object_fit_cover');
         }
         // Avoid re-appending the element in the dom.
         if (!avatarElement.parentElement) {
