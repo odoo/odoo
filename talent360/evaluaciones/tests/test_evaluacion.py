@@ -1,30 +1,45 @@
 from odoo.tests.common import TransactionCase
 
-"""
-La clase debe de tener el mismo nombre que el modelo
-
-"""
 class test_evaluacion(TransactionCase):
+    """
+    Caso de prueba para evaluar la funcionalidades relacionada con evaluaciones en Odoo.
+    """
     
-    # Método para inicializar las variables de la clase
     def setUp(self):
+        """
+        Método para inicializar las variables de la clase antes de cada prueba.
+        """
         super(test_evaluacion, self).setUp()
         
-    # Función 
     def crear_evaluacion(self, nombre, estado='borrador'):
-        # Crear y retornar una evaluación con el nombre y estado proporcionados
+        """
+        Crea y devuelve una evaluación con el nombre y estado proporcionados.
+        
+        :param nombre: El nombre de la evaluación.
+        :param estado: El estado de la evaluación (por defecto es 'borrador').
+        :return: El registro de la evaluación creada.
+        """
         return self.env['evaluacion'].create({
             'nombre': nombre,
             'estado': estado,
         })
         
-    # Método para finalizar las pruebas
     def tearDowm(self):
+        """
+        Método para finalizar las pruebas.
+        """
         super(test_evaluacion, self).tearDown()
         return
     
     
     def test_copiar_preguntas_de_template_nom035(self):
+        """
+        Prueba copiar preguntas desde un template para evaluación NOM-035.
+        
+        Este método simula la copia de preguntas desde un template predefinido para evaluación NOM-035.
+        Crea preguntas de ejemplo y un template con esas preguntas, luego copia las preguntas a
+        una evaluación y verifica que las preguntas se copien correctamente.
+        """
         evaluacion = self.crear_evaluacion('Evaluación NOM-035')
         
         # Crear preguntas de ejemplo que podrían ser asociadas a un template
@@ -43,9 +58,5 @@ class test_evaluacion(TransactionCase):
         # Verificar que las preguntas se han copiado correctamente
         self.assertEqual(len(evaluacion.pregunta_ids), 2)
         
-        
-    
-    def test_action_nom035(self):
-        return
     
     
