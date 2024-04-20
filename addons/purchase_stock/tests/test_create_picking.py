@@ -546,7 +546,10 @@ class TestCreatePicking(common.TestProductCommon):
             'name': 'Roger'
         })
         # This needs to be tried with MTO route activated
-        self.env['stock.location.route'].browse(self.ref('stock.route_warehouse0_mto')).action_unarchive()
+        mto_route = self.env['stock.location.route'].browse(self.ref('stock.route_warehouse0_mto'))
+        mto_route.action_unarchive()
+        rules = mto_route.rule_ids.filtered(lambda r: r.procure_method == 'mts_else_mto')
+        rules.procure_method = 'make_to_order'
         product = self.env['product.product'].create({
             'name': 'product',
             'type': 'product',
@@ -564,7 +567,7 @@ class TestCreatePicking(common.TestProductCommon):
         create_run_procurement(product, 50, {
             'group_id': procurement_group,
             'warehouse_id': picking_type_out.warehouse_id,
-            'partner_id': vendor
+            'partner_id': vendor.id
         })
         customer_move = self.env['stock.move'].search([('group_id', '=', procurement_group.id)])
         purchase_order = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
@@ -599,6 +602,7 @@ class TestCreatePicking(common.TestProductCommon):
         self.assertEqual(purchase_order_line.product_qty, 45, 'The demand on the Purchase Order should not have been increased since it is has been confirmed.')
         purchase_orders = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
         self.assertEqual(len(purchase_orders), 2, 'A new RFQ should have been created for missing demand.')
+        rules.procure_method = 'mts_else_mto'
 
     def test_update_qty_purchased(self):
         """

@@ -543,7 +543,10 @@ class TestProcurement(TestMrpCommon):
             'name': 'Roger'
         })
         # This needs to be tried with MTO route activated
-        self.env['stock.location.route'].browse(self.ref('stock.route_warehouse0_mto')).action_unarchive()
+        mto_route = self.env['stock.location.route'].browse(self.ref('stock.route_warehouse0_mto'))
+        mto_route.action_unarchive()
+        rules = mto_route.rule_ids.filtered(lambda r: r.procure_method == 'mts_else_mto')
+        rules.procure_method = 'make_to_order'
         # Define products requested for this BoM.
         product = self.env['product.product'].create({
             'name': 'product',
@@ -576,7 +579,7 @@ class TestProcurement(TestMrpCommon):
         create_run_procurement(product, 10, {
             'group_id': procurement_group,
             'warehouse_id': picking_type_out.warehouse_id,
-            'partner_id': vendor
+            'partner_id': vendor.id
         })
         customer_move = self.env['stock.move'].search([('group_id', '=', procurement_group.id)])
         manufacturing_order = self.env['mrp.production'].search([('product_id', '=', product.id)])
@@ -596,6 +599,7 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(manufacturing_order.product_qty, 10, 'The demand on the initial manufacturing order should not have been increased.')
         manufacturing_orders = self.env['mrp.production'].search([('product_id', '=', product.id)])
         self.assertEqual(len(manufacturing_orders), 2, 'A new MO should have been created for missing demand.')
+        rules.procure_method = 'mts_else_mto'
 
     def test_rr_with_dependance_between_bom(self):
         self.warehouse = self.env.ref('stock.warehouse0')
