@@ -48,6 +48,7 @@
         'web.assets_frontend': [
             'purchase/static/src/js/purchase_datetimepicker.js',
             'purchase/static/src/js/purchase_portal_sidebar.js',
+            'purchase/static/src/js/purchase_bank_account.js',
         ],
     },
     'license': 'LGPL-3',

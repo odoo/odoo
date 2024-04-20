@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import time
+
 from collections import defaultdict
 from datetime import datetime
+from urllib.parse import urljoin, urlencode
+
 from dateutil.relativedelta import relativedelta
 from pytz import timezone
 
@@ -10,9 +14,11 @@ from werkzeug.urls import url_encode
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools import format_amount, format_date, formatLang, groupby
+from odoo.tools import format_amount, format_date, formatLang, groupby, hmac, consteq
 from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import UserError, ValidationError
+
+VERIFICATION_URL_DURATION_S = 7 * 24 * 60 * 60  # 1 week
 
 
 class PurchaseOrder(models.Model):
@@ -564,7 +570,7 @@ class PurchaseOrder(models.Model):
                 # supplier info should be added regardless of the user access rights
                 line.product_id.product_tmpl_id.sudo().write(vals)
 
-    def action_create_invoice(self):
+    def _create_invoices(self):
         """Create the invoice associated to the PO.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
@@ -635,7 +641,10 @@ class PurchaseOrder(models.Model):
         # is actually negative or not
         moves.filtered(lambda m: m.currency_id.round(m.amount_total) < 0).action_switch_move_type()
 
-        return self.action_view_invoice(moves)
+        return moves
+
+    def action_create_invoice(self):
+        return self.action_view_invoice(self._create_invoices())
 
     def _prepare_invoice(self):
         """Prepare the dict of values to create the new invoice for a purchase order.
@@ -941,6 +950,69 @@ class PurchaseOrder(models.Model):
         order lines."""
         update_param = url_encode({'update': 'True'})
         return self.get_portal_url(query_string='&%s' % update_param)
+
+    def _portal_has_upload_bill_button(self, for_partner):
+        """The upload bill button should only show if the upload bill feature is enabled and the PO is confirmed. To
+        avoid "no invoiceable line" errors, we also hide the button when there's nothing to invoice, except when the
+        invoices can be manually deleted by the user in the portal."""
+        self.ensure_one()
+
+        return self.company_id.allow_vendor_bill_upload and \
+            self.state in ['purchase', 'done'] and \
+            (self.invoice_status == 'to invoice' or self.invoice_ids.filtered(lambda i: i._can_be_cancelled_by_vendor_partner(for_partner)))
+
+    def _portal_get_upload_bill_signature(self, expiration_ts):
+        """Creates a session verification signature for this purchase order. This should be sent to a trusted contact
+        in the partner's company who can optionally choose to forward the email to someone else they trust (e.g. AR responsible).
+
+        The signature is specific for an (order, PO partner, expiration time) tuple. The partner is included to
+        ensure links are not valid if the partner on the PO changes after generation.
+
+        :param expiration_ts: integer representing expiration time in seconds since the Epoch.
+        """
+        self.ensure_one()
+        return hmac(self.env(su=True), "purchase_upload_bill", (self.id, self.partner_id.id, expiration_ts))
+
+    def _portal_get_upload_bill_signed_url(self):
+        """Creates a signed session verification URL for this PO that can be used in a verification email."""
+        self.ensure_one()
+        expiration_ts = int(time.time()) + VERIFICATION_URL_DURATION_S
+        signature = self._portal_get_upload_bill_signature(expiration_ts)
+        params = {
+            'expiration_ts': expiration_ts,
+            'signature': signature,
+        }
+        # No get_portal_url() because verification requires the user to be logged in.
+        return urljoin(self.get_base_url(), f'/my/purchase/{self.id}?{urlencode(params)}')
+
+    def _portal_verify_upload_bill_session(self, logged_in_partner, expiration_ts, signature):
+        """ Checks that this verification request:
+          - comes from a partner who qualifies as a vendor
+          - is executed by a child of the partner associated to the PO
+          - hasn't expired
+          - has a valid signature
+        """
+        self.ensure_one()
+        if not logged_in_partner or not expiration_ts or not signature:
+            return False
+
+        commercial_partner = logged_in_partner.commercial_partner_id
+
+        # supplier_rank requires validated vendor bills. To not block first-time vendors also include POs.
+        has_access_to_upload_bill = commercial_partner.supplier_rank > 0 or self.sudo().search_count(
+            [("partner_id", "=", commercial_partner.id), ("state", "!=", "cancel")], limit=1
+        )
+        if not has_access_to_upload_bill:
+            return False
+
+        if commercial_partner != self.partner_id.commercial_partner_id:
+            return False
+
+        expiration_ts = int(expiration_ts)
+        if time.time() > expiration_ts:
+            return False
+
+        return consteq(signature, self._portal_get_upload_bill_signature(expiration_ts))
 
     def confirm_reminder_mail(self, confirmed_date=False):
         for order in self:

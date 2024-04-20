@@ -462,6 +462,11 @@ class AccountMove(models.Model):
                         'sequence': -1,
                     })]
 
+    def _can_be_cancelled_by_vendor_partner(self, for_partner):
+        """Only allow logged in vendors to cancel their own draft vendor bills through the portal."""
+        self.ensure_one()
+        return self.company_id.allow_vendor_bill_upload and self.move_type == 'in_invoice' and \
+            self.state == 'draft' and self.create_uid.partner_id == for_partner
 
 
 class AccountMoveLine(models.Model):

@@ -26,3 +26,7 @@ class Company(models.Model):
 
     po_double_validation_amount = fields.Monetary(string='Double validation amount', default=5000,
         help="Minimum amount for which a double validation is required")
+
+    allow_vendor_bill_upload = fields.Boolean(
+        string='Allow Vendor Bill Upload',
+        help="Allows vendors to upload bills for their POs and create bank accounts in the portal.")

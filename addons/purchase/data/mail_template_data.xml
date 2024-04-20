@@ -56,11 +56,24 @@
         amounting in <span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span>
         from <t t-out="object.company_id.name or ''">YourCompany</t>. 
         <br/><br/>
+        <div t-if="object.company_id.allow_vendor_bill_upload" style="padding: 16px 8px 16px 8px;">
+            <a t-att-href="object._portal_get_upload_bill_signed_url()" style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">
+                <t t-if="object._portal_has_upload_bill_button(object.partner_id)">
+                    Upload Your Bill
+                </t>
+                <t t-else="">
+                    Manage Bank Accounts
+                </t>
+            </a>
+            <br/>
+        </div>
         <t t-if="object.date_planned">
             The receipt is expected for <span style="font-weight:bold;" t-out="format_date(object.date_planned) or ''">05/05/2021</span>.
             <br/><br/>
             Could you please acknowledge the receipt of this order?
         </t>
+        <br/><br/>
+        If you have any questions, please do not hesitate to contact us.
         <t t-if="not is_html_empty(object.user_id.signature)">
             <br/><br/>
             <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
