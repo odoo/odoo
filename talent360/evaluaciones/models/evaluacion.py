@@ -5,14 +5,13 @@ class Evaluacion(models.Model):
     """
     Modelo para representar una evaluación de personal en Odoo.
 
-    Atributos:
-        _name (str): Nombre del modelo en Odoo.
-        _description (str): Descripción del modelo en Odoo.
-        nombre (fields.Char): Nombre de la evaluación. Es un campo obligatorio.
-        estado (fields.Selection): Estado de la evaluación con opciones 'borrador', 'publicado' y 'finalizado'. Por defecto, es 'borrador'.
-        pregunta_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'pregunta' para almacenar las preguntas asociadas a la evaluación.
-        competencia_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'competencia' para almacenar las competencias asociadas a la evaluación.
-        usuario_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'res.users' para asignar usuarios a la evaluación.
+    :param _name (str): Nombre del modelo en Odoo.
+    :param _description (str): Descripción del modelo en Odoo.
+    :param nombre (fields.Char): Nombre de la evaluación. Es un campo obligatorio.
+    :param estado (fields.Selection): Estado de la evaluación con opciones 'borrador', 'publicado' y 'finalizado'. Por defecto, es 'borrador'.
+    :param pregunta_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'pregunta' para almacenar las preguntas asociadas a la evaluación.
+    :param competencia_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'competencia' para almacenar las competencias asociadas a la evaluación.
+    :param usuario_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'res.users' para asignar usuarios a la evaluación.
     """
 
     _name = "evaluacion"
@@ -63,8 +62,7 @@ class Evaluacion(models.Model):
         Este método extiende el comportamiento estándar de 'write' para agregar funcionalidad de notificación cuando se modifican los usuarios asignados. 
         En caso de que se añada un usuario, se emite una notificación a través del sistema de mensajería.
 
-        Returns:
-            bool: True si la actualización fue exitosa, False en caso contrario.
+        :return: bool: True si la actualización fue exitosa, False en caso contrario.
             
         """
         res = super(Evaluacion, self).write(vals)
@@ -89,9 +87,8 @@ class Evaluacion(models.Model):
         evaluación con un nombre predeterminado y asigna este nuevo objeto a self. Luego, limpia
         las preguntas existentes y copia todas las preguntas de un template con ID predefinido 
        (en este caso, 331) al objeto evaluación actual.
-
-        Returns:
-        object: Retorna el objeto evaluación actualizado con las preguntas copiadas del template.
+       
+       :return: object: Retorna el objeto evaluación actualizado con las preguntas copiadas del template.
         """
         
         if not self:
@@ -122,8 +119,7 @@ class Evaluacion(models.Model):
         actual tenga las preguntas correctas, y luego configura y devuelve un diccionario con
         los detalles para abrir esta evaluación en una vista de formulario específica.
 
-        Returns:
-        dict: Un diccionario que contiene todos los parámetros necesarios para abrir la
+        :return: Un diccionario que contiene todos los parámetros necesarios para abrir la
         evaluación en una vista de formulario específica de Odoo.
         
         """
