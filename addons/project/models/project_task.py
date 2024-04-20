@@ -51,7 +51,7 @@ PROJECT_TASK_READABLE_FIELDS = {
     'repeat_until',
     'recurrence_id',
     'recurring_count',
-    'duration_tracking'
+    'duration_tracking',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
