@@ -17,10 +17,18 @@ from .project_task import CLOSED_STATES
 class Project(models.Model):
     _name = "project.project"
     _description = "Project"
-    _inherit = ['portal.mixin', 'mail.alias.mixin', 'rating.parent.mixin', 'mail.thread', 'mail.activity.mixin']
+    _inherit = [
+        'portal.mixin',
+        'mail.alias.mixin',
+        'rating.parent.mixin',
+        'mail.thread',
+        'mail.activity.mixin',
+        'mail.tracking.duration.mixin',
+    ]
     _order = "sequence, name, id"
     _rating_satisfaction_days = 30  # takes 30 days by default
     _systray_view = 'activity'
+    _track_duration_field = 'stage_id'
 
     def _compute_task_count(self):
         project_and_state_counts = self.env['project.task'].with_context(
