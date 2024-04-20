@@ -29,10 +29,18 @@ SALE_ORDER_STATE = [
 
 class SaleOrder(models.Model):
     _name = 'sale.order'
-    _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
+    _inherit = [
+        'portal.mixin',
+        'product.catalog.mixin',
+        'mail.thread',
+        'mail.activity.mixin',
+        'utm.mixin',
+        'mail.tracking.duration.mixin'
+    ]
     _description = "Sales Order"
     _order = 'date_order desc, id desc'
     _check_company_auto = True
+    _track_duration_field = 'state'
 
     _sql_constraints = [
         ('date_order_conditional_required',

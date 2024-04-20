@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, fields, models
+from odoo import _, fields, models, api, tools
 
 
 class MailTrackingDurationMixin(models.AbstractModel):
@@ -34,7 +34,7 @@ class MailTrackingDurationMixin(models.AbstractModel):
 
         if (
             self._track_duration_field not in self._track_get_fields()
-            or self._fields[self._track_duration_field].type != 'many2one'
+            or self._fields[self._track_duration_field].type not in ('many2one', 'selection')
         ):
             self.duration_tracking = False
             raise ValueError(_(
@@ -47,7 +47,8 @@ class MailTrackingDurationMixin(models.AbstractModel):
         query = """
                SELECT m.res_id,
                       v.create_date,
-                      v.old_value_integer
+                      v.old_value_integer,
+                      v.old_value_char
                  FROM mail_tracking_value v
             LEFT JOIN mail_message m
                    ON m.id = v.mail_message_id
@@ -62,6 +63,24 @@ class MailTrackingDurationMixin(models.AbstractModel):
         for record in self:
             record_trackings = [tracking for tracking in trackings if tracking['res_id'] == record._origin.id]
             record.duration_tracking = record._get_duration_from_tracking(record_trackings)
+
+    @api.model
+    @tools.ormcache_context('model_name', 'field_name', 'old_value_selection', keys=('lang',))
+    def _get_old_value_selection_key(self, model_name, field_name, old_value_selection):
+        """ Return the translation of a field's selection in the context's language.
+        Note that the result contains the available translations only.
+
+        :param model_name: the name of the field's model
+        :param field_name: the name of the field
+        :return: the fields' selection as a list
+        """
+        field = self.env['ir.model.fields'].sudo().search([('name', '=', field_name), ('model', '=', model_name)])
+        old_value_selection_key = False
+        for sel in field.selection_ids:
+            if sel.name == old_value_selection:
+                old_value_selection_key = sel.value
+                break
+        return old_value_selection_key
 
     def _get_duration_from_tracking(self, trackings):
         """
@@ -79,15 +98,26 @@ class MailTrackingDurationMixin(models.AbstractModel):
         self.ensure_one()
         json = defaultdict(lambda: 0)
         previous_date = self.create_date
+        tracking_duration_field_type = self._fields[self._track_duration_field].type
 
         # add "fake" tracking for time spent in the current value
-        trackings.append({
-            'create_date': self.env.cr.now(),
-            'old_value_integer': self[self._track_duration_field].id,
-        })
+        if tracking_duration_field_type == 'many2one':
+            trackings.append({
+                'create_date': self.env.cr.now(),
+                'old_value_integer': self[self._track_duration_field].id,
+            })
+        else:
+            trackings.append({
+                'create_date': self.env.cr.now(),
+                'old_value_char': self[self._track_duration_field],
+            })
 
         for tracking in trackings:
-            json[tracking['old_value_integer']] += int((tracking['create_date'] - previous_date).total_seconds())
+            if tracking_duration_field_type == 'many2one':
+                json[tracking['old_value_integer']] += int((tracking['create_date'] - previous_date).total_seconds())
+            else:
+                old_value_selection_key = self._get_old_value_selection_key(self._name, self._track_duration_field, tracking['old_value_char'])
+                json[old_value_selection_key or tracking['old_value_char']] += int((tracking['create_date'] - previous_date).total_seconds())
             previous_date = tracking['create_date']
 
         return json
