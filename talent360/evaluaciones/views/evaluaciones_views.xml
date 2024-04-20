@@ -42,6 +42,35 @@
         </field>
     </record>
 
+
+    <record id="evaluacion_reporte_form" model="ir.ui.view">
+        <field name="name">evaluacion.form</field>
+        <field name="model">evaluacion</field>
+
+        <field name="arch" type="xml">
+            <form>
+                <sheet string="Evaluacion de pesonal">
+                    <group>
+                        <group>
+                            <field name="nombre" field_id="nombre_0"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="pregunta_ids" can_create="True" can_write="True" field_id="pregunta_ids_0" context="{'current_evaluacion_id': active_id}">
+                            <tree>
+                                <field name="pregunta_texto"/>
+                                <field name="tipo"/>
+                                <button name="ver_respuestas" string="Respuestas" type="object"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <button name="reporte_test" string="Reporte" type="object"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
     <!-- OPCION -->
     <record id="opcion_action" model="ir.actions.act_window">
         <field name="name">opcion.action</field>

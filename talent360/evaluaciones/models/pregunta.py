@@ -19,3 +19,23 @@ class Pregunta(models.Model):
     company_id = fields.Many2one("res.company", string="Compañía")
     opcion_ids = fields.One2many("opcion", "pregunta_id", string="Opciones")
     respuesta_ids = fields.One2many("respuesta", "pregunta_id", string="Respuestas")
+
+    def ver_respuestas(self):
+        evaluacion_id = self._context.get('current_evaluacion_id')
+        print(f"Current evaluacion_id: {evaluacion_id}")
+
+        # Redirect to graph view of respuestas filtered by evaluacion_id and pregunta_id grouped by respuesta
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Respuestas',
+            'res_model': 'respuesta',
+            'view_mode': 'graph',
+            'domain': [
+                ('evaluacion_id', '=', evaluacion_id),
+                ('pregunta_id', '=', self.id)
+            ],
+            'context': {
+                'group_by': 'respuesta_texto'
+            }
+        }
+

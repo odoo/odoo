@@ -1,5 +1,6 @@
-from odoo import models, fields
+from odoo import models, fields, http
 import base64
+
 
 class Evaluacion(models.Model):
     _name = "evaluacion"
@@ -79,16 +80,27 @@ class Evaluacion(models.Model):
         exportText = base64.b64encode(exportText.encode())
 
         # create an 'ir.attachment' record to hold the download data
-        attachment = self.env['ir.attachment'].create({
-            'name': 'Export.txt',
-            'type': 'binary',
-            'datas': exportText,
-            'store_fname': 'Export.txt'
-        })
+        attachment = self.env["ir.attachment"].create(
+            {
+                "name": "Export.txt",
+                "type": "binary",
+                "datas": exportText,
+                "store_fname": "Export.txt",
+            }
+        )
 
         # return an action to download the file
         return {
-            'type': 'ir.actions.act_url',
-            'url': '/web/content/%s?download=true' % (attachment.id),
-            'target': 'self',
+            "type": "ir.actions.act_url",
+            "url": "/web/content/%s?download=true" % (attachment.id),
+            "target": "self",
         }
+
+    def reporte_test(self):
+        return {
+            "type": "ir.actions.act_url",
+            "url": "/evaluacion/reporte/%s" % (self.id),
+            "target": "self",
+        }
+
+   
