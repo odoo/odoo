@@ -8,7 +8,7 @@
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Niyas Raphy, 2023
-# Malaz Abuidris <msea@odoo.com>, 2023
+# Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4281,6 +4281,12 @@ msgid "Route"
 msgstr "المسار"
 
 #. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr "العودة إلى المخزون "
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
 msgid "Routing Lines"
 msgstr "خطوط التوجيه "
@@ -6333,6 +6339,14 @@ msgstr "لقد قمت بإنتاج كمية أقل من الطلب المبدأ�
 #, python-format
 msgid "You should provide a lot number for the final product."
 msgstr "ينبغي تعيين رقم دفعة للمنتج النهائي. "
+
+#. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid ""
+"You should update the components quantity instead of directly updating the "
+"quantity of the kit product."
+msgstr "عليك تحديث كمية المكونات بدلاً من تحديث كمية منتج المجموعة مباشرةً. "
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action

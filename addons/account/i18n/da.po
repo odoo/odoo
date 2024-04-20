@@ -12,10 +12,10 @@
 # Stefan Mølgaard, 2023
 # Ejner Sønniksen <ejner@vkdata.dk>, 2023
 # Mads Søndergaard, 2023
-# lhmflexerp <lhm@flexerp.dk>, 2024
 # Martin Trigaux, 2024
 # Kjeld Borch Egevang <kjeld@mail4us.dk>, 2024
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
+# lhmflexerp <lhm@flexerp.dk>, 2024
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8019,7 +8019,7 @@ msgstr "Faktura/regnings dato"
 #. module: account
 #: model:mail.template,name:account.email_template_edi_invoice
 msgid "Invoice: Sending"
-msgstr ""
+msgstr "Faktura: Send"
 
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_invoice
@@ -10907,7 +10907,7 @@ msgstr "Betalingsbetingelser: Straksbetaling"
 #. module: account
 #: model:mail.template,name:account.mail_template_data_payment_receipt
 msgid "Payment: Payment Receipt"
-msgstr ""
+msgstr "Betalings: Betalingskvittering"
 
 #. module: account
 #. odoo-python
@@ -12517,6 +12517,8 @@ msgid ""
 "Sent manually to customer when clicking on 'Send receipt by email' in "
 "payment action"
 msgstr ""
+"Sendt manuelt til kunde når der klikkes på 'Send kvittering per email' ved "
+"betaling"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_credit_note
@@ -12526,7 +12528,7 @@ msgstr "Sendes til kunder med kreditnotaen vedhæftet"
 #. module: account
 #: model:mail.template,description:account.email_template_edi_invoice
 msgid "Sent to customers with their invoices in attachment"
-msgstr ""
+msgstr "Sendt til kunder med deres fakturaer vedhæftet"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__9
@@ -16468,11 +16470,9 @@ msgstr ""
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
-"You can't register payments for journal items being either all inbound, "
-"either all outbound."
+"You can't register payments for both inbound and outbound moves at the same "
+"time."
 msgstr ""
-"Du kan ikke registrere betalinger for journal bilag der enten alle er "
-"indgående eller udgående."
 
 #. module: account
 #. odoo-python

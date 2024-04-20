@@ -290,11 +290,25 @@ msgstr "Thuế GTGT của %s phải được bắt đầu bằng mã quốc gia 
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "The country is required for the %s."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "The currency '%s' is not active."
 msgstr "Tiền tệ '%s' không hoạt động."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "The customer %s must have a Bronnoysund company registry."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -335,6 +349,8 @@ msgid ""
 "The invoice contains line(s) with a negative unit price, which is not "
 "allowed. You might need to set a negative quantity instead."
 msgstr ""
+"Hóa đơn chứa (các) dòng có đơn giá âm, và điều này không được phép xảy ra. "
+"Thay vào đó, bạn có thể thiết lập số lượng âm."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -357,7 +373,6 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The supplier %s must have a Bronnoysund company registry."

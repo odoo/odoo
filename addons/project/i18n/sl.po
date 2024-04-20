@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Katja Deržič, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
@@ -78,10 +78,22 @@ msgid "# of Tasks"
 msgstr "# opravil"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "#{record.commercial_partner_id.value}"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid ""
 "#{record.milestone_count_reached.value} Milestones reached out of "
 "#{record.milestone_count.value}"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "#{record.partner_id.value}"
 msgstr ""
 
 #. module: project
@@ -117,13 +129,6 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Tasks Analysis"
-msgstr ""
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "%(name)s's Timesheets"
 msgstr ""
 
 #. module: project
@@ -2004,8 +2009,8 @@ msgstr ""
 "Nimate dostopa, preskočite te podatke v uporabnikovem e-poštnem povzetku."
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -2101,7 +2106,7 @@ msgstr ""
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
 #, python-format
 msgid "Employees Only"
-msgstr ""
+msgstr "Samo zaposleni"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_until
@@ -2523,8 +2528,8 @@ msgid ""
 msgstr "De aktiviranje , brez brisanja"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -2600,7 +2605,7 @@ msgstr ""
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
 #, python-format
 msgid "Internal notes are only displayed to internal users."
-msgstr ""
+msgstr "Notranje opombe so prikazane samo notranjim uporabnikom."
 
 #. module: project
 #. odoo-python
@@ -2936,14 +2941,7 @@ msgstr "Pozneje"
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
 msgid "Leave a comment"
-msgstr ""
-
-#. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/js/tours/project.js:0
-#, python-format
-msgid "Let's create your first <b>stage</b>."
-msgstr ""
+msgstr "Pustite komentar"
 
 #. module: project
 #. odoo-javascript
@@ -2951,6 +2949,13 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
+msgstr ""
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your first <b>stage</b>."
 msgstr ""
 
 #. module: project
@@ -3115,8 +3120,8 @@ msgid "Messages"
 msgstr "Sporočila"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
@@ -3279,8 +3284,8 @@ msgid "Neutral face"
 msgstr ""
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -3923,8 +3928,8 @@ msgid "Progress Percentage"
 msgstr "Odstotek napredka"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/js/project_rating_graph_view.js:0
@@ -4842,8 +4847,8 @@ msgid "Sprint in Progress"
 msgstr ""
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
@@ -5943,7 +5948,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Writing"
-msgstr ""
+msgstr "Pisanje"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__yearly
@@ -5994,6 +5999,8 @@ msgstr ""
 msgid ""
 "You cannot delete recurring tasks. Please disable the recurrence first."
 msgstr ""
+"Ponavljajočih se opravil ne morete izbrisati. Najprej onemogočite "
+"ponavljanje."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -6014,7 +6021,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot read %s fields in task."
-msgstr ""
+msgstr "Ni mogoče prebrati %spolja v opravilo."
 
 #. module: project
 #. odoo-python
@@ -6040,7 +6047,7 @@ msgstr "Dodeljeni ste v"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You have not write access of %s field."
-msgstr ""
+msgstr "Nimate dostopa do %spolja"
 
 #. module: project
 #. odoo-javascript
@@ -6073,7 +6080,7 @@ msgstr ""
 #: code:addons/project/models/project_task_recurrence.py:0
 #, python-format
 msgid "You should select a least one day"
-msgstr ""
+msgstr "Izbrati morate vsaj en dan."
 
 #. module: project
 #. odoo-javascript
@@ -6123,7 +6130,7 @@ msgstr ""
 #, python-format
 msgid ""
 "button to inform your colleagues that a task is ready for the next stage."
-msgstr ""
+msgstr "obvestite sodelavce, da je opravilo pripravljeno za naslednjo fazo."
 
 #. module: project
 #. odoo-javascript
@@ -6176,7 +6183,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "icon to organize your daily activities."
-msgstr ""
+msgstr "ikona za urejanje vsakodnevnih dejavnosti."
 
 #. module: project
 #. odoo-javascript
@@ -6184,14 +6191,14 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "icon."
-msgstr ""
+msgstr "Ikona."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
 msgid "logged in"
-msgstr ""
+msgstr "prijavljeni"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -6228,6 +6235,8 @@ msgid ""
 "to define if the project is\n"
 "      ready for the next step."
 msgstr ""
+"za določitev, ali je projekt\n"
+"pripravljen za naslednji korak."
 
 #. module: project
 #. odoo-javascript
@@ -6241,7 +6250,7 @@ msgstr ""
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
 msgid "to post a comment."
-msgstr ""
+msgstr "Objavite komentar"
 
 #. module: project
 #. odoo-javascript

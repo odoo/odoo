@@ -278,8 +278,6 @@ msgid "...and switch the timeline contents to fit your needs."
 msgstr "...และเปลี่ยนเนื้อหาไทม์ไลน์ให้เหมาะกับความต้องการของคุณ"
 
 #. module: website
-#: model:website,contact_us_button_url:website.default_website
-#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -1365,7 +1363,6 @@ msgstr ""
 "เปลี่ยนสีพื้นหลังตามบริบท และยังมีตัวเลือกการแสดงผลที่มีประสิทธิภาพ"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__website_published
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,help:website.field_ir_cron__website_published
 msgid ""
@@ -2112,7 +2109,6 @@ msgid "Autosizing"
 msgstr "ปรับขนาดอัตโนมัติ"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -4321,7 +4317,6 @@ msgid "Extension View"
 msgstr "Extension View"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_cron__xml_id
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
@@ -5262,8 +5257,8 @@ msgid "Home page of the current website"
 msgstr "หน้าแรกของเว็บไซต์ปัจจุบัน"
 
 #. module: website
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
@@ -5358,7 +5353,6 @@ msgid "ID"
 msgstr "ไอดี"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__xml_id
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:website.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
@@ -7152,12 +7146,6 @@ msgid "Normal"
 msgstr "ปกติ"
 
 #. module: website
-#: model:website,prevent_zero_price_sale_text:website.default_website
-#: model:website,prevent_zero_price_sale_text:website.website2
-msgid "Not Available For Sale"
-msgstr "ไม่มีจำหน่าย"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Not Published"
 msgstr "ไม่เผยแพร่"
@@ -7541,7 +7529,10 @@ msgid "Page Layout"
 msgstr "เค้าโครงหน้า"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#, python-format
 msgid "Page Name"
 msgstr "ชื่อเพจ"
 
@@ -7842,6 +7833,13 @@ msgstr "นำหน้า"
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "Preset"
 msgstr "พรีเซ็ต"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
+#, python-format
+msgid "Press %(key)s to exit full string"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -9560,7 +9558,6 @@ msgid "The full URL to access the document through the website."
 msgstr "URL แบบเต็มเพื่อเข้าถึงเอกสารผ่านเว็บไซต์"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__website_url
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
@@ -10957,7 +10954,6 @@ msgid "Website Pages"
 msgstr "หน้าของเว็บไซต์"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_path
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_path
 msgid "Website Path"
@@ -11012,7 +11008,6 @@ msgid "Website URL"
 msgstr "เว็บไซต์ URL"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_url
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"
@@ -11292,6 +11287,15 @@ msgstr "คุณไม่สามารถลบปุ่มส่งของ
 msgid ""
 "You cannot delete default website %s. Try to change its settings instead"
 msgstr "คุณไม่สามารถลบเว็บไซต์เริ่มต้น %s ได้ ลองเปลี่ยนการตั้งค่าแทน"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
 
 #. module: website
 #. odoo-python
