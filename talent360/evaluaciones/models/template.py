@@ -18,10 +18,4 @@ class Template(models.Model):
         required=True,
     )
 
-    pregunta_ids = fields.Many2many(
-        "pregunta",
-        "pregunta_template_rel",
-        "template_id",
-        "pregunta_id",
-        string="Preguntas",
-    )
+    pregunta_ids = fields.Many2many("pregunta", string="Preguntas")
