@@ -7,13 +7,12 @@
 # Abdullah J <bosaeed4@gmail.com>, 2023
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2023
 # Amjad Qassas <q_amjad@msn.com>, 2023
-# Niyas Raphy, 2023
 # Mustafa Rawi <mustafa@cubexco.com>, 2023
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2023
 # Rachid Al Assir <rachidalassir@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
 # Malaz Abuidris <msea@odoo.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -21,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,12 +42,20 @@ msgstr "\" تنبيه مع"
 
 #. module: website
 #. odoo-python
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "\"%s form submission\" <%s>"
+msgstr "\"%s إرسال الاستمارة\" <%s>"
+
+#. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL from\" can not be empty."
 msgstr "لا يمكن ترك \"رابط URL من\" فارغاً. "
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" can not be empty."
@@ -274,8 +281,6 @@ msgid "...and switch the timeline contents to fit your needs."
 msgstr "...وقم بتغيير محتوى المخطط الزمني ليناسب احتياجاتك. "
 
 #. module: website
-#: model:website,contact_us_button_url:website.default_website
-#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -1367,7 +1372,6 @@ msgstr ""
 "قوية."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__website_published
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,help:website.field_ir_cron__website_published
 msgid ""
@@ -1461,6 +1465,13 @@ msgstr "من نحن "
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "About us"
 msgstr "من نحن "
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "تم رفض الوصول "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
@@ -2114,7 +2125,6 @@ msgid "Autosizing"
 msgstr "التحجيم التلقائي"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -3636,6 +3646,13 @@ msgid "Designed to drive conversion"
 msgstr "مصمم لتحفيز معدلات التحويل "
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/views/theme_preview.xml:0
+#, python-format
+msgid "Desktop"
+msgstr "سطح المكتب "
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Desktop computers"
 msgstr "حواسيب سطح المكتب "
@@ -4313,7 +4330,6 @@ msgid "Extension View"
 msgstr "معاينة الامتداد"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_cron__xml_id
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
@@ -5358,7 +5374,6 @@ msgid "ID"
 msgstr "المُعرف"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__xml_id
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:website.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
@@ -6455,7 +6470,6 @@ msgstr "القائمة الرئيسية"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/components/views/page_list.xml:0
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
 #, python-format
 msgid "Main actions"
@@ -6605,6 +6619,7 @@ msgid "Men"
 msgstr "الرجال "
 
 #. module: website
+#: model:ir.model,name:website.model_ir_ui_menu
 #: model:ir.model.fields,field_description:website.field_website_menu__name
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Menu"
@@ -6705,7 +6720,10 @@ msgid "Minutes"
 msgstr "الدقائق"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/views/theme_preview.xml:0
 #: model:ir.model.fields,field_description:website.field_website_visitor__mobile
+#, python-format
 msgid "Mobile"
 msgstr "الهاتف المحمول"
 
@@ -7144,12 +7162,6 @@ msgid "Normal"
 msgstr "عادي"
 
 #. module: website
-#: model:website,prevent_zero_price_sale_text:website.default_website
-#: model:website,prevent_zero_price_sale_text:website.website2
-msgid "Not Available For Sale"
-msgstr "غير متوفر للبيع"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Not Published"
 msgstr "غير منشور "
@@ -7535,7 +7547,10 @@ msgid "Page Layout"
 msgstr "مخطط الصفحة "
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#, python-format
 msgid "Page Name"
 msgstr "اسم الصفحة"
 
@@ -7861,6 +7876,13 @@ msgstr "معد مسبقاً "
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
+#, python-format
+msgid "Press %(key)s to exit full string"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/js/backend/view_hierarchy/view_hierarchy.xml:0
 #, python-format
 msgid "Press <Tab> for next ["
@@ -8105,6 +8127,11 @@ msgstr "Qweb"
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
 msgstr "جهة اتصال حقل Qweb"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
+msgstr "حقل Qweb من النوع HTML"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -9348,13 +9375,6 @@ msgid "TIP: Once loaded, follow the"
 msgstr "نصيحة: بمجرد التحميل، اتبع "
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/systray_items/translate_website.xml:0
-#, python-format
-msgid "TRANSLATE"
-msgstr "ترجمة"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Table of Content"
 msgstr "جدول المحتويات "
@@ -9592,7 +9612,6 @@ msgid "The full URL to access the document through the website."
 msgstr "رابطURL الكامل للوصول إلى المستند من خلال الموقع الإلكتروني. "
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__website_url
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
@@ -9934,6 +9953,13 @@ msgstr "تم تعديل بناء هذا العرض. "
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#, python-format
+msgid "This website does not have a domain configured."
+msgstr "ليس لهذا الموقع الإلكتروني نطاق مهيأ. "
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
 msgid ""
@@ -9942,13 +9968,6 @@ msgid ""
 msgstr ""
 "لم تتم تهيئة نطاق لهذا الموقع الإلكتروني. لتجنب التصرفات غير المتوقعة أثناء تحرير الموقع الإلكتروني، نوصي بإغلاق (أو تحديث) علامات تبويب المتصفح الأخرى. \n"
 "لإزالة هذه الرسالة، يرجى إعداد نطاق في إعدادات موقعك الإلكتروني "
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/systray_items/website_switcher.xml:0
-#, python-format
-msgid "This website does not have a domain configured."
-msgstr "ليس لهذا الموقع الإلكتروني نطاق مهيأ. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -10144,6 +10163,13 @@ msgstr "متتبع "
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Transition"
 msgstr "انتقال"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/systray_items/translate_website.xml:0
+#, python-format
+msgid "Translate"
+msgstr "ترجِم"
 
 #. module: website
 #. odoo-javascript
@@ -10897,6 +10923,7 @@ msgstr "زائري الويب "
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/fields/redirect_field.xml:0
+#: code:addons/website/static/src/components/views/page_list.xml:0
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
@@ -11028,7 +11055,6 @@ msgid "Website Pages"
 msgstr "صفحات الموقع الإلكتروني "
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_path
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_path
 msgid "Website Path"
@@ -11083,7 +11109,6 @@ msgid "Website URL"
 msgstr "رابط URL للموقع الإلكتروني "
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_url
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"
@@ -11361,13 +11386,7 @@ msgstr ""
 "ذلك "
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/snippets/s_website_form/options.js:0
-#, python-format
-msgid "You cannot duplicate this field."
-msgstr "لا يمكنك صنع نسخة مطابقة لهذا الحقل. "
-
-#. module: website
+#. odoo-python
 #: code:addons/website/models/website_menu.py:0
 #, python-format
 msgid ""
@@ -11376,6 +11395,13 @@ msgid ""
 msgstr ""
 "لا يمكنك حذف قائمة الموقع الإلكتروني هذا حيث إنه يعمل كالقائمة الرئيسية "
 "الافتراضية للمواقع الإلكترونية الجديدة (مثال: /shop، /event، ...). "
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You cannot duplicate this field."
+msgstr "لا يمكنك صنع نسخة مطابقة لهذا الحقل. "
 
 #. module: website
 #. odoo-python
@@ -11393,13 +11419,6 @@ msgid ""
 " engines."
 msgstr ""
 "لقد قمت بإخفاء هذه الصفحة من نتائج البحث. لن تقوم محركات البحث بفهرستها."
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-#, python-format
-msgid "You haven't defined your domain"
-msgstr "لم تقم بتحديد النطاق الخاص بك "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy

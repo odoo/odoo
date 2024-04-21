@@ -16,8 +16,8 @@
 # Jakub Smolka, 2023
 # Jakub Krkoška, 2024
 # Tomáš Píšek, 2024
-# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # Katerina Horylova, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Katerina Horylova, 2024\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -196,6 +196,8 @@ msgid ""
 ".\n"
 "      Attach all documents or links to the task directly, to have all research information centralized."
 msgstr ""
+".\n"
+"      Připojte všechny dokumenty nebo odkazy přímo k úkolu, abyste měli všechny informace o výzkumu pohromadě."
 
 #. module: project
 #. odoo-javascript
@@ -338,7 +340,7 @@ msgstr ""
 "                <br><br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Tento zákaznický průzkum byl odeslán, protože váš úkol byl přesunut do fáze <b t-out=\"object.stage_id.name or ''\">Probíhá</b></span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Tento zákaznický průzkum je zasílán <b t-out=\"object.project_id.rating_status_period or ''\">týdně</b>, pokud je úkol je fázi <b t-out=\"object.stage_id.name or ''\">Probíhá</b>.</span>\n"
+"                <br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Tento zákaznický průzkum je zasílán <b t-out=\"object.project_id.rating_status_period or ''\">týdně</b>, pokud je úkol ve fázi <b t-out=\"object.stage_id.name or ''\">Probíhá</b>.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -499,7 +501,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Dílčí úkoly</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
@@ -956,7 +958,7 @@ msgstr "Přiřazení odpovědné osoby k úkolu"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Assign each new project to this plan"
-msgstr ""
+msgstr "Přiřaďte každý nový projekt tomuto plánu"
 
 #. module: project
 #. odoo-javascript
@@ -970,7 +972,7 @@ msgstr "Přiřazeno"
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Assigned On: %s"
-msgstr ""
+msgstr "Přiřazeno dne: %s"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -1309,6 +1311,8 @@ msgid ""
 "Communicate with customers on the task using the email gateway. Attach logo designs to the task, so that information flows from\n"
 "      designers to the workers who print the t-shirt. Organize priorities amongst orders using the"
 msgstr ""
+"Komunikujte se zákazníky o úkolu pomocí e-mailové brány. Připojte k úkolu návrhy loga, aby informace proudily od designérů\n"
+"      k pracovníkům, kteří tričko tisknou. Uspořádejte priority mezi objednávkami pomocí"
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -1593,6 +1597,8 @@ msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and you can\n"
 "      communicate on the task directly. Your managers decide which feedback is accepted"
 msgstr ""
+"Zákazníci navrhují zpětnou vazbu e-mailem; Odoo vytváří úkoly automaticky a můžete o\n"
+"      úkolu přímo komunikovat. Vaši manažeři rozhodnou, která zpětná vazba je přijata"
 
 #. module: project
 #. odoo-python
@@ -1693,13 +1699,13 @@ msgstr "Vážený"
 #: model:ir.model.fields,field_description:project.field_res_company__analytic_plan_id
 #: model:ir.model.fields,field_description:project.field_res_config_settings__analytic_plan_id
 msgid "Default Plan"
-msgstr ""
+msgstr "Výchozí plán"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company__analytic_plan_id
 #: model:ir.model.fields,help:project.field_res_config_settings__analytic_plan_id
 msgid "Default Plan for a new analytic account for projects"
-msgstr ""
+msgstr "Výchozí plán pro nový analytický účet pro projekty"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -5149,6 +5155,8 @@ msgid ""
 "Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \n"
 "    Add new people to the followers' list to make them aware of the main changes about this task."
 msgstr ""
+"Pomocí chatu můžete <b>odesílat e-maily</b> a efektivně komunikovat se svými zákazníky.\n"
+"    Přidávejte nové lidi do seznamu sledovaných, abyste je informovali o hlavních změnách týkajících se tohoto úkolu."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5456,6 +5464,8 @@ msgid ""
 "You should at least have one personal stage. Create a new stage to which the"
 " tasks can be transferred after this one is deleted."
 msgstr ""
+"Měli byste mít alespoň jednu osobní fázi. Vytvořte novou fázi, do které lze "
+"úkoly přenést po odstranění této."
 
 #. module: project
 #. odoo-javascript
