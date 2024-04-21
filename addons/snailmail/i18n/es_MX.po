@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__snailmail_cover
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid "Add a Cover Page"
-msgstr "Agregar una página de portada"
+msgstr "Agregar una portada"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
@@ -45,14 +45,14 @@ msgstr "Ocurrió un error al enviar la carta por correo postal."
 #, python-format
 msgid "An error occurred when sending the document by post.<br>Error: %s"
 msgstr ""
-"Ocurrió un error al enviar el documento por correo postal. <br> Error: %s"
+"Ocurrió un error al enviar el documento por correo postal. <br>Error: %s"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "An unknown error happened. Please contact the support."
 msgstr ""
-"Ocurrió un error desconocido. Póngase en contacto con asistencia técnica."
+"Ocurrió un error desconocido. Póngase en contacto con el equipo de soporte."
 
 #. module: snailmail
 #. openerp-web
@@ -180,7 +180,7 @@ msgstr "Empresa"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de configuración"
+msgstr "Ajustes de configuración"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
@@ -279,7 +279,7 @@ msgstr "La carta falló"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__failure_type
 msgid "Failure type"
-msgstr "Tipo de fallo"
+msgstr "Tipo de error"
 
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_format_error_action
@@ -424,7 +424,7 @@ msgstr "Notificaciones"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "One or more required fields are empty."
-msgstr "Uno o más de los campos requeridos están vacíos"
+msgstr "Uno o más de los campos obligatorios están vacíos."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__report_template
@@ -477,7 +477,7 @@ msgstr "Destinatario"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__reference
 msgid "Related Record"
-msgstr "Reporte relacionado "
+msgstr "Registro relacionado"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_actions_report
@@ -530,7 +530,7 @@ msgstr "Error del crédito del correo postal"
 #: code:addons/snailmail/static/src/models/notification_group/notification_group.js:0
 #, python-format
 msgid "Snailmail Failures"
-msgstr "Fallas de correo postal"
+msgstr "Errores en correo postal"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_format
@@ -630,7 +630,7 @@ msgstr "TRIAL_ERROR"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The address of the recipient is not complete"
-msgstr "La dirección del destinatario no está completa"
+msgstr "La dirección del destinatario está incompleta"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -646,7 +646,7 @@ msgstr ""
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
-msgstr "El correo postal no cubre el país del partner."
+msgstr "No es posible hacer envíos por correo postal al país del contacto."
 
 #. module: snailmail
 #. openerp-web
@@ -655,7 +655,8 @@ msgstr "El correo postal no cubre el país del partner."
 msgid ""
 "The country to which you want to send the letter is not supported by our "
 "service."
-msgstr "Nuestro servicio no hace envíos al país al que quiere enviar la carta"
+msgstr ""
+"Nuestro servicio no hace envíos al país al que quiere enviar la carta."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
@@ -663,8 +664,8 @@ msgid ""
 "The customer address is not complete. Update the address here and re-send "
 "the letter."
 msgstr ""
-"La dirección del cliente no está completa. Actualice la dirección aquí y "
-"envíe de nuevo la carta."
+"La dirección del cliente está incompleta. Actualice la dirección aquí y "
+"vuelva a enviar la carta."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -682,8 +683,7 @@ msgid ""
 "The letter could not be sent due to insufficient credits on your IAP "
 "account."
 msgstr ""
-"No se pudo enviar la carta porque su cuenta AIP no cuenta con los créditos "
-"suficientes"
+"No se pudo enviar la carta. Su cuenta IAP no tiene suficientes créditos."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type

@@ -2395,6 +2395,7 @@ msgstr "Sumă Monedă"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_residual
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_residual
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Amount Due"
 msgstr "Valoare scadentă"
@@ -10423,6 +10424,14 @@ msgid "Please define a payment method line on your payment."
 msgstr "Vă rugăm să definiți o metodă de plată pe plata dvs."
 
 #. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Please first define a fiscal country for company %s."
@@ -16269,11 +16278,9 @@ msgstr ""
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
-"You can't register payments for journal items being either all inbound, "
-"either all outbound."
+"You can't register payments for both inbound and outbound moves at the same "
+"time."
 msgstr ""
-"Nu puteți înregistra plăți pentru elementele jurnalului fie toate de "
-"intrare, fie toate de ieșire."
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -16374,10 +16381,24 @@ msgstr ""
 "schiță și să o postați după."
 
 #. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
 msgstr "Nu puteți șterge un element legat de o intrare postată."
+
+#. module: account
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16389,6 +16410,14 @@ msgstr ""
 "Nu puteți șterge această intrare, deoarece a consumat deja un număr de "
 "secvență și nu este ultima din lanț. Probabil ar trebui să o anulați în "
 "locul ei."
+
+#. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0

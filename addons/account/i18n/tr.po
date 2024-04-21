@@ -2392,6 +2392,7 @@ msgstr "Para Birimi Tutarı"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_residual
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_residual
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Amount Due"
 msgstr "Ödenecek Tutar"
@@ -10384,6 +10385,14 @@ msgid "Please define a payment method line on your payment."
 msgstr "Lütfen ödemenizde bir ödeme yöntemi satırı tanımlayın."
 
 #. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Please first define a fiscal country for company %s."
@@ -16190,11 +16199,9 @@ msgstr ""
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
-"You can't register payments for journal items being either all inbound, "
-"either all outbound."
+"You can't register payments for both inbound and outbound moves at the same "
+"time."
 msgstr ""
-"Yevmiye kalemlerinin tümü gelen, tümü giden olması için ödeme "
-"kaydedemezsiniz."
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -16293,10 +16300,24 @@ msgstr ""
 "oluşturun ve daha sonra onaylayın."
 
 #. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
 msgstr "Kaydedilen bir girişe bağlı bir öğeyi silemezsiniz."
+
+#. module: account
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16307,6 +16328,14 @@ msgid ""
 msgstr ""
 "Zaten bir sıra numarası tükettiğinden ve zincirdeki son giriş olmadığı için "
 "bu girişi silemezsiniz. Onun yerine geri dönmelisin."
+
+#. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0

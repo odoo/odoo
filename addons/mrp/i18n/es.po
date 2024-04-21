@@ -10,6 +10,7 @@
 # marcescu, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3937,6 +3938,12 @@ msgid "Responsible User"
 msgstr "Usuario responsable"
 
 #. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr "Regresar al Inventario"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
 msgid "Routing Lines"
 msgstr "Líneas de ruta"
@@ -5872,6 +5879,16 @@ msgstr "Produjo menos que la demanda inicial"
 #, python-format
 msgid "You should provide a lot number for the final product."
 msgstr "Debe proporcionar un número de lote para el producto final."
+
+#. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid ""
+"You should update the components quantity instead of directly updating the "
+"quantity of the kit product."
+msgstr ""
+"Debe actualizar la cantidad de componentes en lugar de actualizar la "
+"cantidad del producto del kit."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
