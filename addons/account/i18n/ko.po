@@ -1996,6 +1996,7 @@ msgstr "판매 영수증 생성 기능을 활성화합니다."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__active
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,field_description:account.field_account_incoterms__active
 #: model:ir.model.fields,field_description:account.field_account_journal__active
 #: model:ir.model.fields,field_description:account.field_account_payment_term__active
@@ -2280,6 +2281,13 @@ msgid "All our contractual relations will be governed exclusively by"
 msgstr "당사의 모든 계약 관계는 전적으로 법률에 의거한 "
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_reversal.py:0
+#, python-format
+msgid "All selected moves for reversal must belong to the same company."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
 msgid "Allow Product Margin"
 msgstr "제품 마진 허용"
@@ -2524,6 +2532,7 @@ msgstr "분석 회계"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Analytic Accounts"
 msgstr "분석 계정"
 
@@ -2808,6 +2817,7 @@ msgstr "자동 검증"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/company.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid "Automatic Balancing Line"
 msgstr "자동 수지 조정 라인"
@@ -2901,6 +2911,7 @@ msgstr "잔액 비율은 0이 될 수 없습니다"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_bank_journal_default_account_38
 #: model:account.journal,name:account.1_bank
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_id
@@ -3035,6 +3046,7 @@ msgstr "은행 가계정"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_suspense_account_id
 #, python-format
 msgid "Bank Suspense Account"
 msgstr "은행 가계정"
@@ -3468,6 +3480,7 @@ msgstr "다음 이월 항목: %s"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_cash_journal_default_account_39
 #: model:account.journal,name:account.1_cash
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -4510,6 +4523,7 @@ msgstr "작성일자"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #, python-format
 msgid "Credit"
@@ -4614,6 +4628,7 @@ msgstr "통화"
 
 #. module: account
 #: model:ir.model,name:account.model_res_currency
+#: model:ir.model.fields,field_description:account.field_account_account__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__currency_id
@@ -4913,8 +4928,8 @@ msgid "Data consistency check"
 msgstr "데이터 일관성 검사"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/static/src/components/account_resequence/account_resequence.xml:0
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__date
@@ -5019,6 +5034,7 @@ msgstr "일 (청구서 날짜 후)"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #, python-format
 msgid "Debit"
@@ -6046,8 +6062,8 @@ msgid "Example:"
 msgstr "예시 금액:"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
@@ -6078,8 +6094,8 @@ msgid "Expects a Chart of Accounts"
 msgstr "예상 계정과목표"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__expense
@@ -7497,11 +7513,6 @@ msgid "Invalid fiscal year last day"
 msgstr "회계연도 마감일이 잘못되었습니다."
 
 #. module: account
-#: model:account.journal,name:account.1_inventory_valuation
-msgid "Inventory Valuation"
-msgstr "재고 자산 평가"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
 msgid "Invert Tags"
 msgstr "전환 태그"
@@ -7963,8 +7974,8 @@ msgid "Journal Currency"
 msgstr "전표 통화"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
 #: model:ir.actions.act_window,name:account.action_move_journal_line
@@ -7983,8 +7994,8 @@ msgid "Journal Entries by Date"
 msgstr "날짜별 전표 입력"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_payment.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
@@ -8553,6 +8564,7 @@ msgstr "유동성"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_transfer_account_id
 #, python-format
 msgid "Liquidity Transfer"
 msgstr "유동성 이동"
@@ -9745,8 +9757,7 @@ msgstr "전기된 개시 이동"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid "Opening balance"
 msgstr "개시 잔액"
@@ -9908,6 +9919,7 @@ msgstr "미결제 계정"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
 #, python-format
 msgid "Outstanding Payments"
@@ -9921,6 +9933,7 @@ msgstr "미지급금 계정"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
 #, python-format
 msgid "Outstanding Receipts"
@@ -11397,6 +11410,7 @@ msgstr "역분개 및 청구서 생성"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__reversed
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
@@ -12039,6 +12053,7 @@ msgid "Set active to false to hide the Journal without removing it."
 msgstr "전표를 삭제하지 않고 숨기려면 false로 설정합니다."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,help:account.field_account_tax__active
 msgid "Set active to false to hide the tax without removing it."
 msgstr "세금 항목을 삭제하는 대신 숨기려면 토글을 해제하세요."
@@ -13056,13 +13071,6 @@ msgstr "전표입력 순서가 현재의 형식과 맞지 않습니다. 회계 �
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
-msgid "The Months and Days of the Payment Terms lines must be positive."
-msgstr "지급 조건 항목의 월과 일은 양수여야 합니다."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment_term.py:0
-#, python-format
 msgid ""
 "The Payment Term must have at least one percent line and the sum of the "
 "percent must be 100%."
@@ -13769,6 +13777,15 @@ msgid ""
 msgstr ""
 "선택한 대상 계정은 특정 통화를 사용하도록 설정되어 있습니다 이 계정으로 이동되는 항목은 모두 해당 통화로 변환되며,\n"
 "                기존에 사전 입력된 외환액은 모두 삭제됩니다."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -14703,6 +14720,7 @@ msgstr "아직 지정되지 않음"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
+#: model:account.account,name:account.1_unaffected_earnings_account
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr "미분배 손익"
@@ -15639,9 +15657,9 @@ msgstr "결제를 등록할 수 없습니다. 선택한 전표에 결제할 항�
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
-"You can't register payments for journal items being either all inbound, "
-"either all outbound."
-msgstr "전표 항목 전체가 인바운드 또는 아웃바운드인 경우에는 결제 등록을 할 수 없습니다."
+"You can't register payments for both inbound and outbound moves at the same "
+"time."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15755,6 +15773,15 @@ msgstr "발행이 완료된 경우에는 연결된 항목을 삭제할 수 없�
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -15762,6 +15789,15 @@ msgid ""
 "and is not the last one in the chain. You should probably revert it instead."
 msgstr ""
 "이 항목은 이미 시퀀스 번호를 사용했으며 체인의 마지막 항목이 아니므로 삭제할 수 없습니다. 대신 변경 사항은 되돌릴 수 있습니다."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15842,15 +15878,13 @@ msgstr "\"현재 연도 수익\" 계정은 하나만 있어야 합니다. (계�
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted.                 If you are absolutely sure you want to "
+"modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
-"기초 작업 (%s)이 이미 발행된 후에는 \"openning_balance\" 파일을 가져올 수 없습니다."
-"                         계정의 기초 잔액을 꼭 수정해야만 한다면, 작업을 미결 상태로 초기화하세요."
 
 #. module: account
 #. odoo-python

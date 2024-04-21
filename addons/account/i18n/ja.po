@@ -1983,6 +1983,7 @@ msgstr "有効にして販売領収書を作成します"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__active
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,field_description:account.field_account_incoterms__active
 #: model:ir.model.fields,field_description:account.field_account_journal__active
 #: model:ir.model.fields,field_description:account.field_account_payment_term__active
@@ -2265,6 +2266,13 @@ msgid "All our contractual relations will be governed exclusively by"
 msgstr "全ての契約関係は、以下によってのみ管理されます："
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_reversal.py:0
+#, python-format
+msgid "All selected moves for reversal must belong to the same company."
+msgstr "逆仕訳のために選択された全ての記帳は、同じ会社に属している必要があります。"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
 msgid "Allow Product Margin"
 msgstr "プロダクトマージンを許可する"
@@ -2508,6 +2516,7 @@ msgstr "分析用会計"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Analytic Accounts"
 msgstr "分析勘定"
 
@@ -2792,6 +2801,7 @@ msgstr "自動検証"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/company.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid "Automatic Balancing Line"
 msgstr "自動バランスライン"
@@ -2885,6 +2895,7 @@ msgstr "残高割合が0になることはありません"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_bank_journal_default_account_38
 #: model:account.journal,name:account.1_bank
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_id
@@ -3018,6 +3029,7 @@ msgstr "銀行仮勘定"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_suspense_account_id
 #, python-format
 msgid "Bank Suspense Account"
 msgstr "銀行仮勘定"
@@ -3451,6 +3463,7 @@ msgstr "以下への繰り越しライン： %s"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_cash_journal_default_account_39
 #: model:account.journal,name:account.1_cash
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -4489,6 +4502,7 @@ msgstr "作成日"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #, python-format
 msgid "Credit"
@@ -4593,6 +4607,7 @@ msgstr "通貨"
 
 #. module: account
 #: model:ir.model,name:account.model_res_currency
+#: model:ir.model.fields,field_description:account.field_account_account__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__currency_id
@@ -4890,8 +4905,8 @@ msgid "Data consistency check"
 msgstr "データの一貫性チェック"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/static/src/components/account_resequence/account_resequence.xml:0
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__date
@@ -4996,6 +5011,7 @@ msgstr "日以降：請求日から"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #, python-format
 msgid "Debit"
@@ -6020,8 +6036,8 @@ msgid "Example:"
 msgstr "例："
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
@@ -6052,8 +6068,8 @@ msgid "Expects a Chart of Accounts"
 msgstr "勘定科目表を期待して"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__expense
@@ -7462,11 +7478,6 @@ msgid "Invalid fiscal year last day"
 msgstr "無効な会計年度最終日"
 
 #. module: account
-#: model:account.journal,name:account.1_inventory_valuation
-msgid "Inventory Valuation"
-msgstr "在庫評価"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
 msgid "Invert Tags"
 msgstr "反転タグ"
@@ -7928,8 +7939,8 @@ msgid "Journal Currency"
 msgstr "仕訳通貨"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
 #: model:ir.actions.act_window,name:account.action_move_journal_line
@@ -7948,8 +7959,8 @@ msgid "Journal Entries by Date"
 msgstr "日別仕訳"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_payment.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
@@ -8516,6 +8527,7 @@ msgstr "流動性"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_transfer_account_id
 #, python-format
 msgid "Liquidity Transfer"
 msgstr "資金移動"
@@ -9701,8 +9713,7 @@ msgstr "記帳済開始仕訳"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid "Opening balance"
 msgstr "残高を開きます"
@@ -9860,6 +9871,7 @@ msgstr "未消込勘定"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
 #, python-format
 msgid "Outstanding Payments"
@@ -9873,6 +9885,7 @@ msgstr "確認待ち支払勘定科目"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
 #, python-format
 msgid "Outstanding Receipts"
@@ -10496,15 +10509,6 @@ msgstr "支払時に支払い方法の明細を定義して下さい。"
 #, python-format
 msgid "Please install Accounting for this feature"
 msgstr "この機能を利用するには会計アプリをインストールして下さい。"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment.py:0
-#, python-format
-msgid ""
-"The selected payment method is not available for this payment, please select"
-" the payment method again."
-msgstr "選択された支払方法はこの支払に利用できません。もう一度支払方法を選択して下さい。"
 
 #. module: account
 #. odoo-python
@@ -11359,6 +11363,7 @@ msgstr "リバースし請求書を作成"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__reversed
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
@@ -11997,6 +12002,7 @@ msgid "Set active to false to hide the Journal without removing it."
 msgstr "削除せずにジャーナルを非表示にするにはfalseにアクティブに設定します。"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,help:account.field_account_tax__active
 msgid "Set active to false to hide the tax without removing it."
 msgstr "削除せずに税を非表示にするにはfalseにアクティブに設定します。"
@@ -13006,13 +13012,6 @@ msgstr "仕訳の順序が現在のフォーマットに適合していません
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
-msgid "The Months and Days of the Payment Terms lines must be positive."
-msgstr "支払条件行の月・日は正の値である必要があります。"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment_term.py:0
-#, python-format
 msgid ""
 "The Payment Term must have at least one percent line and the sum of the "
 "percent must be 100%."
@@ -13709,6 +13708,15 @@ msgid ""
 "                        the loss of any pre-existing foreign currency amount."
 msgstr ""
 "選択した宛先アカウントは、特定の通貨を使用するように設定されています。転送されたすべてのエントリはこの通貨に変換され、既存の外貨金額の損失を発生させます。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr "選択された支払方法はこの支払に利用できません。もう一度支払方法を選択して下さい。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -14635,6 +14643,7 @@ msgstr "未定義"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
+#: model:account.account,name:account.1_unaffected_earnings_account
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr "未分配損益"
@@ -15559,9 +15568,9 @@ msgstr "選択した仕訳項目に支払う金額が残っていないため、
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
-"You can't register payments for journal items being either all inbound, "
-"either all outbound."
-msgstr "すべてがインバウンド又はすべてがアウトバウンドの仕訳項目に対しての支払は登録できません。"
+"You can't register payments for both inbound and outbound moves at the same "
+"time."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15673,6 +15682,15 @@ msgstr "記帳済仕訳に紐づいた項目を削除することはできませ
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr "この勘定科目タグ(%s)は削除できません。勘定科目表定義に使用されているためです。"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -15688,15 +15706,6 @@ msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
 msgstr "このレポート(%s)を削除することはできません。このレポートは、会計PDF生成エンジンで使用されます。"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account_tag.py:0
-#, python-format
-msgid ""
-"You cannot delete this account tag (%s), it is used on the chart of account "
-"definition."
-msgstr "この勘定科目タグ(%s)は削除できません。勘定科目表定義に使用されているためです。"
 
 #. module: account
 #. odoo-python
@@ -15776,15 +15785,15 @@ msgstr "タイプとして、\"当期純利\"で複数のアカウントを持�
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted.                 If you are absolutely sure you want to "
+"modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
-"開始仕訳（%s）がすでに記帳されている場合は「開始残高opening_balance」をインポートすることはできません。"
-"                         どうしても口座の開始残高を変更したい場合は、仕訳を下書きに設定し直して下さい。"
+"開始仕訳(%s)がすでに計上されている場合は、 \"openning_balance\"をインポートすることはできません。 "
+"どうしても勘定科目開始残高を変更したい場合は、仕訳をドラフトに再設定して下さい。"
 
 #. module: account
 #. odoo-python

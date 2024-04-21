@@ -2019,6 +2019,7 @@ msgstr "เปิดใช้งานเพื่อสร้างใบเส
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__active
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,field_description:account.field_account_incoterms__active
 #: model:ir.model.fields,field_description:account.field_account_journal__active
 #: model:ir.model.fields,field_description:account.field_account_payment_term__active
@@ -2306,6 +2307,13 @@ msgid "All our contractual relations will be governed exclusively by"
 msgstr "ความสัมพันธ์ตามสัญญาทั้งหมดของเราจะถูกควบคุมโดย"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_reversal.py:0
+#, python-format
+msgid "All selected moves for reversal must belong to the same company."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
 msgid "Allow Product Margin"
 msgstr "ตามสินค้า"
@@ -2555,6 +2563,7 @@ msgstr "บัญชีวิเคราะห์"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Analytic Accounts"
 msgstr "บัญชีวิเคราะห์"
 
@@ -2842,6 +2851,7 @@ msgstr "การตรวจสอบอัตโนมัติ"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/company.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid "Automatic Balancing Line"
 msgstr "บรรทัดปรับสมดุลอัตโนมัติ"
@@ -2935,6 +2945,7 @@ msgstr "เปอร์เซ็นต์ยอดคงเหลือต้อ
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_bank_journal_default_account_38
 #: model:account.journal,name:account.1_bank
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_id
@@ -3070,6 +3081,7 @@ msgstr "การระงับของธนาคาร"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_suspense_account_id
 #, python-format
 msgid "Bank Suspense Account"
 msgstr "บัญชีพักของธนาคาร"
@@ -3515,6 +3527,7 @@ msgstr "ยกบรรทัดสำหรับ: %s"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_cash_journal_default_account_39
 #: model:account.journal,name:account.1_cash
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -4572,6 +4585,7 @@ msgstr "สร้างเมื่อ"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #, python-format
 msgid "Credit"
@@ -4676,6 +4690,7 @@ msgstr "สกุลเงิน"
 
 #. module: account
 #: model:ir.model,name:account.model_res_currency
+#: model:ir.model.fields,field_description:account.field_account_account__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__currency_id
@@ -4973,8 +4988,8 @@ msgid "Data consistency check"
 msgstr "การตรวจสอบความสอดคล้องของข้อมูล"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/static/src/components/account_resequence/account_resequence.xml:0
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__date
@@ -5081,6 +5096,7 @@ msgstr "วันหลังจากวันที่ในใบแจ้ง
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #, python-format
 msgid "Debit"
@@ -6116,8 +6132,8 @@ msgid "Example:"
 msgstr "ตัวอย่าง:"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
@@ -6148,8 +6164,8 @@ msgid "Expects a Chart of Accounts"
 msgstr "ผังบัญชี"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__expense
@@ -7607,11 +7623,6 @@ msgid "Invalid fiscal year last day"
 msgstr "วันที่สุดท้ายของปีงบประมาณไม่ถูกต้อง"
 
 #. module: account
-#: model:account.journal,name:account.1_inventory_valuation
-msgid "Inventory Valuation"
-msgstr "การประเมินมูลค่าสินค้าคงคลัง"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
 msgid "Invert Tags"
 msgstr "สลับแท็ก"
@@ -8077,8 +8088,8 @@ msgid "Journal Currency"
 msgstr "สกุลเงินสมุดรายวัน"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
 #: model:ir.actions.act_window,name:account.action_move_journal_line
@@ -8097,8 +8108,8 @@ msgid "Journal Entries by Date"
 msgstr "รายการสมุดรายวันตามวันที่"
 
 #. module: account
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_payment.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
@@ -8680,6 +8691,7 @@ msgstr "โอนย้ายภายใน"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_transfer_account_id
 #, python-format
 msgid "Liquidity Transfer"
 msgstr "โอนย้ายภายใน"
@@ -9891,8 +9903,7 @@ msgstr "รายการลงบัญชีตั้งต้น"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid "Opening balance"
 msgstr "ยอดตั้งต้น"
@@ -10053,6 +10064,7 @@ msgstr "บัญชีคงค้าง"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
 #, python-format
 msgid "Outstanding Payments"
@@ -10066,6 +10078,7 @@ msgstr "บัญชีการชำระเงินคงค้าง"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
 #, python-format
 msgid "Outstanding Receipts"
@@ -11550,6 +11563,7 @@ msgstr "การย้อนกลับและการสร้างใบ
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__reversed
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
@@ -12205,6 +12219,7 @@ msgid "Set active to false to hide the Journal without removing it."
 msgstr "ตั้งค่า Active ให้เป็น False เพื่อซ่อนสมุดรายวันโดยไม่ต้องลบออก"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,help:account.field_account_tax__active
 msgid "Set active to false to hide the tax without removing it."
 msgstr "ตั้งค่า Active ให้เป็น False เพื่อซ่อนภาษีโดยไม่ต้องลบออก"
@@ -13239,13 +13254,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
-msgid "The Months and Days of the Payment Terms lines must be positive."
-msgstr "บรรทัดเดือนและวันของเงื่อนไขการชำระเงินต้องมีค่าเป็นบวก"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment_term.py:0
-#, python-format
 msgid ""
 "The Payment Term must have at least one percent line and the sum of the "
 "percent must be 100%."
@@ -13991,6 +13999,15 @@ msgid ""
 msgstr ""
 "บัญชีปลายทางที่เลือกถูกตั้งค่าให้ใช้สกุลเงินเฉพาะ ทุกรายการที่โอนไปจะถูกแปลงเป็นสกุลเงินนี้ทำให้\n"
 "                        สูญเสียจำนวนสกุลเงินต่างประเทศที่มีอยู่ก่อน"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -14972,6 +14989,7 @@ msgstr "ยังไม่กำหนด"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
+#: model:account.account,name:account.1_unaffected_earnings_account
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr "กำไร/ขาดทุนที่ยังไม่ได้สรุป"
@@ -15949,10 +15967,9 @@ msgstr ""
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
-"You can't register payments for journal items being either all inbound, "
-"either all outbound."
+"You can't register payments for both inbound and outbound moves at the same "
+"time."
 msgstr ""
-"คุณไม่สามารถลงทะเบียนการชำระเงินสำหรับรายการสมุดรายวันที่เป็นขาเข้าทั้งหมดหรือขาออกทั้งหมดก็ได้"
 
 #. module: account
 #. odoo-python
@@ -16047,6 +16064,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -16072,6 +16096,15 @@ msgstr "คุณไม่สามารถลบรายการที่เ
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -16081,6 +16114,15 @@ msgstr ""
 "คุณไม่สามารถลบรายการนี้ได้ "
 "เนื่องจากรายการดังกล่าวใช้หมายเลขลำดับไปแล้วและไม่ใช่รายการสุดท้ายของขั้นตอน"
 " คุณควรจะเปลี่ยนกลับแทน"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -16173,16 +16215,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted.                 If you are absolutely sure you want to "
+"modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
-"คุณไม่สามารถนำเข้า \"openning_balance\" ได้ หากได้ผ่านรายการการย้ายแล้ว (%s)"
-"                         หากคุณแน่ใจว่าต้องการแก้ไขยอดดุลเปิดบัญชี "
-"ให้รีเซ็ตการย้ายเป็นการร่าง"
 
 #. module: account
 #. odoo-python

@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2023
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
-# Wil Odoo, 2023
 # Thi Huong Nguyen, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +33,13 @@ msgstr " Thêm hình ảnh"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "\" alert with a"
 msgstr "\" kèm với"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "\"%s form submission\" <%s>"
+msgstr "\"%s gửi biểu mẫu\" <%s>"
 
 #. module: website
 #. odoo-python
@@ -266,8 +273,6 @@ msgstr ""
 "...và chuyển đổi nội dung dòng thời gian để phù hợp với nhu cầu của bạn."
 
 #. module: website
-#: model:website,contact_us_button_url:website.default_website
-#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -1368,7 +1373,6 @@ msgstr ""
 "cảnh và các tùy chọn hiển thị mạnh mẽ."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__website_published
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,help:website.field_ir_cron__website_published
 msgid ""
@@ -1468,6 +1472,13 @@ msgstr "Giới thiệu"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "About us"
 msgstr "Về chúng tôi"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "Truy cập bị từ chối"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
@@ -2142,7 +2153,6 @@ msgid "Autosizing"
 msgstr "Tự động định cỡ"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -4388,7 +4398,6 @@ msgid "Extension View"
 msgstr "Chế độ xem Mở rộng"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_cron__xml_id
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
@@ -5450,7 +5459,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__xml_id
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:website.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
@@ -7262,12 +7270,6 @@ msgid "None"
 msgstr "Không"
 
 #. module: website
-#: model:website,prevent_zero_price_sale_text:website.default_website
-#: model:website,prevent_zero_price_sale_text:website.website2
-msgid "Not Available For Sale"
-msgstr "Không có sẵn để bán"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Not Published"
 msgstr "Chưa được đăng"
@@ -7678,7 +7680,10 @@ msgid "Page Layout"
 msgstr "Bố cục trang"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#, python-format
 msgid "Page Name"
 msgstr "Tên trang"
 
@@ -8011,6 +8016,13 @@ msgstr "Kiểu định trước"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
+#, python-format
+msgid "Press %(key)s to exit full string"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/js/backend/view_hierarchy/view_hierarchy.xml:0
 #, python-format
 msgid "Press <Tab> for next ["
@@ -8255,6 +8267,11 @@ msgstr "Qweb"
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
 msgstr "Liên hệ lĩnh vực Qweb"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
+msgstr "Qweb Field HTML"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -9712,6 +9729,8 @@ msgid ""
 "The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
 "Change that website's company first."
 msgstr ""
+"Không thể lưu trữ công ty %(company_name)r vì có trang web %(website_name)r được liên kết với công ty này.\n"
+"Trước tiên hãy thay đổi công ty của trang web đó."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -9783,7 +9802,6 @@ msgid "The full URL to access the document through the website."
 msgstr "URL đầy đủ để truy cập tài liệu thông qua trang web."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__website_url
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
@@ -10129,6 +10147,13 @@ msgstr "Dạng xem kiến trúc này đã được sửa đổi"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#, python-format
+msgid "This website does not have a domain configured."
+msgstr "Trang web này không có miền nào được cấu hình."
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
 msgid ""
@@ -10137,13 +10162,6 @@ msgid ""
 msgstr ""
 "Trang web này không có miền nào được cấu hình. Để tránh những hành vi không mong muốn trong quá trình chỉnh sửa trang web, chúng tôi khuyên bạn nên đóng (hoặc làm mới) các tab trình duyệt khác.\n"
 "Để xóa thông báo này, vui lòng thiết lập miền trong cài đặt trang web của bạn"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/systray_items/website_switcher.xml:0
-#, python-format
-msgid "This website does not have a domain configured."
-msgstr "Trang web này không có miền nào được cấu hình."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -11246,7 +11264,6 @@ msgid "Website Pages"
 msgstr "Trang Website"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_path
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_path
 msgid "Website Path"
@@ -11298,7 +11315,6 @@ msgid "Website URL"
 msgstr "URL trang web"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_url
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"
@@ -11580,13 +11596,7 @@ msgstr ""
 "đặt trang web"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/snippets/s_website_form/options.js:0
-#, python-format
-msgid "You cannot duplicate this field."
-msgstr "Bạn không thể nhân bản trường này."
-
-#. module: website
+#. odoo-python
 #: code:addons/website/models/website_menu.py:0
 #, python-format
 msgid ""
@@ -11595,6 +11605,13 @@ msgid ""
 msgstr ""
 "Bạn không thể xóa menu trang web này vì menu này đóng vai trò là menu chính "
 "mặc định cho các trang web mới (ví dụ: /shop, /event, ...)."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You cannot duplicate this field."
+msgstr "Bạn không thể nhân bản trường này."
 
 #. module: website
 #. odoo-python
@@ -11613,13 +11630,6 @@ msgid ""
 msgstr ""
 "Bạn đã ẩn trang này khỏi kết quả tìm kiếm. Nó sẽ không được lập chỉ mục bởi "
 "các công cụ tìm kiếm."
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-#, python-format
-msgid "You haven't defined your domain"
-msgstr "Bạn chưa xác định tên miền của mình"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -11681,6 +11691,8 @@ msgid ""
 "Your Embed Code snippet doesn't have anything to display. Click on Edit to "
 "modify it."
 msgstr ""
+"Snippet mã nhúng của bạn không có gì để hiển thị. Hãy nhấp Chỉnh sửa để sửa "
+"đổi."
 
 #. module: website
 #. odoo-javascript

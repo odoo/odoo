@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2023
 # Henry Mineehen <info@mineehen.de>, 2023
-# Wil Odoo, 2023
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +33,13 @@ msgstr " Bilder hinzufügen"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "\" alert with a"
 msgstr "“-Warnung mit einem"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "\"%s form submission\" <%s>"
+msgstr "„Formulareinreichung %s“ <%s>"
 
 #. module: website
 #. odoo-python
@@ -271,8 +278,6 @@ msgstr ""
 "... und wechseln Sie den Inhalt der Zeitachse nach Ihren Bedürfnissen."
 
 #. module: website
-#: model:website,contact_us_button_url:website.default_website
-#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -1382,7 +1387,6 @@ msgstr ""
 "kontextbezogene Hintergrundfarben und leistungsstarke Anzeigeoptionen."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__website_published
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,help:website.field_ir_cron__website_published
 msgid ""
@@ -1483,6 +1487,13 @@ msgstr "Über uns"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "About us"
 msgstr "Über uns"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "Zugriff verweigert"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
@@ -2160,7 +2171,6 @@ msgid "Autosizing"
 msgstr "Automatische Größenanpassung"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -4418,7 +4428,6 @@ msgid "Extension View"
 msgstr "Erweiterungsübersicht"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_cron__xml_id
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
@@ -5489,7 +5498,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__xml_id
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:website.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
@@ -7316,12 +7324,6 @@ msgid "None"
 msgstr "Keine"
 
 #. module: website
-#: model:website,prevent_zero_price_sale_text:website.default_website
-#: model:website,prevent_zero_price_sale_text:website.website2
-msgid "Not Available For Sale"
-msgstr "Nicht zum Verkauf verfügbar"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Not Published"
 msgstr "Nicht veröffentlicht"
@@ -7726,7 +7728,10 @@ msgid "Page Layout"
 msgstr "Seitenlayout"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#, python-format
 msgid "Page Name"
 msgstr "Seitenname"
 
@@ -8059,6 +8064,13 @@ msgstr "Voreinstellung"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
+#, python-format
+msgid "Press %(key)s to exit full string"
+msgstr "Drücken Sie %(key)s, um die volle Zeichenkette zu verlassen"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/js/backend/view_hierarchy/view_hierarchy.xml:0
 #, python-format
 msgid "Press <Tab> for next ["
@@ -8304,6 +8316,11 @@ msgstr "Qweb"
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
 msgstr "Qweb-Feld Kontakt"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
+msgstr "Qweb-Feld HTML"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -9841,7 +9858,6 @@ msgstr ""
 "Die vollständige URL, um über die Website auf das Dokument zuzugreifen."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__website_url
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
@@ -10191,6 +10207,13 @@ msgstr "Diese Ansicht wurde geändert"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#, python-format
+msgid "This website does not have a domain configured."
+msgstr "Für diese Website wurde keine Domain konfiguriert."
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
 msgid ""
@@ -10199,13 +10222,6 @@ msgid ""
 msgstr ""
 "Für diese Website wurde keine Domain konfiguriert. Um unerwartetes Verhalten während der Bearbeitung der Website zu vermeiden, empfehlen wir, andere Browser-Tabs zu schließen (oder zu aktualisieren).\n"
 "Um diese Meldung zu entfernen, stellen Sie bitte eine Domain in den Einstellungen Ihrer Website ein"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/systray_items/website_switcher.xml:0
-#, python-format
-msgid "This website does not have a domain configured."
-msgstr "Für diese Website wurde keine Domain konfiguriert."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -11313,7 +11329,6 @@ msgid "Website Pages"
 msgstr "Website-Seiten"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_path
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_path
 msgid "Website Path"
@@ -11365,7 +11380,6 @@ msgid "Website URL"
 msgstr "Website-URL"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_url
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"
@@ -11655,13 +11669,7 @@ msgstr ""
 "die Einstellungen zu ändern"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/snippets/s_website_form/options.js:0
-#, python-format
-msgid "You cannot duplicate this field."
-msgstr "Sie können dieses Feld nicht duplizieren."
-
-#. module: website
+#. odoo-python
 #: code:addons/website/models/website_menu.py:0
 #, python-format
 msgid ""
@@ -11670,6 +11678,13 @@ msgid ""
 msgstr ""
 "Sie können dieses Website-Menü nicht löschen, da es als übergeordnetes "
 "Standardmenü für neue Websites dient (z. B. /shop, /event, ...)."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You cannot duplicate this field."
+msgstr "Sie können dieses Feld nicht duplizieren."
 
 #. module: website
 #. odoo-python
@@ -11690,13 +11705,6 @@ msgid ""
 msgstr ""
 "Sie haben diese Seite vor den Suchergebnissen verborgen. Es wird nicht von "
 "Suchmaschinen indiziert."
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-#, python-format
-msgid "You haven't defined your domain"
-msgstr "Sie haben Ihre Domain nicht definiert"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy

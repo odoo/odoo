@@ -3,8 +3,8 @@
 # 	* website
 # 
 # Translators:
-# Wil Odoo, 2023
 # Abe Manyo, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Abe Manyo, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +31,13 @@ msgstr "Tambahkan Gambar"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "\" alert with a"
 msgstr "\" beritahu dengan"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "\"%s form submission\" <%s>"
+msgstr "\"%s penyerahan formulir\" <%s>"
 
 #. module: website
 #. odoo-python
@@ -267,8 +274,6 @@ msgid "...and switch the timeline contents to fit your needs."
 msgstr "...dan mengganti konten timeline agar sesuai kebutuhan anda."
 
 #. module: website
-#: model:website,contact_us_button_url:website.default_website
-#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -1372,7 +1377,6 @@ msgstr ""
 "belakang yang kontekstual, dan opsi tampilan yang andal."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__website_published
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,help:website.field_ir_cron__website_published
 msgid ""
@@ -1473,6 +1477,13 @@ msgstr "Tentang Kami"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "About us"
 msgstr "Tentang kami"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "Akses Ditolak"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
@@ -2147,7 +2158,6 @@ msgid "Autosizing"
 msgstr "Autosizing"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -4400,7 +4410,6 @@ msgid "Extension View"
 msgstr "Tampilan Extension"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_cron__xml_id
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
@@ -5466,7 +5475,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__xml_id
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:website.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
@@ -7285,12 +7293,6 @@ msgid "None"
 msgstr "Tidak Ada"
 
 #. module: website
-#: model:website,prevent_zero_price_sale_text:website.default_website
-#: model:website,prevent_zero_price_sale_text:website.website2
-msgid "Not Available For Sale"
-msgstr "Tidak Tersedia Untuk Sale"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Not Published"
 msgstr "Tidak Dipublikasikan"
@@ -7702,7 +7704,10 @@ msgid "Page Layout"
 msgstr "Layout Halaman"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#, python-format
 msgid "Page Name"
 msgstr "Nama Halaman"
 
@@ -8034,6 +8039,13 @@ msgstr "Preset"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
+#, python-format
+msgid "Press %(key)s to exit full string"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/js/backend/view_hierarchy/view_hierarchy.xml:0
 #, python-format
 msgid "Press <Tab> for next ["
@@ -8278,6 +8290,11 @@ msgstr "Qweb"
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
 msgstr "Kolom Kontak Qweb"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
+msgstr "HTML Field Qweb"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -9811,7 +9828,6 @@ msgid "The full URL to access the document through the website."
 msgstr "URL lengkap untuk mengakses dokumen melalui website."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__website_url
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
@@ -10151,6 +10167,13 @@ msgstr "Tampilan arch ini telah dimodifikasi"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#, python-format
+msgid "This website does not have a domain configured."
+msgstr "Website ini tidak memiliki domain yang dikonfigurasi."
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
 msgid ""
@@ -10159,13 +10182,6 @@ msgid ""
 msgstr ""
 "Website ini tidak memiliki domain yang dikonfigurasi. Untuk mencegah perilaku yang tidak terduga selama edisi website, kami menyarankan menutup (atau memuat ulang) tab-tab browser lainnya.\n"
 "Untuk menghapus pesan ini mohon tetapkan domain di pengaturan website Anda"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/systray_items/website_switcher.xml:0
-#, python-format
-msgid "This website does not have a domain configured."
-msgstr "Website ini tidak memiliki domain yang dikonfigurasi."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -11273,7 +11289,6 @@ msgid "Website Pages"
 msgstr "Halaman Website"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_path
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_path
 msgid "Website Path"
@@ -11325,7 +11340,6 @@ msgid "Website URL"
 msgstr "URL Websi8te"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_url
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"
@@ -11609,13 +11623,7 @@ msgstr ""
 "mengganti pengaturannya"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/snippets/s_website_form/options.js:0
-#, python-format
-msgid "You cannot duplicate this field."
-msgstr "Anda tidak dapat menduplikat field ini."
-
-#. module: website
+#. odoo-python
 #: code:addons/website/models/website_menu.py:0
 #, python-format
 msgid ""
@@ -11624,6 +11632,13 @@ msgid ""
 msgstr ""
 "Anda tidak dapat menghapus menu website ini karena berfungsi sebagai menu "
 "parent default untuk website baru (contoh, /shop, /event, ...)."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You cannot duplicate this field."
+msgstr "Anda tidak dapat menduplikat field ini."
 
 #. module: website
 #. odoo-python
@@ -11642,13 +11657,6 @@ msgid ""
 msgstr ""
 "Anda telah menyembunyikan halaman ini dari pencarian. Halaman ini tidak akan"
 " diineks oleh search engine."
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-#, python-format
-msgid "You haven't defined your domain"
-msgstr "Anda belum menetapkan domain Anda"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy

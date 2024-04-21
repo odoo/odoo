@@ -45,6 +45,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Xin chào,<br><br>\n"
+"                Bạn đã yêu cầu được đăng ký vào danh sách gửi thư này <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                Để xác nhận, hãy truy cập liên kết sau: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                Nếu đây là nhầm lẫn hoặc bạn không yêu cầu đăng ký, vui lòng bỏ qua tin nhắn này.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -59,6 +68,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Xin chào,<br><br>\n"
+"                Bạn đã yêu cầu huỷ đăng ký khỏi danh sách gửi thư này <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                Để xác nhận, hãy truy cập liên kết sau: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
+"                <br><br>\n"
+"                Nếu đây là nhầm lẫn hoặc bạn không yêu cầu huỷ đăng ký, vui lòng bỏ qua tin nhắn này.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -70,6 +88,12 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>Xin chào <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
+"                <p>Vui lòng tham khảo quy định về <t t-out=\"object.mail_group_id.name\"></t> danh sách gửi thư</p> dưới đây.\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -1136,7 +1160,7 @@ msgstr "Từ chối tin nhắn nhóm"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Reject Silently"
-msgstr ""
+msgstr "Âm thầm từ chối"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form

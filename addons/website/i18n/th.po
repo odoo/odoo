@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wichanon Jamwutthipreecha, 2023
-# Wil Odoo, 2023
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +32,13 @@ msgstr "เพิ่มรูปภาพ"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "\" alert with a"
 msgstr "เตือนด้วย"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "\"%s form submission\" <%s>"
+msgstr "\"%s ยื่นแบบฟอร์ม\" <%s>"
 
 #. module: website
 #. odoo-python
@@ -264,8 +271,6 @@ msgid "...and switch the timeline contents to fit your needs."
 msgstr "...และเปลี่ยนเนื้อหาไทม์ไลน์ให้เหมาะกับความต้องการของคุณ"
 
 #. module: website
-#: model:website,contact_us_button_url:website.default_website
-#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -1349,7 +1354,6 @@ msgstr ""
 "เปลี่ยนสีพื้นหลังตามบริบท และยังมีตัวเลือกการแสดงผลที่มีประสิทธิภาพ"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__website_published
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,help:website.field_ir_cron__website_published
 msgid ""
@@ -1446,6 +1450,13 @@ msgstr "เกี่ยวกับเรา"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "About us"
 msgstr "เกี่ยวกับเรา"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "การเข้าถึงถูกปฏิเสธ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
@@ -2114,7 +2125,6 @@ msgid "Autosizing"
 msgstr "ปรับขนาดอัตโนมัติ"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -4352,7 +4362,6 @@ msgid "Extension View"
 msgstr "Extension View"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_cron__xml_id
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
@@ -5410,7 +5419,6 @@ msgid "ID"
 msgstr "ไอดี"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__xml_id
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:website.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
@@ -7223,12 +7231,6 @@ msgid "None"
 msgstr "ไม่มี"
 
 #. module: website
-#: model:website,prevent_zero_price_sale_text:website.default_website
-#: model:website,prevent_zero_price_sale_text:website.website2
-msgid "Not Available For Sale"
-msgstr "ไม่มีจำหน่าย"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Not Published"
 msgstr "ไม่เผยแพร่"
@@ -7634,7 +7636,10 @@ msgid "Page Layout"
 msgstr "เค้าโครงหน้า"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#, python-format
 msgid "Page Name"
 msgstr "ชื่อเพจ"
 
@@ -7963,6 +7968,13 @@ msgstr "พรีเซ็ต"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
+#, python-format
+msgid "Press %(key)s to exit full string"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/js/backend/view_hierarchy/view_hierarchy.xml:0
 #, python-format
 msgid "Press <Tab> for next ["
@@ -8207,6 +8219,11 @@ msgstr "QWeb"
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
 msgstr "ฟิลด์ติดต่อ QWeb"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
+msgstr "ฟิลด์ HTML Qweb"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -9729,7 +9746,6 @@ msgid "The full URL to access the document through the website."
 msgstr "URL แบบเต็มเพื่อเข้าถึงเอกสารผ่านเว็บไซต์"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__website_url
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
@@ -10061,6 +10077,13 @@ msgstr "มุมมองนี้ได้รับการแก้ไขแ
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#, python-format
+msgid "This website does not have a domain configured."
+msgstr "เว็บไซต์นี้ไม่มีการกำหนดค่าโดเมน"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
 msgid ""
@@ -10069,13 +10092,6 @@ msgid ""
 msgstr ""
 "เว็บไซต์นี้ไม่มีการกำหนดค่าโดเมน เพื่อหลีกเลี่ยงพฤติกรรมที่ไม่คาดคิดในระหว่างการแก้ไขเว็บไซต์ เราขอแนะนำให้ปิด (หรือรีเฟรช) แท็บเบราว์เซอร์อื่นๆ\n"
 "หากต้องการลบข้อความนี้ โปรดตั้งค่าโดเมนในการตั้งค่าเว็บไซต์ของคุณ"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/systray_items/website_switcher.xml:0
-#, python-format
-msgid "This website does not have a domain configured."
-msgstr "เว็บไซต์นี้ไม่มีการกำหนดค่าโดเมน"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -11162,7 +11178,6 @@ msgid "Website Pages"
 msgstr "หน้าของเว็บไซต์"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_path
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_path
 msgid "Website Path"
@@ -11214,7 +11229,6 @@ msgid "Website URL"
 msgstr "เว็บไซต์ URL"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_url
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"
@@ -11490,6 +11504,15 @@ msgid ""
 msgstr "คุณไม่สามารถลบเว็บไซต์เริ่มต้น %s ได้ ลองเปลี่ยนการตั้งค่าแทน"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
@@ -11512,13 +11535,6 @@ msgid ""
 " engines."
 msgstr ""
 "คุณได้ซ่อนหน้านี้จากผลการค้นหา มันจะไม่ถูกสจัดทำดัชนีโดยเครื่องมือค้นหา"
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-#, python-format
-msgid "You haven't defined your domain"
-msgstr "คุณยังไม่ได้กำหนดโดเมนของคุณ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy

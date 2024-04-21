@@ -6,12 +6,12 @@
 # Damian Brencic <brencicdamian12313@gmail.com>, 2023
 # Jiří Podhorecký, 2023
 # Ivana Bartonkova, 2023
-# Wil Odoo, 2023
 # Jakub Krkoška, 2023
 # Tomáš Píšek, 2023
 # Jakub Smolka, 2024
 # Katerina Horylova, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +38,13 @@ msgstr "Přidat obrázky"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "\" alert with a"
 msgstr "\" výstraha s"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "\"%s form submission\" <%s>"
+msgstr "\"%s odeslání formuláře\" <%s>"
 
 #. module: website
 #. odoo-python
@@ -270,8 +277,6 @@ msgid "...and switch the timeline contents to fit your needs."
 msgstr "... a přepněte obsah časové osy tak, aby vyhovoval vašim potřebám."
 
 #. module: website
-#: model:website,contact_us_button_url:website.default_website
-#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -1321,7 +1326,6 @@ msgstr ""
 "možnosti zobrazení."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__website_published
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,help:website.field_ir_cron__website_published
 msgid ""
@@ -1420,6 +1424,13 @@ msgstr "O nás"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "About us"
 msgstr "O nás"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "Přístup zamítnut"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
@@ -2090,7 +2101,6 @@ msgid "Autosizing"
 msgstr "Automatické rozlišení"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -4327,7 +4337,6 @@ msgid "Extension View"
 msgstr "Zobrazení rozšíření"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_cron__xml_id
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
@@ -5382,7 +5391,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__xml_id
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:website.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
@@ -7193,12 +7201,6 @@ msgid "None"
 msgstr "Nic"
 
 #. module: website
-#: model:website,prevent_zero_price_sale_text:website.default_website
-#: model:website,prevent_zero_price_sale_text:website.website2
-msgid "Not Available For Sale"
-msgstr "Není k dispozici k prodeji"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Not Published"
 msgstr "Není zveřejněno"
@@ -7603,7 +7605,10 @@ msgid "Page Layout"
 msgstr "Rozvržení stránky"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#, python-format
 msgid "Page Name"
 msgstr "Název strany"
 
@@ -7930,6 +7935,13 @@ msgstr "Přednastavení"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
+#, python-format
+msgid "Press %(key)s to exit full string"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/js/backend/view_hierarchy/view_hierarchy.xml:0
 #, python-format
 msgid "Press <Tab> for next ["
@@ -8174,6 +8186,11 @@ msgstr "Qweb"
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
 msgstr "Qweb pole kontakt"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
+msgstr "QWeb pole HTML"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -9698,7 +9715,6 @@ msgid "The full URL to access the document through the website."
 msgstr "Celá adresa URL pro přístup k dokumentu prostřednictvím webstránky."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_base_automation__website_url
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
@@ -10036,6 +10052,13 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#, python-format
+msgid "This website does not have a domain configured."
+msgstr "Tato webová stránka nemá nakonfigurovánu doménu."
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
 msgid ""
@@ -10044,13 +10067,6 @@ msgid ""
 msgstr ""
 "Tato webová stránka nemá nakonfigurovanou doménu. Abyste předešli neočekávanému chování během úprav webu, doporučujeme zavřít (nebo obnovit) ostatní karty v prohlížeči.\n"
 "Pro odstranění tohoto sdělení nastavte prosím doménu ve svých webových nastaveních"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/systray_items/website_switcher.xml:0
-#, python-format
-msgid "This website does not have a domain configured."
-msgstr "Tato webová stránka nemá nakonfigurovánu doménu."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -11145,7 +11161,6 @@ msgid "Website Pages"
 msgstr "Webové stránky"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_path
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_path
 msgid "Website Path"
@@ -11197,7 +11212,6 @@ msgid "Website URL"
 msgstr "URL webové stránky"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_automation__website_url
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"
@@ -11472,13 +11486,7 @@ msgstr ""
 "nastavení"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/snippets/s_website_form/options.js:0
-#, python-format
-msgid "You cannot duplicate this field."
-msgstr ""
-
-#. module: website
+#. odoo-python
 #: code:addons/website/models/website_menu.py:0
 #, python-format
 msgid ""
@@ -11487,6 +11495,13 @@ msgid ""
 msgstr ""
 "Tuto nabídku webu nemůžete smazat, protože slouží jako výchozí nadřazená "
 "nabídka pro nové weby (např. /obchod, /událost, ...)."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You cannot duplicate this field."
+msgstr ""
 
 #. module: website
 #. odoo-python
@@ -11505,13 +11520,6 @@ msgid ""
 msgstr ""
 "Tuto stránku jste skryli z výsledků vyhledávání. Nebude indexována "
 "vyhledávači."
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-#, python-format
-msgid "You haven't defined your domain"
-msgstr "Nedefinovali jste svou doménu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy

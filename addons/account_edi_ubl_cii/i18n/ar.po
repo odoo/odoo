@@ -779,6 +779,30 @@ msgid "Peppol BIS Billing 3.0 SG"
 msgstr "Peppol BIS Billing 3.0 SG"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"Peppol EAS code 9901 is deprecated. Please use a different Danish EAS code "
+"instead."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid "Peppol EAS code 9955 is deprecated. Please use 0007 instead."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"Peppol EAS codes 0212 and 0213 are deprecated. Please use 0216 instead."
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__peppol_endpoint
 msgid "Peppol Endpoint"
@@ -848,6 +872,13 @@ msgstr "The VAT of the %s should be prefixed with its country code."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "The country is required for the %s."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
@@ -879,6 +910,19 @@ msgstr "الحقل 'رقم الحساب السليم' مطلوب في الحسا
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#, python-format
+msgid ""
+"The following partners are missing Peppol EAS or Peppol Endpoint field: %s. "
+"Please check those in their Accounting tab. Otherwise, the generated files "
+"will be incomplete."
+msgstr ""
+"The following partners are missing Peppol EAS or Peppol Endpoint field: %s. "
+"Please check those in their Accounting tab. Otherwise, the generated files "
+"will be incomplete."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid ""
@@ -897,6 +941,17 @@ msgid ""
 "The invoice has been converted into a credit note and the quantities have "
 "been reverted."
 msgstr "لقد تم تحويل الفاتورة إلى إشعار دائن وقد تمت إعادة الكميات. "
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#, python-format
+msgid ""
+"This partner is missing Peppol EAS or Peppol Endpoint field. Please check "
+"those in its Accounting tab or the generated file will be incomplete."
+msgstr ""
+"This partner is missing Peppol EAS or Peppol Endpoint field. Please check "
+"those in its Accounting tab or the generated file will be incomplete."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
