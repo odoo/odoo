@@ -7919,7 +7919,7 @@ msgstr "Virheellinen \"Posti alue\", määritä se oikein."
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Invalid domain for expression '%s' of line '%s': %s"
-msgstr ""
+msgstr "Virheellinen alue ilmaisulle '%s' rivillä '%s': %s"
 
 #. module: account
 #. odoo-python
@@ -14745,6 +14745,8 @@ msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
 msgstr ""
+"Valittu maksutapa ei ole käytettävissä tätä maksua varten, valitse maksutapa"
+" uudelleen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -16677,11 +16679,9 @@ msgstr ""
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
-"You can't register payments for journal items being either all inbound, "
-"either all outbound."
+"You can't register payments for both inbound and outbound moves at the same "
+"time."
 msgstr ""
-"Et voi kirjata maksuja päiväkirjariveille, jotka ovat joko kaikki saapuvia "
-"tai lähteviä."
 
 #. module: account
 #. odoo-python
@@ -16783,7 +16783,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot create recursive groups."
-msgstr ""
+msgstr "Et voi luoda rekursiivisia ryhmiä."
 
 #. module: account
 #. odoo-python
@@ -16818,6 +16818,8 @@ msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
 "definition."
 msgstr ""
+"Et voi poistaa tätä tilitunnistetta (%s), sitä käytetään tilikartan "
+"määrittelyssä."
 
 #. module: account
 #. odoo-python
@@ -16838,6 +16840,8 @@ msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
 msgstr ""
+"Tätä raporttia (%s) ei voi poistaa, sillä kirjanpidon PDF-tiedostojen "
+"luontimoottori käyttää sitä."
 
 #. module: account
 #. odoo-python
