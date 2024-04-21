@@ -24,4 +24,3 @@ class Evaluacion360(models.Model):
     def _onchange_pregunta_ids(self):
         self.actualizar_preguntas()
         print('onchange pregunta_ids asdasdasdasdas')
-        
