@@ -32,12 +32,12 @@
 
         <field name="arch" type="xml">
             <tree>
-                <field name="nombre"/>
-                <field name="estado"/>
-                <field name="pregunta_ids"/>
-                <field name="competencia_ids"/>
-                <field name="usuario_ids"/>
-                <button name="printReport" string="Resumen" type="object"/>
+                <field class="h3" name="nombre"/>
+                <field class="h3" name="estado"/>
+                <field class="h3" name="pregunta_ids"/>
+                <field class="h3" name="competencia_ids"/>
+                <field class="h3" name="usuario_ids"/>
+                <button name="printReport" class="btn btn-primary btn-lg px-4" string="Resumen" type="object"/>
             </tree>
         </field>
     </record>
@@ -49,10 +49,10 @@
 
         <field name="arch" type="xml">
             <form>
-                <sheet string="Evaluacion de pesonal">
+                <sheet string="Evaluacion de personal">
                     <group>
                         <group>
-                            <field name="nombre" field_id="nombre_0"/>
+                            <field class="h5" name="nombre" field_id="nombre_0"/>
                         </group>
                     </group>
                     <group>
@@ -121,12 +121,6 @@
         </field>
     </record>
 
-    <record id="evaluacion_resumen_action" model="ir.actions.act_window">
-        <field name="name">evaluacion.resumen.action</field>
-        <field name="res_model">evaluacion.resumen</field>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="evaluacion_resumen_tree"/>
-    </record>
 
     <record id="evaluacion_resumen_tree" model="ir.ui.view">
         <field name="name">evaluacion.resumen.tree</field>
@@ -138,5 +132,12 @@
                 <field name="estado"/>
             </tree>
         </field>
+    </record>
+
+    <record id="evaluacion_resumen_action" model="ir.actions.act_window">
+        <field name="name">evaluacion.resumen.action</field>
+        <field name="res_model">evaluacion.resumen</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="evaluacion_resumen_tree"/>
     </record>
 </odoo>
