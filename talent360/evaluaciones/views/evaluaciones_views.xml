@@ -32,11 +32,11 @@
 
         <field name="arch" type="xml">
             <tree>
-                <field class="h3" name="nombre"/>
-                <field class="h3" name="estado"/>
-                <field class="h3" name="pregunta_ids"/>
-                <field class="h3" name="competencia_ids"/>
-                <field class="h3" name="usuario_ids"/>
+                <field class="fs-3" name="nombre"/>
+                <field class="fs-3" name="estado"/>
+                <field class="fs-3" name="pregunta_ids"/>
+                <field class="fs-3" name="competencia_ids"/>
+                <field class="fs-3" name="usuario_ids"/>
                 <button name="printReport" class="btn btn-primary btn-lg px-4" string="Resumen" type="object"/>
             </tree>
         </field>
@@ -52,19 +52,19 @@
                 <sheet string="Evaluacion de personal">
                     <group>
                         <group>
-                            <field class="h5" name="nombre" field_id="nombre_0"/>
+                            <field class="h1 text-primary font-weight-bold lh-lg" name="nombre" field_id="nombre_0"/>
                         </group>
                     </group>
                     <group>
-                        <field name="pregunta_ids" can_create="True" can_write="True" field_id="pregunta_ids_0" context="{'current_evaluacion_id': active_id}">
+                        <field class="h2 lh-lg" name="pregunta_ids" can_create="True" can_write="True" field_id="pregunta_ids_0" context="{'current_evaluacion_id': active_id}">
                             <tree>
-                                <field name="pregunta_texto"/>
-                                <field name="tipo"/>
-                                <button name="ver_respuestas" string="Respuestas" type="object"/>
+                                <field class="h3 lh-lg" name="pregunta_texto"/>
+                                <field class="h3 lh-lg" name="tipo"/>
+                                <button class="btn btn-outline-primary btn-lg px-4 lh-lg" name="ver_respuestas" string="Detalle" type="object"/>
                             </tree>
                         </field>
                     </group>
-                    <button name="reporte_test" string="Reporte" type="object"/>
+                    <button class="btn btn-primary btn-lg px-4 font-weight-bold lh-lg mx-auto" name="reporte_test" string="Reporte" type="object"/>
                 </sheet>
             </form>
         </field>
