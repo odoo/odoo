@@ -7,7 +7,8 @@ class Evaluacion360(models.Model):
 
     _inherit = ["evaluacion"]
 
-    def actualizar_preguntas(self):
+    @api.onchange('competencia_ids')
+    def _onchange_competencia_ids(self):
         if self.tipo == 'NOM_035' or self.tipo == 'CLIMA':
             return
         if self.competencia_ids:
@@ -15,12 +16,3 @@ class Evaluacion360(models.Model):
             self.pregunta_ids = competencia_preguntas
         else:
             self.pregunta_ids = False
-
-    @api.onchange('competencia_ids')
-    def _onchange_competencia_ids(self):
-        self.actualizar_preguntas()
-
-    @api.onchange('pregunta_ids')
-    def _onchange_pregunta_ids(self):
-        self.actualizar_preguntas()
-        print('onchange pregunta_ids asdasdasdasdas')
