@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -70,7 +71,7 @@ msgstr "%s: Son sus propios gastos "
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "%s: Your are not a Manager or HR Officer"
-msgstr "%s: No es gerente o encrgado de RR.HH."
+msgstr "%s: no es gerente ni encargado de RR. HH."
 
 #. module: hr_expense
 #: model:ir.actions.report,print_report_name:hr_expense.action_report_hr_expense_sheet
@@ -377,8 +378,8 @@ msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
 "taxes for expenses."
 msgstr ""
-"Tanto los impuestos incluidos en el precio como los no incluidos se "
-"comportarán como incluidos en el precio en el caso de los gastos."
+"En cuanto a los gastos, tanto los precios con y sin impuestos incluidos se "
+"comportarán como precios con impuestos incluidos."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -607,7 +608,7 @@ msgstr "Descripción"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 msgid "Did you try the mobile app?"
-msgstr "¿Ha probado la aplicación para celulares?"
+msgstr "¿Ya probó la aplicación para dispositivos móviles?"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -631,9 +632,9 @@ msgid ""
 "picture of your receipt and let Odoo digitalizes it for you. The OCR and "
 "Artificial Intelligence will fill the data automatically."
 msgstr ""
-"Ya no tiene que guardar sus recibos de gastos en los bolsillos. Solamente "
-"tome una foto de su recibo y Odoo lo digitaliza por usted. El OCR y la "
-"Inteligencia Artificial completarán los datos automáticamente."
+"Deje de guardar los recibos de sus gastos, solo tome una foto de su recibo y"
+" Odoo lo digitalizará. El OCR y la inteligencia artificial completarán los "
+"datos de forma automática."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__business_domain
@@ -1051,7 +1052,7 @@ msgstr "Agrupar por"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_multiple_currency
 msgid "Handle lines with different currencies"
-msgstr "Maneja líneas con diferentes divisas"
+msgstr "Gestionar líneas con diferentes divisas"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
@@ -1132,7 +1133,7 @@ msgstr "Notas internas"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Invalid attachments!"
-msgstr "¡Archivos adjuntos inválidos!"
+msgstr "Los archivos adjuntos no son válidos."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_editable
@@ -1392,22 +1393,22 @@ msgstr "No se proporcionó ningún archivo adjunto"
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_department_filtered
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "No data yet!"
-msgstr "¡No hay datos aún!"
+msgstr "Todavía no hay información"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "No expense categories found. Let's create one!"
-msgstr "No se encontraron categorías de gastos. ¡Creemos una!"
+msgstr "No se encontraron categorías de gastos. Creemos una."
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
 msgid "No expense report found. Let's create one!"
-msgstr "No se encontraron reportes de gastos. ¡Vamos a crear uno!"
+msgstr "No se encontraron reportes de gastos. Creemos uno."
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
 msgid "No expense reports found. Let's create one!"
-msgstr "No se encontraron reportes de gastos. ¡Vamos a crear uno!"
+msgstr "No se encontraron reportes de gastos. Creemos uno."
 
 #. module: hr_expense
 #. odoo-python
@@ -1660,7 +1661,8 @@ msgid ""
 "navigate."
 msgstr ""
 "¿Está listo? Puede guardarlo de forma manual o descartar los cambios aquí. "
-"No <em>necesita guarda</em> - Odoo guardará todo por usted mientras navega."
+"No <em>necesita guardar</em> - Odoo lo hará por usted mientras sigue "
+"navegando."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__reason
@@ -2031,7 +2033,7 @@ msgid ""
 msgstr ""
 "Los siguientes gastos aprobados tienen un empleado, un importe y una "
 "categoría similares a los de algunos gastos de este reporte. Verifique que "
-"este reporte no contiene duplicados."
+"este reporte no contenga duplicados."
 
 #. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
@@ -2102,8 +2104,7 @@ msgstr ""
 msgid ""
 "This note will be shown to users when they select this expense product."
 msgstr ""
-"Se le mostrará esta nota a los usuarios cuando seleccionen su producto de "
-"gasto."
+"Los usuarios verán esta nota cuando seleccionen este producto de gasto."
 
 #. module: hr_expense
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
@@ -2252,7 +2253,7 @@ msgstr "Ver reporte"
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Wasting time recording your receipts? Let’s try a better way."
 msgstr ""
-"¿Perdiendo el tiempo registrando sus recibos? Probemos una mejor forma."
+"¿Pierde mucho tiempo registrando sus recibos? Hagámoslo de otra forma."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
@@ -2432,13 +2433,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot report the expenses without amount!"
-msgstr "¡No puede reportar los gastos sin un importe!"
+msgstr "No puede reportar gastos sin un importe."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot report twice the same line!"
-msgstr "¡No puede incluir dos veces la misma línea!"
+msgstr "No puede incluir dos veces la misma línea."
 
 #. module: hr_expense
 #. odoo-python
@@ -2476,8 +2477,8 @@ msgid ""
 "You need to have at least one category that can be expensed in your database"
 " to proceed!"
 msgstr ""
-"¡Necesita tener por lo menos una categoría que pueda ser un gasto en su base"
-" de datos para continuar!"
+"Para poder continuar necesita al menos una categoría que pueda ser un gasto "
+"en su base de datos."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
@@ -2540,4 +2541,5 @@ msgstr "en validación"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "use OCR to fill data from a picture of the bill"
-msgstr "use el OCR para completar los datos de una foto de la factura"
+msgstr ""
+"use el OCR para completar los datos a partir de una foto de la factura"

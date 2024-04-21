@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,7 +62,7 @@ msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(employee)s on Time Off : %(duration)s"
-msgstr ""
+msgstr "%(employee)s 休暇中 : %(duration)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -92,25 +93,25 @@ msgstr "%(leave_name)sは以下の理由で取消されました: <br/> %(reason
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(leave_type)s: %(duration)s (%(start)s)"
-msgstr ""
+msgstr "%(leave_type)s: %(duration)s (%(start)s)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(name)s: %(duration)s"
-msgstr ""
+msgstr "%(name)s: %(duration)s"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(person)s on %(leave_type)s: %(duration)s (%(start)s)"
-msgstr ""
+msgstr "%(person)s %(leave_type)s中: %(duration)s (%(start)s)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(person)s: %(duration)s (%(start)s)"
-msgstr ""
+msgstr "%(person)s: %(duration)s (%(start)s)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2923,7 +2924,7 @@ msgstr "育児休暇"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
 msgid "Pending Requests"
-msgstr ""
+msgstr "保留中申請"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_mandatory_day_view_search
@@ -4331,7 +4332,7 @@ msgstr "あなたは彼の休暇マネージャーではないため、最初に
 #, python-format
 msgid ""
 "You cannot have a cap on accrued time without setting a maximum amount."
-msgstr ""
+msgstr "未払時間に上限を設けずに、上限額を設定することはできません。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4339,7 +4340,7 @@ msgstr ""
 msgid ""
 "You cannot reduce the duration below the duration of leaves already taken by"
 " the employee."
-msgstr ""
+msgstr "従業員が既に取得した休暇の期間より短くすることはできません。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4606,7 +4607,7 @@ msgstr "否認されました"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__sequence
 msgid "sequence"
-msgstr "付番"
+msgstr "シーケンス"
 
 #. module: hr_holidays
 #. odoo-javascript

@@ -3,9 +3,9 @@
 # 	* account
 # 
 # Translators:
-# Junko Augias, 2024
 # Wil Odoo, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-29 11:36+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -255,7 +255,7 @@ msgstr "- 以下の分割払い："
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- The document's sequence becomes editable on all documents."
-msgstr "- ドキュメントの付番は、全ての書類で編集できるようになります。"
+msgstr "- ドキュメントのシーケンスは、全てのドキュメントで編集できるようになります。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -1872,7 +1872,7 @@ msgstr "勘定科目: auto_postを有効にし、記帳日を「今日まで」�
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Accountant"
-msgstr ""
+msgstr "会計士"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -2559,7 +2559,7 @@ msgstr "エラーが発生しました"
 msgid ""
 "An error occurred when computing the inalterability. A gap has been detected"
 " in the sequence."
-msgstr ""
+msgstr "不変量の計算時にエラーが発生しました。シーケンスにギャップが検出されました。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -2868,7 +2868,7 @@ msgstr "自動入力のデフォルト仕訳帳"
 #. module: account
 #: model:ir.model,name:account.model_sequence_mixin
 msgid "Automatic sequence"
-msgstr "自動付番"
+msgstr "自動採番"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__availability_condition
@@ -3306,7 +3306,7 @@ msgstr "阻止メッセージ"
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Bookkeeper"
-msgstr ""
+msgstr "記録係"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3783,14 +3783,14 @@ msgstr "この勘定科目は仕訳明細の請求書と支払の照合が許可
 msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
-msgstr "この仕訳から作成された請求書とクレジットノートで同じ付番を共有したくない場合は、チェックして下さい"
+msgstr "この仕訳から作成された請求書とクレジットノートで同じシーケンスを共有したくない場合は、チェックして下さい"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__payment_sequence
 msgid ""
 "Check this box if you don't want to share the same sequence on payments and "
 "bank transactions posted on this journal"
-msgstr "この仕訳から作成された支払と銀行取引で同じ付番を共有したくない場合は、チェックして下さい"
+msgstr "この仕訳から作成された支払と銀行取引で同じシーケンスを共有したくない場合は、チェックして下さい"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_negate
@@ -4184,7 +4184,7 @@ msgstr "支払うべき仕入先請求書はないようです"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %s (%s)."
-msgstr ""
+msgstr "ID %s(%s) を持つ仕訳記帳のデータが壊れています。"
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -4983,7 +4983,7 @@ msgstr "データの不変性チェック"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Data Inalterability Check Report -"
-msgstr ""
+msgstr "データ不変性チェックレポート"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -5023,7 +5023,7 @@ msgstr "日付(包括的)番号が再配列決定されているから。"
 msgid ""
 "Date (inclusive) to which the numbers are resequenced. If not set, all "
 "Journal Entries up to the end of the period are resequenced."
-msgstr "番号が再付番される日付（その日付も含む）。設定されていない場合、期間の終わりまでの全ての仕訳入力が再付番されます。"
+msgstr "番号が再採番される日付（その日付も含む）。設定されていない場合、期間の終わりまでの全ての仕訳入力が再採番されます。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_date_range
@@ -6072,7 +6072,7 @@ msgstr "エントリ数"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Entries are correctly hashed"
-msgstr ""
+msgstr "仕訳が正常にハッシュ化されました"
 
 #. module: account
 #. odoo-python
@@ -6429,7 +6429,7 @@ msgstr "1行目インデックス"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_name
 msgid "First New Sequence"
-msgstr "最初の新しい付番"
+msgstr "最初の新しい採番"
 
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_create_invoice
@@ -6995,7 +6995,7 @@ msgstr "消込済エントリあり"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_sequence_holes
 msgid "Has Sequence Holes"
-msgstr "付番に穴あり"
+msgstr "氏―ジェンスに穴あり"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_statement_lines
@@ -7222,14 +7222,14 @@ msgstr "空の場合、逆仕訳される仕訳の仕訳を使用します。"
 msgid ""
 "If set, taxes with a higher sequence than this one will be affected by it, "
 "provided they accept it."
-msgstr "設定すると、同意した場合には、これより後の付番の税金は影響を受けます。"
+msgstr "設定すると、同意した場合には、これより後のシーケンスの税金は影響を受けます。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__is_base_affected
 msgid ""
 "If set, taxes with a lower sequence might affect this one, provided they try"
 " to do it."
-msgstr "設定すると、試行する場合は、これより前の付番のある税金がこれに影響を与える可能性があります。"
+msgstr "設定すると、試行する場合は、これより前のシーケンスのある税金がこれに影響を与える可能性があります。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__analytic
@@ -7284,6 +7284,7 @@ msgid ""
 "If ticked, the hash chain will be computed from the last move hashed to the "
 "new move to be hashed. The hash is performed on demand."
 msgstr ""
+"チェックを入れると、最後にハッシュされた仕訳からハッシュされる新しい仕訳までのハッシュチェーンが計算されます。ハッシュはオンデマンドで実行されます。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -7295,6 +7296,7 @@ msgid ""
 "the last move hashed to the new move to be hashed. The hash can also be "
 "performed on demand."
 msgstr ""
+"チェックを入れると、請求書が送信されるときに、ハッシュされた最後の仕訳からハッシュされる新しい仕訳までのハッシュチェーンが計算されます。ハッシュはオンデマンドで実行することもできます。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7472,7 +7474,7 @@ msgstr "変更不可ハッシュ"
 #: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
 #: model:ir.model.fields,field_description:account.field_account_payment__secure_sequence_number
 msgid "Inalterability No Gap Sequence #"
-msgstr ""
+msgstr "不変性 ギャップなしシーケンス#"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -8087,7 +8089,7 @@ msgstr "オンボーディング請求"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_with_gaps_in_sequence_filter
 msgid "Irregular Sequences"
-msgstr "イレギュラー付番"
+msgstr "イレギュラーなシーケンス"
 
 #. module: account
 #. odoo-python
@@ -8095,7 +8097,7 @@ msgstr "イレギュラー付番"
 msgid ""
 "Irregularities due to draft, cancelled or deleted bills with a sequence "
 "number since last lock date."
-msgstr "最終ロック日以降の付番号の仕入先請求書の取消または削除されたドラフトによる不正。"
+msgstr "最終ロック日以降のシーケンス番号の仕入先請求書の取消または削除されたドラフトによる不正。"
 
 #. module: account
 #. odoo-python
@@ -8103,7 +8105,7 @@ msgstr "最終ロック日以降の付番号の仕入先請求書の取消また
 msgid ""
 "Irregularities due to draft, cancelled or deleted invoices with a sequence "
 "number since last lock date."
-msgstr "最終ロック日以降の付番号の顧客請求書の、取消または削除されたドラフトによる不正。"
+msgstr "最終ロック日以降のシーケンス番号の顧客請求書の、取消または削除されたドラフトによる不正。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_being_sent
@@ -8275,7 +8277,7 @@ msgstr "日別仕訳"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/company.py:0
 msgid "Journal Entries to Hash"
-msgstr ""
+msgstr "未ハッシュ記帳仕訳"
 
 #. module: account
 #. odoo-javascript
@@ -8868,7 +8870,7 @@ msgstr "ロック日メッセージ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Lock Entries Manually"
-msgstr ""
+msgstr "仕訳を手動でロック"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -8876,7 +8878,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_payment__restrict_mode_hash_table
 msgid "Lock Sent Invoices with Hash"
-msgstr ""
+msgstr "ハッシュで送信済請求書をロック"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
@@ -8923,7 +8925,7 @@ msgstr "その他"
 #: model:ir.model.fields,field_description:account.field_account_move__made_sequence_hole
 #: model:ir.model.fields,field_description:account.field_account_payment__made_sequence_hole
 msgid "Made Sequence Hole"
-msgstr "付番に穴ができました"
+msgstr "シーケンスに穴ができました"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__mail_attachments_widget
@@ -11272,12 +11274,12 @@ msgstr "研究開発費"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
-msgstr "再付番"
+msgstr "再採番"
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
 msgid "Read-only"
-msgstr ""
+msgstr "読取り専用"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -11515,7 +11517,7 @@ msgstr "不整合に気づいたら、会計データ(税金、勘定科目な�
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
-msgstr "仕訳の付番を作り直す"
+msgstr "仕訳のシーケンスを作り直す"
 
 #. module: account
 #. odoo-python
@@ -12096,7 +12098,7 @@ msgstr "セクション"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__secure_sequence_id
 msgid "Secure Sequence"
-msgstr "付番を確保する"
+msgstr "シーケンスを確保する"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_token
@@ -12336,7 +12338,7 @@ msgstr "請求書送信中"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "Sending these invoices will create a gap in the sequence."
-msgstr "これらの請求書を送ると、付番にギャップが生じます。"
+msgstr "これらの請求書を送ると、シーケンスにギャップが生じます。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__move_sent_values
@@ -12410,12 +12412,12 @@ msgstr "9月"
 #: model:ir.model.fields,field_description:account.field_account_tax_group__sequence
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__sequence
 msgid "Sequence"
-msgstr "付番"
+msgstr "シーケンス"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__sequence_gap_warning
 msgid "Sequence Gap Warning"
-msgstr "付番ギャップ警告"
+msgstr "シーケンスギャップ警告"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sequence_number
@@ -12423,17 +12425,17 @@ msgstr "付番ギャップ警告"
 #: model:ir.model.fields,field_description:account.field_account_payment__sequence_number
 #: model:ir.model.fields,field_description:account.field_sequence_mixin__sequence_number
 msgid "Sequence Number"
-msgstr "付番数"
+msgstr "シーケンス数"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__sequence_number_reset
 msgid "Sequence Number Reset"
-msgstr "付番数のリセット"
+msgstr "シーケンス数のリセット"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sequence_override_regex
 msgid "Sequence Override Regex"
-msgstr "付番を上書きする正規表現"
+msgstr "シーケンスを上書きする正規表現"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sequence_prefix
@@ -12442,12 +12444,12 @@ msgstr "付番を上書きする正規表現"
 #: model:ir.model.fields,field_description:account.field_sequence_mixin__sequence_prefix
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Sequence Prefix"
-msgstr "付番プレフィックス"
+msgstr "シーケンスプレフィックス"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__secure_sequence_id
 msgid "Sequence to use to ensure the securisation of data"
-msgstr "データのセキュリティ化を確実にするために使用する付番"
+msgstr "データのセキュリティ化を確実にするために使用するシーケンス"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_scope__service
@@ -12573,7 +12575,7 @@ msgstr "税込表示を強制"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show Journal Entries to Hash"
-msgstr ""
+msgstr "未ハッシュ記帳仕訳を表示"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
@@ -12651,7 +12653,7 @@ msgstr "Snailmail"
 msgid ""
 "Some journal entries have not been hashed yet. You should hash them before "
 "locking the fiscal year."
-msgstr ""
+msgstr "まだハッシュされていない仕訳もあります。会計年度をロックする前にそれらをハッシュする必要があります。"
 
 #. module: account
 #. odoo-python
@@ -13335,9 +13337,9 @@ msgid ""
 "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"
 "e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 msgstr ""
-"システムが通常誤解する複雑な付番構成を強化するために使用される技術フィールド。\n"
+"システムが通常誤解する複雑なシーケンス構成を強化するために使用される技術フィールド。\n"
 "prefix1、year、prefix2、month、prefix3、seq、suffixのすべてのキャプチャグループを含めることができる正規表現です。\n"
-"プレフィックス*グループは、年、月、および実際に増加する付番数（seq）の間の区切り文字です。\n"
+"プレフィックス*グループは、年、月、および実際に増加するシーケンス番号（seq）の間の区切り文字です。\n"
 "e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
@@ -13403,9 +13405,9 @@ msgid ""
 "You will need to clear the %(model)s's %(sequence_field)s to proceed.\n"
 "In doing so, you might want to resequence your entries in order to maintain a continuous date-based sequence."
 msgstr ""
-"%(date_field)s (%(date)s)  は %(model)s (%(sequence)s)に関連する付番数に一致しません。\n"
+"%(date_field)s (%(date)s)  は %(model)s (%(sequence)s)に関連するシーケンス数に一致しません。\n"
 "処理を進めるためには%(model)sの%(sequence_field)s をクリアにする必要があります。\n"
-"その際、日付ベースの連続した付番を維持したい場合には、エントリーの順序を変更して下さい。"
+"その際、日付ベースの連続したシーケンスを維持したい場合には、仕訳の順序を変更して下さい。"
 
 #. module: account
 #. odoo-python
@@ -13543,6 +13545,8 @@ msgid ""
 "The amount for %(partner_name)s appears unusual. Based on your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
+"%(partner_name)sの金額は異常のようです。過去のデータに基づくと、予想される金額は%(mean)s (± %(wiggle)s) です。\n"
+"この金額が正確かどうか確認して下さい。"
 
 #. module: account
 #. odoo-python
@@ -14162,13 +14166,13 @@ msgstr "選択された支払方法は銀行口座が必要とされているが
 msgid ""
 "The sequence field is used to define order in which the tax lines are "
 "applied."
-msgstr "付番フィールドは、税の明細が適用される順序を定義するために使用されます。"
+msgstr "シーケンスフィールドは、税の明細が適用される順序を定義するために使用されます。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The sequence format has changed."
-msgstr "付番フォーマットが変更されました。"
+msgstr "シーケンスフォーマットが変更されました。"
 
 #. module: account
 #. odoo-python
@@ -14177,7 +14181,7 @@ msgid ""
 "The sequence regex should at least contain the seq grouping keys. For instance:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 msgstr ""
-"付番の正規表現は、少なくともキーをグルーピングする配列が含まれている必要があります。\n"
+"シーケンスの正規表現は、少なくともキーをグルーピングする配列が含まれている必要があります。\n"
 "例: ^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 
 #. module: account
@@ -14187,7 +14191,7 @@ msgid ""
 "The sequence will never restart.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
-"付番がリセットされることはありません。\n"
+"シーケンスがリセットされることはありません。\n"
 "この場合の次の数は'%(formatted_seq)s'です。"
 
 #. module: account
@@ -14199,7 +14203,7 @@ msgid ""
 "The financial end year detected here is '%(year_end)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
-"この付番は、会計年度が始まるたびに1から始まります。\n"
+"このシーケンスは、会計年度が始まるたびに1から始まります。\n"
 "ここで検出される会計年度開始は '%(year)s'.\n"
 "ここで検出された会計年度決算期は '%(year_end)s'.\n"
 "この場合のインクリメント数は '%(formatted_seq)s'."
@@ -14212,7 +14216,7 @@ msgid ""
 "The year detected here is '%(year)s' and the month is '%(month)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
-"付番は毎月初に1から再開されます。\n"
+"採番は毎月初に1から再開されます。\n"
 "ここで検出された年は'%(year)s'で月は'%(month)s'です。\n"
 "この場合における次の番号は'%(formatted_seq)s'です。"
 
@@ -14224,7 +14228,7 @@ msgid ""
 "The year detected here is '%(year)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
-"付番は毎年初に1から再開されます。\n"
+"採番は毎年初に1から再開されます。\n"
 "ここで検出された年は'%(year)s'です。\n"
 "この場合における次の番号は'%(formatted_seq)s'です。"
 
@@ -14343,7 +14347,7 @@ msgstr "選択された注文に請求項目はないようです。しかし、
 #: code:addons/account/models/company.py:0
 msgid ""
 "There is no journal entry flagged for accounting data inalterability yet."
-msgstr ""
+msgstr "会計データの変更不可のフラグが立った仕訳はまだありません。"
 
 #. module: account
 #. odoo-python
@@ -14481,7 +14485,7 @@ msgstr "これは仕訳項目のみに使用できます"
 msgid ""
 "This document is protected by a hash. Therefore, you cannot edit the "
 "following fields: %s."
-msgstr ""
+msgstr "このドキュメントはハッシュで保護されています。したがって、次のフィールドを編集することはできません: %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -14562,7 +14566,7 @@ msgstr "与信限度額が指定されていない取引先に対して、この
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "This journal is not restricted"
-msgstr ""
+msgstr "この仕訳帳は制限されていません。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
@@ -14585,12 +14589,15 @@ msgid ""
 "- some move with the same sequence prefix has a higher number. You may need to resequence it.\n"
 "- the move's date is anterior to the lock date"
 msgstr ""
+"この仕訳も以下の理由でロックできませんでした。\n"
+"- 同じシーケンス接頭辞を持つ仕訳にはより大きな番号があります。再採番が必要かもしれません。\n"
+"- その仕訳の日付がロック日より前です。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This move has been locked."
-msgstr ""
+msgstr "この仕訳はロックされました"
 
 #. module: account
 #. odoo-python
@@ -14614,7 +14621,7 @@ msgstr "この仕訳は、記帳日で記帳されます:%(date)s"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_move_service/account_move_service.js:0
 msgid "This operation will create a gap in the sequence."
-msgstr "この処理により付番にギャップが生じます。"
+msgstr "この処理によりシーケンスにギャップが生じます。"
 
 #. module: account
 #. odoo-python
@@ -15066,12 +15073,12 @@ msgstr "すべてを展開"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_unhashed_entries
 msgid "Unhashed Entries"
-msgstr ""
+msgstr "未ハッシュ仕訳"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Unhashed entries"
-msgstr ""
+msgstr "未ハッシュ仕訳"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
@@ -15983,9 +15990,9 @@ msgstr "選択した仕訳項目に支払う金額が残っていないため、
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid ""
-"You can't register payments for journal items being either all inbound, "
-"either all outbound."
-msgstr "すべてがインバウンド又はすべてがアウトバウンドの仕訳項目に対しての支払は登録できません。"
+"You can't register payments for both inbound and outbound moves at the same "
+"time."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -16084,7 +16091,8 @@ msgstr "この勘定科目タグ(%s)は削除できません。勘定科目表�
 msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
-msgstr "この仕訳は既に付番の番号を消費しており、連携の最後のものではないため、削除することはできません。その代わりに元に戻す方が良いでしょう。"
+msgstr ""
+"この仕訳は既にシーケンスの番号を消費しており、連携の最後のものではないため、削除することはできません。その代わりに元に戻す方が良いでしょう。"
 
 #. module: account
 #. odoo-python
@@ -16129,7 +16137,7 @@ msgstr ""
 msgid ""
 "You cannot edit the journal of an account move if it already has a sequence "
 "number assigned."
-msgstr "すでに付番号が割り当てられている場合、勘定移動の仕訳を編集することはできません。"
+msgstr "すでにシーケンス番号が割り当てられている場合、勘定移動の仕訳を編集することはできません。"
 
 #. module: account
 #. odoo-python

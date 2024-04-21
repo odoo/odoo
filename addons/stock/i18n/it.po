@@ -8785,6 +8785,9 @@ msgid ""
 "operation is part of a chain of operations targeting the destination "
 "location."
 msgstr ""
+"L'operazione porta i prodotti nell'ubicazione intermedia. L'operazione fa "
+"parte di una catena di operazioni che devono raggiungere l'ubicazione di "
+"destinazione."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
@@ -9567,7 +9570,7 @@ msgstr "Attivazione manuale"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_scrap__should_replenish
 msgid "Trigger replenishment for scrapped products"
-msgstr ""
+msgstr "Attiva rifornimento per prodotti scartati"
 
 #. module: stock
 #. odoo-javascript
@@ -10213,6 +10216,8 @@ msgid ""
 "When set to True the destination location of the stock.move will be the "
 "rule.Otherwise, it takes it from the picking type."
 msgstr ""
+"Se impostato su vero l'ubicazione di destinazione di stock.move sarà la "
+"regola. Altrimenti, la prenderà dal tipo di prelievo."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -10230,6 +10235,9 @@ msgid ""
 " Odoo generates a procurement to bring the forecasted quantity above of this"
 " Min Quantity."
 msgstr ""
+"Quando le scorte virtuali scendono al di sotto della quantità minima "
+"indicata per questo campo, Odoo genera un approvvigionamento per portare la "
+"quantità prevista al di sopra della quantità minima."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -10238,6 +10246,10 @@ msgid ""
 "procurement to bring the forecasted quantity up to (or near to) the Max "
 "Quantity specified for this field (or to Min Quantity, whichever is bigger)."
 msgstr ""
+"Quando le scorte virtuali scendono al di sotto della quantità minima, Odoo "
+"genera un approvvigionamento per portare la quantità prevista alla (o vicino"
+" alla) quantità massima specificata per questo campo (o alla quantità "
+"minima, a seconda della più grande)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
@@ -10921,7 +10933,7 @@ msgstr "es. Magazzino Centrale"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "e.g. LOT-PR-00012"
-msgstr ""
+msgstr "ad es. LOT-PR-00012"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form

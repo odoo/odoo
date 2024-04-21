@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Junko Augias, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-27 13:28+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11097,7 +11097,7 @@ msgstr ""
 "\n"
 "イタリアの電子請求導入に伴う源泉徴収と年金基金の取り扱い。\n"
 "\n"
-"    源泉所得税と年金基金税は、付番ごとの順番によって他の税金と同様に計算されます。\n"
+"    源泉所得税と年金基金税は、シーケンスごとの順番によって他の税金と同様に計算されます。\n"
 "従って、税設定での税の順番には注意して下さい。\n"
 "\n"
 "    このモジュールをインストールする際には、イタリアの会計モジュール(l10n_it)もアップデートして下さい。\n"
@@ -25754,7 +25754,7 @@ msgstr "次の番号"
 #: model:ir.model.fields,help:base.field_ir_sequence__number_next
 #: model:ir.model.fields,help:base.field_ir_sequence_date_range__number_next
 msgid "Next number of this sequence"
-msgstr "この付番定義の次の番号"
+msgstr "この採番定義の次の番号"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__number_next_actual
@@ -32199,7 +32199,7 @@ msgstr "シーケンス"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__code
 msgid "Sequence Code"
-msgstr "付番コード"
+msgstr "シーケンスコード"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_sequence_date_range
@@ -32209,7 +32209,7 @@ msgstr "シーケンスの日付範囲"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__padding
 msgid "Sequence Size"
-msgstr "付番サイズ"
+msgstr "シーケンスサイズ"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_form
@@ -32218,12 +32218,12 @@ msgstr "付番サイズ"
 #: model_terms:ir.ui.view,arch_db:base.sequence_view_tree
 #: model_terms:ir.ui.view,arch_db:base.view_sequence_search
 msgid "Sequences"
-msgstr "付番"
+msgstr "シーケンス"
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_5
 msgid "Sequences & Identifiers"
-msgstr "付番とID"
+msgstr "シーケンスとID"
 
 #. module: base
 #: model:res.country,name:base.rs
@@ -37296,7 +37296,7 @@ msgid ""
 "When subsequences per date range are used, you can prefix variables with 'range_'\n"
 "                                to use the beginning of the range instead of the current date, e.g. %(range_year)s instead of %(year)s."
 msgstr ""
-"日付範囲毎の枝番を使用する場合、プレフィクスに「range_xxx」と設定することで、現在日ではなく範囲開始日を基に付番できます。例: "
+"日付範囲毎の枝番を使用する場合、プレフィクスに「range_xxx」と設定することで、現在日ではなく範囲開始日を基に採番できます。例: "
 "「%(year)s」の代わりに「%(range_year)s」を設定。"
 
 #. module: base

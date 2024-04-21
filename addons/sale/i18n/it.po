@@ -882,6 +882,9 @@ msgid ""
 "                                                By paying,\n"
 "                                            </span>"
 msgstr ""
+"<span id=\"o_sale_portal_use_amount_total\">\n"
+"                                                Pagando,\n"
+"                                            </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1149,6 +1152,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                (e.g. \"Delivery scheduling\", \"Order Payment Follow-up\", ...)"
 msgstr ""
+"I piani attività vengono utilizzati per assegnare un elenco di attività in pochi clic\n"
+"                (ad es. \"Programmazione consegne\", \"Follow-up pagamento ordine\"...)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1189,6 +1194,11 @@ msgid ""
 "On order confirmation: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
 msgstr ""
+"Consente di condividere il documento con i tuoi clienti al momento di una vendita.\n"
+"Sul preventivo: il documento verrà inviato ai clienti e sarà accessibile in qualsiasi momento.\n"
+"Ad es. quest'opzione può essere utile per condividere file relativi alla descrizione del prodotto.\n"
+"Ordine confermato: il documento verrà inviato e sarà accessibile ai clienti.\n"
+"Ad es. quest'opzione può essere utile per condividere manuali utente o contenuti digitali acquistati sull'e-commerce. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1403,17 +1413,17 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying a <u>down payment</u> of"
-msgstr ""
+msgstr "Pagando un <u>acconto</u> di"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying,"
-msgstr ""
+msgstr "Pagando,"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By signing, you confirm acceptance on behalf of"
-msgstr ""
+msgstr "Firmando, confermi di accettare a nome di"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1711,7 +1721,7 @@ msgstr "Crea fatture"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
 msgid "Create a Sale Order Activity Plan"
-msgstr ""
+msgstr "Crea un piano attività ordine di vendita"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -3128,12 +3138,12 @@ msgstr "Su tutte le righe d'ordine"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on__sale_order
 msgid "On confirmed order"
-msgstr ""
+msgstr "Su ordine confermato"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on__quotation
 msgid "On quote"
-msgstr ""
+msgstr "Sul preventivo"
 
 #. module: sale
 #: model:ir.model,name:sale.model_onboarding_onboarding
@@ -3961,6 +3971,8 @@ msgstr "Utente responsabile"
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
 msgid "Revenue Target for the current month (untaxed total of paid invoices)."
 msgstr ""
+"Obiettivo per il ricavo del mese corrente (totale imponibile delle fatture "
+"pagate)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -5559,7 +5571,7 @@ msgstr "per questo ordine di vendita."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "quote."
-msgstr ""
+msgstr "preventivo."
 
 #. module: sale
 #. odoo-python
@@ -5584,7 +5596,7 @@ msgstr "unità"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "you confirm acceptance on the behalf of"
-msgstr ""
+msgstr "confermi di accettare a nome di"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation
