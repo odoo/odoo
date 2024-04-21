@@ -314,8 +314,8 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"สินค้าที่จัดเก็บได้คือสินค้าที่ทคุณจัดการสต๊อก จำเป็นต้องติดตั้งแอปคลังสินค้า\n"
-"สินค้าบริโภคคือสินค้าที่ไม่มีการจัดการสต๊อก\n"
+"สินค้าที่จัดเก็บได้คือสินค้าที่ทคุณจัดการสต็อก จำเป็นต้องติดตั้งแอปคลังสินค้า\n"
+"สินค้าบริโภคคือสินค้าที่ไม่มีการจัดการสต็อก\n"
 "บริการคือสินค้าที่ไม่ใช่วัตถุที่คุณจัดหา"
 
 #. module: product
@@ -1017,7 +1017,7 @@ msgstr "ราคาเพิ่มเติมเริ่มต้น"
 #: model:ir.model.fields,help:product.field_product_product__uom_id
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr "หน่วยวัดเริ่มต้นที่ใช้สำหรับการปฏิบัติการสต๊อกทั้งหมด"
+msgstr "หน่วยวัดเริ่มต้นที่ใช้สำหรับการปฏิบัติการสต็อกทั้งหมด"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__uom_po_id
@@ -2096,6 +2096,17 @@ msgstr "ทรงยา"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Please enter a positive whole number."
 msgstr "กรุณากรอกจำนวนเต็มบวก"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_document.py:0
+#, python-format
+msgid ""
+"Please enter a valid URL.\n"
+"Example: https://www.odoo.com\n"
+"\n"
+"Invalid URL: %s"
+msgstr ""
 
 #. module: product
 #. odoo-python

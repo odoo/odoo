@@ -106,7 +106,7 @@ msgstr "%(partner_name)s đã đạt hạn mức tín dụng là: %(credit_limit
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(ref)s (%(currency_amount)s)"
-msgstr ""
+msgstr "%(ref)s (%(currency_amount)s)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -294,7 +294,7 @@ msgstr "... (%s khác)"
 #. odoo-javascript
 #: code:addons/account/static/src/components/x2many_buttons/x2many_buttons.xml:0
 msgid "... (View all)"
-msgstr ""
+msgstr "... (Xem tất cả)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
@@ -1044,6 +1044,8 @@ msgid ""
 "<span invisible=\"state != 'draft' or name != '/' or posted_before or "
 "quick_edit_mode\">Draft</span>"
 msgstr ""
+"<span invisible=\"state != 'draft' or name != '/' or posted_before or "
+"quick_edit_mode\">Nháp</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1520,26 +1522,26 @@ msgstr "Có thể đặt cảnh báo đối với đối tác (Tài khoản)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
 msgid "Abnormal Amount Partner"
-msgstr ""
+msgstr "Abnormal Amount Partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_amount_warning
 #: model:ir.model.fields,field_description:account.field_account_move__abnormal_amount_warning
 #: model:ir.model.fields,field_description:account.field_account_payment__abnormal_amount_warning
 msgid "Abnormal Amount Warning"
-msgstr ""
+msgstr "Abnormal Amount Warning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_date_partner_ids
 msgid "Abnormal Date Partner"
-msgstr ""
+msgstr "Abnormal Date Partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_date_warning
 #: model:ir.model.fields,field_description:account.field_account_move__abnormal_date_warning
 #: model:ir.model.fields,field_description:account.field_account_payment__abnormal_date_warning
 msgid "Abnormal Date Warning"
-msgstr ""
+msgstr "Abnormal Date Warning"
 
 #. module: account
 #: model:ir.model,name:account.model_res_groups
@@ -2980,13 +2982,13 @@ msgstr "HÓA ĐƠN"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Bill"
-msgstr ""
+msgstr "Quay lại hoá đơn thanh toán"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Invoice"
-msgstr ""
+msgstr "Quay lại hoá đơn"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3860,7 +3862,7 @@ msgstr "Hệ thống tài khoản đã được thiết lập!"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
 msgid "Check Partner(s)"
-msgstr ""
+msgstr "Kiểm tra (các) đối tác"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
@@ -4224,12 +4226,12 @@ msgstr "Xác nhận"
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Confirm Entries"
-msgstr ""
+msgstr "Xác nhận bút toán"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Confirm them now"
-msgstr ""
+msgstr "Xác nhận ngay"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5656,7 +5658,7 @@ msgstr "Hiển thị số tiền"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_post
 msgid "Display Force Post"
-msgstr ""
+msgstr "Hiển thị Bắt buộc ghi sổ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_inactive_currency_warning
@@ -5866,7 +5868,7 @@ msgstr "Nháp"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft (%(currency_amount)s)"
-msgstr ""
+msgstr "Nháp (%(currency_amount)s)"
 
 #. module: account
 #. odoo-python
@@ -6925,7 +6927,7 @@ msgstr "Hoạt động trong tương lai"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Future-dated invoices will auto-confirm on their respective dates."
-msgstr ""
+msgstr "Hóa đơn trong tương lai sẽ tự động xác nhận vào ngày tương ứng."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7188,7 +7190,7 @@ msgstr "Tên cao nhất"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__horizontal_split_side
 msgid "Horizontal Split Side"
-msgstr ""
+msgstr "Mặt chia ngang"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7503,29 +7505,29 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_amount
 msgid "Ignore Abnormal Amount"
-msgstr ""
+msgstr "Bỏ qua số tiền bất thường"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_date
 msgid "Ignore Abnormal Date"
-msgstr ""
+msgstr "Bỏ qua ngày bất thường"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__ignore_abnormal_invoice_amount
 #: model:ir.model.fields,field_description:account.field_res_users__ignore_abnormal_invoice_amount
 msgid "Ignore Abnormal Invoice Amount"
-msgstr ""
+msgstr "Bỏ qua số tiền hoá đơn bất thường"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__ignore_abnormal_invoice_date
 #: model:ir.model.fields,field_description:account.field_res_users__ignore_abnormal_invoice_date
 msgid "Ignore Abnormal Invoice Date"
-msgstr ""
+msgstr "Bỏ qua ngày lập hoá đơn bất thường"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Ignore future alerts"
-msgstr ""
+msgstr "Bỏ qua các cảnh báo sau này"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -8072,7 +8074,7 @@ msgstr "Tổng tiền hóa đơn"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Invoice amounts for"
-msgstr ""
+msgstr "Số tiền hoá đơn cho"
 
 #. module: account
 #. odoo-python
@@ -8113,7 +8115,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Invoice dates for"
-msgstr ""
+msgstr "Ngày lập hoá đơn cho"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_line_ids
@@ -10673,7 +10675,7 @@ msgstr "Tìm kiếm đối tác cho mẫu đối chiếu"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
 msgid "Partner(s) should have an email address."
-msgstr ""
+msgstr "(Các) đối tác phải có địa chỉ email."
 
 #. module: account
 #. odoo-python
@@ -10834,7 +10836,7 @@ msgstr "Biên lai thanh toán"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_receipt_title
 msgid "Payment Receipt Title"
-msgstr ""
+msgstr "Tiêu đề biên lai thanh toán"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -12878,7 +12880,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show draft entries"
-msgstr ""
+msgstr "Hiển thị bút toán nháp"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -13841,6 +13843,8 @@ msgid ""
 "The amount for %(partner_name)s appears unusual. Based on your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
+"Số tiền cho %(partner_name)s có vẻ bất thường. Dựa trên dữ liệu lịch sử của bạn, số tiền dự kiến là %(mean)s (± %(wiggle)s).\n"
+"Vui lòng xác nhận xem số tiền này có chính xác không."
 
 #. module: account
 #. odoo-python
@@ -13878,6 +13882,8 @@ msgid ""
 "The billing frequency for %(partner_name)s appears unusual. Based on your historical data, the expected next invoice date is not before %(expected_date)s (every %(mean)s (± %(wiggle)s) days).\n"
 "Please verify if this date is accurate."
 msgstr ""
+"Tần suất thanh toán cho %(partner_name)s có vẻ bất thường. Dựa trên dữ liệu lịch sử của bạn, ngày lập hoá đơn dự kiến tiếp theo không diễn ra trước %(expected_date)s (mỗi %(mean)s (± %(wiggle)s) ngày).\n"
+"Vui lòng xác nhận xem ngày này có chính xác không."
 
 #. module: account
 #. odoo-javascript
@@ -14535,6 +14541,10 @@ msgid ""
 "The financial end year detected here is '%(year_end)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"Số thứ tự sẽ bắt đầu lại ở số 1 vào đầu mỗi năm tài chính.\n"
+"Năm tài chính bắt đầu được phát hiện ở đây là '%(year)s'.\n"
+"Năm tài chính cuối cùng được phát hiện ở đây là '%(year_end)s'.\n"
+"Số tăng dần trong trường hợp này là '%(formatted_seq)s'."
 
 #. module: account
 #. odoo-python
@@ -14681,6 +14691,8 @@ msgid ""
 "There are still draft entries in the period you want to lock. You should "
 "either post or delete them."
 msgstr ""
+"Vẫn còn bút toán nháp trong kỳ mà bạn muốn đóng. Bạn nên vào sổ hoặc xóa "
+"chúng."
 
 #. module: account
 #. odoo-python
@@ -15813,6 +15825,8 @@ msgstr "Đã xác thực"
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Validating invoices is a key action. Have you reviewed everything?"
 msgstr ""
+"Xác nhận hóa đơn là một hành động quan trọng. Bạn đã kiểm tra kỹ thông tin "
+"chưa?"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value
@@ -15962,7 +15976,7 @@ msgstr "Chế độ xem"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
 msgid "View Partner(s)"
-msgstr ""
+msgstr "Xem (các) đối tác"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__warning
@@ -16434,11 +16448,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid ""
-"You can't register payments for journal items being either all inbound, "
-"either all outbound."
+"You can't register payments for both inbound and outbound moves at the same "
+"time."
 msgstr ""
-"Bạn không thể ghi nhận thanh toán cho các hạng mục bút toán đều là dạng gửi "
-"đi hoặc nhận về."
 
 #. module: account
 #. odoo-python
@@ -17125,7 +17137,7 @@ msgstr "VD: domain.com"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "fall outside the typical range."
-msgstr ""
+msgstr "nằm ngoài khoảng thời gian điển hình."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17391,6 +17403,8 @@ msgid ""
 "{amount} ({debit_credit}) from <strong>{account_source_name}</strong> were "
 "transferred to <strong>{account_target_name}</strong> by {link}"
 msgstr ""
+"{amount} ({debit_credit}) từ <strong>{account_source_name}</strong> đã được "
+"chuyển tới <strong>{account_target_name}</strong> bằng {link}"
 
 #. module: account
 #. odoo-python
