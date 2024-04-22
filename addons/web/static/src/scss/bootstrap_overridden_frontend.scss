@@ -21,6 +21,8 @@ $min-contrast-ratio: $o-frontend-min-contrast-ratio !default;
 // Body
 
 $body-bg: $white !default; // BS Default
+$body-color: $gray-900 !default; // BS Default
+$body-emphasis-color: $black !default; // BS Default
 
 // Components
 //
@@ -35,6 +37,8 @@ $border-width: 1px !default; // BS Default
 $font-family-sans-serif: o-add-unicode-support-font($o-system-fonts) !default;
 
 $font-size-base: (14 / 16) * 1rem !default;
+
+$text-muted: mute-color($body-color) !default;
 
 // Link
 $link-decoration: none !default;
@@ -89,3 +93,7 @@ $card-bg: $body-bg !default;
 // Dropdown
 
 $dropdown-bg: $body-bg !default;
+
+// Navbar
+
+$navbar-light-toggler-border-color: rgba($body-emphasis-color, 0.15) !default;
