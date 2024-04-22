@@ -945,23 +945,26 @@ class Project(models.Model):
             return self.env['project.collaborator'].search([('project_id', '=', self.sudo().id), ('partner_id', '=', self.env.user.partner_id.id)])
         return self.env.user._is_internal()
 
-    def _add_collaborators(self, partners):
+    def _add_collaborators(self, partners, limited_access=False):
         self.ensure_one()
-        user_group_id = self.env['ir.model.data']._xmlid_to_res_id('base.group_user')
-        all_collaborators = self.collaborator_ids.partner_id
-        new_collaborators = partners.filtered(
-            lambda partner:
-                partner not in all_collaborators
-                and (not partner.user_ids or user_group_id not in partner.user_ids[0].groups_id.ids)
-        )
+        new_collaborators = self._get_new_collaborators(partners)
         if not new_collaborators:
             # Then we have nothing to do
             return
         self.write({'collaborator_ids': [
             Command.create({
                 'partner_id': collaborator.id,
+                'limited_access': limited_access,
             }) for collaborator in new_collaborators],
         })
+
+    def _get_new_collaborators(self, partners):
+        self.ensure_one()
+        return partners.filtered(
+            lambda partner:
+                partner not in self.collaborator_ids.partner_id
+                and partner.partner_share
+        )
 
     def _add_followers(self, partners):
         self.ensure_one()
