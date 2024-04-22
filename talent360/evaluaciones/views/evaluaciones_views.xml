@@ -64,7 +64,7 @@
                             </tree>
                         </field>
                     </group>
-                    <button class="btn btn-primary btn-lg px-4 font-weight-bold lh-lg mx-auto" name="reporte_test" string="Reporte" type="object"/>
+                    <button class="btn btn-primary btn-lg px-4 font-weight-bold lh-lg mx-auto" name="reporte_test" string="Reporte" type="object" groups="evaluaciones.group_evaluaciones_cliente_cr"/>
                 </sheet>
             </form>
         </field>
@@ -119,25 +119,5 @@
                 <field name="usuario_id"/>
             </form>
         </field>
-    </record>
-
-
-    <record id="evaluacion_resumen_tree" model="ir.ui.view">
-        <field name="name">evaluacion.resumen.tree</field>
-        <field name="model">evaluacion.resumen</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="usuario_id"/>
-                <field name="nombre"/>
-                <field name="estado"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="evaluacion_resumen_action" model="ir.actions.act_window">
-        <field name="name">evaluacion.resumen.action</field>
-        <field name="res_model">evaluacion.resumen</field>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="evaluacion_resumen_tree"/>
     </record>
 </odoo>

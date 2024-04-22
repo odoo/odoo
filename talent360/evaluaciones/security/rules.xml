@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="evaluaciones_rule" model="ir.rule">
+        <field name="name">Evaluaciones Rule</field>
+        <field name="model_id" ref="model_evaluacion"/>
+        <field name="groups" eval="[(4, ref('evaluaciones.group_evaluaciones_cliente_cr'))]"/>
+        <field name="domain_force">[('usuario_ids', 'in', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>
