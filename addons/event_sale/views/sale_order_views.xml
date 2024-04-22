@@ -5,12 +5,15 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
-            <xpath expr="//sheet/div[hasclass('oe_button_box')]" position="inside">
-                <button name="action_view_attendee_list" type="object"
-                    class="oe_stat_button" icon="fa-users" invisible="attendee_count == 0">
+            <div name="button_box" position="inside">
+                <button name="action_view_attendee_list"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-users"
+                        invisible="attendee_count == 0">
                     <field name="attendee_count" widget="statinfo" string="Attendees"/>
                 </button>
-            </xpath>
+            </div>
             <xpath expr="//field[@name='order_line']//form//field[@name='product_id']" position="after">
                 <field
                     name="event_id"

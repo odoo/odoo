@@ -393,6 +393,12 @@ export const saleOrderLineProductField = {
             readonlyField: dynamicInfo.readonly,
         };
     },
+    fieldDependencies: [
+        { name: 'is_configurable_product', type: 'boolean' },
+        { name: 'product_type', type: 'selection' },
+        { name: 'service_tracking', type: 'selection' },
+        { name: 'product_template_attribute_value_ids', type: 'many2many' },
+    ],
 };
 
 registry.category("fields").add("sol_product_many2one", saleOrderLineProductField);
