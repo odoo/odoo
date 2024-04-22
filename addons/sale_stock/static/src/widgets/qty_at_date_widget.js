@@ -87,5 +87,16 @@ export class QtyAtDateWidget extends Component {
 
 export const qtyAtDateWidget = {
     component: QtyAtDateWidget,
+    fieldDependencies: [
+        { name: 'display_qty_widget', type: 'boolean'},
+        { name: 'free_qty_today', type: 'float'},
+        { name: 'forecast_expected_date', type: 'datetime'},
+        { name: 'is_mto', type: 'boolean'},
+        { name: 'qty_available_today', type: 'float'},
+        { name: 'qty_to_deliver', type: 'float'},
+        { name: 'scheduled_date', type: 'datetime'},
+        { name: 'virtual_available_at_date', type: 'float'},
+        { name: 'warehouse_id', type: 'many2one'},
+    ],
 };
 registry.category("view_widgets").add("qty_at_date_widget", qtyAtDateWidget);

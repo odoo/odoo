@@ -35,11 +35,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_updatable" invisible="1"/>
                             <field name="order_id" readonly="1" force_save="1"/>
-                            <field name="product_uom_readonly" invisible="1"/>
-                            <field name="qty_delivered_method" invisible="1"/>
-                            <field name="state" invisible="1"/>
                             <field name="product_id"
                                 readonly="id and not product_updatable"
                                 required="not display_type"
@@ -60,12 +56,8 @@
                             <field name="product_uom_id" groups="!uom.group_uom" invisible="1"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             <field name="order_partner_id" invisible="1"/>
-                            <field name="display_type" invisible="1"/>
-                            <field name="product_updatable" invisible="1"/>
                         </group>
                         <group>
-                            <field name="company_id" invisible="1"/>
-                            <field name="tax_country_id" invisible="1"/>
                             <field name="price_unit"/>
                             <field name="discount" groups="sale.group_discount_per_so_line"/>
                             <field name="price_subtotal"
@@ -112,9 +104,9 @@
                 <field name="product_id"/>
                 <field name="salesman_id"/>
                 <group expand="0" string="Group By">
-                    <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
-                    <filter string="Order" name="order" domain="[]" context="{'group_by':'order_id'}"/>
-                    <filter string="Salesperson" name="salesperson" domain="[]" context="{'group_by':'salesman_id'}"/>
+                    <filter string="Product" name="product" context="{'group_by':'product_id'}"/>
+                    <filter string="Order" name="order" context="{'group_by':'order_id'}"/>
+                    <filter string="Salesperson" name="salesperson" context="{'group_by':'salesman_id'}"/>
                 </group>
             </search>
         </field>

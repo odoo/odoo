@@ -11,7 +11,7 @@
         'sale',
     ],
     'data': [
-        'views/sale_views.xml',
+        'views/sale_order_views.xml',
     ],
     'demo': [
         'data/product_demo.xml',

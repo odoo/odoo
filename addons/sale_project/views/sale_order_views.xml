@@ -7,19 +7,35 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_view_invoice']" position="before">
-                <field name="show_task_button" invisible="1"/>
-                <field name="show_project_button" invisible="1"/>
-                <field name="show_create_project_button" invisible="1"/>
-                <field name="project_ids" invisible="1"/>
-                <field name="is_product_milestone" invisible="1"/>
-                <button type="object" name="action_view_project_ids" class="oe_stat_button" icon="fa-puzzle-piece" invisible="not show_project_button" groups="project.group_project_user">
+            <button name="action_view_invoice" position="before">
+                <button
+                    name="action_view_project_ids"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-puzzle-piece"
+                    invisible="not show_project_button"
+                    groups="project.group_project_user"
+                >
                     <field name="project_count" widget="statinfo" string="Projects"/>
                 </button>
-                <button class="oe_stat_button" name="action_view_milestone" type="object" icon="fa-check-square-o" invisible="not is_product_milestone or not project_ids or state == 'draft'" groups="project.group_project_milestone">
+                <button
+                    name="action_view_milestone"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-check-square-o"
+                    invisible="not is_product_milestone or not project_ids or state == 'draft'"
+                    groups="project.group_project_milestone"
+                >
                     <field name="milestone_count" widget="statinfo" string="Milestones"/>
                 </button>
-                <button type="object" name="action_view_task" class="oe_stat_button" icon="fa-check" invisible="not show_task_button" groups="project.group_project_user">
+                <button
+                    name="action_view_task"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-check"
+                    invisible="not show_task_button"
+                    groups="project.group_project_user"
+                >
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_text">Tasks</span>
                         <span class="o_stat_value">
@@ -28,7 +44,7 @@
                         </span>
                     </div>
                 </button>
-            </xpath>
+            </button>
             <field name="journal_id" position="before">
                 <field name="project_id" groups="project.group_project_user"
                     context="{'default_allow_billable': True, 'default_partner_id': partner_id, 'order_id': id, 'order_state' : state}"/>

@@ -65,7 +65,6 @@
                                 string="Disc.%"
                                 groups="sale.group_discount_per_so_line"
                                 optional="show"/>
-                            <field name="is_present" column_invisible="True" />
                             <button name="button_add_to_order"
                                 type="object"
                                 class="oe_link"
@@ -78,10 +77,11 @@
             </page>
 
             <field name="partner_shipping_id" position="after">
-                <field name="sale_order_template_id"
+                <field
+                    name="sale_order_template_id"
                     options="{'no_create': True}"
-                    groups="sale_management.group_sale_order_template"
-                 readonly="state in ['cancel', 'sale']"/>
+                    readonly="state in ['cancel', 'sale']"
+                    groups="sale_management.group_sale_order_template"/>
             </field>
         </field>
     </record>
