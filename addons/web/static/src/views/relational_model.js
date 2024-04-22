@@ -1667,6 +1667,7 @@ class DynamicList extends DataPoint {
     exportState() {
         return {
             limit: this.limit,
+            offset: this.offset,
             initialLimit: this.initialLimit,
             orderBy: this.orderBy,
             initialOrderBy: this.initialOrderBy,
@@ -2051,7 +2052,6 @@ export class DynamicRecordList extends DynamicList {
     exportState() {
         return {
             ...super.exportState(),
-            offset: this.offset,
             countLimit: this.countLimit,
         };
     }
