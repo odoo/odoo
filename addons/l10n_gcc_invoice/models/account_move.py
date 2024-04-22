@@ -69,8 +69,19 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     l10n_gcc_invoice_tax_amount = fields.Float(string='Tax Amount', compute='_compute_tax_amount', digits='Product Price')
+    l10n_gcc_line_name = fields.Char(compute='_compute_l10n_gcc_line_name')
 
     @api.depends('price_subtotal', 'price_total')
     def _compute_tax_amount(self):
         for record in self:
             record.l10n_gcc_invoice_tax_amount = record.price_total - record.price_subtotal
+
+    @api.depends('name')
+    def _compute_l10n_gcc_line_name(self):
+        def lang_product_name(line, lang):
+            return line.with_context(lang=lang).product_id.display_name
+        for line in self:
+            if line.product_id and line.name in [lang_product_name(line, lang) for lang in ('ar_001', 'en_US')]:
+                line.l10n_gcc_line_name = lang_product_name(line, line.move_id.partner_id.lang)
+            else:
+                line.l10n_gcc_line_name = line.name
