@@ -191,7 +191,7 @@ class TestMrpAccount(TestMrpCommon):
 
     def test_stock_user_without_account_permissions_can_create_bom(self):
         mrp_manager = new_test_user(
-            self.env, 'temp_mrp_manager', 'mrp.group_mrp_manager',
+            self.env, 'temp_mrp_manager', 'mrp.group_mrp_manager,product.group_product_variant',
         )
 
         bom_form = Form(self.env['mrp.bom'].with_user(mrp_manager))
