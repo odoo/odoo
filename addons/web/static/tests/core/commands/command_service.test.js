@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { press, queryAllTexts } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockUserAgent } from "@odoo/hoot-mock";
+import { Deferred, advanceFrame, advanceTime, animationFrame, mockUserAgent } from "@odoo/hoot-mock";
 import {
     contains,
     getService,
@@ -621,6 +621,7 @@ test("namespaces display in the footer are still clickable", async () => {
     expect(queryAllTexts(".o_command")).toEqual(["Command@"]);
 
     await contains(".o_command_palette_search input").edit("Com", { confirm: false });
+    await advanceFrame();
     await contains(".o_command_palette_footer .o_namespace:eq(1)").click();
     await animationFrame();
     expect(".o_command_palette_search .o_namespace").toHaveText("#");
@@ -701,12 +702,13 @@ test("can switch between command providers", async () => {
 
     // Switch to the other provider
     await contains(".o_command_palette_search input").edit("@", { confirm: false });
+    await advanceFrame();
 
     expect(queryAllTexts(".o_command")).toEqual(otherNames);
 
     // Press backspace to recover the default provider
     press("backspace");
-    await animationFrame();
+    await advanceTime(1);
 
     expect(queryAllTexts(".o_command")).toEqual(defaultNames);
 });
