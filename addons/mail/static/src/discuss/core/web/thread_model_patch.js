@@ -19,7 +19,7 @@ patch(Thread, {
         thread.fetchChannelInfoState = "fetching";
         const def = new Deferred();
         thread.fetchChannelInfoDeferred = def;
-        thread.fetchChannelInfo().then(
+        thread.fetchChannelInfo(data.isLivechatSession).then(
             (result) => {
                 if (thread.exists()) {
                     thread.fetchChannelInfoState = "fetched";

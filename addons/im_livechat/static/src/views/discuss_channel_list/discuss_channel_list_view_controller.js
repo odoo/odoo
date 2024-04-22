@@ -15,7 +15,8 @@ export class DiscussChannelListController extends ListController {
         if (!this.ui.isSmall) {
             return this.actionService.doAction("mail.action_discuss", {
                 name: _t("Discuss"),
-                additionalContext: { active_id: record.resId },
+                //isLiveChatSession is set to true when the session open from Session History
+                additionalContext: { active_id: record.resId, isLivechatSession: true },
             });
         }
         let thread = this.store.Thread.get({

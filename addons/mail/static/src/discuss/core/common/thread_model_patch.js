@@ -80,17 +80,21 @@ const threadPatch = {
         }
         return super.avatarUrl;
     },
-    async fetchChannelInfo() {
+    async fetchChannelInfo(isLivechatSession) {
         return this.fetchChannelMutex.exec(async () => {
             if (!(this.localId in this.store.Thread.records)) {
                 return; // channel was deleted in-between two calls
             }
-            const data = await rpc("/discuss/channel/info", { channel_id: this.id });
+            const data = isLivechatSession
+                ? await rpc("/im_livechat/session_history", { channel_id: this.id })
+                : await rpc("/discuss/channel/info", { channel_id: this.id });
             if (data) {
                 this.update(data);
-                for (let index = 0; index < data.length; index++) {
-                    const newThread = this.store.Thread.insert(data[index]);
-                    newThread.isLocallyPinned = true;
+                if (isLivechatSession) {
+                    for (let index = 0; index < data.length; index++) {
+                        const newThread = this.store.Thread.insert(data[index]);
+                        newThread.isLocallyPinned = true;
+                    }
                 }
             } else {
                 this.delete();
