@@ -229,7 +229,10 @@ class IrModule(models.Model):
                             terp = ast.literal_eval(f.read().decode())
                     except Exception:
                         continue
-                    files_to_import = terp.get('data', []) + terp.get('init_xml', []) + terp.get('update_xml', [])
+                    trep_data = [terp.get('data', []), terp.get('init_xml', []), terp.get('update_xml', [])]
+                    if any(not isinstance(data, list) for data in trep_data):
+                        raise UserError(_("The manifest data of the uploaded file must be in list datatype"))
+                    files_to_import = trep_data[0] + trep_data[1] + trep_data[2]
                     if with_demo:
                         files_to_import += terp.get('demo', [])
                     for filename in files_to_import:
