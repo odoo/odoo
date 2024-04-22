@@ -23,6 +23,5 @@ class TestAccountJournalDashboard(TestExpenseCommon):
         expense_sheet.flush_recordset()
         payment.flush_recordset()
         dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
-        # todo master: have 750 (residual amount will be used)
         # we still want to assert a second time in order to make sure that partially paid expenses are displayed
-        self.assertEqual(dashboard_data['sum_expenses_to_pay'], format_amount(self.env, 1000, company_currency))
+        self.assertEqual(dashboard_data['sum_expenses_to_pay'], format_amount(self.env, 750, company_currency))
