@@ -60,47 +60,46 @@ class Evaluacion(models.Model):
                     )
         return res
 
-    def printReport(self):
-        # do something
-        preguntas_tabuladas = []
-
-        for pregunta in self.pregunta_ids:
-            pregunta_tabulada = {"pregunta": pregunta.pregunta_texto, "respuestas": {}}
-            for respuesta in pregunta.respuesta_ids:
-                if respuesta.respuesta_texto not in pregunta_tabulada["respuestas"]:
-                    pregunta_tabulada["respuestas"][respuesta.respuesta_texto] = 0
-                pregunta_tabulada["respuestas"][respuesta.respuesta_texto] += 1
-            preguntas_tabuladas.append(pregunta_tabulada)
-
-        print(preguntas_tabuladas)
-
-        exportText = str(preguntas_tabuladas)
-
-        # encode the text to bytes, then to base64
-        exportText = base64.b64encode(exportText.encode())
-
-        # create an 'ir.attachment' record to hold the download data
-        attachment = self.env["ir.attachment"].create(
-            {
-                "name": "Export.txt",
-                "type": "binary",
-                "datas": exportText,
-                "store_fname": "Export.txt",
-            }
-        )
-
-        # return an action to download the file
-        return {
-            "type": "ir.actions.act_url",
-            "url": "/web/content/%s?download=true" % (attachment.id),
-            "target": "self",
-        }
-
-    def reporte_test(self):
+    def reporte_generico(self):
         return {
             "type": "ir.actions.act_url",
             "url": "/evaluacion/reporte/%s" % (self.id),
             "target": "self",
         }
 
-   
+
+    def generar_datos_reporte_generico(self):
+            params = {
+                "evaluacion": self,
+                "preguntas": [],
+            }
+
+            respuesta_tabulada = {}
+
+            for pregunta in self.pregunta_ids:
+
+                respuestas = []
+                respuestas_tabuladas = []
+
+                for respuesta in pregunta.respuesta_ids:
+                    respuestas.append(respuesta.respuesta_texto)
+
+                    for i, respuesta_tabulada in enumerate(respuestas_tabuladas):
+                        if respuesta_tabulada["texto"] == respuesta.respuesta_texto:
+                            respuestas_tabuladas[i]["conteo"] += 1
+                            break
+                    else:
+                        respuestas_tabuladas.append(
+                            {"texto": respuesta.respuesta_texto, "conteo": 1}
+                        )
+
+                datos_pregunta = {
+                    "pregunta": pregunta,
+                    "respuestas": respuestas,
+                    "respuestas_tabuladas": respuestas_tabuladas,
+                    "datos_grafica": str(respuestas_tabuladas).replace("'", '"'),
+                }
+
+                params["preguntas"].append(datos_pregunta)
+
+            return params
