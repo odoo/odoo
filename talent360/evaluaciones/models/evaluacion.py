@@ -53,32 +53,6 @@ class Evaluacion(models.Model):
         string="Asignados",
     )
 
-
-
-    def write(self, vals):
-        """
-        Actualiza registros de la evaluación y maneja notificaciones relacionadas con los usuarios asignados.
-
-        Este método extiende el comportamiento estándar de 'write' para agregar funcionalidad de notificación cuando se modifican los usuarios asignados. 
-        En caso de que se añada un usuario, se emite una notificación a través del sistema de mensajería.
-
-        :return: bool: True si la actualización fue exitosa, False en caso contrario.
-            
-        """
-        res = super(Evaluacion, self).write(vals)
-        if "usuario_ids" in vals:
-            for user_change in vals["usuario_ids"]:
-                action, user_id = user_change
-                user = self.env["res.users"].browse(user_id)
-                partner_id = user.partner_id.id
-                if action == 4:
-                    print(f"Se ha asignado la evaluación {self.nombre} a {partner_id}")
-                    self.message_post(
-                        body=f"Se te ha asignado la evaluación {self.nombre}",
-                        partner_ids=[partner_id],
-                    )
-        return res
-    
     def copiar_preguntas_de_template_nom035(self):
         """
         Copia preguntas de un template de evaluación predeterminado a una nueva evaluación.
