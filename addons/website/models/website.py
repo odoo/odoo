@@ -976,7 +976,7 @@ class Website(models.Model):
         if country:
             country_id = self.env['res.country'].search([('code', '=', country)], limit=1).id
 
-        website_id = self._get_current_website_id(domain_name, country_id, fallback=fallback)
+        website_id = self.sudo()._get_current_website_id(domain_name, country_id, fallback=fallback)
         return self.browse(website_id)
 
     @tools.cache('domain_name', 'country_id', 'fallback')
