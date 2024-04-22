@@ -136,9 +136,9 @@ class TestReportes(TransactionCase):
                 self.assertEqual(
                     pregunta["respuestas_tabuladas"],
                     [
-                        {"texto": "3", "conteo": 8},
-                        {"texto": "4", "conteo": 2},
                         {"texto": "5", "conteo": 3},
+                        {"texto": "4", "conteo": 2},
+                        {"texto": "3", "conteo": 8},
                     ],
                 )
             else:
