@@ -2921,6 +2921,27 @@ class TestFields(TransactionCaseWithUserDemo):
             records.mapped('harry')  # fetch all fields with prefetch='Harry Potter'
             records.mapped('rare_description')  # fetch that field only
 
+    def test_cache_key_invalidation(self):
+        company0 = self.env.ref('base.main_company')
+        company1 = self.env['res.company'].create({'name': 'A'})
+
+        user0 = self.env['res.users'].create({
+            'name': 'Foo', 'login': 'foo', 'company_id': company0.id,
+            'company_ids': [Command.set([company0.id, company1.id])],
+        })
+
+        # this uses company0
+        record = self.env['test_new_api.company'].with_user(user0).create({
+            'foo': 'main',
+        })
+        self.assertEqual(record.env.company, company0)
+        self.assertEqual(record.foo, 'main')
+
+        # change the user's company, so we implicitly switch to company1
+        user0.company_id = company1
+        self.assertEqual(record.env.company, company1)
+        self.assertEqual(record.foo, False)
+
 
 class TestX2many(common.TransactionCase):
 

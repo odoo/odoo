@@ -672,13 +672,15 @@ class Users(models.Model):
                     user.partner_id.write({'company_id': user.company_id.id})
 
         if 'company_id' in values or 'company_ids' in values:
-            # Reset lazy properties `company` & `companies` on all envs
+            # Reset lazy properties `company` & `companies` on all envs,
+            # and also their _cache_key, which may depend on them.
             # This is unlikely in a business code to change the company of a user and then do business stuff
             # but in case it happens this is handled.
             # e.g. `account_test_savepoint.py` `setup_company_data`, triggered by `test_account_invoice_report.py`
             for env in list(self.env.transaction.envs):
                 if env.user in self:
                     lazy_property.reset_all(env)
+                    env._cache_key.clear()
 
         # clear caches linked to the users
         if self.ids and 'groups_id' in values:
