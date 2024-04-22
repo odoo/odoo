@@ -628,20 +628,48 @@ class Meeting(models.Model):
 
         return True
 
+    def _check_private_event_conditions(self):
+        """ Checks if the event is private, returning True if the conditions match and False otherwise. """
+        self.ensure_one()
+        event_is_private = self.privacy == 'private'
+        user_is_not_partner = self.user_id.id != self.env.uid and self.env.user.partner_id not in self.partner_ids
+        return event_is_private and user_is_not_partner
+
     def name_get(self):
         """ Hide private events' name for events which don't belong to the current user
         """
-        hidden = self.filtered(
-            lambda evt:
-                evt.privacy == 'private' and
-                evt.user_id.id != self.env.uid and
-                self.env.user.partner_id not in evt.partner_ids
-        )
-
+        hidden = self.filtered(lambda evt: evt._check_private_event_conditions())
         shown = self - hidden
         shown_names = super(Meeting, shown).name_get()
         obfuscated_names = [(eid, _('Busy')) for eid in hidden.ids]
         return shown_names + obfuscated_names
+
+    def read(self, fields=None, load='_classic_read'):
+        """
+        Return the events information to be shown on calendar/tree/form views.
+        Private events will have their sensitive fields hidden by default.
+        """
+        records = super().read(fields=fields, load=load)
+        if fields:
+            # Define the private fields and filter the private events from self.
+            private_fields = ['name', 'location', 'attendee_ids', 'description', 'videocall_location', 'message_ids']
+            private_events = self.filtered(lambda ev: ev._check_private_event_conditions())
+
+            # Hide the private information of the event by changing their values to 'Busy' and False.
+            for event in records:
+                if event['id'] in private_events.ids:
+                    for field in private_fields:
+                        event[field] = _('Busy') if field in ['name', 'display_name'] else False
+
+            # Update the cache with the new hidden values.
+            for field_name in private_fields:
+                if field_name in self._fields:
+                    field = self._fields[field_name]
+                    replacement = field.convert_to_cache(
+                        _('Busy') if field_name in ['name', 'display_name'] else False,
+                        private_events)
+                    self.env.cache.update(private_events, field, repeat(replacement))
+        return records
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
