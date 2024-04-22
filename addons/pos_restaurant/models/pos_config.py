@@ -69,7 +69,6 @@ class PosConfig(models.Model):
                 vals['iface_splitbill'] = True
             if not is_restaurant or not vals.get('iface_tipproduct', False):
                 vals['set_tip_after_payment'] = False
-            vals["iface_orderline_notes"] = is_restaurant
         pos_configs = super().create(vals_list)
         for config in pos_configs:
             if config.module_pos_restaurant:
