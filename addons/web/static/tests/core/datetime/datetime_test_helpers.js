@@ -1,5 +1,6 @@
 import { click, queryAll, queryAllTexts, queryAllValues, queryFirst } from "@odoo/hoot-dom";
 import { expect } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
 
 const PICKER_ROWS = 6;
 const PICKER_COLS = 7;
@@ -154,8 +155,9 @@ export function getPickerApplyButton() {
     return queryFirst(".o_datetime_picker .o_datetime_buttons .o_apply");
 }
 
-export function zoomOut() {
-    return click(".o_zoom_out");
+export async function zoomOut() {
+    click(".o_zoom_out");
+    await animationFrame();
 }
 
 export function getTimePickers({ parse = false } = {}) {
