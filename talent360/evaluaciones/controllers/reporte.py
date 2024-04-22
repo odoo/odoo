@@ -1,11 +1,17 @@
 from odoo import http
-
+from odoo.http import request
+from odoo.exceptions import AccessError
 
 class ReporteController(http.Controller):
     @http.route(
         "/evaluacion/reporte/<model('evaluacion'):evaluacion>", type="http", auth="user"
     )
     def reporte_controler(self, evaluacion):
+
+        if not request.env.user.has_group('your_module.your_group'):
+            raise AccessError("You do not have access to this resource.")
+
+
         params = {
             "evaluacion": evaluacion,
             "preguntas": [],
@@ -40,4 +46,4 @@ class ReporteController(http.Controller):
             params["preguntas"].append(datos_pregunta)
 
         # Se renderiza el reporte
-        return http.request.render("evaluaciones.encuestas_reporte", params)
+        return request.render("evaluaciones.encuestas_reporte", params)
