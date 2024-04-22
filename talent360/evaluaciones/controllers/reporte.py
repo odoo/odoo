@@ -8,7 +8,7 @@ class ReporteController(http.Controller):
     def reporte_controler(self, evaluacion):
         params = {
             "evaluacion": evaluacion,
-            "question_and_page_data": [],
+            "preguntas": [],
         }
 
         respuesta_tabulada = {}
@@ -30,14 +30,14 @@ class ReporteController(http.Controller):
                         {"texto": respuesta.respuesta_texto, "conteo": 1}
                     )
 
-            question_data = {
-                "question": pregunta,
+            datos_pregunta = {
+                "pregunta": pregunta,
                 "respuestas": respuestas,
                 "respuestas_tabuladas": respuestas_tabuladas,
-                "graph_data": str(respuestas_tabuladas).replace("'", '"'),
+                "datos_grafica": str(respuestas_tabuladas).replace("'", '"'),
             }
 
-            params["question_and_page_data"].append(question_data)
+            params["preguntas"].append(datos_pregunta)
 
         # Se renderiza el reporte
         return http.request.render("evaluaciones.encuestas_reporte", params)

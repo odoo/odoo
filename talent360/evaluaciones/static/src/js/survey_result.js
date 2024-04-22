@@ -273,13 +273,14 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
                     'questionsEl': self.$('#survey_table_question_'+ questionId)
                 }).attachTo($(this)));
             });
+
             self.$('.survey_graph').each(function () {
-                allPromises.push(new publicWidget.registry.SurveyResultChart(self)
-                    .attachTo($(this)));
-            });
+                var chartWidget = new publicWidget.registry.SurveyResultChart(self);
+                allPromises.push(chartWidget.attachTo($(this)));
+            }); 
 
             if (allPromises.length !== 0) {
-                return Promise.all(allPromises);
+                return Promise.all(allPromises).finally(seleccionarTab);
             } else {
                 return Promise.resolve();
             }
@@ -294,6 +295,43 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
         window.print();
     },
 });
+
+
+function seleccionarTab(){
+    var tabs = $('.nav-tabs');
+    
+    tabs.each(function() {
+        var children = $(this).find('a');
+        var default_tab = undefined;
+
+        children.each(function() {
+            var child = $(this);
+            var done = false;
+
+            if (done) {
+                return;
+            }
+
+            if (default_tab) {
+                child.tab('show');
+                done = true
+            }
+
+            if (child.hasClass('default')) {
+                default_tab = child;
+            }
+        });
+
+        if (default_tab === undefined) {
+            default_tab = $(children[0]);
+        }
+
+        
+        default_tab.tab('show');
+
+
+    });
+}
 
 export default {
     resultWidget: publicWidget.registry.SurveyResultWidget,
