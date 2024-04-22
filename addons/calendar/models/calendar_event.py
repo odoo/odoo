@@ -432,6 +432,12 @@ class Meeting(models.Model):
                     )
                 )
 
+    def _check_organizer_validation_conditions(self, vals_list):
+        """ Method for check in the microsoft_calendar module that needs to be
+            overridden in appointment.
+        """
+        return [True] * len(vals_list)
+
     @api.depends('recurrence_id', 'recurrency')
     def _compute_rrule_type_ui(self):
         defaults = self.env["calendar.recurrence"].default_get(["interval", "rrule_type"])
