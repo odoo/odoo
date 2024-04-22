@@ -19,6 +19,7 @@ class Pregunta(models.Model):
     company_id = fields.Many2one("res.company", string="Compañía")
     opcion_ids = fields.One2many("opcion", "pregunta_id", string="Opciones")
     respuesta_ids = fields.One2many("respuesta", "pregunta_id", string="Respuestas")
+    competencia_ids = fields.Many2many("competencia", string="Competencias")
 
     def ver_respuestas(self):
         evaluacion_id = self._context.get('current_evaluacion_id')
