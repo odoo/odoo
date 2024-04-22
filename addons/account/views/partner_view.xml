@@ -66,7 +66,7 @@
                                         domain="[
                                             ('type_tax_use', '!=', 'none'),
                                             ('country_id', '=', parent.company_country_id),
-                                            '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
+                                            '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)
                                         ]"
                                         context="{'append_type_to_tax_name': True}"
                                     />
@@ -75,7 +75,7 @@
                                         domain="[
                                             ('type_tax_use', '!=', 'none'),
                                             ('country_id', '=', parent.country_id if parent.foreign_vat else parent.company_country_id),
-                                            '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
+                                            '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)]"
                                         context="{'append_type_to_tax_name': True}"
                                     />
                                 </tree>
