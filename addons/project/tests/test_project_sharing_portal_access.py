@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import OrderedDict
@@ -16,15 +15,13 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        project_share_wizard = cls.env['project.share.wizard'].create({
-            'access_mode': 'edit',
+        cls.env['project.share.wizard'].create({
             'res_model': 'project.project',
             'res_id': cls.project_portal.id,
-            'partner_ids': [
-                Command.link(cls.partner_portal.id),
+            'collaborator_ids': [
+                Command.create({'partner_id': cls.partner_portal.id, 'access_mode': 'edit'}),
             ],
         })
-        project_share_wizard.action_share_record()
 
         Task = cls.env['project.task']
         cls.read_protected_fields_task = OrderedDict([
@@ -86,11 +83,10 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         })
 
         project_share_wizard_no_user = self.env['project.share.wizard'].create({
-            'access_mode': 'edit',
             'res_model': 'project.project',
             'res_id': self.project_portal.id,
-            'partner_ids': [
-                Command.link(partner_portal_no_user.id),
+            'collaborator_ids': [
+                Command.create({'partner_id': partner_portal_no_user.id, 'access_mode': 'edit'}),
             ],
         })
         self.env["res.config.settings"].create({"auth_signup_uninvited": 'b2b'}).execute()

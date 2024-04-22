@@ -6,29 +6,29 @@
         <field name="model">project.share.wizard</field>
         <field name="arch" type="xml">
             <form string="Share Project">
-                <p class="alert alert-warning" invisible="access_warning == ''" role="alert"><field name="access_warning"/></p>
-                <p class="text-muted" invisible="access_mode != 'edit'">
-                    When sharing a project in edit mode, you are giving people access to the kanban and list views of your tasks.
-                    Collaborators will be able to view and modify part of the tasks' information.
-                </p>
-                <p class="text-muted" invisible="access_mode == 'edit'">
-                    When sharing a project in read-only mode, you are giving people access to the tasks in their portal.
-                    These people will be able to view the tasks, but not edit them.
-                </p>
                 <field name="res_model" invisible="1"/>
                 <field name="res_id" invisible="1"/>
                 <group>
-                    <field options="{'horizontal': true}" name="access_mode" widget="radio"/>
-                    <field name="share_link" widget="CopyClipboardChar" invisible="access_mode == 'edit'"/>
-                    <field name="send_email" widget="boolean_toggle" options="{'autosave': False}" invisible="access_mode == 'edit'"/>
-                    <div invisible="not send_email and access_mode == 'read'" class="o_td_label mb-0">
-                        <label for="partner_ids" string="Invite People" invisible="access_mode == 'read'"/>
-                        <label for="partner_ids" invisible="access_mode == 'edit'"/>
-                    </div>
-                    <field name="partner_ids" widget="many2many_tags_email" options="{'no_quick_create': True}" placeholder="Add the contacts you would like to share the project with..." invisible="not send_email and access_mode == 'read'" nolabel="1" context="{'form_view_ref': 'base.view_partner_simple_form'}"/>
+                    <field name="share_link" widget="CopyClipboardChar"/>
                 </group>
+                <field name="collaborator_ids" nolabel="1">
+                    <tree string="Collaborators" editable="bottom">
+                        <field name="partner_id"
+                               options="{'no_create': True, 'no_open': True}"
+                               domain="[('id', 'not in', parent.existing_partner_ids), ('partner_share', '=', True)]"
+                        />
+                        <field name="access_mode"/>
+                        <field name="send_invitation"/>
+                    </tree>
+                </field>
+                <p class="text-muted">Choose one of the following access modes for your collaborators:</p>
+                <ul class="text-muted">
+                    <li>Read-only: collaborators can view tasks but cannot edit them.</li>
+                    <li>Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.</li>
+                    <li>Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow.</li>
+                </ul>
                 <footer>
-                    <button string="Send invitation" name="action_share_record" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Share Project" name="action_share_record" type="object" class="btn-primary" data-hotkey="q"/>
                     <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
                 </footer>
             </form>

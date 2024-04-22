@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -10,16 +8,19 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     trigger: '.dropdown-menu a:contains("Share")',
     content: 'Start editing the project.',
 }, {
-    trigger: 'div.o_field_radio[name="access_mode"] div.o_radio_item > input[data-value="edit"]',
-    content: 'Select "Edit" as Access mode in the "Share Project" wizard.',
+    trigger: 'div[name="collaborator_ids"] .o_field_x2many_list_row_add > a',
+    content: 'Add a collaborator to the project.',
 }, {
-    trigger: '.o_field_many2many_tags_email[name=partner_ids] input',
-    extra_trigger: 'label[for=partner_ids_0]:contains("Invite People")',
+    trigger: 'div[name="collaborator_ids"] div[name="partner_id"] input',
     content: 'Select the user portal as collaborator to the "Project Sharing" project.',
     run: "edit Georges",
 }, {
     trigger: '.ui-autocomplete a.dropdown-item:contains("Georges")',
     in_modal: false,
+}, {
+    trigger: 'div[name="collaborator_ids"] div[name="access_mode"] select',
+    content: 'Select "Edit" as Access mode in the "Share Project" wizard.',
+    run: 'select "edit"',
 }, {
     trigger: 'footer > button[name="action_share_record"]',
     content: 'Confirm the project sharing with this portal user.',

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
@@ -11,6 +10,7 @@ class ProjectCollaborator(models.Model):
     project_id = fields.Many2one('project.project', 'Project Shared', domain=[('privacy_visibility', '=', 'portal')], required=True, readonly=True, export_string_translation=False)
     partner_id = fields.Many2one('res.partner', 'Collaborator', required=True, readonly=True)
     partner_email = fields.Char(related='partner_id.email', export_string_translation=False)
+    limited_access = fields.Boolean('Limited Access', default=False, export_string_translation=False)
 
     _sql_constraints = [
         ('unique_collaborator', 'UNIQUE(project_id, partner_id)', 'A collaborator cannot be selected more than once in the project sharing access. Please remove duplicate(s) and try again.'),
