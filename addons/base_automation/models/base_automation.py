@@ -841,7 +841,8 @@ class BaseAutomation(models.Model):
                     return message
 
                 # always execute actions when the author is a customer
-                mail_trigger = "on_message_received" if message_sudo.author_id.partner_share else "on_message_sent"
+                # if author is not set, it means the message is coming from outside
+                mail_trigger = "on_message_received" if not message_sudo.author_id or message_sudo.author_id.partner_share else "on_message_sent"
                 automations = self.env['base.automation']._get_actions(self, [mail_trigger])
                 for automation in automations.with_context(old_values=None):
                     records = automation._filter_pre(self, feedback=True)
