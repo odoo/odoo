@@ -118,8 +118,12 @@ class TestLeadAssign(TestLeadAssignCommon):
             count=8,
             suffix='Initial',
         )
-        # commit probability and related fields
+        # Explicitely assert auto_proba is 0. This is done because it will not be updated
+        # by the compute, as we set the stored computed field 'probability', that shares
+        # the same compute method as automated_probability, leading to both fields being
+        # protected at creation. This ensures no lead is using automated probability. (*)
         leads.flush_recordset()
+        self.assertTrue(all(lead.automated_probability == 0 for lead in leads))
         self.assertInitialData()
 
         # archived members should not be taken into account
@@ -130,10 +134,10 @@ class TestLeadAssign(TestLeadAssignCommon):
         # assign probability to leads (bypass auto probability as purpose is not to test pls)
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
         for idx, lead in enumerate(leads):
-            lead.probability = idx * 10
+            lead.probability = idx * 10 + 1  # Prevent P = AP = 0 (*)
+
         # commit probability and related fields
         leads.flush_recordset()
-        self.assertEqual(leads[0].probability, 0)
 
         # create exiting leads for user_sales_salesman (sales_team_1_m3, sales_team_convert_m1)
         existing_leads = self._create_leads_batch(
@@ -142,10 +146,11 @@ class TestLeadAssign(TestLeadAssignCommon):
             count=14,
             suffix='Existing')
         self.assertEqual(existing_leads.team_id, self.sales_team_1, "Team should have lower sequence")
-        existing_leads[0].active = False  # lost
-        existing_leads[1].probability = 100  # not won
-        existing_leads[2].probability = 0  # not lost
+        existing_leads[0].action_set_lost()  # lost
+        existing_leads[1].probability = 100  # not won as stage is not won.
+        existing_leads[2].probability = 0  # not lost as active
         existing_leads.flush_recordset()
+        self.env['crm.lead']._process_pls_pending_updates()
 
         self.members.invalidate_model(['lead_month_count'])
         self.assertEqual(self.sales_team_1_m3.lead_month_count, 14)
@@ -173,20 +178,20 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertEqual(
             Leads.browse(teams_data[self.sales_team_1]['merged']).mapped('name'),
             ['TestLeadInitial_0003']
-        )
+        )  # TestLeadInitial_0007 has same partner as TestLeadInitial_0003 -> merged in 0003
+
 
         self.assertEqual(len(teams_data[self.sales_team_1]['duplicates']), 1)
-
         self.assertEqual(
             sorted(members_data[self.sales_team_1_m3]['assigned'].mapped('name')),
-            ['TestLeadInitial_0000', 'TestLeadInitial_0005']
-        )
+            ['TestLeadInitial_0000', 'TestLeadInitial_0003']
+        )  # Highest probability is assigned first, 71% and 61% respectively.
 
         # salespersons assign
         self.members.invalidate_model(['lead_month_count'])
         self.assertEqual(self.sales_team_1_m1.lead_month_count, 0)  # archived do not get leads
         self.assertEqual(self.sales_team_1_m2.lead_month_count, 0)  # opt-out through assignment_max = 0
-        self.assertEqual(self.sales_team_1_m3.lead_month_count, 14)  # 15 max on 4 days (2) + existing 12
+        self.assertEqual(self.sales_team_1_m3.lead_month_count, 14)  # 15 max per month -> 2 max for 4 days + existing 12
 
         with self.with_user('user_sales_manager'):
             self.env['crm.team'].browse(self.sales_team_1.ids)._action_assign_leads(work_days=4)
@@ -195,7 +200,8 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.members.invalidate_model(['lead_month_count'])
         self.assertEqual(self.sales_team_1_m1.lead_month_count, 0)  # archived do not get leads
         self.assertEqual(self.sales_team_1_m2.lead_month_count, 0)  # opt-out through assignment_max = 0
-        self.assertEqual(self.sales_team_1_m3.lead_month_count, 16)  # 15 max on 4 days (2) + existing 14 and not capped anymore
+        # The last time _action_assign_leads is called before reaching the max member's capacity, the count may go over it. (unwanted bahavior?)
+        self.assertEqual(self.sales_team_1_m3.lead_month_count, 16)  # 15 max per month -> 2 max for 4 days + existing 14, not capped as it had been once.
 
     @mute_logger('odoo.models.unlink')
     def test_assign_duplicates(self):

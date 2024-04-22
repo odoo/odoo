@@ -10,7 +10,7 @@ class CrmLeadLost(models.TransientModel):
     _name = 'crm.lead.lost'
     _description = 'Get Lost Reason'
 
-    lead_ids = fields.Many2many('crm.lead', string='Leads')
+    lead_ids = fields.Many2many('crm.lead', string='Leads', context={"active_test": False})
     lost_reason_id = fields.Many2one('crm.lost.reason', 'Lost Reason')
     lost_feedback = fields.Html(
         'Closing Note', sanitize=True

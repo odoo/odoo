@@ -382,8 +382,7 @@ class Team(models.Model):
         Heuristic of this method is the following:
           * find unassigned leads for each team, aka leads being
             * without team, without user -> not assigned;
-            * not in a won stage, and not having False/0 (lost) or 100 (won)
-              probability) -> live leads;
+            * not won nor inactive -> live leads;
             * if set, a delay after creation can be applied (see BUNDLE_HOURS_DELAY)
               parameter explanations here below;
             * matching the team's assignment domain (empty means
@@ -458,7 +457,7 @@ class Team(models.Model):
                 literal_eval(team.assignment_domain or '[]'),
                 [('create_date', '<=', max_create_dt)],
                 ['&', ('team_id', '=', False), ('user_id', '=', False)],
-                ['|', ('stage_id', '=', False), ('stage_id.is_won', '=', False)]
+                [('is_won', '=', False)]
             ])
 
             leads = self.env["crm.lead"].search(lead_domain)

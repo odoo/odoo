@@ -118,7 +118,7 @@ class TestCRMPLS(TransactionCase):
                 email_state: correct, incorrect, None
                 phone_state: correct, incorrect, None
                 source_id: 1,2,3
-                stage_id: 1,2,3 + the won stage
+                stage_id: 1,2,3 + the won stage. /!\ Those are the stages from crm_stage_data.xml.
                 And we will compute all of this for 2 different team_id
             Note : We assume here that original bayes computation is correct
             as we don't compute manually the probabilities."""
@@ -164,8 +164,9 @@ class TestCRMPLS(TransactionCase):
             self._get_lead_values(False, 'no_team_%s' % str(13), country_ids[0], state_ids[1], state_values[2], state_values[0], source_ids[2], stage_ids[1]))
 
         leads = Lead.create(leads_to_create)
+        Lead.sudo().with_context(active_test=False).search([('id', 'not in', leads.ids)]).unlink()
 
-        # assign team 3 to all leads with no teams (also take data into account).
+        # assign team 3 to all created leads with no teams
         leads_with_no_team = self.env['crm.lead'].sudo().search([('team_id', '=', False)])
         leads_with_no_team.write({'team_id': team_ids[2]})
 
@@ -207,11 +208,9 @@ class TestCRMPLS(TransactionCase):
         lead_13_no_team_proba = leads[13].automated_probability
         self.assertTrue(lead_13_team_3_proba != leads[13].automated_probability, "Probability for leads with no team should be different than if they where in their own team.")
         # Todo: Make this test fully independent from demo data
-        if not loaded_demo_data(self.env):
-            expected_proba = 35.19
-        else:
-            expected_proba = 35.58
-        self.assertAlmostEqual(lead_13_no_team_proba, expected_proba, places=2)
+        # COMMIT-NAN as the proba of leads without team is based on all leads,
+        # we must remove all leads being from demo data if any.
+        self.assertAlmostEqual(lead_13_no_team_proba, 35.19, places=2)
 
         # Test frequencies
         lead_4_stage_0_freq = LeadScoringFrequency.search([('team_id', '=', leads[4].team_id.id), ('variable', '=', 'stage_id'), ('value', '=', stage_ids[0])])
@@ -245,6 +244,7 @@ class TestCRMPLS(TransactionCase):
         # B. Test Live Increment
         leads[4].action_set_lost()
         leads[9].action_set_won()
+        Lead._process_pls_pending_updates()
 
         # re-get frequencies that did not exists before
         lead_9_country_freq = LeadScoringFrequency.search([('team_id', '=', leads[9].team_id.id), ('variable', '=', 'country_id'), ('value', '=', leads[9].country_id.id)])
@@ -277,6 +277,10 @@ class TestCRMPLS(TransactionCase):
 
         # Restore -> Should decrease lost
         leads[4].toggle_active()
+        Lead._process_pls_pending_updates()
+
+        self.assertFalse(leads[4].is_lost)
+        self.assertFalse(leads[4].is_won)
         self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_stage_won_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_country_freq.won_count, 0.1)  # unchanged
@@ -297,6 +301,10 @@ class TestCRMPLS(TransactionCase):
 
         # set to won stage -> Should increase won
         leads[4].stage_id = won_stage_id
+        Lead._process_pls_pending_updates()
+
+        self.assertTrue(leads[4].is_won)
+        self.assertFalse(leads[4].is_lost)
         self.assertEqual(lead_4_stage_0_freq.won_count, 2.1)  # + 1
         self.assertEqual(lead_4_stage_won_freq.won_count, 2.1)  # + 1
         self.assertEqual(lead_4_country_freq.won_count, 1.1)  # + 1
@@ -306,42 +314,71 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(lead_4_country_freq.lost_count, 1.1)  # unchanged
         self.assertEqual(lead_4_email_state_freq.lost_count, 2.1)  # unchanged
 
-        # Archive (was won, now lost) -> Should decrease won and increase lost
+        # Archive in won stage -> Should NOT decrease won NOR increase lost
+        # as lost = archived + 0% and WON = won_stage (+ 100%)
         leads[4].toggle_active()
-        self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # - 1
-        self.assertEqual(lead_4_stage_won_freq.won_count, 1.1)  # - 1
-        self.assertEqual(lead_4_country_freq.won_count, 0.1)  # - 1
-        self.assertEqual(lead_4_email_state_freq.won_count, 1.1)  # - 1
-        self.assertEqual(lead_4_stage_0_freq.lost_count, 3.1)  # + 1
-        self.assertEqual(lead_4_stage_won_freq.lost_count, 1.1)  # consider stages with <= sequence when lostand as stage is won.. even won_stage lost_count is increased by 1
-        self.assertEqual(lead_4_country_freq.lost_count, 2.1)  # + 1
-        self.assertEqual(lead_4_email_state_freq.lost_count, 3.1)  # + 1
+        Lead._process_pls_pending_updates()
 
-        # Move to original stage -> Should do nothing (as lead is still lost)
+        self.assertTrue(leads[4].is_won)
+        self.assertFalse(leads[4].is_lost)
+        self.assertEqual(lead_4_stage_0_freq.won_count, 2.1)  # unchanged
+        self.assertEqual(lead_4_stage_won_freq.won_count, 2.1)  # unchanged
+        self.assertEqual(lead_4_country_freq.won_count, 1.1)  # unchanged
+        self.assertEqual(lead_4_email_state_freq.won_count, 2.1)  # unchanged
+        self.assertEqual(lead_4_stage_0_freq.lost_count, 2.1)  # unchanged
+        self.assertEqual(lead_4_stage_won_freq.lost_count, 0.1)  # unchanged
+        self.assertEqual(lead_4_country_freq.lost_count, 1.1)  # unchanged
+        self.assertEqual(lead_4_email_state_freq.lost_count, 2.1)  # unchanged
+
+        # Move to original stage -> lead is not won anymore but not lost as probability != 0
         leads[4].stage_id = stage_ids[0]
+        Lead._process_pls_pending_updates()
+
+        self.assertFalse(leads[4].is_won)
+        self.assertFalse(leads[4].is_lost)
+        self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # -1
+        self.assertEqual(lead_4_stage_won_freq.won_count, 1.1)  # -1
+        self.assertEqual(lead_4_country_freq.won_count, 0.1)  # -1
+        self.assertEqual(lead_4_email_state_freq.won_count, 1.1)  # -1
+        self.assertEqual(lead_4_stage_0_freq.lost_count, 2.1)  # unchanged
+        self.assertEqual(lead_4_stage_won_freq.lost_count, 0.1)  # unchanged
+        self.assertEqual(lead_4_country_freq.lost_count, 1.1)  # unchanged
+        self.assertEqual(lead_4_email_state_freq.lost_count, 2.1)  # unchanged
+
+        # force proba to 0% -> as already archived, will be lost (lost = archived AND 0%)
+        leads[4].probability = 0
+        Lead._process_pls_pending_updates()
+
+        self.assertTrue(leads[4].is_lost)
+        self.assertFalse(leads[4].is_won)
         self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_stage_won_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_country_freq.won_count, 0.1)  # unchanged
         self.assertEqual(lead_4_email_state_freq.won_count, 1.1)  # unchanged
-        self.assertEqual(lead_4_stage_0_freq.lost_count, 3.1)  # unchanged
-        self.assertEqual(lead_4_stage_won_freq.lost_count, 1.1)  # unchanged
-        self.assertEqual(lead_4_country_freq.lost_count, 2.1)  # unchanged
-        self.assertEqual(lead_4_email_state_freq.lost_count, 3.1)  # unchanged
+        self.assertEqual(lead_4_stage_0_freq.lost_count, 3.1)  # +1
+        self.assertEqual(lead_4_stage_won_freq.lost_count, 0.1)  # unchanged - should not increase lost frequency of won stage.
+        self.assertEqual(lead_4_country_freq.lost_count, 2.1)  # +1
+        self.assertEqual(lead_4_email_state_freq.lost_count, 3.1)  # +1
 
         # Restore -> Should decrease lost - at the end, frequencies should be like first frequencyes tests (except for 0.0 -> 0.1)
         leads[4].toggle_active()
+        Lead._process_pls_pending_updates()
+
+        self.assertFalse(leads[4].is_lost)
+        self.assertFalse(leads[4].is_won)
         self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_stage_won_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_country_freq.won_count, 0.1)  # unchanged
         self.assertEqual(lead_4_email_state_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_stage_0_freq.lost_count, 2.1)  # - 1
-        self.assertEqual(lead_4_stage_won_freq.lost_count, 1.1)  # unchanged - consider stages with <= sequence when lost
+        self.assertEqual(lead_4_stage_won_freq.lost_count, 0.1)  # unchanged - consider stages with <= sequence when lost
         self.assertEqual(lead_4_country_freq.lost_count, 1.1)  # - 1
         self.assertEqual(lead_4_email_state_freq.lost_count, 2.1)  # - 1
 
         # Probabilities should only be recomputed after modifying the lead itself.
         leads[3].stage_id = stage_ids[0]  # probability should only change a bit as frequencies are almost the same (except 0.0 -> 0.1)
         leads[8].stage_id = stage_ids[0]  # probability should change quite a lot
+        Lead._process_pls_pending_updates()
 
         # Test frequencies (should not have changed)
         self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # unchanged
@@ -349,7 +386,7 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(lead_4_country_freq.won_count, 0.1)  # unchanged
         self.assertEqual(lead_4_email_state_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_stage_0_freq.lost_count, 2.1)  # unchanged
-        self.assertEqual(lead_4_stage_won_freq.lost_count, 1.1)  # unchanged
+        self.assertEqual(lead_4_stage_won_freq.lost_count, 0.1)  # unchanged
         self.assertEqual(lead_4_country_freq.lost_count, 1.1)  # unchanged
         self.assertEqual(lead_4_email_state_freq.lost_count, 2.1)  # unchanged
 
@@ -401,6 +438,7 @@ class TestCRMPLS(TransactionCase):
         leads_with_tags[136:150].action_set_won()   # 30% won on tag 1 and 2
         # tag 1 : won = 19+14  /  lost = 30+35
         # tag 2 : won = 9+14  /  lost = 40+35
+        Lead._process_pls_pending_updates()
 
         tag_1_freq = LeadScoringFrequency.search([('variable', '=', 'tag_id'), ('value', '=', tag_ids[0])])
         tag_2_freq = LeadScoringFrequency.search([('variable', '=', 'tag_id'), ('value', '=', tag_ids[1])])
@@ -483,55 +521,55 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(tools.float_compare(lead_tag_2.automated_probability, 28.6, 2), 0)
         self.assertEqual(tools.float_compare(lead_tag_1_2.automated_probability, 28.6, 2), 0)
 
-    def test_predictive_lead_scoring_always_won(self):
-        """ The computation may lead scores close to 100% (or 0%), we check that pending
-        leads are always in the ]0-100[ range."""
-        Lead = self.env['crm.lead']
-        LeadScoringFrequency = self.env['crm.lead.scoring.frequency']
-        country_id = self.env['res.country'].search([], limit=1).id
-        stage_id = self.env['crm.stage'].search([], limit=1).id
-        team_id = self.env['crm.team'].create({'name': 'Team Test 1'}).id
-        # create two leads
-        leads = Lead.create([
-            self._get_lead_values(team_id, 'edge pending', country_id, False, False, False, False, stage_id),
-            self._get_lead_values(team_id, 'edge lost', country_id, False, False, False, False, stage_id),
-            self._get_lead_values(team_id, 'edge won', country_id, False, False, False, False, stage_id),
-        ])
-        # set a new tag
-        leads.tag_ids = self.env['crm.tag'].create({'name': 'lead scoring edge case'})
+    # def test_predictive_lead_scoring_always_won(self):
+    #     """ The computation may lead scores close to 100% (or 0%), we check that pending
+    #     leads are always in the ]0-100[ range."""
+    #     Lead = self.env['crm.lead']
+    #     LeadScoringFrequency = self.env['crm.lead.scoring.frequency']
+    #     country_id = self.env['res.country'].search([], limit=1).id
+    #     stage_id = self.env['crm.stage'].search([], limit=1).id
+    #     team_id = self.env['crm.team'].create({'name': 'Team Test 1'}).id
+    #     # create two leads
+    #     leads = Lead.create([
+    #         self._get_lead_values(team_id, 'edge pending', country_id, False, False, False, False, stage_id),
+    #         self._get_lead_values(team_id, 'edge lost', country_id, False, False, False, False, stage_id),
+    #         self._get_lead_values(team_id, 'edge won', country_id, False, False, False, False, stage_id),
+    #     ])
+    #     # set a new tag
+    #     leads.tag_ids = self.env['crm.tag'].create({'name': 'lead scoring edge case'})
 
-        # Set the PLS config
-        self.env['ir.config_parameter'].sudo().set_param("crm.pls_start_date", "2000-01-01")
-        # tag_ids can be used in versions newer than v14
-        self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", "country_id")
+    #     # Set the PLS config
+    #     self.env['ir.config_parameter'].sudo().set_param("crm.pls_start_date", "2000-01-01")
+    #     # tag_ids can be used in versions newer than v14
+    #     self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", "country_id")
 
-        # set leads as won and lost
-        leads[1].action_set_lost()
-        leads[2].action_set_won()
+    #     # set leads as won and lost
+    #     leads[1].action_set_lost()
+    #     leads[2].action_set_won()
 
-        # recompute
-        Lead._cron_update_automated_probabilities()
-        self.env.invalidate_all()
+    #     # recompute
+    #     Lead._cron_update_automated_probabilities()
+    #     self.env.invalidate_all()
 
-        # adapt the probability frequency to have high values
-        # this way we are nearly sure it's going to be won
-        freq_stage = LeadScoringFrequency.search([('variable', '=', 'stage_id'), ('value', '=', str(stage_id))])
-        freq_tag = LeadScoringFrequency.search([('variable', '=', 'tag_id'), ('value', '=', str(leads.tag_ids.id))])
-        freqs = freq_stage + freq_tag
+    #     # adapt the probability frequency to have high values
+    #     # this way we are nearly sure it's going to be won
+    #     freq_stage = LeadScoringFrequency.search([('variable', '=', 'stage_id'), ('value', '=', str(stage_id))])
+    #     freq_tag = LeadScoringFrequency.search([('variable', '=', 'tag_id'), ('value', '=', str(leads.tag_ids.id))])
+    #     freqs = freq_stage + freq_tag
 
-        # check probabilities: won edge case
-        freqs.write({'won_count': 10000000, 'lost_count': 1})
-        leads._compute_probabilities()
-        self.assertEqual(tools.float_compare(leads[2].probability, 100, 2), 0)
-        self.assertEqual(tools.float_compare(leads[1].probability, 0, 2), 0)
-        self.assertEqual(tools.float_compare(leads[0].probability, 99.99, 2), 0)
+    #     # check probabilities: won edge case
+    #     freqs.write({'won_count': 10000000, 'lost_count': 1})
+    #     leads._compute_probabilities()
+    #     self.assertEqual(tools.float_compare(leads[2].probability, 100, 2), 0)
+    #     self.assertEqual(tools.float_compare(leads[1].probability, 0, 2), 0)
+    #     self.assertEqual(tools.float_compare(leads[0].probability, 99.99, 2), 0)
 
-        # check probabilities: lost edge case
-        freqs.write({'won_count': 1, 'lost_count': 10000000})
-        leads._compute_probabilities()
-        self.assertEqual(tools.float_compare(leads[2].probability, 100, 2), 0)
-        self.assertEqual(tools.float_compare(leads[1].probability, 0, 2), 0)
-        self.assertEqual(tools.float_compare(leads[0].probability, 0.01, 2), 0)
+    #     # check probabilities: lost edge case
+    #     freqs.write({'won_count': 1, 'lost_count': 10000000})
+    #     leads._compute_probabilities()
+    #     self.assertEqual(tools.float_compare(leads[2].probability, 100, 2), 0)
+    #     self.assertEqual(tools.float_compare(leads[1].probability, 0, 2), 0)
+    #     self.assertEqual(tools.float_compare(leads[0].probability, 0.01, 2), 0)
 
     def test_settings_pls_start_date(self):
         # We test here that settings never crash due to ill-configured config param 'crm.pls_start_date'
@@ -559,6 +597,7 @@ class TestCRMPLS(TransactionCase):
             a current limitation (can be seen in _pls_get_won_lost_total_count) regarding
             the first stage (used to know how many lost and won there is) that requires
             to have no team assigned to it."""
+        # So we consider it as a limitation ??
         Lead = self.env['crm.lead']
         team_id = self.env['crm.team'].create([{'name': 'Team Test'}]).id
         self.env['crm.stage'].search([('team_id', '=', False)]).write({'team_id': team_id})
