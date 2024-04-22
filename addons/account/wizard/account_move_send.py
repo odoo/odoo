@@ -308,7 +308,7 @@ class AccountMoveSend(models.TransientModel):
             if wizard.mode == 'invoice_single':
                 manual_attachments_data = [x for x in wizard.mail_attachments_widget or [] if x.get('manual')]
                 wizard.mail_attachments_widget = (
-                        self._get_default_mail_attachments_widget(wizard.move_ids, wizard.mail_template_id)
+                        wizard._get_default_mail_attachments_widget(wizard.move_ids, wizard.mail_template_id)
                         + manual_attachments_data
                 )
             else:
