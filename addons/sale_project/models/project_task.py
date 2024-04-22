@@ -137,7 +137,7 @@ class ProjectTask(models.Model):
 
         return action_window
 
-    def action_project_sharing_view_so(self):
+    def project_sharing_action_view_so(self):
         self.ensure_one()
         if not self.display_sale_order_button:
             return {}

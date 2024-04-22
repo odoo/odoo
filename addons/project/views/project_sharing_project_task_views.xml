@@ -135,23 +135,23 @@
                 </header>
                 <div groups="base.group_user" role="status" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
                     <div class="text-center">This is a preview of how the project will look when it's shared with customers and they have editing access.
-                        <a name="action_redirect_to_project_task_form" type="object"><i class="oi oi-arrow-right me-1"/>Back to edit mode</a>
+                        <a name="project_sharing_action_redirect_to_backend" type="object"><i class="oi oi-arrow-right me-1"/>Back to edit mode</a>
                     </div>
                 </div>
                 <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
                         <field name="display_parent_task_button" invisible="1"/>
                         <field name="recurrence_id" invisible="1" />
-                        <button name="action_project_sharing_view_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" invisible="not display_parent_task_button">
+                        <button name="project_sharing_action_view_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" invisible="not display_parent_task_button">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Parent Task</span>
                             </div>
                         </button>
-                        <button name="action_project_sharing_recurring_tasks" type="object" invisible="not active or not recurrence_id"
+                        <button name="project_sharing_action_recurring_tasks" type="object" invisible="not active or not recurrence_id"
                                 class="oe_stat_button" icon="fa-repeat" context="{'default_user_ids': [(6, 0, [uid])]}">
                             <field name="recurring_count" widget="statinfo" string="Recurring Tasks"/>
                         </button>
-                        <button name="action_project_sharing_open_subtasks" type="object" class="oe_stat_button" icon="fa-tasks"
+                        <button name="project_sharing_action_open_subtasks" type="object" class="oe_stat_button" icon="fa-tasks"
                             invisible="not id or subtask_count == 0" context="{
                                 'default_user_ids': [(6, 0, [uid])],
                                 'default_project_id': project_id,
@@ -160,7 +160,7 @@
                             <field name="subtask_count" widget="statinfo" string="Sub-tasks"/>
                             <field name="display_in_project" invisible="True"/>
                         </button>
-                        <button name="action_project_sharing_open_blocking" type="object" invisible="not dependent_tasks_count" class="oe_stat_button" icon="fa-tasks">
+                        <button name="project_sharing_action_open_blocking" type="object" invisible="not dependent_tasks_count" class="oe_stat_button" icon="fa-tasks">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_text">Blocking Tasks</span>
                                 <span class="o_stat_value ">
@@ -248,7 +248,7 @@
                                     <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" decoration-danger="date_deadline &lt; current_date" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="stage_id" domain="[('user_id', '=', False), ('project_ids', 'in', [project_id])]"/>
-                                    <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
+                                    <button name="project_sharing_action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form', 'search_view_ref': 'project.project_sharing_project_task_view_search'}"
                                             invisible="project_id != context.get('active_id')"/>
                                 </tree>
@@ -281,7 +281,7 @@
                                     <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="stage_id" optional="show"/>
-                                    <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
+                                    <button name="project_sharing_action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form'}"
                                             invisible="project_id != context.get('active_id')"/>
                                 </tree>
@@ -342,7 +342,7 @@
             <field name="user_ids" position="after">
                 <field name="portal_user_names" string="Assignees" optional="show"/>
             </field>
-            
+
         </field>
     </record>
 

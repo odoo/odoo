@@ -1644,7 +1644,7 @@ class Task(models.Model):
             'context': self._context
         }
 
-    def action_project_sharing_view_parent_task(self):
+    def project_sharing_action_view_parent_task(self):
         if self.parent_id.project_id != self.project_id and self.env.user._is_portal():
             project = self.parent_id.project_id._filter_access_rules_python('read')
             if project:
@@ -1680,12 +1680,12 @@ class Task(models.Model):
             'context': self._context
         }
 
-    def action_project_sharing_open_task(self):
+    def project_sharing_action_open_task(self):
         action = self.action_open_task()
         action['views'] = [[self.env.ref('project.project_sharing_project_task_view_form').id, 'form']]
         return action
 
-    def action_project_sharing_open_subtasks(self):
+    def project_sharing_action_open_subtasks(self):
         self.ensure_one()
         subtasks = self.env['project.task'].search([('id', 'child_of', self.id), ('id', '!=', self.id)])
         if subtasks.project_id == self.project_id:
@@ -1701,7 +1701,7 @@ class Task(models.Model):
             'url': f'/my/projects/{self.project_id.id}/task/{self.id}/subtasks' if len(subtasks) > 1 else subtasks.get_portal_url(query_string='project_sharing=1'),
         }
 
-    def action_project_sharing_open_blocking(self):
+    def project_sharing_action_open_blocking(self):
         self.ensure_one()
         blockings = self.dependent_ids
         action = self.env['ir.actions.act_window']._for_xml_id('project.project_sharing_project_task_action_blocking_tasks')
@@ -1732,7 +1732,7 @@ class Task(models.Model):
             'domain': [('recurrence_id', 'in', self.recurrence_id.ids)],
         }
 
-    def action_project_sharing_recurring_tasks(self):
+    def project_sharing_action_recurring_tasks(self):
         self.ensure_one()
         recurrent_tasks = self.env['project.task'].search([('recurrence_id', 'in', self.recurrence_id.ids)])
         # If all the recurrent tasks are in the same project, open the list view in sharing mode.
@@ -1854,7 +1854,7 @@ class Task(models.Model):
             datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC)
         )
 
-    def action_redirect_to_project_task_form(self):
+    def project_sharing_action_redirect_to_backend(self):
         return {
             'type': 'ir.actions.act_url',
             'url': '/web#model=project.task&id=%s&active_id=1&menu_id=%s&action=%s&view_type=form' % (
