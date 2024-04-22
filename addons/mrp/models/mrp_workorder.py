@@ -329,7 +329,7 @@ class MrpWorkorder(models.Model):
     @api.depends('operation_id', 'workcenter_id', 'qty_production')
     def _compute_duration_expected(self):
         for workorder in self:
-            if workorder.state not in ['done', 'cancel']:
+            if workorder.state not in ['done', 'cancel'] or workorder.production_id.backorder_sequence != 0:
                 workorder.duration_expected = workorder._get_duration_expected()
 
     @api.depends('time_ids.duration', 'qty_produced')
