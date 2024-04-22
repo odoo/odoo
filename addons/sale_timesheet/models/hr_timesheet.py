@@ -36,6 +36,10 @@ class AccountAnalyticLine(models.Model):
     allow_billable = fields.Boolean(related="project_id.allow_billable")
     sale_order_state = fields.Selection(related='order_id.state')
 
+    @property
+    def SELF_READABLE_FIELDS(self) -> set[str]:
+        return super().SELF_READABLE_FIELDS | {'timesheet_invoice_id', 'so_line'}
+
     @api.depends('project_id.partner_id.commercial_partner_id', 'task_id.partner_id.commercial_partner_id')
     def _compute_commercial_partner(self):
         for timesheet in self:

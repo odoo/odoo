@@ -1,5 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from contextlib import contextmanager
+from unittest.mock import patch
+
 from odoo import Command
 from odoo.osv import expression
 from odoo.exceptions import AccessError
@@ -71,6 +74,32 @@ class TestProjectSharingCommon(TestProjectCommon):
             record.with_user(with_user or self.env.user),
             view=self.project_sharing_form_view_xml_id
         )
+
+    @contextmanager
+    def mockProjectSharingFormView(self):
+        def _record_onchange_patched(form, values, field_names, fields_spec):
+            field_name = field_names[0] if field_names else None
+            record = form._get_record_with_field_context(field_name)
+            return record.project_sharing_onchange(values, field_names, fields_spec)
+
+        def _record_save_patched(form, values, specification):
+            return form._record.project_sharing_web_save(values, specification)
+
+        def _record_web_read_patched(form, fields):
+            return form._record.project_sharing_web_read(fields)
+
+        def _get_views(form, model, views, options=None):
+            return model.project_sharing_get_views(views, options)
+
+        try:
+            with patch.object(Form, '_record_onchange', _record_onchange_patched), \
+                 patch.object(Form, '_record_save', _record_save_patched), \
+                 patch.object(Form, '_record_web_read', _record_web_read_patched), \
+                 patch.object(Form, '_get_views', _get_views):
+                yield
+        finally:
+            pass
+
 
 @tagged('project_sharing')
 class TestProjectSharing(TestProjectSharingCommon):
@@ -261,19 +290,21 @@ class TestProjectSharing(TestProjectSharingCommon):
             3) Give the 'edit' access mode to a portal user in a project and try to create task with this user.
             3.1) Try to change the project of the new task with this user.
         """
-        Task = self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_portal.id, 'default_user_ids': [(4, self.user_portal.id)]})
+        Task = self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_portal.id})
         # 1) Give the 'read' access mode to a portal user in a project and try to create task with this user.
-        with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
-            with self.get_project_sharing_form_view(Task, self.user_portal) as form:
-                form.name = 'Test'
-                task = form.save()
+        with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."), \
+             self.mockProjectSharingFormView():
+            form = self.get_project_sharing_form_view(Task, self.user_portal)
+            form.name = 'Test'
+            form.save()
 
         self.project_portal.write({
             'collaborator_ids': [
                 Command.create({'partner_id': self.user_portal.partner_id.id}),
             ],
         })
-        with self.get_project_sharing_form_view(Task, self.user_portal) as form:
+        with self.mockProjectSharingFormView():
+            form = self.get_project_sharing_form_view(Task, self.user_portal)
             form.name = 'Test'
             with form.child_ids.new() as subtask_form:
                 subtask_form.name = 'Test Subtask'
@@ -297,50 +328,50 @@ class TestProjectSharing(TestProjectSharingCommon):
         Task = Task.with_user(self.user_portal)
         # Create/Update a forbidden task through child_ids
         with self.assertRaisesRegex(AccessError, "You cannot write on the following fields"):
-            Task.create({'name': 'foo', 'child_ids': [Command.create({'name': 'Foo', 'color': 1})]})
+            Task.project_sharing_create({'name': 'foo', 'child_ids': [Command.create({'name': 'Foo', 'color': 1})]})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
-            Task.create({'name': 'foo', 'child_ids': [Command.update(self.task_no_collabo.id, {'name': 'Foo'})]})
+            Task.project_sharing_create({'name': 'foo', 'child_ids': [Command.update(self.task_no_collabo.id, {'name': 'Foo'})]})
+        with self.assertRaisesRegex(AccessError, "You are not allowed to delete"):
+            Task.project_sharing_create({'name': 'foo', 'child_ids': [Command.delete(self.task_no_collabo.id)]})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
-            Task.create({'name': 'foo', 'child_ids': [Command.delete(self.task_no_collabo.id)]})
+            Task.project_sharing_create({'name': 'foo', 'child_ids': [Command.unlink(self.task_no_collabo.id)]})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
-            Task.create({'name': 'foo', 'child_ids': [Command.unlink(self.task_no_collabo.id)]})
+            Task.project_sharing_create({'name': 'foo', 'child_ids': [Command.link(self.task_no_collabo.id)]})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
-            Task.create({'name': 'foo', 'child_ids': [Command.link(self.task_no_collabo.id)]})
-        with self.assertRaisesRegex(AccessError, "top-secret records"):
-            Task.create({'name': 'foo', 'child_ids': [Command.set([self.task_no_collabo.id])]})
+            Task.project_sharing_create({'name': 'foo', 'child_ids': [Command.set([self.task_no_collabo.id])]})
 
         # Same thing but using context defaults
+        with self.assertRaisesRegex(AccessError, "Invalid default values"):
+            Task.with_context(default_child_ids=[Command.update(self.task_no_collabo.id, {'name': 'Foo'})]).project_sharing_create({'name': 'foo'})
+        with self.assertRaisesRegex(AccessError, "You are not allowed to delete"):
+            Task.with_context(default_child_ids=[Command.delete(self.task_no_collabo.id)]).project_sharing_create({'name': 'foo'})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
-            Task.with_context(default_child_ids=[Command.update(self.task_no_collabo.id, {'name': 'Foo'})]).create({'name': 'foo'})
+            Task.with_context(default_child_ids=[Command.unlink(self.task_no_collabo.id)]).project_sharing_create({'name': 'foo'})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
-            Task.with_context(default_child_ids=[Command.delete(self.task_no_collabo.id)]).create({'name': 'foo'})
+            Task.with_context(default_child_ids=[Command.link(self.task_no_collabo.id)]).project_sharing_create({'name': 'foo'})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
-            Task.with_context(default_child_ids=[Command.unlink(self.task_no_collabo.id)]).create({'name': 'foo'})
-        with self.assertRaisesRegex(AccessError, "top-secret records"):
-            Task.with_context(default_child_ids=[Command.link(self.task_no_collabo.id)]).create({'name': 'foo'})
-        with self.assertRaisesRegex(AccessError, "top-secret records"):
-            Task.with_context(default_child_ids=[Command.set([self.task_no_collabo.id])]).create({'name': 'foo'})
+            Task.with_context(default_child_ids=[Command.set([self.task_no_collabo.id])]).project_sharing_create({'name': 'foo'})
 
         # Create/update a tag through tag_ids
         with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tags'"):
-            Task.create({'name': 'foo', 'tag_ids': [Command.create({'name': 'Bar'})]})
+            Task.project_sharing_create({'name': 'foo', 'tag_ids': [Command.create({'name': 'Bar'})]})
         with self.assertRaisesRegex(AccessError, "not allowed to modify 'Project Tags'"):
-            Task.create({'name': 'foo', 'tag_ids': [Command.update(self.task_tag.id, {'name': 'Bar'})]})
+            Task.project_sharing_create({'name': 'foo', 'tag_ids': [Command.update(self.task_tag.id, {'name': 'Bar'})]})
         with self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tags'"):
-            Task.create({'name': 'foo', 'tag_ids': [Command.delete(self.task_tag.id)]})
+            Task.project_sharing_create({'name': 'foo', 'tag_ids': [Command.delete(self.task_tag.id)]})
 
         # Same thing but using context defaults
         with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tags'"):
-            Task.with_context(default_tag_ids=[Command.create({'name': 'Bar'})]).create({'name': 'foo'})
+            Task.with_context(default_tag_ids=[Command.create({'name': 'Bar'})]).project_sharing_create({'name': 'foo'})
         with self.assertRaisesRegex(AccessError, "not allowed to modify 'Project Tags'"):
-            Task.with_context(default_tag_ids=[Command.update(self.task_tag.id, {'name': 'Bar'})]).create({'name': 'foo'})
+            Task.with_context(default_tag_ids=[Command.update(self.task_tag.id, {'name': 'Bar'})]).project_sharing_create({'name': 'foo'})
         with self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tags'"):
-            Task.with_context(default_tag_ids=[Command.delete(self.task_tag.id)]).create({'name': 'foo'})
+            Task.with_context(default_tag_ids=[Command.delete(self.task_tag.id)]).project_sharing_create({'name': 'foo'})
 
-        task = Task.create({'name': 'foo', 'tag_ids': [Command.link(self.task_tag.id)]})
+        task = Task.project_sharing_create({'name': 'foo', 'tag_ids': [Command.link(self.task_tag.id)]})
         self.assertEqual(task.tag_ids, self.task_tag)
 
-        Task.create({'name': 'foo', 'tag_ids': [Command.set([self.task_tag.id])]})
+        Task.project_sharing_create({'name': 'foo', 'tag_ids': [Command.set([self.task_tag.id])]})
         self.assertEqual(task.tag_ids, self.task_tag)
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
@@ -358,7 +389,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         """
         # 1) Give the 'read' access mode to a portal user in a project and try to create task with this user.
         with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
-            with self.get_project_sharing_form_view(self.task_cow.with_context({'tracking_disable': True, 'default_project_id': self.project_cows.id}), self.user_portal) as form:
+            with self.mockProjectSharingFormView(), self.get_project_sharing_form_view(self.task_cow.with_context({'tracking_disable': True, 'default_project_id': self.project_cows.id}), self.user_portal) as form:
                 form.name = 'Test'
                 task = form.save()
 
@@ -372,7 +403,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         project_share_wizard.action_send_mail()
         # the portal user is set as follower for the task_cow. Without it he does not have read access to the task, and thus can not access its view form
         self.task_cow.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
-        with self.get_project_sharing_form_view(self.task_cow.with_context({'tracking_disable': True, 'default_project_id': self.project_cows.id, 'uid': self.user_portal.id}), self.user_portal) as form:
+        with self.mockProjectSharingFormView(), self.get_project_sharing_form_view(self.task_cow.with_context({'tracking_disable': True, 'default_project_id': self.project_cows.id, 'uid': self.user_portal.id}), self.user_portal) as form:
             form.name = 'Test'
             task = form.save()
             self.assertEqual(task.name, 'Test')
@@ -384,65 +415,66 @@ class TestProjectSharing(TestProjectSharingCommon):
                 form.project_id = self.project_portal
 
         # 3.2) Create a sub-task
-        with self.get_project_sharing_form_view(task, self.user_portal) as form:
+        with self.mockProjectSharingFormView(), self.get_project_sharing_form_view(task, self.user_portal) as form:
             with form.child_ids.new() as subtask_form:
                 subtask_form.name = 'Test Subtask'
                 with self.assertRaises(AssertionError, msg="Should not accept the portal user changes the project of the task."):
                     subtask_form.project_id = self.project_portal
         self.assertEqual(task.child_ids.name, 'Test Subtask')
         self.assertEqual(task.child_ids.project_id, self.project_cows)
-        self.assertFalse(task.child_ids.portal_user_names, 'by default no user should be assigned to a subtask created by the portal user.')
-        self.assertFalse(task.child_ids.user_ids, 'No user should be assigned to the new subtask.')
+        self.assertEqual(task.child_ids.portal_user_names, self.user_projectuser.name, 'by default the user set on the parent task should be set.')
+        self.assertEqual(task.child_ids.user_ids, self.user_projectuser, 'The user set should be the same as the parent task.')
 
-        task2 = self.env['project.task'] \
-            .with_context({
-                'tracking_disable': True,
-                'default_project_id': self.project_cows.id,
-                'default_user_ids': [Command.set(self.user_portal.ids)],
-            }) \
-            .with_user(self.user_portal) \
-            .create({'name': 'Test'})
-        self.assertFalse(task2.portal_user_names, 'the portal user should not be assigned when the portal user creates a task into the project shared.')
+        with self.assertRaisesRegex(AccessError, "You cannot write on the following fields"):
+            self.env['project.task'] \
+                .with_context({
+                    'tracking_disable': True,
+                    'default_project_id': self.project_cows.id,
+                    'default_user_ids': [Command.set(self.user_portal.ids)],
+                }) \
+                .with_user(self.user_portal) \
+                .project_sharing_create({'name': 'Test'})
 
         # 3.3) Create a second sub-task
-        with self.get_project_sharing_form_view(task, self.user_portal) as form:
+        with self.mockProjectSharingFormView(), self.get_project_sharing_form_view(task, self.user_portal) as form:
             with form.child_ids.new() as subtask_form:
                 subtask_form.name = 'Test Subtask'
         self.assertEqual(len(task.child_ids), 2, 'Check 2 subtasks has correctly been created by the user portal.')
 
         # Create/Update a forbidden task through child_ids
         with self.assertRaisesRegex(AccessError, "You cannot write on the following fields"):
-            task.write({'child_ids': [Command.create({'name': 'Foo', 'color': 1})]})
+            task.project_sharing_write({'child_ids': [Command.create({'name': 'Foo', 'color': 1})]})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
-            task.write({'child_ids': [Command.update(self.task_no_collabo.id, {'name': 'Foo'})]})
+            task.project_sharing_write({'child_ids': [Command.update(self.task_no_collabo.id, {'name': 'Foo'})]})
+        with self.assertRaisesRegex(AccessError, "You are not allowed to delete 'Task'"):
+            task.project_sharing_write({'child_ids': [Command.delete(self.task_no_collabo.id)]})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
-            task.write({'child_ids': [Command.delete(self.task_no_collabo.id)]})
+            task.project_sharing_write({'child_ids': [Command.unlink(self.task_no_collabo.id)]})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
-            task.write({'child_ids': [Command.unlink(self.task_no_collabo.id)]})
+            task.project_sharing_write({'child_ids': [Command.link(self.task_no_collabo.id)]})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
-            task.write({'child_ids': [Command.link(self.task_no_collabo.id)]})
-        with self.assertRaisesRegex(AccessError, "top-secret records"):
-            task.write({'child_ids': [Command.set([self.task_no_collabo.id])]})
+            task.project_sharing_write({'child_ids': [Command.set([self.task_no_collabo.id])]})
 
         # Create/update a tag through tag_ids
         with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tags'"):
-            task.write({'tag_ids': [Command.create({'name': 'Bar'})]})
+            task.project_sharing_write({'tag_ids': [Command.create({'name': 'Bar'})]})
         with self.assertRaisesRegex(AccessError, "not allowed to modify 'Project Tags'"):
-            task.write({'tag_ids': [Command.update(self.task_tag.id, {'name': 'Bar'})]})
+            task.project_sharing_write({'tag_ids': [Command.update(self.task_tag.id, {'name': 'Bar'})]})
         with self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tags'"):
-            task.write({'tag_ids': [Command.delete(self.task_tag.id)]})
+            task.project_sharing_write({'tag_ids': [Command.delete(self.task_tag.id)]})
 
-        task.write({'tag_ids': [Command.link(self.task_tag.id)]})
+        task.project_sharing_write({'tag_ids': [Command.link(self.task_tag.id)]})
         self.assertEqual(task.tag_ids, self.task_tag)
 
-        task.write({'tag_ids': [Command.unlink(self.task_tag.id)]})
+        task.project_sharing_write({'tag_ids': [Command.unlink(self.task_tag.id)]})
         self.assertFalse(task.tag_ids)
 
-        task.write({'tag_ids': [Command.link(self.task_tag.id)]})
-        task.write({'tag_ids': [Command.clear()]})
+        task.project_sharing_write({'tag_ids': [Command.link(self.task_tag.id)]})
+        self.assertEqual(task.tag_ids, self.task_tag)
+        task.project_sharing_write({'tag_ids': [Command.clear()]})
         self.assertFalse(task.tag_ids, [])
 
-        task.write({'tag_ids': [Command.set([self.task_tag.id])]})
+        task.project_sharing_write({'tag_ids': [Command.set([self.task_tag.id])]})
         self.assertEqual(task.tag_ids, self.task_tag)
 
 
@@ -489,7 +521,7 @@ class TestProjectSharing(TestProjectSharingCommon):
                 Command.create({'partner_id': self.user_portal.partner_id.id}),
             ],
         })
-        self.task_portal.with_user(self.user_portal).write({'stage_id': self.project_portal.type_ids[-1].id})
+        self.task_portal.with_user(self.user_portal).project_sharing_write({'stage_id': self.project_portal.type_ids[-1].id})
 
     def test_orm_method_with_true_false_domain(self):
         """ Test orm method overriden in project for project sharing works with TRUE_LEAF/FALSE_LEAF
