@@ -7,6 +7,7 @@ declare module "models" {
     import { Country as CountryClass } from "@mail/core/common/country_model";
     import { Failure as FailureClass } from "@mail/core/common/failure_model";
     import { Follower as FollowerClass } from "@mail/core/common/follower_model";
+    import { FollowerListView as FollowerListViewClass } from "@mail/core/common/follower_list_view_model";
     import { LinkPreview as LinkPreviewClass } from "@mail/core/common/link_preview_model";
     import { Message as MessageClass } from "@mail/core/common/message_model";
     import { MessageReactions as MessageReactionsClass } from "@mail/core/common/message_reactions_model";
@@ -26,6 +27,7 @@ declare module "models" {
     export interface Country extends CountryClass {}
     export interface Failure extends FailureClass {}
     export interface Follower extends FollowerClass {}
+    export interface FollowerListView extends FollowerListViewClass{}
     export interface LinkPreview extends LinkPreviewClass {}
     export interface Message extends MessageClass {}
     export interface MessageReactions extends MessageReactionsClass {}
@@ -45,6 +47,7 @@ declare module "models" {
         "ir.attachment": Attachment,
         "mail.canned.response": CannedResponse,
         "mail.followers": Follower,
+        "FollowerListView": FollowerListView,
         "mail.link.preview": LinkPreview,
         "mail.message": Message,
         "mail.notification": Notification,
