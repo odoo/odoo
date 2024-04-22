@@ -40,7 +40,7 @@
                 <button t-foreach="Object.entries(getColors())" t-as="color" t-key="color[0]" class="p-4 border-0"
                     t-attf-style="background-color: {{lighter ? getLighterShade(color[0]) : color[1]}}" t-on-click.stop="() => this.setColor(lighter ? this.getLighterShade(color[0]) : color[1])" />
                 <div class="floor-picture position-relative text-center overflow-hidden d-flex flex-column align-items-center justify-content-center">
-                    <t t-if="activeFloor.floor_background_image">
+                    <t t-if="activeFloor?.floor_background_image">
                         <img t-att-src="floorBackround" style="width: 48px; height: 48px; object-fit: cover;" />
                     </t>
                     <t t-else="">
@@ -61,11 +61,11 @@
                 <button class="btn btn-secondary p-3 ms-auto rounded-0" t-if="pos.isEditMode or pos.config.floor_ids?.length === 0" t-on-click="addFloor">
                     <i class="fa fa-plus me-2" role="img" aria-label="Add" title="Add" />Add Floor</button>
             </div>
-            <div t-ref="floor-map-scroll" class="overflow-scroll flex-grow-1 flex-shrink-1 flex-basis-0 w-auto" t-attf-style="background: {{activeFloor.background_color}}"> 
+            <div t-ref="floor-map-scroll" class="overflow-scroll flex-grow-1 flex-shrink-1 flex-basis-0 w-auto" t-attf-style="background: {{activeFloor?.background_color}}"> 
                 <div t-on-click="onClickFloorMap" t-on-touchstart="_onPinchStart" t-on-touchmove="_onPinchMove" t-on-touchend="_onPinchEnd"
                     class="floor-map position-relative w-100 h-100 overflow-hidden"
                     t-ref="floor-map-ref"
-                    t-attf-style="height: {{state.floorHeight}} !important; width: {{state.floorWidth}} !important; {{ activeFloor.floor_background_image and pos.floorPlanStyle !== 'kanban' &amp;&amp; 'background-image: url(' + floorBackround + '); background-size: auto; background-repeat: no-repeat; background-attachment: local;' }}">
+                    t-attf-style="height: {{state.floorHeight}} !important; width: {{state.floorWidth}} !important; {{ activeFloor?.floor_background_image and pos.floorPlanStyle !== 'kanban' &amp;&amp; 'background-image: url(' + floorBackround + '); background-size: auto; background-repeat: no-repeat; background-attachment: local;' }}">
                     <t t-if="pos.config.floor_ids?.length > 0">
                         <div t-if="!activeTables?.length" class="empty-floor d-flex align-items-center justify-content-center h-100 fs-3 text-center text-muted" t-ref="map">
                             <span>Oops! No tables available.<br/>Add a new table to get started.</span>
