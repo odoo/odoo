@@ -253,6 +253,8 @@ class AccountMove(models.Model):
             totals['total_taxes_withheld'] += sum((abs(tax["tax_amount"]) for tax in taxes_withheld_computed))
 
             invoice_line_values.update({
+                'FileReference': self._l10n_es_edi_facturae_get_filename().split('.')[0][:20],
+                'FileDate': fields.Date.context_today(self),
                 'ItemDescription': line.name,
                 'Quantity': line.quantity,
                 'UnitOfMeasure': line.product_uom_id.l10n_es_edi_facturae_uom_code,
