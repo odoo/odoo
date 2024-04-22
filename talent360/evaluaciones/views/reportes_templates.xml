@@ -136,6 +136,12 @@
                     </a>
                 </li>
                 <li t-if="pregunta_contestada" class="nav-item">
+                    <a t-att-href="'#grafica_columnas_pregunta__%d' % pregunta.id" t-att-aria-controls="'grafica_columnas_pregunta__%d' % pregunta.id" class="nav-link" data-bs-toggle="tab" role="tab">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <span>Gráfico de columnas</span>
+                    </a>
+                </li>
+                <li t-if="pregunta_contestada" class="nav-item">
                     <a t-att-href="'#grafica_pastel_pregunta__%d' % pregunta.id" t-att-aria-controls="'grafica_pastel_pregunta__%d' % pregunta.id" class="nav-link" data-bs-toggle="tab" role="tab">
                         <i class="fa fa-bar-chart-o"></i>
                         <span>Gráfico de pastel</span>
@@ -150,6 +156,10 @@ Datos
             </ul>
             <div class="tab-content">
                 <div t-if="pregunta_contestada" role="tabpanel" class="tab-pane active survey_graph" t-att-id="'grafica_barras_pregunta__%d' % pregunta.id" t-att-data-graph-type="'bar'" t-att-data-graph-data="datos_grafica">
+                    <!-- canvas element for drawing bar chart -->
+                    <canvas class="mx-auto"/>
+                </div>
+                <div t-if="pregunta_contestada" role="tabpanel" class="tab-pane active survey_graph" t-att-id="'grafica_columnas_pregunta__%d' % pregunta.id" t-att-data-graph-type="'col'" t-att-data-graph-data="datos_grafica">
                     <!-- canvas element for drawing bar chart -->
                     <canvas class="mx-auto"/>
                 </div>
@@ -187,11 +197,11 @@ Datos
         </template>
 
         <template id="question_table_pagination" name="Survey: statistics table pagination">
-            <t t-set="respuestas_count" t-value="len(datos_pregunta['respuestas'])"/>
-            <t t-if="respuestas_count > limite_registros">
+            <t t-set="respuestas_conteo" t-value="len(datos_pregunta['respuestas'])"/>
+            <t t-if="respuestas_conteo > limite_registros">
                 <div class="d-flex justify-content-between d-print-none pagination_wrapper" t-att-id="'pagination_%d' % pregunta.id" t-att-data-question_id="pregunta.id" t-att-data-record_limit="limite_registros">
                     <ul class="pagination mt-2">
-                        <t t-set="total" t-value="ceil(respuestas_count / limite_registros) + 1"/>
+                        <t t-set="total" t-value="ceil(respuestas_conteo / limite_registros) + 1"/>
                         <li t-foreach="range(1, total)" t-as="num" t-att-class="'page-item o_survey_js_results_pagination %s' % ('active' if num == 1 else '')">
                             <a href="#" class="page-link" t-esc="num"></a>
                         </li>

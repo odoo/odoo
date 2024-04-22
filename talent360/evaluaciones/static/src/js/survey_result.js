@@ -119,6 +119,9 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                     case 'bar':
                         self.chartConfig = self._getBarChartConfig();
                         break;
+                    case 'col':
+                        self.chartConfig = self._getColChartConfig();
+                        break;
                     case 'pie':
                         self.chartConfig = self._getPieChartConfig();
                         break;
@@ -200,6 +203,53 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                         },
                     },
                     y: {
+                        ticks: {
+                            precision: 0,
+                        },
+                        beginAtZero: true,
+                    },
+                },
+            },
+        };
+    },
+
+    _getColChartConfig: function () {
+        return {
+            type: 'bar',
+            data: {
+                labels: this.labels,
+                datasets:[{
+                    label: "Conteo",
+                    data: this.counts,
+                    backgroundColor: this.counts.map(function (val, index) {
+                        return D3_COLORS[index % 20];
+                    }),
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        enabled: false,
+                    },
+                },
+                indexAxis: 'y',
+                scales: {
+                    y: {
+                        ticks: {
+                            callback: function (val, index) {
+                                // For a category axis, the val is the index so the lookup via getLabelForValue is needed
+                                const value = this.getLabelForValue(val);
+                                const tickLimit = 35;
+                                return value?.length > tickLimit
+                                    ? `${value.slice(0, tickLimit)}...`
+                                    : value;
+                            },
+                        },
+                    },
+                    x: {
                         ticks: {
                             precision: 0,
                         },
