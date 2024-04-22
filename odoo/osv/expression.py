@@ -1275,26 +1275,26 @@ class expression(object):
                     if isinstance(ids2, Query):
                         # rewrite condition in terms of ids2
                         sql_ids2 = ids2.subselect()
+                        limit = SQL('LIMIT 1')
                     else:
                         # rewrite condition in terms of ids2
                         sql_ids2 = SQL("%s", tuple(it for it in ids2 if it) or (None,))
+                        limit = SQL('') if len(ids2) == 1 else SQL('LIMIT 1')
 
-                    if operator in NEGATIVE_TERM_OPERATORS:
-                        sql_exists = SQL('NOT EXISTS')
-                    else:
-                        sql_exists = SQL('EXISTS')
-
-                    rel_alias = self.query.make_alias(alias, field.name)
-                    push_result(SQL(
-                        "%s (SELECT 1 FROM %s AS %s WHERE %s = %s AND %s IN %s)",
-                        sql_exists,
+                    rel_alias = self.query.make_alias(alias, f"{field.name}_{hash(tuple(sql_ids2.params))}")
+                    self.query.lateral_join(rel_alias, SQL(
+                        "SELECT 1 AS exist FROM %s WHERE %s = %s AND %s IN %s %s",
                         SQL.identifier(rel_table),
-                        SQL.identifier(rel_alias),
-                        SQL.identifier(rel_alias, rel_id1),
+                        SQL.identifier(rel_id1),
                         SQL.identifier(alias, 'id'),
-                        SQL.identifier(rel_alias, rel_id2),
+                        SQL.identifier(rel_id2),
                         sql_ids2,
+                        limit,
                     ))
+                    if operator in NEGATIVE_TERM_OPERATORS:
+                        push_result(SQL("%s IS NULL", SQL.identifier(rel_alias, 'exist')))
+                    else:
+                        push_result(SQL("%s IS NOT NULL", SQL.identifier(rel_alias, 'exist')))
 
                 else:
                     # rewrite condition to match records with/without relations

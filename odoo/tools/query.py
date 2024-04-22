@@ -26,6 +26,7 @@ def _sql_from_join(kind: SQL, alias: str, table: SQL | None, condition: SQL) -> 
 _SQL_JOINS = {
     "JOIN": SQL("JOIN"),
     "LEFT JOIN": SQL("LEFT JOIN"),
+    "LEFT JOIN LATERAL": SQL("LEFT JOIN LATERAL"),
 }
 
 
@@ -139,6 +140,10 @@ class Query(object):
         condition = SQL("%s = %s", SQL.identifier(lhs_alias, lhs_column), SQL.identifier(rhs_alias, rhs_column))
         self.add_join('LEFT JOIN', rhs_alias, rhs_table, condition)
         return rhs_alias
+
+    def lateral_join(self, alias: str, table: SQL):
+        self.add_join('LEFT JOIN LATERAL', alias, SQL("(%s)", table), SQL('TRUE'))
+        return alias
 
     @property
     def order(self) -> SQL | None:
