@@ -87,7 +87,8 @@ class SaleOrderLine(models.Model):
         comodel_name='product.product',
         string="Product",
         change_default=True, ondelete='restrict', index='btree_not_null',
-        domain="[('sale_ok', '=', True)]")
+        domain=lambda self: self._domain_product_id(),
+        check_company=True)
     product_template_id = fields.Many2one(
         string="Product Template",
         comodel_name='product.template',
@@ -97,7 +98,11 @@ class SaleOrderLine(models.Model):
         # previously related='product_id.product_tmpl_id'
         # not anymore since the field must be considered editable for product configurator logic
         # without modifying the related product_id when updated.
-        domain=[('sale_ok', '=', True)])
+
+        # magic way to make sure the domain integrates the check_company _domain_product_id logics
+        # despite not being a check_company=True field
+        domain=lambda self: self._fields['product_id']._description_domain(self.env),
+    )
 
     product_template_attribute_value_ids = fields.Many2many(
         related='product_id.product_template_attribute_value_ids',
@@ -161,7 +166,9 @@ class SaleOrderLine(models.Model):
         compute='_compute_tax_ids',
         store=True, readonly=False, precompute=True,
         context={'active_test': False},
-        check_company=True)
+        check_company=True,
+        domain="[('type_tax_use', '=', 'sale'), ('country_id', '=', tax_country_id)]",
+    )
 
     # Tech field caching pricelist rule used for price & discount computation
     pricelist_item_id = fields.Many2one(
@@ -309,6 +316,9 @@ class SaleOrderLine(models.Model):
             if additional_name:
                 name = f'{name} {additional_name}'
             so_line.display_name = name
+
+    def _domain_product_id(self):
+        return [('sale_ok', '=', True)]
 
     @api.depends('product_id')
     def _compute_product_template_id(self):
