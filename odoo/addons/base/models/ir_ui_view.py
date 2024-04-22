@@ -1475,6 +1475,15 @@ actual arch.
         self._validate_tag_form(node, name_manager, node_info)
         if not node_info['validate']:
             return
+        # inline tree views inside form views aren't rng validated, so we must validate the
+        # editable attribute in python
+        editable_attr = node.get("editable")
+        if editable_attr and editable_attr not in ["top", "bottom"]:
+            msg = _(
+                'The "editable" attribute of list views must be "top" or "bottom", received %(value)s',
+                value=editable_attr,
+            )
+            self._raise_view_error(msg, node)
         allowed_tags = ('field', 'button', 'control', 'groupby', 'widget', 'header')
         for child in node.iterchildren(tag=etree.Element):
             if child.tag not in allowed_tags and not isinstance(child, etree._Comment):

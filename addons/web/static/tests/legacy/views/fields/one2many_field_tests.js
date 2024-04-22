@@ -13925,7 +13925,7 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                         <form>
                             <field name="p">
-                                <tree editable="1" class="o-custom-class">
+                                <tree editable="bottom" class="o-custom-class">
                                     <field name="display_name"/>
                                 </tree>
                             </field>
@@ -13951,7 +13951,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("list one2many in opened view form (with _view_ref)", async function (assert) {
         serverData.views = {
             "partner,1234,list": /* xml */ `
-                <tree editable="1" class="o-custom-class">
+                <tree editable="bottom" class="o-custom-class">
                     <field name="display_name"/>
                 </tree>
             `,
