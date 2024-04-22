@@ -92,8 +92,8 @@ class Evaluacion(models.Model):
         """
         
         if not self:
-            new_evaluation = self.env['evaluacion'].create({
-                'nombre': 'Escribe el nombre de tu evaluación',
+            new_evaluation = self.env["evaluacion"].create({
+                "nombre": "Escribe el nombre de tu evaluación",
             })
             self = new_evaluation
 
@@ -102,7 +102,7 @@ class Evaluacion(models.Model):
         template_id_hardcoded = 4 #CAMBIAR ID A 331
 
         if template_id_hardcoded:
-            template = self.env['template'].browse(template_id_hardcoded)
+            template = self.env["template"].browse(template_id_hardcoded)
             if template:
                 pregunta_ids = template.pregunta_ids.ids
                 print("IDs de preguntas:", pregunta_ids)
@@ -126,13 +126,13 @@ class Evaluacion(models.Model):
         self = self.copiar_preguntas_de_template_nom035()
 
         return {
-            'type': 'ir.actions.act_window',
-            'name': 'Nombre de tu evaluación',
-            'res_model': 'evaluacion',
-            'view_mode': 'form',
-            'view_id': self.env.ref('evaluaciones.evaluacion_nom035_form').id,
-            'target': 'current',
-            'res_id': self.id,
+            "type": "ir.actions.act_window",
+            "name": "Nombre de tu evaluación",
+            "res_model": "evaluacion",
+            "view_mode": "form",
+            "view_id": self.env.ref("evaluaciones.evaluacion_nom035_form").id,
+            "target": "current",
+            "res_id": self.id,
         }
         
     def evaluacion_action_tree(self):
@@ -147,9 +147,9 @@ class Evaluacion(models.Model):
         """
 
         return {
-            'name': 'Evaluación',
-            'type': 'ir.actions.act_window',
-            'res_model': 'evaluacion',
-            'view_mode': 'tree,form',
-            'target': 'current',
+            "name": "Evaluación",
+            "type": "ir.actions.act_window",
+            "res_model": "evaluacion",
+            "view_mode": "tree,form",
+            "target": "current",
         }
