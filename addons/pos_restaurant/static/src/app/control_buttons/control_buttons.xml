@@ -2,8 +2,25 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
         <xpath expr="//OrderlineNoteButton" position="after">
+            <OrderlineNoteButton
+                t-if="pos.config.iface_orderline_notes"
+                icon="'fa fa-tag'"
+                label="'Internal Note'"
+                getter="(orderline) => orderline.getNote()"
+                setter="(orderline, note) => orderline.setNote(note)" />
+
             <t t-if="pos.config.module_pos_restaurant">
+<<<<<<< HEAD
                 <!-- All buttons always displayed -->
+||||||| parent of 1813ab82aa38 (temp)
+                <OrderlineNoteButton
+                    t-if="pos.config.iface_orderline_notes"
+                    icon="'fa fa-tag'"
+                    label="'Internal Note'"
+                    getter="(orderline) => orderline.getNote()"
+                    setter="(orderline, note) => orderline.setNote(note)" />
+=======
+>>>>>>> 1813ab82aa38 (temp)
                 <button class="btn btn-light rounded-0 fw-bolder"
                     t-att-disabled="!pos.get_order()?.get_orderlines()?.length"
                     t-on-click="clickPrintBill">

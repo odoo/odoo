@@ -18,6 +18,7 @@
                         </div>
                     </div>
                 </setting>
+<<<<<<< HEAD
                 <setting string="Eat in / Take out" help="Adjust the tax rate based on whether customers are dining in or opting for takeout."  invisible="not pos_module_pos_restaurant">
                     <field name="pos_takeaway"/>
                     <div class="content-group" invisible="not pos_takeaway">
@@ -28,6 +29,12 @@
                         </div>
                     </div>
                 </setting>
+||||||| parent of 1813ab82aa38 (temp)
+                <setting string="Internal Notes" help="Add internal notes on order lines for the kitchen" id="iface_orderline_notes"  invisible="not pos_module_pos_restaurant">
+                    <field name="pos_iface_orderline_notes"/>
+                </setting>
+=======
+>>>>>>> 1813ab82aa38 (temp)
                 <setting string="Early Receipt Printing" help="Allow to print receipt before payment" id="iface_printbill"  invisible="not pos_module_pos_restaurant or is_kiosk_mode">
                     <field name="pos_iface_printbill"/>
                 </setting>
@@ -49,9 +56,18 @@
                     <label class="fw-normal" for="pos_set_tip_after_payment" string="Add tip after payment"/>
                 </div>
             </div>
+<<<<<<< HEAD
             <setting id="flexible_taxes" position="attributes">
                 <attribute name="invisible">pos_takeaway</attribute>
             </setting>
+||||||| parent of 1813ab82aa38 (temp)
+=======
+            <block id="pos_interface_section" position="inside">
+                <setting string="Internal Notes" help="Add internal notes on order lines for the kitchen" id="iface_orderline_notes">
+                    <field name="pos_iface_orderline_notes"/>
+                </setting>
+            </block>
+>>>>>>> 1813ab82aa38 (temp)
         </field>
     </record>
 </odoo>
