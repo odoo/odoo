@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_document" inherit_id="sale.report_saleorder_document">
+        <p id="fiscal_position_remark" position="after">
+            <div>
+                <span>Your Declaration of Intent number <span t-field="doc.l10n_it_edi_doi_id"/> from <span t-field="doc.l10n_it_edi_doi_id.issue_date"/>.</span>
+            </div>
+        </p>
+    </template>
+</odoo>
