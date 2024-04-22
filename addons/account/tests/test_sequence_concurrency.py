@@ -28,7 +28,7 @@ class ThreadRaiseJoin(threading.Thread):
         self.exc = None
         try:
             return super().run(*args, **kwargs)
-        except BaseException as e:
+        except BaseException as e:  # noqa: BLE001
             self.exc = e
 
     def join(self, *args, **kwargs):
@@ -129,7 +129,7 @@ class TestSequenceConcurrency(TransactionCase):
                 self._create_payment_form(env)
             # sleep in order to avoid release the locks too faster
             # It could be many methods called after creating these kind of records e.g. reconcile
-            print("Finishing waiting %s" % (deadlock_timeout + 12))
+            _logger.info("Finishing waiting %s", (deadlock_timeout + 12))
             time.sleep(deadlock_timeout + 12)
 
     def test_sequence_concurrency_10_draft_invoices(self):
