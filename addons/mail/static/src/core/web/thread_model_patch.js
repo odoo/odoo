@@ -32,7 +32,7 @@ patch(Thread.prototype, {
         const followers = await this.store.env.services.orm.call(
             this.model,
             "message_get_followers",
-            [[this.id], this.followers.at(-1).id]
+            [[this.id], this.followers.at(-1).id, false, this.followers.length]
         );
         Record.MAKE_UPDATE(() => {
             for (const data of followers) {
@@ -50,7 +50,7 @@ patch(Thread.prototype, {
         const recipients = await this.store.env.services.orm.call(
             this.model,
             "message_get_followers",
-            [[this.id], this.recipients.at(-1).id],
+            [[this.id], this.recipients.at(-1).id, false, this.recipients.length],
             { filter_recipients: true }
         );
         Record.MAKE_UPDATE(() => {
