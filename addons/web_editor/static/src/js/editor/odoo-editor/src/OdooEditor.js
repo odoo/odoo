@@ -3454,6 +3454,10 @@ export class OdooEditor extends EventTarget {
 
     _onBeforeInput(ev) {
         this._lastBeforeInputType = ev.inputType;
+        const selection = this.document.getSelection();
+        if (selection?.isCollapsed && selection?.anchorNode?.nodeType === Node.ELEMENT_NODE && selection?.anchorNode?.matches('div.oe_structure:empty')) {
+            fillEmpty(selection.anchorNode);
+        }
     }
 
     /**
