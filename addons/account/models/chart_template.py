@@ -547,8 +547,10 @@ class AccountChartTemplate(models.AbstractModel):
                             if (
                                 model == 'account.tax' and 'repartition_line_ids' in field_name
                                 and not self.ref(xml_id, raise_if_not_found=False)
-                                and all(isinstance(x, tuple | list) for x in field_val)
-                                and all(int(x[0]) in Command for x in field_val)
+                                and all(
+                                    isinstance(x, tuple | list) and len(x)
+                                    and isinstance(x[0], Command | int) for x in field_val
+                                )
                             ):
                                 field_val = [Command.clear()] + field_val
                             to_be_removed.append(field_name)
