@@ -78,15 +78,13 @@ class Ewaybill(models.Model):
     is_ship_to_editable = fields.Boolean(compute="_compute_is_editable")
     is_ship_from_editable = fields.Boolean(compute="_compute_is_editable")
 
-    transaction_type = fields.Selection(
-        selection=[
-            ("inter_state", "Inter State"),
-            ("intra_state", "Intra State"),
-        ],
-        string="Transaction",
-        compute="_compute_transaction_type",
-        readonly=False,
-        required=True
+    fiscal_position_id = fields.Many2one(
+        comodel_name="account.fiscal.position",
+        string="Fiscal Position",
+        compute="_compute_fiscal_position",
+        check_company=True,
+        store=True,
+        readonly=False
     )
 
     # E-waybill Document Type
@@ -170,14 +168,12 @@ class Ewaybill(models.Model):
                 ewaybill.partner_ship_to_id = purchase_id.dest_address_id
                 ewaybill.partner_ship_from_id = ewaybill.picking_id.partner_id
 
-
     @api.depends('partner_bill_from_id', 'partner_bill_to_id')
-    def _compute_transaction_type(self):
+    def _compute_fiscal_position(self):
         for ewaybill in self:
-            ewaybill.transaction_type = (
-                ewaybill.partner_bill_from_id.state_id == ewaybill.partner_bill_to_id.state_id and
-                'intra_state' or
-                'inter_state'
+            ewaybill.fiscal_position_id = self.env['account.fiscal.position']._get_fiscal_position(
+                ewaybill.picking_type_code == 'incoming' and ewaybill.partner_bill_from_id or
+                ewaybill.partner_bill_to_id
             )
 
     @api.depends('partner_ship_from_id', 'partner_ship_to_id', 'partner_bill_from_id', 'partner_bill_to_id')
