@@ -8,6 +8,7 @@ import { usePosition } from "@web/core/position_hook";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { shallowEqual } from "@web/core/utils/arrays";
 import { roundDecimals } from "@web/core/utils/numbers";
+import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 
@@ -270,6 +271,12 @@ export class AnalyticDistribution extends Component {
         const values = {};
         // Analytic Account fields
         line.analyticAccounts.map((account) => {
+            let domain = [["root_plan_id", "=", account.planId]];
+            if ("company_id" in this.props.record.activeFields) {
+                domain = Domain.and([domain, [
+                    ["company_id", "in", [this.props.record.data.company_id[0], false]],
+                ]]).toList();
+            }
             const fieldName = `x_plan${account.planId}_id`;
             recordFields[fieldName] = {
                 string: account.planName,
@@ -279,8 +286,7 @@ export class AnalyticDistribution extends Component {
                     fields: analyticAccountFields,
                     activeFields: analyticAccountFields,
                 },
-                // company domain might be required here
-                domain: [["root_plan_id", "=", account.planId]],
+                domain,
             };
             values[fieldName] =  account?.accountId || false;
         });
