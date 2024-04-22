@@ -13,6 +13,7 @@ import {
     isRecordList,
     isRelation,
     modelRegistry,
+    recordInternal,
 } from "./misc";
 
 /** @typedef {import("./misc").FieldDefinition} FieldDefinition */
@@ -23,12 +24,12 @@ export class Record {
     /** @type {import("./model_internal").ModelInternal} */
     static _;
     /** @type {import("./record_internal").RecordInternal} */
-    _;
+    _ = recordInternal();
     static id;
     /** @type {import("@web/env").OdooEnv} */
     static env;
     /** @type {import("@web/env").OdooEnv} */
-    env;
+    env = recordInternal();
     /** @type {Object<string, Record>} */
     static records;
     /** @type {import("models").Store} */
@@ -348,17 +349,24 @@ export class Record {
      *
      * @type {typeof Record}
      */
-    Model;
+    Model = recordInternal();
     /** @type {string} */
     get localId() {
         return toRaw(this)._.localId;
     }
     /** @type {this} */
-    _raw;
+    _raw = recordInternal();
     /** @type {this} */
-    _proxyInternal;
+    _proxyInternal = recordInternal();
     /** @type {this} */
-    _proxy;
+    _proxy = recordInternal();
+    /**
+     * Enumerates props that are internal and should not be considered as fields.
+     * They are automatically registered with @see recordInternal() function.
+     *
+     * @type {Object<string, true>}
+     */
+    static INTERNAL_PROPS = {};
 
     constructor() {
         this.setup();
