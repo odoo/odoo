@@ -38,7 +38,8 @@ const threadPatch = {
     async loadMoreFollowers() {
         const data = await this.store.env.services.orm.call(this.model, "message_get_followers", [
             [this.id],
-            this.followers.at(-1).id,
+            20,
+            this.followers.length,
         ]);
         this.store.insert(data);
     },
@@ -46,7 +47,7 @@ const threadPatch = {
         const data = await this.store.env.services.orm.call(
             this.model,
             "message_get_followers",
-            [[this.id], this.recipients.at(-1).id],
+            [[this.id], 20, this.recipients.length],
             { filter_recipients: true }
         );
         this.store.insert(data);
