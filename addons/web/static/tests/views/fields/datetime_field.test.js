@@ -65,10 +65,8 @@ test("DatetimeField in form view", async () => {
     expect(".o_datetime_picker").toHaveCount(1);
 
     // select 22 April 2018 at 8:25
-    zoomOut();
-    await animationFrame();
-    zoomOut();
-    await animationFrame();
+    await zoomOut();
+    await zoomOut();
     click(getPickerCell("2018"));
     await animationFrame();
     click(getPickerCell("Apr"));
@@ -117,10 +115,8 @@ test("DatetimeField only triggers fieldChange when a day is picked and when an h
 
     expect(".o_datetime_picker").toHaveCount(1);
     // select 22 April 2018 at 8:25
-    zoomOut();
-    await animationFrame();
-    zoomOut();
-    await animationFrame();
+    await zoomOut();
+    await zoomOut();
     click(getPickerCell("2018"));
     await animationFrame();
     click(getPickerCell("Apr"));
@@ -218,10 +214,8 @@ test("DatetimeField in editable list view", async () => {
     expect(".o_datetime_picker").toHaveCount(1);
 
     // select 22 April 2018 at 8:25
-    zoomOut();
-    await animationFrame();
-    zoomOut();
-    await animationFrame();
+    await zoomOut();
+    await zoomOut();
     click(getPickerCell("2018"));
     await animationFrame();
     click(getPickerCell("Apr"));
