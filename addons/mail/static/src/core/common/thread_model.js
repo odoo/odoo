@@ -269,6 +269,9 @@ export class Thread extends Record {
             return this._computeDiscussAppCategory();
         },
     });
+    hey = Record.attr(1, {
+        localStorage: true,
+    });
     /** @type {string} */
     defaultDisplayMode;
     suggestedRecipients = Record.attr([], {

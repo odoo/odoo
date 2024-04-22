@@ -5,6 +5,7 @@ import { Record } from "./record";
 import { StoreInternal } from "./store_internal";
 import { ModelInternal } from "./model_internal";
 import { RecordInternal } from "./record_internal";
+import { browser } from "@web/core/browser/browser";
 
 /** @returns {import("models").Store} */
 export function makeStore(env, { localRegistry } = {}) {
@@ -196,5 +197,24 @@ export function makeStore(env, { localRegistry } = {}) {
         store._proxy[Model.name] = Model;
     }
     Object.assign(store, { Models, storeReady: true });
+    browser.addEventListener(
+        "beforeunload",
+        function () {
+            for (const Model of Object.values(Models)) {
+                if (!Model._.fieldsLocalStorage.size) {
+                    continue;
+                }
+                for (const record of Object.values(Model.records)) {
+                    for (const fieldName of Model._.fieldsLocalStorage.keys()) {
+                        if (!record.exists()) {
+                            record._.syncLocalStorages(record, fieldName, { operation: "delete" });
+                            continue;
+                        }
+                        record._.syncLocalStorages(record, fieldName, { operation: "write" });
+                    }
+                }
+            }
+        }.bind(this)
+    );
     return store._proxy;
 }

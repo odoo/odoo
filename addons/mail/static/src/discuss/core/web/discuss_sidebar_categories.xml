@@ -56,6 +56,7 @@
             <span class="ms-3 me-2 text-truncate" t-att-class="{ 'o-item-unread fw-bolder': thread.message_unread_counter > 0 and !thread.mute_until_dt }">
                 <t t-esc="thread.displayName"/>
             </span>
+            <span t-esc="thread.hey" t-on-click="()=>thread.hey=thread.hey+1"/>
             <div class="flex-grow-1"/>
             <div class="o-mail-DiscussSidebarChannel-commands d-none ms-1 me-3">
                 <i t-if="thread.channel_type === 'channel'" t-attf-class="fa fa-cog {{ hover_class }} text-700" title="Channel settings" t-on-click.stop="() => this.openSettings(thread)" role="img"/>
