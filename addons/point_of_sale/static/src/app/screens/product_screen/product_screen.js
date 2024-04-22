@@ -106,7 +106,7 @@ export class ProductScreen extends Component {
     }
     getChildCategoriesInfo(selectedCategory) {
         return this.getChildCategories(selectedCategory).map((category) => ({
-            ...pick(category, "id", "name", "color"),
+            ...pick(category, "id", "name"),
             imgSrc:
                 this.pos.show_category_images && category.has_image
                     ? this.computeImageUrl(category)
