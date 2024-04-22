@@ -1,0 +1,169 @@
+@media print {
+    .chartjs-size-monitor {
+        display: none;
+    }
+    .chartjs-render-monitor {
+        width: 100% !important;
+        height: 100% !important;
+    }
+    .tab-content > .tab-pane {
+        display: block;
+    }
+    html {
+        height: unset;
+    }
+    @page {
+        size: portrait; // force paper orientation to portrait
+        margin: auto 0; // force default left/rigth margins so elements (e.g.: graphs) are centered in the page
+    }
+    .o_frontend_to_backend_nav {
+        display: none !important;
+    }
+    .o_survey_brand_message {
+        border: none !important;
+    }
+    .o_survey_result {
+        canvas {
+            margin-bottom: 2rem;
+        }
+        .o_survey_question_page {
+            page-break-inside: avoid;
+        }
+        .o_survey_results_question_wrapper {
+            .o_survey_results_question_header, .o_survey_question_description {
+                page-break-inside: avoid;
+                page-break-after: avoid;
+            }
+        }
+        .o_survey_results_question_wrapper:has(button.collapsed) {
+            display: none;
+        }
+        .o_survey_user_responses_table_wrapper {
+            height: auto !important;
+        }
+        table {
+            overflow: visible !important;
+            thead {
+                display: table-row-group;
+            }
+            tbody {
+                tr {
+                  break-inside: avoid;  
+                }
+                tr.d-none {
+                    display: table-row !important;
+                }
+            }
+        }
+    }
+}
+
+.o_survey_results_topbar {
+
+    .nav-item.dropdown a {
+        min-width: 13em;
+    }
+    .o_survey_results_topbar_dropdown_filters {
+        // Dropdown adapted from event templates to get a coherent styling
+        .dropdown-toggle {
+            text-align: left;
+            &:hover, &:focus {
+                text-decoration: none;
+            }
+            &:after {
+                float:right;
+                margin-top: .5em;
+            }
+            .fa {
+                margin-right: .4em;
+            }
+        }
+        .dropdown-menu {
+            margin-top: $navbar-padding-y;
+            min-width: 12rem;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        .dropdown-item {
+            &.active .badge { // Invert badge display when the item is active
+                background-color: color-contrast(map-get($theme-colors, 'primary'));
+                color: map-get($theme-colors, 'primary');
+            }
+        }
+    }
+    .o_survey_results_topbar_answer_filters {
+        .btn.filter-remove-answer {
+            border-color: #DEE2E6;
+            background-color: transparent;
+            white-space: normal;
+            text-align: left;
+            i.fa-times {
+                cursor: pointer;
+            }
+        }
+    }
+    .o_survey_results_topbar_clear_filters {
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.o_survey_results_question {
+    .o_survey_results_question_pill {
+        .only_right_radius {
+            border-radius: 0 2em 2em 0;
+        }
+        .only_left_radius {
+            border-radius: 2em 0 0 2em;
+        }
+    }
+    .o_survey_answer_image{
+        cursor: zoom-in;
+        &:hover {
+            box-sizing: border-box;
+            box-shadow: 0 0 5px 2px grey;
+        }
+    }
+    .o_survey_answer i {
+        padding:3px;
+        cursor:pointer;
+
+        &.o_survey_answer_matrix_whitespace {
+            padding-right:18px;
+            cursor:default;
+        }
+    }
+    .nav-tabs .nav-link.active {
+        background-color: transparent;
+        border-color: #DEE2E6;
+        font-weight: bold;
+    }
+    table {
+        font-size: 1rem;
+        &.o_survey_results_table_indexed {
+            td:first-child {
+                width: 7%;
+            }
+        }
+    }
+}
+
+.o_survey_no_answers::before {
+    width: 120px;
+    height: 80px;
+    background: transparent url(/web/static/img/empty_folder.svg) no-repeat center;
+    content: "";
+    display: block;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 1;
+}
+
+.o_survey_user_responses_table_wrapper {
+    overflow: auto;
+}

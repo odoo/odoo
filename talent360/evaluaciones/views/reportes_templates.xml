@@ -2,17 +2,16 @@
 <odoo>
     <data>
 
-        <!-- Layout copiado de los reportes de encuestas de odoo -->
-        <template id="evaluaciones.layout" name="Survey Layout" inherit_id="web.frontend_layout" primary="True">
+        <!-- diseño copiado de los reportes de encuestas de odoo -->
+        <template id="evaluaciones.diseño" name="Diseño de reporte de evaluación genérico" inherit_id="web.frontend_layout" primary="True">
             <xpath expr="//div[@id='wrapwrap']" position="before">
-                <!--TODO DBE Fix me : If one day, there is a survey_livechat bridge module, put this in that module-->
                 <t t-set="no_livechat" t-value="True"/>
             </xpath>
             <xpath expr="//div[@id='wrapwrap']" position="attributes">
                 <attribute name="t-attf-class" add="o_survey_background" separator=" "/>
             </xpath>
             <xpath expr="//head/t[@t-call-assets][last()]" position="after">
-                <t t-call-assets="survey.survey_assets" lazy_load="True"/>
+                <t t-call-assets="evaluaciones.evaluaciones_assets" lazy_load="True"/>
             </xpath>
             <xpath expr="//header" position="before">
                 <t t-set="no_header" t-value="True"/>
@@ -24,17 +23,17 @@
         </template>
 
 
-        <template id="survey_page_statistics" name="Survey: result statistics page">
-            <t t-call="evaluaciones.layout">
-                <t t-set="page_record_limit" t-value="10"/>
+        <template id="encuestas_reporte" name="Survey: result statistics page">
+            <t t-call="evaluaciones.diseño">
+                <t t-set="limite_registros" t-value="10"/>
                 <div class="container o_survey_result">
-                    <t t-call="evaluaciones.survey_page_statistics_header" />
-                    <t t-call="evaluaciones.survey_page_statistics_inner" />
+                    <t t-call="evaluaciones.encuestas_reporte_header" />
+                    <t t-call="evaluaciones.encuestas_reporte_inner" />
                 </div>
             </t>
         </template>
 
-        <template id="survey_page_statistics_header" name="Survey: result statistics header">
+        <template id="encuestas_reporte_header" name="Survey: result statistics header">
             <div class="o_survey_statistics_header mt32">
                 <div class="d-flex justify-content-between">
                     <div class="d-block">
@@ -52,14 +51,14 @@
             </div>
         </template>
 
-        <template id="survey_page_statistics_inner" name="Survey: result statistics content">
+        <template id="encuestas_reporte_inner" name="Survey: result statistics content">
             <div t-foreach="question_and_page_data" t-as='question_data'>
                 <t t-set="question" t-value="question_data['question']"/>
-                <div class="ms-4 mt-5 o_survey_results_question_wrapper" t-call="evaluaciones.survey_page_statistics_question" />
+                <div class="ms-4 mt-5 o_survey_results_question_wrapper" t-call="evaluaciones.encuestas_reporte_question" />
             </div>
         </template>
 
-        <template id="survey_page_statistics_question" name="Question: result statistics">
+        <template id="encuestas_reporte_question" name="Question: result statistics">
             <!-- <t t-set="comment_lines" t-value="question_data['comment_line_ids']"/>
             <t t-set="graph_data" t-value="question_data['graph_data']"/> -->
             <!-- <t t-set="table_data" t-value="question_data['table_data']"/> -->
@@ -101,7 +100,7 @@
 
         <template id="question_result_text" name="Question: text result (text_box, char_box)">
             <t t-set="respuestas" t-value="question_data['respuestas']"/>
-            <t t-set="first_page_records_count" t-value="len(respuestas) if len(respuestas) &lt; page_record_limit else page_record_limit"/>
+            <t t-set="first_page_records_count" t-value="len(respuestas) if len(respuestas) &lt; limite_registros else limite_registros"/>
             <t t-set="cell_height" t-value="default_line_height"/>
             <div t-attf-style="height: auto" class="overflow_auto o_survey_user_responses_table_wrapper">
                 <table class="table table-hover table-sm o_survey_results_table_indexed" t-att-id="'survey_table_question_%d' % question.id">
@@ -113,7 +112,7 @@
                     </thead>
                     <tbody>
                         <t t-foreach="respuestas" t-as="respuesta">
-                            <tr t-att-class="'d-none' if not respuesta in respuestas[:page_record_limit] else ''">
+                            <tr t-att-class="'d-none' if not respuesta in respuestas[:limite_registros] else ''">
                                 <td>
                                     <t t-esc="respuesta_index + 1"></t>
                                 </td>
@@ -132,14 +131,15 @@
 
         <template id="question_result_choice" name="Question: choice result (simple_choice, multiple_choice)">
             <t t-set="respuestas" t-value="question_data['respuestas']"/>
+            <t t-set="respuestas_tabuladas" t-value="question_data['respuestas_tabuladas']"/>
+            <t t-set="graph_data" t-value="question_data['graph_data']"/>
             <ul class="nav nav-tabs d-print-none" role="tablist">
-                <!-- <li t-if="question_answered" class="nav-item">
+                <li t-if="question_answered" class="nav-item">
                     <a t-att-href="'#survey_graph_question_%d' % question.id" t-att-aria-controls="'survey_graph_question_%d' % question.id" class="nav-link active" data-bs-toggle="tab" role="tab">
                         <i class="fa fa-bar-chart-o"></i>
-                        <span t-if="question.question_type == 'simple_choice'">Pie Graph</span>
-                        <span t-else="">Graph</span>
+                        <span>Graph</span>
                     </a>
-                </li> -->
+                </li>
                 <li class="nav-item">
                     <a t-att-href="'#survey_data_question_%d' % question.id" t-att-aria-controls="'survey_data_question_%d' % question.id" t-attf-class="nav-link #{'active' if not question_answered else ''}" data-bs-toggle="tab" role="tab">
                         <i class="fa fa-list-alt me-1"/>
@@ -148,29 +148,31 @@ Data
                 </li>
             </ul>
             <div class="tab-content">
-                <!-- <div t-if="question_answered" role="tabpanel" class="tab-pane active survey_graph" t-att-id="'survey_graph_question_%d' % question.id" t-att-data-question-id="question.id" t-att-data-graph-type="'pie' if question.question_type == 'simple_choice' else 'bar'" t-att-data-graph-data="graph_data" t-att-data-right-answers="list(question_data['right_answers'].mapped('value'))">
-                    canvas element for drawing bar chart
+                <div t-if="question_answered" role="tabpanel" class="tab-pane active survey_graph" t-att-id="'survey_graph_question_%d' % question.id" t-att-data-question-id="question.id" t-att-data-graph-type="'bar'" t-att-data-graph-data="graph_data">
+                    <!-- canvas element for drawing bar chart -->
                     <canvas class="mx-auto"/>
-                </div> -->
+                </div>
                 <div role="tabpanel" t-att-id="'survey_data_question_%d' % question.id" t-attf-class="tab-pane #{'active' if not question_answered else ''}">
                     <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Respuesta</th>
-                                <th>User Choice</th>
+                                <th>Porcentaje</th>
+                                <th>Frecuencia</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="respuestas" t-as="respuesta">
+                            <tr t-foreach="respuestas_tabuladas" t-as="respuesta">
                                 <td>
                                     <p>
-                                        <span t-esc="respuesta"/>
+                                        <span t-esc="respuesta['texto']"/>
                                     </p>
                                 </td>
                                 <td class="o_survey_answer">
-                                    <p> 1 </p>
-                                    <!-- <span t-esc="round(choice_data['count'] * 100.0/ (len(question_data['answer_line_done_ids']) or 1), 2)"></span> %
-                                    <span t-esc="'%s Votes' % choice_data['count']" class="badge text-bg-primary"/> -->
+                                    <span t-esc="round(respuesta['conteo'] * 100.0/ (len(respuestas) or 1), 2)"></span> % 
+                                </td>
+                                <td class="o_survey_answer">
+                                    <span t-esc="'%s Votos' % respuesta['conteo']" class="badge text-bg-primary"/>
                                 </td>
                             </tr>
                         </tbody>
@@ -181,10 +183,10 @@ Data
 
         <template id="question_table_pagination" name="Survey: statistics table pagination">
             <t t-set="respuestas_count" t-value="len(question_data['respuestas'])"/>
-            <t t-if="respuestas_count > page_record_limit">
-                <div class="d-flex justify-content-between d-print-none pagination_wrapper" t-att-id="'pagination_%d' % question.id" t-att-data-question_id="question.id" t-att-data-record_limit="page_record_limit">
+            <t t-if="respuestas_count > limite_registros">
+                <div class="d-flex justify-content-between d-print-none pagination_wrapper" t-att-id="'pagination_%d' % question.id" t-att-data-question_id="question.id" t-att-data-record_limit="limite_registros">
                     <ul class="pagination mt-2">
-                        <t t-set="total" t-value="ceil(respuestas_count / page_record_limit) + 1"/>
+                        <t t-set="total" t-value="ceil(respuestas_count / limite_registros) + 1"/>
                         <li t-foreach="range(1, total)" t-as="num" t-att-class="'page-item o_survey_js_results_pagination %s' % ('active' if num == 1 else '')">
                             <a href="#" class="page-link" t-esc="num"></a>
                         </li>
