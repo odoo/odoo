@@ -860,6 +860,10 @@ class Task(models.Model):
     def default_get(self, default_fields):
         vals = super(Task, self).default_get(default_fields)
 
+        # check if 'state' exists and if it equal to '04_waiting_normal' then we set it to '01_in_progress'
+        if 'state' in default_fields and vals.get('state') == '04_waiting_normal':
+            vals['state'] = '01_in_progress'
+
         if 'repeat_until' in default_fields:
             vals['repeat_until'] = fields.Date.today() + timedelta(days=7)
 
