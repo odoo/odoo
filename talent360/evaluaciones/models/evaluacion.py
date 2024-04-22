@@ -73,7 +73,7 @@ class Evaluacion(models.Model):
 
         self.pregunta_ids = [(5,)]
 
-        template_id_hardcoded = 4 #CAMBIAR ID A 331
+        template_id_hardcoded = 2
 
         if template_id_hardcoded:
             template = self.env["template"].browse(template_id_hardcoded)

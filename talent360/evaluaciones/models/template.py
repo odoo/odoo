@@ -21,14 +21,10 @@ class Template(models.Model):
         [
             ("nom_035", "NOM 035"),
             ("clima", "Clima"),
+            ("90_grados", "90 grados"),
+            ("180_grados", "180 grados"),
         ],
         required=True,
     )
 
-    pregunta_ids = fields.Many2many(
-        "pregunta",
-        "pregunta_template_rel",
-        "template_id",
-        "pregunta_id",
-        string="Preguntas",
-    )
+    pregunta_ids = fields.Many2many("pregunta", string="Preguntas")
