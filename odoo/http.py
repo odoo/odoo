@@ -1207,7 +1207,7 @@ class HTTPRequest:
 
         self.__wrapped = httprequest
         self.__environ = self.__wrapped.environ
-        self.environ = {
+        self.environ = self.headers.environ = {
             key: value
             for key, value in self.__environ.items()
             if not key.startswith(('werkzeug.', 'wsgi.')) or key in ['wsgi.url_scheme', 'werkzeug.proxy_fix.orig']
