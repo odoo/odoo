@@ -21,6 +21,6 @@ class TestWebsitePageManager(odoo.tests.HttpCase):
         self.start_tour(url, 'website_page_manager', login="admin")
         self.start_tour(url, 'website_page_manager_session_forced', login="admin")
 
-        alternate_website = self.env['website'].search([], limit=2)[1]
+        alternate_website = self.env['website'].search([('name', '=', 'My Website 2')], limit=1)
         alternate_website.domain = f'http://{HOST}:{config["http_port"]}'
         self.start_tour('/web#action=website.action_website_pages_list', 'website_page_manager_direct_access', login='admin')
