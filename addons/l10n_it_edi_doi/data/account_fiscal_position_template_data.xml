@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="declaration_of_intent_fiscal_position" model="account.fiscal.position.template">
+            <field name="sequence">10</field>
+            <field name="name">Declaration of Intent</field>
+            <field name="chart_template_id" ref="l10n_it.l10n_it_chart_template_generic"/>
+            <field name="auto_apply" eval="False" />
+            <field name="vat_required" eval="False" />
+            <field name="note">Not taxable (art. 8, c. 1, lett. c) D.P.R. 633/1972) letter intent</field>
+        </record>
+
+        <record id="afpttn_declaration_of_intent_fiscal_position_1" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="declaration_of_intent_fiscal_position"/>
+            <field name="tax_src_id"  ref="l10n_it.22v"/>
+            <field name="tax_dest_id" ref="00di"/>
+        </record>
+
+        <record id="afpttn_declaration_of_intent_fiscal_position_2" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="declaration_of_intent_fiscal_position"/>
+            <field name="tax_src_id"  ref="l10n_it.10v"/>
+            <field name="tax_dest_id" ref="00di"/>
+        </record>
+
+        <record id="afpttn_declaration_of_intent_fiscal_position_3" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="declaration_of_intent_fiscal_position"/>
+            <field name="tax_src_id"  ref="l10n_it.5v"/>
+            <field name="tax_dest_id" ref="00di"/>
+        </record>
+
+        <record id="afpttn_declaration_of_intent_fiscal_position_4" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="declaration_of_intent_fiscal_position"/>
+            <field name="tax_src_id"  ref="l10n_it.4v"/>
+            <field name="tax_dest_id" ref="00di"/>
+        </record>
+</odoo>

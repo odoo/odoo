@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sales_order_filter" model="ir.ui.view">
+        <field name="name">sale.order.list.select</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <filter name="my_sale_orders_filter" position="after">
+                <filter string="Exceeded Declaration of Intent"
+                        name="l10n_it_edi_doi_declaration_of_intent_exceeded"
+                        domain="[('l10n_it_edi_doi_id.remaining','&lt;', 0)]"/>
+            </filter>
+            <xpath expr="//search/group" position="inside">
+                <filter string="Declaration of Intent"
+                        name="l10n_it_edi_doi_declaration_of_intent"
+                        domain="" context="{'group_by':'l10n_it_edi_doi_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_quotation_tree" model="ir.ui.view">
+        <field name="name">sale.order.tree</field>
+        <field name="model">sale.order</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <tree class="o_sale_order"
+                  string="Sales Orders"
+                  sample="1"
+                  decoration-muted="state == 'cancel'">
+                <field name="name" string="Number"/>
+                <field name="date_order" widget="date"/>
+                <field name="partner_id"/>
+                <field name="currency_id" attrs="{'column_invisible': True}"/>
+                <field name="state"
+                       decoration-success="state == 'sale'"
+                       decoration-info="state == 'draft'"
+                       decoration-primary="state == 'sent'"
+                       widget="badge"/>
+                <field name="l10n_it_edi_doi_not_yet_invoiced" decoration-bf="1" sum="Total" string="Not Yet Invoiced Amount"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button groups="account.group_account_invoice"
+                        type="object"
+                        class="oe_stat_button"
+                        name="action_open_declaration_of_intent"
+                        icon="fa-list"
+                        attrs="{'invisible': [('l10n_it_edi_doi_id', '=', False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Declaration of Intent</span>
+                    </div>
+                </button>
+            </div>
+            <xpath expr="//header" position="after">
+                <div class="alert alert-warning mb-0" role="alert"
+                     attrs="{'invisible': [('l10n_it_edi_doi_warning', '=', '')]}">
+                    <field name="l10n_it_edi_doi_warning"/>
+                </div>
+            </xpath>
+            <xpath expr="//label[@for='fiscal_position_id']" position="before">
+                <field name="l10n_it_edi_doi_use" invisible="True"/>
+                <field name="l10n_it_edi_doi_id"
+                       attrs="{'invisible': [('l10n_it_edi_doi_use', '=', False)]}"
+                       options='{"no_quick_create": True}'
+                       domain="[
+                           ('state', '!=', 'draft'),
+                           ('company_id', '=', company_id),
+                           ('currency_id', '=', currency_id),
+                           ('partner_id', 'parent_of', partner_id)]"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
