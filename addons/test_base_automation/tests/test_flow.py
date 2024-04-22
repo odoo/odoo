@@ -1012,6 +1012,11 @@ class TestCompute(common.TransactionCase):
         obj.message_post(author_id=internal_partner.id, subtype_xmlid="mail.mt_comment", message_type="comment")
         self.assertFalse(obj.active)
 
+        obj.active = True
+        # message doesn't have author_id, so it should be considered as external the automation should't be triggered
+        obj.message_post(author_id=False, email_from="test_abla@test.test", message_type="email", subtype_xmlid="mail.mt_comment")
+        self.assertTrue(obj.active)
+
         automation.trigger = "on_message_received"
         obj.active = True
         obj.message_post(author_id=internal_partner.id, subtype_xmlid="mail.mt_comment", message_type="comment")
@@ -1026,6 +1031,9 @@ class TestCompute(common.TransactionCase):
         obj.active = True
         obj.message_post(author_id=ext_partner.id, subtype_xmlid="mail.mt_comment")
         self.assertTrue(obj.active)
+
+        obj.message_post(author_id=False, email_from="test_abla@test.test", message_type="email", subtype_xmlid="mail.mt_comment")
+        self.assertFalse(obj.active)
 
     def test_multiple_mail_triggers(self):
         lead_model = self.env["ir.model"]._get("base.automation.lead.test")
