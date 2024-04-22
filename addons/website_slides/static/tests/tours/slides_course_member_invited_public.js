@@ -14,7 +14,7 @@ registry.category('web_tour.tours').add('invite_check_channel_preview_as_public'
     trigger: '.o_wslides_slides_list_slide:contains("Gardening: The Know-How")',
     run: function () {
         if (this.anchor.querySelector(".o_wslides_js_slides_list_slide_link")) {
-            throw new Error('The preview should not allow the public user to browse slides');
+            console.error('The preview should not allow the public user to browse slides');
         }
     }
 }, {

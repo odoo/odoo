@@ -23,7 +23,7 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part1'
             content: "drop a snippet",
             trigger: ".oe_snippet .oe_snippet_thumbnail[data-snippet=s_cover]",
             // id starting by 'oe_structure..' will actually create an inherited view
-            run: "drag_and_drop_native :iframe #oe_structure_test_website_page",
+            run: "drag_and_drop :iframe #oe_structure_test_website_page",
         },
         ...wTourUtils.clickOnSave(),
         // 2. Edit that COW'd view in the HTML editor to break it.

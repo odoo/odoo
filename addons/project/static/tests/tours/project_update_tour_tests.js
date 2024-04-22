@@ -89,7 +89,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
 }, {
     trigger: ".o_kanban_record .oe_kanban_content",
     extra_trigger: '.o_kanban_project_tasks',
-    run: "drag_and_drop_native .o_kanban_group:eq(1) ",
+    run: "drag_and_drop(.o_kanban_group:eq(1))",
 }, {
     trigger: ".o_project_updates_breadcrumb",
     content: 'Open Updates'
@@ -101,7 +101,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     run: "edit New milestone",
 }, {
     trigger: "input[data-field=deadline]",
-    run: "edit 12/12/2099 && blur",
+    run: "edit 12/12/2099 && click body",
 }, {
     trigger: ".modal-footer .o_form_button_save"
 }, {
@@ -111,14 +111,14 @@ registry.category("web_tour.tours").add('project_update_tour', {
     run: "edit Second milestone",
 }, {
     trigger: "input[data-field=deadline]",
-    run: "edit 12/12/2022 && blur",
+    run: "edit 12/12/2022 && click body",
 }, {
     trigger: ".modal-footer .o_form_button_save"
 }, {
     trigger: ".o_rightpanel_milestone:eq(1) .o_milestone_detail",
 }, {
     trigger: "input[data-field=deadline]",
-    run: "edit 12/12/2100 && blur",
+    run: "edit 12/12/2100 && click body",
 }, {
     trigger: ".modal-footer .o_form_button_save"
 }, {

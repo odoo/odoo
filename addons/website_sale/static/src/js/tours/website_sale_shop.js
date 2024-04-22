@@ -53,7 +53,7 @@
         extra_trigger: "body:not(.modal-open)",
         content: _t("Drag this website block and drop it in your page."),
         position: "bottom",
-        run: "drag_and_drop_native :iframe #wrapwrap > main",
+        run: "drag_and_drop :iframe #wrapwrap > main",
     }, {
         trigger: "button[data-action=save]",
         content: markup(_t("Once you click on <b>Save</b>, your product is updated.")),

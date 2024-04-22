@@ -64,7 +64,7 @@ const addNewSocialNetwork = function (optionIndex, linkIndex, url, replaceIcon =
     {
         content: "Change added Option label",
         trigger: `we-list table input:eq(${optionIndex})`,
-        run: `edit ${url} && blur`,
+        run: `edit ${url} && click body`,
     },
     {
         content: "Ensure new link is changed",
@@ -97,7 +97,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
         content: 'Drag the facebook link at the end of the list',
         trigger: 'we-list table we-button.o_we_drag_handle',
         position: 'bottom',
-        run: "drag_and_drop_native we-list table tr:last-child",
+        run: "drag_and_drop we-list table tr:last-child",
     },
     {
         content: 'Check drop completed',
@@ -127,7 +127,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     {
         content: 'Change custom social to unsupported link',
         trigger: 'we-list table input:eq(6)',
-        run: "edit https://www.paypal.com/abc && blur",
+        run: "edit https://www.paypal.com/abc && click body",
     },
     {
         content: "Ensure paypal icon is found",
@@ -168,7 +168,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     {
         content: 'Change url of the DB instagram link',
         trigger: 'we-list table input:eq(3)',
-        run: "edit https://instagram.com/odoo.official/ && blur",
+        run: "edit https://instagram.com/odoo.official/ && click body",
     },
     ...wTourUtils.clickOnSave(),
     ...wTourUtils.clickOnEditAndWaitEditMode(),

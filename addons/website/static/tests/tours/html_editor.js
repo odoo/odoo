@@ -16,7 +16,7 @@ wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
             content: "drop a snippet",
             trigger: ".oe_snippet .oe_snippet_thumbnail[data-snippet=s_cover]",
             // id starting by 'oe_structure..' will actually create an inherited view
-            run: "drag_and_drop_native :iframe #oe_structure_test_ui",
+            run: "drag_and_drop :iframe #oe_structure_test_ui",
         },
         ...wTourUtils.clickOnSave(),
         // 2. Edit generic view

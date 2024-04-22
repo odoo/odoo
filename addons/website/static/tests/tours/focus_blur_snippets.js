@@ -57,7 +57,7 @@ wTourUtils.registerWebsitePreviewTour("focus_blur_snippets", {
     {
         content: 'Drag the custom block into the page',
         trigger: '#snippet_structure .oe_snippet[name="s_focusblur"] .oe_snippet_thumbnail',
-        run: 'drag_and_drop_native :iframe #wrap',
+        run: 'drag_and_drop :iframe #wrap',
     },
     ...clickAndCheck('parent', ['focus parent']),
     ...clickAndCheck(null, ['blur parent']),

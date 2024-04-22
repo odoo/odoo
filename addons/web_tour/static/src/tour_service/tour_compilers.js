@@ -6,6 +6,7 @@ import { _legacyIsVisible, isVisible } from "@web/core/utils/ui";
 import { omit, pick } from "@web/core/utils/objects";
 import { tourState } from "./tour_state";
 import * as hoot from "@odoo/hoot-dom";
+import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import {
     callWithUnloadCheck,
     getConsumeEventType,
@@ -124,9 +125,8 @@ function describeFailedStepDetailed(tour, step) {
     const start = stepIndex - offset >= 0 ? stepIndex - offset : 0;
     const end =
         stepIndex + offset + 1 <= tour.steps.length ? stepIndex + offset + 1 : tour.steps.length;
-    let result = "";
+    let result = [describeFailedStepSimple(tour, step)];
     for (let i = start; i < end; i++) {
-        const highlight = i === stepIndex;
         const stepString = JSON.stringify(
             omit(tour.steps[i], "state"),
             (_key, value) => {
@@ -137,12 +137,17 @@ function describeFailedStepDetailed(tour, step) {
                 }
             },
             2
-        );
-        result += `\n${highlight ? "----- FAILING STEP -----\n" : ""}${stepString},${
-            highlight ? "\n-----------------------" : ""
-        }`;
+        ) + ",";
+        const text = [stepString];
+        if (i === stepIndex) {
+            const line = "-".repeat(10);
+            const failing_step = `${line} FAILING STEP (${i + 1}/${tour.steps.length}) ${line}`;
+            text.unshift(failing_step);
+            text.push("-".repeat(failing_step.length));
+        }
+        result.push(...text);
     }
-    return `${describeFailedStepSimple(tour, step)}\n\n${result.trim()}`;
+    return result.join("\n");
 }
 
 /**
@@ -359,6 +364,7 @@ export function compileStepAuto(stepIndex, step, options) {
     return [
         {
             action: () => {
+                setupEventActions(document.createElement("div"));
                 step.state = step.state || {};
                 if (step.break && debugMode !== false) {
                     // eslint-disable-next-line no-debugger
@@ -431,10 +437,10 @@ export function compileStepAuto(stepIndex, step, options) {
                     });
                     result = willUnload && "will unload";
                 } else if (typeof step.run === "string") {
-                    step.run.split("&&").forEach(async (todo) => {
+                    for (const todo of step.run.split("&&")) {
                         const m = String(todo).trim().match(/^(?<action>\w*) *\(? *(?<arguments>.*?)\)?$/);
                         await tryToDoAction(() => actionHelper[m.groups?.action](m.groups?.arguments));
-                    });
+                    }
                 } else if (!step.isCheck) {
                     if (stepIndex === tour.steps.length - 1) {
                         console.warn("Tour %s: ignoring action (auto) of last step", tour.name);

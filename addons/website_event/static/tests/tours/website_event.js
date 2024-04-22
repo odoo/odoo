@@ -43,7 +43,7 @@
         trigger: "#oe_snippets.o_loaded #snippet_structure .oe_snippet:eq(2) .oe_snippet_thumbnail",
         content: _t("Drag this block and drop it in your page."),
         position: "bottom",
-        run: "drag_and_drop_native :iframe #wrapwrap > main",
+        run: `drag_and_drop(:iframe #wrapwrap > main)`, 
     }, {
         trigger: "button[data-action=save]",
         content: _t("Once you click on save, your event is updated."),

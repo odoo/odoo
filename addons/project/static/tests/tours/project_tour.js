@@ -71,7 +71,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_create_input input",
         extra_trigger: ".subtask_create_input",
         content: 'Give the sub-task a name',
-        run: "edit newer subtask && click(div.subtask_create_input button:contains(SAVE))",
+        run: "edit newer subtask && click .o_kanban_renderer",
     }, {
         trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_list_row:first-child .o_field_project_task_state_selection button",
         content: 'Change the subtask state',

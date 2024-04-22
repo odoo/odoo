@@ -45,7 +45,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".o_kanban_record .oe_kanban_content",
     extra_trigger: '.o_project_task_kanban_view',
     content: "Drag &amp; drop the card to change the personal task from personal stage.",
-    run: "drag_and_drop_native .o_kanban_group:eq(1) ",
+    run: "drag_and_drop(.o_kanban_group:eq(1))",
 }, {
     trigger: ".o_kanban_record:first",//:contains(Send message)
     extra_trigger: '.o_project_task_kanban_view',
@@ -66,12 +66,12 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: "button[name=action_schedule_activities]",
     content: "Schedule an activity",
 }, {
-    trigger: ".o_field_widget[name='user_ids']",
+    trigger: ".o_field_widget[name='user_ids'] input",
     extra_trigger: '.o_todo_form_view',
     content: "Assign a responsible to your task",
-    run() {
-        document.querySelector('.o_field_widget[name="user_ids"] input').click();
-    }
+    run(helpers) {
+        this.anchor.click();
+    }, 
 }, {
     trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
     auto: true,

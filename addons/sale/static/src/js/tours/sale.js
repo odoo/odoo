@@ -128,7 +128,7 @@ registry.category("web_tour.tours").add("sale_quote_tour", {
         extra_trigger: ".oi-arrow-right",  // Wait for product creation
         content: markup(_t("<b>Set a price</b>.")),
         position: "right",
-        run: "edit 10.0 && blur",
+        run: "edit 10.0 && click .o_selected_row",
     }, {
         trigger: ".o_field_monetary[name='price_subtotal']:contains(10.00)",
         auto: true,

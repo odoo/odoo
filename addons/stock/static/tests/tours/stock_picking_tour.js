@@ -26,20 +26,12 @@ registry.category("web_tour.tours").add('test_detailed_op_no_save_1', { test: tr
     {
         trigger: 'input[name="picked"]',
         content: 'Check the picked field to display the column on the list view.',
-        run: function (actions) {
-            if (!this.anchor.checked) {
-                actions.click();
-            }
-        },
+        run: "check",
     },
     {trigger: ".o_data_cell[name=picked]"},
     {
         trigger: ".o_field_widget[name=picked] input",
-        run: function (actions) {
-            if (!this.anchor.checked) {
-                actions.click();
-            }
-        }
+        run: "check",
     },
     {trigger: ".btn-primary[name=button_validate]"},
     {
@@ -66,7 +58,7 @@ registry.category("web_tour.tours").add('test_generate_serial_1', { test: true, 
     },
     {
         trigger: "div[name=next_serial_count] input",
-        run: "edit 5 && blur",
+        run: "edit 5 && click body",
     },
     {trigger: ".btn-primary:contains('Generate')"},
     {
@@ -128,11 +120,11 @@ registry.category("web_tour.tours").add('test_generate_serial_2', { test: true, 
     },
     {
         trigger: "div[name=next_serial_count] input",
-        run: "edit 7.5 && blur",
+        run: "edit 7.5 && click body",
     },
     {
         trigger: "div[name=total_received] input",
-        run: "edit 50 && blur",
+        run: "edit 50 && click body",
     },
     {trigger: ".btn-primary:contains('Generate')"},
     {
@@ -153,11 +145,11 @@ registry.category("web_tour.tours").add('test_generate_serial_2', { test: true, 
     },
     {
         trigger: "div[name=next_serial_count] input",
-        run: "edit 13 && blur",
+        run: "edit 13 && click body",
     },
     {
         trigger: "div[name=total_received] input",
-        run: "edit 50 && blur",
+        run: "edit 50 && click body",
     },
     {
         trigger: "div[name=keep_lines] input",

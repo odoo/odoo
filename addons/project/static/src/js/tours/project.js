@@ -77,7 +77,7 @@ registry.category("web_tour.tours").add('project_tour', {
     extra_trigger: '.o_kanban_project_tasks',
     content: markup(_t("<b>Drag &amp; drop</b> the card to change your task from stage.")),
     position: "bottom",
-    run: "drag_and_drop_native .o_kanban_group:eq(1) ",
+    run: "drag_and_drop(.o_kanban_group:eq(1))",
 }, {
     trigger: ".o_kanban_record:first",
     extra_trigger: '.o_kanban_project_tasks',
@@ -111,7 +111,9 @@ registry.category("web_tour.tours").add('project_tour', {
     extra_trigger: '.o_form_project_tasks',
     content: _t("Assign a responsible to your task"),
     position: "right",
-    run: "click",
+    run(helpers) {
+        this.anchor.click();
+    }, 
 }, {
     trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
     auto: true,
@@ -154,7 +156,7 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_create_input input",
     extra_trigger: ".subtask_create_input",
     content: markup(_t("Give the sub-task a <b>name</b>")),
-    run: "edit Newer Sub-task && blur",
+    run: "edit Newer Sub-task && click body",
 }, {
     trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_list_row:first-child .o_field_project_task_state_selection button",
     content: _t("You can change the sub-task state here!"),

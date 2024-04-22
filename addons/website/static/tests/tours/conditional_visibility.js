@@ -172,7 +172,7 @@ wTourUtils.clickOnSnippet(snippets[1]),
 {
     content: "Drag the 'Banner' snippet to the end of the page",
     trigger: ":iframe .o_overlay_move_options .o_move_handle",
-    run: "drag_and_drop_native :iframe #wrapwrap footer",
+    run: "drag_and_drop :iframe #wrapwrap footer",
 },
 ...checkEyesIconAfterSave(false),
 {

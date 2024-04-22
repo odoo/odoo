@@ -41,15 +41,31 @@
     {
         content: "Fulfill billing address form",
         trigger: 'select[name="country_id"]',
-        run: function () {
-            document.querySelector('input[name="name"]').value = 'abc';
-            document.querySelector('input[name="phone"]').value = '99999999';
-            document.querySelector('input[name="email"]').value = 'abc@odoo.com';
-            document.querySelector('input[name="street"]').value = 'SO1 Billing Street, 33';
-            document.querySelector('input[name="city"]').value = 'SO1BillingCity';
-            document.querySelector('input[name="zip"]').value = '10000';
-            document.querySelectorAll("#country_id option")[1].selected = true;
-        },
+        run: "selectByLabel Afghanistan",
+    },
+    {
+        trigger: `input[name="name"]`,
+        run: "edit abc",
+    },
+    {
+        trigger: `input[name="phone"]`,
+        run: "edit 99999999",
+    },
+    {
+        trigger: `input[name="email"]`,
+        run: "edit abc@odoo.com",
+    },
+    {
+        trigger: `input[name="street"]`,
+        run: "edit SO1 Billing Street, 33",
+    },
+    {
+        trigger: `input[name="city"]`,
+        run: "edit SO1BillingCity",
+    },
+    {
+        trigger: `input[name="zip"]`,
+        run: "edit 10000",
     },
     {
         content: "Shipping address is not same as billing address",
@@ -63,14 +79,27 @@
         content: "Fulfill shipping address form",
         trigger: 'select[name="country_id"]',
         extra_trigger: 'h3:contains("Shipping address")',
-        run: function () {
-            document.querySelector('input[name="name"]').value = 'def';
-            document.querySelector('input[name="phone"]').value = '8888888888';
-            document.querySelector('input[name="street"]').value = '17, SO1 Shipping Road';
-            document.querySelector('input[name="city"]').value = 'SO1ShippingCity';
-            document.querySelector('input[name="zip"]').value = '10000';
-            document.querySelectorAll("#country_id option")[1].selected = true;
-        },
+        run: "selectByLabel Afghanistan",
+    },
+    {
+        trigger: `input[name="name"]`,
+        run: "edit def",
+    },
+    {
+        trigger: `input[name="phone"]`,
+        run: "edit 8888888888",
+    },
+    {
+        trigger: `input[name="street"]`,
+        run: "edit 17, SO1 Shipping Road",
+    },
+    {
+        trigger: `input[name="city"]`,
+        run: "edit SO1ShippingCity",
+    },
+    {
+        trigger: `input[name="zip"]`,
+        run: "edit 10000",
     },
     {
         content: "Click on next button",
@@ -98,12 +127,23 @@
         content: "Change billing address form",
         trigger: 'select[name="country_id"]',
         extra_trigger: 'h3:contains("Billing address")',
-        run: function () {
-            document.querySelector('input[name="name"]').value = 'abcd';
-            document.querySelector('input[name="phone"]').value = '11111111';
-            document.querySelector('input[name="street"]').value = 'SO1 Billing Street Edited, 33';
-            document.querySelector('input[name="city"]').value = 'SO1BillingCityEdited';
-        },
+        isCheck: true,
+    },
+    {
+        trigger: `input[name="name"]`,
+        run: "edit abcd",
+    },
+    {
+        trigger: `input[name="phone"]`,
+        run: "edit 11111111",
+    },
+    {
+        trigger: `input[name="street"]`,
+        run: "edit SO1 Billing Street Edited, 33",
+    },
+    {
+        trigger: `input[name="city"]`,
+        run: "edit SO1BillingCityEdited",
     },
     {
         content: "Click on next button",
@@ -132,13 +172,17 @@
         trigger: '.oe_cart a:contains("Sign Up")',
     },
     {
+        trigger: `.oe_signup_form input[name="password"]`,
+        run: "edit 1admin@admin",
+    },
+    {
+        trigger: `.oe_signup_form input[name="confirm_password"]`,
+        run: "edit 1admin@admin",
+    },
+    {
         content: "Submit login",
-        trigger: '.oe_signup_form',
-        run: function () {
-            document.querySelector('.oe_signup_form input[name="password"]').value = "1admin@admin";
-            document.querySelector('.oe_signup_form input[name="confirm_password"]').value = "1admin@admin";
-            document.querySelector('.oe_signup_form').submit();
-        },
+        trigger: `.oe_signup_form button[type="submit"]`,
+        run: "click",
     },
     {
         content: "See Quotations",
@@ -159,14 +203,24 @@
         trigger: 'header a[href="/web/login"]',
     },
     {
-        content: "Submit login",
-        trigger: '.oe_login_form',
-        run: function () {
-            document.querySelector('.oe_login_form input[name="login"]').value = "admin";
-            document.querySelector('.oe_login_form input[name="password"]').value = "admin";
-            document.querySelector('.oe_login_form input[name="redirect"]').value = "/";
-            document.querySelector('.oe_login_form').submit();
+        trigger: `.oe_login_form input[name="login"]`,
+        run: "edit admin",
+    },
+    {
+        trigger: `.oe_login_form input[name="password"]`,
+        run: "edit admin",
+    },
+    {
+        trigger: `.oe_login_form input[name="redirect"]`,
+        run(helpers) {
+            this.anchor.value = "/";
         },
+        allowInvisible: true,
+    },
+    {
+        content: "Submit login",
+        trigger: `.oe_login_form button[type="submit"]`,
+        run: "click"
     },
     {
         content: "Configuration Settings for 'Tax Included' and sign up 'On Invitation'",
@@ -229,13 +283,17 @@
         trigger: `.oe_cart a:contains(Sign in)`,
     },
     {
+        trigger: `.oe_login_form input[name="login"]`,
+        run: "edit abc@odoo.com",
+    },
+    {
+        trigger: `.oe_login_form input[name="password"]`,
+        run: "edit 1admin@admin",
+    },
+    {
         content: "Submit login",
-        trigger: '.oe_login_form',
-        run: function () {
-            document.querySelector('.oe_login_form input[name="login"]').value = "abc@odoo.com";
-            document.querySelector('.oe_login_form input[name="password"]').value = "1admin@admin";
-            document.querySelector('.oe_login_form').submit();
-        },
+        trigger: `.oe_login_form button[type="submit"]`,
+        run: "click",
     },
     {
         content: "Add new shipping address",
@@ -244,14 +302,27 @@
     {
         content: "Fulfill shipping address form",
         trigger: 'select[name="country_id"]',
-        run: function () {
-            document.querySelector('input[name="name"]').value = 'ghi';
-            document.querySelector('input[name="phone"]').value = '7777777777';
-            document.querySelector('input[name="street"]').value = 'SO2New Shipping Street, 5';
-            document.querySelector('input[name="city"]').value = 'SO2NewShipping';
-            document.querySelector('input[name="zip"]').value = '1200';
-            document.querySelectorAll("#country_id option")[1].selected = true;
-        },
+        run: "selectByLabel Afghanistan",
+    },
+    {
+        trigger: `input[name="name"]`,
+        run: "edit ghi",
+    },
+    {
+        trigger: `input[name="phone"]`,
+        run: "edit 7777777777",
+    },
+    {
+        trigger: `input[name="street"]`,
+        run: "edit SO2New Shipping Street, 5",
+    },
+    {
+        trigger: `input[name="city"]`,
+        run: "edit SO2NewShipping",
+    },
+    {
+        trigger: `input[name="zip"]`,
+        run: "edit 1200",
     },
     {
         content: "Click on next button",
@@ -292,14 +363,24 @@
         trigger: 'header a[href="/web/login"]',
     },
     {
-        content: "Submit login",
-        trigger: '.oe_login_form',
-        run: function () {
-            document.querySelector('.oe_login_form input[name="login"]').value  = "admin";
-            document.querySelector('.oe_login_form input[name="password"]').value  = "admin";
-            document.querySelector('.oe_login_form input[name="redirect"]').value  = "/shop/cart";
-            document.querySelector('.oe_login_form').submit();
+        trigger: `.oe_login_form input[name="login"]`,
+        run: "edit admin",
+    },
+    {
+        trigger: `.oe_login_form input[name="password"]`,
+        run: "edit admin",
+    },
+    {
+        trigger: `.oe_login_form input[name="redirect"]`,
+        run(helpers) {
+            this.anchor.value = "/shop/cart";
         },
+        allowInvisible: true,
+    },
+    {
+        content: "Submit login",
+        trigger: `.oe_login_form button[type="submit"]`,
+        run: "click",
     }]});
 
     registry.category("web_tour.tours").add('website_sale_tour_2', {
@@ -320,14 +401,24 @@
         trigger: 'header a[href="/web/login"]',
     },
     {
-        content: "Submit login",
-        trigger: '.oe_login_form',
-        run: function () {
-            document.querySelector('.oe_login_form input[name="login"]').value = "abc@odoo.com";
-            document.querySelector('.oe_login_form input[name="password"]').value = "1admin@admin";
-            document.querySelector('.oe_login_form input[name="redirect"]').value = "/shop?search=Storage Box Test";
-            document.querySelector('.oe_login_form').submit();
+        trigger: `.oe_login_form input[name="login"]`,
+        run: "edit abc@odoo.com",
+    },
+    {
+        trigger: `.oe_login_form input[name="password"]`,
+        run: "edit 1admin@admin",
+    },
+    {
+        trigger: `.oe_login_form input[name="redirect"]`,
+        run(helpers) {
+            this.anchor.value = "/shop?search=Storage Box Test";
         },
+        allowInvisible: true,
+    },
+    {
+        content: "Submit login",
+        trigger: `.oe_login_form button[type="submit"]`,
+        run: "click",
     },
     {
         content: "Open product page",

@@ -15,7 +15,7 @@ registry.category('web_tour.tours').add('invite_check_channel_preview_as_logged'
     content: 'Check that other slides are not accessible',
     run: function () {
         if (this.anchor.querySelector(".o_wslides_js_slides_list_slide_link")) {
-            throw new Error('Invited attendee should not see non-preview slides');
+            console.error('Invited attendee should not see non-preview slides');
         }
     }
 }, {

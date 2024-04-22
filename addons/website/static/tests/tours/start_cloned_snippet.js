@@ -12,7 +12,7 @@ wTourUtils.registerWebsitePreviewTour('website_start_cloned_snippet', {
         id: 's_countdown',
     };
     const dragNDropOutOfFooter = wTourUtils.dragNDrop(countdownSnippet);
-    dragNDropOutOfFooter.run = 'drag_and_drop_native :iframe #wrapwrap #wrap';
+    dragNDropOutOfFooter.run = 'drag_and_drop :iframe #wrapwrap #wrap';
     return [
         dragNDropOutOfFooter,
         wTourUtils.clickOnSnippet(countdownSnippet),

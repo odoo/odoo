@@ -52,7 +52,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     run: "click",
 }, {
     trigger: 'table.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk")) td>div[name="ptal"]:has(div>label:contains("Legs")) input[type="text"]',
-    run: "edit nice custom value && blur .modal-body",
+    run: "edit nice custom value && click .modal-body",
 }, {
     trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Customizable Desk")) label[style="background-color:#000000"] input',
     run: "click", 
