@@ -1,4 +1,4 @@
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, onWillUnmount, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FollowerSubtypeDialog } from "./follower_subtype_dialog";
@@ -13,6 +13,8 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
  * @extends {Component<Props, Env>}
  */
 
+let local_id = 0;
+
 export class FollowerList extends Component {
     static template = "mail.FollowerList";
     static components = { DropdownItem };
@@ -22,11 +24,29 @@ export class FollowerList extends Component {
         super.setup();
         this.action = useService("action");
         this.store = useState(useService("mail.store"));
+        this.followerListId = local_id++;
         useVisible("load-more", (isVisible) => {
             if (isVisible) {
-                this.props.thread.loadMoreFollowers();
+                this.followerListView.loadMoreFollowers();
             }
         });
+
+        onWillStart(async () => {
+            await this.store.FollowerListView.insert({
+                id: this.followerListId,
+                thread_id: this.props.thread.id,
+                thread_model: this.props.thread.model,
+            });
+            await this.followerListView.get_follower();
+        });
+
+        onWillUnmount(() => {
+            this.followerListView?.delete();
+        });
+    }
+
+    get followerListView() {
+        return this.store.FollowerListView.get({ id: this.followerListId });
     }
 
     onClickAddFollowers() {

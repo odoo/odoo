@@ -773,6 +773,54 @@ async function mail_message_update_content(request) {
 }
 
 registerRoute("/discuss/channel/<int:cid>/partner/<int:pid>/avatar_128", partnerAvatar128);
+
+registerRoute("/mail/message/get_followers", message_get_followers);
+/** @type {RouteCallback} */
+async function message_get_followers(request) {
+    const {
+        thread_id,
+        thread_model,
+        limit,
+        offset,
+        filter_recipients = false,
+    } = await parseRequestParams(request);
+    if (filter_recipients) {
+        // not implemented for the simplicity
+    }
+
+    /** @type {import("mock_models").MailFollowers} */
+    const MailFollowers = this.env["mail.followers"];
+    const followersCount = MailFollowers._filter([
+        ["res_id", "=", thread_id],
+        ["res_model", "=", thread_model],
+    ]).length;
+    const selfFollower = MailFollowers.search([
+        ["res_id", "=", thread_id],
+        ["res_model", "=", thread_model],
+        ["partner_id", "=", this.env.user.partner_id],
+    ]);
+    let followers = MailFollowers._filter([
+        ["res_id", "=", thread_id],
+        ["res_model", "=", thread_model],
+        ["partner_id", "!=", this.env.user.partner_id],
+    ]);
+
+    followers = followers.sort((a, b) => (a.name < b.name ? -1 : 1));
+    followers = followers.slice(offset, offset + limit);
+    let store = new mailDataHelpers.Store();
+    store.add("mail.followers", followers);
+    const data = store.get_result();
+    store = new mailDataHelpers.Store();
+    store.add(selfFollower);
+    const selfFollowerData = store.get_result();
+    return {
+        data: data,
+        followers: Store.many_ids(followers),
+        selfFollower: selfFollowerData,
+        followersCount: followersCount,
+    };
+}
+
 /** @type {RouteCallback} */
 async function partnerAvatar128(request, { cid, pid }) {
     return [cid, pid];
