@@ -13,14 +13,14 @@
                     <field name="sale_order_option_ids" mode="list,kanban" readonly="state in ['cancel', 'sale']">
                         <form string="Optional Products">
                             <group>
-                                <field name="product_id"
-                                    domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                <field name="product_id"/>
                                 <field name="name"/>
                                 <field name="quantity"/>
                                 <field name="uom_id" widget="many2one_uom" groups="uom.group_uom"/>
                                 <field name="price_unit"/>
                                 <field name="discount" groups="sale.group_discount_per_so_line"/>
                                 <field name="is_present" />
+                                <field name="company_id" invisible="1"/>
                             </group>
                         </form>
                         <kanban class="o_kanban_mobile">
@@ -54,8 +54,7 @@
                                 <create name="add_product_control" string="Add a product"/>
                             </control>
                             <field name="sequence" widget="handle"/>
-                            <field name="product_id"
-                                domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                            <field name="product_id"/>
                             <field name="name" optional="show"/>
                             <field name="quantity"/>
                             <field name="uom_id" widget="many2one_uom" groups="uom.group_uom" optional="show"/>

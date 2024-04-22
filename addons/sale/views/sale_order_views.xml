@@ -514,7 +514,6 @@
                                                 invisible="state not in ['draft', 'sent'] or not is_product_archived"
                                             />
                                             <field name="product_id"
-                                                domain="[('sale_ok', '=', True)]"
                                                 context="{'default_uom_id': product_uom_id}"
                                                 readonly="not product_updatable"
                                                 required="not display_type and not is_downpayment"
@@ -549,7 +548,6 @@
                                             widget="many2many_tax_tags"
                                             options="{'no_create': True}"
                                             context="{'search_view_ref': 'account.account_tax_view_search'}"
-                                            domain="[('type_tax_use', '=', 'sale'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
                                             readonly="qty_invoiced &gt; 0"/>
                                         <t groups="sale.group_discount_per_so_line">
                                             <label for="discount"/>
@@ -628,7 +626,6 @@
                                         'default_uom_id': product_uom_id,
                                     }"
                                     optional="hide"
-                                    domain="[('sale_ok', '=', True)]"
                                     widget="sol_product_many2one"/>
                                 <field name="product_template_id"
                                     string="Product"
@@ -639,7 +636,6 @@
                                         'default_uom_id': product_uom_id,
                                     }"
                                     optional="show"
-                                    domain="[('sale_ok', '=', True)]"
                                     widget="sol_product_many2one"
                                     placeholder="Type to find a product..."/>
                                 <field name="name" widget="sol_text" optional="show"/>
@@ -694,7 +690,6 @@
                                     name="tax_ids"
                                     widget="many2many_tax_tags"
                                     options="{'no_create': True}"
-                                    domain="[('type_tax_use', '=', 'sale'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
                                     context="{'active_test': True}"
                                     readonly="qty_invoiced &gt; 0 or is_downpayment"
                                     optional="show"/>
