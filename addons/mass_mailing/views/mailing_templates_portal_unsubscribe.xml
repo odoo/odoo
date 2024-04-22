@@ -61,7 +61,7 @@
                                     <li t-foreach="(lists_optin + lists_optout)"
                                         t-as="mailing_list"
                                         class="list-group-item d-flex align-items-center">
-                                        <t t-set="title" t-value="mailing_list.name if mailing_list.is_public else 'Mailing List #%s' % mailing_list.id"/>
+                                        <t t-set="title" t-value="mailing_list.name"/>
                                         <input type="checkbox"
                                                name="mailing_list_ids"
                                                t-att-data-member="1"

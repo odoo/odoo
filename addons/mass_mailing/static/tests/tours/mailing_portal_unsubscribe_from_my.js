@@ -106,3 +106,13 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_my', {
         }
     ],
 });
+
+registry.category("web_tour.tours").add('test_mailing_private_list_not_in_my', {
+    test: true,
+    steps: () => [
+        {
+            content: "List5 is not proposed (not member and not public)",
+            trigger: "ul#o_mailing_subscription_form_lists:not(:has(li.list-group-item:contains('List5')))",
+        },
+    ],
+});

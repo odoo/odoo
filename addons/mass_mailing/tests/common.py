@@ -304,12 +304,13 @@ class MassMailCase(MailCase, MockLinkTracker):
     def _create_mailing_list(cls):
         """ Shortcut to create mailing lists. Currently hardcoded, maybe evolve
         in a near future. """
-        cls.mailing_list_1, cls.mailing_list_2, cls.mailing_list_3, cls.mailing_list_4 = cls.env['mailing.list'].with_context(cls._test_context).create([
+        cls.mailing_list_1, cls.mailing_list_2, cls.mailing_list_3, cls.mailing_list_4, cls.mailing_list_5 = cls.env['mailing.list'].with_context(cls._test_context).create([
             {
                 'contact_ids': [
                     (0, 0, {'name': 'Déboulonneur', 'email': 'fleurus@example.com'}),
                     (0, 0, {'name': 'Gorramts', 'email': 'gorramts@example.com'}),
                     (0, 0, {'name': 'Ybrant', 'email': 'ybrant@example.com'}),
+                    (0, 0, {'name': 'Robert', 'email': 'robby@example.com'}),
                 ],
                 'name': 'List1',
                 'is_public': True,
@@ -330,9 +331,16 @@ class MassMailCase(MailCase, MockLinkTracker):
                 'is_public': True,
             }, {
                 'name': 'List4',
+            }, {
+                'contact_ids': [
+                    (0, 0, {'name': 'Robert', 'email': 'robby@example.com'}),
+                ],
+                'name': 'List5',
+                'is_public': False
             }
         ])
         cls.mailing_list_3.subscription_ids[0].opt_out = True
+        cls.mailing_list_5.subscription_ids[0].opt_out = True
 
     @classmethod
     def _create_mailing_list_of_x_contacts(cls, contacts_nbr):

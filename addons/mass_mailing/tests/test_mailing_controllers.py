@@ -174,6 +174,29 @@ class TestMailingControllers(TestMailingControllersCommon):
         self.assertEqual(res.status_code, 200)
         self.assertFalse(self.env['ir.config_parameter'].sudo().get_param('mass_mailing.mass_mailing_reports'))
 
+    def test_mailing_private_list_not_in_my(self):
+        """ Test that only the proper mailing lists are shown in the 'my' and
+        the mailing lists which we are not members and are not public shouldn't
+        be in this list.
+        """
+
+        portal_user = mail_new_test_user(
+            self.env,
+            email=tools.formataddr(("Robert", "robby@example.com")),
+            groups='base.group_portal',
+            login='user_portal_fleurus',
+            name='Robert User',
+            signature='--\nRobert',
+        )
+
+        self.authenticate(portal_user.login, portal_user.login)
+        with freeze_time(self._reference_now):
+            self.start_tour(
+                "/mailing/my",
+                "test_mailing_private_list_not_in_my",
+                login=portal_user.login,
+            )
+
     def test_mailing_unsubscribe_from_document_tour(self):
         """ Test portal unsubscribe on mailings performed on documents (not
         mailing lists or contacts). Primary effect is to automatically exclude
