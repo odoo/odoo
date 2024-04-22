@@ -251,6 +251,16 @@ img, .media_iframe_video, .o_image {
     > tbody.o_portal_report_tbody {
         vertical-align: middle;
     }
+
+    .o_portal_all_addresses {
+        @include media-breakpoint-down(md) {
+            overflow-x: auto;
+
+            .address_card-container {
+                width: auto;
+            }
+        }
+    }
 }
 
 .o_portal_wrap {
