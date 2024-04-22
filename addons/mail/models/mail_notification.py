@@ -11,6 +11,7 @@ from odoo.tools.translate import _
 class MailNotification(models.Model):
     _name = 'mail.notification'
     _table = 'mail_notification'
+    _order = "id DESC"
     _rec_name = 'res_partner_id'
     _log_access = False
     _description = 'Message Notifications'
@@ -135,5 +136,9 @@ class MailNotification(models.Model):
             'notification_type': notif.notification_type,
             'notification_status': notif.notification_status,
             'failure_type': notif.failure_type,
-            'persona': {'id': notif.res_partner_id.id, 'displayName': notif.res_partner_id.display_name, 'type': "partner"} if notif.res_partner_id else False,
+            'persona': {
+                'id': notif.res_partner_id.id,
+                'displayName': notif.res_partner_id.display_name,
+                'type': "partner",
+            } if notif.res_partner_id else False,
         } for notif in self]

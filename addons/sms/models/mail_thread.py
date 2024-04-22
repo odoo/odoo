@@ -208,6 +208,8 @@ class MailThread(models.AbstractModel):
         )
 
     def _notify_thread(self, message, msg_vals=False, **kwargs):
+        """ Main notification method. Override to add support of sending SMS
+        notifications. """
         scheduled_date = self._is_notification_scheduled(kwargs.get('scheduled_date'))
         recipients_data = super(MailThread, self)._notify_thread(message, msg_vals=msg_vals, **kwargs)
         if not scheduled_date:
@@ -216,32 +218,36 @@ class MailThread(models.AbstractModel):
 
     def _notify_thread_by_sms(self, message, recipients_data, msg_vals=False,
                               sms_numbers=None, sms_pid_to_number=None,
-                              resend_existing=False, put_in_queue=False, **kwargs):
+                              resend_existing=False, put_in_queue=False,
+                              **kwargs):
         """ Notification method: by SMS.
 
-        :param message: ``mail.message`` record to notify;
-        :param recipients_data: list of recipients information (based on res.partner
-          records), formatted like
-            [{'active': partner.active;
-              'id': id of the res.partner being recipient to notify;
-              'groups': res.group IDs if linked to a user;
-              'notif': 'inbox', 'email', 'sms' (SMS App);
-              'share': partner.partner_share;
-              'type': 'customer', 'portal', 'user;'
-             }, {...}].
-          See ``MailThread._notify_get_recipients``;
-        :param msg_vals: dictionary of values used to create the message. If given it
-          may be used to access values related to ``message`` without accessing it
-          directly. It lessens query count in some optimized use cases by avoiding
-          access message content in db;
+        :param <mail.message> message: message record being notified. May be
+          void as 'msg_vals' superseeds it;
+        :param list recipients_data: list of recipients data based on <res.partner>
+          records formatted like [
+          {
+            'active': partner.active;
+            'id': id of the res.partner being recipient to notify;
+            'is_follower': follows the message related document;
+            'lang': its lang;
+            'groups': res.group IDs if linked to a user;
+            'notif': 'inbox', 'email', 'sms' (SMS App);
+            'share': is partner a customer (partner.partner_share);
+            'type': partner usage ('customer', 'portal', 'user');
+            'ushare': are users shared (if users, all users are shared);
+          }, {...}]. See ``MailThread._notify_get_recipients()``;
+        :param dict msg_vals: values dict used to create the message, allows to
+          skip message usage and spare some queries if given;
 
-        :param sms_numbers: additional numbers to notify in addition to partners
+        :param list sms_numbers: additional numbers to notify in addition to partners
           and classic recipients;
-        :param pid_to_number: force a number to notify for a given partner ID
-              instead of taking its mobile / phone number;
-        :param resend_existing: check for existing notifications to update based on
-          mailed recipient, otherwise create new notifications;
-        :param put_in_queue: use cron to send queued SMS instead of sending them
+        :param dict sms_pid_to_number: force a number to notify for a given partner ID
+          instead of taking its mobile / phone number;
+
+        :param bool resend_existing: check for existing notifications to update
+          based on mailed recipient, otherwise create new notifications;
+        :param bool put_in_queue: use cron to send queued SMS instead of sending them
           directly;
         """
         sms_pid_to_number = sms_pid_to_number if sms_pid_to_number is not None else {}

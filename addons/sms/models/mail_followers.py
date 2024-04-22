@@ -8,7 +8,9 @@ class Followers(models.Model):
     _inherit = ['mail.followers']
 
     def _get_recipient_data(self, records, message_type, subtype_id, pids=None):
-        recipients_data = super()._get_recipient_data(records, message_type, subtype_id, pids=pids)
+        recipients_data = super()._get_recipient_data(
+            records, message_type, subtype_id, pids=pids
+        )
         if message_type != 'sms' or not (pids or records):
             return recipients_data
 
