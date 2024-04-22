@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 
+from odoo.addons.website.tools import MockRequest
 from odoo.tests import tagged
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
@@ -108,3 +109,26 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
         # It should not login since the website set on the user has no domain.
         self.user_demo.website_id = website2
         self.assertFalse(rpc_login_user_demo())
+
+    def test_recursive_current_website(self):
+        Website = self.env['website']
+        self.env['ir.rule'].create({
+            'name': 'Recursion Test',
+            'model_id': self.env.ref('website.model_website').id,
+            'domain_force': [(1, '=', 1)],
+            'groups': [],
+        })
+        # Ensure the cache is invalidated, it is not needed at the time but some
+        # code might one day go through get_current_website_id before reaching
+        # this code, making this test useless
+        self.env.registry.clear_cache()
+        failed = False
+        # website is added in ir.rule context only when in frontend
+        with MockRequest(self.env, website=self.website):
+            try:
+                Website.with_user(self.env.ref('base.public_user').id).search([])
+            except RecursionError:
+                # Do not fail test from here to avoid dumping huge stack.
+                failed = True
+        if failed:
+            self.fail("There should not be a RecursionError")
