@@ -713,6 +713,7 @@ class Environment(Mapping):
             This may be useful when recovering from a failed ORM operation.
         """
         lazy_property.reset_all(self)
+        self._cache_key.clear()
         self.transaction.clear()
 
     def invalidate_all(self, flush=True):
@@ -905,6 +906,7 @@ class Transaction:
         for env in self.envs:
             env.registry = self.registry
             lazy_property.reset_all(env)
+            env._cache_key.clear()
         self.clear()
 
 
