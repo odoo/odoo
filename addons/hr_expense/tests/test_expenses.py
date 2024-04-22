@@ -1046,7 +1046,7 @@ class TestExpenses(TestExpenseCommon):
         # Set bank account in company.
         self.env.company.partner_id.bank_ids = self.env['res.partner.bank'].create({
             'acc_number': 'BE457268179587463',
-            'partner_id': self.env.company.id,
+            'partner_id': self.env.company.partner_id.id,
             'acc_type': 'bank',
         })
         # Set commercial partner in employee's contact.
