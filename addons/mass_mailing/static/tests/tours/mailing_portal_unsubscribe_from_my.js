@@ -34,6 +34,10 @@ registry.category("web_tour.tours").add("mailing_portal_unsubscribe_from_my", {
             run: "click",
         },
         {
+            content: "List5 is not proposed (not member and not public)",
+            trigger: "body:not(:has(li.list-group-item:contains('List5')))",
+        },
+        {
             trigger: "div#o_mailing_portal_subscription:not(fieldset)",
         },
         {
