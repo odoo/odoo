@@ -56,8 +56,9 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
                 ptav.price_extra = 50.4
 
         # Update the pricelist currency regarding env.company_id currency_id in case company has changed currency with COA installation.
-        website = self.env['website'].get_current_website()
-        pricelist = website.get_current_pricelist()
+        # Whenever COA is installed with multiple companies, a new pricelist with the main company and the new currency is created and set as default
+        # Since test is run with odoobot, it doesn't capture the public pricelist that is needed to be changed, only the new pricelist
+        pricelist = self.env.ref('product.list0')
         pricelist.write({'currency_id': self.env.company.currency_id.id})
 
     def test_01_admin_shop_customize_tour(self):
