@@ -6790,6 +6790,47 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("grouped list keeps offset on switchView", async (assert) => {
+        assert.expect(8);
+        serverData.views = {
+            "foo,false,search": `
+                <search>
+                    <filter string="IntField" name="groupby" domain="[]" context="{'group_by': 'int_field'}"/>
+                </search>`,
+            "foo,99,list": `<list groups_limit="1"><field name="display_name" /></list>`,
+            "foo,100,form": `<form><field name="display_name" /></form>`,
+        };
+
+        const offsets = [0, 1, 1];
+        const mockRPC = async (route, args) => {
+            if (args.method === "web_read_group") {
+                assert.strictEqual(args.kwargs.offset, offsets.shift());
+            }
+        };
+        const wc = await createWebClient({ serverData, mockRPC });
+        await doAction(wc, {
+            res_model: "foo",
+            type: "ir.actions.act_window",
+            views: [
+                [99, "list"],
+                [100, "form"],
+            ],
+            context: {
+                search_default_groupby: true,
+            },
+        });
+
+        assert.containsOnce(target, ".o_list_view");
+        await click(target, ".o_pager_next");
+        assert.containsNone(target, ".o_data_row");
+        await click(target, ".o_group_header");
+        assert.containsOnce(target, ".o_data_row");
+        await click(target, ".o_data_cell");
+        assert.containsOnce(target, ".o_form_view");
+        await click(target, ".o_back_button");
+        assert.containsOnce(target, ".o_data_row");
+    });
+
     QUnit.test("can sort records when clicking on header", async function (assert) {
         serverData.models.foo.fields.foo.sortable = true;
 
