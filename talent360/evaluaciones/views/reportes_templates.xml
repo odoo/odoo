@@ -167,7 +167,7 @@ Datos
                     <!-- canvas element for drawing bar chart -->
                     <canvas class="mx-auto"/>
                 </div>
-                <div role="tabpanel" t-att-id="'datos_pregunta__%d' % pregunta.id" t-attf-class="tab-pane #{'active' if not pregunta_contestada else ''}">
+                <div role="tabpanel" t-att-id="'datos_pregunta__%d' % pregunta.id" t-attf-class="tab-pane always-print #{'active' if not pregunta_contestada else ''}">
                     <table class="table table-hover">
                         <thead>
                             <tr>

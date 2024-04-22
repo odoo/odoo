@@ -324,9 +324,11 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
                 }).attachTo($(this)));
             });
 
+            self.charts = [];
             self.$('.survey_graph').each(function () {
                 var chartWidget = new publicWidget.registry.SurveyResultChart(self);
                 allPromises.push(chartWidget.attachTo($(this)));
+                self.charts.push(chartWidget);
             }); 
 
             if (allPromises.length !== 0) {
@@ -342,6 +344,12 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * @private
      */
     _onPrintResultsClick: function () {
+        // Force a reflow on each chart
+        this.charts.forEach(function(chart) {
+            chart.chart.resize();
+        });
+        
+        // Print the page
         window.print();
     },
 });

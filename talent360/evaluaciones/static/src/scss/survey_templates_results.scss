@@ -6,7 +6,11 @@
         width: 100% !important;
         height: 100% !important;
     }
-    .tab-content > .tab-pane {
+    .tab-content > .tab-pane.always-print {
+        display: block;
+    }
+
+    .tab-content > .tab-pane.active {
         display: block;
     }
     html {
