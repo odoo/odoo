@@ -6,11 +6,10 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <field name="partner_id" position='after'>
-                <field name="delivery_set" invisible="1"/>
-                <field name="is_all_service" invisible="1"/>
+            <header position="inside">
+                <!-- modified through an onchange, must be present but not readonly -->
                 <field name="recompute_delivery_price" invisible="1"/>
-            </field>
+            </header>
             <div name="so_button_below_order_lines" position="inside">
                 <button
                     string="Add shipping"
@@ -31,14 +30,6 @@
                     type="object"
                     invisible="is_all_service or recompute_delivery_price or not delivery_set"/>
             </div>
-            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
-                <field name="recompute_delivery_price" invisible="1"/>
-                <field name="is_delivery" invisible="1"/>
-            </xpath>
-            <xpath expr="//field[@name='order_line']/list/field[@name='price_unit']" position="before">
-                <field name="recompute_delivery_price" column_invisible="True"/>
-                <field name="is_delivery" column_invisible="True"/>
-            </xpath>
             <xpath expr="//field[@name='order_line']/list" position="attributes">
                 <attribute name="decoration-warning" add="(recompute_delivery_price and is_delivery)" separator="or"/>
             </xpath>
