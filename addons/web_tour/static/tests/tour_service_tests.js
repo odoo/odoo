@@ -716,7 +716,6 @@ QUnit.module("Tour service", (hooks) => {
         assert.verifySteps(["log: Tour tour1 on step: 'content (trigger: .wrong_selector)'"]);
         await mock.advanceTime(10000);
         const expectedWarning = `warn: Tour tour1 failed at step content (trigger: .wrong_selector)
-
 {
   "content": "content",
   "trigger": ".button1"
@@ -729,12 +728,12 @@ QUnit.module("Tour service", (hooks) => {
   "content": "content",
   "trigger": ".button3"
 },
------ FAILING STEP -----
+---------- FAILING STEP (5/9) ----------
 {
   "content": "content",
   "trigger": ".wrong_selector"
 },
------------------------
+----------------------------------------
 {
   "content": "content",
   "trigger": ".button4"

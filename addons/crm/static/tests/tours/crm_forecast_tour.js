@@ -1,4 +1,5 @@
 /** @odoo-module */
+import { queryAll } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 const today = luxon.DateTime.now();
@@ -11,6 +12,7 @@ registry.category("web_tour.tours").add('crm_forecast', {
     {
         trigger: ".o_app[data-menu-xmlid='crm.crm_menu_root']",
         content: "open crm app",
+        run: "click",
     }, {
         trigger: '.dropdown-toggle[data-menu-xmlid="crm.crm_menu_report"]',
         content: 'Open Reporting menu',
@@ -21,7 +23,8 @@ registry.category("web_tour.tours").add('crm_forecast', {
         run: 'click',
     }, {
         trigger: '.o_column_quick_create:contains(Add next month)',
-        content: 'Wait page loading'
+        content: 'Wait page loading',
+        isCheck: true,
     }, {
         trigger: ".o-kanban-button-new",
         content: "click create",
@@ -53,9 +56,9 @@ registry.category("web_tour.tours").add('crm_forecast', {
     }, {
         trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Opportunity 1')",
         content: "move to the next month",
-        run: function (actions) {
-            const undefined_groups = $('.o_column_title:contains("None")').length;
-            actions.drag_and_drop_native(`.o_opportunity_kanban .o_kanban_group:eq(${1 + undefined_groups})`);
+        async run(helpers) {
+            const undefined_groups = queryAll('.o_column_title:contains("None")').length;
+            await helpers.drag_and_drop(`.o_opportunity_kanban .o_kanban_group:eq(${1 + undefined_groups})`);
         },
     }, {
         trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Opportunity 1')",

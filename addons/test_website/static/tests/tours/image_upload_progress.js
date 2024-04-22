@@ -47,12 +47,12 @@ const setupSteps = [{
 }, {
     content: "drop a snippet",
     trigger: "#oe_snippets .oe_snippet[name='Text - Image'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
-    run: "drag_and_drop_native :iframe #wrap",
+    run: "drag_and_drop :iframe #wrap",
 }, {
     content: "drop a snippet",
     trigger: "#oe_snippets .oe_snippet[name='Image Gallery'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
     extra_trigger: "body.editor_has_snippets",
-    run: "drag_and_drop_native :iframe #wrap",
+    run: "drag_and_drop :iframe #wrap",
 }];
 
 const formatErrorMsg = "format is not supported. Try with: .gif, .jpe, .jpeg, .jpg, .png, .svg, .webp";

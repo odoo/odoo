@@ -43,7 +43,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     extra_trigger: ".o_opportunity_kanban",
     content: markup(_t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle.")),
     position: "right",
-    run: "drag_and_drop_native (.o_opportunity_kanban .o_kanban_group:eq(2))",
+    run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(2))",
 }, {
     // Choose the element that is not going to be moved by the previous step.
     trigger: ".o_opportunity_kanban .o_kanban_group:nth-child(2) .o_kanban_record .o-mail-ActivityButton",
@@ -66,7 +66,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     trigger: ".o_opportunity_kanban .o_kanban_record:last-of-type",
     content: markup(_t("Drag your opportunity to <b>Won</b> when you get the deal. Congrats!")),
     position: "bottom",
-    run: "drag_and_drop_native (.o_opportunity_kanban .o_kanban_group:eq(3))",
+    run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(3))",
 },  {
     trigger: ".o_kanban_record",
     extra_trigger: ".o_opportunity_kanban",

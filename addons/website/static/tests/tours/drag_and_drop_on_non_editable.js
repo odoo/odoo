@@ -26,7 +26,7 @@ wTourUtils.registerWebsitePreviewTour("test_drag_and_drop_on_non_editable", {
         name: "Text Highlight",
     }), {
         content: "Drag and drop the Text Highlight building block next to the Team block media.",
-        run: "drag_and_drop_native :iframe .s_company_team .o_not_editable > .o_editable_media",
+        run: "drag_and_drop :iframe .s_company_team .o_not_editable > .o_editable_media",
     }),
     {
         content: "Verify that the Text Highlight building block isn't in a non editable element.",

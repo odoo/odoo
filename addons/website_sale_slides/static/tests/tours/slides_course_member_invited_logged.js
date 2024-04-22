@@ -11,7 +11,7 @@ registry.category('web_tour.tours').add('invited_on_payment_course_logged', {
     content: 'Check that the course can be bought but not joined',
     run: function () {
         if (document.querySelector('.o_wslides_js_course_join_link')) {
-            throw new Error('The course should not be joinable before buying');
+            console.error('The course should not be joinable before buying');
         }
     }
 }, {
@@ -19,7 +19,7 @@ registry.category('web_tour.tours').add('invited_on_payment_course_logged', {
     content: 'Check that non-preview slides are not accessible',
     run: function () {
         if (this.anchor.querySelector(".o_wslides_js_slides_list_slide_link")) {
-            throw new Error('Invited attendee should not access non-preview slides');
+            console.error('Invited attendee should not access non-preview slides');
         }
     }
 }, {

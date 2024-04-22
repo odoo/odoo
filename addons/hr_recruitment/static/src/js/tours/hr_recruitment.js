@@ -40,9 +40,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     trigger: '.o_create_job',
     content: _t('Let\'s create the position. An email will be setup for applications, and a public job description, if you use the Website app.'),
     position: 'bottom',
-    run: function (actions) {
-        actions.auto('.modal:visible .btn.btn-primary');
-    },
+    run: "click .modal:visible .btn.btn-primary",
 }, {
     trigger: ".oe_kanban_action_button",
     extra_trigger: '.o_hr_recruitment_kanban',
@@ -68,7 +66,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     extra_trigger: '.o_kanban_applicant',
     content: markup(_t("<b>Drag this card</b>, to qualify him for a first interview.")),
     position: "bottom",
-    run: "drag_and_drop_native .o_kanban_group:eq(1) ",
+    run: "drag_and_drop(.o_kanban_group:eq(1))",
 }, {
     trigger: ".oe_kanban_card",
     extra_trigger: '.o_kanban_applicant',
