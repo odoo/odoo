@@ -110,7 +110,7 @@ class Evaluacion(models.Model):
 
         return self
 
-    def action_nom035(self):
+    def evaluacion_nom035_action_view_form(self):
         """
         Ejecuta la acción de copiar preguntas de un template a la evaluación actual y devuelve
         un diccionario con los parámetros necesarios para abrir una ventana de acción en Odoo.
@@ -135,7 +135,7 @@ class Evaluacion(models.Model):
             'res_id': self.id,
         }
         
-    def action_redirigir_a_evaluacion(self):
+    def evaluacion_action_view_tree(self):
         """
         Ejecuta la acción de redireccionar a la lista de evaluaciones y devuelve un diccionario
 
