@@ -11,18 +11,14 @@ class Evaluacion360(models.Model):
 
     _inherit = ["evaluacion"]
 
-    @api.onchange('competencia_ids')
-    def _onchange_competencia_ids(self):
-        """
-        Método que se ejecuta cuando cambian las competencias.
+    preguntas_360_ids = fields.Many2many(
+        'pregunta', compute='_compute_preguntas_360_ids', string='Preguntas 360', store=False)
 
-        Si el tipo de evaluación no es 'NOM_035' o 'CLIMA', y hay competencias seleccionadas,
-        asigna las preguntas relacionadas con esas competencias a la evaluación.
+    @api.depends('competencia_ids')
+    def _compute_preguntas_360_ids(self):
         """
-        if self.tipo == 'NOM_035' or self.tipo == 'CLIMA':
-            return
-        if self.competencia_ids:
-            competencia_preguntas = self.competencia_ids.mapped('pregunta_ids')
-            self.pregunta_ids = competencia_preguntas
-        else:
-            self.pregunta_ids = False
+        Método que calcula las preguntas 360 de la evaluación.
+        """
+        for evaluacion in self:
+            preguntas_360 = evaluacion.competencia_ids.mapped('pregunta_ids')
+            evaluacion.preguntas_360_ids = preguntas_360
