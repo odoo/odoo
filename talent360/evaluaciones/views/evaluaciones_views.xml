@@ -96,7 +96,7 @@
         <field name="name">evaluacion.form</field>
         <field name="model">evaluacion</field>
         <field name="arch" type="xml">
-            <form string="NOM035">
+            <form string="NOM035" create="false">
                 <sheet>
 					<h1>Encuesta NOM 035</h1>
 					<p>La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.</p>
@@ -115,7 +115,10 @@
 								<field name="usuario_ids"/>
 							</page>
                         </notebook>
-					</group>					
+					</group>
+                    <div>
+                        <button name="action_redirect_to_evaluacion" string="Finalizar" type="object" class="btn-primary"/>
+                    </div>					
                 </sheet>
             </form>
         </field>
@@ -126,6 +129,14 @@
         <field name="model_id" ref="model_evaluacion"/>
         <field name="state">code</field>
         <field name="code">action = model.action_nom035()</field>
+        <field name="binding_model_id" ref="model_evaluacion"/>
+
+    </record>
+        <record id="action_redirigir_a_evaluacion" model="ir.actions.server">
+        <field name="name">Redirigir a Evaluación</field>
+        <field name="model_id" ref="model_evaluacion"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_redirigir_a_evaluacion()</field>
         <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
      
