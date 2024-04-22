@@ -22,7 +22,7 @@ patch(EventAdditionalTourSteps.prototype, {
                 trigger: '#oe_snippets.o_loaded div[name="Image - Text"] .oe_snippet_thumbnail',
                 content: markup(_t("<b>Drag and Drop</b> this snippet below the event title.")),
                 position: 'bottom',
-                run: 'drag_and_drop_native :iframe #o_wevent_event_main_col',
+                run: 'drag_and_drop :iframe #o_wevent_event_main_col',
             }, {
                 trigger: 'button[data-action="save"]',
                 content: markup(_t("Don't forget to click <b>save</b> when you're done.")),

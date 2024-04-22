@@ -150,71 +150,148 @@ export const triggerPointerEvent = (el, type, canBubbleAndBeCanceled, additional
 
 export class RunningTourActionHelper {
 
+    /**
+     * @typedef {string|Node} Selector
+     */
+
+
     constructor(anchor) {
         this.anchor = anchor;
+        this.delay = 20;
     }
 
     /**
+     * Ensures that the given {@link Selector} is checked.
+     * @description
+     * If it is not checked, a click is triggered on the input.
+     * If the input is still not checked after the click, an error is thrown.
+     *
      * @param {string|Node} selector 
+     * @example
+     *  run: "check", //Checks the action element 
+     * @example
+     *  run: "check input[type=checkbox]", // Checks the selector
      */
-    blur(selector) {
-        if (selector?.length) {
-            hoot.click(selector);
-        } else if (this.previousActiveElement !== this.currentActiveElement) {
-            hoot.click(this.previousActiveElement);
-        } else {
-            hoot.click("body");
-        }
+    check(selector) {
+        const element = this._get_action_element(selector);
+        hoot.check(element);
     }
 
     /**
-     * @param {string|Node} selector 
+     * Clears the **value** of the **{@link Selector}**.
+     * @description
+     * This is done using the following sequence:
+     * - pressing "Control" + "A" to select the whole value;
+     * - pressing "Backspace" to delete the value;
+     * - (optional) triggering a "change" event by pressing "Enter".
+     *
+     * @param {Selector} selector 
+     * @example
+     *  run: "clear", // Clears the value of the action element
+     * @example
+     *  run: "clear input#my_input", // Clears the value of the selector
      */
     clear(selector) {
-        this.focus(selector);
+        const element = this._get_action_element(selector);
+        hoot.click(element);
         hoot.clear();
     }
 
     /**
-     * @param {string|Node} selector 
+     * Performs a click sequence on the given **{@link Selector}**
+     * @description Let's see more informations about click sequence here: {@link hoot.click}
+     * @param {Selector} selector 
+     * @example
+     *  run: "click", // Click on the action element
+     * @example
+     *  run: "click .o_rows:first", // Click on the selector
      */
     click(selector) {
         const element = this._get_action_element(selector);
-        this._click(element);
+        hoot.click(element);
     }
 
     /**
-     * @param {string|Node} selector 
+     * Performs two click sequences on the given **{@link Selector}**.
+     * @description Let's see more informations about click sequence here: {@link hoot.dblclick}
+     * @param {Selector} selector 
+     * @example
+     *  run: "dblclick", // Double click on the action element
+     * @example
+     *  run: "dblclick .o_rows:first", // Double click on the selector
      */
     dblclick(selector) {
         const element = this._get_action_element(selector);
         hoot.dblclick(element);
     }
 
-    drag_and_drop_native(toSel, fromSel) {
-        const source = this._get_action_element(fromSel);
-        const target = hoot.queryFirst(toSel);
-        this._drag_and_drop(source, target);
+    /**
+     * Starts a drag sequence on the active element (anchor) and drop it on the given **{@link Selector}**.
+     * @param {Selector} selector 
+     * @param {hoot.PointerOptions} options
+     * @example
+     *  run: "drag_and_drop .o_rows:first", // Drag the active element and drop it in the selector
+     * @example
+     *  async run(helpers) {
+     *      await helpers.drag_and_drop(".o_rows:first", {
+     *          position: {
+     *              top: 40,
+     *              left: 5,
+     *          },
+     *          relative: true,
+     *      });
+     *  }
+     */
+    async drag_and_drop(selector, options) {
+        if (typeof options !== "object") {
+            options = { position: "top", relative: true };
+        }
+        const dragEffectDelay = async () => {
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+            await new Promise((resolve) => setTimeout(resolve, this.delay));
+        };
+        const element = this.anchor;
+        const { drop, moveTo } = hoot.drag(element);
+        await dragEffectDelay();
+        hoot.hover(element, {
+            position: {
+                top: 20,
+                left: 20,
+            },
+            relative: true,
+        });
+        await dragEffectDelay();
+        const target = await hoot.waitFor(selector, { 
+            visible: true, 
+            timeout: 500,
+        });
+        moveTo(target, options);
+        await dragEffectDelay();
+        drop();
+        await dragEffectDelay();
     }
 
      /**
-     * Edit input or textarea
+     * Edit input or textarea given by **{@link selector}**
      * @param {string} text 
-     * @param {string|Node} selector 
+     * @param {Selector} selector
+     * @example
+     *  run: "edit Hello Mr. Doku",
      */
     edit(text, selector) {
-        this.focus(selector);
+        const element = this._get_action_element(selector);
+        hoot.click(element);
         hoot.edit(text);
     }
 
     /**
-     * Only for editable (wysiwyg) element
+     * Edit only editable wysiwyg element given by **{@link Selector}**
      * @param {string} text 
-     * @param {string|Node} selector 
+     * @param {Selector} selector 
      */
     editor(text, selector) {
         const element = this._get_action_element(selector);
-        this._click(element);
+        hoot.click(element);
         this._set_range(element, "start");
         hoot.keyDown("_");
         element.textContent = text;
@@ -224,78 +301,110 @@ export class RunningTourActionHelper {
         hoot.manuallyDispatchProgrammaticEvent(element, "change");
     }
 
+    
     /**
-     * Usefull for autocomplete. With text(), it clears the input before fill it.
-     * @param {string} text 
-     * @param {string|Node} selector 
+     * Fills the **{@link Selector}** with the given `value`. 
+     * @description This helper is intended for `<input>` and `<textarea>` elements, 
+     * with the exception of `"checkbox"` and `"radio"` types, which should be 
+     * selected using the {@link check} helper.
+     * In tour, it's mainly usefull for autocomplete components.
+     * @param {string} value 
+     * @param {Selector} selector 
      */
-    fill(text, selector) {
-        this.focus(selector);
-        hoot.fill(text);
+    fill(value, selector) {
+        const element = this._get_action_element(selector);
+        hoot.click(element);
+        hoot.fill(value);
     }
 
     /**
-     * @param {string|Node} selector 
+     * Performs a hover sequence on the given **{@link Selector}**.
+     * @param {Selector} selector 
+     * @example
+     *  run: "hover",
      */
-    focus(selector) {
-        this.previousActiveElement = hoot.getActiveElement();
-        this.currentActiveElement = this._get_action_element(selector);
-        hoot.click(this.currentActiveElement);
-        return this.currentActiveElement;
+    hover(selector) {
+        const element = this._get_action_element(selector);
+        hoot.hover(element);
     }
 
     /**
      * Only for input[type="range"]
      * @param {string|number} value 
-     * @param {string|Node} selector 
+     * @param {Selector} selector 
      */
     range(value, selector) {
-        const element = this.focus(selector);
+        const element = this._get_action_element(selector);
+        hoot.click(element);
         hoot.setInputRange(element, value);
     }
 
+    /**
+     * Performs a keyboard event sequence.
+     * @example
+     *  run : "press Enter",
+     */
     press(...args) {
         return hoot.press(...args);
     }
 
     /**
+     * Performs a selection event sequence on **{@link Selector}**. This helper is intended
+     * for `<select>` elements only.
+     * @description Select the option by its value
      * @param {string} value
-     * @param {string|Node} selector 
+     * @param {Selector} selector
+     * @example 
+     * run(helpers) => {
+     *  helpers.select("Kevin17", "select#mySelect");
+     * },
+     * @example
+     * run: "select Foden47",
      */
     select(value, selector) {
-        this.focus(selector);
-        hoot.select(value, { target: this.currentActiveElement });
+        const element = this._get_action_element(selector);
+        hoot.click(element);
+        hoot.select(value, { target: element });
     }
 
     /**
-     * Select option by its index
+     * Performs a selection event sequence on **{@link Selector}**
+     * @description Select the option by its index
      * @param {number} index starts at 0
-     * @param {string|Node} selector 
+     * @param {Selector} selector 
+     * @example 
+     *  run: "selectByIndex 2", //Select the third option
      */
     selectByIndex(index, selector) {
-        const element = this.focus(selector);
-        const value = hoot.queryValue(`option:eq(${index})`, { root: this.currentActiveElement });
+        const element = this._get_action_element(selector);
+        hoot.click(element);
+        const value = hoot.queryValue(`option:eq(${index})`, { root: element });
         if (value) {
-            hoot.select(value, { target: this.currentActiveElement });
+            hoot.select(value, { target: element });
             element.dispatchEvent(new Event("input"));
         }
     }
 
     /**
-     * Select option(s) by there values
+     * Performs a selection event sequence on **{@link Selector}**
+     * @description Select option(s) by there labels
      * @param {string|RegExp} contains 
-     * @param {string|Node} selector 
+     * @param {Selector} selector 
+     * @example 
+     *  run: "selectByLabel Jeremy Doku", //Select all options where label contains Jeremy Doku
      */
     selectByLabel(contains, selector) {
-        this.focus(selector);
-        const values = hoot.queryAllValues(`option:contains(${contains})`, { root: this.currentActiveElement });
-        hoot.select(values, { target: this.currentActiveElement });
+        const element = this._get_action_element(selector);
+        hoot.click(element);
+        const values = hoot.queryAllValues(`option:contains(${contains})`, { root: element });
+        hoot.select(values, { target: element });
     }
 
     /**
-     * Get Node for a selector, return this.anchor by default
-     * @param {string|Node} selector
+     * Get Node for **{@link Selector}**
+     * @param {Selector} selector
      * @returns {Node}
+     * @default this.anchor
      */
     _get_action_element(selector) {
         if (typeof selector === "string" && selector.length) {
@@ -305,17 +414,6 @@ export class RunningTourActionHelper {
             return selector;
         }
         return this.anchor;
-    }
-   
-    _click(target) {
-        triggerPointerEvent(target, "pointerover", true);
-        triggerPointerEvent(target, "pointerenter", false);
-        triggerPointerEvent(target, "pointermove", true);
-        triggerPointerEvent(target, "pointerdown", true);
-        triggerPointerEvent(target, "pointerup", true);
-        triggerPointerEvent(target, "click", true);
-        triggerPointerEvent(target, "pointerout", true);
-        triggerPointerEvent(target, "pointerleave", false);
     }
 
     // Useful for wysiwyg editor.
@@ -346,33 +444,34 @@ export class RunningTourActionHelper {
         range.setEnd(node, length);
         selection.addRange(range);
     }
+
     /**
-     * ! This function is a reduced version of "drag" in @web/../tests/helpers/utils
-     * TODO: Unify utils for tests and tours since they're doing the exact same thing
-     * @param {HTMLElement} source
-     * @param {HTMLElement} target
+     * Helper to facilitate drag and drop debugging
      */
-    _drag_and_drop(source, target) {
-        const sourceRect = source.getBoundingClientRect();
-        const sourcePosition = {
-            clientX: sourceRect.x + sourceRect.width / 2,
-            clientY: sourceRect.y + sourceRect.height / 2,
-        };
-
-        const targetRect = target.getBoundingClientRect();
-        const targetPosition = {
-            clientX: targetRect.x + targetRect.width / 2,
-            clientY: targetRect.y + targetRect.height / 2,
-        };
-
-        triggerPointerEvent(source, "pointerdown", true, sourcePosition);
-        triggerPointerEvent(source, "pointermove", true, targetPosition);
-
-        for (const parent of getDifferentParents(source, target)) {
-            triggerPointerEvent(parent, "pointerenter", false, targetPosition);
+    _showCursor() {
+        if (!document.querySelector("div.o_tooltip_mouse_coordinates")) {
+            const infoElement = document.createElement("div");
+            infoElement.classList.add(".o_tooltip_mouse_coordinates");
+            infoElement.style.backgroundColor = "red";
+            infoElement.style.position = "absolute";
+            infoElement.style.zIndex = 10e3;
+            document.body.appendChild(infoElement);
+            document.addEventListener("mousemove", (event) => {
+                getCursor(event);
+            })
+            hoot.queryAll(":iframe").forEach((iframe) => {
+                iframe.addEventListener("mousemove", (event) => {
+                    getCursor(event);
+                })
+            })
+            function getCursor(event) {
+                let x = event.clientX;
+                let y = event.clientY;
+                infoElement.textContent = `[ X: ${x} | Y: ${y} ]`;
+                infoElement.style.top = (y+3) + "px";
+                infoElement.style.left = (x+3) + "px";
+            }
         }
-
-        triggerPointerEvent(target, "pointerup", true, targetPosition);
     }
 }
 

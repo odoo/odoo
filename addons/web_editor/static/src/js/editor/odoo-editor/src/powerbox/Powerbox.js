@@ -198,7 +198,7 @@ export class Powerbox {
                 commandElWrapper.querySelector('.oe-powerbox-commandDescription').innerText = command.description;
                 categoryWrapperEl.append(commandElWrapper);
                 // Handle events on command (activate and pick).
-                commandElWrapper.addEventListener('mousemove', () => {
+                commandElWrapper.addEventListener('mouseenter', () => {
                     this.el.querySelector('.oe-powerbox-commandWrapper.active').classList.remove('active');
                     this._context.selectedCommand = command;
                     commandElWrapper.classList.add('active');
