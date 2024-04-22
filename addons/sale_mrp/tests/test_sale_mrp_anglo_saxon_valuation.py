@@ -107,9 +107,9 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
         self.assertEqual(len(amls), 4)
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_out'])
         self.assertEqual(stock_out_aml.debit, 0)
-        self.assertAlmostEqual(stock_out_aml.credit, 1.53, "Should not include the value of consumable component")
+        self.assertAlmostEqual(stock_out_aml.credit, 1.58, msg="Should not include the value of consumable component")
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
-        self.assertAlmostEqual(cogs_aml.debit, 1.53, "Should not include the value of consumable component")
+        self.assertAlmostEqual(cogs_aml.debit, 1.58, msg="Should not include the value of consumable component")
         self.assertEqual(cogs_aml.credit, 0)
 
     def test_sale_mrp_anglo_saxon_variant(self):
