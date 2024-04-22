@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_l10n_it_edi_doi_tree" model="ir.ui.view">
+        <field name="name">l10n_it_edi_doi.declaration_of_intent.tree</field>
+        <field name="model">l10n_it_edi_doi.declaration_of_intent</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'draft'"
+                  decoration-muted="state == 'terminated'"
+                  decoration-danger="state == 'revoked'">
+                <control>
+                    <create name="add_line_control" string="Add a Declaration of Intent"/>
+                </control>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="partner_id" readonly="state != 'draft'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hidden"/>
+                <field name="protocol_number_part1" readonly="state != 'draft'"/>
+                <field name="protocol_number_part2" readonly="state != 'draft'"/>
+                <field name="issue_date" readonly="state != 'draft'"/>
+                <field name="start_date" readonly="state != 'draft'"/>
+                <field name="end_date" readonly="state != 'draft'"/>
+                <field name="threshold" readonly="state != 'draft'"/>
+                <field name="not_yet_invoiced" optional="hidden"/>
+                <field name="invoiced" optional="hidden"/>
+                <field name="remaining"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_l10n_it_edi_doi_form" model="ir.ui.view">
+        <field name="name">l10n_it_edi_doi.declaration_of_intent.form</field>
+        <field name="model">l10n_it_edi_doi.declaration_of_intent</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active"/>
+                    <button string="Validate" invisible="state != 'draft'" class="btn-primary"
+                            type="object" name="action_validate"/>
+                    <button string="Terminate" invisible="state != 'active'" class="btn-primary"
+                            type="object" name="action_terminate"/>
+                    <button string="Reset to Draft" invisible="state != 'active'" class="btn-secondary"
+                            type="object" name="action_reset_to_draft"/>
+                    <button string="Reactivate" invisible="state not in ['terminated', 'revoked']" class="btn-secondary"
+                            type="object" name="action_reactivate"/>
+                    <button string="Revoke" invisible="state != 'active'" class="btn-secondary"
+                            type="object" name="action_revoke"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="invoice_ids" invisible="True"/>
+                        <field name="sale_order_ids" invisible="True"/>
+                        <button type="object"
+                                class="oe_stat_button"
+                                name="action_open_invoice_ids"
+                                icon="fa-pencil-square-o"
+                                invisible="not invoice_ids">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Invoices</span>
+                            </div>
+                        </button>
+                        <button type="object"
+                                class="oe_stat_button"
+                                name="action_open_sale_order_ids"
+                                icon="fa-pencil-square-o"
+                                invisible="not sale_order_ids">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Sale Orders</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group name="main_group">
+                        <group name="left_column">
+                            <field name="partner_id" readonly="state != 'draft'"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                            <label for="protocol_number_part1" string="Protocol Number"/>
+                            <div name="protocol_div" class="d-flex">
+                                <field name="protocol_number_part1" readonly="state != 'draft'"/>
+                                <span class="o_form_label mx-3">/</span>
+                                <field name="protocol_number_part2" readonly="state != 'draft'"/>
+                            </div>
+                            <field name="issue_date" readonly="state != 'draft'"/>
+                            <label string="Date Range" for="start_date"/>
+                            <div name="date_range_div" class="d-flex">
+                                <field name="start_date" readonly="state != 'draft'"/>
+                                <span class="o_form_label mx-3"> to </span>
+                                <field name="end_date" readonly="state != 'draft'"/>
+                            </div>
+                        </group>
+                        <group name="right_column">
+                            <div colspan="2" class="o_wrap_label">
+                                <span class="o_form_label">Amounts:</span>
+                            </div>
+                            <field name="currency_id" invisible="True"/>
+                            <field name="threshold" widget="monetary" readonly="state != 'draft'"/>
+                            <field name="not_yet_invoiced" widget="monetary"/>
+                            <field name="invoiced" widget="monetary"/>
+                            <field name="remaining" widget="monetary"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_l10n_it_edi_doi_declaration_of_intent_search" model="ir.ui.view">
+        <field name="name">l10n_it_edi_doi.declaration_of_intent.search</field>
+        <field name="model">l10n_it_edi_doi.declaration_of_intent</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="protocol_number_part1"/>
+                <field name="protocol_number_part2"/>
+                <filter name="l10n_it_edi_doi_declaration_of_intent_active_filter"
+                        string="Active"
+                        domain="[('state','=', 'active')]"
+                        help="Show active declarations of intent"/>
+                <filter name="l10n_it_edi_doi_declaration_of_intent_draft_filter"
+                        string="Draft"
+                        domain="[('state','=', 'draft')]"
+                        help="Show draft declarations of intent"/>
+                <filter name="l10n_it_edi_doi_declaration_of_intent_terminated_filter"
+                        string="Terminated / Revoked"
+                        domain="[('state','in', ['terminated', 'revoked'])]"
+                        help="Show terminated or revoked Declarations of Intent"/>
+            </search>
+        </field>
+    </record>
+
+</odoo>
