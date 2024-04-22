@@ -322,6 +322,38 @@ class TestSequenceConcurrency(TransactionCase):
         "v13.0 you can define standard sequence for payments and avoid raising error here",
     )
     # TODO: Change the payment sequence to standard and revert it with commit
+    def test_sequence_concurrency_90_invoices(self):
+        """Creating concurrent invoices should not raises errors"""
+        with self.env.registry.cursor() as cr0, self.env.registry.cursor() as cr1, self.env.registry.cursor() as cr2:
+            env0 = api.Environment(cr0, SUPERUSER_ID, {})
+            env1 = api.Environment(cr1, SUPERUSER_ID, {})
+            env2 = api.Environment(cr2, SUPERUSER_ID, {})
+            for cr in [cr0, cr1, cr2]:
+                # Set 10s timeout in order to avoid waiting for release locks a long time
+                cr.execute("SET LOCAL statement_timeout = '10s'")
+
+            # Create "last move" to lock
+            invoice = self._create_invoice_form(env0)
+            self.addCleanup(self._clean_moves, invoice.ids)
+            env0.cr.commit()
+            try:
+                with env1.cr.savepoint(), env2.cr.savepoint():
+                    self._create_invoice_form(env1)
+                    self._create_invoice_form(env2)
+            except psycopg2.OperationalError as e:
+                if e.pgcode in PG_CONCURRENCY_ERRORS:
+                    self.assertFalse(
+                        True,
+                        "Should it raises error to user and rollback the whole transaction? %s" % e,
+                    )
+                else:
+                    raise
+
+    @unittest.skipIf(
+        release.version == "13.0",
+        "v13.0 you can define standard sequence for payments and avoid raising error here",
+    )
+    # TODO: Change the payment sequence to standard and revert it with commit
     def test_sequence_concurrency_90_payments(self):
         """Creating concurrent payments should not raises errors"""
         with self.env.registry.cursor() as cr0, self.env.registry.cursor() as cr1, self.env.registry.cursor() as cr2:
