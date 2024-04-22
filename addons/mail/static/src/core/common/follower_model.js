@@ -18,6 +18,7 @@ export class Follower extends Record {
         return super.insert(...arguments);
     }
 
+    followerListView = Record.one("FollowerListView");
     thread = Record.one("Thread");
     /** @type {number} */
     id;

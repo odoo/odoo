@@ -55,8 +55,8 @@ test("rendering with multiple partner followers", async () => {
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Followers-dropdown");
     await contains(".o-mail-Follower", { count: 2 });
-    await contains(":nth-child(1 of .o-mail-Follower)", { text: "Jean Michang" });
-    await contains(":nth-child(2 of .o-mail-Follower)", { text: "Eden Hazard" });
+    await contains(".o-mail-Follower:eq(0)", { text: "Eden Hazard" });
+    await contains(".o-mail-Follower:eq(1)", { text: "Jean Michang" });
 });
 
 test("log note toggling", async () => {
