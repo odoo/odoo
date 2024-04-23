@@ -2451,18 +2451,18 @@ class Binary(Field):
             for record_no_bin_size, record in zip(records_no_bin_size, records):
                 try:
                     value = cache.get(record_no_bin_size, self)
-                    try:
-                        value = base64.b64decode(value)
-                    except (TypeError, binascii.Error):
-                        pass
+                    # don't decode non-attachments to be consistent with pg_size_pretty
+                    if not (self.store and self.column_type):
+                        with contextlib.suppress(TypeError, binascii.Error):
+                            value = base64.b64decode(value)
                     try:
                         if isinstance(value, (bytes, _BINARY)):
                             value = human_size(len(value))
                     except (TypeError):
                         pass
                     cache_value = self.convert_to_cache(value, record)
-                    dirty = self.column_type and self.store and any(records._ids)
-                    cache.set(record, self, cache_value, dirty=dirty)
+                    # the dirty flag is independent from this assignment
+                    cache.set(record, self, cache_value, check_dirty=False)
                 except CacheMiss:
                     pass
         else:
