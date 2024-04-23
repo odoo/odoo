@@ -44,7 +44,6 @@ export class DataServiceOptions {
             "pos.order": ["uuid"],
             "product.product": ["barcode", "pos_categ_ids", "write_date"],
             "account.fiscal.position": ["tax_ids"],
-            "account.fiscal.position.tax": ["tax_src_id"],
             "product.packaging": ["barcode"],
             "loyalty.program": ["trigger_product_ids"],
             "calendar.event": ["appointment_resource_ids"],
@@ -63,7 +62,6 @@ export class DataServiceOptions {
             "res.users",
             "pos.order",
             "account.tax", // Cannot be auto-loaded because the record needs adaptions
-            "account.fiscal.postion", // Cannot be auto-loaded because the record needs adaptions
         ];
     }
 
