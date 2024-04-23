@@ -12,4 +12,15 @@
         </field>
     </record>
 
+    <record id="l10n_in_view_country_state_tree_inherit" model="ir.ui.view">
+        <field name="name">l10n.in.res.country.state.tree.inhert</field>
+        <field name="model">res.country.state</field>
+        <field name="inherit_id" ref="base.view_country_state_tree"/>
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="l10n_in_tin" groups="base.group_no_one" />
+            </field>
+        </field>
+    </record>
+
 </odoo>
