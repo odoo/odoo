@@ -211,6 +211,7 @@ class SaleOrderLine(models.Model):
             'taxes_id': [(6, 0, taxes.ids)],
             'order_id': purchase_order.id,
             'sale_line_id': self.id,
+            'discount': supplierinfo.discount,
         }
 
     def _purchase_service_match_supplier(self, warning=True):
