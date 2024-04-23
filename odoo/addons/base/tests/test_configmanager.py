@@ -272,3 +272,112 @@ class TestConfigManager(TransactionCase):
                     empty_dict=r'{}',
                 )
                 self.assertEqual(config_content.splitlines(), save_content.splitlines())
+
+    def test_04_odoo14_config_file(self):
+        # test that loading the Odoo 14.0 generated default config works
+        # with a modern version
+        config = configmanager(fname=file_path('base/tests/config/14.0.conf'))
+
+        assert_options = {
+            # options taken from the configuration file
+            'admin_passwd': 'admin',
+            'csv_internal_sep': ',',
+            'db_host': False,
+            'db_maxconn': 64,
+            'db_name': False,
+            'db_password': False,
+            'db_port': False,
+            'db_sslmode': 'prefer',
+            'db_template': 'template0',
+            'db_user': False,
+            'dbfilter': '',
+            'demo': {},
+            'email_from': False,
+            'geoip_city_db': '/usr/share/GeoIP/GeoLite2-City.mmdb',
+            'http_enable': True,
+            'http_interface': '',
+            'http_port': 8069,
+            'import_partial': '',
+            'list_db': True,
+            'load_language': None,
+            'log_db': False,
+            'log_db_level': 'warning',
+            'log_handler': [':INFO'],
+            'log_level': 'info',
+            'logfile': '',
+            'max_cron_threads': 2,
+            'osv_memory_count_limit': False,
+            'overwrite_existing_translations': False,
+            'pg_path': '',
+            'pidfile': '',
+            'proxy_mode': False,
+            'reportgz': False,
+            'screencasts': '',
+            'screenshots': '/tmp/odoo_tests',
+            'server_wide_modules': 'base,web',
+            'smtp_password': False,
+            'smtp_port': 25,
+            'smtp_server': 'localhost',
+            'smtp_ssl': False,
+            'smtp_user': False,
+            'syslog': False,
+            'test_enable': False,
+            'test_file': '',
+            'test_tags': None,
+            'transient_age_limit': 1.0,
+            'translate_modules': ['all'],
+            'unaccent': False,
+            'update': {},
+            'upgrade_path': '',
+            'without_demo': False,
+
+            # options that are not taken from the file (also in 14.0)
+            'addons_path': f'{ROOT_PATH}/odoo/addons,{ROOT_PATH}/addons',
+            'config': None,
+            'data_dir': _get_default_datadir(),
+            'dev_mode': [],
+            'init': {},
+            'language': None,
+            'publisher_warranty_url': 'http://services.openerp.com/publisher-warranty/',
+            'save': None,
+            'shell_interface': None,
+            'stop_after_init': False,
+            'root_path': f'{ROOT_PATH}/odoo',
+            'translate_in': '',
+            'translate_out': '',
+
+            # new options since 14.0
+            'db_maxconn_gevent': False,
+            'db_replica_host': False,
+            'db_replica_port': False,
+            'geoip_country_db': '/usr/share/GeoIP/GeoLite2-Country.mmdb',
+            'from_filter': False,
+            'gevent_port': 8072,
+            'smtp_ssl_certificate_filename': False,
+            'smtp_ssl_private_key_filename': False,
+            'websocket_keep_alive_timeout': 3600,
+            'websocket_rate_limit_burst': 10,
+            'websocket_rate_limit_delay': 0.2,
+            'x_sendfile': False,
+        }
+        if IS_POSIX:
+            # multiprocessing
+            assert_options.update(
+                {
+                    'workers': 0,
+                    'limit_memory_soft': 2048 * 1024 * 1024,
+                    'limit_memory_hard': 2560 * 1024 * 1024,
+                    'limit_time_cpu': 60,
+                    'limit_time_real': 120,
+                    'limit_time_real_cron': -1,
+                    'limit_request': 1 << 13,
+                }
+            )
+
+        config._parse_config()
+        with self.assertLogs('py.warnings') as capture:
+            config._warn_deprecated_options()
+        self.assertEqual(config.options, assert_options, "Options don't match")
+        self.assertEqual(len(capture.output), 1)
+        full_output = "\n".join(capture.output)
+        self.assertIn("longpolling-port is a deprecated alias", full_output)
