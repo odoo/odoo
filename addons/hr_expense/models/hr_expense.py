@@ -767,9 +767,9 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             '|',
             ('work_email', 'ilike', email_address),
             ('user_id.email', 'ilike', email_address)
-        ], limit=1)
+        ]).filtered(lambda e: e.company_id == e.user_id.company_id)
 
-        if not employee:
+        if len(employee) != 1:
             return super().message_new(msg_dict, custom_values=custom_values)
 
         expense_description = msg_dict.get('subject', '')

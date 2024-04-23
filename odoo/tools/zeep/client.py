@@ -2,11 +2,14 @@ import zeep
 
 from decimal import Decimal
 from datetime import date, datetime, timedelta
+from requests import Response
 from types import SimpleNamespace, FunctionType
 
 
 TIMEOUT = 30
-SERIALIZABLE_TYPES = (type(None), bool, int, float, str, bytes, tuple, list, dict, Decimal, date, datetime, timedelta)
+SERIALIZABLE_TYPES = (
+    type(None), bool, int, float, str, bytes, tuple, list, dict, Decimal, date, datetime, timedelta, Response
+)
 
 
 class Client:
@@ -17,18 +20,15 @@ class Client:
     * serializing the returned values of its methods.
     """
     def __init__(self, *args, **kwargs):
-        load_timeout = kwargs.pop('timeout', None)
-        operation_timeout = kwargs.pop('operation_timeout', None)
-        session = kwargs.pop('session', None)
+        transport = kwargs.setdefault('transport', zeep.Transport())
+        # The timeout for loading wsdl and xsd documents.
+        transport.load_timeout = kwargs.pop('timeout', None) or transport.load_timeout or TIMEOUT
+        # The timeout for operations (POST/GET)
+        transport.operation_timeout = kwargs.pop('operation_timeout', None) or transport.operation_timeout or TIMEOUT
+        # The `requests.session` used for HTTP requests
+        transport.session = kwargs.pop('session', None) or transport.session
 
         client = zeep.Client(*args, **kwargs)
-
-        # The timeout for loading wsdl and xsd documents.
-        client.transport.load_timeout = load_timeout or client.transport.load_timeout or TIMEOUT
-        # The timeout for operations (POST/GET)
-        client.transport.operation_timeout = operation_timeout or client.transport.operation_timeout or TIMEOUT
-        if session:
-            client.transport.session = session
 
         self.__obj = client
         self.__service = None
