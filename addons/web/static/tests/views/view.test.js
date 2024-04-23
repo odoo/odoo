@@ -162,8 +162,8 @@ test("rendering with given 'views' param", async function () {
             toolbar: false,
         });
     });
-    const env = await makeMockEnv({ config: { views: [[1, "toy"]] } });
-    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy" }, env });
+    await makeMockEnv({ config: { views: [[1, "toy"]] } });
+    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy" } });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
     expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Arch content (id=1)</toy>`);
 });
@@ -191,8 +191,8 @@ test("rendering with given 'views' param not containing view id", async function
             toolbar: false,
         });
     });
-    const env = await makeMockEnv({ config: { views: [[false, "other"]] } });
-    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy" }, env });
+    await makeMockEnv({ config: { views: [[false, "other"]] } });
+    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy" } });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
     expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Arch content (id=false)</toy>`);
 });
@@ -220,7 +220,7 @@ test("viewId defined as prop and in 'views' prop", async function () {
             toolbar: false,
         });
     });
-    const env = await makeMockEnv({
+    await makeMockEnv({
         config: {
             views: [
                 [3, "toy"],
@@ -228,7 +228,7 @@ test("viewId defined as prop and in 'views' prop", async function () {
             ],
         },
     });
-    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 }, env });
+    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
     expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Arch content (id=1)</toy>`);
 });

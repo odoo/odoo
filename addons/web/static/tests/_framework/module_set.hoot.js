@@ -306,15 +306,13 @@ export async function describeSuite(entryPoints, params) {
             const { clearProcessedTemplates, setUrlFilters } =
                 subLoader.modules.get("@web/core/templates");
 
-            before(() => setUrlFilters([filterTemplateUrl]));
+            before(() => {
+                odoo.loader = subLoader;
+                odoo.define = subLoader.define.bind(subLoader);
+                setUrlFilters([filterTemplateUrl]);
+            });
 
-            const { loader, define } = odoo;
-            odoo.loader = subLoader;
-            odoo.define = subLoader.define.bind(subLoader);
             after(() => {
-                odoo.loader = loader;
-                odoo.define = define;
-
                 setUrlFilters([]);
                 clearProcessedTemplates();
             });
