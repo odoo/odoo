@@ -1,28 +1,29 @@
-from odoo import api, fields, models
+from odoo import _ ,api, fields, models
 from odoo.exceptions import ValidationError
 from datetime import date
 
-"""
-Modelo para representar un objetivo de desempeño en Odoo
-
-Atributos:
-    _name(str): Nombre del modelo en Odoo
-    _description (str): Descripción del modelo en Odoo
-    titulo (fields.Char): Título del objetivo
-    descripcion (fields.Text): Descrpición del objetivo
-    metrica(fields.Selection): Seleccionar la forma en la que se va a medir el objetivo
-    tipo(fields.Selection): Seleccionar el tipo del objetivo
-    orden(fields.Selection): Seleccionar si el objetivo es para incrementar o decrementar un comportamiento
-    peso(fields.Integer): Peso del objetivo de la evaluación
-    piso_minimo(fields.Integer): El resultado mínimo que se espera
-    piso_maximo(fields.Integer): El resultado máximo que se espera
-    fecha_fin(fields.Date): Fecha final del objetivo
-    resultado(fields.Integer): Resultado del objetivo
-    estado(fields.Selection): Seleccionar el estado actual del objetivo
-    usuario_ids(fields.Many2Many): Arreglo de usuarios asignado a un objetivo
-    evaluador(fields.Char): Nombre del evaluador del objetivo
-"""
 class Objetivo(models.Model):
+    """
+    Modelo para representar un objetivo de desempeño en Odoo
+
+    Atributos:
+        _name(str): Nombre del modelo en Odoo
+        _description (str): Descripción del modelo en Odoo
+        titulo (fields.Char): Título del objetivo
+        descripcion (fields.Text): Descrpición del objetivo
+        metrica(fields.Selection): Seleccionar la forma en la que se va a medir el objetivo
+        tipo(fields.Selection): Seleccionar el tipo del objetivo
+        orden(fields.Selection): Seleccionar si el objetivo es para incrementar o decrementar un comportamiento
+        peso(fields.Integer): Peso del objetivo de la evaluación
+        piso_minimo(fields.Integer): El resultado mínimo que se espera
+        piso_maximo(fields.Integer): El resultado máximo que se espera
+        fecha_fin(fields.Date): Fecha final del objetivo
+        resultado(fields.Integer): Resultado del objetivo
+        estado(fields.Selection): Seleccionar el estado actual del objetivo
+        usuario_ids(fields.Many2Many): Arreglo de usuarios asignado a un objetivo
+        evaluador(fields.Char): Nombre del evaluador del objetivo
+    """
+    
     _name = "objetivo"
     _description = "Objetivos de desempeño"
 
@@ -95,9 +96,9 @@ class Objetivo(models.Model):
         """
         for record in self:
             if record.piso_minimo >= record.piso_maximo:
-                raise ValidationError("El piso mínimo debe ser menor al piso máximo")
+                raise ValidationError(_("El piso mínimo debe ser menor al piso máximo"))
             if record.piso_minimo < 0 or record.piso_maximo < 0:
-                raise ValidationError("Los pisos minimos y maximos deben ser mayores a 0")
+                raise ValidationError(_("Los pisos minimos y maximos deben ser mayores a 0"))
 
     @api.constrains("peso")
     def _check_peso(self):
@@ -108,7 +109,7 @@ class Objetivo(models.Model):
         """
         for record in self:
             if record.peso > 100 or record.peso <= 0:
-                raise ValidationError("El peso debe estar en el rango de 1 y 100")
+                raise ValidationError(_("El peso debe estar en el rango de 1 y 100"))
             
     def write(self, vals):
         """
@@ -124,14 +125,14 @@ class Objetivo(models.Model):
             new_piso_minimo = vals.get("piso_minimo", self.piso_minimo)
             new_piso_maximo = vals.get("piso_maximo", self.piso_maximo)
             if new_piso_minimo >= new_piso_maximo:
-                raise ValidationError("El piso mínimo debe ser menor al piso máximo")
+                raise ValidationError(_("El piso mínimo debe ser menor al piso máximo"))
             if new_piso_minimo < 0 or new_piso_maximo < 0:
-                raise ValidationError("Los pisos mínimos y máximos deben ser mayores a 0")
+                raise ValidationError(_("Los pisos mínimos y máximos deben ser mayores a 0"))
             
         if "peso" in vals:
             new_peso = vals.get("peso", self.peso)
             if new_peso > 100 or new_peso <= 0:
-                raise ValidationError("El peso debe estar en el rango de 1 y 100")
+                raise ValidationError(_("El peso debe estar en el rango de 1 y 100"))
         return super(Objetivo, self).write(vals)
     
     @api.constrains("fecha_fin")
@@ -143,7 +144,7 @@ class Objetivo(models.Model):
         """
         for record in self:
             if record.fecha_fin and record.fecha_fin < date.today():
-                raise ValidationError("La fecha final debe ser mayor a la fecha de hoy")
+                raise ValidationError(_("La fecha final debe ser mayor a la fecha de hoy"))
             
     @api.depends("resultado", "piso_maximo")
     def _compute_estado(self):
@@ -171,4 +172,4 @@ class Objetivo(models.Model):
         """
         for record in self:
             if not record.usuario_ids:
-                raise ValidationError("Debe asignar al menos un usuario al objetivo")
+                raise ValidationError(_("Debe asignar al menos un usuario al objetivo"))

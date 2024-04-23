@@ -51,7 +51,6 @@ class Evaluacion(models.Model):
                 user = self.env["res.users"].browse(user_id)
                 partner_id = user.partner_id.id
                 if action == 4:
-                    print(f"Se ha asignado la evaluación {self.nombre} a {partner_id}")
                     # Send email to assigned user
                     self.message_post(
                         body=f"Se te ha asignado la evaluación {self.nombre}",
