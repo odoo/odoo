@@ -28,12 +28,12 @@ class StockMove(models.Model):
 
     @api.depends('product_id.uom_id', 'product_id.standard_price', 'l10n_in_ewaybill_id')
     def _compute_l10n_in_ewaybill_price_unit(self):
-        for line in self.filtered(lambda line: line.l10n_in_ewaybill_id.state == 'pending'):
+        for line in self.filtered(lambda line: line.l10n_in_ewaybill_id.state not in ['generated', 'cancel']):
             line.ewaybill_price_unit = line._l10n_in_get_product_price_unit()
 
     @api.depends('product_id.supplier_taxes_id', 'product_id.taxes_id', 'l10n_in_ewaybill_id.fiscal_position_id')
     def _compute_l10n_in_tax_ids(self):
-        for line in self.filtered(lambda line: line.l10n_in_ewaybill_id.state == 'pending'):
+        for line in self.filtered(lambda line: line.l10n_in_ewaybill_id.state not in ['generated', 'cancel']):
             taxes = line._l10n_in_get_product_tax()
             if fiscal_position := line.l10n_in_ewaybill_id.fiscal_position_id:
                 taxes = fiscal_position.map_tax(taxes)
