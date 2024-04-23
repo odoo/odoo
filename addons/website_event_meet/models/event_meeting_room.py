@@ -54,9 +54,3 @@ class EventMeetingRoom(models.Model):
     def get_base_url(self):
         """As website_id is not defined on this record, we rely on event website_id for base URL."""
         return self.event_id.get_base_url()
-
-    def open_website_url(self):
-        """ Overridden to use a relative URL instead of an absolute when website_id is False. """
-        if self.event_id.website_id:
-            return super().open_website_url()
-        return self.env['website'].get_client_action(f'/event/{self.env["ir.http"]._slug(self.event_id)}/meeting_room/{self.env["ir.http"]._slug(self)}')
