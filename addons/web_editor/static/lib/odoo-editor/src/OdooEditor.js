@@ -1716,6 +1716,7 @@ export class OdooEditor extends EventTarget {
      * @returns {?}
      */
     _applyCommand(...args) {
+        this._checkStepUnbreakable = true;
         this._recordHistorySelection(true);
         const result = this._protect(() => this._applyRawCommand(...args));
         this.historyStep();
