@@ -116,7 +116,11 @@ const FormEditor = options.Class.extend({
                 display_name: el[1],
             }));
         } else if (field.relation && field.relation !== 'ir.attachment') {
-            field.records = await this.orm.searchRead(field.relation, field.domain || [], ["display_name"]);
+            const fieldNames = field.fieldName ? [field.fieldName] : ["display_name"];
+            field.records = await this.orm.searchRead(field.relation, field.domain || [], fieldNames);
+            if (field.fieldName) {
+                field.records.forEach(r => r["display_name"] = r[field.fieldName]);
+            }
         }
         return field.records;
     },
