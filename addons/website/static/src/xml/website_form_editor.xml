@@ -287,17 +287,11 @@
         <!-- Generic one2many -->
         <t t-if="field.relation != 'ir.attachment'">
             <t t-call="website.form_field">
-                <select class="form-select s_website_form_input" t-att-name="field.name" t-att-required="field.required || field.modelRequired || None" t-att-id="field.id" style="display: none">
+                <select class="form-select s_website_form_input" t-att-name="field.name" t-att-required="field.required || field.modelRequired || None" t-att-id="field.id">
                     <t t-foreach="field.records" t-as="record" t-key="record_index">
-                        <option t-esc="record.display_name" t-att-value="record.id" t-att="{selected: record.selected and 'selected' or None}"/>
+                        <option t-esc="record.display_name" t-att-id="field.id + record_index" t-att-value="record.id" t-att="{selected: record.selected and 'selected' or None}"/>
                     </t>
                 </select>
-                <div id="editable_select" class="form-control s_website_form_input">
-                    <t t-foreach="field.records" t-as="record" t-key="record_index">
-                        <t t-set="noValueLabel">no value</t>
-                        <div t-esc="record.display_name" t-attf-data-empty-value="&lt;#{noValueLabel}&gt;" t-att-id="record.id" t-attf-class="s_website_form_select_item #{record.selected and 'selected' or ''}"/>
-                    </t>
-                </div>
             </t>
         </t>
     </t>

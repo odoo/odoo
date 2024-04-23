@@ -409,12 +409,12 @@
             content: "Check the resulting snippet",
             trigger: ":iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
                         ":has(label:contains('State'))" +
-                        ":has(select[required]:hidden)" +
-                        ":has(.s_website_form_select_item:contains('Belgium'))" +
-                        ":has(.s_website_form_select_item:contains('France'))" +
-                        ":has(.s_website_form_select_item:contains('Canada'))" +
-                        ":has(.s_website_form_select_item:contains('44 - UK'))" +
-                        ":not(:has(.s_website_form_select_item:contains('Germany')))",
+                        ":has(select[required])" +
+                        ":has(option[selected]:contains('Belgium'))" +
+                        ":has(option:contains('France'))" +
+                        ":has(option:contains('Canada'))" +
+                        ":has(option:contains('44 - UK'))" +
+                        ":not(:has(option:contains('Germany')))",
             run: function () {},
         },
 
@@ -594,7 +594,6 @@
         {
             content: 'Click on the submit button',
             trigger: ':iframe .s_website_form_send',
-            extra_trigger: ":iframe .s_website_form_field .row :has(#editable_select)",
             run: 'click',
         },
         {
@@ -680,19 +679,6 @@
             // We have to this that way because the input type = hidden.
             trigger: ':iframe form:has(input[name="email_to"][value="test@test.test"])',
             isCheck: true,
-        },
-        {
-            content: "Verify that the selects have been cleaned",
-            trigger: ":iframe .s_website_form",
-            run() {
-                if (
-                    this.anchor.querySelector(
-                        ".s_website_form_field .row:has(select) #editable_select"
-                    )
-                ) {
-                    console.error("The form was not properly cleaned and still has some editable elements.");
-                }
-            }
         }
     ]);
 
