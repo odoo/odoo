@@ -14,23 +14,6 @@
     .s_website_form_field select {
         pointer-events: none;
     }
-    // Display the editable select as a single big field
-    #editable_select.form-control {
-        height: auto;
-
-        .s_website_form_select_item {
-            &.selected {
-                font-weight: bold;
-            }
-            &:empty::before {
-                content: attr(data-empty-value);
-                pointer-events: none;
-                font-style: italic;
-                font-weight: normal;
-                opacity: 0.6;
-            }
-        }
-    }
 }
 
 .s_website_form[data-vcss="001"] {
