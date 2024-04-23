@@ -30,7 +30,8 @@ const makeSteps = (steps = []) => [
         content: "Click elsewhere and wait for a few ms",
         trigger: ":iframe #wrap",
         async run(actions) {
-            actions.click();
+            // TODO: use actions.click(); instead
+            this.anchor.click();
             await new Promise((resolve) => {
                 browser.setTimeout(() => {
                     document.body.classList.add("o_test_delay");

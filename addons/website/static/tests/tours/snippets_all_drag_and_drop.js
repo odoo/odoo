@@ -40,7 +40,7 @@ for (const snippet of snippetsNames) {
     const snippetSteps = [{
         content: `Drop ${snippet} snippet [${n}/${snippetsNames.length}]`,
         trigger: `#oe_snippets .oe_snippet:has( > [data-snippet='${snippet}']) .oe_snippet_thumbnail`,
-        run: "drag_and_drop_native :iframe #wrap",
+        run: "drag_and_drop :iframe #wrap",
     }, {
         content: `Edit ${snippet} snippet`,
         trigger: `:iframe #wrap.o_editable [data-snippet='${snippet}']${isModal ? ' .modal.show' : ''}`,
@@ -57,7 +57,8 @@ for (const snippet of snippetsNames) {
         trigger: ".o_we_add_snippet_btn",
         run: function (actions) {
             document.body.removeAttribute("test-dd-snippet-removed");
-            actions.click();
+            // TODO: use actions.click(); instead
+            this.anchor.click();
         },
     }];
 
@@ -74,6 +75,7 @@ for (const snippet of snippetsNames) {
         }, {
             content: `Make sure ${snippet} is hidden`,
             trigger: ":iframe body:not(.modal-open)",
+            isCheck: true,
         });
     } else if (isDropInOnlySnippet) {
         // The 'drop in only' snippets have their 'data-snippet' attribute
