@@ -128,12 +128,11 @@ class Web_Editor(http.Controller):
         boxw = box[2] - box[0]
         boxh = box[3] - box[1]
         draw.text((0, 0), icon, font=font_obj)
-        left, top, right, bottom = image.getbbox()
 
         # Create an alpha mask
         imagemask = Image.new("L", (boxw, boxh), 0)
         drawmask = ImageDraw.Draw(imagemask)
-        drawmask.text((-left, -top), icon, font=font_obj, fill=255)
+        drawmask.text((-box[0], -box[1]), icon, font=font_obj, fill=255)
 
         # Create a solid color image and apply the mask
         if color.startswith('rgba'):
@@ -144,7 +143,7 @@ class Web_Editor(http.Controller):
 
         # Create output image
         outimage = Image.new("RGBA", (boxw, height), bg or (0, 0, 0, 0))
-        outimage.paste(iconimage, (left, top), iconimage)
+        outimage.paste(iconimage, (box[0], box[1]), iconimage)
 
         # output image
         output = io.BytesIO()
