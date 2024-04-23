@@ -10834,7 +10834,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("list with handle widget", async function (assert) {
-        assert.expect(11);
+        assert.expect(13);
 
         await makeView({
             type: "list",
@@ -10846,6 +10846,9 @@ QUnit.module("Views", (hooks) => {
                     <field name="amount" widget="float" digits="[5,0]"/>
                 </tree>`,
             mockRPC(route, args) {
+                if (args.method === "web_search_read") {
+                    assert.step(`web_search_read: order: ${args.kwargs.order}`);
+                }
                 if (route === "/web/dataset/resequence") {
                     assert.strictEqual(
                         args.offset,
@@ -10867,6 +10870,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
+        assert.verifySteps(["web_search_read: order: int_field ASC, id ASC"]);
         let rows = target.querySelectorAll(".o_data_row");
         assert.strictEqual(
             rows[0].querySelector("[name='amount']").textContent,
