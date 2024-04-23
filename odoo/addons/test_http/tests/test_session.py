@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import os
 import datetime
 import json
 import pytz
@@ -210,6 +211,17 @@ class TestHttpSession(TestHttpBase):
             self.assertEqual(check_session_attr(value), False)
         for value in not_recommended_values:
             self.assertEqual(check_session_attr(value), None)
+
+    @patch("odoo.http.root.session_store.vacuum")
+    def test_session8_gc_ignored_no_db_name(self, mock):
+        with patch.dict(os.environ, {'ODOO_SKIP_GC_SESSIONS': ''}):
+            self.env['ir.http']._gc_sessions()
+            mock.assert_called_once()
+
+        with patch.dict(os.environ, {'ODOO_SKIP_GC_SESSIONS': '1'}):
+            mock.reset_mock()
+            self.env['ir.http']._gc_sessions()
+            mock.assert_not_called()
 
 class TestSessionStore(HttpCaseWithUserDemo):
     def setUp(self):
