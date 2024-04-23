@@ -157,6 +157,8 @@ class PosPaymentMethod(models.Model):
                 self.viva_wallet_merchant_id,
                 self.viva_wallet_api_key
                 )
+            if not self.viva_wallet_webhook_verification_key:
+                raise UserError(_("Can't update payment method. Please check the data and update it."))
 
         return record
 
@@ -171,6 +173,8 @@ class PosPaymentMethod(models.Model):
                     record.viva_wallet_merchant_id,
                     record.viva_wallet_api_key,
                 )
+                if not record.viva_wallet_webhook_verification_key:
+                    raise UserError(_("Can't create payment method. Please check the data and update it."))
 
         return records
 
