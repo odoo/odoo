@@ -6,6 +6,7 @@ from odoo.tools.float_utils import float_round
 
 import json
 import base64
+from contextlib import contextmanager
 from lxml import etree
 from unittest import SkipTest
 
@@ -659,6 +660,20 @@ class AccountTestInvoicingCommon(TransactionCase):
         '''
         return etree.fromstring(xml_tree_str)
 
+    @contextmanager
+    def enter_test_mode(self):
+        """
+        Make so that all new cursors opened on this database registry
+        reuse the one currently used by the test.
+
+        Useful for printing PDFs inside a TransactionCase test when
+        using a HttpCase is not possible/desirable.
+        """
+        self.env.registry.enter_test_mode(self.env.cr)
+        try:
+            yield
+        finally:
+            self.env.registry.leave_test_mode()
 
 class AccountTestInvoicingHttpCommon(AccountTestInvoicingCommon, HttpCase):
     pass
