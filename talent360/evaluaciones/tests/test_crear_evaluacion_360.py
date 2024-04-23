@@ -8,10 +8,10 @@ class TestCrearEvaluacion360(TransactionCase):
 
     def setUp(self):
         super(TestCrearEvaluacion360, self).setUp()
-        self.evaluacion360 = self.env['evaluacion'].create({
-            'nombre': 'Evaluación 360 Test',
-            'tipo': '90',
-            'estado': 'borrador',
+        self.evaluacion360 = self.env["evaluacion"].create({
+            "nombre": "Evaluación 360 Test",
+            "tipo": "90",
+            "estado": "borrador",
         })
 
     def tearDown(self):
@@ -21,17 +21,17 @@ class TestCrearEvaluacion360(TransactionCase):
         """
         Método para crear competencias.
         """
-        competencia1 = self.env['competencia'].create({
-            'nombre': 'Competencia 1',
-            'descripcion': 'Competencia 1',
+        competencia1 = self.env["competencia"].create({
+            "nombre": "Competencia 1",
+            "descripcion": "Competencia 1",
         })
-        competencia2 = self.env['competencia'].create({
-            'nombre': 'Competencia 2',
-            'descripcion': 'Competencia 2',
+        competencia2 = self.env["competencia"].create({
+            "nombre": "Competencia 2",
+            "descripcion": "Competencia 2",
         })
-        competencia3 = self.env['competencia'].create({
-            'nombre': 'Competencia 3',
-            'descripcion': 'Competencia 3',
+        competencia3 = self.env["competencia"].create({
+            "nombre": "Competencia 3",
+            "descripcion": "Competencia 3",
         })
         return competencia1, competencia2, competencia3
 
@@ -39,17 +39,17 @@ class TestCrearEvaluacion360(TransactionCase):
         """
         Método para crear preguntas.
         """
-        pregunta1 = self.env['pregunta'].create({
-            'pregunta_texto': 'Pregunta 1',
-            'tipo': 'open_question',
+        pregunta1 = self.env["pregunta"].create({
+            "pregunta_texto": "Pregunta 1",
+            "tipo": "open_question",
         })
-        pregunta2 = self.env['pregunta'].create({
-            'pregunta_texto': 'Pregunta 2',
-            'tipo': 'open_question',
+        pregunta2 = self.env["pregunta"].create({
+            "pregunta_texto": "Pregunta 2",
+            "tipo": "open_question",
         })
-        pregunta3 = self.env['pregunta'].create({
-            'pregunta_texto': 'Pregunta 3',
-            'tipo': 'open_question',
+        pregunta3 = self.env["pregunta"].create({
+            "pregunta_texto": "Pregunta 3",
+            "tipo": "open_question",
         })
         return pregunta1, pregunta2, pregunta3
 
@@ -66,13 +66,13 @@ class TestCrearEvaluacion360(TransactionCase):
         """
         Test para crear una evaluación 360.
         """
-        self.assertTrue(self.evaluacion360, 'La evaluación no se ha creado')
-        self.assertEqual(self.evaluacion360.nombre, 'Evaluación 360 Test',
-                         'El nombre de la evaluación no es correcto')
-        self.assertEqual(self.evaluacion360.tipo, '90',
-                         'El tipo de la evaluación no es correcto')
-        self.assertEqual(self.evaluacion360.estado, 'borrador',
-                         'El estado de la evaluación no es correcto')
+        self.assertTrue(self.evaluacion360, "La evaluación no se ha creado")
+        self.assertEqual(self.evaluacion360.nombre, "Evaluación 360 Test",
+                         "El nombre de la evaluación no es correcto")
+        self.assertEqual(self.evaluacion360.tipo, "90",
+                         "El tipo de la evaluación no es correcto")
+        self.assertEqual(self.evaluacion360.estado, "borrador",
+                         "El estado de la evaluación no es correcto")
 
     def test02_agregar_competencias(self):
         """
@@ -83,9 +83,9 @@ class TestCrearEvaluacion360(TransactionCase):
         self.evaluacion360.competencia_ids = [(4, competencia2.id)]
         self.evaluacion360.competencia_ids = [(4, competencia3.id)]
         self.assertTrue(self.evaluacion360.competencia_ids,
-                        'No se han agregado competencias')
+                        "No se han agregado competencias")
         self.assertEqual(len(self.evaluacion360.competencia_ids),
-                         3, 'No se han agregado las 3 competencias')
+                         3, "No se han agregado las 3 competencias")
 
     def test03_agregar_preguntas(self):
         """
@@ -99,12 +99,12 @@ class TestCrearEvaluacion360(TransactionCase):
         self.evaluacion360.competencia_ids = [(4, competencia2.id)]
         self.evaluacion360.competencia_ids = [(4, competencia3.id)]
         self.assertTrue(self.evaluacion360.competencia_ids.pregunta_ids,
-                        'No se han agregado preguntas')
+                        "No se han agregado preguntas")
         self.assertEqual(len(self.evaluacion360.competencia_ids.pregunta_ids),
-                         3, 'No se han agregado las 3 preguntas')
+                         3, "No se han agregado las 3 preguntas")
         self.assertEqual(
-            self.evaluacion360.competencia_ids.pregunta_ids[0].pregunta_texto, 'Pregunta 1', 'Pregunta 1 no se ha agregado correctamente')
+            self.evaluacion360.competencia_ids.pregunta_ids[0].pregunta_texto, "Pregunta 1", "Pregunta 1 no se ha agregado correctamente")
         self.assertEqual(
-            self.evaluacion360.competencia_ids.pregunta_ids[1].pregunta_texto, 'Pregunta 2', 'Pregunta 2 no se ha agregado correctamente')
+            self.evaluacion360.competencia_ids.pregunta_ids[1].pregunta_texto, "Pregunta 2", "Pregunta 2 no se ha agregado correctamente")
         self.assertEqual(
-            self.evaluacion360.competencia_ids.pregunta_ids[2].pregunta_texto, 'Pregunta 3', 'Pregunta 3 no se ha agregado correctamente')
+            self.evaluacion360.competencia_ids.pregunta_ids[2].pregunta_texto, "Pregunta 3", "Pregunta 3 no se ha agregado correctamente")
