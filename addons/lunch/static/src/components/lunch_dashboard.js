@@ -33,7 +33,7 @@ export class LunchOrderLine extends Component {
     }
 
     get canEdit() {
-        return !['sent', 'confirmed'].includes(this.line.raw_state);
+        return !['sent', 'confirmed', 'ordered'].includes(this.line.raw_state);
     }
 
     get badgeClass() {
