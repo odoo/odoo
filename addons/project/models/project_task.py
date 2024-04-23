@@ -52,6 +52,8 @@ PROJECT_TASK_READABLE_FIELDS = {
     'recurrence_id',
     'recurring_count',
     'duration_tracking',
+    'message_is_follower',
+    'display_follow_button',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
@@ -259,6 +261,7 @@ class Task(models.Model):
     # Project sharing fields
     display_parent_task_button = fields.Boolean(compute='_compute_display_parent_task_button', compute_sudo=True, export_string_translation=False)
     current_user_same_company_partner = fields.Boolean(compute='_compute_current_user_same_company_partner', compute_sudo=True, export_string_translation=False)
+    display_follow_button = fields.Boolean(compute='_compute_display_follow_button', compute_sudo=True, export_string_translation=False)
 
     # recurrence fields
     recurring_task = fields.Boolean(string="Recurrent")
@@ -649,6 +652,19 @@ class Task(models.Model):
         commercial_partner_id = self.env.user.partner_id.commercial_partner_id
         for task in self:
             task.current_user_same_company_partner = task.partner_id and commercial_partner_id == task.partner_id.commercial_partner_id
+
+    def _compute_display_follow_button(self):
+        if not self.env.user.share:
+            self.display_follow_button = False
+            return
+        project_collaborator_read_group = self.env['project.collaborator']._read_group(
+            [('project_id', 'in', self.project_id.ids), ('partner_id', '=', self.env.user.partner_id.id)],
+            ['project_id'],
+            ['limited_access:bool_and'],
+        )
+        limited_access_per_project_id = dict(project_collaborator_read_group)
+        for task in self:
+            task.display_follow_button = not limited_access_per_project_id.get(task.project_id, True)
 
     def _get_group_pattern(self):
         return {
@@ -1958,3 +1974,18 @@ class Task(models.Model):
                 group['personal_stage_type_id_count'] = group.pop('personal_stage_type_ids_count', 0)
             return result
         return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+
+    # ---------------------------------------------------
+    # Project Sharing
+    # ---------------------------------------------------
+
+    def project_sharing_toggle_is_follower(self):
+        self.ensure_one()
+        self.check_access_rights('write')
+        self.check_access_rule('write')
+        is_follower = self.message_is_follower
+        if is_follower:
+            self.sudo().message_unsubscribe(self.env.user.partner_id.ids)
+        else:
+            self.sudo().message_subscribe(self.env.user.partner_id.ids)
+        return not is_follower
