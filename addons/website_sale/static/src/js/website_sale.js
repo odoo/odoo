@@ -16,7 +16,6 @@ import { Component } from "@odoo/owl";
 export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
     selector: '.oe_website_sale',
     events: Object.assign({}, VariantMixin.events || {}, {
-        'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
         'mouseup .js_publish': '_onMouseupPublish',
         'touchend .js_publish': '_onMouseupPublish',
         'change .oe_cart input.js_quantity[data-product-id]': '_onChangeCartQuantity',
@@ -31,7 +30,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         'click #add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit': 'async _onClickAdd',
         'click input.js_product_change': 'onChangeVariant',
         'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
-        'change oe_advanced_configurator_modal [data-attribute_exclusions]': 'onChangeVariant',
         'click .o_product_page_reviews_link': '_onClickReviewsLink',
         'mousedown .o_wsale_filmstip_wrapper': '_onMouseDown',
         'mouseleave .o_wsale_filmstip_wrapper': '_onMouseLeave',
@@ -55,7 +53,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         this.filmStripScrollLeft = 0;
         this.filmStripMoved = false;
 
-        delete this.events['change .main_product:not(.in_cart) input.js_quantity'];
         delete this.events['change [data-attribute_exclusions]'];
     },
     /**
@@ -445,13 +442,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      */
     _onClickAddCartJSON: function (ev) {
         this.onClickAddCartJSON(ev);
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onChangeAddQuantity: function (ev) {
-        this.onChangeAddQuantity(ev);
     },
     /**
      * @private

@@ -8,7 +8,6 @@ export const cartHandlerMixin = {
     getRedirectOption() {
         const html = document.documentElement;
         this.stayOnPageOption = html.dataset.add2cartRedirect === '1';
-        this.forceDialog = html.dataset.add2cartRedirect === '2';
     },
     getCartHandlerOptions(ev) {
         this.isBuyNow = ev.currentTarget.classList.contains('o_we_buy_now');
