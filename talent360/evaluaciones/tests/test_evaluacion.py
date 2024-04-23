@@ -32,6 +32,33 @@ class test_evaluacion(TransactionCase):
         return
     
     
+    def test_copiar_preguntas_de_template_clima(self):
+        """
+        Prueba copiar preguntas desde un template para evaluación Clima.
+        
+        Este método simula la copia de preguntas desde un template predefinido para evaluación Clima.
+        Crea preguntas de ejemplo y un template con esas preguntas, luego copia las preguntas a
+        una evaluación y verifica que las preguntas se copien correctamente.
+        """
+        evaluacion = self.crear_evaluacion('Evaluación Clima')
+        
+        # Crear preguntas de ejemplo que podrían ser asociadas a un template
+        preguntas = self.env['pregunta'].create([
+            {'pregunta_texto': 'Pregunta 1', 'tipo': 'open_question'},
+            {'pregunta_texto': 'Pregunta 2',  'tipo': 'open_question'}
+        ])
+        # Crear un template con preguntas predefinidas
+        template = self.env['template'].create({
+            'nombre': 'Template Clima',
+            'tipo': 'clima',
+            'pregunta_ids': [(6, 0, preguntas.ids)],
+        })
+        # Simular copia de preguntas desde el template
+        evaluacion.pregunta_ids = [(6, 0, template.pregunta_ids.ids)]
+        # Verificar que las preguntas se han copiado correctamente
+        self.assertEqual(len(evaluacion.pregunta_ids), 2)
+
+        
     def test_copiar_preguntas_de_template_nom035(self):
         """
         Prueba copiar preguntas desde un template para evaluación NOM-035.

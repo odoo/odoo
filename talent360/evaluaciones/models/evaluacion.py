@@ -43,6 +43,7 @@ class Evaluacion(models.Model):
     tipo = fields.Selection(selection=_get_evaluation_type,
                             required=True, default="get_evaluation_default_type")
 
+    descripcion = fields.Text()
     estado = fields.Selection(
         [
             ("borrador", "Borrador"),
@@ -76,7 +77,42 @@ class Evaluacion(models.Model):
         "usuario_id",
         string="Asignados",
     )
+    
+    # Método para copiar preguntas de la plantilla a la evaluación
+    def copiar_preguntas_de_template(self):
+        """
+        Copia preguntas de un template de evaluación predeterminado a una nueva evaluación.
 
+        Este método verifica si el objeto actual está vacío (self). Si lo está, crea una nueva
+        evaluación con un nombre predeterminado y asigna este nuevo objeto a self. Luego, limpia
+        las preguntas existentes y copia todas las preguntas de un template con ID predefinido 
+        (en este caso, 332) al objeto evaluación actual.
+
+        Returns:
+        object: Retorna el objeto evaluación actualizado con las preguntas copiadas del template.
+        """
+
+        if not self:
+            new_evaluation = self.env["evaluacion"].create({
+                "nombre": "Evaluacion Clima",
+                "descripcion": "La valuacion Clima es una herramienta de medición de clima organizacional, cuyo objetivo es conocer la percepción que tienen las personas que laboran en los centros de trabajo, sobre aquellos aspectos sociales que conforman su entorno laboral y que facilitan o dificultan su desempeño.",
+            })
+            self = new_evaluation
+
+        self.pregunta_ids = [(5,)]
+
+        template_id_hardcoded = 1
+
+        if template_id_hardcoded:
+            template = self.env["template"].browse(template_id_hardcoded)
+            if template:
+                pregunta_ids = template.pregunta_ids.ids
+                print("IDs de preguntas:", pregunta_ids)
+                self.pregunta_ids = [(6, 0, pregunta_ids)]
+
+        return self
+
+    
     def copiar_preguntas_de_template_nom035(self):
         """
         Copia preguntas de un template de evaluación predeterminado a una nueva evaluación.
@@ -92,6 +128,7 @@ class Evaluacion(models.Model):
         if not self:
             new_evaluation = self.env["evaluacion"].create({
                 "nombre": "NOM 035",
+                "descripcion": "La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.",
             })
             self = new_evaluation
 
@@ -107,6 +144,34 @@ class Evaluacion(models.Model):
 
         return self
 
+    def evaluacion_clima_action_form(self):
+        """
+        Ejecuta la acción de copiar preguntas de un template a la evaluación actual y devuelve
+        un diccionario con los parámetros necesarios para abrir una ventana de acción en Odoo.
+
+        Este método utiliza `copiar_preguntas_de_template_nom035` para asegurarse de que la evaluación
+        actual tenga las preguntas correctas, y luego configura y devuelve un diccionario con
+        los detalles para abrir esta evaluación en una vista de formulario específica.
+
+        Returns:
+        dict: Un diccionario que contiene todos los parámetros necesarios para abrir la
+        evaluación en una vista de formulario específica de Odoo.
+        
+        """
+
+        self = self.copiar_preguntas_de_template()
+
+        # Retornar la acción con la vista como destino
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Evaluación Clima",
+            "res_model": "evaluacion",
+            "view_mode": "form",
+            "view_id": self.env.ref("evaluaciones.evaluacion_clima_form").id,
+            "target": "current",
+            "res_id": self.id,
+        }
+    
     def evaluacion_nom035_action_form(self):
         """
         Ejecuta la acción de copiar preguntas de un template a la evaluación actual y devuelve
