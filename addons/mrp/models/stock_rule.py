@@ -84,7 +84,11 @@ class StockRule(models.Model):
             warehouse_id = rule.warehouse_id
             if not warehouse_id:
                 warehouse_id = rule.location_dest_id.warehouse_id
-            if rule.picking_type_id == warehouse_id.sam_type_id or (warehouse_id.sam_loc_id and warehouse_id.sam_loc_id.parent_path in rule.location_src_id.parent_path):
+            if rule.picking_type_id == warehouse_id.sam_type_id or (
+                warehouse_id.manufacture_steps == 'pbm_sam'
+                and warehouse_id.sam_loc_id
+                and warehouse_id.sam_loc_id.parent_path in rule.location_src_id.parent_path
+            ):
                 if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) < 0:
                     procurement.values['group_id'] = procurement.values['group_id'].stock_move_ids.filtered(
                         lambda m: m.state not in ['done', 'cancel']).move_orig_ids.group_id[:1]
