@@ -62,6 +62,25 @@ class ProjectSharingMixin(models.AbstractModel):
                     if error_message:
                         raise AccessError(error_message)
 
+    def _get_project_sharing_methods(self) -> set[str]:
+        return {
+            'copy',
+            'create',
+            'filtered',
+            'get_views',
+            'name_search',
+            'onchange',
+            'read_group',
+            'read_progress_bar',
+            'search_read',
+            'unlink',
+            'web_read',
+            'web_read_group',
+            'web_save',
+            'web_search_read',
+            'write',
+        }
+
     @api.model
     @api.readonly
     def project_sharing_get_views(self, views: list[tuple[int, str]], options: dict | None = None) -> dict[str, dict]:
