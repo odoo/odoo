@@ -85,8 +85,7 @@ class LivechatController(http.Controller):
         # find the first matching rule for the given country and url
         matching_rule = request.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id)
         if matching_rule and (not matching_rule.chatbot_script_id or matching_rule.chatbot_script_id.script_step_ids):
-            frontend_lang = request.httprequest.cookies.get('frontend_lang', request.env.user.lang or 'en_US')
-            matching_rule = matching_rule.with_context(lang=frontend_lang)
+            matching_rule = matching_rule.with_context(lang=request.env['chatbot.script']._get_chatbot_language())
             rule = {
                 'action': matching_rule.action,
                 'auto_popup_timer': matching_rule.auto_popup_timer,
@@ -130,8 +129,9 @@ class LivechatController(http.Controller):
 
         chatbot_script = False
         if chatbot_script_id:
-            frontend_lang = request.httprequest.cookies.get('frontend_lang', request.env.user.lang or 'en_US')
-            chatbot_script = request.env['chatbot.script'].sudo().with_context(lang=frontend_lang).browse(chatbot_script_id)
+            chatbot_script = request.env['chatbot.script'].sudo().with_context(
+                lang=request.env["chatbot.script"]._get_chatbot_language()
+            ).browse(chatbot_script_id)
         channel_vals = request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._get_livechat_discuss_channel_vals(
             anonymous_name,
             previous_operator_id=previous_operator_id,
@@ -158,7 +158,10 @@ class LivechatController(http.Controller):
                 } if chatbot_script else None
             }
         else:
-            channel = request.env['discuss.channel'].with_context(mail_create_nosubscribe=False).sudo().create(channel_vals)
+            channel = request.env['discuss.channel'].with_context(
+                mail_create_nosubscribe=False,
+                lang=request.env['chatbot.script']._get_chatbot_language()
+            ).sudo().create(channel_vals)
             if chatbot_script:
                 chatbot_script._post_welcome_steps(channel)
             with replace_exceptions(UserError, by=NotFound()):
