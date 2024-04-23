@@ -245,12 +245,6 @@ class EventSponsor(models.Model):
     def get_backend_menu_id(self):
         return self.env.ref('event.event_main_menu').id
 
-    def open_website_url(self):
-        """ Overridden to use a relative URL instead of an absolute when website_id is False. """
-        if self.event_id.website_id:
-            return super().open_website_url()
-        return self.env['website'].get_client_action(f'/event/{self.env["ir.http"]._slug(self.event_id)}/exhibitor/{self.env["ir.http"]._slug(self)}')
-
     # ------------------------------------------------------------
     # MESSAGING
     # ------------------------------------------------------------

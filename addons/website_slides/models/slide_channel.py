@@ -1276,9 +1276,3 @@ class SlideChannel(models.Model):
         if field in image_fields:
             return self.website_default_background_image_url
         return super()._get_placeholder_filename(field)
-
-    def open_website_url(self):
-        """ Overridden to use a relative URL instead of an absolute when website_id is False. """
-        if self.website_id:
-            return super().open_website_url()
-        return self.env['website'].get_client_action(f'/slides/{self.env["ir.http"]._slug(self)}')
