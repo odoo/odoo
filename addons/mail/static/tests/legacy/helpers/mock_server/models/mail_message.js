@@ -221,9 +221,6 @@ patch(MockServer.prototype, {
             const allNotifications = this.getRecords("mail.notification", [
                 ["mail_message_id", "=", message.id],
             ]);
-            const historyPartnerIds = allNotifications
-                .filter((notification) => notification.is_read)
-                .map((notification) => notification.res_partner_id);
             const needactionPartnerIds = allNotifications
                 .filter((notification) => !notification.is_read)
                 .map((notification) => notification.res_partner_id);
@@ -290,7 +287,6 @@ patch(MockServer.prototype, {
             const response = Object.assign({}, message, {
                 attachments: formattedAttachments,
                 author,
-                history_partner_ids: historyPartnerIds,
                 default_subject:
                     message.model &&
                     message.res_id &&

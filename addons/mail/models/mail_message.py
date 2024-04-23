@@ -1016,7 +1016,6 @@ class Message(models.Model):
                 'write_date': message_sudo.write_date,
                 "needaction_partner_ids": notifs.filtered(lambda n: not n.is_read).res_partner_id.ids,
                 "starredPersonas": [{"id": partner_id, "type": "partner"} for partner_id in message_sudo.starred_partner_ids.ids],
-                "history_partner_ids": notifs.filtered("is_read").res_partner_id.ids,
                 "is_note": message_sudo.subtype_id.id == note_id,
                 "is_discussion": message_sudo.subtype_id.id == com_id,
                 "subtype_description": message_sudo.subtype_id.description,
