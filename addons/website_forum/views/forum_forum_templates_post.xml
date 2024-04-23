@@ -162,7 +162,13 @@
 </template>
 
 <template id="post_stats">
-    <div class="d-flex">
+    <div t-if="question.tag_ids" class="o_wforum_index_entry_tags ms-0">
+        <a  t-foreach="question.tag_ids" t-as="question_tag"
+            t-attf-href="/forum/#{slug(question_tag.forum_id)}/tag/#{slug(question_tag)}/questions?#{keep_query(filters='tag')}"
+            t-attf-class="badge text-bg-secondary #{'ms-1' if not question_tag_first else ''} fw-normal"
+            t-field="question_tag.name"/>
+    </div>
+    <div class="ms-auto d-flex">
         <div>
             <span t-if="question.child_count" class="small">
                 <t t-out="question.child_count or 0"/>
@@ -172,7 +178,7 @@
                 </span>
             </span>
         </div>
-        <div class="ms-3">
+        <div class="mx-3">
             <span t-if="question.views" class="small">
                 <t t-out="question.views or 0"/>
                 <span class="text-muted">
@@ -181,12 +187,6 @@
                 </span>
             </span>
         </div>
-    </div>
-    <div t-if="question.tag_ids" class="o_wforum_index_entry_tags ms-3">
-        <a t-foreach="question.tag_ids" t-as="question_tag"
-            t-attf-href="/forum/#{slug(question_tag.forum_id)}/tag/#{slug(question_tag)}/questions?#{keep_query(filters='tag')}"
-            t-attf-class="badge text-bg-secondary #{'ms-1' if not question_tag_first else ''} fw-normal"
-            t-field="question_tag.name"/>
     </div>
 </template>
 
@@ -265,12 +265,12 @@
                 </section>
                 <!-- Write Answer -->
                 <div t-if="uid and not question.uid_has_answered and question.can_answer and question.state == 'active' and question.active != False" class="d-flex mt-3">
-                    <a t-attf-class="btn btn-link collapsed #{ 'karma_required text-muted' if not question.can_answer else '' }#{ ' disabled' if forum.has_pending_post else ''} text-decoration-none"
+                    <a t-attf-class="btn btn-outline-primary collapsed #{ 'karma_required text-muted' if not question.can_answer else '' }#{ ' disabled' if forum.has_pending_post else ''} text-decoration-none"
                         t-att-data-karma="question.forum_id.karma_answer"
                         data-bs-toggle="collapse"
                         data-bs-target=".answer_collapse"
                         href="#">
-                        <i class="fa fa-reply me-1"/>Answer
+                        <i class="fa fa-reply me-1"/>Reply
                     </a>
                 </div>
                 <t t-if="question.state != 'close' and question.active != False and question.can_answer and forum">
@@ -307,14 +307,14 @@
         t-attf-data-id="#{post_type}-#{post_id.id}"
         t-attf-id="#{post_type}-#{post_id.id}"
         t-att-data-state="post_id.state">
-            <div class="d-flex flex-column col-auto pe-2 pe-lg-3">
+            <div class="d-flex flex-column col-auto">
                 <t t-call="website_forum.author_box">
                     <t t-set="object" t-value="post_id"/>
                     <t t-set="show_image" t-value="True"/>
                 </t>
                 <div t-attf-class="align-self-center flex-grow-1 mt-2 border-start opacity-50 #{ 'border-success' if post_id.is_correct else '' }"/>
             </div>
-            <div class="post_content_wrapper col">
+            <div t-attf-class="post_content_wrapper col ps-2 ps-lg-3 #{ 'rounded' if post_type == 'question' else '' }">
                 <header class="o_wforum_post_header d-flex align-items-center mb-1">
                     <t t-call="website_forum.author_box">
                         <t t-set="object" t-value="post_id"/>
@@ -385,36 +385,30 @@
                     <div class="d-flex align-items-center ms-auto">
                         <t t-if="post_id == question">
                             <t t-set="user_answer" t-value="uid and post_id.child_ids.filtered(lambda a: a.create_uid.id == uid)"/>
-                            <div t-if="not user_answer and uid and question.can_answer and question.state == 'active' and question.active != False" class="d-flex ms-auto me-2">
-                                <a t-attf-class="btn btn-link collapsed #{ 'karma_required text-muted' if not question.can_answer else '' }#{ 'disabled' if forum.has_pending_post else '' } text-decoration-none"
+                            <div t-if="not user_answer and uid and question.can_answer and question.state == 'active' and question.active != False" class="d-flex ms-auto">
+                                <a t-attf-class="btn opacity-50 opacity-100-hover collapsed #{ 'karma_required text-muted' if not question.can_answer else '' }#{ 'disabled' if forum.has_pending_post else '' } text-decoration-none"
                                     t-att-data-karma="question.forum_id.karma_answer"
                                     data-bs-toggle="collapse" data-bs-target=".answer_collapse"
                                     href="#"
                                 >
-                                    <i class="fa fa-reply me-1"/>Answer
+                                    <i class="fa fa-reply me-1"/>Reply
                                 </a>
                             </div>
                             <a t-if="user_answer" class="btn btn-sm btn-primary"
-                                t-att-title="question.forum_id.mode == 'questions' and edit_answer_title"
-                                data-bs-toggle="tooltip" data-bs-placement="top"
                                 t-attf-href="#answer-#{user_answer.id}"
                             >
                                 View my answer <i class="oi oi-arrow-right ms-1"/>
                             </a>
                         </t>
                         <div class="d-flex ms-auto me-2" t-if="post_id == answer and post_id.create_uid.id == uid">
-                            <t t-set="edit_answer_title">You are only allowed one answer</t>
-
                             <a class="btn btn-sm btn-outline-primary"
-                                t-att-title="question.forum_id.mode == 'questions' and edit_answer_title"
-                                data-bs-toggle="tooltip" data-bs-placement="top"
                                 t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}/edit_answer">
                                 <i class="fa fa-pencil"/>
                                 Edit<span class="d-none d-lg-inline"> your answer</span>
                             </a>
                         </div>
                         <t t-if="post_id.state == 'active' and post_id.active != False">
-                            <a t-attf-class="btn #{ 'd-none ' if not uid else '' }#{'karma_required opacity-25' if not post_id.can_comment else 'opacity-50 opacity-100-hover'}"
+                            <a t-attf-class="btn px-2 #{ 'd-none ' if not uid else '' }#{'karma_required opacity-25' if not post_id.can_comment else 'opacity-50 opacity-100-hover'}"
                                t-att-data-karma="{post_id.karma_comment if not post_id.can_comment else 0}"
                                t-att-data-bs-toggle="'collapse' if post_id.can_comment else None"
                                t-attf-href="##{ _answer_comment_collapse_uid if post_id == answer else _question_comment_collapse_uid}"
@@ -422,7 +416,7 @@
                                 <i t-attf-class="fa fa-comment #{ 'karma_required' if not post_id.can_comment else ''}" title="Comment" data-bs-toggle="tooltip" data-bs-placement="top" />
                             </a>
                             <div class="dropdown">
-                                <a type="button" class="btn opacity-50 opacity-100-hover" data-bs-toggle="dropdown">
+                                <a type="button" class="btn opacity-50 opacity-100-hover px-2" data-bs-toggle="dropdown">
                                     <i class="fa fa-share-alt" data-bs-toggle="tooltip" data-bs-placement="top" title="Share"/>
                                 </a>
                                 <div class="dropdown-menu css_editable_mode_hidden">
@@ -458,7 +452,7 @@
 </template>
 
 <template id="post_dropdown">
-    <a class="btn opacity-50 opacity-100-hover" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <a class="btn opacity-50 opacity-100-hover px-2" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-ellipsis-h"  data-bs-toggle="tooltip" data-bs-placement="top" title="More"/>
     </a>
     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
@@ -500,6 +494,13 @@
                 <t t-set="icon" t-value="'fa-check fa-fw'"/>
                 <t t-set="karma" t-value="post_id.forum_id.karma_moderate if not post_id.can_moderate else 0"/>
             </t>
+        </t>
+        <t t-else="" t-call="website_forum.link_button">
+            <t t-set="url" t-valuef="/forum/#{slug(forum)}/post/#{slug(post_id)}/convert_to_comment"/>
+            <t t-set="label">Convert to Comment</t>
+            <t t-set="inDropdown" t-value="True"/>
+            <t t-set="icon" t-valuef="fa-comment fa-fw"/>
+            <t t-set="karma" t-value="post_id.karma_comment_convert if not post_id.can_comment_convert else 0"/>
         </t>
         <t t-if="post_id.active" t-call="website_forum.link_button">
             <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(post_id) + '/delete'"/>
