@@ -17,6 +17,8 @@ import { registry } from "@web/core/registry";
  *   position?: import("@web/core/position/position_hook").UsePositionOptions["position"];
  *   ref?: Function;
  * }} PopoverServiceAddOptions
+ *
+ * @typedef {ReturnType<popoverService["start"]>["add"]} PopoverServiceAddFunction
  */
 
 export const popoverService = {

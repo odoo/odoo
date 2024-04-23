@@ -55,7 +55,7 @@ export const datetimePickerService = {
             create: (
                 hookParams,
                 getInputs = () => [hookParams.target, null],
-                createPopover = (...args) => makePopover(popoverService, ...args)
+                createPopover = (...args) => makePopover(popoverService.add, ...args)
             ) => {
                 const popover = createPopover(DateTimePickerPopover, {
                     onClose: () => {
@@ -265,7 +265,10 @@ export const datetimePickerService = {
                     const { type } = pickerProps;
                     const convertFn = (operation === "format" ? formatters : parsers)[type];
                     try {
-                        return [convertFn(value, { format: hookParams.format, tz: pickerProps.tz }), null];
+                        return [
+                            convertFn(value, { format: hookParams.format, tz: pickerProps.tz }),
+                            null,
+                        ];
                     } catch (error) {
                         if (error?.name === "ConversionError") {
                             return [null, error];

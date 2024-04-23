@@ -19,7 +19,7 @@ export function useDateTimePicker(hookParams) {
     const { computeBasePickerProps, state, open, focusIfNeeded, enable } = datetimePicker.create(
         hookParams,
         () => inputRefs.map((ref) => ref?.el),
-        usePopover
+        (component, options) => usePopover(component, { ...options, responsive: true })
     );
     onWillRender(computeBasePickerProps);
     useEffect(enable);
