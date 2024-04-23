@@ -10,8 +10,7 @@
         "data/pregunta.csv",
         "data/competencia.csv",
         "data/opcion.csv",
-        "data/template.csv",
-        
+        "data/template.csv",      
     ],
     "depends": ["base", "mail"],
 }
