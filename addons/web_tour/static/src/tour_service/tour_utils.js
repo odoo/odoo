@@ -166,9 +166,9 @@ export class RunningTourActionHelper {
      * If it is not checked, a click is triggered on the input.
      * If the input is still not checked after the click, an error is thrown.
      *
-     * @param {string|Node} selector 
+     * @param {string|Node} selector
      * @example
-     *  run: "check", //Checks the action element 
+     *  run: "check", //Checks the action element
      * @example
      *  run: "check input[type=checkbox]", // Checks the selector
      */
@@ -185,7 +185,7 @@ export class RunningTourActionHelper {
      * - pressing "Backspace" to delete the value;
      * - (optional) triggering a "change" event by pressing "Enter".
      *
-     * @param {Selector} selector 
+     * @param {Selector} selector
      * @example
      *  run: "clear", // Clears the value of the action element
      * @example
@@ -200,7 +200,7 @@ export class RunningTourActionHelper {
     /**
      * Performs a click sequence on the given **{@link Selector}**
      * @description Let's see more informations about click sequence here: {@link hoot.click}
-     * @param {Selector} selector 
+     * @param {Selector} selector
      * @example
      *  run: "click", // Click on the action element
      * @example
@@ -214,7 +214,7 @@ export class RunningTourActionHelper {
     /**
      * Performs two click sequences on the given **{@link Selector}**.
      * @description Let's see more informations about click sequence here: {@link hoot.dblclick}
-     * @param {Selector} selector 
+     * @param {Selector} selector
      * @example
      *  run: "dblclick", // Double click on the action element
      * @example
@@ -227,7 +227,7 @@ export class RunningTourActionHelper {
 
     /**
      * Starts a drag sequence on the active element (anchor) and drop it on the given **{@link Selector}**.
-     * @param {Selector} selector 
+     * @param {Selector} selector
      * @param {hoot.PointerOptions} options
      * @example
      *  run: "drag_and_drop .o_rows:first", // Drag the active element and drop it in the selector
@@ -261,8 +261,8 @@ export class RunningTourActionHelper {
             relative: true,
         });
         await dragEffectDelay();
-        const target = await hoot.waitFor(selector, { 
-            visible: true, 
+        const target = await hoot.waitFor(selector, {
+            visible: true,
             timeout: 500,
         });
         moveTo(target, options);
@@ -273,7 +273,7 @@ export class RunningTourActionHelper {
 
      /**
      * Edit input or textarea given by **{@link selector}**
-     * @param {string} text 
+     * @param {string} text
      * @param {Selector} selector
      * @example
      *  run: "edit Hello Mr. Doku",
@@ -286,8 +286,8 @@ export class RunningTourActionHelper {
 
     /**
      * Edit only editable wysiwyg element given by **{@link Selector}**
-     * @param {string} text 
-     * @param {Selector} selector 
+     * @param {string} text
+     * @param {Selector} selector
      */
     editor(text, selector) {
         const element = this._get_action_element(selector);
@@ -301,15 +301,15 @@ export class RunningTourActionHelper {
         hoot.manuallyDispatchProgrammaticEvent(element, "change");
     }
 
-    
+
     /**
-     * Fills the **{@link Selector}** with the given `value`. 
-     * @description This helper is intended for `<input>` and `<textarea>` elements, 
-     * with the exception of `"checkbox"` and `"radio"` types, which should be 
+     * Fills the **{@link Selector}** with the given `value`.
+     * @description This helper is intended for `<input>` and `<textarea>` elements,
+     * with the exception of `"checkbox"` and `"radio"` types, which should be
      * selected using the {@link check} helper.
      * In tour, it's mainly usefull for autocomplete components.
-     * @param {string} value 
-     * @param {Selector} selector 
+     * @param {string} value
+     * @param {Selector} selector
      */
     fill(value, selector) {
         const element = this._get_action_element(selector);
@@ -319,7 +319,7 @@ export class RunningTourActionHelper {
 
     /**
      * Performs a hover sequence on the given **{@link Selector}**.
-     * @param {Selector} selector 
+     * @param {Selector} selector
      * @example
      *  run: "hover",
      */
@@ -330,8 +330,8 @@ export class RunningTourActionHelper {
 
     /**
      * Only for input[type="range"]
-     * @param {string|number} value 
-     * @param {Selector} selector 
+     * @param {string|number} value
+     * @param {Selector} selector
      */
     range(value, selector) {
         const element = this._get_action_element(selector);
@@ -345,7 +345,7 @@ export class RunningTourActionHelper {
      *  run : "press Enter",
      */
     press(...args) {
-        return hoot.press(...args);
+        return hoot.press(args.flatMap((arg) => typeof arg === "string" && arg.split("+")));
     }
 
     /**
@@ -354,7 +354,7 @@ export class RunningTourActionHelper {
      * @description Select the option by its value
      * @param {string} value
      * @param {Selector} selector
-     * @example 
+     * @example
      * run(helpers) => {
      *  helpers.select("Kevin17", "select#mySelect");
      * },
@@ -371,8 +371,8 @@ export class RunningTourActionHelper {
      * Performs a selection event sequence on **{@link Selector}**
      * @description Select the option by its index
      * @param {number} index starts at 0
-     * @param {Selector} selector 
-     * @example 
+     * @param {Selector} selector
+     * @example
      *  run: "selectByIndex 2", //Select the third option
      */
     selectByIndex(index, selector) {
@@ -388,9 +388,9 @@ export class RunningTourActionHelper {
     /**
      * Performs a selection event sequence on **{@link Selector}**
      * @description Select option(s) by there labels
-     * @param {string|RegExp} contains 
-     * @param {Selector} selector 
-     * @example 
+     * @param {string|RegExp} contains
+     * @param {Selector} selector
+     * @example
      *  run: "selectByLabel Jeremy Doku", //Select all options where label contains Jeremy Doku
      */
     selectByLabel(contains, selector) {

@@ -398,7 +398,7 @@ test('PriorityField edited by the smart action "Set priority..."', async () => {
 
     expect("a.fa-star").toHaveCount(1);
 
-    press("control+k");
+    press(["control", "k"]);
     await animationFrame();
     const idx = queryAllTexts(".o_command").indexOf("Set priority...\nALT + R");
     expect(idx).toBeGreaterThan(-1);

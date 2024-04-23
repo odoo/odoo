@@ -414,7 +414,7 @@ test("open search view autocomplete on paste value using mouse", async () => {
     // Simulate paste text through the mouse.
     navigator.clipboard.writeTextSync("ABC");
     pointerDown(".o_searchview input");
-    press("ctrl+v");
+    press(["ctrl", "v"]);
     await animationFrame();
     expect(`.o_searchview_autocomplete`).toHaveCount(1);
 });

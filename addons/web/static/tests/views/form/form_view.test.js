@@ -3150,7 +3150,7 @@ test(`buttons with data-hotkey attribute`, async () => {
     });
     expect(`.o_form_view button[data-hotkey=v]`).toHaveCount(1);
 
-    press("alt+v");
+    press(["alt", "v"]);
     await animationFrame();
     expect(["validate"]).toVerifySteps();
 });
@@ -4639,7 +4639,7 @@ test(`keynav: switching to another record from an invalid one`, async () => {
     expect(`.o_pager_counter`).toHaveText("1 / 2");
 
     await contains(`.o_field_widget[name=foo] input`).edit("");
-    press("alt+n");
+    press(["alt", "n"]);
     await animationFrame();
     expect(`.o_breadcrumb`).toHaveText("first record");
     expect(`.o_form_status_indicator .text-danger`).toHaveAttribute(
@@ -4692,13 +4692,13 @@ test(`keynav: switching to another record from a dirty one`, async () => {
     expect(`.o_field_widget[name=foo] input`).toHaveValue("yop");
 
     await contains(`.o_field_widget[name=foo] input`).edit("new value", { confirm: false });
-    press("alt+n");
+    press(["alt", "n"]);
     await animationFrame();
     expect(["web_save"]).toVerifySteps();
     expect(`.o_pager_counter`).toHaveText("2 / 2");
     expect(`.o_field_widget[name=foo] input`).toHaveValue("blip");
 
-    press("alt+p");
+    press(["alt", "p"]);
     await animationFrame();
     expect([]).toVerifySteps();
     expect(`.o_pager_counter`).toHaveText("1 / 2");

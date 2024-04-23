@@ -54,7 +54,7 @@ test("displays only apps if the search value is '/'", async () => {
     await mountWithCleanup(WebClient);
     expect(".o_menu_brand").toHaveCount(0);
 
-    press("control+k");
+    press(["control", "k"]);
     await animationFrame();
     await contains(".o_command_palette_search input").edit("/", { confirm: false });
     await animationFrame();
@@ -67,7 +67,7 @@ test("displays only apps if the search value is '/'", async () => {
 test("displays apps and menu items if the search value is not only '/'", async () => {
     await mountWithCleanup(WebClient);
 
-    press("control+k");
+    press(["control", "k"]);
     await animationFrame();
     await contains(".o_command_palette_search input").edit("/sal", { confirm: false });
     await animationFrame();
@@ -80,7 +80,7 @@ test("opens an app", async () => {
     await mountWithCleanup(WebClient);
     expect(".o_menu_brand").toHaveCount(0);
 
-    press("control+k");
+    press(["control", "k"]);
     await animationFrame();
     await contains(".o_command_palette_search input").edit("/", { confirm: false });
     await animationFrame();
@@ -98,7 +98,7 @@ test("opens a menu items", async () => {
     await mountWithCleanup(WebClient);
     expect(".o_menu_brand").toHaveCount(0);
 
-    press("control+k");
+    press(["control", "k"]);
     await animationFrame();
     await contains(".o_command_palette_search input").edit("/sal", { confirm: false });
     await animationFrame();
@@ -128,7 +128,7 @@ test("open a menu item when a dialog is displayed", async () => {
     await animationFrame();
     expect(".modal .test").toHaveCount(1);
 
-    press("control+k");
+    press(["control", "k"]);
     await animationFrame();
     await contains(".o_command_palette_search input").edit("/sal", { confirm: false });
     await animationFrame();
