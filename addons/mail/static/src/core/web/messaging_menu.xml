@@ -55,10 +55,10 @@
                     />
                 </t>
             </t>
-            <t t-foreach="threads" t-as="thread" t-key="thread.localId">
+            <t t-foreach="threads" name="threads" t-as="thread" t-key="thread.localId">
                 <t t-set="message" t-value="thread.isChatChannel or (thread.type === 'channel' and !thread.hasNeedactionMessages) ? thread.newestMessage : thread.newestNeedactionMessage"/>
                 <NotificationItem
-                    body="message?.inlineBody"
+                    body="message?.inlineBody or message?.subtypeDescription"
                     counter="thread.needactionCounter"
                     datetime="message?.datetime"
                     displayName="thread.displayName"
