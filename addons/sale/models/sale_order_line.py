@@ -414,9 +414,9 @@ class SaleOrderLine(models.Model):
                 taxes_by_product_company[(product, tax.company_id)] += tax
         for company, lines in lines_by_company.items():
             for line in lines.with_company(company):
-                taxes, comp = None, company
-                while not taxes and comp:
-                    taxes = taxes_by_product_company[(line.product_id, comp)]
+                taxes, comp = self.env['account.tax'], company
+                while comp:
+                    taxes += taxes_by_product_company[(line.product_id, comp)]
                     comp = comp.parent_id
                 if not line.product_id or not taxes:
                     # Nothing to map
