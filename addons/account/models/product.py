@@ -66,10 +66,10 @@ class ProductTemplate(models.Model):
         return res
 
     def get_product_accounts(self, fiscal_pos=None):
-        accounts = self._get_product_accounts()
-        if not fiscal_pos:
-            fiscal_pos = self.env['account.fiscal.position']
-        return fiscal_pos.map_accounts(accounts)
+        return {
+            key: (fiscal_pos or self.env['account.fiscal.position']).map_account(account)
+            for key, account in self._get_product_accounts().items()
+        }
 
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')

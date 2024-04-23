@@ -81,7 +81,7 @@ class ProductTemplate(models.Model):
         accounts.update({
             'stock_input': res['stock_input'] or self.categ_id.property_stock_account_input_categ_id,
             'stock_output': res['stock_output'] or self.categ_id.property_stock_account_output_categ_id,
-            'stock_valuation': self.categ_id.property_stock_valuation_account_id or False,
+            'stock_valuation': self.categ_id.property_stock_valuation_account_id,
         })
         return accounts
 

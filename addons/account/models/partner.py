@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 import time
 import re
 import logging
@@ -12,7 +13,7 @@ from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, mute_logger
 from odoo.exceptions import ValidationError, UserError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
-from odoo.tools import SQL
+from odoo.tools import SQL, unique
 
 _logger = logging.getLogger(__name__)
 
@@ -32,7 +33,9 @@ class AccountFiscalPosition(models.Model):
         string='Company', required=True, readonly=True,
         default=lambda self: self.env.company)
     account_ids = fields.One2many('account.fiscal.position.account', 'position_id', string='Account Mapping', copy=True)
+    account_map = fields.Binary(compute='_compute_account_map')
     tax_ids = fields.One2many('account.fiscal.position.tax', 'position_id', string='Tax Mapping', copy=True)
+    tax_map = fields.Binary(compute='_compute_tax_map')
     note = fields.Html('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")
     auto_apply = fields.Boolean(string='Detect Automatically', help="Apply tax & account mappings on invoices automatically if the matching criterias (VAT/Country) are met.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
@@ -74,6 +77,22 @@ class AccountFiscalPosition(models.Model):
                 # 'no_template' kept for compatibility in stable. To remove in master
                 fiscal_position.foreign_vat_header_mode = 'templates_found' if template['installed'] else 'no_template'
 
+    @api.depends('tax_ids.tax_src_id', 'tax_ids.tax_dest_id')
+    def _compute_tax_map(self):
+        for position in self:
+            tax_map = defaultdict(list)
+            for tl in position.tax_ids:
+                if tl.tax_dest_id:
+                    tax_map[tl.tax_src_id.id].append(tl.tax_dest_id.id)
+                else:
+                    tax_map[tl.tax_src_id.id]  # map to an empty list
+            position.tax_map = dict(tax_map)
+
+    @api.depends('account_ids.account_src_id', 'account_ids.account_dest_id')
+    def _compute_account_map(self):
+        for position in self:
+            position.account_map = {al.account_src_id.id: al.account_dest_id.id for al in position.account_ids}
+
     @api.constrains('zip_from', 'zip_to')
     def _check_zip(self):
         for position in self:
@@ -108,30 +127,14 @@ class AccountFiscalPosition(models.Model):
                     raise ValidationError(_("A fiscal position with a foreign VAT already exists in this region."))
 
     def map_tax(self, taxes):
-        if not self:
-            return taxes
-        result = self.env['account.tax']
-        for tax in taxes:
-            taxes_correspondance = self.tax_ids.filtered(lambda t: t.tax_src_id == tax._origin and (not t.tax_dest_id or t.tax_dest_active))
-            result |= taxes_correspondance.tax_dest_id if taxes_correspondance else tax
-        return result
+        return self.env['account.tax'].browse(unique(
+            tax_id
+            for tax in taxes
+            for tax_id in (self.tax_map or {}).get(tax.id, [tax.id])
+        ))
 
     def map_account(self, account):
-        for pos in self.account_ids:
-            if pos.account_src_id == account:
-                return pos.account_dest_id
-        return account
-
-    def map_accounts(self, accounts):
-        """ Receive a dictionary having accounts in values and try to replace those accounts accordingly to the fiscal position.
-        """
-        ref_dict = {}
-        for line in self.account_ids:
-            ref_dict[line.account_src_id] = line.account_dest_id
-        for key, acc in accounts.items():
-            if acc in ref_dict:
-                accounts[key] = ref_dict[acc]
-        return accounts
+        return self.env['account.account'].browse((self.account_map or {}).get(account.id, account.id))
 
     @api.onchange('country_id')
     def _onchange_country_id(self):
