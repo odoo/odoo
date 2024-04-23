@@ -205,7 +205,10 @@ class IrModule(models.Model):
                             terp = ast.literal_eval(f.read().decode())
                     except Exception:
                         continue
-                    for filename in terp.get('data', []) + terp.get('init_xml', []) + terp.get('update_xml', []):
+                    terp_data = [terp.get('data', []), terp.get('init_xml', []), terp.get('update_xml', [])]
+                    if any(not isinstance(data, list) for data in terp_data):
+                        raise UserError(_("The manifest data of the uploaded zip file must be in list datatype"))
+                    for filename in sum(terp_data, []):
                         if os.path.splitext(filename)[1].lower() not in ('.xml', '.csv', '.sql'):
                             continue
                         module_data_files[mod_name].append('%s/%s' % (mod_name, filename))
