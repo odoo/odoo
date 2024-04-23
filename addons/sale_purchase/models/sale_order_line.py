@@ -211,6 +211,7 @@ class SaleOrderLine(models.Model):
             'taxes_id': [(6, 0, taxes.ids)],
             'order_id': purchase_order.id,
             'sale_line_id': self.id,
+            'discount': supplierinfo.discount,
         }
         if self.analytic_distribution:
             purchase_line_vals['analytic_distribution'] = self.analytic_distribution
