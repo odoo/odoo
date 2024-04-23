@@ -427,7 +427,7 @@ var FieldMany2One = AbstractField.extend({
         var self = this;
         return {
             res_model: this.field.relation,
-            domain: this.record.getDomain({fieldName: this.name}),
+            domain: this.record.getDomain(this.recordParams),
             context: _.extend({}, this.record.getContext(this.recordParams), context || {}),
             _createContext: this._createContext.bind(this),
             dynamicFilters: dynamicFilters || [],
