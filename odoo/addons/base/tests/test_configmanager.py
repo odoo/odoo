@@ -114,7 +114,7 @@ class TestConfigManager(TransactionCase):
             'from_filter': '',
             'smtp_server': 'localhost',
             'smtp_port': 25,
-            'smtp_ssl': False,
+            'smtp_ssl': 'none',
             'smtp_user': '',
             'smtp_password': '',
             'smtp_ssl_certificate_filename': '',
@@ -229,7 +229,7 @@ class TestConfigManager(TransactionCase):
             'from_filter': '.*',
             'smtp_server': 'smtp.localhost',
             'smtp_port': 1299,
-            'smtp_ssl': True,
+            'smtp_ssl': 'ssl_strict',
             'smtp_user': 'spongebob',
             'smtp_password': 'Tigrou0072',
             'smtp_ssl_certificate_filename': '/tmp/tlscert',
@@ -353,7 +353,7 @@ class TestConfigManager(TransactionCase):
             'smtp_password': '',
             'smtp_port': 25,
             'smtp_server': 'localhost',
-            'smtp_ssl': False,
+            'smtp_ssl': 'none',
             'smtp_user': '',
             'syslog': False,
             'test_enable': False,
@@ -416,6 +416,9 @@ class TestConfigManager(TransactionCase):
              f"the config file at {config_path}, option stored as-is, "
              "without parsing")
             for option in ('demo', 'geoip_database', 'osv_memory_age_limit')
+        ] + [
+            ("WARNING:odoo.tools.config:option smtp_ssl: since 19.0, "
+             "invalid value: 'False', assume 'none'")
         ] + [
             (f"WARNING:odoo.tools.config:option {option} reads 'False' "
              f"in the config file at {config_path} but isn't a boolean "
@@ -508,7 +511,7 @@ class TestConfigManager(TransactionCase):
             'from_filter': '.*',
             'smtp_server': 'smtp.localhost',
             'smtp_port': 1299,
-            'smtp_ssl': True,
+            'smtp_ssl': 'starttls_strict',
             'smtp_user': 'spongebob',
             'smtp_password': 'Tigrou0072',
             'smtp_ssl_certificate_filename': '/tmp/tlscert',

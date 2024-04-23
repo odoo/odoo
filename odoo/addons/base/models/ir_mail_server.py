@@ -474,23 +474,29 @@ class IrMail_Server(models.Model):
             else:
                 from_filter = self.env['ir.mail_server']._get_default_from_filter()
 
-            smtp_encryption = encryption
-            if smtp_encryption is None and tools.config.get('smtp_ssl'):
-                smtp_encryption = 'starttls' # smtp_ssl => STARTTLS as of v7
-            smtp_ssl_certificate_filename = ssl_certificate or tools.config.get('smtp_ssl_certificate_filename')
-            smtp_ssl_private_key_filename = ssl_private_key or tools.config.get('smtp_ssl_private_key_filename')
-
-            if smtp_ssl_certificate_filename and smtp_ssl_private_key_filename:
-                try:
-                    ssl_context = PyOpenSSLContext(ssl.PROTOCOL_TLS)
+            smtp_encryption = encryption or tools.config.get('smtp_ssl')
+            if smtp_encryption != 'none':
+                ssl_context = PyOpenSSLContext(ssl.PROTOCOL_TLS)
+                if smtp_encryption in ('ssl_strict', 'starttls_strict'):
+                    ssl_context.set_default_verify_paths()
+                    ssl_context._ctx.set_verify(
+                        VERIFY_PEER | VERIFY_FAIL_IF_NO_PEER_CERT,
+                        functools.partial(_verify_check_hostname_callback, hostname=smtp_server)
+                    )
+                else:
                     ssl_context.verify_mode = ssl.CERT_NONE
-                    ssl_context.load_cert_chain(smtp_ssl_certificate_filename, keyfile=smtp_ssl_private_key_filename)
-                    # Check that the private key match the certificate
-                    ssl_context._ctx.check_privatekey()
-                except SSLCryptoError as e:
-                    raise UserError(_('The private key or the certificate is not a valid file. \n%s', str(e)))
-                except SSLError as e:
-                    raise UserError(_('Could not load your certificate / private key. \n%s', str(e)))
+
+                smtp_ssl_certificate_filename = ssl_certificate or tools.config.get('smtp_ssl_certificate_filename')
+                smtp_ssl_private_key_filename = ssl_private_key or tools.config.get('smtp_ssl_private_key_filename')
+                if smtp_ssl_certificate_filename and smtp_ssl_private_key_filename:
+                    try:
+                        ssl_context.load_cert_chain(smtp_ssl_certificate_filename, keyfile=smtp_ssl_private_key_filename)
+                        # Check that the private key match the certificate
+                        ssl_context._ctx.check_privatekey()
+                    except SSLCryptoError as e:
+                        raise UserError(_('The private key or the certificate is not a valid file. \n%s', str(e)))
+                    except SSLError as e:
+                        raise UserError(_('Could not load your certificate / private key. \n%s', str(e)))
 
         if not smtp_server:
             raise UserError(_(
