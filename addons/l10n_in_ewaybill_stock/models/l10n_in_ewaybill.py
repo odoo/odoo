@@ -158,14 +158,14 @@ class Ewaybill(models.Model):
                 ewaybill.partner_bill_from_id = picking_id.company_id.partner_id
                 ewaybill.partner_ship_to_id = picking_id.partner_id
                 ewaybill.partner_ship_from_id = picking_id.picking_type_id.warehouse_id.partner_id
-                if sale_id := ewaybill.picking_id._get_l10n_in_sale():
-                    ewaybill.partner_bill_to_id = sale_id.partner_invoice_id
+                if  partner_invoice_id := ewaybill.picking_id._l10n_in_get_invoice_partner():
+                    ewaybill.partner_bill_to_id = partner_invoice_id
 
             if (
-                (purchase_id := ewaybill.picking_id._get_l10n_in_purchase())
-                and ewaybill.picking_type_code == 'dropship'
+                ewaybill.picking_type_code == 'dropship' and
+                (dest_partner := ewaybill.picking_id._get_l10n_in_dropship_dest_partner())
             ):
-                ewaybill.partner_ship_to_id = purchase_id.dest_address_id
+                ewaybill.partner_ship_to_id = dest_partner
                 ewaybill.partner_ship_from_id = ewaybill.picking_id.partner_id
 
     @api.depends('partner_bill_from_id', 'partner_bill_to_id')

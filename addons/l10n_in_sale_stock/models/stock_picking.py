@@ -7,6 +7,6 @@ class StockPicking(models.Model):
 
     _inherit = 'stock.picking'
 
-    def _get_l10n_in_sale(self):
+    def _l10n_in_get_invoice_partner(self):
         self.ensure_one()
-        return self.sale_id
+        return self.sale_id.invoice_partner_id

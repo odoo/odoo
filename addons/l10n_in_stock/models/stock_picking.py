@@ -12,8 +12,8 @@ class StockPicking(models.Model):
         super(StockPicking, self)._should_generate_commercial_invoice()
         return True
 
-    def _get_l10n_in_purchase(self):
+    def _get_l10n_in_dropship_dest_partner(self):
         pass
 
-    def _get_l10n_in_sale(self):
+    def _l10n_in_get_invoice_partner(self):
         pass
