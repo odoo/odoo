@@ -79,9 +79,6 @@ $-seen-urls: ();
         $i: $i + 1;
     }
 
-    // restore non-responsive body-font-size like in Bootstrap 5.1
-    --#{$variable-prefix}body-font-size: #{$font-size-base};
-
     // Note: font-size are not needed as already added by web_editor for the
     // font-size dropdown
     @include print-variable('paragraph-margin-top', $paragraph-margin-top);

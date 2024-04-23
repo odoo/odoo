@@ -3,7 +3,7 @@
 import weUtils from "@web_editor/js/common/utils";
 import wTourUtils from "@website/js/tours/tour_utils";
 
-const TARGET_FONT_SIZE = 30;
+const TARGET_FONT_SIZE = 20; // The max to not be impacted by the responsive font size system
 const TARGET_BODY_BG_COLOR = '#00FF00';
 const TARGET_BODY_BG_COLOR_V2 = 'rgb(0, 255, 0)';
 const TARGET_BODY_COLOR = '#FF00FF';
