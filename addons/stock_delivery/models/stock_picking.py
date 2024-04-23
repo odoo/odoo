@@ -177,7 +177,12 @@ class StockPicking(models.Model):
 
     def send_to_shipper(self):
         self.ensure_one()
-        res = self.carrier_id.send_shipping(self)[0]
+        res_list = self.carrier_id.send_shipping(self)
+        if res_list:
+            self.process_carrier_shipping(res_list[0])
+
+    def process_carrier_shipping(self, res):
+        self.ensure_one()
         if self.carrier_id.free_over and self.sale_id:
             amount_without_delivery = self.sale_id._compute_amount_total_without_delivery()
             if self.carrier_id._compute_currency(self.sale_id, amount_without_delivery, 'pricelist_to_company') >= self.carrier_id.amount:
