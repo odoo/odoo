@@ -13,6 +13,7 @@ export class QtyAtDatePopover extends Component {
     static props = {
         record: Object,
         calcData: Object,
+        close: Function,
     };
     setup() {
         this.actionService = useService("action");
