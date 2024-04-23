@@ -80,3 +80,27 @@ class TestRetrySubtestFailures(TestRetryCommon):
             with self.subTest():
                 _logger.error('Failure')
                 self.assertFalse(1 == 1)
+
+@tagged('-standard', 'test_retry', 'test_retry_disable')
+class TestRetry1Disable(TestRetryCommon):
+
+    def test_retry_0_retry_success(self):
+        tests_run_count = self.get_tests_run_count()
+        self.update_count()
+        if tests_run_count != self.count:
+            raise Exception('Should success on retry')
+
+    def test_retry_1_fails(self):
+        raise Exception('Should fail twice')
+
+    def test_retry_2_fails(self):
+        raise Exception('Should fail without retry 1')
+
+    def test_retry_3_fails(self):
+        raise Exception('Should fail without retry 2')
+
+@tagged('-standard', 'test_retry', 'test_retry_disable')
+class TestRetry2Disable(TestRetryCommon):
+
+    def test_retry_second_class_fails(self):
+        raise Exception('Should fail without retry other class')
