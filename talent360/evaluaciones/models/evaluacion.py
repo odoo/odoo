@@ -1,5 +1,4 @@
-from odoo import models, fields, http
-import base64
+from odoo import models, fields
 
 
 class Evaluacion(models.Model):
@@ -52,7 +51,6 @@ class Evaluacion(models.Model):
                 user = self.env["res.users"].browse(user_id)
                 partner_id = user.partner_id.id
                 if action == 4:
-                    print(f"Se ha asignado la evaluación {self.nombre} a {partner_id}")
                     # Send email to assigned user
                     self.message_post(
                         body=f"Se te ha asignado la evaluación {self.nombre}",
@@ -60,46 +58,45 @@ class Evaluacion(models.Model):
                     )
         return res
 
-    def reporte_generico(self):
+    def action_reporte_generico(self):
         return {
             "type": "ir.actions.act_url",
             "url": "/evaluacion/reporte/%s" % (self.id),
             "target": "self",
         }
 
+    def action_generar_datos_reporte_generico(self):
+        parametros = {
+            "evaluacion": self,
+            "preguntas": [],
+        }
 
-    def generar_datos_reporte_generico(self):
-            params = {
-                "evaluacion": self,
-                "preguntas": [],
+        respuesta_tabulada = {}
+
+        for pregunta in self.pregunta_ids:
+
+            respuestas = []
+            respuestas_tabuladas = []
+
+            for respuesta in pregunta.respuesta_ids:
+                respuestas.append(respuesta.respuesta_texto)
+
+                for i, respuesta_tabulada in enumerate(respuestas_tabuladas):
+                    if respuesta_tabulada["texto"] == respuesta.respuesta_texto:
+                        respuestas_tabuladas[i]["conteo"] += 1
+                        break
+                else:
+                    respuestas_tabuladas.append(
+                        {"texto": respuesta.respuesta_texto, "conteo": 1}
+                    )
+
+            datos_pregunta = {
+                "pregunta": pregunta,
+                "respuestas": respuestas,
+                "respuestas_tabuladas": respuestas_tabuladas,
+                "datos_grafica": str(respuestas_tabuladas).replace("'", '"'),
             }
 
-            respuesta_tabulada = {}
+            parametros["preguntas"].append(datos_pregunta)
 
-            for pregunta in self.pregunta_ids:
-
-                respuestas = []
-                respuestas_tabuladas = []
-
-                for respuesta in pregunta.respuesta_ids:
-                    respuestas.append(respuesta.respuesta_texto)
-
-                    for i, respuesta_tabulada in enumerate(respuestas_tabuladas):
-                        if respuesta_tabulada["texto"] == respuesta.respuesta_texto:
-                            respuestas_tabuladas[i]["conteo"] += 1
-                            break
-                    else:
-                        respuestas_tabuladas.append(
-                            {"texto": respuesta.respuesta_texto, "conteo": 1}
-                        )
-
-                datos_pregunta = {
-                    "pregunta": pregunta,
-                    "respuestas": respuestas,
-                    "respuestas_tabuladas": respuestas_tabuladas,
-                    "datos_grafica": str(respuestas_tabuladas).replace("'", '"'),
-                }
-
-                params["preguntas"].append(datos_pregunta)
-
-            return params
+        return parametros

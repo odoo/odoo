@@ -98,9 +98,8 @@ class TestReportes(TransactionCase):
     def tearDown(self):
         return super().tearDown()
 
-
     def test_generar_datos_reporte_generico(self):
-        params = self.evaluacion.generar_datos_reporte_generico()
+        params = self.evaluacion.action_generar_datos_reporte_generico()
 
         self.assertEqual(params["evaluacion"], self.evaluacion)
         self.assertEqual(len(params["preguntas"]), 3)

@@ -3,7 +3,7 @@
     <record id="evaluaciones_rule_clientes" model="ir.rule">
         <field name="name">Evaluaciones Rule for Clientes</field>
         <field name="model_id" ref="model_evaluacion"/>
-        <field name="groups" eval="[(4, ref('evaluaciones.group_evaluaciones_cliente_cr'))]"/>
+        <field name="groups" eval="[(4, ref('evaluaciones.evaluaciones_cliente_cr_group_user'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="True"/>
         <field name="perm_create" eval="True"/>
@@ -15,7 +15,7 @@
         <field name="name">Evaluaciones Rule for Others</field>
         <field name="model_id" ref="model_evaluacion"/>
         <!-- Add the groups for other users here -->
-        <field name="groups" eval="[(4, ref('evaluaciones.group_evaluaciones_colaborador_cr'))]"/>
+        <field name="groups" eval="[(4, ref('evaluaciones.evaluaciones_colaborador_cr_group_user'))]"/>
         <field name="domain_force">[('usuario_ids', 'in', [user.id])]</field>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="True"/>

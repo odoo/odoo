@@ -2,17 +2,16 @@
     "name": "Evaluaciones",
     "application": True,
     "data": [
+        "security/evaluaciones_groups.xml",
+        "security/evaluaciones_security.xml",
         "security/ir.model.access.csv",
-        "security/security.xml",
-        "security/rules.xml",
         "views/evaluaciones_views.xml",
         "views/evaluaciones_menus.xml",
-        "views/reportes_templates.xml",
+        "views/evaluaciones_templates.xml",
         "data/pregunta.csv",
         "data/competencia.csv",
         "data/opcion.csv",
         "data/template.csv",
-        
     ],
     "depends": ["base", "mail"],
     "assets": {

@@ -9,6 +9,5 @@ class Competencia(models.Model):
     descripcion = fields.Text("Descripción")
 
     company_id = fields.Many2one("res.company", string="Compañía")
-    
-    pregunta_ids = fields.Many2many("pregunta", string="Preguntas")
 
+    pregunta_ids = fields.Many2many("pregunta", string="Preguntas")
