@@ -326,3 +326,23 @@ QUnit.test(
         assert.containsNone($, ".o-mail-MessagingMenu-counter-badge");
     }
 );
+
+QUnit.test(
+    "subtype description should be displayed when body is empty",
+    async () => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "Test" });
+        const subtypeId = pyEnv["mail.message.subtype"].create({ description: "hello" });
+        pyEnv["mail.message"].create({
+            author_id: partnerId,
+            body: "",
+            model: "discuss.channel",
+            res_id: channelId,
+            subtype_id: subtypeId,
+        });
+        await start();
+        await click(".o_menu_systray i[aria-label='Messages']");
+        await contains(".o-mail-NotificationItem-text", { text: "Partner1: hello" });
+    }
+);
