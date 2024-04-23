@@ -276,6 +276,8 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
     warm = True             # False during warm-up phase (see :func:`warmup`)
     _python_version = sys.version_info
 
+    _tests_run_count = int(os.environ.get('ODOO_TEST_FAILURE_RETRIES', 0)) + 1
+
     def __init__(self, methodName='runTest'):
         super().__init__(methodName)
         self.addTypeEqualityFunc(etree._Element, self.assertTreesEqual)
@@ -299,13 +301,14 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         testMethod = getattr(self, self._testMethodName)
 
         if getattr(testMethod, '_retry', True) and getattr(self, '_retry', True):
-            tests_run_count = int(os.environ.get('ODOO_TEST_FAILURE_RETRIES', 0)) + 1
+            tests_run_count = self._tests_run_count
         else:
             tests_run_count = 1
             _logger.info('Auto retry disabled for %s', self)
 
-        failure = False
+        quiet_log = None
         for retry in range(tests_run_count):
+            result.had_failure = False  # reset in case of retry without soft_fail
             if retry:
                 _logger.runbot(f'Retrying a failed test: {self}')
             if retry < tests_run_count-1:
@@ -313,11 +316,13 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
                         result.soft_fail(), \
                         lower_logging(25, logging.INFO) as quiet_log:
                     super().run(result)
-                    failure = result.had_failure or quiet_log.had_error_log
+                if not (result.had_failure or quiet_log.had_error_log):
+                    break
             else:  # last try
                 super().run(result)
-            if not failure:
-                break
+                if not result.wasSuccessful() and BaseCase._tests_run_count != 1:
+                    _logger.runbot('Disabling auto-retry after a failed test')
+                    BaseCase._tests_run_count = 1
 
     @classmethod
     def setUpClass(cls):
