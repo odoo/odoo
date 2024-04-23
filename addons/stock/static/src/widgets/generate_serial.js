@@ -30,6 +30,15 @@ export class GenerateDialog extends Component {
         });
     }
     async _onGenerate() {
+        let lines = this.props.move.data.move_line_ids;
+
+        if (!this.keepLines.el.checked) {
+            await lines._applyCommands(lines._currentIds.map((currentId) => [
+                x2ManyCommands.DELETE,
+                currentId,
+            ]));
+        }
+
         const count = parseInteger(this.nextSerialCount.el?.value || '0');
         const move_line_vals = await this.orm.call("stock.move", "action_generate_lot_line_vals", [
             {
@@ -37,15 +46,36 @@ export class GenerateDialog extends Component {
                 default_product_id: this.props.move.data.product_id[0],
                 default_location_dest_id: this.props.move.data.location_dest_id[0],
                 default_location_id: this.props.move.data.location_id[0],
+                picking_type_id: this.props.move.data.picking_type_id[0],
+                company_id: this.props.move.data.company_id[0],
             },
             this.props.type,
             this.nextSerial.el?.value,
             count,
             this.lots.el?.value,
         ]);
+
+        const update_commands = [];
+        for (let i = 0; i < lines._currentIds.length && move_line_vals.length > 0; i++) {
+            const move_line = this.props.move.data.move_line_ids.records[i].data;
+            const line_current_id = lines._currentIds[i];
+
+            if (!move_line.lot_name) {
+                update_commands.push([
+                    x2ManyCommands.UPDATE,
+                    line_current_id,
+                    {
+                        lot_id: move_line_vals[0].lot_id,
+                        lot_name: move_line_vals[0].lot_name,
+                        quantity: move_line_vals[0].quantity === 1 ? move_line.quantity : move_line_vals[0].quantity,
+                    }
+                ]);
+                move_line_vals.shift();
+            }
+        }
+        await lines._applyCommands(update_commands);
+
         const newlines = [];
-        let lines = []
-        lines = this.props.move.data.move_line_ids;
 
         // create records directly from values to bypass onchanges
         for (const values of move_line_vals) {
@@ -57,12 +87,7 @@ export class GenerateDialog extends Component {
                 })
             );
         }
-        if (!this.keepLines.el.checked) {
-            await lines._applyCommands(lines._currentIds.map((currentId) => [
-                x2ManyCommands.DELETE,
-                currentId,
-            ]));
-        }
+
         lines.records.push(...newlines);
         lines._commands.push(...newlines.map((record) => [
             x2ManyCommands.CREATE,
