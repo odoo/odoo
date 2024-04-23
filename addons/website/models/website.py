@@ -1725,9 +1725,10 @@ class Website(models.Model):
         # comodel behind a relational direct field.
         indirect_fields = {}
         for field in fields:
-            if '.' not in field:
+            field_parts = field.split('.')
+            if len(field_parts) != 2:
                 continue
-            direct, indirect = field.split('.')
+            direct, indirect = field_parts
             if direct not in model._fields:
                 continue
             direct_field = model._fields[direct]
