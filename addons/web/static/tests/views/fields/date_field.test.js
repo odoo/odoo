@@ -6,9 +6,9 @@ import {
     clickSave,
     contains,
     defineModels,
+    defineParams,
     fieldInput,
     fields,
-    makeMockServer,
     models,
     mountView,
     onRpc,
@@ -325,7 +325,7 @@ test("date field should select its content onclick when there is one", async () 
 });
 
 test("date field supports custom formats", async () => {
-    makeMockServer({ lang_parameters: { date_format: "dd-MM-yyyy" } });
+    defineParams({ lang_parameters: { date_format: "dd-MM-yyyy" } });
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 
     const dateViewValue = queryOne(".o_field_date input").value;
