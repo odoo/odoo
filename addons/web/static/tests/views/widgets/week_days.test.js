@@ -1,14 +1,14 @@
+import { expect, test } from "@odoo/hoot";
+import { click, queryAllTexts } from "@odoo/hoot-dom";
 import {
     clickSave,
     defineModels,
+    defineParams,
     fields,
-    makeMockServer,
     models,
     mountView,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-import { test, expect } from "@odoo/hoot";
-import { queryAllTexts, click } from "@odoo/hoot-dom";
 
 class Partner extends models.Model {
     sun = fields.Boolean({ string: "Sun" });
@@ -37,7 +37,7 @@ defineModels([Partner]);
 
 test("simple week recurrence widget", async () => {
     expect.assertions(13);
-    await makeMockServer({ lang_parameters: { week_start: 1 } });
+    defineParams({ lang_parameters: { week_start: 1 } });
     let writeCall = 0;
     onRpc("web_save", ({ args }) => {
         writeCall++;
@@ -101,7 +101,7 @@ test("simple week recurrence widget", async () => {
 });
 
 test("week recurrence widget readonly modifiers", async () => {
-    await makeMockServer({ lang_parameters: { week_start: 1 } });
+    defineParams({ lang_parameters: { week_start: 1 } });
     await mountView({
         type: "form",
         resModel: "partner",
@@ -119,7 +119,7 @@ test("week recurrence widget readonly modifiers", async () => {
 });
 
 test("week recurrence widget show week start as per language configuration", async () => {
-    await makeMockServer({ lang_parameters: { week_start: 5 } });
+    defineParams({ lang_parameters: { week_start: 5 } });
     await mountView({
         type: "form",
         resModel: "partner",

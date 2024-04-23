@@ -1,6 +1,6 @@
-import { expect, test } from "@odoo/hoot";
+import { afterEach, expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryOne } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockDate } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, mockDate, runAllTimers } from "@odoo/hoot-mock";
 import { onRendered } from "@odoo/owl";
 
 import {
@@ -330,6 +330,8 @@ class Foo extends models.Model {
 }
 
 defineModels([Foo, Color, Product]);
+
+afterEach(runAllTimers);
 
 test("simple bar chart rendering", async () => {
     const view = await mountView({ type: "graph", resModel: "foo" });

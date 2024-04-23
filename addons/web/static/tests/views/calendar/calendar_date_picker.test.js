@@ -4,9 +4,9 @@ import { mockDate } from "@odoo/hoot-mock";
 import {
     contains,
     defineModels,
+    defineParams,
     fields,
     findComponent,
-    makeMockServer,
     models,
     mountView,
     patchWithCleanup,
@@ -103,7 +103,7 @@ test(`Scale: init with year`, async () => {
 
 test(`First day: 0 = Sunday`, async () => {
     // the week start depends on the locale
-    await makeMockServer({
+    defineParams({
         lang_parameters: { week_start: 0 },
     });
     await mountView({
@@ -124,7 +124,7 @@ test(`First day: 0 = Sunday`, async () => {
 
 test(`First day: 1 = Monday`, async () => {
     // the week start depends on the locale
-    await makeMockServer({
+    defineParams({
         lang_parameters: { week_start: 1 },
     });
     await mountView({

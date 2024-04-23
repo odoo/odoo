@@ -7,7 +7,6 @@ import {
     defineModels,
     fieldInput,
     fields,
-    makeMockServer,
     models,
     mountView,
     onRpc,
@@ -320,7 +319,6 @@ test("translation dialog should close if field is not there anymore", async () =
     serverState.lang = "en_US";
     serverState.multiLang = true;
 
-    await makeMockServer({ multi_lang: true });
     await mountView({
         type: "form",
         resModel: "res.partner",
@@ -453,7 +451,9 @@ test("html field translatable", async () => {
 
 test("char field translatable in create mode", async () => {
     Partner._fields.name = fields.Char({ string: "Name", translate: true });
-    await makeMockServer({ multi_lang: true });
+
+    serverState.multiLang = true;
+
     await mountView({ type: "form", resModel: "res.partner" });
 
     expect(".o_field_char .btn.o_field_translate").toHaveCount(1, {
