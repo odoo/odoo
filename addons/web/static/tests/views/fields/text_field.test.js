@@ -202,7 +202,7 @@ test.tags("desktop")("with dynamic placeholder", async () => {
             </form>`,
     });
     expect(".o_popover .o_model_field_selector_popover").toHaveCount(0);
-    await press("alt+#");
+    await press(["alt", "#"]);
     await animationFrame();
     expect(".o_popover .o_model_field_selector_popover").toHaveCount(1);
 });
@@ -230,7 +230,7 @@ test.tags("mobile")("with dynamic placeholder in mobile", async () => {
     });
     expect(".o_popover .o_model_field_selector_popover").toHaveCount(0);
     await fieldTextArea("description").focus();
-    await press("alt+#");
+    await press(["alt", "#"]);
     await animationFrame();
     expect(".o_popover .o_model_field_selector_popover").toHaveCount(1);
 });
