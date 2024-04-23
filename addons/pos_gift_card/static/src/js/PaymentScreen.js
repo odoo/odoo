@@ -14,31 +14,45 @@ odoo.define('pos_gift_card.PaymentScreen', function(require) {
                 if (await this._isOrderValid(isForceValidate)) {
                     try {
                         let giftProduct = this.env.pos.db.product_by_id[this.env.pos.config.gift_card_product_id[0]];
-
                         for (let line of this.currentOrder.orderlines.models) {
                             if(line.product.id === giftProduct.id && line.price <= 0) {
-                                let is_valid = await this.isGiftCardValid(line);
-                                if(!is_valid) {
-                                    await this.showPopup('ErrorPopup', {
-                                        'title': _t("Gift Card Error"),
-                                        'body': _t("Gift card is not valid."),
+                                // refunding gift card
+                                if (line.quantity < 0) {
+                                    const { confirmed } = await this.showPopup("GiftCardPopup", {
+                                        notEscapable: true,
+                                        isRefund: true,
+                                        order_line: line,
                                     });
-                                    return;
-                                }
+                                    if (confirmed && line.gift_card_id) {
+                                        line.isRefund = true;
+                                        line.price *= -1;
+                                    } else {
+                                        return;
+                                    }
+                                } else {
+                                    let is_valid = await this.isGiftCardValid(line);
+                                    if(!is_valid) {
+                                        await this.showPopup('ErrorPopup', {
+                                            'title': _t("Gift Card Error"),
+                                            'body': _t("Gift card is not valid."),
+                                        });
+                                        return;
+                                    }
 
-                                let gift_card = await this.rpc({
-                                    model: "gift.card",
-                                    method: 'search_read',
-                                    domain: [['id', '=', line.gift_card_id]],
-                                    fields: ['balance'],
-                                  });
+                                    let gift_card = await this.rpc({
+                                        model: "gift.card",
+                                        method: 'search_read',
+                                        domain: [['id', '=', line.gift_card_id]],
+                                        fields: ['balance'],
+                                      });
 
-                                if(Math.abs(line.get_unit_price()) > gift_card[0].balance) {
-                                    await this.showPopup('ErrorPopup', {
-                                        'title': _t("Gift Card Error"),
-                                        'body': _t("Gift card balance is too low."),
-                                    });
-                                    return;
+                                    if(Math.abs(line.get_unit_price()) > gift_card[0].balance) {
+                                        await this.showPopup('ErrorPopup', {
+                                            'title': _t("Gift Card Error"),
+                                            'body': _t("Gift card balance is too low."),
+                                        });
+                                        return;
+                                    }
                                 }
                             }
                         }

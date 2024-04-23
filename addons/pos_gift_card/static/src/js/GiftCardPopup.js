@@ -145,6 +145,11 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
       let giftCard = await this.getGiftCard();
       if (!giftCard) return;
 
+      if (this.props.isRefund) {
+        this.props.order_line.gift_card_id = giftCard.id;
+        this.confirm();
+      }
+
       let gift =
         this.env.pos.db.product_by_id[
           this.env.pos.config.gift_card_product_id[0]

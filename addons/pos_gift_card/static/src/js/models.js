@@ -4,6 +4,9 @@ odoo.define("pos_gift_card.gift_card", function (require) {
   const models = require("point_of_sale.models");
   const core = require('web.core');
   const _t = core._t;
+  const utils = require('web.utils');
+
+  const round_pr = utils.round_precision;
 
   models.load_fields("pos.order.line", "generated_gift_card_ids");
 
@@ -29,6 +32,17 @@ odoo.define("pos_gift_card.gift_card", function (require) {
 
   var _order_super = models.Order.prototype;
   models.Order = models.Order.extend({
+    //@override
+    get_total_without_tax: function () {
+        let filtered_lines = this.orderlines.filter((line) => !line.isRefund)
+        let other_lines = this.orderlines.filter((line) => line.isRefund)
+
+        return round_pr(filtered_lines.reduce((function(sum, orderLine) {
+            return sum + orderLine.get_price_without_tax();
+        }), 0), this.pos.currency.rounding) - round_pr(other_lines.reduce((function(sum, orderLine) {
+            return sum + orderLine.get_price_without_tax();
+        }), 0), this.pos.currency.rounding);
+    },
     //@override
     set_orderline_options: function (orderline, options) {
       _order_super.set_orderline_options.apply(this, [orderline, options]);
@@ -65,6 +79,10 @@ odoo.define("pos_gift_card.gift_card", function (require) {
 
   var _super_orderline = models.Orderline;
   models.Orderline = models.Orderline.extend({
+    initialize: function(attr,options) {
+        _super_orderline.prototype.initialize.apply(this,arguments);
+        this.isRefund = false;
+    },
     export_as_JSON: function () {
       var json = _super_orderline.prototype.export_as_JSON.apply(
         this,

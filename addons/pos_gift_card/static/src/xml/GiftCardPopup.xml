@@ -6,12 +6,12 @@
             <Draggable>
                 <div class="popup popup-textarea">
                     <header class="title drag-handle">
-                        Gift Card
+                        <t t-if="props.isRefund">Refund </t>Gift Card
                     </header>
 
                     <main class="giftCardPopupMain">
                         <div class="giftCardPopupContainer" t-if="!state.showBarcodeGeneration">
-                            <span t-if="state.giftCardConfig == 'create_set'"
+                            <span t-if="state.giftCardConfig == 'create_set' &amp;&amp; !props.isRefund"
                                   class="giftCardPopupButton button"
                                   t-on-click="switchBarcodeView">Generate barcode</span>
                             <span t-if="state.giftCardConfig == 'scan_set'"
@@ -24,7 +24,7 @@
 
                         <div t-if="!state.showUseGiftCardMenu &amp;&amp; !state.showGiftCardDetails">
                             <div class="giftCardPopupContainer"
-                                 t-if="state.showBarcodeGeneration &amp;&amp; state.giftCardConfig == 'create_set'">
+                                 t-if="state.showBarcodeGeneration &amp;&amp; state.giftCardConfig == 'create_set' &amp;&amp; !props.isRefund">
                                 <div>
                                     <span>Amount of the gift card:</span><br/>
                                     <div>
@@ -98,7 +98,7 @@
                         </div>
 
                         <div class="giftCardPopupContainer"
-                             t-if="state.showBarcodeGeneration &amp;&amp; state.showGiftCardDetails">
+                             t-if="state.showBarcodeGeneration &amp;&amp; state.showGiftCardDetails &amp;&amp; !props.isRefund">
                             <div>
                                 Gift Card Barcode:
                                 <input t-model="state.giftCardBarcode" class="giftCardPopupInput" type="text"/>
@@ -119,9 +119,10 @@
 
                         <div class="giftCardPopupContainer" t-if="!state.showBarcodeGeneration">
                             <div class="button giftCardPopupConfirmButton" t-on-click="switchToUseGiftCardMenu">
-                                Use a gift card
+                                <t t-if="!props.isRefund">Use a gift card</t>
+                                <t t-else="">Enter card code</t>
                             </div>
-                                <div class="button giftCardPopupConfirmButton" t-on-click="switchToShowGiftCardDetails">
+                                <div class="button giftCardPopupConfirmButton" t-on-click="switchToShowGiftCardDetails" t-if="!props.isRefund">
                                 Check a gift card
                             </div>
                         </div>
