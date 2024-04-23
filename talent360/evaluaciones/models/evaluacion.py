@@ -71,6 +71,7 @@ class Evaluacion(models.Model):
         if not self:
             new_evaluation = self.env["evaluacion"].create({
                 "nombre": "Evaluacion Clima",
+                "descripcion": "La valuacion Clima es una herramienta de medición de clima organizacional, cuyo objetivo es conocer la percepción que tienen las personas que laboran en los centros de trabajo, sobre aquellos aspectos sociales que conforman su entorno laboral y que facilitan o dificultan su desempeño.",
             })
             self = new_evaluation
 
@@ -103,6 +104,7 @@ class Evaluacion(models.Model):
         if not self:
             new_evaluation = self.env["evaluacion"].create({
                 "nombre": "NOM 035",
+                "descripcion": "La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.",
             })
             self = new_evaluation
 

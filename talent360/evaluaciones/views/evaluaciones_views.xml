@@ -98,18 +98,19 @@
         <field name="arch" type="xml">
             <form string="Clima" create="false">
                 <sheet>
-					<h1>Evaluacion Clima</h1>
-					<p>La valuacion Clima es una herramienta de medición de clima organizacional, cuyo objetivo es conocer la percepción que tienen las personas que laboran en los centros de trabajo, sobre aquellos aspectos sociales que conforman su entorno laboral y que facilitan o dificultan su desempeño.</p>
+					<h1>
+                        <field name="nombre"/>
+                    </h1>
+					<p>
+                        <field name="descripcion"/>
+                    </p>
                     <group>
-                        <group>
-							<field name="nombre"/>
-                        </group>
                         <group>
                             <field name="estado"/>
                         </group>
                         <notebook>
                             <page string="Preguntas">
-                                <field name="pregunta_ids"/>
+                                <field name="pregunta_ids" readonly="1"/>
                             </page>
 							<page string="Asignados">
 								<field name="usuario_ids"/>
@@ -133,18 +134,19 @@
         <field name="arch" type="xml">
             <form string="NOM035" create="false">
                 <sheet>
-					<h1>Encuesta NOM 035</h1>
-					<p>La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.</p>
+					<h1>
+                        <field name="nombre"/>
+                    </h1>
+					<p>
+                        <field name="descripcion"/>
+                    </p>
                     <group>
-                        <group>
-							<field name="nombre"/>
-                        </group>
                         <group>
                             <field name="estado"/>
                         </group>
                         <notebook>
                             <page string="Preguntas">
-                                <field name="pregunta_ids"/>
+                                <field name="pregunta_ids" readonly="1"/>
                             </page>
 							<page string="Asignados">
 								<field name="usuario_ids"/>
