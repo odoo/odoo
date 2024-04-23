@@ -73,9 +73,12 @@ const FormEditor = options.Class.extend({
                 method: 'search_read',
                 args: [
                     field.domain,
-                    ['display_name']
+                    field.fieldName ? [field.fieldName] : ["display_name"],
                 ],
             });
+            if (field.fieldName) {
+                field.records.forEach(r => r.display_name = r[field.fieldName]);
+            }
         }
         return field.records;
     },
