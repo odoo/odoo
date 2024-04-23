@@ -22,7 +22,7 @@ from werkzeug.local import LocalStack
 from werkzeug.exceptions import BadRequest, HTTPException, ServiceUnavailable
 
 import odoo
-from odoo import api
+from odoo import api, modules
 from .models.bus import dispatch
 from odoo.http import root, Request, Response, SessionExpiredException, get_default_session
 from odoo.modules.registry import Registry
@@ -816,7 +816,7 @@ class WebsocketConnectionHandler:
 
     @classmethod
     def websocket_allowed(cls, request):
-        return not request.registry.in_test_mode()
+        return not modules.module.current_test
 
     @classmethod
     def open_connection(cls, request):
