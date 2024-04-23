@@ -456,15 +456,13 @@ const logEvents = (actionName) => {
  * @returns {KeyboardEventInit}
  */
 const parseKeyStrokes = (keyStrokes, options) =>
-    (isIterable(keyStrokes) ? [...keyStrokes] : [keyStrokes])
-        .flatMap((keyStroke) => keyStroke.split(/\s*[,+]\s*/))
-        .map((key) => {
-            const lower = key.toLowerCase();
-            return {
-                ...options,
-                key: lower.length === 1 ? key : KEY_ALIASES[lower] || key,
-            };
-        });
+    (isIterable(keyStrokes) ? [...keyStrokes] : [keyStrokes]).map((key) => {
+        const lower = key.toLowerCase();
+        return {
+            ...options,
+            key: lower.length === 1 ? key : KEY_ALIASES[lower] || key,
+        };
+    });
 
 /**
  * @param {Event} ev

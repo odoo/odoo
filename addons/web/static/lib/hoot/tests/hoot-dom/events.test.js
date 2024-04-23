@@ -1165,7 +1165,7 @@ describe(parseUrl(import.meta.url), () => {
             "keyup:Control.ctrl",
         ]).toVerifySteps();
 
-        press("shift+b");
+        press(["shift", "b"]);
 
         expect([
             "keydown:Shift.shift",
@@ -1176,7 +1176,7 @@ describe(parseUrl(import.meta.url), () => {
             "keyup:Shift.shift",
         ]).toVerifySteps();
 
-        press("Alt+Control+b");
+        press(["Alt", "Control", "b"]);
 
         expect([
             "keydown:Alt.alt",
