@@ -77,9 +77,21 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteSaleCommon):
         self.start_tour("/", 'shop', login="admin")
 
     def test_02_admin_checkout(self):
+        if 'l10n_ar_afip_responsibility_type_id' in self.env['res.partner']._fields:
+            self.env.company.partner_id.write({
+                'l10n_ar_afip_responsibility_type_id': 5,
+                'vat': '123456789',
+                'state_id': self.env.ref('base.state_us_39').id,
+            })
         self.start_tour("/", 'shop_buy_product', login="admin")
 
     def test_03_demo_checkout(self):
+        if 'l10n_ar_afip_responsibility_type_id' in self.env['res.partner']._fields:
+            self.env.company.partner_id.write({
+                'l10n_ar_afip_responsibility_type_id': 5,
+                'vat': '123456789',
+                'state_id': self.env.ref('base.state_us_39').id,
+            })
         self.start_tour("/", 'shop_buy_product', login="demo")
 
     def test_04_admin_website_sale_tour(self):
