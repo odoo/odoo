@@ -954,16 +954,6 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     /**
      * @override
      */
-    cleanForSave: function () {
-        this.$target[0].querySelectorAll('#editable_select').forEach(el => el.remove());
-        const select = this._getSelect();
-        if (select) {
-            select.style.display = '';
-        }
-    },
-    /**
-     * @override
-     */
     updateUI: async function () {
         // See Form updateUI
         if (this.rerender) {
@@ -1048,6 +1038,16 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         this._setActiveProperties(field);
         await this._replaceField(field);
         this.rerender = true;
+    },
+    /**
+     * Set the the selction type of existing fields (radio or dropdown).
+     *
+     * @see this.selectClass for parameters
+     */
+    async existingFieldSelectType(previewMode, value, params) {
+        const field = this._getActiveField();
+        field.type = value;
+        await this._replaceField(field);
     },
     /**
      * Set the name of the field on the label
@@ -1227,6 +1227,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             case 'selectLabelPosition':
                 return this._getLabelPosition();
             case 'selectType':
+            case "existingFieldSelectType":
                 return this._getFieldType();
             case 'selectTextareaValue':
                 return this.$target[0].textContent;
@@ -1301,6 +1302,9 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 return !this.$target[0].classList.contains('s_website_form_custom') &&
                     ['char', 'email', 'tel', 'url'].includes(this.$target[0].dataset.type) &&
                     !this.$target[0].classList.contains('s_website_form_model_required');
+            case "existing_field_select_type_opt":
+                return !this._isFieldCustom() &&
+                        ["selection", "many2one"].includes(this.$target[0].dataset.type);
             case 'multi_check_display_opt':
                 return !!this._getMultipleInputs();
             case 'required_opt':
