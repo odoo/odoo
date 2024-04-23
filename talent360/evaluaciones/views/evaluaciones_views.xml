@@ -61,7 +61,7 @@
 
     <!-- COMPETENCIA -->
     <record id="competencia_action" model="ir.actions.act_window">
-        <field name="name">competencia.action</field>
+        <field name="name">Competencias CR</field>
         <field name="res_model">competencia</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -90,4 +90,54 @@
             </form>
         </field>
     </record>
+
+    <!-- NOM035 -->
+    <record id="evaluacion_nom035_form" model="ir.ui.view">
+        <field name="name">evaluacion.nom035.form</field>
+        <field name="model">evaluacion</field>
+        <field name="arch" type="xml">
+            <form string="NOM035" create="false">
+                <sheet>
+					<h1>Encuesta NOM 035</h1>
+					<p>La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.</p>
+                    <group>
+                        <group>
+							<field name="nombre"/>
+                        </group>
+                        <group>
+                            <field name="estado"/>
+                        </group>
+                        <notebook>
+                            <page string="Preguntas">
+                                <field name="pregunta_ids"/>
+                            </page>
+							<page string="Asignados">
+								<field name="usuario_ids"/>
+							</page>
+                        </notebook>
+					</group>
+                    <div>
+                        <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary"/>
+                    </div>					
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="evaluacion_nom035_action_form" model="ir.actions.server">
+        <field name="name">NOM 035</field>
+        <field name="model_id" ref="model_evaluacion"/>
+        <field name="state">code</field>
+        <field name="code">action = model.evaluacion_nom035_action_form()</field>
+        <field name="binding_model_id" ref="model_evaluacion"/>
+
+    </record>
+        <record id="evaluacion_action_tree" model="ir.actions.server">
+        <field name="name">Redirigir a Evaluación Tree</field>
+        <field name="model_id" ref="model_evaluacion"/>
+        <field name="state">code</field>
+        <field name="code">action = model.evaluacion_action_tree()</field>
+        <field name="binding_model_id" ref="model_evaluacion"/>
+    </record>
+     
 </odoo>

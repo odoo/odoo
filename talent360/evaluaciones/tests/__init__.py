@@ -1,1 +1,1 @@
-from . import test_objetivo
+from . import test_evaluacion, test_objetivo
