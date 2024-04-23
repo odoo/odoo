@@ -64,6 +64,8 @@ export class Thread extends Component {
     setup() {
         super.setup();
         this.escape = escape;
+        this.refByMessageId = new Map();
+        this.registerMessageRef = this.registerMessageRef.bind(this);
         this.store = useState(useService("mail.store"));
         this.state = useState({
             isReplyingTo: false,
@@ -141,6 +143,14 @@ export class Thread extends Component {
                 }
             },
             () => [this.state.mountedAndLoaded]
+        );
+        useEffect(
+            () => {
+                this.refByMessageId
+                    .get(this.messageHighlight?.highlightedMessageId)
+                    ?.el?.scrollIntoView({ behavior: "smooth", block: "center" });
+            },
+            () => [this.messageHighlight?.highlightedMessageId]
         );
         onMounted(() => {
             if (!this.env.chatter || this.env.chatter?.fetchMessages) {
@@ -273,7 +283,7 @@ export class Thread extends Component {
         });
         onWillDestroy(() => stopOnChange());
         const saveScroll = () => {
-            this.props.thread.scrollTop =
+            toRaw(this.props.thread).scrollTop =
                 ref.el.scrollHeight - ref.el.scrollTop - ref.el.clientHeight < 30
                     ? "bottom"
                     : ref.el.scrollTop;
@@ -380,6 +390,12 @@ export class Thread extends Component {
         this.env.services.action.doAction(actionDescription);
     }
 
+    getMessageClassName(message) {
+        return this.messageHighlight?.highlightedMessageId === message.id
+            ? "o-highlighted bg-view shadow-lg"
+            : "";
+    }
+
     async jumpToPresent() {
         this.messageHighlight?.clearHighlight();
         await this.props.thread.loadAround();
@@ -403,6 +419,13 @@ export class Thread extends Component {
                 this.props.thread
             );
         }
+    }
+
+    registerMessageRef(message, ref) {
+        if (!ref) {
+            this.refByMessageId.delete(message.id);
+        }
+        this.refByMessageId.set(message.id, ref);
     }
 
     isSquashed(msg, prevMsg) {
