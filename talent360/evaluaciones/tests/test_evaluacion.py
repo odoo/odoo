@@ -50,7 +50,7 @@ class test_evaluacion(TransactionCase):
         # Crear un template con preguntas predefinidas
         template = self.env['template'].create({
             'nombre': 'Template Clima',
-            'tipo': 'Clima',
+            'tipo': 'clima',
             'pregunta_ids': [(6, 0, preguntas.ids)],
         })
         # Simular copia de preguntas desde el template
