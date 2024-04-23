@@ -32,11 +32,11 @@
 
         <field name="arch" type="xml">
             <tree>
-                <field class="fs-3" name="nombre"/>
-                <field class="fs-3" name="estado"/>
-                <field class="fs-3" name="pregunta_ids"/>
-                <field class="fs-3" name="competencia_ids"/>
-                <field class="fs-3" name="usuario_ids"/>
+                <field class="text-primary font-weight-bold h5" name="nombre"/>
+                <field name="estado"/>
+                <field name="pregunta_ids"/>
+                <field name="competencia_ids"/>
+                <field name="usuario_ids"/>
             </tree>
         </field>
     </record>
@@ -51,19 +51,19 @@
                 <sheet string="Evaluacion de personal">
                     <group>
                         <group>
-                            <field class="h1 text-primary font-weight-bold lh-lg" name="nombre" field_id="nombre_0"/>
+                            <field class="h3 text-primary font-weight-bold lh-lg w-100" colspan="3" name="nombre" field_id="nombre_0" nolabel="1" />
                         </group>
                     </group>
-                    <group>
-                        <field class="h2 lh-lg" name="pregunta_ids" can_create="True" can_write="True" field_id="pregunta_ids_0" context="{'current_evaluacion_id': active_id}">
-                            <tree>
-                                <field class="h3 lh-lg" name="pregunta_texto"/>
-                                <field class="h3 lh-lg" name="tipo"/>
-                                <button class="btn btn-outline-primary btn-lg px-4 lh-lg" name="ver_respuestas" string="Detalle" type="object"/>
-                            </tree>
-                        </field>
-                    </group>
-                    <button class="btn btn-primary btn-lg px-4 font-weight-bold lh-lg mx-auto" name="reporte_generico" string="Reporte" type="object" groups="evaluaciones.group_evaluaciones_cliente_cr"/>
+                        <group>
+                            <field class="lh-lg w-100" colspan="2" name="pregunta_ids" can_create="True" can_write="True" nolabel="1" field_id="pregunta_ids_0" context="{'current_evaluacion_id': active_id}">
+                                <tree>
+                                    <field class="lh-m" name="pregunta_texto"/>
+                                    <field class="lh-m" name="tipo"/>
+                                    <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="ver_respuestas" string="Detalle" type="object"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <button class="btn btn-primary btn-lg px-4 font-weight-bold lh-m my-2" name="reporte_generico" string="Reporte" type="object" groups="evaluaciones.group_evaluaciones_cliente_cr"/>
                 </sheet>
             </form>
         </field>

@@ -4,7 +4,7 @@ import base64
 
 class Evaluacion(models.Model):
     _name = "evaluacion"
-    _description = "Evaluacion de pesonal"
+    _description = "Evaluacion de personal"
     _inherit = ["mail.thread"]
 
     nombre = fields.Char(required=True)
