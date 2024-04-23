@@ -43321,9 +43321,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.38';
-    __info__.date = '2024-04-10T12:32:46.699Z';
-    __info__.hash = '6c7d510';
+    __info__.version = '16.0.39';
+    __info__.date = '2024-04-18T16:53:40.591Z';
+    __info__.hash = 'ea5a526';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);

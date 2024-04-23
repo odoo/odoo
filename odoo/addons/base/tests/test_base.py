@@ -3,6 +3,8 @@
 
 import ast
 
+from markupsafe import Markup
+
 from odoo import SUPERUSER_ID, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tests import tagged
@@ -61,6 +63,68 @@ class TestSafeEval(BaseCase):
         # no dunder
         with self.assertRaises(NameError):
             safe_eval("self.__name__", {'self': self}, mode="exec")
+
+    def test_06_safe_eval_format(self):
+        # string.format
+        self.assertEqual(safe_eval("'__{0}__'.format('Foo')"), '__Foo__')
+        self.assertEqual(safe_eval("'{0.__self__}'.format(abs)"), '{0.__self__}')
+        self.assertEqual(safe_eval("'{0.f_globals}'.format(abs)"), '{0.f_globals}')
+
+        # string.format_map
+        self.assertEqual(safe_eval("'__{foo}__'.format_map({'foo': 'Foo'})"), '__Foo__')
+        self.assertEqual(safe_eval("'{foo.__self__}'.format_map({'foo': abs})"), '{foo.__self__}')
+        self.assertEqual(safe_eval("'{foo.f_globals}'.format_map({'foo': abs})"), '{foo.f_globals}')
+
+        # Evaluation context for Markup asserts
+        c = {"Markup": Markup}
+
+        # Markup.format
+        self.assertEqual(safe_eval("Markup('__{0}__').format('Foo')", c), Markup('__Foo__'))
+        with self.assertRaisesRegex(ValueError, 'Access to forbidden name'):
+            safe_eval("Markup('{0.__self__}').format(abs)", c)
+        with self.assertRaisesRegex(ValueError, 'Access to forbidden name'):
+            safe_eval("Markup('{0.f_globals}').format(abs)", c)
+
+        # Markup.format_map
+        self.assertEqual(safe_eval("Markup('__{foo}__').format_map({'foo': 'Foo'})", c), Markup('__Foo__'))
+        self.assertEqual(safe_eval("Markup('{foo.__self__}').format_map({'foo': abs})", c), Markup('{foo.__self__}'))
+        self.assertEqual(safe_eval("Markup('{foo.f_globals}').format_map({'foo': abs})", c), Markup('{foo.f_globals}'))
+
+    def test_07_safe_eval_attribute_error_obj(self):
+        locals_dict = {}
+        try:
+            safe_eval("""
+try:
+    dict.foo
+except Exception as e:
+    action = {'args': e.args, 'obj': e.obj, 'name': e.name}
+            """, locals_dict=locals_dict, mode="exec", nocopy=True)
+        except ValueError as e:
+            # AttributeError.name, AttributeError.obj added in Python 3.10
+            # https://github.com/python/cpython/commit/37494b441aced0362d7edd2956ab3ea7801e60c8
+            self.assertIn("'AttributeError' object has no attribute 'obj'", e.args[0])
+        else:
+            exception = locals_dict.get('action')
+            self.assertEqual(exception['args'], ("type object 'dict' has no attribute 'foo'",))
+            self.assertIsNone(exception['name'])
+            self.assertIsNone(exception['obj'])
+
+        attribute_error = None
+        try:
+            raise AttributeError('Foo', name='Bar', obj=[])
+        except TypeError as e:
+            # AttributeError does not take keyword arguments before Python 3.10
+            # https://github.com/python/cpython/commit/37494b441aced0362d7edd2956ab3ea7801e60c8
+            # Error can be either, according to the Python version:
+            # - AttributeError does not take keyword arguments
+            # - AttributeError() takes no keyword arguments
+            self.assertIn("keyword arguments", e.args[0])
+        except AttributeError as e:
+            attribute_error = e
+        if attribute_error:
+            self.assertEqual(attribute_error.args, ('Foo',))
+            self.assertEqual(attribute_error.name, 'Bar')
+            self.assertIsNone(attribute_error.obj)
 
 
 # samples use effective TLDs from the Mozilla public suffix

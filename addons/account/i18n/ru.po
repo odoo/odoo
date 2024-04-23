@@ -31,13 +31,13 @@
 # Alena Vlasova, 2023
 # ILMIR <karamov@it-projects.info>, 2023
 # Elena Da, 2023
-# Сергей Шебанин <sergey@shebanin.ru>, 2023
 # alenafairy, 2023
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2024
 # Martin Trigaux, 2024
 # Смородин Даниил, 2024
 # Collex100, 2024
 # Wil Odoo, 2024
+# Сергей Шебанин <sergey@shebanin.ru>, 2024
 # 
 msgid ""
 msgstr ""
@@ -45,7 +45,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -906,7 +906,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "<span class=\"o_stat_text\">Invoiced</span>"
-msgstr "<span class=\"o_stat_text\">Документ продажи выставлен</span>"
+msgstr "<span class=\"o_stat_text\">Выставлен счет</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -8095,7 +8095,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Invoiced"
-msgstr "Закрыто документами"
+msgstr "Выставлен счет"
 
 #. module: account
 #. odoo-python
@@ -8181,7 +8181,7 @@ msgstr "Идеальное соответствие счетов/фактур"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
-msgstr "Актирование"
+msgstr "Выставление счетов"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
@@ -15455,7 +15455,7 @@ msgstr "Итого по дебету"
 #: model:ir.model.fields,field_description:account.field_res_partner__total_invoiced
 #: model:ir.model.fields,field_description:account.field_res_users__total_invoiced
 msgid "Total Invoiced"
-msgstr "Итого закрыто документом"
+msgstr "Итого выставлено счетов"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__debit
@@ -16643,11 +16643,9 @@ msgstr ""
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
-"You can't register payments for journal items being either all inbound, "
-"either all outbound."
+"You can't register payments for both inbound and outbound moves at the same "
+"time."
 msgstr ""
-"Вы не можете зарегистрировать платежи для статей журнала, которые являются "
-"либо полностью входящими, либо полностью исходящими."
 
 #. module: account
 #. odoo-python
