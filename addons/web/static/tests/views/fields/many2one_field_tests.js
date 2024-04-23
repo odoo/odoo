@@ -1128,14 +1128,16 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("many2one with no_create_edit and no_quick_create options should show no records when no result match", async function (assert) {
-        assert.expect(2);
+    QUnit.test(
+        "many2one with no_create_edit and no_quick_create options should show no records when no result match",
+        async function (assert) {
+            assert.expect(2);
 
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <form>
                     <sheet>
                         <group>
@@ -1143,21 +1145,22 @@ QUnit.module("Fields", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-        });
+            });
 
-        await click(target, ".o_field_many2one[name='product_id'] input");
-        assert.containsNone(
-            target.querySelector(".o_field_many2one[name='product_id'] .dropdown-menu"),
-            "li.o_m2o_no_result",
-            "autocomplete should not contain the no records option"
-        );
-        await editInput(target, ".o_field_many2one[name='product_id'] input", "aze");
-        assert.containsOnce(
-            target.querySelector(".o_field_many2one[name='product_id'] .dropdown-menu"),
-            "li.o_m2o_no_result",
-            "autocomplete should contain the no records option"
-        );
-    });
+            await click(target, ".o_field_many2one[name='product_id'] input");
+            assert.containsNone(
+                target.querySelector(".o_field_many2one[name='product_id'] .dropdown-menu"),
+                "li.o_m2o_no_result",
+                "autocomplete should not contain the no records option"
+            );
+            await editInput(target, ".o_field_many2one[name='product_id'] input", "aze");
+            assert.containsOnce(
+                target.querySelector(".o_field_many2one[name='product_id'] .dropdown-menu"),
+                "li.o_m2o_no_result",
+                "autocomplete should contain the no records option"
+            );
+        }
+    );
 
     QUnit.test("many2one in edit mode", async function (assert) {
         assert.expect(17);
@@ -1877,6 +1880,63 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".modal .o_field_widget[name=product_id] .ui-menu-item"));
 
         assert.verifySteps(["name_create"]);
+    });
+
+    QUnit.test("many2one inside one2many form view, with domain", async function (assert) {
+        assert.expect(4);
+
+        serverData.models.partner.fields.trululu.domain = "[['id', '<', 1000]]";
+        serverData.models.partner.records = [
+            { id: 1, display_name: "a1", p: [1] },
+            { id: 2, display_name: "a2" },
+            { id: 3, display_name: "a3" },
+            { id: 4, display_name: "a4" },
+            { id: 5, display_name: "a5" },
+            { id: 6, display_name: "a6" },
+            { id: 7, display_name: "a7" },
+            { id: 8, display_name: "a8" },
+            { id: 9, display_name: "a9" },
+        ];
+        serverData.views = {
+            "partner,false,list": '<list><field name="display_name"/></list>',
+            "partner,false,search": "<search></search>",
+        };
+
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="p">
+                            <tree>
+                                <field name="display_name"/>
+                                <field name="trululu" domain="[]"/>
+                            </tree>
+                            <form>
+                                <field name="trululu" domain="[['id', '>', 1]]"/>
+                            </form>
+                        </field>
+                    </sheet>
+                </form>`,
+            resId: 1,
+            mockRPC(route, args) {
+                if (args.method === "name_search") {
+                    assert.deepEqual(args.kwargs.args, [["id", ">", 1]]);
+                }
+                if (args.method === "web_search_read") {
+                    assert.deepEqual(args.kwargs.domain, [["id", ">", 1]]);
+                }
+            },
+        });
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await editInput(target, ".o_field_widget[name=trululu] input", "");
+        await clickOpenedDropdownItem(target, "trululu", "Search More...");
+
+        assert.containsOnce(document.body, ".modal .o_list_view");
+        assert.containsN(document.body, ".modal .o_data_row", 8);
     });
 
     QUnit.test("list in form: quick create then add a new line directly", async function (assert) {
