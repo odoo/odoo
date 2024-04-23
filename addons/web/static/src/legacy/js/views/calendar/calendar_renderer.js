@@ -914,7 +914,7 @@ return AbstractRenderer.extend({
             title: title,
             template: qweb.render('CalendarView.event.popover.placeholder',
             {color: this.getColor(eventData.extendedProps.color_index), displayLock: displayLock}),
-            container: eventData.allDay ? '.fc-view' : '.fc-scroller',
+            container: eventData.allDay ? this.$('.fc-view')[0] : this.$('.fc-scroller')[0],
         }
     },
     /**
