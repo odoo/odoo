@@ -218,26 +218,37 @@ class StockMoveLine(models.Model):
                 best_loc = smls.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls.ids, products=smls.product_id)._get_putaway_strategy(self.env['product.product'], package=package)
                 smls.location_dest_id = smls.package_level_id.location_dest_id = best_loc
             elif package:
+                # Ensure NewIds without origin come after real records and NewIds with origin.
+                smls = smls.sorted(lambda sml: not sml._origin)
+                # Avoid calling the ids property and __sub__ too frequently when excluded_smls_ids is large.
+                excluded_smls_ids = excluded_smls.ids
+                excluded_smls_ids.reverse()
                 used_locations = set()
                 for sml in smls:
                     if len(used_locations) > 1:
                         break
-                    sml.location_dest_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls.ids)._get_putaway_strategy(sml.product_id, quantity=sml.product_uom_qty)
-                    excluded_smls -= sml
+                    sml.location_dest_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls_ids)._get_putaway_strategy(sml.product_id, quantity=sml.product_uom_qty)
+                    # Handle NewIds.
+                    if excluded_smls_ids:
+                        excluded_smls_ids.pop()
                     used_locations.add(sml.location_dest_id)
                 if len(used_locations) > 1:
                     smls.location_dest_id = smls.move_id.location_dest_id
                 else:
                     smls.package_level_id.location_dest_id = smls.location_dest_id
             else:
+                smls = smls.sorted(lambda sml: not sml._origin)
+                excluded_smls_ids = excluded_smls.ids
+                excluded_smls_ids.reverse()
                 for sml in smls:
                     qty = max(sml.product_uom_qty, sml.qty_done)
-                    putaway_loc_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls.ids)._get_putaway_strategy(
+                    putaway_loc_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls_ids)._get_putaway_strategy(
                         sml.product_id, quantity=qty, packaging=sml.move_id.product_packaging_id,
                     )
                     if putaway_loc_id != sml.location_dest_id:
                         sml.location_dest_id = putaway_loc_id
-                    excluded_smls -= sml
+                    if excluded_smls_ids:
+                        excluded_smls_ids.pop()
 
     def _get_default_dest_location(self):
         if not self.user_has_groups('stock.group_stock_storage_categories'):
