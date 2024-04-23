@@ -10,8 +10,7 @@ from uuid import uuid4
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, exceptions, fields, models
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.tools import safe_eval
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, safe_eval
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -83,7 +82,8 @@ class BaseAutomation(models.Model):
     name = fields.Char(string="Automation Rule Name", required=True, translate=True)
     description = fields.Html(string="Description")
     model_id = fields.Many2one(
-        "ir.model", string="Model", required=True, ondelete="cascade", help="Model on which the automation rule runs."
+        "ir.model", string="Model", domain=[("field_id", "!=", False)], required=True, ondelete="cascade",
+        help="Model on which the automation rule runs."
     )
     model_name = fields.Char(related="model_id.model", string="Model Name", readonly=True, inverse="_inverse_model_name")
     model_is_mail_thread = fields.Boolean(related="model_id.is_mail_thread")
