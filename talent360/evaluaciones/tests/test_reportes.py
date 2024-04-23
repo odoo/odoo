@@ -2,11 +2,17 @@ from odoo.tests.common import TransactionCase
 
 
 class TestReportes(TransactionCase):
+    """
+    Caso de prueba para evaluar la generación de reportes relacionados con evaluaciones en Odoo.
+    """
 
     def setUp(self):
+        """
+        Inicializa el entorno de prueba antes de cada método de prueba.
+        """
         super(TestReportes, self).setUp()
 
-        # Se crea una evaluación
+        # Crear una evaluación de prueba
         self.evaluacion = self.env["evaluacion"].create(
             {
                 "nombre": "Evaluacion de prueba",
@@ -14,7 +20,7 @@ class TestReportes(TransactionCase):
             }
         )
 
-        # Se crean preguntas
+        # Crear preguntas para la evaluación
         pregunta1 = self.env["pregunta"].create(
             {
                 "pregunta_texto": "Pregunta 1",
@@ -34,12 +40,12 @@ class TestReportes(TransactionCase):
             }
         )
 
-        # Se asignan las preguntas a la evaluación
+        # Asignar las preguntas a la evaluación
         self.evaluacion.pregunta_ids = [
             (6, 0, [pregunta1.id, pregunta2.id, pregunta3.id])
         ]
 
-        # Se crean respuestas
+        # Crear respuestas para las preguntas
         preguntas_respuestas = {
             pregunta1.id: [
                 "Respuesta 1",
@@ -84,9 +90,9 @@ class TestReportes(TransactionCase):
             ],
         }
 
-        # Se crean respuestas para la pregunta 1
-        for pregunta, respuesas in preguntas_respuestas.items():
-            for respuesta in respuesas:
+        # Crear respuestas para las preguntas
+        for pregunta, respuestas in preguntas_respuestas.items():
+            for respuesta in respuestas:
                 self.env["respuesta"].create(
                     {
                         "pregunta_id": pregunta,
@@ -96,14 +102,24 @@ class TestReportes(TransactionCase):
                 )
 
     def tearDown(self):
+        """
+        Finaliza el entorno de prueba después de cada método de prueba.
+        """
         return super().tearDown()
 
     def test_generar_datos_reporte_generico(self):
+        """
+        Prueba la generación de datos para un reporte genérico de una evaluación.
+
+        Este método verifica que los datos generados para el reporte genérico sean correctos.
+        """
         params = self.evaluacion.action_generar_datos_reporte_generico()
 
+        # Verificar que la evaluación y el número de preguntas sean correctos
         self.assertEqual(params["evaluacion"], self.evaluacion)
         self.assertEqual(len(params["preguntas"]), 3)
 
+        # Verificar que los datos de las preguntas sean correctos
         for pregunta in params["preguntas"]:
             if pregunta["pregunta"].tipo == "open_question":
                 self.assertEqual(len(pregunta["respuestas"]), 10)

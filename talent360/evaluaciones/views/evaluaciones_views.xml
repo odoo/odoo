@@ -25,7 +25,7 @@
         <field name="res_model">evaluacion</field>
         <field name="view_mode">tree,form</field>
     </record>
-
+    <!-- Vista de lista de todas las evaluaciones-->
     <record id="evaluacion_view_tree" model="ir.ui.view">
         <field name="name">evaluacion.tree</field>
         <field name="model">evaluacion</field>
@@ -41,7 +41,7 @@
         </field>
     </record>
 
-
+    <!-- Vista de lista de todas las preguntas de una evaluación-->
     <record id="evaluacion_reporte_form" model="ir.ui.view">
         <field name="name">evaluacion.form</field>
         <field name="model">evaluacion</field>
@@ -59,10 +59,12 @@
                                 <tree>
                                     <field class="lh-m" name="pregunta_texto"/>
                                     <field class="lh-m" name="tipo"/>
+                                    <!-- Métricas de una sola pregunta-->
                                     <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="ver_respuestas" string="Detalle" type="object"/>
                                 </tree>
                             </field>
                         </group>
+                        <!-- Generación de reporte de una evaluación-->
                         <button class="btn btn-primary btn-lg px-4 font-weight-bold lh-m my-2" name="action_reporte_generico" string="Reporte" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
                 </sheet>
             </form>
@@ -168,5 +170,4 @@
         <field name="code">action = model.evaluacion_action_tree()</field>
         <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
-     
 </odoo>

@@ -60,9 +60,9 @@ class Evaluacion(models.Model):
         Este método verifica si el objeto actual está vacío (self). Si lo está, crea una nueva
         evaluación con un nombre predeterminado y asigna este nuevo objeto a self. Luego, limpia
         las preguntas existentes y copia todas las preguntas de un template con ID predefinido 
-       (en este caso, 331) al objeto evaluación actual.
-       
-       :return: object: Retorna el objeto evaluación actualizado con las preguntas copiadas del template.
+        (en este caso, 331) al objeto evaluación actual.
+        
+        :return: object: Retorna el objeto evaluación actualizado con las preguntas copiadas del template.
         """
         
         if not self:
@@ -128,13 +128,33 @@ class Evaluacion(models.Model):
         }
 
     def action_reporte_generico(self):
+        """
+        Genera una acción de URL para el reporte genérico de la evaluación.
+
+        Esta función genera un URL para redirigir
+        a un reporte específico de la evaluación actual.
+
+        :return: una acción de redirección al reporte de la evaluación
+
+        """
         return {
             "type": "ir.actions.act_url",
             "url": "/evaluacion/reporte/%s" % (self.id),
             "target": "self",
-        }
+    }
+
 
     def action_generar_datos_reporte_generico(self):
+
+        """
+        Genera los datos necesarios para el reporte genérico de la evaluación.
+
+        Esta función genera los parámetros requeridos para generar un reporte genérico de la evaluación actual,
+        incluyendo las preguntas y las respuestas tabuladas.
+
+        :return: Los parámetros necesarios para generar el reporte.
+
+        """
         parametros = {
             "evaluacion": self,
             "preguntas": [],
