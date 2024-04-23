@@ -196,6 +196,7 @@ class SaleOrder(models.Model):
                 ('city', '=', city),
                 ('state_id', '=', state),
                 ('country_id', '=', country),
+                ('parent_id', '=', parent_id),
                 ('type', '=', 'delivery'),
             ], limit=1)
 
