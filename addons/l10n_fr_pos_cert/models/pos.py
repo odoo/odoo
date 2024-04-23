@@ -2,12 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, timedelta
 from hashlib import sha256
-from json import dumps
+from json import dumps, loads
+import logging
 
 from odoo import models, api, fields
 from odoo.fields import Datetime
 from odoo.tools.translate import _, _lt
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 
 class pos_config(models.Model):
@@ -63,7 +66,15 @@ class pos_order(models.Model):
                _('An error occurred when computing the inalterability. Impossible to get the unique previous posted point of sale order.'))
 
         #build and return the hash
-        return self._compute_hash(prev_order.l10n_fr_hash if prev_order else u'')
+        computed_hash = self._compute_hash(prev_order.l10n_fr_hash if prev_order else '')
+        _logger.info(
+            'Computed hash for order ID %s: %s \n String to hash: %s \n Previous hash: %s',
+            self.id,
+            computed_hash,
+            dumps(loads(self.l10n_fr_string_to_hash), indent=2),
+            prev_order.l10n_fr_hash
+        )
+        return computed_hash
 
     def _compute_hash(self, previous_hash):
         """ Computes the hash of the browse_record given as self, based on the hash
