@@ -52,7 +52,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     {
         content: "Drag the Media List block and drop it in the popup.",
         trigger: "#oe_snippets .oe_snippet:has(> [data-snippet='s_media_list']) .oe_snippet_thumbnail",
-        run: "drag_and_drop_native :iframe #wrap .s_popup .modal-content.oe_structure",
+        run: "drag_and_drop :iframe #wrap .s_popup .oe_drop_zone:last",
     },
     checkScrollbar(false),
     {
@@ -67,13 +67,13 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     toggleBackdrop(), // show Popup backdrop
     checkScrollbar(false),
     {
-        content: "Close the Popup.",
-        trigger: ".o_we_invisible_el_panel .o_we_invisible_entry",
+        content: "Close the Popup that has now backdrop.",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:first",
     },
     checkScrollbar(true),
     {
         content: "Open the Cookies Bar.",
-        trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:last-child",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:last",
     },
     checkScrollbar(true),
     toggleBackdrop(), // show Cookies Bar backdrop
@@ -81,17 +81,17 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     toggleBackdrop(), // hide Cookies Bar backdrop
     checkScrollbar(true),
     {
-        content: "Open the Popup.",
-        trigger: ".o_we_invisible_el_panel .o_we_invisible_entry",
+        content: "Open the Popup that has backdrop.",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:first",
     },
     checkScrollbar(false),
     wTourUtils.goBackToBlocks(),
     {
         content: "Drag the Media List block and drop it in the popup.",
         trigger: "#oe_snippets .oe_snippet:has(> [data-snippet='s_media_list']) .oe_snippet_thumbnail",
-        run: "drag_and_drop_native :iframe #wrap .s_popup .modal-content.oe_structure",
+        run: "drag_and_drop :iframe #wrap .s_popup .modal-content.oe_structure .oe_drop_zone:last",
     },
-    checkScrollbar(false),
+    checkScrollbar(true), //the popup backdrop is activated so there should have a scrollbar on #wrapwrap
     {
         content: 'Click on the s_popup snippet',
         in_modal: false,
@@ -101,14 +101,18 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
         content: "Remove the s_popup snippet",
         trigger: ".o_we_customize_panel we-customizeblock-options:contains('Popup') we-button.oe_snippet_remove:first",
         in_modal: false,
-        run: "click",
+        async run(helpers) {
+            helpers.click();
+            // TODO: remove the below setTimeout. Without it, goBackToBlocks() not works.
+            await new Promise((r) => setTimeout(r, 300));
+        }
     },
     checkScrollbar(true),
     wTourUtils.goBackToBlocks(),
     {
         content: "Drag a Media List snippet and drop it in the Cookies Bar.",
         trigger: "#oe_snippets .oe_snippet:has(> [data-snippet='s_media_list']) .oe_snippet_thumbnail",
-        run: "drag_and_drop_native :iframe #website_cookies_bar .modal-content.oe_structure",
+        run: "drag_and_drop :iframe #website_cookies_bar .modal-content.oe_structure",
     },
     {
         content: "Select the Media List snippet in the Cookies Bar.",
@@ -117,8 +121,10 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     {
         content: "Duplicate the Media List snippet",
         trigger: ".o_we_customize_panel we-customizeblock-options:contains('Media List') we-button.oe_snippet_clone:first",
-        in_modal: false,
-        run: "click",
+        run() {
+            // TODO: use run: "click", instead
+            this.anchor.click();
+        }
     },
     checkScrollbar(false),
     {

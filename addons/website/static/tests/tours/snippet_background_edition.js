@@ -263,7 +263,10 @@ switchTo('gradient'),
     updateStep: {
         trigger: '.colorpicker .o_custom_gradient_scale',
         content: 'Add step',
-        run: 'click',
+        run() {
+            // TODO: use run: "click", instead
+            this.anchor.click();
+        }
     },
     checkGradient: 'linear-gradient(135deg, rgb(203, 94, 238) 0%, rgb(203, 94, 238) 0%, rgb(75, 225, 236) 100%)',
 }),
@@ -282,7 +285,8 @@ switchTo('gradient'),
     updateStep: {
         trigger: '.colorpicker .o_color_picker_inputs .o_hex_div input',
         content: 'Pick step color',
-        run: "edit #FF0000 && focus .o_color_picker_inputs",
+        // TODO: remove && click
+        run: "edit #FF0000 && click .o_color_picker_inputs",
     },
     checkGradient: 'linear-gradient(135deg, rgb(203, 94, 238) 0%, rgb(255, 0, 0) 45%, rgb(75, 225, 236) 100%)',
 }),
@@ -299,7 +303,7 @@ switchTo('gradient'),
     updateStep: {
         trigger: '.colorpicker input[data-name="angle"]',
         content: 'Change angle',
-        run: "edit 50 && focus .o_color_picker_inputs",
+        run: "edit 50 && click .o_color_picker_inputs",
     },
     checkGradient: 'linear-gradient(50deg, rgb(203, 94, 238) 0%, rgb(75, 225, 236) 100%)',
 }),
@@ -316,7 +320,7 @@ switchTo('gradient'),
     updateStep: {
         trigger: '.colorpicker input[data-name="positionX"]',
         content: 'Change X position',
-        run: "edit 33 && focus .o_color_picker_inputs",
+        run: "edit 33 && click .o_color_picker_inputs",
     },
     checkGradient: 'radial-gradient(circle farthest-side at 33% 25%, rgb(203, 94, 238) 0%, rgb(75, 225, 236) 100%)',
 }),
@@ -324,7 +328,7 @@ switchTo('gradient'),
     updateStep: {
         trigger: '.colorpicker input[data-name="positionY"]',
         content: 'Change Y position',
-        run: "edit 75 && focus .o_color_picker_inputs",
+        run: "edit 75 && click .o_color_picker_inputs",
     },
     checkGradient: 'radial-gradient(circle farthest-side at 33% 75%, rgb(203, 94, 238) 0%, rgb(75, 225, 236) 100%)',
 }),

@@ -61,7 +61,8 @@ function getFontSizeTestSteps(fontSizeClass) {
         }, {
             content: `Change the setting value of ${fontSizeClass}`,
             trigger: `[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"] input`,
-            run: `edit ${classNameInfo.get(fontSizeClass).end} && blur`,
+            // TODO: Remove "&& click body"
+            run: `edit ${classNameInfo.get(fontSizeClass).end} && click body`,
         }, {
             content: `[${fontSizeClass}] Go to blocks tab`,
             trigger: ".o_we_add_snippet_btn",
@@ -88,6 +89,11 @@ function getFontSizeTestSteps(fontSizeClass) {
         }, {
             content: `Remove the text snippet containing the text with class ${fontSizeClass}`,
             trigger: `.oe_snippet_remove`,
+            async run(helpers) {
+                helpers.click();
+                // TODO: Remove the below setTimeout or understand why it should be required.
+                await new Promise((r) => setTimeout(r, 300));
+            },
         }
     ];
 }
