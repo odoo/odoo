@@ -11,6 +11,7 @@ from werkzeug.test import EnvironBuilder
 import odoo
 from odoo.tests.common import HttpCase, HOST
 from odoo.tools.misc import hmac, DotDict, frozendict
+from odoo.tools import config
 
 
 @contextlib.contextmanager
@@ -224,3 +225,23 @@ def add_form_signature(html_fragment, env_sudo):
             hash_value += ':email_cc'
         hash_node = etree.Element('input', attrib={'type': "hidden", 'value': hash_value, 'class': "form-control s_website_form_input s_website_form_custom", 'name': "website_form_signature"})
         form_values['email_to'].addnext(hash_node)
+
+
+def create_image_attachment(env, image_path, image_name):
+    """
+    Creates an image attachment.
+
+    :param env: self.env
+    :param image_path: the path to the image (e.g. '/web/image/website.s_banner_default_image')
+    :param image_name: the name to give to the image (e.g. 's_banner_default_image.jpg')
+    :return: the image attachment
+    """
+    IrAttachment = env['ir.attachment']
+    base = 'http://%s:%s' % (HOST, config['http_port'])
+    img = IrAttachment.create({
+        'public': True,
+        'name': image_name,
+        'type': 'url',
+        'url': base + image_path,
+    })
+    return img

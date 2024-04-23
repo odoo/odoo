@@ -6,6 +6,7 @@ from urllib.parse import urlparse
 import odoo.tests
 from odoo.tests.common import HOST
 from odoo.tools import config
+from odoo.addons.website.tools import create_image_attachment
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
@@ -13,21 +14,9 @@ class TestWebsiteAttachment(odoo.tests.HttpCase):
 
     def test_01_type_url_301_image(self):
         IMD = self.env['ir.model.data']
-        IrAttachment = self.env['ir.attachment']
 
-        img1 = IrAttachment.create({
-            'public': True,
-            'name': 's_banner_default_image.jpg',
-            'type': 'url',
-            'url': '/website/static/src/img/snippets_demo/s_banner.jpg'
-        })
-
-        img2 = IrAttachment.create({
-            'public': True,
-            'name': 's_banner_default_image.jpg',
-            'type': 'url',
-            'url': '/web/image/test.an_image_url'
-        })
+        img1 = create_image_attachment(self.env, '/website/static/src/img/snippets_demo/s_banner.jpg', 's_banner_default_image.jpg')
+        img2 = create_image_attachment(self.env, '/web/image/test.an_image_url', 's_banner_default_image.jpg')
 
         IMD.create({
             'name': 'an_image_url',
