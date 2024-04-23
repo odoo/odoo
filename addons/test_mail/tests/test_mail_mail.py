@@ -14,7 +14,7 @@ from OpenSSL.SSL import Error as SSLError
 from socket import gaierror, timeout
 from unittest.mock import call, patch, PropertyMock
 
-from odoo import api, Command, fields
+from odoo import api, Command, fields, SUPERUSER_ID
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
@@ -931,11 +931,14 @@ class TestMailMailRace(common.TransactionCase):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_bounce_during_send(self):
-        self.partner = self.env['res.partner'].create({
+        cr = self.registry.cursor()
+        env = api.Environment(cr, SUPERUSER_ID, {})
+
+        self.partner = env['res.partner'].create({
             'name': 'Ernest Partner',
         })
         # we need to simulate a mail sent by the cron task, first create mail, message and notification by hand
-        mail = self.env['mail.mail'].sudo().create({
+        mail = env['mail.mail'].sudo().create({
             'body_html': '<p>Test</p>',
             'is_notification': True,
             'state': 'outgoing',
@@ -943,7 +946,7 @@ class TestMailMailRace(common.TransactionCase):
         })
         mail_message = mail.mail_message_id
 
-        message = self.env['mail.message'].create({
+        message = env['mail.message'].create({
             'subject': 'S',
             'body': 'B',
             'subtype_id': self.ref('mail.mt_comment'),
@@ -955,9 +958,9 @@ class TestMailMailRace(common.TransactionCase):
                 'notification_status': 'ready',
             })],
         })
-        notif = self.env['mail.notification'].search([('res_partner_id', '=', self.partner.id)])
+        notif = env['mail.notification'].search([('res_partner_id', '=', self.partner.id)])
         # we need to commit transaction or cr will keep the lock on notif
-        self.cr.commit()
+        cr.commit()
 
         # patch send_email in order to create a concurent update and check the notif is already locked by _send()
         this = self  # coding in javascript ruinned my life
@@ -992,8 +995,5 @@ class TestMailMailRace(common.TransactionCase):
         mail.unlink()
         (mail_message | message).unlink()
         self.partner.unlink()
-        self.env.cr.commit()
-
-        # because we committed the cursor, the savepoint of the test method is
-        # gone, and this would break TransactionCase cleanups
-        self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
+        cr.commit()
+        cr.close()
