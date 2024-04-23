@@ -18,6 +18,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'click .karma_required': '_onKarmaRequiredClick',
         'mouseenter .o_js_forum_tag_follow': '_onTagFollowBoxMouseEnter',
         'mouseleave .o_js_forum_tag_follow': '_onTagFollowBoxMouseLeave',
+        "click .o_js_forum_tag_follow": "_onTagFollowClick",
         'mouseenter .o_forum_user_info': '_onUserInfoMouseEnter',
         'mouseleave .o_forum_user_info': '_onUserInfoMouseLeave',
         'mouseleave .o_forum_user_bio_expand': '_onUserBioExpandMouseLeave',
@@ -78,6 +79,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     }
                 }
             },
+            createSearchChoicePosition: "bottom",
             formatResult: function (term) {
                 if (term.isNew) {
                     return '<span class="badge bg-primary">New</span> ' + escape(term.text);
@@ -302,6 +304,16 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      */
     _onTagFollowBoxMouseLeave: function (ev) {
         $(ev.currentTarget).find('.o_forum_tag_follow_box').stop().fadeOut().css('display', 'none');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onTagFollowClick: function (ev) {
+        const closestBtn = ev.target.closest("button");
+        if (closestBtn) {
+            ev.currentTarget.querySelector(".o_js_forum_tag_link").classList.toggle("text-muted");
+        }
     },
     /**
      * @private

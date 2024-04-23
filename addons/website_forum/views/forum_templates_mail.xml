@@ -10,7 +10,7 @@
                 <button t-attf-class="btn js_unfollow_btn #{btn_classes}">
                     <i t-attf-class="fa fa-fw fa-minus-circle #{icons_classes}" data-bs-toggle="tooltip" data-bs-placement="top" title="Unfollow"/>
                 </button>
-                <button t-attf-class="btn js_follow_btn #{btn_classes}">
+                <button t-attf-class="btn js_follow_btn #{btn_classes} #{follow_btn_classes}">
                     <i t-attf-class="fa fa-fw fa-plus-circle #{icons_classes}" data-bs-toggle="tooltip" data-bs-placement="top" title="Follow"/>
                 </button>
             </div>
@@ -18,7 +18,7 @@
                 <button t-attf-class="btn js_unfollow_btn #{btn_classes}">
                     <i t-attf-class="fa fa-fw fa-minus-circle #{icons_classes}" data-bs-toggle="tooltip" data-bs-placement="top" title="Unfollow"/>
                 </button>
-                <button t-attf-class="btn follow_btn #{btn_classes}" data-bs-toggle="modal" data-bs-target="#o_wmail_follow_modal">
+                <button t-attf-class="btn follow_btn #{btn_classes}" data-bs-toggle="modal" t-attf-data-bs-target="#o_wmail_follow_modal_#{object.id}">
                     <i t-attf-class="fa fa-fw fa-plus-circle #{icons_classes}" data-bs-toggle="tooltip" data-bs-placement="top" title="Follow"/>
                 </button>
             </span>
@@ -26,7 +26,7 @@
                 <button href="#" t-attf-class="btn btn-primary js_unfollow_btn #{btn_classes}"><i class="fa fa-fw fa-check me-1"/>Following</button>
                 <button href="#" t-attf-class="btn btn-outline-primary js_follow_btn #{btn_classes}">Follow</button>
             </t>
-            <div role="dialog" class="modal fade" id="o_wmail_follow_modal" aria-hidden="True">
+            <div role="dialog" class="modal fade" t-attf-id="o_wmail_follow_modal_#{object.id}" aria-hidden="True">
                 <div class="modal-dialog mw-lg-25" role="document">
                     <div class="modal-content">
                         <header class="modal-header" role="status">

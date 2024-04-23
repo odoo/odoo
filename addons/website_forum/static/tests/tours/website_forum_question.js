@@ -37,8 +37,8 @@ registry.category("web_tour.tours").add('forum_question', {
         trigger: ".modal-header button.btn-close",
     },
     {
-        trigger: "a:contains(\"Answer\").collapsed",
-        content: "Click to answer.",
+        trigger: "a:contains(\"Reply\").collapsed",
+        content: "Click to reply.",
         position: "bottom",
     },
     {
