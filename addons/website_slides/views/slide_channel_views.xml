@@ -20,6 +20,7 @@
                                 <field name="total_views" widget="statinfo" string="Visits"/>
                             </button>
                             <button name="action_view_slides"
+                                invisible="website_published == False"
                                 type="object"
                                 icon="fa-files-o"
                                 class="oe_stat_button"
@@ -81,7 +82,9 @@
                                         <field name="completion_time" invisible="slide_category == 'category'" string="Duration" widget="float_time"/>
                                         <field name="total_views" invisible="slide_category == 'category'"/>
                                         <field name="is_preview" string="Preview"/>
-                                        <field name="is_published" string="Published"/>
+                                        <field name="publish_on" column_invisible="1"/>
+                                        <field name="website_published" invisible="publish_on and website_published" string="Published"/>
+                                        <field name="publish_on" string="Scheduled" invisible="not publish_on"/>
                                         <field name="is_category" column_invisible="True"/>
                                         <control>
                                             <create name="add_slide_section" string="Add Section" context="{'default_is_category': True}"/>
@@ -98,6 +101,13 @@
                                     <group name="course" string="Course">
                                         <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                                         <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                                        <field name="publish_on" invisible="1"/>
+                                        <field string="Published" name="website_published" widget="boolean_toggle" readonly="publish_on"></field>
+                                        <label invisible="website_published" for="publish_on" string="Auto publish on"/>
+                                        <div invisible="website_published" class="o_row">
+                                            <field name="publish_on" widget="datetime" options="{'min_date': datetime.datetime.now().to_utc().strftime('%Y-%m-%d %H:%M:%S')}"/>
+                                            <button name="action_unschedule" type="object" invisible="not publish_on">Unschedule</button>
+                                        </div>
                                     </group>
                                     <group name="access_rights" string="Access Rights">
                                         <field name="website_published" invisible="1"/>
@@ -165,7 +175,9 @@
                     <field name="channel_type" string="Course Type"/>
                     <field name="visibility"/>
                     <field name="enroll" widget="badge" decoration-success="enroll == 'public'" decoration-info="enroll == 'invite'" decoration-warning="enroll == 'payment'" optional="hide"/>
-                    <field name="is_published" string="Published"/>
+                    <field name="publish_on" column_invisible="1"/>
+                    <field name="website_published" invisible="publish_on and website_published" string="Published"/>
+                    <field name="publish_on" string="Scheduled" invisible="not publish_on"/>
                     <field name="active" column_invisible="True"/>
                 </tree>
             </field>
@@ -271,6 +283,11 @@
                                     invisible="not website_published or not active">
                                     <field name="website_published" invisible="1"/>
                                     <span class="text-bg-success">Published</span>
+                                </div>
+                                <div class="ribbon ribbon-top-right"
+                                    invisible="not publish_on">
+                                    <field name="publish_on" invisible="1"/>
+                                    <span class="text-bg-warning">Scheduled</span>
                                 </div>
                                 <div class="o_kanban_card_header">
                                     <div class="o_kanban_card_header_title mb16">

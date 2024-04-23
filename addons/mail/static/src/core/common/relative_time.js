@@ -16,18 +16,24 @@ export class RelativeTime extends Component {
         onWillDestroy(() => clearTimeout(this.timeout));
     }
 
+    computeDeltaAndRelativeTime() {
+        const delta = Date.now() - this.props.datetime.ts;
+        let relativeTime;
+        if (delta < 45 * 1000) {
+            relativeTime = _t("now");
+        } else {
+            relativeTime = this.props.datetime.toRelative();
+        }
+        return [delta, relativeTime];
+    }
+
     computeRelativeTime() {
-        const datetime = this.props.datetime;
-        if (!datetime) {
+        if (!this.props.datetime) {
             this.relativeTime = "";
             return;
         }
-        const delta = Date.now() - datetime.ts;
-        if (delta < 45 * 1000) {
-            this.relativeTime = _t("now");
-        } else {
-            this.relativeTime = datetime.toRelative();
-        }
+        let delta;
+        [delta, this.relativeTime] = this.computeDeltaAndRelativeTime();
         const updateDelay = delta < HOUR ? MINUTE : HOUR;
         if (updateDelay) {
             this.timeout = setTimeout(() => {

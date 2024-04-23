@@ -209,7 +209,10 @@
                 <div class="o_wsale_product_information_text flex-grow-1">
                     <h6 class="o_wsale_products_item_title mb-2">
                         <a class="text-primary text-decoration-none" itemprop="name" t-att-href="product_href" t-att-content="product.name" t-field="product.name" />
-                        <a t-if="not product.website_published" role="button" t-att-href="product_href" class="btn btn-sm btn-danger" title="This product is unpublished.">
+                        <a t-if="product.publish_on" role="button" t-att-href="product_href" class="btn btn-sm btn-warning" title="This product is scheduled.">
+                            Scheduled
+                        </a>
+                        <a t-elif="not product.website_published" role="button" t-att-href="product_href" class="btn btn-sm btn-danger" title="This product is unpublished.">
                             Unpublished
                         </a>
                     </h6>
