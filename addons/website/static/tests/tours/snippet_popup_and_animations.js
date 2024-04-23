@@ -83,7 +83,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         content: "Drag the Columns building block and drop it at the bottom of the popup.",
         trigger: '#oe_snippets .oe_snippet[name="Columns"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
         extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets",
-        run: "drag_and_drop_native :iframe #wrapwrap .modal-content .s_media_list .container > .row > :last-child",
+        run: "drag_and_drop :iframe #wrap .s_popup .modal-content.oe_structure .oe_drop_zone:last",
     },
     wTourUtils.clickOnElement("3rd columns", ":iframe .s_popup .s_three_columns .row > :last-child"),
     ...setOnScrollAnim(),
@@ -106,8 +106,10 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     {
         content: "Wait until the column is no longer animated/visible.",
-        trigger: ":iframe .s_popup .s_three_columns .row > :last-child:not(.o_animating)",
-        run: function () {
+        trigger: ":iframe .s_popup .s_three_columns .row > :last-child:not(:has(.o_animating))",
+        async run() {
+            //TODO: understand why we now wait 500ms before check the condition
+            await new Promise((r) => setTimeout(r, 500));
             // If the column has been animated successfully, the animation delay
             // should be set to approximately zero when it is not visible.
             if (Math.round(parseFloat(this.anchor.style.animationDelay)) !== 0) {

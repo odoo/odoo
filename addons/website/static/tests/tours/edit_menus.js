@@ -166,23 +166,22 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
     },
     {
-        content: "Avoid flickering during DnD",
-        trigger: ".modal-dialog",
-        run: () => {
-            const modalDialog = document.querySelector(".modal .modal-dialog");
-            modalDialog.classList.remove("modal-dialog-centered");
-        },
-        debugHelp: "This is a hack/workaround for the next step",
-    },
-    {
-        content: "Drag 'Contact Us' item below the 'Home' item",
+        content: `Drag "Contact Us" menu below "Home" menu`,
         trigger: '.oe_menu_editor li:contains("Contact us") .fa-bars',
-        run: "drag_and_drop_native .oe_menu_editor li:contains('Home') + li .fa-bars",
+        async run(helpers) {
+            await helpers.drag_and_drop('.oe_menu_editor li:contains("Home")', {
+                position: {
+                    top: 57,
+                    left:5,
+                },
+                relative: true,
+            });
+        },
     },
     {
         content: "Drag 'Contact Us' item as a child of the 'Home' item",
         trigger: '.oe_menu_editor li:contains("Contact us") .fa-bars',
-        run: "drag_and_drop_native .oe_menu_editor li:contains('Home') + li .form-control",
+        run: 'drag_and_drop .oe_menu_editor li:contains("Contact us") .form-control',
     },
     {
         content: "Wait for drop",
@@ -193,7 +192,15 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Drag Mega at the top",
         trigger: '.oe_menu_editor li:contains("Megaaaaa!") .fa-bars',
-        run: "drag_and_drop_native .oe_menu_editor li:contains('Home') .fa-bars",
+        async run(helpers) {
+            await helpers.drag_and_drop('.oe_menu_editor li:contains("Home")', {
+                position: {
+                    y: 27,
+                    left: 5,
+                },
+                relative: true,
+            });
+        },
     },
     {
         content: "Wait for drop",
@@ -285,8 +292,6 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         // If this step fails, it means that a patch inside bootstrap was lost.
         content: "Press the 'down arrow' key.",
         trigger: ':iframe .top_menu .nav-item:contains("Home") li:contains("Contact us")',
-        run: function (actions) {
-            this.anchor.dispatchEvent(new window.KeyboardEvent("keydown", { key: "ArrowDown" }));
-        },
+        run: "press ArrowDown",
     },
 ]);

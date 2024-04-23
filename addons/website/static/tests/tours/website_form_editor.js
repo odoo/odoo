@@ -60,6 +60,10 @@
         return [{
             content: "Open the select",
             trigger: `we-select:has(we-button[${data}]) we-toggler`,
+            run() {
+                // TODO: use run: "click", instead
+                this.anchor.click();
+            }
         }, {
             content: "Click on the option",
             trigger: `we-select we-button[${data}]`,
@@ -135,7 +139,7 @@
         {
             content: "Drop the form snippet",
             trigger: '#oe_snippets .oe_snippet .oe_snippet_thumbnail[data-snippet=s_website_form]',
-            run: 'drag_and_drop_native :iframe #wrap',
+            run: "drag_and_drop :iframe #wrap",
         }, {
             content: "Select form by clicking on an input field",
             extra_trigger: ':iframe .s_website_form_field',
@@ -159,7 +163,7 @@
         }, {
             content: "Rename and leave the field label",
             trigger: 'we-input[data-set-label-text] input',
-            run: "edit Renamed && blur",
+            run: "edit Renamed && click body",
         },
         wTourUtils.goBackToBlocks(),
         {
@@ -198,7 +202,8 @@
         {
             content: "Change the label of 'Conditional Visibility Check 4' and change it to 'Conditional Visibility Check 3'",
             trigger: 'we-input[data-set-label-text] input',
-            run: "edit Conditional Visibility Check 3 && blur",
+            // TODO: remove && click body
+            run: "edit Conditional Visibility Check 3 && click body",
         },
         {
             content: "Check that the conditional visibility of the renamed field is removed",
@@ -211,7 +216,8 @@
         {
             content: "Change the label of 'Conditional Visibility Check 6' and change it to 'Conditional Visibility Check 5'",
             trigger: 'we-input[data-set-label-text] input',
-            run: "edit Conditional Visibility Check 5 && blur",
+            // TODO: remove && click body
+            run: "edit Conditional Visibility Check 5 && click body",
         },
         {
             content: "Check that 'Conditional Visibility Check 5' is not in the list of the renamed field",
@@ -599,7 +605,8 @@
         {
             content: 'Change the Recipient Email',
             trigger: '[data-field-name="email_to"] input',
-            run: "edit test@test.test && blur we-title",
+            // TODO: remove && click we-title
+            run: "edit test@test.test && click we-title",
         },
         // Test a field visibility when it's tied to another Date [Time] field
         // being set.
@@ -611,7 +618,8 @@
         {
             content: "Enter a date in the date input",
             trigger: "[data-name='hidden_condition_additional_date'] input",
-            run: "edit 03/28/2017",
+            // TODO: remove && click .o_we_customize_panel
+            run: "edit 03/28/2017 && click .o_we_customize_panel",
         },
         ...wTourUtils.clickOnSave(),
         {
@@ -703,7 +711,8 @@
         {
             content: 'Change the Recipient Email',
             trigger: '[data-field-name="email_to"] input',
-            run: "edit test@test.test && blur",
+            // TODO: remove && click body
+            run: "edit test@test.test && click body", 
         },
     ]));
     wTourUtils.registerWebsitePreviewTour('website_form_contactus_edition_no_email', {
@@ -714,7 +723,7 @@
         {
             content: "Change a random option",
             trigger: '[data-set-mark] input',
-            run: "edit ** && blur",
+            run: "edit ** && click body",
         }, {
             content: "Check that the recipient email is correct",
             trigger: 'we-input[data-field-name="email_to"] input:value("website_form_contactus_edition_no_email@mail.com")',
@@ -734,7 +743,7 @@
         {
             content: "Add the form snippet",
             trigger: '#oe_snippets .oe_snippet .oe_snippet_thumbnail[data-snippet=s_website_form]',
-            run: 'drag_and_drop_native :iframe #wrap',
+            run: "drag_and_drop :iframe #wrap",
         }, {
             content: "Select the form by clicking on an input field",
             extra_trigger: ':iframe .s_website_form_field',
@@ -771,15 +780,33 @@
         {
             content: "Open condition item select",
             trigger: 'we-select[data-name="hidden_condition_opt"] we-toggler',
+            run(helpers) {
+                // TODO: use run: "click",
+                this.anchor.click();
+            }
         }, {
             content: "Choose first checkbox as condition item",
             trigger: 'we-button[data-set-visibility-dependency="Checkbox 1"]',
+            async run(helpers) {
+                helpers.click();
+                // TODO:to be removed
+                await new Promise((r) => setTimeout(r, 300));
+            }
         }, {
             content: "Open condition comparator select",
             trigger: 'we-select[data-attribute-name="visibilityComparator"] we-toggler',
+            run(helpers) {
+                // TODO: use run: "click",
+                this.anchor.click();
+            }
         }, {
             content: "Choose 'not equal to' comparator",
             trigger: 'we-button[data-select-data-attribute="!selected"]',
+            async run(helpers) {
+                helpers.click();
+                // TODO: to be removed
+                await new Promise((r) => setTimeout(r, 300));
+            }
         },
         ...wTourUtils.clickOnSave(),
 
@@ -845,7 +872,8 @@
         {
             content: "Change a random option",
             trigger: '[data-set-mark] input',
-            run: "edit ** && blur",
+            // TODO: remove && click body
+            run: "edit ** && click body",
         },
     ]));
 

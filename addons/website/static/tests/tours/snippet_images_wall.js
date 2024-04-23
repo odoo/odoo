@@ -58,7 +58,7 @@ selectSignImageStep,
 }, {
     content: "Change the link of the image",
     trigger: ".snippet-option-ReplaceMedia [data-set-url] input",
-    run: "edit /contactus && click body",
+    run: "edit /contactus",
 }, {
     content: "Click on move to previous",
     trigger: ".snippet-option-GalleryElement we-button[data-position='prev']",
