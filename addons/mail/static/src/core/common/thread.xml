@@ -31,11 +31,12 @@
                         <t t-call="mail.NotificationMessage"/>
                     </t>
                     <Message t-else=""
+                        className="getMessageClassName(msg)"
                         isInChatWindow="props.isInChatWindow"
                         message="msg"
+                        registerMessageRef="registerMessageRef"
                         messageToReplyTo="props.messageToReplyTo"
                         squashed="isSquashed(msg, prevMsg)"
-                        highlighted="messageHighlight?.highlightedMessageId === msg.id"
                         onParentMessageClick.bind="() => msg.parentMessage and env.messageHighlight?.highlightMessage(msg.parentMessage, props.thread)"
                         thread="props.thread"
                         messageEdition="props.messageEdition"
