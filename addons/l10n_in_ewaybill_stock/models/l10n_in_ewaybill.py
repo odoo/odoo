@@ -158,7 +158,7 @@ class Ewaybill(models.Model):
                 ewaybill.partner_bill_from_id = picking_id.company_id.partner_id
                 ewaybill.partner_ship_to_id = picking_id.partner_id
                 ewaybill.partner_ship_from_id = picking_id.picking_type_id.warehouse_id.partner_id
-                if  partner_invoice_id := ewaybill.picking_id._l10n_in_get_invoice_partner():
+                if partner_invoice_id := ewaybill.picking_id._l10n_in_get_invoice_partner():
                     ewaybill.partner_bill_to_id = partner_invoice_id
 
             if (
@@ -220,7 +220,7 @@ class Ewaybill(models.Model):
             'res_model': 'l10n.in.ewaybill.cancel',
             'view_mode': 'form',
             'context': {
-                'default_ewaybill_id': self.id,
+                'default_l10n_in_ewaybill_id': self.id,
             },
             'target': 'new',
             'type': 'ir.actions.act_window',
