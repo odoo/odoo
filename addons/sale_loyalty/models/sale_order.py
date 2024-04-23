@@ -205,6 +205,8 @@ class SaleOrder(models.Model):
         assert reward.discount_applicability == 'cheapest'
 
         cheapest_line = self._cheapest_line()
+        if not cheapest_line:
+            return False, False
         discountable = cheapest_line.price_total
         discountable_per_taxes = cheapest_line.price_unit * (1 - (cheapest_line.discount or 0) / 100)
         taxes = cheapest_line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
