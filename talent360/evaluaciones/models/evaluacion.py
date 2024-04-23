@@ -32,6 +32,14 @@ class Evaluacion(models.Model):
     def get_evaluation_default_type(self):
         return self._get_evaluation_type(self)[0][0]
 
+    def get_formview_id(self, access_uuid=None):
+        if self.tipo == "NOM_035":
+            return self.env.ref("evaluaciones.evaluacion_nom035_form").id
+        elif self.tipo in ["90", "180", "270", "360"]:
+            return self.env.ref("evaluaciones.evaluacion_360_form").id
+        else:
+            return super(Evaluacion, self).get_formview_id(access_uuid)
+
     tipo = fields.Selection(selection=_get_evaluation_type,
                             required=True, default="get_evaluation_default_type")
 
