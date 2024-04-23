@@ -602,6 +602,7 @@ actual arch.
         # if in uninstall mode and has children views, emulate an ondelete cascade
         if self.env.context.get('_force_unlink', False) and self.inherit_children_ids:
             self.inherit_children_ids.unlink()
+        self.env.registry.clear_cache('templates')
         return super(View, self).unlink()
 
     def _update_field_translations(self, fname, translations, digest=None):
