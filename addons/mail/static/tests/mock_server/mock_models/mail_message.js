@@ -7,10 +7,6 @@ export class MailMessage extends models.ServerModel {
     _name = "mail.message";
 
     author_id = fields.Generic({ default: () => serverState.partnerId });
-    history_partner_ids = fields.Many2many({
-        relation: "res.partner",
-        string: "Partners with History",
-    });
     is_discussion = fields.Boolean({ string: "Discussion" });
     is_note = fields.Boolean({ string: "Note" });
     needaction_partner_ids = fields.Many2many({

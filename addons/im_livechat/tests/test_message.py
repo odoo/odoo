@@ -81,7 +81,6 @@ class TestImLivechatMessage(HttpCase):
             'date': message.date,
             'write_date': message.write_date,
             'create_date': message.create_date,
-            'history_partner_ids': [],
             'id': message.id,
             'default_subject': channel_livechat_1.name,
             'is_discussion': False,

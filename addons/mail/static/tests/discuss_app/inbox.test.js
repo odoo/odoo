@@ -12,7 +12,7 @@ import {
     step,
     triggerHotkey,
 } from "../mail_test_helpers";
-import { Command, mockService, serverState } from "@web/../tests/web_test_helpers";
+import { mockService, serverState } from "@web/../tests/web_test_helpers";
 import { Deferred } from "@odoo/hoot-mock";
 import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
 import { actionService } from "@web/webclient/actions/action_service";
@@ -181,7 +181,6 @@ test("show subject of message in history", async () => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
-        history_partner_ids: [Command.link(serverState.partnerId)], // not needed, for consistency
         model: "discuss.channel",
         subject: "Salutations, voyageur",
     });
