@@ -1,19 +1,13 @@
 
 .s_hr {
     line-height: 0;
+
     hr {
-        // TODO this should be reviewed as per the bootstrap update: many things
-        // are not needed anymore here and it's also probably better to just not
-        // force what we don't have to.
         padding: 0;
-        border: 0;
-        border-top: 1px solid $border-color;
         margin: 0;
-        color: inherit;
-        // As BS5 added "opacity" and "background-color" on hr tag, we remove
-        // that here to let users set the color as they want.
+        // Bootstrap sets an "opacity" on hr elements, it is removed here to let
+        // users set the color as they want with the editor.
         opacity: 1;
-        background-color: transparent;
     }
 }
 
