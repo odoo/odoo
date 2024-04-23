@@ -39,8 +39,8 @@
         auto: true,
     },
     {
-        trigger: "a:contains(\"Answer\").collapsed",
-        content: _t("Click to answer."),
+        trigger: "a:contains(\"Reply\").collapsed",
+        content: _t("Click to reply."),
         position: "bottom",
     },
     {
