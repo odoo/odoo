@@ -433,12 +433,13 @@ class PurchaseOrderLine(models.Model):
     def _create_or_update_picking(self):
         for line in self:
             if line.product_id and line.product_id.type in ('product', 'consu'):
+                rounding = line.product_uom.rounding
                 # Prevent decreasing below received quantity
-                if float_compare(line.product_qty, line.qty_received, line.product_uom.rounding) < 0:
+                if float_compare(line.product_qty, line.qty_received, precision_rounding=rounding) < 0:
                     raise UserError(_('You cannot decrease the ordered quantity below the received quantity.\n'
                                       'Create a return first.'))
 
-                if float_compare(line.product_qty, line.qty_invoiced, line.product_uom.rounding) == -1:
+                if float_compare(line.product_qty, line.qty_invoiced, precision_rounding=rounding) < 0:
                     # If the quantity is now below the invoiced quantity, create an activity on the vendor bill
                     # inviting the user to create a refund.
                     line.invoice_lines[0].move_id.activity_schedule(

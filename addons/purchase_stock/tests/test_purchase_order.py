@@ -7,6 +7,7 @@ from freezegun import freeze_time
 from odoo import Command
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 
 
@@ -213,6 +214,9 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         self.assertEqual(po1.order_line.qty_received, 5)
 
+        with self.assertRaises(UserError, msg="Shouldn't allow ordered qty be lower than received"):
+            po1.order_line.product_qty = po1.order_line.qty_received - 0.01
+
         # Deliver 15 instead of 10.
         po1.write({
             'order_line': [
@@ -223,6 +227,16 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         # A new move of 10 unit (15 - 5 units)
         self.assertEqual(po1.order_line.qty_received, 5)
         self.assertEqual(po1.picking_ids[-1].move_ids.product_qty, 10)
+
+        # Modify after invoicing
+        po1.action_create_invoice()
+        self.assertEqual(po1.order_line.qty_invoiced, 15)
+        self.assertFalse(po1.invoice_ids.activity_ids)
+        po1.order_line.product_qty = 14.99
+        self.assertTrue(
+            po1.invoice_ids.activity_ids,
+            "Lowering product qty below invoiced qty should schedule an activity",
+        )
 
     def test_04_update_date_planned(self):
         today = datetime.today().replace(hour=9, microsecond=0)
