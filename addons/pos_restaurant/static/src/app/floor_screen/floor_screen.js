@@ -274,6 +274,7 @@ export class FloorScreen extends Component {
             }
 
             newTableData = {
+                active: true,
                 position_v: posV,
                 position_h: posH,
                 width: widthTable,
