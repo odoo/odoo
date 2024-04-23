@@ -10,6 +10,8 @@ class Competencia(models.Model):
 
     company_id = fields.Many2one("res.company", string="Compañía")
 
+    pregunta_ids = fields.Many2many("pregunta", string="Preguntas")
+
     pregunta_ids = fields.Many2many(
         "pregunta",
         string="Preguntas",
