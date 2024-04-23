@@ -573,7 +573,7 @@ class TestRepair(common.TransactionCase):
         self.assertEqual(return_picking.state, 'done')
 
         res_dict = return_picking.action_repair_return()
-        repair_form = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context']), view=self.env.ref('repair.view_repair_order_form'))
+        repair_form = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context']), view=res_dict['view_id'])
         repair_form.product_id = product
         with repair_form.move_ids.new() as move:
             move.product_id = self.product_product_5
