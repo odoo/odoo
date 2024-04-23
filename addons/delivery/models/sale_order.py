@@ -54,7 +54,6 @@ class SaleOrder(models.Model):
                 + '\n'.join(['- %s: %s x %s' % (line.product_id.with_context(display_default_code=False).display_name, line.qty_invoiced, line.price_unit) for line in delivery_lines])
             )
         to_delete.unlink()
-        self.carrier_id = self.env['delivery.carrier']  # reset carrier
 
     def set_delivery_line(self, carrier, amount):
         self._remove_delivery_line()
