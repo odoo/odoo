@@ -105,8 +105,8 @@ publicWidget.registry.websiteSlidesSlideLike = publicWidget.Widget.extend({
     start: function () {
         const self = this;
         const defs = [this._super.apply(this, arguments)];
-        this.el.querySelectorAll('.o_wslides_js_slide_like').forEach(function () {
-            defs.push(new SlideLikeWidget(self).attachTo(this));
+        this.el.querySelectorAll('.o_wslides_js_slide_like').forEach(function (el) {
+            defs.push(new SlideLikeWidget(self).attachTo(el));
         });
         return Promise.all(defs);
     },

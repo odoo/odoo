@@ -268,11 +268,15 @@ var PortalChatter = publicWidget.Widget.extend({
     },
     _renderMessageCount: function () {
         const messageCounter = this.el.querySelector('.o_message_counter');
-        messageCounter.parentNode.replaceChild(messageCounter, renderToElement("portal.chatter_message_count", {widget: this}));
+        if (messageCounter) {
+            messageCounter.parentNode.replaceChild(renderToElement("portal.chatter_message_count", {widget: this}), messageCounter);
+        }
     },
     _renderPager: function () {
         const chatterPager = this.el.querySelector('.o_portal_chatter_pager');
-        chatterPager.parentNode.replaceChild(chatterPager, renderToElement("portal.pager", {widget: this}));
+        if (chatterPager) {
+            chatterPager.parentNode.replaceChild(renderToElement("portal.pager", {widget: this}), chatterPager);
+        }
     },
 
     //--------------------------------------------------------------------------

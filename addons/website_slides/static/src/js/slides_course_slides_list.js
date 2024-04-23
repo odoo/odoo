@@ -126,10 +126,10 @@ publicWidget.registry.websiteSlidesCourseSlidesList = SlideCoursePage.extend({
      * @private
      */
     _updateHref: function () {
-        this.el.querySelectorAll(".o_wslides_js_slides_list_slide_link").forEach(() => {
-            const href = this.getAttribute('href');
+        this.el.querySelectorAll(".o_wslides_js_slides_list_slide_link").forEach(function (el) {
+            const href = el.getAttribute('href');
             const operator = href.indexOf('?') !== -1 ? '&' : '?';
-            this.setAttribute('href', href + operator + "fullscreen=1");
+            el.setAttribute('href', href + operator + "fullscreen=1");
         });
     }
 });

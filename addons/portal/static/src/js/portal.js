@@ -31,18 +31,21 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
      */
     _adaptAddressForm: function () {
         const country = this.el.querySelector('select[name="country_id"]');
-        const countryID = (country.value || 0);
-        this.state.removeChild()
-        // TODO: MSH: Need to check this code as this is not as per expectations
-        const displayedState = this.stateOptions.filter('[data-country_id=' + countryID + ']');
-        this.state.appendChild(displayedState)
-        displayedState.show();
+        const countryID = country.value || 0;
+        const displayedState = this.stateOptions.filter(el => el.getAttribute('data-country_id') ===  `${countryID}`);
+        if (countryID) {
+            this.state.innerHTML = "";
+        }
+        displayedState.forEach(state => {
+            this.state.appendChild(state);
+            state.style.display = "";
+        });
         const nb = displayedState.length;
         if (nb >= 1) {
-            if (this.state.parent().offsetParent === null) { // hidden
-                this.state.parent().style.display = 'none';
+            if (this.state.parentElement.offsetParent === null) { // hidden
+                this.state.parentElement.style.display = 'none';
             } else {
-                this.state.parent().style.display = 'block';
+                this.state.parentElement.style.display = 'block';
             }
         }
     },
@@ -129,7 +132,7 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        this._adaptSearchLabel(this.$('.dropdown-item.active'));
+        this._adaptSearchLabel(this.el.querySelector('.dropdown-item.active'));
         return def;
     },
 

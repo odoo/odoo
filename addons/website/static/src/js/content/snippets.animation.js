@@ -1079,7 +1079,7 @@ registry.anchorSlide = publicWidget.Widget.extend({
         }
         // Escape special characters to make the jQuery selector to work.
         hash = '#' + hash.substring(1).replace(/([!"#$%&'()*+,./:;<=>?@[\]^`{|}~])/g, '\\$1');
-        const anchor = hash;
+        const anchor = document.querySelector(hash);
         const scrollValue = anchor.getAttribute('data-anchor');
         if (!anchor.length || !scrollValue) {
             return;

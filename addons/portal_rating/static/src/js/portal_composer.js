@@ -56,7 +56,9 @@ PortalComposer.include({
 
             // set the default value to trigger the display of star widget and update the hidden input value.
             self.set("star_value", self.options.default_rating_value);
-            self.input.value = self.options.default_rating_value;
+            if (self.input) {
+                self.input.value = self.options.default_rating_value;
+            }
         });
     },
 
@@ -72,7 +74,7 @@ PortalComposer.include({
         const options = this._super(...arguments);
         return Object.assign(options || {}, {
             message_id: this.options.default_message_id,
-            post_data: { ...options.post_data, rating_value: this.input.value },
+            post_data: { ...options.post_data, rating_value: this.input?.value || "" },
         });
     },
     /**

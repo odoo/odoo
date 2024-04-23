@@ -59,7 +59,7 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
         let anchor;
 
         const quotes = document.querySelectorAll("#quote_content [id^=quote_header_], #quote_content [id^=quote_]") || this.spyWatched;
-        quotes.forEach(quote => quote.attr("id", ""));
+        quotes.forEach(quote => quote.setAttribute("id", ""));
         const h2AndH3 = this.spyWatched.querySelectorAll("#quote_content h2, #quote_content h3");
         h2AndH3.forEach((el) => {
             var id, text;

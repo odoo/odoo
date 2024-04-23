@@ -60,7 +60,7 @@ const RatingPopupComposer = publicWidget.Widget.extend({
     _reloadRatingPopupComposer: function () {
         const popupComposerStars = this.el.querySelector('.o_rating_popup_composer_stars');
         if (this.options.hide_rating_avg) {
-            popupComposerStars.replaceChild();
+            popupComposerStars.innerHTML = "";
         } else {
             const ratingAverage = renderToElement(
                 'portal_rating.rating_stars_static', {
@@ -68,8 +68,8 @@ const RatingPopupComposer = publicWidget.Widget.extend({
                 widget: this,
                 val: this.rating_avg,
             });
-            popupComposerStars.replaceChild();
-            popupComposerStars.html(ratingAverage);
+            popupComposerStars.innerHTML = "";
+            popupComposerStars.appendChild(ratingAverage);
         }
 
         // Append the modal
@@ -79,7 +79,8 @@ const RatingPopupComposer = publicWidget.Widget.extend({
             widget: this,
             val: this.rating_avg,
         }) || '';
-        this.el.querySelector('.o_rating_popup_composer_modal').innerHTML = modal;
+        this.el.querySelector('.o_rating_popup_composer_modal').innerHTML = "";
+        this.el.querySelector('.o_rating_popup_composer_modal').appendChild(modal);
 
         if (this._composer) {
             this._composer.destroy();

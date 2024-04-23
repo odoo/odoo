@@ -32,8 +32,8 @@ MailGroup.include({
 
         if (userEmail && userEmail.length) {
             const emailInput = this.el.querySelector('.o_mg_subscribe_email');
-            emailInput.val(userEmail);
-            emailInput.attr('readonly', 1);
+            emailInput.value = userEmail;
+            emailInput.setAttribute('readonly', 1);
         }
 
         if (this.isMember) {
