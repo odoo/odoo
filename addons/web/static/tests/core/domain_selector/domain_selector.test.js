@@ -37,8 +37,8 @@ import {
 import {
     contains,
     defineModels,
+    defineParams,
     fields,
-    makeMockServer,
     models,
     mountWithCleanup,
     onRpc,
@@ -1103,7 +1103,7 @@ test("support properties (mode readonly)", async () => {
         { name: "xpad_prop_1", string: "M2O", type: "many2one", comodel: "product" },
     ];
 
-    await makeMockServer({
+    defineParams({
         lang_parameters: {
             date_format: "%d|%m|%Y",
         },
@@ -1340,7 +1340,7 @@ test("integer field (readonly)", async () => {
 });
 
 test("date field (readonly)", async () => {
-    makeMockServer({
+    defineParams({
         lang_parameters: {
             date_format: "%d|%m|%Y",
         },
@@ -2021,7 +2021,7 @@ test("render false and true leaves", async () => {
 });
 
 test("datetime domain in readonly mode (check localization)", async () => {
-    await makeMockServer({
+    defineParams({
         lang_parameters: {
             date_format: "%m.%d.%Y",
         },
@@ -2037,7 +2037,7 @@ test("datetime domain in readonly mode (check localization)", async () => {
 });
 
 test("date domain in readonly mode (check localization)", async () => {
-    await makeMockServer({
+    defineParams({
         lang_parameters: {
             date_format: "%d|%m|%Y",
         },

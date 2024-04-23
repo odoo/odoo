@@ -6,11 +6,11 @@ import {
     defineModels,
     fieldInput,
     fields,
-    makeMockServer,
     models,
     mountView,
     onRpc,
-} from "../../web_test_helpers";
+    serverState,
+} from "@web/../tests/web_test_helpers";
 
 function fieldTextArea(name) {
     return contains(`.o_field_widget[name='${name}'] textarea`);
@@ -104,9 +104,9 @@ test("set row on text fields", async () => {
 test("is translatable", async () => {
     Product._fields.description = fields.Text({ translate: true });
     Product._records = [{ id: 1, description: "Description as text" }];
-    await makeMockServer({
-        multi_lang: true,
-    });
+
+    serverState.multiLang = true;
+
     onRpc("get_installed", () => [
         ["en_US", "English"],
         ["fr_BE", "French (Belgium)"],
@@ -137,9 +137,9 @@ test("is translatable", async () => {
 test("is translatable on new record", async () => {
     Product._fields.description = fields.Text({ translate: true });
     Product._records = [{ id: 1, description: "Description as text" }];
-    await makeMockServer({
-        multi_lang: true,
-    });
+
+    serverState.multiLang = true;
+
     await mountView({
         type: "form",
         resModel: "product",
