@@ -106,11 +106,6 @@ insertModelFields("mail.message", {
             return this.pyEnv.currentPartnerId;
         },
     },
-    history_partner_ids: {
-        relation: "res.partner",
-        string: "Partners with History",
-        type: "many2many",
-    },
     pinned_at: { default: () => false },
     is_discussion: { string: "Discussion", type: "boolean" },
     is_note: { string: "Discussion", type: "boolean" },

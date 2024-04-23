@@ -412,7 +412,6 @@ test("Can reply to history message", async () => {
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         model: "discuss.channel",
-        history_partner_ids: [serverState.partnerId],
         res_id: channelId,
     });
     pyEnv["mail.notification"].create({

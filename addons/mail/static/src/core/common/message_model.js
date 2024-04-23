@@ -119,8 +119,6 @@ export class Message extends Record {
     linkPreviews = Record.many("LinkPreview", { inverse: "message", onDelete: (r) => r.delete() });
     /** @type {number[]} */
     needaction_partner_ids = [];
-    /** @type {number[]} */
-    history_partner_ids = [];
     parentMessage = Record.one("Message");
     reactions = Record.many("MessageReactions", { inverse: "message" });
     notifications = Record.many("Notification", { inverse: "message" });
@@ -237,13 +235,6 @@ export class Message extends Record {
 
     get hasActions() {
         return !this.is_transient;
-    }
-
-    get isHistory() {
-        return (
-            this.store.self.type === "partner" &&
-            this.history_partner_ids.includes(this.store.self.id)
-        );
     }
 
     get isNotification() {
