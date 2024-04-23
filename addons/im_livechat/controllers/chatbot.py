@@ -2,7 +2,7 @@
 
 from odoo import http
 from odoo.http import request
-from odoo.tools import get_lang, is_html_empty, plaintext2html
+from odoo.tools import is_html_empty, plaintext2html
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
@@ -81,7 +81,9 @@ class LivechatChatbotScriptController(http.Controller):
     @http.route("/chatbot/step/validate_email", type="json", auth="public")
     @add_guest_to_context
     def chatbot_validate_email(self, channel_id):
-        discuss_channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        discuss_channel = request.env["discuss.channel"].search(
+            [("id", "=", channel_id)]
+        ).with_context(lang=self._get_chatbot_language())
         if not discuss_channel or not discuss_channel.chatbot_current_step_id:
             return None
 
@@ -101,4 +103,4 @@ class LivechatChatbotScriptController(http.Controller):
         return result
 
     def _get_chatbot_language(self):
-        return request.httprequest.cookies.get('frontend_lang', request.env.user.lang or get_lang(request.env).code)
+        return request.env["chatbot.script"]._get_chatbot_language()

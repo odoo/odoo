@@ -49,10 +49,11 @@ class DiscussChannel(models.Model):
         """
         channel_infos = super()._channel_info()
         channel_infos_dict = dict((c['id'], c) for c in channel_infos)
+        chatbot_lang = self.env["chatbot.script"]._get_chatbot_language()
         for channel in self:
             if channel.chatbot_current_step_id:
                 # sudo: chatbot.script.step - returning the current script/step of the channel
-                current_step_sudo = channel.chatbot_current_step_id.sudo()
+                current_step_sudo = channel.chatbot_current_step_id.sudo().with_context(lang=chatbot_lang)
                 chatbot_script = current_step_sudo.chatbot_script_id
                 # sudo: channel - accessing chatbot messages to get the current step message
                 step_message = next((
