@@ -15,6 +15,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Component, useRef, useState, xml } from "@odoo/owl";
+import { isIterable } from "@web/core/utils/arrays";
 import { Deferred } from "@web/core/utils/concurrency";
 
 /**
@@ -25,14 +26,18 @@ import { Deferred } from "@web/core/utils/concurrency";
  *  - `keyup`
  * Setting addOverlayModParts to true ensures alt is pressed
  * before the given key
- * @param {string} key
- * @param {boolean} addOverlayModParts
+ * @param {string | Iterable<string>} key
+ * @param {boolean} [addOverlayModParts]
  * @param {KeyboardEventInit} [options]
  */
-function triggerHotkey(key, addOverlayModParts = false, options = {}) {
-    press(addOverlayModParts ? "alt+" + key : key, options);
+const triggerHotkey = (key, addOverlayModParts, options) => {
+    const keys = isIterable(key) ? [...key] : [key];
+    if (addOverlayModParts) {
+        keys.unshift("alt");
+    }
+    press(keys, options);
     return animationFrame();
-}
+};
 
 const getOverlays = () => queryAllTexts(".o_web_hotkey_overlay");
 
@@ -73,7 +78,7 @@ test("hotkey handles wrongly formed KeyboardEvent", async () => {
 
     const key = "q";
     let removeHotkey = hotkey.add(key, () => expect.step(key), { global: true });
-    triggerHotkey(key);
+    await triggerHotkey(key);
     expect([key]).toVerifySteps();
     removeHotkey();
 
@@ -84,12 +89,12 @@ test("hotkey handles wrongly formed KeyboardEvent", async () => {
         },
         { global: true }
     );
-    triggerHotkey(key);
+    await triggerHotkey(key);
     expect(["error"]).toVerifySteps();
 
     // Trigger an event that doesn't honor KeyboardEvent API: that's the point
     // in particular, it has no `key`
-    triggerHotkey("");
+    await triggerHotkey("");
     expect([]).toVerifySteps();
 });
 
@@ -275,7 +280,7 @@ test("non-MacOS usability", async () => {
     await triggerHotkey(key, true);
     expect([`alt+${key}`]).toVerifySteps();
 
-    await triggerHotkey("ctrl+" + key);
+    await triggerHotkey(["ctrl", key]);
     expect([]).toVerifySteps();
 
     removeHotkey();
@@ -284,10 +289,10 @@ test("non-MacOS usability", async () => {
     removeHotkey = hotkey.add(`control+${key}`, () => expect.step(`control+${key}`));
     await animationFrame();
 
-    await triggerHotkey("ctrl+" + key);
+    await triggerHotkey(["ctrl", key]);
     expect([`control+${key}`]).toVerifySteps();
 
-    await triggerHotkey("win+" + key);
+    await triggerHotkey(["win", key]);
     expect([]).toVerifySteps();
 
     removeHotkey();
@@ -316,7 +321,7 @@ test("the overlay of hotkeys is correctly displayed", async () => {
     expect(getOverlays()).toEqual(["B", "C"], { message: "should display the overlay" });
 
     // apply an existent hotkey
-    await triggerHotkey(`alt+b`);
+    await triggerHotkey(["alt", "b"]);
     expect(["click b"]).toVerifySteps();
     expect(getOverlays()).toEqual([], { message: "shouldn't display the overlay" });
 
@@ -324,7 +329,7 @@ test("the overlay of hotkeys is correctly displayed", async () => {
     expect(getOverlays()).toEqual(["B", "C"], { message: "should display the overlay" });
 
     // apply a non-existent hotkey
-    await triggerHotkey(`alt+x`);
+    await triggerHotkey(["alt", "x"]);
     expect(getOverlays()).toEqual([], { message: "shouldn't display the overlay" });
     expect([]).toVerifySteps();
 });
@@ -354,7 +359,7 @@ test("the overlay of hotkeys is correctly displayed on MacOs", async () => {
     expect(getOverlays()).toEqual(["B", "C"], { message: "should display the overlay" });
 
     // apply an existent hotkey
-    await triggerHotkey(`alt+b`);
+    await triggerHotkey(["alt", "b"]);
     expect(["click b"]).toVerifySteps();
     expect(getOverlays()).toEqual([], { message: "shouldn't display the overlay" });
 
@@ -362,7 +367,7 @@ test("the overlay of hotkeys is correctly displayed on MacOs", async () => {
     expect(getOverlays()).toEqual(["B", "C"], { message: "should display the overlay" });
 
     // apply a non-existent hotkey
-    await triggerHotkey(`alt+x`);
+    await triggerHotkey(["alt", "x"]);
     expect(getOverlays()).toEqual([], { message: "shouldn't display the overlay" });
     expect([]).toVerifySteps();
 });
@@ -408,12 +413,10 @@ test("MacOS usability", async () => {
     let removeHotkey = hotkey.add(`alt+${key}`, () => expect.step(`alt+${key}`));
     await animationFrame();
 
-    press("alt+q");
-    await animationFrame();
+    await triggerHotkey(["alt", "q"]);
     expect([]).toVerifySteps();
 
-    press("ctrl+q");
-    await animationFrame();
+    await triggerHotkey(["ctrl", "q"]);
     expect([`alt+${key}`]).toVerifySteps();
 
     removeHotkey();
@@ -422,12 +425,10 @@ test("MacOS usability", async () => {
     removeHotkey = hotkey.add(`control+${key}`, () => expect.step(`control+${key}`));
     await animationFrame();
 
-    press("ctrl+q");
-    await animationFrame();
+    await triggerHotkey(["ctrl", "q"]);
     expect([]).toVerifySteps();
 
-    press("win+q");
-    await animationFrame();
+    await triggerHotkey(["win", "q"]);
     expect([`control+${key}`]).toVerifySteps();
 
     removeHotkey();
@@ -657,12 +658,11 @@ test("replace the overlayModifier for non-MacOs", async () => {
         overlayModifier: "alt+shift",
     });
     const key = "b";
-    triggerHotkey(`alt+shift+${key}`);
+    await triggerHotkey(["alt", "shift", key]);
 
-    await animationFrame();
     expect(["click"]).toVerifySteps();
 
-    await triggerHotkey(`alt+${key}`);
+    await triggerHotkey(["alt", key]);
 
     expect([]).toVerifySteps();
 });
@@ -687,12 +687,11 @@ test("replace the overlayModifier for MacOs", async () => {
     });
 
     const key = "b";
-    triggerHotkey(`ctrl+shift+${key}`);
+    await triggerHotkey(["ctrl", "shift", key]);
 
-    await animationFrame();
     expect(["click"]).toVerifySteps();
 
-    await triggerHotkey(`alt+${key}`);
+    await triggerHotkey(["alt", key]);
 
     expect([]).toVerifySteps();
 });
@@ -777,8 +776,7 @@ test("ignore numpad keys", async () => {
     expect([]).toVerifySteps();
 
     keyDown("alt");
-    press("&", { code: "Digit1" });
-    await animationFrame();
+    await triggerHotkey("&", false, { code: "Digit1" });
     expect(["1"]).toVerifySteps();
 });
 
@@ -848,9 +846,9 @@ test("callback: received context", async () => {
     await mountWithCleanup(A);
     await mountWithCleanup(B);
     await contains(".a").focus();
-    triggerHotkey("A");
+    await triggerHotkey("A");
     await contains(".b").focus();
-    triggerHotkey("B");
+    await triggerHotkey("B");
 });
 
 test("operating area can be restricted", async () => {
@@ -1083,7 +1081,6 @@ test("useHotkey can display an overlay over a DOM element ", async () => {
     displayHotkeysOverlay();
     expect(getOverlays()).toEqual(["A"], { message: "should display the overlay" });
 
-    await triggerHotkey("alt+a");
-    await animationFrame();
+    await triggerHotkey(["alt", "a"]);
     expect(["hotkey alt+a has been triggered"]).toVerifySteps();
 });

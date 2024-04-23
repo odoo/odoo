@@ -454,7 +454,7 @@ test(`statusbar edited by the smart action "Move to stage..."`, async () => {
 
     expect(".o_field_widget").toHaveCount(1);
 
-    press("control+k");
+    press(["control", "k"]);
     await animationFrame();
     click(`.o_command:contains("Move to Trululu")`);
     await animationFrame();
@@ -478,7 +478,7 @@ test("smart actions are unavailable if readonly", async () => {
     });
 
     expect(".o_field_widget").toHaveCount(1);
-    press("control+k");
+    press(["control", "k"]);
     await animationFrame();
     const moveStages = queryAllTexts(".o_command");
     expect(moveStages).not.toInclude("Move to Trululu\nALT + SHIFT + X");
@@ -500,11 +500,11 @@ test("hotkeys are unavailable if readonly", async () => {
     });
 
     expect(".o_field_widget").toHaveCount(1);
-    press("alt+shift+x"); // Move to stage...
+    press(["alt", "shift", "x"]); // Move to stage...
     await animationFrame();
     expect(".modal").toHaveCount(0, { message: "command palette should not open" });
 
-    press("alt+x"); // Move to next
+    press(["alt", "x"]); // Move to next
     await animationFrame();
     expect(".modal").toHaveCount(0, { message: "command palette should not open" });
 });

@@ -341,7 +341,7 @@ test('StateSelectionField edited by the smart actions "Set kanban state as <stat
     });
 
     expect(".o_status_red").toHaveCount(1);
-    press("control+k");
+    press(["control", "k"]);
     await animationFrame();
     expect(`.o_command:contains("Set kanban state as Normal\nALT + D")`).toHaveCount(1);
     const doneItem = `.o_command:contains("Set kanban state as Done\nALT + G")`;
@@ -351,7 +351,7 @@ test('StateSelectionField edited by the smart actions "Set kanban state as <stat
     await animationFrame();
     expect(".o_status_green").toHaveCount(1);
 
-    press("control+k");
+    press(["control", "k"]);
     await animationFrame();
     expect(`.o_command:contains("Set kanban state as Normal\nALT + D")`).toHaveCount(1);
     expect(`.o_command:contains("Set kanban state as Blocked\nALT + F")`).toHaveCount(1);
@@ -512,7 +512,7 @@ test("StateSelectionField - hotkey handling when there are more than 3 options a
     expect(".dropdown-menu .dropdown-item").toHaveCount(5, {
         message: "Five choices are displayed",
     });
-    press("control+k");
+    press(["control", "k"]);
     await animationFrame();
 
     expect(".o_command#o_command_2").toHaveText("Set kanban state as Done\nALT + G", {
