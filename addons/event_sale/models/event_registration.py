@@ -29,7 +29,7 @@ class EventRegistration(models.Model):
         for record in self:
             so = record.sale_order_id
             so_line = record.sale_order_line_id
-            if not so or float_is_zero(so_line.price_total, precision_digits=so.currency_id.rounding):
+            if not so or float_is_zero(so_line.price_total, precision_rounding=so.currency_id.rounding):
                 record.payment_status = 'free'
             elif record.is_paid:
                 record.payment_status = 'paid'
