@@ -12,7 +12,6 @@ var VariantMixin = {
     events: {
         'change .css_attribute_color input': '_onChangeColorAttribute',
         'click .o_variant_pills': '_onChangePillsAttribute',
-        'change .main_product:not(.in_cart) input.js_quantity': 'onChangeAddQuantity',
         'change [data-attribute_exclusions]': 'onChangeVariant'
     },
 
@@ -60,44 +59,13 @@ var VariantMixin = {
             return Promise.resolve();
         }
         const combination = this.getSelectedVariantValues($parent);
-        let parentCombination;
-
-        if ($parent.hasClass('main_product')) {
-            parentCombination = $parent.find('ul[data-attribute_exclusions]').data('attribute_exclusions').parent_combination;
-            const $optProducts = $parent.parent().find(`[data-parent-unique-id='${$parent.data('uniqueId')}']`);
-
-            for (const optionalProduct of $optProducts) {
-                const $currentOptionalProduct = $(optionalProduct);
-                const childCombination = this.getSelectedVariantValues($currentOptionalProduct);
-                const productTemplateId = parseInt($currentOptionalProduct.find('.product_template_id').val());
-                rpc('/website_sale/get_combination_info', {
-                    'product_template_id': productTemplateId,
-                    'product_id': this._getProductId($currentOptionalProduct),
-                    'combination': childCombination,
-                    'add_qty': parseInt($currentOptionalProduct.find('input[name="add_qty"]').val()),
-                    'parent_combination': combination,
-                    'context': this.context,
-                    ...this._getOptionalCombinationInfoParam($currentOptionalProduct),
-                }).then((combinationData) => {
-                    if (this._shouldIgnoreRpcResult()) {
-                        return;
-                    }
-                    this._onChangeCombination(ev, $currentOptionalProduct, combinationData);
-                    this._checkExclusions($currentOptionalProduct, childCombination, combinationData.parent_exclusions);
-                });
-            }
-        } else {
-            parentCombination = this.getSelectedVariantValues(
-                $parent.parent().find('.js_product.in_cart.main_product')
-            );
-        }
 
         return rpc('/website_sale/get_combination_info', {
             'product_template_id': parseInt($parent.find('.product_template_id').val()),
             'product_id': this._getProductId($parent),
             'combination': combination,
             'add_qty': parseInt($parent.find('input[name="add_qty"]').val()),
-            'parent_combination': parentCombination,
+            'parent_combination': [],
             'context': this.context,
             ...this._getOptionalCombinationInfoParam($parent),
         }).then((combinationData) => {
@@ -191,26 +159,6 @@ var VariantMixin = {
     },
 
     /**
-     * When the quantity is changed, we need to query the new price of the product.
-     * Based on the price list, the price might change when quantity exceeds X
-     *
-     * @param {MouseEvent} ev
-     */
-    onChangeAddQuantity: function (ev) {
-        var $parent;
-
-        if ($(ev.currentTarget).closest('.oe_advanced_configurator_modal').length > 0){
-            $parent = $(ev.currentTarget).closest('.oe_advanced_configurator_modal');
-        } else if ($(ev.currentTarget).closest('form').length > 0){
-            $parent = $(ev.currentTarget).closest('form');
-        }  else {
-            $parent = $(ev.currentTarget).closest('.o_product_configurator');
-        }
-
-        this.triggerVariantChange($parent);
-    },
-
-    /**
      * Triggers the price computation and other variant specific changes
      *
      * @param {$.Element} $container
@@ -291,16 +239,11 @@ var VariantMixin = {
 
     /**
      * Will return the list of selected product.template.attribute.value ids
-     * For the modal, the "main product"'s attribute values are stored in the
-     * "unchanged_value_ids" data
      *
      * @param {$.Element} $container the container to look into
      */
     getSelectedVariantValues: function ($container) {
         var values = [];
-        var unchangedValues = $container
-            .find('div.oe_unchanged_value_ids')
-            .data('unchanged_value_ids') || [];
 
         var variantsValuesSelectors = [
             'input.js_variant_change:checked',
@@ -310,7 +253,7 @@ var VariantMixin = {
             values.push(+$(el).val());
         });
 
-        return values.concat(unchangedValues);
+        return values;
     },
 
     /**
@@ -568,7 +511,6 @@ var VariantMixin = {
         var self = this;
         var $price = $parent.find(".oe_price:first .oe_currency_value");
         var $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
-        var $optional_price = $parent.find(".oe_optional:first .oe_currency_value");
         $price.text(self._priceToStr(combination.price));
         $default_price.text(self._priceToStr(combination.list_price));
 
@@ -582,23 +524,17 @@ var VariantMixin = {
             $default_price
                 .closest('.oe_website_sale')
                 .addClass("discount");
-            $optional_price
-                .closest('.oe_optional')
-                .removeClass('d-none')
-                .css('text-decoration', 'line-through');
             $default_price.parent().removeClass('d-none');
         } else {
             $default_price
                 .closest('.oe_website_sale')
                 .removeClass("discount");
-            $optional_price.closest('.oe_optional').addClass('d-none');
             $default_price.parent().addClass('d-none');
         }
 
         var rootComponentSelectors = [
             'tr.js_product',
             '.oe_website_sale',
-            '.o_product_configurator'
         ];
 
         // update images only when changing product
@@ -623,17 +559,6 @@ var VariantMixin = {
             .find('.product_id')
             .first()
             .val(combination.product_id || 0)
-            .trigger('change');
-
-        $parent
-            .find('.product_display_name')
-            .first()
-            .text(combination.display_name);
-
-        $parent
-            .find('.js_raw_price')
-            .first()
-            .text(combination.price)
             .trigger('change');
 
         $parent
@@ -697,17 +622,7 @@ var VariantMixin = {
      * @param {boolean} isCombinationPossible
      */
     _toggleDisable: function ($parent, isCombinationPossible) {
-        if ($parent.hasClass('in_cart')) {
-            const secondaryButton = $parent.parents('.modal-content').find('.modal-footer .btn-secondary');
-            secondaryButton.prop('disabled', !isCombinationPossible);
-            secondaryButton.toggleClass('disabled', !isCombinationPossible);
-        }
         $parent.toggleClass('css_not_available', !isCombinationPossible);
-        if ($parent.hasClass('in_cart')) {
-            const primaryButton = $parent.parents('.modal-content').find('.modal-footer .btn-primary');
-            primaryButton.prop('disabled', !isCombinationPossible);
-            primaryButton.toggleClass('disabled', !isCombinationPossible);
-        }
     },
     /**
      * Updates the product image.
@@ -731,8 +646,6 @@ var VariantMixin = {
         var imagesSelectors = [
             'span[data-oe-model^="product."][data-oe-type="image"] img:first',
             'img.product_detail_img',
-            'span.variant_image img',
-            'img.variant_image',
         ];
 
         var $img = $productContainer.find(imagesSelectors.join(', '));

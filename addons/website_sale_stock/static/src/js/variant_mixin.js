@@ -33,7 +33,7 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         product_id = $parent.find('.product_id').val();
     }
     const isMainProduct = combination.product_id &&
-        ($parent.is('.js_main_product') || $parent.is('.main_product')) &&
+        $parent.is('.js_main_product') &&
         combination.product_id === parseInt(product_id);
 
     if (!this.isWebsite || !isMainProduct) {
