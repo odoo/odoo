@@ -1751,8 +1751,9 @@ class MailThread(models.AbstractModel):
 
         return matching_user
 
+    # priority partner with user (Waresix)
     @api.model
-    def _mail_find_partner_from_emails(self, emails, records=None, force_create=False, extra_domain=False):
+    def _mail_find_partner_from_emails(self, emails, records=None, force_create=False, extra_domain=False, priority_partneruser=False):
         """ Utility method to find partners from email addresses. If no partner is
         found, create new partners if force_create is enabled. Search heuristics
 
@@ -1777,13 +1778,25 @@ class MailThread(models.AbstractModel):
         else:
             followers = self.env['res.partner']
         if records and 'company_id' in records:
-            sort_key = lambda p: (
-                self.env.user.partner_id == p,      # prioritize user
-                p.company_id in records.company_id, # then partner associated w/ records
-                not p.company_id,                   # otherwise prefer partner w/out company_id
-            )
+            if priority_partneruser:
+                sort_key = lambda p: (
+                    self.env.user.partner_id == p,          # prioritize user
+                    p.user_ids,                             # then partner with user (Waresix)
+                    p.company_id in records.company_id,     # then partner associated w/ records
+                    not p.company_id,                       # otherwise prefer partner w/out company_id
+                )
+            else:
+                sort_key = lambda p: (
+                    self.env.user.partner_id == p,      # prioritize user
+                    p.company_id in records.company_id, # then partner associated w/ records
+                    not p.company_id,                   # otherwise prefer partner w/out company_id
+                )
         else:
-            sort_key = lambda p: (self.env.user.partner_id == p, not p.company_id)
+            if priority_partneruser:
+                # priority partner with user (Waresix)
+                sort_key = lambda p: (self.env.user.partner_id == p, p.user_ids, not p.company_id)
+            else:
+                sort_key = lambda p: (self.env.user.partner_id == p, not p.company_id)
         catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
 
         # first, build a normalized email list and remove those linked to aliases
