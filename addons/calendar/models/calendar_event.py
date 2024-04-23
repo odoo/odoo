@@ -572,12 +572,13 @@ class Meeting(models.Model):
         previous_attendees = self.attendee_ids
 
         recurrence_values = {field: values.pop(field) for field in self._get_recurrent_fields() if field in values}
+        # Fixing Duplicate Event (Waresix)
+        future_edge_case = recurrence_update_setting == 'future_events' and self == self.recurrence_id.base_event_id
         if update_recurrence:
             if break_recurrence:
                 # Update this event
                 detached_events |= self._break_recurrence(future=recurrence_update_setting == 'future_events')
             else:
-                future_edge_case = recurrence_update_setting == 'future_events' and self == self.recurrence_id.base_event_id
                 time_values = {field: values.pop(field) for field in time_fields if field in values}
                 if 'access_token' in values:
                     values.pop('access_token')  # prevents copying access_token to other events in recurrency
@@ -593,7 +594,10 @@ class Meeting(models.Model):
             self._sync_activities(fields=values.keys())
 
         # We reapply recurrence for future events and when we add a rrule and 'recurrency' == True on the event
-        if recurrence_update_setting not in ['self_only', 'all_events'] and not break_recurrence:
+        # Fixing Duplicate Event (Waresix)
+        # if recurrence_update_setting not in ['self_only', 'all_events'] and not break_recurrence:
+        if recurrence_update_setting not in ['self_only',
+                                             'all_events'] and not future_edge_case and not break_recurrence:
             detached_events |= self._apply_recurrence_values(recurrence_values, future=recurrence_update_setting == 'future_events')
 
         (detached_events & self).active = False

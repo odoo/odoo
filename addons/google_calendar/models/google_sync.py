@@ -130,10 +130,13 @@ class GoogleSync(models.AbstractModel):
         new_records = records_to_sync - updated_records
         for record in cancelled_records.filtered(lambda e: e.google_id and e.need_sync):
             record.with_user(record._get_event_user())._google_delete(google_service, record.google_id)
-        for record in new_records:
+        for record in new_records.filtered(lambda e: e.user_id and not e.google_id): # No Insert to Google for no Organizer, because can duplicate (Waresix)
             record.with_user(record._get_event_user())._google_insert(google_service, record._google_values())
         for record in updated_records:
             record.with_user(record._get_event_user())._google_patch(google_service, record.google_id, record._google_values())
+        for record in self.env["calendar.event"].sudo().search([("user_id", "=", False), (
+        "google_id", "=", False)]):  # Remove Event, if there is no Organize and not Google Id (Waresix)
+            record.unlink()
 
     def _cancel(self):
         self.with_context(dont_notify=True).write({'google_id': False})
@@ -315,7 +318,7 @@ class GoogleSync(models.AbstractModel):
         remaining = [email for email in normalized_emails if
                      email not in [partner.email_normalized for partner in partners]]
         if remaining:
-            partners += self.env['mail.thread']._mail_find_partner_from_emails(remaining, records=self, force_create=True, extra_domain=[('type', '!=', 'private')])
+            partners += self.env['mail.thread']._mail_find_partner_from_emails(remaining, records=self, force_create=True, extra_domain=[('type', '!=', 'private')], priority_partneruser=True) # Prioritas Partner With User (Waresix)
         unsorted_partners = self.env['res.partner'].browse([p.id for p in partners if p.id])
         # partners needs to be sorted according to the emails order provided by google
         k = {value: idx for idx, value in enumerate(emails)}

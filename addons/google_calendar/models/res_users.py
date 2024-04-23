@@ -41,7 +41,8 @@ class User(models.Model):
             self.sudo().google_calendar_account_id._refresh_google_calendar_token()
         return self.google_calendar_account_id.calendar_token
 
-    def _sync_google_calendar(self, calendar_service: GoogleCalendarService):
+    # In Scheduler Sync, not Sync to Google for Error Permission (Waresix)
+    def _sync_google_calendar(self, calendar_service: GoogleCalendarService, no_sync_to_google=False):
         self.ensure_one()
         if self.google_synchronization_stopped:
             return False
@@ -78,14 +79,16 @@ class User(models.Model):
         synced_recurrences = self.env['calendar.recurrence'].with_context(write_dates=recurrences_write_dates)._sync_google2odoo(recurrences)
         synced_events = self.env['calendar.event'].with_context(write_dates=events_write_dates)._sync_google2odoo(events - recurrences, default_reminders=default_reminders)
 
-        # Odoo -> Google
-        recurrences = self.env['calendar.recurrence']._get_records_to_sync(full_sync=full_sync)
-        recurrences -= synced_recurrences
-        recurrences.with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
-        synced_events |= recurrences.calendar_event_ids - recurrences._get_outliers()
-        synced_events |= synced_recurrences.calendar_event_ids - synced_recurrences._get_outliers()
-        events = self.env['calendar.event']._get_records_to_sync(full_sync=full_sync)
-        (events - synced_events).with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
+        # In Scheduler Sync, not Sync to Google for Error Permission (Waresix)
+        if not no_sync_to_google:
+            # Odoo -> Google
+            recurrences = self.env['calendar.recurrence']._get_records_to_sync(full_sync=full_sync)
+            recurrences -= synced_recurrences
+            recurrences.with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
+            synced_events |= recurrences.calendar_event_ids - recurrences._get_outliers()
+            synced_events |= synced_recurrences.calendar_event_ids - synced_recurrences._get_outliers()
+            events = self.env['calendar.event']._get_records_to_sync(full_sync=full_sync)
+            (events - synced_events).with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
 
         return bool(events | synced_events) or bool(recurrences | synced_recurrences)
 
@@ -97,7 +100,7 @@ class User(models.Model):
         for user in users:
             _logger.info("Calendar Synchro - Starting synchronization for %s", user)
             try:
-                user.with_user(user).sudo()._sync_google_calendar(google)
+                user.with_user(user).sudo()._sync_google_calendar(google, no_sync_to_google=True) # In Scheduler Sync, not Sync to Google for Error Permission (Waresix)
                 self.env.cr.commit()
             except Exception as e:
                 _logger.exception("[%s] Calendar Synchro - Exception : %s !", user, exception_to_unicode(e))
