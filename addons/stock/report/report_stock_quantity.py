@@ -52,8 +52,8 @@ WITH
         FROM stock_move m
         LEFT JOIN stock_location ls on (ls.id=m.location_id)
         LEFT JOIN stock_location ld on (ld.id=m.location_dest_id)
-        LEFT JOIN stock_warehouse whs ON ls.parent_path like concat('%/', whs.view_location_id, '/%')
-        LEFT JOIN stock_warehouse whd ON ld.parent_path like concat('%/', whd.view_location_id, '/%')
+        LEFT JOIN stock_warehouse whs ON ls.parent_path like concat('%%/', whs.view_location_id, '/%%')
+        LEFT JOIN stock_warehouse whd ON ld.parent_path like concat('%%/', whd.view_location_id, '/%%')
         LEFT JOIN product_product pp on pp.id=m.product_id
         LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
         WHERE pt.type = 'product' AND
@@ -61,7 +61,7 @@ WITH
             (whs.id IS NULL OR whd.id IS NULL OR whs.id != whd.id) AND
             m.product_qty != 0 AND
             m.state NOT IN ('draft', 'cancel') AND
-            (m.state IN ('draft', 'waiting', 'confirmed', 'partially_available', 'assigned') or m.date >= ((now() at time zone 'utc')::date - interval '3month'))
+            (m.state IN ('draft', 'waiting', 'confirmed', 'partially_available', 'assigned') or m.date >= ((now() at time zone 'utc')::date - interval '%(report_period)s month'))
     ),
     all_sm (id, product_id, tmpl_id, product_qty, date, state, company_id, whs_id, whd_id) AS (
         SELECT sm.id, sm.product_id, sm.tmpl_id,
@@ -123,11 +123,11 @@ FROM (SELECT
         q.company_id,
         wh.id as warehouse_id
     FROM
-        GENERATE_SERIES((now() at time zone 'utc')::date - interval '3month',
-        (now() at time zone 'utc')::date + interval '3 month', '1 day'::interval) date,
+        GENERATE_SERIES((now() at time zone 'utc')::date - interval '%(report_period)s month',
+        (now() at time zone 'utc')::date + interval '%(report_period)s month', '1 day'::interval) date,
         stock_quant q
     LEFT JOIN stock_location l on (l.id=q.location_id)
-    LEFT JOIN stock_warehouse wh ON l.parent_path like concat('%/', wh.view_location_id, '/%')
+    LEFT JOIN stock_warehouse wh ON l.parent_path like concat('%%/', wh.view_location_id, '/%%')
     LEFT JOIN product_product pp on pp.id=q.product_id
     WHERE
         (l.usage = 'internal' AND wh.id IS NOT NULL) OR
@@ -140,11 +140,11 @@ FROM (SELECT
         'forecast' as state,
         GENERATE_SERIES(
         CASE
-            WHEN m.state = 'done' THEN (now() at time zone 'utc')::date - interval '3month'
+            WHEN m.state = 'done' THEN (now() at time zone 'utc')::date - interval '%(report_period)s month'
             ELSE m.date::date
         END,
         CASE
-            WHEN m.state != 'done' THEN (now() at time zone 'utc')::date + interval '3 month'
+            WHEN m.state != 'done' THEN (now() at time zone 'utc')::date + interval '%(report_period)s month'
             ELSE m.date::date - interval '1 day'
         END, '1 day'::interval)::date date,
         CASE
@@ -165,4 +165,5 @@ FROM (SELECT
 GROUP BY product_id, product_tmpl_id, state, date, company_id, warehouse_id
 );
 """
-        self.env.cr.execute(query)
+        report_period = self.env['ir.config_parameter'].sudo().get_param('stock.report_stock_quantity_period', default='3')
+        self.env.cr.execute(query, {'report_period': int(report_period)})
