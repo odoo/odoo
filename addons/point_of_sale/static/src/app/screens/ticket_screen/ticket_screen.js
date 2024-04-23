@@ -271,6 +271,40 @@ export class TicketScreen extends Component {
             this._state.ui.highlightHeaderNote = !this._state.ui.highlightHeaderNote;
             return;
         }
+<<<<<<< HEAD
+||||||| parent of deb57386fcfc (temp)
+
+        const invoicedOrderIds = new Set(
+            allToRefundDetails
+                .filter(detail => this._state.syncedOrders.cache[detail.orderline.orderBackendId].state === "invoiced")
+                .map(detail => detail.orderline.orderBackendId)
+        );
+
+        if (invoicedOrderIds.size > 1) {
+            this.popup.add(ErrorPopup, {
+                title: _t('Multiple Invoiced Orders Selected'),
+                body: _t('You have selected orderlines from multiple invoiced orders. To proceed refund, please select orderlines from the same invoiced order.')
+            });
+            return;
+        }
+
+=======
+
+        const invoicedOrderIds = new Set(
+            allToRefundDetails
+                .filter(detail => this._state.syncedOrders.cache[detail.orderline.orderBackendId]?.state === "invoiced")
+                .map(detail => detail.orderline.orderBackendId)
+        );
+
+        if (invoicedOrderIds.size > 1) {
+            this.popup.add(ErrorPopup, {
+                title: _t('Multiple Invoiced Orders Selected'),
+                body: _t('You have selected orderlines from multiple invoiced orders. To proceed refund, please select orderlines from the same invoiced order.')
+            });
+            return;
+        }
+
+>>>>>>> deb57386fcfc (temp)
         // The order that will contain the refund orderlines.
         // Use the destinationOrder from props if the order to refund has the same
         // partner as the destinationOrder.
