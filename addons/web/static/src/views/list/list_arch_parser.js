@@ -214,7 +214,8 @@ export class ListArchParser {
         });
 
         if (!treeAttr.defaultOrder.length && handleField) {
-            treeAttr.defaultOrder = stringToOrderBy(handleField);
+            const handleFieldSort = `${handleField}, id`;
+            treeAttr.defaultOrder = stringToOrderBy(handleFieldSort);
         }
 
         return {
