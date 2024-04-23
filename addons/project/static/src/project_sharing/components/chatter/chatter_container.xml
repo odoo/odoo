@@ -3,8 +3,16 @@
     <t t-name="project.ChatterContainer">
         <div t-attf-class="o_portal_chatter {{props.twoColumns ? 'row' : ''}}">
             <div t-attf-class="{{props.twoColumns ? 'col-lg-5' : props.resId ? 'border-bottom' : ''}}">
-                <div class="o_portal_chatter_header pb-2">
+                <div class="o_portal_chatter_header d-flex pt-2">
                     <ChatterMessageCounter count="state.options.message_count"/>
+                    <button t-if="props.displayFollowButton" class="btn btn-link w-auto" t-on-click="toggleIsFollower">
+                        <t t-if="state.options.is_follower">
+                            Unfollow
+                        </t>
+                        <t t-else="">
+                            Follow
+                        </t>
+                    </button>
                 </div>
                 <ChatterComposer t-props="composerProps"/>
             </div>

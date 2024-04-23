@@ -1,5 +1,4 @@
-/** @odoo-module */
-
+import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 import { ChatterComposer } from "./chatter_composer";
 import { ChatterMessageCounter } from "./chatter_message_counter";
@@ -24,6 +23,8 @@ export class ChatterContainer extends Component {
         pagerStart: { type: Number, optional: true },
         twoColumns: { type: Boolean, optional: true },
         projectSharingId: Number,
+        isFollower: Boolean,
+        displayFollowButton: Boolean,
     };
     static defaultProps = {
         token: "",
@@ -38,6 +39,7 @@ export class ChatterContainer extends Component {
             messages: [],
             options: this.defaultOptions,
         });
+        this.ormService = useService("orm");
 
         onWillStart(this.onWillStart);
         onWillUpdateProps(this.onWillUpdateProps);
@@ -53,6 +55,7 @@ export class ChatterContainer extends Component {
             partner_id: null,
             pager_scope: 4,
             pager_step: 10,
+            is_follower: this.props.isFollower,
         };
     }
 
@@ -121,6 +124,15 @@ export class ChatterContainer extends Component {
         this.state.messages = this.preprocessMessages(result.messages);
         this.state.options.message_count = result.message_count;
         return result;
+    }
+
+    async toggleIsFollower() {
+        const isFollower = await this.ormService.call(
+            this.props.resModel,
+            "project_sharing_toggle_is_follower",
+            [this.props.resId]
+        );
+        this.state.options.is_follower = isFollower;
     }
 
     messagesParams(props) {
