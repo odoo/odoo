@@ -6,7 +6,7 @@ import logging
 from lxml import etree
 import uuid
 
-from odoo import _, api, Command, fields, models
+from odoo import _, api, Command, fields, models, modules
 from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.exceptions import UserError
@@ -717,14 +717,17 @@ class AccountMove(models.Model):
                 invoice_data['key'],
                 proxy_user,
             ):
-                self.env.cr.commit()
+
+                if not modules.module.current_test:
+                    self.env.cr.commit()
                 moves |= move
             proxy_acks.append(id_transaction)
 
         # Extend created moves with the related attachments and commit
         for move in moves:
             move._extend_with_attachments(move.l10n_it_edi_attachment_id, new=True)
-            self.env.cr.commit()
+            if not modules.module.current_test:
+                self.env.cr.commit()
 
         return {"retrigger": retrigger, "proxy_acks": proxy_acks}
 
