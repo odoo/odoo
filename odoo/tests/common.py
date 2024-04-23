@@ -27,6 +27,7 @@ import sys
 import tempfile
 import threading
 import time
+import traceback
 import unittest
 import warnings
 from collections import defaultdict, deque
@@ -838,6 +839,18 @@ class TransactionCase(BaseCase):
 
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(cls.cr.close)
+
+        def forbidden(*args, **kwars):
+            traceback.print_stack()
+            raise AssertionError('Cannot commit or rollback a cursor from inside a test, this will lead to a broken cursor when trying to rollback the test. Please rollback to a specific savepoint instead or open another cursor if really necessary')
+
+        cls.commit_patcher = patch.object(cls.cr, 'commit', forbidden)
+        cls.startClassPatcher(cls.commit_patcher)
+        cls.rollback_patcher = patch.object(cls.cr, 'rollback', forbidden)
+        cls.startClassPatcher(cls.rollback_patcher)
+        cls.close_patcher = patch.object(cls.cr, 'close', forbidden)
+        cls.startClassPatcher(cls.close_patcher)
+
 
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
 

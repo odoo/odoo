@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests import BaseCase, tagged
+from odoo.tests import BaseCase, TransactionCase, tagged
 
 import logging
 import os
@@ -16,7 +16,7 @@ class TestRetryCommon(BaseCase):
         self.count = getattr(self, 'count', 0) + 1
 
 
-@tagged('-standard', 'test_retry', 'test_retry_success')
+@tagged('test_retry', 'test_retry_success')
 class TestRetry(TestRetryCommon):
     """ Check some tests behaviour when ODOO_TEST_FAILURE_RETRIES is set"""
 
@@ -42,7 +42,45 @@ class TestRetryFailures(TestRetryCommon):
         _logger.error('Failure')
 
 
-@tagged('-standard', 'test_retry', 'test_retry_success')
+@tagged('test_retry', 'test_retry_success')
+class TestRetryRollbackedCursor(TestRetryCommon, TransactionCase):
+    def test_broken_cursor(self):
+        tests_run_count = self.get_tests_run_count()
+        self.update_count()
+        if tests_run_count != self.count:
+            self.env.cr.rollback()
+
+
+@tagged('test_retry', 'test_retry_success')
+class TestRetryCommitedCursor(TestRetryCommon, TransactionCase):
+    def test_broken_cursor(self):
+        tests_run_count = self.get_tests_run_count()
+        self.update_count()
+        if tests_run_count != self.count:
+            self.env.cr.commit()
+
+
+@tagged('test_retry', 'test_retry_success')
+class TestRetryRollbackedCursorError(TestRetryCommon, TransactionCase):
+    def test_broken_cursor(self):
+        tests_run_count = self.get_tests_run_count()
+        self.update_count()
+        if tests_run_count != self.count:
+            self.env.cr.rollback()
+            raise Exception('a')
+
+
+@tagged('test_retry', 'test_retry_success')
+class TestRetryCommitedCursorError(TestRetryCommon, TransactionCase):
+    def test_broken_cursor(self):
+        tests_run_count = self.get_tests_run_count()
+        self.update_count()
+        if tests_run_count != self.count:
+            self.env.cr.commit()
+            raise Exception('a')
+
+
+@tagged('test_retry', 'test_retry_success')
 class TestRetrySubtest(TestRetryCommon):
 
     def test_retry_subtest_success_one(self):
@@ -81,6 +119,7 @@ class TestRetrySubtestFailures(TestRetryCommon):
                 _logger.error('Failure')
                 self.assertFalse(1 == 1)
 
+
 @tagged('-standard', 'test_retry', 'test_retry_disable')
 class TestRetry1Disable(TestRetryCommon):
 
@@ -98,6 +137,7 @@ class TestRetry1Disable(TestRetryCommon):
 
     def test_retry_3_fails(self):
         raise Exception('Should fail without retry 2')
+
 
 @tagged('-standard', 'test_retry', 'test_retry_disable')
 class TestRetry2Disable(TestRetryCommon):
