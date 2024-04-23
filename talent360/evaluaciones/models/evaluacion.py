@@ -67,7 +67,7 @@ class Evaluacion(models.Model):
         
         if not self:
             new_evaluation = self.env["evaluacion"].create({
-                "nombre": "Escribe el nombre de tu evaluación",
+                "nombre": "NOM 035",
             })
             self = new_evaluation
 
@@ -79,7 +79,6 @@ class Evaluacion(models.Model):
             template = self.env["template"].browse(template_id_hardcoded)
             if template:
                 pregunta_ids = template.pregunta_ids.ids
-                print("IDs de preguntas:", pregunta_ids)
                 self.pregunta_ids = [(6, 0, pregunta_ids)]
 
         return self
@@ -101,7 +100,7 @@ class Evaluacion(models.Model):
 
         return {
             "type": "ir.actions.act_window",
-            "name": "Nombre de tu evaluación",
+            "name": "NOM 035",
             "res_model": "evaluacion",
             "view_mode": "form",
             "view_id": self.env.ref("evaluaciones.evaluacion_nom035_form").id,
