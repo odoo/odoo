@@ -67,7 +67,9 @@ QUnit.test("can be rendered", async (assert) => {
             type: "item",
             id: "hidden",
             description: "Hidden Power",
-            callback: () => {},
+            callback: () => {
+                assert.step("callback hidden_item");
+            },
             sequence: 5,
             hide: true,
         };
@@ -83,15 +85,10 @@ QUnit.test("can be rendered", async (assert) => {
         };
     });
     await mount(BurgerUserMenu, target, { env });
-    assert.containsN(target, ".o_user_menu_mobile .dropdown-item", 4);
-    assert.containsOnce(target, ".o_user_menu_mobile .dropdown-item input.form-check-input");
-    assert.containsOnce(target, "div.dropdown-divider");
-    const children = [...(target.querySelector(".o_user_menu_mobile").children || [])];
-    assert.deepEqual(
-        children.map((el) => el.tagName),
-        ["A", "A", "DIV", "DIV", "A"]
-    );
-    const items = [...target.querySelectorAll(".dropdown-item")] || [];
+    assert.containsN(target, "a", 3);
+    assert.containsOnce(target, ".form-switch input.form-check-input");
+    assert.containsOnce(target, "hr");
+    const items = [...target.querySelectorAll("a, .form-switch")] || [];
     assert.deepEqual(
         items.map((el) => el.textContent),
         ["Ring", "Bad", "Frodo", "Eye"]
@@ -136,8 +133,8 @@ QUnit.test("can execute the callback of settings", async (assert) => {
     env = await makeTestEnv(testConfig);
     userMenuRegistry.add("profile", preferencesItem);
     await mount(BurgerUserMenu, target, { env });
-    assert.containsOnce(target, ".o_user_menu_mobile .dropdown-item");
-    const item = target.querySelector(".o_user_menu_mobile .dropdown-item");
+    assert.containsOnce(target, "a");
+    const item = target.querySelector("a");
     assert.strictEqual(item.textContent, "Preferences");
     await click(item);
     assert.verifySteps(["7", "Change My Preferences"]);
