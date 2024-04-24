@@ -117,6 +117,7 @@ class ResConfigSettings(models.TransientModel):
     pos_order_edit_tracking = fields.Boolean(related="pos_config_id.order_edit_tracking", readonly=False)
     pos_orderlines_sequence_in_cart_by_category = fields.Boolean(related='pos_config_id.orderlines_sequence_in_cart_by_category', readonly=False)
     pos_basic_receipt = fields.Boolean(related='pos_config_id.basic_receipt', readonly=False)
+    pos_fallback_nomenclature_id = fields.Many2one(related='pos_config_id.fallback_nomenclature_id', domain="[('id', '!=', barcode_nomenclature_id)]", readonly=False)
 
     def open_payment_method_form(self):
         bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)], limit=1)
