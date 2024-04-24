@@ -4095,3 +4095,23 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         for line in move.line_ids:
             self.assertEqual(line.date, move.date)
+
+    def test_invoice_copy_data(self):
+        """User should be able to duplicate invoices with different journals"""
+
+        new_sale_journal = self.company_data['default_journal_sale'].copy()
+
+        invoice_1, invoice_2 = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_sale'].id,
+        }, {
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'journal_id': new_sale_journal.id,
+        }])
+
+        invoices_duplicate = (invoice_1 + invoice_2).copy_data()
+
+        self.assertEqual(invoice_1.journal_id.id, invoices_duplicate[0]['journal_id'])
+        self.assertEqual(invoice_2.journal_id.id, invoices_duplicate[1]['journal_id'])
