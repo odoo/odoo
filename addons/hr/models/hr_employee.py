@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
+from copy import copy
 from pytz import timezone, UTC
 from datetime import datetime, time
 from random import choice
@@ -317,11 +317,9 @@ class HrEmployeePrivate(models.Model):
         for fname in field_names:
             field = self._fields[fname]
             public_field = public._fields[fname]
-            if any(public_field.get_cache_ids_missing(public)):
-                continue
             values = public_field._get_cache_values(public)
             if field.translate:
-                values = [(value.copy() if value else None) for value in values]
+                values = [copy(value) for value in values]
             field.update_cache(self, values)
 
     @api.model
