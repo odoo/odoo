@@ -1067,5 +1067,57 @@ odoo.define('website.tour.form_editor', function (require) {
         },
     ]);
 
+    tour.register("website_form_special_characters", {
+        test: true,
+    }, [
+        {
+            content: "Enter edit mode",
+            trigger: "a[data-action=edit]",
+        }, {
+            content: "Check that we are in edit mode",
+            trigger: "#oe_snippets.o_loaded",
+            run: () => null,
+        }, {
+            content: "Drop the form snippet",
+            trigger: "#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail",
+            run: "drag_and_drop #wrap",
+        }, {
+            content: "Select form by clicking on an input field",
+            extra_trigger: ".s_website_form_field",
+            trigger: "section.s_website_form input",
+        },
+        ...addCustomField("char", "text", `Test1"'`, false),
+        ...addCustomField("char", "text", 'Test2`\\', false),
+        {
+            content: "Save the page",
+            trigger: "button[data-action=save]",
+        },
+        {
+            content: "Wait for page reload",
+            trigger: "body:not(.editor_enable) [data-snippet='s_website_form']",
+        },
+        ...essentialFieldsForDefaultFormFillInSteps,
+        {
+            content: "Complete 'Your Question' field",
+            trigger: "textarea[name='description']",
+            run: "text test",
+        }, {
+            content: "Complete the first added field",
+            trigger: "input[name='Test1&quot;&apos;']",
+            run: "text test1",
+        }, {
+            content: "Complete the second added field",
+            trigger: "input[name='Test2&lsquo;&bsol;']",
+            run: "text test2",
+        }, {
+            content: "Click on 'Submit'",
+            trigger: "a.s_website_form_send",
+        }, {
+            content: "Check the form was again sent (success page without form)",
+            trigger: "body:not(:has([data-snippet='s_website_form'])) .fa-check-circle",
+            run: () => null,
+        },
+    ]);
+
     return {};
 });
