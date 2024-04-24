@@ -1,10 +1,8 @@
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { patch } from "@web/core/utils/patch";
 import { Record } from "@mail/core/common/record";
-import { assignDefined, rpcWithEnv, compareDatetime } from "@mail/utils/common/misc";
+import { assignDefined, compareDatetime } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 
 patch(ThreadService.prototype, {
     /**
@@ -12,7 +10,6 @@ patch(ThreadService.prototype, {
      * @param {Partial<import("services").Services>} services
      */
     setup(env, services) {
-        rpc = rpcWithEnv(env);
         super.setup(env, services);
         this.action = services.action;
         this.activityService = services["mail.activity"];

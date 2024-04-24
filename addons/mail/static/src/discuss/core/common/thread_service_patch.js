@@ -1,18 +1,11 @@
 import { ThreadService } from "@mail/core/common/thread_service";
-import { rpcWithEnv } from "@mail/utils/common/misc";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
 const commandRegistry = registry.category("discuss.channel_commands");
 
 patch(ThreadService.prototype, {
-    setup(...args) {
-        super.setup(...args);
-        rpc = rpcWithEnv(this.env);
-    },
     /**
      * @override
      * @param {import("models").Thread} thread

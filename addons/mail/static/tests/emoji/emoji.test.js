@@ -1,6 +1,3 @@
-import { describe, test } from "@odoo/hoot";
-
-import { EMOJI_PER_ROW } from "@web/core/emoji_picker/emoji_picker";
 import {
     click,
     contains,
@@ -10,7 +7,10 @@ import {
     start,
     startServer,
     triggerHotkey,
-} from "../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, test } from "@odoo/hoot";
+
+import { EMOJI_PER_ROW } from "@web/core/emoji_picker/emoji_picker";
 
 describe.current.tags("desktop");
 defineMailModels();

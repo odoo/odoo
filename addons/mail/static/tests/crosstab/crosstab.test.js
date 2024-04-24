@@ -1,7 +1,3 @@
-import { describe, test } from "@odoo/hoot";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import {
     assertSteps,
     click,
@@ -13,10 +9,12 @@ import {
     startServer,
     step,
     triggerHotkey,
-} from "../mail_test_helpers";
-import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
+import { getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -48,7 +46,6 @@ test("Delete starred message updates counter", async () => {
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await contains("button", { target: env2, text: "Starred1" });
-    rpc = rpcWithEnv(env1);
     rpc("/mail/message/update_content", {
         message_id: messageId,
         body: "",
@@ -110,15 +107,15 @@ test.skip("Channel subscription is renewed when channel is added from invite", a
     mockDate(
         `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
     );
-    const env = await start();
-    patchWithCleanup(env.services.bus_service, {
+    await start();
+    patchWithCleanup(getService("bus_service"), {
         forceUpdateChannels() {
             step("update-channels");
         },
     });
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel");
-    env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
+    getService("orm").call("discuss.channel", "add_members", [[channelId]], {
         partner_ids: [serverState.partnerId],
     });
     await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
@@ -142,7 +139,6 @@ test("Adding attachments", async () => {
         name: "test.txt",
         mimetype: "text/plain",
     });
-    rpc = rpcWithEnv(env1);
     rpc("/mail/message/update_content", {
         body: "Hello world!",
         attachment_ids: [attachmentId],

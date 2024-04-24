@@ -1,6 +1,3 @@
-import { describe, beforeEach, test } from "@odoo/hoot";
-
-import { Composer } from "@mail/core/common/composer";
 import {
     assertSteps,
     click,
@@ -12,7 +9,9 @@ import {
     start,
     startServer,
     step,
-} from "../../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { Composer } from "@mail/core/common/composer";
+import { beforeEach, describe, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");

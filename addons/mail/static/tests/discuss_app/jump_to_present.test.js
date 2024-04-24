@@ -1,4 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
 import {
     SIZES,
     click,
@@ -12,7 +11,8 @@ import {
     scroll,
     start,
     startServer,
-} from "../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
 
 import { PRESENT_THRESHOLD } from "@mail/core/common/thread";
 

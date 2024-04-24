@@ -1,5 +1,11 @@
+import {
+    click,
+    contains,
+    defineMailModels,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { click, contains, defineMailModels, start, startServer } from "../mail_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();

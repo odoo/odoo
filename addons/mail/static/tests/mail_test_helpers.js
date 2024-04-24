@@ -250,12 +250,10 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
     dropdownDiv.querySelector(".dropdown-menu").appendChild(li);
 }
 
-let NEXT_ENV_ID = 1;
-
 /**
  * @param {{ asTab?: boolean }} [options]
  */
-export async function start({ asTab = false } = {}) {
+export async function start(options) {
     if (!MockServer.current) {
         await startServer();
     }
@@ -271,27 +269,19 @@ export async function start({ asTab = false } = {}) {
         });
     }
     let env;
-    if (asTab) {
+    if (options?.asTab) {
         restoreRegistry(registry);
         const rootTarget = target;
         target = document.createElement("div");
         target.style.width = "100%";
         rootTarget.appendChild(target);
         addSwitchTabDropdownItem(rootTarget, target);
-        const envId = NEXT_ENV_ID++;
-        mailGlobal.elligibleEnvs.add(envId);
-        env = await makeMockEnv({ envId }, { makeNew: true });
+        env = await makeMockEnv({}, { makeNew: true });
     } else {
-        const envId = NEXT_ENV_ID++;
-        mailGlobal.elligibleEnvs.add(envId);
         env = getMockEnv() || (await makeMockEnv());
-        Object.assign(env, { envId });
     }
-    await mountWithCleanup(WebClient, { target, env });
-    after(() => {
-        mailGlobal.elligibleEnvs.clear();
-    });
-    return Object.assign(getMockEnv(), { target });
+    await mountWithCleanup(WebClient, { env, target });
+    return Object.assign(env, { target });
 }
 
 export async function startServer() {
