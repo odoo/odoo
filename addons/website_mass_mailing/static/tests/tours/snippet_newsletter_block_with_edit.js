@@ -87,6 +87,6 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     // prevent to edit the button).
     {
         content: 'Check that the link style is correct',
-        trigger: ':iframe .s_newsletter_block .js_subscribed_btn.btn.btn-custom.flat:not(.btn-success)',
+        trigger: ':iframe .s_newsletter_block .js_subscribed_btn.btn.btn-custom.flat:not(.disabled)',
     },
 ]);
