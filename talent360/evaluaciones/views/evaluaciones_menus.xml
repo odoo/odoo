@@ -2,11 +2,13 @@
 <odoo>
     <menuitem id="pregunta_menu_root" name="Talent 360">
         <menuitem id="pregunta_first_level_menu" name="Detalles">
-            <menuitem id="pregunta_menu_action" action="pregunta_action"/>
-            <menuitem id="evaluacion_menu_action" action="evaluacion_action" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
+            <menuitem id="pregunta_menu_action" name="Pregunta" action="pregunta_action"/>
             <menuitem id="competecia_menu_action" action="competencia_action"/>
-            <menuitem id="clima_menu_action" action="evaluacion_clima_action_form"/>
+            <menuitem id="evaluacion_360_menu_action" name="Evaluacion 360" action="evaluacion_360_action_form"/>
             <menuitem id="nom035_menu_action" action="evaluacion_nom035_action_form"/>
+            <menuitem id="clima_menu_action" action="evaluacion_clima_action_form"/>
+            <menuitem id="evaluacion_menu_action" name="Evaluacion" action="evaluacion_action"/>
         </menuitem>
     </menuitem>
 </odoo>
+
