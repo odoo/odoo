@@ -16,9 +16,12 @@ class Evaluacion(models.Model):
 
     _name = "evaluacion"
     _description = "Evaluacion de pesonal"
-    _inherit = ["mail.thread"]
+    # _inherit = ["mail.thread"]
 
     nombre = fields.Char(required=True)
+
+    tipo = fields.Selection([("CLIMA", "Clima Organizacional"), ("NOM_035", "NOM 035"), ("competencia", "Competencia")],
+                            required=True, default="competencia")
     descripcion = fields.Text()
     estado = fields.Selection(
         [
@@ -53,7 +56,7 @@ class Evaluacion(models.Model):
         "usuario_id",
         string="Asignados",
     )
-    
+
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
         """
@@ -69,9 +72,11 @@ class Evaluacion(models.Model):
         """
 
         if not self:
+
             new_evaluation = self.env["evaluacion"].create({
                 "nombre": "Evaluacion Clima",
                 "descripcion": "La valuacion Clima es una herramienta de medición de clima organizacional, cuyo objetivo es conocer la percepción que tienen las personas que laboran en los centros de trabajo, sobre aquellos aspectos sociales que conforman su entorno laboral y que facilitan o dificultan su desempeño.",
+                "tipo": "CLIMA",
             })
             self = new_evaluation
 
@@ -88,7 +93,6 @@ class Evaluacion(models.Model):
 
         return self
 
-    
     def copiar_preguntas_de_template_nom035(self):
         """
         Copia preguntas de un template de evaluación predeterminado a una nueva evaluación.
@@ -97,14 +101,15 @@ class Evaluacion(models.Model):
         evaluación con un nombre predeterminado y asigna este nuevo objeto a self. Luego, limpia
         las preguntas existentes y copia todas las preguntas de un template con ID predefinido 
        (en este caso, 331) al objeto evaluación actual.
-       
+
        :return: object: Retorna el objeto evaluación actualizado con las preguntas copiadas del template.
         """
-        
+
         if not self:
             new_evaluation = self.env["evaluacion"].create({
                 "nombre": "NOM 035",
                 "descripcion": "La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.",
+                "tipo": "NOM_035",
             })
             self = new_evaluation
 
@@ -132,7 +137,7 @@ class Evaluacion(models.Model):
         Returns:
         dict: Un diccionario que contiene todos los parámetros necesarios para abrir la
         evaluación en una vista de formulario específica de Odoo.
-        
+
         """
 
         self = self.copiar_preguntas_de_template()
@@ -147,7 +152,7 @@ class Evaluacion(models.Model):
             "target": "current",
             "res_id": self.id,
         }
-    
+
     def evaluacion_nom035_action_form(self):
         """
         Ejecuta la acción de copiar preguntas de un template a la evaluación actual y devuelve
@@ -159,7 +164,7 @@ class Evaluacion(models.Model):
 
         :return: Un diccionario que contiene todos los parámetros necesarios para abrir la
         evaluación en una vista de formulario específica de Odoo.
-        
+
         """
         self = self.copiar_preguntas_de_template_nom035()
 
@@ -172,7 +177,28 @@ class Evaluacion(models.Model):
             "target": "current",
             "res_id": self.id,
         }
-        
+
+    def evaluacion_360_action_form(self):
+        """
+        Ejecuta la acción de redireccionar a la evaluación 360 y devuelve un diccionario
+
+        Este método utiliza los parámetros necesarios para redireccionar a la evaluación 360
+
+        :return: Un diccionario que contiene todos los parámetros necesarios para redireccionar la
+        a una vista de la evaluación 360.
+
+        """
+        self.tipo = "competencia"
+        return {
+            "type": "ir.actions.act_window",
+            "name": "360",
+            "res_model": "evaluacion",
+            "view_mode": "form",
+            "view_id": self.env.ref("evaluaciones.evaluacion_360_form").id,
+            "target": "current",
+            "res_id": self.id,
+        }
+
     def evaluacion_action_tree(self):
         """
         Ejecuta la acción de redireccionar a la lista de evaluaciones y devuelve un diccionario
@@ -181,7 +207,7 @@ class Evaluacion(models.Model):
 
         :return: Un diccionario que contiene todos los parámetros necesarios para redireccionar la
         a una vista de la lista de las evaluaciones.
-        
+
         """
 
         return {
