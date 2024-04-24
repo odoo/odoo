@@ -1,4 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
 import {
     assertSteps,
     click,
@@ -8,8 +7,9 @@ import {
     step,
     triggerEvents,
 } from "@mail/../tests/mail_test_helpers";
-import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
 import { defineSnailmailModels } from "@snailmail/../tests/snailmail_test_helpers";
+import { mockService, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineSnailmailModels();
@@ -123,8 +123,7 @@ test("grouped notifications by document model", async (assert) => {
             notification_type: "snail",
         },
     ]);
-    const env = await start();
-    patchWithCleanup(env.services.action, {
+    mockService("action", {
         doAction(action) {
             step("do_action");
             expect(action.name).toBe("Snailmail Failures");
@@ -144,6 +143,7 @@ test("grouped notifications by document model", async (assert) => {
             );
         },
     });
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { text: "Contact" });
     await contains(".o-mail-NotificationItem-counter", { text: "2" });

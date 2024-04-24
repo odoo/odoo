@@ -1,24 +1,23 @@
+import { defineMailModels, start } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { defineMailModels, start } from "../mail_test_helpers";
+import { getService, serverState } from "@web/../tests/web_test_helpers";
 
-import { serializeDateTime, deserializeDateTime } from "@web/core/l10n/dates";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { deserializeDateTime, serializeDateTime } from "@web/core/l10n/dates";
 
 describe.current.tags("desktop");
 defineMailModels();
 
 test("Message model properties", async () => {
-    const env = await start();
-    env.services["mail.store"].Store.insert({
+    await start();
+    getService("mail.store").Store.insert({
         self: { id: serverState.partnerId, type: "partner" },
     });
-    env.services["mail.store"].Thread.insert({
+    getService("mail.store").Thread.insert({
         id: serverState.partnerId,
         model: "res.partner",
         name: "general",
     });
-    /** @type {import("models").Message} */
-    const message = env.services["mail.store"].Message.insert({
+    const message = getService("mail.store").Message.insert({
         attachments: [
             {
                 filename: "test.txt",
