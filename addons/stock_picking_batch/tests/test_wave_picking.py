@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
@@ -504,3 +505,50 @@ class TestBatchPicking(TransactionCase):
             ('is_wave', '=', True)
         ])
         self.assertEqual(wave.picking_type_id, move_line.picking_type_id)
+
+    def test_validatation_of_partially_empty_picking(self):
+        """
+            Check that you can validate a wave transfer containing an empty picking,
+            that the picking stays unchanged and is removed from the transfer
+        """
+        self.productA.tracking = 'none'
+        self.productB.tracking = 'none'
+        (picking_1, picking_2) = self.env['stock.picking'].create([
+            {
+            'picking_type_id': self.picking_type_in,
+            },
+            {
+            'picking_type_id': self.picking_type_in,
+            },
+        ])
+        self.env['stock.move'].create([
+            {
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_1.id,
+            'location_id': picking_1.location_id.id,
+            'location_dest_id': picking_1.location_dest_id.id,
+            },
+            {
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 3,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking_2.id,
+            'location_id': picking_2.location_id.id,
+            'location_dest_id': picking_2.location_dest_id.id,
+            },
+        ])
+        (picking_1 | picking_2).action_confirm()
+        wave = self.env['stock.picking.batch'].create({
+            'name': 'Wave transfer',
+            'picking_ids': [Command.link(picking_1.id), Command.link(picking_2.id)],
+        })
+        wave.move_ids.filtered(lambda m: m.product_id == self.productB).quantity = 0.0
+        wave.action_done()
+        self.assertEqual(wave.state, 'done')
+        self.assertEqual(wave.picking_ids, picking_1)
+        self.assertEqual([picking_1.state, picking_1.move_ids.quantity, picking_1.move_ids.picked], ['done', 2.0, True])
+        self.assertEqual([picking_2.state, picking_2.move_ids.quantity, picking_2.move_ids.picked], ['assigned', 0.0, False])
