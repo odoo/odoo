@@ -905,7 +905,10 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
      */
     _onCollapseHidden() {
         this.options.wysiwyg?.odooEditor.observerUnactive("removeCollapseClass");
-        this.el.classList.remove('o_top_menu_collapse_shown');
+        const mobileNavbarEl = this.el.querySelector("#top_menu_collapse_mobile");
+        if (!mobileNavbarEl.matches(".show, .showing")) {
+            this.el.classList.remove("o_top_menu_collapse_shown");
+        }
         this.options.wysiwyg?.odooEditor.observerActive("removeCollapseClass");
     },
     /**
