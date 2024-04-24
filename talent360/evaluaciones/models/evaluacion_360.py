@@ -14,6 +14,9 @@ class Evaluacion360(models.Model):
     preguntas_360_ids = fields.Many2many(
         "pregunta", compute="_compute_preguntas_360_ids", string="Preguntas 360", store=False)
 
+    tipo_competencia = fields.Selection([("90", "90 Grados"), ("180", "180 Grados"), (
+        "270", "270 Grados"), ("360", "360 Grados")], required=False, default=None)
+
     @api.depends("competencia_ids")
     def _compute_preguntas_360_ids(self):
         """

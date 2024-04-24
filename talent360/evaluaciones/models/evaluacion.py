@@ -20,31 +20,8 @@ class Evaluacion(models.Model):
 
     nombre = fields.Char(required=True)
 
-    @api.depends("env.context")
-    def _get_evaluation_type(self):
-
-        print("Contexto:", self.env.context)
-        print("default_tipo:", self.env.context.get("default_tipo"))
-        print("default_tipo:", type(self.env.context.get("default_tipo")))
-
-        print("default_tipo:", self.env.context.get("default_tipo") == "360")
-
-        ans = None
-        if self.env.context.get("default_tipo") == "360":
-            ans = [("90", "90 Grados"), ("180", "180 Grados"),
-                   ("270", "270 Grados"), ("360", "360 Grados")]
-        else:
-            ans = [("CLIMA", "Clima Organizacional"), ("NOM_035", "NOM 035")]
-
-        print("ANS:", ans)
-        return ans
-
-    def get_evaluation_default_type(self):
-        return self._get_evaluation_type()[0][0]
-
-    tipo = fields.Selection(selection=_get_evaluation_type,
-                            required=True, default=get_evaluation_default_type)
-
+    tipo = fields.Selection([("CLIMA", "Clima Organizacional"), ("NOM_035", "NOM 035"), ("competencia", "Competencia")],
+                            required=True, default="competencia")
     descripcion = fields.Text()
     estado = fields.Selection(
         [
@@ -203,17 +180,15 @@ class Evaluacion(models.Model):
 
     def evaluacion_360_action_form(self):
         """
-        Ejecuta la acción de copiar preguntas de un template a la evaluación actual y devuelve
-        un diccionario con los parámetros necesarios para abrir una ventana de acción en Odoo.
+        Ejecuta la acción de redireccionar a la evaluación 360 y devuelve un diccionario
 
-        Este método utiliza `copiar_preguntas_de_template_nom035` para asegurarse de que la evaluación
-        actual tenga las preguntas correctas, y luego configura y devuelve un diccionario con
-        los detalles para abrir esta evaluación en una vista de formulario específica.
+        Este método utiliza los parámetros necesarios para redireccionar a la evaluación 360
 
-        :return: Un diccionario que contiene todos los parámetros necesarios para abrir la
-        evaluación en una vista de formulario específica de Odoo.
+        :return: Un diccionario que contiene todos los parámetros necesarios para redireccionar la
+        a una vista de la evaluación 360.
 
         """
+        self.tipo = "competencia"
         return {
             "type": "ir.actions.act_window",
             "name": "360",
@@ -222,9 +197,6 @@ class Evaluacion(models.Model):
             "view_id": self.env.ref("evaluaciones.evaluacion_360_form").id,
             "target": "current",
             "res_id": self.id,
-            "context": {
-                "default_tipo": "360"
-            }
         }
 
     def evaluacion_action_tree(self):
