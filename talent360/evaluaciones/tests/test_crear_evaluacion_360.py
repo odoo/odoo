@@ -90,10 +90,16 @@ class TestCrearEvaluacion360(TransactionCase):
             "El nombre de la evaluación no es correcto",
         )
         self.assertEqual(
-            self.evaluacion360.tipo, "competencia", "El tipo de la evaluación no es correcto"
+            self.evaluacion360.tipo,
+            "competencia",
+            "El tipo de la evaluación no es correcto",
         )
 
-        self.assertEqual(self.evaluacion360.tipo_competencia, "90", "El tipo de competencia de la evaluación no es correcto")
+        self.assertEqual(
+            self.evaluacion360.tipo_competencia,
+            "90",
+            "El tipo de competencia de la evaluación no es correcto",
+        )
 
         self.assertEqual(
             self.evaluacion360.estado,
