@@ -3,16 +3,16 @@
 
 <template id="s_newsletter_block_sms_template" groups="base.group_user">
     <div class="row">
-        <div class="col-lg-8 offset-lg-2 pt24 pb24">
-            <h2>Always First.</h2>
-            <p>Be the first to find out all the latest news, products, and trends.</p>
-            <div class="s_newsletter_subscribe_form s_subscription_list js_subscribe" data-vxml="001" data-list-id="0" data-name="Newsletter Form">
-                <div class="input-group">
-                    <!-- input name must be an existing 'mailing.contact' field -->
-                    <input type="tel" name="mobile" class="js_subscribe_value form-control" placeholder="e.g. +1 555-555-1234"/>
-                    <a role="button" href="#" class="btn btn-success js_subscribed_btn d-none o_submit" disabled="disabled">Thanks</a>
-                    <a role="button" href="#" class="btn btn-primary js_subscribe_btn o_submit">Subscribe</a>
-                </div>
+        <div class="col-lg-6">
+            <h2 class="h4-fs">Always First.</h2>
+            <p class="text-muted">Be the first to find out all the latest news, products, and trends.</p>
+        </div>
+        <div class="s_newsletter_subscribe_form s_subscription_list js_subscribe col-lg-5 offset-lg-1" data-vxml="001" data-list-id="0" data-name="Newsletter Form">
+            <div class="input-group">
+                <!-- input name must be an existing 'mailing.contact' field -->
+                <input type="tel" name="mobile" class="js_subscribe_value form-control" placeholder="+1 555-555-1234"/>
+                <a role="button" href="#" class="btn btn-primary js_subscribed_btn d-none o_submit pe-none opacity-50" disabled="disabled">Thanks, you are already subscribed</a>
+                <a role="button" href="#" class="btn btn-primary js_subscribe_btn o_submit">Subscribe</a>
             </div>
         </div>
     </div>
