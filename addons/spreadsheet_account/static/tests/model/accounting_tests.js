@@ -41,6 +41,38 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         assert.verifySteps(["spreadsheet_fetch_debit_credit"]);
     });
 
+    QUnit.test("evaluation with reference to a month period", async (assert) => {
+        const model = await createModelWithDataSource({
+            mockRPC: async function (route, args) {
+                if (args.method === "spreadsheet_fetch_debit_credit") {
+                    assert.deepEqual(args.args[0], [
+                        {
+                            codes: ["100"],
+                            company_id: null,
+                            date_range: {
+                                month: 2,
+                                range_type: "month",
+                                year: 2022,
+                            },
+                            include_unposted: false,
+                        },
+                    ]);
+                    assert.step("spreadsheet_fetch_debit_credit");
+                    return [{ debit: 42, credit: 16 }];
+                }
+            },
+        });
+        setCellContent(model, "B1", "02/2022");
+        setCellContent(model, "A1", `=ODOO.CREDIT("100", B1)`);
+        setCellContent(model, "A2", `=ODOO.DEBIT("100", B1)`);
+        setCellContent(model, "A3", `=ODOO.BALANCE("100", B1)`);
+        await waitForDataSourcesLoaded(model);
+        assert.equal(getCellValue(model, "A1"), 16);
+        assert.equal(getCellValue(model, "A2"), 42);
+        assert.equal(getCellValue(model, "A3"), 26);
+        assert.verifySteps(["spreadsheet_fetch_debit_credit"]);
+    });
+
     QUnit.test("Functions are correctly formatted", async (assert) => {
         const model = await createModelWithDataSource();
         setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022")`);
