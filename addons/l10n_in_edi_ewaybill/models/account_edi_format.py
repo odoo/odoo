@@ -386,7 +386,7 @@ class AccountEdiFormat(models.Model):
             "docNo": invoices.is_purchase_document(include_receipts=True) and invoices.ref or invoices.name,
             "docDate": invoices.date.strftime("%d/%m/%Y"),
             "fromGstin": seller_details.commercial_partner_id.vat or "URP",
-            "fromTrdName": seller_details.commercial_partner_id.name,
+            "fromTrdName": seller_details.commercial_partner_id.ref or seller_details.commercial_partner_id.name,
             "fromAddr1": dispatch_details.street or "",
             "fromAddr2": dispatch_details.street2 or "",
             "fromPlace": dispatch_details.city or "",

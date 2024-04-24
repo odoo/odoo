@@ -500,6 +500,8 @@ class AccountEdiFormat(models.Model):
                     (tax_details.get("base_amount") + tax_details.get("tax_amount")) * sign),
             },
         }
+        if saler_buyer.get("seller_details").commercial_partner_id.ref and json_payload['SellerDtls'].get('LglNm'):
+            json_payload['SellerDtls']['LglNm'] = saler_buyer.get("seller_details").commercial_partner_id.ref
         if invoice.company_currency_id != invoice.currency_id:
             json_payload["ValDtls"].update({
                 "TotInvValFc": self._l10n_in_round_value(
