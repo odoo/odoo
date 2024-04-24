@@ -19,7 +19,7 @@ class TestCalendarCommon(TransactionCase):
 
         default_values = {
             'partner_id': cls.calendar_user_A.partner_id.id,
-            'note': 'DESCRIPTION',
+            'description': 'DESCRIPTION',
         }
 
         cls.single_event = cls.create_event({**default_values, 'name': 'EVENT 1', 'start': datetime(2024, 1, 1, 10, 0), 'stop': datetime(2024, 1, 1, 11, 0)})

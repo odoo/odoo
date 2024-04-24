@@ -1,8 +1,21 @@
-from odoo import models, fields, api, _, Command
-from odoo.exceptions import AccessError
+import logging
 
 from dateutil.relativedelta import relativedelta
-from datetime import datetime
+from datetime import datetime, timedelta
+from pytz import timezone
+
+from odoo import models, fields, api, _, Command
+from odoo.exceptions import AccessError, UserError
+from odoo.tools import pycompat
+from odoo.addons.base.models.res_partner import _tz_get
+
+_logger = logging.getLogger(__name__)
+
+try:
+    import vobject
+except ImportError:
+    _logger.warning("`vobject` Python module not found, iCal file generation disabled. Consider installing this module if you want to generate iCal files")
+    vobject = None
 
 days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
@@ -25,10 +38,11 @@ class CalendarTimeslot(models.Model):
     stop = fields.Datetime(default=fields.Datetime.now() + relativedelta(minutes=15), required=True, compute='_compute_stop', readonly=False, store=True)
     duration = fields.Float('Duration', compute='_compute_duration', store=True, readonly=False)
     allday = fields.Boolean('All Day', default=False)
+    tz = fields.Selection(_tz_get, string='Timezone', related='partner_id.tz')
 
     # Attendee Fields
     attendee_ids = fields.One2many('calendar.attendee_bis', 'timeslot_id', compute='_compute_attendee_ids', store=True, copy=True)
-    partner_ids = fields.Many2many('res.partner', string="Attendees")
+    partner_ids = fields.Many2many('res.partner', string="Attendees")   # TODO move to calendar_ev
 
     # Computed Fields
     is_current_partner = fields.Boolean(compute='_compute_is_current_partner')
@@ -42,7 +56,7 @@ class CalendarTimeslot(models.Model):
     user_id = fields.Many2one('res.users', related='event_id.user_id', string='User')
         # Private fields
     name = fields.Char('Title', compute='_compute_name', inverse='_inverse_name', required=True)
-    note = fields.Char('Note', compute='_compute_note', inverse='_inverse_note')
+    description = fields.Char('Note', compute='_compute_description', inverse='_inverse_description')
     tag_ids = fields.Many2many('calendar.event_bis.tag', compute='_compute_tag_ids', inverse='_inverse_tag_ids', string="Tags")
     location = fields.Char('Location', compute='_compute_location', inverse='_inverse_location', tracking=True)
     alarm_ids = fields.Many2many('calendar.alarm_ids', compute='_compute_alarm_ids', inverse='_inverse_alarm_ids', string="Alerts")
@@ -223,15 +237,15 @@ class CalendarTimeslot(models.Model):
         for slot in self:
             slot.event_id.name = slot.name
 
-    @api.depends('event_id.note')
+    @api.depends('event_id.description')
     @api.depends_context('uid')
-    def _compute_note(self):
+    def _compute_description(self):
         for slot in self.filtered('can_read_private'):
-            slot.note = slot.event_id.note
+            slot.description = slot.event_id.description
 
-    def _inverse_note(self):
+    def _inverse_description(self):
         for slot in self:
-            slot.event_id.note = slot.note
+            slot.event_id.description = slot.description
 
     @api.depends('partner_ids')
     def _compute_attendee_ids(self):
@@ -287,6 +301,108 @@ class CalendarTimeslot(models.Model):
                 ts.is_organizer_alone = True
             else:
                 ts.is_organizer_alone = False
+
+    def _get_attendee_emails(self):
+        """ Get comma-separated attendee email addresses. """
+        self.ensure_one()
+        return ",".join(e for e in self.attendee_ids.mapped("email") if e)
+
+    def _get_display_time(self, tz=None):
+        """ Return date and time (from to from) based on duration with timezone in string. Eg :
+                1) if user add duration for 2 hours, return : August-23-2013 at (04-30 To 06-30) (Europe/Brussels)
+                2) if event all day ,return : AllDay, July-31-2013
+        """
+        self.ensure_one()
+        timezone = tz or self.env.user.partner_id.tz or 'UTC'
+
+        # get date/time format according to context
+        format_date, format_time = self._get_date_formats()
+
+        # convert date and time into user timezone
+        self_tz = self.with_context(tz=timezone)
+        date = fields.Datetime.context_timestamp(self_tz, fields.Datetime.from_string(self.start))
+        date_deadline = fields.Datetime.context_timestamp(self_tz, fields.Datetime.from_string(self.stop))
+
+        # convert into string the date and time, using user formats
+        to_text = pycompat.to_text
+        date_str = to_text(date.strftime(format_date))
+        time_str = to_text(date.strftime(format_time))
+
+        if self.allday:
+            display_time = _("All Day, %(day)s", day=date_str)
+        elif self.duration < 24:
+            duration = date + timedelta(minutes=round(self.duration*60))
+            duration_time = to_text(duration.strftime(format_time))
+            display_time = _(
+                u"%(day)s at (%(start)s To %(end)s) (%(timezone)s)",
+                day=date_str,
+                start=time_str,
+                end=duration_time,
+                timezone=timezone,
+            )
+        else:
+            dd_date = to_text(date_deadline.strftime(format_date))
+            dd_time = to_text(date_deadline.strftime(format_time))
+            display_time = _(
+                u"%(date_start)s at %(time_start)s To\n %(date_end)s at %(time_end)s (%(timezone)s)",
+                date_start=date_str,
+                time_start=time_str,
+                date_end=dd_date,
+                time_end=dd_time,
+                timezone=timezone,
+            )
+        return display_time
+
+    def _get_ics(self):
+        def ics_datetime(date, allday=False):
+            if not date:
+                return
+            if allday:
+                return date
+            return date.replace(tzinfo=timezone('UTC'))
+
+        result = {}
+
+        if not vobject:
+            return result
+
+        for ts in self:
+            cal = vobject.iCalendar()
+            event = cal.add('vevent')
+
+            if not ts.start or not ts.stop:
+                raise UserError(_("First you have to specify the date of the invitation."))
+            event.add('created').value = ics_datetime(fields.Datetime.now())
+            event.add('dtstart').value = ics_datetime(ts.start, ts.allday)
+            event.add('dtend').value = ics_datetime(ts.stop, ts.allday)
+            event.add('summary').value = ts.name        # TODO overridable
+            description = ts.description if ts.description else ''    # TODO overridable + html2plaintext
+            if description:
+                event.add('description').value = description
+            if ts.location:
+                event.add('location').value = ts.location
+            if ts.is_recurring:
+                event.add('rrule').value = ts.event_id.rrule
+
+            if ts.alarm_ids:
+                for alarm in ts.alarm_ids:
+                    valarm = event.add('valarm')
+                    trigger = valarm.add('TRIGGER')
+                    trigger.params['related'] = ["START"]
+                    trigger.value = alarm.time_delta
+                    valarm.add('DESCRIPTION').value = alarm.name or u'Odoo'
+            for attendee in ts.attendee_ids:
+                att = event.add('attendee')
+                att.value = u'MAILTO:' + (attendee.email or u'')
+
+            # Add "organizer" field if email available
+            if ts.partner_id.email:
+                organizer = event.add('organizer')
+                organizer.value = u'MAILTO:' + ts.partner_id.email
+                if ts.partner_id.name:
+                    organizer.params['CN'] = [ts.partner_id.display_name.replace('\"', '\'')]
+            result[ts.id] = cal.serialize().encode('utf-8')
+        return result
 
     def mass_delete(self, update_policy):
         self.ensure_one()

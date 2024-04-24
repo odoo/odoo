@@ -1,4 +1,4 @@
-from odoo import models, fields, api, Command
+from odoo import models, fields, api, Command, _
 from dateutil.relativedelta import relativedelta
 
 from ..util import RRULE
@@ -24,7 +24,7 @@ class CalendarEventPrivate(models.Model):
     is_shown = fields.Boolean('Shown', default=True, public=True)
 
     name = fields.Char(public_default="Busy")
-    note = fields.Char()
+    description = fields.Char()
     tag_ids = fields.Many2many('calendar.event_bis.tag', string="Tags")
     location = fields.Char('Location')
 
@@ -177,3 +177,60 @@ class CalendarEventPrivate(models.Model):
             if event.is_recurring and set(values.keys()).intersection(recurring_fields):
                 event.make_timeslots()
         return res
+
+    def _get_daily_recurrence_display(self):
+        self.ensure_one()
+        if self.count:
+            return _("Every %(interval)s Days for %(count)s events", interval=self.interval, count=self.count)
+        elif self.until:
+            return _("Every %(interval)s Days until %(until)s", interval=self.interval, until=self.until)
+        return _("Every %(interval)s Days", interval=self.interval)
+
+    def _get_weekly_recurrence_display(self):
+        self.ensure_one()
+        labels = {
+            'mon': _('Monday'), 'tue': _('Tuesday'), 'wed': _('Wednesday'), 'thu': _('Thursday'),
+            'fri': _('Friday'), 'sat': _('Saturday'), 'sun': _('Sunday'),
+        }
+        days = ", ".join(labels[day] for day in ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] if getattr(self, day))
+
+        if self.count:
+            return _("Every %(interval)s Weeks on %(days)s for %(count)s events", interval=self.interval, days=days, count=self.count)
+        elif self.until:
+            return _("Every %(interval)s Weeks on %(days)s until %(until)s", interval=self.interval, days=days, until=self.until)
+        return _("Every %(interval)s Weeks on %(days)s", interval=self.interval, days=days)
+
+    def _get_monthly_recurrence_display(self):
+        self.ensure_one()
+        if self.monthday:
+            if self.count:
+                return _("Every %(interval)s Months day %(day)s for %(count)s events", interval=self.interval, day=self.day, count=self.count)
+            if self.until:
+                return _("Every %(interval)s Months day %(day)s until %(until)s", interval=self.interval, day=self.day, until=self.until)
+            return _("Every %(interval)s Months day %(day)s", interval=self.interval, day=self.day)
+        else:
+            weekday_label = dict(self._fields['monthweekday_day']._description_selection(self.env))[self.monthweekday_day]
+            position_label = ['0', _('1st'), _('2nd'), _('3rd'), _('4th')][self.monthweekday_n]
+            if self.count:
+                return _("Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s events", interval=self.interval, position=position_label, weekday=weekday_label, count=self.count)
+            if self.until:
+                return _("Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s", interval=self.interval, position=position_label, weekday=weekday_label, until=self.until)
+            return _("Every %(interval)s Months on the %(position)s %(weekday)s", interval=self.interval, position=position_label, weekday=weekday_label)
+
+    def _get_yearly_recurrence_display(self):
+        self.ensure_one()
+        if self.count:
+            return _("Every %(interval)s Years for %(count)s events", interval=self.interval, count=self.count)
+        elif self.until:
+            return _("Every %(interval)s Years until %(until)s", interval=self.interval, until=self.until)
+        return _("Every %(interval)s Years", interval=self.interval)
+
+    def get_recurrence_display(self):
+        if self.freq == 'daily':
+            return self._get_daily_recurrence_name()
+        if self.freq == 'weekly':
+            return self._get_weekly_recurrence_name()
+        if self.freq == 'monthly':
+            return self._get_monthly_recurrence_name()
+        if self.freq == 'yearly':
+            return self._get_yearly_recurrence_name()

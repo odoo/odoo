@@ -13,7 +13,7 @@ class TestCalendar(TestCalendarCommon):
         self.assertEqual(single_event.can_write, True)
 
         self.assertEqual(single_event.name, 'EVENT 1')
-        self.assertEqual(single_event.note, 'DESCRIPTION')
+        self.assertEqual(single_event.description, 'DESCRIPTION')
         self.assertEqual(single_event.is_public, False)
         self.assertEqual(single_event.is_recurring, False)
         self.assertEqual(len(single_event.event_id.timeslot_ids), 1)
@@ -32,7 +32,7 @@ class TestCalendar(TestCalendarCommon):
         self.assertEqual(single_event.can_write, False)
 
         self.assertEqual(single_event.name, 'EVENT 1')
-        self.assertEqual(single_event.note, 'DESCRIPTION')
+        self.assertEqual(single_event.description, 'DESCRIPTION')
         self.assertEqual(single_event.is_public, False)
         self.assertEqual(single_event.is_recurring, False)
         self.assertEqual(len(single_event.event_id.timeslot_ids), 1)
@@ -52,7 +52,7 @@ class TestCalendar(TestCalendarCommon):
         self.assertEqual(single_event.can_write, False)
 
         self.assertEqual(single_event.name, 'Busy')
-        self.assertEqual(single_event.note, False)
+        self.assertEqual(single_event.description, False)
         self.assertEqual(single_event.is_public, False)
         self.assertEqual(single_event.start, datetime(2024, 1, 1, 10, 0))
         self.assertEqual(single_event.stop, datetime(2024, 1, 1, 11, 0))
@@ -70,7 +70,7 @@ class TestCalendar(TestCalendarCommon):
         self.assertEqual(public_event.can_write, True)
 
         self.assertEqual(public_event.name, 'PUBLIC EVENT')
-        self.assertEqual(public_event.note, 'DESCRIPTION')
+        self.assertEqual(public_event.description, 'DESCRIPTION')
         self.assertEqual(public_event.is_public, True)
         self.assertEqual(public_event.is_recurring, False)
         self.assertEqual(len(public_event.event_id.timeslot_ids), 1)
@@ -89,7 +89,7 @@ class TestCalendar(TestCalendarCommon):
         self.assertEqual(public_event.can_write, False)
 
         self.assertEqual(public_event.name, 'PUBLIC EVENT')
-        self.assertEqual(public_event.note, 'DESCRIPTION')
+        self.assertEqual(public_event.description, 'DESCRIPTION')
         self.assertEqual(public_event.is_public, True)
         self.assertEqual(public_event.is_recurring, False)
         self.assertEqual(len(public_event.event_id.timeslot_ids), 1)
@@ -109,7 +109,7 @@ class TestCalendar(TestCalendarCommon):
         self.assertEqual(public_event.can_write, False)
 
         self.assertEqual(public_event.name, 'PUBLIC EVENT')
-        self.assertEqual(public_event.note, 'DESCRIPTION')
+        self.assertEqual(public_event.description, 'DESCRIPTION')
         self.assertEqual(public_event.is_public, True)
         self.assertEqual(public_event.start, datetime(2024, 1, 3, 15, 0))
         self.assertEqual(public_event.stop, datetime(2024, 1, 3, 16, 0))

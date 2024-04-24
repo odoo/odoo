@@ -47,7 +47,7 @@
                         <group string="Private" readonly="not can_write" invisible="not can_read_private">
                             <field name="alarm_ids" widget="many2many_tags" readonly="not can_write"/>
                             <field name="partner_ids" widget="many2many_tags" readonly="not can_write"/>
-                            <field name="note" readonly="not can_write"/>
+                            <field name="description" readonly="not can_write"/>
                             <field name="location" readonly="not can_write"/>
                         </group>
                     </group>
@@ -101,7 +101,7 @@
                             <field name="is_public" widget="boolean_toggle" invisible="not is_shown"/>
                         </group>
                         <group string="Private" readonly="not can_write" invisible="not can_read_private">
-                            <field name="note"/>
+                            <field name="description"/>
                             <field name="partner_ids" widget="many2many_tags"/>
                             <field name="location"/>
                         </group>
