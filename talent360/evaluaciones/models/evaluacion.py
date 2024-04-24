@@ -214,8 +214,35 @@ class Evaluacion(models.Model):
             "name": "Evaluación",
             "type": "ir.actions.act_window",
             "res_model": "evaluacion",
-            "view_mode": "tree,form",
+            "view_mode": "tree",
             "target": "current",
+        }
+
+    def abrir_evaluacion_form(self):
+        """
+        Abre la evaluación en una vista de formulario.
+
+        Este método configura y devuelve un diccionario con los detalles para abrir la evaluación
+        actual en una vista de formulario específica dependiendo de su tipo.
+
+        :return: Un diccionario que contiene todos los parámetros necesarios para abrir la
+        evaluación en una vista de formulario específica de Odoo.
+
+        """
+
+        if self.tipo == "competencia":
+            view_id = self.env.ref("evaluaciones.evaluacion_360_form").id
+        else:
+            view_id = self.env.ref("evaluaciones.evaluacion_reporte_form").id
+
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Evaluación",
+            "res_model": "evaluacion",
+            "view_mode": "form",
+            "view_id": view_id,
+            "target": "current",
+            "res_id": self.id,
         }
 
     def action_reporte_generico(self):
@@ -232,7 +259,7 @@ class Evaluacion(models.Model):
             "type": "ir.actions.act_url",
             "url": "/evaluacion/reporte/%s" % (self.id),
             "target": "self",
-    }
+    } 
 
 
     def action_generar_datos_reporte_generico(self):

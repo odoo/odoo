@@ -20,18 +20,24 @@
     </record>
 
     <!-- EVALUACION -->
+
+    <record id="evaluacion_action" model="ir.actions.act_window">
+        <field name="name">Evaluaciones</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">tree</field>
+    </record>
     <!-- Vista de lista de todas las evaluaciones-->
     <record id="evaluacion_view_tree" model="ir.ui.view">
         <field name="name">evaluacion.tree</field>
         <field name="model">evaluacion</field>
 
         <field name="arch" type="xml">
-            <tree>
-                <field class="text-primary font-weight-bold h5" name="nombre"/>
-                <field name="estado"/>
-                <field name="pregunta_ids"/>
-                <field name="competencia_ids"/>
-                <field name="usuario_ids"/>
+            <tree create="false">
+                <field class="text-primary font-weight-bold h5 align-middle" name="nombre" readonly="1"/>
+                <field name="descripcion" readonly="1"/>
+                <field name="estado" readonly="1"/>
+                <field name="tipo" readonly="1"/>
+                <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="abrir_evaluacion_form" string="Detalle" type="object" readonly="1"/>
             </tree>
         </field>
     </record>
@@ -44,20 +50,31 @@
         <field name="arch" type="xml">
             <form>
                 <sheet string="Evaluacion de personal">
+                    <h1>
+                        <field class="text-primary font-weight-bold" name="nombre"/>
+                    </h1>
+                    <p>
+                        <field name="descripcion"/>
+                    </p>
                     <group>
                         <group>
-                            <field class="h3 text-primary font-weight-bold lh-lg w-100" colspan="3" name="nombre" field_id="nombre_0" nolabel="1" />
+                            <field name="estado"/>
                         </group>
-                    </group>
-                    <group>
-                        <field class="lh-lg w-100" colspan="2" name="pregunta_ids" can_create="True" can_write="True" nolabel="1" field_id="pregunta_ids_0" context="{'current_evaluacion_id': active_id}">
-                            <tree>
-                                <field class="lh-m" name="pregunta_texto"/>
-                                <field class="lh-m" name="tipo"/>
-                                <!-- Métricas de una sola pregunta-->
-                                <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="ver_respuestas" string="Detalle" type="object"/>
-                            </tree>
-                        </field>
+                        <notebook>
+                            <page string="Preguntas">
+                                <field class="lh-lg w-100" colspan="2" name="pregunta_ids" can_create="True" can_write="True" nolabel="1" field_id="pregunta_ids_0" context="{'current_evaluacion_id': active_id}">
+                                    <tree>
+                                        <field class="lh-m" name="pregunta_texto"/>
+                                        <field class="lh-m" name="tipo"/>
+                                        <!-- Métricas de una sola pregunta-->
+                                        <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="ver_respuestas" string="Detalle" type="object"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Asignados">
+                                <field name="usuario_ids"/>
+                            </page>
+                        </notebook>
                     </group>
                     <!-- Generación de reporte de una evaluación-->
                     <button class="btn btn-primary btn-lg px-4 font-weight-bold lh-m my-2" name="action_reporte_generico" string="Reporte" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
@@ -222,22 +239,7 @@
     <record id="evaluacion_action" model="ir.actions.act_window">
         <field name="name">Evaluaciones</field>
         <field name="res_model">evaluacion</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree</field>
     </record>
-
-    <record id="evaluacion_tree" model="ir.ui.view">
-        <field name="name">evaluacion.tree</field>
-        <field name="model">evaluacion</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="nombre"/>
-                <field name="descripcion"/>
-                <field name="estado"/>
-                <field name="tipo"/>
-                <field name="pregunta_ids"/>
-            </tree>
-        </field>
-    </record>
-
 
 </odoo>
