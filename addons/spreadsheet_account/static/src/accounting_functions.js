@@ -147,36 +147,29 @@ functionRegistry.add("ODOO.CREDIT", {
     args: ODOO_FIN_ARGS(),
     category: "Odoo",
     returns: ["NUMBER"],
-    compute: function (
+    computeValueAndFormat: function (
         accountCodes,
         dateRange,
-        offset = 0,
-        companyId = null,
-        includeUnposted = false
+        offset = { value: 0 },
+        companyId = { value: null },
+        includeUnposted = { value: false }
     ) {
-        accountCodes = toString(accountCodes)
+        accountCodes = toString(accountCodes?.value)
             .split(",")
             .map((code) => code.trim())
             .sort();
-        offset = toNumber(offset, this.locale);
-        dateRange = parseAccountingDate(dateRange, this.locale);
-        includeUnposted = toBoolean(includeUnposted);
-        return this.getters.getAccountPrefixCredit(
+        offset = toNumber(offset.value, this.locale);
+        dateRange = parseAccountingDate(dateRange?.value, this.locale);
+        includeUnposted = toBoolean(includeUnposted.value);
+        const value = this.getters.getAccountPrefixCredit(
             accountCodes,
             dateRange,
             offset,
-            companyId,
+            companyId.value,
             includeUnposted
         );
-    },
-    computeFormat: function (
-        accountCodes,
-        dateRange,
-        offset = 0,
-        companyId = null,
-        includeUnposted = false
-    ) {
-        return this.getters.getCompanyCurrencyFormat(companyId && companyId.value) || "#,##0.00";
+        const format = this.getters.getCompanyCurrencyFormat(companyId.value) || "#,##0.00";
+        return { value, format };
     },
 });
 
@@ -185,36 +178,29 @@ functionRegistry.add("ODOO.DEBIT", {
     args: ODOO_FIN_ARGS(),
     category: "Odoo",
     returns: ["NUMBER"],
-    compute: function (
+    computeValueAndFormat: function (
         accountCodes,
         dateRange,
-        offset = 0,
-        companyId = null,
-        includeUnposted = false
+        offset = { value: 0 },
+        companyId = { value: null },
+        includeUnposted = { value: false }
     ) {
-        accountCodes = toString(accountCodes)
+        accountCodes = toString(accountCodes?.value)
             .split(",")
             .map((code) => code.trim())
             .sort();
-        offset = toNumber(offset, this.locale);
-        dateRange = parseAccountingDate(dateRange, this.locale);
-        includeUnposted = toBoolean(includeUnposted);
-        return this.getters.getAccountPrefixDebit(
+        offset = toNumber(offset.value, this.locale);
+        dateRange = parseAccountingDate(dateRange?.value, this.locale);
+        includeUnposted = toBoolean(includeUnposted.value);
+        const value = this.getters.getAccountPrefixDebit(
             accountCodes,
             dateRange,
             offset,
-            companyId,
+            companyId.value,
             includeUnposted
         );
-    },
-    computeFormat: function (
-        accountCodes,
-        dateRange,
-        offset = 0,
-        companyId = null,
-        includeUnposted = false
-    ) {
-        return this.getters.getCompanyCurrencyFormat(companyId && companyId.value) || "#,##0.00";
+        const format = this.getters.getCompanyCurrencyFormat(companyId.value) || "#,##0.00";
+        return { value, format };
     },
 });
 
@@ -223,45 +209,37 @@ functionRegistry.add("ODOO.BALANCE", {
     args: ODOO_FIN_ARGS(),
     category: "Odoo",
     returns: ["NUMBER"],
-    compute: function (
+    computeValueAndFormat: function (
         accountCodes,
         dateRange,
-        offset = 0,
-        companyId = null,
-        includeUnposted = false
+        offset = { value: 0 },
+        companyId = { value: null },
+        includeUnposted = { value: false }
     ) {
-        accountCodes = toString(accountCodes)
+        accountCodes = toString(accountCodes?.value)
             .split(",")
             .map((code) => code.trim())
             .sort();
-        offset = toNumber(offset, this.locale);
-        dateRange = parseAccountingDate(dateRange, this.locale);
-        includeUnposted = toBoolean(includeUnposted);
-        return (
+        offset = toNumber(offset.value, this.locale);
+        dateRange = parseAccountingDate(dateRange?.value, this.locale);
+        includeUnposted = toBoolean(includeUnposted.value);
+        const value =
             this.getters.getAccountPrefixDebit(
                 accountCodes,
                 dateRange,
                 offset,
-                companyId,
+                companyId.value,
                 includeUnposted
             ) -
             this.getters.getAccountPrefixCredit(
                 accountCodes,
                 dateRange,
                 offset,
-                companyId,
+                companyId.value,
                 includeUnposted
-            )
-        );
-    },
-    computeFormat: function (
-        accountCodes,
-        dateRange,
-        offset = 0,
-        companyId = null,
-        includeUnposted = false
-    ) {
-        return this.getters.getCompanyCurrencyFormat(companyId && companyId.value) || "#,##0.00";
+            );
+        const format = this.getters.getCompanyCurrencyFormat(companyId.value) || "#,##0.00";
+        return { value, format };
     },
 });
 
