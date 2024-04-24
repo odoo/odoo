@@ -461,13 +461,13 @@ class TestMultiCompany(TransactionCase):
             'location_dest_id': self.stock_location_a.id,
             'product_id': product_lot.id,
             'product_uom': product_lot.uom_id.id,
-            'product_uom_qty': 1.0,
+            'product_uom_qty': 0.1,
             'picking_type_id': self.warehouse_a.in_type_id.id,
         })
         move_from_supplier._action_confirm()
         move_line_1 = move_from_supplier.move_line_ids[0]
         move_line_1.lot_name = 'lot 1'
-        move_line_1.quantity = 1.0
+        move_line_1.quantity = 0.1
         move_from_supplier.picked = True
         move_from_supplier._action_done()
         lot_1 = move_line_1.lot_id
@@ -479,7 +479,7 @@ class TestMultiCompany(TransactionCase):
             'location_dest_id': intercom_location.id,
             'product_id': product_lot.id,
             'product_uom': product_lot.uom_id.id,
-            'product_uom_qty': 1.0,
+            'product_uom_qty': 0.1,
             'picking_type_id': picking_type_to_transit.id,
             'route_ids': [(4, route.id)],
         })
@@ -487,7 +487,7 @@ class TestMultiCompany(TransactionCase):
         move_to_transit.with_user(self.user_a)._action_assign()
         move_line_2 = move_to_transit.move_line_ids[0]
         self.assertTrue(move_line_2.lot_id, move_line_1.lot_id)
-        move_line_2.quantity = 1.0
+        move_line_2.quantity = 0.1
         move_to_transit.picked = True
         move_to_transit.with_user(self.user_a)._action_done()
 
@@ -506,16 +506,16 @@ class TestMultiCompany(TransactionCase):
 
         move_line_3 = move_push.move_line_ids[0]
         move_line_3.lot_name = 'lot 2'
-        move_line_3.quantity = 1.0
+        move_line_3.quantity = 0.1
         picking_receipt.move_ids.picked = True
         picking_receipt.button_validate()
         lot_2 = move_line_3.lot_id
         self.assertEqual(lot_1.company_id, self.company_a)
         self.assertEqual(lot_1.name, 'lot 1')
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, intercom_location, lot_1), 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, intercom_location, lot_1), 0.1)
         self.assertEqual(lot_2.company_id, self.company_b)
         self.assertEqual(lot_2.name, 'lot 2')
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, self.stock_location_b, lot_2), 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, self.stock_location_b, lot_2), 0.1)
 
     def test_intercom_lot_pull(self):
         """Use warehouse of comany a to resupply warehouse of company b. Check
