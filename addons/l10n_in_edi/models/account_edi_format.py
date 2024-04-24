@@ -485,6 +485,14 @@ class AccountEdiFormat(models.Model):
         sign = invoice.is_inbound() and -1 or 1
         rounding_amount = sum(line.balance for line in invoice.line_ids if line.display_type == 'rounding') * sign
         global_discount_amount = sum(line.balance for line in global_discount_line) * sign * -1
+        inter_partner_tranaction = invoice.company_id.partner_id
+        buyer_details = saler_buyer.get("buyer_details")
+        if invoice.company_id.parent_id:
+            inter_partner_tranaction |= invoice.company_id.parent_id.partner_id
+            if invoice.company_id.parent_id.child_ids:
+                inter_partner_tranaction |= invoice.company_id.parent_id.mapped('child_ids.partner_id')
+        if invoice.company_id.child_ids:
+            inter_partner_tranaction |= invoice.company_id.mapped('child_ids.partner_id')
         json_payload = {
             "Version": "1.1",
             "TranDtls": {
@@ -498,7 +506,7 @@ class AccountEdiFormat(models.Model):
                 "Dt": invoice.invoice_date.strftime("%d/%m/%Y")},
             "SellerDtls": self._get_l10n_in_edi_partner_details(saler_buyer.get("seller_details")),
             "BuyerDtls": self._get_l10n_in_edi_partner_details(
-                saler_buyer.get("buyer_details"), pos_state_id=invoice.l10n_in_state_id, is_overseas=is_overseas),
+                buyer_details, pos_state_id=invoice.l10n_in_state_id, is_overseas=is_overseas),
             "ItemList": [
                 self._get_l10n_in_edi_line_details(index, line, tax_details_per_record.get(line, {}))
                 for index, line in enumerate(lines, start=1)
@@ -533,16 +541,19 @@ class AccountEdiFormat(models.Model):
                 "DispDtls": self._get_l10n_in_edi_partner_details(saler_buyer.get("dispatch_details"),
                     set_vat=False, set_phone_and_email=False)
             })
-        if saler_buyer.get("buyer_details") != saler_buyer.get("ship_to_details"):
+        if buyer_details != saler_buyer.get("ship_to_details"):
             json_payload.update({
                 "ShipDtls": self._get_l10n_in_edi_partner_details(saler_buyer.get("ship_to_details"), is_overseas=is_overseas)
             })
+        if buyer_details in inter_partner_tranaction and buyer_details.commercial_partner_id.ref and json_payload['BuyerDtls'].get('LglNm'):
+            json_payload['BuyerDtls']['LglNm'] = buyer_details.commercial_partner_id.ref
+
         if is_overseas:
             json_payload.update({
                 "ExpDtls": {
                     "RefClm": tax_details_by_code.get("igst") and "Y" or "N",
                     "ForCur": invoice.currency_id.name,
-                    "CntCode": saler_buyer.get("buyer_details").country_id.code or "",
+                    "CntCode": buyer_details.country_id.code or "",
                 }
             })
             if invoice.l10n_in_shipping_bill_number:

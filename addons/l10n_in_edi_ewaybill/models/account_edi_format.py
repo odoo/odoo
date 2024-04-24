@@ -379,6 +379,13 @@ class AccountEdiFormat(models.Model):
         tax_details = self._l10n_in_prepare_edi_tax_details(invoices)
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
         invoice_line_tax_details = tax_details.get("tax_details_per_record")
+        inter_partner_tranaction = invoices.company_id.partner_id
+        if invoices.company_id.parent_id:
+            inter_partner_tranaction |= invoices.company_id.parent_id.partner_id
+            if invoices.company_id.parent_id.child_ids:
+                inter_partner_tranaction |= invoices.company_id.parent_id.mapped('child_ids.partner_id')
+        if invoices.company_id.child_ids:
+            inter_partner_tranaction |= invoices.company_id.mapped('child_ids.partner_id')
         json_payload = {
             "supplyType": invoices.is_purchase_document(include_receipts=True) and "I" or "O",
             "subSupplyType": invoices.l10n_in_type_id.sub_type_code,
@@ -396,7 +403,7 @@ class AccountEdiFormat(models.Model):
             "fromStateCode": int(seller_details.state_id.l10n_in_tin) or "",
             "actFromStateCode": dispatch_details.state_id.l10n_in_tin and int(dispatch_details.state_id.l10n_in_tin) or "",
             "toGstin": buyer_details.commercial_partner_id.vat or "URP",
-            "toTrdName": buyer_details.commercial_partner_id.name,
+            "toTrdName": buyer_details.commercial_partner_id.ref if buyer_details in inter_partner_tranaction and buyer_details.commercial_partner_id.ref else buyer_details.commercial_partner_id.name,
             "toAddr1": ship_to_details.street or "",
             "toAddr2": ship_to_details.street2 or "",
             "toPlace": ship_to_details.city or "",
