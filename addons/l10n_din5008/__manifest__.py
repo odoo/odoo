@@ -10,6 +10,7 @@
     'auto_install': True,
     'countries': ['de', 'ch'],
     'data': [
+        'report/din5008_base_document_layout.xml',
         'report/din5008_report.xml',
         'data/report_layout.xml',
     ],
