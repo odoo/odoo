@@ -240,6 +240,31 @@ test("chat window: open / close", async () => {
     await assertSteps(["channel_fold/open"]);
 });
 
+test("Open chatwindow as a non member", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [],
+    });
+    const messageId = pyEnv["mail.message"].create({
+        model: "discuss.channel",
+        body: "A needaction message to have it in messaging menu",
+        author_id: serverState.odoobotId,
+        needaction: true,
+        needaction_partner_ids: [serverState.partnerId],
+        res_id: channelId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-ChatWindow");
+});
+
 test("open chat on very narrow device should work", async () => {
     const pyEnv = await startServer();
     patchUiSize({ width: 200 });
