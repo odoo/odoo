@@ -1475,8 +1475,6 @@ class Field(MetaField('DummyField', (object,), {})):
             record = records.__class__(records.env, (record_id,), records._prefetch_ids)
             return self._get(record)
 
-        if getter is None:
-            getter = dict.get
         context_key = records.env.cache_key(self)
         vals = records.env.cache.get_values(self, context_key, records._ids, getter=getter, on_cache_miss=on_cache_miss)
         return vals
@@ -2035,9 +2033,9 @@ class _String(Field):
 
         def _getter(field_cache, record_id, nothing):
             cache_value = field_cache.get(record_id, nothing)
-            if (cache_value is not nothing and cache_value is not None and lang not in cache_value):
-                return nothing
-            return cache_value
+            if cache_value is None or cache_value is nothing or lang in cache_value:
+                return cache_value
+            return nothing
 
         return super()._get_cache_values(records, _getter)
 
