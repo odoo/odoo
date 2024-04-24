@@ -7,7 +7,15 @@
 </t>
 <t t-name="web_editor.TestSnippetOption">
     <WeButton selectClass="'test_class'">Test Class</WeButton>
+    <WeSelect>
+        <WeButton selectClass="'test_class_1'">Test Class 1</WeButton>
+        <WeButton selectClass="'test_class_2'">Test Class 2</WeButton>
+        <WeButton selectClass="'test_class_3'">Test Class 3</WeButton>
+        <WeButton selectClass="'test_class_4'">Test Class 4</WeButton>
+        <WeButton selectClass="'test_class_5'">Test Class 5</WeButton>
+    </WeSelect>
 </t>
+
 <t t-name="web_editor.WeButton">
     <we-button t-ref="text-content"
                t-on-mouseenter="this._onUserValuePreview"
@@ -28,3 +36,16 @@
             </div>
     </we-button>
 </t>
+<t t-name="web_editor.WeSelect">
+    <we-select class="o_we_user_value_widget" t-att-class="getAllClasses()" t-on-click="_onClick">
+        <t t-if="props.slots?.title"><we-title><t t-slot="title"/></we-title></t>
+        <div>
+            <we-toggler t-out="state.toggler.textContent" t-att-class="{ 'active': state.opened }"/>
+            <we-selection-items t-ref="menu">
+                <t t-slot="default"/>
+            </we-selection-items>
+            <span class="o_we_dropdown_caret"/>
+        </div>
+    </we-select>
+</t>
+</templates>

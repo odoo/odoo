@@ -382,6 +382,23 @@ class UserValue {
         this._state.value = value;
     }
     /**
+     * Returns whether the component that posses this state should be visible
+     * or not. Cannot be set directly, use {@link toggleVisibility} instead.
+     */
+    get show() {
+        return this._state.show;
+    }
+    /**
+     * Returns whether sub widgets should or shouldn't be shown. Typically in
+     * the case of a list, we do not want to show all buttons at all time, so
+     * instead they will only be shown when this value is true.
+     *
+     * @type {boolean}
+     */
+    get opened() {
+        return this._state.opened;
+    }
+    /**
      * @TODO: @owl-options: This should be moved into the component
      */
     async willStart() {
@@ -446,14 +463,7 @@ class UserValue {
      * Closes the widget (only meaningful for widgets that can be closed).
      */
     close() {
-        if (!this.el) {
-            // In case the method is called while the widget is not fully
-            // initialized yet. No need to prevent that case: asking a non
-            // initialized widget to close itself should just not be a problem
-            // and just be ignored.
-            return;
-        }
-        if (!this.el.classList.contains('o_we_widget_opened')) {
+        if (!this._state.opened) {
             // Small optimization: it would normally not matter asking to
             // remove a class of an element if it does not already have it but
             // in this case we do more: we trigger_up an event and ask to close
@@ -463,15 +473,17 @@ class UserValue {
             // instructions being done at each click in the editor.
             return;
         }
-        this.trigger_up('user_value_widget_closing');
-        this.el.classList.remove('o_we_widget_opened');
-        this._userValueWidgets.forEach(widget => widget.close());
+        this.env.userValueWidgetClosing();
+        this._state.opened = false;
+        Object.values(this._subValues).forEach(widget => widget.close());
     }
     /**
-     * Simulates the correct event on the element to make it active.
+     * Triggers a value change in non preview mode.
+     * Should be overridden by Sub-classes to properly reflect what enabling
+     * their component means.
      */
     enable() {
-        this.$el.click();
+        this.notifyValueChange(false);
     }
     /**
      * @param {string} name
@@ -687,12 +699,10 @@ class UserValue {
     }
     /**
      * Opens the widget (only meaningful for widgets that can be opened).
-     * @TODO @owl-options: Find a way to link this to the component, or remove
-     * calls to this thing.
      */
     open() {
-        this.trigger_up('user_value_widget_opening');
-        this.el.classList.add('o_we_widget_opened');
+        this.env.userValueWidgetOpening();
+        this._state.opened = true;
     }
     /**
      * Adds the given userValue to the list of sub values (useful for container
@@ -851,6 +861,20 @@ class UserValueComponent extends Component {
                 }
             }
         });
+        // Track the changes to the textContent slot so that parent widgets can
+        // use it (e.g. WeSelect use the active value's textContent for its
+        // toggler).
+        this.textContentRef = useRef("text-content");
+        useEffect(
+            () => {
+                const textContent = this.textContentRef.el?.textContent || "";
+                if (textContent && textContent !== this.state.textContent) {
+                    this.state.textContent = textContent;
+                }
+            },
+            () => [this.textContentRef.el]
+        );
+
         onWillDestroy(() => {
             this.env.unregisterUserValue(this.state);
         });
@@ -1105,26 +1129,27 @@ const CheckboxUserValueWidget = ButtonUserValueWidget.extend({
     },
 });
 
-const BaseSelectionUserValueWidget = UserValueWidget.extend({
+const BaseSelectionUserValueWidget = UserValueWidget.extend({});
+class BaseSelectionUserValue extends UserValue {
     /**
      * @override
      */
     async start() {
-        await this._super(...arguments);
+        await super.start(...arguments);
 
-        this.menuEl = document.createElement('we-selection-items');
-        if (this.options && this.options.childNodes) {
-            this.options.childNodes.forEach(node => {
-                // Ensure to only put element nodes inside the selection menu
-                // as there could be an :empty CSS rule to handle the case when
-                // the menu is empty (so it should not contain any whitespace).
-                if (node.nodeType === Node.ELEMENT_NODE) {
-                    this.menuEl.appendChild(node);
-                }
-            });
-        }
-        this.containerEl.appendChild(this.menuEl);
-    },
+        // this.menuEl = document.createElement('we-selection-items');
+        // if (this.options && this.options.childNodes) {
+        //     this.options.childNodes.forEach(node => {
+        //         // Ensure to only put element nodes inside the selection menu
+        //         // as there could be an :empty CSS rule to handle the case when
+        //         // the menu is empty (so it should not contain any whitespace).
+        //         if (node.nodeType === Node.ELEMENT_NODE) {
+        //             this.menuEl.appendChild(node);
+        //         }
+        //     });
+        // }
+        // this.containerEl.appendChild(this.menuEl);
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -1134,13 +1159,13 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
      * @override
      */
     getMethodsParams(methodName) {
-        const params = this._super(...arguments);
+        const params = super.getMethodsParams(...arguments);
         const activeWidget = this._getActiveSubWidget();
         if (!activeWidget) {
             return params;
         }
         return Object.assign(activeWidget.getMethodsParams(...arguments), params);
-    },
+    }
     /**
      * @override
      */
@@ -1149,23 +1174,23 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
         if (activeWidget) {
             return activeWidget.getActiveValue(methodName);
         }
-        return this._super(...arguments);
-    },
+        return super.getValue(...arguments);
+    }
     /**
      * @override
      */
     isContainer() {
         return true;
-    },
+    }
     /**
      * @override
      */
     async setValue(value, methodName) {
-        const _super = this._super.bind(this);
-        for (const widget of this._userValueWidgets) {
+        const subValues = Object.values(this._subValues);
+        for (const widget of subValues) {
             await widget.setValue(NULL_ID, methodName);
         }
-        for (const widget of [...this._userValueWidgets].reverse()) {
+        for (const widget of subValues.reverse()) {
             await widget.setValue(value, methodName);
             if (widget.isActive()) {
                 // Only one select item can be true at a time, we consider the
@@ -1173,8 +1198,8 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
                 break;
             }
         }
-        await _super(...arguments);
-    },
+        await super.setValue(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -1182,23 +1207,120 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
 
     /**
      * @private
-     * @returns {UserValueWidget|undefined}
+     * @returns {UserValue|undefined}
      */
     _getActiveSubWidget() {
-        const previewedWidget = this._userValueWidgets.find(widget => widget.isPreviewed());
+        const previewedWidget = Object.values(this._subValues).find(value => value.isPreviewed());
         if (previewedWidget) {
             return previewedWidget;
         }
-        return this._userValueWidgets.find(widget => widget.isActive());
-    },
-});
+        return Object.values(this._subValues).find(value => value.isActive());
+    }
+}
+class SelectUserValue extends BaseSelectionUserValue {
 
-const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
-    tagName: 'we-select',
-    events: {
-        'click': '_onClick',
-    },
-    PLACEHOLDER_TEXT: _t("None"),
+    static PLACEHOLDER_TEXT = _t("None");
+
+    constructor() {
+        super(...arguments);
+        this._state.toggler = {
+            faIcon: false,
+            imgSrc: false,
+            textContent: this.constructor.PLACEHOLDER_TEXT,
+        };
+    }
+    /**
+     * Informations about the toggler element, to be used in the template.
+     *
+     * @type {Object}
+     */
+    get toggler() {
+        return this._state.toggler;
+    }
+    /**
+     * @override
+     */
+    async setValue(value, methodName) {
+        await super.setValue(...arguments);
+        // Re-initialising the toggler.
+        const newToggler = {
+            textContent: "",
+            faIcon: false,
+            imgSrc: false,
+        };
+        const activeWidget = Object.values(this._subValues).find(value => !value.isPreviewed() && value.isActive());
+        if (activeWidget) {
+            const params = activeWidget.getMethodsParams(methodName);
+            // Check the param for svg on buttons
+            const svgSrc = params.svgSrc; // useful to avoid searching text content in svg element
+            const text = (params.selectLabel || (!svgSrc && activeWidget.textContent.trim()));
+            const imgSrc = params.img;
+            const icon = params.icon;
+            if (text) {
+                newToggler.textContent = text;
+            } else if (icon) {
+                newToggler.faIcon = icon;
+            } else if (imgSrc) {
+                newToggler.imgSrc = imgSrc;
+            } else {
+                // TODO: @owl-options: check this?
+                //const fakeImgEl = activeWidget.el.querySelector('.o_we_fake_img_item');
+                //if (fakeImgEl) {
+                //    this.menuTogglerItemEl = fakeImgEl.cloneNode(true);
+                //}
+            }
+        } else {
+            newToggler.textContent = this.constructor.PLACEHOLDER_TEXT;
+        }
+
+        this._state.toggler = newToggler;
+
+        if (this.menuTogglerItemEl) {
+            this.menuTogglerEl.appendChild(this.menuTogglerItemEl);
+        }
+    }
+    /**
+     * @override
+     */
+    isPreviewed() {
+        return super.isPreviewed() || this.opened;
+    }
+    /**
+     * @override
+     */
+    enable() {
+        if (!this.opened) {
+            this.open();
+        }
+    }
+}
+const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({});
+class WeSelect extends UserValueComponent {
+    static isContainer = true;
+    static template = "web_editor.WeSelect";
+    static components = { Dropdown };
+    static StateModel = SelectUserValue;
+
+    setup() {
+        // Use this ref to adjust the dropdown's position upwards if not enough
+        // space downwards.
+        this.menuRef = useRef("menu");
+
+        useEffect(
+            (opened) => {
+                if (opened) {
+                    this._adjustDropdownPosition();
+                }
+                return () => {
+                    const containerEl = this.menuRef.el?.closest(".o_we_user_value_widget");
+                    containerEl.classList.remove("o_we_select_dropdown_up");
+                };
+            },
+            () => [this.state.opened]
+        );
+
+        super.setup();
+    }
 
     /**
      * @override
@@ -1229,89 +1351,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
         const dropdownCaretEl = document.createElement('span');
         dropdownCaretEl.classList.add('o_we_dropdown_caret');
         this.containerEl.appendChild(dropdownCaretEl);
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    close: function () {
-        this._super(...arguments);
-        this.el.classList.remove("o_we_select_dropdown_up");
-        if (this.menuTogglerEl) {
-            this.menuTogglerEl.classList.remove('active');
-        }
-    },
-    /**
-     * @override
-     */
-    isPreviewed: function () {
-        return this._super(...arguments) || this.menuTogglerEl.classList.contains('active');
-    },
-    /**
-     * @override
-     */
-    open() {
-        this._super(...arguments);
-        this.menuTogglerEl.classList.add('active');
-        this._adjustDropdownPosition();
-    },
-    /**
-     * @override
-     */
-    async setValue() {
-        await this._super(...arguments);
-
-        if (this.iconEl) {
-            return;
-        }
-
-        if (this.menuTogglerItemEl) {
-            this.menuTogglerItemEl.remove();
-            this.menuTogglerItemEl = null;
-        }
-
-        let textContent = '';
-        const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
-        if (activeWidget) {
-            const svgTag = activeWidget.el.querySelector('svg'); // useful to avoid searching text content in svg element
-            const value = (activeWidget.el.dataset.selectLabel || (!svgTag && activeWidget.el.textContent.trim()));
-            const imgSrc = activeWidget.el.dataset.img;
-            const icon = activeWidget.el.dataset.icon;
-            if (value) {
-                textContent = value;
-            } else if (icon) {
-                this.menuTogglerItemEl = document.createElement('i');
-                this.menuTogglerItemEl.classList.add('fa', icon);
-            } else if (imgSrc) {
-                this.menuTogglerItemEl = document.createElement('img');
-                this.menuTogglerItemEl.src = imgSrc;
-            } else {
-                const fakeImgEl = activeWidget.el.querySelector('.o_we_fake_img_item');
-                if (fakeImgEl) {
-                    this.menuTogglerItemEl = fakeImgEl.cloneNode(true);
-                }
-            }
-        } else {
-            textContent = this.PLACEHOLDER_TEXT;
-        }
-
-        this.menuTogglerEl.textContent = textContent;
-        if (this.menuTogglerItemEl) {
-            this.menuTogglerEl.appendChild(this.menuTogglerItemEl);
-        }
-    },
-    /**
-     * @override
-     */
-    enable() {
-        if (!this.menuTogglerEl.classList.contains('active')) {
-            this.menuTogglerEl.click();
-        }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -1323,7 +1363,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      */
     _shouldIgnoreClick(ev) {
         return !!ev.target.closest('[role="button"]');
-    },
+    }
     /**
      * Decides whether the dropdown should be positioned below or above the
      * selector based on the available space.
@@ -1331,14 +1371,22 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      * @private
      */
     _adjustDropdownPosition() {
-        const customizePanelEl = this.menuEl.closest(".o_we_customize_panel");
+        if (!this.state.opened) {
+            return;
+        }
+        const customizePanelEl = this.menuRef.el?.closest(".o_we_customize_panel");
         if (!customizePanelEl) {
             return;
         }
 
-        this.el.classList.remove("o_we_select_dropdown_up");
+        const containerEl = this.menuRef.el.closest(".o_we_user_value_widget");
+        if (!containerEl) {
+            return;
+        }
+
+        containerEl.classList.remove("o_we_select_dropdown_up");
         const customizePanelElCoords = customizePanelEl.getBoundingClientRect();
-        let dropdownMenuElCoords = this.menuEl.getBoundingClientRect();
+        let dropdownMenuElCoords = this.menuRef.el.getBoundingClientRect();
 
         // Adds a margin to prevent the dropdown from sticking to the edge of
         // the customize panel.
@@ -1346,15 +1394,15 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
         // If after opening, the dropdown list overflows the customization
         // panel at the bottom, opens the dropdown above the selector.
         if ((dropdownMenuElCoords.bottom + dropdownMenuMargin) > customizePanelElCoords.bottom) {
-            this.el.classList.add("o_we_select_dropdown_up");
-            dropdownMenuElCoords = this.menuEl.getBoundingClientRect();
+            containerEl.classList.add("o_we_select_dropdown_up");
+            dropdownMenuElCoords = this.menuRef.el.getBoundingClientRect();
             // If there is no available space above it either, then we open
             // it below the selector.
             if (dropdownMenuElCoords.top < customizePanelElCoords.top) {
-                this.el.classList.remove("o_we_select_dropdown_up");
+                containerEl.classList.remove("o_we_select_dropdown_up");
             }
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -1365,22 +1413,23 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      *
      * @private
      */
-    _onClick: function (ev) {
+    _onClick(ev) {
         if (this._shouldIgnoreClick(ev)) {
             return;
         }
 
-        if (!this.menuTogglerEl.classList.contains('active')) {
-            this.open();
+        if (!this.state.opened) {
+            this.state.open();
         } else {
-            this.close();
+            this.state.close();
         }
-        const activeButton = this._userValueWidgets.find(widget => widget.isActive());
-        if (activeButton) {
-            this.menuEl.scrollTop = activeButton.el.offsetTop - (this.menuEl.offsetHeight / 2);
+        const activeItem = this.menuRef.el?.querySelector(".active");
+        if (activeItem) {
+            this.menuRef.el.scrollTop = activeItem.offsetTop - (this.menuRef.el.offsetHeight / 2);
         }
-    },
-});
+    }
+}
+registry.category("snippet_widgets").add("WeSelect", WeSelect);
 
 const ButtonGroupUserValueWidget = BaseSelectionUserValueWidget.extend({
     tagName: 'we-button-group',

@@ -2006,6 +2006,11 @@ class SnippetsMenu extends Component {
             detail.proms.push(this.cleanForSave());
         });
 
+        useSubEnv({
+            userValueWidgetOpening: this._onUserValueWidgetOpening.bind(this),
+            userValueWidgetClosing: this._onUserValueWidgetClosing.bind(this),
+        });
+        this.options.env = this.env;
         // If multiple SnippetOptionsComponent are mounted at the same time,
         // only compute their state once per tick instead of once per option.
         this.onOptionMounted = batched(() => {
