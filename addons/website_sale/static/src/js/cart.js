@@ -17,6 +17,7 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClickDeleteProduct: function (ev) {
+        debugger;
         ev.preventDefault();
         let quantityElement = ev.currentTarget.closest('.o_cart_product').querySelector('.js_quantity');
         quantityElement.value = 0;

@@ -53,6 +53,7 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
      * @private
      */
     _changeCountry: function () {
+        debugger;
         if (!this.el.querySelector("#country_id").value) {
             return;
         }
