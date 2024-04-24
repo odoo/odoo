@@ -20,8 +20,15 @@ class Evaluacion(models.Model):
 
     nombre = fields.Char(required=True)
 
-    tipo = fields.Selection([("CLIMA", "Clima Organizacional"), ("NOM_035", "NOM 035"), ("competencia", "Competencia")],
-                            required=True, default="competencia")
+    tipo = fields.Selection(
+        [
+            ("CLIMA", "Clima Organizacional"),
+            ("NOM_035", "NOM 035"),
+            ("competencia", "Competencia"),
+        ],
+        required=True,
+        default="competencia",
+    )
     descripcion = fields.Text()
     estado = fields.Selection(
         [
@@ -64,7 +71,7 @@ class Evaluacion(models.Model):
 
         Este método verifica si el objeto actual está vacío (self). Si lo está, crea una nueva
         evaluación con un nombre predeterminado y asigna este nuevo objeto a self. Luego, limpia
-        las preguntas existentes y copia todas las preguntas de un template con ID predefinido 
+        las preguntas existentes y copia todas las preguntas de un template con ID predefinido
         (en este caso, 332) al objeto evaluación actual.
 
         Returns:
@@ -73,11 +80,13 @@ class Evaluacion(models.Model):
 
         if not self:
 
-            new_evaluation = self.env["evaluacion"].create({
-                "nombre": "Evaluacion Clima",
-                "descripcion": "La valuacion Clima es una herramienta de medición de clima organizacional, cuyo objetivo es conocer la percepción que tienen las personas que laboran en los centros de trabajo, sobre aquellos aspectos sociales que conforman su entorno laboral y que facilitan o dificultan su desempeño.",
-                "tipo": "CLIMA",
-            })
+            new_evaluation = self.env["evaluacion"].create(
+                {
+                    "nombre": "Evaluacion Clima",
+                    "descripcion": "La valuacion Clima es una herramienta de medición de clima organizacional, cuyo objetivo es conocer la percepción que tienen las personas que laboran en los centros de trabajo, sobre aquellos aspectos sociales que conforman su entorno laboral y que facilitan o dificultan su desempeño.",
+                    "tipo": "CLIMA",
+                }
+            )
             self = new_evaluation
 
         self.pregunta_ids = [(5,)]
@@ -99,18 +108,20 @@ class Evaluacion(models.Model):
 
         Este método verifica si el objeto actual está vacío (self). Si lo está, crea una nueva
         evaluación con un nombre predeterminado y asigna este nuevo objeto a self. Luego, limpia
-        las preguntas existentes y copia todas las preguntas de un template con ID predefinido 
+        las preguntas existentes y copia todas las preguntas de un template con ID predefinido
         (en este caso, 331) al objeto evaluación actual.
-        
+
         :return: object: Retorna el objeto evaluación actualizado con las preguntas copiadas del template.
         """
 
         if not self:
-            new_evaluation = self.env["evaluacion"].create({
-                "nombre": "NOM 035",
-                "descripcion": "La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.",
-                "tipo": "NOM_035",
-            })
+            new_evaluation = self.env["evaluacion"].create(
+                {
+                    "nombre": "NOM 035",
+                    "descripcion": "La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.",
+                    "tipo": "NOM_035",
+                }
+            )
             self = new_evaluation
 
         self.pregunta_ids = [(5,)]
@@ -259,11 +270,9 @@ class Evaluacion(models.Model):
             "type": "ir.actions.act_url",
             "url": "/evaluacion/reporte/%s" % (self.id),
             "target": "self",
-    } 
-
+        }
 
     def action_generar_datos_reporte_generico(self):
-
         """
         Genera los datos necesarios para el reporte genérico de la evaluación.
 

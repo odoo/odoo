@@ -8,9 +8,7 @@ class EvaluacionesController(http.Controller):
     """Controlador para manejar las solicitudes relacionadas con las evaluaciones."""
 
     @http.route(
-        "/evaluacion/reporte/<model('evaluacion'):evaluacion>",
-        type="http",
-        auth="user"
+        "/evaluacion/reporte/<model('evaluacion'):evaluacion>", type="http", auth="user"
     )
     def reporte_controler(self, evaluacion: Evaluacion):
         """Método para generar y mostrar un reporte de evaluación.

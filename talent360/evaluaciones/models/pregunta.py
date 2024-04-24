@@ -14,6 +14,7 @@ class Pregunta(models.Model):
     :param respuesta_ids (fields.One2many): Relación uno a muchos con el modelo 'respuesta' para las respuestas asociadas a la pregunta.
     :param competencia_ids (fields.Many2many): Relación muchos a muchos con el modelo 'competencia' para las competencias asociadas a la pregunta.
     """
+
     _name = "pregunta"
     _description = "Pregunta para una evaluación"
 
@@ -30,8 +31,7 @@ class Pregunta(models.Model):
 
     company_id = fields.Many2one("res.company", string="Compañía")
     opcion_ids = fields.One2many("opcion", "pregunta_id", string="Opciones")
-    respuesta_ids = fields.One2many(
-        "respuesta", "pregunta_id", string="Respuestas")
+    respuesta_ids = fields.One2many("respuesta", "pregunta_id", string="Respuestas")
     competencia_ids = fields.Many2many("competencia", string="Competencias")
 
     def ver_respuestas(self):
