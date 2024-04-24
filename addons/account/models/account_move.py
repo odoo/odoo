@@ -2677,8 +2677,8 @@ class AccountMove(models.Model):
             user_fiscal_lock_date = move.company_id._get_user_fiscal_lock_date()
             if (default_date or move.date) <= user_fiscal_lock_date:
                 vals['date'] = user_fiscal_lock_date + timedelta(days=1)
-        if not self.journal_id.active and 'journal_id' in vals_list:
-            del vals['journal_id']
+            if not move.journal_id.active and 'journal_id' in vals:
+                del vals['journal_id']
         return vals_list
 
     def copy(self, default=None):
