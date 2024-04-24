@@ -1459,8 +1459,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """
         if self.name == 'id':
             # not stored in cache
-            yield from records._ids
-            return
+            return records._ids
 
         if self.compute and self.store:
             # process pending computations
@@ -1480,7 +1479,7 @@ class Field(MetaField('DummyField', (object,), {})):
             getter = dict.get
         context_key = records.env.cache_key(self)
         vals = records.env.cache.get_values(self, context_key, records._ids, getter=getter, on_cache_miss=on_cache_miss)
-        yield from vals
+        return vals
 
     def set_cache(self, record, value, dirty=False, check_dirty=True):
         # when storing the value of a content dependent(binary) field, it will be stored once under the context value
@@ -2028,8 +2027,7 @@ class _String(Field):
     def _get_cache_values(self, records, getter=None):
         """ return cache values and fetch missing ones"""
         if not self.translate or getter:
-            yield from super()._get_cache_values(records, getter)
-            return
+            return super()._get_cache_values(records, getter)
 
         lang = '__dummy' if records.env.context.get('prefetch_langs') \
             else (records.env.lang or 'en_US') if self.translate is True \
@@ -2041,7 +2039,7 @@ class _String(Field):
                 return nothing
             return cache_value
 
-        yield from super()._get_cache_values(records, _getter)
+        return super()._get_cache_values(records, _getter)
 
     def impute_cache(self, records, values):
         if not self.translate:
@@ -2064,8 +2062,7 @@ class _String(Field):
 
     def get_cache_ids_missing(self, records):
         if not self.translate:
-            yield from super().get_cache_ids_missing(records)
-            return
+            return super().get_cache_ids_missing(records)
         context_key = records.env.cache_key(self)
         field_cache = records.env.cache._get_field_cache(self, context_key)
         lang = '__dummy' if records.env.context.get('prefetch_langs') \
