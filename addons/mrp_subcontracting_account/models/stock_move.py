@@ -23,7 +23,7 @@ class StockMove(models.Model):
             # In case of standard price, the component cost is the cost of the product
             # the subcontracting service cost may not represent the real cost of the subcontracting service
             # the difference should be posted in price difference account in the end
-            component_cost = currency.round(sum(m.price_unit * m.product_uom_qty for m in subcontract_production.move_raw_ids))
+            component_cost = abs(currency.round(sum(subcontract_production.move_raw_ids.stock_valuation_layer_ids.mapped('value'))))
             subcontract_service_cost = credit_value - component_cost
         else:
             subcontract_service_cost = currency.round(subcontract_production.extra_cost * qty)
