@@ -109,3 +109,26 @@ class StockMoveLine(TestStockCommon):
             ml.quant_id = self.quant
 
         self.assertEqual(move.move_line_ids.quantity, 0)
+
+    def test_pick_from_5(self):
+        """ check small quantities get handled correctly """
+        precision = self.env.ref('product.decimal_product_uom')
+        precision.digits = 6
+        self.product.uom_id = self.uom_kg
+        move = self.env['stock.move'].create({
+            'name': 'Test move',
+            'product_id': self.product.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.stock_location,
+            'product_uom_qty': 1e-5,
+        })
+        move_form = Form(move, view='stock.view_stock_move_operations')
+        with move_form.move_line_ids.new() as ml:
+            ml.quant_id = self.quant
+        move = move_form.save()
+        self.assertAlmostEqual(
+            move.move_line_ids.quantity,
+            1e-5,
+            delta=1e-6,
+            msg="Small line quantity should get detected",
+        )
