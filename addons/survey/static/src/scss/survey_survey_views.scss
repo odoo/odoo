@@ -151,3 +151,17 @@
     opacity: 100;
     font-weight: 500;
 }
+
+.o_mail_composer_form div[name="emails"] {
+    &:has(~ span) {
+        textarea:not(:focus) {
+            border-bottom: solid 1px map-get($theme-colors, 'danger');
+        }
+    }
+}
+
+.o_mail_composer_form div[name="comment"] {
+    div, textarea {
+        height: 80px !important;
+    }
+}

@@ -24,6 +24,9 @@
         <t t-if="object.deadline">
             Please answer the interview for <t t-out="format_date(object.deadline)">[deadline date]</t>.<br/><br/>
         </t>
+        <t t-if="object.comment">
+            <t t-out="object.comment or ''"></t><br/><br/>
+        </t>
         <t>
             We wish you good luck! Thank you in advance for your participation.
         </t>

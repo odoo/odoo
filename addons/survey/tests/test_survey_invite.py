@@ -21,13 +21,13 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
         self.env["ir.config_parameter"].set_param('auth_signup.invitation_scope', 'b2b')
         view = self.env.ref('survey.survey_invite_view_form').sudo()
         tree = etree.fromstring(view.arch)
-        # Remove the invisible on `emails` to be able to test the onchange `_onchange_emails`
+        # Remove the invisible on group containing `emails` to be able to test the onchange `_onchange_emails`
         # which raises an error when attempting to change `emails`
         # while the survey is set with `users_login_required` to True
-        # By default, `<field name="emails"/>` is invisible when `survey_users_login_required` is True,
+        # By default, `<group name="emails"/>` is invisible when `survey_users_login_required` is True,
         # making it normally impossible to change by the user in the web client by default.
         # For tests `test_survey_invite_authentication_nosignup` and `test_survey_invite_token_internal`
-        tree.xpath('//field[@name="emails"]')[0].attrib.pop('invisible', None)
+        tree.xpath('//group[@name="emails"]')[0].attrib.pop('invisible', None)
         view.arch = etree.tostring(tree)
         return res
 
@@ -210,10 +210,10 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
         # Verifies whether changing the value of the "email_from" field reflects on the receiving end.
         action = self.survey.action_send_survey()
         action['context']['default_send_email'] = True
-        invite_form = Form(self.env[action['res_model']].with_context(action['context']))
-        invite_form.partner_ids.add(self.survey_user.partner_id)
-        invite_form.template_id.write({'email_from':'{{ object.partner_id.email_formatted }}'})
-        invite = invite_form.save()
+        invite = self.env[action['res_model']].with_context(action['context']).create({
+            'partner_ids': [(4, self.survey_user.partner_id.id)],
+        })
+        invite.template_id.write({'email_from': '{{ object.partner_id.email_formatted }}'})
         with self.mock_mail_gateway():
             invite.action_invite()
 
@@ -356,11 +356,11 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
         })
 
         action = user_survey.action_send_survey()
-        invite_form = Form(self.env[action['res_model']].with_context(action['context']))
-        invite_form.send_email = True
-        invite_form.template_id = mail_template
-        invite_form.emails = 'test_survey_invite_with_template_attachment@odoo.gov'
-        invite = invite_form.save()
+        invite = self.env[action['res_model']].with_context(action['context']).create({
+            'send_email': True,
+            'template_id': mail_template.id,
+            'emails': 'test_survey_invite_with_template_attachment@odoo.gov',
+        })
         with self.mock_mail_gateway():
             invite.action_invite()
 
