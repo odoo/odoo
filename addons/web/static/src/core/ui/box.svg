@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="67" height="77" viewBox="0 0 67 77">
+    <defs>
+        <pattern id="woodDiagonalHatch" width="12" height="12" patternTransform="translate(0 6) rotate(-45 0 0)" patternUnits="userSpaceOnUse">
+            <line x1="0" y1="0" x2="0" y2="12" stroke="#573d34" stroke-width="2"/>
+        </pattern>
+        <linearGradient id="woodTextureGradient" x1="0%" x2="100%" y1="0%" y2="100%">
+            <stop offset="0%" stop-color="black" stop-opacity="0.4"/>
+            <stop offset="10%" stop-color="black" stop-opacity="0.3"/>
+            <stop offset="40%" stop-color="black" stop-opacity="0.2"/>
+            <stop offset="100%" stop-color="black" stop-opacity="0"/>
+        </linearGradient>
+    </defs>
+    <g transform="translate(-14 0)  skewX(12)">
+        <rect y="64" width="63.5" height="12" fill="#bd8c61"/>
+        <rect y="64" width="63.5" height="12" fill="url(#woodTextureGradient)"/>
+        <rect y="64" width="63.5" height="12" fill="url(#woodDiagonalHatch)" transform="translate(64 0) scale(-1 1)"/>
+    </g>
+    <g transform="translate(19 -239) scale(0.7 1) skewY(75)">
+        <rect x="64" width="4" height="64" fill="#bd8c61"/>
+        <rect x="64" width="4" height="64" fill="url(#woodTextureGradient)"/>
+    </g>
+    <g>
+        <rect width="64" height="64" fill="#bd8c61"/>
+        <rect width="64" height="64" fill="url(#woodTextureGradient)"/>
+        <rect width="64" height="64" fill="url(#woodDiagonalHatch)"/>
+    </g>
+    <rect x="1" y="1" width="62" height="62" fill="none" stroke="#6d4c41" stroke-width="2"/>
+    <line x1="0" y1="0" x2="0" y2="64" stroke="#3b2922" stroke-width="1"/>
+    <line x1="0" y1="64" x2="64" y2="64" stroke="#3b2922" stroke-width="1"/>
+    <path d="M0 64 2 76 66 76 63.5 64M66 76 66 12 64 0" fill="none" stroke="#6d4c41" stroke-width="1"/>
+</svg>
