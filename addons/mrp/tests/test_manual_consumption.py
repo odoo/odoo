@@ -237,3 +237,37 @@ class TestManualConsumption(TestMrpCommon):
         mo = self.env[action['res_model']].browse(action['res_id'])
         self.assertTrue(mo.move_raw_ids.filtered(lambda m: m.product_id == p1).manual_consumption)
         self.assertFalse(mo.move_raw_ids.filtered(lambda m: m.product_id == p2).manual_consumption)
+
+    def test_manual_consumption_with_different_component_price(self):
+        """
+        Test that the moves are merged correctly, even if the products have been used with different prices:
+        - Create a product with a price of $10 and use it in a BoM with 1 unit.
+        - Create a MO with this BoM and confirm it.
+        - Update the price of the component to $20 and adjust the consumed quantity to 2.
+        - Mark the MO as done.
+        - Another move should be created and merged with the first move.
+
+        """
+        self.bom_4.consumption = 'warning'
+        component = self.bom_4.bom_line_ids.product_id
+        component.write({
+            'type': 'product',
+            'standard_price': 10,
+        })
+        self.env['stock.quant']._update_available_quantity(component, self.stock_location, 2)
+        mo = self.env['mrp.production'].create({
+            'product_qty': 1,
+            'bom_id': self.bom_4.id,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        component.standard_price = 20
+        mo.move_raw_ids.quantity = 2.0
+        mo.move_raw_ids.picked = True
+        mo.move_raw_ids.manual_consumption = True
+        self.assertEqual(mo.state, 'progress')
+        action = mo.button_mark_done()
+        consumption_warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context']))
+        action = consumption_warning.save().action_confirm()
+        self.assertEqual(len(mo.move_raw_ids), 1)
+        self.assertEqual(mo.move_raw_ids.quantity, 2)
