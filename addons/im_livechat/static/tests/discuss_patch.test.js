@@ -6,15 +6,13 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
-import { describe, test } from "@odoo/hoot";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { defineLivechatModels } from "./livechat_test_helpers";
-import { mockDate } from "@odoo/hoot-mock";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
+import { describe, test } from "@odoo/hoot";
+import { mockDate } from "@odoo/hoot-mock";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { rpc } from "@web/core/network/rpc";
+import { defineLivechatModels } from "./livechat_test_helpers";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -31,10 +29,10 @@ test("add livechat in the sidebar on visitor sending first message", async () =>
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor (Belgium)",
         channel_member_ids: [
-            Command.create({ 
+            Command.create({
                 unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
-                partner_id: serverState.partnerId
+                partner_id: serverState.partnerId,
             }),
             Command.create({ guest_id: guestId }),
         ],
@@ -43,8 +41,7 @@ test("add livechat in the sidebar on visitor sending first message", async () =>
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: serverState.partnerId,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebar");
     // simulate livechat visitor sending a message

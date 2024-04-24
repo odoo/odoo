@@ -1,10 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
-
-import {
-    CHAT_WINDOW_END_GAP_WIDTH,
-    CHAT_WINDOW_INBETWEEN_WIDTH,
-    CHAT_WINDOW_WIDTH,
-} from "@mail/core/common/chat_window_service";
 import {
     assertSteps,
     click,
@@ -15,8 +8,15 @@ import {
     start,
     startServer,
     step,
-} from "../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
+
+import {
+    CHAT_WINDOW_END_GAP_WIDTH,
+    CHAT_WINDOW_INBETWEEN_WIDTH,
+    CHAT_WINDOW_WIDTH,
+} from "@mail/core/common/chat_window_service";
 
 describe.current.tags("desktop");
 defineMailModels();

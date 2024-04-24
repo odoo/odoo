@@ -1,4 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
 import {
     assertSteps,
     click,
@@ -11,8 +10,10 @@ import {
     startServer,
     step,
     triggerHotkey,
-} from "../../../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
 import { onRpc, serverState } from "@web/../tests/web_test_helpers";
+
 import { pick } from "@web/core/utils/objects";
 
 describe.current.tags("desktop");

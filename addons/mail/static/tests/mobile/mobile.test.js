@@ -1,4 +1,3 @@
-import { describe, test } from "@odoo/hoot";
 import {
     click,
     contains,
@@ -8,7 +7,8 @@ import {
     patchUiSize,
     start,
     startServer,
-} from "../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, test } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
 
 describe.current.tags("desktop");

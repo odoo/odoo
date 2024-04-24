@@ -12,12 +12,9 @@ import {
     useState,
     useExternalListener,
 } from "@odoo/owl";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 
 const HIDDEN_CONNECTION_STATES = new Set(["connected", "completed"]);
 
@@ -27,7 +24,6 @@ export class CallParticipantCard extends Component {
     static template = "discuss.CallParticipantCard";
 
     setup() {
-        rpc = rpcWithEnv(this.env);
         this.contextMenuAnchorRef = useRef("contextMenuAnchor");
         this.root = useRef("root");
         this.popover = usePopover(CallContextMenu);
