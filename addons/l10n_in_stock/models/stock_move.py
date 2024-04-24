@@ -14,7 +14,10 @@ class StockMove(models.Model):
 
     def _l10n_in_get_product_tax(self):
         self.ensure_one()
-        return (
-            self.picking_code == "incoming" and
-            self.product_id.supplier_taxes_id or self.product_id.taxes_id
-        )
+        return {
+            'is_from_order': False,
+            'taxes': (
+                self.picking_code == "incoming" and
+                self.product_id.supplier_taxes_id or self.product_id.taxes_id
+            ),
+        }

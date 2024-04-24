@@ -2,6 +2,7 @@
 
 import base64
 import json
+import logging
 import pytz
 import re
 from datetime import datetime
@@ -12,6 +13,8 @@ from odoo.exceptions import UserError
 
 from odoo.addons.l10n_in_ewaybill_stock.tools.ewaybill_api import EWayBillApi, EWayBillError
 
+
+_logger = logging.getLogger(__name__)
 
 class Ewaybill(models.Model):
     _name = "l10n.in.ewaybill"
@@ -86,6 +89,7 @@ class Ewaybill(models.Model):
         store=True,
         readonly=False
     )
+    is_fiscal_position_invisible = fields.Boolean(compute="_compute_is_fiscal_position_visible")
 
     # E-waybill Document Type
     type_id = fields.Many2one("l10n.in.ewaybill.type", "Document Type", tracking=True, required=True)
@@ -146,7 +150,7 @@ class Ewaybill(models.Model):
 
     @api.depends('picking_id')
     def _compute_document_partners_details(self):
-        for ewaybill in self:
+        for ewaybill in self.filtered(lambda ewb: ewb.state == 'pending'):
             picking_id = ewaybill.picking_id
             if ewaybill.picking_type_code == 'incoming':
                 ewaybill.partner_bill_to_id = picking_id.company_id.partner_id
@@ -168,12 +172,23 @@ class Ewaybill(models.Model):
                 ewaybill.partner_ship_to_id = dest_partner
                 ewaybill.partner_ship_from_id = ewaybill.picking_id.partner_id
 
+    def _compute_is_fiscal_position_invisible(self):
+        for ewaybill in self:
+            fiscal_position = ewaybill.picking_id._l10n_in_get_fiscal_position()
+            ewaybill.is_fiscal_position_invisible = (
+                fiscal_position == self.env['account.fiscal.position'] or
+                fiscal_position
+            )
+
     @api.depends('partner_bill_from_id', 'partner_bill_to_id')
     def _compute_fiscal_position(self):
-        for ewaybill in self:
-            ewaybill.fiscal_position_id = self.env['account.fiscal.position']._get_fiscal_position(
-                ewaybill.picking_type_code == 'incoming' and ewaybill.partner_bill_from_id or
-                ewaybill.partner_bill_to_id
+        for ewaybill in self.filtered(lambda ewb: ewb.state == 'pending'):
+            ewaybill.fiscal_position_id = (
+                ewaybill.picking_id._l10n_in_get_fiscal_position() or
+                self.env['account.fiscal.position']._get_fiscal_position(
+                    ewaybill.picking_type_code == 'incoming' and ewaybill.partner_bill_from_id or
+                    ewaybill.partner_bill_to_id
+                )
             )
 
     @api.depends('partner_ship_from_id', 'partner_ship_to_id', 'partner_bill_from_id', 'partner_bill_to_id')
@@ -192,7 +207,7 @@ class Ewaybill(models.Model):
     @api.depends('name', 'state')
     def _compute_display_name(self):
         for ewaybill in self:
-            ewaybill.display_name = ewaybill.name or _('Pending')
+            ewaybill.display_name = ewaybill.state == 'pending' and _('Pending') or ewaybill.name
 
     @api.depends('mode')
     def _compute_vehicle_type(self):
@@ -282,6 +297,8 @@ class Ewaybill(models.Model):
                 message.append(_("- State is required"))
             if not partner.zip or not re.match("^[0-9]{6}$", partner.zip):
                 message.append(_("- Zip code required and should be 6 digits"))
+        elif not partner.country_id:
+            message.append(_("- Country is required"))
         if message:
             message.insert(0, "%s" % partner.display_name)
         return message
@@ -370,25 +387,30 @@ class Ewaybill(models.Model):
             self._handle_internal_warning_if_present(response)  # In case of error 604
             self.state = 'generated'
             response_data = response.get("data")
-            time_format = '%d/%m/%Y %I:%M:%S %p'
             self._write_successfully_response({
                 'name': response_data.get("ewayBillNo"),
                 'ewaybill_date': self._indian_timezone_to_odoo_utc(
-                    response_data.get('ewayBillDate'),
-                    time_format
+                    response_data.get('ewayBillDate')
                 ),
                 'ewaybill_expiry_date': self._indian_timezone_to_odoo_utc(
-                    response_data.get('validUpto'),
-                    time_format
+                    response_data.get('validUpto')
                 ),
             })
 
     @api.model
-    def _indian_timezone_to_odoo_utc(self, str_date, time_format="%Y-%m-%d %H:%M:%S"):
+    def _indian_timezone_to_odoo_utc(self, str_date, time_format = '%d/%m/%Y %I:%M:%S %p'):
         """
             This method is used to convert date from Indian timezone to UTC
         """
-        local_time = datetime.strptime(str_date, time_format)
+        try:
+            local_time = datetime.strptime(str_date, time_format)
+        except ValueError:
+            try:
+                local_time = datetime.strptime(str_date, "%d/%m/%Y %H:%M:%S ")
+            except ValueError:
+                # Worst senario no date format matched
+                _logger.warning("Something went wrong while L10nInEwaybill date conversion")
+                return fields.Datetime.to_string(fields.Datetime.now())
         utc_time = local_time.astimezone(pytz.utc)
         return fields.Datetime.to_string(utc_time)
 

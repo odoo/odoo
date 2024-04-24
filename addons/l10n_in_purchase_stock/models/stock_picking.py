@@ -8,3 +8,9 @@ class StockPicking(models.Model):
     def _get_l10n_in_dropship_dest_partner(self):
         self.ensure_one()
         return self.purchase_id.dest_address_id
+
+    def _l10n_in_get_fiscal_position(self):
+        self.ensure_one()
+        if res := super()._l10n_in_get_fiscal_position():
+            return res
+        return self.purchase_id.fiscal_position_id

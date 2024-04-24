@@ -17,3 +17,6 @@ class StockPicking(models.Model):
 
     def _l10n_in_get_invoice_partner(self):
         pass
+
+    def _l10n_in_get_fiscal_position(self):
+        pass

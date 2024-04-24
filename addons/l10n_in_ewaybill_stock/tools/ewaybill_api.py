@@ -77,13 +77,13 @@ class EWayBillApi:
                 raise EWayBillError(response)
         except AccessError as e:
             _logger.warning("Connection error: %s", e.args[0])
-            return {
+            raise EWayBillError({
                 "error": [{
                     "code": "access_error",
                     "message": _("Unable to connect to the E-WayBill service."
                                  "The web service may be temporary down. Please try again in a moment.")
                 }]
-            }
+            })
         return response
 
     def _ewaybill_check_authentication(self):
@@ -112,11 +112,11 @@ class EWayBillApi:
         :params json_payload: to be sent as params
         This method handles the common errors in generating and canceling the ewaybill
         """
-        if not self._ewaybill_check_authentication():
-            return self._ewaybill_no_config_response()
-        params = {"json_payload": json_payload}
-        url_path = f"/iap/l10n_in_edi_ewaybill/1/{operation_type}"
         try:
+            if not self._ewaybill_check_authentication():
+                self._raise_ewaybill_no_config_error()
+            params = {"json_payload": json_payload}
+            url_path = f"/iap/l10n_in_edi_ewaybill/1/{operation_type}"
             response = self._ewaybill_connect_to_server(
                 url_path=url_path,
                 params=params
@@ -174,29 +174,29 @@ class EWayBillApi:
         return self._ewaybill_make_transaction("cancel", json_payload)
 
     def _ewaybill_get_by_consigner(self, document_type, document_number, add_warning=False):
-        if not self._ewaybill_check_authentication():
-            return self._ewaybill_no_config_response()
-        params = {"document_type": document_type, "document_number": document_number}
         try:
+            if not self._ewaybill_check_authentication():
+                self._raise_ewaybill_no_config_error()
+            params = {"document_type": document_type, "document_number": document_number}
             response = self._ewaybill_connect_to_server(
                 url_path="/iap/l10n_in_edi_ewaybill/1/getewaybillgeneratedbyconsigner",
                 params=params
             )
-            if add_warning:
-                # Add warning that ewaybill was already generated
-                response.update({
-                    'odoo_warning': [{
-                        'message': self.DEFAULT_HELP_MESSAGE % 'generated',
-                        'message_post': True
-                    }]
-                })
-            return response
         except EWayBillError as e:
             return e
+        if add_warning:
+            # Add warning that ewaybill was already generated
+            response.update({
+                'odoo_warning': [{
+                    'message': self.DEFAULT_HELP_MESSAGE % 'generated',
+                    'message_post': True
+                }]
+            })
+        return response
 
     @staticmethod
-    def _ewaybill_no_config_response():
-        return {
+    def _raise_ewaybill_no_config_error():
+        raise EWayBillError({
             "error": [{
                 "code": "0",
                 "message": _(
@@ -204,4 +204,4 @@ class EWayBillApi:
                     "Create an API user in NIC portal, and set it using the top menu: Configuration > Settings."
                 )
             }]
-        }
+        })

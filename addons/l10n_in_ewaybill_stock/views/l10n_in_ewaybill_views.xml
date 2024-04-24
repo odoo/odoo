@@ -51,7 +51,8 @@
                         <field name="is_ship_from_editable" invisible="1"/>
                         <group>
                             <field name="company_id" invisible="1"/>
-                            <field name="fiscal_position_id" readonly="state != 'pending'"/>
+                            <field name="is_fiscal_position_invisible" invisible="1"/>
+                            <field name="fiscal_position_id" readonly="state != 'pending'" invisible="is_fiscal_position_invisible"/>
                         </group>
                         <group>
                         </group>

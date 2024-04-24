@@ -15,5 +15,8 @@ class StockMove(models.Model):
     def _l10n_in_get_product_tax(self):
         self.ensure_one()
         if self.sale_line_id:
-            return self.sale_line_id.tax_id
+            return {
+                'is_from_order': True,
+                'taxes': self.sale_line_id.tax_id,
+            }
         return super()._l10n_in_get_product_tax()
