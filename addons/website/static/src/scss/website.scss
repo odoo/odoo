@@ -1368,6 +1368,15 @@ header {
                     }
                 }
             }
+            .o_header_mobile_buttons_wrap, .btn[data-bs-toggle="offcanvas"] {
+                color: inherit;
+            }
+            .navbar-toggler-icon {
+                background-color: currentColor;
+                background-image: none;
+                mask: $navbar-light-toggler-icon-bg;
+                -webkit-mask: $navbar-light-toggler-icon-bg;
+            }
         }
     }
 }
