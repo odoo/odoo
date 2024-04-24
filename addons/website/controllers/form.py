@@ -170,6 +170,9 @@ class WebsiteForm(http.Controller):
         custom_fields = []
 
         for field_name, field_value in values.items():
+            # First decode the field_name encoded at the client side.
+            field_name = re.sub('&quot;', '"', field_name)
+
             # If the value of the field if a file
             if hasattr(field_value, 'filename'):
                 # Undo file upload field name indexing
