@@ -2,7 +2,12 @@
 
 /* eslint-disable no-restricted-globals */
 const cacheName = "odoo-sw-cache";
-const cachedRequests = ["/odoo/offline"];
+const cachedRequests = [
+    "/odoo/offline",
+    "/web/static/src/core/ui/loading_screen.js",
+    "/web/static/src/core/ui/person.svg",
+    "/web/static/src/core/ui/box.svg",
+];
 
 self.addEventListener("install", (event) => {
     event.waitUntil(caches.open(cacheName).then((cache) => cache.addAll(cachedRequests)));

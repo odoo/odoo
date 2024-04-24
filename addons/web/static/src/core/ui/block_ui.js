@@ -1,7 +1,8 @@
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
+import { EventBus, Component, useState, xml, useRef, onWillDestroy } from "@odoo/owl";
+import LoadingScreen from "@web/core/ui/loading_screen";
 
-import { EventBus, Component, useState, xml } from "@odoo/owl";
 
 export class BlockUI extends Component {
     static props = {
@@ -11,9 +12,7 @@ export class BlockUI extends Component {
     static template = xml`
         <div t-att-class="state.blockUI ? 'o_blockUI fixed-top d-flex justify-content-center align-items-center flex-column vh-100' : ''">
           <t t-if="state.blockUI">
-            <div class="o_spinner mb-4">
-                <img src="/web/static/img/spin.svg" alt="Loading..."/>
-            </div>
+            <div class="loading-screen-ux" t-ref="loading-screen"/>
             <div class="o_message text-center px-4">
                 <t t-esc="state.line1"/> <br/>
                 <t t-esc="state.line2"/>
@@ -58,6 +57,10 @@ export class BlockUI extends Component {
 
         this.props.bus.addEventListener("BLOCK", this.block.bind(this));
         this.props.bus.addEventListener("UNBLOCK", this.unblock.bind(this));
+
+        this.loadingUX = new LoadingScreen();
+        this.loading = useRef("loading-screen");
+        onWillDestroy(() => this.loadingUX.stop());
     }
 
     replaceMessage(index) {
@@ -78,11 +81,23 @@ export class BlockUI extends Component {
         } else {
             this.replaceMessage(0);
         }
+        // this timeout is needed in order to wait for the component to
+        // arrive in it's final state.
+        this.loadingTimer = browser.setTimeout(() => {
+            // In few tests "browser.setTimeout" is updated to be
+            // synchronous, the component is not ready.
+            if (this.loading.el) {
+                this.loading.el.append(this.loadingUX.render());
+                this.loadingUX.start();
+            }
+        }, 100);
     }
 
     unblock() {
         this.state.blockUI = false;
         clearTimeout(this.msgTimer);
+        clearTimeout(this.loadingTimer);
+        this.loadingUX.stop();
         this.state.line1 = "";
         this.state.line2 = "";
     }

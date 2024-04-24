@@ -324,6 +324,17 @@
                     });
                     window.addEventListener('online', () => location.reload());
                 </script>
+
+                <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+                <script type="module">
+                    import LoadingScreen from "/web/static/src/core/ui/loading_screen.js";
+                    const loading = new LoadingScreen();
+                    window.addEventListener('DOMContentLoaded', () => {
+                        document.querySelector('h1').insertAdjacentElement("afterend", loading.render());
+                        loading.start();
+                    });
+                </script>
+
                 <style>
                     body {
                     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
