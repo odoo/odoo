@@ -80,16 +80,20 @@ class User(models.Model):
         synced_events = self.env['calendar.event'].with_context(write_dates=events_write_dates)._sync_google2odoo(events - recurrences, default_reminders=default_reminders)
 
         # In Scheduler Sync, not Sync to Google for Error Permission (Waresix)
-        # Odoo -> Google
-        recurrences = self.env['calendar.recurrence']._get_records_to_sync(full_sync=full_sync)
-        recurrences -= synced_recurrences
         if not no_sync_to_google:
+            # Odoo -> Google
+            recurrences = self.env['calendar.recurrence']._get_records_to_sync(full_sync=full_sync)
+            recurrences -= synced_recurrences
             recurrences.with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
-        synced_events |= recurrences.calendar_event_ids - recurrences._get_outliers()
-        synced_events |= synced_recurrences.calendar_event_ids - synced_recurrences._get_outliers()
-        events = self.env['calendar.event']._get_records_to_sync(full_sync=full_sync)
-        if not no_sync_to_google:
+            synced_events |= recurrences.calendar_event_ids - recurrences._get_outliers()
+            synced_events |= synced_recurrences.calendar_event_ids - synced_recurrences._get_outliers()
+            events = self.env['calendar.event']._get_records_to_sync(full_sync=full_sync)
             (events - synced_events).with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
+        else:
+            if events.__class__.__name__ == "GoogleEvent":
+                events = self.env['calendar.event'].search([("google_id", "in", events.ids)])
+            if recurrences.__class__.__name__ == "GoogleEvent":
+                recurrences = self.env['calendar.recurrence'].search([("google_id", "in", recurrences.ids)])
 
         return bool(events | synced_events) or bool(recurrences | synced_recurrences)
 
