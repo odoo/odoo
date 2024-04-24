@@ -32,7 +32,12 @@ export class ChatWindowService {
     }
 
     notifyState(chatWindow) {
-        if (this.ui.isSmall || !this.store.self || chatWindow.thread?.isTransient) {
+        if (
+            this.ui.isSmall ||
+            !this.store.self ||
+            chatWindow.thread?.isTransient ||
+            !chatWindow.thread?.hasSelfAsMember
+        ) {
             return;
         }
         if (chatWindow.thread?.model === "discuss.channel") {
