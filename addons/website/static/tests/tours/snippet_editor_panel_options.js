@@ -102,12 +102,12 @@ wTourUtils.goBackToBlocks(),
     },
 }, {
     content: "Click on the columns option.",
-    trigger: '.snippet-option-layout_column we-select',
+    trigger: '.snippet-option-WebsiteLayoutColumn we-select',
     run: "click",
 },
 {
     content: "Change the number of columns.",
-    trigger: '.snippet-option-layout_column [data-select-count="3"]',
+    trigger: '.snippet-option-WebsiteLayoutColumn [data-select-count="3"]',
     run: "click",
 }, {
     content: "The snippet should have the correct number of columns.",
@@ -132,12 +132,12 @@ wTourUtils.goBackToBlocks(),
 // Test keeping the text selection when removing all columns of a snippet.
 {
     content: "Click on the columns option.",
-    trigger: '.snippet-option-layout_column we-select',
+    trigger: '.snippet-option-WebsiteLayoutColumn we-select',
     run: "click",
 },
 {
     content: "Change the number of columns.",
-    trigger: '.snippet-option-layout_column [data-select-count="0"]',
+    trigger: '.snippet-option-WebsiteLayoutColumn [data-select-count="0"]',
     run: "click",
 }, {
     content: "The snippet should have the correct number of columns.",
@@ -156,7 +156,7 @@ wTourUtils.goBackToBlocks(),
     },
 },
 // Test keeping the text selection when toggling the grid mode.
-wTourUtils.changeOption("layout_column", 'we-button[data-name="grid_mode"]'),
+wTourUtils.changeOption("WebsiteLayoutColumn", 'we-button[data-name="grid_mode"]'),
 {
     content: "The snippet row should have the grid mode class.",
     trigger: ":iframe .s_text_block .row.o_grid_mode",
@@ -173,7 +173,7 @@ wTourUtils.changeOption("layout_column", 'we-button[data-name="grid_mode"]'),
     },
 },
 // Test keeping the text selection when toggling back the normal mode.
-wTourUtils.changeOption("layout_column", 'we-button[data-name="normal_mode"]'),
+wTourUtils.changeOption("WebsiteLayoutColumn", 'we-button[data-name="normal_mode"]'),
 {
     content: "The snippet row should not have the grid mode class anymore.",
     trigger: ":iframe .s_text_block .row:not(.o_grid_mode)",

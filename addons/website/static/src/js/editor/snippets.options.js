@@ -6,7 +6,8 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { Dialog } from "@web/core/dialog/dialog";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
-import { useChildRef } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
+import { useChildRef, useService } from "@web/core/utils/hooks";
 import weUtils from "@web_editor/js/common/utils";
 import options from "@web_editor/js/editor/snippets.options.legacy";
 import { NavbarLinkPopoverWidget } from "@website/js/widgets/link_popover_widget";
@@ -35,12 +36,15 @@ import {
     drawTextHighlightSVG,
 } from "@website/js/text_processing";
 
-import { Component, markup, useEffect, useRef, useState } from "@odoo/owl";
+import { patch } from "@web/core/utils/patch";
+import { Component, markup, onWillUnmount, useEffect, useRef, useState } from "@odoo/owl";
 
 import {
+    LayoutColumn,
     legacyRegistry,
     owlRegistry,
     UnitUserValue,
+    WeInput,
 } from '@web_editor/js/editor/snippets.options'; 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
@@ -91,44 +95,38 @@ Many2oneUserValueWidget.include({
     },
 });
 
-const UrlPickerUserValueWidget = InputUserValueWidget.extend({
-    events: Object.assign({}, InputUserValueWidget.prototype.events || {}, {
-        'click .o_we_redirect_to': '_onRedirectTo',
-    }),
+class WeUrlPicker extends WeInput {
+    static template = "website.WeUrlPicker";
+    static defaultProps = {
+        ...WeInput.defaultProps,
+        unit: "",
+        saveUnit: "",
+    };
+    setup() {
+        super.setup();
+        this.website = useService('website');
+        useEffect((inputEl) => {
+            const options = {
+                classes: {
+                    "ui-autocomplete": 'o_website_ui_autocomplete'
+                },
+                urlChosen: this._onWebsiteURLChosen.bind(this),
+            };
+            const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(inputEl, options);
+            return () => unmountAutocompleteWithPages();
+        }, () => [this.inputRef.el]);
+    }
 
-    /**
-     * @override
-     */
-    start: async function () {
-        await this._super(...arguments);
-        const linkButton = document.createElement('we-button');
-        const icon = document.createElement('i');
-        icon.classList.add('fa', 'fa-fw', 'fa-external-link');
-        linkButton.classList.add('o_we_redirect_to', 'o_we_link', 'ms-1');
-        linkButton.title = _t("Preview this URL in a new tab");
-        linkButton.appendChild(icon);
-        this.containerEl.after(linkButton);
-        this.el.classList.add('o_we_large');
-        this.inputEl.classList.add('text-start');
-        const options = {
-            classes: {
-                "ui-autocomplete": 'o_website_ui_autocomplete'
-            },
-            body: this.getParent().$target[0].ownerDocument.body,
-            urlChosen: this._onWebsiteURLChosen.bind(this),
-        };
-        this.unmountAutocompleteWithPages = wUtils.autocompleteWithPages(this.inputEl, options);
-    },
-
+    // TODO maybe these open & close can be removed
     open() {
-        this._super(...arguments);
+        super.open(...arguments);
         document.querySelector(".o_website_ui_autocomplete")?.classList?.remove("d-none");
-    },
+    }
 
     close() {
-        this._super(...arguments);
+        super.close(...arguments);
         document.querySelector(".o_website_ui_autocomplete")?.classList?.add("d-none");
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -140,26 +138,22 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onWebsiteURLChosen: function (ev) {
-        this._value = this.inputEl.value;
+    _onWebsiteURLChosen(ev) {
+        this.state.value = this.inputRef.el.value;
         this._onUserValueChange(ev);
-    },
+    }
     /**
      * Redirects to the URL the widget currently holds.
      *
      * @private
      */
-    _onRedirectTo: function () {
-        if (this._value) {
-            window.open(this._value, '_blank');
+    _onRedirectTo() {
+        if (this.state.value) {
+            window.open(this.state.value, '_blank');
         }
-    },
-    destroy() {
-        this.unmountAutocompleteWithPages?.();
-        this.unmountAutocompleteWithPages = null;
-        this._super(...arguments);
     }
-});
+}
+registry.category("snippet_widgets").add("WeUrlPicker", WeUrlPicker);
 
 class GoogleFontAutoComplete extends AutoComplete {
     setup() {
@@ -4427,13 +4421,20 @@ options.registry.Button = options.Class.extend({
     },
 });
 
-options.registry.layout_column.include({
+class WebsiteLayoutColumn extends LayoutColumn {
     /**
      * @override
      */
     _isMobile() {
-        return wUtils.isMobile(this);
-    },
+        return this.env.services.website.context.isMobile;
+    }
+}
+registry.category("snippet_options").add("WebsiteLayoutColumns", {
+    Class: WebsiteLayoutColumn,
+    template: "website.layout_column",
+    selector: "section, section.s_carousel_wrapper .carousel-item",
+    target: "> *:has(> .row), > .s_allow_columns",
+    exclude: ".s_masonry_block, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline"
 });
 
 options.registry.SnippetMove.include({

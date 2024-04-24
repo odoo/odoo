@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="website.column_count_option">
+    <WeSelect class="with_grid and 'o_grid'" noPreview="'true'" name="'column_count_opt'" dependencies="with_grid and 'normal_mode'">
+        <!-- TODO: @owl-options
+            This should be working but slots cannot be conditional so instead
+            make the caller define the title.
+            <t t-set-slot="title"><t t-if="!with_grid">Columns</t></t>
+        -->
+        <t t-out="0"/>
+        <WeButton selectCount="'0'" name="'zero_cols_opt'">None</WeButton>
+        <WeButton selectCount="'1'">1</WeButton>
+        <WeButton selectCount="'2'">2</WeButton>
+        <WeButton selectCount="'3'">3</WeButton>
+        <WeButton selectCount="'4'">4</WeButton>
+        <WeButton selectCount="'5'">5</WeButton>
+        <WeButton selectCount="'6'">6</WeButton>
+        <WeButton selectCount="'custom'" name="'custom_cols_opt'">Custom</WeButton>
+    </WeSelect>
+</t>
+<t t-name="website.grid_layout_options">
+    <WeButtonGroup class="indent and 'o_we_sublevel_1'" noPreview="'true'"
+                   dependencies="'grid_mode'" title.translate="Add Elements">
+        <WeButton class="'o_we_bg_brand_primary o_grid'" addElement="'image'" tooltip.translate="Image" name="'image'">Image</WeButton>
+        <WeButton class="'o_we_bg_brand_primary o_grid'" addElement="'text'" tooltip.translate="Text" name="'text'">Text</WeButton>
+        <WeButton class="'o_we_bg_brand_primary o_grid'" addElement="'button'" tooltip.translate="Button" name="'button'">Button</WeButton>
+    </WeButtonGroup>
+    <WeRow class="indent and 'o_we_sublevel_1'" title.translate="Spacing (Y, X)">
+        <WeInput dependencies="'grid_mode'" selectStyle="''" cssProperty="'row-gap'" unit="'px'" preventImportant="'true'" applyTo="'.row'"/>
+        <WeInput dependencies="'grid_mode'" selectStyle="''" cssProperty="'column-gap'" unit="'px'" max="'60'" preventImportant="'true'" applyTo="'.row'"/>
+    </WeRow>
+</t>
+<t t-name="website.layout_column">
+    <WeRow>
+        <WeButtonGroup noPreview="'true'" title.translate="Layout">
+            <WeButton selectLayout="'grid'" name="'grid_mode'">Grid</WeButton>
+            <WeButton selectLayout="'normal'" name="'normal_mode'">Cols</WeButton>
+        </WeButtonGroup>
+        <t t-call="website.column_count_option"/>
+    </WeRow>
+    <t t-call="website.grid_layout_options">
+        <t t-set="indent" t-value="true"/>
+    </t>
+</t>
+
+<t t-name="website.TestSnippetOption" t-inherit="web_editor.TestSnippetOption" t-inherit-mode="extension">
+    <xpath expr="//WeRow" position="before">
+        <WeRow title.translate="URL">
+            <WeUrlPicker selectDataAttribute="''" attributeName="'url'"/>
+        </WeRow>
+    </xpath>
+</t>
+
+<t t-name="website.WeUrlPicker">
+    <!-- TODO There was no w-100 -->
+    <we-input class="o_we_user_value_widget o_we_large w-100">
+        <div>
+            <input t-ref="input" type="text" class="text-start"
+                autocomplete="chrome-off"
+                t-att-data-tooltip="this.props.tooltip"
+                t-att-placeholder="this.props.placeholder"
+                t-on-input="this._onInputInput"
+                t-on-blur="this._onInputBlur"
+                t-on-change="this._onUserValueChange"
+                t-on-keydown="this._onInputKeydown"
+                t-att-value="this.state.value"
+            />
+        </div>
+        <t t-set="tooltip">Preview this URL in a new tab</t>
+        <we-button class="o_we_redirect_to o_we_link ms-1"
+            t-att-data-tooltip="tooltip"
+            t-on-click="() => { this._onRedirectTo(); }"
+        >
+            <i class="fa fa-fw fa-external-link"/>
+        </we-button>
+    </we-input>
+</t>
+</templates>

@@ -10,7 +10,7 @@ import Widget from "@web_editor/js/core/widget";
 import { ColorPalette } from "@web_editor/js/wysiwyg/widgets/color_palette";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
-import {ColumnLayoutMixin} from "@web_editor/js/common/column_layout_mixin";
+import {ColumnLayoutUtils} from "@web_editor/js/common/column_layout_mixin";
 const {
     normalizeColor,
     getBgImageURL,
@@ -5331,7 +5331,7 @@ registry.Box = SnippetOptionWidget.extend({
 
 
 
-registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
+registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutUtils, {
     /**
      * @override
      */
@@ -5788,7 +5788,7 @@ registry.vAlignment = SnippetOptionWidget.extend({
 /**
  * Allows snippets to be moved before the preceding element or after the following.
  */
-registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
+registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutUtils, {
     displayOverlayOptions: true,
 
     /**

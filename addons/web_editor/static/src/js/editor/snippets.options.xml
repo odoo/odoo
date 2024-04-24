@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="web_editor.SnippetOptionComponent">
+    <t t-set="className" t-value="`snippet-option-${props.snippetOption.name}`"/>
+    <we-customizeblock-option t-att-class="{'d-none': !renderContext.showUI, [className]: true}">
+        <!-- Some options do not have a template -->
+        <t t-if="props.snippetOption.template" t-call="{{props.snippetOption.template}}"/>
+    </we-customizeblock-option>
+</t>
+<t t-name="web_editor.TestSnippetOption">
+    <WeMediapicker mediaType="'videos'"/>
+    <WeButton selectClass="'test_class'">Test Class</WeButton>
+    <WeRow>
+        <t t-set-slot="title">Checkbox</t>
+        <WeCheckbox selectClass="'test_class'">Test Class</WeCheckbox>
+    </WeRow>
+    <WeSelect>
+        <WeButton selectClass="'test_class_1'" name="'test_class_1'">Test Class 1</WeButton>
+        <WeButton selectClass="'test_class_2'">Test Class 2</WeButton>
+        <WeButton selectClass="'test_class_3'">Test Class 3</WeButton>
+        <WeButton selectClass="'test_class_4'">Test Class 4</WeButton>
+        <WeButton selectClass="'test_class_5'">Test Class 5</WeButton>
+    </WeSelect>
+    <WeButtonGroup>
+        <t t-set-slot="title">Test Button Group</t>
+        <WeButton selectClass="'test_class_6'">6</WeButton>
+        <WeButton selectClass="'test_class_7'">7</WeButton>
+        <WeButton selectClass="'test_class_8'">8</WeButton>
+    </WeButtonGroup>
+    <WeInput unit="'px'" step="'5'" selectStyle="'0'" cssProperty="'border-width'" extraClass="'border'"/>
+    <WeDatetime selectDataAttribute="''" attributeName="'datetime'"/>
+    <WeDatetime selectDataAttribute="''" attributeName="'dateonly'" pickerType="'date'"/>
+    <WeButton selectClass="''" dependencies="'test_class_1'">Show when test_class_1</WeButton>
+    <WeRow>
+        <t t-set-slot="title">Row</t>
+        <WeButton dependencies="'test_class_1'" selectClass="'visible_class_test'">Button</WeButton>
+    </WeRow>
+    <WeRow>
+        <t t-set-slot="title">Low to high</t>
+        <WeRange selectDataAttribute="''"
+            attributeName="'range'"
+            min="'-100'"
+            step="'10'"/>
+    </WeRow>
+    <WeRow>
+        <t t-set-slot="title">High to low</t>
+        <WeRange string="'Reversed Range'"
+                selectDataAttribute="''"
+                attributeName="'revrange'"
+                displayRangeValue="'true'"
+                min="'100'"
+                max="'-100'"
+                step="'10'"/>
+    </WeRow>
+</t>
+
+<t t-name="web_editor.container_width">
+    <WeButtonGroup title.translate="Content Width">
+        <WeButton selectClass="'o_container_small'"
+                  tooltip.translate="Small"
+                  img="'/website/static/src/img/snippets_options/content_width_small.svg'"/>
+        <WeButton selectClass="'container'"
+                  img="'/website/static/src/img/snippets_options/content_width_normal.svg'"
+                  tooltip.translate="Regular"/>
+        <WeButton selectClass="'container-fluid'"
+                  img="'/website/static/src/img/snippets_options/content_width_full.svg'"
+                  tooltip.translate="Full"/>
+    </WeButtonGroup>
+</t>
+
+<t t-name="web_editor.WeTitle">
+    <we-title t-att-class="props.class" t-att-style="props.style"
+                t-att-data-tooltip="props.tooltip">
+        <t t-if="props.slots?.title" t-slot="title"/>
+        <t t-else="" t-out="props.title"/>
+    </we-title>
+</t>
+
+<t t-name="web_editor.WeRow">
+    <we-row t-att-class="{'d-none': !this.state.show, [props.class]: true}" t-att-data-tooltip="props.tooltip">
+        <WeTitle t-if="props.slots?.title || props.title"
+                title="props.title" slots="{title: props.slots?.title}"
+                style="props.fontFamily ? `font-family: ${props.fontFamily}` : ''"/>
+        <div>
+            <t t-slot="default"/>
+        </div>
+    </we-row>
+</t>
+
+<t t-name="web_editor.WeButton">
+    <!-- 
+         TODO: @owl-options tooltips are not automatically translated. To Check
+        How we can solve that issue.
+    -->
+    <we-button t-ref="text-content"
+               t-on-mouseenter="this._onUserValuePreview"
+               t-on-mouseleave="this._onUserValueReset"
+               t-on-click="this._onButtonClick" class="o_we_user_value_widget"
+               t-att-data-tooltip="props.tooltip"
+               t-att-class="getAllClasses()"
+               t-att="getAllDataAttributes()">
+            <div>
+                <t t-if="this.img">
+                    <img t-att-src="this.img"/>
+                </t>
+                <t t-if="this.props.icon">
+                    <i t-attf-class="fa {{ this.props.icon }}"/>
+                </t>
+                <t t-if="this.svg">
+                    <t t-out="this.svg"/>
+                </t>
+                <t t-slot="default"/>
+            </div>
+    </we-button>
+</t>
+<t t-name="web_editor.WeCheckbox">
+    <we-button t-ref="text-content"
+               t-on-mouseenter="this._onUserValuePreview"
+               t-on-mouseleave="this._onUserValueReset"
+               t-on-click="this._onButtonClick" class="o_we_user_value_widget o_we_checkbox_wrapper"
+               t-att-data-tooltip="props.tooltip"
+               t-att-class="getAllClasses()"
+               t-att="getAllDataAttributes()">
+            <WeTitle t-if="props.slots?.title || props.title"
+                    title="props.title" slots="{title: props.slots?.title}"/>
+            <div>
+                <we-checkbox/>
+            </div>
+    </we-button>
+</t>
+<t t-name="web_editor.WeSelect">
+    <we-select class="o_we_user_value_widget" t-att-class="getAllClasses()" t-on-click="_onClick"
+               t-att="getAllDataAttributes()">
+        <WeTitle t-if="props.slots?.title || props.title"
+               title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <t t-if="props.slots?.toggler">
+                <we-toggler t-att-class="{ 'active': state.opened }">
+                    <t t-slot="toggler"/>
+                </we-toggler>
+            </t>
+            <t t-else="">
+                <we-toggler t-att-class="{ 'active': state.opened }">
+                    <t t-if="state.toggler.textContent" t-out="state.toggler.textContent"/>
+                    <t t-if="state.toggler.faIcon">
+                        <i t-att-class="`fa ${state.toggler.faIcon}`"/>
+                    </t>
+                    <t t-if="state.toggler.imgSrc">
+                        <img t-att-src="state.toggler.imgSrc"/>
+                    </t>
+                </we-toggler>
+            </t>
+            <we-selection-items t-ref="menu">
+                <t t-slot="default"/>
+            </we-selection-items>
+            <span class="o_we_dropdown_caret"/>
+        </div>
+    </we-select>
+</t>
+<t t-name="web_editor.WeButtonGroup">
+        <we-button-group class="o_we_user_value_widget" t-att-class="getAllClasses()">
+        <WeTitle t-if="props.slots?.title || props.title" tooltip="props.tooltip"
+                title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <we-selection-items>
+                <t t-slot="default"/>
+            </we-selection-items>
+        </div>
+    </we-button-group>
+</t>
+<t t-name="web_editor.WeInput">
+    <we-input class="o_we_user_value_widget" t-att-class="getAllClasses()"
+              t-att-data-tooltip="props.tooltip" t-att="getAllDataAttributes()">
+        <WeTitle t-if="props.slots?.title || props.title"
+              title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <t t-set="isNumber" t-value="this.state._isNumeric() || !! !!this.props.hideUnit"/>
+            <t t-set="showUnit" t-value="(!!this.props.unit || !!this.props.fakeUnit) and !this.props.hideUnit"/>
+            <input t-ref="input" t-att-name="this.props.optionName"
+                t-att-type="isNumber ? 'number' : 'text'"
+                t-att-class="{'text-end': isNumber, 'text-start': !isNumber}"
+                autocomplete="chrome-off"
+                t-att-placeholder="this.props.placeholder"
+                t-on-input="this._onInputInput"
+                t-on-blur="this._onInputBlur"
+                t-on-change="this._onUserValueChange"
+                t-on-keydown="this._onInputKeydown"
+                t-att-value="this.state.value"
+            />
+            <span t-if="showUnit" t-out="this.props.fakeUnit || this.props.unit"/>
+        </div>
+    </we-input>
+</t>
+<t t-name="web_editor.WeDatetime">
+    <we-input class="o_we_user_value_widget o_we_large" t-att-class="getAllClasses()"
+              t-att="getAllDataAttributes()">
+        <WeTitle t-if="props.slots?.title || props.title"
+                title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <input t-ref="input" type="text" class="datetimepicker-input mx-0 text-start"
+                t-on-blur="this._onInputBlur"
+                t-on-input="this._onDateInputInput"
+            />
+        </div>
+    </we-input>
+</t>
+<t t-name="web_editor.WeRange">
+    <we-range class="o_we_user_value_widget" t-att-class="getAllClasses()"
+              t-att="getAllDataAttributes()">
+        <WeTitle t-if="props.slots?.title || props.title"
+                title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <!-- TODO w-100 did not exist in legacy, but output spans beyond div without it -->
+            <input type="range" class="w-100" t-att-class="{o_we_inverted_range: this.inverted}"
+                t-att-min="this.min"
+                t-att-max="this.state.max"
+                t-att-step="this.props.step"
+                t-att-value="this.state.value"
+                t-on-change="this._onInputChange"
+                t-on-input="this._onInputInput"
+            />
+            <output t-if="this.props.displayRangeValue" class="ms-2" t-out="this.state.displayValue"/>
+        </div>
+    </we-range>
+</t>
+<t t-name="web_editor.WeMediapicker">
+    <WeTitle t-if="props.slots?.title || props.title"
+            title="props.title" slots="{title: props.slots?.title}"/>
+    <we-button class="o_we_user_value_widget"
+               t-on-click="this._onEditMedia"
+               t-att-data-tooltip="props.tooltip"
+               t-att-class="getAllClasses()">
+        <div>
+            <t t-if="props.buttonStyle"><i class="fa fa-fw fa-camera" alt="Add media"></i></t>
+            <t t-else="">Replace</t>
+        </div>
+    </we-button>
+</t>
+<t t-name="web_editor.WeColorpicker">
+    <we-select class="o_we_user_value_widget o_we_so_color_palette" t-att-class="getAllClasses()"
+                t-att-data-tooltip="props.tooltip" t-on-click="this._onClick">
+        <WeTitle t-if="props.slots?.title || props.title"
+                title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <span class="o_we_color_preview" t-att="getPreviewAttributes()"/>
+            <we-toggler t-att-class="{ 'active': state.opened }"/>
+            <we-selection-items t-ref="menu">
+                <div class="o_we_color_palette_wrapper" style="display: contents;">
+                    <!-- Only render the ColorPalette when the toggler is active -->
+                    <ColorPalette t-if="state.opened" t-props="options" selectedCC="this.state.ccValue" selectedColor="this.state.value" />
+                </div>
+            </we-selection-items>
+            <span class="o_we_dropdown_caret"/>
+        </div>
+    </we-select>
+</t>
+</templates>

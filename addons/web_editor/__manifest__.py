@@ -26,6 +26,7 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/core/owl_utils.js',
             'web_editor/static/src/js/editor/snippets.editor.js',
             'web_editor/static/src/js/editor/snippets.options.js',
+            'web_editor/static/src/js/editor/snippets.options.xml',
             'web_editor/static/src/js/editor/snippets.options.legacy.js',
         ],
         'web_editor.wysiwyg_iframe_editor_assets': [

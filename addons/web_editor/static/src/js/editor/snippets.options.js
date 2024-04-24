@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
 import { attachComponent } from "@web_editor/js/core/owl_utils";
+import { uniqueId } from "@web/core/utils/functions";
+import { registry } from "@web/core/registry";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { throttleForAnimation, debounce } from "@web/core/utils/timing";
@@ -10,7 +12,7 @@ import Widget from "@web_editor/js/core/widget";
 import { ColorPalette } from "@web_editor/js/wysiwyg/widgets/color_palette";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
-import {ColumnLayoutMixin} from "@web_editor/js/common/column_layout_mixin";
+import { ColumnLayoutMixin } from "@web_editor/js/common/column_layout_mixin";
 const {
     normalizeColor,
     getBgImageURL,
@@ -42,6 +44,22 @@ import {
 import { renderToElement } from "@web/core/utils/render";
 import { rpc } from "@web/core/network/rpc";
 import snippetsOptionsLegacy from "./snippets.options.legacy";
+import {
+    Component,
+    markup,
+    onMounted,
+    onWillStart,
+    onPatched,
+    onWillDestroy,
+    reactive,
+    useEffect,
+    useChildSubEnv,
+    useRef,
+    useState,
+    useSubEnv,
+} from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 
 const preserveCursor = OdooEditorLib.preserveCursor;
 const { DateTime } = luxon;
@@ -50,7 +68,7 @@ let _serviceCache = {
     orm: {},
     rpc: {},
 };
-const clearServiceCache = () => {
+export const clearServiceCache = () => {
     _serviceCache = {
         orm: {},
         rpc: {},
@@ -100,7 +118,7 @@ function serviceCached(service) {
 }
 // Outdated snippets whose alert has been discarded.
 const controlledSnippets = new Set();
-const clearControlledSnippets = () => controlledSnippets.clear();
+export const clearControlledSnippets = () => controlledSnippets.clear();
 /**
  * @param {HTMLElement} el
  * @param {string} [title]
@@ -194,27 +212,77 @@ async function _buildImgElement(src) {
     const node = await _buildImgElementCache[src];
     return node.cloneNode(true);
 }
-/**
- * Build the correct DOM for a we-row element.
- *
- * @param {string} [title] - @see _buildElement
- * @param {Object} [options] - @see _buildElement
- * @param {HTMLElement[]} [options.childNodes]
- * @returns {HTMLElement}
- */
-function _buildRowElement(title, options) {
-    const groupEl = _buildElement('we-row', title, options);
 
-    const rowEl = document.createElement('div');
-    groupEl.appendChild(rowEl);
-
-    if (options && options.childNodes) {
-        options.childNodes.forEach(node => rowEl.appendChild(node));
+const _buildSvgElementCache = {};
+async function buildSvgElement(src) {
+    if (!(src in _buildSvgElementCache)) {
+        _buildSvgElementCache[src] = (async () => {
+            let text;
+            try {
+                const response = await window.fetch(src);
+                text = await response.text();
+            } catch {
+                // In some tours, the tour finishes before the fetch is done
+                // and when a tour is finished, the python side will ask the
+                // browser to stop loading resources. This causes the fetch
+                // to fail and throw an error which crashes the test even
+                // though it completed successfully.
+                // So return an empty SVG to ensure everything completes
+                // correctly.
+                text = "<svg></svg>";
+            }
+            return markup(text);
+        })();
     }
-
-    return groupEl;
+    const svgMarkup = await _buildSvgElementCache[src];
+    return svgMarkup;
 }
+
+export class WeTitle extends Component {
+    static template = "web_editor.WeTitle";
+    static props = {
+        title: { type: String, optional: true },
+        class: { type: String, optional: true },
+        style: { type: String, optional: true },
+        "*": { optional: true },
+    };
+}
+
+class WeRow extends Component {
+    static template = "web_editor.WeRow";
+    static props = {
+        class: { type: String, optional: true },
+        fontFamily: { type: String, optional: true },
+        slots: { type: Object, optional: true },
+        title: { type: String, optional: true },
+        tooltip: { type: String, optional: true },
+        "*": { optional: true },
+    };
+    static components = { WeTitle };
+    setup() {
+        /** @type {Object.<string, UserValue>} */
+        this.userValues = {};
+        this.state = useState({
+            show: false,
+        });
+        this.env.registerLayoutElement({ state: this.state, userValues: this.userValues }, true);
+        useChildSubEnv({
+            registerUserValue: (userValue) => {
+                this.userValues[userValue.id] = userValue;
+                this.env.registerUserValue(userValue);
+            },
+            unregisterUserValue: (userValue) => {
+                delete this.userValues[userValue.id];
+                this.env.unregisterUserValue(userValue);
+            },
+        });
+    }
+}
+
+registry.category("snippet_widgets").add("WeRow", WeRow);
+
 /**
+ * TODO: @owl-options remove when done.
  * Build the correct DOM for a we-collapse element.
  *
  * @param {string} [title] - @see _buildElement
@@ -222,7 +290,7 @@ function _buildRowElement(title, options) {
  * @param {HTMLElement[]} [options.childNodes]
  * @returns {HTMLElement}
  */
-function _buildCollapseElement(title, options) {
+export function _buildCollapseElement(title, options) {
     const groupEl = _buildElement('we-collapse', title, options);
     const titleEl = groupEl.querySelector('we-title');
 
@@ -275,20 +343,6 @@ function createPropertyProxy(obj, propertyName, value) {
         },
     });
 }
-/**
- * Creates and registers a UserValueWidget by tag-name
- *
- * @param {string} widgetName
- * @param {SnippetOptionWidget|UserValueWidget|null} parent
- * @param {string} title
- * @param {Object} options
- * @returns {UserValueWidget}
- */
-function registerUserValueWidget(widgetName, parent, title, options, $target) {
-    const widget = new userValueWidgetsRegistry[widgetName](parent, title, options, $target);
-    parent.registerSubWidget(widget);
-    return widget;
-}
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -300,39 +354,74 @@ const NULL_ID = '__NULL__';
  */
 const UserValueWidget = Widget;
 
-class UserValue {
+export class UserValue {
     static custom_events = {
         'user_value_update': '_onUserValueNotification',
     };
 
     /**
      * @constructor
+     * @param {string} id
+     * @param {Object} state
+     * @param {Object} env
+     * @param {SnippetOption} option
+     * @param {Object} data
      */
-    constructor(parent, title, options, $target) {
-        this._super(...arguments);
-        this.title = title;
-        this.options = options;
-        this._userValueWidgets = [];
-        this._value = '';
-        this.$target = $target;
+    constructor(id, state, env, option, data) {
+        this.id = id;
+        this.option = option;
+        this.env = env;
+        // TODO: @owl-option maybe we should take the opportunity to remove this.
+        this.$target = env.$target;
+        /** @type {UserValue[]} */
+        this._subValues = {};
+        this.mounted = false;
+        this.textContent = "";
+        this._state = state;
+        this._state.preview = false;
+        this._state.active = false;
+        this._data = data;
     }
     /**
-     * @override
+     * Returns the value that is currently in the state. This allows components
+     * to react to state changes, and is different than what a SnippetOption
+     * would need.
+     */
+    get value() {
+        return this._state.value;
+    }
+
+    set value(value) {
+        this._state.value = value;
+    }
+    /**
+     * Returns whether the component that posses this state should be visible
+     * or not. Cannot be set directly, use {@link toggleVisibility} instead.
+     */
+    get show() {
+        return this._state.show;
+    }
+    /**
+     * Returns whether sub widgets should or shouldn't be shown. Typically in
+     * the case of a list, we do not want to show all buttons at all time, so
+     * instead they will only be shown when this value is true.
+     *
+     * @type {boolean}
+     */
+    get opened() {
+        return this._state.opened;
+    }
+    /**
+     * @TODO: @owl-options: This should be moved into the component
      */
     async willStart() {
         await this._super(...arguments);
-        if (this.options.dataAttributes.img) {
-            this.illustrationEl = await _buildImgElement(this.options.dataAttributes.img);
-        } else if (this.options.dataAttributes.icon) {
-            this.illustrationEl = document.createElement('i');
-            this.illustrationEl.classList.add('fa', this.options.dataAttributes.icon);
-        }
         if (this.options.dataAttributes.reload) {
             this.options.dataAttributes.noPreview = "true";
         }
     }
     /**
-     * @override
+     * @TODO: @owl-options: This should be moved into the component
      */
     _makeDescriptive() {
         const $el = this._super(...arguments);
@@ -348,7 +437,7 @@ class UserValue {
         return $el;
     }
     /**
-     * @override
+     * @TODO: @owl-options: This should be moved into the component
      */
     async start() {
         await this._super(...arguments);
@@ -366,7 +455,7 @@ class UserValue {
         }
     }
     /**
-     * @override
+     * @TODO: @owl-options: This should be moved into the component
      */
     destroy() {
         // Check if $el exists in case the widget is destroyed before it has
@@ -387,14 +476,7 @@ class UserValue {
      * Closes the widget (only meaningful for widgets that can be closed).
      */
     close() {
-        if (!this.el) {
-            // In case the method is called while the widget is not fully
-            // initialized yet. No need to prevent that case: asking a non
-            // initialized widget to close itself should just not be a problem
-            // and just be ignored.
-            return;
-        }
-        if (!this.el.classList.contains('o_we_widget_opened')) {
+        if (!this._state.opened) {
             // Small optimization: it would normally not matter asking to
             // remove a class of an element if it does not already have it but
             // in this case we do more: we trigger_up an event and ask to close
@@ -404,22 +486,25 @@ class UserValue {
             // instructions being done at each click in the editor.
             return;
         }
-        this.trigger_up('user_value_widget_closing');
-        this.el.classList.remove('o_we_widget_opened');
-        this._userValueWidgets.forEach(widget => widget.close());
+        this.env.userValueWidgetClosing();
+        this._state.opened = false;
+        Object.values(this._subValues).forEach(widget => widget.close());
     }
     /**
-     * Simulates the correct event on the element to make it active.
+     * Triggers a value change in non preview mode.
+     * Should be overridden by Sub-classes to properly reflect what enabling
+     * their component means.
      */
     enable() {
-        this.$el.click();
+        this.notifyValueChange(false);
     }
+    // TODO: @owl-options: rename this to findUserValue
     /**
      * @param {string} name
      * @returns {UserValueWidget|null}
      */
     findWidget(name) {
-        for (const widget of this._userValueWidgets) {
+        for (const widget of Object.values(this._subValues)) {
             if (widget.getName() === name) {
                 return widget;
             }
@@ -447,7 +532,7 @@ class UserValue {
      * @returns {string}
      */
     getActiveValue(methodName) {
-        return this._value;
+        return this.value;
     }
     /**
      * Returns the default value the widget holds when inactive, by default the
@@ -473,7 +558,7 @@ class UserValue {
      * @returns {string[]}
      */
     getMethodsNames() {
-        return this._methodsNames;
+        return [...this._methodsNames.values()];
     }
     /**
      * Returns the option parameters associated to the widget (for a given
@@ -507,7 +592,7 @@ class UserValue {
      */
     getValue(methodName) {
         const isActive = this.isActive();
-        if (!methodName || !this._methodsNames.includes(methodName)) {
+        if (!methodName || !this._methodsNames.has(methodName)) {
             return isActive ? 'true' : '';
         }
         if (isActive) {
@@ -521,7 +606,7 @@ class UserValue {
      * @returns {boolean}
      */
     isActive() {
-        return this._value && this._value !== NULL_ID;
+        return this.value && this.value !== NULL_ID;
     }
     /**
      * Indicates if the widget can contain sub user value widgets or not.
@@ -538,12 +623,13 @@ class UserValue {
      * @returns {boolean}
      */
     isPreviewed() {
-        const focusEl = document.activeElement;
-        if (focusEl && focusEl.tagName === 'INPUT'
-                && (this.el === focusEl || this.el.contains(focusEl))) {
-            return true;
-        }
-        return this.el.classList.contains('o_we_preview');
+        // const focusEl = document.activeElement;
+        // TODO: @owl-options: implement this on input values
+        // if (focusEl && focusEl.tagName === 'INPUT'
+        //         && (this.el === focusEl || this.el.contains(focusEl))) {
+        //     return true;
+        // }
+        return this._state.preview;
     }
     /**
      * Loads option method names and option method parameters.
@@ -552,15 +638,21 @@ class UserValue {
      * @param {Object} extraParams
      */
     loadMethodsData(validMethodNames, extraParams) {
-        this._methodsNames = [];
+        this._validMethodNames = validMethodNames;
+        this._methodsNames = new Set();
         this._methodsParams = Object.assign({}, extraParams);
         this._methodsParams.optionsPossibleValues = {};
         this._dependencies = [];
         this._triggerWidgetsNames = [];
         this._triggerWidgetsValues = [];
 
-        for (const key in this.el.dataset) {
-            const dataValue = this.el.dataset[key].trim();
+        for (const key in this._data) {
+            // Ignore values set to false or undefined but not empty strings.
+            if (this._data[key] === false || this._data[key] === undefined) {
+                continue;
+            }
+
+            const dataValue = this._data[key].trim();
 
             if (key === 'dependencies') {
                 this._dependencies.push(...dataValue.split(/\s*,\s*/g));
@@ -569,41 +661,20 @@ class UserValue {
             } else if (key === 'triggerValue') {
                 this._triggerWidgetsValues.push(...dataValue.split(/\s*,\s*/g));
             } else if (validMethodNames.includes(key)) {
-                this._methodsNames.push(key);
+                this._methodsNames.add(key);
                 this._methodsParams.optionsPossibleValues[key] = dataValue.split(/\s*\|\s*/g);
             } else {
                 this._methodsParams[key] = dataValue;
             }
         }
-        this._userValueWidgets.forEach(widget => {
-            const inheritedParams = Object.assign({}, this._methodsParams);
-            inheritedParams.optionsPossibleValues = null;
-            widget.loadMethodsData(validMethodNames, inheritedParams);
-            const subMethodsNames = widget.getMethodsNames();
-            const subMethodsParams = widget.getMethodsParams();
 
-            for (const methodName of subMethodsNames) {
-                if (!this._methodsNames.includes(methodName)) {
-                    this._methodsNames.push(methodName);
-                    this._methodsParams.optionsPossibleValues[methodName] = [];
-                }
-                for (const subPossibleValue of subMethodsParams.optionsPossibleValues[methodName]) {
-                    this._methodsParams.optionsPossibleValues[methodName].push(subPossibleValue);
-                }
-            }
-        });
-        for (const methodName of this._methodsNames) {
-            const arr = this._methodsParams.optionsPossibleValues[methodName];
-            const uniqArr = arr.filter((v, i, arr) => i === arr.indexOf(v));
-            this._methodsParams.optionsPossibleValues[methodName] = uniqArr;
-        }
-
+        // TODO: @owl-options Sort the method names or fix this.
         // Method names come from the widget's dataset whose keys' order cannot
         // be relied on. We explicitely sort them by alphabetical order allowing
         // consistent behavior, while relying on order for such methods should
         // not be done when possible (the methods should be independent from
         // each other when possible).
-        this._methodsNames.sort();
+        //this._methodsNames.sort();
     }
     /**
      * @param {boolean} [previewMode=false]
@@ -621,6 +692,7 @@ class UserValue {
             previewMode: previewMode || false,
             isSimulatedEvent: !!isSimulatedEvent,
         };
+        // @owl-options: Could we change this?
         // TODO improve this. The preview state has to be updated only when the
         // actual option _select is gonna be called... but this is delayed by a
         // mutex. So, during test tours, we would notify both 'preview' and
@@ -632,28 +704,53 @@ class UserValue {
             // an inverted state)... but if, for example, a modal opens before
             // handling that non-preview, a 'reset' will be thrown thus removing
             // the preview class. So we force it in non-preview too.
-            data.prepare = () => this.el.classList.add('o_we_preview');
+            data.prepare = () => this._state.preview = true;
         } else if (previewMode === 'reset') {
-            data.prepare = () => this.el.classList.remove('o_we_preview');
+            data.prepare = () => this._state.preview = false;
         }
 
-        this.trigger_up('user_value_update', data);
+        this.userValueNotification(data);
     }
     /**
      * Opens the widget (only meaningful for widgets that can be opened).
      */
     open() {
-        this.trigger_up('user_value_widget_opening');
-        this.el.classList.add('o_we_widget_opened');
+        this.env.userValueWidgetOpening();
+        this._state.opened = true;
     }
     /**
-     * Adds the given widget to the known list of user value sub-widgets (useful
-     * for container widgets).
+     * Adds the given userValue to the list of sub values (useful for container
+     * components).
      *
-     * @param {UserValueWidget} widget
+     * @param {UserValue} userValue
      */
-    registerSubWidget(widget) {
-        this._userValueWidgets.push(widget);
+    registerUserValue(userValue) {
+        this._subValues[userValue.id] = (userValue);
+        const inheritedParams = Object.assign({}, this._methodsParams);
+        inheritedParams.optionsPossibleValues = null;
+        userValue.loadMethodsData(this._validMethodNames, inheritedParams);
+        const subMethodsNames = userValue.getMethodsNames();
+        const subMethodsParams = userValue.getMethodsParams();
+
+        for (const methodName of subMethodsNames) {
+            if (!this._methodsNames.has(methodName)) {
+                this._methodsNames.add(methodName);
+                this._methodsParams.optionsPossibleValues[methodName] = [];
+            }
+            for (const subPossibleValue of subMethodsParams.optionsPossibleValues[methodName]) {
+                if (!this._methodsParams.optionsPossibleValues[methodName].includes(subPossibleValue)) {
+                    this._methodsParams.optionsPossibleValues[methodName].push(subPossibleValue);
+                }
+            }
+        }
+    }
+    /**
+     * Removes the given userValue from the list of sub values.
+     *
+     * @param {UserValue} userValue
+     */
+    unregisterUserValue(userValue) {
+        delete this._subValues[userValue.id];
     }
     /**
      * Sets the user value that the widget should currently hold, for the
@@ -669,22 +766,23 @@ class UserValue {
      * @param {string} [methodName]
      */
     async setValue(value, methodName) {
-        this._value = value;
-        this.el.classList.remove('o_we_preview');
+        this._state.preview = false;
+        this.value = value;
     }
     /**
      * @param {boolean} show
      */
     toggleVisibility(show) {
-        let doFocus = false;
-        if (show) {
-            const wasInvisible = this.el.classList.contains('d-none');
-            doFocus = wasInvisible && this.el.dataset.requestFocus === "true";
-        }
-        this.el.classList.toggle('d-none', !show);
-        if (doFocus) {
-            this.focus();
-        }
+        this._state.show = show;
+        // let doFocus = false;
+        // if (show) {
+        //     const wasInvisible = this.el.classList.contains('d-none');
+        //     doFocus = wasInvisible && this.el.dataset.requestFocus === "true";
+        // }
+        // this.el.classList.toggle('d-none', !show);
+        // if (doFocus) {
+        //     this.focus();
+        // }
     }
 
     //--------------------------------------------------------------------------
@@ -701,6 +799,168 @@ class UserValue {
      */
     _getFocusableElement() {
         return null;
+    }
+    /**
+     * Allows container widgets to add additional data if needed.
+     *
+     * @private
+     * @param {Object} params
+     */
+    userValueNotification(params) {
+        params.widget = this;
+
+        if (!params.triggerWidgetsNames) {
+            params.triggerWidgetsNames = [];
+        }
+        params.triggerWidgetsNames.push(...this._triggerWidgetsNames);
+
+        if (!params.triggerWidgetsValues) {
+            params.triggerWidgetsValues = [];
+        }
+        params.triggerWidgetsValues.push(...this._triggerWidgetsValues);
+        this.env.userValueNotification(params);
+    }
+}
+
+class UserValueComponent extends Component {
+
+    static props = {
+        name: { type: String, optional: true },
+        slots: { type: Object, optional: true },
+        // Allow any prop as they will reference a method of SnippetOption
+        "*": {},
+    };
+
+    static StateModel = UserValue;
+
+    // This is an abstract component, it should not be used alone.
+    static template = "";
+
+    setup() {
+        const id = uniqueId("userValue");
+        const state = useState({});
+        const stateParams = this.getStateParams();
+        this.state = new this.constructor.StateModel(
+            id,
+            state,
+            this.env,
+            this.env.snippetOption,
+            stateParams
+        );
+
+        this.env.registerUserValue(this.state);
+
+        if (this.constructor.isContainer) {
+            // If this component contains other UserValueComponents, they should
+            // not register to the options, but to this Component's state instead, so
+            // that this one's UserValue can handle their state, as they are
+            // heavily dependent on the parent's state.
+            useChildSubEnv({
+                registerUserValue: (userValue) => {
+                    this.state.registerUserValue(userValue);
+                    if (this.env.isContained) {
+                        this.env.registerUserValue(userValue);
+                    }
+                },
+                unregisterUserValue: (userValue) => {
+                    this.state.unregisterUserValue(userValue);
+                },
+                userValueNotification: (params) => {
+                    this.state.userValueNotification(params);
+                },
+                isContained: true,
+            });
+        }
+
+        onWillStart(async () => {
+            if (this.props.img) {
+                const src = this.props.img;
+                if (src.split(".").pop() === "svg") {
+                    this.svg = await buildSvgElement(src);
+                } else {
+                    this.img = this.props.img;
+                }
+            }
+        });
+        // Track the changes to the textContent slot so that parent widgets can
+        // use it (e.g. WeSelect use the active value's textContent for its
+        // toggler).
+        this.textContentRef = useRef("text-content");
+        useEffect(
+            () => {
+                const textContent = this.textContentRef.el?.textContent || "";
+                if (textContent && textContent !== this.state.textContent) {
+                    this.state.textContent = textContent;
+                } else if (!textContent) {
+                    const fakeImgEl = this.textContentRef.el?.querySelector('.o_we_fake_img_item');
+                    if (fakeImgEl) {
+                        this.state.fakeImg = markup(fakeImgEl.outerHTML);
+                    }
+                }
+            },
+            () => [this.textContentRef.el]
+        );
+
+        onWillDestroy(() => {
+            this.env.unregisterUserValue(this.state);
+        });
+    }
+    /**
+     * Returns an object containing the classes defined in the props
+     *
+     * @returns {Object}
+     */
+    getPropsClass() {
+        if (typeof this.props.class === "string") {
+            return { [this.props.class]: true };
+        }
+        if (Array.isArray(this.props.class)) {
+            const classes = this.props.class.join(" ");
+            return { [classes]: this.props.class.length > 0 };
+        }
+        if (typeof this.props.class === "object") {
+            return this.props.class;
+        }
+	}
+    /**
+     * Returns all the classes that should be applied on the root of the widget.
+     *
+     * @returns {Object}
+     */
+    getAllClasses() {
+        return {
+            "active": this.state.active,
+            "o_we_preview": this.state.isPreviewed(),
+            "d-none": !this.state.show,
+            "o_we_widget_opened": this.state.opened,
+            "o_we_icon_button": this.img || this.svg || this.props.icon,
+            ...this.getPropsClass(),
+        };
+    }
+    /**
+     * Sets all props as data attributes to match with existing tours.
+     * @TODO this should be removed or only shown when tours are actually 
+     * activated. However, some SCSS styles are using attributes to style some
+     * buttons (e.g. BackgroundShape).
+     */
+    getAllDataAttributes() {
+        const dataAttributes = {};
+        for (const key of Object.getOwnPropertyNames(this.state._data)) {
+            const kebabName = key.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
+            dataAttributes[`data-${kebabName}`] = this.props[key];
+        }
+        return dataAttributes;
+    }
+    /**
+     * Prepare the values that will be passed as parameters to the state.
+     * 
+     * @private
+     * @return {Objectl}
+     */
+    getStateParams() {
+        const propsCopy = { ...this.props };
+        delete propsCopy.slots;
+        return propsCopy;
     }
     /**
      * @private
@@ -734,27 +994,8 @@ class UserValue {
      */
     _onUserValueChange(ev) {
         if (this._handleNotifierEvent(ev)) {
-            this.notifyValueChange(false);
+            this.state.notifyValueChange(false);
         }
-    }
-    /**
-     * Allows container widgets to add additional data if needed.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onUserValueNotification(ev) {
-        ev.data.widget = this;
-
-        if (!ev.data.triggerWidgetsNames) {
-            ev.data.triggerWidgetsNames = [];
-        }
-        ev.data.triggerWidgetsNames.push(...this._triggerWidgetsNames);
-
-        if (!ev.data.triggerWidgetsValues) {
-            ev.data.triggerWidgetsValues = [];
-        }
-        ev.data.triggerWidgetsValues.push(...this._triggerWidgetsValues);
     }
     /**
      * Should be called when an user event on the widget indicates a value
@@ -765,7 +1006,7 @@ class UserValue {
      */
     _onUserValuePreview(ev) {
         if (this._handleNotifierEvent(ev)) {
-            this.notifyValueChange(true);
+            this.state.notifyValueChange(true);
         }
     }
     /**
@@ -777,29 +1018,81 @@ class UserValue {
      */
     _onUserValueReset(ev) {
         if (this._handleNotifierEvent(ev)) {
-            this.notifyValueChange('reset');
+            this.state.notifyValueChange('reset');
         }
     }
 }
 
-const ButtonUserValueWidget = UserValueWidget.extend({
-    tagName: 'we-button',
-    events: {
-        'click': '_onButtonClick',
-        'click [role="button"]': '_onInnerButtonClick',
-        'mouseenter': '_onUserValuePreview',
-        'mouseleave': '_onUserValueReset',
-    },
 
+class ButtonUserValue extends UserValue {
+    /**
+     * @override
+     */
+    async setValue(value, methodName) {
+        await super.setValue(...arguments);
+        let active = !!value;
+        if (methodName) {
+            if (!this._methodsNames.has(methodName)) {
+                return;
+            }
+            active = (this.getActiveValue(methodName) === value);
+        }
+        this._state.active = active;
+        // TODO: @owl-options: Some of this code is no longer used, it should
+        // probably be removed in its own commit.
+        // if (this.illustrationEl && this.activeImgEl) {
+        //     this.illustrationEl.classList.toggle('d-none', active);
+        //     this.activeImgEl.classList.toggle('d-none', !active);
+        // }
+        // this.el.classList.toggle('active', active);
+    }
+
+    get active() {
+        return this._state.active;
+    }
+    /**
+     * @override
+     */
+    getActiveValue(methodName) {
+        const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
+        return possibleValues && possibleValues[possibleValues.length - 1] || '';
+    }
+    /**
+     * @override
+     */
+    isActive() {
+        return (this.isPreviewed() !== this._state.active);
+    }
+    /**
+     * @override
+     */
+    loadMethodsData(validMethodNames) {
+        super.loadMethodsData(...arguments);
+        for (const methodName of this._methodsNames.values()) {
+            const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
+            if (possibleValues.length <= 1) {
+                possibleValues.unshift('');
+            }
+        }
+    }
+}
+
+class WeButton extends UserValueComponent {
+    static template = "web_editor.WeButton";
+    static StateModel = ButtonUserValue;
+    setup() {
+        super.setup();
+    }
     /**
      * @override
      */
     async willStart() {
         await this._super(...arguments);
         if (this.options.dataAttributes.activeImg) {
+            // TODO: @owl-options: this is no longer used.
             this.activeImgEl = await _buildImgElement(this.options.dataAttributes.activeImg);
         }
-    },
+    }
     /**
      * @override
      */
@@ -812,66 +1105,17 @@ const ButtonUserValueWidget = UserValueWidget.extend({
             this.containerEl.appendChild(this.activeImgEl);
         }
         return $el;
-    },
+    }
     /**
      * @override
      */
-    start: function (parent, title, options) {
+    start(parent, title, options) {
         if (this.options && this.options.childNodes) {
             this.options.childNodes.forEach(node => this.containerEl.appendChild(node));
         }
 
         return this._super(...arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    getActiveValue: function (methodName) {
-        const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
-        return possibleValues && possibleValues[possibleValues.length - 1] || '';
-    },
-    /**
-     * @override
-     */
-    isActive: function () {
-        return (this.isPreviewed() !== this.el.classList.contains('active'));
-    },
-    /**
-     * @override
-     */
-    loadMethodsData: function (validMethodNames) {
-        this._super.apply(this, arguments);
-        for (const methodName of this._methodsNames) {
-            const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
-            if (possibleValues.length <= 1) {
-                possibleValues.unshift('');
-            }
-        }
-    },
-    /**
-     * @override
-     */
-    async setValue(value, methodName) {
-        await this._super(...arguments);
-        let active = !!value;
-        if (methodName) {
-            if (!this._methodsNames.includes(methodName)) {
-                return;
-            }
-            active = (this.getActiveValue(methodName) === value);
-        }
-        if (this.illustrationEl && this.activeImgEl) {
-            this.illustrationEl.classList.toggle('d-none', active);
-            this.activeImgEl.classList.toggle('d-none', !active);
-        }
-        this.el.classList.toggle('active', active);
-    },
-
+    }
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -879,33 +1123,28 @@ const ButtonUserValueWidget = UserValueWidget.extend({
     /**
      * @private
      */
-    _onButtonClick: function (ev) {
+    _onButtonClick(ev) {
         if (!ev._innerButtonClicked) {
             this._onUserValueChange(ev);
         }
-    },
+    }
     /**
      * @private
      */
-    _onInnerButtonClick: function (ev) {
+    _onInnerButtonClick(ev) {
         // Cannot just stop propagation as the click needs to be propagated to
         // potential parent widgets for event delegation on those inner buttons.
         ev._innerButtonClicked = true;
-    },
-});
+    }
+}
+registry.category("snippet_widgets").add("WeButton", WeButton);
 
-const CheckboxUserValueWidget = ButtonUserValueWidget.extend({
-    className: (ButtonUserValueWidget.prototype.className || '') + ' o_we_checkbox_wrapper',
+const ButtonUserValueWidget = Widget.extend({className: ''});
+const CheckboxUserValueWidget = ButtonUserValueWidget.extend({});
 
-    /**
-     * @override
-     */
-    start: function () {
-        const checkboxEl = document.createElement('we-checkbox');
-        this.containerEl.appendChild(checkboxEl);
-
-        return this._super(...arguments);
-    },
+class WeCheckbox extends WeButton {
+    static template = "web_editor.WeCheckbox";
+    static components = { WeTitle };
 
     //--------------------------------------------------------------------------
     // Public
@@ -915,8 +1154,9 @@ const CheckboxUserValueWidget = ButtonUserValueWidget.extend({
      * @override
      */
     enable() {
+        // TODO: @owl-options adapt
         this.$('we-checkbox').click();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -930,30 +1170,32 @@ const CheckboxUserValueWidget = ButtonUserValueWidget.extend({
             // Only consider clicks on the label and the checkbox control itself
             return;
         }
-        return this._super(...arguments);
-    },
-});
+        return super._onButtonClick(...arguments);
+    }
+}
+registry.category("snippet_widgets").add("WeCheckbox", WeCheckbox);
 
-const BaseSelectionUserValueWidget = UserValueWidget.extend({
+const BaseSelectionUserValueWidget = UserValueWidget.extend({});
+class BaseSelectionUserValue extends UserValue {
     /**
      * @override
      */
     async start() {
-        await this._super(...arguments);
+        await super.start(...arguments);
 
-        this.menuEl = document.createElement('we-selection-items');
-        if (this.options && this.options.childNodes) {
-            this.options.childNodes.forEach(node => {
-                // Ensure to only put element nodes inside the selection menu
-                // as there could be an :empty CSS rule to handle the case when
-                // the menu is empty (so it should not contain any whitespace).
-                if (node.nodeType === Node.ELEMENT_NODE) {
-                    this.menuEl.appendChild(node);
-                }
-            });
-        }
-        this.containerEl.appendChild(this.menuEl);
-    },
+        // this.menuEl = document.createElement('we-selection-items');
+        // if (this.options && this.options.childNodes) {
+        //     this.options.childNodes.forEach(node => {
+        //         // Ensure to only put element nodes inside the selection menu
+        //         // as there could be an :empty CSS rule to handle the case when
+        //         // the menu is empty (so it should not contain any whitespace).
+        //         if (node.nodeType === Node.ELEMENT_NODE) {
+        //             this.menuEl.appendChild(node);
+        //         }
+        //     });
+        // }
+        // this.containerEl.appendChild(this.menuEl);
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -963,13 +1205,13 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
      * @override
      */
     getMethodsParams(methodName) {
-        const params = this._super(...arguments);
+        const params = super.getMethodsParams(...arguments);
         const activeWidget = this._getActiveSubWidget();
         if (!activeWidget) {
             return params;
         }
         return Object.assign(activeWidget.getMethodsParams(...arguments), params);
-    },
+    }
     /**
      * @override
      */
@@ -978,23 +1220,23 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
         if (activeWidget) {
             return activeWidget.getActiveValue(methodName);
         }
-        return this._super(...arguments);
-    },
+        return super.getValue(...arguments);
+    }
     /**
      * @override
      */
     isContainer() {
         return true;
-    },
+    }
     /**
      * @override
      */
     async setValue(value, methodName) {
-        const _super = this._super.bind(this);
-        for (const widget of this._userValueWidgets) {
+        const subValues = Object.values(this._subValues);
+        for (const widget of subValues) {
             await widget.setValue(NULL_ID, methodName);
         }
-        for (const widget of [...this._userValueWidgets].reverse()) {
+        for (const widget of subValues.reverse()) {
             await widget.setValue(value, methodName);
             if (widget.isActive()) {
                 // Only one select item can be true at a time, we consider the
@@ -1002,8 +1244,8 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
                 break;
             }
         }
-        await _super(...arguments);
-    },
+        await super.setValue(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -1011,23 +1253,129 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
 
     /**
      * @private
-     * @returns {UserValueWidget|undefined}
+     * @returns {UserValue|undefined}
      */
     _getActiveSubWidget() {
-        const previewedWidget = this._userValueWidgets.find(widget => widget.isPreviewed());
+        const previewedWidget = Object.values(this._subValues).find(value => value.isPreviewed());
         if (previewedWidget) {
             return previewedWidget;
         }
-        return this._userValueWidgets.find(widget => widget.isActive());
-    },
-});
+        return Object.values(this._subValues).find(value => value.isActive());
+    }
+}
+class SelectUserValue extends BaseSelectionUserValue {
 
-const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
-    tagName: 'we-select',
-    events: {
-        'click': '_onClick',
-    },
-    PLACEHOLDER_TEXT: _t("None"),
+    static PLACEHOLDER_TEXT = _t("None");
+
+    constructor() {
+        super(...arguments);
+        this._state.toggler = {
+            faIcon: false,
+            imgSrc: false,
+            textContent: this.constructor.PLACEHOLDER_TEXT,
+        };
+    }
+    /**
+     * Informations about the toggler element, to be used in the template.
+     *
+     * @type {Object}
+     */
+    get toggler() {
+        return this._state.toggler;
+    }
+    /**
+     * @override
+     */
+    async setValue(value, methodName) {
+        await super.setValue(...arguments);
+        // Re-initialising the toggler.
+        const newToggler = {
+            textContent: "",
+            faIcon: false,
+            imgSrc: false,
+        };
+        const activeWidget = Object.values(this._subValues).find(value => !value.isPreviewed() && value.isActive());
+        if (activeWidget) {
+            const params = activeWidget.getMethodsParams(methodName);
+            // Check the param for svg on buttons
+            const svgSrc = params.svgSrc; // useful to avoid searching text content in svg element
+            const text = (params.selectLabel || (!svgSrc && activeWidget.textContent.trim()));
+            const imgSrc = params.img;
+            const icon = params.icon;
+            if (text) {
+                newToggler.textContent = text;
+            } else if (icon) {
+                newToggler.faIcon = icon;
+            } else if (imgSrc) {
+                newToggler.imgSrc = imgSrc;
+            } else {
+                // TODO: @owl-options: check this? See the "border-style" option
+                // that appears when you add a border for an example. e.g.: on
+                // Images Wall.
+                if (activeWidget.fakeImg) {
+                   newToggler.textContent = activeWidget.fakeImg;
+                }
+            }
+        } else {
+            newToggler.textContent = this.constructor.PLACEHOLDER_TEXT;
+        }
+
+        this._state.toggler = newToggler;
+    }
+    /**
+     * @override
+     */
+    isPreviewed() {
+        return super.isPreviewed() || this.opened;
+    }
+    /**
+     * @override
+     */
+    enable() {
+        if (!this.opened) {
+            this.open();
+        }
+    }
+}
+const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({});
+class WeSelect extends UserValueComponent {
+    static isContainer = true;
+    static template = "web_editor.WeSelect";
+    static components = { Dropdown, WeTitle };
+    static StateModel = SelectUserValue;
+    static props = {
+        ...UserValueComponent.props,
+        title: { type: String, optional: true },
+    }
+
+    setup() {
+        // Use this ref to adjust the dropdown's position upwards if not enough
+        // space downwards.
+        this.menuRef = useRef("menu");
+
+        useEffect(
+            (opened) => {
+                if (opened) {
+                    this._adjustDropdownPosition();
+                }
+                return () => {
+                    const containerEl = this.menuRef.el?.closest(".o_we_user_value_widget");
+                    containerEl.classList.remove("o_we_select_dropdown_up");
+                };
+            },
+            () => [this.state.opened]
+        );
+
+        super.setup();
+    }
+    /**
+     * @override
+     */
+    getStateParams() {
+        const propsCopy = super.getStateParams();
+        delete propsCopy.title;
+        return propsCopy;
+    }
 
     /**
      * @override
@@ -1058,89 +1406,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
         const dropdownCaretEl = document.createElement('span');
         dropdownCaretEl.classList.add('o_we_dropdown_caret');
         this.containerEl.appendChild(dropdownCaretEl);
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    close: function () {
-        this._super(...arguments);
-        this.el.classList.remove("o_we_select_dropdown_up");
-        if (this.menuTogglerEl) {
-            this.menuTogglerEl.classList.remove('active');
-        }
-    },
-    /**
-     * @override
-     */
-    isPreviewed: function () {
-        return this._super(...arguments) || this.menuTogglerEl.classList.contains('active');
-    },
-    /**
-     * @override
-     */
-    open() {
-        this._super(...arguments);
-        this.menuTogglerEl.classList.add('active');
-        this._adjustDropdownPosition();
-    },
-    /**
-     * @override
-     */
-    async setValue() {
-        await this._super(...arguments);
-
-        if (this.iconEl) {
-            return;
-        }
-
-        if (this.menuTogglerItemEl) {
-            this.menuTogglerItemEl.remove();
-            this.menuTogglerItemEl = null;
-        }
-
-        let textContent = '';
-        const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
-        if (activeWidget) {
-            const svgTag = activeWidget.el.querySelector('svg'); // useful to avoid searching text content in svg element
-            const value = (activeWidget.el.dataset.selectLabel || (!svgTag && activeWidget.el.textContent.trim()));
-            const imgSrc = activeWidget.el.dataset.img;
-            const icon = activeWidget.el.dataset.icon;
-            if (value) {
-                textContent = value;
-            } else if (icon) {
-                this.menuTogglerItemEl = document.createElement('i');
-                this.menuTogglerItemEl.classList.add('fa', icon);
-            } else if (imgSrc) {
-                this.menuTogglerItemEl = document.createElement('img');
-                this.menuTogglerItemEl.src = imgSrc;
-            } else {
-                const fakeImgEl = activeWidget.el.querySelector('.o_we_fake_img_item');
-                if (fakeImgEl) {
-                    this.menuTogglerItemEl = fakeImgEl.cloneNode(true);
-                }
-            }
-        } else {
-            textContent = this.PLACEHOLDER_TEXT;
-        }
-
-        this.menuTogglerEl.textContent = textContent;
-        if (this.menuTogglerItemEl) {
-            this.menuTogglerEl.appendChild(this.menuTogglerItemEl);
-        }
-    },
-    /**
-     * @override
-     */
-    enable() {
-        if (!this.menuTogglerEl.classList.contains('active')) {
-            this.menuTogglerEl.click();
-        }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -1152,7 +1418,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      */
     _shouldIgnoreClick(ev) {
         return !!ev.target.closest('[role="button"]');
-    },
+    }
     /**
      * Decides whether the dropdown should be positioned below or above the
      * selector based on the available space.
@@ -1160,14 +1426,22 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      * @private
      */
     _adjustDropdownPosition() {
-        const customizePanelEl = this.menuEl.closest(".o_we_customize_panel");
+        if (!this.state.opened) {
+            return;
+        }
+        const customizePanelEl = this.menuRef.el?.closest(".o_we_customize_panel");
         if (!customizePanelEl) {
             return;
         }
 
-        this.el.classList.remove("o_we_select_dropdown_up");
+        const containerEl = this.menuRef.el.closest(".o_we_user_value_widget");
+        if (!containerEl) {
+            return;
+        }
+
+        containerEl.classList.remove("o_we_select_dropdown_up");
         const customizePanelElCoords = customizePanelEl.getBoundingClientRect();
-        let dropdownMenuElCoords = this.menuEl.getBoundingClientRect();
+        let dropdownMenuElCoords = this.menuRef.el.getBoundingClientRect();
 
         // Adds a margin to prevent the dropdown from sticking to the edge of
         // the customize panel.
@@ -1175,15 +1449,15 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
         // If after opening, the dropdown list overflows the customization
         // panel at the bottom, opens the dropdown above the selector.
         if ((dropdownMenuElCoords.bottom + dropdownMenuMargin) > customizePanelElCoords.bottom) {
-            this.el.classList.add("o_we_select_dropdown_up");
-            dropdownMenuElCoords = this.menuEl.getBoundingClientRect();
+            containerEl.classList.add("o_we_select_dropdown_up");
+            dropdownMenuElCoords = this.menuRef.el.getBoundingClientRect();
             // If there is no available space above it either, then we open
             // it below the selector.
             if (dropdownMenuElCoords.top < customizePanelElCoords.top) {
-                this.el.classList.remove("o_we_select_dropdown_up");
+                containerEl.classList.remove("o_we_select_dropdown_up");
             }
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -1194,40 +1468,39 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      *
      * @private
      */
-    _onClick: function (ev) {
+    _onClick(ev) {
         if (this._shouldIgnoreClick(ev)) {
             return;
         }
 
-        if (!this.menuTogglerEl.classList.contains('active')) {
-            this.open();
+        if (!this.state.opened) {
+            this.state.open();
         } else {
-            this.close();
+            this.state.close();
         }
-        const activeButton = this._userValueWidgets.find(widget => widget.isActive());
-        if (activeButton) {
-            this.menuEl.scrollTop = activeButton.el.offsetTop - (this.menuEl.offsetHeight / 2);
+        const activeItem = this.menuRef.el?.querySelector(".active");
+        if (activeItem) {
+            this.menuRef.el.scrollTop = activeItem.offsetTop - (this.menuRef.el.offsetHeight / 2);
         }
-    },
-});
+    }
+}
+registry.category("snippet_widgets").add("WeSelect", WeSelect);
+
+class WeButtonGroup extends UserValueComponent {
+    static template = "web_editor.WeButtonGroup";
+    static isContainer = true;
+    static components = { WeTitle };
+    static StateModel = BaseSelectionUserValue;
+}
+
+registry.category("snippet_widgets").add("WeButtonGroup", WeButtonGroup);
 
 const ButtonGroupUserValueWidget = BaseSelectionUserValueWidget.extend({
     tagName: 'we-button-group',
 });
 
-const UnitUserValueWidget = UserValueWidget.extend({
-    /**
-     * @override
-     */
-    start: async function () {
-        const unit = this.el.dataset.unit || '';
-        this.el.dataset.unit = unit;
-        if (this.el.dataset.saveUnit === undefined) {
-            this.el.dataset.saveUnit = unit;
-        }
-
-        return this._super(...arguments);
-    },
+const UnitUserValueWidget = UserValueWidget.extend({});
+class UnitUserValue extends UserValue {
 
     //--------------------------------------------------------------------------
     // Public
@@ -1236,12 +1509,16 @@ const UnitUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    getActiveValue: function (methodName) {
-        const activeValue = this._super(...arguments);
+    getActiveValue(methodName) {
+        const activeValue = this._nextValue || super.getActiveValue(...arguments) || "";
 
         const params = this._methodsParams;
         if (!this._isNumeric()) {
             return activeValue;
+        }
+        // TODO find correct way to apply this
+        if (params.saveUnit === undefined) {
+            params.saveUnit = params.unit;
         }
 
         const defaultValue = this.getDefaultValue(methodName, false);
@@ -1255,13 +1532,13 @@ const UnitUserValueWidget = UserValueWidget.extend({
                 return `${this._floatToStr(value)}${params.saveUnit}`;
             }
         }).join(' ');
-    },
+    }
     /**
      * @override
      * @param {boolean} [useInputUnit=false]
      */
-    getDefaultValue: function (methodName, useInputUnit) {
-        const defaultValue = this._super(...arguments);
+    getDefaultValue(methodName, useInputUnit) {
+        const defaultValue = super.getDefaultValue(...arguments);
 
         const params = this._methodsParams;
         if (!this._isNumeric()) {
@@ -1274,21 +1551,32 @@ const UnitUserValueWidget = UserValueWidget.extend({
             return defaultValue;
         }
         return `${this._floatToStr(numValue)}${unit}`;
-    },
+    }
     /**
      * @override
      */
-    isActive: function () {
-        const isSuperActive = this._super(...arguments);
+    isActive() {
+        const isSuperActive = super.isActive(...arguments);
         if (!this._isNumeric()) {
             return isSuperActive;
         }
         return isSuperActive && (
-            this._floatToStr(parseFloat(this._value)) !== '0'
+            this._floatToStr(parseFloat(this.value)) !== '0'
             // Or is a composite value.
-            || !!this._value.match(/\d+\s+\d+/)
+            || !!this.value.match(/\d+\s+\d+/)
         );
-    },
+    }
+    /**
+     * @override
+     */
+    loadMethodsData() {
+        super.loadMethodsData(...arguments);
+        const params = this._methodsParams;
+        const unit = params.unit || '';
+        if (params.saveUnit === undefined) {
+            params.saveUnit = unit;
+        }
+    }
     /**
      * @override
      */
@@ -1303,8 +1591,8 @@ const UnitUserValueWidget = UserValueWidget.extend({
                 return this._floatToStr(numValue);
             }).join(' ');
         }
-        return this._super(value, methodName);
-    },
+        return super.setValue(value, methodName);
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -1317,9 +1605,9 @@ const UnitUserValueWidget = UserValueWidget.extend({
      * @param {number} value
      * @returns {string}
      */
-    _floatToStr: function (value) {
+    _floatToStr(value) {
         return `${parseFloat(value.toFixed(5))}`;
-    },
+    }
     /**
      * Checks whether the widget contains a numeric value.
      *
@@ -1327,60 +1615,64 @@ const UnitUserValueWidget = UserValueWidget.extend({
      * @returns {Boolean} true if the value is numeric, false otherwise.
      */
     _isNumeric() {
-        const params = this._methodsParams || this.el.dataset;
+        const params = this._methodsParams;
         return !!params.unit;
-    },
-});
+    }
+}
 
-const InputUserValueWidget = UnitUserValueWidget.extend({
-    tagName: 'we-input',
-    events: {
-        'input input': '_onInputInput',
-        'blur input': '_onInputBlur',
-        'change input': '_onUserValueChange',
-        'keydown input': '_onInputKeydown',
-    },
-
+const InputUserValueWidget = UnitUserValueWidget.extend({});
+class InputUserValue extends UnitUserValue {
     /**
      * @override
      */
-    start: async function () {
-        await this._super(...arguments);
+    async setValue() {
+        await super.setValue(...arguments);
+        this._oldValue = this.value;
+    }
+    /**
+     * @override
+     */
+    _isNumeric() {
+        const isNumeric = super._isNumeric(...arguments);
+        const params = this._methodsParams;
+        return isNumeric || !!params.fakeUnit || !!params.step;
+    }
+}
+export class WeInput extends UserValueComponent {
+    static template = 'web_editor.WeInput';
+    static props = { ...UserValueComponent.props,
+        unit: { type: String, optional: true },
+        step: { type: String, optional: true },
+        saveUnit: { type: String, optional: true },
+        // withUnit: { type: String, optional: true }, // ? boolean ?
+        fakeUnit: { type: String, optional: true }, // ? boolean ?
+        hideUnit: { type: String, optional: true }, // ? boolean ?
+        extraClass: { type: String, optional: true },
+        placeholder: { type: String, optional: true },
+    };
+    static defaultProps = {
+        unit: "",
+    };
+    static components = { WeTitle };
+    static StateModel = InputUserValue;
 
-        const unit = this.el.dataset.unit;
-        this.inputEl = document.createElement('input');
-        this.inputEl.setAttribute('type', 'text');
-        this.inputEl.setAttribute('autocomplete', 'chrome-off');
-        this.inputEl.setAttribute('placeholder', this.el.getAttribute('placeholder') || '');
-        const useNumberAlignment = this._isNumeric() || !!this.el.dataset.hideUnit;
-        this.inputEl.classList.toggle('text-start', !useNumberAlignment);
-        this.inputEl.classList.toggle('text-end', useNumberAlignment);
-        this.containerEl.appendChild(this.inputEl);
-
-        const showUnit = (!!unit || !!this.el.dataset.fakeUnit) && !this.el.dataset.hideUnit;
-        if (showUnit) {
-            var unitEl = document.createElement('span');
-            const unitText = this.el.dataset.fakeUnit || unit;
-            unitEl.textContent = unitText;
-            this.containerEl.appendChild(unitEl);
-            if (unitText.length > 3) {
-                this.el.classList.add('o_we_large');
-            }
-        }
-    },
+    setup() {
+        super.setup();
+        this.inputRef = useRef("input");
+    }
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    async setValue() {
-        await this._super(...arguments);
-        this.inputEl.value = this._value;
-        this._oldValue = this._value;
-    },
+    getAllClasses() {
+        return {
+            ...super.getAllClasses(),
+            "o_we_large": (
+                !this.props.unit && !this.props.fakeUnit
+            ) || this.props.hideUnit,
+        };
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -1390,16 +1682,8 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
      * @override
      */
     _getFocusableElement() {
-        return this.inputEl;
-    },
-    /**
-     * @override
-     */
-    _isNumeric() {
-        const isNumeric = this._super(...arguments);
-        const params = this._methodsParams || this.el.dataset;
-        return isNumeric || !!params.fakeUnit || !!params.step;
-    },
+        return this.inputRef.el;
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -1409,17 +1693,17 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
      * @private
      * @param {Event} ev
      */
-    _onInputInput: function (ev) {
+    _onInputInput(ev) {
         // First record the input value as the new current value and bound it if
         // necessary (min / max params).
-        this._value = this.inputEl.value;
+        this.state.value = this.inputRef.el?.value;
 
-        const params = this._methodsParams;
+        const params = this.props;
         const hasMin = ('min' in params);
         const hasMax = ('max' in params);
         if (hasMin || hasMax) {
             // Bounding the value in [min, max] if specified.
-            const boundedValue = this._value.split(/\s+/g).map(v => {
+            const boundedValue = this.state.value.split(/\s+/g).map(v => {
                 let numValue = parseFloat(v);
                 if (isNaN(numValue)) {
                     return hasMin ? params.min : v;
@@ -1432,14 +1716,14 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
 
             // If the bounded version is different from the value, forget about
             // the old value so that we properly update the UI in any case.
-            this._oldValue = undefined;
+            this.state._oldValue = undefined;
 
             // Note: we do not change the input's value because we want the user
             // to be able to enter anything without it being auto-fixed. For
             // example, just emptying the input to enter new numbers: you don't
             // want the min value to pop up unexpectedly. The next UI update
             // will take care of showing the user that the value was bound.
-            this._value = boundedValue;
+            this.state.value = boundedValue;
         }
 
         // When the value changes as a result of a arrow up/down, the change
@@ -1451,12 +1735,12 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
             this.changeEventWillBeTriggered = true;
         }
         this._onUserValuePreview(ev);
-    },
+    }
     /**
      * @private
      * @param {Event} ev
      */
-    _onInputBlur: function (ev) {
+    _onInputBlur(ev) {
         if (this.notifyValueChangeOnBlur && !this.changeEventWillBeTriggered) {
             // In case the input value has been modified with arrow up/down, the
             // change event is not triggered (except if there has been a natural
@@ -1466,14 +1750,14 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
             this.notifyValueChangeOnBlur = false;
         }
         this.changeEventWillBeTriggered = false;
-    },
+    }
     /**
      * @private
      * @param {Event} ev
      */
-    _onInputKeydown: function (ev) {
-        const params = this._methodsParams;
-        if (!this._isNumeric()) {
+    _onInputKeydown(ev) {
+        const params = this.props;
+        if (!this.state._isNumeric()) {
             return;
         }
         switch (ev.key) {
@@ -1482,6 +1766,7 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
                 break;
             case "ArrowUp":
             case "ArrowDown": {
+                ev.preventDefault(); // Do not let it be handled as an hotkey.
                 const input = ev.currentTarget;
                 let parts = (input.value || input.placeholder).match(/-?\d+\.\d+|-?\d+/g);
                 if (!parts) {
@@ -1519,7 +1804,7 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
                     value += (increasing ? step : -step);
                     value = hasMin ? Math.max(params.min, value) : value;
                     value = hasMax ? Math.min(value, params.max) : value;
-                    return this._floatToStr(value);
+                    return this.state._floatToStr(value);
                 }).join(" ");
                 if (newValue === (input.value || input.placeholder)) {
                     return;
@@ -1539,16 +1824,17 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
                 break;
             }
         }
-    },
+    }
     /**
      * @override
      */
     _onUserValueChange() {
-        if (this._oldValue !== this._value) {
-            this._super(...arguments);
+        if (this.state._oldValue !== this.state.value) {
+            super._onUserValueChange(...arguments);
         }
     }
-});
+}
+registry.category("snippet_widgets").add("WeInput", WeInput);
 
 const MultiUserValueWidget = UserValueWidget.extend({
     tagName: 'we-multi',
@@ -1598,120 +1884,61 @@ const MultiUserValueWidget = UserValueWidget.extend({
     },
 });
 
-const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
-    className: (SelectUserValueWidget.prototype.className || '') + ' o_we_so_color_palette',
-
+export class ColorpickerUserValue extends SelectUserValue {
+    /** 
+     * The Color Combination value, which is a string ranging from 1 to 5
+     *
+     * @type {string}
+     */
+    get ccValue() {
+        return this._state.ccValue;
+    }
+    set ccValue(value) {
+        this._state.ccValue = value;
+    }
+    /**
+     * A custom color value, selected through the color picker of the color
+     * palette
+     *
+     * @type {string}
+     */
+    get customColorValue() {
+        return this._state.cutomColorValue;
+    }
+    set customColorValue(value) {
+        this._state.customColorValue = value;
+    }
     /**
      * @override
      */
-    start: async function () {
-        const _super = this._super.bind(this);
-        const args = arguments;
-
-        this.resetTabCount = 0;
-
-        // Build the select element with a custom span to hold the color preview
-        this.colorPreviewEl = document.createElement('span');
-        this.colorPreviewEl.classList.add('o_we_color_preview');
-        // todo: This div should be removed whenever possible (like when
-        // converting the uservaluewidget to owl).
-        this.colorPaletteEl = document.createElement('div');
-        this.colorPaletteEl.classList.add('o_we_color_palette_wrapper');
-        this.colorPaletteEl.style.display = 'contents';
-        this.colorPaletteColorNames = [];
-        this.options.childNodes = [this.colorPaletteEl];
-        this.options.valueEl = this.colorPreviewEl;
-        // TODO: find a better way to do this.
-        // The colorpicker widget is started before the ColorPalette component
-        // is attached to the DOM (which only happens once the user opens the
-        // picker). However, the colorNames are only set after the ColorPalette
-        // has been mounted. Initializing the colorNames through a direct call
-        // to the `getColorPickerTemplateService` so that the widget starts
-        // with possible default values is thus necessary to avoid bugs on
-        // `_computeWidgetState()`.
-        const wysiwyg = this.getParent().options.wysiwyg;
-        if (wysiwyg) {
-            const colorpickerTemplate = await wysiwyg.getColorpickerTemplate.call(wysiwyg);
-            this.colorPaletteColorNames = this._getColorNames(colorpickerTemplate);
-        }
-        return _super(...args);
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    open: function () {
-        if (this.colorPaletteWrapper) {
-            this.colorPaletteWrapper?.update({
-                selectedCC: this._ccValue,
-                selectedColor: this._value,
-                resetTabCount: ++this.resetTabCount,
-            });
-            this._super(...arguments);
-        } else {
-            // TODO review in master, this does async stuff. Maybe the open
-            // method should now be async. This is not really robust as the
-            // colorPalette can be used without it to be fully rendered but
-            // the use of the saved promise where we can should mitigate that
-            // issue.
-            this._colorPaletteRenderPromise = this._renderColorPalette();
-            this._super(...arguments);
-            this._colorPaletteRenderPromise.then(() => {
-                // Re-adjust the position of the colorpicker once the
-                // colorpalette is completely rendered (once that the
-                // colorpicker has its final height.
-                // TODO should not be needed once everything will be converted
-                // to owl.
-                this._adjustDropdownPosition();
-            });
-        }
-    },
-    /**
-     * @override
-     */
-    close: function () {
-        this._super(...arguments);
-        if (this._customColorValue && this._customColorValue !== this._value) {
-            this._value = this._customColorValue;
-            this._customColorValue = false;
-            this._onUserValueChange();
-        }
-    },
-    /**
-     * @override
-     */
-    getMethodsParams: function () {
-        return Object.assign(this._super(...arguments), {
+    getMethodsParams() {
+        return Object.assign(super.getMethodsParams(...arguments), {
             colorNames: this.colorPaletteColorNames,
         });
-    },
+    }
     /**
      * @override
      */
-    getValue: function (methodName) {
+    getValue(methodName) {
         const isCCMethod = (this._methodsParams.withCombinations === methodName);
-        let value = this._super(...arguments);
+        let value = super.getValue(...arguments);
         if (isCCMethod) {
-            value = this._ccValue;
-        } else if (typeof this._customColorValue === 'string') {
-            value = this._customColorValue;
+            value = this.ccValue;
+        } else if (typeof this.customColorValue === 'string') {
+            value = this.customColorValue;
         }
 
         // TODO strange there is some processing below for the normal value but
         // not for the preview value? To check in older stable versions as well.
-        if (typeof this._previewColor === 'string') {
-            return isCCMethod ? this._previewCC : this._previewColor;
+        if (typeof this.previewColor === 'string') {
+            return isCCMethod ? this.previewCC : this.previewColor;
         }
 
         if (value) {
             // TODO probably something to be done to handle gradients properly
             // in this code.
-            const useCssColor = this.options.dataAttributes.hasOwnProperty('useCssColor');
-            const cssCompatible = this.options.dataAttributes.hasOwnProperty('cssCompatible');
+            const useCssColor = this._data.useCssColor;
+            const cssCompatible = this._data.cssCompatible;
             if ((useCssColor || cssCompatible) && !isCSSColor(value)) {
                 if (useCssColor) {
                     value = weUtils.getCSSVariableValue(value);
@@ -1721,20 +1948,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             }
         }
         return value;
-    },
-    /**
-     * @override
-     */
-    isContainer: function () {
-        return false;
-    },
-    /**
-     * @override
-     */
-    isActive: function () {
-        return !!this._ccValue
-            || !weUtils.areCssValuesEqual(this._value, 'rgba(0, 0, 0, 0)');
-    },
+    }
     /**
      * Updates the color preview + re-render the whole color palette widget.
      *
@@ -1747,30 +1961,134 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         // available in `_ccValue`.
         const isCCMethod = (this._methodsParams.withCombinations === methodName);
         // Always call _super but don't change _value if meant for the CC value.
-        await this._super(isCCMethod ? this._value : color, methodName, ...rest);
+        await super.setValue(isCCMethod ? this.value : color, methodName, ...rest);
         if (isCCMethod) {
-            this._ccValue = color;
+            this.ccValue = color;
         }
+    }
+    /**
+     * @override
+     */
+    isActive() {
+        return !!this.ccValue
+            || !weUtils.areCssValuesEqual(this.value, 'rgba(0, 0, 0, 0)');
+    }
+    /**
+     * @override
+     */
+    close() {
+        super.close();
+        if (this._state.customColorValue && this._state.customColorValue !== this._state.value) {
+            this._state.value = this._state.customColorValue;
+            this._state.customColorValue = false;
+            this.notifyValueChange(false);
+        }
+    }
+}
 
-        await this._colorPaletteRenderPromise;
+export class WeColorpicker extends WeSelect {
+    static StateModel = ColorpickerUserValue;
+    static template = "web_editor.WeColorpicker";
+    static components = { ...WeSelect.components, ColorPalette };
+    static isContainer = false;
 
+    setup() {
+        super.setup();
+        this.getColorPickerTemplateService = useService("get_color_picker_template");
+        onWillStart(async () => {
+            // TODO: find a better way to do this.
+            // The colorpicker widget is started before the ColorPalette component
+            // is attached to the DOM (which only happens once the user opens the
+            // picker). However, the colorNames are only set after the ColorPalette
+            // has been mounted. Initializing the colorNames through a direct call
+            // to the `getColorPickerTemplateService` so that the widget starts
+            // with possible default values is thus necessary to avoid bugs on
+            // `_computeWidgetState()`.
+            const colorpickerTemplate = await this.getColorPickerTemplateService();
+            this.state.colorPaletteColorNames = this._getColorNames(colorpickerTemplate);
+        });
+        this.colorPaletteColorNames = [];
+        // Colorpalette Props.
+        this.resetTabCount = 0;
+        const options = {
+            getCustomColors: () => {
+                let result = [];
+                if (this.env.getCustomColors) {
+                    result = this.env.getCustomColors();
+                }
+                return result;
+            },
+            onCustomColorPicked: this._onCustomColorPicked.bind(this),
+            onColorPicked: this._onColorPicked.bind(this),
+            onColorHover: this._onColorHovered.bind(this),
+            onColorLeave: this._onColorLeft.bind(this),
+            onInputEnter: this._onEnterKey.bind(this),
+        };
+        if (this.props.excluded) {
+            options.excluded = this.props.excluded.replace(/ /g, '').split(',');
+        }
+        if (this.props.opacity) {
+            options.opacity = parseFloat(this.props.opacity);
+        }
+        if (this.props.withCombinations) {
+            options.withCombinations = !!this.props.withCombinations;
+        }
+        if (this.props.withGradients) {
+            options.withGradients = !!this.props.withGradients;
+        }
+        if (this.props.noTransparency) {
+            options.noTransparency = !!this.props.noTransparency;
+            options.excluded = [...(options.excluded || []), 'transparent_grayscale'];
+        }
+        if (this.props.selectedTab) {
+            options.selectedTab = this.props.selectedTab;
+        }
+        options.getTemplate = this.getColorPickerTemplateService;
+        this.options = options;
+    }
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+    /**
+     * @override
+     */
+    isContainer() {
+        return false;
+    }
+    /**
+     * @override
+     */
+    isActive() {
+        return !!this._ccValue
+            || !weUtils.areCssValuesEqual(this._value, 'rgba(0, 0, 0, 0)');
+    }
+    getPreviewAttributes() {
         const classes = weUtils.computeColorClasses(this.colorPaletteColorNames);
-        this.colorPreviewEl.classList.remove(...classes);
-        this.colorPreviewEl.style.removeProperty('background-color');
-        this.colorPreviewEl.style.removeProperty('background-image');
-        const prefix = this.options.dataAttributes.colorPrefix || 'bg';
-        if (this._ccValue) {
-            this.colorPreviewEl.style.backgroundColor = `var(--we-cp-o-cc${this._ccValue}-${prefix.replace(/-/, '')})`;
-            this.colorPreviewEl.style.backgroundImage = `var(--we-cp-o-cc${this._ccValue}-${prefix.replace(/-/, '')}-gradient)`;
+        // this.colorPreviewEl.classList.remove(...classes);
+        // this.colorPreviewEl.style.removeProperty('background-color');
+        // this.colorPreviewEl.style.removeProperty('background-image');
+        const prefix = this.props.colorPrefix || 'bg';
+        const style = {
+            "background-color": "",
+            "background-image": "",
+        };
+        const attributes = {
+            class: "",
+            style: "",
+        };
+        if (this.state.ccValue) {
+            style["background-color"] = `var(--we-cp-o-cc${this.state.ccValue}-${prefix.replace(/-/, '')})`;
+            style["background-image"] = `var(--we-cp-o-cc${this.state.ccValue}-${prefix.replace(/-/, '')}-gradient)`;
         }
-        if (this._value) {
-            this.colorPreviewEl.style.backgroundImage = 'none';
-            if (isCSSColor(this._value)) {
-                this.colorPreviewEl.style.backgroundColor = this._value;
-            } else if (weUtils.isColorGradient(this._value)) {
-                this.colorPreviewEl.style.backgroundImage = this._value;
-            } else if (weUtils.EDITOR_COLOR_CSS_VARIABLES.includes(this._value)) {
-                this.colorPreviewEl.style.backgroundColor = `var(--we-cp-${this._value}`;
+        if (this.state.value) {
+            style["background-image"] = "none";
+            if (isCSSColor(this.state.value)) {
+                style["background-color"] = this.state.value;
+            } else if (weUtils.isColorGradient(this.state.value)) {
+                style["background-image"] = this.state.value;
+            } else if (weUtils.EDITOR_COLOR_CSS_VARIABLES.includes(this.state.value)) {
+                style["background-color"] = `var(--we-cp-${this.state.value}`;
             } else {
                 // Checking if the className actually exists seems overkill but
                 // it is actually needed to prevent a crash. As an example, if a
@@ -1785,90 +2103,26 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
                 // space inside). In that case, we simply do not show any color.
                 // We could choose to handle this split-value case specifically
                 // but it was decided that this is enough for the moment.
-                const className = `bg-${this._value}`;
+                const className = `bg-${this.state.value}`;
                 if (classes.includes(className)) {
-                    this.colorPreviewEl.classList.add(className);
+                    attributes.class = className;
                 }
             }
         }
+        attributes.style = Object.entries(style).map(([k, v]) => `${k}: ${v}`).join("; ");
         // If the palette was already opened (e.g. modifying a gradient), the new DOM state must be
         // reflected in the palette, but the tab selection must not be impacted.
-        this.colorPaletteWrapper?.update({
-            selectedCC: this._ccValue,
-            selectedColor: this._value,
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @returns {Promise}
-     */
-    _renderColorPalette: async function () {
-        this.resetTabCount = 0;
-        const options = {
-            resetTabCount: this.resetTabCount,
-            selectedCC: this._ccValue,
-            selectedColor: this._value,
-            getCustomColors: () => {
-                let result = [];
-                this.trigger_up('get_custom_colors', {
-                    onSuccess: (colors) => result = colors,
-                });
-                return result;
-            },
-            onCustomColorPicked: this._onCustomColorPicked.bind(this),
-            onColorPicked: this._onColorPicked.bind(this),
-            onColorHover: this._onColorHovered.bind(this),
-            onColorLeave: this._onColorLeft.bind(this),
-            onInputEnter: this._onEnterKey.bind(this),
-        };
-        if (this.options.dataAttributes.excluded) {
-            options.excluded = this.options.dataAttributes.excluded.replace(/ /g, '').split(',');
-        }
-        if (this.options.dataAttributes.opacity) {
-            options.opacity = parseFloat(this.options.dataAttributes.opacity);
-        }
-        if (this.options.dataAttributes.withCombinations) {
-            options.withCombinations = !!this.options.dataAttributes.withCombinations;
-        }
-        if (this.options.dataAttributes.withGradients) {
-            options.withGradients = !!this.options.dataAttributes.withGradients;
-        }
-        if (this.options.dataAttributes.noTransparency) {
-            options.noTransparency = !!this.options.dataAttributes.noTransparency;
-            options.excluded = [...(options.excluded || []), 'transparent_grayscale'];
-        }
-        if (this.options.dataAttributes.selectedTab) {
-            options.selectedTab = this.options.dataAttributes.selectedTab;
-        }
-        const wysiwyg = this.getParent().options.wysiwyg;
-        if (wysiwyg) {
-            options.document = this.$target[0].ownerDocument;
-            options.getTemplate = wysiwyg.getColorpickerTemplate.bind(wysiwyg);
-        }
-        this.colorPaletteWrapper?.destroy();
-        const sidebarDocument = this.colorPaletteEl.ownerDocument;
-        if (!(this.colorPaletteEl instanceof sidebarDocument.defaultView.HTMLElement)) {
-            // When inside an iframe, the element for mounting a component must
-            // be an instance of the iframe's HTMLElement, or else target
-            // validation for attachComponent fails.
-            const newEl = sidebarDocument.importNode(this.colorPaletteEl, true);
-            this.colorPaletteEl.before(newEl);
-            this.colorPaletteEl.remove();
-            this.colorPaletteEl = newEl;
-        }
-        this.colorPaletteWrapper = await attachComponent(this, this.colorPaletteEl, ColorPalette, options);
-    },
+        // TODO: @owl-options this used to be part of setValue, now it isn't.
+        // this.options.selectedCC = this.state.ccValue;
+        // this.options.selectedColor = this.state.value;
+        return attributes;
+    }
     /**
      * @override
      */
     _shouldIgnoreClick(ev) {
-        return ev.originalEvent.__isColorpickerClick || this._super(...arguments);
-    },
+        return ev.__isColorpickerClick || super._shouldIgnoreClick(...arguments);
+    }
     /**
      * Browses the colorpicker XML template to return all possible values of
      * [data-color].
@@ -1888,7 +2142,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             }
         });
         return colorNames;
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -1901,75 +2155,67 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @private
      * @param {Object} params
      */
-    _onCustomColorPicked: function (params) {
-        this._customColorValue = params.color;
-    },
+    _onCustomColorPicked(params) {
+        this.state.customColorValue = params.color;
+    }
     /**
      * Called when a color button is clicked -> confirms the preview.
      *
      * @private
      * @param {Object} params
      */
-    _onColorPicked: function (params) {
-        this._previewCC = false;
-        this._previewColor = false;
-        this._customColorValue = false;
+    _onColorPicked(params) {
+        this.state.previewCC = false;
+        this.state.previewColor = false;
+        this.state.customColorValue = false;
 
-        this._ccValue = params.ccValue;
-        this._value = params.color;
+        this.state.ccValue = params.ccValue;
+        this.state.value = params.color;
 
         this._onUserValueChange();
-    },
+    }
     /**
      * Called when a color button is entered -> previews the background color.
      *
      * @private
      * @param {Object} params
      */
-    _onColorHovered: function (params) {
-        this._previewCC = params.ccValue;
-        this._previewColor = params.color;
+    _onColorHovered(params) {
+        this.state.previewCC = params.ccValue;
+        this.state.previewColor = params.color;
         this._onUserValuePreview();
-    },
+    }
     /**
      * Called when a color button is left -> cancels the preview.
      *
      * @private
      */
-    _onColorLeft: function () {
-        this._previewCC = false;
-        this._previewColor = false;
+    _onColorLeft() {
+        this.state.previewCC = false;
+        this.state.previewColor = false;
         this._onUserValueReset();
-    },
+    }
     /**
      * @private
      */
-    _onEnterKey: function () {
-        this.close();
-    },
-});
-
-const MediapickerUserValueWidget = UserValueWidget.extend({
-    tagName: 'we-button',
-    events: {
-        'click': '_onEditMedia',
-    },
-
+    _onEnterKey() {
+        this.state.close();
+    }
     /**
      * @override
      */
-    async start() {
-        await this._super(...arguments);
-        if (this.options.dataAttributes.buttonStyle) {
-            const iconEl = document.createElement('i');
-            iconEl.classList.add('fa', 'fa-fw', 'fa-camera');
-            $(this.containerEl).prepend(iconEl);
-        } else {
-            this.el.classList.add('o_we_no_toggle', 'o_we_bg_success');
-            this.containerEl.textContent = _t("Replace");
+    _onClick() {
+        super._onClick(...arguments);
+        if (this.state.opened) {
+            this.options.resetTabCount++;
         }
-    },
+    }
+}
 
+registry.category("snippet_widgets").add("WeColorpicker", WeColorpicker);
+
+const MediapickerUserValueWidget = UserValueWidget.extend({});
+class MediapickerUserValue extends UserValue {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -1985,9 +2231,10 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
      *   default: false
      */
     _openDialog(el, {images = false, videos = false, save}) {
-        el.src = this._value;
-        const $editable = this.$target.closest('.o_editable');
-        this.call("dialog", "add", MediaDialog, {
+        el.src = this.value || "";
+        // @TODO: @owl-options: review this line. Put it in the env maybe?
+        const editableEl = this.option.$target[0].closest('.o_editable');
+        this.env.services.dialog.add(MediaDialog, {
             noImages: !images,
             noVideos: !videos,
             noIcons: true,
@@ -1995,12 +2242,28 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
             isForBgVideo: true,
             vimeoPreviewIds: ['528686125', '430330731', '509869821', '397142251', '763851966', '486931161',
                 '499761556', '392935303', '728584384', '865314310', '511727912', '466830211'],
-            'res_model': $editable.data('oe-model'),
-            'res_id': $editable.data('oe-id'),
+            'res_model': editableEl ? editableEl.dataset.oeModel : null,
+            'res_id': editableEl ? editableEl.dataset.oeId : null,
             save,
             media: el,
         });
-    },
+    }
+    /**
+     * Opens a dialog to select a new image and sets the new src
+     */
+    _editMedia() {
+        // Need a dummy element for the media dialog to modify.
+        const tagName = this._data.mediaType === "images" ? "img" : "iframe";
+        const dummyEl = document.createElement(tagName);
+        this._openDialog(dummyEl, {
+            [this._data.mediaType]: true,
+            save: (media) => {
+                this.value = this._data.mediaType === "images"
+                    ? media.getAttribute('src')
+                    : media.querySelector(tagName).src;
+                this.notifyValueChange(false);
+        }});
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -2010,9 +2273,40 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
      * @override
      */
     async setValue() {
-        await this._super(...arguments);
-        this.el.classList.toggle('active', this.isActive());
-    },
+        await super.setValue(...arguments);
+        this._state.active = this.isActive();
+    }
+    /**
+     * @override
+     */
+    enable() {
+        this._editMedia();
+    }
+}
+
+class WeMediapicker extends UserValueComponent {
+    static template = "web_editor.WeMediapicker";
+    static StateModel = MediapickerUserValue;
+    static props = {
+        ...UserValueComponent.props,
+        mediaType: { type: String }, // One of "images", "videos"
+        buttonStyle: { type: Boolean, optional: true },
+    };
+    static components = { WeTitle };
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    getAllClasses() {
+        return {
+            ...super.getAllClasses(),
+            "o_we_no_toggle o_we_bg_success": !this.props.buttonStyle,
+        };
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -2023,90 +2317,60 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
      *
      * @private
      * @param {Event} ev
-     */
-    _onEditMedia: function (ev) {},
-});
+    */
+    _onEditMedia(ev) {
+        this.state._editMedia();
+    }
+}
+registry.category("snippet_widgets").add("WeMediapicker", WeMediapicker);
 
-const ImagepickerUserValueWidget = MediapickerUserValueWidget.extend({
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+const ImagepickerUserValueWidget = MediapickerUserValueWidget.extend({});
+const VideopickerUserValueWidget = MediapickerUserValueWidget.extend({});
 
+const DatetimePickerUserValueWidget = InputUserValueWidget.extend({});
+class WeDatetime extends WeInput {
+    static template = "web_editor.WeDatetime";
+    static props = { ...WeInput.props,
+        pickerType: { type: String, optional: true },
+    };
+    static defaultProps = {
+        pickerType: "datetime",
+    };
     /**
      * @override
      */
-    _onEditMedia(ev) {
-        // Need a dummy element for the media dialog to modify.
-        const dummyEl = document.createElement('img');
-        this._openDialog(dummyEl, {
-            images: true,
-            save: (media) => {
-                // Accessing the value directly through dummyEl.src converts the url to absolute,
-                // using getAttribute allows us to keep the url as it was inserted in the DOM
-                // which can be useful to compare it to values stored in db.
-                this._value = media.getAttribute('src');
-                this._onUserValueChange();
-            }
+    setup() {
+        super.setup();
+        this.datetimePicker = useService("datetime_picker");
+        onMounted(() => {
+            this.picker = this.datetimePicker.create({
+                target: this.inputRef.el,
+                onChange: this._onDateTimePickerChange.bind(this),
+                pickerProps: {
+                    type: this.props.pickerType,
+                    minDate: DateTime.fromObject({ year: 1000 }),
+                    maxDate: DateTime.now().plus({ year: 200 }),
+                    value: this.state.value,
+                    rounding: 0,
+                },
+            });
+            this.picker.enable();
         });
-    },
-});
 
-const VideopickerUserValueWidget = MediapickerUserValueWidget.extend({
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _onEditMedia(ev) {
-        // Need a dummy element for the media dialog to modify.
-        const dummyEl = document.createElement('iframe');
-        this._openDialog(dummyEl, {
-            videos: true,
-            save: (media) => {
-                this._value = media.querySelector('iframe').src;
-                this._onUserValueChange();
-        }});
-    },
-});
-
-const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
-    events: { // Explicitely not consider all InputUserValueWidget events
-        'blur input': '_onInputBlur',
-        'input input': '_onDateInputInput',
-    },
-    pickerType: 'datetime',
-
-    /**
-     * @override
-     */
-    init: function () {
-        this._super(...arguments);
-        this._value = DateTime.now().toUnixInteger().toString();
-    },
-    /**
-     * @override
-     */
-    start: async function () {
-        await this._super(...arguments);
-
-        this.el.classList.add('o_we_large');
-        this.inputEl.classList.add('datetimepicker-input', 'mx-0', 'text-start');
-
-        this.picker = this.call("datetime_picker", "create", {
-            target: this.inputEl,
-            onChange: this._onDateTimePickerChange.bind(this),
-            pickerProps: {
-                type: this.pickerType,
-                minDate: DateTime.fromObject({ year: 1000 }),
-                maxDate: DateTime.now().plus({ year: 200 }),
-                value: DateTime.fromSeconds(parseInt(this._value)),
-                rounding: 0,
+        useEffect(
+            (value) => {
+                let dateTime = null;
+                if (value) {
+                    dateTime = DateTime.fromSeconds(parseInt(value));
+                    if (!dateTime.isValid) {
+                        dateTime = DateTime.now();
+                    }
+                }
+                this.picker.state.value = dateTime;
             },
-        });
-        this.picker.enable();
-    },
+            () => [this.state.value]
+        );
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -2115,31 +2379,17 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     /**
      * @override
      */
-    getMethodsParams: function () {
+    getMethodsParams() {
         return Object.assign(this._super(...arguments), {
             format: this.defaultFormat,
         });
-    },
+    }
     /**
      * @override
      */
-    isPreviewed: function () {
+    isPreviewed() {
         return this._super(...arguments) || this.picker.isOpen;
-    },
-    /**
-     * @override
-     */
-    async setValue() {
-        await this._super(...arguments);
-        let dateTime = null;
-        if (this._value) {
-            dateTime = DateTime.fromSeconds(parseInt(this._value))
-            if (!dateTime.isValid) {
-                dateTime = DateTime.now();
-            }
-        }
-        this.picker.state.value = dateTime;
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -2149,14 +2399,14 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
      * @private
      * @param {Event} ev
      */
-    _onDateTimePickerChange: function (newDateTime) {
+    _onDateTimePickerChange(newDateTime) {
         if (!newDateTime || !newDateTime.isValid) {
-            this._value = '';
+            this.state.value = "";
         } else {
-            this._value = newDateTime.toUnixInteger().toString();
+            this.state.value = newDateTime.toUnixInteger().toString();
         }
         this._onUserValuePreview();
-    },
+    }
     /**
      * Handles the clear button of the datepicker.
      *
@@ -2164,16 +2414,15 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
      * @param {Event} ev
      */
     _onDateInputInput(ev) {
-        if (!this.inputEl.value) {
-            this._value = '';
+        if (!this.inputRef.el.value) {
+            this.state.value = "";
             this._onUserValuePreview(ev);
         }
-    },
-});
+    }
+}
+registry.category("snippet_widgets").add("WeDatetime", WeDatetime);
 
-const DatePickerUserValueWidget = DatetimePickerUserValueWidget.extend({
-    pickerType: 'date',
-});
+const DatePickerUserValueWidget = DatetimePickerUserValueWidget.extend({});
 
 const ListUserValueWidget = UserValueWidget.extend({
     tagName: 'we-list',
@@ -2586,38 +2835,30 @@ const ListUserValueWidget = UserValueWidget.extend({
     },
 });
 
-const RangeUserValueWidget = UnitUserValueWidget.extend({
-    tagName: 'we-range',
-    events: {
-        'change input': '_onInputChange',
-        'input input': '_onInputInput',
-    },
-
+class RangeUserValue extends UnitUserValue {
+    constructor() {
+        super(...arguments);
+        this._state.max = undefined;
+        this._state.displayValue = false;
+    }
     /**
-     * @override
+     * @type {number}
      */
-    async start() {
-        await this._super(...arguments);
-        this.input = document.createElement('input');
-        this.input.type = "range";
-        let min = this.el.dataset.min && parseFloat(this.el.dataset.min) || 0;
-        let max = this.el.dataset.max && parseFloat(this.el.dataset.max) || 100;
-        const step = this.el.dataset.step && parseFloat(this.el.dataset.step) || 1;
-        this.displayValue = this.el.dataset.displayRangeValue;
-        if (min > max) {
-            [min, max] = [max, min];
-            this.input.classList.add('o_we_inverted_range');
-        }
-        this._setInputAttributes(min, max, step);
-        this.containerEl.appendChild(this.input);
-        if (this.displayValue) {
-            this.outputEl = document.createElement('output');
-            this.outputEl.classList.add('ms-2');
-            this.containerEl.appendChild(this.outputEl);
-        }
-
-        this._onInputChange = debounce(this._onInputChange, 100);
-    },
+    get max() {
+        return this._state.max;
+    }
+    set max(value) {
+        this._state.max = value;
+    }
+    /**
+     * @type {string|number}
+     */
+    get displayValue() {
+        return this._state.displayValue;
+    }
+    set displayValue(value) {
+        this._state.displayValue = value;
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -2627,35 +2868,85 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
      * @override
      */
     loadMethodsData(validMethodNames) {
-        this._super(...arguments);
+        super.loadMethodsData(...arguments);
         for (const methodName of this._methodsNames) {
             const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
             if (possibleValues.length > 1) {
-                this._setInputAttributes(0, possibleValues.length - 1, 1);
+                this.max = possibleValues.length - 1;
                 break;
             }
         }
-    },
+    }
     /**
      * @override
      */
     async setValue(value, methodName) {
-        await this._super(...arguments);
+        await super.setValue(value, methodName);
         const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
-        const inputValue = possibleValues.length > 1 ? possibleValues.indexOf(value) : this._value;
-        this.input.value = inputValue;
-        if (this.displayValue) {
+        const inputValue = possibleValues.length > 1 ? possibleValues.indexOf(value) : this.value;
+        if (this._data.displayRangeValue) {
             this._computeDisplayValue(inputValue);
         }
-    },
+    }
     /**
      * @override
      */
     getValue(methodName) {
-        const value = this._super(...arguments);
+        const value = super.getValue(...arguments);
         const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
         return possibleValues.length > 1 ? possibleValues[+value] : value;
-    },
+    }
+    /**
+     * @private
+     * @param {string} inputValue 
+     */
+    _computeDisplayValue(inputValue) {
+        if (this.toRatio) {
+            const inputValueAsNumber = Number(inputValue);
+            const ratio = inputValueAsNumber >= 0 ? 1 + inputValueAsNumber : 1 / (1 - inputValueAsNumber);
+            this.displayValue = `${ratio.toFixed(2)}x`;
+        } else if (this._data.displayRangeValueUnit) {
+            this.displayValue = inputValue + this._data.displayRangeValueUnit;
+        } else {
+            this.displayValue = inputValue;
+        }
+    }
+}
+
+const RangeUserValueWidget = UnitUserValueWidget.extend({});
+class WeRange extends WeInput {
+    static template = "web_editor.WeRange";
+    static StateModel = RangeUserValue;
+    static props = {
+        ...WeInput.props,
+        min: { type: String, optional: true },
+        max: { type: String, optional: true },
+        step: { type: String, optional: true },
+        toRatio: { type: String, optional: true },
+        displayRangeValue: { type: String, optional: true },
+    };
+    static defaultProps = {
+        min: "0",
+        max: "100",
+        step: "1",
+        toRatio: "",
+        displayRangeValue: "",
+        unit: "",
+    };
+    setup() {
+        this._onInputChange = debounce(this._onInputChange, 100);
+        super.setup();
+        this.state.toRatio = this.props.toRatio;
+        if (Number(this.props.min) > Number(this.props.max)) {
+            this.state.max = this.props.min;
+            this.min = this.props.max;
+            this.inverted = true;
+        } else {
+            this.min = this.props.min;
+            this.state.max ||= this.props.max;
+            this.inverted = false;
+        }
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -2665,44 +2956,22 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
      * @private
      */
     _onInputChange(ev) {
-        this._value = ev.target.value;
+        this.state.value = ev.target.value;
         this._onUserValueChange(ev);
-    },
-    /**
-     * @private
-     * @param {string} inputValue 
-     */
-    _computeDisplayValue(inputValue) {
-        if (this.el.dataset.toRatio) {
-            const inputValueAsNumber = Number(inputValue);
-            const ratio = inputValueAsNumber >= 0 ? 1 + inputValueAsNumber : 1 / (1 - inputValueAsNumber);
-            this.outputEl.value = `${ratio.toFixed(2)}x`;
-        } else if (this.el.dataset.displayRangeValueUnit) {
-            this.outputEl.value = inputValue + this.el.dataset.displayRangeValueUnit;
-        } else {
-            this.outputEl.value = inputValue;
-        }
-    },
+    }
     /**
      * @private
      * @param {Event} ev
      */
     _onInputInput(ev) {
-        this._value = ev.target.value;
-        if (this.displayValue) {
-            this._computeDisplayValue(this._value);
+        this.state.value = ev.target.value;
+        if (this.props.displayRangeValue) {
+            this.state._computeDisplayValue(this.state.value);
         }
         this._onUserValuePreview(ev);
-    },
-    /**
-     * @private
-     */
-    _setInputAttributes(min, max, step) {
-        this.input.setAttribute('min', min);
-        this.input.setAttribute('max', max);
-        this.input.setAttribute('step', step);
-    },
-});
+    }
+}
+registry.category("snippet_widgets").add("WeRange", WeRange);
 
 const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
     className: (SelectUserValueWidget.prototype.className || '') + ' o_we_select_pager',
@@ -3315,7 +3584,6 @@ const userValueWidgetsRegistry = {
     'we-button-group': ButtonGroupUserValueWidget,
     'we-input': InputUserValueWidget,
     'we-multi': MultiUserValueWidget,
-    'we-colorpicker': ColorpickerUserValueWidget,
     'we-datetimepicker': DatetimePickerUserValueWidget,
     'we-datepicker': DatePickerUserValueWidget,
     'we-list': ListUserValueWidget,
@@ -3328,11 +3596,64 @@ const userValueWidgetsRegistry = {
 };
 
 /**
+ * This component is responsible for rendering the widgets. Once it's mounted
+ * it means all "UserValue" states have been created, and the templates are
+ * accessible. So it notifies the SnippetsMenu that the initial "updateUI" is
+ * ready to be done.
+ * @TODO @owl-options: If an option renders a widget **after** the initial
+ * onMounted, the SnippetsMenu will not have a computed state for its widgets.
+ * It should therefore ask for a new updateUI. This should probably be improved.
+ * To discuss.
+ */
+export class SnippetOptionComponent extends Component {
+
+    static template = "web_editor.SnippetOptionComponent";
+
+    static props = {
+        snippetOption: Object,
+        onOptionMounted: Function,
+    };
+
+    setup() {
+        this.renderContext = useState(this.props.snippetOption.instance.renderContext);
+        this.updateUI = false;
+
+        useSubEnv({
+            snippetOption: this.props.snippetOption.instance,
+            userValueNotification: this.props.snippetOption.instance.onUserValueUpdate,
+            registerUserValue: (userValue) => {
+                this.updateUI = true;
+                return this.props.snippetOption.instance.registerUserValue(userValue);
+            },
+            unregisterUserValue: (userValue) => {
+                return this.props.snippetOption.instance.unregisterUserValue(userValue);
+            },
+            renderContext: this.renderContext,
+            registerLayoutElement: (layoutElement) => {
+                return this.props.snippetOption.instance.registerLayoutElement(layoutElement);
+            },
+            $target: this.props.snippetOption.instance.$target,
+        });
+
+        onMounted(() => {
+            this.props.onOptionMounted();
+            this.updateUI = false;
+        });
+
+        onPatched(() => {
+            if (this.updateUI) {
+                this.updateUI = false;
+                this.props.onOptionMounted();
+            }
+        });
+    }
+}
+/**
  * Handles a set of options for one snippet. The registry returned by this
  * module contains the names of the specialized SnippetOptionWidget which can be
  * referenced thanks to the data-js key in the web_editor options template.
  */
-class SnippetOption {
+export class SnippetOption {
     static events = {
         'click .o_we_collapse_toggler': '_onCollapseTogglerClick',
     };
@@ -3382,32 +3703,41 @@ class SnippetOption {
      *
      * @constructor
      */
-    init(parent, $uiElements, $target, $overlay, data, options) {
+    constructor({ editor, $target, $overlay, data, options, callbacks }) {
 
-        this.$originalUIElements = $uiElements;
-
+        this.env = options.env;
         this.$target = $target;
         this.$overlay = $overlay;
         this.data = data;
         this.options = options;
+        // TODO: @owl-options better name or do it differently? It's to replace
+        // what was previously done by trigger_up's.
+        this.callbacks = callbacks;
 
         this.className = 'snippet-option-' + this.data.optionName;
 
         this.ownerDocument = this.$target[0].ownerDocument;
 
+        /** @type {UserValue[]} */
+        this._userValues = {};
+        this._layoutElements = [];
         this._userValueWidgets = [];
         this._actionQueues = new Map();
 
-        this.dialog = this.bindService("dialog");
+        this.dialog = this.env.services.dialog;
+        // Passed as props to components so bind it here, that way
+        // it will always have the same reference.
+        this.onUserValueUpdate = this._onUserValueUpdate.bind(this);
     }
     /**
-     * @override
+     * Called after the constructor. Allows the option to do async stuff
+     * before the widgets are mounted.
      */
     async willStart() {
-        return this._renderOriginalXML().then(uiFragment => {
-            this.uiFragment = uiFragment;
-        });
+        const context = await this._getRenderContext();
+        this.renderContext = reactive({...context});
     }
+    destroy() {}
     /**
      * @override
      */
@@ -3505,10 +3835,27 @@ class SnippetOption {
     /**
      * Adds the given widget to the known list of user value widgets
      *
-     * @param {UserValueWidget} widget
+     * @param {UserValue} userValue
      */
-    registerSubWidget(widget) {
-        this._userValueWidgets.push(widget);
+    registerUserValue(userValue) {
+        this._userValues[userValue.id] = (userValue);
+        userValue.loadMethodsData(this.getMethodsNames());
+    }
+    /**
+     * Removes the give user value to the known list of user values.
+     *
+     * @param {UserValue} userValue
+     */
+    unregisterUserValue(userValue) {
+        delete this._userValues[userValue.id];
+    }
+    /**
+     * Register a layout element to hide them if no component is visible
+     * within it.
+     * @params {Object} layoutElement
+     */
+    registerLayoutElement(layoutElement) {
+        this._layoutElements.push(layoutElement);
     }
 
     //--------------------------------------------------------------------------
@@ -3799,14 +4146,14 @@ class SnippetOption {
      * Closes all user value widgets.
      */
     closeWidgets() {
-        this._userValueWidgets.forEach(widget => widget.close());
+        Object.values(this._userValues).forEach(widget => widget.close());
     }
     /**
      * @param {string} name
      * @returns {UserValueWidget|null}
      */
     findWidget(name) {
-        for (const widget of this._userValueWidgets) {
+        for (const widget of Object.values(this._userValues)) {
             if (widget.getName() === name) {
                 return widget;
             }
@@ -3846,6 +4193,18 @@ class SnippetOption {
     setTarget($target) {
         this.$target = $target;
     }
+    getMethodsNames() {
+        // TODO: @owl-options either add all possible method or find a way to compute it.
+        function getMethods(obj) {
+            if (!obj || obj === Object) {
+                return [];
+            }
+            const properties = Object.getOwnPropertyNames(obj);
+            const methods = properties.filter(name => typeof obj[name] === "function");
+            return [...methods, ...getMethods(Object.getPrototypeOf(obj))];
+        }
+        return getMethods(this);
+    }
     /**
      * Updates the UI. For widget update, @see _computeWidgetState.
      *
@@ -3861,11 +4220,12 @@ class SnippetOption {
         // For each widget, for each of their option method, notify to the
         // widget the current value they should hold according to the $target's
         // current state, related for that method.
-        const proms = this._userValueWidgets.map(async widget => {
+        const useValueStates = Object.values(this._userValues);
+        const proms = useValueStates.map(async (userValue) => {
             // Update widget value (for each method)
-            const methodsNames = widget.getMethodsNames();
+            const methodsNames = userValue.getMethodsNames();
             for (const methodName of methodsNames) {
-                const params = widget.getMethodsParams(methodName);
+                const params = userValue.getMethodsParams(methodName);
 
                 let obj = this;
                 if (params.applyTo) {
@@ -3881,7 +4241,7 @@ class SnippetOption {
                     continue;
                 }
                 const normalizedValue = this._normalizeWidgetValue(value);
-                await widget.setValue(normalizedValue, methodName);
+                await userValue.setValue(normalizedValue, methodName);
             }
         });
         await Promise.all(proms);
@@ -3897,14 +4257,14 @@ class SnippetOption {
      * @returns {Promise}
      */
     async updateUIVisibility() {
-        const proms = this._userValueWidgets.map(async widget => {
-            const params = widget.getMethodsParams();
+        const proms = Object.values(this._userValues).map(async userValue => {
+            const params = userValue.getMethodsParams();
 
             let obj = this;
             if (params.applyTo) {
                 const $firstSubTarget = this.$(params.applyTo).eq(0);
                 if (!$firstSubTarget.length) {
-                    widget.toggleVisibility(false);
+                    userValue.toggleVisibility(false);
                     return;
                 }
                 obj = createPropertyProxy(this, '$target', $firstSubTarget);
@@ -3913,23 +4273,23 @@ class SnippetOption {
             // Make sure to check the visibility of all sub-widgets. For
             // simplicity and efficiency, those will be checked with main
             // widgets params.
-            const allSubWidgets = [widget];
+            const allSubValues = [userValue];
             let i = 0;
-            while (i < allSubWidgets.length) {
-                allSubWidgets.push(...allSubWidgets[i]._userValueWidgets);
+            while (i < allSubValues.length) {
+                allSubValues.push(...Object.values(allSubValues[i]._subValues));
                 i++;
             }
-            const proms = allSubWidgets.map(async widget => {
-                const show = await this._computeWidgetVisibility.call(obj, widget.getName(), params);
+            const proms = allSubValues.map(async userValue => {
+                const show = await this._computeWidgetVisibility.call(obj, userValue.getName(), params);
                 if (!show) {
-                    widget.toggleVisibility(false);
+                    userValue.toggleVisibility(false);
                     return;
                 }
 
-                const dependencies = widget.getDependencies();
+                const dependencies = userValue.getDependencies();
 
                 if (dependencies.length === 1 && dependencies[0] === 'fake') {
-                    widget.toggleVisibility(false);
+                    userValue.toggleVisibility(false);
                     return;
                 }
 
@@ -3940,46 +4300,39 @@ class SnippetOption {
                         depName = depName.substr(1);
                     }
 
-                    const widget = this._requestUserValueWidgets(depName, true)[0];
-                    if (widget) {
+                    const userValue = this._requestUserValueWidgets(depName, true)[0];
+                    if (userValue) {
                         dependenciesData.push({
-                            widget: widget,
+                            userValue: userValue,
                             toBeActive: toBeActive,
                         });
                     }
                 });
                 const dependenciesOK = !dependenciesData.length || dependenciesData.some(depData => {
-                    return (depData.widget.isActive() === depData.toBeActive);
+                    return (depData.userValue.isActive() === depData.toBeActive);
                 });
 
-                widget.toggleVisibility(dependenciesOK);
+                userValue.toggleVisibility(dependenciesOK);
             });
             return Promise.all(proms);
         });
 
-        const showUI = await this._computeVisibility();
-        this.el.classList.toggle('d-none', !showUI);
+        this.renderContext.showUI = await this._computeVisibility();
 
         await Promise.all(proms);
 
+        for (const layout of this._layoutElements) {
+            const shouldShow = Object.values(layout.userValues)
+                .some(uv => uv.show);
+            layout.state.show = shouldShow;
+        }
+
+        // TODO: @owl-options, layout should probably be hidden in template.
         // Hide layouting elements which contains only hidden widgets
         // TODO improve this, this is hackish to rely on DOM structure here.
         // Layouting elements should be handled as widgets or other.
-        for (const el of this.$el.find('we-row')) {
-            const $userValueWidget = $(el).find('> div > .o_we_user_value_widget');
-            el.classList.toggle('d-none', $userValueWidget.length && !$userValueWidget.not('.d-none').length);
-        }
-        for (const el of this.$el.find('we-collapse')) {
-            const $el = $(el);
-            el.classList.toggle('d-none', $el.children().first().hasClass('d-none'));
-            const hasNoVisibleElInCollapseMenu = !$el.children().last().children().not('.d-none').length;
-            if (hasNoVisibleElInCollapseMenu) {
-                this._toggleCollapseEl(el, false);
-            }
-            el.querySelector('.o_we_collapse_toggler').classList.toggle('d-none', hasNoVisibleElInCollapseMenu);
-        }
 
-        return !this.displayOverlayOptions && showUI;
+        return !this.displayOverlayOptions && this.renderContext.showUI;
     }
 
     //--------------------------------------------------------------------------
@@ -4157,7 +4510,6 @@ class SnippetOption {
                 if (value === "currentColor") {
                     return styles.color;
                 }
-
                 return value;
             }
             case 'selectColorCombination': {
@@ -4213,90 +4565,13 @@ class SnippetOption {
         return value;
     }
     /**
+     * Allows options to share a context to their template / components.
+     *
      * @private
-     * @param {HTMLElement} uiFragment
      * @returns {Promise}
      */
-    _renderCustomWidgets(uiFragment) {
-        return Promise.resolve();
-    }
-    /**
-     * @private
-     * @param {HTMLElement} uiFragment
-     * @returns {Promise}
-     */
-    _renderCustomXML(uiFragment) {
-        return Promise.resolve();
-    }
-    /**
-     * @private
-     * @param {jQuery} [$xml] - default to original xml content
-     * @returns {Promise}
-     */
-    async _renderOriginalXML($xml) {
-        const uiFragment = document.createDocumentFragment();
-        ($xml || this.$originalUIElements).clone(true).appendTo(uiFragment);
-
-        await this._renderCustomXML(uiFragment);
-
-        // Build layouting components first
-        for (const [itemName, build] of [['we-row', _buildRowElement], ['we-collapse', _buildCollapseElement]]) {
-            uiFragment.querySelectorAll(itemName).forEach(el => {
-                const infos = this._extraInfoFromDescriptionElement(el);
-                const groupEl = build(infos.title, infos.options);
-                el.parentNode.insertBefore(groupEl, el);
-                el.parentNode.removeChild(el);
-            });
-        }
-
-        // Load widgets
-        await this._renderXMLWidgets(uiFragment);
-        await this._renderCustomWidgets(uiFragment);
-
-        if (this.isDestroyed()) {
-            // TODO there is probably better to do. This case was found only in
-            // tours, where the editor is left before the widget are fully
-            // loaded (loadMethodsData doesn't work if the widget is destroyed).
-            return uiFragment;
-        }
-
-        const validMethodNames = [];
-        for (const key in this) {
-            validMethodNames.push(key);
-        }
-        this._userValueWidgets.forEach(widget => {
-            widget.loadMethodsData(validMethodNames);
-        });
-
-        return uiFragment;
-    }
-    /**
-     * @private
-     * @param {HTMLElement} parentEl
-     * @param {SnippetOptionWidget|UserValueWidget} parentWidget
-     * @returns {Promise}
-     */
-    _renderXMLWidgets(parentEl, parentWidget) {
-        const proms = [...parentEl.children].map(el => {
-            const widgetName = el.tagName.toLowerCase();
-            if (!userValueWidgetsRegistry.hasOwnProperty(widgetName)) {
-                return this._renderXMLWidgets(el, parentWidget);
-            }
-
-            const infos = this._extraInfoFromDescriptionElement(el);
-            const widget = registerUserValueWidget(widgetName, parentWidget || this, infos.title, infos.options, this.$target);
-            return widget.insertAfter(el).then(() => {
-                // Remove the original element afterwards as the insertion
-                // operation may move some of its inner content during
-                // widget start.
-                parentEl.removeChild(el);
-
-                if (widget.isContainer() && !widget.isDestroyed()) {
-                    return this._renderXMLWidgets(widget.el, widget);
-                }
-            });
-        });
-        return Promise.all(proms);
+    async _getRenderContext() {
+        return {};
     }
     /**
      * @private
@@ -4316,9 +4591,8 @@ class SnippetOption {
         const widgets = [];
         for (const widgetName of widgetNames) {
             let widget = null;
-            this.trigger_up('user_value_widget_request', {
+            widget = this.callbacks.requestUserValue({
                 name: widgetName,
-                onSuccess: _widget => widget = _widget,
                 allowParentOption: allowParentOption,
             });
             if (widget) {
@@ -4355,7 +4629,7 @@ class SnippetOption {
      *        - truthy if the option is enabled for preview or if leaving it (in
      *          that second case, the value is 'reset')
      *        - false if the option should be activated for good
-     * @param {UserValueWidget} widget - the widget which triggered the option change
+     * @param {UserValue} widget - the widget which triggered the option change
      * @returns {Promise}
      */
     async _select(previewMode, widget) {
@@ -4453,19 +4727,18 @@ class SnippetOption {
      * @private
      * @param {Event} ev
      */
-    async _onUserValueUpdate(ev) {
-        ev.stopPropagation();
-        const widget = ev.data.widget;
-        const previewMode = ev.data.previewMode;
+    async _onUserValueUpdate(params) {
+        const widget = params.widget;
+        const previewMode = params.previewMode;
 
         // First check if the updated widget or any of the widgets it triggers
         // will require a reload or a confirmation choice by the user. If it is
         // the case, warn the user and potentially ask if he agrees to save its
         // current changes. If not, just do nothing.
         let requiresReload = false;
-        if (!ev.data.previewMode && !ev.data.isSimulatedEvent) {
-            const linkedWidgets = this._requestUserValueWidgets(...ev.data.triggerWidgetsNames);
-            const widgets = [ev.data.widget].concat(linkedWidgets);
+        if (!params.previewMode && !params.isSimulatedEvent) {
+            const linkedWidgets = this._requestUserValueWidgets(...params.triggerWidgetsNames);
+            const widgets = [params.widget].concat(linkedWidgets);
 
             const warnMessage = await this._checkIfWidgetsUpdateNeedWarning(widgets);
             if (warnMessage) {
@@ -4492,18 +4765,20 @@ class SnippetOption {
         this._actionQueues.get(widget).push(currentAction);
 
         // Ask a mutexed snippet update according to the widget value change
-        const shouldRecordUndo = (!previewMode && !ev.data.isSimulatedEvent);
+        const shouldRecordUndo = (!previewMode && !params.isSimulatedEvent);
         if (shouldRecordUndo) {
             this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
         }
-        const useLoaderOnOptionPanel = ev.target.el.dataset.loaderOnOptionPanel;
-        this.trigger_up('snippet_edition_request', {exec: async () => {
+        // TODO: @owl-options make it go through props + params.
+        // const useLoaderOnOptionPanel = ev.target.el.dataset.loaderOnOptionPanel;
+        const useLoaderOnOptionPanel = false;
+        this.options.snippetEditionRequest({exec: async () => {
             // If some previous snippet edition in the mutex removed the target from
             // the DOM, the widget can be destroyed, in that case the edition request
             // is now useless and can be discarded.
-            if (this.isDestroyed()) {
-                return;
-            }
+            // if (this.isDestroyed()) {
+            //     return;
+            // }
             // Filter actions that are counterbalanced by earlier/later actions
             const actionQueue = this._actionQueues.get(widget).filter(({previewMode}, i, actions) => {
                 const prev = actions[i - 1];
@@ -4522,11 +4797,12 @@ class SnippetOption {
             }
             this._actionQueues.set(widget, actionQueue.filter(action => action !== currentAction));
 
-            if (ev.data.prepare) {
-                ev.data.prepare();
+            if (params.prepare) {
+                // Why must this be done before checking noPreview ?
+                params.prepare();
             }
 
-            if (previewMode && (widget.$el.closest('[data-no-preview="true"]').length)) {
+            if (previewMode && (widget.getMethodsParams().noPreview)) {
                 // TODO the flag should be fetched through widget params somehow
                 return;
             }
@@ -4547,15 +4823,14 @@ class SnippetOption {
             await new Promise(resolve => setTimeout(() => {
                 // Will update the UI of the correct widgets for all options
                 // related to the same $target/editor
-                this.trigger_up('snippet_option_update', {
-                    onSuccess: () => resolve(),
-                });
+                this.options.optionUpdate().then(resolve);
             // Set timeout needed so that the user event which triggered the
             // option can bubble first.
             }));
         }, optionsLoader: useLoaderOnOptionPanel});
 
-        if (ev.data.isSimulatedEvent) {
+        // TODO: @owl-options is this still needed?
+        if (params.isSimulatedEvent) {
             // If the user value update was simulated through a trigger, we
             // prevent triggering further widgets. This could be allowed at some
             // point but does not work correctly in complex website cases (see
@@ -4563,13 +4838,14 @@ class SnippetOption {
             return;
         }
 
+        // TODO: @owl-options support triggerWidgets.
         // Check linked widgets: force their value and simulate a notification
         // It is possible that we don't have the widget, we continue because a
         // reload might be needed. For example, change template header without
         // being on a website.page (e.g: /shop).
-        const linkedWidgets = this._requestUserValueWidgets(...ev.data.triggerWidgetsNames);
+        const linkedWidgets = this._requestUserValueWidgets(...params.triggerWidgetsNames);
         let i = 0;
-        const triggerWidgetsValues = ev.data.triggerWidgetsValues;
+        const triggerWidgetsValues = params.triggerWidgetsValues;
         for (const linkedWidget of linkedWidgets) {
             const widgetValue = triggerWidgetsValues[i];
             if (widgetValue !== undefined) {
@@ -4608,11 +4884,101 @@ class SnippetOption {
         });
     }
 }
-const registry = {};
+
+const owlRegistry = registry.category("snippet_options");
+
+// class TestOption extends SnippetOption {
+//     constructor() {
+//         super(...arguments);
+//         this.orm = serviceCached(this.env, "orm");
+//         this.listItems = ["Test1", "Test2", "Test3"];
+//         // M2O
+//         this.pageId = "";
+//         this.newPage = {};
+//         // M2m
+//         this.allGroupsByID = {};
+//         this.groupIDs = [];
+
+//         this.fetchGroups();
+//     }
+//     async fetchGroups() {
+//         const groups = await this.orm.searchRead(
+//             "res.groups",
+//             [],
+//             ["id", "name", "display_name"]
+//         );
+//         for (const group of groups) {
+//             this.allGroupsByID[group.id] = group;
+//         }
+//     }
+
+//     renderListItems(previewMode, widgetValue, params) {
+//         this.listItems = JSON.parse(widgetValue);
+//     }
+
+//     setPageTemplate(previewMode, widgetValue, params) {
+//         this.pageId = widgetValue;
+//     }
+//     createPage(previewMode, widgetValue, params) {
+//         if (!widgetValue) {
+//             return;
+//         }
+//         this.newPage = {
+//             'id': Math.floor(Math.random() * 8) + 1,
+//             'name': widgetValue,
+//             'display_name': widgetValue,
+//         };
+//         this.pageId = this.newPage.id.toString();
+//     }
+
+//     setGroups(previewMode, widgetValue, params) {
+//         this.groupIDs = JSON.parse(widgetValue).map(group => group.id);
+//     }
+//     createGroup(previewMode, widgetValue, params) {
+//         if (!widgetValue) {
+//             return;
+//         }
+//         const existing = Object.values(this.allGroupsByID).some(group => {
+//             // A group is already existing only if it was already defined (i.e.
+//             // id is a number) or if it appears in the current list of groups.
+//             return group.name.toLowerCase() === widgetValue.toLowerCase()
+//                 && (typeof(group.id) === 'number' || this.groupIDs.includes(group.id));
+//         });
+//         if (existing) {
+//             return;
+//         }
+//         const newGroupID = uniqueId("new_group_");
+//         this.allGroupsByID[newGroupID] = {
+//             'id': newGroupID,
+//             'name': widgetValue,
+//             'display_name': widgetValue,
+//         };
+//         this.groupIDs.push(newGroupID);
+//     }
+
+//     _computeWidgetState(methodName, params) {
+//         if (methodName === "renderListItems") {
+//             return JSON.stringify(this.listItems);
+//         } else if (methodName === "setPageTemplate") {
+//             return this.pageId;
+//         } else if (methodName === "setGroups") {
+//             return JSON.stringify(this.groupIDs.map(id => this.allGroupsByID[id]));
+//         }
+//         return super._computeWidgetState(...arguments);
+//     }
+// }
+// TODO: @owl-options remove this or include it in some tests?
+//registerOption("test_option", {
+//    Class: TestOption,
+//    template: "web_editor.TestSnippetOption",
+//    selector: "section",
+//});
+
+const legacyRegistry = {};
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-registry.sizing = SnippetOptionWidget.extend({
+legacyRegistry.sizing = SnippetOptionWidget.extend({
     displayOverlayOptions: true,
 
     /**
@@ -4983,7 +5349,7 @@ registry.sizing = SnippetOptionWidget.extend({
 /**
  * Handles the edition of padding-top and padding-bottom.
  */
-registry['sizing_y'] = registry.sizing.extend({
+legacyRegistry['sizing_y'] = legacyRegistry.sizing.extend({
 
     //--------------------------------------------------------------------------
     // Private
@@ -5016,7 +5382,7 @@ registry['sizing_y'] = registry.sizing.extend({
         return this.grid;
     },
 });
-registry['sizing_x'] = registry.sizing.extend({
+legacyRegistry['sizing_x'] = legacyRegistry.sizing.extend({
     /**
      * @override
      */
@@ -5128,7 +5494,7 @@ registry['sizing_x'] = registry.sizing.extend({
 /**
  * Handles the sizing in grid mode: edition of grid-{column|row}-{start|end}.
  */
-registry['sizing_grid'] = registry.sizing.extend({
+legacyRegistry['sizing_grid'] = legacyRegistry.sizing.extend({
     /**
      * @override
      */
@@ -5230,7 +5596,7 @@ registry['sizing_grid'] = registry.sizing.extend({
 /**
  * Controls box properties.
  */
-registry.Box = SnippetOptionWidget.extend({
+legacyRegistry.Box = SnippetOptionWidget.extend({
 
     //--------------------------------------------------------------------------
     // Options
@@ -5336,13 +5702,13 @@ registry.Box = SnippetOptionWidget.extend({
 
 
 
-registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
+export class LayoutColumn extends ColumnLayoutMixin(SnippetOption) {
     /**
      * @override
      */
     cleanUI() {
         this._removeGridPreview();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -5353,7 +5719,7 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
      *
      * @see this.selectClass for parameters
      */
-    selectCount: async function (previewMode, widgetValue, params) {
+    async selectCount(previewMode, widgetValue, params) {
         // Make sure the "Custom" option is read-only.
         if (widgetValue === "custom") {
             return;
@@ -5378,15 +5744,16 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             resetOuids($row[0]);
             $row.contents().unwrap().contents().unwrap();
             restoreCursor();
-            this.trigger_up('activate_snippet', {$snippet: this.$target});
+            this.env.activateSnippet(this.$target);
         } else if (previousNbColumns === 0) {
-            this.trigger_up('activate_snippet', {$snippet: this.$('> .row').children().first()});
+            this.env.activateSnippet(this.$('> .row').children().first());
         }
-        this.trigger_up('option_update', {
-            optionName: 'StepsConnector',
-            name: 'change_columns',
-        });
-    },
+        // TODO: @owl-options
+        // this.trigger_up('option_update', {
+        //     optionName: 'StepsConnector',
+        //     name: 'change_columns',
+        // });
+    }
     /**
      * Changes the layout (columns or grid).
      *
@@ -5397,7 +5764,7 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             const rowEl = this.$target[0].querySelector('.row');
             if (!rowEl || !rowEl.classList.contains('o_grid_mode')) { // Prevent toggling grid mode twice.
                 gridUtils._toggleGridMode(this.$target[0]);
-                this.trigger_up('activate_snippet', {$snippet: this.$target});
+                this.env.activateSnippet(this.$target);
             }
         } else {
             // Toggle normal mode only if grid mode was activated (as it's in
@@ -5405,14 +5772,15 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             const rowEl = this.$target[0].querySelector('.row');
             if (rowEl && rowEl.classList.contains('o_grid_mode')) {
                 this._toggleNormalMode(rowEl);
-                this.trigger_up('activate_snippet', {$snippet: this.$target});
+                this.env.activateSnippet(this.$target);
             }
         }
-        this.trigger_up('option_update', {
-            optionName: 'StepsConnector',
-            name: 'change_columns',
-        });
-    },
+        // TODO: @owl-options
+        // this.trigger_up('option_update', {
+        //     optionName: 'StepsConnector',
+        //     name: 'change_columns',
+        // });
+    }
     /**
      * Adds an image, some text or a button in the grid.
      *
@@ -5448,7 +5816,7 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             // Choose an image with the media dialog.
             let isImageSaved = false;
             await new Promise(resolve => {
-                this.call("dialog", "add", MediaDialog, {
+                this.env.services.dialog.add(MediaDialog, {
                     onlyImages: true,
                     save: imageEl => {
                         isImageSaved = true;
@@ -5521,13 +5889,13 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         if (!sameCoordinatesEl || !newColumnEl.contains(sameCoordinatesEl)) {
             newColumnEl.scrollIntoView({behavior: "smooth", block: "center"});
         }
-        this.trigger_up('activate_snippet', {$snippet: $(newColumnEl)});
-    },
+        this.env.activateSnippet($(newColumnEl));
+    }
     /**
      * @override
      */
     async selectStyle(previewMode, widgetValue, params) {
-        await this._super(previewMode, widgetValue, params);
+        await super.selectStyle(previewMode, widgetValue, params);
 
         const rowEl = this.$target[0];
         const isMobileView = weUtils.isMobileView(rowEl);
@@ -5545,7 +5913,7 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             this.removeGridPreview = this._removeGridPreview.bind(this);
             rowEl.addEventListener("animationend", this.removeGridPreview);
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -5554,7 +5922,7 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         if (methodName === 'selectCount') {
             const isMobile = this._isMobile();
             const columnEls = this.$target[0].querySelector(":scope > .row")?.children;
@@ -5567,8 +5935,8 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
                 return 'normal';
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -5593,8 +5961,8 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
                 this._areColsCustomized(this.$target[0].querySelector(":scope > .row").children,
                 isMobile);
         }
-        return this._super(...arguments);
-    },
+        return super._computeVisibility(...arguments);
+    }
     /**
      * If the number of columns requested is greater than the number of items,
      * adds new columns which are clones of the last one. If there are less
@@ -5621,14 +5989,14 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             for (let i = 0; i < itemsDelta; i++) {
                 const lastEl = rowEl.lastElementChild;
                 newItems.push(new Promise(resolve => {
-                    this.trigger_up("clone_snippet", {$snippet: $(lastEl), onSuccess: resolve});
+                    this.env.cloneSnippet($(lastEl)).then(resolve);
                 }));
             }
             await Promise.all(newItems);
         }
 
-        this.trigger_up('cover_update');
-    },
+        this.callbacks.cover();
+    }
     /**
      * Resizes the columns for the mobile or desktop view.
      *
@@ -5658,7 +6026,7 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             const hasDesktopOffset = columnEl.className.match(/(^|\s+)offset-lg-[1-9][0-1]?(?!\S)/);
             columnEl.classList.toggle("offset-lg-0", hasMobileOffset && !hasDesktopOffset);
         }
-    },
+    }
     /**
      * Toggles the normal mode.
      *
@@ -5670,12 +6038,7 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         rowEl.classList.remove('o_grid_mode');
         const columnEls = rowEl.children;
         // Removing the grid previews (if any).
-        await new Promise(resolve => {
-            this.trigger_up("clean_ui_request", {
-                targetEl: this.$target[0].closest("section"),
-                onSuccess: resolve,
-            });
-        });
+        await this.env.cleanUI(this.$target[0].closest("section"))
 
         for (const columnEl of columnEls) {
             // Reloading the images.
@@ -5689,7 +6052,7 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         rowEl.style.removeProperty('--grid-item-padding-x');
         rowEl.style.removeProperty('--grid-item-padding-y');
         rowEl.style.removeProperty("gap");
-    },
+    }
     /**
      * Removes the grid preview that was added when changing the grid gaps.
      *
@@ -5704,16 +6067,16 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         }
         delete this.removeGridPreview;
         this.options.wysiwyg.odooEditor.observerActive("removeGridPreview");
-    },
+    }
     /**
      * @returns {boolean}
      */
     _isMobile() {
         return weUtils.isMobileView(this.$target[0]);
-    },
-});
+    }
+}
 
-registry.GridColumns = SnippetOptionWidget.extend({
+legacyRegistry.GridColumns = SnippetOptionWidget.extend({
     /**
      * @override
      */
@@ -5774,7 +6137,7 @@ registry.GridColumns = SnippetOptionWidget.extend({
     },
 });
 
-registry.vAlignment = SnippetOptionWidget.extend({
+legacyRegistry.vAlignment = SnippetOptionWidget.extend({
     /**
      * @override
      */
@@ -5793,7 +6156,7 @@ registry.vAlignment = SnippetOptionWidget.extend({
 /**
  * Allows snippets to be moved before the preceding element or after the following.
  */
-registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
+legacyRegistry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutUtils, {
     displayOverlayOptions: true,
 
     /**
@@ -6031,7 +6394,7 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
 /**
  * Allows for media to be replaced.
  */
-registry.ReplaceMedia = SnippetOptionWidget.extend({
+legacyRegistry.ReplaceMedia = SnippetOptionWidget.extend({
     init: function () {
         this._super(...arguments);
         this._activateLinkTool = this._activateLinkTool.bind(this);
@@ -6242,7 +6605,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         await this._super(...arguments);
 
         if (this._filesize === undefined) {
-            this.$weight.addClass('d-none');
+            // TODO ? this.$weight.addClass('d-none');
             await this._applyOptions(false);
         }
         if (this._filesize !== undefined) {
@@ -6593,7 +6956,7 @@ const _addAnimatedShapeLabel = function addAnimatedShapeLabel(containerEl, label
 /**
  * Controls image width and quality.
  */
-registry.ImageTools = ImageHandlerOption.extend({
+legacyRegistry.ImageTools = ImageHandlerOption.extend({
     MAX_SUGGESTED_WIDTH: 1920,
 
     /**
@@ -7924,7 +8287,7 @@ registry.ImageTools = ImageHandlerOption.extend({
 /**
  * Controls background image width and quality.
  */
-registry.BackgroundOptimize = ImageHandlerOption.extend({
+legacyRegistry.BackgroundOptimize = ImageHandlerOption.extend({
     /**
      * @override
      */
@@ -8036,7 +8399,7 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
     },
 });
 
-registry.BackgroundToggler = SnippetOptionWidget.extend({
+legacyRegistry.BackgroundToggler = SnippetOptionWidget.extend({
 
     //--------------------------------------------------------------------------
     // Options
@@ -8149,7 +8512,7 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
 /**
  * Handles the edition of snippet's background image.
  */
-registry.BackgroundImage = SnippetOptionWidget.extend({
+legacyRegistry.BackgroundImage = SnippetOptionWidget.extend({
     /**
      * @override
      */
@@ -8315,7 +8678,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
 /**
  * Handles background shapes.
  */
-registry.BackgroundShape = SnippetOptionWidget.extend({
+legacyRegistry.BackgroundShape = SnippetOptionWidget.extend({
     /**
      * @override
      */
@@ -8824,7 +9187,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
 /**
  * Handles the edition of snippets' background image position.
  */
-registry.BackgroundPosition = SnippetOptionWidget.extend({
+legacyRegistry.BackgroundPosition = SnippetOptionWidget.extend({
     /**
      * @override
      */
@@ -9141,7 +9504,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
  * snippet drop (so that base snippet definition do not need to care about that)
  * and on first focus (for compatibility).
  */
-registry.ColoredLevelBackground = registry.BackgroundToggler.extend({
+legacyRegistry.ColoredLevelBackground = legacyRegistry.BackgroundToggler.extend({
     /**
      * @override
      */
@@ -9175,13 +9538,13 @@ registry.ColoredLevelBackground = registry.BackgroundToggler.extend({
     },
 });
 
-registry.ContainerWidth = SnippetOptionWidget.extend({
+class ContainerWidth extends SnippetOption {
     /**
      * @override
      */
-    cleanForSave: function () {
+    cleanForSave() {
         this.$target.removeClass('o_container_preview');
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -9190,25 +9553,34 @@ registry.ContainerWidth = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    selectClass: async function (previewMode, widgetValue, params) {
-        await this._super(...arguments);
+    async selectClass(previewMode, widgetValue, params) {
+        await super.selectClass(...arguments);
         if (previewMode === 'reset') {
             this.$target.removeClass('o_container_preview');
         } else if (previewMode) {
             this.$target.addClass('o_container_preview');
         }
-        this.trigger_up('option_update', {
-            optionName: 'StepsConnector',
-            name: 'change_container_width',
-        });
-    },
+        // TODO: @owl-options implement option_update
+        // this.trigger_up('option_update', {
+        //     optionName: 'StepsConnector',
+        //     name: 'change_container_width',
+        // });
+    }
+}
+
+owlRegistry.add("container_width", {
+    Class: ContainerWidth,
+    template: "web_editor.container_width",
+    selector: "section, .s_carousel .carousel-item, s_quotes_carousel .carousel-item",
+    exclude: "[data-snippet] :not(.oe_structure) > [data-snippet]",
+    target: "> .container, > .container-fluid, > .o_container_small",
 });
 
 /**
  * Allows to replace a text value with the name of a database record.
  * @todo replace this mechanism with real backend m2o field ?
  */
-registry.many2one = SnippetOptionWidget.extend({
+legacyRegistry.many2one = SnippetOptionWidget.extend({
     init() {
         this._super(...arguments);
         this.orm = this.bindService("orm");
@@ -9334,7 +9706,7 @@ registry.many2one = SnippetOptionWidget.extend({
 /**
  * Allows to display a warning message on outdated snippets.
  */
-registry.VersionControl = SnippetOptionWidget.extend({
+legacyRegistry.VersionControl = SnippetOptionWidget.extend({
 
     //--------------------------------------------------------------------------
     // Options
@@ -9419,7 +9791,7 @@ registry.VersionControl = SnippetOptionWidget.extend({
 /**
  * Handle the save of a snippet as a template that can be reused later
  */
-registry.SnippetSave = SnippetOptionWidget.extend({
+legacyRegistry.SnippetSave = SnippetOptionWidget.extend({
     isTopOption: true,
 
     //--------------------------------------------------------------------------
@@ -9509,7 +9881,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
 /**
  * Handles the dynamic colors for dynamic SVGs.
  */
-registry.DynamicSvg = SnippetOptionWidget.extend({
+legacyRegistry.DynamicSvg = SnippetOptionWidget.extend({
     /**
      * @override
      */
@@ -9599,7 +9971,7 @@ registry.DynamicSvg = SnippetOptionWidget.extend({
 /**
  * Allows to handle snippets with a list of items.
  */
-registry.MultipleItems = SnippetOptionWidget.extend({
+legacyRegistry.MultipleItems = SnippetOptionWidget.extend({
 
     //--------------------------------------------------------------------------
     // Options
@@ -9665,7 +10037,7 @@ registry.MultipleItems = SnippetOptionWidget.extend({
     _removeItemCallback($target) {},
 });
 
-registry.SelectTemplate = SnippetOptionWidget.extend({
+legacyRegistry.SelectTemplate = SnippetOptionWidget.extend({
     custom_events: Object.assign({}, SnippetOptionWidget.prototype.custom_events, {
         'user_value_widget_opening': '_onWidgetOpening',
     }),
@@ -9791,7 +10163,7 @@ registry.SelectTemplate = SnippetOptionWidget.extend({
  * the "CarouselHandler" option) that handles all the common parts (reordering
  * of elements).
  */
-registry.GalleryHandler = SnippetOptionWidget.extend({
+legacyRegistry.GalleryHandler = SnippetOptionWidget.extend({
 
     //--------------------------------------------------------------------------
     // Public
@@ -9857,7 +10229,7 @@ registry.GalleryHandler = SnippetOptionWidget.extend({
  * Abstract option to be extended by the Carousel and gallery options that
  * handles the update of the carousel indicator.
  */
-registry.CarouselHandler = registry.GalleryHandler.extend({
+legacyRegistry.CarouselHandler = legacyRegistry.GalleryHandler.extend({
 
     //--------------------------------------------------------------------------
     // Private
@@ -9888,28 +10260,3 @@ registry.CarouselHandler = registry.GalleryHandler.extend({
     },
 });
 
-
-export default {
-    SnippetOptionWidget: SnippetOptionWidget,
-    snippetOptionRegistry: registry,
-
-    NULL_ID: NULL_ID,
-    UserValueWidget: UserValueWidget,
-    userValueWidgetsRegistry: userValueWidgetsRegistry,
-    UnitUserValueWidget: UnitUserValueWidget,
-
-    addTitleAndAllowedAttributes: _addTitleAndAllowedAttributes,
-    buildElement: _buildElement,
-    buildTitleElement: _buildTitleElement,
-    buildRowElement: _buildRowElement,
-    buildCollapseElement: _buildCollapseElement,
-
-    addAnimatedShapeLabel: _addAnimatedShapeLabel,
-
-    // Other names for convenience
-    Class: SnippetOptionWidget,
-    registry: registry,
-    serviceCached,
-    clearServiceCache,
-    clearControlledSnippets,
-};

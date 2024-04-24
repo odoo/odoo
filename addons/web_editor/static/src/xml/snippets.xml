@@ -216,7 +216,23 @@
                     </div>
                 </t>
             </div>
-            <div class="o_we_customize_panel" t-ref="customize-panel" t-att-class="{ 'd-none': state.currentTab === constructor.tabs.BLOCKS }">
+        <div class="o_we_customize_panel" t-ref="customize-panel" t-att-class="{ 'd-none': state.currentTab === constructor.tabs.BLOCKS }">
+                <div class="d-none" id="legacyOptionsLimiter"/>
+                <t t-foreach="[...state.enabledEditorHierarchy].reverse()" t-as="editor" t-key="editor.key">
+                    <t t-set="snippetOptions" t-value="editor.getOptions()"/>
+                    <we-customizeblock-options t-if="snippetOptions.length > 0">
+                        <we-title><span>[OWL] <t t-out="editor.getName()"/></span></we-title>
+                        <t t-foreach="snippetOptions" t-as="option" t-key="option_index">
+                            <!-- todo: @owl-options this div encapsulation is
+                            there so solve a weird crash -->
+                            <div>
+                                <t t-component="option.renderingComponent"
+                                    snippetOption="option"
+                                    onOptionMounted.bind="onOptionMounted"/>
+                            </div>
+                         </t>
+                    </we-customizeblock-options>
+                </t>
                 <we-customizeblock-options id="o_we_editor_toolbar_container" t-att-class="{ 'd-none': !state.showToolbar }">
                     <we-title>
                         <span t-out="state.toolbarTitle"/>

@@ -430,7 +430,6 @@
         data-allow-delete="true" data-fakem2m="true"/>
 </template>
 
-<!-- Column count option -->
 <template id="column_count_option">
     <we-select t-att-string="not with_grid and 'Columns'" t-att-class="with_grid and 'o_grid'" data-no-preview="true" data-name="column_count_opt" t-att-data-dependencies="with_grid and 'normal_mode'">
         <we-button data-select-count="0" data-name="zero_cols_opt">None</we-button>
@@ -655,23 +654,6 @@
     </div>
 
     <!-- Grid and columns -->
-    <div data-js="layout_column"
-        data-selector="section, section.s_carousel_wrapper .carousel-item"
-        data-target="> *:has(> .row), > .s_allow_columns"
-        data-exclude=".s_masonry_block, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline">
-        <we-row>
-            <we-button-group string="Layout" data-no-preview="true">
-                <we-button data-select-layout="grid" data-name="grid_mode">Grid</we-button>
-                <we-button data-select-layout="normal" data-name="normal_mode">Cols</we-button>
-            </we-button-group>
-            <t t-call="website.column_count_option">
-                <t t-set="with_grid" t-value="True"/>
-            </t>
-        </we-row>
-        <t t-call="website.grid_layout_options">
-            <t t-set="indent" t-value="True"/>
-        </t>
-    </div>
 
     <!--  Vertical Alignment -->
     <div data-js="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references" data-target=".row">
@@ -1409,22 +1391,6 @@
             <we-button data-select-class="text-center">Centered</we-button>
             <we-button data-select-class="text-end">Right</we-button>
         </we-select>
-    </div>
-
-    <!-- Stretch section -->
-    <div data-js="ContainerWidth" data-selector="section, .s_carousel .carousel-item, s_quotes_carousel .carousel-item"
-        data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet]" data-target="> .container, > .container-fluid, > .o_container_small">
-        <we-button-group string="Content Width">
-            <we-button data-select-class="o_container_small"
-                       data-img="/website/static/src/img/snippets_options/content_width_small.svg"
-                       title="Small"/>
-            <we-button data-select-class="container"
-                       data-img="/website/static/src/img/snippets_options/content_width_normal.svg"
-                       title="Regular"/>
-            <we-button data-select-class="container-fluid"
-                       data-img="/website/static/src/img/snippets_options/content_width_full.svg"
-                       title="Full"/>
-        </we-button-group>
     </div>
 
     <!-- Scroll to next section button (only for full height) -->

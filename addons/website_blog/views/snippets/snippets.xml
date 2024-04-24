@@ -168,10 +168,6 @@
         <attribute name="data-exclude" add=".o_wblog_post_content_field > :not(div, section)" separator=","/>
     </xpath>
 
-    <!-- Hides ContainerWidth option for content in blog posts -->
-    <xpath expr="//div[@data-js='ContainerWidth']" position="attributes">
-        <attribute name="data-exclude" add="#o_wblog_post_content *" separator=","/>
-    </xpath>
 </template>
 
 <template id="blog_searchbar_input_snippet_options" inherit_id="website.searchbar_input_snippet_options" name="blog search bar snippet options">
