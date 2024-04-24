@@ -12,8 +12,10 @@ class WebsiteForm(form.WebsiteForm):
         if model.model == 'project.task':
             visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
             visitor_partner = visitor_sudo.partner_id
-            if visitor_partner:
-                values['partner_id'] = visitor_partner.id
+            if not visitor_partner:
+                visitor_partner_vals = self._prepare_visitor_partner_vals(request)
+                visitor_partner = visitor_partner.sudo().create(visitor_partner_vals)
+            values['partner_id'] = visitor_partner.id
             # When a task is created from the web editor, if the key 'user_ids' is not present, the user_ids is filled with the odoo bot. We set it to False to ensure it is not.
             values.setdefault('user_ids', False)
 
@@ -39,3 +41,12 @@ class WebsiteForm(form.WebsiteForm):
                 message_type='comment',
             )
         return res
+
+    def _prepare_visitor_partner_vals(self, request):
+        return {
+            'email': request.params.get('email_from', False),
+            'name': request.params.get('partner_name', False),
+            'phone': request.params.get('partner_phone', False),
+            'company_name': request.params.get('partner_company_name', False),
+            'lang': request.lang.code,
+        }

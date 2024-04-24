@@ -205,6 +205,10 @@ class Task(models.Model):
     partner_id = fields.Many2one('res.partner',
         string='Customer', recursive=True, tracking=True, compute='_compute_partner_id', store=True, readonly=False,
         domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", )
+    # Used to submit tasks from a contact form
+    partner_name = fields.Char(string='Customer Name', related="partner_id.name", store=True, readonly=False)
+    partner_phone = fields.Char(string='Customer Phone', related="partner_id.phone", store=True, readonly=False)
+    partner_company_name = fields.Char(string='Company Name', related="partner_id.company_name", store=True, readonly=False)
     email_cc = fields.Char(help='Email addresses that were in the CC of the incoming emails from this task and that are not currently linked to an existing customer.')
     company_id = fields.Many2one('res.company', string='Company', compute='_compute_company_id', store=True, readonly=False, recursive=True, copy=True, default=_default_company_id)
     color = fields.Integer(string='Color Index')
