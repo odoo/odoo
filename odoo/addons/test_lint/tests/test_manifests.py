@@ -54,10 +54,10 @@ class ManifestLinter(BaseCase):
             # todo installable ?
         ]
 
-        if 'countries' in manifest_data and 'l10n' not in module:
+        if len(manifest_data.get('countries', [])) == 1 and 'l10n' not in module:
             _logger.warning(
-                "Module %s specific to certain countries %s should contain `l10n` in their name.",
-                module, manifest_data['countries'])
+                "Module %r specific to one single country %r should contain `l10n` in their name.",
+                module, manifest_data['countries'][0])
 
         for key in manifest_data:
             value = manifest_data[key]
