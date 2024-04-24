@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~17.1\n"
+"Project-Id-Version: Odoo Server 17.3alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-25 14:42+0000\n"
-"PO-Revision-Date: 2024-02-25 14:42+0000\n"
+"POT-Creation-Date: 2024-04-24 08:09+0000\n"
+"PO-Revision-Date: 2024-04-24 08:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -62,6 +62,21 @@ msgid ""
 msgstr ""
 
 #. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
+msgid "<span class=\"fw-bold\">Invoicing Address:</span>"
+msgstr ""
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
+msgid "<span class=\"fw-bold\">Invoicing and Shipping Address:</span>"
+msgstr ""
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
+msgid "<span class=\"fw-bold\">Shipping Address:</span>"
+msgstr ""
+
+#. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
 msgid "<span>|</span>"
 msgstr ""
@@ -82,8 +97,7 @@ msgid "Banks"
 msgstr ""
 
 #. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "Cancelled Invoice"
 msgstr ""
 
@@ -108,28 +122,23 @@ msgid "Company ID"
 msgstr ""
 
 #. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "Credit Note"
 msgstr ""
 
 #. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
-#: code:addons/l10n_din5008/models/base_document_layout.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
 msgid "Delivery Date"
 msgstr ""
 
 #. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "Draft Invoice"
 msgstr ""
 
 #. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
-#: code:addons/l10n_din5008/models/base_document_layout.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
 msgid "Due Date"
 msgstr ""
 
@@ -159,65 +168,41 @@ msgid "IBAN:"
 msgstr ""
 
 #. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
-#: code:addons/l10n_din5008/models/base_document_layout.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
+msgid "INV/2021/12345"
+msgstr ""
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "Invoice"
 msgstr ""
 
 #. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
-#: code:addons/l10n_din5008/models/base_document_layout.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
 msgid "Invoice Date"
 msgstr ""
 
 #. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
-#: code:addons/l10n_din5008/models/base_document_layout.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
+msgid "Invoice Date Due"
+msgstr ""
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
 msgid "Invoice No."
 msgstr ""
 
 #. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
-msgid "Invoicing Address:"
-msgstr ""
-
-#. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
-#: code:addons/l10n_din5008/models/account_move.py:0
-msgid "Invoicing and Shipping Address:"
-msgstr ""
-
-#. module: l10n_din5008
-#: model:ir.model,name:l10n_din5008.model_account_move
-msgid "Journal Entry"
-msgstr ""
-
-#. module: l10n_din5008
-#: model:ir.model.fields,field_description:l10n_din5008.field_account_bank_statement_line__l10n_din5008_addresses
-#: model:ir.model.fields,field_description:l10n_din5008.field_account_move__l10n_din5008_addresses
-#: model:ir.model.fields,field_description:l10n_din5008.field_account_payment__l10n_din5008_addresses
-msgid "L10N Din5008 Addresses"
-msgstr ""
-
-#. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_account_analytic_line__l10n_din5008_document_title
-#: model:ir.model.fields,field_description:l10n_din5008.field_account_bank_statement_line__l10n_din5008_document_title
-#: model:ir.model.fields,field_description:l10n_din5008.field_account_move__l10n_din5008_document_title
-#: model:ir.model.fields,field_description:l10n_din5008.field_account_payment__l10n_din5008_document_title
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_document_title
 msgid "L10N Din5008 Document Title"
 msgstr ""
 
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_account_analytic_line__l10n_din5008_template_data
-#: model:ir.model.fields,field_description:l10n_din5008.field_account_bank_statement_line__l10n_din5008_template_data
-#: model:ir.model.fields,field_description:l10n_din5008.field_account_move__l10n_din5008_template_data
-#: model:ir.model.fields,field_description:l10n_din5008.field_account_payment__l10n_din5008_template_data
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_template_data
 msgid "L10N Din5008 Template Data"
 msgstr ""
@@ -228,9 +213,8 @@ msgid "Page: <span class=\"page\"/> of <span class=\"topage\"/>"
 msgstr ""
 
 #. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
-#: code:addons/l10n_din5008/models/base_document_layout.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
 msgid "Reference"
 msgstr ""
 
@@ -240,14 +224,7 @@ msgid "Report Footer"
 msgstr ""
 
 #. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
-msgid "Shipping Address:"
-msgstr ""
-
-#. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "Source"
 msgstr ""
 
@@ -259,6 +236,11 @@ msgstr ""
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__street2
 msgid "Street2"
+msgstr ""
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
+msgid "Tax ID"
 msgstr ""
 
 #. module: l10n_din5008
@@ -274,14 +256,12 @@ msgid ""
 msgstr ""
 
 #. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "Vendor Bill"
 msgstr ""
 
 #. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "Vendor Credit Note"
 msgstr ""
 
