@@ -80,6 +80,9 @@ class Client:
             for key, operation in service._operations.items()
         })
 
+    def bind(self, service_name, port_name):
+        return self.__obj.bind(service_name, port_name)
+
 
 class ReadOnlyMethodNamespace(SimpleNamespace):
     """A read-only attribute-based namespace not prefixed by `_` and restricted to functions.
