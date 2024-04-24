@@ -303,7 +303,7 @@ const isNodeDisplayed = (node) => {
 
 /**
  * @param {Window | Node} node
- * @param {"x" | "y"} axis
+ * @param {"x" | "y"} [axis]
  */
 const isNodeScrollable = (node, axis) => {
     if (!isElement(node)) {
@@ -1382,6 +1382,18 @@ export function isNode(object) {
  */
 export function isNodeFocusable(node) {
     return isNodeDisplayed(node) && node.matches?.(FOCUSABLE_SELECTOR);
+}
+
+/**
+ * Returns whether an element is scrollable.
+ *
+ * @param {Target} target
+ * @param {"x" | "y"} [axis]
+ * @returns {boolean}
+ */
+export function isScrollable(target, axis) {
+    const nodes = queryAll(target);
+    return nodes.length && nodes.every((node) => isNodeScrollable(node, axis));
 }
 
 /**

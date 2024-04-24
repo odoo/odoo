@@ -28,6 +28,7 @@ export {
     isEventTarget,
     isFocusable,
     isInDOM,
+    isScrollable,
     isVisible,
     matches,
     observe,
