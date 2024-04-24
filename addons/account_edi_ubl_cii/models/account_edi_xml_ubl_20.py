@@ -604,162 +604,99 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         return {
             'vat': self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:CompanyID[string-length(text()) > 5]', tree),
             'phone': self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:Telephone', tree),
-            'mail': self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:ElectronicMail', tree),
+            'email': self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:ElectronicMail', tree),
             'name': self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:Name', tree),
             'country_code': self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree),
         }
 
-    def _import_fill_invoice_form(self, invoice, tree, qty_factor):
+    def _import_fill_invoice(self, invoice, tree, qty_factor):
         logs = []
-
         if qty_factor == -1:
             logs.append(_("The invoice has been converted into a credit note and the quantities have been reverted."))
-
-        # ==== partner_id ====
-
         role = "Customer" if invoice.journal_id.type == 'sale' else "Supplier"
-        partner_vals = self._import_retrieve_partner_vals(tree, role)
-        self._import_retrieve_and_fill_partner(invoice, **partner_vals)
-
-        # ==== currency_id ====
-
-        currency_code_node = tree.find('.//{*}DocumentCurrencyCode')
-        if currency_code_node is not None:
-            currency = self.env['res.currency'].with_context(active_test=False).search([
-                ('name', '=', currency_code_node.text),
-            ], limit=1)
-            if currency:
-                if not currency.active:
-                    logs.append(_("The currency '%s' is not active.", currency.name))
-                invoice.currency_id = currency
-            else:
-                logs.append(_("Could not retrieve currency: %s. Did you enable the multicurrency option "
-                              "and activate the currency?", currency_code_node.text))
-
-        # ==== invoice_date ====
-
-        invoice_date_node = tree.find('./{*}IssueDate')
-        if invoice_date_node is not None and invoice_date_node.text:
-            invoice.invoice_date = invoice_date_node.text
-
-        # ==== invoice_date_due ====
-
-        for xpath in ('./{*}DueDate', './/{*}PaymentDueDate'):
-            invoice_date_due_node = tree.find(xpath)
-            if invoice_date_due_node is not None and invoice_date_due_node.text:
-                invoice.invoice_date_due = invoice_date_due_node.text
-                break
-
-        # ==== Bank Details ====
-
+        logs += self._import_partner(invoice, **self._import_retrieve_partner_vals(tree, role))
+        logs += self._import_currency(invoice, tree, './/{*}DocumentCurrencyCode')
+        invoice.invoice_date = tree.findtext('./{*}IssueDate')
+        invoice.invoice_date_due = self._find_value(('./cbc:DueDate', './/cbc:PaymentDueDate'), tree)
+        # ==== partner_bank_id ====
         bank_detail_nodes = tree.findall('.//{*}PaymentMeans')
         bank_details = [bank_detail_node.findtext('{*}PayeeFinancialAccount/{*}ID') for bank_detail_node in bank_detail_nodes]
-
         if bank_details:
-            self._import_retrieve_and_fill_partner_bank_details(invoice, bank_details=bank_details)
+            self._import_partner_bank(invoice, bank_details)
 
-        # ==== Reference ====
-
-        ref_node = tree.find('./{*}ID')
-        if ref_node is not None:
-            if invoice.is_sale_document(include_receipts=True) and invoice.quick_edit_mode:
-                invoice.name = ref_node.text
-            else:
-                invoice.ref = ref_node.text
-
-        # ==== Invoice origin ====
-
-        invoice_origin_node = tree.find('./{*}OrderReference/{*}ID')
-        if invoice_origin_node is not None:
-            invoice.invoice_origin = invoice_origin_node.text
-
-        # === Note/narration ====
-
-        narration = ""
-        note_node = tree.find('./{*}Note')
-        if note_node is not None and note_node.text:
-            narration += f"<p>{note_node.text}</p>"
-
-        payment_terms_node = tree.find('./{*}PaymentTerms/{*}Note')  # e.g. 'Payment within 10 days, 2% discount'
-        if payment_terms_node is not None and payment_terms_node.text:
-            narration += f"<p>{payment_terms_node.text}</p>"
-
-        invoice.narration = narration
-
-        # ==== payment_reference ====
-
-        payment_reference_node = tree.find('./{*}PaymentMeans/{*}PaymentID')
-        if payment_reference_node is not None:
-            invoice.payment_reference = payment_reference_node.text
+        # ==== ref, invoice_origin, narration, payment_reference ====
+        ref = tree.findtext('./{*}ID')
+        if ref and invoice.is_sale_document(include_receipts=True) and invoice.quick_edit_mode:
+            invoice.name = ref
+        elif ref:
+            invoice.ref = ref
+        invoice.invoice_origin = tree.findtext('./{*}OrderReference/{*}ID')
+        self._import_narration(invoice, tree, xpaths=['./{*}Note', './{*}PaymentTerms/{*}Note'])
+        invoice.payment_reference = tree.findtext('./{*}PaymentMeans/{*}PaymentID')
 
         # ==== invoice_incoterm_id ====
-
-        incoterm_code_node = tree.find('./{*}TransportExecutionTerms/{*}DeliveryTerms/{*}ID')
-        if incoterm_code_node is not None:
-            incoterm = self.env['account.incoterms'].search([('code', '=', incoterm_code_node.text)], limit=1)
+        incoterm_code = tree.findtext('./{*}TransportExecutionTerms/{*}DeliveryTerms/{*}ID')
+        if incoterm_code:
+            incoterm = self.env['account.incoterms'].search([('code', '=', incoterm_code)], limit=1)
             if incoterm:
                 invoice.invoice_incoterm_id = incoterm
 
-        # ==== invoice_line_ids: AllowanceCharge (document level) ====
-
-        logs += self._import_fill_invoice_allowance_charge(tree, invoice, qty_factor)
-
-        # ==== Prepaid amount ====
-
-        prepaid_node = tree.find('./{*}LegalMonetaryTotal/{*}PrepaidAmount')
-        logs += self._import_log_prepaid_amount(invoice, prepaid_node, qty_factor)
-
-        # ==== invoice_line_ids: InvoiceLine/CreditNoteLine ====
-
-        invoice_line_tag = 'InvoiceLine' if invoice.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1 else 'CreditNoteLine'
-        for i, invl_el in enumerate(tree.findall('./{*}' + invoice_line_tag)):
-            invoice_line = invoice.invoice_line_ids.create({'move_id': invoice.id})
-            invl_logs = self._import_fill_invoice_line_form(invl_el, invoice_line, qty_factor)
-            logs += invl_logs
-
+        # ==== Document level AllowanceCharge, Prepaid Amounts, Invoice Lines ====
+        logs += self._import_document_allowance_charges(tree, invoice, qty_factor)
+        logs += self._import_prepaid_amount(invoice, tree, './{*}LegalMonetaryTotal/{*}PrepaidAmount', qty_factor)
+        line_tag = (
+            'InvoiceLine'
+            if invoice.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1
+            else 'CreditNoteLine'
+        )
+        logs += self._import_invoice_lines(invoice, tree, './{*}' + line_tag, qty_factor)
         return logs
 
-    def _import_fill_invoice_line_form(self, tree, invoice_line, qty_factor):
-        logs = []
+    def _get_tax_nodes(self, tree):
+        tax_nodes = tree.findall('.//{*}Item/{*}ClassifiedTaxCategory/{*}Percent')
+        if not tax_nodes:
+            for elem in tree.findall('.//{*}TaxTotal'):
+                tax_nodes += elem.findall('.//{*}TaxSubtotal/{*}TaxCategory/{*}Percent')
+        return tax_nodes
 
-        # Product.
-        invoice_line.product_id = self.env['product.product']._retrieve_product(
-            default_code=self._find_value('./cac:Item/cac:SellersItemIdentification/cbc:ID', tree),
-            name=self._find_value('./cac:Item/cbc:Name', tree),
-            barcode=self._find_value("./cac:Item/cac:StandardItemIdentification/cbc:ID[@schemeID='0160']", tree),
-        )
-        # Description
-        description_node = tree.find('./{*}Item/{*}Description')
-        name_node = tree.find('./{*}Item/{*}Name')
-        if description_node is not None:
-            invoice_line.name = description_node.text
-        elif name_node is not None:
-            invoice_line.name = name_node.text  # Fallback on Name if Description is not found.
+    def _get_document_allowance_charge_xpaths(self):
+        return {
+            'root': './{*}AllowanceCharge',
+            'charge_indicator': './{*}ChargeIndicator',
+            'base_amount': './{*}BaseAmount',
+            'amount': './{*}Amount',
+            'reason': './{*}AllowanceChargeReason',
+            'percentage': './{*}MultiplierFactorNumeric',
+            'tax_percentage': './{*}TaxCategory/{*}Percent',
+        }
 
-        xpath_dict = {
-            'basis_qty': [
-                './{*}Price/{*}BaseQuantity',
-            ],
+    def _get_invoice_line_xpaths(self, invoice_line, qty_factor):
+        return {
+            'basis_qty': './cac:Price/cbc:BaseQuantity',
             'gross_price_unit': './{*}Price/{*}AllowanceCharge/{*}BaseAmount',
             'rebate': './{*}Price/{*}AllowanceCharge/{*}Amount',
             'net_price_unit': './{*}Price/{*}PriceAmount',
-            'billed_qty':  './{*}InvoicedQuantity' if invoice_line.move_id.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1 else './{*}CreditedQuantity',
+            'billed_qty': (
+                './{*}InvoicedQuantity'
+                if invoice_line.move_id.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1
+                else './{*}CreditedQuantity'
+            ),
             'allowance_charge': './/{*}AllowanceCharge',
             'allowance_charge_indicator': './{*}ChargeIndicator',
             'allowance_charge_amount': './{*}Amount',
             'allowance_charge_reason': './{*}AllowanceChargeReason',
             'allowance_charge_reason_code': './{*}AllowanceChargeReasonCode',
             'line_total_amount': './{*}LineExtensionAmount',
+            'name': [
+                './cac:Item/cbc:Description',
+                './cac:Item/cbc:Name',
+            ],
+            'product': {
+                'default_code': './cac:Item/cac:SellersItemIdentification/cbc:ID',
+                'name': './cac:Item/cbc:Name',
+                'barcode': './cac:Item/cac:StandardItemIdentification/cbc:ID[@schemeID="0160"]',
+            },
         }
-
-        # Taxes
-        inv_line_vals = self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line, qty_factor)
-        # retrieve tax nodes
-        tax_nodes = tree.findall('.//{*}Item/{*}ClassifiedTaxCategory/{*}Percent')
-        if not tax_nodes:
-            for elem in tree.findall('.//{*}TaxTotal'):
-                tax_nodes += elem.findall('.//{*}TaxSubtotal/{*}TaxCategory/{*}Percent')
-        return self._import_fill_invoice_line_taxes(tax_nodes, invoice_line, inv_line_vals, logs)
 
     def _correct_invoice_tax_amount(self, tree, invoice):
         """ The tax total may have been modified for rounding purpose, if so we should use the imported tax and not

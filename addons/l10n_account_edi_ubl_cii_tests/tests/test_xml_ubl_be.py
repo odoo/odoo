@@ -604,7 +604,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         """
         partner_vals = {
             'name': "Buyer",
-            'mail': "buyer@yahoo.com",
+            'email': "buyer@yahoo.com",
             'phone': "1111",
             'vat': "BE980737405",
         }
@@ -624,7 +624,6 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             invoice=invoice)
 
         # assert a new partner has been created
-        partner_vals['email'] = partner_vals.pop('mail')
         self.assertRecordValues(invoice.partner_id, [partner_vals])
 
     def test_import_export_invoice_xml(self):
