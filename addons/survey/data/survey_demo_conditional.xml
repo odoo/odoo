@@ -12,6 +12,7 @@
         <field name="is_time_limited" >limited</field>
         <field name="time_limit" >10.0</field>
         <field name="questions_layout">page_per_question</field>
+        <field name="lang_ids" eval="False"/>
         <field name="description" type="html">
             <p>Choose your favourite subject and show how good you are. Ready?</p></field>
         <field name="background_image" type="base64" file="survey/static/src/img/burger_quiz_background.webp"/>
@@ -454,6 +455,7 @@
         <field name="user_id" ref="base.user_demo"/>
         <field name="access_mode">public</field>
         <field name="questions_layout">one_page</field>
+        <field name="lang_ids" eval="False"/>
         <field name="description" type="html">
             <p>Please give us your preferences for this event's dinner!</p>
         </field>

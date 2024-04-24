@@ -43,6 +43,13 @@ class SurveySurvey(models.Model):
         ('custom', 'Custom'),
     ],
         string='Survey Type', required=True, default='custom')
+    lang_ids = fields.Many2many(
+        'res.lang', string='Languages',
+        default=lambda self: self.env['res.lang']._lang_get(
+            self.env.context.get('lang') or self.env['res.lang'].get_installed()[0][0]),
+        domain=lambda self: [('id', 'in', [lang.id for lang in self.env['res.lang']._get_active_by('code').values()])],
+        help="Leave the field empty to support all installed languages."
+    )
     allowed_survey_types = fields.Json(string='Allowed survey types', compute="_compute_allowed_survey_types")
     title = fields.Char('Survey Title', required=True, translate=True)
     color = fields.Integer('Color Index', default=0)
@@ -1304,3 +1311,7 @@ class SurveySurvey(models.Model):
 
         # could not generate enough codes, fill with False for remainder
         return session_codes + [False] * (code_count - len(session_codes))
+
+    def _get_supported_lang_codes(self):
+        self.ensure_one()
+        return self.lang_ids.mapped('code') or [lg[0] for lg in self.env['res.lang'].get_installed()]
