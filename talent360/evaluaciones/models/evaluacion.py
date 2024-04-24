@@ -20,28 +20,30 @@ class Evaluacion(models.Model):
 
     nombre = fields.Char(required=True)
 
-    @api.model
+    @api.depends("env.context")
     def _get_evaluation_type(self):
-        if self.env.context.get("default_tipo") == "NOM_035":
-            return [("NOM_035", "NOM-035")]
-        elif self.env.context.get("default_tipo") == "CLIMA":
-            return [("CLIMA", "Clima Laboral")]
+
+        print("Contexto:", self.env.context)
+        print("default_tipo:", self.env.context.get("default_tipo"))
+        print("default_tipo:", type(self.env.context.get("default_tipo")))
+
+        print("default_tipo:", self.env.context.get("default_tipo") == "360")
+
+        ans = None
+        if self.env.context.get("default_tipo") == "360":
+            ans = [("90", "90 Grados"), ("180", "180 Grados"),
+                   ("270", "270 Grados"), ("360", "360 Grados")]
         else:
-            return [("90", "90 Grados"), ("180", "180 Grados"), ("270", "270 Grados"), ("360", "360 Grados")]
+            ans = [("CLIMA", "Clima Organizacional"), ("NOM_035", "NOM 035")]
+
+        print("ANS:", ans)
+        return ans
 
     def get_evaluation_default_type(self):
-        return self._get_evaluation_type(self)[0][0]
-
-    def get_formview_id(self, access_uuid=None):
-        if self.tipo == "NOM_035":
-            return self.env.ref("evaluaciones.evaluacion_nom035_form").id
-        elif self.tipo in ["90", "180", "270", "360"]:
-            return self.env.ref("evaluaciones.evaluacion_360_form").id
-        else:
-            return super(Evaluacion, self).get_formview_id(access_uuid)
+        return self._get_evaluation_type()[0][0]
 
     tipo = fields.Selection(selection=_get_evaluation_type,
-                            required=True, default="get_evaluation_default_type")
+                            required=True, default=get_evaluation_default_type)
 
     descripcion = fields.Text()
     estado = fields.Selection(
@@ -77,7 +79,7 @@ class Evaluacion(models.Model):
         "usuario_id",
         string="Asignados",
     )
-    
+
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
         """
@@ -93,9 +95,11 @@ class Evaluacion(models.Model):
         """
 
         if not self:
+
             new_evaluation = self.env["evaluacion"].create({
                 "nombre": "Evaluacion Clima",
                 "descripcion": "La valuacion Clima es una herramienta de medición de clima organizacional, cuyo objetivo es conocer la percepción que tienen las personas que laboran en los centros de trabajo, sobre aquellos aspectos sociales que conforman su entorno laboral y que facilitan o dificultan su desempeño.",
+                "tipo": "CLIMA",
             })
             self = new_evaluation
 
@@ -112,7 +116,6 @@ class Evaluacion(models.Model):
 
         return self
 
-    
     def copiar_preguntas_de_template_nom035(self):
         """
         Copia preguntas de un template de evaluación predeterminado a una nueva evaluación.
@@ -129,6 +132,7 @@ class Evaluacion(models.Model):
             new_evaluation = self.env["evaluacion"].create({
                 "nombre": "NOM 035",
                 "descripcion": "La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.",
+                "tipo": "NOM_035",
             })
             self = new_evaluation
 
@@ -156,7 +160,7 @@ class Evaluacion(models.Model):
         Returns:
         dict: Un diccionario que contiene todos los parámetros necesarios para abrir la
         evaluación en una vista de formulario específica de Odoo.
-        
+
         """
 
         self = self.copiar_preguntas_de_template()
@@ -171,7 +175,7 @@ class Evaluacion(models.Model):
             "target": "current",
             "res_id": self.id,
         }
-    
+
     def evaluacion_nom035_action_form(self):
         """
         Ejecuta la acción de copiar preguntas de un template a la evaluación actual y devuelve
@@ -195,6 +199,32 @@ class Evaluacion(models.Model):
             "view_id": self.env.ref("evaluaciones.evaluacion_nom035_form").id,
             "target": "current",
             "res_id": self.id,
+        }
+
+    def evaluacion_360_action_form(self):
+        """
+        Ejecuta la acción de copiar preguntas de un template a la evaluación actual y devuelve
+        un diccionario con los parámetros necesarios para abrir una ventana de acción en Odoo.
+
+        Este método utiliza `copiar_preguntas_de_template_nom035` para asegurarse de que la evaluación
+        actual tenga las preguntas correctas, y luego configura y devuelve un diccionario con
+        los detalles para abrir esta evaluación en una vista de formulario específica.
+
+        :return: Un diccionario que contiene todos los parámetros necesarios para abrir la
+        evaluación en una vista de formulario específica de Odoo.
+
+        """
+        return {
+            "type": "ir.actions.act_window",
+            "name": "360",
+            "res_model": "evaluacion",
+            "view_mode": "form",
+            "view_id": self.env.ref("evaluaciones.evaluacion_360_form").id,
+            "target": "current",
+            "res_id": self.id,
+            "context": {
+                "default_tipo": "360"
+            }
         }
 
     def evaluacion_action_tree(self):

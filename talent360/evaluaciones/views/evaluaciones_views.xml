@@ -156,6 +156,14 @@
         <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
 
+    <record id="evaluacion_360_action_form" model="ir.actions.server">
+        <field name="name">360</field>
+        <field name="model_id" ref="model_evaluacion"/>
+        <field name="state">code</field>
+        <field name="code">action = model.evaluacion_360_action_form()</field>
+        <field name="binding_model_id" ref="model_evaluacion"/>
+    </record>
+
     <record id="evaluacion_action_tree" model="ir.actions.server">
         <field name="name">Redirigir a Evaluación Tree</field>
         <field name="model_id" ref="model_evaluacion"/>
@@ -163,5 +171,26 @@
         <field name="code">action = model.evaluacion_action_tree()</field>
         <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
+
+    <record id="evaluacion_action" model="ir.actions.act_window">
+        <field name="name">Evaluaciones</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="evaluacion_tree" model="ir.ui.view">
+        <field name="name">evaluacion.tree</field>
+        <field name="model">evaluacion</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="nombre"/>
+                <field name="descripcion"/>
+                <field name="estado"/>
+                <field name="tipo"/>
+                <field name="pregunta_ids"/>
+            </tree>
+        </field>
+    </record>
+
 
 </odoo>
