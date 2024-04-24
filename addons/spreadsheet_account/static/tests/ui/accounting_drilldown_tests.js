@@ -8,6 +8,7 @@ import {
     waitForDataSourcesLoaded,
 } from "@spreadsheet/../tests/utils/model";
 import { registry } from "@web/core/registry";
+import { doMenuAction } from "@spreadsheet/../tests/utils/ui";
 
 const { cellMenuRegistry } = spreadsheet.registries;
 
@@ -90,5 +91,45 @@ QUnit.module("spreadsheet_account > Accounting Drill down", { beforeEach }, () =
         assert.verifySteps(["drill down action"]);
         selectCell(model, "A5");
         assert.equal(root.isVisible(env), false);
+    });
+
+    QUnit.test("Create drill down domain when month date is a reference", async (assert) => {
+        const actionService = {
+            start() {
+                return {
+                    doAction(args) {},
+                };
+            },
+        };
+        registry.category("services").add("action", actionService, { force: true });
+        const model = await createModelWithDataSource({
+            serverData,
+            mockRPC: async function (route, args) {
+                if (args.method === "spreadsheet_move_line_action") {
+                    assert.step("spreadsheet_move_line_action");
+                    assert.deepEqual(args.args, [
+                        {
+                            codes: ["100"],
+                            company_id: null,
+                            include_unposted: false,
+                            date_range: {
+                                month: 2,
+                                range_type: "month",
+                                year: 2024,
+                            },
+                        },
+                    ]);
+                    return {};
+                }
+            },
+        });
+        const env = model.config.custom.env;
+        env.model = model;
+        setCellContent(model, "A1", "02/2024");
+        setCellContent(model, "A2", '=ODOO.BALANCE("100", A1)');
+        await waitForDataSourcesLoaded(model);
+        selectCell(model, "A2");
+        await doMenuAction(cellMenuRegistry, ["move_lines_see_records"], env);
+        assert.verifySteps(["spreadsheet_move_line_action"]);
     });
 });
