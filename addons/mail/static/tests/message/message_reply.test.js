@@ -1,7 +1,3 @@
-import { describe, test } from "@odoo/hoot";
-
-import { deserializeDateTime } from "@web/core/l10n/dates";
-import { getOrigin } from "@web/core/utils/urls";
 import {
     click,
     contains,
@@ -9,8 +5,12 @@ import {
     openDiscuss,
     start,
     startServer,
-} from "../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, test } from "@odoo/hoot";
 import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { deserializeDateTime } from "@web/core/l10n/dates";
+
+import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
 defineMailModels();

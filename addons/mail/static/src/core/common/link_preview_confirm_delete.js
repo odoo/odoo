@@ -1,9 +1,7 @@
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 import { Component, useState } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -20,7 +18,6 @@ export class LinkPreviewConfirmDelete extends Component {
 
     setup() {
         this.store = useState(useService("mail.store"));
-        rpc = rpcWithEnv(this.env);
     }
 
     get message() {

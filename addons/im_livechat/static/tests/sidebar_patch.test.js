@@ -1,5 +1,4 @@
 import { waitNotifications } from "@bus/../tests/bus_test_helpers";
-import { describe, test } from "@odoo/hoot";
 import {
     click,
     contains,
@@ -8,16 +7,15 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
-import { tick, mockDate } from "@odoo/hoot-mock";
-import { url } from "@web/core/utils/urls";
-import { deserializeDateTime } from "@web/core/l10n/dates";
-import { defineLivechatModels } from "./livechat_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
+import { describe, test } from "@odoo/hoot";
+import { mockDate, tick } from "@odoo/hoot-mock";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { deserializeDateTime } from "@web/core/l10n/dates";
+import { rpc } from "@web/core/network/rpc";
+import { url } from "@web/core/utils/urls";
+import { defineLivechatModels } from "./livechat_test_helpers";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -84,8 +82,7 @@ test("Do not show channel when visitor is typing", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: serverState.partnerId,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
@@ -347,8 +344,7 @@ test("Message unread counter", async () => {
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     withGuest(guestId, () =>
         rpc("/mail/message/post", {

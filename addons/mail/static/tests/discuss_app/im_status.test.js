@@ -1,4 +1,3 @@
-import { describe, test } from "@odoo/hoot";
 import {
     click,
     contains,
@@ -6,13 +5,13 @@ import {
     openDiscuss,
     start,
     startServer,
-} from "../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, test } from "@odoo/hoot";
+import { advanceTime } from "@odoo/hoot-mock";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 
 import { UPDATE_BUS_PRESENCE_DELAY } from "@bus/im_status_service";
-
 import { Store } from "@mail/core/common/store_service";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { advanceTime } from "@odoo/hoot-mock";
 
 describe.current.tags("desktop");
 defineMailModels();

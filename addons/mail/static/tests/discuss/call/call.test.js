@@ -1,8 +1,3 @@
-import { describe, test } from "@odoo/hoot";
-import { hover, queryFirst } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
-
-import { browser } from "@web/core/browser/browser";
 import {
     SIZES,
     assertSteps,
@@ -17,13 +12,18 @@ import {
     startServer,
     step,
     triggerEvents,
-} from "../../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, test } from "@odoo/hoot";
+import { hover, queryFirst } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     Command,
     mockService,
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
+
+import { browser } from "@web/core/browser/browser";
 
 describe.current.tags("desktop");
 defineMailModels();

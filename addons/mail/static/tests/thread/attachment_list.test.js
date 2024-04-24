@@ -1,6 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
-
-import { getOrigin } from "@web/core/utils/urls";
 import {
     assertSteps,
     click,
@@ -11,7 +8,10 @@ import {
     start,
     startServer,
     step,
-} from "../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
+
+import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
 defineMailModels();

@@ -20,16 +20,15 @@ import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import {
     Command,
+    getService,
     onRpc,
     patchWithCleanup,
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
-import { config as transitionConfig } from "@web/core/transition";
 
-import { rpcWithEnv } from "@mail/utils/common/misc";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { rpc } from "@web/core/network/rpc";
+import { config as transitionConfig } from "@web/core/transition";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -298,8 +297,7 @@ test("mark channel as fetched when a new message is loaded and as seen when focu
         expect(args[0][0]).toBe(channelId);
         step("rpc:channel_fetch");
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await assertSteps([
         `/mail/action - ${JSON.stringify({
@@ -347,8 +345,7 @@ test("mark channel as fetched and seen when a new message is loaded if composer 
             );
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-input");
     // simulate receiving a message
@@ -380,8 +377,7 @@ test("should scroll to bottom on receiving new message if the list is initially 
             res_id: channelId,
         });
     }
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 11 });
@@ -415,8 +411,7 @@ test("should not scroll on receiving new message if the list is initially scroll
             res_id: channelId,
         });
     }
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 11 });
@@ -532,8 +527,7 @@ test("new messages separator on receiving new message [REQUIRE FOCUS]", async ()
         ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
@@ -776,8 +770,7 @@ test("first unseen message should be directly preceded by the new message separa
             res_id: channelId,
         },
     ]);
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     // send a command that leads to receiving a transient message
     await insertText(".o-mail-Composer-input", "/who");
@@ -904,7 +897,7 @@ test("Opening thread with needaction messages should mark all messages of thread
             ["res_id", "=", channelId],
         ]);
     });
-    const env = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
     await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]);
@@ -925,7 +918,7 @@ test("Opening thread with needaction messages should mark all messages of thread
         res_partner_id: serverState.partnerId,
     });
     // simulate receiving a new needaction message
-    const [formattedMessage] = await env.services.orm.call("mail.message", "message_format", [
+    const [formattedMessage] = await getService("orm").call("mail.message", "message_format", [
         [messageId],
     ]);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
@@ -945,8 +938,7 @@ test("[technical] Opening thread without needaction messages should not mark all
             step("mark-all-messages-as-read");
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await click("button", { text: "Inbox" });
     await rpc("/mail/message/post", {
