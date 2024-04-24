@@ -72,3 +72,4 @@ from . import test_neutralize
 from . import test_config_parameter
 from . import test_ir_module_category
 from . import test_configmanager
+from . import test_num2words_ar
