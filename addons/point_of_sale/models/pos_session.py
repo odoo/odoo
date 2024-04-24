@@ -1803,36 +1803,6 @@ class PosSession(models.Model):
 
         return res
 
-    def _get_pos_fallback_nomenclature_id(self):
-        """
-        Retrieve the fallback barcode nomenclature.
-        If a fallback_nomenclature_id is specified in the config parameters,
-        it retrieves the nomenclature with that ID. Otherwise, it retrieves
-        the first non-GS1 nomenclature if the main nomenclature is GS1.
-        """
-        def convert_to_int(string_value):
-            try:
-                return int(string_value)
-            except (TypeError, ValueError, OverflowError):
-                return None
-
-        fallback_nomenclature_id = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.fallback_nomenclature_id')
-
-        if not self.company_id.nomenclature_id.is_gs1_nomenclature and not fallback_nomenclature_id:
-            return None
-
-        if fallback_nomenclature_id:
-            fallback_nomenclature_id = convert_to_int(fallback_nomenclature_id)
-            if not fallback_nomenclature_id or self.company_id.nomenclature_id.id == fallback_nomenclature_id:
-                return None
-            domain = [('id', '=', fallback_nomenclature_id)]
-        else:
-            domain = [('is_gs1_nomenclature', '=', False)]
-
-        record = self.env['barcode.nomenclature'].search(domain=domain, limit=1)
-
-        return record.id if record else None
-
     def _get_partners_domain(self):
         return []
 
