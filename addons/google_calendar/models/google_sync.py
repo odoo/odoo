@@ -134,9 +134,9 @@ class GoogleSync(models.AbstractModel):
             record.with_user(record._get_event_user())._google_insert(google_service, record._google_values())
         for record in updated_records:
             record.with_user(record._get_event_user())._google_patch(google_service, record.google_id, record._google_values())
-        for record in self.env["calendar.event"].sudo().search([("user_id", "=", False), (
-        "google_id", "=", False)]):  # Remove Event, if there is no Organize and not Google Id (Waresix)
-            record.unlink()
+        event_no_org = self.env["calendar.event"].sudo().search([("user_id", "=", False), ("google_id", "=", False)]) # Remove Event, if there is no Organize and not Google Id (Waresix)
+        if event_no_org:
+            event_no_org.unlink()
 
     def _cancel(self):
         self.with_context(dont_notify=True).write({'google_id': False})
