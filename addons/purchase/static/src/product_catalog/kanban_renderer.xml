@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="PurchaseProductCatalogKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
+        <t t-if="showNoContentHelper" position="replace">
+            <t t-if="showNoContentHelper">
+                <div class="o_view_nocontent" role="alert">
+                    <div class="o_nocontent_help">
+                        <p class="o_view_nocontent_smiling_face">
+                            No Products for the selected Vendor.
+                        </p>
+                        <p>
+                            Try removing the top filter to broaden your search
+                            <br/>
+                            <button class="mt-2 btn btn-primary" t-on-click="this.createProduct">Create a product</button>
+                        </p>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </t>
+</templates>
