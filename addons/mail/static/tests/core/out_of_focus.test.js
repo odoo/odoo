@@ -8,9 +8,10 @@ import {
     startServer,
     step,
 } from "@mail/../tests/mail_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { describe, test } from "@odoo/hoot";
 import { Command, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
+
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -32,8 +33,7 @@ test("Spaces in notifications are not encoded", async () => {
             Command.create({ partner_id: bobPartnerId }),
         ],
     });
-    const env = await start();
-    const rpc = rpcWithEnv(env);
+    await start();
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},

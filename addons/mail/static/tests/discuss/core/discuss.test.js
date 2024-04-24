@@ -1,4 +1,4 @@
-import { describe, test } from "@odoo/hoot";
+import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/mock_websocket";
 import {
     assertSteps,
     click,
@@ -9,9 +9,9 @@ import {
     start,
     startServer,
     step,
-} from "../../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/mock_websocket";
 
 describe.current.tags("desktop");
 defineMailModels();

@@ -7,23 +7,22 @@ import {
     registerArchs,
     start,
     startServer,
-    step
+    step,
 } from "@mail/../tests/mail_test_helpers";
 import { createFile, inputFiles } from "@web/../tests/utils";
 import { defineMrpModels } from "@mrp/../tests/mrp_test_helpers";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { fileUploadService } from "@web/core/file_upload/file_upload_service";
 
 describe.current.tags("desktop");
 defineMrpModels();
 
 const newArchs = {
-    "product.document,false,kanban":
-            `<kanban js_class="product_documents_kanban" create="false"><templates><t t-name="kanban-box">
+    "product.document,false,kanban": `<kanban js_class="product_documents_kanban" create="false"><templates><t t-name="kanban-box">
                     <div>
                         <field name="name"/>
                     </div>
-                </t></templates></kanban>`
+                </t></templates></kanban>`,
 };
 
 test("MRP documents kanban basic rendering", async () => {
@@ -39,11 +38,11 @@ test("MRP documents kanban basic rendering", async () => {
     ]);
     registerArchs(newArchs);
     await start();
-    await openView({ res_model: "product.document", views: [[false,"kanban"]] });
+    await openView({ res_model: "product.document", views: [[false, "kanban"]] });
     await contains(".o_mrp_documents_kanban_upload");
     await contains(".o_kanban_renderer .o_kanban_record:not(.o_kanban_ghost)", { count: 3 });
     // check control panel buttons
-    await contains(".o_cp_buttons .btn-primary", { text: "Upload"});
+    await contains(".o_cp_buttons .btn-primary", { text: "Upload" });
 });
 
 test("mrp: upload multiple files", async () => {
@@ -59,13 +58,10 @@ test("mrp: upload multiple files", async () => {
     ]);
 
     registerArchs(newArchs);
-    const env = await start();
-    await openView({ res_model: "product.document", views: [[false,"kanban"]] });
+    await start();
+    await openView({ res_model: "product.document", views: [[false, "kanban"]] });
 
-    env.services.file_upload.bus.addEventListener(
-        "FILE_UPLOAD_ADDED",
-        () => step("xhrSend")
-    );
+    getService("file_upload").bus.addEventListener("FILE_UPLOAD_ADDED", () => step("xhrSend"));
     await inputFiles(".o_control_panel_main_buttons .o_input_file", [
         await createFile({
             name: "text1.txt",
@@ -107,7 +103,7 @@ test("mrp: click on image opens attachment viewer", async () => {
                             </div>
                         </t>
                     </templates>
-                </kanban>`
+                </kanban>`,
     };
     const pyEnv = await startServer();
     const irAttachment = pyEnv["ir.attachment"].create({
@@ -122,7 +118,7 @@ test("mrp: click on image opens attachment viewer", async () => {
 
     registerArchs(newArchs);
     await start();
-    await openView({ res_model: "product.document", views: [[false,"kanban"]] });
+    await openView({ res_model: "product.document", views: [[false, "kanban"]] });
 
     await click(".o_kanban_previewer");
     await contains(".o-FileViewer");
@@ -144,7 +140,7 @@ test("mrp: upload progress bars", async () => {
 
     registerArchs(newArchs);
     await start();
-    await openView({res_model: "product.document", views: [[false, "kanban"]]});
+    await openView({ res_model: "product.document", views: [[false, "kanban"]] });
 
     let xhr;
     patchWithCleanup(fileUploadService, {

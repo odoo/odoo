@@ -1,7 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import {
     assertSteps,
     click,
@@ -13,8 +9,10 @@ import {
     start,
     startServer,
     step,
-} from "../mail_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
+
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -271,8 +269,7 @@ test("No crash on receiving link preview of non-known message", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     rpc("/mail/link_preview", { message_id: messageId });
     rpc("/mail/link_preview/hide", { link_preview_ids: [linkPreviewId] });

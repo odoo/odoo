@@ -2,13 +2,11 @@ import { patch } from "@web/core/utils/patch";
 import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 
-import { rpcWithEnv } from "@mail/utils/common/misc";
-let rpc;
+import { rpc } from "@web/core/network/rpc";
 
 patch(Thread.prototype, {
     setup() {
         super.setup();
-        rpc = rpcWithEnv(this.env);
 
         /** @type {'loaded'|'loading'|'error'|undefined} */
         this.pinnedMessagesState = undefined;

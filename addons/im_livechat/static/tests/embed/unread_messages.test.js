@@ -1,12 +1,8 @@
 import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
-import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
-import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
-import { describe, test } from "@odoo/hoot";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import {
     assertSteps,
     click,
@@ -19,11 +15,12 @@ import {
     step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { Command, mountWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { describe, test } from "@odoo/hoot";
+import { Command, mountWithCleanup, serverState, withUser } from "@web/../tests/web_test_helpers";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
+import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -52,10 +49,9 @@ test("new message from operator displays unread counter", async () => {
         }
     });
     const userId = serverState.userId;
-    const env = await start({
+    await start({
         authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
     });
-    rpc = rpcWithEnv(env);
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {
@@ -86,8 +82,7 @@ test("focus on unread livechat marks it as read", async () => {
         }
     });
     const userId = serverState.userId;
-    const env = await start({ authenticateAs: false });
-    rpc = rpcWithEnv(env);
+    await start({ authenticateAs: false });
     await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");

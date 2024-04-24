@@ -1,4 +1,3 @@
-import { describe, test } from "@odoo/hoot";
 import {
     click,
     contains,
@@ -7,12 +6,11 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { describe, test } from "@odoo/hoot";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { defineLivechatModels } from "./livechat_test_helpers";
 
-import { rpcWithEnv } from "@mail/utils/common/misc";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -87,8 +85,7 @@ test("Display livechat custom name in typing status", async () => {
         channel_type: "livechat",
         livechat_operator_id: partnerId,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {

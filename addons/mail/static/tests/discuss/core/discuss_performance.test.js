@@ -1,4 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
 import {
     assertSteps,
     contains,
@@ -11,11 +10,12 @@ import {
     startServer,
     step,
     triggerHotkey,
-} from "../../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { Composer } from "@mail/core/common/composer";
+import { Message } from "@mail/core/common/message";
+import { describe, expect, test } from "@odoo/hoot";
 import { onWillRender } from "@odoo/owl";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { Message } from "@mail/core/common/message";
-import { Composer } from "@mail/core/common/composer";
 
 describe.current.tags("desktop");
 defineMailModels();

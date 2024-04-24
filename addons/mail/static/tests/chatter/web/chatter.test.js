@@ -17,8 +17,7 @@ import {
     step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
-import { describe, expect, getFixture, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, advanceTime } from "@odoo/hoot-mock";
 import {
     defineActions,
@@ -27,6 +26,8 @@ import {
     onRpc,
     serverState,
 } from "@web/../tests/web_test_helpers";
+
+import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -241,9 +242,6 @@ test("chatter: drop attachment should refresh thread data with hasParentReloadOn
         }
     });
     await start();
-    const target = getFixture();
-    target.classList.add("o_web_client");
-
     await openFormView("res.partner", partnerId, {
         arch: `
             <form>

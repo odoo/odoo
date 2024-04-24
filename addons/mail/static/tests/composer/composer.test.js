@@ -18,16 +18,18 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { Composer } from "@mail/core/common/composer";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { Deferred, tick } from "@odoo/hoot-mock";
 import {
     Command,
+    getService,
     onRpc,
     patchWithCleanup,
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
+
+import { Composer } from "@mail/core/common/composer";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -450,10 +452,10 @@ test("Can handle leave notification from unknown member", async () => {
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const env = await start();
+    await start();
     await openDiscuss(channelId);
     await withUser(userId, () =>
-        env.services.orm.call("discuss.channel", "action_unfollow", [channelId])
+        getService("orm").call("discuss.channel", "action_unfollow", [channelId])
     );
     await click("button[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { text: "Mitchell Admin" });

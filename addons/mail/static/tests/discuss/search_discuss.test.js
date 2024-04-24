@@ -1,6 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
-
-import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_hook";
 import {
     click,
     contains,
@@ -12,9 +9,12 @@ import {
     start,
     startServer,
     triggerHotkey,
-} from "../mail_test_helpers";
-import { serverState } from "@web/../tests/web_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
+import { serverState } from "@web/../tests/web_test_helpers";
+
+import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_hook";
 
 describe.current.tags("desktop");
 defineMailModels();

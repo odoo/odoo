@@ -1,6 +1,3 @@
-import { describe, test } from "@odoo/hoot";
-
-import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
 import {
     click,
     contains,
@@ -9,9 +6,12 @@ import {
     openFormView,
     start,
     startServer,
-} from "../../mail_test_helpers";
-import { onRpc } from "@web/../tests/web_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, test } from "@odoo/hoot";
 import { Deferred, advanceTime } from "@odoo/hoot-mock";
+import { onRpc } from "@web/../tests/web_test_helpers";
+
+import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
 
 describe.current.tags("desktop");
 defineMailModels();

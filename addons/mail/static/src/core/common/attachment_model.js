@@ -1,9 +1,9 @@
 import { Record } from "@mail/core/common/record";
-import { assignDefined, rpcWithEnv } from "@mail/utils/common/misc";
+import { assignDefined } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 
 import { FileModelMixin } from "@web/core/file_viewer/file_model";
 
-let rpc;
 export class Attachment extends FileModelMixin(Record) {
     static id = "id";
     /** @type {Object.<number, import("models").Attachment>} */
@@ -17,7 +17,6 @@ export class Attachment extends FileModelMixin(Record) {
         return super.insert(...arguments);
     }
     static new(data) {
-        rpc = rpcWithEnv(this.store.env);
         /** @type {import("models").Attachment} */
         const attachment = super.new(data);
         Record.onChange(attachment, ["extension", "name"], () => {
