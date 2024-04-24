@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+import math
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -296,6 +297,7 @@ class AccountMove(models.Model):
                         'tax_amount': sign * tax_amount,
                         'base_amount_currency': sign * tax_res['base'],
                         'tax_amount_currency': sign * tax_res['amount'],
+                        'tax_vals': tax_res,
                     })
             return invoice_lines_tax_values_dict
 
@@ -308,6 +310,59 @@ class AccountMove(models.Model):
             invoice_lines_tax_values_dict = compute_invoice_lines_tax_values_dict_from_compute_all(invoice_lines)
         else:
             invoice_lines_tax_values_dict = compute_invoice_lines_tax_values_dict_from_tax_details(invoice_lines)
+
+        # For compute_mode 'tax_details' the values in invoice_lines_tax_values_dict are already rounded
+        # (in the SQL query)
+        if compute_mode == 'compute_all' and self.env.company.tax_calculation_rounding_method == 'round_globally':
+            # Aggregate all amounts according the tax lines grouping key.
+            comp_currency = self.env.company.currency_id
+            amount_per_tax_repartition_line_id = defaultdict(lambda: {
+                'tax_amount': 0.0,
+                'tax_amount_currency': 0.0,
+                'tax_values_list': [],
+            })
+            for line, tax_values_list in invoice_lines_tax_values_dict.items():
+                currency = line.currency_id or comp_currency
+                for tax_values in tax_values_list:
+                    grouping_key = frozendict(self._get_tax_grouping_key_from_base_line(line, tax_values['tax_vals']))
+                    total_amounts = amount_per_tax_repartition_line_id[grouping_key]
+                    total_amounts['tax_amount_currency'] += tax_values['tax_amount_currency']
+                    total_amounts['tax_amount'] += tax_values['tax_amount']
+                    total_amounts['tax_values_list'].append(tax_values)
+
+            # Round them like what the creation of tax lines would do.
+            for key, values in amount_per_tax_repartition_line_id.items():
+                currency = self.env['res.currency'].browse(key['currency_id']) or comp_currency
+                values['tax_amount_rounded'] = comp_currency.round(values['tax_amount'])
+                values['tax_amount_currency_rounded'] = currency.round(values['tax_amount_currency'])
+
+            # Dispatch the amount accross the tax values.
+            for key, values in amount_per_tax_repartition_line_id.items():
+                foreign_currency = self.env['res.currency'].browse(key['currency_id']) or comp_currency
+                for currency, amount_field in ((comp_currency, 'tax_amount'), (foreign_currency, 'tax_amount_currency')):
+                    raw_value = values[amount_field]
+                    rounded_value = values[f'{amount_field}_rounded']
+                    diff = rounded_value - raw_value
+                    abs_diff = abs(diff)
+                    diff_sign = -1 if diff < 0 else 1
+                    tax_values_list = values['tax_values_list']
+                    nb_error = math.ceil(abs_diff / currency.rounding)
+                    nb_cents_per_tax_values = math.floor(nb_error / len(tax_values_list))
+                    nb_extra_cent = nb_error % len(tax_values_list)
+
+                    for tax_values in tax_values_list:
+                        if not abs_diff:
+                            break
+
+                        nb_amount_curr_cent = nb_cents_per_tax_values
+                        if nb_extra_cent:
+                            nb_amount_curr_cent += 1
+                            nb_extra_cent -= 1
+
+                        # We can have more than one cent to distribute on a single tax_values.
+                        abs_delta_to_add = min(abs_diff, currency.rounding * nb_amount_curr_cent)
+                        tax_values[amount_field] += diff_sign * abs_delta_to_add
+                        abs_diff -= abs_delta_to_add
 
         grouping_key_generator = grouping_key_generator or default_grouping_key_generator
 
