@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="web_editor.SnippetOptionComponent">
+    <we-customizeblock-option t-att-class="{'d-none': !renderContext.showUI}">
+        <t t-call="{{props.snippetOption.template}}"/>
+    </we-customizeblock-option>
+</t>
+<t t-name="web_editor.TestSnippetOption">
+    <WeButton selectClass="'test_class'">Test Class</WeButton>
+</t>
+<t t-name="web_editor.WeButton">
+    <we-button t-ref="text-content"
+               t-on-mouseenter="this._onUserValuePreview"
+               t-on-mouseleave="this._onUserValueReset" 
+               t-on-click="this._onButtonClick" class="o_we_user_value_widget" 
+               t-att-class="getAllClasses()">
+            <div>
+                <t t-if="this.img">
+                    <img t-att-src="this.img"/>
+                </t>
+                <t t-if="this.props.icon">
+                    <i t-attf-class="fa {{ this.props.icon }}"/>
+                </t>
+                <t t-if="this.svg">
+                    <t t-out="this.svg"/>
+                </t>
+                <t t-slot="default"/>
+            </div>
+    </we-button>
+</t>
