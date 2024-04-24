@@ -309,7 +309,6 @@ class StockMove(models.Model):
                         product = product.browse(values['product_id'])
                     product_id_to_product[values['product_id']] = product
                     values['location_dest_id'] = mo.production_location_id.id
-                    values['price_unit'] = product.standard_price
                     if not values.get('location_id'):
                         values['location_id'] = mo.location_src_id.id
                     continue

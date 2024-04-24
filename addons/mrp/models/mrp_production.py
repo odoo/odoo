@@ -1192,7 +1192,6 @@ class MrpProduction(models.Model):
             'raw_material_production_id': self.id,
             'company_id': self.company_id.id,
             'operation_id': operation_id,
-            'price_unit': product_id.standard_price,
             'procure_method': 'make_to_stock',
             'origin': self._get_origin(),
             'state': 'draft',
