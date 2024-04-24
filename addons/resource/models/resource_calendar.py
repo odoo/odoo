@@ -470,8 +470,11 @@ class ResourceCalendar(models.Model):
             work_intervals = [start_dt] + list(chain.from_iterable(work_intervals)) + [end_dt]
             # put it back to UTC
             work_intervals = list(map(lambda dt: dt.astimezone(utc), work_intervals))
-            # pick groups of two
-            work_intervals = list(zip(work_intervals[0::2], work_intervals[1::2]))
+            # pick groups of two if the interval is more than one minute
+            work_intervals = [
+                interval for interval in zip(work_intervals[0::2], work_intervals[1::2])
+                if (interval[1] - interval[0]).total_seconds() > 60
+            ]
             result[resource.id] = work_intervals
         return result
 
