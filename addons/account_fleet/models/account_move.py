@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, _
+from odoo import fields, models, _
 
 
 class AccountMove(models.Model):
@@ -13,10 +13,12 @@ class AccountMove(models.Model):
 
         val_list = []
         log_list = []
-        not_posted_before = self.filtered(lambda r: not r.posted_before)
         posted = super()._post(soft)  # We need the move name to be set, but we also need to know which move are posted for the first time.
-        for line in (not_posted_before & posted).line_ids.filtered(
-            lambda ml: ml.vehicle_id and ml.move_id.move_type == 'in_invoice' and ml.display_type == "product"):
+        for line in posted.line_ids:
+            if not line.vehicle_id or line.vehicle_log_service_ids\
+                    or line.move_id.move_type != 'in_invoice'\
+                    or line.display_type != 'product':
+                continue
             val = line._prepare_fleet_log_service()
             log = _('Service Vendor Bill: %s', line.move_id._get_html_link())
             val_list.append(val)
@@ -33,6 +35,8 @@ class AccountMoveLine(models.Model):
     vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle', index='btree_not_null')
     # used to decide whether the vehicle_id field is editable
     need_vehicle = fields.Boolean(compute='_compute_need_vehicle')
+    vehicle_log_service_ids = fields.One2many(export_string_translation=False,
+        comodel_name='fleet.vehicle.log.services', inverse_name='account_move_line_id')  # One2one
 
     def _compute_need_vehicle(self):
         self.need_vehicle = False
@@ -47,11 +51,11 @@ class AccountMoveLine(models.Model):
             'account_move_line_id': self.id,
         }
 
+    def write(self, vals):
+        if 'vehicle_id' in vals and not vals['vehicle_id']:
+            self.sudo().vehicle_log_service_ids.with_context(ignore_linked_bill_constraint=True).unlink()
+        return super().write(vals)
+
     def unlink(self):
-        log_services = self.env['fleet.vehicle.log.services'].sudo().search([
-            ('account_move_line_id.id', 'in', self.ids),
-        ])
-        res = super().unlink()
-        if log_services:
-            log_services.unlink()
-        return res
+        self.sudo().vehicle_log_service_ids.with_context(ignore_linked_bill_constraint=True).unlink()
+        return super().unlink()

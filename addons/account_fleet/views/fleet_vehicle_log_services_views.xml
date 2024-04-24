@@ -13,10 +13,14 @@
                         type="object"
                         class="oe_stat_button"
                         icon="fa-pencil-square-o"
-                        invisible="not account_move_line_id.move_id">
+                        invisible="not account_move_line_id">
                         <div class="o_field_widget o_stat_info">
-                            <span class="o_stat_text text-success" invisible="account_move_state != 'posted'" title="Service's Bill"> Service's Bill</span>
-                            <span class="o_stat_text text-warning" invisible="account_move_state != 'draft'" title="Service's Bill"> Service's Bill</span>
+                            <span class="o_stat_text text-success"
+                                invisible="account_move_state != 'posted'"
+                                title="Service's Bill">Service's Bill</span>
+                            <span class="o_stat_text text-warning"
+                                invisible="account_move_state == 'posted'"
+                                title="Service's Bill">Service's Bill</span>
                         </div>
                     </button>
                 </div>
