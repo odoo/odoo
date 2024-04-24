@@ -218,11 +218,6 @@ class IrRule(models.Model):
 
         resolution_info = _("If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.")
 
-        if not self.env.user.has_group('base.group_no_one') or not self.env.user._is_internal():
-            records.invalidate_recordset()
-            return AccessError(f"{operation_error}\n{failing_model}\n\n{resolution_info}")
-
-        # This extended AccessError is only displayed in debug mode.
         # Note that by default, public and portal users do not have
         # the group "base.group_no_one", even if debug mode is enabled,
         # so it is relatively safe here to include the list of rules and record names.
@@ -238,19 +233,33 @@ class IrRule(models.Model):
                 return f'{description}, {rec.display_name} ({model}: {rec.id}, company={rec.company_id.display_name})'
             return f'{description}, {rec.display_name} ({model}: {rec.id})'
 
-        failing_records = '\n '.join(f'- {get_record_description(rec)}' for rec in records_sudo)
-
-        rules_description = '\n'.join(f'- {rule.name}' for rule in rules)
-        failing_rules = _("Blame the following rules:\n%s", rules_description)
-
+        context = None
         if company_related:
-            failing_rules += "\n\n" + _('Note: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!')
+            suggested_companies = records_sudo._get_redirect_suggested_company()
+            if suggested_companies and len(suggested_companies) != 1:
+                resolution_info += "\n\n" + _('Note: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!')
+            elif suggested_companies and suggested_companies in self.env.user.company_ids:
+                context = {'suggested_company': {'id': suggested_companies.id, 'display_name': suggested_companies.display_name}}
+                resolution_info += "\n\n" + _('This seems to be a multi-company issue, you might be able to access the record by switching to the company: %s.', suggested_companies.display_name)
+            elif suggested_companies:
+                resolution_info += "\n\n" + _('This seems to be a multi-company issue, but you do not have access to the proper company to access the record anyhow.')
+
+        if not self.env.user.has_group('base.group_no_one') or not self.env.user._is_internal():
+            msg = f"{operation_error}\n{failing_model}\n\n{resolution_info}"
+        else:
+            # This extended AccessError is only displayed in debug mode.
+            failing_records = '\n'.join(f'- {get_record_description(rec)}' for rec in records_sudo)
+            rules_description = '\n'.join(f'- {rule.name}' for rule in rules)
+            failing_rules = _("Blame the following rules:\n%s", rules_description)
+            msg = f"{operation_error}\n{failing_records}\n\n{failing_rules}\n\n{resolution_info}"
 
         # clean up the cache of records prefetched with display_name above
         records_sudo.invalidate_recordset()
 
-        msg = f"{operation_error}\n{failing_records}\n\n{failing_rules}\n\n{resolution_info}"
-        return AccessError(msg)
+        exception = AccessError(msg)
+        if context:
+            exception.context = context
+        return exception
 
 
 #

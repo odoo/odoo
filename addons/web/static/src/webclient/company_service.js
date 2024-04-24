@@ -7,19 +7,15 @@ import { cookie } from "@web/core/browser/cookie";
 import { user } from "@web/core/user";
 import { router } from "@web/core/browser/router";
 
-const CIDS_SEARCH_SEPARATOR = "-";
+const CIDS_SEPARATOR = "-";
 
-function parseCompanyIds(cids, separator = ",") {
+function parseCompanyIds(cids, separator = CIDS_SEPARATOR) {
     if (typeof cids === "string") {
         return cids.split(separator).map(Number);
     } else if (typeof cids === "number") {
         return [cids];
     }
     return [];
-}
-
-function formatCompanyIds(cids, separator = ",") {
-    return cids.join(separator);
 }
 
 function computeActiveCompanyIds(cids) {
@@ -36,16 +32,19 @@ function computeActiveCompanyIds(cids) {
     return activeCompanyIds;
 }
 
-function getCompanyIdsFromBrowser(state) {
+function getCompanyIds() {
     let cids;
+    // backward compatibility, in old urls cid was still used.
+    // deprecated as of saas-17.3
+    const state = router.current;
     if ("cids" in state) {
         // backward compatibility s.t. old urls (still using "," as separator) keep working
         // deprecated as of 17.0
-        let separator = CIDS_SEARCH_SEPARATOR;
-        if (typeof state.cids === "string" && !state.cids.includes(CIDS_SEARCH_SEPARATOR)) {
-            separator = ",";
+        if (typeof state.cids === "string" && !state.cids.includes(CIDS_SEPARATOR)) {
+            cids = parseCompanyIds(state.cids, ",");
+        } else {
+            cids = parseCompanyIds(state.cids);
         }
-        cids = parseCompanyIds(state.cids, separator);
     } else if (cookie.get("cids")) {
         cids = parseCompanyIds(cookie.get("cids"));
     }
@@ -61,13 +60,10 @@ export const companyService = {
             ...allowedCompanies,
             ...disallowedAncestorCompanies,
         };
-        const activeCompanyIds = computeActiveCompanyIds(getCompanyIdsFromBrowser(router.current));
+        const activeCompanyIds = computeActiveCompanyIds(getCompanyIds());
 
         // update browser data
-        const cidsSearch = formatCompanyIds(activeCompanyIds, CIDS_SEARCH_SEPARATOR);
-        router.addLockedKey("cids");
-        router.replaceState({ cids: cidsSearch });
-        cookie.set("cids", formatCompanyIds(activeCompanyIds));
+        cookie.set("cids", activeCompanyIds.join(CIDS_SEPARATOR));
         user.updateContext({ allowed_company_ids: activeCompanyIds });
 
         // reload the page if changes are being done to `res.company`
@@ -121,14 +117,11 @@ export const companyService = {
                     );
                 }
 
-                const cidsSearch = formatCompanyIds(newCompanyIds, CIDS_SEARCH_SEPARATOR);
-                cookie.set("cids", formatCompanyIds(newCompanyIds));
+                cookie.set("cids", newCompanyIds.join(CIDS_SEPARATOR));
                 user.updateContext({ allowed_company_ids: newCompanyIds });
 
                 const controller = action.currentController;
-                const state = {
-                    cids: cidsSearch,
-                };
+                const state = {};
                 const options = { reload: true };
                 if (controller?.props.resId && controller?.props.resModel) {
                     let hasReadRights = true;

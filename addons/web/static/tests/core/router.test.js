@@ -61,10 +61,9 @@ describe("parseHash", () => {
     });
 
     test("can parse a realistic hash", () => {
-        expect(parseHash("#action=114&active_id=mail.box_inbox&cids=1&menu_id=91")).toEqual({
+        expect(parseHash("#action=114&active_id=mail.box_inbox&menu_id=91")).toEqual({
             action: 114,
             active_id: "mail.box_inbox",
-            cids: 1,
             menu_id: 91,
         });
     });
@@ -465,7 +464,9 @@ describe("stateToUrl", () => {
                     { active_id: 5, action: "module.xml_id", resId: 2 },
                 ],
             })
-        ).toBe("/odoo/action-module.xml_id/5/action-module.xml_id/2", { message: "actions as xml_ids" });
+        ).toBe("/odoo/action-module.xml_id/5/action-module.xml_id/2", {
+            message: "actions as xml_ids",
+        });
         // model
         expect(
             stateToUrl({ actionStack: [{ model: "some.model" }, { model: "other.model" }] })

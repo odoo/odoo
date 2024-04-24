@@ -982,7 +982,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             return vals_list
         raise UserError(_('A time off cannot be duplicated.'))
 
-    def _get_mail_redirect_suggested_company(self):
+    def _get_redirect_suggested_company(self):
         return self.holiday_status_id.company_id
 
     ####################################################

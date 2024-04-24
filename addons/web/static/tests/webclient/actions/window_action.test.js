@@ -638,7 +638,6 @@ test.tags("desktop")("A new form view can be reloaded after a failed one", async
                 view_type: "list",
             },
         ],
-        cids: 1,
     });
 
     // Click on the first record
