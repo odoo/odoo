@@ -60,9 +60,17 @@
                     <group>
                         <group>
                             <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
-                            <field name="restrict_user_ids" widget="many2many_tags_avatar"/>
                             <field name="active" invisible="1"/>
                             <field name="has_conditional_questions" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="restrict_user_ids" widget="many2many_tags_avatar"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group colspan="4">
+                            <field name="lang_ids" widget="many2many_tags" placeholder="All installed languages"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                         </group>
                     </group>
                     <notebook>
