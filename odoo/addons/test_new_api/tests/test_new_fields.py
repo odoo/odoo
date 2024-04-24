@@ -2923,6 +2923,26 @@ class TestFields(TransactionCaseWithUserDemo):
 
 
 class TestX2many(common.TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_portal = cls.env['res.users'].sudo().search([('login', '=', 'portal')])
+        cls.partner_portal = cls.user_portal.partner_id
+
+        if not cls.user_portal:
+            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.partner_portal = cls.env['res.partner'].create({
+                'name': 'Joel Willis',
+                'email': 'joel.willis63@example.com',
+            })
+            cls.user_portal = cls.env['res.users'].with_context(no_reset_password=True).create({
+                'login': 'portal',
+                'password': 'portal',
+                'partner_id': cls.partner_portal.id,
+                'groups_id': [Command.set([cls.env.ref('base.group_portal').id])],
+            })
+
     def test_definition_many2many(self):
         """ Test the definition of inherited many2many fields. """
         field = self.env['test_new_api.multi.line']._fields['tags']
