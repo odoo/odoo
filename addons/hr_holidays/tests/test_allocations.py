@@ -158,6 +158,42 @@ class TestAllocations(TestHrHolidaysCommon):
 
         self.assertEqual(employee_allocation.number_of_days, 1.0)
 
+    def test_allocation_type_hours_with_resource_calendar(self):
+        self.leave_type.request_unit = 'hour'
+        self.employee.resource_calendar_id = self.ref('resource.resource_calendar_std_35h')
+
+        hour_type_allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Hours Allocation',
+            'holiday_type': 'employee',
+            'employee_ids': [(4, self.employee.id), (4, self.employee_emp.id)],
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.leave_type.id,
+            'number_of_days': 10,
+            'allocation_type': 'regular',
+        })
+
+        self.assertEqual(self.employee.resource_calendar_id.hours_per_day, 7.0)
+        self.assertEqual(self.employee_emp.resource_calendar_id.hours_per_day, 8.0)
+        self.assertEqual(hour_type_allocation.number_of_hours_display, 80)
+
+        hour_type_allocation.action_validate()
+
+        # Find allocations created for individual employees
+        employee_allocation = self.env['hr.leave.allocation'].search([
+            ('employee_id', '=', self.employee.id),
+
+            ('multi_employee', '=', False),
+            ('parent_id', '=', hour_type_allocation.id)
+        ])
+        employee_emp_allocation = self.env['hr.leave.allocation'].search([
+            ('employee_id', '=', self.employee_emp.id),
+            ('multi_employee', '=', False),
+            ('parent_id', '=', hour_type_allocation.id)
+        ])
+
+        self.assertEqual(employee_allocation.number_of_hours_display, 80.0, 'Employee Allocation should not be changed')
+        self.assertEqual(employee_emp_allocation.number_of_hours_display, 80.0, 'Employee Allocation should not be changed')
+
     def change_allocation_type_hours(self):
         self.leave_type.write({
             'name': 'Custom Time Off Test',
@@ -277,4 +313,4 @@ class TestAllocations(TestHrHolidaysCommon):
             default_date_from='2024-08-18 06:00:00',
             default_date_to='2024-08-18 15:00:00'
         ).name_search(args=[['id', '=', leave_type.id]])
-        self.assertEqual(result[0][1], 'Compensatory Days (72 remaining out of 72 hours)')
+        self.assertEqual(result[0][1], 'Compensatory Days (9 remaining out of 9 days)')
