@@ -7,7 +7,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -43,12 +43,12 @@ test("Remove member from channel", async () => {
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const env = await start();
+    await start();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { text: "Harry" });
     withUser(userId, () =>
-        env.services.orm.call("discuss.channel", "action_unfollow", [channelId])
+        getService("orm").call("discuss.channel", "action_unfollow", [channelId])
     );
     await contains(".o-discuss-ChannelMember", { count: 0, text: "Harry" });
 });

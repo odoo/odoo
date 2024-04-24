@@ -1,8 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
-
 import {
     SIZES,
     assertSteps,
@@ -21,18 +16,21 @@ import {
     triggerEvents,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { Deferred } from "@odoo/hoot-mock";
+import { describe, expect, test } from "@odoo/hoot";
+import { Deferred, mockUserAgent } from "@odoo/hoot-mock";
 import {
     Command,
+    getService,
     mockService,
     patchWithCleanup,
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
+
 import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
+import { rpc } from "@web/core/network/rpc";
 import { getOrigin } from "@web/core/utils/urls";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -140,9 +138,7 @@ test("respond to notification prompt (granted)", async () => {
 test("no 'OdooBot has a request' in mobile app", async () => {
     patchBrowserNotification("default");
     // simulate Android Odoo App
-    patchWithCleanup(browser.navigator, {
-        userAgent: "Chrome/0.0.0 Android (OdooMobile; Linux; Android 13; Odoo TestSuite)",
-    });
+    mockUserAgent("Chrome/0.0.0 Android (OdooMobile; Linux; Android 13; Odoo TestSuite)");
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
@@ -165,8 +161,8 @@ test("rendering with PWA installation request", async () => {
     });
     const pyEnv = await startServer();
     const [odoobot] = pyEnv["res.partner"].read(serverState.odoobotId);
-    const env = await start();
-    patchWithCleanup(env.services.installPrompt, {
+    await start();
+    patchWithCleanup(getService("installPrompt"), {
         show() {
             step("show prompt");
         },
@@ -212,8 +208,8 @@ test("installation of the PWA request can be dismissed", async () => {
             return super.setItem(key, value);
         },
     });
-    const env = await start();
-    patchWithCleanup(env.services.installPrompt, {
+    await start();
+    patchWithCleanup(getService("installPrompt"), {
         show() {
             step("show prompt should not be triggered");
         },
@@ -636,8 +632,7 @@ test("Counter is updated when receiving new message", async () => {
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1006,8 +1001,7 @@ test("preview for channel should show latest non-deleted message", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await click(".o_menu_systray i[aria-label='Messages']");

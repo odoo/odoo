@@ -1,11 +1,10 @@
 import { Record } from "@mail/core/common/record";
-import { assignDefined, rpcWithEnv } from "@mail/utils/common/misc";
+import { assignDefined } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 
 import { _t } from "@web/core/l10n/translation";
 
 /** @typedef {{ thread?: import("models").Thread, folded?: boolean, replaceNewMessageChatWindow?: boolean }} ChatWindowData */
-
-let rpc;
 
 export class ChatWindow extends Record {
     static id = "thread";
@@ -18,10 +17,6 @@ export class ChatWindow extends Record {
     /** @returns {import("models").ChatWindow|import("models").ChatWindow[]} */
     static insert() {
         return super.insert(...arguments);
-    }
-    static new() {
-        rpc = rpcWithEnv(this.store.env);
-        return super.new(...arguments);
     }
     /**
      * @param {ChatWindowData} [data]

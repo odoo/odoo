@@ -1,4 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
 import {
     click,
     contains,
@@ -6,11 +5,11 @@ import {
     openDiscuss,
     start,
     startServer,
-} from "../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 
-let rpc;
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -436,8 +435,7 @@ test("no seen indicator in 'channel' channels (with is_typing)", async () => {
         fetched_message_id: chatMsgId,
         seen_message_id: 0,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { text: "channel-msg" });
     await contains(".o-mail-MessageSeenIndicator i", { count: 0 }); // none in channel

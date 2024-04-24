@@ -1,6 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { mockDate, tick } from "@odoo/hoot-mock";
-import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 import {
     SIZES,
     assertSteps,
@@ -21,11 +18,12 @@ import {
     startServer,
     step,
     triggerHotkey,
-} from "../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
+import { mockDate, tick } from "@odoo/hoot-mock";
+import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
-import { rpcWithEnv } from "@mail/utils/common/misc";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -42,8 +40,7 @@ test("Mobile: chat window shouldn't open automatically after receiving a new mes
         channel_type: "chat",
     });
     patchUiSize({ size: SIZES.SM });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     // simulate receiving a message
@@ -673,9 +670,8 @@ test("chat window should open when receiving a new DM", async () => {
             step("init_messaging");
         }
     });
-    const env = await start();
+    await start();
     await assertSteps(["init_messaging"]);
-    rpc = rpcWithEnv(env);
     await contains(".o-mail-ChatWindowContainer");
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -702,8 +698,7 @@ test("chat window should not open when receiving a new DM from odoobot", async (
         ],
         channel_type: "chat",
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o-mail-ChatWindowContainer");
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -757,8 +752,7 @@ test("chat window should remain folded when new message is received", async () =
         ],
         channel_type: "chat",
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o-mail-ChatWindow.o-folded");
     await contains(".o-mail-ChatWindow-counter", { count: 0 });
     withUser(userId, () =>
@@ -1096,8 +1090,7 @@ test("mark as read when opening chat window", async () => {
             Command.create({ partner_id: bobPartnerId }),
         ],
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "bob" });
     await contains(".o-mail-ChatWindow .o-mail-ChatWindow-header", { text: "bob" });

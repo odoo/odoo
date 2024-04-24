@@ -1,5 +1,5 @@
 import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 
 import { EventBus, reactive } from "@odoo/owl";
 
@@ -7,7 +7,6 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
-let rpc;
 const STEP_DELAY = 500;
 export class ChatBotService {
     /** @type {number} */
@@ -28,7 +27,6 @@ export class ChatBotService {
      */
     setup(env, services) {
         this.env = env;
-        rpc = rpcWithEnv(env);
         this.bus = new EventBus();
         this.livechatService = services["im_livechat.livechat"];
         this.store = services["mail.store"];

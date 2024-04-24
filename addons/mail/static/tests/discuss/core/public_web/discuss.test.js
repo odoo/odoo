@@ -11,9 +11,7 @@ import { describe, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
 import { Command, withUser } from "@web/../tests/web_test_helpers";
 
-import { rpcWithEnv } from "@mail/utils/common/misc";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -56,8 +54,7 @@ test.skip("bus subscription kept after receiving a message as non member", async
         channel_member_ids: [Command.create({ partner_id: johnPartner })],
         name: "General",
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await Promise.all([openDiscuss(channelId), waitUntilSubscribe(`discuss.channel_${channelId}`)]);
     await withUser(johnUser, () =>
         rpc("/mail/message/post", {

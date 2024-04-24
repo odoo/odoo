@@ -18,13 +18,11 @@ import {
     triggerEvents,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { queryFirst } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import { Command, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 
-import { rpcWithEnv } from "@mail/utils/common/misc";
-import { queryFirst } from "@odoo/hoot-dom";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -316,8 +314,7 @@ test("mark channel as fetched when a new message is loaded", async () => {
         expect(args[0][0]).toBe(channelId);
         step("rpc:channel_fetch");
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await assertSteps([
         `/mail/action - ${JSON.stringify({
@@ -365,8 +362,7 @@ test("mark channel as fetched when a new message is loaded and thread is focused
             );
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await assertSteps(["/discuss/channel/messages"]);
     await click(".o-mail-Composer");
@@ -399,8 +395,7 @@ test("should scroll to bottom on receiving new message if the list is initially 
             res_id: channelId,
         });
     }
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 11 });
@@ -436,8 +431,7 @@ test("should not scroll on receiving new message if the list is initially scroll
             res_id: channelId,
         });
     }
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 11 });
@@ -703,8 +697,7 @@ test("first unseen message should be directly preceded by the new message separa
             Command.create({ partner_id: serverState.partnerId }),
         ],
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "not empty");
     await click(".o-mail-Composer-send:enabled");
@@ -866,8 +859,7 @@ test("[technical] Opening thread without needaction messages should not mark all
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     onRpc("mail.message", "mark_all_as_read", () => step("mark-all-messages-as-read"));
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await click("button", { text: "Inbox" });
     await rpc("/mail/message/post", {

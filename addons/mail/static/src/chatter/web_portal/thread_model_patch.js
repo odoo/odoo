@@ -1,15 +1,7 @@
 import { Thread } from "@mail/core/common/thread_model";
-import { rpcWithEnv } from "@mail/utils/common/misc";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 
-patch(Thread, {
-    new() {
-        rpc = rpcWithEnv(this.env);
-        return super.new(...arguments);
-    },
-});
 patch(Thread.prototype, {
     /** @param {string[]} requestList */
     async fetchData(requestList) {

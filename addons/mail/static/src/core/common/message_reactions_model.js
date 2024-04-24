@@ -1,7 +1,6 @@
 import { AND, Record } from "@mail/core/common/record";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 
-let rpc;
 export class MessageReactions extends Record {
     static id = AND("message", "content");
     /** @returns {import("models").MessageReactions} */
@@ -11,10 +10,6 @@ export class MessageReactions extends Record {
     /** @returns {import("models").MessageReactions|import("models").MessageReactions[]} */
     static insert(data) {
         return super.insert(...arguments);
-    }
-    static new() {
-        rpc = rpcWithEnv(this.store.env);
-        return super.new(...arguments);
     }
 
     /** @type {string} */

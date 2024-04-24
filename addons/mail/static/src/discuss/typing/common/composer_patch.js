@@ -1,10 +1,8 @@
 import { Composer } from "@mail/core/common/composer";
 import { Typing } from "@mail/discuss/typing/common/typing";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 
 import { browser } from "@web/core/browser/browser";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { useDebounced } from "@web/core/utils/timing";
@@ -24,7 +22,6 @@ patch(Composer.prototype, {
      */
     setup() {
         super.setup();
-        rpc = rpcWithEnv(this.env);
         this.typingNotified = false;
         this.stopTypingDebounced = useDebounced(this.stopTyping.bind(this), SHORT_TYPING);
     },

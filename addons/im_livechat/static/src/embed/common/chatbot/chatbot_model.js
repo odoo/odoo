@@ -1,20 +1,15 @@
 import { AND, Record } from "@mail/core/common/record";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 import { markup } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { debounce } from "@web/core/utils/timing";
 
-let rpc;
 export class Chatbot extends Record {
     static id = AND("script", "thread");
     static MESSAGE_DELAY = 1500;
     // Time to wait without user input before considering a multi line step as
     // completed.
     static MULTILINE_STEP_DEBOUNCE_DELAY = 10000;
-    static new() {
-        rpc = rpcWithEnv(this.store.env);
-        return super.new(...arguments);
-    }
 
     isTyping = false;
     script = Record.one("ChatbotScript");

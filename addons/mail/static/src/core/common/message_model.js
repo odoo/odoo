@@ -5,7 +5,7 @@ import {
     htmlToTextContentInline,
     prettifyMessageContent,
 } from "@mail/utils/common/format";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -14,7 +14,6 @@ import { omit } from "@web/core/utils/objects";
 import { url } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;
-let rpc;
 export class Message extends Record {
     static id = "id";
     /** @type {Object.<number, import("models").Message>} */
@@ -26,10 +25,6 @@ export class Message extends Record {
     /** @returns {import("models").Message|import("models").Message[]} */
     static insert(data) {
         return super.insert(...arguments);
-    }
-    static new() {
-        rpc = rpcWithEnv(this.store.env);
-        return super.new(...arguments);
     }
 
     /** @param {Object} data */
