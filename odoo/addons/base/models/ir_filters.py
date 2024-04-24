@@ -24,7 +24,22 @@ class IrFilters(models.Model):
                                 help="The menu action this filter applies to. "
                                      "When left empty the filter applies to all menus "
                                      "for this model.")
+    embedded_action_id = fields.Many2one('ir.embedded.actions', help="The embedded action this filter is applied to", ondelete="cascade")
+    embedded_parent_res_id = fields.Integer(help="id of the record the filter should be applied to. Only used in combination with embedded actions")
     active = fields.Boolean(default=True)
+
+    # The embedded_parent_res_id can only be defined when the embedded_action_id field is set.
+    # As the embedded model is linked to only one res_model, It ensure the unicity of the filter regarding the
+    # embedded_parent_res_model and the embedded_parent_res_id
+    _sql_constraints = [
+        (
+            'check_res_id_only_when_embedded_action',
+            """CHECK(
+                NOT (embedded_parent_res_id IS NOT NULL AND embedded_action_id IS NULL)
+            )""",
+            'Constraint to ensure that the embedded_parent_res_id is only defined when a top_action_id is defined.'
+        ),
+    ]
 
     @api.model
     def _list_all_models(self):
@@ -47,17 +62,17 @@ class IrFilters(models.Model):
         })
 
     @api.model
-    def _get_action_domain(self, action_id=None):
+    def _get_action_domain(self, action_id=None, embedded_action_id=None, embedded_parent_res_id=None):
         """Return a domain component for matching filters that are visible in the
            same context (menu/view) as the given action."""
-        if action_id:
-            # filters specific to this menu + global ones
-            return [('action_id', 'in', [action_id, False])]
-        # only global ones
-        return [('action_id', '=', False)]
+        action_condition = ('action_id', 'in', [action_id, False]) if action_id else ('action_id', '=', False)
+        embedded_condition = ('embedded_action_id', '=', embedded_action_id) if embedded_action_id else ('embedded_action_id', '=', False)
+        embedded_parent_res_id_condition = ('embedded_parent_res_id', '=', embedded_parent_res_id) if embedded_action_id and embedded_parent_res_id else ('embedded_parent_res_id', '=', False)
+
+        return [action_condition, embedded_condition, embedded_parent_res_id_condition]
 
     @api.model
-    def get_filters(self, model, action_id=None):
+    def get_filters(self, model, action_id=None, embedded_action_id=None, embedded_parent_res_id=None):
         """Obtain the list of filters available for the user on the given model.
 
         :param int model: id of model to find filters for
@@ -67,15 +82,16 @@ class IrFilters(models.Model):
             a contextual action.
         :return: list of :meth:`~osv.read`-like dicts containing the
             ``name``, ``is_default``, ``domain``, ``user_id`` (m2o tuple),
-            ``action_id`` (m2o tuple) and ``context`` of the matching ``ir.filters``.
+            ``action_id`` (m2o tuple), ``embedded_action_id`` (m2o tuple), ``embedded_parent_res_id``
+            and ``context`` of the matching ``ir.filters``.
         """
         # available filters: private filters (user_id=uid) and public filters (uid=NULL),
         # and filters for the action (action_id=action_id) or global (action_id=NULL)
         user_context = self.env['res.users'].context_get()
-        action_domain = self._get_action_domain(action_id)
+        action_domain = self._get_action_domain(action_id, embedded_action_id, embedded_parent_res_id)
         return self.with_context(user_context).search_read(
             action_domain + [('model_id', '=', model), ('user_id', 'in', [self._uid, False])],
-            ['name', 'is_default', 'domain', 'context', 'user_id', 'sort'],
+            ['name', 'is_default', 'domain', 'context', 'user_id', 'sort', 'embedded_action_id', 'embedded_parent_res_id'],
         )
 
     @api.model
@@ -95,7 +111,7 @@ class IrFilters(models.Model):
         :raises odoo.exceptions.UserError: if there is an existing default and
                                             we're not updating it
         """
-        domain = self._get_action_domain(vals.get('action_id'))
+        domain = self._get_action_domain(vals.get('action_id'), vals.get('embedded_action_id'), vals.get('embedded_parent_res_id'))
         defaults = self.search(domain + [
             ('model_id', '=', vals['model_id']),
             ('user_id', '=', False),
@@ -113,7 +129,11 @@ class IrFilters(models.Model):
     @api.returns('self', lambda value: value.id)
     def create_or_replace(self, vals):
         action_id = vals.get('action_id')
-        current_filters = self.get_filters(vals['model_id'], action_id)
+        embedded_action_id = vals.get('embedded_action_id')
+        if not embedded_action_id and vals.get('embedded_parent_res_id'):
+            del vals['embedded_parent_res_id']
+        embedded_parent_res_id = vals.get('embedded_parent_res_id')
+        current_filters = self.get_filters(vals['model_id'], action_id, embedded_action_id, embedded_parent_res_id)
         matching_filters = [f for f in current_filters
                             if f['name'].lower() == vals['name'].lower()
                             # next line looks for matching user_ids (specific or global), i.e.
@@ -125,7 +145,7 @@ class IrFilters(models.Model):
             if vals.get('user_id'):
                 # Setting new default: any other default that belongs to the user
                 # should be turned off
-                domain = self._get_action_domain(action_id)
+                domain = self._get_action_domain(action_id, embedded_action_id, embedded_parent_res_id)
                 defaults = self.search(domain + [
                     ('model_id', '=', vals['model_id']),
                     ('user_id', '=', vals['user_id']),
@@ -149,12 +169,14 @@ class IrFilters(models.Model):
         # Partial constraint, complemented by unique index (see below). Still
         # useful to keep because it provides a proper error message when a
         # violation occurs, as it shares the same prefix as the unique index.
-        ('name_model_uid_unique', 'unique (model_id, user_id, action_id, name)', 'Filter names must be unique'),
+        ('name_model_uid_unique', 'unique (model_id, user_id, action_id, embedded_action_id, embedded_parent_res_id, name)',
+            'Filter names must be unique'),
     ]
 
     def _auto_init(self):
         result = super(IrFilters, self)._auto_init()
         # Use unique index to implement unique constraint on the lowercase name (not possible using a constraint)
         tools.create_unique_index(self._cr, 'ir_filters_name_model_uid_unique_action_index',
-            self._table, ['model_id', 'COALESCE(user_id,-1)', 'COALESCE(action_id,-1)', 'lower(name)'])
+                                  self._table, ['model_id', 'COALESCE(user_id,-1)', 'COALESCE(action_id,-1)',
+                                                'lower(name)', 'embedded_parent_res_id', 'COALESCE(embedded_action_id,-1)'])
         return result
