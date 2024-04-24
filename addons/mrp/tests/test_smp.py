@@ -293,3 +293,23 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         self.assertEqual(mo.state, "to_close")
         # Each generated serial number should have its own mo
         self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 12)
+
+    def test_smp_two_steps(self):
+        """Create a MO for a product tracked by lot and with a component untracked and tracked by lot.
+           As the smp wizard should not open even if in two steps
+        """
+        self.env['res.config.settings'].write({
+            'group_stock_adv_location': True,
+        })
+        self.env.ref('stock.warehouse0').manufacture_steps = 'pbm'
+        mo = self.generate_mo(tracking_final='lot', tracking_base_1='lot')[0]
+        # Make some stock and reserve
+        for product in mo.move_raw_ids.product_id:
+            self.env['stock.quant'].with_context(inventory_mode=True).create({
+                'product_id': product.id,
+                'inventory_quantity': 100,
+                'location_id': mo.location_src_id.id,
+            })._apply_inventory()
+        mo.action_assign()
+        action = mo.action_mass_produce()
+        self.assertEqual(action, None)

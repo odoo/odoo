@@ -2117,7 +2117,7 @@ class MrpProduction(models.Model):
     def _auto_production_checks(self):
         self.ensure_one()
         return all(p.tracking == 'none' for p in self.move_raw_ids.product_id | self.move_finished_ids.product_id)\
-            or self.product_uom_qty == 1 or (self.product_id.tracking != 'serial' and self.reservation_state in ('assigned', 'confirmed'))
+            or self.product_uom_qty == 1 or (self.product_id.tracking != 'serial' and self.reservation_state in ('assigned', 'confirmed', 'waiting'))
 
     def do_unreserve(self):
         (self.move_finished_ids | self.move_raw_ids).filtered(lambda x: x.state not in ('done', 'cancel'))._do_unreserve()
