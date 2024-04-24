@@ -121,7 +121,11 @@ export class ChatWindow extends Record {
     }
 
     notifyState() {
-        if (this.store.env.services.ui.isSmall || this.thread?.isTransient) {
+        if (
+            this.store.env.services.ui.isSmall ||
+            this.thread?.isTransient ||
+            !this.thread?.hasSelfAsMember
+        ) {
             return;
         }
         if (this.thread?.model === "discuss.channel") {
