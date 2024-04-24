@@ -538,22 +538,22 @@ overridden by modules), because:
 
 <template id="new_page_template_about_full_s_numbers" inherit_id="website.new_page_template_about_s_numbers" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="o_cc3 o_colored_level" remove="o_cc2" separator=" "/>
+        <attribute name="class" add="o_cc3 o_colored_level" remove="o_cc1" separator=" "/>
     </xpath>
 </template>
 
 <template id="new_page_template_about_personal_s_numbers" inherit_id="website.new_page_template_about_s_numbers" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="pt0 o_cc3 o_colored_level" remove="o_cc2 pt24" separator=" "/>
+        <attribute name="class" add="pt0 o_cc3 o_colored_level" remove="o_cc1 pt80" separator=" "/>
     </xpath>
     <xpath expr="//h6" position="replace">
-        <h6 style="text-align: center;">Clients</h6>
+        <h6 class="lead" style="text-align: center;">Clients</h6>
     </xpath>
     <xpath expr="(//h6)[2]" position="replace">
-        <h6 style="text-align: center;">Amazing Pages</h6>
+        <h6 class="lead" style="text-align: center;">Amazing Pages</h6>
     </xpath>
     <xpath expr="(//h6)[3]" position="replace">
-        <h6 style="text-align: center;">Websites</h6>
+        <h6 class="lead" style="text-align: center;">Websites</h6>
     </xpath>
 </template>
 
