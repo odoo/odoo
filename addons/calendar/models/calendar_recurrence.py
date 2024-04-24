@@ -14,7 +14,7 @@ from odoo.addons.base.models.res_partner import _tz_get
 
 
 # MAX_RECURRENT_EVENT = 720
-MAX_RECURRENT_EVENT = 30 # Set to 30 for Recurrent (Waresix)
+MAX_RECURRENT_EVENT = 10 # Set to 30 for Recurrent (Waresix)
 
 SELECT_FREQ_TO_RRULE = {
     'daily': rrule.DAILY,
