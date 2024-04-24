@@ -1341,17 +1341,20 @@ header {
 }
 
 #wrapwrap.o_header_overlay {
-    > header:not(.o_header_affixed):not(.o_top_menu_collapse_shown):not(.o_header_sidebar) {
+    > header:not(.o_header_affixed):not(.o_header_sidebar) {
         @include o-position-absolute(0, 0, auto, 0);
         z-index: 1000;
 
         > .navbar {
-            @include o-apply-colors(1); // Reset to default colored components
             // Prevent the nav color/gradient to impact the header color.
             background-color: transparent !important;
             background-image: none !important;
             border-color: transparent;
-            color: inherit;
+            color: inherit !important;
+        }
+
+        &:not(.o_top_menu_collapse_shown) > .navbar {
+            @include o-apply-colors(1); // Reset to default colored components
 
             .nav-item {
                 > .nav-link {
