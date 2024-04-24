@@ -8,22 +8,21 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
-import { router } from "@web/core/browser/router";
 import { session } from "@web/session";
 import { SwitchCompanyMenu } from "@web/webclient/switch_company_menu/switch_company_menu";
+import { cookie } from "@web/core/browser/cookie";
 
 const ORIGINAL_TOGGLE_DELAY = SwitchCompanyMenu.toggleDelay;
 
-async function createSwitchCompanyMenu(routerParams = {}, toggleDelay = 0) {
-    patchWithCleanup(SwitchCompanyMenu, { toggleDelay });
-    if (routerParams.onPushState) {
-        const pushState = browser.history.pushState;
-        patchWithCleanup(browser.history, {
-            pushState(state, title, url) {
-                pushState.apply(browser.history, ...arguments);
-                if (routerParams.onPushState) {
-                    routerParams.onPushState(url);
+async function createSwitchCompanyMenu(options = { toggleDelay: 0 }) {
+    patchWithCleanup(SwitchCompanyMenu, { toggleDelay: options.toggleDelay });
+    if (options.onSetCookie) {
+        const set = cookie.set;
+        patchWithCleanup(cookie, {
+            set(key, value) {
+                set.apply(cookie, [key, value]);
+                if (options.onSetCookie) {
+                    options.onSetCookie(key, value);
                 }
             },
         });
@@ -64,12 +63,13 @@ test("basic rendering", async () => {
 });
 
 test("companies can be toggled: toggle a second company", async () => {
-    const prom = new Deferred();
-    function onPushState(url) {
-        expect.step(url.split("?")[1]);
-        prom.resolve();
+    function onSetCookie(key, values) {
+        if (key === "cids") {
+            expect.step(values);
+        }
     }
-    await createSwitchCompanyMenu({ onPushState });
+    await createSwitchCompanyMenu({ onSetCookie });
+    expect(["3"]).toVerifySteps();
 
     /**
      *   [x] **Hermit**
@@ -124,17 +124,23 @@ test("companies can be toggled: toggle a second company", async () => {
         "false",
         "false",
     ]);
-    await prom;
-    expect(["cids=3-2"]).toVerifySteps();
+    expect(["3-2"]).toVerifySteps();
 });
 
 test("can toggle multiple companies at once", async () => {
     const prom = new Deferred();
-    function onPushState(url) {
-        expect.step(url.split("?")[1]);
-        prom.resolve();
+    let step = 0;
+    function onSetCookie(key, values) {
+        if (key === "cids") {
+            expect.step(values);
+            if (step === 1) {
+                prom.resolve();
+            }
+            step++;
+        }
     }
-    await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
+    await createSwitchCompanyMenu({ onSetCookie, toggleDelay: ORIGINAL_TOGGLE_DELAY });
+    expect(["3"]).toVerifySteps();
 
     /**
      *   [ ] Hermit          -> toggle all
@@ -166,11 +172,17 @@ test("can toggle multiple companies at once", async () => {
 
     expect([]).toVerifySteps();
     await prom;
-    expect(["cids=2-1-4-5"]).toVerifySteps();
+    expect(["2-1-4-5"]).toVerifySteps();
 });
 
 test("single company selected: toggling it off will keep it", async () => {
-    await createSwitchCompanyMenu();
+    function onSetCookie(key, values) {
+        if (key === "cids") {
+            expect.step(values);
+        }
+    }
+    await createSwitchCompanyMenu({ onSetCookie });
+    expect(["3"]).toVerifySteps();
 
     /**
      *   [x] **Hermit**
@@ -180,7 +192,7 @@ test("single company selected: toggling it off will keep it", async () => {
      *   [ ]    Hulk
      */
     await runAllTimers();
-    expect(router.current).toEqual({ cids: 3 });
+    expect(cookie.get("cids")).toBe("3");
     expect(getService("company").activeCompanyIds).toEqual([3]);
     expect(getService("company").currentCompany.id).toBe(3);
     await contains(".dropdown-toggle").click();
@@ -198,9 +210,7 @@ test("single company selected: toggling it off will keep it", async () => {
     await contains(".toggle_company:eq(0)").click();
     await runAllTimers();
 
-    expect(router.current).toEqual({
-        cids: 3,
-    });
+    expect(["3"]).toVerifySteps();
     expect(getService("company").activeCompanyIds).toEqual([3]);
     expect(getService("company").currentCompany.id).toBe(3);
     expect(".dropdown-menu").toHaveCount(1, { message: "dropdown is still opened" });
@@ -209,10 +219,13 @@ test("single company selected: toggling it off will keep it", async () => {
 });
 
 test("single company mode: companies can be logged in", async () => {
-    function onPushState(url) {
-        expect.step(url.split("?")[1]);
+    function onSetCookie(key, values) {
+        if (key === "cids") {
+            expect.step(values);
+        }
     }
-    await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
+    await createSwitchCompanyMenu({ onSetCookie, toggleDelay: ORIGINAL_TOGGLE_DELAY });
+    expect(["3"]).toVerifySteps();
 
     /**
      *   [x] **Hermit**
@@ -237,15 +250,18 @@ test("single company mode: companies can be logged in", async () => {
      */
     await contains(".log_into:eq(1)").click();
     expect(".dropdown-menu").toHaveCount(0, { message: "dropdown is directly closed" });
-    expect(["cids=2"]).toVerifySteps();
+    expect(["2"]).toVerifySteps();
 });
 
 test("multi company mode: log into a non selected company", async () => {
-    function onPushState(url) {
-        expect.step(url.split("?")[1]);
+    function onSetCookie(key, values) {
+        if (key === "cids") {
+            expect.step(values);
+        }
     }
-    browser.location.search = "cids=3-1";
-    await createSwitchCompanyMenu({ onPushState });
+    cookie.set("cids", "3-1");
+    await createSwitchCompanyMenu({ onSetCookie });
+    expect(["3-1"]).toVerifySteps();
 
     /**
      *   [x] Hermit
@@ -270,15 +286,18 @@ test("multi company mode: log into a non selected company", async () => {
      */
     await contains(".log_into:eq(1)").click();
     expect(".dropdown-menu").toHaveCount(0, { message: "dropdown is directly closed" });
-    expect(["cids=2"]).toVerifySteps();
+    expect(["2"]).toVerifySteps();
 });
 
 test("multi company mode: log into an already selected company", async () => {
-    function onPushState(url) {
-        expect.step(url.split("?")[1]);
+    function onSetCookie(key, values) {
+        if (key === "cids") {
+            expect.step(values);
+        }
     }
-    browser.location.search = "cids=2-1";
-    await createSwitchCompanyMenu({ onPushState });
+    cookie.set("cids", "2-1");
+    await createSwitchCompanyMenu({ onSetCookie });
+    expect(["2-1"]).toVerifySteps();
 
     /**
      *   [ ] Hermit
@@ -303,14 +322,17 @@ test("multi company mode: log into an already selected company", async () => {
      */
     await contains(".log_into:eq(2)").click();
     expect(".dropdown-menu").toHaveCount(0, { message: "dropdown is directly closed" });
-    expect(["cids=1-4-5"]).toVerifySteps();
+    expect(["1-4-5"]).toVerifySteps();
 });
 
 test("companies can be logged in even if some toggled within delay", async () => {
-    function onPushState(url) {
-        expect.step(url.split("?")[1]);
+    function onSetCookie(key, values) {
+        if (key === "cids") {
+            expect.step(values);
+        }
     }
-    await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
+    await createSwitchCompanyMenu({ onSetCookie, toggleDelay: ORIGINAL_TOGGLE_DELAY });
+    expect(["3"]).toVerifySteps();
 
     /**
      *   [x] **Hermit**
@@ -337,5 +359,5 @@ test("companies can be logged in even if some toggled within delay", async () =>
     await contains(".toggle_company:eq(0)").click();
     await contains(".log_into:eq(1)").click();
     expect(".dropdown-menu").toHaveCount(0, { message: "dropdown is directly closed" });
-    expect(["cids=2"]).toVerifySteps();
+    expect(["2"]).toVerifySteps();
 });

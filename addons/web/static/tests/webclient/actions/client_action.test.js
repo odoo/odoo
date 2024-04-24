@@ -271,12 +271,8 @@ test("test display_notification client action", async () => {
     });
     await animationFrame(); // wait for the notification to be displayed
     expect(".o_notification_manager .o_notification").toHaveCount(1);
-    expect(".o_notification_manager .o_notification .o_notification_title").toHaveText(
-        "title"
-    );
-    expect(".o_notification_manager .o_notification .o_notification_content").toHaveText(
-        "message"
-    );
+    expect(".o_notification_manager .o_notification .o_notification_title").toHaveText("title");
+    expect(".o_notification_manager .o_notification .o_notification_content").toHaveText("message");
     expect(".o_kanban_view").toHaveCount(1);
     await contains(".o_notification_close").click();
     expect(".o_notification_manager .o_notification").toHaveCount(0);
@@ -304,9 +300,7 @@ test("test display_notification client action with links", async () => {
     });
     await animationFrame(); // wait for the notification to be displayed
     expect(".o_notification_manager .o_notification").toHaveCount(1);
-    expect(".o_notification_manager .o_notification .o_notification_title").toHaveText(
-        "title"
-    );
+    expect(".o_notification_manager .o_notification .o_notification_title").toHaveText("title");
     expect(".o_notification_manager .o_notification .o_notification_content").toHaveText(
         "message test <R&D> <R&D>"
     );
@@ -362,8 +356,8 @@ test("test next action on display_notification client action", async () => {
 });
 
 test("test reload client action", async () => {
-    redirect("/odoo?cids=1&test=42");
-    browser.location.search = "?cids=1&test=42";
+    redirect("/odoo?test=42");
+    browser.location.search = "?test=42";
 
     patchWithCleanup(browser.location, {
         assign: (url) => {
@@ -408,20 +402,20 @@ test("test reload client action", async () => {
     });
     await runAllTimers();
     expect([
-        // "/odoo?cids=1&test=42", // This one was not push to the history because it's the current url (see router.js)
+        // "/odoo?test=42", // This one was not push to the history because it's the current url (see router.js)
         "window_reload",
-        "/odoo/action-2?cids=1",
+        "/odoo/action-2",
         "window_reload",
-        "/odoo?cids=1&menu_id=1",
+        "/odoo?menu_id=1",
         "window_reload",
-        "/odoo/action-1?cids=1&menu_id=2",
+        "/odoo/action-1?menu_id=2",
         "window_reload",
     ]).toVerifySteps();
 });
 
 test("test home client action", async () => {
-    redirect("/odoo?cids=1");
-    browser.location.search = "?cids=1";
+    redirect("/odoo");
+    browser.location.search = "";
 
     patchWithCleanup(browser.location, {
         assign: (url) => expect.step(`assign ${url}`),
@@ -439,5 +433,5 @@ test("test home client action", async () => {
     });
     await runAllTimers();
     await animationFrame();
-    expect(["/web/webclient/version_info", "assign /?cids=1"]).toVerifySteps();
+    expect(["/web/webclient/version_info", "assign /"]).toVerifySteps();
 });

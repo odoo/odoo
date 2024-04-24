@@ -345,7 +345,6 @@ test("document's title is updated when an action is executed", async () => {
     let currentTitle = getService("title").getParts();
     expect(currentTitle).toEqual({});
     let currentState = router.current;
-    expect(currentState).toEqual({ cids: 1 });
     await getService("action").doAction(4);
     await animationFrame();
     currentTitle = getService("title").getParts();
@@ -360,7 +359,6 @@ test("document's title is updated when an action is executed", async () => {
                 view_type: "kanban",
             },
         ],
-        cids: 1,
     });
 
     await getService("action").doAction(8);
@@ -382,7 +380,6 @@ test("document's title is updated when an action is executed", async () => {
                 view_type: "list",
             },
         ],
-        cids: 1,
     });
 
     await contains(".o_data_row .o_data_cell").click();
@@ -411,7 +408,6 @@ test("document's title is updated when an action is executed", async () => {
                 view_type: "form",
             },
         ],
-        cids: 1,
     });
 });
 
