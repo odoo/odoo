@@ -1810,7 +1810,7 @@ Please change the quantity done or the rounding precision of your unit of measur
     def _action_done(self, cancel_backorder=False):
         moves = self.filtered(
             lambda move: move.state == 'draft'
-            or float_is_zero(move.product_uom_qty, precision_digits=move.product_uom.rounding)
+            or float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding)
         )._action_confirm(merge=False)  # MRP allows scrapping draft moves
         moves = (self | moves).exists().filtered(lambda x: x.state not in ('done', 'cancel'))
 
