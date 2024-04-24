@@ -8,16 +8,18 @@ from odoo.exceptions import UserError, ValidationError
 _logger = logging.getLogger(__name__)
 
 
-class l10nLatamAccountPaymentCheck(models.TransientModel):
+class l10nLatamAccountPaymentCheck(models.Model):
     _name = 'l10n_latam.account.payment.check'
     _description = 'Account payment check'
     _check_company_auto = True
-    _inherits = {'account.payment': 'payment_id'}
 
     payment_id = fields.Many2one(
         'account.payment',
+        required=True,
+        ondelete='cascade',
+        delegate=True,
     )
-
+    payment_state = fields.Selection(related="payment_id.state", store=True)
     l10n_latam_check_operation_ids = fields.Many2many(
         comodel_name='account.payment',
         relation='account_payment_account_payment_check_rel',
@@ -32,10 +34,10 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
         string="Check Current Journal",
         compute='_compute_check_info', store=True,
     )
-
     company_id = fields.Many2one(related='payment_id.company_id')
     currency_id = fields.Many2one(related='payment_id.currency_id')
     name = fields.Char(string='Number')
+    check_number = fields.Char(compute='_compute_check_number', store=True)
     l10n_latam_check_bank_id = fields.Many2one(
         comodel_name='res.bank',
         string='Check Bank',
@@ -52,36 +54,24 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
     )
     amount = fields.Monetary()
     split_move_line_id = fields.Many2one('account.move.line')
+    reconcile_move_line_id = fields.Many2one('account.move.line')
     issue_state = fields.Selection([('handed', 'Handed'), ('debited', 'Debited'), ('voided', 'Voided')],
-                                   compute='_compute_issue_state', search='_search_issue_state')
+                                   compute='_compute_issue_state', store=True)
 
-    def _search_issue_state(self, operator, value):
-        if operator not in ('=', '!='):
-            raise UserError(_('Operation not supported'))
+    @api.depends('name')
+    def _compute_check_number(self):
+        for rec in self:
+            try:
+                rec.check_number = str(int(rec.name))
+            except ValueError:
+                raise UserError(_("%s not is valid check number") % rec.name)
 
-        sql_operator = 'is' if operator == '=' else 'is not'
-        sql_value = "NULL"
+    @api.onchange('name')
+    def _onchange_name(self):
+        if self.name:
+            self.name = self.name.zfill(11)
 
-        if value == 'voided':
-            sql_operator = 'in' if operator == '=' else 'not in'
-            sql_value = "('liability_payable', 'assets_receivable')"
-        elif value == 'debited':
-            sql_operator = 'in' if operator == '=' else 'not in'
-            sql_value = "('asset_cash')"
-
-        self.env.cr.execute("""
-            SELECT line_check.id
-              FROM l10n_latam_account_payment_check line_check
-              JOIN account_move_line split_line ON split_line.id = line_check.split_move_line_id
-              LEFT JOIN account_move_line reconcile_line ON reconcile_line.full_reconcile_id = split_line.full_reconcile_id and reconcile_line.id != split_line.id
-              LEFT JOIN account_move_line state_line ON state_line.move_id = reconcile_line.move_id and state_line.id != reconcile_line.id
-              LEFT JOIN account_account account on account.id= state_line.account_id
-            WHERE  split_move_line_id != 0 and account.account_type %s %s
-        """ % (sql_operator, sql_value))
-        ids = [x['id'] for x in self.env.cr.dictfetchall()]
-        return [('id', 'in', ids)]
-
-    def prepare_void_move_vals(self):
+    def _prepare_void_move_vals(self):
         return {
                 'ref': 'Void check',
                 'journal_id': self.split_move_line_id.move_id.journal_id.id,
@@ -107,12 +97,12 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
                      })]
             }
 
-    @api.depends('split_move_line_id', 'split_move_line_id.amount_residual')
+    @api.depends('split_move_line_id.amount_residual')
     def _compute_issue_state(self):
         for rec in self:
             if not rec.split_move_line_id:
                 rec.issue_state = False
-            elif not rec.split_move_line_id.amount_residual:
+            elif rec.amount and not rec.split_move_line_id.amount_residual:
                 reconciled_line = rec.split_move_line_id.full_reconcile_id.reconciled_line_ids - rec.split_move_line_id
                 voides_types = ['liability_payable', 'assets_receivable']
                 if (reconciled_line.move_id.line_ids - reconciled_line).mapped('account_id.account_type')[0] in voides_types:
@@ -124,7 +114,7 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
 
     def action_void(self):
         for rec in self.filtered('split_move_line_id'):
-            void_move = rec.env['account.move'].create(rec.prepare_void_move_vals())
+            void_move = rec.env['account.move'].create(rec._prepare_void_move_vals())
             void_move.action_post()
             (void_move.line_ids[1] + rec.split_move_line_id).reconcile()
 
@@ -148,7 +138,6 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
         :return:    An action on account.move.
         '''
         self.ensure_one()
-
         operations = ((self.l10n_latam_check_operation_ids + self.payment_id).filtered(lambda x: x.state == 'posted'))
         action = {
             'name': _("Check Operations"),
@@ -174,46 +163,40 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
             'res_id': move_id.id,
         }
 
+    def action_show_split_move(self):
+        self.ensure_one()
+        move_id = self.split_move_line_id.move_id
+        return {
+            'name': _("Journal Entry"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'context': {'create': False},
+            'view_mode': 'form',
+            'res_id': move_id.id,
+        }
+
     def _get_reconciled_move(self):
         reconciled_line = self.split_move_line_id.full_reconcile_id.reconciled_line_ids - self.split_move_line_id
         return (reconciled_line.move_id.line_ids - reconciled_line).mapped('move_id')
 
-    @api.constrains('name', 'journal_id')
+    @api.constrains('check_number', 'journal_id', 'payment_state')
     def _constrains_check_number_unique(self):
-        """ Don't enforce uniqueness for third party checks"""
-        third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
-        checks = self - third_party_checks
-        if not checks:
-            return
-        self.env.flush_all()
-        self.env.cr.execute("""
-            SELECT check_line.name, move.journal_id
-              FROM l10n_latam_account_payment_check check_line
-              JOIN account_payment payment ON (check_line.payment_id = payment.id)
-              JOIN account_move move ON move.id = payment.move_id
-              JOIN account_journal journal ON journal.id = move.journal_id,
-                   l10n_latam_account_payment_check other_check
-              JOIN account_payment other_payment ON (other_check.payment_id = other_payment.id)
-              JOIN account_move other_move ON other_move.id = other_payment.move_id
-             WHERE check_line.name::BIGINT = other_check.name::BIGINT
-               AND move.journal_id = other_move.journal_id
-               AND check_line.id != other_check.id
-               AND check_line.id IN %(ids)s
-               AND move.state = 'posted'
-               AND other_move.state = 'posted'
-               AND check_line.name IS NOT NULL
-               AND other_check.name IS NOT NULL
-        """, {
-            'ids': tuple(checks.ids),
-        })
-        res = self.env.cr.dictfetchall()
+        checks = self.filtered(lambda x: x.state == 'posted')
+        res = self.env['l10n_latam.account.payment.check']
+        for rec in checks:
+            domain = [('check_number', '=', rec.check_number), ('state', '=', 'posted'),
+                      ('journal_id', '=', rec.journal_id.id), ('id', '!=', rec.id),
+                      ('payment_method_line_id', '=', rec.payment_method_line_id.id)]
+            if rec.payment_method_line_id.code != 'own_check':
+                domain += [('partner_id', '=', rec.partner_id.id)]
+            res += self.search(domain)
         if res:
             raise ValidationError(_(
                 'The following numbers are already used:\n%s',
                 '\n'.join(_(
                     '%(number)s in journal %(journal)s',
-                    number=r['name'],
-                    journal=self.env['account.journal'].browse(r['journal_id']).display_name,
+                    number=r.name,
+                    journal=r.journal_id.display_name,
                 ) for r in res)
             ))
 

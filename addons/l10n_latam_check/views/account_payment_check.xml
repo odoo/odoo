@@ -99,6 +99,7 @@
         <field name="model">l10n_latam.account.payment.check</field>
         <field name="arch" type="xml">
             <form create="False" edit="False">
+                <field name="split_move_line_id" invisible="True"/>
                 <header>
                     <button name="action_void" string="Void Check" invisible="issue_state != 'handed'" type="object" class="oe_highlight" confirm="void"  data-hotkey="v"/>
                     <field name="issue_state" statusbar_visible="issue_state" widget="statusbar"/>
@@ -108,7 +109,10 @@
                         <button  icon="fa-bars" type="object" name="button_open_check_operations">
                             <span>Check Operations</span>
                         </button>
-                        <button  icon="fa-bars" type="object" invisible="issue_state not in ['debited', 'voided']" name="action_show_reconciled_move">
+                        <button  icon="fa-bars" type="object" invisible="not split_move_line_id" name="action_show_split_move">
+                            <span>Split move</span>
+                        </button>
+                        <button  icon="fa-bars" type="object" invisible="issue_state != 'handed'" name="action_show_reconciled_move">
                             <span>Reconciled move</span>
                         </button>
                     </div>

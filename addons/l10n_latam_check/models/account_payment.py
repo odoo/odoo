@@ -47,7 +47,6 @@ class AccountPayment(models.Model):
         # TODO : to look for another alternative.
         (self.l10n_latam_check_ids or self.l10n_latam_new_check_ids)._compute_check_info()
 
-
     def _l10n_latam_check_split_move(self):
         for payment in self.filtered(lambda x: x.payment_method_code == 'own_checks' and x.payment_type == 'outbound'):
             # _prepare_move_line_default_vals
@@ -157,7 +156,7 @@ class AccountPayment(models.Model):
         """ Add is_internal_transfer as a trigger to re-compute """
         return super()._compute_payment_method_line_fields()
 
-    @api.constrains('state', 'amount', 'l10n_latam_check_ids.amount', 'l10n_latam_new_check_ids')
+    @api.constrains('state', 'amount', 'l10n_latam_check_ids', 'l10n_latam_new_check_ids')
     def _constrains_check_amount(self):
         if self.state == 'post' and self.l10n_latam_check_ids and \
             float_compare(self.amount, sum(self.l10n_latam_check_ids.mapped('amount')), precision_rounding=self.currency_id.rounding):
