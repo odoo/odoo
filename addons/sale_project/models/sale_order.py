@@ -188,7 +188,13 @@ class SaleOrder(models.Model):
 
         action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_task")
         if self.tasks_count > 1:  # cross project kanban task
-            action['views'] = [[kanban_view_id, 'kanban'], [list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot']]
+            for idx, (view_id, view_type) in enumerate(action['views']):
+                if view_type == 'kanban':
+                    action['views'][idx] = (kanban_view_id, 'kanban')
+                elif view_type == 'tree':
+                    action['views'][idx] = (list_view_id, 'tree')
+                elif view_type == 'form':
+                    action['views'][idx] = (form_view_id, 'form')
         else:  # 1 or 0 tasks -> form view
             action['views'] = [(form_view_id, 'form')]
             action['res_id'] = self.tasks_ids.id
