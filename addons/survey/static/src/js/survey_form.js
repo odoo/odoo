@@ -24,6 +24,7 @@ var isMac = navigator.platform.toUpperCase().includes('MAC');
 publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloadImageMixin, {
     selector: '.o_survey_form',
     events: {
+        'change .o_survey_lang_selector': '_onChangeLanguage',
         'change .o_survey_form_choice_item': '_onChangeChoiceItem',
         'click .o_survey_matrix_btn': '_onMatrixBtnClick',
         'click input[type="radio"]': '_onRadioChoiceClick',
@@ -47,7 +48,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         var self = this;
         this.fadeInOutDelay = 400;
         return this._super.apply(this, arguments).then(function () {
-            self.options = self.$('form').data();
+            self.options = self.$("form.o_survey-fill-form").data();
             self.readonly = self.options.readonly;
             self.selectedAnswers = self.options.selectedAnswers;
             self.imgZoomer = false;
@@ -344,6 +345,15 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         this._goToNextPage({ isFinish: true });
     },
 
+    _onChangeLanguage() {
+        const lang_code = document.querySelector('.o_survey_lang_selector[name="lang_code"]').value;
+        const pathname = document.location.pathname;
+        const indexOfSurvey = pathname.indexOf("/survey/");
+        if (indexOfSurvey >= 0) {
+            document.location = `/${lang_code}${pathname.substring(indexOfSurvey)}`;
+        }
+    },
+
     /**
      * Go to the next page of the survey.
      *
@@ -353,6 +363,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
      */
     _goToNextPage: function ({ isFinish = false } = {}) {
         this.$(".o_survey_main_title:visible").fadeOut(400);
+        this.$(".o_lang_selector:visible").fadeOut(400);
         this.preventEnterSubmit = false;
         this.readonly = false;
         this._nextScreen(
@@ -393,13 +404,17 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         var route = "/survey/submit";
 
         if (this.options.isStartScreen) {
+            params.lang_code = document.querySelector(
+                '.o_survey_lang_selector[name="lang_code"]'
+            ).value;
             route = "/survey/begin";
             // Hide survey title in 'page_per_question' layout: it takes too much space
             if (this.options.questionsLayout === 'page_per_question') {
                 this.$('.o_survey_main_title').fadeOut(400);
             }
+            this.$(".o_survey_lang_selector").fadeOut(400);
         } else {
-            var $form = this.$('form');
+            var $form = this.$("form.o_survey-fill-form");
             var formData = new FormData($form[0]);
 
             if (!options.skipValidation) {

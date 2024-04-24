@@ -169,8 +169,8 @@ class SurveyCase(common.TransactionCase):
             return self.url_open('/survey/%s/%s' % (survey.access_token, token))
 
     def _access_begin(self, survey, token):
-        url = survey.get_base_url() + '/survey/begin/%s/%s' % (survey.access_token, token)
-        return self.opener.post(url=url, json={})
+        url = survey.get_base_url() + f'/survey/begin/%s/%s' % (survey.access_token, token)
+        return self.opener.post(url=url, json={'params': {'lang_code': 'en_US'}})
 
     def _access_submit(self, survey, token, post_data, query_count=None):
         url = survey.get_base_url() + '/survey/submit/%s/%s' % (survey.access_token, token)
