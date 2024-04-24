@@ -28,6 +28,7 @@ class SurveyUser_Input(models.Model):
     start_datetime = fields.Datetime('Start date and time', readonly=True)
     end_datetime = fields.Datetime('End date and time', readonly=True)
     deadline = fields.Datetime('Deadline', help="Datetime until customer can open the survey and submit answers")
+    lang_id = fields.Many2one('res.lang', string='Language')
     state = fields.Selection([
         ('new', 'New'),
         ('in_progress', 'In Progress'),
@@ -194,11 +195,14 @@ class SurveyUser_Input(models.Model):
     def action_print_answers(self):
         """ Open the website page with the survey form """
         self.ensure_one()
+        url = self.env['ir.http']._url_for(
+            '/survey/print/%s?answer_token=%s' % (self.survey_id.access_token, self.access_token),
+            self.lang_id.code or None)
         return {
             'type': 'ir.actions.act_url',
             'name': "View Answers",
             'target': 'self',
-            'url': '/survey/print/%s?answer_token=%s' % (self.survey_id.access_token, self.access_token)
+            'url': url,
         }
 
     def action_redirect_to_attempts(self):
@@ -704,6 +708,7 @@ class SurveyUser_InputLine(models.Model):
     question_id = fields.Many2one('survey.question', string='Question', ondelete='cascade', required=True, index=True)
     page_id = fields.Many2one(related='question_id.page_id', string="Section", readonly=False)
     question_sequence = fields.Integer('Sequence', related='question_id.sequence', store=True)
+    lang_id = fields.Many2one('res.lang', related="user_input_id.lang_id")
     # answer
     skipped = fields.Boolean('Skipped')
     answer_type = fields.Selection([

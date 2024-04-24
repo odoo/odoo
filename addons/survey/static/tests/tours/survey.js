@@ -1,14 +1,12 @@
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add('test_survey', {
-    url: '/survey/start/b137640d-14d4-4748-9ef6-344caaaaaae',
-    steps: () => [
+const survey_steps = (checkPageTranslation) => [
     // Page-1
     {
         content: 'Click on Start',
         trigger: 'button.btn:contains("Start")',
         run: "click",
-    }, {
+    }, ...(checkPageTranslation ? checkPageTranslation : []), {
         content: 'Answer Where do you live',
         trigger: 'div.js_question-wrapper:contains("Where do you live") input',
         run: "edit Mordor-les-bains",
@@ -30,6 +28,7 @@ registry.category("web_tour.tours").add('test_survey', {
         run: "click",
     },
     // Page-2
+    ...(checkPageTranslation ? checkPageTranslation : []),
     {
         content: 'Answer Which of the following words would you use to describe our products (High Quality)',
         trigger: 'div.js_question-wrapper:contains("Which of the following words would you use to describe our products") label:contains("High quality")',
@@ -80,4 +79,58 @@ registry.category("web_tour.tours").add('test_survey', {
         content: 'Thank you',
         trigger: 'h1:contains("Thank you!")',
     }
-]});
+];
+
+registry.category("web_tour.tours").add("test_survey", {
+    url: "/survey/start/b137640d-14d4-4748-9ef6-344caaaaaae",
+    steps: () => [
+        {
+            content: "Check that the language selector is hidden",
+            trigger: "select[name='lang_code'].d-none:not(:visible)",
+        },
+        ...survey_steps(),
+    ],
+});
+
+registry.category("web_tour.tours").add("test_survey_multilang", {
+    url: "/survey/start/b137640d-14d4-4748-9ef6-344caaaaaae",
+    steps: () => {
+        return [
+            {
+                content: "Select French",
+                trigger: "select[name='lang_code']",
+                run() {
+                    const langSelect = document.querySelector("select[name='lang_code']");
+                    if (Array.from(langSelect.classList).includes("d-none")) {
+                        throw new Error("The language selector must not be hidden.");
+                    }
+                    langSelect.value = "fr_BE";
+                    langSelect.dispatchEvent(new Event("change", { bubbles: true }));
+                },
+            },
+            {
+                content: "Check French translation",
+                trigger: "h1.o_survey_main_title:contains('Enquête de satisfaction')",
+            },
+            {
+                content: "Select French",
+                trigger: "select[name='lang_code']",
+                run() {
+                    const langSelect = document.querySelector("select[name='lang_code']");
+                    langSelect.value = "fr_BE";
+                    langSelect.dispatchEvent(new Event("change", { bubbles: true }));
+                },
+            },
+            {
+                content: "Check French translation",
+                trigger: "h1.o_survey_main_title:contains('Enquête de satisfaction')",
+            },
+            ...survey_steps([
+                {
+                    content: "Check Page translation",
+                    trigger: ".js_question-wrapper h3:contains('FR: ')",
+                },
+            ]),
+        ];
+    },
+});
