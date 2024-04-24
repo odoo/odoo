@@ -1710,6 +1710,7 @@ class SaleOrder(models.Model):
         - it's not expired;
         - it requires a signature;
         - it's not already signed.
+        - confirmation amount is not reached
 
         Note: self.ensure_one()
 
@@ -1722,6 +1723,7 @@ class SaleOrder(models.Model):
             and not self.is_expired
             and self.require_signature
             and not self.signature
+            and not self._is_confirmation_amount_reached()
         )
 
     def _has_to_be_paid(self):
@@ -1731,6 +1733,7 @@ class SaleOrder(models.Model):
         - it requires a payment;
         - the last transaction's state isn't `done`;
         - the total amount is strictly positive.
+        - confirmation amount is not reached
 
         Note: self.ensure_one()
 
@@ -1738,13 +1741,12 @@ class SaleOrder(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        transaction = self.get_portal_last_transaction()
         return (
             self.state in ['draft', 'sent']
             and not self.is_expired
             and self.require_payment
-            and transaction.state != 'done'
             and self.amount_total > 0
+            and not self._is_confirmation_amount_reached()
         )
 
     def _get_portal_return_action(self):
