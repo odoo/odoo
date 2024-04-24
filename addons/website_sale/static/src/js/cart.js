@@ -17,10 +17,11 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClickDeleteProduct: function (ev) {
+        debugger;
         ev.preventDefault();
         let quantityElement = ev.currentTarget.closest('.o_cart_product').querySelector('.js_quantity');
         quantityElement.value = 0;
-        quantityElement.dispatchEvent(new Event('change'));
+        ev.currentTarget.closest('.o_cart_product').dispatchEvent(new Event('change'), {bubble: true});
     },
 });
 

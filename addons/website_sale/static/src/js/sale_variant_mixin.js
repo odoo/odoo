@@ -38,10 +38,10 @@ var VariantMixin = {
      */
     onChangeVariant: function (ev) {
         const parent = ev.target.closest('.js_product');
-        if (parent.dataset.uniqueId) {
-            parent.dataset.uniqueId = uniqueId();
+        if (!parent.getAttribute('data-uniqueId')) {
+            parent.setAttribute('data-uniqueId', uniqueId())
         }
-        this._throttledGetCombinationInfo(this, parent.dataset.uniqueId)(ev);
+        this._throttledGetCombinationInfo(this, parent.getAttribute('data-uniqueId'))(ev);
     },
     /**
      * @see onChangeVariant
@@ -51,19 +51,19 @@ var VariantMixin = {
      * @returns {Deferred}
      */
     _getCombinationInfo: function (ev) {
-        if (ev.target.classList.contains('variant_custom_value')) {
+        if (ev?.target.classList.contains('variant_custom_value')) {
             return Promise.resolve();
         }
 
-        const parent = ev.target.closest('.js_product');
-        if(!parent.length){
+        const parent = ev?.target.closest('.js_product');
+        if(!parent){
             return Promise.resolve();
         }
         const combination = this.getSelectedVariantValues(parent);
         let parentCombination;
         if (parent.classList.contains('main_product')) {
             parentCombination = JSON.parse(parent.querySelector('ul[data-attribute_exclusions]').dataset.attributeExclusions).parent_combination;
-            const optProducts = parent.parentElement.querySelectorAll(`[data-parent-unique-id='${parent.dataset.uniqueId}']`);
+            const optProducts = parent.parentElement.querySelectorAll(`[data-parent-unique-id='${parent.getAttribute('data-uniqueId')}']`);
 
             for (const optionalProduct of optProducts) {
                 const currentOptionalProduct = optionalProduct;
@@ -184,7 +184,8 @@ var VariantMixin = {
 
         if (newQty !== previousQty) {
             input.value = newQty;
-            input.dispatchEvent(new Event('change'));
+            debugger;
+            input.dispatchEvent(new Event('change'), {bubbles: true});
         }
         return false;
     },
@@ -197,9 +198,9 @@ var VariantMixin = {
      */
     onChangeAddQuantity: function (ev) {
         let parent;
-        if (ev.currentTarget.closest('.oe_advanced_configurator_modal').length > 0){
+        if (ev.currentTarget.closest('.oe_advanced_configurator_modal')){
             parent = ev.currentTarget.closest('.oe_advanced_configurator_modal');
-        } else if (ev.currentTarget.closest('form').length > 0){
+        } else if (ev.currentTarget.closest('form')){
             parent = ev.currentTarget.closest('form');
         }  else {
             parent = ev.currentTarget.closest('.o_product_configurator');
@@ -296,16 +297,19 @@ var VariantMixin = {
      */
     getSelectedVariantValues: function (container) {
         const values = [];
-        const unchangedValues =
-            [...container.querySelectorAll('div.oe_unchanged_value_ids')].map((el) => el.dataset.unchangedValueIds) || [];
+        let unchangedValues;
+        if (container) {
+            unchangedValues =
+                [...container.querySelectorAll('div.oe_unchanged_value_ids')].map((el) => el.dataset.unchangedValueIds) || [];
 
-        const variantsValuesSelectors = [
-            'input.js_variant_change:checked',
-            'select.js_variant_change'
-        ];
-        container.querySelectorAll(variantsValuesSelectors.join(', ')).forEach((el) => {
-            values.push(+el.value);
-        });
+            const variantsValuesSelectors = [
+                'input.js_variant_change:checked',
+                'select.js_variant_change'
+            ];
+            container.querySelectorAll(variantsValuesSelectors.join(', ')).forEach((el) => {
+                values.push(+el.value);
+            });
+        }
 
         return values.concat(unchangedValues);
     },
@@ -366,7 +370,7 @@ var VariantMixin = {
      */
     _checkExclusions: function (parent, combination, parentExclusions) {
         const self = this;
-        const combinationData = parent.querySelectorAll('ul[data-attribute_exclusions]').forEach((el) => el.dataset.attributeExclusions);
+        const combinationData = JSON.parse(parent.querySelector('ul[data-attribute_exclusions]').dataset.attribute_exclusions);
 
         if (parentExclusions && combinationData.parent_exclusions) {
             combinationData.parent_exclusions = parentExclusions;
@@ -521,7 +525,7 @@ var VariantMixin = {
      * @param {Array} combination
      */
     _onChangeCombination: function (ev, parent, combination) {
-        const pricePerUom = parent.querySelector(".o_base_unit_price:first .oe_currency_value");
+        const pricePerUom = parent.querySelector(".o_base_unit_price .oe_currency_value");
         if (pricePerUom) {
             if (combination.is_combination_possible !== false && combination.base_unit_price != 0) {
                 pricePerUom.closest(".o_base_unit_price_wrapper").classList.remove("d-none");
@@ -593,13 +597,13 @@ var VariantMixin = {
         this._toggleDisable(parent, isCombinationPossible);
 
         if (combination.has_discounted_price && !combination.compare_list_price) {
-            default_price.closest('.oe_website_sale').classList.add("discount");
+            default_price?.closest('.oe_website_sale').classList.add("discount");
             optional_price.closest('.oe_optional').classList.remove('d-none').style.textDecoration = 'line-through';
-            default_price.parentElement.classList.remove('d-none');
+            default_price?.parentElement.classList.remove('d-none');
         } else {
-            default_price.closest('.oe_website_sale').classList.remove("discount");
-            optional_price.closest('.oe_optional').classList.add('d-none');
-            default_price.parentElement.classList.add('d-none');
+            default_price?.closest('.oe_website_sale').classList.remove("discount");
+            optional_price?.closest('.oe_optional').classList.add('d-none');
+            default_price?.parentElement.classList.add('d-none');
         }
 
         var rootComponentSelectors = [
@@ -627,18 +631,26 @@ var VariantMixin = {
         }
 
         let productIdElement = parent.querySelector('.product_id');
-        productIdElement.value = combination.product_id || 0;
-        productIdElement.dispatchEvent(new Event('change'));
+        if (productIdElement) {
+            productIdElement.value = combination.product_id || 0;
+            productIdElement.dispatchEvent(new Event('change'));
+        }
 
         let productDisplayNameElement = parent.querySelector('.product_display_name');
-        productDisplayNameElement.textContent = combination.display_name;
+        if (productDisplayNameElement) {
+            productDisplayNameElement.textContent = combination.display_name;
+        }
 
         let rawPriceElement = parent.querySelector('.js_raw_price');
-        rawPriceElement.textContent = combination.price;
-        rawPriceElement.dispatchEvent(new Event('change'));
+        if (rawPriceElement) {
+            rawPriceElement.textContent = combination.price;
+            rawPriceElement.dispatchEvent(new Event('change'));
+        }
 
         let productTagsElement = parent.querySelector('.o_product_tags');
-        productTagsElement.innerHTML = combination.product_tags;
+        if (productTagsElement) {
+            productTagsElement.innerHTML = combination.product_tags;
+        }
 
         this.handleCustomValues(ev.target);
     },
@@ -653,7 +665,7 @@ var VariantMixin = {
         let precision = 2;
 
         const precisionEls = this.el.querySelectorAll('.decimal_precision');
-        const lastElement = precisionEls[precisionEls - 1];
+        const lastElement = precisionEls[precisionEls.length - 1];
         if (precisionEls.length) {
             precision = parseInt(lastElement.dataset.precision);
         }

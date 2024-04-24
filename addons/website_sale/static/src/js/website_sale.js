@@ -107,7 +107,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @override
      */
     getSelectedVariantValues: function (container) {
-        const combination = container.querySelector('input.js_product_change:checked')?.dataset.combination;
+        const combination = container?.querySelector('input.js_product_change:checked')?.dataset.combination;
 
         if (combination) {
             return combination;
@@ -203,6 +203,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @private
      */
     _changeCartQuantity: function (input, value, dom_optional, line_id, productIDs) {
+        debugger;
         [...dom_optional].forEach((elem) => {
             elem.querySelector('.js_quantity').textContent = value;
             productIDs.push(elem.querySelector('span[data-product-id]').dataset.productId);
@@ -248,7 +249,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @override
      */
     _getProductId: function (parent) {
-        if (parent.querySelector('input.js_product_change').length !== 0) {
+        if (parent.querySelector('input.js_product_change')) {
             return parseInt(parent.querySelector('input.js_product_change:checked').value);
         }
         else {
@@ -356,26 +357,26 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         // When using the web editor, don't reload this or the images won't
         // be able to be edited depending on if this is done loading before
         // or after the editor is ready.
-        if (images.length && !this._isEditorEnabled()) {
-            images.forEach((image, index) => {
-                image.parentNode.insertBefore(newImages[index], image.nextSibling);
-            });
-            images.forEach((image) => image.remove());
+        if (images && !this._isEditorEnabled()) {
+            const parser = new DOMParser();
+            newImages = parser.parseFromString(newImages, 'text/html').querySelector('#o-carousel-product');
+            images[0].parentNode.appendChild(newImages);
+            images.forEach((img) => img.remove());
             images = newImages;
             // Update the sharable image (only work for Pinterest).
-            const shareImageSrc = images[0].querySelector('img').src;
+            const shareImageSrc =  images.querySelector('img').src;
             document.querySelector('meta[property="og:image"]')
                 .setAttribute('content', shareImageSrc);
 
-            images.forEach((image) => {
-                // TODO VISP: remove this when the carousel is fixed
-                image.getAttribute('id') === 'o-carousel-product' ? image.carousel(0) : null;
-            });
+            if (images.getAttribute('id') === 'o-carousel-product') {
+                // TODO-VISP take a look
+                new Carousel(images, {interval: 0});
+            }
             this._startZoom();
             // fix issue with carousel height
             this.trigger_up('widgets_start_request', {target: images});
         }
-        images.forEach(el => el.classList.toggle('css_not_available', !isCombinationPossible));
+        images.classList.toggle('css_not_available', !isCombinationPossible);
     },
     /**
      * @private
@@ -479,6 +480,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @param {Event} ev
      */
     _onChangeCartQuantity: function (ev) {
+        debugger;
         const input = ev.currentTarget;
         if (input.dataset.updateChange) {
             return;
@@ -527,12 +529,14 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             aSubmit.classList.add("disabled");
         }
         if (aSubmit.classList.contains('a-submit-loading')) {
-            var loading = '<span class="fa fa-cog fa-spin"/>';
-            var fa_span = aSubmit.querySelector('span[class*="fa"]');
-            if (fa_span.length) {
-                fa_span.replaceWith(loading);
+            const loadingEl = document.createElement('SPAN');
+            loadingEl.className = "fa fa-cog fa-spin";
+
+            const fa_span = aSubmit.querySelector('span[class*="fa"]');
+            if (fa_span) {
+                fa_span.replaceWith(loadingEl);
             } else {
-                aSubmit.append(loading);
+                aSubmit.append(loadingEl);
             }
         }
     },
@@ -594,7 +598,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
     _toggleDisable: function (parent, isCombinationPossible) {
         VariantMixin._toggleDisable.apply(this, arguments);
         parent.querySelector("#add_to_cart").classList.toggle('disabled', !isCombinationPossible);
-        parent.querySelector(".o_we_buy_now").classList.toggle('disabled', !isCombinationPossible);
+        parent.querySelector(".o_we_buy_now")?.classList.toggle('disabled', !isCombinationPossible);
     },
     /**
      * Write the properties of the form elements in the DOM to prevent the

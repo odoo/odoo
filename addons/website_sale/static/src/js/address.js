@@ -51,6 +51,7 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
      * @private
      */
     _changeCountry: function () {
+        debugger;
         if (!this.el.querySelector("#country_id").value) {
             return;
         }
@@ -58,12 +59,12 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
             mode: this.el.querySelector("#country_id").getAttribute('mode'),
         }).then(function (data) {
             // placeholder phone_code
-            this.el.querySelector("input[name='phone']").setAttribute('placeholder', data.phone_code !== 0 ? '+'+ data.phone_code : '');
+            document.querySelector("input[name='phone']").setAttribute('placeholder', data.phone_code !== 0 ? '+'+ data.phone_code : '');
 
             // populate states and display
-            const selectStates = this.el.querySelector("select[name='state_id']");
+            const selectStates = document.querySelector("select[name='state_id']");
             // dont reload state at first loading (done in qweb)
-            if (selectStates.dataset.init === 0 || selectStates.querySelector('option').length === 1) {
+            if (parseInt(selectStates.dataset.init) === 0 || selectStates.querySelector('option').length === 1) {
                 if (data.states.length || data.state_required) {
                     selectStates.innerHTML = '';
                     data.states.forEach((x) => {
@@ -85,8 +86,8 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
 
             // manage fields order / visibility
             if (data.fields) {
-                let divZip = this.el.querySelector('.div_zip');
-                let divCity = this.el.querySelector('.div_city');
+                let divZip = document.querySelector('.div_zip');
+                let divCity = document.querySelector('.div_city');
                 if (data.fields.indexOf('zip') > data.fields.indexOf('city')){
                     divZip.parentNode.insertBefore(divCity, divZip);
                 } else {
@@ -94,18 +95,20 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
                 }
                 var all_fields = ["street", "zip", "city", "country_name"]; // "state_code"];
                 all_fields.forEach((field) => {
-                    const fieldEl = field.querySelector(".checkout_autoformat .div_" + field.split('_')[0]);
+                    const fieldEl = document.querySelector(".checkout_autoformat .div_" + field.split('_')[0]);
                     fieldEl.style.display = data.fields.includes(field) ? '' : 'none';
                 });
             }
 
-            if (this.el.querySelector("label[for='zip']").length) {
-                this.el.querySelector("label[for='zip']").classList.toggle('label-optional', !data.zip_required);
-                this.el.querySelector("label[for='zip']").classList.setAttribute('required', !!data.zip_required);
+            const lableZipEl = document.querySelector("label[for='zip']");
+            if (lableZipEl) {
+                lableZipEl.classList.toggle('label-optional', !data.zip_required);
+                lableZipEl.setAttribute('required', !!data.zip_required);
             }
-            if (this.el.querySelector("label[for='zip']").length) {
-                this.el.querySelector("label[for='state_id']").classList.toggle('label-optional', !data.state_required);
-                this.el.querySelector("label[for='state_id']").classList.setAttribute('required', !!data.state_required);
+            if (lableZipEl) {
+                const lableStateIdEl = document.querySelector("label[for='state_id']");
+                lableStateIdEl.classList.toggle('label-optional', !data.state_required);
+                lableStateIdEl.setAttribute('required', !!data.state_required);
             }
         });
     },
@@ -115,7 +118,9 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onChangeShippingUseSame: function (ev) {
-        document.querySelector('.ship_to_other').style.display = ev.currentTarget.checked ? 'none' : '';
+        if (document.querySelector('.ship_to_other')) {
+            document.querySelector('.ship_to_other').style.display = ev.currentTarget.checked ? 'none' : '';
+        }
     },
 
 });

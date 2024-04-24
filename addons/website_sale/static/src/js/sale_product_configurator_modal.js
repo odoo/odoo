@@ -91,11 +91,11 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
             custom_attribute: self.rootProduct.product_custom_attribute_values,
             context: Object.assign({'quantity': self.rootProduct.quantity}, this.context),
         }).then(function (modalContent) {
-            modalContent = new DOMParser().parseFromString(modalContent, 'text/html');
-            modalContent = modalContent.querySelector('main.modal-body');
+            // TODO-VISP : remove this
             if (modalContent) {
-                modalContent = self._postProcessContent(modalContent);
-                self.content = modalContent;
+                var $modalContent = $(modalContent);
+                $modalContent = self._postProcessContent($modalContent);
+                self.$content = $modalContent;
             } else {
                 self.trigger('options_empty');
                 self.preventOpening = true;
@@ -119,11 +119,11 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
         })
 
         const self = this;
-        let div = document.createElement('div');
-        this.appendTo(div).then(function () {
+        // TODO-VISP : remove this
+        this.appendTo($('<div/>')).then(function () {
             if (!self.preventOpening) {
-                self.$modal[0].querySelector(".modal-body").replaceWith(self.content);
-                self.$modal[0].setAttribute('open', true);
+                self.$modal.find(".modal-body").replaceWith(self.$el);
+                self.$modal.attr('open', true);
                 self.$modal.appendTo(self.container);
                 const modal = new Modal(self.$modal[0], {
                     focus: true,
@@ -146,7 +146,11 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
     start: function () {
         const def = this._super.apply(this, arguments);
         const self = this;
-        this.container.querySelector('input[name="add_qty"]').value = this.rootProduct.quantity;
+
+        const qtyInputEl = this.el.querySelector('input[name="add_qty"]');
+        if (qtyInputEl) {
+            qtyInputEl.value = this.rootProduct.quantity;
+        }
 
         // set a unique id to each row for options hierarchy
         const products = this.container.querySelectorAll('tr.js_product');
@@ -189,11 +193,11 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
         const products = [];
         let productCustomVariantValues;
         let noVariantAttributeValues;
-        for (const product of self.modal.querySelectorAll('.js_product.in_cart')) {
+        for (const product of self.$modal[0].querySelectorAll('.js_product.in_cart')) {
             const item = product;
             const quantity = parseFloat(item.querySelector('input[name="add_qty"]').value.replace(',', '.') || 1);
-            const parentUniqueId = product.dataset.parentUniqueId;
-            const uniqueId = product.dataset.uniqueId;
+            const parentUniqueId = item.dataset.parentUniqueId;
+            const uniqueId = this._getUniqueId(item);
             productCustomVariantValues = [...item.querySelectorAll('.custom-attribute-info')].map(el => el.dataset.attributeValue) || self.getCustomVariantValues(item);
             noVariantAttributeValues = [...item.querySelectorAll('.no-attribute-info')].map(el => el.dataset.attributeValue) || self.getNoVariantAttributeValues(item);
 
@@ -208,8 +212,8 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
                 'quantity': quantity,
                 'parent_unique_id': parentUniqueId,
                 'unique_id': uniqueId,
-                'product_custom_attribute_values': productCustomVariantValues,
-                'no_variant_attribute_values': noVariantAttributeValues
+                'product_custom_attribute_values': parseInt(productCustomVariantValues),
+                'no_variant_attribute_values': parseInt(noVariantAttributeValues)
             });
         }
         return products;
@@ -226,6 +230,8 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
      * @private
      */
     _postProcessContent: function (modalContent) {
+        // TODO_VISP: remove this 
+        modalContent = modalContent[0];
         const productId = this.rootProduct.product_id;
         let firstImg = modalContent.querySelector('img:first-child');
         firstImg.src = "/web/image/product.product/" + productId + "/image_128";
@@ -300,7 +306,7 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
         const self = this;
         const target = ev.currentTarget;
         const modal = target.closest('.oe_advanced_configurator_modal');
-        const parent = target.closest('.js_product:first');
+        const parent = target.closest('.js_product');
         parent.querySelectorAll("a.js_add, span.js_remove").forEach(el => el.classList.toggle('d-none'));
 
         const productTemplateId = parent.querySelector(".product_template_id").value;
@@ -367,16 +373,17 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
                 }
             });
 
-            productDescription.append(customAttributeValuesDescription);
+            productDescription?.append(customAttributeValuesDescription);
         }
 
         // place it after its parent and its parent options
         let tmpOptionParent = optionParent;
-        while (tmpOptionParent.length) {
+        while (tmpOptionParent) {
             optionParent = tmpOptionParent;
-            tmpOptionParent = [...modal.querySelectorAll('tr.js_product.in_cart')].filter(el => el.dataset.uniqueId === optionParent.dataset.uniqueId).slice(-1)[0];
+            tmpOptionParent = [...modal.querySelectorAll('tr.js_product.in_cart')].filter(el => el.dataset.uniqueId === optionParent.getAttribute('data-uniqueId')).slice(-1)[0];
         }
-        optionParent.after(parent);
+        debugger;
+        optionParent?.parentNode.insertBefore(parent, optionParent.nextSibling);
         parent.classList.add('in_cart');
 
         this.selectOrCreateProduct(
@@ -398,7 +405,8 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
                 self.triggerVariantChange(addedItem);
 
                 // add a unique id to the new products
-                const parentUniqueId = parent.dataset.uniqueId;
+                debugger;
+                const parentUniqueId = parent.getAttribute('data-uniqueId');
                 const parentQty = parent.querySelector('input[name="add_qty"]').value;
                 addedItem.querySelectorAll('.js_product').each(function (item) {
                     var uniqueId = self._getUniqueId(item);
@@ -436,7 +444,7 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
         parent.querySelector('.custom_attribute_values_description').remove();
         modal.querySelector('.o_select_options').style.display = '';
 
-        const productUniqueId = parent.dataset.uniqueId;
+        const productUniqueId = parent.getAttribute('data-uniqueId');
         this._removeOptionOption(modal, productUniqueId);
 
         const lastTr = modal.querySelector('tr:last-child');
@@ -478,7 +486,7 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
         const product = ev.target.closest('tr.js_product');
         const qty = parseFloat(ev.currentTarget.value);
 
-        const uniqueId = product.dataset.uniqueId;
+        const uniqueId = this._getUniqueId(product);
         this.el.querySelectorAll('tr.js_product:not(.in_cart)[data-parent-unique-id="' + uniqueId + '"] input[name="add_qty"]').forEach(() => {
             this.value = qty;
         });
@@ -498,14 +506,15 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
      * we need to refresh the total price row
      */
     _computePriceTotal: function () {
-        if (this.modal.querySelector('.js_price_total').length) {
+        debugger;
+        if (this.$modal[0].querySelector('.js_price_total').length) {
             let price = 0;
-            this.modal.querySelectorAll('.js_product.in_cart').forEach(() => {
+            this.$modal[0].querySelectorAll('.js_product.in_cart').forEach(() => {
                 const quantity = parseFloat(this.el.querySelectorAll('input[name="add_qty"]')[0].value.replace(',', '.') || 1);
                 price += parseFloat(this.querySelector('.js_raw_price').innerHTML) * quantity;
             });
 
-            this.modal.querySelector('.js_price_total .oe_currency_value').textContent = this._priceToStr(parseFloat(price));
+            this.$modal[0].querySelector('.js_price_total .oe_currency_value').textContent = this._priceToStr(parseFloat(price));
         }
     },
 

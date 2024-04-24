@@ -102,6 +102,7 @@ publicWidget.registry.WebsiteSale.include({
         const callService = this.call.bind(this)
         this.optionalProductsModal.getAndCreateSelectedProducts()
             .then((products) => {
+                debugger;
                 const productAndOptions = JSON.stringify(products);
                 rpc('/shop/cart/update_option', {
                     product_and_options: productAndOptions,
@@ -114,7 +115,7 @@ publicWidget.registry.WebsiteSale.include({
                         wSaleUtils.showCartNotification(callService, values.notification_info);
                     }
                 }).then(() => {
-                    this._getCombinationInfo(this.el.querySelector('#add_to_cart').dispatchEvent(new Event('click')));
+                    this._getCombinationInfo(document.getElementById('#add_to_cart')?.dispatchEvent(new Event('click')));
                 });
             });
     },

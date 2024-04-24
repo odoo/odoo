@@ -184,7 +184,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @param {Object} result
      */
     _handleCarrierUpdateResultBadge: function (result) {
-        const carrierBadge = this.el.querySelector('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_wsale_delivery_badge_price');
+        const carrierBadge = this.el.querySelector('#delivery_carrier input[name="delivery_type"][value="' + result.carrier_id + '"]~ .o_wsale_delivery_badge_price')
 
         if (result.status === true) {
              // if free delivery (`free_over` field), show 'Free', not '0'
