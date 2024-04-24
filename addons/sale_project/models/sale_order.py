@@ -297,7 +297,7 @@ class SaleOrder(models.Model):
         project = self.env['project.project'].browse(self.env.context.get('create_for_project_id'))
         if project:
             service_sol = next((sol for sol in created_records.order_line if sol.is_service), False)
-            if not service_sol:
+            if not service_sol and not self.env.context.get('from_embedded_action'):
                 raise UserError(_('This Sales Order must contain at least one product of type "Service".'))
             if not project.sale_line_id:
                 project.sale_line_id = service_sol
