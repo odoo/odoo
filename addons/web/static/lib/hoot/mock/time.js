@@ -514,6 +514,6 @@ export class MockDate extends Date {
     }
 
     static now() {
-        return new this().getTime() + ($now() - dateTimeStamp) + timeOffset;
+        return new MockDate().getTime() + ($now() - dateTimeStamp) + timeOffset;
     }
 }
