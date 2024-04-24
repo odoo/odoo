@@ -1018,7 +1018,7 @@ class TestBoM(TestMrpCommon):
                 }),
                 Command.create({
                     'product_id': product_two.id,
-                    'product_qty': 1,
+                    'product_qty': 0.1,
                     'product_uom_id': uom_unit.id,
                 })
             ]
@@ -1027,8 +1027,8 @@ class TestBoM(TestMrpCommon):
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
 
         # The first product shouldn't affect the producible quantity because the target needs none of it
-        # So with 4 of the second product available, we can produce 4 items
-        self.assertEqual(report_values["lines"]["producible_qty"], 4)
+        # So with 4 of the second product available, we can produce 40 items
+        self.assertEqual(report_values["lines"]["producible_qty"], 40)
 
     def test_bom_report_capacity_with_duplicate_components(self):
         location = self.env.ref('stock.stock_location_stock')
