@@ -1,7 +1,7 @@
 import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
 
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { reactive } from "@odoo/owl";
+import { rpc } from "@web/core/network/rpc";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -13,8 +13,6 @@ import { session } from "@web/session";
  * @property {number?} [auto_popup_timer]
  * @property {import("@im_livechat/embed/common/chatbot/chatbot_model").IChatbot} [chatbot]
  */
-
-let rpc;
 
 export const RATING = Object.freeze({
     GOOD: 5,
@@ -56,7 +54,6 @@ export class LivechatService {
 
     constructor(env, services) {
         this.setup(env, services);
-        rpc = rpcWithEnv(env);
     }
 
     /**

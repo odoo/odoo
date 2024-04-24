@@ -8,7 +8,7 @@ import {
     patchUiSize,
     start,
     startServer,
-} from "../../../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
 import { Command, getService, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");

@@ -11,12 +11,11 @@ import {
     step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
 import { mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -629,8 +628,7 @@ test("Counter should be incremented by 1 when receiving a message with a mention
             res_partner_id: serverState.partnerId,
         },
     ]);
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     const mention = [serverState.partnerId];
@@ -665,7 +663,7 @@ test("Clear need action counter when opening a channel", async () => {
             model: "discuss.channel",
             needaction: true,
             res_id: channelId,
-        }
+        },
     ]);
     pyEnv["mail.notification"].create([
         {
