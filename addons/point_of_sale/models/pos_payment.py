@@ -66,39 +66,55 @@ class PosPayment(models.Model):
     def _create_payment_moves(self, is_reverse=False):
         result = self.env['account.move']
         for payment in self:
-            order = payment.pos_order_id
             payment_method = payment.payment_method_id
-            if payment_method.type == 'pay_later' or float_is_zero(payment.amount, precision_rounding=order.currency_id.rounding):
+            if payment_method.type == 'pay_later' or float_is_zero(payment.amount, precision_rounding=payment.pos_order_id.currency_id.rounding):
                 continue
-            accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
-            pos_session = order.session_id
-            journal = pos_session.config_id.journal_id
-            payment_move = self.env['account.move'].with_context(default_journal_id=journal.id).create({
-                'journal_id': journal.id,
-                'date': fields.Date.context_today(order, order.date_order),
-                'ref': _('Invoice payment for %s (%s) using %s') % (order.name, order.account_move.name, payment_method.name),
-                'pos_payment_ids': payment.ids,
-            })
-            result |= payment_move
+            payment_move = payment._create_payment_move_entry(is_reverse)
             payment.write({'account_move_id': payment_move.id})
-            amounts = pos_session._update_amounts({'amount': 0, 'amount_converted': 0}, {'amount': payment.amount}, payment.payment_date)
-            credit_line_vals = pos_session._credit_amounts({
-                'account_id': accounting_partner.with_company(order.company_id).property_account_receivable_id.id,  # The field being company dependant, we need to make sure the right value is received.
-                'partner_id': accounting_partner.id,
-                'move_id': payment_move.id,
-            }, amounts['amount'], amounts['amount_converted'])
-            is_split_transaction = payment.payment_method_id.split_transactions
-            if is_split_transaction and is_reverse:
-                reversed_move_receivable_account_id = accounting_partner.with_company(order.company_id).property_account_receivable_id.id
-            elif is_reverse:
-                reversed_move_receivable_account_id = payment.payment_method_id.receivable_account_id.id or self.company_id.account_default_pos_receivable_account_id.id
-            else:
-                reversed_move_receivable_account_id = self.company_id.account_default_pos_receivable_account_id.id
-            debit_line_vals = pos_session._debit_amounts({
-                'account_id': reversed_move_receivable_account_id,
-                'move_id': payment_move.id,
-                'partner_id': accounting_partner.id if is_split_transaction and is_reverse else False,
-            }, amounts['amount'], amounts['amount_converted'])
-            self.env['account.move.line'].with_context(check_move_validity=False).create([credit_line_vals, debit_line_vals])
+            result |= payment_move
             payment_move._post()
         return result
+
+    def _create_payment_move_entry(self, is_reverse=False):
+        self.ensure_one()
+        order = self.pos_order_id
+        pos_session = order.session_id
+        journal = pos_session.config_id.journal_id
+        payment_move = self.env['account.move'].with_context(default_journal_id=journal.id).create({
+            'journal_id': journal.id,
+            'date': fields.Date.context_today(order, order.date_order),
+            'ref': _('Invoice payment for %s (%s) using %s') % (order.name, order.account_move.name, self.payment_method_id.name),
+            'pos_payment_ids': self.ids,
+        })
+        amounts = pos_session._update_amounts({'amount': 0, 'amount_converted': 0}, {'amount': self.amount}, self.payment_date)
+        credit_line_values = self._prepare_credit_line_payment(payment_move)
+        credit_line_vals = pos_session._credit_amounts(credit_line_values, amounts['amount'], amounts['amount_converted'])
+        debit_line_values = self._prepare_debit_line_payment(payment_move, is_reverse)
+        debit_line_vals = pos_session._debit_amounts(debit_line_values, amounts['amount'], amounts['amount_converted'])
+        self.env['account.move.line'].with_context(check_move_validity=False).create([credit_line_vals, debit_line_vals])
+        return payment_move
+
+    def _prepare_credit_line_payment(self, payment_move):
+        accounting_partner = self.env["res.partner"]._find_accounting_partner(self.partner_id)
+        order = self.pos_order_id
+        return {
+            'account_id': accounting_partner.with_company(order.company_id).property_account_receivable_id.id,  # The field being company dependant, we need to make sure the right value is received.
+            'move_id': payment_move.id,
+            'partner_id': accounting_partner.id,
+        }
+
+    def _prepare_debit_line_payment(self, payment_move, is_reverse):
+        accounting_partner = self.env["res.partner"]._find_accounting_partner(self.partner_id)
+        order = self.pos_order_id
+        is_split_transaction = self.payment_method_id.split_transactions
+        if is_split_transaction and is_reverse:
+            reversed_move_receivable_account_id = accounting_partner.with_company(order.company_id).property_account_receivable_id.id
+        elif is_reverse:
+            reversed_move_receivable_account_id = self.payment_method_id.receivable_account_id.id or self.company_id.account_default_pos_receivable_account_id.id
+        else:
+            reversed_move_receivable_account_id = self.company_id.account_default_pos_receivable_account_id.id
+        return {
+            'account_id': reversed_move_receivable_account_id,
+            'move_id': payment_move.id,
+            'partner_id': accounting_partner.id if is_split_transaction and is_reverse else False,
+        }
