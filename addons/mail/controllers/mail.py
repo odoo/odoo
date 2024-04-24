@@ -62,7 +62,7 @@ class MailController(http.Controller):
             # record does not seem to exist -> redirect to login
             return cls._redirect_to_messaging()
 
-        suggested_company = record_sudo._get_mail_redirect_suggested_company()
+        suggested_company = record_sudo._get_redirect_suggested_company()
         # the record has a window redirection: check access rights
         if uid is not None:
             if not RecordModel.with_user(uid).check_access_rights('read', raise_exception=False):
@@ -72,7 +72,7 @@ class MailController(http.Controller):
                 # to any record that the user can access, regardless of currently visible
                 # records based on the "currently allowed companies".
                 cids_str = request.httprequest.cookies.get('cids', str(user.company_id.id))
-                cids = [int(cid) for cid in cids_str.split(',')]
+                cids = [int(cid) for cid in cids_str.split('-')]
                 try:
                     record_sudo.with_user(uid).with_context(allowed_company_ids=cids).check_access_rule('read')
                 except AccessError:
@@ -80,7 +80,7 @@ class MailController(http.Controller):
                     # on their browser) is not sufficient to avoid an ir.rule access error, try to following
                     # heuristic:
                     # - Guess the supposed necessary company to access the record via the method
-                    #   _get_mail_redirect_suggested_company
+                    #   _get_redirect_suggested_company
                     #   - If no company, then redirect to the messaging
                     #   - Merge the suggested company with the companies on the cookie
                     # - Make a new access test if it succeeds, redirect to the record. Otherwise, 
@@ -88,6 +88,7 @@ class MailController(http.Controller):
                     if not suggested_company:
                         raise AccessError('')
                     cids = cids + [suggested_company.id]
+                    request.future_response.set_cookie('cids', '-'.join([str(cid) for cid in cids]))
                     record_sudo.with_user(uid).with_context(allowed_company_ids=cids).check_access_rule('read')
             except AccessError:
                 return cls._redirect_to_messaging()
@@ -105,7 +106,7 @@ class MailController(http.Controller):
                     'action': record_action.get('id'),
                 }
                 if cids:
-                    url_params['cids'] = cids[0]
+                    request.future_response.set_cookie('cids', '-'.join([str(cid) for cid in cids]))
                 view_id = record_sudo.get_formview_id()
                 if view_id:
                     url_params['view_id'] = view_id
@@ -134,7 +135,7 @@ class MailController(http.Controller):
             url_params['view_id'] = view_id
 
         if cids:
-            url_params['cids'] = ','.join([str(cid) for cid in cids])
+            request.future_response.set_cookie('cids', '-'.join([str(cid) for cid in cids]))
         url = '/web?#%s' % url_encode(url_params)
         return request.redirect(url)
 

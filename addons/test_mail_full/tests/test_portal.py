@@ -51,7 +51,7 @@ class TestPortalControllers(TestPortal):
 
         fragment = url_parse(response.url).fragment
         params = url_decode(fragment)
-        self.assertEqual(params['cids'], '%s' % self.user_admin.company_id.id)
+        self.assertEqual(response.request._cookies.get('cids'), '%s' % self.user_admin.company_id.id)
         self.assertEqual(params['id'], '%s' % self.record_portal.id)
         self.assertEqual(params['model'], self.record_portal._name)
 

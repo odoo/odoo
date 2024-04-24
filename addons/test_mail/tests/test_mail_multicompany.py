@@ -346,9 +346,8 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
                 if not login:
                     path = url_parse(response.url).path
                     self.assertEqual(path, '/web/login')
-                    decoded_fragment = url_decode(url_parse(response.url).fragment)
-                    self.assertTrue("cids" in decoded_fragment)
-                    self.assertEqual(decoded_fragment['cids'], str(mc_record.company_id.id))
+                    self.assertTrue('cids' in response.request._cookies)
+                    self.assertEqual(response.request._cookies.get('cids'), str(mc_record.company_id.id))
                 else:
                     user = self.env['res.users'].browse(self.session.uid)
                     self.assertEqual(user.login, login)
@@ -364,12 +363,40 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
                         # Logged into company main, try accessing record in same
                         # company -> _redirect_to_record should add company in
                         # allowed_company_ids
-                        fragment = url_parse(response.url).fragment
-                        cids = url_decode(fragment)['cids']
+                        cids = response.request._cookies.get('cids')
                         if mc_record.company_id == user.company_id:
                             self.assertEqual(cids, f'{mc_record.company_id.id}')
                         else:
-                            self.assertEqual(cids, f'{user.company_id.id},{mc_record.company_id.id}')
+                            self.assertEqual(cids, f'{user.company_id.id}-{mc_record.company_id.id}')
+
+    def test_multi_redirect_to_records(self):
+        """ Test mail/view redirection in MC environment, notably test a user that is
+        redirected multiple times, the cids needed to access the record are being added
+        recursivelly when in redirect."""
+        mc_records = self.env['mail.test.multi.company'].create([
+            {
+                'company_id': self.user_employee.company_id.id,
+                'name': 'Multi Company Record',
+            },
+            {
+                'company_id': self.user_employee_c2.company_id.id,
+                'name': 'Multi Company Record',
+            }
+        ])
+
+        self.authenticate('admin', 'admin')
+        companies = []
+        for mc_record in mc_records:
+            with self.subTest(mc_record=mc_record):
+                response = self.url_open(
+                    f'/mail/view?model={mc_record._name}&res_id={mc_record.id}',
+                    timeout=15
+                )
+                self.assertEqual(response.status_code, 200)
+
+                cids = response.request._cookies.get('cids')
+                companies.append(str(mc_record.company_id.id))
+                self.assertEqual(cids, '-'.join(companies))
 
     def test_redirect_to_records_nothread(self):
         """ Test no thread models and redirection """
@@ -383,10 +410,10 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
 
         # when being logged, cids should be based on current user's company unless
         # there is an access issue (not tested here, see 'test_redirect_to_records')
-        self.authenticate(self.user_admin.login, self.user_admin.login)
         for test_record in nothreads:
             for user_company in self.company_admin, self.company_2:
                 with self.subTest(record_name=test_record.name, user_company=user_company):
+                    self.authenticate(self.user_admin.login, self.user_admin.login)
                     self.user_admin.write({'company_id': user_company.id})
                     response = self.url_open(
                         f'/mail/view?model={test_record._name}&res_id={test_record.id}',
@@ -394,15 +421,14 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
                     )
                     self.assertEqual(response.status_code, 200)
 
-                    decoded_fragment = url_decode(url_parse(response.url).fragment)
-                    self.assertTrue("cids" in decoded_fragment)
-                    self.assertEqual(decoded_fragment['cids'], str(user_company.id))
+                    self.assertTrue('cids' in response.request._cookies)
+                    self.assertEqual(response.request._cookies.get('cids'), str(user_company.id))
 
         # when being not logged, cids should be added based on
-        # '_get_mail_redirect_suggested_company'
-        self.authenticate(None, None)
+        # '_get_redirect_suggested_company'
         for test_record in nothreads:
             with self.subTest(record_name=test_record.name, user_company=user_company):
+                self.authenticate(None, None)
                 self.user_admin.write({'company_id': user_company.id})
                 response = self.url_open(
                     f'/mail/view?model={test_record._name}&res_id={test_record.id}',
@@ -410,9 +436,8 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
                 )
                 self.assertEqual(response.status_code, 200)
 
-                decoded_fragment = url_decode(url_parse(response.url).fragment)
                 if test_record.company_id:
-                    self.assertIn('cids', decoded_fragment)
-                    self.assertEqual(decoded_fragment['cids'], str(test_record.company_id.id))
+                    self.assertIn('cids', response.request._cookies)
+                    self.assertEqual(response.request._cookies.get('cids'), str(test_record.company_id.id))
                 else:
-                    self.assertNotIn('cids', decoded_fragment)
+                    self.assertNotIn('cids', response.request._cookies)
