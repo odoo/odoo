@@ -19,27 +19,6 @@
         </field>
     </record>
 
-    <!-- EVALUACION -->
-    <record id="evaluacion_action" model="ir.actions.act_window">
-        <field name="name">evaluacion.action</field>
-        <field name="res_model">evaluacion</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-
-    <record id="evaluacion_tree" model="ir.ui.view">
-        <field name="name">evaluacion.tree</field>
-        <field name="model">evaluacion</field>
-
-        <field name="arch" type="xml">
-            <tree>
-                <field name="nombre"/>
-                <field name="estado"/>
-                <field name="pregunta_ids"/>
-                <field name="competencia_ids"/>
-                <field name="usuario_ids"/>
-            </tree>
-        </field>
-    </record>
 
     <!-- OPCION -->
     <record id="opcion_action" model="ir.actions.act_window">
@@ -98,10 +77,10 @@
         <field name="arch" type="xml">
             <form string="Clima" create="false">
                 <sheet>
-					<h1>
+                    <h1>
                         <field name="nombre"/>
                     </h1>
-					<p>
+                    <p>
                         <field name="descripcion"/>
                     </p>
                     <group>
@@ -112,11 +91,11 @@
                             <page string="Preguntas">
                                 <field name="pregunta_ids" readonly="1"/>
                             </page>
-							<page string="Asignados">
-								<field name="usuario_ids"/>
-							</page>
+                            <page string="Asignados">
+                                <field name="usuario_ids"/>
+                            </page>
                         </notebook>
-					</group>
+                    </group>
 
                     <div>
                         <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary"/>
@@ -126,7 +105,7 @@
             </form>
         </field>
     </record>
-    
+
     <!-- NOM035 -->
     <record id="evaluacion_nom035_form" model="ir.ui.view">
         <field name="name">evaluacion.nom035.form</field>
@@ -134,10 +113,10 @@
         <field name="arch" type="xml">
             <form string="NOM035" create="false">
                 <sheet>
-					<h1>
+                    <h1>
                         <field name="nombre"/>
                     </h1>
-					<p>
+                    <p>
                         <field name="descripcion"/>
                     </p>
                     <group>
@@ -148,14 +127,14 @@
                             <page string="Preguntas">
                                 <field name="pregunta_ids" readonly="1"/>
                             </page>
-							<page string="Asignados">
-								<field name="usuario_ids"/>
-							</page>
+                            <page string="Asignados">
+                                <field name="usuario_ids"/>
+                            </page>
                         </notebook>
-					</group>
+                    </group>
                     <div>
                         <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary"/>
-                    </div>					
+                    </div>
                 </sheet>
             </form>
         </field>
@@ -176,7 +155,15 @@
         <field name="code">action = model.evaluacion_nom035_action_form()</field>
         <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
-    
+
+    <record id="evaluacion_360_action_form" model="ir.actions.server">
+        <field name="name">360</field>
+        <field name="model_id" ref="model_evaluacion"/>
+        <field name="state">code</field>
+        <field name="code">action = model.evaluacion_360_action_form()</field>
+        <field name="binding_model_id" ref="model_evaluacion"/>
+    </record>
+
     <record id="evaluacion_action_tree" model="ir.actions.server">
         <field name="name">Redirigir a Evaluación Tree</field>
         <field name="model_id" ref="model_evaluacion"/>
@@ -184,5 +171,26 @@
         <field name="code">action = model.evaluacion_action_tree()</field>
         <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
-     
+
+    <record id="evaluacion_action" model="ir.actions.act_window">
+        <field name="name">Evaluaciones</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="evaluacion_tree" model="ir.ui.view">
+        <field name="name">evaluacion.tree</field>
+        <field name="model">evaluacion</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="nombre"/>
+                <field name="descripcion"/>
+                <field name="estado"/>
+                <field name="tipo"/>
+                <field name="pregunta_ids"/>
+            </tree>
+        </field>
+    </record>
+
+
 </odoo>

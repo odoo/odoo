@@ -1,15 +1,17 @@
 <?xml version="1.0"?>
 <odoo>
-    <menuitem id="pregunta_menu_root" name="Questions">
+    <menuitem id="pregunta_menu_root" name="Evaluaciones">
         <menuitem id="pregunta_first_level_menu" name="Detalles">
-            <menuitem id="pregunta_menu_action" action="pregunta_action"/>
-            <menuitem id="evaluacion_menu_action" action="evaluacion_action"/>
-            <menuitem id="competecia_menu_action" action="competencia_action"/>
-            <menuitem id="clima_menu_action" action="evaluacion_clima_action_form"/>
+            <menuitem id="pregunta_menu_action" name="Pregunta" action="pregunta_action"/>
+            <menuitem id="competencia_menu_action" name="Competencia" action="competencia_action"/>
+            <menuitem id="evaluacion_360_menu_action" name="Evaluacion 360" action="evaluacion_360_action_form"/>
             <menuitem id="nom035_menu_action" action="evaluacion_nom035_action_form"/>
+            <menuitem id="clima_menu_action" action="evaluacion_clima_action_form"/>
+            <menuitem id="evaluacion_menu_action" name="Evaluacion" action="evaluacion_action"/>
         </menuitem>
         <menuitem id="objetivo_first_level_menu" name="Objetivos">
             <menuitem id="objetivo_menu_action" action="objetivo_action"/>
         </menuitem>
     </menuitem>
 </odoo>
+
