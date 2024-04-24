@@ -5,7 +5,7 @@ import { sprintf } from "@web/core/utils/strings";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 const { functionRegistry } = spreadsheet.registries;
-const { arg, toBoolean, toString, toNumber, toJsDate } = spreadsheet.helpers;
+const { arg, toBoolean, toString, toNumber, toJsDate, formatValue } = spreadsheet.helpers;
 
 const QuarterRegexp = /^q([1-4])\/(\d{4})$/i;
 const MonthRegexp = /^0?([1-9]|1[0-2])\/(\d{4})$/i;
@@ -159,6 +159,12 @@ functionRegistry.add("ODOO.CREDIT", {
             .map((code) => code.trim())
             .sort();
         offset = toNumber(offset.value, this.locale);
+        if (dateRange?.format) {
+            dateRange.value = formatValue(dateRange.value, {
+                format: dateRange.format,
+                locale: this.locale,
+            });
+        }
         dateRange = parseAccountingDate(dateRange?.value, this.locale);
         includeUnposted = toBoolean(includeUnposted.value);
         const value = this.getters.getAccountPrefixCredit(
@@ -190,6 +196,12 @@ functionRegistry.add("ODOO.DEBIT", {
             .map((code) => code.trim())
             .sort();
         offset = toNumber(offset.value, this.locale);
+        if (dateRange?.format) {
+            dateRange.value = formatValue(dateRange.value, {
+                format: dateRange.format,
+                locale: this.locale,
+            });
+        }
         dateRange = parseAccountingDate(dateRange?.value, this.locale);
         includeUnposted = toBoolean(includeUnposted.value);
         const value = this.getters.getAccountPrefixDebit(
@@ -221,6 +233,12 @@ functionRegistry.add("ODOO.BALANCE", {
             .map((code) => code.trim())
             .sort();
         offset = toNumber(offset.value, this.locale);
+        if (dateRange?.format) {
+            dateRange.value = formatValue(dateRange.value, {
+                format: dateRange.format,
+                locale: this.locale,
+            });
+        }
         dateRange = parseAccountingDate(dateRange?.value, this.locale);
         includeUnposted = toBoolean(includeUnposted.value);
         const value =
