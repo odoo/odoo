@@ -22,7 +22,7 @@ import {
 const viewRegistry = registry.category("views");
 
 viewRegistry.addValidation({
-    Controller: { validate: (c) => c.prototype instanceof Component }, 
+    Controller: { validate: (c) => c.prototype instanceof Component },
     "*": true,
 });
 
@@ -49,6 +49,9 @@ export function getDefaultConfig() {
     const config = {
         actionId: false,
         actionType: false,
+        embeddedActions: [],
+        currentEmbeddedActionId: false,
+        parentActionId: false,
         actionFlags: {},
         breadcrumbs: reactive([
             {
@@ -267,7 +270,13 @@ export class View extends Component {
             // a loadViews is done to complete the missing information
             const result = await this.viewService.loadViews(
                 { context, resModel, views },
-                { actionId: this.env.config.actionId, loadActionMenus, loadIrFilters }
+                {
+                    actionId: this.env.config.actionId,
+                    embeddedActionId: this.env.config.currentEmbeddedActionId,
+                    embeddedParentResId: context.active_id,
+                    loadActionMenus,
+                    loadIrFilters,
+                }
             );
             // Note: if props.views is different from views, the cached descriptions
             // will certainly not be reused! (but for the standard flow this will work as

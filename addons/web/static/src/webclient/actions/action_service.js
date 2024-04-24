@@ -692,12 +692,22 @@ export function makeActionManager(env, router = _router) {
         delete action.context.no_breadcrumbs;
 
         let resId = viewProps.resId;
+        const embeddedActions =
+            view.type === "form"
+                ? []
+                : context.parent_action_embedded_actions || action.embedded_action_ids;
+        const parentActionId = (view.type !== "form" && context.parent_action_id) || false;
+        const currentEmbeddedActionId = context.current_embedded_action_id || false;
         return {
             props: viewProps,
             resId: () => resId,
             config: {
                 actionId: action.id,
+                actionName: action.name,
                 actionType: "ir.actions.act_window",
+                embeddedActions,
+                parentActionId,
+                currentEmbeddedActionId,
                 actionFlags: action.flags,
                 views: action.views,
                 viewSwitcherEntries,
@@ -783,6 +793,12 @@ export function makeActionManager(env, router = _router) {
                 controller.config.breadcrumbs.push(undefined);
                 controller.config.breadcrumbs.pop();
             }
+        };
+        controller.config.setCurrentEmbeddedAction = (embeddedActionId) => {
+            controller.currentEmbeddedActionId = embeddedActionId;
+        };
+        controller.config.setEmbeddedActions = (embeddedActions) => {
+            controller.embeddedActions = embeddedActions;
         };
         controller.config.historyBack = () => {
             const previousController = controllerStack[controllerStack.length - 2];
@@ -1354,7 +1370,8 @@ export function makeActionManager(env, router = _router) {
         // in case an effect is returned from python and there is already an effect
         // attribute on the button, the priority is given to the button attribute
         const effect = params.effect ? evaluateExpr(params.effect) : action.effect;
-        const options = { onClose: params.onClose };
+        const { onClose, stackPosition, viewType } = params;
+        const options = { onClose, stackPosition, viewType };
         await doAction(action, options);
         if (params.close) {
             await _executeCloseAction();

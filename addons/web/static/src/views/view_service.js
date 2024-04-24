@@ -13,6 +13,8 @@ import { UPDATE_METHODS } from "@web/core/orm_service";
  * @property {boolean} is_default
  * @property {string} model_id
  * @property {[number, string] | false} action_id
+ * @property {number | false} embedded_action_id
+ * @property {number | false} embedded_parent_res_id
  */
 
 /**
@@ -72,11 +74,21 @@ export const viewService = {
             const { context, resModel, views } = params;
             const loadViewsOptions = {
                 action_id: options.actionId || false,
+                embedded_action_id: options.embeddedActionId || false,
+                embedded_parent_res_id: options.embeddedParentResId || false,
                 load_filters: options.loadIrFilters || false,
                 toolbar: (!context?.disable_toolbar && options.loadActionMenus) || false,
             };
             for (const key in options) {
-                if (!["actionId", "loadIrFilters", "loadActionMenus"].includes(key)) {
+                if (
+                    ![
+                        "actionId",
+                        "embeddedActionId",
+                        "embeddedParentResId",
+                        "loadIrFilters",
+                        "loadActionMenus",
+                    ].includes(key)
+                ) {
                     loadViewsOptions[key] = options[key];
                 }
             }

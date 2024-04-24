@@ -133,6 +133,8 @@ test("load search view description if not provided and loadSearchView=true", asy
                 action_id: false,
                 load_filters: false,
                 toolbar: false,
+                embedded_action_id: false,
+                embedded_parent_res_id: false,
             },
             views: [[false, "search"]],
         });
@@ -176,6 +178,8 @@ test("load view description if it is not complete and loadSearchView=true", asyn
             action_id: false,
             load_filters: true,
             toolbar: false,
+            embedded_action_id: false,
+            embedded_parent_res_id: false,
         });
     });
     await mountWithSearch(TestComponent, {

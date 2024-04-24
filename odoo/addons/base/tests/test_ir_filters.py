@@ -15,8 +15,9 @@ def noid(seq):
     for d in seq:
         d.pop('id', None)
         d.pop('action_id', None)
+        d.pop('embedded_action_id', None)
+        d.pop('embedded_parent_res_id', None)
     return seq
-
 
 class FiltersCase(TransactionCaseWithUserDemo):
     def setUp(self):
@@ -101,7 +102,7 @@ class TestOwnDefaults(FiltersCase):
 
         self.assertItemsEqual(noid(filters), [
             dict(name='a', user_id=self.USER_NG, is_default=True,
-                 domain='[]', context='{}', sort='[]')
+                 domain='[]', context='{}', sort='[]'),
         ])
 
     def test_new_filter_not_default(self):
@@ -309,3 +310,62 @@ class TestAllFilters(TransactionCase):
                     order=','.join(ast.literal_eval(filter_.sort)),
                     context=context,
                 )
+
+
+class TestEmbeddedFilters(FiltersCase):
+
+    def setUp(self):
+        super(FiltersCase, self).setUp()
+        self.USER_NG = self.env['res.users'].name_search('demo')[0]
+        self.USER_ID = self.USER_NG[0]
+        self.parent_action = self.env['ir.actions.act_window'].create({
+            'name': 'ParentAction',
+            'res_model': 'res.partner',
+        })
+        self.action_1 = self.env['ir.actions.act_window'].create({
+            'name': 'Action1',
+            'res_model': 'res.partner',
+        })
+        self.embedded_action_1 = self.env['ir.embedded.actions'].create({
+            'name': 'EmbeddedAction1',
+            'parent_res_model': 'res.partner',
+            'parent_action_id': self.parent_action.id,
+            'action_id': self.action_1.id,
+        })
+        self.embedded_action_2 = self.env['ir.embedded.actions'].create({
+            'name': 'EmbeddedAction2',
+            'parent_res_model': 'res.partner',
+            'parent_action_id': self.parent_action.id,
+            'action_id': self.action_1.id,
+        })
+
+    def test_global_filters_with_embedded_action(self):
+        Filters = self.env['ir.filters'].with_user(self.USER_ID)
+        Filters.create_or_replace({
+            'name': 'a',
+            'model_id': 'ir.filters',
+            'user_id': False,
+            'is_default': True,
+            'embedded_action_id': self.embedded_action_1.id,
+            'embedded_parent_res_id': 1
+        })
+        Filters.create_or_replace({
+            'name': 'b',
+            'model_id': 'ir.filters',
+            'user_id': False,
+            'is_default': False,
+            'embedded_action_id': self.embedded_action_2.id,
+            'embedded_parent_res_id': 1
+        })
+
+        # If embedded_action_id and embedded_parent_res_id are set, should return the corresponding filter
+        filters = self.env['ir.filters'].with_user(self.USER_ID).get_filters('ir.filters', embedded_action_id=self.embedded_action_1.id, embedded_parent_res_id=1)
+        self.assertItemsEqual(noid(filters), [dict(name='a', is_default=True, user_id=False, domain='[]', context='{}', sort='[]')])
+
+        # Check that the filter is correctly linked to one embedded_parent_res_id and is not returned if another one is set
+        filters = self.env['ir.filters'].with_user(self.USER_ID).get_filters('ir.filters', embedded_action_id=self.embedded_action_1.id, embedded_parent_res_id=2)
+        self.assertItemsEqual(noid(filters), [])
+
+        # If embedded_action_id and embedded_parent_res_id are not set, should return no filters
+        filters = self.env['ir.filters'].with_user(self.USER_ID).get_filters('ir.filters')
+        self.assertItemsEqual(noid(filters), [])
