@@ -850,13 +850,13 @@ class ResPartner(models.Model):
         return partner
 
     @api.model
-    def _retrieve_partner_with_phone_mail(self, phone, mail, extra_domain):
+    def _retrieve_partner_with_phone_email(self, phone, email, extra_domain):
         domains = []
         if phone:
             domains.append([('phone', '=', phone)])
             domains.append([('mobile', '=', phone)])
-        if mail:
-            domains.append([('email', '=', mail)])
+        if email:
+            domains.append([('email', '=', email)])
 
         if not domains:
             return None
@@ -872,7 +872,7 @@ class ResPartner(models.Model):
             return None
         return self.env['res.partner'].search([('name', 'ilike', name)] + extra_domain, limit=2)
 
-    def _retrieve_partner(self, name=None, phone=None, mail=None, vat=None, domain=None, company=None):
+    def _retrieve_partner(self, name=None, phone=None, email=None, vat=None, domain=None, company=None):
         '''Search all partners and find one that matches one of the parameters.
         :param name:    The name of the partner.
         :param phone:   The phone or mobile of the partner.
@@ -887,7 +887,7 @@ class ResPartner(models.Model):
             return self._retrieve_partner_with_vat(vat, extra_domain)
 
         def search_with_phone_mail(extra_domain):
-            return self._retrieve_partner_with_phone_mail(phone, mail, extra_domain)
+            return self._retrieve_partner_with_phone_email(phone, email, extra_domain)
 
         def search_with_name(extra_domain):
             return self._retrieve_partner_with_name(name, extra_domain)

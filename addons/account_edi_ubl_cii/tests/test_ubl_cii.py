@@ -100,7 +100,6 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
 
         facturx_attachment.raw = etree.tostring(xml_tree)
         new_invoice = invoice.journal_id._create_document_from_attachment(facturx_attachment.ids)
-
         self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
 
     def test_import_tax_prediction(self):
