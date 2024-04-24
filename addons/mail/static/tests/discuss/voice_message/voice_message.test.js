@@ -1,10 +1,3 @@
-import { describe, globals, test } from "@odoo/hoot";
-
-import { VoicePlayer } from "@mail/discuss/voice_message/common/voice_player";
-import { VoiceRecorder } from "@mail/discuss/voice_message/common/voice_recorder";
-
-import { browser } from "@web/core/browser/browser";
-import { Deferred } from "@web/core/utils/concurrency";
 import {
     click,
     contains,
@@ -14,10 +7,15 @@ import {
     openDiscuss,
     start,
     startServer,
-} from "../../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, globals, test } from "@odoo/hoot";
+import { Deferred, mockDate } from "@odoo/hoot-mock";
 import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
-import { mockDate } from "@odoo/hoot-mock";
+
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
+import { VoicePlayer } from "@mail/discuss/voice_message/common/voice_player";
+import { VoiceRecorder } from "@mail/discuss/voice_message/common/voice_recorder";
+import { browser } from "@web/core/browser/browser";
 
 /** @type {AudioWorkletNode} */
 let audioProcessor;

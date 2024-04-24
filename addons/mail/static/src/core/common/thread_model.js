@@ -1,13 +1,13 @@
 import { AND, Record } from "@mail/core/common/record";
 import { prettifyMessageContent } from "@mail/utils/common/format";
-import { compareDatetime, nearestGreaterThanOrEqual, rpcWithEnv } from "@mail/utils/common/misc";
+import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 import { router } from "@web/core/browser/router";
 
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
 
-let rpc;
 /**
  * @typedef SuggestedRecipient
  * @property {string} email
@@ -41,7 +41,6 @@ export class Thread extends Record {
         return super.insert(...arguments);
     }
     static new(data) {
-        rpc = rpcWithEnv(this.env);
         const thread = super.new(data);
         Record.onChange(thread, ["state"], () => {
             if (thread.state !== "closed" && !this.store.env.services.ui.isSmall) {

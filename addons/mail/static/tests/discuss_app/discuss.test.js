@@ -19,13 +19,16 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
-import { Command, mockService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    getService,
+    mockService,
+    onRpc,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 
-import { rpcWithEnv } from "@mail/utils/common/misc";
-import { queryFirst } from "@odoo/hoot-dom";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -882,17 +885,13 @@ test("post a simple message", async () => {
     await contains(".o-mail-Composer-input", { value: "" });
     await contains(".o-mail-Message-author", { text: "Mitchell Admin" });
     await contains(".o-mail-Message-content", { text: "Test" });
-    expect(
-        getComputedStyle(queryFirst(".o-mail-Message-content")).getPropertyValue("opacity")
-    ).toBe("0.5");
+    expect(".o-mail-Message-content").toHaveStyle({ opacity: "0.5" });
     await contains(".o-mail-Message-pendingProgress"); // visible after 0.5 sec. elapsed
     // simulate message genuinely posted
     messagePostDef.resolve();
     await contains(".o-mail-Message-pendingProgress", { count: 0 });
     await contains(".o-mail-Message-content", { text: "Test" });
-    expect(
-        getComputedStyle(queryFirst(".o-mail-Message-content")).getPropertyValue("opacity")
-    ).toBe("1");
+    expect(".o-mail-Message-content").toHaveStyle({ opacity: "1" });
 });
 
 test("post several messages with failures", async () => {
@@ -926,30 +925,18 @@ test("post several messages with failures", async () => {
         ],
     });
     // all are pending
-    expect(
-        getComputedStyle(queryFirst(".o-mail-Message-content:eq(0)")).getPropertyValue("opacity")
-    ).toBe("0.5");
-    expect(
-        getComputedStyle(queryFirst(".o-mail-Message-content:eq(1)")).getPropertyValue("opacity")
-    ).toBe("0.5");
-    expect(
-        getComputedStyle(queryFirst(".o-mail-Message-content:eq(2)")).getPropertyValue("opacity")
-    ).toBe("0.5");
+    expect(".o-mail-Message-content:eq(0)").toHaveStyle({ opacity: "0.5" });
+    expect(".o-mail-Message-content:eq(1)").toHaveStyle({ opacity: "0.5" });
+    expect(".o-mail-Message-content:eq(2)").toHaveStyle({ opacity: "0.5" });
     await contains(".o-mail-Message-pendingProgress", { count: 3 }); // visible after 0.5 sec. elapsed
     // simulate OK for 1, NOT-OK for 0, 2
     messagePostDefs[0].reject();
     messagePostDefs[1].resolve();
     messagePostDefs[2].reject();
     await contains(".o-mail-Message-pendingProgress", { count: 0 });
-    expect(
-        getComputedStyle(queryFirst(".o-mail-Message-content:eq(0)")).getPropertyValue("opacity")
-    ).toBe("0.5");
-    expect(
-        getComputedStyle(queryFirst(".o-mail-Message-content:eq(1)")).getPropertyValue("opacity")
-    ).toBe("1");
-    expect(
-        getComputedStyle(queryFirst(".o-mail-Message-content:eq(2)")).getPropertyValue("opacity")
-    ).toBe("0.5");
+    expect(".o-mail-Message-content:eq(0)").toHaveStyle({ opacity: "0.5" });
+    expect(".o-mail-Message-content:eq(1)").toHaveStyle({ opacity: "1" });
+    expect(".o-mail-Message-content:eq(2)").toHaveStyle({ opacity: "0.5" });
     // re-try failed posted messages
     messagePostDefs[0] = true;
     messagePostDefs[2] = true;
@@ -967,15 +954,9 @@ test("post several messages with failures", async () => {
             [".o-mail-Message-content:not(.opacity-50)", { text: "2" }],
         ],
     });
-    expect(
-        getComputedStyle(queryFirst(".o-mail-Message-content:eq(0)")).getPropertyValue("opacity")
-    ).toBe("1");
-    expect(
-        getComputedStyle(queryFirst(".o-mail-Message-content:eq(1)")).getPropertyValue("opacity")
-    ).toBe("1");
-    expect(
-        getComputedStyle(queryFirst(".o-mail-Message-content:eq(2)")).getPropertyValue("opacity")
-    ).toBe("1");
+    expect(".o-mail-Message-content:eq(0)").toHaveStyle({ opacity: "1" });
+    expect(".o-mail-Message-content:eq(1)").toHaveStyle({ opacity: "1" });
+    expect(".o-mail-Message-content:eq(2)").toHaveStyle({ opacity: "1" });
 });
 
 test("starred: unstar all", async () => {
@@ -1032,8 +1013,7 @@ test("no out-of-focus notification on receiving self messages in chat", async ()
             }
         },
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     // simulate receiving a new message of self with odoo out-of-focused
@@ -1077,8 +1057,7 @@ test("out-of-focus notif on needaction message in channel", async () => {
             step("init_messaging");
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await assertSteps(["init_messaging"]);
@@ -1123,8 +1102,7 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
             step("init_messaging");
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await assertSteps(["init_messaging"]);
@@ -1167,8 +1145,7 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
             step("init_messaging");
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await assertSteps(["init_messaging"]);
@@ -1226,8 +1203,7 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
             }
         },
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
     // simulate receiving a new message in chat 1 with odoo out-of-focused
@@ -1280,8 +1256,7 @@ test("should auto-pin chat when receiving a new DM", async () => {
             step("init_messaging");
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Demo" });
@@ -1479,13 +1454,13 @@ test("Channel is added to discuss after invitation", async () => {
             channel_member_ids: [Command.create({ partner_id: partnerId })],
         },
     ]);
-    const env = await start();
+    await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "my channel" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });
     const adminPartnerId = serverState.partnerId;
     withUser(userId, () =>
-        env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
+        getService("orm").call("discuss.channel", "add_members", [[channelId]], {
             partner_ids: [adminPartnerId],
         })
     );
@@ -1829,8 +1804,7 @@ test("restore thread scroll position", async () => {
 test("Message shows up even if channel data is incomplete", async () => {
     // Pass in only but not when bulk running tests
     const pyEnv = await startServer();
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
@@ -1849,7 +1823,7 @@ test("Message shows up even if channel data is incomplete", async () => {
         ],
         channel_type: "chat",
     });
-    env.services["bus_service"].forceUpdateChannels();
+    getService("bus_service").forceUpdateChannels();
     await waitUntilSubscribe();
     await withUser(correspondentUserId, () =>
         rpc("/discuss/channel/notify_typing", {
@@ -2118,8 +2092,7 @@ test("Read of unread chat where new message is deleted should mark as read [REQU
         seen_message_id: messageId,
         message_unread_counter: 1,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     await contains("button", { text: "Marc Demo", contains: [".badge", { text: "1" }] });
     // simulate deleted message

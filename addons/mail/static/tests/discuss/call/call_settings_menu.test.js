@@ -1,6 +1,3 @@
-import { describe, test } from "@odoo/hoot";
-
-import { browser } from "@web/core/browser/browser";
 import {
     click,
     contains,
@@ -8,8 +5,11 @@ import {
     openDiscuss,
     start,
     startServer,
-} from "../../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+
+import { browser } from "@web/core/browser/browser";
 
 describe.current.tags("desktop");
 defineMailModels();

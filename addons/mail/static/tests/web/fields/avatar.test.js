@@ -1,16 +1,15 @@
+import { click, contains, defineMailModels, start } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
-import { click, contains, defineMailModels, start } from "../../mail_test_helpers";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
 
 test("basic rendering", async () => {
-    const env = await start();
+    await start();
     await mountWithCleanup(Avatar, {
-        env,
         props: {
             resId: 2,
             resModel: "res.users",

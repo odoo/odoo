@@ -1,5 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
-
 import {
     assertSteps,
     click,
@@ -10,7 +8,8 @@ import {
     start,
     startServer,
     step,
-} from "../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
 import { Command, getService, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");

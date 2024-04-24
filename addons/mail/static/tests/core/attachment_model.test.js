@@ -1,12 +1,13 @@
+import { defineMailModels, start } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { defineMailModels, start } from "../mail_test_helpers";
+import { getService } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
 
 test("Attachment model properties", async () => {
-    const env = await start();
-    const attachment = env.services["mail.store"].Attachment.insert({
+    await start();
+    const attachment = getService("mail.store").Attachment.insert({
         filename: "test.txt",
         id: 750,
         mimetype: "text/plain",

@@ -1,5 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
-
 import {
     assertSteps,
     click,
@@ -9,8 +7,9 @@ import {
     startServer,
     step,
 } from "@mail/../tests/mail_test_helpers";
-import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
+import { getService, onRpc } from "@web/../tests/web_test_helpers";
 import { defineSnailmailModels } from "../snailmail_test_helpers";
 
 describe.current.tags("desktop");
@@ -229,17 +228,15 @@ test("Format Error", async () => {
         notification_type: "snail",
         res_partner_id: partnerId,
     });
-    const env = await start();
+    await start();
     await openFormView("res.partner", partnerId);
+    getService("action").doAction = (action, options) => {
+        step("do_action");
+        expect(action).toBe("snailmail.snailmail_letter_format_error_action");
+        expect(options.additionalContext.message_id).toBe(messageId);
+        def.resolve();
+    };
     const def = new Deferred();
-    patchWithCleanup(env.services.action, {
-        doAction(action, options) {
-            step("do_action");
-            expect(action).toBe("snailmail.snailmail_letter_format_error_action");
-            expect(options.additionalContext.message_id).toBe(messageId);
-            def.resolve();
-        },
-    });
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await def;
     assertSteps(["do_action"]);
@@ -263,17 +260,15 @@ test("Missing Required Fields", async () => {
     const snailMailLetterId1 = pyEnv["snailmail.letter"].create({
         message_id: messageId,
     });
-    const env = await start();
+    await start();
     await openFormView("res.partner", partnerId);
+    getService("action").doAction = (action, options) => {
+        step("do_action");
+        expect(action).toBe("snailmail.snailmail_letter_missing_required_fields_action");
+        expect(options?.additionalContext.default_letter_id).toBe(snailMailLetterId1);
+        def.resolve();
+    };
     const def = new Deferred();
-    patchWithCleanup(env.services.action, {
-        doAction(action, options) {
-            step("do_action");
-            expect(action).toBe("snailmail.snailmail_letter_missing_required_fields_action");
-            expect(options.additionalContext.default_letter_id).toBe(snailMailLetterId1);
-            def.resolve();
-        },
-    });
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await def;
     assertSteps(["do_action"]);

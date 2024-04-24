@@ -1,6 +1,6 @@
 import { AND, Record } from "@mail/core/common/record";
 import { imageUrl } from "@web/core/utils/urls";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 
 /**
  * @typedef {'offline' | 'bot' | 'online' | 'away' | 'im_partner' | undefined} ImStatus
@@ -12,7 +12,6 @@ import { rpcWithEnv } from "@mail/utils/common/misc";
  * @property {ImStatus} im_status
  */
 
-let rpc;
 export class Persona extends Record {
     static id = AND("type", "id");
     /** @type {Object.<number, import("models").Persona>} */
@@ -24,10 +23,6 @@ export class Persona extends Record {
     /** @returns {import("models").Persona|import("models").Persona[]} */
     static insert(data) {
         return super.insert(...arguments);
-    }
-    static new() {
-        rpc = rpcWithEnv(this.store.env);
-        return super.new(...arguments);
     }
 
     channelMembers = Record.many("ChannelMember");

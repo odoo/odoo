@@ -1,15 +1,13 @@
 import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { browser } from "@web/core/browser/browser";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
-let rpc;
 export class HistoryService {
     static HISTORY_STORAGE_KEY = "im_livechat_history";
     static HISTORY_LIMIT = 15;
 
     constructor(env, services) {
-        rpc = rpcWithEnv(env);
         /** @type {ReturnType<typeof import("@bus/services/bus_service").busService.start>} */
         this.busService = services.bus_service;
         /** @type {import("@im_livechat/embed/common/livechat_service").LivechatService} */

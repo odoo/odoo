@@ -1,13 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
-import {
-    Command,
-    getService,
-    onRpc,
-    patchWithCleanup,
-    serverState,
-} from "@web/../tests/web_test_helpers";
-import { Deferred, mockDate } from "@odoo/hoot-mock";
-
 import {
     assertSteps,
     click,
@@ -21,7 +11,16 @@ import {
     startServer,
     step,
     triggerHotkey,
-} from "../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
+import { Deferred, mockDate } from "@odoo/hoot-mock";
+import {
+    Command,
+    getService,
+    onRpc,
+    patchWithCleanup,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";

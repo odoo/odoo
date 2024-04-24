@@ -1,5 +1,4 @@
 import { presenceService } from "@bus/services/presence_service";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import {
     assertSteps,
     click,
@@ -8,8 +7,8 @@ import {
     insertText,
     onRpcBefore,
     openDiscuss,
-    scroll,
     openFormView,
+    scroll,
     start,
     startServer,
     step,
@@ -17,11 +16,10 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { mockDate, tick } from "@odoo/hoot-mock";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { Command, mockService, serverState } from "@web/../tests/web_test_helpers";
+import { Command, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { rpc } from "@web/core/network/rpc";
+
 describe.current.tags("desktop");
 defineMailModels();
 
@@ -101,8 +99,7 @@ test("keep new message separator until user goes back to the thread", async () =
         model: "discuss.channel",
         res_id: channelId,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Thread");
     await contains(".o-mail-Message", { text: "hello" });
@@ -133,8 +130,7 @@ test("show new message separator on receiving new message when out of odoo focus
         channel_type: "channel",
         name: "General",
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Thread");
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
@@ -215,8 +211,7 @@ test("show new message separator when message is received in chat window", async
         ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: messageId + 1 });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     // simulate receiving a message
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -250,8 +245,7 @@ test("show new message separator when message is received while chat window is c
             step(`/mail/action - ${JSON.stringify(args)}`);
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
