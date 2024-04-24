@@ -143,7 +143,7 @@ class StockMoveLine(models.Model):
             if not record.quant_id or record.quantity:
                 continue
             origin_move = record.move_id._origin
-            if float_compare(record.move_id.product_qty, origin_move.quantity, record.move_id.product_uom.rounding) > 0:
+            if float_compare(record.move_id.product_qty, origin_move.quantity, precision_rounding=record.move_id.product_uom.rounding) > 0:
                 record.quantity = max(0, min(record.quant_id.available_quantity, record.move_id.product_qty - origin_move.quantity))
             else:
                 record.quantity = max(0, record.quant_id.available_quantity)
