@@ -3,33 +3,6 @@
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
-function openProjectUpdateAndReturnToTasks(view, viewClass) {
-    return [{
-            trigger: '.o_project_updates_breadcrumb',
-            content: 'Open Project Update from view : ' + view,
-            extra_trigger: `.${viewClass}`,
-        }, {
-            trigger: ".o-kanban-button-new",
-            content: "Create a new update from project task view : " + view,
-            extra_trigger: '.o_project_update_kanban_view',
-        }, {
-            trigger: "button.o_form_button_cancel",
-            content: "Discard project update from project task view : " + view,
-        }, {
-            trigger: ".o_switch_view.o_list",
-            content: "Go to list of project update from view " + view,
-        }, {
-            trigger: '.o_back_button',
-            content: 'Go back to the task view : ' + view,
-            // extra_trigger: '.o_list_view', // FIXME: [XBO] uncomment it when the sample data will be displayed after discarding the creation of a project update record.
-        }, {
-            trigger: `.${viewClass}`,
-            content: 'Check the task view : ' + view,
-            isCheck: true,
-        }
-    ];
-}
-
 registry.category("web_tour.tours").add('project_update_tour', {
     test: true,
     url: '/web',
@@ -91,8 +64,17 @@ registry.category("web_tour.tours").add('project_update_tour', {
     extra_trigger: '.o_kanban_project_tasks',
     run: "drag_and_drop(.o_kanban_group:eq(1))",
 }, {
-    trigger: ".o_project_updates_breadcrumb",
-    content: 'Open Updates'
+    trigger: ".o_control_panel_navigation button i.fa-sliders",
+    content: 'Open embedded actions'
+}, {
+    trigger: ".o_embedded_actions_buttons_wrapper button i.fa-sliders",
+    content: "Open embedded actions dropdown"
+}, {
+    trigger: ".o-dropdown-item div span:contains('Project Updates')",
+    content: "Put Project Updates in the embedded actions"
+}, {
+    trigger: ".o_embedded_actions_buttons_wrapper button span:contains('Project Updates')",
+    content: "Open Project Updates"
 }, {
     trigger: ".o_add_milestone a",
     content: "Add a first milestone"
@@ -154,21 +136,5 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: '.o_back_button',
     content: 'Go back to the kanban view the project',
     extra_trigger: '.o_list_view',
-}, {
-    trigger: '.o_switch_view.o_graph',
-    content: 'Open Graph View of Tasks',
-}, ...openProjectUpdateAndReturnToTasks("Graph", "o_graph_view"), {
-    trigger: '.o_switch_view.o_list',
-    content: 'Open List View of Tasks',
-    extra_trigger: '.o_graph_view',
-}, ...openProjectUpdateAndReturnToTasks("List", "o_list_view"), {
-    trigger: '.o_switch_view.o_pivot',
-    content: 'Open Pivot View of Tasks',
-}, ...openProjectUpdateAndReturnToTasks("Pivot", "o_pivot_view"), {
-    trigger: '.o_switch_view.o_calendar',
-    content: 'Open Calendar View of Tasks',
-}, ...openProjectUpdateAndReturnToTasks("Calendar", "o_calendar_view"), {
-    trigger: '.o_switch_view.o_activity',
-    content: 'Open Activity View of Tasks',
-}, ...openProjectUpdateAndReturnToTasks("Activity", "o_activity_view"),
+},
 ]});

@@ -234,8 +234,17 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: '.oe_kanban_global_click :contains("Project for Freeman")',
     content: 'Open the project',
 }, {
-    trigger: ".o_project_updates_breadcrumb",
-    content: 'Open Updates',
+    trigger: ".o_control_panel_navigation button i.fa-sliders",
+    content: 'Open embedded actions'
+}, {
+    trigger: ".o_embedded_actions_buttons_wrapper button i.fa-sliders",
+    content: "Open embedded actions dropdown"
+}, {
+    trigger: ".o-dropdown-item div span:contains('Project Updates')",
+    content: "Put Project Updates in the embedded actions"
+}, {
+    trigger: ".o_embedded_actions_buttons_wrapper button span:contains('Project Updates')",
+    content: "Open Project Updates"
 }, {
     trigger: ".o_rightpanel_section[name='sales'] .o_rightpanel_title:contains('Sales')",
     content: 'Check the user sees Sales section',
