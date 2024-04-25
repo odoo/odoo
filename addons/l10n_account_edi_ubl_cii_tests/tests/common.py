@@ -2,7 +2,6 @@
 import base64
 
 from freezegun import freeze_time
-from collections import Counter
 from os.path import join as opj
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -111,60 +110,24 @@ class TestUBLCommon(AccountTestInvoicingCommon):
             })
             invoice.message_post(attachment_ids=[attachment.id])
 
-    def _assert_imported_invoice_from_file(self, subfolder, filename, amount_total, amount_tax, list_line_subtotals,
-                                           list_line_price_unit=None, list_line_discount=None, list_line_taxes=None,
-                                           list_line_quantity=None,
-                                           move_type='in_invoice', currency_id=None):
-        """
-        Create an empty account.move, update the file to fill its fields, asserts the currency, total and tax amounts
-        are as expected.
-        """
-        if not currency_id:
-            currency_id = self.env.ref('base.EUR').id
-
-        # Create empty account.move, then update a file
+    def _assert_imported_invoice_from_file(self, subfolder, filename, invoice_vals, move_type='in_invoice'):
+        """ Create an empty account.move, update the xml file, and then check the invoice values. """
         if move_type in self.env['account.move'].get_purchase_types():
             journal = self.company_data['default_journal_purchase']
         else:
             journal = self.company_data['default_journal_sale']
-
-        invoice = self.env['account.move'].create({
-            'move_type': move_type,
-            'journal_id': journal.id,
-        })
-
-        invoice_count = len(self.env['account.move'].search([]))
-
+        invoice = self.env['account.move'].create({'move_type': move_type, 'journal_id': journal.id})
         self._update_invoice_from_file(
             module_name='l10n_account_edi_ubl_cii_tests',
             subfolder=subfolder,
             filename=filename,
             invoice=invoice,
         )
-
-        # Checks
-        self.assertEqual(len(self.env['account.move'].search([])), invoice_count)
-        self.assertRecordValues(invoice, [{
-            'amount_total': amount_total,
-            'amount_tax': amount_tax,
-            'currency_id': currency_id,
-        }])
-        self.assertEqual(
-            Counter(invoice.invoice_line_ids.mapped('price_subtotal')),
-            Counter(list_line_subtotals),
-        )
-        if list_line_price_unit:
-            self.assertEqual(invoice.invoice_line_ids.mapped('price_unit'), list_line_price_unit)
-        if list_line_discount:
-            # See test_import_tax_included: sometimes, it's impossible to retrieve the exact discount at import because
-            # of rounding during export. The obtained discount might be 10.001 while the expected is 10.
-            dp = self.env.ref('product.decimal_discount').precision_get("Discount")
-            self.assertEqual([round(d, dp) for d in invoice.invoice_line_ids.mapped('discount')], list_line_discount)
-        if list_line_taxes:
-            for line, taxes in zip(invoice.invoice_line_ids, list_line_taxes):
-                self.assertEqual(line.tax_ids, taxes)
-        if list_line_quantity:
-            self.assertEqual(invoice.invoice_line_ids.mapped('quantity'), list_line_quantity)
+        invoice_vals = invoice_vals.copy()
+        invoice_lines = invoice_vals.pop('invoice_lines', False)
+        self.assertRecordValues(invoice, [invoice_vals])
+        if invoice_lines:
+            self.assertRecordValues(invoice.invoice_line_ids, invoice_lines)
 
     # -------------------------------------------------------------------------
     # EXPORT HELPERS

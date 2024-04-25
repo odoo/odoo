@@ -680,12 +680,16 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
     def test_import_invoice_xml(self):
         kwargs = {
             'subfolder': 'tests/test_files/from_odoo',
-            'amount_total': 3164.22,
-            'amount_tax': 482.22,
-            'list_line_subtotals': [1782, 1000, -100],
-            'list_line_price_unit': [990, 100, 100],
-            'list_line_discount': [10, 0, 0],
-            'currency_id': self.other_currency.id,
+            'invoice_vals': {
+                'currency_id': self.other_currency.id,
+                'amount_total': 3164.22,
+                'amount_tax': 482.22,
+                'invoice_lines': [{
+                    'price_subtotal': subtotal,
+                    'price_unit': price_unit,
+                    'discount': discount,
+                } for (subtotal, price_unit, discount) in [(1782, 990, 10), (1000, 100, 0), (-100, 100, 0)]]
+            },
         }
         self._assert_imported_invoice_from_file(filename='bis3_out_invoice.xml', **kwargs)
         # same as the file above, but the <cac:Price> are missing in the invoice lines
@@ -695,17 +699,48 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         # Source: https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples
         subfolder = 'tests/test_files/from_peppol-bis-invoice-3_doc'
         # source: Allowance-example.xml
-        self._assert_imported_invoice_from_file(subfolder=subfolder, filename='bis3_allowance.xml', amount_total=7125,
-            amount_tax=1225, list_line_subtotals=[200, -200, 4000, 1000, 900])
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder,
+            filename='bis3_allowance.xml',
+            invoice_vals={
+                'amount_total': 7125,
+                'amount_tax': 1225,
+                'invoice_lines': [{'price_subtotal': x} for x in (200, -200, 3999, 1, 1000, 899, 1)],
+            },
+        )
         # source: base-creditnote-correction.xml
-        self._assert_imported_invoice_from_file(subfolder=subfolder, filename='bis3_credit_note.xml',
-            amount_total=1656.25, amount_tax=331.25, list_line_subtotals=[25, 2800, -1500], move_type='in_refund')
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder,
+            filename='bis3_credit_note.xml',
+            move_type='in_refund',
+            invoice_vals={
+                'amount_total': 1656.25,
+                'amount_tax': 331.25,
+                'invoice_lines': [{'price_subtotal': x} for x in (25, 2800, -1500)],
+            },
+        )
         # source: base-negative-inv-correction.xml
-        self._assert_imported_invoice_from_file(subfolder=subfolder, filename='bis3_invoice_negative_amounts.xml',
-            amount_total=1656.25, amount_tax=331.25, list_line_subtotals=[25, 2800, -1500], move_type='in_refund')
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder,
+            filename='bis3_invoice_negative_amounts.xml',
+            move_type='in_refund',
+            invoice_vals={
+                'amount_total': 1656.25,
+                'amount_tax': 331.25,
+                'invoice_lines': [{'price_subtotal': x} for x in (25, 2800, -1500)],
+            },
+        )
         # source: vat-category-E.xml
-        self._assert_imported_invoice_from_file(subfolder=subfolder, filename='bis3_tax_exempt_gbp.xml',
-            amount_total=1200, amount_tax=0, list_line_subtotals=[1200], currency_id=self.env.ref('base.GBP').id)
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder,
+            filename='bis3_tax_exempt_gbp.xml',
+            invoice_vals={
+                'currency_id': self.env.ref('base.GBP').id,
+                'amount_total': 1200,
+                'amount_tax': 0,
+                'invoice_lines': [{'price_subtotal': 1200}],
+            },
+        )
 
     def test_import_existing_invoice_flip_move_type(self):
         """ Tests whether the move_type of an existing invoice can be flipped when importing an attachment
@@ -731,36 +766,97 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         # The tax 21% from l10n_be is retrieved since it's a duplicate of self.tax_21
         tax_21 = self.env.ref(f'account.{self.env.company.id}_attn_VAT-OUT-21-L')
         self._assert_imported_invoice_from_file(
-            subfolder=subfolder, filename='bis3_ecotaxes_case1.xml', amount_total=121, amount_tax=22,
-            list_line_subtotals=[99], currency_id=self.other_currency.id, list_line_price_unit=[99],
-            list_line_discount=[0], list_line_taxes=[tax_21+self.recupel], move_type='out_invoice',
-        )
-        self._assert_imported_invoice_from_file(
-            subfolder=subfolder, filename='bis3_ecotaxes_case2.xml', amount_total=121, amount_tax=23,
-            list_line_subtotals=[98], currency_id=self.other_currency.id, list_line_price_unit=[98],
-            list_line_discount=[0], list_line_taxes=[tax_21+self.recupel+self.auvibel], move_type='out_invoice',
-        )
-        self._assert_imported_invoice_from_file(
-            subfolder=subfolder, filename='bis3_ecotaxes_case3.xml', amount_total=121, amount_tax=22,
-            list_line_subtotals=[99], currency_id=self.other_currency.id, list_line_price_unit=[99],
-            list_line_discount=[0], list_line_taxes=[tax_21+self.recupel], move_type='out_invoice',
-        )
-        self._assert_imported_invoice_from_file(
-            subfolder=subfolder, filename='bis3_ecotaxes_case4.xml', amount_total=218.042, amount_tax=39.842,
-            list_line_subtotals=[178.20000000000002], currency_id=self.other_currency.id,
-            list_line_price_unit=[99], list_line_discount=[10], list_line_taxes=[tax_21+self.recupel],
+            subfolder=subfolder,
+            filename='bis3_ecotaxes_case1.xml',
             move_type='out_invoice',
+            invoice_vals={
+                'currency_id': self.other_currency.id,
+                'amount_total': 121,
+                'amount_tax': 22,
+                'invoice_lines': [{
+                    'price_unit': 99,
+                    'discount': 0,
+                    'price_subtotal': 99,
+                    'tax_ids': (tax_21 + self.recupel).ids,
+                }]
+            }
+        )
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder,
+            filename='bis3_ecotaxes_case2.xml',
+            move_type='out_invoice',
+            invoice_vals={
+                'currency_id': self.other_currency.id,
+                'amount_total': 121,
+                'amount_tax': 23,
+                'invoice_lines': [{
+                    'price_unit': 98,
+                    'discount': 0,
+                    'price_subtotal': 98,
+                    'tax_ids': (tax_21 + self.recupel + self.auvibel).ids,
+                }]
+            },
+        )
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder,
+            filename='bis3_ecotaxes_case3.xml',
+            move_type='out_invoice',
+            invoice_vals={
+                'currency_id': self.other_currency.id,
+                'amount_total': 121,
+                'amount_tax': 22,
+                'invoice_lines': [{
+                    'price_unit': 99,
+                    'discount': 0,
+                    'price_subtotal': 99,
+                    'tax_ids': (tax_21 + self.recupel).ids,
+                }]
+            },
+        )
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder,
+            filename='bis3_ecotaxes_case4.xml',
+            move_type='out_invoice',
+            invoice_vals={
+                'currency_id': self.other_currency.id,
+                'amount_total': 218.042,
+                'amount_tax': 39.842,
+                'invoice_lines': [{
+                    'price_unit': 99,
+                    'quantity': 2,
+                    'discount': 10,
+                    'price_subtotal': 178.20000000000002,
+                    'tax_ids': (tax_21 + self.recupel).ids,
+                }]
+            },
         )
 
     def test_import_payment_terms(self):
         # The tax 21% from l10n_be is retrieved since it's a duplicate of self.tax_21
         tax_21 = self.env.ref(f'account.{self.env.company.id}_attn_VAT-OUT-21-L')
         self._assert_imported_invoice_from_file(
-            subfolder='tests/test_files/from_odoo', filename='bis3_pay_term.xml', amount_total=3105.68,
-            amount_tax=505.68, list_line_subtotals=[-4, -48, 52, 200, 2400],
-            currency_id=self.other_currency.id, list_line_price_unit=[-4, -48, 52, 200, 2400],
-            list_line_discount=[0, 0, 0, 0, 0], list_line_taxes=[self.tax_6, tax_21, self.tax_0, self.tax_6, tax_21],
+            subfolder='tests/test_files/from_odoo',
+            filename='bis3_pay_term.xml',
             move_type='out_invoice',
+            invoice_vals={
+                'currency_id': self.other_currency.id,
+                'amount_total': 3105.68,
+                'amount_tax': 505.68,
+                'invoice_lines': [
+                    {
+                        'price_unit': price_unit,
+                        'price_subtotal': price_unit,
+                        'discount': 0,
+                        'tax_ids': tax.ids,
+                    } for (price_unit, tax) in [
+                        (-4, self.tax_6),
+                        (-48, tax_21),
+                        (52, self.tax_0),
+                        (200, self.tax_6),
+                        (2400, tax_21),
+                    ]
+                ]
+            },
         )
 
     ####################################################
@@ -851,7 +947,21 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         # The tax 21% from l10n_be is retrieved since it's a duplicate of self.tax_21
         tax_21 = self.env.ref(f'account.{self.env.company.id}_attn_VAT-OUT-21-L')
         self._assert_imported_invoice_from_file(
-            subfolder=subfolder, filename='bis3_out_invoice_quantity_and_or_unit_price_zero.xml', amount_total=3630.00, amount_tax=630.00,
-            list_line_subtotals=[1000, 1000, 1000], currency_id=self.other_currency.id, list_line_price_unit=[1000, 100, 10],
-            list_line_discount=[0, 0, 0], list_line_taxes=[tax_21, tax_21, tax_21], list_line_quantity=[1, 10, 100], move_type='out_invoice',
+            subfolder=subfolder,
+            filename='bis3_out_invoice_quantity_and_or_unit_price_zero.xml',
+            move_type='out_invoice',
+            invoice_vals={
+                'amount_total': 3630,
+                'amount_tax': 630,
+                'currency_id': self.other_currency.id,
+                'invoice_lines': [
+                    {
+                        'price_unit': price_unit,
+                        'quantity': quantity,
+                        'discount': 0,
+                        'tax_ids': tax_21.ids,
+                        'price_subtotal': 1000,
+                    } for price_unit, quantity in [(1000, 1), (100, 10), (10, 100)]
+                ]
+            }
         )
