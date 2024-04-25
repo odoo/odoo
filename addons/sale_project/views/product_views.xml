@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="sale.product_template_form_view"/>
         <field name="arch" type="xml">
             <field name="invoice_policy" position="attributes">
-                <attribute name="invisible">type == 'service' and sale_ok == True</attribute>
+                <attribute name="invisible" separator="or" add="(type == 'service' and sale_ok == True)"/>
             </field>
             <field name="invoice_policy" position="after">
                 <field name="service_policy" string="Invoicing Policy" invisible="type != 'service' or sale_ok == False" required="type == 'service' and sale_ok == True"/>

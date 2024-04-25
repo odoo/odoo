@@ -212,7 +212,7 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     // click somewhere else to exit cell focus
 }, {
     mobile: false,
-    trigger: 'label:contains("Vendor Taxes")',
+    trigger: 'label:contains("Purchase Unit")',
     // click somewhere else to exit cell focus
 }, {
     mobile: false,
@@ -325,7 +325,7 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     // click somewhere else to exit cell focus
 }, {
     mobile: false,
-    trigger: 'label:contains("Vendor Taxes")',
+    trigger: 'label:contains("Purchase Unit")',
     // click somewhere else to exit cell focus
 }, {
     trigger: '.o_back_button',

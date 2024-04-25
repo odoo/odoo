@@ -397,7 +397,7 @@
                             groups="stock.group_stock_user"
                             invisible="type not in ['consu', 'product']"/>
                     </xpath>
-                    <div name="button_box" position="inside">
+                    <button name="action_open_documents" position="before">
                         <t groups="stock.group_stock_user">
                             <field name="tracking" invisible="1"/>
                             <field name="show_on_hand_qty_status_button" invisible="1"/>
@@ -427,22 +427,10 @@
                                     <span class="o_stat_text">Forecasted</span>
                                 </div>
                             </button>
-                            <button type="object"
-                                name= "action_view_stock_move_lines"
-                                invisible="type not in ['product', 'consu']"
-                                class="oe_stat_button" icon="fa-exchange"
-                                groups="stock.group_stock_user">
-                                <div class="d-flex flex-column">
-                                    <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
-                                        <span class="o_stat_text">In:</span>
-                                        <span class="o_stat_value"><field name="nbr_moves_in"/></span>
-                                    </div>
-                                    <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
-                                        <span class="o_stat_text">Out:</span>
-                                        <span class="o_stat_value"><field name="nbr_moves_out"/></span>
-                                    </div>
-                                </div>
-                            </button>
+                        </t>
+                    </button>
+                    <button name="action_open_documents" position="after">
+                        <t groups="stock.group_stock_user">
                             <button type="object"
                                 name="action_view_orderpoints"
                                 invisible="type != 'product' or nbr_reordering_rules != 1"
@@ -464,6 +452,22 @@
                                 class="oe_stat_button"
                                 icon="fa-refresh">
                                 <field name="nbr_reordering_rules" widget="statinfo"/>
+                            </button>
+                            <button type="object"
+                                name= "action_view_stock_move_lines"
+                                invisible="type not in ['product', 'consu']"
+                                class="oe_stat_button" icon="fa-exchange"
+                                groups="stock.group_stock_user">
+                                <div class="d-flex flex-column">
+                                    <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
+                                        <span class="o_stat_text">In:</span>
+                                        <span class="o_stat_value"><field name="nbr_moves_in"/></span>
+                                    </div>
+                                    <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
+                                        <span class="o_stat_text">Out:</span>
+                                        <span class="o_stat_value"><field name="nbr_moves_out"/></span>
+                                    </div>
+                                </div>
                             </button>
                             <button type="object"
                                 name="action_open_product_lot"
@@ -496,7 +500,7 @@
                                 </div>
                             </button>
                         </t>
-                    </div>
+                    </button>
 
                     <xpath expr="//label[@for='weight']" position="before">
                         <field name="responsible_id" domain="[('share', '=', False)]" widget="many2one_avatar_user" groups="stock.group_stock_user"/>

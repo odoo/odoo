@@ -100,23 +100,12 @@
             </field>
         </record>
 
-        <record id="view_product_account_purchase_ok_form" model="ir.ui.view">
-            <field name="name">product.template.account.purchase.ok.form.inherit</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="account.product_template_form_view"/>
-            <field name="arch" type="xml">
-                <field name='supplier_taxes_id' position="replace" >
-                     <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" readonly="purchase_ok == 0" context="{'default_type_tax_use':'purchase'}"/>
-                </field>
-            </field>
-        </record>
-
         <record id="view_product_template_purchase_buttons_from" model="ir.ui.view">
             <field name="name">product.template.purchase.button.inherit</field>
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="arch" type="xml">
-                <div name="button_box" position="inside">
+                <button name="action_open_documents" position="after">
                     <button class="oe_stat_button" name="action_view_po"
                         groups="purchase.group_purchase_user"
                         type="object" icon="fa-credit-card" invisible="not purchase_ok" help="Purchased in the last 365 days">
@@ -128,7 +117,7 @@
                             <span class="o_stat_text">Purchased</span>
                         </div>
                     </button>
-                </div>
+                </button>
             </field>
         </record>
 

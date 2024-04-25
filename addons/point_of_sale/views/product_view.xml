@@ -74,32 +74,58 @@
             <xpath expr="//page[@name='sales']" position="attributes">
                 <attribute name="invisible" remove="1" separator="or"/>
             </xpath>
-            <xpath expr="//page[@name='sales']/group[@name='sale']" position="inside">
-                <group name="pos" string="Point of Sale" invisible="not sale_ok">
-                    <field name="color" invisible="true"/>
-                    <field name="available_in_pos"/>
-                    <field name="to_weight" invisible="not available_in_pos"/>
-                    <field name="pos_categ_ids" widget="many2many_tags" groups="point_of_sale.group_pos_user" invisible="not available_in_pos" string="Category" options="{'color_field': 'color'}"/>
-                </group>
-            </xpath>
-            <xpath expr="//page[@name='general_information']" position="after">
-                <page name="combos" string="Combo Choices" groups="point_of_sale.group_pos_user" invisible="not detailed_type == 'combo'">
-                    <field name="combo_ids" widget="one2many" >
-                        <tree string="combos">
-                            <field name="sequence" widget="handle"/>
-                            <field name="name" />
-                            <field name="base_price" />
-                            <field name="num_of_products"/>
-                        </tree>
-                    </field>
+            <page name="sales" position="after">
+                <page string="Point of Sale" name="pos" invisible="not available_in_pos">
+                    <group>
+                        <group name="pos" string="Point of Sale">
+                            <field name="color" invisible="true"/>
+                            <field name="to_weight"/>
+                            <field name="pos_categ_ids"
+                                   widget="many2many_tags"
+                                   groups="point_of_sale.group_pos_user"
+                                   string="Category"
+                                   options="{'color_field': 'color'}"/>
+                        </group>
+                    </group>
                 </page>
-            </xpath>
-            <xpath expr="//page[@name='purchase']" position="attributes">
-                <attribute name="invisible" separator="or" add="detailed_type == 'combo'"></attribute>
-            </xpath>
+            </page>
+            <div name="options" position='inside'>
+                <span class="d-inline-block">
+                    <field name="available_in_pos"/>
+                    <label for="available_in_pos" string="Point of Sale"/>
+                </span>
+            </div>
+            <field name="detailed_type" position="after">
+                <field name="combo_ids"
+                    string="Combo Choices"
+                    widget="many2many_tags"
+                    invisible="detailed_type != 'combo'"
+                    groups="point_of_sale.group_pos_user"/>
+            </field>
+            <span name="uom_span" position="attributes">
+                <attribute name="invisible">detailed_type == 'combo'</attribute>
+            </span>
+            <label for="standard_price" position="attributes">
+                <attribute name="invisible" separator="or" add="detailed_type == 'combo'"/>
+            </label>
+            <div name="standard_price_uom" position="attributes">
+                <attribute name="invisible" separator="or" add="detailed_type == 'combo'"/>
+            </div>
+            <page name="purchase" position="attributes">
+                <attribute name="invisible" separator="or" add="detailed_type == 'combo'"/>
+            </page>
             <xpath expr="//page[@name='inventory']" position="attributes">
-                <attribute name="invisible">type in ['combo', 'service']</attribute>
+                <attribute name="invisible" separator="or" add="type == 'combo'"/>
             </xpath>
+            <label for="taxes_id" position="attributes">
+                <attribute name="invisible" separator="or" add="detailed_type == 'combo'"/>
+            </label>
+            <div name="taxes_div" position="attributes">
+                <attribute name="invisible" separator="or" add="detailed_type == 'combo'"/>
+            </div>
+            <field name="supplier_taxes_id" position="attributes">
+                <attribute name="invisible" separator="or" add="detailed_type == 'combo'"/>
+            </field>
         </field>
     </record>
 
@@ -112,18 +138,9 @@
             <xpath expr="//page[@name='variants']" position="attributes">
                 <attribute name="invisible">detailed_type == "combo"</attribute>
             </xpath>
-        </field>
-    </record>
-
-    <!-- Hide the Customer Taxes field -->
-    <record id="account_product_template_form_view" model="ir.ui.view">
-        <field name="name">product.template.product.form.account.inherit</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="account.product_template_form_view"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='taxes_id']" position="attributes">
-                <attribute name="invisible">detailed_type == "combo"</attribute>
-            </xpath>
+            <field name="barcode" position="attributes">
+                <attribute name="invisible" separator="or" add="detailed_type == 'combo'"/>
+            </field>
         </field>
     </record>
 

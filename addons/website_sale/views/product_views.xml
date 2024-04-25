@@ -111,7 +111,7 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
-            <div name="pricing" position="after">
+            <field name="categ_id" position="before">
                 <label for="compare_list_price" groups="website_sale.group_product_price_comparison"/>
                 <div class="o_row" groups="website_sale.group_product_price_comparison">
                     <del class="oe_read_only">
@@ -119,8 +119,6 @@
                     </del>
                     <field name="compare_list_price" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" class="oe_edit_only"/>
                 </div>
-            </div>
-            <field name="uom_id" position="after">
                 <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
                 <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="d-flex flex-row">
                     <field name="base_unit_count" invisible="product_variant_count &gt; 1" style="width: 4rem;"/>
@@ -139,7 +137,7 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_normal_form_view"/>
         <field name="arch" type="xml">
-            <field name="uom_id" position="after">
+            <field name="categ_id" position="before">
                 <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
                 <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="d-flex flex-row">
                     <field name="base_unit_count" style="width: 4rem;"/>
@@ -158,9 +156,9 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <!-- add state field in header -->
-            <div name="button_box" position="inside">
+            <span id="button_website" position="before">
                 <field name="is_published" widget="website_redirect_button" invisible="not sale_ok"/>
-            </div>
+            </span>
             <group name="upsell" position="attributes">
                 <attribute name="invisible">0</attribute>
             </group>
@@ -176,12 +174,15 @@
             <xpath expr="//page[@name='sales']/group[@name='sale']" position="inside">
                 <group string="eCommerce Shop" name="shop" invisible="not sale_ok">
                     <field name="website_url" invisible="1"/>
-                    <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                    <field name="website_id"
+                        options="{'no_create': True}"
+                        groups="website.group_multi_website"
+                        placeholder="All"/>
                     <field name="website_sequence" groups="base.group_no_one"/>
                     <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
                     <field name="website_ribbon_id" groups="base.group_no_one" options="{'no_quick_create': True}"/>
                 </group>
-                <group name="product_template_images" string="Extra Product Media" invisible="not sale_ok">
+                <group name="product_template_images" string="eCommerce Media" invisible="not sale_ok">
                     <field name="product_template_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add a Media" nolabel="1"/>
                 </group>
             </xpath>

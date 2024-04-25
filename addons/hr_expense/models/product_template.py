@@ -15,7 +15,7 @@ class ProductTemplate(models.Model):
             result['supplier_taxes_id'] = False
         return result
 
-    can_be_expensed = fields.Boolean(string="Can be Expensed", compute='_compute_can_be_expensed',
+    can_be_expensed = fields.Boolean(string="Expenses", compute='_compute_can_be_expensed',
         store=True, readonly=False, help="Specify whether the product can be selected in an expense.")
 
     def _auto_init(self):

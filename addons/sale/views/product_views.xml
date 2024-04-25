@@ -15,8 +15,10 @@
             </field>
             <field name="detailed_type" position="after">
                 <field name="invoice_policy" required="1"/>
-                <field name="expense_policy" widget="radio" invisible="not visible_expense_policy"/>
             </field>
+            <group name="tags" position="inside">
+                <field name="expense_policy" widget="radio" invisible="not visible_expense_policy"/>
+            </group>
             <field name="product_tooltip" position="after">
                 <label for="product_tooltip" string=""
                     invisible="type not in ('product', 'consu') or invoice_policy != 'order'"/>
@@ -77,7 +79,7 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
-            <div name="button_box" position="inside">
+            <button name="action_open_documents" position="after">
                 <button class="oe_stat_button"
                     name="action_view_sales"
                     type="object" icon="fa-signal"
@@ -92,7 +94,7 @@
                         <span class="o_stat_text">Sold</span>
                     </div>
                 </button>
-            </div>
+            </button>
         </field>
     </record>
 

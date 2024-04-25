@@ -35,6 +35,8 @@
                                     </span>
                                </div>
                         </button>
+                        <!-- Dummy tag for organizing buttons, using position='replace' when inheriting -->
+                        <span id="button_website" invisible="1"/>
                         <button class="oe_stat_button"
                                 name="action_open_documents"
                                 type="object"
@@ -46,7 +48,7 @@
                     <field name="id" invisible="True"/>
                     <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_title">
-                        <label for="name" string="Product Name"/>
+                        <label for="name" string="Product"/>
                         <h1>
                             <div class="d-flex">
                                 <field name="is_favorite" widget="boolean_favorite" class="me-3" nolabel="1"/>
@@ -69,40 +71,49 @@
                             <group>
                                 <group name="group_general">
                                     <field name="active" invisible="1"/>
-                                    <field name="detailed_type"/>
+                                    <field name="detailed_type" string="Type"/>
                                     <field name="product_tooltip" string="" class="fst-italic text-muted" invisible="type == 'service' and not sale_ok"/>
-                                    <field name="uom_id" groups="uom.group_uom" options="{'no_create': True}"/>
-                                    <field name="uom_po_id" groups="uom.group_uom" options="{'no_create': True}"/>
                                 </group>
                                 <group name="group_standard_price">
                                     <label for="list_price"/>
-                                    <div name="pricing" class="o_row">
-                                      <field name="list_price" class="oe_inline" widget='monetary'
-                                        options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                    <div name="list_price_uom">
+                                        <field name="list_price"
+                                            class="oe_inline"
+                                            widget="monetary"
+                                            options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                            <span name="uom_span" groups="uom.group_uom">per
+                                                <field name="uom_id"
+                                                    class="oe_inline"
+                                                    options="{'no_create': True}"/>
+                                            </span>
                                     </div>
                                     <label for="standard_price" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
                                     <div name="standard_price_uom" invisible="product_variant_count &gt; 1 and not is_product_variant">
-                                        <field name="standard_price" class="oe_inline" widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
+                                        <field name="standard_price" class="oe_inline" widget="monetary" options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
                                         <span groups="uom.group_uom" >per
                                             <field name="uom_name" class="oe_inline"/>
                                         </span>
                                     </div>
-                                    <field name="categ_id" string="Product Category"/>
-                                    <field name="product_tag_ids" widget="many2many_tags" context="{'product_template_id': id}"/>
-                                    <field name="company_id" groups="base.group_multi_company"
-                                        options="{'no_create': True}"/>
+                                    <field name="categ_id" string="Category"/>
+                                    <field name="company_id"
+                                        groups="base.group_multi_company"
+                                        options="{'no_create': True}"
+                                        placeholder="Visible to all"/>
                                     <field name="currency_id" invisible="1"/>
                                     <field name="cost_currency_id" invisible="1"/>
                                     <field name="product_variant_id" invisible="1"/>
                                 </group>
                             </group>
-                            <group string="Internal Notes">
+                            <group name="internal_notes" string="Internal Notes">
                                 <field colspan="2" name="description" nolabel="1" placeholder="This note is only for internal purposes."/>
                             </group>
                         </page>
                         <page string="Sales" name="sales" invisible="1 or not sale_ok">
                             <group name="sale">
                                 <group string="Upsell &amp; Cross-Sell" name="upsell" invisible="1"/>
+                                <group name="tags" string="Extra Info">
+                                    <field name="product_tag_ids" widget="many2many_tags" context="{'product_template_id': id}"/>
+                                </group>
                             </group>
                             <group>
                                 <group string="Sales Description" name="description">
@@ -110,9 +121,11 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Purchase" name="purchase" invisible="1 or not purchase_ok">
+                        <page string="Purchase" name="purchase" invisible="1 or not purchase_ok" groups="uom.group_uom">
                             <group name="purchase">
-                                <group string="Vendor Bills" name="bill"/>
+                                <group string="Vendor Bills" name="bill">
+                                    <field name="uom_po_id" groups="uom.group_uom" options="{'no_create': True}"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Inventory" name="inventory" groups="product.group_stock_packaging" invisible="type == 'service'">
@@ -156,8 +169,8 @@
                 <filter string="Services" name="services" domain="[('type','=','service')]"/>
                 <filter string="Products" name="consumable" domain="[('type', 'in', ['consu', 'product'])]"/>
                 <separator/>
-                <filter string="Can be Sold" name="filter_to_sell" domain="[('sale_ok','=',True)]"/>
-                <filter string="Can be Purchased" name="filter_to_purchase" domain="[('purchase_ok', '=', True)]"/>
+                <filter string="Sales" name="filter_to_sell" domain="[('sale_ok','=',True)]"/>
+                <filter string="Purchase" name="filter_to_purchase" domain="[('purchase_ok', '=', True)]"/>
                 <separator/>
                 <field string="Attributes" name="attribute_line_ids" groups="product.group_product_variant"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
@@ -408,10 +421,10 @@
                 <field name="list_price" position="attributes">
                    <attribute name="invisible">1</attribute>
                    <attribute name="readonly">product_variant_count &gt; 1</attribute>
-                   </field>
-                <xpath expr="//label[@for='list_price']" position="replace">
+                </field>
+                <label for="list_price" position="replace">
                     <label for="lst_price"/>
-                </xpath>
+                </label>
                 <field name="list_price" position="after">
                    <field name="lst_price" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                 </field>
