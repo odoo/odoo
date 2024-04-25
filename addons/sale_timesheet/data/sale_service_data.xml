@@ -15,5 +15,52 @@
         <record model="res.groups" id="base.group_user">
             <field name="implied_ids" eval="[(4, ref('uom.group_uom'))]"/>
         </record>
+
+        <!-- Timesheets export template -->
+        <record id="account_analytic_line_export_template_line_so_line" model="ir.exports.line">
+            <field name="export_id" ref="hr_timesheet.account_analytic_line_export_template"/>
+            <field name="name">so_line</field>
+        </record>
+
+        <!-- Timesheets export template 2 -->
+        <record id="aal_costs_revenues_export_template" model="ir.exports">
+            <field name="name">Project Costs &amp; Revenues</field>
+            <field name="resource">account.analytic.line</field>
+        </record>
+
+        <record id="aal_costs_revenues_export_template_line_date" model="ir.exports.line">
+            <field name="export_id" ref="aal_costs_revenues_export_template"/>
+            <field name="name">date</field>
+        </record>
+
+        <record id="aal_costs_revenues_export_template_line_name" model="ir.exports.line">
+            <field name="export_id" ref="aal_costs_revenues_export_template"/>
+            <field name="name">name</field>
+        </record>
+
+        <record id="aal_costs_revenues_export_template_line_project_id" model="ir.exports.line">
+            <field name="export_id" ref="aal_costs_revenues_export_template"/>
+            <field name="name">project_id</field>
+        </record>
+
+        <record id="aal_costs_revenues_export_template_line_product_id" model="ir.exports.line">
+            <field name="export_id" ref="aal_costs_revenues_export_template"/>
+            <field name="name">so_line/product_id</field>
+        </record>
+
+        <record id="aal_costs_revenues_export_template_line_unit_amount" model="ir.exports.line">
+            <field name="export_id" ref="aal_costs_revenues_export_template"/>
+            <field name="name">unit_amount</field>
+        </record>
+
+        <record id="aal_costs_revenues_export_template_line_partner_id" model="ir.exports.line">
+            <field name="export_id" ref="aal_costs_revenues_export_template"/>
+            <field name="name">partner_id</field>
+        </record>
+
+        <record id="aal_costs_revenues_export_template_line_amount" model="ir.exports.line">
+            <field name="export_id" ref="aal_costs_revenues_export_template"/>
+            <field name="name">amount</field>
+        </record>
     </data>
 </odoo>
