@@ -76,7 +76,7 @@ class MailRenderMixin(models.AbstractModel):
             if sub_field_name:
                 expression += "." + sub_field_name
             if null_value:
-                expression += " or '''%s'''" % null_value
+                expression += f" ||| {null_value}"
             expression += " }}"
         return expression
 
@@ -205,24 +205,24 @@ class MailRenderMixin(models.AbstractModel):
     # SECURITY
     # ------------------------------------------------------------
 
-    def _is_dynamic(self):
+    def _has_unsafe_expression(self):
         for template in self.sudo():
             for fname, field in template._fields.items():
                 engine = getattr(field, 'render_engine', 'inline_template')
                 if engine in ('qweb', 'qweb_view'):
-                    if self._is_dynamic_template_qweb(template[fname]):
+                    if self._has_unsafe_expression_template_qweb(template[fname]):
                         return True
                 else:
-                    if self._is_dynamic_template_inline_template(template[fname]):
+                    if self._has_unsafe_expression_template_inline_template(template[fname]):
                         return True
         return False
 
     @api.model
-    def _is_dynamic_template_qweb(self, template_src):
+    def _has_unsafe_expression_template_qweb(self, template_src):
         if template_src:
             try:
                 node = html.fragment_fromstring(template_src, create_parent='div')
-                self.env["ir.qweb"].with_context(raise_on_code=True)._compile(node)
+                self.env["ir.qweb"].with_context(raise_on_forbidden_code=True)._compile(node)
             except QWebException as e:
                 if isinstance(e.__cause__, PermissionError):
                     return True
@@ -230,18 +230,19 @@ class MailRenderMixin(models.AbstractModel):
         return False
 
     @api.model
-    def _is_dynamic_template_inline_template(self, template_txt):
+    def _has_unsafe_expression_template_inline_template(self, template_txt):
         if template_txt:
             template_instructions = parse_inline_template(str(template_txt))
-            if len(template_instructions) > 1 or template_instructions[0][1]:
+            expressions = [inst[1] for inst in template_instructions]
+            if not all(self.env["ir.qweb"]._is_expression_allowed(e) for e in expressions if e):
                 return True
         return False
 
     def _check_access_right_dynamic_template(self):
-        if not self.env.su and not self.env.user.has_group('mail.group_mail_template_editor') and self._is_dynamic():
+        if not self.env.su and not self.env.user.has_group('mail.group_mail_template_editor') and self._has_unsafe_expression():
             group = self.env.ref('mail.group_mail_template_editor')
             raise AccessError(
-                _('Only users belonging to the "%(group_name)s" group can modify dynamic templates.',
+                _('Only members of %(group_name)s group are allowed to edit templates containing sensible placeholders',
                   group_name=group.name)
             )
 
@@ -309,7 +310,7 @@ class MailRenderMixin(models.AbstractModel):
                 render_result = self.env['ir.qweb']._render(
                     html.fragment_fromstring(template_src, create_parent='div'),
                     variables,
-                    raise_on_code=is_restricted,
+                    raise_on_forbidden_code=is_restricted,
                     **(options or {})
                 )
                 # remove the rendered tag <div> that was added in order to wrap potentially multiples nodes into one.
@@ -318,7 +319,7 @@ class MailRenderMixin(models.AbstractModel):
                 if isinstance(e, QWebException) and isinstance(e.__cause__, PermissionError):
                     group = self.env.ref('mail.group_mail_template_editor')
                     raise AccessError(
-                        _('Only users belonging to the "%(group_name)s" group can modify dynamic templates.',
+                        _('Only members of %(group_name)s group are allowed to edit templates containing sensible placeholders',
                            group_name=group.name)
                     ) from e
                 _logger.info("Failed to render template: %s", template_src, exc_info=True)
@@ -405,28 +406,19 @@ class MailRenderMixin(models.AbstractModel):
 
         :return dict: {res_id: string of rendered template based on record}
         """
-        results = dict.fromkeys(res_ids, u"")
+        results = dict.fromkeys(res_ids, "")
         if not template_txt or not res_ids:
             return results
 
-        template_instructions = parse_inline_template(str(template_txt))
-        is_dynamic = len(template_instructions) > 1 or template_instructions[0][1]
-
-        if (not self._unrestricted_rendering and is_dynamic and not self.env.is_admin() and
-           not self.env.user.has_group('mail.group_mail_template_editor')):
+        if (not self._unrestricted_rendering
+            and not self.env.is_admin()
+            and not self.env.user.has_group('mail.group_mail_template_editor')
+            and self._has_unsafe_expression_template_inline_template(str(template_txt))):
             group = self.env.ref('mail.group_mail_template_editor')
             raise AccessError(
-                _('Only users belonging to the "%(group_name)s" group can modify dynamic templates.',
+                _('Only members of %(group_name)s group are allowed to edit templates containing sensible placeholders',
                   group_name=group.name)
             )
-
-        if not is_dynamic:
-            # Either the content is a raw text without placeholders, either we fail to
-            # detect placeholders code. In both case we skip the rendering and return
-            # the raw content, so even if we failed to detect dynamic code,
-            # non "mail_template_editor" users will not gain rendering tools available
-            # only for template specific group users
-            return {record_id: template_instructions[0][0] for record_id in res_ids}
 
         # prepare template variables
         variables = self._render_eval_context()
@@ -438,7 +430,7 @@ class MailRenderMixin(models.AbstractModel):
 
             try:
                 results[record.id] = render_inline_template(
-                    template_instructions,
+                    parse_inline_template(str(template_txt)),
                     variables
                 )
             except Exception as e:

@@ -24,7 +24,7 @@ export class DynamicPlaceholderPlugin extends Plugin {
         powerboxCategory: { id: "marketing_tools", name: _t("Marketing Tools"), sequence: 60 },
         powerboxItems: {
             name: _t("Dynamic Placeholder"),
-            description: _t("Insert personalized content"),
+            description: _t("Insert a field"),
             category: "marketing_tools",
             fontawesome: "fa-magic",
             action(dispatch) {
@@ -92,11 +92,11 @@ export class DynamicPlaceholderPlugin extends Plugin {
             return;
         }
 
-        let dynamicPlaceholder = "object." + chain;
-        dynamicPlaceholder +=
-            defaultValue && defaultValue !== "" ? ` or '''${defaultValue}'''` : "";
         const t = document.createElement("T");
-        t.setAttribute("t-out", dynamicPlaceholder);
+        t.setAttribute("t-out", `object.${chain}`);
+        if (defaultValue?.length) {
+            t.innerText = defaultValue;
+        }
 
         this.shared.domInsert(t);
         this.editable.focus();

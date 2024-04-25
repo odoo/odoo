@@ -79,6 +79,7 @@ export class SmsWidget extends EmojisTextField {
      * @private
      */
     async onBlur() {
+        await super.onBlur();
         var content = this.props.record.data[this.props.name] || '';
         if( !content.trim().length && content.length > 0) {
             this.notification.add(

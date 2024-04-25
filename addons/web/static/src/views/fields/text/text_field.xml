@@ -14,13 +14,20 @@
                     t-att-placeholder="props.placeholder"
                     t-att-rows="rowCount"
                     t-ref="textarea"
+                    t-on-blur="onBlur"
                 />
-                <t t-if="isTranslatable">
+                <div class="o_field_text_buttons d-flex flex-row align-items-baseline">
                     <TranslationButton
+                        t-if="isTranslatable"
                         fieldName="props.name"
                         record="props.record"
                     />
-                </t>
+                    <button t-if="props.dynamicPlaceholder"
+                        class="btn m-0 py-0 px-2 fa fa-magic position-relative"
+                        title="Insert Field"
+                        t-on-click="onDynamicPlaceholderOpen"
+                    />
+                </div>
             </div>
         </t>
     </t>

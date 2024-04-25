@@ -90,21 +90,22 @@ class TestMailTemplate(MailCommon):
         employee_template.with_user(self.user_employee).body_html = '<p>bar</p>'
 
         employee_template = self.env['mail.template'].with_user(self.user_employee).create({'email_to': 'foo@bar.com'})
+        employee_template = employee_template.with_user(self.user_employee)
 
-        employee_template.with_user(self.user_employee).email_to = 'bar@foo.com'
+        employee_template.email_to = 'bar@foo.com'
 
         # Standard employee cannot create and edit templates with dynamic qweb
         with self.assertRaises(AccessError):
-            self.env['mail.template'].with_user(self.user_employee).create({'body_html': '<p t-esc="\'foo\'"></p>'})
+            self.env['mail.template'].with_user(self.user_employee).create({'body_html': '''<p t-out="'foo'"></p>'''})
 
         # Standard employee cannot edit templates from another user, non-dynamic and dynamic
         with self.assertRaises(AccessError):
             mail_template.with_user(self.user_employee).body_html = '<p>foo</p>'
         with self.assertRaises(AccessError):
-            mail_template.with_user(self.user_employee).body_html = '<p t-esc="\'foo\'"></p>'
+            mail_template.with_user(self.user_employee).body_html = '''<p t-out="'foo'"></p>'''
 
         # Standard employee can edit his own templates if not dynamic
-        employee_template.with_user(self.user_employee).body_html = '<p>foo</p>'
+        employee_template.body_html = '<p>foo</p>'
 
         # Standard employee cannot create and edit templates with dynamic inline fields
         with self.assertRaises(AccessError):
@@ -112,13 +113,84 @@ class TestMailTemplate(MailCommon):
 
         # Standard employee cannot edit his own templates if dynamic
         with self.assertRaises(AccessError):
-            employee_template.with_user(self.user_employee).body_html = '<p t-esc="\'foo\'"></p>'
+            employee_template.body_html = '''<p t-out="'foo'"></p>'''
 
-        with self.assertRaises(AccessError):
-            employee_template.with_user(self.user_employee).email_to = '{{ object.partner_id.email }}'
+        forbidden_expressions = (
+            'object.partner_id.email',
+            'object.password',
+            "object.name or (1+1)",
+            'password',
+            'object.name or object.name',
+            '[a for a in (1,)]',
+            "object.name or f''",
+            "object.name or ''.format",
+            "object.name or f'{1+1}'",
+            "object.name or len('')",
+            "'abcd' or object.name",
+            "object.name and ''",
+        )
+        for expression in forbidden_expressions:
+            with self.assertRaises(AccessError):
+                employee_template.email_to = '{{ %s }}' % expression
+
+            with self.assertRaises(AccessError):
+                employee_template.email_to = '{{ %s ||| Bob}}' % expression
+
+            with self.assertRaises(AccessError):
+                employee_template.body_html = '<p t-out="%s"></p>' % expression
+
+            with self.assertRaises(AccessError):
+                employee_template.body_html = '<p t-esc="%s"></p>' % expression
+
+            # try to cheat with the context
+            with self.assertRaises(AccessError):
+                employee_template.with_context(raise_on_forbidden_code=False).email_to = '{{ %s }}' % expression
+            with self.assertRaises(AccessError):
+                employee_template.with_context(raise_on_forbidden_code=False).body_html = '<p t-esc="%s"></p>' % expression
+
+            # check that an admin can use the expression
+            mail_template.with_user(self.user_admin).email_to = '{{ %s }}' % expression
+            mail_template.with_user(self.user_admin).email_to = '{{ %s ||| Bob }}' % expression
+            mail_template.with_user(self.user_admin).body_html = '<p t-out="%s">Default</p>' % expression
+            mail_template.with_user(self.user_admin).body_html = '<p t-esc="%s">Default</p>' % expression
+
+        forbidden_qweb_expressions = (
+            '<p t-debug=""></p>',
+            '<p t-set="x" t-value="object.name"></p>',
+            '<p t-set="x" t-value="object.name"></p>',
+            '<p t-groups="base.group_system"></p>',
+            '<p t-call="template"></p>',
+            '<p t-cache="object.name"></p>',
+            '<t t-set="namn" t-value="Hello {{world}} !"/>',
+            '<t t-att-test="object.name"/>',
+            '<p t-att-title="object.name"></p>',
+            # hide qweb code in t-inner-content
+            '<t t-inner-content="&lt;p t-set=&quot;x&quot; t-value=&quot;object.name&quot;&gt;&lt;/p&gt;"></p>'
+        )
+        for expression in forbidden_qweb_expressions:
+            with self.assertRaises(AccessError):
+                employee_template.body_html = expression
+
+        # allowed expressions
+        employee_template.body_html = '<p t-esc="object.name"></p>'
+
+        self.env['mail.template'].with_user(self.user_employee).create({
+            'body_html': '<p t-esc="object.name"></p>'
+        })
+
+        employee_template.body_html = """
+            <p t-esc="object.name">default</p>
+            <p t-out="object.name">default</p>
+        """
+        employee_template.body_html = """
+            <p t-esc="object.partner_id.name">default</p>
+            <p t-out="object.partner_id.name">default</p>
+        """
+
+        employee_template.email_to = 'Test {{ object.name }}'
 
     def test_mail_template_acl_translation(self):
-        ''' Test that a user that doenn't have the group_mail_template_editor cannot create / edit
+        ''' Test that a user that doesn't have the group_mail_template_editor cannot create / edit
         translation with dynamic code if he cannot write dynamic code on the related record itself.
         '''
 
