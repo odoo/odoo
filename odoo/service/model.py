@@ -7,6 +7,7 @@ from collections.abc import Mapping, Sequence
 from functools import partial
 
 from psycopg2 import IntegrityError, OperationalError, errorcodes
+from werkzeug.exceptions import NotFound
 
 import odoo
 from odoo.exceptions import UserError, ValidationError
@@ -163,7 +164,8 @@ def retrying(func, env):
         else:
             # handled in the "if not tryleft" case
             raise RuntimeError("unreachable")
-
+    except KeyError as e:
+        raise NotFound() from e
     except Exception:
         env.reset()
         env.registry.reset_changes()
