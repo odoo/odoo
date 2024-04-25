@@ -15,7 +15,7 @@ from urllib.parse import urlparse
 import idna
 import markupsafe
 from lxml import etree
-from lxml.html import clean
+from lxml.html import clean, defs
 from werkzeug import urls
 
 import odoo
@@ -34,8 +34,8 @@ tags_to_kill = ['base', 'embed', 'frame', 'head', 'iframe', 'link', 'meta',
 tags_to_remove = ['html', 'body']
 
 # allow new semantic HTML5 tags
-allowed_tags = clean.defs.tags | frozenset('article bdi section header footer hgroup nav aside figure main'.split() + [etree.Comment])
-safe_attrs = clean.defs.safe_attrs | frozenset(
+allowed_tags = defs.tags | frozenset('article bdi section header footer hgroup nav aside figure main'.split() + [etree.Comment])
+safe_attrs = defs.safe_attrs | frozenset(
     ['style',
      'data-o-mail-quote',  # quote detection
      'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translation-id', 'data-oe-nodeid',
