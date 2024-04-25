@@ -4016,3 +4016,16 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         # The integrity check should work
         integrity_check = invoice.company_id._check_hash_integrity()['results'][0]
         self.assertEqual(integrity_check['msg_cover'], 'All entries are hashed.')
+
+    def test_update_lines_date_when_invoice_date_changes(self):
+        move = self.init_invoice(
+            move_type='in_invoice',
+            partner=self.partner_a,
+            amounts=[1000.0],
+        )
+
+        move.invoice_date = fields.Date.from_string('2024-01-01')
+        self.env.flush_all()
+
+        for line in move.line_ids:
+            self.assertEqual(line.date, move.date)
