@@ -11,11 +11,11 @@ import {
     getService,
     models,
     mountWithCleanup,
+    mountWithSearch,
     onRpc,
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { mountWithSearch } from "./helpers";
 
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 import { SearchPanel } from "@web/search/search_panel/search_panel";

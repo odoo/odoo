@@ -18,6 +18,7 @@ import {
     isOptionSelected,
     mockService,
     models,
+    mountWithSearch,
     onRpc,
     openAddCustomFilterDialog,
     patchWithCleanup,
@@ -25,7 +26,6 @@ import {
     toggleMenuItemOption,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { mountWithSearch } from "../helpers";
 import { Foo, Partner, defineSearchBarModels } from "./models";
 
 import { SearchBar } from "@web/search/search_bar/search_bar";
