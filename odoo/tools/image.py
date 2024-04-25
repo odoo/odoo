@@ -161,11 +161,12 @@ class ImageProcess():
             return self.source
         return output_bytes
 
-    def resize(self, max_width=0, max_height=0):
+    def resize(self, max_width=0, max_height=0, expand=False):
         """Resize the image.
 
-        The image is never resized above the current image size. This method is
-        only to create a smaller version of the image.
+        The image is not resized above the current image size, unless the expand
+        parameter is True. This method is used by default to create smaller versions
+        of the image.
 
         The current ratio is preserved. To change the ratio, see `crop_resize`.
 
@@ -177,6 +178,7 @@ class ImageProcess():
 
         :param int max_width: max width
         :param int max_height: max height
+        :param bool expand: whether or not the image size can be increased
         :return: self to allow chaining
         :rtype: ImageProcess
         """
@@ -184,6 +186,10 @@ class ImageProcess():
             w, h = self.image.size
             asked_width = max_width or (w * max_height) // h
             asked_height = max_height or (h * max_width) // w
+            if expand and (asked_width > w or asked_height > h):
+                self.image = self.image.resize((asked_width, asked_height))
+                self.operationsCount += 1
+                return self
             if asked_width != w or asked_height != h:
                 self.image.thumbnail((asked_width, asked_height), Resampling.LANCZOS)
                 if self.image.width != w or self.image.height != h:
@@ -246,27 +252,43 @@ class ImageProcess():
 
         return self.resize(max_width, max_height)
 
-    def colorize(self):
-        """Replace the transparent background by a random color.
+    def colorize(self, color=None):
+        """Replace the transparent background by a given color, or by a random one.
 
+        :param tuple color: RGB values for the color to use
         :return: self to allow chaining
         :rtype: ImageProcess
         """
+        if color is None:
+            color = (randrange(32, 224, 24), randrange(32, 224, 24), randrange(32, 224, 24))
         if self.image:
             original = self.image
-            color = (randrange(32, 224, 24), randrange(32, 224, 24), randrange(32, 224, 24))
             self.image = Image.new('RGB', original.size)
             self.image.paste(color, box=(0, 0) + original.size)
             self.image.paste(original, mask=original)
             self.operationsCount += 1
         return self
 
+    def add_padding(self, padding):
+        """Expand the image size by adding padding around the image
 
-def image_process(source, size=(0, 0), verify_resolution=False, quality=0, crop=None, colorize=False, output_format=''):
+        :param int padding: thickness of the padding
+        :return: self to allow chaining
+        :rtype: ImageProcess
+        """
+        if self.image:
+            img_width, img_height = self.image.size
+            self.image = self.image.resize((img_width - 2 * padding, img_height - 2 * padding))
+            self.image = ImageOps.expand(self.image, border=padding)
+            self.operationsCount += 1
+        return self
+
+
+def image_process(source, size=(0, 0), verify_resolution=False, quality=0, expand=False, crop=None, colorize=False, output_format='', padding=False):
     """Process the `source` image by executing the given operations and
     return the result image.
     """
-    if not source or ((not size or (not size[0] and not size[1])) and not verify_resolution and not quality and not crop and not colorize and not output_format):
+    if not source or ((not size or (not size[0] and not size[1])) and not verify_resolution and not quality and not crop and not colorize and not output_format and not padding):
         # for performance: don't do anything if the image is falsy or if
         # no operations have been requested
         return source
@@ -282,9 +304,11 @@ def image_process(source, size=(0, 0), verify_resolution=False, quality=0, crop=
                 center_y = 1
             image.crop_resize(max_width=size[0], max_height=size[1], center_x=center_x, center_y=center_y)
         else:
-            image.resize(max_width=size[0], max_height=size[1])
+            image.resize(max_width=size[0], max_height=size[1], expand=expand)
+    if padding:
+        image.add_padding(padding)
     if colorize:
-        image.colorize()
+        image.colorize(colorize if isinstance(colorize, tuple) else None)
     return image.image_quality(quality=quality, output_format=output_format)
 
 

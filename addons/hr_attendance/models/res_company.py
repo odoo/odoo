@@ -118,10 +118,3 @@ class ResCompany(models.Model):
         self.write({
             'attendance_kiosk_key': uuid.uuid4().hex
         })
-
-    def _action_open_kiosk_mode(self):
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'self',
-            'url': f'/hr_attendance/kiosk_mode_menu/{self.env.company.id}',
-        }

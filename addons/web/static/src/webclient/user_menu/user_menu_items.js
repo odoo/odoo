@@ -7,7 +7,6 @@ import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
-import { InstallPWADialog } from "./install_pwa_dialog";
 
 function documentationItem(env) {
     const documentationURL = "https://www.odoo.com/documentation/master";
@@ -106,21 +105,39 @@ export function odooAccountItem(env) {
 }
 
 function installPWAItem(env) {
+    let description = _t("Install app");
+    let callback = () => env.services.pwa.show();
+    let show = () => env.services.pwa.isAvailable;
+    const currentApp = env.services.menu.getCurrentApp();
+    if (currentApp && ["barcode", "field-service", "shop-floor"].includes(currentApp.actionPath)) {
+        // While the feature could work with all apps, we have decided to only
+        // support the installation of the apps contained in this list
+        // The list can grow in the future, by simply adding their path
+        description = _t("Install %s", currentApp.name);
+        callback = () => {
+            window.open(
+                `/scoped_app?app_id=${currentApp.webIcon.split(",")[0]}&path=${encodeURIComponent(
+                    "scoped_app/" + currentApp.actionPath
+                )}`
+            );
+        };
+        show = () => !env.services.pwa.isScopedApp;
+    }
     return {
         type: "item",
         id: "install_pwa",
-        description: _t("Install the app"),
-        callback: () => {
-            env.bus.trigger("HOME-MENU:TOGGLED");
-            env.services.dialog.add(InstallPWADialog, {});
-        },
-        show: () => env.services.installPrompt.isAvailable,
+        description,
+        callback,
+        show,
         sequence: 65,
     };
 }
 
 function logOutItem(env) {
-    const route = "/web/session/logout";
+    let route = "/web/session/logout";
+    if (env.services.pwa.isScopedApp) {
+        route += `?redirect=${encodeURIComponent(env.services.pwa.startUrl)}`;
+    }
     return {
         type: "item",
         id: "logout",

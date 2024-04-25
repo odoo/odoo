@@ -1,0 +1,38 @@
+<templates>
+    <t t-name="web.InstallScopedApp">
+        <div class="o_install_scoped_app o_home_menu_background h-100 w-100 d-flex align-items-center justify-content-center user-select-none">
+            <button class="btn btn-link m-1 position-absolute start-0 top-0" t-on-click="() => window.close()">
+                <svg style="transform:rotate(135deg);" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="-7 -7 24 24" preserveAspectRatio="xMinYMin">
+                    <path fill="#000" d="M8 8V1a1 1 0 1 1 2 0v8a1 1 0 0 1-1 1H1a1 1 0 1 1 0-2h7z"></path>
+                </svg>
+            </button>
+            <i t-if="!state.showInstallUI" class="fa fa-spinner fa-spin fa-2x text-primary position-absolute"/>
+            <div t-attf-class="h-100 w-100 d-flex align-items-center justify-content-center flex-column fade {{state.showInstallUI ? 'show': ''}}">
+                <div class="d-flex align-items-center justify-content-center flex-wrap gap-3 m-4 mw-75 mw-md-50">
+                    <img style="height:100px;width:100px;" class="rounded-4 p-4 bg-white shadow" t-att-src="state.manifest.icons?.[0]?.src"/>
+                    <div class="d-inline-block">
+                        <div class="d-flex align-items-center">
+                            <h1 class="mb-0" t-esc="state.manifest.name"></h1>
+                            <Dropdown t-if="pwa.isAvailable" menuClass="'p-2'">
+                                <button class="btn btn-link fa fa-pencil" />
+                                <t t-set-slot="content">
+                                    <label class="mb-1">Application name</label>
+                                    <input class="form-control" t-att-value="state.manifest.name" t-on-change="onChangeName"/>
+                                </t>
+                            </Dropdown>
+                        </div>
+                        <a class="text-primary text-decoration-none" href="https://odoo.com" alt="Odoo" target="_blank">Odoo S.A.</a>
+                    </div>
+                </div>
+                <button t-if="pwa.isAvailable" class="btn btn-primary btn-lg rounded-5 shadow py-2 px-3" t-on-click="onInstall">Install</button>
+                <div t-else="" class="p-2 px-4 overflow-hidden rounded-2 mw-75 bg-info text-white">
+                    <t t-if="pwa.isSupportedOnBrowser">
+                        <span t-if="pwa.hasScopeBeenInstalled()">The app seems to be installed on your device</span>
+                        <span t-else="">You can install the app from the browser menu</span>
+                    </t>
+                    <span t-else="">The app cannot be installed with this browser</span>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

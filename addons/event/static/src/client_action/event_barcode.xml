@@ -5,7 +5,7 @@
     <t t-name="event.EventScanView">
         <div class="o_event_barcode_bg o_home_menu_background">
             <div class="o_event_barcode_main bg-view">
-                <a href="#" class="o_event_previous_menu float-start"><i class="oi oi-chevron-left" t-on-click.prevent="() => this.onClickBackToEvents()"></i></a>
+                <a t-if="!isDisplayStandalone" href="#" class="o_event_previous_menu float-start"><i class="oi oi-chevron-left" t-on-click.prevent="() => this.onClickBackToEvents()"></i></a>
                 <div class="text-center">
                     <h1 t-out="data.name"/>
                     <p>
