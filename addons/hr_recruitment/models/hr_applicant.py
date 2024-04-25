@@ -340,16 +340,15 @@ class HrApplicant(models.Model):
                     model_description="Applicant",
                 )
         # Copy CV from candidate to applicant at record creation
-        attachments_result = self.env['ir.attachment'].read_group([
+        attachments_by_candidate = dict(self.env['ir.attachment']._read_group([
             ('res_id', 'in', applicants.candidate_id.ids),
             ('res_model', '=', "hr.candidate")
-        ], ['ids:array_agg(id)'], groupby=['res_id'])
-        attachments_by_candidate = {e['res_id']: e['ids'] for e in attachments_result}
+        ], groupby=['res_id'], aggregates=['id:recordset']))
         for applicant in applicants:
             candidate_id = applicant.candidate_id.id
             if candidate_id not in attachments_by_candidate:
                 continue
-            self.env['ir.attachment'].browse(attachments_by_candidate[candidate_id]).copy({
+            attachments_by_candidate[candidate_id].copy({
                 'res_id': applicant.id,
                 'res_model': 'hr.applicant'
             })
