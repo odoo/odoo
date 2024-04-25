@@ -14,9 +14,12 @@ publicWidget.registry.boothSponsorDetails = publicWidget.Widget.extend({
 
     _onClickContactDetails(ev) {
         this.useContactDetails = ev.currentTarget.checked;
-        this.$('#o_wbooth_contact_details').toggleClass('d-none', !this.useContactDetails);
-        this.$('label[for="sponsor_name"] > .mandatory_mark, label[for="sponsor_email"] > .mandatory_mark').toggleClass('d-none', this.useContactDetails);
-        this.$('input[name="contact_name"], input[name="contact_email"]').attr('required', this.useContactDetails);
+        this.el.querySelector('#o_wbooth_contact_details')
+            .classList.toggle('d-none', !this.useContactDetails);
+        this.el.querySelector('label[for="sponsor_name"] > .mandatory_mark, label[for="sponsor_email"] > .mandatory_mark')
+            .classList.toggle('d-none', this.useContactDetails);
+        this.el.querySelectorAll('input[name="contact_name"], input[name="contact_email"]')
+            .forEach(input => input.required = this.useContactDetails);
     },
 
 });

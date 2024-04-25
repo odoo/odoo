@@ -3,46 +3,51 @@
 import { sprintf } from "@web/core/utils/strings";
 import dom from "@web/legacy/js/core/dom";
 
-$.fn.share = function (options) {
-    var option = $.extend($.fn.share.defaults, options);
+Element.prototype.share = function (options) {
+    var option = Object.assign(Element.prototype.share.defaults, options);
     var selected_text = "";
-    $.extend($.fn.share, {
+    Object.assign(Element.prototype.share, {
         init: function (shareable) {
             var self = this;
-            $.fn.share.defaults.shareable = shareable;
-            $.fn.share.defaults.shareable.on('mouseup', function () {
-                if ($(this).parents('body.editor_enable').length === 0) {
+            Element.prototype.share.defaults.shareable = shareable;
+            Element.prototype.share.defaults.shareable.addEventListener('mouseup', function () {
+                if (!this.closest('body.editor_enable')) {
                     self.popOver();
                 }
             });
-            $.fn.share.defaults.shareable.on('mousedown', function () {
+            Element.prototype.share.defaults.shareable.addEventListener('mousedown', function () {
                 self.destroy();
             });
         },
         getContent: function () {
-            var $popover_content = $('<div class="h4 m-0"/>');
-            if ($('.o_wblog_title, .o_wblog_post_content_field').hasClass('js_comment')) {
+            var popover_content = document.createElement('div');
+            popover_content.className = 'h4 m-0';
+            if (document.querySelector('.o_wblog_title.js_comment, .o_wblog_post_content_field.js_comment')) {
                 selected_text = this.getSelection('string');
-                var $btn_c = $('<a class="o_share_comment btn btn-link px-2" href="#"/>').append($('<i class="fa fa-lg fa-comment"/>'));
-                $popover_content.append($btn_c);
+                var btn_c = document.createElement('a');
+                btn_c.className = 'o_share_comment btn btn-link px-2';
+                btn_c.href = '#';
+                var i = document.createElement('i');
+                i.className = 'fa fa-lg fa-comment';
+                btn_c.appendChild(i);
+                popover_content.appendChild(btn_c);
             }
-            if ($('.o_wblog_title, .o_wblog_post_content_field').hasClass('js_tweet')) {
+            if (document.querySelector('.o_wblog_title.js_tweet, .o_wblog_post_content_field.js_tweet')) {
                 var tweet = '"%s" - %s';
                 var baseLength = tweet.replace(/%s/g, '').length;
-                // Shorten the selected text to match the tweet max length
-                // Note: all (non-localhost) urls in a tweet have 23 characters https://support.twitter.com/articles/78124
                 var selectedText = this.getSelection('string').substring(0, option.maxLength - baseLength - 23);
 
                 var text = window.btoa(encodeURIComponent(sprintf(tweet, selectedText, window.location.href)));
-                $popover_content.append(sprintf(
+                popover_content.innerHTML += sprintf(
                     "<a onclick=\"window.open('%s' + atob('%s'), '_%s','location=yes,height=570,width=520,scrollbars=yes,status=yes')\"><i class=\"ml4 mr4 fa fa-twitter fa-lg\"/></a>",
-                    option.shareLink, text, option.target));
+                    option.shareLink, text, option.target);
             }
-            return $popover_content;
+            return popover_content;
         },
         commentEdition: function () {
-            $(".o_portal_chatter_composer_form textarea").val('"' + selected_text + '" ').focus();
-            const commentsEl = $('#o_wblog_post_comments')[0];
+            document.querySelector(".o_portal_chatter_composer_form textarea").value = '"' + selected_text + '" ';
+            document.querySelector(".o_portal_chatter_composer_form textarea").focus();
+            const commentsEl = document.getElementById('o_wblog_post_comments');
             if (commentsEl) {
                 dom.scrollTo(commentsEl).then(() => {
                     window.location.hash = 'blog_post_comment_quote';
@@ -79,27 +84,27 @@ $.fn.share = function (options) {
             var newNode = document.createElement("span");
             range.insertNode(newNode);
             newNode.className = option.className;
-            var $pop = $(newNode);
-            $pop.popover({
+            const popover = new Popover(newNode, {
                 trigger: 'manual',
                 placement: option.placement,
                 html: true,
                 content: function () {
                     return data;
                 }
-            }).popover('show');
-            $('.o_share_comment').on('click', this.commentEdition);
+            });
+            popover.show();
+            document.querySelector('.o_share_comment').addEventListener('click', this.commentEdition);
         },
         destroy: function () {
-            var $span = $('span.' + option.className);
-            $span.popover('hide');
-            $span.remove();
+            var span = document.querySelector('span.' + option.className);
+            span.hide();
+            span.parentNode.removeChild(span);
         }
     });
-    $.fn.share.init(this);
+    Element.prototype.share.init(this);
 };
 
-$.fn.share.defaults = {
+Element.prototype.share.defaults = {
     shareLink: "http://twitter.com/intent/tweet?text=",
     minLength: 5,
     maxLength: 140,

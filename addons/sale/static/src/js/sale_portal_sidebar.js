@@ -13,22 +13,22 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
     init: function (parent, options) {
         this._super.apply(this, arguments);
         this.authorizedTextTag = ['em', 'b', 'i', 'u'];
-        this.spyWatched = $('body[data-target=".navspy"]');
+        this.spyWatched = document.querySelector('body[data-target=".navspy"]');
     },
     /**
      * @override
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        var $spyWatcheElement = this.$el.find('[data-id="portal_sidebar"]');
-        this._setElementId($spyWatcheElement);
+        const spyWatcheElement = this.el.querySelector('[data-id="portal_sidebar"]');
+        this._setElementId(spyWatcheElement);
         // Nav Menu ScrollSpy
         this._generateMenu();
         // After signature, automatically open the popup for payment
         const searchParams = new URLSearchParams(window.location.search.substring(1));
-        const payNowButton = this.$('#o_sale_portal_paynow')
+        const payNowButton = this.el.querySelector('#o_sale_portal_paynow')
         if (searchParams.get("allow_payment") === "yes" && payNowButton) {
-            payNowButton[0].click();
+            payNowButton.click();
         }
         return def;
     },
@@ -42,12 +42,12 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
      *
      * @private
      * @param {string} prefix
-     * @param {Object} $el
+     * @param {Object} el
      *
      */
-    _setElementId: function (prefix, $el) {
+    _setElementId: function (prefix, el) {
         var id = uniqueId(prefix);
-        this.spyWatched.find($el).attr('id', id);
+        this.spyWatched.querySelector(el).setAttribute('id', id);
         return id;
     },
     /**
@@ -60,59 +60,67 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
         var self = this,
             lastLI = false,
             lastUL = null,
-            $bsSidenav = this.$el.find('.bs-sidenav');
+            bsSidenav = this.el.querySelector('.bs-sidenav');
 
-        $("#quote_content [id^=quote_header_], #quote_content [id^=quote_]", this.spyWatched).attr("id", "");
-        this.spyWatched.find("#quote_content h2, #quote_content h3").toArray().forEach((el) => {
+        Array.from(this.spyWatched.querySelectorAll("#quote_content [id^=quote_header_], #quote_content [id^=quote_]")).forEach(el => el.removeAttribute("id"));
+        Array.from(this.spyWatched.querySelectorAll("#quote_content h2, #quote_content h3")).forEach((el) => {
             var id, text;
             switch (el.tagName.toLowerCase()) {
                 case "h2":
                     id = self._setElementId('quote_header_', el);
-                    text = self._extractText($(el));
+                    text = self._extractText(el);
                     if (!text) {
                         break;
                     }
-                    lastLI = $("<li class='nav-item'>").append($('<a class="nav-link p-0" href="#' + id + '"/>').text(text)).appendTo($bsSidenav);
+                    lastLI = document.createElement('li');
+                    lastLI.className = 'nav-item';
+                    lastLI.innerHTML = `<a class="nav-link p-0" href="#${id}">${text}</a>`;
+                    bsSidenav.appendChild(lastLI);
                     lastUL = false;
                     break;
                 case "h3":
                     id = self._setElementId('quote_', el);
-                    text = self._extractText($(el));
+                    text = self._extractText(el);
                     if (!text) {
                         break;
                     }
                     if (lastLI) {
                         if (!lastUL) {
-                            lastUL = $("<ul class='nav flex-column'>").appendTo(lastLI);
+                            lastUL = document.createElement('ul');
+                            lastUL.className = 'nav flex-column';
+                            lastLI.appendChild(lastUL);
                         }
-                        $("<li class='nav-item'>").append($('<a class="nav-link p-0" href="#' + id + '"/>').text(text)).appendTo(lastUL);
+                        let li = document.createElement('li');
+                        li.className = 'nav-item';
+                        li.innerHTML = `<a class="nav-link p-0" href="#${id}">${text}</a>`;
+                        lastUL.appendChild(li);
                     }
                     break;
             }
             el.setAttribute('data-anchor', true);
         });
-        this.trigger_up('widgets_start_request', {$target: $bsSidenav});
+        this.trigger_up('widgets_start_request', {target: bsSidenav});
     },
     /**
      * extract text of menu title for sidebar
      *
      * @private
-     * @param {Object} $node
+     * @param {Object} node
      *
      */
-    _extractText: function ($node) {
+    _extractText: function (node) {
         var self = this;
         var rawText = [];
-        $node.contents().toArray().forEach((el) => {
-            var current = $(el);
-            if ($.trim(current.text())) {
-                var tagName = current.prop("tagName");
+        Array.from(node.childNodes).forEach((el) => {
+            var current = el;
+            if (current.textContent.trim()) {
+                var tagName = current.tagName;
                 if (
                     typeof tagName === "undefined" ||
                     (typeof tagName !== "undefined" &&
                         self.authorizedTextTag.includes(tagName.toLowerCase()))
                 ) {
-                    rawText.push($.trim(current.text()));
+                    rawText.push(current.textContent.trim());
                 }
             }
         });
