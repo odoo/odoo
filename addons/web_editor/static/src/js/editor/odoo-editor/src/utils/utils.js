@@ -1835,6 +1835,7 @@ export function isVisible(node) {
     return !!node && (
         (node.nodeType === Node.TEXT_NODE && isVisibleTextNode(node)) ||
         isSelfClosingElement(node) ||
+        isFontAwesome(node) ||
         hasVisibleContent(node)
     );
 }
