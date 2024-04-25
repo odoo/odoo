@@ -236,7 +236,7 @@ class TestEventData(TestEventQuestionCommon, MockVisitor):
         # should fetch "registration_3" because the answer to the third question is "Answer2" (as free text)
         self.assertEqual(search_res, registration_2 | registration_3)
 
-    @users('demo')
+    @users('user_employee')
     def test_website_visibility_internal_user(self):
         """ Check website visibility value for an internal user """
         visible_events = self.env['event.event'].search([
@@ -246,7 +246,7 @@ class TestEventData(TestEventQuestionCommon, MockVisitor):
         self.assertNotIn(self.event_link_only, visible_events)
         self.assertIn(self.event_logged_users, visible_events)
 
-    @users('portal')
+    @users('portal_test')
     def test_website_visibility_portal_user(self):
         """ Check website visibility value for a portal user """
         visible_events = self.env['event.event'].search([
@@ -256,7 +256,7 @@ class TestEventData(TestEventQuestionCommon, MockVisitor):
         self.assertNotIn(self.event_link_only, visible_events)
         self.assertIn(self.event_logged_users, visible_events)
 
-    @users('public')
+    @users('public_test')
     def test_website_visibility_public_user(self):
         """ Check website visibility value for public user """
         visible_events = self.env['event.event'].search([
