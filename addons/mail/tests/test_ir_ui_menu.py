@@ -3,10 +3,11 @@
 from unittest.mock import Mock, patch
 
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
-from odoo.tests import users
+from odoo.tests import tagged, users
 from odoo.tests.common import warmup
 
 
+@tagged('mail_thread')
 class TestMenuRootLookupByModel(MailCommon):
     """ Test the determination of the best menu root for a given model.
 
@@ -142,16 +143,16 @@ class TestMenuRootLookupByModel(MailCommon):
                 self.assertEqual(Menu._get_best_backend_root_menu_id_for_model('res.partner'), expected_menu_root_id)
 
     @warmup
-    @users('portal', 'public')
+    @users('user_portal', 'user_public')
     def test_look_for_existing_menu_root_user_no_access(self):
         Menu = self.env['ir.ui.menu']
-        with self.assertQueryCount(portal=3, public=3):
+        with self.assertQueryCount(user_portal=3, user_public=3):
             self.assertEqual(Menu._get_best_backend_root_menu_id_for_model('res.partner'), None)
-        with self.assertQueryCount(portal=1, public=1):
+        with self.assertQueryCount(user_portal=1, user_public=1):
             self.assertEqual(Menu._get_best_backend_root_menu_id_for_model('res.company'), None)
         with (self.patch_get_backend_root_menu_ids(
                 self.env['res.partner'], [self.menu_root_sales.id, self.menu_root_contact.id]),
-              self.assertQueryCount(portal=1, public=1)):
+              self.assertQueryCount(user_portal=1, user_public=1)):
             self.assertEqual(Menu._get_best_backend_root_menu_id_for_model('res.partner'), None)
 
     @warmup
