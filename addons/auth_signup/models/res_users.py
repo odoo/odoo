@@ -121,16 +121,16 @@ class ResUsers(models.Model):
         return self._create_user_from_template(values)
 
     @classmethod
-    def authenticate(cls, db, login, password, user_agent_env):
-        uid = super().authenticate(db, login, password, user_agent_env)
+    def authenticate(cls, db, credential, user_agent_env):
+        auth_info = super().authenticate(db, credential, user_agent_env)
         try:
             with cls.pool.cursor() as cr:
-                env = api.Environment(cr, uid, {})
+                env = api.Environment(cr, auth_info['uid'], {})
                 if env.user._should_alert_new_device():
                     env.user._alert_new_device()
         except MailDeliveryException:
             pass
-        return uid
+        return auth_info
 
     def _notify_inviter(self):
         for user in self:
