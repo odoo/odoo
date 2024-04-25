@@ -295,6 +295,9 @@ class Evaluacion(models.Model):
             respuestas_tabuladas = []
 
             for respuesta in pregunta.respuesta_ids:
+                if respuesta.evaluacion_id.id != self.id:
+                    continue
+                
                 respuestas.append(respuesta.respuesta_texto)
 
                 for i, respuesta_tabulada in enumerate(respuestas_tabuladas):
