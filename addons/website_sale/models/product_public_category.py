@@ -41,6 +41,10 @@ class ProductPublicCategory(models.Model):
         comodel_name='product.public.category',
         compute='_compute_parents_and_self',
     )
+    relative_path = fields.Many2many(
+        comodel_name='product.public.category',
+        compute='_compute_relative_path',
+    )
 
     product_tmpl_ids = fields.Many2many(
         comodel_name='product.template',
@@ -63,6 +67,15 @@ class ProductPublicCategory(models.Model):
                 category.parents_and_self = self.env['product.public.category'].browse([int(p) for p in category.parent_path.split('/')[:-1]])
             else:
                 category.parents_and_self = category
+
+    def _compute_relative_path(self):
+        for record in self:
+            category = record
+            next_item = category
+            while category.parent_id:
+                category = category.parent_id
+                next_item = category + next_item
+            record.relative_path = next_item
 
     @api.depends('parents_and_self')
     def _compute_display_name(self):

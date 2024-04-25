@@ -1033,10 +1033,35 @@
                                 <li class="breadcrumb-item o_not_editable">
                                     <a t-att-href="keep(category=0)">All Products</a>
                                 </li>
-                                <li t-nocache="The category does not have to be cached, as the product can be accessed via different paths."
-                                    t-if="category" class="breadcrumb-item">
-                                    <a t-att-href="keep('/shop/category/%s' % slug(category), category=0)" t-field="category.name" />
-                                </li>
+                                <t t-set="product_category_path" t-value="False"/>
+                                <!-- Iterate over the public categories of the product,
+                                    checking if a product category matches the context category -->
+                                <t t-if="category" t-foreach="product.public_categ_ids" t-as="product_category">
+                                    <!-- If 'product_category_path' is still False (no match found earlier),
+                                        and if the current category path is a subset of this public category of the product,
+                                        update 'product_category_path' with the relative_path of this product category -->
+                                    <t t-if="not product_category_path and ('/' + category.parent_path) in ('/' + product_category.parent_path)">
+                                        <t t-set="product_category_path" t-value="product_category.relative_path"/>
+                                    </t>
+                                </t>
+                                <!-- If after the check, no match is found('product_category_path' remains False),
+                                    update 'product_category_path' with the relative_path of the first category in
+                                    the product's public category list (if exist)-->
+                                <t t-if="not product_category_path and product.public_categ_ids">
+                                    <t t-set="product_category_path" t-value="product.public_categ_ids[0].relative_path"/>
+                                </t>
+                                <t t-if="product_category_path" t-foreach="product_category_path" t-as="data">
+                                    <li
+                                        t-nocache="The category does not have to be cached, as the product can be accessed via different paths."
+                                        t-if="data"
+                                        class="breadcrumb-item"
+                                    >
+                                        <a
+                                            t-att-href="keep('/shop/category/%s' % slug(data), category=0)"
+                                            t-field="data.name"
+                                        />
+                                    </li>
+                                </t>
                                 <li class="breadcrumb-item active">
                                     <span t-field="product.name" />
                                 </li>
