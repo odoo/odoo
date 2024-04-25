@@ -12,7 +12,7 @@ class Template(models.Model):
         tipo (str): Tipo de la plantilla de evaluación, opciones son 'nom_035' para NOM 035 y 'clima' para Clima.
         pregunta_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'pregunta' para almacenar las preguntas asociadas a la plantilla.
     """
-    
+
     _name = "template"
     _description = "Plantilla para una evaluación"
 

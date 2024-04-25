@@ -7,4 +7,3 @@ class PreguntaTemplateRel(models.Model):
 
     template_id = fields.Many2one("template", string="Plantilla")
     pregunta_id = fields.Many2one("pregunta", string="Pregunta")
-

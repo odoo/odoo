@@ -20,8 +20,15 @@ class Evaluacion(models.Model):
 
     nombre = fields.Char(required=True)
 
-    tipo = fields.Selection([("CLIMA", "Clima Organizacional"), ("NOM_035", "NOM 035"), ("competencia", "Competencia")],
-                            required=True, default="competencia")
+    tipo = fields.Selection(
+        [
+            ("CLIMA", "Clima Organizacional"),
+            ("NOM_035", "NOM 035"),
+            ("competencia", "Competencia"),
+        ],
+        required=True,
+        default="competencia",
+    )
     descripcion = fields.Text()
     estado = fields.Selection(
         [
@@ -64,7 +71,7 @@ class Evaluacion(models.Model):
 
         Este método verifica si el objeto actual está vacío (self). Si lo está, crea una nueva
         evaluación con un nombre predeterminado y asigna este nuevo objeto a self. Luego, limpia
-        las preguntas existentes y copia todas las preguntas de un template con ID predefinido 
+        las preguntas existentes y copia todas las preguntas de un template con ID predefinido
         (en este caso, 332) al objeto evaluación actual.
 
         Returns:
@@ -73,11 +80,13 @@ class Evaluacion(models.Model):
 
         if not self:
 
-            new_evaluation = self.env["evaluacion"].create({
-                "nombre": "Evaluacion Clima",
-                "descripcion": "La valuacion Clima es una herramienta de medición de clima organizacional, cuyo objetivo es conocer la percepción que tienen las personas que laboran en los centros de trabajo, sobre aquellos aspectos sociales que conforman su entorno laboral y que facilitan o dificultan su desempeño.",
-                "tipo": "CLIMA",
-            })
+            new_evaluation = self.env["evaluacion"].create(
+                {
+                    "nombre": "Evaluacion Clima",
+                    "descripcion": "La valuacion Clima es una herramienta de medición de clima organizacional, cuyo objetivo es conocer la percepción que tienen las personas que laboran en los centros de trabajo, sobre aquellos aspectos sociales que conforman su entorno laboral y que facilitan o dificultan su desempeño.",
+                    "tipo": "CLIMA",
+                }
+            )
             self = new_evaluation
 
         self.pregunta_ids = [(5,)]
@@ -99,18 +108,20 @@ class Evaluacion(models.Model):
 
         Este método verifica si el objeto actual está vacío (self). Si lo está, crea una nueva
         evaluación con un nombre predeterminado y asigna este nuevo objeto a self. Luego, limpia
-        las preguntas existentes y copia todas las preguntas de un template con ID predefinido 
-       (en este caso, 331) al objeto evaluación actual.
+        las preguntas existentes y copia todas las preguntas de un template con ID predefinido
+        (en este caso, 331) al objeto evaluación actual.
 
-       :return: object: Retorna el objeto evaluación actualizado con las preguntas copiadas del template.
+        :return: object: Retorna el objeto evaluación actualizado con las preguntas copiadas del template.
         """
 
         if not self:
-            new_evaluation = self.env["evaluacion"].create({
-                "nombre": "NOM 035",
-                "descripcion": "La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.",
-                "tipo": "NOM_035",
-            })
+            new_evaluation = self.env["evaluacion"].create(
+                {
+                    "nombre": "NOM 035",
+                    "descripcion": "La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.",
+                    "tipo": "NOM_035",
+                }
+            )
             self = new_evaluation
 
         self.pregunta_ids = [(5,)]
@@ -214,6 +225,94 @@ class Evaluacion(models.Model):
             "name": "Evaluación",
             "type": "ir.actions.act_window",
             "res_model": "evaluacion",
-            "view_mode": "tree,form",
+            "view_mode": "tree",
             "target": "current",
         }
+
+    def abrir_evaluacion_form(self):
+        """
+        Abre la evaluación en una vista de formulario.
+
+        Este método configura y devuelve un diccionario con los detalles para abrir la evaluación
+        actual en una vista de formulario específica dependiendo de su tipo.
+
+        :return: Un diccionario que contiene todos los parámetros necesarios para abrir la
+        evaluación en una vista de formulario específica de Odoo.
+
+        """
+
+        if self.tipo == "competencia":
+            view_id = self.env.ref("evaluaciones.evaluacion_360_form").id
+        else:
+            view_id = self.env.ref("evaluaciones.evaluacion_reporte_form").id
+
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Evaluación",
+            "res_model": "evaluacion",
+            "view_mode": "form",
+            "view_id": view_id,
+            "target": "current",
+            "res_id": self.id,
+        }
+
+    def action_reporte_generico(self):
+        """
+        Genera una acción de URL para el reporte genérico de la evaluación.
+
+        Esta función genera un URL para redirigir
+        a un reporte específico de la evaluación actual.
+
+        :return: una acción de redirección al reporte de la evaluación
+
+        """
+        return {
+            "type": "ir.actions.act_url",
+            "url": "/evaluacion/reporte/%s" % (self.id),
+            "target": "new",
+        }
+
+    def action_generar_datos_reporte_generico(self):
+        """
+        Genera los datos necesarios para el reporte genérico de la evaluación.
+
+        Esta función genera los parámetros requeridos para generar un reporte genérico de la evaluación actual,
+        incluyendo las preguntas y las respuestas tabuladas.
+
+        :return: Los parámetros necesarios para generar el reporte.
+
+        """
+        parametros = {
+            "evaluacion": self,
+            "preguntas": [],
+        }
+
+        respuesta_tabulada = {}
+
+        for pregunta in self.pregunta_ids:
+
+            respuestas = []
+            respuestas_tabuladas = []
+
+            for respuesta in pregunta.respuesta_ids:
+                respuestas.append(respuesta.respuesta_texto)
+
+                for i, respuesta_tabulada in enumerate(respuestas_tabuladas):
+                    if respuesta_tabulada["texto"] == respuesta.respuesta_texto:
+                        respuestas_tabuladas[i]["conteo"] += 1
+                        break
+                else:
+                    respuestas_tabuladas.append(
+                        {"texto": respuesta.respuesta_texto, "conteo": 1}
+                    )
+
+            datos_pregunta = {
+                "pregunta": pregunta,
+                "respuestas": respuestas,
+                "respuestas_tabuladas": respuestas_tabuladas,
+                "datos_grafica": str(respuestas_tabuladas).replace("'", '"'),
+            }
+
+            parametros["preguntas"].append(datos_pregunta)
+
+        return parametros
