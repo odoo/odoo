@@ -347,7 +347,7 @@
         <record id="tax_report_title_vat_debt_credit" model="account.tax.report.line">
             <field name="name">Block G – Moms att betala eller få tillbaka</field>
             <field name="code">se_g</field>
-            <field name="formula">se_b+se_i+se_d+se_f</field>
+            <field name="formula">se_b+se_i+se_d-se_f</field>
             <field name="sequence">9</field>
             <field name="report_id" ref="tax_report"/>
         </record>
@@ -355,7 +355,7 @@
         <record id="tax_report_line_49" model="account.tax.report.line">
             <field name="name">Fält 49 – Moms att betala eller få tillbaka</field>
             <field name="code">se_49</field>
-            <field name="formula">se_b+se_i+se_d+se_f</field>
+            <field name="formula">se_b+se_i+se_d-se_f</field>
             <field name="sequence">1</field>
             <field name="parent_id" ref="tax_report_title_vat_debt_credit"/>
             <field name="report_id" ref="tax_report"/>
