@@ -19,6 +19,8 @@
     <t t-set="edition_cover_only" t-value="opt_event_description_cover_hidden and request.env.user.has_group('event.group_event_manager')"/>
 
     <t t-call="website_event.event_details">
+        <div t-if="toast_message" class="o_wevent_register_toaster d-none" t-att-data-message="toast_message"/>
+
         <t t-if="opt_event_description_cover_top" t-call="website.record_cover">
             <t t-set="_record" t-value="event"/>
             <t t-set="use_filters" t-value="True"/>
@@ -147,7 +149,6 @@
 <!-- cta_additional_classes {string} - classes applied to the main CTA   -->
 <template id="registration_template" name="Registration">
     <button t-if="event.event_registrations_open" type="button" data-bs-toggle="modal" data-bs-target="#modal_ticket_registration" t-attf-class="btn btn-primary {{cta_additional_classes}}">Register</button>
-    <div t-if="toast_message" class="o_wevent_register_toaster d-none" t-att-data-message="toast_message"/>
     <t t-if="not event.event_registrations_open">
         <!-- Delayed registration time -->
         <div t-if="not event.event_registrations_started and not event.event_registrations_sold_out" class="alert alert-info mb-3 small" role="status">
@@ -473,7 +474,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer flex-lg-row-reverse border-top">
+                        <div class="modal-footer flex-lg-row border-top">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary a-submit" disabled="" t-attf-id="#{event.id}">
                                 Register
@@ -523,7 +524,7 @@
                                 </t>
                             </div>
                         </div>
-                        <div class="modal-footer flex-lg-row-reverse border-top">
+                        <div class="modal-footer flex-lg-row border-top">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary a-submit" t-attf-id="#{event.id}" disabled="disabled">
                                 Register
