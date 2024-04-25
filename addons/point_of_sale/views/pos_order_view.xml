@@ -258,7 +258,7 @@
         <field name="name">pos.order.tree</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <tree string="POS Orders" create="0" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+            <tree string="POS Orders" create="0" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" duplicate="0">
                 <field name="currency_id" column_invisible="True"/>
                 <field name="name" decoration-bf="1"/>
                 <field name="session_id"  readonly="state != 'draft'"/>
