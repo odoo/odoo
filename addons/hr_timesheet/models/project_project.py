@@ -175,7 +175,7 @@ class Project(models.Model):
     @api.depends_context('allowed_company_ids')
     def _compute_display_name(self):
         super()._compute_display_name()
-        if len(self.env.context.get('allowed_company_ids', [])) <= 1:
+        if len(self.env.context.get('allowed_company_ids') or []) <= 1:
             return
 
         for project in self:
