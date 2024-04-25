@@ -171,8 +171,10 @@ class TestUBLAU(TestUBLCommon):
         self._assert_imported_invoice_from_file(
             subfolder='tests/test_files/from_odoo',
             filename='a_nz_out_invoice.xml',
-            amount_total=2950.2,
-            amount_tax=268.2,
-            list_line_subtotals=[1782, 1000, -100],
-            currency_id=self.other_currency.id
+            invoice_vals={
+                'currency_id': self.other_currency.id,
+                'amount_total': 2950.2,
+                'amount_tax': 268.2,
+                'invoice_lines': [{'price_subtotal': x} for x in (1782, 1000, -100)]
+            },
         )
