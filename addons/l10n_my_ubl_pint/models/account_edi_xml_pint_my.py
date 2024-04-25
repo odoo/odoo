@@ -12,6 +12,11 @@ class AccountEdiXmlUBLPINTMY(models.AbstractModel):
     * PINT MY Official documentation: https://docs.peppol.eu/poac/my/pint-my
     """
 
+    def _get_customization_ids(self):
+        vals = super()._get_customization_ids()
+        vals['pint_my'] = 'urn:peppol:pint:billing-1@my-1'
+        return vals
+
     def _export_invoice_filename(self, invoice):
         # EXTENDS account_edi_ubl_cii
         return f"{invoice.name.replace('/', '_')}_pint_my.xml"
@@ -21,7 +26,7 @@ class AccountEdiXmlUBLPINTMY(models.AbstractModel):
         vals = super()._export_invoice_vals(invoice)
         vals['vals'].update({
             # see https://docs.peppol.eu/poac/my/pint-my/bis/#profiles
-            'customization_id': 'urn:peppol:pint:billing-1@my-1',
+            'customization_id': self._get_customization_ids()['pint_my'],
             'profile_id': 'urn:peppol:bis:billing',
         })
         if invoice.currency_id != invoice.company_id.currency_id:
