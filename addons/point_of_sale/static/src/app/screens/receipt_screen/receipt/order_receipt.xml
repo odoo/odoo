@@ -64,13 +64,14 @@
             </t>
             <div t-if="props.data.tax_details.length > 0" class="pos-receipt-taxes">
                 <span />
-                <span>TAX%</span>
                 <span>Tax</span>
+                <span>Amount</span>
                 <span>Base</span>
                 <span>Total</span>
                 <t t-foreach="props.data.tax_details" t-as="tax" t-key="tax.tax.id">
                     <span t-esc="tax.tax.letter || ''"/>
-                    <span><t t-esc="tax.tax.amount"/> %</span>
+                    <span t-if="tax.tax.amount_type != 'fixed'"><t t-esc="tax.tax.amount"/> %</span>
+                    <span t-else="" t-esc="tax.tax.name"/>
                     <span t-esc="props.formatCurrency(tax.amount, false)" />
                     <span t-esc="props.formatCurrency(tax.base, false)" />
                     <span t-esc="props.formatCurrency(tax.amount + tax.base, false)" />
