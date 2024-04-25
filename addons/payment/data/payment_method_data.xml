@@ -2288,6 +2288,28 @@
         />
     </record>
 
+    <record id="payment_method_paylater_india" model="payment.method">
+        <field name="name">Pay Later</field>
+        <field name="code">paylater_india</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/wallet.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund"></field>
+        <field name="support_refund">full_only</field>
+        <field name="supported_country_ids"
+               eval="[Command.set([
+                         ref('base.in'),
+                     ])]"
+        />
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.INR'),
+                     ])]"
+        />
+    </record>
+
     <record id="payment_method_pay_easy" model="payment.method">
         <field name="name">Pay-easy</field>
         <field name="code">pay_easy</field>
