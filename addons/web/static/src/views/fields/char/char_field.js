@@ -27,16 +27,20 @@ export class CharField extends Component {
     setup() {
         this.input = useRef("input");
         if (this.props.dynamicPlaceholder) {
-            const dynamicPlaceholder = useDynamicPlaceholder(this.input);
-            useExternalListener(document, "keydown", dynamicPlaceholder.onKeydown);
+            this.dynamicPlaceholder = useDynamicPlaceholder(this.input);
+            useExternalListener(document, "keydown", this.dynamicPlaceholder.onKeydown);
             useEffect(() =>
-                dynamicPlaceholder.updateModel(this.props.dynamicPlaceholderModelReferenceField)
+                this.dynamicPlaceholder.updateModel(
+                    this.props.dynamicPlaceholderModelReferenceField
+                )
             );
         }
         useInputField({
             getValue: () => this.props.record.data[this.props.name] || "",
             parse: (v) => this.parse(v),
         });
+
+        this.selectionStart = this.props.record.data[this.props.name]?.length || 0;
     }
 
     get shouldTrim() {
@@ -53,12 +57,49 @@ export class CharField extends Component {
             isPassword: this.props.isPassword,
         });
     }
+    get hasDynamicPlaceholder() {
+        return this.props.dynamicPlaceholder && !this.props.readonly;
+    }
 
     parse(value) {
         if (this.shouldTrim) {
             return value.trim();
         }
         return value;
+    }
+
+    onBlur() {
+        this.selectionStart = this.input.el.selectionStart;
+    }
+
+    async onDynamicPlaceholderOpen() {
+        await this.dynamicPlaceholder.open({
+            validateCallback: this.onDynamicPlaceholderValidate.bind(this),
+        });
+    }
+
+    async onDynamicPlaceholderValidate(chain, defaultValue) {
+        if (chain) {
+            this.input.el.focus();
+            defaultValue = defaultValue.replace("|||", "");
+            let dynamicPlaceholder =
+                "object." +
+                chain +
+                (defaultValue && defaultValue !== "" ? ` ||| ${defaultValue}` : "");
+            dynamicPlaceholder = `{{${dynamicPlaceholder}}}`;
+            const newValue =
+                this.input.el.value.slice(0, this.selectionStart) +
+                dynamicPlaceholder +
+                this.input.el.value.slice(this.selectionStart);
+
+            this.input.el.value = newValue;
+            // trigger events to make the field dirty
+            this.input.el.dispatchEvent(new InputEvent("input"));
+            this.input.el.dispatchEvent(new KeyboardEvent("keydown"));
+            this.input.el.focus();
+            const newCursorPos = this.selectionStart + dynamicPlaceholder.length;
+            this.input.el.setSelectionRange(newCursorPos, newCursorPos);
+        }
     }
 }
 

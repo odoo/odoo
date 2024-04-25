@@ -27,8 +27,9 @@ export function useDynamicPlaceholder(elementRef) {
         // When the user cancel/close the popover, the path is empty.
         if (path) {
             let dynamicPlaceholder = "{{object." + path;
+            defaultValue = defaultValue.replace("|||", "");
             dynamicPlaceholder +=
-                defaultValue && defaultValue !== "" ? ` or '''${defaultValue}'''}}` : "}}";
+                defaultValue && defaultValue !== "" ? ` ||| ${defaultValue}}}` : "}}";
 
             const baseValue = element.value;
             const splitedValue = [baseValue.slice(0, rangeIndex), baseValue.slice(rangeIndex)];

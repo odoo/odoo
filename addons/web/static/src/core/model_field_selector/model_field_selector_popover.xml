@@ -54,7 +54,11 @@
             </div>
             <t t-if="showDebugInput">
                 <div class="o_model_field_selector_popover_footer border-top py-1 px-2">
-                    <input type="text" class="o_model_field_selector_debug o_input" t-att-value="state.page.path" t-on-change="(ev) => this.loadNewPath(ev.target.value)" t-on-keydown="onDebugInputKeydown" t-on-input="(ev) => this.props.update(ev.target.value, true)"/>
+                    <input type="text" class="o_model_field_selector_debug o_input"
+                        t-att-value="state.page.path"
+                        t-on-change="(ev) => this.loadNewPath(ev.target.value)"
+                        t-on-keydown="onDebugInputKeydown"
+                        t-on-input="(ev) => this.props.update(ev.target.value, null, true)"/>
                 </div>
             </t>
         </div>

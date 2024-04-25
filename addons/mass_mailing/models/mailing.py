@@ -233,6 +233,12 @@ class MassMailing(models.Model):
         'Warning Message', compute='_compute_warning_message',
         help='Warning message displayed in the mailing form view')
 
+    # For testing, to remove
+    char_no_emoji = fields.Char("Char without emoji")
+    char_no_emoji_translate = fields.Char("Char without emoji translatable", translate=True)
+    char_emoji_translate = fields.Char("Char with emoji translatable", translate=True)
+    text_emoji = fields.Text("Text with emoji translatable", translate=True)
+
     _sql_constraints = [(
         'percentage_valid',
         'CHECK(ab_testing_pc >= 0 AND ab_testing_pc <= 100)',
