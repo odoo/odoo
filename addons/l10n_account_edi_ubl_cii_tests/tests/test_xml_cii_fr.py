@@ -416,43 +416,70 @@ class TestCIIFR(TestUBLCommon):
         -----------------------
         Total: 574.004
         """
+        # /!\ The price_unit are different for taxes with price_include, because all amounts in Factur-X should be
+        # tax excluded. At import, the tax included amounts are thus converted into tax excluded ones.
+        # Yet, the line subtotals and total will be the same (if an equivalent tax exist with price_include = False)
+        invoice_vals = {
+            'amount_total': 574.004,
+            'amount_tax': 27.334,
+            'currency_id': self.env['res.currency'].search([('name', '=', 'USD')], limit=1).id,
+            'invoice_lines': [
+                {'price_unit': 95.24, 'price_subtotal': 95.24, 'quantity': 1, 'discount': 0, 'tax_ids': self.tax_5_purchase.ids},
+                {'price_unit': 100, 'price_subtotal': 100, 'quantity': 1, 'discount': 0, 'tax_ids': self.tax_5_purchase.ids},
+                {'price_unit': 190.48, 'price_subtotal': 171.43, 'quantity': 1, 'discount': 10.001049979000411, 'tax_ids': self.tax_5_purchase.ids},
+                {'price_unit': 200, 'price_subtotal': 180, 'quantity': 1, 'discount': 10.0, 'tax_ids': self.tax_5_purchase.ids},
+            ]
+        }
         self._assert_imported_invoice_from_file(
             subfolder='tests/test_files/from_odoo',
             filename='facturx_out_invoice_tax_incl.xml',
-            amount_total=574.004,
-            amount_tax=27.334,
-            list_line_subtotals=[95.24, 100, 171.43, 180],
-            # /!\ The price_unit are different for taxes with price_include, because all amounts in Factur-X should be
-            # tax excluded. At import, the tax included amounts are thus converted into tax excluded ones.
-            # Yet, the line subtotals and total will be the same (if an equivalent tax exist with price_include = False)
-            list_line_price_unit=[95.24, 100, 190.48, 200],
-            # rounding error since for line 3: we round several times...
-            # when exporting the invoice, we compute the price tax excluded = 200/1.05 ~= 190.48
+            # Discount of line 3: when exporting the invoice, we compute the price tax excluded = 200/1.05 ~= 190.48
             # then, when computing the discount amount: 190.48 * 0.1 ~= 19.05 => price net amount = 171.43
             # Thus, at import: price_unit = 190.48, and discount = 100 * (1 - 171.43 / 190.48) = 10.001049979
-            list_line_discount=[0, 0, 10, 10],
-            # Again, all taxes in the imported invoice are price_include = False
-            list_line_taxes=[self.tax_5_purchase]*4,
             move_type='in_invoice',
-            currency_id=self.env['res.currency'].search([('name', '=', 'USD')], limit=1).id,
+            invoice_vals=invoice_vals,
         )
 
     def test_import_fnfe_examples(self):
         # Source: official documentation of the FNFE (subdirectory: "5. FACTUR-X 1.0.06 - Examples")
         subfolder = 'tests/test_files/from_factur-x_doc'
         # the 2 following files have the same pdf but one is labelled as an invoice and the other as a refund
+        invoice_vals = {
+            'amount_total': 233.47,
+            'amount_tax': 14.99,
+            'invoice_lines': [{'price_subtotal': 20.48}, {'price_subtotal': 198}]
+        }
         # source: Avoir_FR_type380_EN16931.pdf
-        self._assert_imported_invoice_from_file(subfolder=subfolder, filename='facturx_credit_note_type380.xml',
-            amount_total=233.47, amount_tax=14.99, list_line_subtotals=[20.48, 198], move_type='in_refund')
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder,
+            filename='facturx_credit_note_type380.xml',
+            invoice_vals=invoice_vals,
+            move_type='in_refund',
+        )
         # source: Avoir_FR_type381_EN16931.pdf
-        self._assert_imported_invoice_from_file(subfolder=subfolder, filename='facturx_credit_note_type381.xml',
-            amount_total=233.47, amount_tax=14.99, list_line_subtotals=[20.48, 198], move_type='in_refund')
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder,
+            filename='facturx_credit_note_type381.xml',
+            invoice_vals=invoice_vals,
+            move_type='in_refund',
+        )
         # source: Facture_F20220024_EN_16931_basis_quantity, basis quantity != 1 for one of the lines
-        self._assert_imported_invoice_from_file(subfolder=subfolder, filename='facturx_invoice_basis_quantity.xml',
-            amount_total=108, amount_tax=8, list_line_subtotals=[-5, 10, 60, 28, 7])
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder,
+            filename='facturx_invoice_basis_quantity.xml',
+            invoice_vals={'amount_total': 108, 'amount_tax': 8},
+        )
         # source: Facture_F20220029_EN_16931_K.pdf, credit note labelled as an invoice with negative amounts
-        self._assert_imported_invoice_from_file(subfolder=subfolder, filename='facturx_invoice_negative_amounts.xml',
-            amount_total=100, amount_tax=0, list_line_subtotals=[-5, 10, 60, 30, 5], move_type='in_refund')
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder,
+            filename='facturx_invoice_negative_amounts.xml',
+            invoice_vals={
+                'amount_total': 100,
+                'amount_tax': 0,
+                'invoice_lines': [{'price_subtotal': p} for p in (-5, 10, 60, 30, 5)],
+            },
+            move_type='in_refund',
+        )
 
     def test_import_fixed_taxes(self):
         """ Tests whether we correctly decode the xml attachments created using fixed taxes.
@@ -460,18 +487,32 @@ class TestCIIFR(TestUBLCommon):
         NB: use move_type = 'out_invoice' s.t. we can retrieve the taxes used to create the invoices.
         """
         subfolder = "tests/test_files/from_odoo"
-        self._assert_imported_invoice_from_file(
-            subfolder=subfolder, filename='facturx_ecotaxes_case1.xml', amount_total=121, amount_tax=22,
-            list_line_subtotals=[99], currency_id=self.other_currency.id, list_line_price_unit=[99],
-            list_line_discount=[0], list_line_taxes=[self.tax_21+self.recupel], move_type='out_invoice',
-        )
-        self._assert_imported_invoice_from_file(
-            subfolder=subfolder, filename='facturx_ecotaxes_case2.xml', amount_total=121, amount_tax=23,
-            list_line_subtotals=[98], currency_id=self.other_currency.id, list_line_price_unit=[98],
-            list_line_discount=[0], list_line_taxes=[self.tax_21+self.recupel+self.auvibel], move_type='out_invoice',
-        )
-        self._assert_imported_invoice_from_file(
-            subfolder=subfolder, filename='facturx_ecotaxes_case3.xml', amount_total=121, amount_tax=22,
-            list_line_subtotals=[99], currency_id=self.other_currency.id, list_line_price_unit=[99],
-            list_line_discount=[0], list_line_taxes=[self.tax_21+self.recupel], move_type='out_invoice',
-        )
+        kwargs = {
+            'subfolder': subfolder,
+            'move_type': 'out_invoice',
+            'invoice_vals': {
+                'amount_total': 121,
+                'amount_tax': 22,
+                'currency_id': self.other_currency.id,
+                'invoice_lines': [{
+                    'name': "product_a",
+                    'quantity': 1,
+                    'price_unit': 99,
+                    'discount': 0,
+                    'tax_ids': (self.tax_21 + self.recupel).ids,
+                }],
+            },
+        }
+        self._assert_imported_invoice_from_file(filename='facturx_ecotaxes_case1.xml', **kwargs)
+        self._assert_imported_invoice_from_file(filename='facturx_ecotaxes_case3.xml', **kwargs)
+        kwargs['invoice_vals'].update({
+            'amount_tax': 23,
+            'invoice_lines': [{
+                'name': "product_a",
+                'quantity': 1,
+                'price_unit': 98,
+                'discount': 0,
+                'tax_ids': (self.tax_21 + self.recupel + self.auvibel).ids,
+            }],
+        })
+        self._assert_imported_invoice_from_file(filename='facturx_ecotaxes_case2.xml', **kwargs)
