@@ -87,7 +87,7 @@ const Link = Widget.extend({
                 $node = $node.parent();
             }
             const linkNode = this.linkEl || this.data.range.cloneContents();
-            const linkText = linkNode.innerText.replaceAll("\u200B", "");
+            const linkText = linkNode.innerText.replaceAll("\u200B", "").replaceAll("\uFEFF", "");
             this.data.content = linkText.replace(/[ \t\r\n]+/g, ' ');
             this.data.originalText = this.data.content;
             if (linkNode instanceof DocumentFragment) {
