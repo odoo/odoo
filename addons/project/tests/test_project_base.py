@@ -196,22 +196,19 @@ class TestProjectBase(TestProjectCommon):
         self.project_pigs.company_id = company_1
         self.assertEqual(self.project_pigs.company_id, company_1, "The company of the project should have been updated.")
         self.project_pigs.company_id = False
+        # if the partner company is set, the project's should also be set
         partner.company_id = company_1
 
-        # The partner has a company, but the project has none. The partner can have any new company, but the project can only be set to False/partner.company
-        with self.assertRaises(UserError):
-            # Cannot change the company of a project if the company of the partner is different
-            self.project_pigs.company_id = company_2
-        partner.company_id = company_2
-        partner.company_id = False
-        partner.company_id = company_1
-        self.project_pigs.company_id = company_1
-        self.assertEqual(self.project_pigs.company_id, company_1, "The company of the project should have been updated.")
+        # If the partner has a company, the project must have the same
+        self.assertEqual(partner.company_id, self.project_pigs.company_id, "The company of the project should have been updated.")
 
-        # The partner has a company and the project has a company. The project can only be set to False, the partner can not be changed
+        # The partner has a company and the project has a company. The partner's can only be set to False, the project's can not be changed
         with self.assertRaises(UserError):
             # Cannot change the company of a project if both the project and its partner have a company
             self.project_pigs.company_id = company_2
+        with self.assertRaises(UserError):
+            # Cannot unset the project's company if its associated partner has a company
+            self.project_pigs.company_id = False
         with self.assertRaises(UserError):
             # Cannot change the company of a partner if both the project and its partner have a company
             partner.company_id = company_2
