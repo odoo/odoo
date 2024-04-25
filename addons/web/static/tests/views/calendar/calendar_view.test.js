@@ -2627,6 +2627,7 @@ test(`Add filters and specific color`, async () => {
     expect.verifySteps([
         "get_views (event)",
         "has_access (event)",
+        "has_access (event)",
         "search_read (filter.partner) [partner_id]",
         "search_read (event) [display_name, start, stop, is_all_day, color, attendee_ids, type_id]",
     ]);
@@ -5399,4 +5400,18 @@ test("calendar: check context is correclty sent to fetch data", async () => {
             </calendar>`,
         context: { active_test: true },
     });
+});
+
+test(`disable editing without write access rights`, async () => {
+    onRpc("has_access", ({ args }) => args[1] != 'write');
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop">
+                <field name="name"/>
+            </calendar>
+        `,
+    });
+    expect(`.fc-event-draggable`).toHaveCount(0, { message: "Record should not be draggable/editable" });
 });
