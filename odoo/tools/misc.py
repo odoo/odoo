@@ -1144,6 +1144,8 @@ class OrderedSet(MutableSet):
     def __repr__(self):
         return f'{type(self).__name__}({list(self)!r})'
 
+    intersection = property(lambda self: self.__and__)
+
 
 class LastOrderedSet(OrderedSet):
     """ A set collection that remembers the elements last insertion order. """
