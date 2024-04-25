@@ -22,4 +22,50 @@
         <field name="name">Internal</field>
     </record>
 
+    <!-- Project Task export template -->
+    <record id="project_task_export_template_line_allocated_hours" model="ir.exports.line">
+        <field name="export_id" ref="project.project_task_export_template"/>
+        <field name="name">allocated_hours</field>
+    </record>
+
+    <!-- Timesheets export template -->
+    <record id="account_analytic_line_export_template" model="ir.exports">
+        <field name="name">Timesheets</field>
+        <field name="resource">account.analytic.line</field>
+    </record>
+
+    <record id="account_analytic_line_export_template_line_id" model="ir.exports.line">
+        <field name="export_id" ref="account_analytic_line_export_template"/>
+        <field name="name">id</field>
+    </record>
+
+    <record id="account_analytic_line_export_template_line_date" model="ir.exports.line">
+        <field name="export_id" ref="account_analytic_line_export_template"/>
+        <field name="name">date</field>
+    </record>
+
+    <record id="account_analytic_line_export_template_line_employee_id" model="ir.exports.line">
+        <field name="export_id" ref="account_analytic_line_export_template"/>
+        <field name="name">employee_id</field>
+    </record>
+
+    <record id="account_analytic_line_export_template_line_project_id" model="ir.exports.line">
+        <field name="export_id" ref="account_analytic_line_export_template"/>
+        <field name="name">project_id</field>
+    </record>
+
+    <record id="account_analytic_line_export_template_line_task_id" model="ir.exports.line">
+        <field name="export_id" ref="account_analytic_line_export_template"/>
+        <field name="name">task_id</field>
+    </record>
+
+    <record id="account_analytic_line_export_template_line_name" model="ir.exports.line">
+        <field name="export_id" ref="account_analytic_line_export_template"/>
+        <field name="name">name</field>
+    </record>
+
+    <record id="account_analytic_line_export_template_line_unit_amount" model="ir.exports.line">
+        <field name="export_id" ref="account_analytic_line_export_template"/>
+        <field name="name">unit_amount</field>
+    </record>
 </odoo>
