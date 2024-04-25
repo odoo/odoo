@@ -60,7 +60,9 @@ publicWidget.registry.WebsiteSale.include({
 
         if (qtyInput.length) {
             qtyInput.value = quantity;
-            qtyInput.dispatchEvent(new Event('change'));
+            // TODO-visp: Check this also
+            // qtyInput.dispatchEvent(new Event('change'));
+            $(qty).trigger('change');
         } else {
             // This handles the case when the "Select Quantity" customize show
             // is disabled, and therefore the above selector does not find an
@@ -102,7 +104,6 @@ publicWidget.registry.WebsiteSale.include({
         const callService = this.call.bind(this)
         this.optionalProductsModal.getAndCreateSelectedProducts()
             .then((products) => {
-                debugger;
                 const productAndOptions = JSON.stringify(products);
                 rpc('/shop/cart/update_option', {
                     product_and_options: productAndOptions,

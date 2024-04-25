@@ -38,7 +38,7 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
         if (cookie.get(cookieName)) {
             return; // Already tracked in the last 30min
         }
-        if (this.el.querySelector('.js_product.css_not_available').length) {
+        if (this.el.querySelector('.js_product.css_not_available')) {
             return; // Variant not possible
         }
         rpc('/shop/products/recently_viewed_update', {

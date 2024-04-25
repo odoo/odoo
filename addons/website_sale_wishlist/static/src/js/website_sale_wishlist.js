@@ -60,10 +60,15 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         // trigger change on only one input
         if (this.el.querySelector('input.js_product_change').length) { // manage "List View of variants"
             let checkedProductInput = this.el.querySelector('input.js_product_change:checked');
-            checkedProductInput.dispatchEvent(new Event('change'));
+            // TODO-visp: Check this also
+            // checkedProductInput.dispatchEvent(new Event('change'));
+            $(checkedProductInput).trigger('change');
+
         } else {
             let inputProductId = this.el.querySelector('input.product_id');
-            inputProductId.dispatchEvent(new Event('change'));
+            // TODO-visp: Check this also
+            // inputProductId.dispatchEvent(new Event('change'));
+            $(inputProductId).trigger('change');
         }
 
         return def;

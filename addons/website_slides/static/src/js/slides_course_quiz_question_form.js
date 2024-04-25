@@ -114,6 +114,7 @@ var QuestionFormWidget = publicWidget.Widget.extend({
         commentLine.classList.add('d-none');
         const inputEl = commentLine.querySelector('input[type=text]');
         inputEl.value = '';
+        // TODO-visp: Check this also
         inputEl.dispatchEvent(new Event('change'));
     },
 

@@ -62,7 +62,9 @@ var VariantMixin = {
         const combination = this.getSelectedVariantValues(parent);
         let parentCombination;
         if (parent.classList.contains('main_product')) {
-            parentCombination = JSON.parse(parent.querySelector('ul[data-attribute_exclusions]').dataset.attributeExclusions).parent_combination;
+            if (parent.querySelector('ul[data-attribute_exclusions]')) {
+                parentCombination = JSON.parse(parent.querySelector('ul[data-attribute_exclusions]').dataset.attributeExclusions).parent_combination;
+            }
             const optProducts = parent.parentElement.querySelectorAll(`[data-parent-unique-id='${parent.getAttribute('data-uniqueId')}']`);
 
             for (const optionalProduct of optProducts) {
@@ -141,10 +143,10 @@ var VariantMixin = {
                 const attributeValueId = customInput.dataset.value_id;
                 const attributeValueName = customInput.dataset.value_name;
 
-                if (variantContainer.querySelector('.variant_custom_value').length === 0
+                if (variantContainer.querySelector('.variant_custom_value')
                         || variantContainer
                             .querySelector('.variant_custom_value')
-                            .dataset.customProductTemplateAttributeValueId !== parseInt(attributeValueId)) {
+                            ?.dataset.customProductTemplateAttributeValueId !== parseInt(attributeValueId)) {
                     variantContainer.querySelectorAll('.variant_custom_value').forEach((el) => el.remove());
 
                     const previousCustomValue = customInput.getAttribute("previous_custom_value");
@@ -184,8 +186,9 @@ var VariantMixin = {
 
         if (newQty !== previousQty) {
             input.value = newQty;
-            debugger;
-            input.dispatchEvent(new Event('change'), {bubbles: true});
+            // TODO-VISP: take alook here
+            // input.dispatchEvent(new Event('change'), {bubbles: true});
+            $(input).trigger('change');
         }
         return false;
     },
@@ -215,6 +218,7 @@ var VariantMixin = {
      * @param {Element} container
      */
     triggerVariantChange: function (container) {
+        //TODO-visp: debug this also
         container.querySelector('ul[data-attribute_exclusions]')?.dispatchEvent(new Event('change'));
         container.querySelectorAll('input.js_variant_change:checked, select.js_variant_change').forEach(() => {
             VariantMixin.handleCustomValues(this.el);
@@ -497,10 +501,13 @@ var VariantMixin = {
         const input = parent.querySelector(`option[value='${attributeValueId}'], input[value='${attributeValueId}']`);
         input.classList.add('css_not_available');
         input.closest('label').classList.add('css_not_available');
-        input.closest('.o_variant_pills').classList.add('css_not_available');
+        input.closest('.o_variant_pills')?.classList.add('css_not_available');
 
         if (excludedBy && attributeNames) {
-            var target = input.tagName === 'OPTION' ? input : [input.closest('label'), input]
+            var target = input.tagName === 'OPTION' ? input : input.closest('label');
+            if (input.closest('label')) {
+                input.closest('label').append(input);
+            }
             var excludedByData = [];
             if (target.dataset.excludedBy) {
                 excludedByData = JSON.parse(target.dataset.excludedBy);
@@ -512,8 +519,8 @@ var VariantMixin = {
             }
             excludedByData.push(excludedByName);
 
-            target.attr('title', _t('Not available with %s', excludedByData.join(', ')));
-            target.data('excluded-by', JSON.stringify(excludedByData));
+            target.setAttribute('title', _t('Not available with %s', excludedByData.join(', ')));
+            target.dataset.excludedBy = JSON.stringify(excludedByData);
         }
     },
     /**
@@ -633,7 +640,9 @@ var VariantMixin = {
         let productIdElement = parent.querySelector('.product_id');
         if (productIdElement) {
             productIdElement.value = combination.product_id || 0;
-            productIdElement.dispatchEvent(new Event('change'));
+            // TODO-visp: Check this also
+            // productIdElement.dispatchEvent(new Event('change'));
+            $(productIdElement).trigger('change');
         }
 
         let productDisplayNameElement = parent.querySelector('.product_display_name');
@@ -644,7 +653,9 @@ var VariantMixin = {
         let rawPriceElement = parent.querySelector('.js_raw_price');
         if (rawPriceElement) {
             rawPriceElement.textContent = combination.price;
-            rawPriceElement.dispatchEvent(new Event('change'));
+            // TODO-visp: Check this also
+            // rawPriceElement.dispatchEvent(new Event('change'));
+            $(rawPriceElement).trigger('change')
         }
 
         let productTagsElement = parent.querySelector('.o_product_tags');

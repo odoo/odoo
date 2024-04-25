@@ -409,12 +409,16 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             providerFree.setAttribute('disabled', true);
             providerRestricted.style.display = '';
             providerRestricted.setAttribute('disabled', false)
-            providerRestricted.dispatchEvent(new Event('change'));
+            // TODO-visp: Check this also
+            // providerRestricted.dispatchEvent(new Event('change'));
+            $(providerRestricted).trigger('change');
         } else {
             // Create a new address : show all countries available for billing
             providerFree.style.display = '';
             providerFree.setAttribute('disabled', false);
-            providerFree.dispatchEvent(new Event('change'))
+            // TODO-visp: Check this also
+            // providerFree.dispatchEvent(new Event('change'))
+            $(providerFree).trigger('change');
             providerRestricted.style.display = 'none';
             providerRestricted.setAttribute('disabled', true);
         }

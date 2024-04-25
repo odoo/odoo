@@ -27,7 +27,9 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
         const def = this._super(...arguments);
 
         const selectElement = this.el.querySelector('select[name="country_id"]');
-        selectElement.dispatchEvent(new Event('change'));;
+        // TODO-Visp: take a look here
+        // selectElement.dispatchEvent(new Event('change'));;
+        $(selectElement).trigger('change')
 
         return def;
     },
@@ -51,7 +53,6 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
      * @private
      */
     _changeCountry: function () {
-        debugger;
         if (!this.el.querySelector("#country_id").value) {
             return;
         }

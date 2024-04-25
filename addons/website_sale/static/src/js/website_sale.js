@@ -68,7 +68,9 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
 
         this.el.querySelectorAll("div.js_product").forEach((product) => {
             const productChangeEL = product.querySelector('input.js_product_change')
-            productChangeEL?.dispatchEvent(new Event('change'));
+            // TODO-visp: Check this also
+            // productChangeEL?.dispatchEvent(new Event('change'));
+            $(productChangeEL)?.trigger('change');
         });
 
         // This has to be triggered to compute the "out of stock" feature and the hash variant changes
@@ -203,7 +205,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @private
      */
     _changeCartQuantity: function (input, value, dom_optional, line_id, productIDs) {
-        debugger;
         [...dom_optional].forEach((elem) => {
             elem.querySelector('.js_quantity').textContent = value;
             productIDs.push(elem.querySelector('span[data-product-id]').dataset.productId);
@@ -222,6 +223,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
                 check_value = 1;
             }
             if (value !== check_value) {
+                // TODO_VISP: take look here
                 input.dispatchEvent(new Event('change'));
                 return;
             }
@@ -229,8 +231,11 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
                 return window.location = '/shop/cart';
             }
             input.value = data.quantity;
-            this.document.querySelector('.js_quantity[data-line-id='+line_id+']').value = data.quantity;
-            this.document.querySelector('.js_quantity[data-line-id='+line_id+']').textContent = data.quantity;
+            const jsQtyLineIdEL = this.el.querySelector('.js_quantity[data-line-id="'+line_id+'"]');
+            if (jsQtyLineIdEL) {
+                jsQtyLineIdEL.value = data.quantity;
+                jsQtyLineIdEL.textContent = data.quantity;
+            }
 
             wSaleUtils.updateCartNavBar(data);
             wSaleUtils.showWarning(data.notification_info.warning);
@@ -480,7 +485,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @param {Event} ev
      */
     _onChangeCartQuantity: function (ev) {
-        debugger;
         const input = ev.currentTarget;
         if (input.dataset.updateChange) {
             return;
@@ -492,12 +496,12 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         const dom = input.closest('tr');
         // var default_price = parseFloat($dom.find('.text-danger > span.oe_currency_value').text());
         let dom_optional = [];
-        let sibling = dom.nextElementSibling;
+        let sibling = dom?.nextElementSibling;
         while (sibling && sibling.classList.contains('optional_product') && sibling.classList.contains('info')) {
             dom_optional.push(sibling);
             sibling = sibling.nextElementSibling;
         }
-        const line_id = parseInt(input.dataset.line_id, 10);
+        const line_id = parseInt(input.dataset.lineId, 10);
         const productIDs = [parseInt(input.dataset.productId, 10)];
         this._changeCartQuantity(input, value, dom_optional, line_id, productIDs);
     },
@@ -509,7 +513,9 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         let inputElement = ev.currentTarget.previousElementSibling;
         if (inputElement && inputElement.tagName === 'INPUT') {
             inputElement.value = 1;
-            inputElement.dispatchEvent(new Event('change'));
+            // TODO-visp: Check this also
+            // inputElement.dispatchEvent(new Event('change'));
+            $(inputElement).trigger('change');
         }
     },
     /**

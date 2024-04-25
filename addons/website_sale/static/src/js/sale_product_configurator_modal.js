@@ -153,7 +153,7 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
         }
 
         // set a unique id to each row for options hierarchy
-        const products = this.container.querySelectorAll('tr.js_product');
+        const products = this.el.querySelectorAll('tr.js_product');
         products.forEach((el) => {
             const uniqueId = self._getUniqueId(el);
 
@@ -196,24 +196,31 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
         for (const product of self.$modal[0].querySelectorAll('.js_product.in_cart')) {
             const item = product;
             const quantity = parseFloat(item.querySelector('input[name="add_qty"]').value.replace(',', '.') || 1);
-            const parentUniqueId = item.dataset.parentUniqueId;
-            const uniqueId = this._getUniqueId(item);
-            productCustomVariantValues = [...item.querySelectorAll('.custom-attribute-info')].map(el => el.dataset.attributeValue) || self.getCustomVariantValues(item);
-            noVariantAttributeValues = [...item.querySelectorAll('.no-attribute-info')].map(el => el.dataset.attributeValue) || self.getNoVariantAttributeValues(item);
+            const parentUniqueId = product.dataset.parentUniqueId;
+            const uniqueId = product.dataset.uniqueId;
+            productCustomVariantValues = item.querySelector('.custom-attribute-info')?.dataset.attributeValue || self.getCustomVariantValues(item);
+            noVariantAttributeValues = item.querySelector('.no-attribute-info')?.dataset.attributeValue || self.getNoVariantAttributeValues(item);
 
             const productID = await self.selectOrCreateProduct(
                 item,
                 parseInt(item.querySelector('input.product_id').value, 10),
                 parseInt(item.querySelector('input.product_template_id').value, 10),
             );
+
+            if (isNaN(productCustomVariantValues)) {
+                productCustomVariantValues = JSON.parse(productCustomVariantValues);
+            }
+            if (isNaN(noVariantAttributeValues)) {
+                noVariantAttributeValues = JSON.parse(noVariantAttributeValues);
+            }
             products.push({
                 'product_id': productID,
                 'product_template_id': parseInt(item.querySelector('input.product_template_id').value, 10),
                 'quantity': quantity,
                 'parent_unique_id': parentUniqueId,
                 'unique_id': uniqueId,
-                'product_custom_attribute_values': parseInt(productCustomVariantValues),
-                'no_variant_attribute_values': parseInt(noVariantAttributeValues)
+                'product_custom_attribute_values': productCustomVariantValues,
+                'no_variant_attribute_values': noVariantAttributeValues
             });
         }
         return products;
@@ -256,7 +263,7 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
             this.rootProduct.no_variant_attribute_values.forEach( () => {
                 if (this.is_custom !== 'True') {
                     let currentDescription = updatedDescription.querySelector(`div[name=ptal-${this.id}]`);
-                    if (currentDescription?.length > 0) { // one row per multicheckbox
+                    if (currentDescription) { // one row per multicheckbox
                         currentDescription.textContent += ', ' + this.attribute_value_name;
                     } else {
                         let newDiv = document.createElement('div');
@@ -343,8 +350,7 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
         const productCustomVariantValues = self.getCustomVariantValues(parent);
         const noVariantAttributeValues = self.getNoVariantAttributeValues(parent);
         if (productCustomVariantValues || noVariantAttributeValues) {
-            const productDescription = parent
-                .querySelector('td.td-product_name div.float-start');
+            const productDescription = parent.querySelector('td.td-product_name div.float-start');
 
             let customAttributeValuesDescription = document.createElement('div');
             customAttributeValuesDescription.className = 'custom_attribute_values_description text-muted small';
@@ -362,7 +368,7 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
             noVariantAttributeValues.forEach(() => {
                 if (this.is_custom !== 'True'){
                     let currentDescription = customAttributeValuesDescription.querySelector(`div[name=ptal-${this.id}]`);
-                    if (currentDescription?.length > 0) { // one row per multicheckbox
+                    if (currentDescription) { // one row per multicheckbox
                         currentDescription.textContent += ', ' + this.attribute_value_name;
                     } else {
                         const newDiv = document.createElement('div');
@@ -382,7 +388,6 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
             optionParent = tmpOptionParent;
             tmpOptionParent = [...modal.querySelectorAll('tr.js_product.in_cart')].filter(el => el.dataset.uniqueId === optionParent.getAttribute('data-uniqueId')).slice(-1)[0];
         }
-        debugger;
         optionParent?.parentNode.insertBefore(parent, optionParent.nextSibling);
         parent.classList.add('in_cart');
 
@@ -397,25 +402,34 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
                 'product_id': productId,
                 'pricelist_id': self.pricelistId || false,
             }).then(function (addedItem) {
-                const lastTr = modal.querySelector('tr:last-child');
-                lastTr.parentNode.insertBefore(addedItem, lastTr.nextSibling);
+                if (addedItem) {
+                    addedItem = `<table>${addedItem}</table>`;
+                    addedItem = new DOMParser().parseFromString(addedItem, 'text/html').body.querySelector('tbody');
+                    const lastTr =  modal.querySelector('tr.js_product:last-child');
+                    lastTr.insertAdjacentHTML('afterEnd', addedItem.querySelector('tr.js_product').outerHTML);
+                }
                 const inputElement = self.el.querySelector('input[name="add_qty"]');
-                const event = new Event('change');
-                inputElement.dispatchEvent(event);
-                self.triggerVariantChange(addedItem);
+                // const event = new Event('change');
+                // TODO-Visp: Check this alos
+                // inputElement.dispatchEvent(event);
+                $(inputElement).trigger('change');
+                if (addedItem !== "" && addedItem !== null && addedItem !== undefined) {
+                    self.triggerVariantChange(addedItem);
+                }
 
                 // add a unique id to the new products
-                debugger;
-                const parentUniqueId = parent.getAttribute('data-uniqueId');
+                const parentUniqueId = parent.dataset.uniqueId;
                 const parentQty = parent.querySelector('input[name="add_qty"]').value;
-                addedItem.querySelectorAll('.js_product').each(function (item) {
-                    var uniqueId = self._getUniqueId(item);
-                    item.dataset.uniqueId = uniqueId;
-                    item.dataset.parentUniqueId = parentUniqueId;
-                    item.querySelector('input[name="add_qty"]').value = parentQty;
-                });
+                if (addedItem !== "" && addedItem !== null && addedItem !== undefined) {
+                    [...addedItem.querySelectorAll('.js_product')].forEach(function (item) {
+                        var uniqueId = self._getUniqueId(item);
+                        item.dataset.uniqueId = uniqueId;
+                        item.dataset.parentUniqueId = parentUniqueId;
+                        item.querySelector('input[name="add_qty"]').value = parentQty;
+                    });
+                }
 
-                if ([...selectOptionsText.nextElementSibling].filter(el => el.classList.contains('js_product')).length === 0) {
+                if (selectOptionsText.nextElementSibling.classList.contains('js_product')) {
                     // no more optional products to select -> hide the header
                     selectOptionsText.style.display = 'none !important';
                 }
@@ -441,14 +455,14 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
             el.classList.add('d-none');
         });
         parent.querySelector('input[name="add_qty"]').value = qty;
-        parent.querySelector('.custom_attribute_values_description').remove();
+        parent.querySelector('.custom_attribute_values_description')?.remove();
         modal.querySelector('.o_select_options').style.display = '';
 
-        const productUniqueId = parent.getAttribute('data-uniqueId');
+        const productUniqueId = parent.dataset.uniqueId;
         this._removeOptionOption(modal, productUniqueId);
 
-        const lastTr = modal.querySelector('tr:last-child');
-        lastTr.parentNode.insertBefore(parent, lastTr.nextSibling);
+        const lastTr = modal.querySelector('tr.js_product:last-child');
+        lastTr?.parentNode.insertBefore(parent, lastTr.nextSibling);
     },
 
     /**
@@ -460,9 +474,9 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
      */
     _removeOptionOption: function (modal, optionUniqueId) {
         const self = this;
-        modal.querySelectorAll('tr.js_product[data-parent-unique-id="' + optionUniqueId + '"]').forEach(() => {
-            const uniqueId = this.dataset.uniqueId;
-            this.remove();
+        modal.querySelectorAll('tr.js_product[data-parent-unique-id="' + optionUniqueId + '"]').forEach((el) => {
+            const uniqueId = el.dataset.uniqueId;
+            el.remove();
             self._removeOptionOption(modal, uniqueId);
         });
     },
@@ -506,12 +520,11 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
      * we need to refresh the total price row
      */
     _computePriceTotal: function () {
-        debugger;
-        if (this.$modal[0].querySelector('.js_price_total').length) {
+        if (this.$modal[0].querySelector('.js_price_total')) {
             let price = 0;
-            this.$modal[0].querySelectorAll('.js_product.in_cart').forEach(() => {
-                const quantity = parseFloat(this.el.querySelectorAll('input[name="add_qty"]')[0].value.replace(',', '.') || 1);
-                price += parseFloat(this.querySelector('.js_raw_price').innerHTML) * quantity;
+            this.$modal[0].querySelectorAll('.js_product.in_cart').forEach((product) => {
+                const quantity = parseFloat(product.querySelector('input[name="add_qty"]').value.replace(',', '.') || 1);
+                price += parseFloat(product.querySelector('.js_raw_price').innerHTML) * quantity;
             });
 
             this.$modal[0].querySelector('.js_price_total .oe_currency_value').textContent = this._priceToStr(parseFloat(price));
