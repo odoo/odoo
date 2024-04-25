@@ -3871,7 +3871,13 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><a>a[]b</a></p>',
                         stepFunction: editor => editor.document.execCommand('insertParagraph'),
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/test/spec/editor.test.js
                         contentAfterEdit: '<p>\ufeff<a class="">\ufeffa\ufeff</a>\ufeff</p><p>\ufeff<a class="o_link_in_selection">\ufeff[]b\ufeff</a>\ufeff</p>',
+||||||| parent of 56e722faeabe (temp):addons/web_editor/static/lib/odoo-editor/test/spec/editor.test.js
+                        contentAfterEdit: '<p>\ufeff<a>\ufeffa\ufeff</a>\ufeff</p><p>\ufeff<a>\ufeff[]b\ufeff</a>\ufeff</p>',
+=======
+                        contentAfterEdit: '<p>\ufeff<a>\ufeffa\ufeff</a>\ufeff</p><p>\ufeff<a class="o_link_in_selection">\ufeff[]b\ufeff</a>\ufeff</p>',
+>>>>>>> 56e722faeabe (temp):addons/web_editor/static/lib/odoo-editor/test/spec/editor.test.js
                         contentAfter: '<p><a>a</a></p><p><a>[]b</a></p>',
                     });
                 });

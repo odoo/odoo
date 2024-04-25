@@ -1252,8 +1252,18 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         }
     }
 }
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/utils/utils.js
 export const isLinkEligibleForZwnbsp = (editable, link) => {
     return link.isContentEditable && editable.contains(link) && !(
+||||||| parent of 56e722faeabe (temp):addons/web_editor/static/lib/odoo-editor/src/utils/utils.js
+export const isLinkEligibleForZwnbsp = link => {
+    return !(
+        link.textContent.trim() === '' ||
+        [link, ...link.querySelectorAll('*')].some(isBlock) ||
+=======
+export const isLinkEligibleForZwnbsp = link => {
+    return link.isContentEditable && !(
+>>>>>>> 56e722faeabe (temp):addons/web_editor/static/lib/odoo-editor/src/utils/utils.js
         [link, ...link.querySelectorAll('*')].some(el => el.nodeName === 'IMG' || isBlock(el)) ||
         link.matches('nav a, a.nav-link')
     );
@@ -1262,16 +1272,29 @@ export const isLinkEligibleForZwnbsp = (editable, link) => {
  * Take a link and pad it with non-break zero-width spaces to ensure that it is
  * always possible to place the cursor at its inner and outer edges.
  *
- * @param {HTMLElement} editable
  * @param {HTMLAnchorElement} link
  */
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/utils/utils.js
 export const padLinkWithZws = (editable, link) => {
     if (!isLinkEligibleForZwnbsp(editable, link)) {
+||||||| parent of 56e722faeabe (temp):addons/web_editor/static/lib/odoo-editor/src/utils/utils.js
+export const padLinkWithZws = (editable, link) => {
+    if (!isLinkEligibleForZwnbsp(link)) {
+=======
+export const padLinkWithZws = link => {
+    if (!isLinkEligibleForZwnbsp(link)) {
+>>>>>>> 56e722faeabe (temp):addons/web_editor/static/lib/odoo-editor/src/utils/utils.js
         // Only add the ZWNBSP for simple (possibly styled) text links, and
         // never in a nav.
         return;
     }
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/utils/utils.js
     const selection = editable.ownerDocument.getSelection() || {};
+||||||| parent of 56e722faeabe (temp):addons/web_editor/static/lib/odoo-editor/src/utils/utils.js
+    const selection = editable.ownerDocument.getSelection();
+=======
+    const selection = link.ownerDocument.getSelection() || {};
+>>>>>>> 56e722faeabe (temp):addons/web_editor/static/lib/odoo-editor/src/utils/utils.js
     const { anchorOffset, focusOffset } = selection;
     let extraAnchorOffset = 0;
     let extraFocusOffset = 0;

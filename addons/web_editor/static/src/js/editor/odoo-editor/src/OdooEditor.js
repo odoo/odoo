@@ -782,11 +782,22 @@ export class OdooEditor extends EventTarget {
         }
 
         // sanitize and mark current position as sanitized
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js
         sanitize(target);
         this._resetLinkInSelection();
         this._pluginCall('sanitizeElement',
                          [target.parentElement || target]);
         this.options.onPostSanitize(target);
+||||||| parent of 56e722faeabe (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
+        sanitize(commonAncestor);
+        this._pluginCall('sanitizeElement', [commonAncestor]);
+        this.options.onPostSanitize(commonAncestor);
+=======
+        sanitize(commonAncestor);
+        this._resetLinkInSelection();
+        this._pluginCall('sanitizeElement', [commonAncestor]);
+        this.options.onPostSanitize(commonAncestor);
+>>>>>>> 56e722faeabe (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
     }
 
     addDomListener(element, eventName, callback, useCapture) {
@@ -3914,7 +3925,25 @@ export class OdooEditor extends EventTarget {
             this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
         }
     }
-
+    /**
+     * Apply the o_link_in_selection class if the selection is in a single link,
+     * remove it otherwise.
+     */
+    _resetLinkInSelection() {
+        const selection = this.document.getSelection();
+        const [anchorLink, focusLink] = [selection.anchorNode, selection.focusNode]
+            .map(node => closestElement(node, 'a:not(.btn)'));
+        const singleLinkInSelection = anchorLink === focusLink && anchorLink &&
+            this.editable.contains(anchorLink) && isLinkEligibleForZwnbsp(anchorLink) && anchorLink;
+        if (singleLinkInSelection) {
+            singleLinkInSelection.classList.add('o_link_in_selection');
+        }
+        for (const link of this.editable.querySelectorAll('.o_link_in_selection')) {
+            if (link !== singleLinkInSelection) {
+                link.classList.remove('o_link_in_selection');
+            }
+        };
+    }
     /**
      * Apply the o_link_in_selection class if the selection is in a single link,
      * remove it otherwise.
