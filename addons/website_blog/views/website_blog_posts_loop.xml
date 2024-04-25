@@ -211,7 +211,7 @@ according to the enabled options.
     <div t-if="len(blog_post.tag_ids)" class="o_wblog_post_short_tag_section d-flex align-items-center flex-wrap pt-2">
         <t t-foreach="blog_post.tag_ids" t-as="one_tag">
             <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, one_tag.id))}"
-               t-attf-class="badge mb-2 me-1 text-truncate #{one_tag.id in active_tag_ids and 'bg-primary text-light' or 'border text-primary'} post_link"
+               t-attf-class="badge mb-2 me-1 text-truncate o_tag o_tag_color_#{one_tag.color} post_link"
                t-att-rel="len(active_tag_ids) and 'nofollow'"
                t-esc="one_tag.name"/>
         </t>
