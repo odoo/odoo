@@ -4,6 +4,8 @@ import logging
 
 from odoo import models, fields, api, Command, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import index_exists, drop_index
+
 
 _logger = logging.getLogger(__name__)
 
@@ -19,7 +21,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
         ondelete='cascade',
         delegate=True,
     )
-    payment_state = fields.Selection(related="payment_id.state", store=True)
+    payment_method_line_id = fields.Many2one(related='payment_id.payment_method_line_id', store=True)
     l10n_latam_check_operation_ids = fields.Many2many(
         comodel_name='account.payment',
         relation='account_payment_account_payment_check_rel',
@@ -37,7 +39,6 @@ class l10nLatamAccountPaymentCheck(models.Model):
     company_id = fields.Many2one(related='payment_id.company_id')
     currency_id = fields.Many2one(related='payment_id.currency_id')
     name = fields.Char(string='Number')
-    check_number = fields.Char(compute='_compute_check_number', store=True)
     l10n_latam_check_bank_id = fields.Many2one(
         comodel_name='res.bank',
         string='Check Bank',
@@ -58,18 +59,23 @@ class l10nLatamAccountPaymentCheck(models.Model):
     issue_state = fields.Selection([('handed', 'Handed'), ('debited', 'Debited'), ('voided', 'Voided')],
                                    compute='_compute_issue_state', store=True)
 
-    @api.depends('name')
-    def _compute_check_number(self):
-        for rec in self:
-            try:
-                rec.check_number = str(int(rec.name))
-            except ValueError:
-                raise UserError(_("%s not is valid check number") % rec.name)
+    # TODO terminar de implementar
+    def _auto_init(self):
+        super()._auto_init()
+        # drop_index(self.env.cr, 'l10n_latam_account_payment_check_unique')
+        # drop_index(self.env.cr, "l10n_latam_account_payment_check_unique", self._table)
+        if not index_exists(self.env.cr, 'l10n_latam_account_payment_check_unique'):
+            # issue_state is used to know that is an own check and also that is posted
+            self.env.cr.execute("""
+                CREATE INDEX l10n_latam_account_payment_check_unique
+                    ON l10n_latam_account_payment_check(name, payment_method_line_id)
+                WHERE issue_state is not null
+            """)
 
     @api.onchange('name')
     def _onchange_name(self):
         if self.name:
-            self.name = self.name.zfill(11)
+            self.name = self.name.zfill(8)
 
     def _prepare_void_move_vals(self):
         return {
@@ -178,28 +184,6 @@ class l10nLatamAccountPaymentCheck(models.Model):
     def _get_reconciled_move(self):
         reconciled_line = self.split_move_line_id.full_reconcile_id.reconciled_line_ids - self.split_move_line_id
         return (reconciled_line.move_id.line_ids - reconciled_line).mapped('move_id')
-
-    @api.constrains('check_number', 'journal_id', 'payment_state')
-    def _constrains_check_number_unique(self):
-        checks = self.filtered(lambda x: x.state == 'posted')
-        res = self.env['l10n_latam.account.payment.check']
-        for rec in checks:
-            domain = [('check_number', '=', rec.check_number), ('state', '=', 'posted'),
-                      ('journal_id', '=', rec.journal_id.id), ('id', '!=', rec.id),
-                      ('payment_method_line_id', '=', rec.payment_method_line_id.id)]
-            if rec.payment_method_line_id.code != 'own_check':
-                domain += [('partner_id', '=', rec.partner_id.id)]
-            res += self.search(domain)
-        if res:
-            raise ValidationError(_(
-                'The following numbers are already used:\n%s',
-                '\n'.join(_(
-                    '%(number)s in journal %(journal)s',
-                    number=r.name,
-                    journal=r.journal_id.display_name,
-                ) for r in res)
-            ))
-
 
     # @api.depends('payment_register_id.payment_method_line_id.code', 'payment_register_id.partner_id')
     # def _compute_l10n_latam_check_bank_id(self):
