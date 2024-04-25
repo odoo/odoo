@@ -2511,6 +2511,8 @@ class MrpProduction(models.Model):
                     raise UserError(_('The serial number %(number)s used for byproduct %(product_name)s has already been produced',
                                       number=move_line.lot_id.name, product_name=move_line.product_id.name))
 
+        consumed_sn_ids = []
+        sn_error_msg = {}
         for move in self.move_raw_ids:
             if move.has_tracking != 'serial' or not move.picked:
                 continue
@@ -2518,40 +2520,46 @@ class MrpProduction(models.Model):
                 if not move_line.picked or float_is_zero(move_line.quantity, precision_rounding=move_line.product_uom_id.rounding) or\
                         not move_line.lot_id:
                     continue
+                sml_sn = move_line.lot_id
                 message = _('The serial number %(number)s used for component %(component)s has already been consumed',
-                    number=move_line.lot_id.name,
+                    number=sml_sn.name,
                     component=move_line.product_id.name)
+                consumed_sn_ids.append(sml_sn.id)
+                sn_error_msg[sml_sn.id] = message
                 co_prod_move_lines = self.move_raw_ids.move_line_ids
-
-                # Check presence of same sn in previous productions
-                duplicates = self.env['stock.move.line'].search_count([
-                    ('lot_id', '=', move_line.lot_id.id),
-                    ('quantity', '=', 1),
-                    ('state', '=', 'done'),
-                    ('location_dest_id.usage', '=', 'production'),
-                    ('production_id', '!=', False),
-                ])
-                if duplicates:
-                    # Maybe some move lines have been compensated by unbuild
-                    duplicates_returned = move.product_id._count_returned_sn_products(move_line.lot_id)
-                    removed = self.env['stock.move.line'].search_count([
-                        ('lot_id', '=', move_line.lot_id.id),
-                        ('state', '=', 'done'),
-                        ('location_dest_id.scrap_location', '=', True)
-                    ])
-                    unremoved = self.env['stock.move.line'].search_count([
-                        ('lot_id', '=', move_line.lot_id.id),
-                        ('state', '=', 'done'),
-                        ('location_id.scrap_location', '=', True),
-                        ('location_dest_id.scrap_location', '=', False),
-                    ])
-                    # Either removed or unbuild
-                    if not ((duplicates_returned or removed) and duplicates - duplicates_returned - removed + unremoved == 0):
-                        raise UserError(message)
-                # Check presence of same sn in current production
-                duplicates = co_prod_move_lines.filtered(lambda ml: ml.quantity and ml.lot_id == move_line.lot_id) - move_line
+                duplicates = co_prod_move_lines.filtered(lambda ml: ml.quantity and ml.lot_id == sml_sn) - move_line
                 if duplicates:
                     raise UserError(message)
+
+        if not consumed_sn_ids:
+            return
+
+        consumed_sml_groups = self.env['stock.move.line']._read_group([
+            ('lot_id', 'in', consumed_sn_ids),
+            ('quantity', '=', 1),
+            ('state', '=', 'done'),
+            ('location_dest_id.usage', '=', 'production'),
+            ('production_id', '!=', False),
+        ], ['lot_id'], ['quantity:sum'])
+        consumed_qties = {lot.id: qty for lot, qty in consumed_sml_groups}
+        problematic_sn_ids = list(consumed_qties.keys())
+        if not problematic_sn_ids:
+            return
+
+        cancelled_sml_groups = self.env['stock.move.line']._read_group([    # SML that cancels the SN consumption
+            ('lot_id', 'in', problematic_sn_ids),
+            ('quantity', '=', 1),
+            ('state', '=', 'done'),
+            ('location_id.usage', '=', 'production'),
+            ('move_id.production_id', '=', False),
+        ], ['lot_id'], ['quantity:sum'])
+        cancelled_qties = defaultdict(float, {lot.id: qty for lot, qty in cancelled_sml_groups})
+
+        for sn_id in problematic_sn_ids:
+            consumed_qty = consumed_qties[sn_id]
+            cancelled_qty = cancelled_qties[sn_id]
+            if consumed_qty - cancelled_qty > 0:
+                raise UserError(sn_error_msg[sn_id])
 
     def _is_finished_sn_already_produced(self, lot, excluded_sml=None):
         if not lot:
