@@ -101,6 +101,11 @@ QUnit.module("Widgets", (hooks) => {
             type: "kanban",
             resModel: "partner",
             serverData,
+            mockRPC(route, args) {
+                if (args.method === "search_read" && args.model === "res.company") {
+                    return [{ id: 1, country_code: 'US'}];
+                }
+            },
         });
 
         assert.containsOnce(target, ".o_control_panel .o_button_upload_bill:visible");
