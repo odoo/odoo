@@ -1,6 +1,6 @@
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { isDisplayStandalone, isMobileOS } from "@web/core/browser/feature_detection";
 
 import { CashierName } from "@point_of_sale/app/navbar/cashier_name/cashier_name";
 import { ProxyStatus } from "@point_of_sale/app/navbar/proxy_status/proxy_status";
@@ -46,6 +46,7 @@ export class Navbar extends Component {
         this.dialog = useService("dialog");
         this.notification = useService("notification");
         this.hardwareProxy = useService("hardware_proxy");
+        this.isDisplayStandalone = isDisplayStandalone();
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;
         onMounted(async () => {
             this.isSystemUser = await user.hasGroup("base.group_system");
@@ -116,6 +117,12 @@ export class Navbar extends Component {
 
     get orderCount() {
         return this.pos.get_open_orders().length;
+    }
+
+    get appUrl() {
+        return `/scoped_app?app_id=point_of_sale&app_name=${encodeURIComponent(
+            this.pos.config.display_name
+        )}&path=${encodeURIComponent(`pos/ui?config_id=${this.pos.config.id}`)}`;
     }
 
     async closeSession() {

@@ -229,6 +229,18 @@ export function makeFakeDialogService(addDialog, closeAllDialog) {
     };
 }
 
+export function makeFakePwaService() {
+    return {
+        start() {
+            return {
+                canPromptToInstall: false,
+                isAvailable: false,
+                isScopedApp: false
+            }
+        }
+    }
+}
+
 export function patchUserContextWithCleanup(patch) {
     const context = user.context;
     patchWithCleanup(user, {

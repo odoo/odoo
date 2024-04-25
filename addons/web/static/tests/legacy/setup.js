@@ -112,7 +112,7 @@ function patchBrowserWithCleanup() {
             });
             return interval;
         },
-        // patch BeforeInstallPromptEvent to prevent the installPrompt service to return an uncontrolled
+        // patch BeforeInstallPromptEvent to prevent the pwa service to return an uncontrolled
         // canPromptToInstall value depending the browser settings (we ensure the value is always falsy)
         BeforeInstallPromptEvent: undefined,
         navigator: {

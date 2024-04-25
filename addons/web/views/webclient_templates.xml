@@ -369,4 +369,20 @@
             </div>
         </t>
     </template>
+
+    <template id="webclient_scoped_app">
+        <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
+            <t t-set="title" t-value="'Install %s' % (app_name)"/>
+            <t t-set="x_icon" t-value="'/scoped_app_icon_png?app_id=%s' % (app_id)" />
+            <t t-set="head">
+                <t t-call-assets="web.assets_frontend_minimal"/>
+                <t t-call-assets="web.assets_frontend_lazy"/>
+                <link rel="apple-touch-icon" t-att-href="x_icon"/>
+                <link rel="manifest" t-att-href="safe_manifest_url" crossorigin="use-credentials" />
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+            </t>
+            <owl-component name="web.install_scoped_app" />
+        </t>
+    </template>
 </odoo>
