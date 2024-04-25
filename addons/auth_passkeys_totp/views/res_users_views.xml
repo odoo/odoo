@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="auth_passkey_users_form">
+        <field name="name">auth.passkey.users.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <page string="Account Security" name="security">
+                <group string="Passkeys">
+                    <field colspan="4" name="auth_passkey_key_ids" string="">
+                        <kanban create="false">
+                            <field name="name"/>
+                                <templates>
+                                    <t t-name="kanban-menu">
+                                        <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                    </t>
+                                    <t t-name="kanban-box">
+                                        <div class="oe_kanban_card">
+                                            <div class="oe_kanban_details">
+                                                <div class="o_kanban_record_top">
+                                                    <div class="o_kanban_record_headings">
+                                                        <strong class="o_kanban_record_title">
+                                                            <field name="name"/>
+                                                        </strong>
+                                                    </div>
+                                                </div>
+                                                <ul>
+                                                    <li>Created: <field name="create_date"/></li>
+                                                    <li>Last used: <field name="write_date"/></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                        </kanban>
+                    </field>
+                </group>
+            </page>
+
+            <xpath expr="//page[@name='page_account_security_passkeys']" position="replace"/>
+        </field>
+    </record>
+</odoo>

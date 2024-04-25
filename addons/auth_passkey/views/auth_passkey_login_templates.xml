@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template priority="32" id="auth_passkey_login" inherit_id="web.login">
+        <xpath expr="//button[@type='submit']" position="after">
+            <div class="text-start small mt-2">
+                <a href="#" class="passkey_login_link">Login with Passkey</a>
+            </div>
+        </xpath>
+    </template>
+</odoo>

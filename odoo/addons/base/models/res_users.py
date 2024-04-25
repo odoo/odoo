@@ -1926,17 +1926,21 @@ class CheckIdentity(models.TransientModel):
     _description = "Password Check Wizard"
 
     request = fields.Char(readonly=True, groups=fields.NO_ACCESS)
+    auth_method = fields.Selection([('password', 'Password')], default=lambda self: self._get_default_auth_method())
     password = fields.Char()
 
-    def _check_identity(self):
+    def _get_default_auth_method(self):
+        return 'password'
+
+    def _check_identity(self, *args):
         try:
             self.create_uid._check_credentials(self.password, {'interactive': True})
         except AccessDenied:
             raise UserError(_("Incorrect Password, try again or click on Forgot Password to reset your password."))
 
-    def run_check(self):
+    def run_check(self, *args):
         assert request, "This method can only be accessed over HTTP"
-        self._check_identity()
+        self._check_identity(*args)
         self.password = False
 
         request.session['identity-check-last'] = time.time()
