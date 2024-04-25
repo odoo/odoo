@@ -2439,6 +2439,7 @@ export function setTagName(el, newTagName) {
     }
     const n = document.createElement(newTagName);
     if (el.nodeName !== 'LI') {
+        el.style.removeProperty('list-style');
         const attributes = el.attributes;
         for (const attr of attributes) {
             n.setAttribute(attr.name, attr.value);
