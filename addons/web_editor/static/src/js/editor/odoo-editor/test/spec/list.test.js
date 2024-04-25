@@ -6256,7 +6256,7 @@ describe('List', () => {
                         </ol>`),
                 });
             });
-            it('should empty list items, starting and ending with links', async () => {
+            describe('empty list items, starting and ending with links', () => {
                 // Since we introduce \ufeff characters in and around links, we
                 // can enter situations where the links aren't technically fully
                 // selected but should be treated as if they were. These tests
@@ -6289,13 +6289,17 @@ describe('List', () => {
                     '<ul><li>ab</li><li>[\ufeff<a href="#">cd</a></li><li>ef</li><li><a href="#a">gh</a>]\ufeff</li><li>ij</li></ul>',
                     '<ul><li>ab</li><li>\ufeff[<a href="#">cd</a></li><li>ef</li><li><a href="#a">gh</a>]\ufeff</li><li>ij</li></ul>',
                 ];
+                let testIndex = 1;
                 for (const contentBefore of tests) {
-                    await testEditor(BasicEditor, {
-                        contentBefore,
-                        stepFunction: deleteBackward,
-                        contentAfterEdit: '<ul><li>ab</li><li placeholder="List" class="oe-hint">[]<br></li><li>ij</li></ul>',
-                        contentAfter: '<ul><li>ab</li><li>[]<br></li><li>ij</li></ul>',
+                    it(`should empty list items, starting and ending with links (${testIndex})`, async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore,
+                            stepFunction: deleteBackward,
+                            contentAfterEdit: '<ul><li>ab</li><li placeholder="List" class="oe-hint">[]<br></li><li>ij</li></ul>',
+                            contentAfter: '<ul><li>ab</li><li>[]<br></li><li>ij</li></ul>',
+                        });
                     });
+                    testIndex += 1;
                 }
             });
         });
