@@ -45,7 +45,7 @@
   </t>
 
   <t t-name="web.NavBar.AppsMenu">
-    <div class="o_navbar_apps_menu">
+    <div t-if="!isScopedApp" class="o_navbar_apps_menu">
       <Dropdown>
         <button data-hotkey="h" title="Home Menu">
           <i class="oi oi-apps" />
@@ -63,6 +63,7 @@
         </t>
       </Dropdown>
     </div>
+    <div t-else="" class="mx-2"/>
   </t>
 
   <t t-name="web.NavBar.SectionsMenu">

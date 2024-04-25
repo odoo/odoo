@@ -165,12 +165,12 @@ test("rendering with PWA installation request", async () => {
     const pyEnv = await startServer();
     const [odoobot] = pyEnv["res.partner"].read(serverState.odoobotId);
     await start();
-    patchWithCleanup(getService("installPrompt"), {
+    patchWithCleanup(getService("pwa"), {
         show() {
             step("show prompt");
         },
     });
-    // This event must be triggered to initialize the installPrompt service properly
+    // This event must be triggered to initialize the pwa service properly
     // as if it was run by a browser supporting PWA (never triggered in a test otherwise).
     browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
     await assertSteps(["getItem pwa.installationState"]);
@@ -212,18 +212,21 @@ test("installation of the PWA request can be dismissed", async () => {
         },
     });
     await start();
-    patchWithCleanup(getService("installPrompt"), {
+    patchWithCleanup(getService("pwa"), {
         show() {
             step("show prompt should not be triggered");
         },
     });
-    // This event must be triggered to initialize the installPrompt service properly
+    // This event must be triggered to initialize the pwa service properly
     // as if it was run by a browser supporting PWA (never triggered in a test otherwise).
     browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
     await assertSteps(["getItem pwa.installationState"]);
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem .fa-close");
-    await assertSteps(["installationState value:  dismissed"]);
+    await assertSteps([
+        "getItem pwa.installationState",
+        'installationState value:  {"/odoo":"dismissed"}',
+    ]);
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
@@ -237,13 +240,13 @@ test("rendering with PWA installation request (dismissed)", async () => {
             if (key === "pwa.installationState") {
                 step("getItem " + key);
                 // in this test, installation has been previously dismissed by the user
-                return "dismissed";
+                return `{"/odoo":"dismissed"}`;
             }
             return super.getItem(key);
         },
     });
     await start();
-    // This event must be triggered to initialize the installPrompt service properly
+    // This event must be triggered to initialize the pwa service properly
     // as if it was run by a browser supporting PWA (never triggered in a test otherwise).
     browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
     await assertSteps(["getItem pwa.installationState"]);

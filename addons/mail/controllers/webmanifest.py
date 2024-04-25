@@ -3,10 +3,10 @@
 
 from odoo.http import request
 from odoo.tools import file_open
-from odoo.addons.web.controllers.webmanifest import WebManifest as WebWebManifest
+from odoo.addons.web.controllers import webmanifest
 
 
-class WebManifest(WebWebManifest):
+class WebManifest(webmanifest.WebManifest):
 
     def _get_service_worker_content(self):
         body = super()._get_service_worker_content()

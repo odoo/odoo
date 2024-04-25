@@ -25,7 +25,7 @@ export class MessagingMenu extends Component {
         this.hasTouch = hasTouch;
         this.notification = useState(useService("mail.notification.permission"));
         this.action = useService("action");
-        this.installPrompt = useState(useService("installPrompt"));
+        this.pwa = useState(useService("pwa"));
         this.ui = useState(useService("ui"));
         this.state = useState({
             activeIndex: null,
@@ -161,7 +161,7 @@ export class MessagingMenu extends Component {
     }
 
     get canPromptToInstall() {
-        return this.installPrompt.canPromptToInstall;
+        return this.pwa.canPromptToInstall;
     }
 
     get hasPreviews() {
@@ -184,7 +184,7 @@ export class MessagingMenu extends Component {
             body: _t("Come here often? Install Odoo on your device!"),
             displayName: _t("%s has a suggestion", this.store.odoobot.name),
             onClick: () => {
-                this.installPrompt.show();
+                this.pwa.show();
             },
             iconSrc: this.store.odoobot.avatarUrl,
             partner: this.store.odoobot,

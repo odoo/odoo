@@ -16,6 +16,7 @@ import { makeTestEnv } from "../helpers/mock_env";
 import {
     fakeTitleService,
     fakeCompanyService,
+    makeFakePwaService,
     makeFakeLocalizationService,
     makeFakeHTTPService,
     makeFakeBarcodeService,
@@ -63,6 +64,7 @@ export function setupWebClientRegistries() {
         field: () => fieldService,
         hotkey: () => hotkeyService,
         http: () => makeFakeHTTPService(),
+        pwa: () => makeFakePwaService(),
         localization: () => makeFakeLocalizationService(),
         menu: () => menuService,
         name: () => nameService,

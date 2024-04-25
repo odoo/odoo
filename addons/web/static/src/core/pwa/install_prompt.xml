@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.InstallPrompt">
-        <Dialog contentClass="'o_install_prompt position-fixed px-2 py-3 m-2'" size="'md'" footer="false">
+        <Dialog contentClass="'o_install_prompt position-fixed px-2 py-3 m-2 user-select-none'" size="'md'" footer="false">
             <t t-set-slot="header">
                 <div class="d-flex w-100">
                     <h4>How to get the application</h4>
@@ -14,7 +14,7 @@
     </t>
     <t t-name="web.InstallStepsSafari">
         <t t-if="isMobileSafari">
-            <ul class="list-group list-group-numbered">
+            <ul class="mb-0">
                 <li>
                     Tap on the share icon
                 </li>
@@ -24,7 +24,7 @@
             </ul>
         </t>
         <t t-else="">
-            <ul class="list-group list-group-numbered">
+            <ul class="mb-0">
                 <li>
                     Open "File" menu from your browser
                 </li>

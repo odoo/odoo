@@ -440,6 +440,9 @@ class HrAttendance(models.Model):
             'target': 'new'
         }
 
+    def get_kiosk_url(self):
+        return self.get_base_url() + "/hr_attendance/" + self.env.company.attendance_kiosk_key
+
     @api.model
     def has_demo_data(self):
         if not self.env.user.has_group("hr_attendance.group_hr_attendance_manager"):
