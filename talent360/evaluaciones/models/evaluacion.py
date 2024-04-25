@@ -269,7 +269,7 @@ class Evaluacion(models.Model):
         return {
             "type": "ir.actions.act_url",
             "url": "/evaluacion/reporte/%s" % (self.id),
-            "target": "self",
+            "target": "new",
         }
 
     def action_generar_datos_reporte_generico(self):
