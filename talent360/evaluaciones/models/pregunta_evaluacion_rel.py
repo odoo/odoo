@@ -7,4 +7,3 @@ class PreguntaEvaluacionRel(models.Model):
 
     evaluacion_id = fields.Many2one("evaluacion", string="Evaluacion")
     pregunta_id = fields.Many2one("pregunta", string="Pregunta")
-    competencia_ids = fields.Many2many("competencia", string="Competencias")
