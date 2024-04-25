@@ -104,7 +104,6 @@ publicWidget.registry.WebsiteSale.include({
         const callService = this.call.bind(this)
         this.optionalProductsModal.getAndCreateSelectedProducts()
             .then((products) => {
-                debugger;
                 const productAndOptions = JSON.stringify(products);
                 rpc('/shop/cart/update_option', {
                     product_and_options: productAndOptions,

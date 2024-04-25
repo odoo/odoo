@@ -205,7 +205,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @private
      */
     _changeCartQuantity: function (input, value, dom_optional, line_id, productIDs) {
-        debugger;
         [...dom_optional].forEach((elem) => {
             elem.querySelector('.js_quantity').textContent = value;
             productIDs.push(elem.querySelector('span[data-product-id]').dataset.productId);
@@ -486,7 +485,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @param {Event} ev
      */
     _onChangeCartQuantity: function (ev) {
-        debugger;
         const input = ev.currentTarget;
         if (input.dataset.updateChange) {
             return;
