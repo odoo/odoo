@@ -17,7 +17,7 @@ export const patchAvatarCardPopover = {
             "work_email", 
             "job_title", 
             "department_id", 
-            "employee_ids",
+            this.props.recordModel ? "employee_id" : "employee_ids",
         ]);
     },
     get email(){
