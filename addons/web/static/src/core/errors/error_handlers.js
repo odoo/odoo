@@ -8,7 +8,7 @@ import {
     NetworkErrorDialog,
     RPCErrorDialog,
 } from "./error_dialogs";
-import { UncaughtClientError, UncaughtCorsError, UncaughtPromiseError } from "./error_service";
+import { UncaughtClientError, ThirdPartyScriptError, UncaughtPromiseError } from "./error_service";
 
 /**
  * @typedef {import("../../env").OdooEnv} OdooEnv
@@ -132,7 +132,7 @@ errorHandlerRegistry.add("lostConnectionHandler", lostConnectionHandler, { seque
 const defaultDialogs = new Map([
     [UncaughtClientError, ClientErrorDialog],
     [UncaughtPromiseError, ClientErrorDialog],
-    [UncaughtCorsError, NetworkErrorDialog],
+    [ThirdPartyScriptError, NetworkErrorDialog],
 ]);
 
 /**
