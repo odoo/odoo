@@ -134,3 +134,87 @@ class TestRepairTraceability(TestMrpCommon):
         mo = produce_one(finished, component)
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.move_raw_ids.lot_ids, sn_lot)
+
+    def test_mo_with_unscrapped_tracked_component(self):
+        """
+        Tracked-by-sn component
+        Use it in a MO
+        Repair the finished product:
+            Remove the component, destination: scrap location
+        Move the component back to the stock
+        Use it in a MO
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        scrap_location = self.env['stock.location'].search([('company_id', '=', self.env.company.id), ('scrap_location', '=', True)], limit=1)
+        internal_type = self.env.ref('stock.picking_type_internal')
+
+        finished = self.bom_4.product_id
+        component = self.bom_4.bom_line_ids.product_id
+        component.write({
+            'type': 'product',
+            'tracking': 'serial',
+        })
+
+        sn_lot = self.env['stock.lot'].create({
+            'product_id': component.id,
+            'name': 'SN01',
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.quant']._update_available_quantity(component, stock_location, 1, lot_id=sn_lot)
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_4
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.qty_producing = 1
+        mo.move_raw_ids.move_line_ids.quantity = 1
+        mo.move_raw_ids.move_line_ids.picked = True
+        mo.button_mark_done()
+
+        ro = self.env['repair.order'].create({
+            'product_id': finished.id,
+            'picking_type_id': self.warehouse_1.repair_type_id.id,
+            'move_ids': [
+                (0, 0, {
+                    'name': 'foo',
+                    'product_id': component.id,
+                    'lot_ids': [(4, sn_lot.id)],
+                    'repair_line_type': 'remove',
+                    'location_dest_id': scrap_location.id,
+                    'price_unit': 0,
+                })
+            ],
+        })
+        ro.action_validate()
+        ro.action_repair_start()
+        ro.action_repair_end()
+
+        sm = self.env['stock.move'].create({
+            'name': component.name,
+            'product_id': component.id,
+            'product_uom_qty': 1,
+            'product_uom': component.uom_id.id,
+            'picking_id': internal_type.id,
+            'location_id': scrap_location.id,
+            'location_dest_id': stock_location.id,
+        })
+        sm._action_confirm()
+        sm.move_line_ids.write({
+            'quantity': 1.0,
+            'lot_id': sn_lot.id,
+            'picked': True,
+        })
+        sm._action_done()
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_4
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.qty_producing = 1
+        mo.move_raw_ids.move_line_ids.quantity = 1
+        mo.move_raw_ids.move_line_ids.picked = True
+        mo.button_mark_done()
+
+        self.assertRecordValues(mo.move_raw_ids.move_line_ids, [
+            {'product_id': component.id, 'lot_id': sn_lot.id, 'quantity': 1.0, 'state': 'done'},
+        ])
