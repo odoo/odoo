@@ -34,7 +34,8 @@ Depends:
  python3-pil,
  python3-jinja2,
  python3-libsass,
- python3-lxml,
+# After lxml 5.2, lxml-html-clean is in a separate package
+ python3-lxml-html-clean | python3-lxml,
  python3-num2words,
  python3-ofxparse,
  python3-passlib,
