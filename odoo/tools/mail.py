@@ -357,7 +357,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     ## <peter@fry-it.com>
     ## download here: http://www.peterbe.com/plog/html2plaintext
 
-    html = ustr(html)
+    html = ustr(html or '')
 
     if not html.strip():
         return ''
