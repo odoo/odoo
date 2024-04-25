@@ -21,13 +21,10 @@ export class DiscussChannelListController extends ListController {
                 additionalContext: { active_id: record.resId },
             });
         }
-        let thread = this.store.Thread.get({
+        const thread = await this.store.Thread.getOrFetch({
             model: "discuss.channel",
             id: record.resId,
         });
-        if (!thread?.type) {
-            thread = await this.threadService.fetchChannel(record.resId);
-        }
         if (thread) {
             return this.threadService.open(thread);
         }
