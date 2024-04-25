@@ -1,10 +1,15 @@
 import { KanbanHeader } from "@web/views/kanban/kanban_header";
 import { useService } from "@web/core/utils/hooks";
+import { onWillStart } from "@odoo/owl";
+import { user } from "@web/core/user";
 
 export class ProjectProjectKanbanHeader extends KanbanHeader {
     setup() {
         super.setup();
         this.action = useService("action");
+        onWillStart(async () => {
+            this.isProjectManager = await user.hasGroup('project.group_project_manager');
+        });
     }
 
     async deleteGroup() {
@@ -20,5 +25,8 @@ export class ProjectProjectKanbanHeader extends KanbanHeader {
         }
         super.deleteGroup();
     }
-}
 
+    canArchiveGroup() {
+        return super.canArchiveGroup() && this.isProjectManager;
+    }
+}

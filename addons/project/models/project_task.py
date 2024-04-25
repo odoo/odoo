@@ -306,7 +306,7 @@ class ProjectTask(models.Model):
 
     _recurring_task_has_no_parent = models.Constraint(
         'CHECK (NOT (recurring_task IS TRUE AND parent_id IS NOT NULL))',
-        'A subtask cannot be recurrent.',
+        'You cannot convert this task into a sub-task because it is recurrent.',
     )
     _private_task_has_no_parent = models.Constraint(
         'CHECK (NOT (project_id IS NULL AND parent_id IS NOT NULL))',
