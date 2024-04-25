@@ -20,7 +20,7 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        const spyWatcheElement = this.el.querySelector('[data-id="portal_sidebar"]');
+        const spyWatcheElement = this.el.querySelectorAll('[data-id="portal_sidebar"]')[0];
         this._setElementId(spyWatcheElement);
         // Nav Menu ScrollSpy
         this._generateMenu();
@@ -47,7 +47,9 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
      */
     _setElementId: function (prefix, el) {
         var id = uniqueId(prefix);
-        this.spyWatched.querySelector(el).setAttribute('id', id);
+        if (el instanceof Element) {
+            el.setAttribute('id', id);
+        }
         return id;
     },
     /**
@@ -62,8 +64,10 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
             lastUL = null,
             bsSidenav = this.el.querySelector('.bs-sidenav');
 
-        Array.from(this.spyWatched.querySelectorAll("#quote_content [id^=quote_header_], #quote_content [id^=quote_]")).forEach(el => el.removeAttribute("id"));
-        Array.from(this.spyWatched.querySelectorAll("#quote_content h2, #quote_content h3")).forEach((el) => {
+        const quotes = this.spyWatched.querySelectorAll("#quote_content [id^=quote_header_], #quote_content [id^=quote_]");
+        quotes.forEach(el => el.removeAttribute("id"));
+        const quoteH2H3 = this.spyWatched.querySelectorAll("#quote_content h2, #quote_content h3")
+        quoteH2H3.forEach((el) => {
             var id, text;
             switch (el.tagName.toLowerCase()) {
                 case "h2":
@@ -99,7 +103,7 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
             }
             el.setAttribute('data-anchor', true);
         });
-        this.trigger_up('widgets_start_request', {target: bsSidenav});
+        this.trigger_up('widgets_start_request', {$target: $(bsSidenav)}); // TODO: widgets_start_request will expect a jQuery object
     },
     /**
      * extract text of menu title for sidebar

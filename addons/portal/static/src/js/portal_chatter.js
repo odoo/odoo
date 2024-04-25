@@ -267,16 +267,16 @@ var PortalChatter = publicWidget.Widget.extend({
         chatterMessageParent.appendChild(chatterMessage);
     },
     _renderMessageCount: function () {
-        const messageCounter = this.el.querySelector('.o_message_counter');
-        if (messageCounter) {
-            messageCounter.parentNode.replaceChild(renderToElement("portal.chatter_message_count", {widget: this}), messageCounter);
-        }
+        const chatterMessageParent = this.el.querySelector('.o_portal_chatter_messages');
+        chatterMessageParent.innerHTML = ''; // equivalent to .empty() in jQuery
+        const chatterMessage = renderToElement("portal.chatter_messages", {widget: this});
+        chatterMessageParent.appendChild(chatterMessage); // equivalent to .append() in jQuery
     },
     _renderPager: function () {
-        const chatterPager = this.el.querySelector('.o_portal_chatter_pager');
-        if (chatterPager) {
-            chatterPager.parentNode.replaceChild(renderToElement("portal.pager", {widget: this}), chatterPager);
-        }
+        const chatterMessageParent = this.el.querySelector('.o_portal_chatter_messages');
+        chatterMessageParent.innerHTML = ''; // equivalent to .empty() in jQuery
+        const chatterMessage = renderToElement("portal.chatter_messages", {widget: this});
+        chatterMessageParent.appendChild(chatterMessage); // equivalent to .append() in jQuery
     },
 
     //--------------------------------------------------------------------------
@@ -334,8 +334,42 @@ publicWidget.registry.portalChatter = publicWidget.Widget.extend({
      */
     async start() {
         const proms = [this._super.apply(this, arguments)];
+        /*
+        this.$el.data() => {
+            allow_composer: 1
+            anchor: true
+            pager_step : 10
+            res_id: 19
+            res_model: "sale.order"
+            token: "ac0f87e5-08f0-4419-ae0d-a3475becbfe6"
+            two_columns: false
+        }
+
+        this.el.dataset => {
+            allow_composer: "1"
+            anchor: true
+            pager_step : "10"
+            res_id: "19"
+            res_model: "sale.order"
+            token: "ac0f87e5-08f0-4419-ae0d-a3475becbfe6"
+            two_columns: false
+        }
+
+        in order to solve this issue, we need to change the way we are getting the data from the element
+        parseI
+        */
         const data = Object.assign({}, this.el.dataset);
-        const chatter = new PortalChatter(this, data);
+        const keysToConvert = ['allow_composer', 'pager_step', 'res_id']; // add the keys that should be converted
+
+        const newData = {};
+        for (let key in this.el.dataset) {
+            if (keysToConvert.includes(key) && !isNaN(data[key])) {
+                newData[key] = Number(data[key]);
+            } else {
+                newData[key] = data[key];
+            }
+        }
+        const chatter = new PortalChatter(this, newData);
         // TODO: MSH: We need to keep following jquery code as it is as appendTo method do not support HTML Element or we need to make appendTo method handle HTML Element
         proms.push(chatter.appendTo(this.$el));
         await Promise.all(proms);
