@@ -264,10 +264,15 @@ class Sanitize {
                     // the node because these two methods create different
                     // mutations and at least the tour system breaks if all we
                     // send here is a text content change.
-                    const newTextNode = document.createTextNode(newText);
-                    node.before(newTextNode);
+                    let replacement;
+                    if (newText.length) {
+                        replacement = document.createTextNode(newText);
+                        node.before(replacement);
+                    } else {
+                        replacement = node.parentElement;
+                    }
                     node.remove();
-                    node = newTextNode;
+                    node = replacement; // The node has been removed, update the reference.
                 }
             }
 
