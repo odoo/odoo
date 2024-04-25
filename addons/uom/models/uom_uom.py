@@ -81,24 +81,23 @@ class UomUom(models.Model):
     ]
 
     def _check_category_reference_uniqueness(self):
-        categ_res = self.read_group(
+        categ_res = self._read_group(
             [("category_id", "in", self.category_id.ids)],
             ["category_id", "uom_type"],
-            ["category_id", "uom_type"],
-            lazy=False,
+            ["__count"],
         )
         uom_by_category = defaultdict(int)
         ref_by_category = {}
-        for res in categ_res:
-            uom_by_category[res["category_id"][0]] += res["__count"]
-            if res["uom_type"] == "reference":
-                ref_by_category[res["category_id"][0]] = res["__count"]
+        for category, uom_type, count in categ_res:
+            uom_by_category[category] += count
+            if uom_type == "reference":
+                ref_by_category[category] = count
 
         for category in self.category_id:
-            reference_count = ref_by_category.get(category.id, 0)
+            reference_count = ref_by_category.get(category, 0)
             if reference_count > 1:
                 raise ValidationError(_("UoM category %s should only have one reference unit of measure.", category.name))
-            elif reference_count == 0 and uom_by_category.get(category.id, 0) > 0:
+            elif reference_count == 0 and uom_by_category.get(category, 0) > 0:
                 raise ValidationError(_("UoM category %s should have a reference unit of measure.", category.name))
 
     @api.depends('factor')

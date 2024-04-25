@@ -467,30 +467,39 @@ class StockLocation(models.Model):
         """Returns a dictionary with the net and forecasted weight of the location.
         param excluded_sml_ids: set of stock.move.line ids to exclude from the computation
         """
-        result = defaultdict(lambda: defaultdict(float))
         if not excluded_sml_ids:
             excluded_sml_ids = set()
         Product = self.env['product.product']
         StockMoveLine = self.env['stock.move.line']
 
-        quants = self.env['stock.quant'].read_group([('location_id', 'in', self.ids)], ['quantity'], ['location_id', 'product_id'], lazy=False)
+        quants = self.env['stock.quant']._read_group(
+            [('location_id', 'in', self.ids)],
+            groupby=['location_id', 'product_id'], aggregates=['quantity:sum'],
+        )
         base_domain = [('state', 'not in', ['draft', 'done', 'cancel']), ('id', 'not in', tuple(excluded_sml_ids))]
-        outgoing_move_lines = StockMoveLine.read_group(expression.AND([[('location_id', 'in', self.ids)], base_domain]), ['quantity_product_uom'], ['location_id', 'product_id'], lazy=False)
-        incoming_move_lines = StockMoveLine.read_group(expression.AND([[('location_dest_id', 'in', self.ids)], base_domain]), ['quantity_product_uom'], ['location_dest_id', 'product_id'], lazy=False)
+        outgoing_move_lines = StockMoveLine._read_group(
+            expression.AND([[('location_id', 'in', self.ids)], base_domain]),
+            groupby=['location_id', 'product_id'], aggregates=['quantity_product_uom:sum'],
+        )
+        incoming_move_lines = StockMoveLine._read_group(
+            expression.AND([[('location_dest_id', 'in', self.ids)], base_domain]),
+            groupby=['location_dest_id', 'product_id'], aggregates=['quantity_product_uom:sum']
+        )
 
-        product_ids = {record['product_id'][0] for record in quants + outgoing_move_lines + incoming_move_lines}
-        weight_per_product = {weight['id']: weight['weight'] for weight in Product.browse(product_ids).read(['weight'])}
+        products = Product.union(*(product for __, product, __ in quants + outgoing_move_lines + incoming_move_lines))
+        products.fetch(['weight'])
 
-        for quant in quants:
-            weight = quant['quantity'] * weight_per_product[quant['product_id'][0]]
-            result[self.browse(quant['location_id'][0])]['net_weight'] += weight
-            result[self.browse(quant['location_id'][0])]['forecast_weight'] += weight
+        result = defaultdict(lambda: defaultdict(float))
+        for loc, product, quantity_sum in quants:
+            weight = quantity_sum * product.weight
+            result[loc]['net_weight'] += weight
+            result[loc]['forecast_weight'] += weight
 
-        for line in outgoing_move_lines:
-            result[self.browse(line['location_id'][0])]['forecast_weight'] -= line['quantity_product_uom'] * weight_per_product[line['product_id'][0]]
+        for loc, product, quantity_product_uom_sum in outgoing_move_lines:
+            result[loc]['forecast_weight'] -= quantity_product_uom_sum * product.weight
 
-        for line in incoming_move_lines:
-            result[self.browse(line['location_dest_id'][0])]['forecast_weight'] += line['quantity_product_uom'] * weight_per_product[line['product_id'][0]]
+        for dest_loc, product, quantity_product_uom_sum in incoming_move_lines:
+            result[dest_loc]['forecast_weight'] += quantity_product_uom_sum * product.weight
 
         return result
 

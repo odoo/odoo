@@ -261,15 +261,14 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
         country_domain = list(base_partner_domain)
         if grade:
             country_domain += [('grade_id', '=', grade.id)]
-        countries = partner_obj.sudo().read_group(
+
+        country_groups = partner_obj.sudo()._read_group(
             country_domain + [('country_id', '!=', False)],
-            ["id", "country_id"],
-            groupby="country_id", orderby="country_id")
+            ["country_id"], ["__count"], order="country_id")
 
         # Fallback on all countries if no partners found for the country and
         # there are matching partners for other countries.
-        country_ids = [c['country_id'][0] for c in countries]
-        fallback_all_countries = country and country.id not in country_ids
+        fallback_all_countries = country and country.id not in (c.id for c, __ in country_groups)
         if fallback_all_countries:
             country = None
 
@@ -277,28 +276,31 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
         grade_domain = list(base_partner_domain)
         if country:
             grade_domain += [('country_id', '=', country.id)]
-        grades = partner_obj.sudo().read_group(
-            grade_domain, ["id", "grade_id"],
-            groupby="grade_id")
-        grades_partners = partner_obj.sudo().search_count(grade_domain)
-        # flag active grade
-        for grade_dict in grades:
-            grade_dict['active'] = grade and grade_dict['grade_id'][0] == grade.id
-        grades.insert(0, {
-            'grade_id_count': grades_partners,
+        grade_groups = partner_obj.sudo()._read_group(
+            grade_domain, ["grade_id"], ["__count"], order="grade_id")
+        grades = [{
+            'grade_id_count': sum(count for __, count in grade_groups),
             'grade_id': (0, _("All Categories")),
-            'active': bool(grade is None),
-        })
+            'active': grade is None,
+        }]
+        for g_grade, count in grade_groups:
+            grades.append({
+                'grade_id_count': count,
+                'grade_id': (g_grade.id, g_grade.display_name),
+                'active': grade and grade.id == g_grade.id,
+            })
 
-        countries_partners = partner_obj.sudo().search_count(country_domain)
-        # flag active country
-        for country_dict in countries:
-            country_dict['active'] = country and country_dict['country_id'] and country_dict['country_id'][0] == country.id
-        countries.insert(0, {
-            'country_id_count': countries_partners,
+        countries = [{
+            'country_id_count': sum(count for __, count in country_groups),
             'country_id': (0, _("All Countries")),
-            'active': bool(country is None),
-        })
+            'active': country is None,
+        }]
+        for g_country, count in country_groups:
+            countries.append({
+                'country_id_count': count,
+                'country_id': (g_country.id, g_country.display_name),
+                'active': country and g_country.id == country.id,
+            })
 
         # current search
         if grade:

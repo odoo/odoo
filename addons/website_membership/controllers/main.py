@@ -62,25 +62,27 @@ class WebsiteMembership(http.Controller):
         if post_name:
             country_domain += ['|', ('name', 'ilike', post_name), ('website_description', 'ilike', post_name)]
 
-        countries = Partner.sudo().read_group(country_domain + [("website_published", "=", True)], ["__count"], groupby="country_id")
-        countries_total = sum(country_dict['country_id_count'] for country_dict in countries)
+        country_groups = Partner.sudo()._read_group(
+            country_domain + [("website_published", "=", True)],
+            ["country_id"], ["__count"], order="country_id")
 
         line_domain = list(base_line_domain)
         if country_id:
             line_domain.append(('partner.country_id', '=', country_id))
-            current_country = Country.browse(country_id).read(['id', 'name'])[0]
-            if not any(x['country_id'][0] == country_id for x in countries if x['country_id']):
-                countries.append({
-                    'country_id_count': 0,
-                    'country_id': (country_id, current_country["name"])
-                })
-                countries = [d for d in countries if d['country_id']]
-                countries.sort(key=lambda d: d['country_id'][1])
+            if not any(country.id == country_id for country, __ in country_groups):
+                country_groups = [(g_country, count) for g_country, count in country_groups if g_country]
+                country_groups.append((Country.browse(country_id).sudo(), 0))
+                country_groups = sorted(country_groups, key=lambda c, __: c.name or '')
 
-        countries.insert(0, {
-            'country_id_count': countries_total,
-            'country_id': (0, _("All Countries"))
-        })
+        countries = [{
+            'country_id_count': sum(count for __, count in country_groups),
+            'country_id': (0, _("All Countries")),
+        }]
+        for g_country, count in country_groups:
+            countries.append({
+                'country_id_count': count,
+                'country_id': g_country and (g_country.id, g_country.display_name),
+            })
 
         # format domain for group_by and memberships
         memberships = Product.search([('membership', '=', True)], order="website_sequence")

@@ -103,7 +103,12 @@ class SaleOrder(models.Model):
     def _check_warehouse(self):
         """ Ensure that the warehouse is set in case of storable products """
         orders_without_wh = self.filtered(lambda order: order.state not in ('draft', 'cancel') and not order.warehouse_id)
-        company_ids_with_wh = {group['company_id'][0] for group in self.env['stock.warehouse'].read_group(domain=[('company_id', 'in', orders_without_wh.mapped('company_id').ids)], fields=['id:recordset'], groupby=['company_id'])} if orders_without_wh else {}
+        company_ids_with_wh = {
+            company_id.id for [company_id] in self.env['stock.warehouse']._read_group(
+                domain=[('company_id', 'in', orders_without_wh.company_id.ids)],
+                groupby=['company_id'],
+            )
+        }
         other_company = set()
         for order_line in orders_without_wh.order_line:
             if order_line.product_id.type != 'consu':
