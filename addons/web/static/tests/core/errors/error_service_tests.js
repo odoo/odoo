@@ -5,7 +5,6 @@ import { dialogService } from "@web/core/dialog/dialog_service";
 import {
     ClientErrorDialog,
     RPCErrorDialog,
-    NetworkErrorDialog,
     standardErrorDialogProps,
 } from "@web/core/errors/error_dialogs";
 import { errorService, UncaughtPromiseError } from "@web/core/errors/error_service";
@@ -366,22 +365,43 @@ QUnit.test("handle uncaught client errors", async (assert) => {
     await errorCb(errorEvent);
 });
 
-QUnit.test("handle uncaught CORS errors", async (assert) => {
+QUnit.test("don't show dialog for errors in third-party scripts", async (assert) => {
     class TestError extends Error {}
     const error = new TestError();
-    error.message = "This is a cors error";
-    error.name = "CORS error";
+    error.message = "Script error.";
+    error.name = "Script error.";
 
-    function addDialog(dialogClass, props) {
-        assert.strictEqual(dialogClass, NetworkErrorDialog);
-        assert.strictEqual(props.message, "Uncaught CORS Error");
+    function addDialog(_dialogClass, props) {
+        assert.step(props.message);
     }
     serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
     await makeTestEnv();
 
-    // CORS error event has no colno, no lineno and no filename
+    // Error events from errors in third-party scripts hav no colno, no lineno and no filename
+    // because of CORS.
     const errorEvent = new ErrorEvent("error", { error, cancelable: true });
     await errorCb(errorEvent);
+    assert.verifySteps([]);
+});
+
+QUnit.test("show dialog for errors in third-party scripts in debug mode", async (assert) => {
+    class TestError extends Error {}
+    const error = new TestError();
+    error.message = "Script error.";
+    error.name = "Script error.";
+    patchWithCleanup(odoo, { debug: true });
+
+    function addDialog(_dialogClass, props) {
+        assert.step(props.message);
+    }
+    serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
+    await makeTestEnv();
+
+    // Error events from errors in third-party scripts hav no colno, no lineno and no filename
+    // because of CORS.
+    const errorEvent = new ErrorEvent("error", { error, cancelable: true });
+    await errorCb(errorEvent);
+    assert.verifySteps(["Uncaught CORS Error"]);
 });
 
 QUnit.test("check retry", async (assert) => {
