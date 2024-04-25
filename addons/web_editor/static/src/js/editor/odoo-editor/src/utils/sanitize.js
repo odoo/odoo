@@ -255,7 +255,6 @@ function sanitizeNode(node, root) {
             getTraversedNodes(closestElement(root, '[contenteditable=true]')).includes(node)
         )
     ) {
-        // Remove link ZWNBSP not in selection.
         const startsWithLegitZws = node.textContent.startsWith('\uFEFF') && node.previousSibling && node.previousSibling.nodeName === 'A';
         const endsWithLegitZws = node.textContent.endsWith('\uFEFF') && node.nextSibling && node.nextSibling.nodeName === 'A';
         let newText = node.textContent.replace(/\uFEFF/g, '');
@@ -271,10 +270,15 @@ function sanitizeNode(node, root) {
             // the node because these two methods create different
             // mutations and at least the tour system breaks if all we
             // send here is a text content change.
-            const newTextNode = document.createTextNode(newText);
-            node.before(newTextNode);
+            let replacement;
+            if (newText.length) {
+                replacement = document.createTextNode(newText);
+                node.before(replacement);
+            } else {
+                replacement = node.parentElement;
+            }
             node.remove();
-            node = newTextNode;
+            node = replacement; // The node has been removed, update the reference.
         }
     }
     return node;
