@@ -60,7 +60,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: 'Retry insert # inside "Subject" input',
             trigger: 'div[name="subject"] input[type="text"]',
-            run: "edit (yes_model_id ) && press #",
+            run: "edit (yes_model_id) && press #",
         },
         {
             content: "Check if the dynamic placeholder popover is opened",
@@ -73,7 +73,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         },
         {
             content: "Click on the first entry of the dynamic placeholder",
-            trigger: 'div.o_model_field_selector_popover li:first-child button:contains("Name")',
+            trigger: 'div.o_model_field_selector_popover button:contains("Company Name")',
             run: "click",
         },
         {
@@ -83,8 +83,8 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
             run: "edit defValue",
         },
         {
-            content: "Click on the the dynamic placeholder default value",
-            trigger: "div.o_model_field_selector_popover li:first-child button",
+            content: "Click on the insert button",
+            trigger: "div.o_model_field_selector_popover button:first-child",
             run: "click",
         },
         {
@@ -93,11 +93,11 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
             run: "click",
         },
         {
-            content: "Check if subject value was correclty updated",
+            content: "Check if subject value was correctly updated",
             trigger: 'div[name="subject"] input[type="text"]',
             run() {
                 const subjectValue = this.anchor.value;
-                const correctValue = "yes_model_id {{object.name or '''defValue'''}}";
+                const correctValue = "yes_model_id {{object.company_name|||defValue}}";
                 if (subjectValue !== correctValue) {
                     console.error(
                         `Email template should have "${correctValue}" in subject input (actual: ${subjectValue})`
@@ -135,7 +135,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         },
         {
             content: "Click on the first entry of the dynamic placeholder",
-            trigger: 'div.o_model_field_selector_popover li:first-child button:contains("Name")',
+            trigger: 'div.o_model_field_selector_popover button:contains("Company Name")',
             run: "click",
         },
         {
@@ -145,14 +145,13 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
             run: "edit defValue",
         },
         {
-            content: "Click on the the dynamic placeholder default value",
-            trigger: "div.o_model_field_selector_popover li:first-child button",
+            content: "Click on the insert button",
+            trigger: "div.o_model_field_selector_popover button:first-child",
             run: "click",
         },
         {
             content: "Ensure the editable contain the dynamic placeholder t tag",
-            trigger:
-                ".note-editable.odoo-editor-editable t[t-out=\"object.name or '''defValue'''\"]",
+            trigger: `.note-editable.odoo-editor-editable t[t-out="object.company_name"]:contains("defValue")`,
             run: "click",
         },
         {
