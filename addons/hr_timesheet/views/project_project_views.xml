@@ -100,7 +100,7 @@
             <field name="inherit_id" ref="project.view_project_project_filter"/>
             <field name="arch" type="xml">
                 <filter name="late_milestones" position="before">
-                    <filter string="Timesheets &gt;100%" name="projects_in_overtime" domain="[('is_project_overtime', '=', True)]" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <filter string="Timesheets &gt;100%" name="projects_in_overtime" domain="[('is_project_overtime', '=', True)]" groups="project.group_project_manager"/>
                 </filter>
             </field>
         </record>
