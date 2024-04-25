@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <tree string="Tags" editable="bottom">
                 <field name="name"/>
+                <field name="color" widget="color_picker"/>
                 <field name="forum_id" options="{'no_create_edit': True}"/>
             </tree>
         </field>
@@ -20,6 +21,7 @@
                 <sheet>
                     <group>
                         <field name="name"/>
+                        <field name="color" widget="color_picker"/>
                         <field name="forum_id" options="{'no_create_edit': True}"/>
                     </group>
                 </sheet>
@@ -29,7 +31,7 @@
     </record>
 
     <record id="forum_tag_action" model="ir.actions.act_window">
-        <field name="name">Tags</field>
+        <field name="name">Forum Tags</field>
         <field name="res_model">forum.tag</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
