@@ -70,15 +70,34 @@
                         <group name="accounting" groups="account.group_account_readonly,account.group_account_invoice"/>
                     </page>
                 </page>
-                <xpath expr="//div[@name='pricing']" position="after">
-                    <field name="taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'sale', 'search_default_sale': 1, 'search_default_service': type == 'service', 'search_default_goods': type == 'consu'}"/>
-                </xpath>
-                <xpath expr="//div[@name='pricing']" position="inside">
-                    <span class="ms-2"/><field name="tax_string"/>
-                </xpath>
-                <group name="bill" position="inside">
-                    <field name="supplier_taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'purchase', 'search_default_purchase': 1, 'search_default_service': type == 'service', 'search_default_goods': type == 'consu'}"/>
-                </group>
+                <div name="list_price_uom" position="after">
+                    <label for="taxes_id" invisible="not sale_ok"/>
+                    <div name="taxes_div" class="o_row" invisible="not sale_ok">
+                        <field name="taxes_id"
+                            widget="many2many_tags"
+                            class="oe_inline"
+                            context="{
+                                'default_type_tax_use':'sale',
+                                'search_default_sale': 1,
+                                'search_default_service': type == 'service',
+                                'search_default_goods': type == 'consu',
+                            }"
+                        />
+                        <field name="tax_string" class="oe_inline"/>
+                    </div>
+                </div>
+                <div name="standard_price_uom" position="after">
+                    <field name="supplier_taxes_id"
+                        invisible="not purchase_ok"
+                        widget="many2many_tags"
+                        context="{
+                            'default_type_tax_use':'purchase',
+                            'search_default_purchase': 1,
+                            'search_default_service': type == 'service',
+                            'search_default_goods': type == 'consu',
+                        }"
+                    />
+                </div>
             </field>
         </record>
 
