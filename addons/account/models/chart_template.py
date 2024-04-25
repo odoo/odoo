@@ -147,6 +147,9 @@ class AccountChartTemplate(models.AbstractModel):
 
         template_code = template_code or company and self._guess_chart_template(company.country_id)
 
+        if template_code == 'syscohada' and template_code != company.chart_template:
+            raise UserError(_("The Syscohada chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country."))
+
         return self._load(template_code, company, install_demo)
 
     def _load(self, template_code, company, install_demo):
