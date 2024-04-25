@@ -90,13 +90,6 @@ export async function makeMockEnv(partialEnv, { makeNew = false } = {}) {
     }
 
     currentEnv = makeEnv();
-    Object.assign(currentEnv, partialEnv, createDebugContext(currentEnv)); // This is needed if the views are in debug mode
-
-    registerDebugInfo(currentEnv);
-
-    startRouter();
-    await startServices(currentEnv);
-
     after(() => {
         currentEnv = null;
 
@@ -109,6 +102,12 @@ export async function makeMockEnv(partialEnv, { makeNew = false } = {}) {
             translatedTerms[translationLoaded] = false;
         }
     });
+    Object.assign(currentEnv, partialEnv, createDebugContext(currentEnv)); // This is needed if the views are in debug mode
+
+    registerDebugInfo(currentEnv);
+
+    startRouter();
+    await startServices(currentEnv);
 
     return currentEnv;
 }
