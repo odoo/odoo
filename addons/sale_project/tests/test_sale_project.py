@@ -774,3 +774,33 @@ class TestSaleProject(TestSaleProjectCommon):
         })
         action = sale_order_2.action_view_task()
         self.assertEqual(action["context"]["default_project_id"], self.project_global.id)
+
+    def test_keep_partner_on_tasks_even_if_disable_billable_feature_on_project(self):
+        """ Check that when allow_billable is disabled, the partner is not removed """
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+        })
+        sale_order_line = self.env['sale.order.line'].create({
+            'name': self.product_order_service2.name,
+            'product_id': self.product_order_service3.id,
+            'order_id': sale_order.id,
+        })
+        project = self.env['project.project'].create({
+            'name': 'Project X',
+            'partner_id': self.partner.id,
+            'allow_billable': True,
+            'sale_line_id': sale_order_line.id,
+        })
+        task = self.env['project.task'].create({
+            'name': 'Task',
+            'project_id': project.id,
+        })
+        self.assertEqual(task.partner_id, self.partner, "The partner on the task should be the one set on the project.")
+        self.assertEqual(task.sale_line_id, sale_order_line, "The sale order line on the task should be the one set on the project.")
+        project.allow_billable = False
+        self.assertFalse(project.partner_id, "The partner should be removed when allow_billable is disabled")
+        self.assertFalse(project.sale_line_id, "The sale order line should be removed when allow_billable is disabled")
+        self.assertEqual(task.partner_id, self.partner, "The partner should not be removed when allow_billable is disabled")
+        self.assertFalse(task.sale_line_id, "The sale order line should be removed when allow_billable is disabled")

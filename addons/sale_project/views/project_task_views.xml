@@ -28,6 +28,20 @@
         </field>
     </record>
 
+    <record id="view_task_kanban_inherit" model="ir.ui.view">
+        <field name="name">project.task.kanban.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="allow_billable" invisible="1"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_kanban_record_headings')]//field[@name='partner_id']" position="attributes">
+                <attribute name="t-if">record.allow_billable.raw_value</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="project_project_view_tree_inherit_sale_project" model="ir.ui.view">
         <field name="name">project.project.tree.inherit.sale.project</field>
         <field name="model">project.project</field>
