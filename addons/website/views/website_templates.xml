@@ -293,7 +293,7 @@
 </template>
 
 <template id="navbar" name="Navbar">
-    <t t-set="_navbar_expand_class" t-value="_navbar_expand_class is None and 'navbar-expand-lg' or ''"/>
+    <t t-set="_navbar_expand_class" t-value="_navbar_expand_class is None and 'navbar-expand-lg' or _navbar_expand_class"/>
     <nav data-name="Navbar" t-attf-aria-label="#{_navbar_name if _navbar_name else 'Main'}" t-attf-class="navbar #{_navbar_expand_class} navbar-light o_colored_level o_cc #{_navbar_classes} #{_extra_navbar_classes}">
         <t t-out="0"/>
     </nav>
@@ -311,7 +311,7 @@
 <template id="template_header_mobile" name="Template Header Mobile">
     <t t-call="website.navbar">
         <t t-set="_navbar_classes" t-valuef="o_header_mobile d-block d-lg-none shadow-sm"/>
-        <t t-set="_navbar_expand_class" t-valuef="None"/>
+        <t t-set="_navbar_expand_class" t-valuef=""/>
         <t t-set="_navbar_name" t-valuef="Mobile"/>
 
         <div class="o_main_nav container flex-wrap justify-content-between">
@@ -517,7 +517,7 @@
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block shadow-sm"/>
-            <t t-set="_navbar_expand_class" t-valuef="None"/>
+            <t t-set="_navbar_expand_class" t-valuef=""/>
 
             <div id="o_main_nav" class="o_main_nav container d-grid py-0 o_grid_header_3_cols">
                 <!-- Nav Toggler -->
