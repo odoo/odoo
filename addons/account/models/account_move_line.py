@@ -925,7 +925,7 @@ class AccountMoveLine(models.Model):
     def _compute_all_tax(self):
         for line in self:
             sign = line.move_id.direction_sign
-            if line.display_type == 'tax':
+            if line.display_type in ['tax', 'cogs']:
                 line.compute_all_tax = {}
                 line.compute_all_tax_dirty = False
                 continue
