@@ -20,6 +20,7 @@
             <field name="res_model">mail.compose.message</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
+            <field name="groups_id" eval="[(4, ref('project.group_project_manager'))]"/>
             <field name="context">{
                 'default_composition_mode': 'mass_mail',
             }</field>
@@ -31,7 +32,7 @@
             <field name="name">project.project.form</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <form string="Project" class="o_form_project_project" js_class="form_description_expander">
+                <form string="Project" class="o_form_project_project" js_class="project_project_form">
                     <field name="company_id" invisible="1"/>
                     <header>
                         <button name="action_open_share_project_wizard" string="Share Project" type="object" class="oe_highlight" groups="project.group_project_manager"
@@ -145,7 +146,7 @@
                                                 </span>
                                                 <div class="content-group">
                                                     <div class="mt8">
-                                                        <button name="%(project.open_task_type_form_domain)d" context="{'project_id':id}" icon="oi-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link"/>
+                                                        <button name="%(project.open_task_type_form_domain)d" context="{'project_id':id}" icon="oi-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link" groups="project.group_project_manager"/>
                                                     </div>
                                                 </div>
                                             </div>

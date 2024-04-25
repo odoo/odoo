@@ -34,6 +34,7 @@ export class CalendarModel extends Model {
             filters: {},
             filterSections: {},
             hasCreateRight: null,
+            hasEditRight: null,
             range: null,
             records: {},
             unusualDays: [],
@@ -72,7 +73,7 @@ export class CalendarModel extends Model {
         return this.meta.canDelete;
     }
     get canEdit() {
-        return this.meta.canEdit && !this.meta.fields[this.meta.fieldMapping.date_start].readonly;
+        return this.meta.canEdit && this.data.hasEditRight && !this.meta.fields[this.meta.fieldMapping.date_start].readonly;
     }
     get eventLimit() {
         return this.meta.eventLimit;
@@ -320,6 +321,9 @@ export class CalendarModel extends Model {
     async updateData(data) {
         if (data.hasCreateRight === null) {
             data.hasCreateRight = await user.checkAccessRight(this.meta.resModel, "create");
+        }
+        if (data.hasEditRight === null) {
+            data.hasEditRight = await user.checkAccessRight(this.meta.resModel, "write");
         }
         data.range = this.computeRange();
         if (this.meta.showUnusualDays) {
