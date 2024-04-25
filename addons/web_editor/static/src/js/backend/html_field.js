@@ -100,7 +100,7 @@ export class HtmlField extends Component {
             this.commitChanges({ urgent: true })
         );
         useBus(model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
-            detail.proms.push(this.commitChanges())
+            detail.proms.push(this.commitChanges({ shouldInline: true }))
         );
 
         useSpellCheck();
@@ -403,8 +403,8 @@ export class HtmlField extends Component {
         popover.style.top = topPosition + 'px';
         popover.style.left = leftPosition + 'px';
     }
-    async commitChanges({ urgent } = {}) {
-        if (this._isDirty() || urgent) {
+    async commitChanges({ urgent, shouldInline } = {}) {
+        if (this._isDirty() || urgent || (shouldInline && this.props.isInlineStyle)) {
             let savePendingImagesPromise, toInlinePromise;
             if (this.wysiwyg && this.wysiwyg.odooEditor) {
                 this.wysiwyg.odooEditor.observerUnactive('commitChanges');
