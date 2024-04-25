@@ -217,11 +217,7 @@
                                     + (' d-none' if hide_secured_by else '')"
                     >
                         <span><i class="fa fa-lock"/> Secured by</span>
-                        <span t-out="dict(provider_sudo._fields['code']._description_selection(
-                                         provider_sudo.env
-                                     ))[provider_sudo.code]"
-                              class="text-break"
-                        />
+                        <span t-field="provider_sudo.code" />
                     </p>
                 </div>
             </div>
@@ -243,11 +239,7 @@
                         + (' d-none' if hide_secured_by else '')"
         >
             <span><i class="fa fa-lock"/> Secured by</span>
-            <span t-out="dict(provider_sudo._fields['code']._description_selection(
-                             provider_sudo.env
-                         ))[provider_sudo.code]"
-                  class="text-break"
-            />
+            <span t-field="provider_sudo.code" />
         </p>
     </template>
 
@@ -355,11 +347,7 @@
                                 + (' d-none' if hide_secured_by else '')"
                 >
                     <span><i class="fa fa-lock"/> Secured by</span>
-                    <span t-out="dict(provider_sudo._fields['code']._description_selection(
-                                     provider_sudo.env
-                                 ))[provider_sudo.code]"
-                          class="text-break"
-                    />
+                    <span t-field="provider_sudo.code" />
                 </p>
             </div>
         </div>
