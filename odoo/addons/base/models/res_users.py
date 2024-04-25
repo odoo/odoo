@@ -92,13 +92,13 @@ def check_identity(fn):
     Prevents access outside of interactive contexts (aka with a request)
     """
     @wraps(fn)
-    def wrapped(self):
+    def wrapped(self, *args, **kwargs):
         if not request:
             raise UserError(_("This method can only be accessed over HTTP"))
 
         if request.session.get('identity-check-last', 0) > time.time() - 10 * 60:
             # update identity-check-last like github?
-            return fn(self)
+            return fn(self, *args, **kwargs)
 
         w = self.sudo().env['res.users.identitycheck'].create({
             'request': json.dumps([
