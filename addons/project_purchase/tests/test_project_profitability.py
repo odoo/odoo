@@ -265,7 +265,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             },
         )
 
-    def test_analytic_distribution_with_inluded_tax(self):
+    def test_analytic_distribution_with_included_tax(self):
         """When calculating the profitability of a project, included taxes should not be calculated"""
         included_tax = self.env['account.tax'].create({
             'name': 'included tax',
@@ -282,7 +282,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             'order_line': [Command.create({
                 'analytic_distribution': {self.analytic_account.id: 100},
                 'product_id': self.product_order.id,
-                'product_qty': 1,
+                'product_qty': 2,  # plural value to check if the price is multiplied more than once
                 'taxes_id': [included_tax.id],  # set the included tax
                 'price_unit': self.product_order.standard_price,
                 'currency_id': self.env.company.currency_id.id,
@@ -324,6 +324,40 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                 'total': {
                     'to_bill': 0.0,
                     'billed': -(purchase_bill.amount_untaxed),
+                },
+            },
+        )
+
+    def test_analytic_distribution_with_mismatched_uom(self):
+        """When changing the unit of measure, the profitability should still match the price_subtotal of the order line"""
+        # create a purchase.order with the project account in analytic_distribution
+        purchase_order = self.env['purchase.order'].create({
+            'name': "A purchase order",
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'analytic_distribution': {self.analytic_account.id: 100},
+                'product_id': self.product_order.id,
+                'product_qty': 1,
+                'price_unit': self.product_order.standard_price,
+                'currency_id': self.env.company.currency_id.id,
+            })],
+        })
+        purchase_order.button_confirm()
+        # changing the uom to a higher number
+        purchase_order.order_line.product_uom = self.env.ref("uom.product_uom_dozen")
+        purchase_order.order_line.flush_recordset()
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['costs'],
+            {
+                'data': [{
+                    'id': 'purchase_order',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['purchase_order'],
+                    'to_bill': -(purchase_order.amount_untaxed),
+                    'billed': 0.0,
+                }],
+                'total': {
+                    'to_bill': -(purchase_order.amount_untaxed),
+                    'billed': 0.0,
                 },
             },
         )
