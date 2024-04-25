@@ -6,7 +6,7 @@ import logging
 import pytz
 
 from collections import defaultdict, Counter
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, exceptions, fields, models, _, Command
@@ -576,6 +576,11 @@ class MailActivity(models.Model):
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
         }
+
+    def action_snooze(self):
+        today = date.today()
+        for activity in self:
+            activity.date_deadline = max(activity.date_deadline, today) + timedelta(days=7)
 
     def activity_format(self):
         activities = self.read()

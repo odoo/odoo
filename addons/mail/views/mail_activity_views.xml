@@ -296,7 +296,8 @@
         <field name="arch" type="xml">
             <tree string="Next Activities"
                     decoration-danger="date_deadline &lt; current_date"
-                    decoration-success="date_deadline == current_date"
+                    decoration-warning="date_deadline == current_date"
+                    decoration-success="date_deadline &gt; current_date"
                     default_order="date_deadline" create="false">
                 <field name="res_name"/>
                 <field name="activity_type_id"/>
@@ -306,6 +307,7 @@
                 <field name="date_done" string="Done Date" optional="hide"/>
                 <button name="action_done" type="object" string="Done" icon="fa-check"/>
                 <button name="unlink" type="object" string="Cancel" icon="fa-times" class="text-danger"/>
+                <button name="action_snooze" class="text-warning" type="object" string="Snooze 7d" icon="fa-bell-slash"/>
             </tree>
         </field>
     </record>
@@ -322,9 +324,6 @@
                 <attribute name="edit">0</attribute>
                 <attribute name="duplicate">0</attribute>
                 <attribute name="js_class">archive_disabled_activity_list</attribute>
-            </xpath>
-            <xpath expr="//tree" position="inside">
-                <button name="action_done" type="object" string="Mark as Done"/>
             </xpath>
         </field>
     </record>
@@ -448,7 +447,11 @@
         <field name="res_model">mail.activity</field>
         <field name="view_mode">tree,kanban</field>
         <field name="search_view_id" ref="mail.mail_activity_view_search"/>
-        <field name="context">{'search_default_filter_user_id_uid': 1}</field>
+        <field name="context">{
+            'search_default_filter_user_id_uid': 1,
+            'search_default_filter_date_deadline_past': 1,
+            'search_default_filter_date_deadline_today': 1,
+        }</field>
     </record>
 
     <record id="mail_activity_action_my_view_tree" model="ir.actions.act_window.view">
