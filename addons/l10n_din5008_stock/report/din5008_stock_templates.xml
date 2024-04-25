@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_delivery_document" inherit_id="stock.report_delivery_document">
+        <xpath expr="//t[@t-set='address']" position="after">
+            <t t-set="din5008_address_block">
+                <tr t-if="o and o._name=='stock.picking' and o.partner_id">
+                    <td class="shipping_address">
+                        <span class="fw-bold" t-if="o.picking_type_id.code == 'incoming'">Vendor Address:</span>
+                        <span class="fw-bold" t-if="o.picking_type_id.code == 'internal'">Warehouse Address:</span>
+                        <span class="fw-bold" t-if="o.picking_type_id.code == 'outgoing' and o.move_ids_without_package and o.move_ids_without_package[0].partner_id and o.move_ids_without_package[0].partner_id.id != o.partner_id.id">Customer Address:</span>
+                        <address t-esc="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                    </td>
+                </tr>
+            </t>
+        </xpath>
+    </template>
+</odoo>
