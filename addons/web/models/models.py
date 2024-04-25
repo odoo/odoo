@@ -362,7 +362,7 @@ class Base(models.AbstractModel):
         field = self._fields[field_name]
         if field.type == 'many2one':
             def group_id_name(value):
-                return value
+                return value.id, value.sudo().display_name
 
         else:
             # field type is selection: see doc above
@@ -376,18 +376,22 @@ class Base(models.AbstractModel):
             domain,
             [(field_name, '!=', False)],
         ])
-        groups = self.read_group(domain, [field_name], [field_name], limit=limit)
+        groups = self._read_group(
+            domain, groupby=[field_name],
+            aggregates=['__count'] if set_count else [],
+            order=field_name, limit=limit,
+        )
 
         domain_image = {}
         for group in groups:
-            id, display_name = group_id_name(group[field_name])
+            id_, display_name = group_id_name(group[0])
             values = {
-                'id': id,
+                'id': id_,
                 'display_name': display_name,
             }
             if set_count:
-                values['__count'] = group[field_name + '_count']
-            domain_image[id] = values
+                values['__count'] = group[1]
+            domain_image[id_] = values
 
         return domain_image
 

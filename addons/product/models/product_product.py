@@ -212,16 +212,18 @@ class ProductProduct(models.Model):
 
     def _check_duplicated_product_barcodes(self, barcodes_within_company, company_id):
         domain = self._get_barcode_search_domain(barcodes_within_company, company_id)
-        products_by_barcode = self.sudo().read_group(domain, ['barcode', 'id:array_agg'], ['barcode'])
+        products_by_barcode = self.sudo()._read_group(
+            domain, ['barcode'], ['id:recordset'], having=[('__count', '>', 1)],
+        )
 
         duplicates_as_str = "\n".join(
             _(
-                "- Barcode \"%s\" already assigned to product(s): %s",
-                record['barcode'], ", ".join(p.display_name for p in self.search([('id', 'in', record['id'])]))
+                "- Barcode %r already assigned to product(s): %s",
+                barcode, ", ".join(duplicate_products._filter_access_rules_python('read').mapped('display_name')),
             )
-            for record in products_by_barcode if len(record['id']) > 1
+            for barcode, duplicate_products in products_by_barcode
         )
-        if duplicates_as_str.strip():
+        if duplicates_as_str:
             duplicates_as_str += _(
                 "\n\nNote: products that you don't have access to will not be shown above."
             )
