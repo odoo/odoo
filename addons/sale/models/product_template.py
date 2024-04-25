@@ -42,7 +42,11 @@ class ProductTemplate(models.Model):
             ('delivery', "Delivered quantities"),
         ],
         string="Invoicing Policy",
-        compute='_compute_invoice_policy', store=True, readonly=False, precompute=True,
+        compute='_compute_invoice_policy',
+        precompute=True,
+        store=True,
+        readonly=False,
+        tracking=True,
         help="Ordered Quantity: Invoice quantities ordered by the customer.\n"
              "Delivered Quantity: Invoice quantities delivered to the customer.")
     optional_product_ids = fields.Many2many(

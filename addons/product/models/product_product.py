@@ -354,7 +354,7 @@ class ProductProduct(models.Model):
         if self.env['product.product'].search_count(domain, limit=1):
             return {'warning': {
                 'title': _("Note:"),
-                'message': _("The Internal Reference '%s' already exists.", self.default_code),
+                'message': _("The Reference '%s' already exists.", self.default_code),
             }}
 
     @api.model_create_multi

@@ -39,6 +39,11 @@ class ProductTemplate(models.Model):
         if not self.sale_ok:
             self.available_in_pos = False
 
+    @api.onchange('available_in_pos')
+    def _onchange_available_in_pos(self):
+        if self.available_in_pos and not self.sale_ok:
+            self.sale_ok = True
+
     @api.constrains('available_in_pos')
     def _check_combo_inclusions(self):
         for product in self:
