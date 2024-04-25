@@ -16,6 +16,7 @@ class Tags(models.Model):
     ]
 
     name = fields.Char('Name', required=True)
+    color = fields.Integer('Color')
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True, index=True)
     post_ids = fields.Many2many(
         'forum.post', 'forum_tag_rel', 'forum_tag_id', 'forum_post_id',

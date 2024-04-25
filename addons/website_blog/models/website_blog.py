@@ -142,6 +142,7 @@ class BlogTag(models.Model):
 
     name = fields.Char('Name', required=True, translate=True)
     category_id = fields.Many2one('blog.tag.category', 'Category', index=True)
+    color = fields.Integer('Color')
     post_ids = fields.Many2many('blog.post', string='Posts')
 
     _sql_constraints = [
