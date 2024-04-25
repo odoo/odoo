@@ -61,7 +61,7 @@ export class Store extends BaseStore {
     Notification;
     /** @type {typeof import("@mail/core/common/persona_model").Persona} */
     Persona;
-    /** @type {typeof import("@mail/discuss/call/common/rtc_session_model").RtcSession} */
+    /** @type {typeof import("@mail/core/common/rtc_session_model").RtcSession} */
     RtcSession;
     /** @type {typeof import("@mail/core/common/settings_model").Settings} */
     Settings;
@@ -459,6 +459,7 @@ export class Store extends BaseStore {
         mentionedChannels,
         mentionedPartners,
         thread,
+        options,
     }) {
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions =
@@ -500,6 +501,7 @@ export class Store extends BaseStore {
             partner_additional_values: recipientAdditionalValues,
             thread_id: thread.id,
             thread_model: thread.model,
+            ...options,
         };
     }
 

@@ -48,6 +48,8 @@ class MailMessage(models.Model):
             'is_message_subtype_note',
             'published_date_str',
             'subtype_id',
+            'res_id',
+            'model',
         }
 
     def _portal_message_format(self, properties_names, options=None):
@@ -92,18 +94,23 @@ class MailMessage(models.Model):
         note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         for message, values in zip(self, vals_list):
             if message_to_attachments:
-                values['attachment_ids'] = message_to_attachments.get(message.id, {})
+                values['attachments'] = message_to_attachments.get(message.id, {})
             if 'author_avatar_url' in properties_names:
-                if options and 'token' in options:
-                    values['author_avatar_url'] = f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50?access_token={options["token"]}'
-                elif options and options.keys() >= {"hash", "pid"}:
-                    values['author_avatar_url'] = f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50?_hash={options["hash"]}&pid={options["pid"]}'
+                if options and options.get("portal_token"):
+                    values['author_avatar_url'] = f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50?access_token={options["portal_token"]}'
+                elif options and options.get("portal_hash") and options.get("portal_pid"):
+                    values['author_avatar_url'] = f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50?_hash={options["portal_hash"]}&pid={options["portal_pid"]}'
                 else:
                     values['author_avatar_url'] = f'/web/image/mail.message/{message.id}/author_avatar/50x50'
             if 'is_message_subtype_note' in properties_names:
                 values['is_message_subtype_note'] = (values.get('subtype_id') or [False, ''])[0] == note_id
             if 'published_date_str' in properties_names:
                 values['published_date_str'] = format_datetime(self.env, values['date']) if values.get('date') else ''
+            values.update({
+                'reactions': self._reaction_groups(message.sudo()),
+                'author': {'id': message.author_id.id, 'name': message.author_id.name, 'type': 'partner'},
+                'thread': {'model': values['model'], 'id': values['res_id']}
+            })
         return vals_list
 
     def _portal_message_format_attachments(self, attachment_values):
@@ -117,8 +124,15 @@ class MailMessage(models.Model):
         """
         safari = request and request.httprequest.user_agent and request.httprequest.user_agent.browser == 'safari'
         attachment_values['filename'] = attachment_values['name']
+        attachment_values['accessToken'] = attachment_values.pop('access_token')
         attachment_values['mimetype'] = (
             'application/octet-stream' if safari and
             'video' in (attachment_values["mimetype"] or "")
             else attachment_values["mimetype"])
         return attachment_values
+
+    def _bus_notification_target(self):
+        thread = self.env[self.model].search([("id", "=", self.res_id)])
+        if portal_token := thread._get_portal_access():
+            return 'portal_Chatter-' + portal_token
+        return super()._bus_notification_target()

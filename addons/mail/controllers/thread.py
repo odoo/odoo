@@ -10,7 +10,7 @@ from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
 class ThreadController(http.Controller):
-    @http.route("/mail/thread/data", methods=["POST"], type="json", auth="user")
+    @http.route("/mail/thread/data", methods=["POST"], type="json", auth="public")
     def mail_thread_data(self, thread_model, thread_id, request_list):
         thread = request.env[thread_model].with_context(active_test=False).search([("id", "=", thread_id)])
         return thread._get_mail_thread_data(request_list)
@@ -70,6 +70,10 @@ class ThreadController(http.Controller):
     def _get_allowed_message_post_params(self):
         return {"attachment_ids", "body", "message_type", "partner_ids", "subtype_xmlid", "parent_id"}
 
+    def _get_thread(self, thread_model, thread_id):
+        thread = request.env[thread_model].with_context(active_test=False).search([("id", "=", thread_id)])
+        return thread.with_context(active_test=True)
+
     @http.route("/mail/message/post", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
     def mail_message_post(self, thread_model, thread_id, post_data, context=None, **kwargs):
@@ -93,8 +97,7 @@ class ThreadController(http.Controller):
                 'last_used': datetime.now(),
                 'ids': canned_response_ids,
             })
-        thread = request.env[thread_model].with_context(active_test=False).search([("id", "=", thread_id)])
-        thread = thread.with_context(active_test=True)
+        thread = self._get_thread(thread_model, thread_id)
         if not thread:
             raise NotFound()
         if "body" in post_data:

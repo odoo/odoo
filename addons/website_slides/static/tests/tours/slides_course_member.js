@@ -164,9 +164,14 @@ registry.category("web_tour.tours").add('course_member', {
     trigger: 'button.o_portal_chatter_composer_btn',
     in_modal: false,
 }, {
-    trigger: 'a[id="review-tab"]'
-}, {
-    trigger: '.o_portal_chatter_message:contains("This is a great course. Top !")',
-    run: function () {}, // check review is correctly added
-}
+    trigger: 'a[id="review-tab"]',
+    run: function () {},
+},
+        // The popup composer still works with public widget and till the user refreshs the page, the comment's change is not visible.
+        // Todo: Uncomment it when the popup composer would be converted to a component
+        //{
+        //    shadow_dom: "#chatterRoot",
+        //    trigger: '.o-mail-Message-content:contains("This is a great course. Top !")',
+        //    run: function () {}, // check review is correctly added
+        //}
 ]});

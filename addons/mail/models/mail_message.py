@@ -986,15 +986,6 @@ class Message(models.Model):
             else:
                 record_name = False
                 default_subject = False
-            reactions_per_content = defaultdict(self.env['mail.message.reaction'].sudo().browse)
-            for reaction in message_sudo.reaction_ids:
-                reactions_per_content[reaction.content] |= reaction
-            reaction_groups = [{
-                'content': content,
-                'count': len(reactions),
-                'personas': [{'id': guest.id, 'name': guest.name, 'type': "guest"} for guest in reactions.guest_id] + [{'id': partner.id, 'name': partner.name, 'type': "partner"} for partner in reactions.partner_id],
-                'message': {'id': message_sudo.id},
-            } for content, reactions in reactions_per_content.items()]
             allowed_tracking_ids = message_sudo.tracking_value_ids._filter_tracked_field_access(self.env)
             displayed_tracking_ids = allowed_tracking_ids
             if record and hasattr(record, '_track_filter_for_display'):
@@ -1009,7 +1000,7 @@ class Message(models.Model):
                 'attachments': sorted(message_sudo.attachment_ids._attachment_format(), key=lambda a: a["id"]),
                 'trackingValues': displayed_tracking_ids._tracking_value_format(),
                 'linkPreviews': message_sudo.link_preview_ids.filtered(lambda preview: not preview.is_hidden)._link_preview_format(),
-                'reactions': reaction_groups,
+                'reactions': self._reaction_groups(message_sudo),
                 'pinned_at': message_sudo.pinned_at,
                 'record_name': record_name,
                 'create_date': message_sudo.create_date,
@@ -1030,6 +1021,20 @@ class Message(models.Model):
                     thread["module_icon"] = modules.module.get_module_icon(self.env[message_sudo.model]._original_module)
                 vals["thread"] = thread
         return vals_list
+
+    def _reaction_groups(self, message_sudo):
+        reactions_per_content = defaultdict(self.env['mail.message.reaction'].sudo().browse)
+        for reaction in message_sudo.reaction_ids:
+            reactions_per_content[reaction.content] |= reaction
+        reaction_groups = [{
+            'content': content,
+            'count': len(reactions),
+            'personas': [{'id': guest.id, 'name': guest.name, 'type': "guest"} for guest in reactions.guest_id] + [
+                {'id': partner.id, 'name': partner.name, 'type': "partner"} for partner in reactions.partner_id],
+            'message': {'id': message_sudo.id},
+        } for content, reactions in reactions_per_content.items()]
+
+        return reaction_groups
 
     def _message_format_extras(self, format_reply):
         self.ensure_one()

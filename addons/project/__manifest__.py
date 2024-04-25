@@ -211,6 +211,16 @@
             'project/static/src/project_sharing/search/favorite_menu/custom_favorite_item.xml',
             'project/static/src/project_sharing/**/*',
             'web/static/src/start.js',
+
+            # To use mail chatter in portal
+            'web/static/src/libs/pdfjs.js',
+            'bus/static/src/*.js',
+            'bus/static/src/services/**/*.js',
+            'bus/static/src/workers/websocket_worker.js',
+            'bus/static/src/workers/websocket_worker_utils.js',
+            ('include', 'portal.assets_chatter'),
+            'portal/static/src/chatter/core/**/*',
+            'project/static/src/chatter/**/*',
         ],
     },
     'license': 'LGPL-3',

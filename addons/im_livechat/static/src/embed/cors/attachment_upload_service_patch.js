@@ -4,7 +4,7 @@ import { patch } from "@web/core/utils/patch";
 import { url } from "@web/core/utils/urls";
 
 patch(AttachmentUploadService.prototype, {
-    get uploadURL() {
+    getUploadURL(threadModel) {
         return url("/im_livechat/cors/attachment/upload");
     },
 
