@@ -224,7 +224,8 @@ class PosSelfOrderController(http.Controller):
             product = pos_config.env['product.product'].browse(int(line.get('product_id')))
             lst_price = pricelist._get_product_price(product, quantity=line_qty) if pricelist else product.lst_price
             selected_attributes = fetched_attributes.browse(line.get('attribute_value_ids', []))
-            lst_price += sum([attr.price_extra for attr in selected_attributes])
+            price_extra = sum(attr.price_extra for attr in selected_attributes)
+            lst_price += price_extra
 
             children = [l for l in lines if l.get('combo_parent_uuid') == line.get('uuid')]
             pos_combo_lines = combo_lines.browse([child.get('combo_line_id') for child in children])
@@ -243,7 +244,8 @@ class PosSelfOrderController(http.Controller):
                         price_unit += remaining_total
 
                     selected_attributes = fetched_attributes.browse(child.get('attribute_value_ids', []))
-                    price_unit += pos_combo_line.combo_price + sum([attr.price_extra for attr in selected_attributes])
+                    price_extra_child = sum(attr.price_extra for attr in selected_attributes)
+                    price_unit += pos_combo_line.combo_price + price_extra_child
 
                     price_unit_fp = child_product._get_price_unit_after_fp(price_unit, pos_config.currency_id, fiscal_pos)
                     taxes = fiscal_pos.map_tax(child_product.taxes_id) if fiscal_pos else child_product.taxes_id
@@ -265,6 +267,7 @@ class PosSelfOrderController(http.Controller):
                         'full_product_name': child.get('full_product_name'),
                         'combo_parent_uuid': child.get('combo_parent_uuid'),
                         'combo_id': child.get('combo_id'),
+                        'price_extra': price_extra_child
                     })
                     appended_uuid.append(child.get('uuid'))
 
@@ -290,6 +293,7 @@ class PosSelfOrderController(http.Controller):
                 'full_product_name': line.get('full_product_name'),
                 'combo_parent_uuid': line.get('combo_parent_uuid'),
                 'combo_id': line.get('combo_id'),
+                'price_extra': price_extra
             })
             appended_uuid.append(line.get('uuid'))
 
