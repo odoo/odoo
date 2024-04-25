@@ -28,7 +28,7 @@ class TestFleetLogServices(AccountTestInvoicingCommon, common.TransactionCase):
             'partner_id': partner.id,
             'invoice_date': '2019-01-01',
             'date': '2019-01-01',
-            'currency_id': self.env.ref('base.EUR').id,
+            'currency_id': self.currency_data['currency'].id,
             'line_ids': [
                 (0, 0, {
                     'currency_id': self.currency_data['currency'].id,
