@@ -2467,7 +2467,8 @@ export function getState(el, offset, direction, leftCType) {
     let lastSpace = null;
     for (const node of domPath) {
         if (node.nodeType === Node.TEXT_NODE) {
-            const value = node.nodeValue;
+            // ZWNBSP are technical characters which should be ignored.
+            const value = node.nodeValue.replaceAll('\ufeff', '');
             // If we hit a text node, the state depends on the path direction:
             // any space encountered backwards is a visible space if we hit
             // visible content afterwards. If going forward, spaces are only
