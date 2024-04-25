@@ -24,6 +24,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'babel >= 1.0',
+        'cbor2',
         'chardet',
         'cryptography',
         'decorator',

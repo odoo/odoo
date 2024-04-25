@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template priority="32" id="auth_passkey_login" inherit_id="web.login">
+        <xpath expr="//button[@type='submit']" position="after">
+            <div class="text-start mt-2">
+                <button class="btn btn-link passkey_login_link btn-sm p-0 border-0" type="button" style="font-size: 0.875em;">Login with Passkey</button>
+            </div>
+        </xpath>
+        <xpath expr="//input[@name='redirect']" position="before">
+            <input type="hidden" name="webauthn_response"/>
+        </xpath>
+    </template>
+</odoo>

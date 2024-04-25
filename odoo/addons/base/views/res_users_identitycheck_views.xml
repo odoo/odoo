@@ -7,15 +7,17 @@
             <field name="arch" type="xml">
                 <form string="Password Confirmation">
                     <sheet>
-                        <h3><strong>Please enter your password to confirm you own this account</strong></h3>
-                        <div>
-                            <field class="o_field_highlight col-10 col-md-6 px-0" name="password" autocomplete="current-password"
-                                required="True" password="True" placeholder="************"/>
+                        <div invisible="auth_method != 'password'">
+                            <h3><strong>Please enter your password to confirm you own this account</strong></h3>
+                            <div>
+                                <field class="o_field_highlight col-10 col-md-6 px-0" name="password" autocomplete="current-password"
+                                    required="auth_method == 'password'" password="True" placeholder="************"/>
+                            </div>
+                            <a href="/web/reset_password/" class="btn btn-link" role="button">Forgot password?</a>
                         </div>
-                        <a href="/web/reset_password/" class="btn btn-link" role="button">Forgot password?</a>
                     </sheet>
                     <footer>
-                        <button string="Confirm Password" type="object" name="run_check" class="btn btn-primary" data-hotkey="q"/>
+                        <button string="Confirm Password" id="password_confirm" type="object" name="run_check" class="btn btn-primary" data-hotkey="q" invisible="auth_method != 'password'"/>
                         <button string="Cancel" special="cancel" data-hotkey="z" class="btn btn-secondary"/>
                     </footer>
                 </form>
