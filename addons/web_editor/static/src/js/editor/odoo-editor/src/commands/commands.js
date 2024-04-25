@@ -644,7 +644,7 @@ export const editorCommands = {
                     } else {
                         font = [];
                     }
-                } else if ((node.nodeType === Node.TEXT_NODE && !isWhitespace(node))
+                } else if ((node.nodeType === Node.TEXT_NODE && !isWhitespace(node) && node.textContent !== '\ufeff')
                         || (node.nodeName === 'BR' && isEmptyBlock(node.parentNode))
                         || (node.nodeType === Node.ELEMENT_NODE &&
                             node.nodeName !== 'FIGURE' &&
