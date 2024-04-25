@@ -111,6 +111,18 @@ DEFAULT_PAYMENT_METHOD_CODES = {
     'discover',
 }
 
+# The codes of payment methods that are not recognized by the orders API.
+FALLBACK_PAYMENT_METHOD_CODES = {
+    'wallets_india',
+    'paylater_india',
+}
+
+# Mapping of payment method codes to Razorpay codes.
+PAYMENT_METHODS_MAPPING = {
+    'wallets_india': 'wallet',
+    'paylater_india': 'paylater',
+}
+
 # The maximum amount in INR that can be paid through an eMandate.
 MANDATE_MAX_AMOUNT = {
     'card': 1000000,

@@ -119,7 +119,7 @@ class PaymentTransaction(models.Model):
         payload = {
             'amount': converted_amount,
             'currency': self.currency_id.name,
-            'method': pm_code,
+            **({'method': pm_code} if pm_code not in const.FALLBACK_PAYMENT_METHOD_CODES else {}),
         }
         if self.operation in ['online_direct', 'validation']:
             if customer_id:
@@ -403,7 +403,9 @@ class PaymentTransaction(models.Model):
         payment_method_type = entity_data.get('method', '')
         if payment_method_type == 'card':
             payment_method_type = entity_data.get('card', {}).get('network').lower()
-        payment_method = self.env['payment.method']._get_from_code(payment_method_type)
+        payment_method = self.env['payment.method']._get_from_code(
+            payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
+        )
         self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.
