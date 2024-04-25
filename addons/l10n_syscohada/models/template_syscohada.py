@@ -14,7 +14,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_income_categ_id': 'pcg_7011',
             'name': 'SYSCOHADA - Revised',
             'code_digits': '6',
-            'visible': False,
         }
 
     @template('syscohada', 'res.company')
