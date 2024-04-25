@@ -208,7 +208,7 @@ function insert(editor, data, isText = true) {
     } else {
         lastPosition = rightPos(currentNode);
     }
-    if (lastPosition[0] === editor.editable) {
+    if (!editor.options.allowInlineAtRoot && lastPosition[0] === editor.editable) {
         // Correct the position if it happens to be in the editable root.
         lastPosition = getDeepestPosition(...lastPosition);
     }
