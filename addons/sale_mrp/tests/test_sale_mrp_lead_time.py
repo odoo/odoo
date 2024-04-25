@@ -14,7 +14,7 @@ class TestSaleMrpLeadTime(TestMrpCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        with cls.sudo():
+        with cls.admin_permissions():
             # Required to confirm a sale order
             cls.user.groups_id += cls.env.ref('sales_team.group_sale_salesman')
 
@@ -65,7 +65,7 @@ class TestSaleMrpLeadTime(TestMrpCommon):
             and Sales Safety Days."""
 
         # Update company with Manufacturing Lead Time and Sales Safety Days
-        with self.sudo():
+        with self.admin_permissions():
             self.company.write({
                 'manufacturing_lead': 3.0,
                 'security_lead': 3.0

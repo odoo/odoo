@@ -11,7 +11,7 @@ class TestStockFlow(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        with cls.sudo():
+        with cls.admin_permissions():
             cls.env.ref('base.group_user').write({
                 'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]
             })

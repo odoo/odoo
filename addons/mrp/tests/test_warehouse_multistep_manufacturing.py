@@ -12,7 +12,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        with cls.sudo():
+        with cls.admin_permissions():
             # TODO: decide if uom.group_uom should be assigned here or in common.py
             # Required for `uom_id` to be visible in the view
             # cls.env.user.groups_id += cls.env.ref('uom.group_uom')

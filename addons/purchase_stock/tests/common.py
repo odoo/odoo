@@ -24,7 +24,7 @@ class PurchaseTestCommon(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super(PurchaseTestCommon, cls).setUpClass()
-        with cls.sudo():
+        with cls.admin_permissions():
             cls.user.groups_id += cls.env.ref('purchase.group_purchase_user')
         cls.env.ref('stock.route_warehouse0_mto').active = True
 

@@ -338,13 +338,16 @@ class TestStockCommon(TestProductCommon):
 
     @classmethod
     @contextmanager
-    def sudo(cls):
-        old_su = cls.env.su
+    def admin_permissions(cls):
+        admin_group = cls.env.ref('base.group_system')
+        user = cls.env.user
+        is_user_originally_admin = admin_group in user.groups_id
         try:
-            cls.env.su = True
+            user.groups_id += admin_group
             yield
         finally:
-            cls.env.su = old_su
+            if not is_user_originally_admin:
+                user.groups_id -= admin_group
 
     @classmethod
     def setup_product_common(cls):

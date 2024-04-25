@@ -10,7 +10,7 @@ class TestMultistepManufacturing(TestMrpCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        with cls.sudo():
+        with cls.admin_permissions():
             cls.user.groups_id += (
                 # Required for `manufacture_steps` to be visible in the view
                 cls.env.ref('stock.group_adv_location') +

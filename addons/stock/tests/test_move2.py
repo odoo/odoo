@@ -2399,7 +2399,7 @@ class TestStockUOM(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        with cls.sudo():
+        with cls.admin_permissions():
             dp = cls.env.ref('product.decimal_product_uom')
             dp.digits = 7
 
@@ -2477,7 +2477,7 @@ class TestStockUOM(TestStockCommon):
         (more than the quantity in stock), we check that
         we reserve less than the quantity in stock
         """
-        with self.sudo():
+        with self.admin_permissions():
             precision = self.env.ref('product.decimal_product_uom')
             precision.digits = 3
 
@@ -2537,10 +2537,9 @@ class TestStockUOM(TestStockCommon):
         in stock. Similar initial configuration as
         test_move_product_with_different_uom.
         """
-        with self.sudo():
+        with self.admin_permissions():
             precision = self.env.ref('product.decimal_product_uom')
             precision.digits = 3
-        precision_digits = precision.digits
 
         self.uom_kg.rounding = 0.0001
         self.uom_gm.rounding = 0.01

@@ -1921,7 +1921,7 @@ class TestMrpOrder(TestMrpCommon):
         picking_type = self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')])[0]
 
         # the overall decimal accuracy is set to 3 digits
-        with self.sudo():
+        with self.admin_permissions():
             precision = self.env.ref('product.decimal_product_uom')
             precision.digits = 3
 
@@ -3333,7 +3333,7 @@ class TestMrpOrder(TestMrpCommon):
         """
         Test that the operation type set on the bom is set in the manufacturing order
         when selecting the BoM"""
-        with self.sudo():
+        with self.admin_permissions():
             self.user.groups_id += self.env.ref("stock.group_adv_location")
         picking_type = self.env['stock.picking.type'].create({
             'name': 'new_picking_type',
@@ -3757,7 +3757,7 @@ class TestMrpOrder(TestMrpCommon):
         """
         rule = self.env['stock.rule'].search([('action', '=', 'manufacture')], limit=1)
 
-        with self.sudo():
+        with self.admin_permissions():
             self.env.company.manufacturing_lead = 1
         self.bom_1.days_to_prepare_mo = 2
         self.bom_1.produce_delay = 3

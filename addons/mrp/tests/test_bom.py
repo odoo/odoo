@@ -16,7 +16,7 @@ class TestBoM(TestMrpCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        with cls.sudo():
+        with cls.admin_permissions():
             cls.env.ref('base.group_user').write({'implied_ids': [
                 (4, cls.env.ref('product.group_product_variant').id),
             ]})
@@ -398,9 +398,9 @@ class TestBoM(TestMrpCommon):
         # We set the Product Unit of Measure digits to 5.
         # Because float_round(-384.0, 5) = -384.00000000000006
         # And float_round(-384.0, 2) = -384.0
-        with self.sudo():
-            precision = self.env.ref('product.decimal_product_uom')
-            precision.digits = 5
+        precision_digits = 5
+        with self.admin_permissions():
+            self.env.ref('product.decimal_product_uom').digits = precision_digits
 
         # We set the Unit(s) rounding to 0.0001 (digit = 4)
         self.uom_unit.rounding = 0.0001
@@ -423,11 +423,11 @@ class TestBoM(TestMrpCommon):
 
         kit_product_qty = self.product_2.qty_available  # Without product_3 in the prefetch
         # Use the float_repr to remove extra small decimal (and represent the front-end behavior)
-        self.assertEqual(float_repr(float_round(kit_product_qty, precision_digits=precision.digits), precision_digits=precision.digits), '-384.00000')
+        self.assertEqual(float_repr(float_round(kit_product_qty, precision_digits=precision_digits), precision_digits=precision_digits), '-384.00000')
 
         self.product_2.invalidate_recordset(['qty_available'])
         kit_product_qty, _ = (self.product_2 + self.product_3).mapped("qty_available")  # With product_3 in the prefetch
-        self.assertEqual(float_repr(float_round(kit_product_qty, precision_digits=precision.digits), precision_digits=precision.digits), '-384.00000')
+        self.assertEqual(float_repr(float_round(kit_product_qty, precision_digits=precision_digits), precision_digits=precision_digits), '-384.00000')
 
     def test_13_bom_kit_qty_multi_uom(self):
         product_unit = self.env['product.product'].create({
@@ -1358,7 +1358,7 @@ class TestBoM(TestMrpCommon):
         bom_from_mo_2.active = False  # Archives the created BoM to avoid to use it for the next MOs
 
         # Generates a BoM from a confirmed MO using operations and by-products.
-        with self.sudo():
+        with self.admin_permissions():
             self.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')  # Enables by-products.
         # Produces 3 qties to check if the operations' duration will be correctly divided by 3.
         mo_3 = create_mo(3)
@@ -1442,7 +1442,7 @@ class TestBoM(TestMrpCommon):
         """ Creates a Manufacturing Order without BoM then to generate a new BoM from this MO and
         modifies by-products values.
         """
-        with self.sudo():
+        with self.admin_permissions():
             self.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')  # Enables by-products.
         # Creates some products.
         common_vals = {'is_storable': True}
@@ -1499,7 +1499,7 @@ class TestBoM(TestMrpCommon):
         Checks the BoM will be marked as updated in the right situation, and checks the "Update BoM"
         action update the MO accordingly to the changes done in the BoM.
         """
-        with self.sudo():
+        with self.admin_permissions():
             self.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')
         # Creates a BoM.
         common_vals = {'is_storable': True}
@@ -1784,7 +1784,7 @@ class TestBoM(TestMrpCommon):
         replacing one of its BoM line's product. Updates the MO and checks a new
         move for this product was created in the MO's picking.
         """
-        with self.sudo():
+        with self.admin_permissions():
             self.user.groups_id += self.env.ref('stock.group_adv_location')
         self.warehouse_1.manufacture_steps = 'pbm'
 

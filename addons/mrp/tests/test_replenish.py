@@ -24,19 +24,20 @@ class TestMrpReplenish(TestMrpCommon):
             in the base date computation
         """
         route = self.env.ref('mrp.route_warehouse0_manufacture')
-        self.assertEqual(route.rule_ids[0].delay, 0)
         product = self.product_4
         product.route_ids = route
         wh = self.warehouse_1
-        with self.sudo():
+        with self.admin_permissions():
             self.env.company.manufacturing_lead = 0
         self.env['ir.config_parameter'].sudo().set_param('mrp.use_manufacturing_lead', True)
 
         with freeze_time("2023-01-01"):
             wizard = self._create_wizard(product, wh)
             self.assertEqual(fields.Datetime.from_string('2023-01-01 00:00:00'), wizard.date_planned)
-            with self.sudo():
+            with self.admin_permissions():
                 self.env.company.manufacturing_lead = 3
+            # TODO: possibly a bug: `rule_ids` need to be recalculated to set the company correctly
+            self.assertEqual(route.rule_ids[0].delay, 0)
             wizard2 = self._create_wizard(product, wh)
             self.assertEqual(fields.Datetime.from_string('2023-01-04 00:00:00'), wizard2.date_planned)
             route.rule_ids[0].delay = 2
@@ -81,7 +82,7 @@ class TestMrpReplenish(TestMrpCommon):
         bom = product.bom_ids
         product.route_ids = route
         wh = self.warehouse_1
-        with self.sudo():
+        with self.admin_permissions():
             self.env.company.manufacturing_lead = 0
         with freeze_time("2023-01-01"):
             wizard = self._create_wizard(product, wh)

@@ -192,7 +192,7 @@ class TestMrpAccount(TestMrpAccountCommon):
         self.assertEqual(move_value, 141, 'Thing should have the correct price')
 
     def test_stock_user_without_account_permissions_can_create_bom(self):
-        with self.sudo():
+        with self.admin_permissions():
             mrp_manager = new_test_user(
                 self.env, 'temp_mrp_manager', 'mrp.group_mrp_manager,product.group_product_variant',
             )

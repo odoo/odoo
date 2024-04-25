@@ -80,7 +80,7 @@ class TestMrpCommon(TestStockCommon):
             'is_storable': True,
         })
 
-        with cls.sudo():
+        with cls.admin_permissions():
             # User Data: mrp user and mrp manager
             cls.user_mrp_user = mail_new_test_user(
                 cls.env,
