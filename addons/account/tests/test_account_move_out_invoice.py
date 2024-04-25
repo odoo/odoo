@@ -4045,3 +4045,16 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             move_reversal.refund_moves()
 
         self.assertEqual(error_catcher.exception.args[0], "All selected moves for reversal must belong to the same company.")
+
+    def test_update_lines_date_when_invoice_date_changes(self):
+        move = self.init_invoice(
+            move_type='in_invoice',
+            partner=self.partner_a,
+            amounts=[1000.0],
+        )
+
+        move.invoice_date = fields.Date.from_string('2024-01-01')
+        self.env.flush_all()
+
+        for line in move.line_ids:
+            self.assertEqual(line.date, move.date)
