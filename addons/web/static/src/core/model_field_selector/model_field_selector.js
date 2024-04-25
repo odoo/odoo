@@ -56,7 +56,7 @@ export class ModelFieldSelector extends Component {
         this.popover.open(currentTarget, {
             resModel: this.props.resModel,
             path: this.props.path,
-            update: (path, debug = false) => {
+            update: (path, _fieldInfo, debug = false) => {
                 this.newPath = path;
                 if (!debug) {
                     this.updateState({ ...this.props, path }, true);

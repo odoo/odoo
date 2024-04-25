@@ -8267,7 +8267,7 @@ test(`can save without any dirty translatable fields`, async () => {
     expect.verifySteps(["get_views", "web_read"]);
     expect(`.o_form_editable`).toHaveCount(1);
     // o_field_translate is on the input and on the translate button
-    expect(`div[name='name'] > .o_field_translate`).toHaveCount(2);
+    expect(`div[name='name'] .o_field_translate`).toHaveCount(2);
 
     await contains(`.o_form_button_save`, { visible: false }).click();
     expect(`.alert .o_field_translate`).toHaveCount(0);
