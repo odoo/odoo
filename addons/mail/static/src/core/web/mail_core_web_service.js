@@ -31,18 +31,13 @@ export class MailCoreWeb {
             }
         });
         this.busService.subscribe("mail.message/inbox", (payload, { id: notifId }) => {
-            let message = this.store.Message.get(payload.id);
-            const alreadyInNeedaction = message?.in(message.thread.needactionMessages);
-            message = this.store.Message.insert(payload, { html: true });
+            const message = this.store.Message.insert(payload, { html: true });
             const inbox = this.store.discuss.inbox;
             if (notifId > inbox.counter_bus_id) {
                 inbox.counter++;
             }
             inbox.messages.add(message);
-            if (
-                !alreadyInNeedaction &&
-                notifId > message.thread.message_needaction_counter_bus_id
-            ) {
+            if (notifId > message.thread.message_needaction_counter_bus_id) {
                 message.thread.message_needaction_counter++;
             }
         });

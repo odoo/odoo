@@ -193,9 +193,7 @@ export class DiscussCoreCommon {
         }
         const temporaryId = messageData.temporary_id;
         messageData.temporary_id = null;
-        let message = this.store.Message.get(messageData.id);
-        const alreadyInNeedaction = message?.in(message.thread?.needactionMessages);
-        message = this.store.Message.insert(messageData, { html: true });
+        const message = this.store.Message.insert(messageData, { html: true });
         if (message.notIn(channel.messages)) {
             if (!channel.loadNewer) {
                 channel.messages.push(message);
@@ -207,21 +205,6 @@ export class DiscussCoreCommon {
             } else {
                 if (notifId > channel.message_unread_counter_bus_id) {
                     channel.incrementUnreadCounter();
-                }
-                if (message.isNeedaction) {
-                    const inbox = this.store.discuss.inbox;
-                    if (notifId > inbox.counter_bus_id) {
-                        inbox.counter++;
-                    }
-                    if (message.notIn(inbox.messages)) {
-                        inbox.messages.push(message);
-                    }
-                    if (
-                        !alreadyInNeedaction &&
-                        notifId > channel.message_needaction_counter_bus_id
-                    ) {
-                        channel.message_needaction_counter++;
-                    }
                 }
             }
         }
