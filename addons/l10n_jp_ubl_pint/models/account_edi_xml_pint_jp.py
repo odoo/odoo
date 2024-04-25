@@ -75,12 +75,17 @@ class AccountEdiXmlUBLPINTJP(models.AbstractModel):
             vals_list.append(tax_totals_vals)
         return vals_list
 
+    def _get_customization_ids(self):
+        vals = super()._get_customization_ids()
+        vals['pint_jp'] = 'urn:peppol:pint:billing-1@jp-1'
+        return vals
+
     def _export_invoice_vals(self, invoice):
         # EXTENDS account_edi_ubl_cii
         vals = super()._export_invoice_vals(invoice)
         vals['vals'].update({
             # see https://docs.peppol.eu/poac/jp/pint-jp/bis/#profiles
-            'customization_id': 'urn:peppol:pint:billing-1@jp-1',
+            'customization_id': self._get_customization_ids()['pint_jp'],
             'profile_id': 'urn:peppol:bis:billing',
         })
         if invoice.currency_id != invoice.company_id.currency_id:
