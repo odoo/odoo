@@ -61,6 +61,7 @@ setup(
         'xlsxwriter',
         'xlwt',
         'zeep',
+        'cbor2',
     ],
     python_requires='>=3.10',
     extras_require={

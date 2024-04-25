@@ -14,7 +14,8 @@ class ImportModule(Controller):
         try:
             if not request.db:
                 raise Exception(_("Could not select database '%s'", request.db))
-            request.session.authenticate(request.db, login, password)
+            credential = {'login': login, 'password': password, 'type': 'password'}
+            request.session.authenticate(request.db, credential)
             # request.uid is None in case of MFA
             if request.uid and request.env.user._is_admin():
                 return request.env['ir.module.module']._import_zipfile(mod_file, force=force == '1')[0]
