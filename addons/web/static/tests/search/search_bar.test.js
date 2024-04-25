@@ -29,6 +29,7 @@ import {
     fields,
     getFacetTexts,
     models,
+    mountWithSearch,
     onRpc,
     removeFacet,
     serverState,
@@ -36,7 +37,6 @@ import {
     toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
-import { mountWithSearch } from "./helpers";
 
 import { browser } from "@web/core/browser/browser";
 import { pick } from "@web/core/utils/objects";
