@@ -2682,9 +2682,17 @@ var BasicModel = AbstractModel.extend({
         var parent = datapoints[ids[0]][0];
         var def = self._rpc({
             model: model,
-            method: 'name_get',
+            method: 'exists',
             args: [ids],
             context: self.localData[parent].getContext({fieldName: fieldName}),
+        }).then(async function (existIds) {
+            const namedIds = await self._rpc({
+                model: model,
+                method: 'name_get',
+                args: [existIds],
+                context: self.localData[parent].getContext({fieldName: fieldName}),
+            })
+            return namedIds.concat(ids.flatMap((id) => existIds.includes(id) ? [] : [[id, ""]]));
         }).then(function (result) {
             _.each(result, function (el) {
                 var parentIDs = datapoints[el[0]];

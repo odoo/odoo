@@ -419,6 +419,8 @@ export class MockServer {
             }
             case "create":
                 return this.mockCreate(args.model, args.args[0]);
+            case "exists":
+                return args.args[0];
             case "fields_get":
                 return this.mockFieldsGet(args.model);
             case "load_views":

@@ -1981,6 +1981,9 @@ var MockServer = Class.extend({
             case 'create':
                 return this._mockCreate(args.model, args.args[0]);
 
+            case 'exists':
+                return args.args[0];
+
             case 'fields_get':
                 return this._mockFieldsGet(args.model, args.args);
 
