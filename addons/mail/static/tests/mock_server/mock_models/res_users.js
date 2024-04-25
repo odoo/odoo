@@ -1,8 +1,16 @@
-import { serverState, webModels } from "@web/../tests/web_test_helpers";
+import { serverState, webModels, fields } from "@web/../tests/web_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
 import { DISCUSS_ACTION_ID } from "../mail_mock_server";
 
 export class ResUsers extends webModels.ResUsers {
+    notification_type = fields.Selection({
+        selection: [
+            ["email", "Handle by Emails"],
+            ["inbox", "Handle in Odoo"],
+        ],
+        default: "email",
+    });
+
     /** Simulates `_init_store_data` on `res.users`. */
     _init_store_data() {
         /** @type {import("mock_models").ResPartner} */
