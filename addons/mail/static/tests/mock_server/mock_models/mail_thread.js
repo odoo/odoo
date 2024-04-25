@@ -393,6 +393,10 @@ export class MailThread extends models.ServerModel {
         const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").MailMessage} */
         const MailMessage = this.env["mail.message"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
 
         const message = MailMessage._filter([["id", "=", message_id]])[0];
         const messageFormat = MailMessage._message_format([message_id])[0];
@@ -422,6 +426,21 @@ export class MailThread extends models.ServerModel {
                 ]);
                 if (message.author_id === this.env.user?.partner_id) {
                     DiscussChannel._channel_seen(ids, message.id);
+                }
+            }
+        }
+        if (message.partner_ids) {
+            for (const partner_id of message.partner_ids) {
+                const [partner] = ResPartner.search_read([["id", "=", partner_id]]);
+                if (partner.user_ids.length > 0) {
+                    const [user] = ResUsers.search_read([["id", "=", partner.user_ids[0]]]);
+                    if (user.notification_type === "inbox") {
+                        notifications.push([
+                            partner,
+                            "mail.message/inbox",
+                            MailMessage._message_format_personalize([message_id])[0]
+                        ]);
+                    }
                 }
             }
         }

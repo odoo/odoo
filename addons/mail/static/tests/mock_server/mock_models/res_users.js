@@ -4,6 +4,13 @@ import { DISCUSS_ACTION_ID } from "../mail_mock_server";
 
 export class ResUsers extends webModels.ResUsers {
     im_status = fields.Char({ default: "online" });
+    notification_type = fields.Selection({
+        selection: [
+            ["email", "Handle by Emails"],
+            ["inbox", "Handle in Odoo"],
+        ],
+        default: "email",
+    });
 
     /** Simulates `_init_store_data` on `res.users`. */
     _init_store_data() {
