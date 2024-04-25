@@ -7,6 +7,7 @@ import {
     editFavoriteName,
     fields,
     models,
+    mountWithSearch,
     toggleSaveFavorite,
     toggleSearchBarMenu,
     saveFavorite,
@@ -16,7 +17,6 @@ import {
     validateSearch,
     mockService,
 } from "@web/../tests/web_test_helpers";
-import { mountWithSearch } from "./helpers";
 
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";

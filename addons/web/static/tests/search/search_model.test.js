@@ -1,7 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
-import { defineModels, fields, models } from "@web/../tests/web_test_helpers";
-import { mountWithSearch } from "./helpers";
+import { defineModels, fields, models, mountWithSearch } from "@web/../tests/web_test_helpers";
 import { mockDate, mockTimeZone } from "@odoo/hoot-mock";
 
 describe.current.tags("headless");

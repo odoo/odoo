@@ -5,12 +5,12 @@ import {
     getPagerLimit,
     getPagerValue,
     models,
+    mountWithSearch,
     pagerNext,
 } from "@web/../tests/web_test_helpers";
 
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { usePager } from "@web/search/pager_hook";
-import { mountWithSearch } from "./helpers";
 import { animationFrame } from "@odoo/hoot-mock";
 
 class Foo extends models.Model {

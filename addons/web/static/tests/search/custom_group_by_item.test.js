@@ -7,11 +7,11 @@ import {
     isItemSelected,
     isOptionSelected,
     models,
+    mountWithSearch,
     selectGroup,
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { mountWithSearch } from "./helpers";
 
 import { SearchBar } from "@web/search/search_bar/search_bar";
 

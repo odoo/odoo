@@ -5,12 +5,12 @@ import {
     getFacetTexts,
     isItemSelected,
     isOptionSelected,
+    mountWithSearch,
     removeFacet,
     toggleMenuItem,
     toggleMenuItemOption,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { mountWithSearch } from "../helpers";
 import { defineSearchBarModels, Foo } from "./models";
 
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
