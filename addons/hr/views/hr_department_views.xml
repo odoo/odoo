@@ -116,6 +116,9 @@
                                 <div t-attf-class="o_kanban_card_header oe_kanban_details">
                                     <div class="o_kanban_card_header_title">
                                         <div class="o_primary"><a type="edit"><field name="name"/></a></div>
+                                        <div class="text-muted">
+                                            <field name="manager_id" widget="many2one_avatar_user" options="{'display_avatar_name': True}" readonly="1"/>
+                                        </div>
                                         <div class="o_secondary" groups="base.group_multi_company">
                                             <small>
                                                 <i class="fa fa-building-o" role="img" aria-label="Company" title="Company"/> <field name="company_id"/>
