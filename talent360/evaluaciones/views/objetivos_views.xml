@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<odoo>
+  <!--OBJETIVOS-->
+  <record id="objetivo_action" model="ir.actions.act_window">
+    <field name="name">Objetivos</field>
+    <field name="res_model">objetivo</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <record id="objetivo_tree" model="ir.ui.view">
+    <field name="name">objetivo.tree</field>
+    <field name="model">objetivo</field>
+    <field name="arch" type="xml">
+      <tree string="Objetivos">
+        <field name="titulo" />
+        <field name="estado" />
+        <field name="fecha_fin" />
+        <field name="tipo" />
+        <field name="peso" />
+        <field name="piso_minimo" />
+        <field name="piso_maximo" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="objetivo_form" model="ir.ui.view">
+    <field name="name">objetivo.form</field>
+    <field name="model">objetivo</field>
+
+    <field name="arch" type="xml">
+      <form string="Objetivo">
+        <header>
+          <field name="estado" widget="statusbar" statusbar_visible="rojo, amarillo, verde, azul" />
+        </header>
+        <sheet>
+          <div style="width: 100%;">
+            <h1>
+              <field name="titulo" placeholder="Título del objetivo" style="width: 100%;" />
+            </h1>
+
+            <br />
+            <label for="descripcion" string="Descripción" />
+            <field placeholder="¿Qué es lo que se espera lograr con este objetivo?" name="descripcion" />
+          </div>
+          <notebook>
+            <page string="Detalles">
+              <div style="display: flex; flex-direction: column;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="fecha_fin" string="Fecha final" />
+                        <field name="fecha_fin" />
+                        <br />
+                        <label for="tipo" string="Tipo" />
+                        <field name="tipo" />
+                        <br />
+                        <label for="peso" string="Peso" />
+                        <field name="peso" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="metrica" string="Métrica" />
+                        <field name="metrica" />
+                        <br />
+                        <label for="orden" string="Orden" />
+                        <field name="orden" />
+                    </div>
+                </div>
+                <group col="2" style="margin-top: 20px;">
+                  <group>
+                    <field name="piso_minimo" />
+                  </group>
+                  <group>
+                    <field name="piso_maximo" />
+                  </group>
+                </group>
+              </div>
+            </page>
+            <page string="Asignados">
+              <group>
+                <field name="usuario_ids" />
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+</odoo>

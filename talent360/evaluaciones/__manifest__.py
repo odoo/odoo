@@ -7,6 +7,7 @@
         "security/ir.model.access.csv",
         "views/evaluaciones_views.xml",
         "views/crear_evaluaciones_360.xml",
+        "views/objetivos_views.xml",
         "views/evaluaciones_menus.xml",
         "views/evaluaciones_templates.xml",
         "data/pregunta.csv",
