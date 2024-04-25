@@ -1,7 +1,7 @@
 import { browser } from "../browser/browser";
 import { registry } from "../registry";
 import { completeUncaughtError, getErrorTechnicalName } from "./error_utils";
-import { isIOS, isBrowserSafari } from "@web/core/browser/feature_detection";
+import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 
 /**
  * Uncaught Errors have 4 properties:
@@ -32,8 +32,8 @@ export class UncaughtPromiseError extends UncaughtError {
     }
 }
 
-export class UncaughtCorsError extends UncaughtError {
-    constructor(message = "Uncaught CORS Error") {
+export class ThirdPartyScriptError extends UncaughtError {
+    constructor(message = "Third-Party Script Error") {
         super(message);
     }
 }
@@ -80,21 +80,22 @@ export const errorService = {
             if (!error && errorsToIgnore.includes(message)) {
                 return;
             }
+            const isRedactedError = !filename && !lineno && !colno;
+            const isThirdPartyScriptError =
+                isRedactedError ||
+                // Firefox doesn't hide details of errors occuring in third-party scripts, check origin explicitly
+                (isBrowserFirefox() && new URL(filename).origin !== window.location.origin);
+            // Don't display error dialogs for third party script errors unless we are in debug mode
+            if (isThirdPartyScriptError && !odoo.debug) {
+                return;
+            }
             let uncaughtError;
-            if (!filename && !lineno && !colno) {
-                if ((isIOS() || isBrowserSafari()) && odoo.debug !== "assets") {
-                    // In Safari 16.4+ (as of Jun 14th 2023), an error occurs
-                    // when going back and forward through the browser when the
-                    // cache is enabled. A feedback has been reported but in the
-                    // meantime, hide any script error in these versions.
-                    return;
-                }
-                uncaughtError = new UncaughtCorsError();
+            if (isRedactedError) {
+                uncaughtError = new ThirdPartyScriptError();
                 uncaughtError.traceback =
-                    `Unknown CORS error\n\n` +
-                    `An unknown CORS error occured.\n` +
+                    `An error whose details cannot be accessed by the Odoo framework has occurred.\n` +
                     `The error probably originates from a JavaScript file served from a different origin.\n` +
-                    `(Opening your browser console might give you a hint on the error.)`;
+                    `The full error is available in the browser console.`;
             } else {
                 uncaughtError = new UncaughtClientError();
                 uncaughtError.event = ev;

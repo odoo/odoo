@@ -9,11 +9,11 @@ const websiteSaleCheckoutWidget = publicWidget.registry.websiteSaleCheckout;
 
 // temporary for OnNoResultReturned bug
 import {registry} from "@web/core/registry";
-import {UncaughtCorsError} from "@web/core/errors/error_service";
+import {ThirdPartyScriptError} from "@web/core/errors/error_service";
 const errorHandlerRegistry = registry.category("error_handlers");
 
 function corsIgnoredErrorHandler(env, error) {
-    if (error instanceof UncaughtCorsError) {
+    if (error instanceof ThirdPartyScriptError) {
         return true;
     }
 }

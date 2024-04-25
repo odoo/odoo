@@ -5,7 +5,6 @@ import { Deferred, advanceTime, animationFrame } from "@odoo/hoot-mock";
 import {
     ClientErrorDialog,
     RPCErrorDialog,
-    NetworkErrorDialog,
     standardErrorDialogProps,
 } from "@web/core/errors/error_dialogs";
 import { registry } from "@web/core/registry";
@@ -318,26 +317,47 @@ test("handle uncaught client errors", async () => {
     expect(["TestError: This is an error test"]).toVerifySteps();
 });
 
-test("handle uncaught CORS errors", async () => {
-    expect.assertions(3);
+test("don't show dialog for errors in third-party scripts", async () => {
     class TestError extends Error {}
     const error = new TestError();
-    error.message = "This is a cors error";
-    error.name = "CORS Error";
+    error.name = "Script error.";
 
     mockService("dialog", {
-        add(dialogClass, props) {
-            expect(dialogClass).toBe(NetworkErrorDialog);
-            expect(props.message).toBe("Uncaught CORS Error");
+        add(_dialogClass, props) {
+            expect.step("Dialog: " + props.message);
+            return () => {};
         },
     });
     await makeMockEnv();
 
-    // CORS error event has no colno, no lineno and no filename
+    // Error events from errors in third-party scripts have no colno, no lineno and no filename
+    // because of CORS.
     const errorEvent = new ErrorEvent("error", { error, cancelable: true });
     window.dispatchEvent(errorEvent);
     await animationFrame();
-    expect(["CORS Error: This is a cors error"]).toVerifySteps();
+    expect(["Script error."]).toVerifySteps();
+});
+
+test("show dialog for errors in third-party scripts in debug mode", async () => {
+    class TestError extends Error {}
+    const error = new TestError();
+    error.name = "Script error.";
+    patchWithCleanup(odoo, { debug: true });
+
+    mockService("dialog", {
+        add(_dialogClass, props) {
+            expect.step("Dialog: " + props.message);
+            return () => {};
+        },
+    });
+    await makeMockEnv();
+
+    // Error events from errors in third-party scripts have no colno, no lineno and no filename
+    // because of CORS.
+    const errorEvent = new ErrorEvent("error", { error, cancelable: true });
+    window.dispatchEvent(errorEvent);
+    await animationFrame();
+    expect(["Script error.", "Dialog: Third-Party Script Error"]).toVerifySteps();
 });
 
 test("lazy loaded handlers", async () => {
