@@ -23,6 +23,7 @@ SIGN_UP_REQUEST_PARAMS = {'db', 'login', 'debug', 'token', 'message', 'error', '
                           'redirect', 'redirect_hostname', 'email', 'name', 'partner_id',
                           'password', 'confirm_password', 'city', 'country_id', 'lang', 'signup_email'}
 LOGIN_SUCCESSFUL_PARAMS = set()
+CREDENTIAL_PARAMS = ['login', 'password', 'type']
 
 
 class Home(http.Controller):
@@ -110,9 +111,11 @@ class Home(http.Controller):
 
         if request.httprequest.method == 'POST':
             try:
-                uid = request.session.authenticate(request.db, request.params['login'], request.params['password'])
+                credential = {key: value for key, value in request.params.items() if key in CREDENTIAL_PARAMS}
+                credential.setdefault('type', 'password')
+                auth_info = request.session.authenticate(request.db, credential)
                 request.params['login_success'] = True
-                return request.redirect(self._login_redirect(uid, redirect=redirect))
+                return request.redirect(self._login_redirect(auth_info['uid'], redirect=redirect))
             except odoo.exceptions.AccessDenied as e:
                 if e.args == odoo.exceptions.AccessDenied().args:
                     values['error'] = _("Wrong login/password")
