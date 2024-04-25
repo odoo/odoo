@@ -73,6 +73,7 @@ export {
     getVisibleButtons,
     isItemSelected,
     isOptionSelected,
+    mountWithSearch,
     openAddCustomFilterDialog,
     pagerNext,
     pagerPrevious,
