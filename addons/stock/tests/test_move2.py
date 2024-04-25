@@ -1103,7 +1103,6 @@ class TestSinglePicking(TestStockCommon):
     def test_assign_deadline(self):
         """ Check if similar items with shorter deadline are prioritized. """
         # Avoid to merge move3 and move4 for the test case
-        # TODO: should this be done as sudo?
         self.env['ir.config_parameter'].sudo().create({
             'key': 'stock.merge_only_same_date',
             'value': True

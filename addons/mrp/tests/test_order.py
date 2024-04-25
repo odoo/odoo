@@ -3914,7 +3914,6 @@ class TestMrpOrder(TestMrpCommon):
         self.product_1.tracking = 'serial'
         self.product_4.tracking = 'serial'
         self.product_4.uom_id = self.uom_unit
-        # TODO: confirm with ARM that this setup is correct
         self.warehouse_1.manu_type_id.use_create_components_lots = True
 
         mo_form = Form(self.env['mrp.production'])
@@ -3956,7 +3955,6 @@ class TestMrpOrder(TestMrpCommon):
         self.product_2.tracking = 'lot'
         self.product_4.tracking = 'serial'
         self.product_4.uom_id = self.uom_unit
-        # TODO: confirm with ARM that this setup is correct
         self.warehouse_1.manu_type_id.use_create_components_lots = True
 
         mo_form = Form(self.env['mrp.production'])

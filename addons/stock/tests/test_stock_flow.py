@@ -2401,8 +2401,7 @@ class TestStockFlow(TestStockCommon):
         """
         wh01_address, wh02_address = self.env['res.partner'].create([{
             'name': 'Address %s' % i,
-            # TODO: is parent_id required here?
-            # 'parent_id': self.env.company.id,
+            'parent_id': self.env.company.partner_id.id,
             'type': 'delivery',
         } for i in [1, 2]])
 

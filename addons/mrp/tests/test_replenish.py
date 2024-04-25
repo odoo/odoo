@@ -45,7 +45,7 @@ class TestMrpReplenish(TestMrpCommon):
             self.assertEqual(fields.Datetime.from_string('2023-01-06 00:00:00'), wizard3.date_planned)
 
     def test_mrp_orderpoint_leadtime(self):
-        self.warehouse = self.env.ref('stock.warehouse0')
+        self.warehouse = self.warehouse_1
         route_manufacture = self.warehouse.manufacture_pull_id.route_id
         route_manufacture.supplied_wh_id = self.warehouse
         route_manufacture.supplier_wh_id = self.warehouse

@@ -80,7 +80,9 @@ class TestMrpProductionBackorder(TestMrpCommon):
         with Form(self.warehouse_1) as warehouse:
             warehouse.manufacture_steps = 'pbm'
 
-        production, _, product_to_build, product_to_use_1, product_to_use_2 = self.generate_mo(qty_base_1=4, qty_final=4, picking_type_id=self.warehouse_1.manu_type_id)
+        production, _, _, product_to_use_1, product_to_use_2 = self.generate_mo(
+            qty_base_1=4, qty_final=4, picking_type_id=self.warehouse_1.manu_type_id
+        )
 
         move_raw_ids = production.move_raw_ids
         self.assertEqual(len(move_raw_ids), 2)

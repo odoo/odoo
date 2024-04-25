@@ -8,11 +8,6 @@ from odoo.exceptions import UserError
 
 
 class TestUnbuild(TestMrpCommon):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        # TODO: remove this after fixing stock_location and stock_location
-        cls.stock_location = cls.stock_location
 
     def test_unbuild_standart(self):
         """ This test creates a MO and then creates 3 unbuild

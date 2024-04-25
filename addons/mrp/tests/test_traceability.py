@@ -660,7 +660,6 @@ class TestTraceability(TestMrpCommon):
         Consume SN
         Consume SN -> Should raise an error as it has already been consumed
         """
-        stock_location = self.env.ref('stock.stock_location_stock')
         component = self.bom_4.bom_line_ids.product_id
         component.write({
             'is_storable': True,
@@ -672,7 +671,7 @@ class TestTraceability(TestMrpCommon):
             'name': name,
             'company_id': self.env.company.id,
         } for name in ['SN01', 'SN02']])
-        self.env['stock.quant']._update_available_quantity(component, stock_location, 1, lot_id=sn_lot02)
+        self.env['stock.quant']._update_available_quantity(component, self.stock_location, 1, lot_id=sn_lot02)
 
         mo = self.env['mrp.production'].create({
             'product_id': component.id,
@@ -783,7 +782,6 @@ class TestTraceability(TestMrpCommon):
         Consume SN
         -> We should not raise any UserError
         """
-        stock_location = self.env.ref('stock.stock_location_stock')
         component = self.bom_4.bom_line_ids.product_id
         component.write({
             'is_storable': True,
@@ -828,7 +826,7 @@ class TestTraceability(TestMrpCommon):
         unbuild_form.mo_id = mo_produce_sn
         unbuild_form.save().action_unbuild()
 
-        self.env['stock.quant']._update_available_quantity(component, stock_location, 1, lot_id=sn)
+        self.env['stock.quant']._update_available_quantity(component, self.stock_location, 1, lot_id=sn)
 
         mo_consume_sn_form = Form(self.env['mrp.production'])
         mo_consume_sn_form.bom_id = self.bom_4

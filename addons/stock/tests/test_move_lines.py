@@ -111,14 +111,14 @@ class StockMoveLine(TestStockCommon):
 
     def test_pick_from_5(self):
         """ check small quantities get handled correctly """
-        precision = self.env.ref('product.decimal_product_uom')
-        precision.digits = 6
+        with self.admin_permissions():
+            self.env.ref('product.decimal_product_uom').digits = 6
         self.product.uom_id = self.uom_kg
         move = self.env['stock.move'].create({
             'name': 'Test move',
             'product_id': self.product.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.stock_location,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
             'product_uom_qty': 1e-5,
         })
         move_form = Form(move, view='stock.view_stock_move_operations')
