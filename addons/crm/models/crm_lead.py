@@ -1239,16 +1239,8 @@ class Lead(models.Model):
 
     def action_snooze(self):
         self.ensure_one()
-        today = date.today()
         my_next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
-        if my_next_activity:
-            if my_next_activity.date_deadline < today:
-                date_deadline = today + timedelta(days=7)
-            else:
-                date_deadline = my_next_activity.date_deadline + timedelta(days=7)
-            my_next_activity.write({
-                'date_deadline': date_deadline
-            })
+        my_next_activity.action_snooze()
         return True
 
     # ------------------------------------------------------------
