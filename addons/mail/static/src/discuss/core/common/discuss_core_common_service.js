@@ -204,21 +204,6 @@ export class DiscussCoreCommon {
                 if (notifId > this.store.initBusId) {
                     channel.incrementUnreadCounter();
                 }
-                if (message.isNeedaction) {
-                    const inbox = this.store.discuss.inbox;
-                    if (message.notIn(inbox.messages)) {
-                        inbox.messages.push(message);
-                        if (notifId > this.store.initBusId) {
-                            inbox.counter++;
-                        }
-                    }
-                    if (message.notIn(channel.needactionMessages)) {
-                        channel.needactionMessages.push(message);
-                        if (notifId > this.store.initBusId) {
-                            channel.message_needaction_counter++;
-                        }
-                    }
-                }
             }
         }
         if (

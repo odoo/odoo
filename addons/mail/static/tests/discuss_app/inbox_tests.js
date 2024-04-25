@@ -6,6 +6,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup, triggerHotkey, makeDeferred } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
+import { rpc } from "@web/core/network/rpc";
 
 QUnit.module("discuss inbox");
 
@@ -645,4 +646,44 @@ QUnit.test("emptying inbox doesn't display rainbow man in another thread", async
     await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
     // weak test, no guarantee that we waited long enough for the potential rainbow man to show
     await contains(".o_reward_rainbow", { count: 0 });
+});
+
+QUnit.test("Counter should be incremented by 1 when receiving a message with a mention in a channel", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Thread" });
+    const partnerUserId = pyEnv["res.partner"].create({ name: "partner1" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerUserId });
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "res.partner",
+        needaction: true,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create([
+        {
+            mail_message_id: messageId,
+            notification_type: "inbox",
+            res_partner_id: pyEnv.currentPartnerId,
+        },
+    ]);
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
+    const mention = [pyEnv.currentPartnerId];
+    const mentionName = pyEnv.currentPartner.name;
+    pyEnv.withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: `<a href="https://www.hoot.test/web#model=res.partner&amp;id=17" class="o_mail_redirect" data-oe-id="${mention[0]}" data-oe-model="res.partner" target="_blank" contenteditable="false">@${mentionName}</a> mention`,
+                message_type: "comment",
+                partner_ids: mention,
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });
 });
