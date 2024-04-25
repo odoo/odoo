@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
+import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { browser } from "../browser/browser";
 import { _lt } from "../l10n/translation";
 import { registry } from "../registry";
 import { completeUncaughtError, getErrorTechnicalName } from "./error_utils";
-import { isIOS, isBrowserSafari } from "@web/core/browser/feature_detection";
 
 /**
  * Uncaught Errors have 4 properties:
@@ -35,6 +35,8 @@ export class UncaughtPromiseError extends UncaughtError {
     }
 }
 
+// FIXME: this error is misnamed and actually represends errors in third-party scripts
+// rename this in master
 export class UncaughtCorsError extends UncaughtError {
     constructor(message = _lt("Uncaught CORS Error")) {
         super(message);
@@ -83,15 +85,17 @@ export const errorService = {
             if (!error && errorsToIgnore.includes(message)) {
                 return;
             }
+            const isRedactedError = !filename && !lineno && !colno;
+            const isThirdPartyScriptError =
+                isRedactedError ||
+                // Firefox doesn't hide details of errors occuring in third-party scripts, check origin explicitly
+                (isBrowserFirefox() && new URL(filename).origin !== window.location.origin);
+            // Don't display error dialogs for third party script errors unless we are in debug mode
+            if (isThirdPartyScriptError && !odoo.debug) {
+                return;
+            }
             let uncaughtError;
-            if (!filename && !lineno && !colno) {
-                if ((isIOS() || isBrowserSafari()) && odoo.debug !== "assets") {
-                    // In Safari 16.4+ (as of Jun 14th 2023), an error occurs
-                    // when going back and forward through the browser when the
-                    // cache is enabled. A feedback has been reported but in the
-                    // meantime, hide any script error in these versions.
-                    return;
-                }
+            if (isRedactedError) {
                 uncaughtError = new UncaughtCorsError();
                 uncaughtError.traceback = env._t(
                     `Unknown CORS error\n\n` +
