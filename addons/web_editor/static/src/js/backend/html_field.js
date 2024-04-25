@@ -94,7 +94,7 @@ export class HtmlField extends Component {
         });
 
         useBus(this.env.bus, "RELATIONAL_MODEL:WILL_SAVE_URGENTLY", () => this.commitChanges({ urgent: true }));
-        useBus(this.env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", ({detail}) => detail.proms.push(this.commitChanges()));
+        useBus(this.env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", ({ detail }) => detail.proms.push(this.commitChanges({ shouldInline: true })));
 
         this._onUpdateIframeId = 'onLoad_' + _.uniqueId('FieldHtml');
 
@@ -383,8 +383,8 @@ export class HtmlField extends Component {
         popover.style.top = topPosition + 'px';
         popover.style.left = leftPosition + 'px';
     }
-    async commitChanges({ urgent } = {}) {
-        if (this._isDirty() || urgent) {
+    async commitChanges({ urgent, shouldInline } = {}) {
+        if (this._isDirty() || urgent || (shouldInline && this.props.isInlineStyle)) {
             let saveModifiedImagesPromise, toInlinePromise;
             if (this.wysiwyg && this.wysiwyg.odooEditor) {
                 this.wysiwyg.odooEditor.observerUnactive('commitChanges');
