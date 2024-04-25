@@ -54,6 +54,8 @@ def test_all_l10n(env):
         (template_code, template)
         for template_code, template in env['account.chart.template']._get_chart_template_mapping().items()
         if template_code not in already_loaded_codes
+        # We can't make it disappear from the list, but we raise a UserError if it's not already the COA
+        and template_code != 'syscohada'
     ]
     companies = env['res.company'].create([
         {
