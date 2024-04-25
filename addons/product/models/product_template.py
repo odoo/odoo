@@ -742,7 +742,7 @@ class ProductTemplate(models.Model):
 
             else:
                 for variant in existing_variants.values():
-                    is_combination_possible = self._is_combination_possible_by_config(
+                    is_combination_possible = tmpl_id._is_combination_possible_by_config(
                         combination=variant.product_template_attribute_value_ids,
                         ignore_no_variant=True,
                     )
