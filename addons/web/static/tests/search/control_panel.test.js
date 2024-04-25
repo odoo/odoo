@@ -7,9 +7,9 @@ import {
     getService,
     models,
     mountWithCleanup,
+    mountWithSearch,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-import { mountWithSearch } from "./helpers";
 
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { WebClient } from "@web/webclient/webclient";

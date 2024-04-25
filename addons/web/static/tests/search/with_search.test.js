@@ -7,11 +7,11 @@ import {
     getMenuItemTexts,
     models,
     mountWithCleanup,
+    mountWithSearch,
     onRpc,
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { mountWithSearch } from "./helpers";
 
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 import { WithSearch } from "@web/search/with_search/with_search";

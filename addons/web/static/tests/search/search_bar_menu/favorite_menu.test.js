@@ -10,11 +10,11 @@ import {
     getService,
     isItemSelected,
     mountWithCleanup,
+    mountWithSearch,
     onRpc,
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { mountWithSearch } from "../helpers";
 import { Foo, defineSearchBarModels } from "./models";
 
 import { registry } from "@web/core/registry";
