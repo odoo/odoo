@@ -485,12 +485,12 @@ class TestProcurement(TestMrpCommon):
             'name': 'product',
             'type': 'product',
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('mrp.route_warehouse0_manufacture'))],
-            'categ_id': self.env.ref('product.product_category_all').id
+            'categ_id': self.env.ref('product.product_category_services').id
         })
         component = self.env['product.product'].create({
             'name': 'component',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_all').id
+            'categ_id': self.env.ref('product.product_category_services').id
         })
         self.env['mrp.bom'].create({
             'product_id': product.id,

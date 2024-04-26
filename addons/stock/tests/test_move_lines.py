@@ -17,7 +17,7 @@ class StockMoveLine(TestStockCommon):
             'name': 'Product A',
             'type': 'product',
             'tracking': 'lot',
-            'categ_id': cls.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_services').id,
         })
         cls.shelf1 = cls.env['stock.location'].create({
             'name': 'Shelf 1',

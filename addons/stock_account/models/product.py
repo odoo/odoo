@@ -741,6 +741,7 @@ class ProductCategory(models.Model):
         First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.
         """,
         tracking=True,
+        default="standard"
     )
     property_stock_journal = fields.Many2one(
         'account.journal', 'Stock Journal', company_dependent=True,

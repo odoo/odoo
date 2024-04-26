@@ -16,7 +16,7 @@ class TestReportStockQuantity(tests.TransactionCase):
             'name': 'Mellohi',
             'default_code': 'C418',
             'type': 'product',
-            'categ_id': cls.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_services').id,
             'tracking': 'lot',
             'barcode': 'scan_me'
         })
@@ -115,7 +115,7 @@ class TestReportStockQuantity(tests.TransactionCase):
         self.product_replenished = self.env['product.product'].create({
             'name': 'Security razor',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
         # get auto-created pull rule from when warehouse is created
         self.wh.reception_route_id.rule_ids.unlink()

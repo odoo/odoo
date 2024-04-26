@@ -25,7 +25,7 @@ class TestTraceability(TestMrpCommon):
             'name': 'Product %s' % tracking,
             'type': 'product',
             'tracking': tracking,
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
     def test_tracking_types_on_mo(self):

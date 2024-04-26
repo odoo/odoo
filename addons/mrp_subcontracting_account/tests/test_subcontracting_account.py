@@ -18,9 +18,9 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.uom_unit = self.env.ref('uom.product_uom_unit')
 
-        product_category_all = self.env.ref('product.product_category_all')
-        product_category_all.property_cost_method = 'fifo'
-        product_category_all.property_valuation = 'real_time'
+        product_category_services = self.env.ref('product.product_category_services')
+        product_category_services.property_cost_method = 'fifo'
+        product_category_services.property_valuation = 'real_time'
         in_account = self.env['account.account'].create({
             'name': 'IN Account',
             'code': '000001',
@@ -41,14 +41,13 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
             'code': '000004',
             'account_type': 'asset_current',
         })
-        product_category_all.property_stock_account_input_categ_id = in_account
-        product_category_all.property_stock_account_output_categ_id = out_account
-        product_category_all.property_stock_account_production_cost_id = production_cost_account
-        product_category_all.property_stock_valuation_account_id = valu_account
-        stock_in_acc_id = product_category_all.property_stock_account_input_categ_id.id
-        stock_out_acc_id = product_category_all.property_stock_account_output_categ_id.id
-        stock_valu_acc_id = product_category_all.property_stock_valuation_account_id.id
-        stock_cop_acc_id = product_category_all.property_stock_account_production_cost_id.id
+        product_category_services.property_stock_account_input_categ_id = in_account
+        product_category_services.property_stock_account_output_categ_id = out_account
+        product_category_services.property_stock_account_production_cost_id = production_cost_account
+        product_category_services.property_stock_valuation_account_id = valu_account
+        stock_in_acc_id = product_category_services.property_stock_account_input_categ_id.id
+        stock_valu_acc_id = product_category_services.property_stock_valuation_account_id.id
+        stock_cop_acc_id = product_category_services.property_stock_account_production_cost_id.id
 
         # IN 10@10 comp1 10@20 comp2
         move1 = self.env['stock.move'].create({
@@ -167,9 +166,9 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.uom_unit = self.env.ref('uom.product_uom_unit')
-        product_category_all = self.env.ref('product.product_category_all')
-        product_category_all.property_cost_method = 'fifo'
-        product_category_all.property_valuation = 'real_time'
+        product_category_services = self.env.ref('product.product_category_services')
+        product_category_services.property_cost_method = 'fifo'
+        product_category_services.property_valuation = 'real_time'
         in_account = self.env['account.account'].create({
             'name': 'IN Account',
             'code': '000001',
@@ -190,13 +189,13 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
             'code': '000004',
             'account_type': 'asset_current',
         })
-        product_category_all.property_stock_account_input_categ_id = in_account
-        product_category_all.property_stock_account_output_categ_id = out_account
-        product_category_all.property_stock_account_production_cost_id = production_cost_account
-        product_category_all.property_stock_valuation_account_id = valu_account
-        stock_in_acc_id = product_category_all.property_stock_account_input_categ_id.id
-        stock_valu_acc_id = product_category_all.property_stock_valuation_account_id.id
-        stock_cop_acc_id = product_category_all.property_stock_account_production_cost_id.id
+        product_category_services.property_stock_account_input_categ_id = in_account
+        product_category_services.property_stock_account_output_categ_id = out_account
+        product_category_services.property_stock_account_production_cost_id = production_cost_account
+        product_category_services.property_stock_valuation_account_id = valu_account
+        stock_in_acc_id = product_category_services.property_stock_account_input_categ_id.id
+        stock_valu_acc_id = product_category_services.property_stock_valuation_account_id.id
+        stock_cop_acc_id = product_category_services.property_stock_account_production_cost_id.id
 
         # set Cost of Production account on production location
         cop_account = self.env['account.account'].create({
@@ -280,7 +279,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         self.comp1.tracking = 'serial'
         self.comp2.standard_price = 100
         self.finished.tracking = 'serial'
-        self.env.ref('product.product_category_all').property_cost_method = 'fifo'
+        self.env.ref('product.product_category_services').property_cost_method = 'fifo'
 
         # Create a receipt picking from the subcontractor
         picking_form = Form(self.env['stock.picking'])
@@ -342,7 +341,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         Suppose a subcontracted product P with two tracked components, P is FIFO
         Create a receipt for 10 x P, receive 5, then 3 and then 2
         """
-        self.env.ref('product.product_category_all').property_cost_method = 'fifo'
+        self.env.ref('product.product_category_services').property_cost_method = 'fifo'
         self.comp1.tracking = 'lot'
         self.comp1.standard_price = 10
         self.comp2.tracking = 'lot'
@@ -399,9 +398,9 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.uom_unit = self.env.ref('uom.product_uom_unit')
-        product_category_all = self.env.ref('product.product_category_all')
-        product_category_all.property_cost_method = 'standard'
-        product_category_all.property_valuation = 'real_time'
+        product_category_services = self.env.ref('product.product_category_services')
+        product_category_services.property_cost_method = 'standard'
+        product_category_services.property_valuation = 'real_time'
 
         in_account = self.env['account.account'].create({
             'name': 'IN Account',
@@ -423,13 +422,13 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
             'code': '000004',
             'account_type': 'asset_current',
         })
-        product_category_all.property_stock_account_input_categ_id = in_account
-        product_category_all.property_stock_account_output_categ_id = out_account
-        product_category_all.property_stock_account_production_cost_id = production_cost_account
-        product_category_all.property_stock_valuation_account_id = valu_account
-        stock_in_acc_id = product_category_all.property_stock_account_input_categ_id.id
-        stock_valu_acc_id = product_category_all.property_stock_valuation_account_id.id
-        stock_cop_acc_id = product_category_all.property_stock_account_production_cost_id.id
+        product_category_services.property_stock_account_input_categ_id = in_account
+        product_category_services.property_stock_account_output_categ_id = out_account
+        product_category_services.property_stock_account_production_cost_id = production_cost_account
+        product_category_services.property_stock_valuation_account_id = valu_account
+        stock_in_acc_id = product_category_services.property_stock_account_input_categ_id.id
+        stock_valu_acc_id = product_category_services.property_stock_valuation_account_id.id
+        stock_cop_acc_id = product_category_services.property_stock_account_production_cost_id.id
         self.comp1.standard_price = 10
         self.comp2.standard_price = 20
         self.finished.standard_price = 40

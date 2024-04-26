@@ -22,7 +22,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
         cls.env["stock.putaway.rule"].create({
             "location_in_id": cls.stock_location.id,
             "location_out_id": cls.depot_location.id,
-            'category_id': cls.env.ref('product.product_category_all').id,
+            'category_id': cls.env.ref('product.product_category_office').id,
         })
         cls.env['mrp.workcenter'].create({
             'name': 'Assembly Line 1',

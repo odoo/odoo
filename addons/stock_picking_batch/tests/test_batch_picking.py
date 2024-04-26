@@ -23,12 +23,12 @@ class TestBatchPicking(TransactionCase):
         cls.productA = cls.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',
-            'categ_id': cls.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_services').id,
         })
         cls.productB = cls.env['product.product'].create({
             'name': 'Product B',
             'type': 'product',
-            'categ_id': cls.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_services').id,
         })
 
         cls.client_1 = cls.env['res.partner'].create({'name': 'Client 1'})
@@ -695,12 +695,12 @@ class TestBatchPicking02(TransactionCase):
         self.productA = self.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
         self.productB = self.env['product.product'].create({
             'name': 'Product B',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
     def test_same_package_several_pickings(self):

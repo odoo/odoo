@@ -212,7 +212,7 @@ def setup_pos_combo_items(self):
             "list_price": 40,
             "name": "Office Combo",
             "type": "combo",
-            "categ_id": self.env.ref("product.product_category_1").id,
+            "categ_id": self.env.ref("product.product_category_office").id,
             "uom_id": self.env.ref("uom.product_uom_unit").id,
             "uom_po_id": self.env.ref("uom.product_uom_unit").id,
             "combo_ids": [

@@ -1575,6 +1575,7 @@ class TestPacking(TestPackingCommon):
         product = self.env['product.product'].create({
             'name': 'Product',
             'type': 'product',
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
         # Set the removal strategy to 'least_packages'

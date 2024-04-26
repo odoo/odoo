@@ -220,7 +220,7 @@ class TestMrpCommon(TestStockCommon):
             'uom_po_id': cls.env.ref("uom.product_uom_unit").id,
             'type': 'product',
             'tracking': 'none',
-            'categ_id': cls.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_office').id,
         })
         cls.graphics_card = cls.env['product.product'].create({
             'name': 'Individual Workplace',
@@ -228,7 +228,7 @@ class TestMrpCommon(TestStockCommon):
             'uom_po_id': cls.env.ref("uom.product_uom_unit").id,
             'type': 'product',
             'tracking': 'none',
-            'categ_id': cls.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_office').id,
         })
 
     @classmethod

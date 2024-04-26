@@ -20,17 +20,17 @@ class TestMrpSubcontractingCommon(TransactionCase):
         cls.comp1 = cls.env['product.product'].create({
             'name': 'Component1',
             'type': 'product',
-            'categ_id': cls.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_services').id,
         })
         cls.comp2 = cls.env['product.product'].create({
             'name': 'Component2',
             'type': 'product',
-            'categ_id': cls.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_services').id,
         })
         cls.finished = cls.env['product.product'].create({
             'name': 'finished',
             'type': 'product',
-            'categ_id': cls.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_services').id,
         })
         bom_form = Form(cls.env['mrp.bom'])
         bom_form.type = 'subcontract'
@@ -49,7 +49,7 @@ class TestMrpSubcontractingCommon(TransactionCase):
         cls.comp2comp = cls.env['product.product'].create({
             'name': 'component for Component2',
             'type': 'product',
-            'categ_id': cls.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_services').id,
         })
         bom_form = Form(cls.env['mrp.bom'])
         bom_form.product_tmpl_id = cls.comp2.product_tmpl_id

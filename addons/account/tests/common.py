@@ -63,7 +63,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         cls.product_a = cls._create_product(
             name='product_a',
             lst_price=1000.0,
-            standard_price=800.0
+            standard_price=800.0,
         )
         cls.product_b = cls._create_product(
             name='product_b',

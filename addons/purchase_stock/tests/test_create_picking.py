@@ -118,7 +118,7 @@ class TestCreatePicking(common.TestProductCommon):
             'type': 'product',
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
             'seller_ids': [(6, 0, [seller.id])],
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': self.env.ref('product.product_category_services').id,
             'supplier_taxes_id': [(6, 0, [])],
         })
 
@@ -255,7 +255,7 @@ class TestCreatePicking(common.TestProductCommon):
             'type': 'product',
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
             'seller_ids': [(6, 0, [seller.id])],
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
         # A picking is require since only moves inside the same picking are merged.
@@ -559,7 +559,7 @@ class TestCreatePicking(common.TestProductCommon):
             'type': 'product',
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
             'seller_ids': [(6, 0, [seller.id])],
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': self.env.ref('product.product_category_services').id,
             'supplier_taxes_id': [(6, 0, [])],
         })
 

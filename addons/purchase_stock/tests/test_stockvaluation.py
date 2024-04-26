@@ -26,10 +26,14 @@ class TestStockValuation(TransactionCase):
             'name': 'Wood Corner Partner',
             'company_id': cls.env.user.company_id.id,
         })
+        cls.cat = cls.env['product.category'].create({
+            'name': 'cat',
+        })
         cls.product1 = cls.env['product.product'].create({
             'name': 'Large Desk',
             'standard_price': 1299.0,
             'list_price': 1799.0,
+            'categ_id': cls.cat.id,
             # Ignore tax calculations for these tests.
             'supplier_taxes_id': False,
             'type': 'product',
@@ -304,7 +308,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.partner_id = cls.env['res.partner'].create({'name': 'Wood Corner Partner'})
-        cls.product1 = cls.env['product.product'].create({'name': 'Large Desk'})
 
         cls.cat = cls.env['product.category'].create({
             'name': 'cat',

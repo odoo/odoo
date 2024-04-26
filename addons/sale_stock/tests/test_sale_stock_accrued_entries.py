@@ -12,6 +12,7 @@ class TestAccruedStockSaleOrders(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
         uom_unit = cls.env.ref('uom.product_uom_unit')
+        cls.product_category = cls.env['product.category'].create({'name': 'Product Category'})
         cls.product_order = cls.env['product.product'].create({
             'name': "Product",
             'list_price': 30.0,
@@ -19,6 +20,7 @@ class TestAccruedStockSaleOrders(AccountTestInvoicingCommon):
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
             'invoice_policy': 'delivery',
+            'categ_id': cls.product_category.id,
         })
         cls.sale_order = cls.env['sale.order'].with_context(tracking_disable=True).create({
             'partner_id': cls.partner_a.id,

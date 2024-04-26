@@ -33,9 +33,11 @@ class StockQuant(TransactionCase):
             groups='stock.group_stock_user',
         )
 
+        cls.category = cls.env['product.category'].create({'name': 'Product Category'})
         cls.product = cls.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',
+            'categ_id': cls.category.id,
         })
         cls.product_lot = cls.env['product.product'].create({
             'name': 'Product A',
@@ -1318,9 +1320,11 @@ class StockQuantRemovalStrategy(TransactionCase):
         super().setUp()
         self.least_package_strategy = self.env['product.removal'].search(
             [('method', '=', 'least_packages')])
+        self.category = self.env['product.category'].create({'name': 'Product Category'})
         self.product = self.env['product.product'].create({
             'name': 'Product',
             'type': 'product',
+            'categ_id': self.category.id,
         })
         self.product.categ_id.removal_strategy_id = self.least_package_strategy.id
         self.stock_location = self.env['stock.location'].create({

@@ -315,9 +315,9 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             return
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         (self.comp1 + self.comp2).write({'route_ids': [(6, None, [resupply_sub_on_order_route.id])]})
-        product_category_all = self.env.ref('product.product_category_all')
-        product_category_all.property_cost_method = 'standard'
-        product_category_all.property_valuation = 'real_time'
+        product_category_services = self.env.ref('product.product_category_services')
+        product_category_services.property_cost_method = 'standard'
+        product_category_services.property_valuation = 'real_time'
 
         stock_price_diff_acc_id = self.env['account.account'].create({
             'name': 'default_account_stock_price_diff',
@@ -326,7 +326,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             'account_type': 'asset_current',
             'company_id': self.env.company.id,
         })
-        product_category_all.property_account_creditor_price_difference_categ = stock_price_diff_acc_id
+        product_category_services.property_account_creditor_price_difference_categ = stock_price_diff_acc_id
 
         self.comp1.standard_price = 10.0
         self.comp2.standard_price = 20.0
@@ -370,9 +370,9 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             An extra SVL should be created to correct the valuation of the product
             Also check account move data for real time inventory
         """
-        product_category_all = self.env.ref('product.product_category_all')
-        product_category_all.property_cost_method = 'fifo'
-        product_category_all.property_valuation = 'real_time'
+        product_category_services = self.env.ref('product.product_category_services')
+        product_category_services.property_cost_method = 'fifo'
+        product_category_services.property_valuation = 'real_time'
         in_account = self.env['account.account'].create({
             'name': 'IN Account',
             'code': '000001',
@@ -393,11 +393,11 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             'code': '000004',
             'account_type': 'asset_current',
         })
-        product_category_all.property_stock_account_input_categ_id = in_account
-        product_category_all.property_stock_account_output_categ_id = out_account
-        product_category_all.property_stock_account_production_cost_id = production_cost_account
-        product_category_all.property_stock_valuation_account_id = valu_account
-        stock_in_acc_id = product_category_all.property_stock_account_input_categ_id.id
+        product_category_services.property_stock_account_input_categ_id = in_account
+        product_category_services.property_stock_account_output_categ_id = out_account
+        product_category_services.property_stock_account_production_cost_id = production_cost_account
+        product_category_services.property_stock_valuation_account_id = valu_account
+        stock_in_acc_id = product_category_services.property_stock_account_input_categ_id.id
 
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         (self.comp1 + self.comp2).write({'route_ids': [Command.link(resupply_sub_on_order_route.id)]})

@@ -57,7 +57,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             'name': 'analytic_account_2',
             'plan_id': cls.analytic_plan.id,
         })
-
+        cls.product_category = cls.env['product.category'].create({'name': 'Product Category'})
         # Create product without cost
         cls.product_c = cls.env['product.product'].create({
             'name': 'product_c with no cost',
@@ -69,6 +69,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             'supplier_taxes_id': [Command.set((cls.tax_purchase_a + cls.tax_purchase_b).ids)],
             'can_be_expensed': True,
             'default_code': 'product_c',
+            'categ_id': cls.product_category.id,
         })
 
         # Ensure Invoicing tests products can be expensed and their code is properly set.
