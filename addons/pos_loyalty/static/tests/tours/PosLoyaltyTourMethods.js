@@ -112,3 +112,12 @@ export function finalizeOrder(paymentMethod, amount) {
 export function removeRewardLine(name) {
     return [selectRewardLine(name), ProductScreen.pressNumpad("⌫"), Dialog.confirm()].flat();
 }
+
+export function checkAddedLoyaltyPoints(points) {
+    return [
+        {
+            trigger: `.loyalty-points-won:contains("${points}")`,
+            run: function () {}
+        }
+    ]
+}

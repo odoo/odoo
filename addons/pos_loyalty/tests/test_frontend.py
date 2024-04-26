@@ -1049,6 +1049,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'program_type': 'loyalty',
             'trigger': 'auto',
             'applies_on': 'both',
+            'pricelist_ids': [(4, self.main_pos_config.pricelist_id.id)],
             'pos_ok': True,
             'pos_config_ids': [Command.link(self.main_pos_config.id)],
             'rule_ids': [(0, 0, {
