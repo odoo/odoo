@@ -359,13 +359,6 @@ export function makeActionManager(env, router = _router) {
                     action.help = markup(action.help);
                 }
             }
-            if (!action) {
-                return {
-                    type: "ir.actions.client",
-                    tag: "invalid_action",
-                    id: actionRequest,
-                };
-            }
             return Object.assign({}, action);
         }
 

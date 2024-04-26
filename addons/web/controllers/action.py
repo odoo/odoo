@@ -2,10 +2,19 @@
 
 import logging
 from odoo import _
-from odoo.exceptions import AccessError, MissingError
+from odoo.exceptions import UserError, MissingError, AccessError
 from odoo.http import Controller, request, route
 from .utils import clean_action
 from werkzeug.exceptions import BadRequest
+
+
+class MissingActionError(UserError):
+    """Missing Action.
+
+    .. admonition:: Example
+
+        When you try to read on a non existing record.
+    """
 
 
 class Action(Controller):
@@ -27,22 +36,24 @@ class Action(Controller):
                     assert action
                 action_id = action.id
             except Exception as exc:
-                raise MissingError(_("The action %r does not exist.", action_id)) from exc
+                raise MissingActionError(_("The action %r does not exist.", action_id)) from exc
 
         base_action = Actions.browse([action_id]).sudo().read(['type'])
-        if base_action:
-            action_type = base_action[0]['type']
-            if action_type == 'ir.actions.report':
-                request.update_context(bin_size=True)
-            if action_type == 'ir.actions.server':
-                action = request.env["ir.actions.server"].browse([action_id])
-                result = action.run()
-                parent_path = action.sudo().path
-                if parent_path:
-                    result['path'] = parent_path
-                return clean_action(result, env=action.env) if result else {'type': 'ir.actions.act_window_close'}
-            result = request.env[action_type].sudo().browse([action_id]).read()
-            return clean_action(result[0], env=request.env) if result else False
+        if not base_action:
+            raise MissingActionError(_("The action %r does not exist.", action_id))
+
+        action_type = base_action[0]['type']
+        if action_type == 'ir.actions.report':
+            request.update_context(bin_size=True)
+        if action_type == 'ir.actions.server':
+            action = request.env["ir.actions.server"].browse([action_id])
+            result = action.run()
+            parent_path = action.sudo().path
+            if parent_path:
+                result['path'] = parent_path
+            return clean_action(result, env=action.env) if result else {'type': 'ir.actions.act_window_close'}
+        result = request.env[action_type].sudo().browse([action_id]).read()
+        return clean_action(result[0], env=request.env) if result else False
 
     @route('/web/action/load_breadcrumbs', type='json', auth='user', readonly=True)
     def load_breadcrumbs(self, actions):
@@ -88,6 +99,6 @@ class Action(Controller):
                         raise BadRequest('Actions with a model should also have a resId')
                 else:
                     raise BadRequest('Actions should have either an action (id or path) or a model')
-            except (MissingError, AccessError) as exc:
+            except (MissingActionError, MissingError, AccessError) as exc:
                 display_names.append({'error': str(exc)})
         return display_names
