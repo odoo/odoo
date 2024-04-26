@@ -566,7 +566,25 @@ export class Composer extends Component {
                 cannedResponseIds: [...this.props.composer.cannedResponseIds],
                 parentId: this.props.messageToReplyTo?.message?.id,
             };
+<<<<<<< HEAD:addons/mail/static/src/core/common/composer.js
             await this._sendMessage(value, postData);
+||||||| parent of e5807dc503f6 (temp):addons/mail/static/src/composer/composer.js
+            await this.threadService.post(this.thread, value, postData);
+            if (this.props.composer.thread.type === "mailbox") {
+                this.notifySendFromMailbox();
+            }
+            this.suggestion?.clearRawMentions();
+            this.suggestion?.clearCannedReponses();
+            this.props.messageToReplyTo?.cancel();
+=======
+            await this.threadService.post(this.thread, value, postData);
+            if (this.props.composer.thread.type === "mailbox") {
+                this.notifySendFromMailbox();
+            }
+            this.suggestion?.clearRawMentions();
+            this.suggestion?.clearCannedResponses();
+            this.props.messageToReplyTo?.cancel();
+>>>>>>> e5807dc503f6 (temp):addons/mail/static/src/composer/composer.js
         });
     }
 

@@ -15,8 +15,16 @@ export function useSuggestion() {
             comp.props.composer.rawMentions.partnerIds.length = 0;
             comp.props.composer.rawMentions.threadIds.length = 0;
         },
+<<<<<<< HEAD:addons/mail/static/src/core/common/suggestion_hook.js
         clearCannedReponses() {
             comp.props.composer.cannedResponseIds.clear();
+||||||| parent of e5807dc503f6 (temp):addons/mail/static/src/composer/suggestion_hook.js
+        clearCannedReponses() {
+            comp.props.composer.cannedResponses = [];
+=======
+        clearCannedResponses() {
+            comp.props.composer.cannedResponses = [];
+>>>>>>> e5807dc503f6 (temp):addons/mail/static/src/composer/suggestion_hook.js
         },
         clearSearch() {
             Object.assign(self.search, {
