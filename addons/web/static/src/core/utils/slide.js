@@ -1,5 +1,5 @@
 /* SLIDE UP */
-const slideUp = (target, duration=500, callback = () => {}) => {
+export const slideUp = (target, duration=500, callback = () => {}) => {
     target.style.transitionProperty = 'height, margin, padding';
     target.style.transitionDuration = duration + 'ms';
     target.style.boxSizing = 'border-box';
@@ -26,7 +26,7 @@ const slideUp = (target, duration=500, callback = () => {}) => {
 }
 
 /* SLIDE DOWN */
-const slideDown = (target, duration=500, callback = () => {}) => {
+export const slideDown = (target, duration=500, callback = () => {}) => {
     target.style.removeProperty('display');
     let display = window.getComputedStyle(target).display;
     if (display === 'none') display = 'block';
@@ -57,7 +57,7 @@ const slideDown = (target, duration=500, callback = () => {}) => {
 }
 
 /* TOOGLE */
-const slideToggle = (target, duration = 500, callback = () => {}) => {
+export const slideToggle = (target, duration = 500, callback = () => {}) => {
     if (window.getComputedStyle(target).display === 'none') {
       return slideDown(target, duration, callback);
     } else {
