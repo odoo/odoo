@@ -4399,7 +4399,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'website_hr_recruitment',
             'project_timesheet_holidays',
             'hr_holidays_attendance',
-            'hr_payroll_account_sepa',
             'hr_skills_survey',
             'hr_work_entry',
             'hr_recruitment_sign',
