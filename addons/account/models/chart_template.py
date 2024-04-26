@@ -1033,7 +1033,19 @@ class AccountChartTemplate(models.AbstractModel):
                 "match_same_currency": True,
                 "allow_payment_tolerance": False,
                 "match_partner": True,
-            }
+            },
+            "reconcile_bill": {
+                "name": 'Create Bill',
+                "sequence": 5,
+                "rule_type": 'writeoff_button',
+                'counterpart_type': 'purchase',
+                'line_ids': [
+                    Command.create({
+                        'amount_type': 'percentage_st_line',
+                        'amount_string': '100',
+                    }),
+                ],
+            },
         }
 
     # --------------------------------------------------------------------------------

@@ -84,6 +84,9 @@
                                 <field name="to_check" invisible="rule_type != 'writeoff_button'"/>
                                 <field name="past_months_limit" invisible="rule_type != 'invoice_matching'"/>
                                 <field name="matching_order" invisible="rule_type != 'invoice_matching'"/>
+                                <field name="counterpart_type"
+                                       required="rule_type == 'writeoff_button'"
+                                       invisible="rule_type != 'writeoff_button'"/>
                             </group>
                         </group>
                         <notebook>
@@ -168,7 +171,7 @@
                                                invisible="not match_partner or rule_type == 'writeoff_button'"/>
                                     </group>
                                 </group>
-                                <group string="Counterpart Entries" colespan="4"
+                                <group string="Counterpart Items" colespan="4"
                                        class="oe_inline"
                                        invisible="rule_type == 'invoice_matching' and (not allow_payment_tolerance or allow_payment_tolerance and payment_tolerance_param == 0.0)">
                                     <group>
@@ -186,21 +189,25 @@
 
                                             <field name="sequence"
                                                    widget="handle"/>
-                                            <field name="account_id"/>
+                                            <field name="account_id"
+                                                   required="(parent.counterpart_type == 'general' and parent.rule_type == 'writeoff_button') or parent.rule_type == 'writeoff_suggestion'"/>
                                             <field name="amount_type"/>
                                             <field name="journal_id"
                                                    column_invisible="parent.rule_type != 'writeoff_button'"
-                                                   optional="hide"/>
+                                                   optional="hide"
+                                                   domain="[('type', '=', parent.counterpart_type)]"/>
                                             <field name="amount_string"/>
                                             <field name="tax_ids"
                                                    widget="many2many_tags"
-                                                   optional="hide"/>
+                                                   optional="hide"
+                                                   domain="[('type_tax_use', '=?', parent.counterpart_type if parent.counterpart_type in ('sale', 'purchase') and rule_type == 'writeoff_button' else None)]"/>
                                             <field name="analytic_distribution" widget="analytic_distribution"
                                                    groups="analytic.group_analytic_accounting"
                                                    options="{'account_field': 'account_id', 'business_domain': 'general'}"/>
                                             <field name="force_tax_included"
                                                    widget="boolean_toggle"
                                                    invisible="not show_force_tax_included"
+                                                   column_invisible="parent.rule_type == 'writeoff_button' and parent.counterpart_type != 'general'"
                                                    optional="hide"/>
                                             <field name="label"/>
                                         </tree>
