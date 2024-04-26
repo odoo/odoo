@@ -767,7 +767,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         let linkPreview = document.querySelector(".modal a#link-preview");
         assert.strictEqual(labelInputField.value, 'This website',
             "The label input field should match the link's content");
-        assert.strictEqual(linkPreview.innerText.replaceAll("\u200B", ""), "This website",
+        assert.strictEqual(linkPreview.innerText.replaceAll("\ufeff", ""), "This website",
             "Link label in preview should match label input field");
 
         // Click on discard
@@ -775,7 +775,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
         const p = document.querySelector(".test_target");
         // Select link label to open the floating toolbar.
-        setSelection(p, 0, p, 1);
+        setSelection(p, 1, p, 2);
         await nextTick();
         // Click on create-link button to open the Link Dialog.
         document.querySelector("#toolbar #create-link").click();
@@ -794,7 +794,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             "Preview should be updated on label input field change");
         // Click "Save".
         await click(document, ".modal .modal-footer button.btn-primary");
-        assert.strictEqual(p.innerText.replaceAll('\u200B', ''), 'New label',
+        assert.strictEqual(p.innerText.replaceAll('\ufeff', ''), 'New label',
             "The link's label should be updated");
     });
 
