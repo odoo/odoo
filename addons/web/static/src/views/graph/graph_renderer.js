@@ -7,6 +7,7 @@ import {
     lightenColor,
     darkenColor,
 } from "@web/core/colors/colors";
+import { registry } from "@web/core/registry";
 import { formatFloat } from "@web/views/fields/formatters";
 import { SEP } from "./graph_model";
 import { sortBy } from "@web/core/utils/arrays";
@@ -21,6 +22,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
 
 const NO_DATA = _t("No data");
+const formatters = registry.category("formatters");
 
 const colorScheme = cookie.get("color_scheme");
 const GRAPH_LEGEND_COLOR = getCustomColor(colorScheme, "#111827", "#ffffff");
@@ -294,8 +296,11 @@ export class GraphRenderer extends Component {
      * @param {boolean} [allIntegers=true]
      * @returns {string}
      */
-    formatValue(value, allIntegers = true) {
+    formatValue(value, allIntegers = true, formatType = "") {
         const largeNumber = Math.abs(value) >= 1000;
+        if (formatType) {
+            return formatters.get(formatType)(value);
+        }
         if (allIntegers && !largeNumber) {
             return String(value);
         }
@@ -584,7 +589,7 @@ export class GraphRenderer extends Component {
      */
     getScaleOptions() {
         const { datasets, labels } = this.model.data;
-        const { measure, measures, mode, stacked } = this.model.metaData;
+        const { fieldAttrs, measure, measures, mode, stacked } = this.model.metaData;
         if (mode === "pie") {
             return {};
         }
@@ -616,7 +621,7 @@ export class GraphRenderer extends Component {
                         : null,
             },
             ticks: {
-                callback: (value) => this.formatValue(value, false),
+                callback: (value) => this.formatValue(value, false, fieldAttrs[measure]?.widget),
                 color: GRAPH_LABEL_COLOR,
             },
             stacked: mode === "line" && stacked ? stacked : undefined,
@@ -644,7 +649,7 @@ export class GraphRenderer extends Component {
      * @returns {Object[]}
      */
     getTooltipItems(data, metaData, tooltipModel) {
-        const { allIntegers, domains, mode, groupBy } = metaData;
+        const { allIntegers, domains, mode, groupBy, measure } = metaData;
         const sortedDataPoints = sortBy(tooltipModel.dataPoints, "raw", "desc");
         const items = [];
         for (const item of sortedDataPoints) {
@@ -652,12 +657,14 @@ export class GraphRenderer extends Component {
             // If `datasetIndex` is not found in the `datasets`, then it refers to the `lineOverlayDataset`.
             const dataset = data.datasets[item.datasetIndex] || this.model.lineOverlayDataset;
             let label = dataset.trueLabels[index];
-            let value = this.formatValue(dataset.data[index], allIntegers);
+            let value = dataset.data[index];
+            const measureWidget = metaData.fieldAttrs[measure]?.widget;
+            value = this.formatValue(value, allIntegers, measureWidget);
             let boxColor;
             let percentage;
             if (mode === "pie") {
                 if (label === NO_DATA) {
-                    value = this.formatValue(0, allIntegers);
+                    value = this.formatValue(0, allIntegers, measureWidget);
                 }
                 if (domains.length > 1) {
                     label = `${dataset.label} / ${label}`;
