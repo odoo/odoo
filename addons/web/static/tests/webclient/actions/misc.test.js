@@ -293,6 +293,29 @@ test("actions can be cached", async () => {
     ).toVerifySteps();
 });
 
+test("server action run shouldn't be cached", async function (assert) {
+    defineActions([
+        {
+            id: 2,
+            xml_id: "action_2",
+            type: "ir.actions.server",
+            state: "code",
+            code: () => false,
+        },
+    ]);
+    onRpc("/web/action/load", () => {
+        expect.step("server loaded");
+    });
+
+    await makeMockEnv();
+
+    // With no additional params
+    await getService("action").loadAction(2);
+    await getService("action").loadAction(2);
+
+    expect(["server loaded", "server loaded"]).toVerifySteps();
+});
+
 test("action cache: additionalContext is used on the key", async () => {
     onRpc("/web/action/load", () => {
         expect.step("server loaded");
