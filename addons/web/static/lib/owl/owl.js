@@ -2602,11 +2602,10 @@
 
     const TIMEOUT = Symbol("timeout");
     function wrapError(fn, hookName) {
-        const error = new OwlError(`The following error occurred in ${hookName}: `);
-        const timeoutError = new OwlError(`${hookName}'s promise hasn't resolved after 3 seconds`);
         const node = getCurrent();
         return (...args) => {
             const onError = (cause) => {
+                const error = new OwlError(`The following error occurred in ${hookName}: `);
                 error.cause = cause;
                 if (cause instanceof Error) {
                     error.message += `"${cause.message}"`;
@@ -2626,6 +2625,7 @@
                             new Promise((resolve) => setTimeout(() => resolve(TIMEOUT), 3000)),
                         ]).then((res) => {
                             if (res === TIMEOUT && node.fiber === fiber) {
+                                const timeoutError = new OwlError(`${hookName}'s promise hasn't resolved after 3 seconds`);
                                 console.warn(timeoutError);
                             }
                         });

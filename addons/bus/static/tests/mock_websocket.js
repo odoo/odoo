@@ -70,9 +70,7 @@ let websocketWorker;
  */
 export function patchWebsocketWorkerWithCleanup(params = {}) {
     patchWithCleanup(window, {
-        WebSocket: function () {
-            return new WebSocketMock();
-        },
+        WebSocket: WebSocketMock,
     });
     patchWithCleanup(websocketWorker || WebsocketWorker.prototype, params);
     websocketWorker = websocketWorker || new WebsocketWorker();

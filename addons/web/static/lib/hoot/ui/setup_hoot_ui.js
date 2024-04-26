@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { mount, reactive, whenReady } from "@odoo/owl";
+import { getRunner } from "../main_runner";
 import { patchWindow } from "../mock/window";
 import { generateStyleSheets, setColorRoot } from "./hoot_colors";
 import { HootMain } from "./hoot_main";
@@ -82,10 +83,7 @@ customElements.define("hoot-container", HootContainer);
 // Exports
 //-----------------------------------------------------------------------------
 
-/**
- * @param {import("../core/runner").TestRunner} runner
- */
-export function setupHootUI(runner) {
+export function setupHootUI() {
     // - Patch window before code from other modules is executed
     patchWindow();
 
@@ -101,7 +99,7 @@ export function setupHootUI(runner) {
             warnIfNoStaticProps: true,
             // TODO >>>
             env: {
-                runner,
+                runner: getRunner(),
                 ui: makeUiState(),
             },
             name: "HOOT",

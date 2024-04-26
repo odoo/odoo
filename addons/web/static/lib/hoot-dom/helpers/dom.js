@@ -79,7 +79,6 @@ const {
     Boolean,
     cancelAnimationFrame,
     clearTimeout,
-    console: { warn: $warn },
     document,
     DOMParser,
     Map,
@@ -88,7 +87,6 @@ const {
     Number: { isInteger: $isInteger, isNaN: $isNaN, parseInt: $parseInt, parseFloat: $parseFloat },
     Object: { keys: $keys, values: $values },
     Promise,
-    Reflect: { ownKeys: $ownKeys },
     RegExp,
     requestAnimationFrame,
     Set,
@@ -748,7 +746,7 @@ const R_HORIZONTAL_WHITESPACE =
     /[\r\t\f \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+/g;
 
 // Following selector is based on this spec:
-// https://html.spec.whatwg.org/multipage/interaction.html#dom-tabindex
+// https://html.spec.whatwg.org/multipage/interaction.html_dom-tabindex
 const FOCUSABLE_SELECTOR = [
     "a[href]",
     "area[href]",
@@ -923,7 +921,7 @@ export function cleanupDOM() {
     // Observers
     const remainingObservers = observers.size;
     if (remainingObservers) {
-        $warn(`${remainingObservers} observers still running`);
+        console.warn(`${remainingObservers} observers still running`);
         for (const { observer } of observers.values()) {
             observer.disconnect();
         }
@@ -1583,7 +1581,7 @@ export function parsePosition(position) {
  * @example
  *  // regular selectors
  *  queryAll`window`; // -> []
- *  queryAll`input#name`; // -> [input]
+ *  queryAll`input_name`; // -> [input]
  *  queryAll`div`; // -> [div, div, ...]
  *  queryAll`ul > li`; // -> [li, li, ...]
  * @example
@@ -1592,7 +1590,7 @@ export function parsePosition(position) {
  *  queryAll`div:visible:contains(${/^L\w+\si.*m$/})`; // -> [div, div, ...]
  *  queryAll`:focusable`; // -> [a, button, input, ...]
  *  queryAll`.o_iframe:iframe p`; // -> [p, p, ...] (inside iframe)
- *  queryAll`#editor:shadow div`; // -> [div, div, ...] (inside shadow DOM)
+ *  queryAll`_editor:shadow div`; // -> [div, div, ...] (inside shadow DOM)
  * @example
  *  // with options
  *  queryAll(`div:first`, { exact: 1 }); // -> [div]
@@ -1970,45 +1968,4 @@ export async function waitUntil(predicate, options) {
         cancelAnimationFrame(handle);
         clearTimeout(timeoutId);
     });
-}
-
-/**
- * Returns a function checking that the given target does not contain any unexpected
- * key. The list of accepted keys is the initial list of keys of the target, along
- * with an optional `whiteList` argument.
- *
- * @template T
- * @param {T} target
- * @param {string[]} [whiteList]
- * @example
- *  afterEach(watchKeys(window, ["odoo"]));
- */
-export function watchKeys(target, whiteList) {
-    const acceptedKeys = new Set([...$ownKeys(target), ...(whiteList || [])]);
-
-    /**
-     * @param {{ cleanup?: boolean }} [options]
-     */
-    return function checkKeys(options) {
-        if (!isInDOM(target)) {
-            return;
-        }
-        const keysDiff = $ownKeys(target).filter(
-            (key) => $isNaN($parseFloat(key)) && !acceptedKeys.has(key)
-        );
-        if (keysDiff.length) {
-            if (options?.cleanup) {
-                for (const key of keysDiff) {
-                    delete target[key];
-                }
-            } else {
-                $warn(
-                    `${target.constructor.name} has`,
-                    keysDiff.length,
-                    `unexpected keys:`,
-                    keysDiff
-                );
-            }
-        }
-    };
 }

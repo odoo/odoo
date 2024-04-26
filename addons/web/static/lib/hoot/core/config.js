@@ -75,7 +75,7 @@ export const CONFIG_SCHEMA = {
     },
     /**
      * Same as the {@link FILTER_SCHEMA.test} filter, while also putting the test
-     * runner in "debug" mode. See {@link TestRunner.debug} for more info.
+     * runner in "debug" mode. See {@link Runner.debug} for more info.
      * @default false
      */
     debugTest: {
@@ -184,15 +184,6 @@ export const CONFIG_SCHEMA = {
     timeout: {
         default: 5_000,
         parse: parseNumber(5_000),
-    },
-    /**
-     * Monitors keys added on global objects if truthy. The value is a comma-separated
-     * list of white-listed keys. If left empty, no monitoring will be performed.
-     * @default ""
-     */
-    watchkeys: {
-        default: "",
-        parse: parseString(""),
     },
 };
 

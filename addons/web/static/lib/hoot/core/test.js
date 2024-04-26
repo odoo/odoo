@@ -1,5 +1,4 @@
 /** @odoo-module */
-/* eslint-disable no-restricted-syntax */
 
 import { reactive } from "@odoo/owl";
 import { HootError } from "../hoot_utils";

@@ -1,6 +1,7 @@
 import { busModels } from "@bus/../tests/bus_test_helpers";
 import { mailGlobal } from "@mail/utils/common/misc";
 import { after, before, getFixture } from "@odoo/hoot";
+import { resize } from "@odoo/hoot-dom";
 import { getMockEnv, restoreRegistry } from "@web/../tests/_framework/env_test_helpers";
 import { parseViewProps } from "@web/../tests/_framework/view_test_helpers";
 import {
@@ -24,6 +25,7 @@ import { WebClient } from "@web/webclient/webclient";
 import { DISCUSS_ACTION_ID } from "./mock_server/mail_mock_server";
 import { Base } from "./mock_server/mock_models/base";
 import { DEFAULT_MAIL_VIEW_ID } from "./mock_server/mock_models/constants";
+
 import { DiscussChannel } from "./mock_server/mock_models/discuss_channel";
 import { DiscussChannelMember } from "./mock_server/mock_models/discuss_channel_member";
 import { DiscussChannelRtcSession } from "./mock_server/mock_models/discuss_channel_rtc_session";
@@ -53,6 +55,7 @@ import { ResPartner } from "./mock_server/mock_models/res_partner";
 import { ResUsers } from "./mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
+
 export { SIZES } from "@web/core/ui/ui_service";
 export * from "./mail_test_helpers_contains";
 
@@ -340,10 +343,7 @@ export function patchUiSize({ height, size, width }) {
     size = size === undefined ? getSizeFromWidth(width) : size;
     width = width || getWidthFromSize(size);
 
-    patchWithCleanup(browser, {
-        innerWidth: width,
-        innerHeight: height || browser.innerHeight,
-    });
+    resize({ width, height });
     patchWithCleanup(uiUtils, {
         getSize() {
             return size;

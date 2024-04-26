@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { whenReady } from "@odoo/owl";
-import { getCurrentDimensions, isInDOM, mockedMatchMedia } from "@web/../lib/hoot-dom/helpers/dom";
-import { MockMath } from "./math";
+import { EventBus, whenReady } from "@odoo/owl";
+import { getCurrentDimensions, mockedMatchMedia } from "@web/../lib/hoot-dom/helpers/dom";
+import { getRunner } from "../main_runner";
 import { mockNavigator } from "./navigator";
 import {
     MockBroadcastChannel,
@@ -34,12 +34,16 @@ import {
 //-----------------------------------------------------------------------------
 
 const {
-    console,
     document,
+    Document,
+    HTMLBodyElement,
+    HTMLHeadElement,
+    HTMLHtmlElement,
     innerHeight,
     innerWidth,
+    MessagePort,
+    Number: { isNaN: $isNaN, parseFloat: $parseFloat },
     Object: {
-        assign: $assign,
         defineProperty: $defineProperty,
         entries: $entries,
         getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
@@ -49,7 +53,11 @@ const {
     ontouchstart,
     outerHeight,
     outerWidth,
-    window,
+    Reflect: { ownKeys: $ownKeys },
+    Set,
+    SharedWorker,
+    Window,
+    Worker,
 } = globalThis;
 
 //-----------------------------------------------------------------------------
@@ -76,30 +84,6 @@ const applyPropertyDescriptors = (target, descriptors) => {
         $defineProperty(owner, property, descriptor);
     }
 };
-
-const cleanupListeners = () => {
-    for (const [target, listeners] of listenerMap) {
-        if (!isInDOM(target)) {
-            continue;
-        }
-        for (const [type, callbacks] of $entries(listeners)) {
-            for (const callback of callbacks) {
-                target.removeEventListener(type, callback, optionsMap.get(callback));
-            }
-        }
-    }
-};
-
-/**
- * @param  {...EventTarget} additionalTargets
- */
-const getMainDomTargets = (...additionalTargets) => [
-    document,
-    document.documentElement,
-    document.head,
-    document.body,
-    ...additionalTargets,
-];
 
 /**
  * @template T
@@ -131,81 +115,29 @@ const findPropertyOwner = (object, property) => {
     return object;
 };
 
-/**
- * @param {EventTarget} target
- */
-const mockEventListeners = (target) => {
-    const { addEventListener, removeEventListener } = target;
-
-    /** @type {addEventListener} */
-    const mockedAddEventListener = (type, callback, options) => {
-        const listeners = listenerMap.get(target);
-        if (callback && listeners && !R_OWL_SYNTHETIC_LISTENER.test(String(callback))) {
-            if (options?.once) {
-                const originalCallback = callback;
-                callback = (...args) => {
-                    unregisterListener(listeners, type, callback);
-                    return originalCallback(...args);
-                };
-            }
-            registerListener(listeners, type, callback, options);
-        }
-        return addEventListener.call(target, type, callback, options);
-    };
-
-    /** @type {removeEventListener} */
-    const mockedRemoveEventListener = (type, callback, options) => {
-        const listeners = listenerMap.get(target);
-        if (callback && listeners) {
-            unregisterListener(listeners, type, callback);
-        }
-        return removeEventListener.call(target, type, callback, options);
-    };
-
-    target.addEventListener = mockedAddEventListener;
-    target.removeEventListener = mockedRemoveEventListener;
-};
-
-/**
- * @param {EventTarget} target
- * @param {string} type
- * @param {EventListener} callback
- * @param {AddEventListenerOptions} options
- */
-const registerListener = (listeners, type, callback, options) => {
-    if (!listeners[type]) {
-        listeners[type] = new Set();
-    }
-    listeners[type].add(callback);
-    optionsMap.set(callback, options);
-};
-
-/**
- * @param {EventTarget} target
- * @param {string} type
- * @param {EventListener} callback
- */
-const unregisterListener = (listeners, type, callback) => {
-    if (!listeners[type]) {
-        return;
-    }
-    listeners[type].delete(callback);
-    if (!listeners[type].size) {
-        delete listeners[type];
-    }
-};
-
-const R_OWL_SYNTHETIC_LISTENER = /\bnativeToSyntheticEvent\b/;
+const EVENT_TARGET_PROTOTYPES = new Map(
+    [
+        // Top level objects
+        Window,
+        Document,
+        // Permanent DOM elements
+        HTMLBodyElement,
+        HTMLHeadElement,
+        HTMLHtmlElement,
+        // Workers
+        MessagePort,
+        SharedWorker,
+        Worker,
+        // Others
+        EventBus,
+    ].map((cls) => [cls.prototype, cls.prototype.addEventListener])
+);
 
 /** @type {{ descriptor: PropertyDescriptor; owner: any; property: string; target: any }[]} */
 const originalDescriptors = [];
-/** @type {Map<EventTarget, Record<string, Set<EventListener>>} */
-const listenerMap = new Map();
-const optionsMap = new WeakMap();
 
 const mockLocalStorage = new MockStorage();
 const mockSessionStorage = new MockStorage();
-const originalConsole = { ...console };
 let mockTitle = "";
 
 // Mock descriptors
@@ -219,6 +151,7 @@ const DOCUMENT_MOCK_DESCRIPTORS = {
         set: (value) => (mockTitle = value),
     },
 };
+const R_OWL_SYNTHETIC_LISTENER = /\bnativeToSyntheticEvent\b/;
 const WINDOW_MOCK_DESCRIPTORS = {
     BroadcastChannel: { value: MockBroadcastChannel },
     cancelAnimationFrame: { value: mockedCancelAnimationFrame, writable: false },
@@ -231,7 +164,6 @@ const WINDOW_MOCK_DESCRIPTORS = {
     innerWidth: { get: () => getCurrentDimensions().width || innerWidth },
     localStorage: { value: mockLocalStorage, writable: false },
     matchMedia: { value: mockedMatchMedia },
-    Math: { value: MockMath },
     navigator: { value: mockNavigator },
     Notification: { value: MockNotification },
     outerHeight: { get: () => getCurrentDimensions().height || outerHeight },
@@ -261,14 +193,8 @@ export function cleanupWindow() {
     // Title
     mockTitle = "";
 
-    // Console
-    $assign(console, originalConsole);
-
     // Touch
     globalThis.ontouchstart = ontouchstart;
-
-    // Listeners
-    cleanupListeners();
 }
 
 export function getTitle() {
@@ -296,12 +222,8 @@ export function mockTouch(setTouch) {
  */
 export function patchWindow({ document, window } = globalThis) {
     applyPropertyDescriptors(window, WINDOW_MOCK_DESCRIPTORS);
-    mockEventListeners(window);
     whenReady(() => {
         applyPropertyDescriptors(document, DOCUMENT_MOCK_DESCRIPTORS);
-        for (const target of getMainDomTargets()) {
-            mockEventListeners(target);
-        }
     });
 }
 
@@ -317,35 +239,63 @@ export function setTitle(value) {
     }
 }
 
-/**
- * TODO: is this useful?
- */
-export function unpatchWindow() {
-    for (const { descriptor, owner, property } of originalDescriptors) {
-        $defineProperty(owner, property, descriptor);
+export function watchListeners() {
+    const remaining = [];
+
+    for (const [proto, addEventListener] of EVENT_TARGET_PROTOTYPES) {
+        proto.addEventListener = function mockedAddEventListener(...args) {
+            const runner = getRunner();
+            if (runner.dry) {
+                // Ignore listeners during dry run
+                return;
+            }
+            if (runner.suiteStack.length && !R_OWL_SYNTHETIC_LISTENER.test(String(args[1]))) {
+                // Do not cleanup:
+                // - listeners outside of suites
+                // - Owl synthetic listeners
+                remaining.push([this, args]);
+                runner.after(() => this.removeEventListener(...args));
+            }
+            return addEventListener.call(this, ...args);
+        };
     }
-    originalDescriptors.length = 0;
+
+    return function unwatchAllListeners() {
+        for (const [target, args] of remaining) {
+            target.removeEventListener(...args);
+        }
+
+        for (const [proto, addEventListener] of EVENT_TARGET_PROTOTYPES) {
+            proto.addEventListener = addEventListener;
+        }
+    };
 }
 
 /**
- * Returns a function checking that no listeners are left on the given target, and
- * optionally removing them.
+ * Returns a function checking that the given target does not contain any unexpected
+ * key. The list of accepted keys is the initial list of keys of the target, along
+ * with an optional `whiteList` argument.
  *
- * @param {EventTarget[]} targets
+ * @template T
+ * @param {T} target
+ * @param {string[]} [whiteList]
+ * @example
+ *  afterEach(watchKeys(window, ["odoo"]));
  */
-export function watchListeners(targets) {
-    for (const target of targets || getMainDomTargets(window)) {
-        listenerMap.set(target, {});
-    }
+export function watchKeys(target, whiteList) {
+    const acceptedKeys = new Set([...$ownKeys(target), ...(whiteList || [])]);
 
-    /**
-     * @param {{ cleanup?: boolean }} [options]
-     */
-    return function unwatchListeners(options) {
-        if (options?.cleanup) {
-            cleanupListeners();
+    return function checkKeys() {
+        const keysDiff = $ownKeys(target).filter(
+            (key) => $isNaN($parseFloat(key)) && !acceptedKeys.has(key)
+        );
+        for (const key of keysDiff) {
+            const descriptor = $getOwnPropertyDescriptor(target, key);
+            if (descriptor.configurable) {
+                delete target[key];
+            } else if (descriptor.writable) {
+                target[key] = undefined;
+            }
         }
-
-        listenerMap.clear();
     };
 }

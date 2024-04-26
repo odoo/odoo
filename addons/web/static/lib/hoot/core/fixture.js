@@ -51,7 +51,19 @@ customElements.define("hoot-fixture", class HootFixture extends HTMLElement {});
 //-----------------------------------------------------------------------------
 
 /**
- * @param {import("./runner").TestRunner} runner
+ * @param {App | Component} target
+ */
+export function destroy(target) {
+    const app = target instanceof App ? target : target.__owl__.app;
+    if (destroyed.has(app)) {
+        return;
+    }
+    destroyed.add(app);
+    app.destroy();
+}
+
+/**
+ * @param {import("./runner").Runner} runner
  */
 export function makeFixtureManager(runner) {
     const cleanupFixture = () => {
@@ -62,18 +74,6 @@ export function makeFixtureManager(runner) {
         shouldPrepareNextFixture = true;
         fixture.remove();
         fixture = null;
-    };
-
-    /**
-     * @param {App | Component} target
-     */
-    const destroy = (target) => {
-        const app = target instanceof App ? target : target.__owl__.app;
-        if (destroyed.has(app)) {
-            return;
-        }
-        destroyed.add(app);
-        app.destroy();
     };
 
     const getFixture = () => {
@@ -161,6 +161,5 @@ export function makeFixtureManager(runner) {
         setup: setupFixture,
         get: getFixture,
         mount: mountOnFixture,
-        destroy,
     };
 }

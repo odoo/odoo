@@ -75,7 +75,7 @@ export class HootButtons extends Component {
         this.runnerState = useState(runner.state);
         this.disableTimeout = 0;
 
-        runner.__afterPostTest(({ id, status }) => {
+        runner.afterPostTest(({ id, status }) => {
             if (status === Test.FAILED) {
                 this.state.failed.push(id);
             }

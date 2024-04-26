@@ -1,7 +1,41 @@
 import { browser } from "./browser/browser";
 import { registry } from "./registry";
 import { session } from "@web/session";
-import { Component, xml, onWillStart } from "@odoo/owl";
+import { Component, xml, onWillStart, whenReady } from "@odoo/owl";
+
+const computeCacheMap = () => {
+    for (const script of document.head.querySelectorAll("script[src]")) {
+        cacheMap.set(script.src, Promise.resolve(true));
+    }
+    for (const link of document.head.querySelectorAll("link[rel=stylesheet][href]")) {
+        cacheMap.set(link.href, Promise.resolve(true));
+    }
+};
+
+/**
+ * @param {HTMLLinkElement | HTMLScriptElement} el
+ * @param {(event: Event) => any} onLoad
+ * @param {(error: Error) => any} onError
+ */
+const onLoadAndError = (el, onLoad, onError) => {
+    const onLoadListener = (event) => {
+        removeListeners();
+        onLoad(event);
+    };
+
+    const onErrorListener = (error) => {
+        removeListeners();
+        onError(error);
+    };
+
+    const removeListeners = () => {
+        el.removeEventListener("load", onLoadListener);
+        el.removeEventListener("error", onErrorListener);
+    };
+
+    el.addEventListener("load", onLoadListener);
+    el.addEventListener("error", onErrorListener);
+};
 
 /**
  * This export is done only in order to modify the behavior of the exported
@@ -17,6 +51,8 @@ export const assets = {
 };
 
 const cacheMap = new Map();
+
+whenReady(computeCacheMap);
 
 class AssetsLoadingError extends Error {}
 
@@ -34,11 +70,10 @@ assets.loadJS = async function loadJS(url) {
     scriptEl.type = url.includes("web/static/lib/pdfjs/") ? "module" : "text/javascript";
     scriptEl.src = url;
     const promise = new Promise((resolve, reject) => {
-        scriptEl.onload = () => resolve(true);
-        scriptEl.onerror = () => {
+        onLoadAndError(scriptEl, resolve, () => {
             cacheMap.delete(url);
             reject(new AssetsLoadingError(`The loading of ${url} failed`));
-        };
+        });
     });
     cacheMap.set(url, promise);
     document.head.appendChild(scriptEl);
@@ -59,13 +94,13 @@ assets.loadCSS = async function loadCSS(url, retryCount = 0) {
     linkEl.type = "text/css";
     linkEl.rel = "stylesheet";
     linkEl.href = url;
-    const promise = new Promise((resolve, _reject) => {
-        const reject = (...args) => {
+    const promise = new Promise((resolve, reject) => {
+        const onError = (...args) => {
             cacheMap.delete(url);
-            return _reject(...args);
+            return reject(...args);
         };
-        linkEl.onload = () => resolve(true);
-        linkEl.onerror = async () => {
+
+        onLoadAndError(linkEl, resolve, async () => {
             cacheMap.delete(url);
             if (retryCount < assets.retries.count) {
                 await new Promise((resolve) =>
@@ -77,11 +112,11 @@ assets.loadCSS = async function loadCSS(url, retryCount = 0) {
                 linkEl.remove();
                 loadCSS(url, retryCount + 1)
                     .then(resolve)
-                    .catch(reject);
+                    .catch(onError);
             } else {
-                reject(new AssetsLoadingError(`The loading of ${url} failed`));
+                onError(new AssetsLoadingError(`The loading of ${url} failed`));
             }
-        };
+        });
     });
     cacheMap.set(url, promise);
     document.head.appendChild(linkEl);

@@ -1,10 +1,10 @@
 /** @odoo-module alias=@web/../tests/utils default=false */
 
-import { isVisible } from "@web/core/utils/ui";
-import { Deferred, tick } from "@odoo/hoot-mock";
-import { __debug__, after, afterAll, beforeAll, expect, getFixture } from "@odoo/hoot";
-import { isMacOS } from "@web/core/browser/feature_detection";
+import { __debug__, after, afterEach, expect, getFixture } from "@odoo/hoot";
 import { queryAll, queryFirst } from "@odoo/hoot-dom";
+import { Deferred, tick } from "@odoo/hoot-mock";
+import { isMacOS } from "@web/core/browser/feature_detection";
+import { isVisible } from "@web/core/utils/ui";
 
 /** @param {EventInit} [args] */
 const mapBubblingEvent = (args) => ({ ...args, bubbles: true });
@@ -504,7 +504,6 @@ function log(ok, message) {
 }
 
 let hasUsedContainsPositively = false;
-beforeAll(() => (hasUsedContainsPositively = false));
 /**
  * @typedef {[string, ContainsOptions]} ContainsTuple tuple representing params of the contains
  *  function, where the first element is the selector, and the second element is the options param.
@@ -594,6 +593,7 @@ class Contains {
         if (this.options.contains && !Array.isArray(this.options.contains[0])) {
             this.options.contains = [this.options.contains];
         }
+        after(() => (hasUsedContainsPositively = false));
         if (this.options.count) {
             hasUsedContainsPositively = true;
         } else if (!hasUsedContainsPositively) {
@@ -987,7 +987,7 @@ const stepState = {
     },
 };
 
-afterAll(() => {
+afterEach(() => {
     if (stepState.expectedSteps) {
         stepState.check({ crashOnFail: true });
     } else {

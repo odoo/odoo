@@ -11,13 +11,11 @@ const {
     console: {
         debug: $debug,
         dir: $dir,
-        error: $error,
         groupCollapsed: $groupCollapsed,
         groupEnd: $groupEnd,
         log: $log,
         table: $table,
         trace: $trace,
-        warn: $warn,
     },
 } = globalThis;
 
@@ -107,7 +105,6 @@ export const logLevels = {
 };
 
 export const logger = {
-    ignoreErrors: false,
     level: urlParams.loglevel ?? logLevels.RUNNER,
 
     // Standard console methods
@@ -116,10 +113,13 @@ export const logger = {
      * @param {...any} args
      */
     error(...args) {
-        if (logger.ignoreErrors) {
-            return;
-        }
-        $error(...styledArguments(args));
+        console.error(...styledArguments(args));
+    },
+    /**
+     * @param {...any} args
+     */
+    debug(...args) {
+        $debug(...styledArguments(args));
     },
     /**
      * @param {...any} args
@@ -140,10 +140,7 @@ export const logger = {
      * @param {...any} args
      */
     warn(...args) {
-        if (logger.ignoreErrors) {
-            return;
-        }
-        $warn(...styledArguments(args));
+        console.warn(...styledArguments(args));
     },
 
     // Level-specific methods

@@ -1082,8 +1082,8 @@ class ChromeBrowser:
             '--user-data-dir': user_data_dir,
             '--window-size': window_size,
             '--no-first-run': '',
-            # '--enable-precise-memory-info': '', # uncomment to debug memory leaks in qunit suite
-            # '--js-flags': '--expose-gc', # uncomment to debug memory leaks in qunit suite
+            '--enable-precise-memory-info': '', # uncomment to debug memory leaks in qunit suite
+            '--js-flags': '--expose-gc', # uncomment to debug memory leaks in qunit suite
         }
         if headless:
             switches.update(headless_switches)

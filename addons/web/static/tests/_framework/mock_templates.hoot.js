@@ -1,3 +1,7 @@
+// ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
+
+import { after } from "@odoo/hoot";
+
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
@@ -60,6 +64,7 @@ export function makeTemplateFactory(name, module) {
                 const exports = factory(...args);
 
                 exports.registerTemplateProcessor(replaceAttributes);
+                after(exports.clearProcessedTemplates);
 
                 return exports;
             };

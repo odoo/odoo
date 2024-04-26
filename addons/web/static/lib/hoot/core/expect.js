@@ -1,5 +1,4 @@
 /** @odoo-module */
-/* eslint-disable no-restricted-syntax */
 
 import {
     formatXml,
@@ -21,6 +20,7 @@ import { isFirefox, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
     HootError,
     Markup,
+    deepCopy,
     deepEqual,
     ensureArguments,
     ensureArray,
@@ -107,7 +107,7 @@ const $now = performance.now.bind(performance);
 
 /**
  * @param {Test} test
- * @param {AfterTestOptions} options
+ * @param {AfterTestOptions} [options]
  */
 const afterTest = (test, options) => {
     currentResult.duration = $now() - currentResult.ts;
@@ -142,7 +142,7 @@ const afterTest = (test, options) => {
                 label: "step",
                 message: `unverified steps`,
                 pass: false,
-                info: [[Markup.red("Steps:"), Markup.diff([], currentResult.steps)]],
+                info: [[Markup.red("Steps:"), Markup.diff([], deepCopy(currentResult.steps))]],
             })
         );
     }
@@ -544,10 +544,10 @@ export class Assertion {
  */
 export class Matchers {
     /** @type {R} */
-    #received = null;
-    #headless = false;
+    _received = null;
+    _headless = false;
     /** @type {Modifiers<Async>} */
-    #modifiers = {
+    _modifiers = {
         not: false,
         rejects: false,
         resolves: false,
@@ -559,9 +559,9 @@ export class Matchers {
      * @param {boolean} headless
      */
     constructor(received, modifiers, headless) {
-        this.#received = received;
-        this.#headless = headless;
-        this.#modifiers = modifiers;
+        this._received = received;
+        this._headless = headless;
+        this._modifiers = modifiers;
 
         unconsumedMatchers.add(this);
     }
@@ -581,11 +581,11 @@ export class Matchers {
      *  expect("foo").not.toBe("bar");
      */
     get not() {
-        if (this.#modifiers.not) {
+        if (this._modifiers.not) {
             throw matcherModifierError("not", `matcher is already negated`);
         }
         unconsumedMatchers.delete(this);
-        return new Matchers(this.#received, { ...this.#modifiers, not: true }, this.#headless);
+        return new Matchers(this._received, { ...this._modifiers, not: true }, this._headless);
     }
 
     /**
@@ -598,14 +598,14 @@ export class Matchers {
      *  await expect(Promise.reject("foo")).rejects.toBe("foo");
      */
     get rejects() {
-        if (this.#modifiers.rejects || this.#modifiers.resolves) {
+        if (this._modifiers.rejects || this._modifiers.resolves) {
             throw matcherModifierError(
                 "rejects",
                 `matcher value has already been wrapped in a promise resolver`
             );
         }
         unconsumedMatchers.delete(this);
-        return new Matchers(this.#received, { ...this.#modifiers, rejects: true }, this.#headless);
+        return new Matchers(this._received, { ...this._modifiers, rejects: true }, this._headless);
     }
 
     /**
@@ -618,14 +618,14 @@ export class Matchers {
      *  await expect(Promise.resolve("foo")).resolves.toBe("foo");
      */
     get resolves() {
-        if (this.#modifiers.rejects || this.#modifiers.resolves) {
+        if (this._modifiers.rejects || this._modifiers.resolves) {
             throw matcherModifierError(
                 "resolves",
                 `matcher value has already been wrapped in a promise resolver`
             );
         }
         unconsumedMatchers.delete(this);
-        return new Matchers(this.#received, { ...this.#modifiers, resolves: true }, this.#headless);
+        return new Matchers(this._received, { ...this._modifiers, resolves: true }, this._headless);
     }
 
     //-------------------------------------------------------------------------
@@ -643,14 +643,14 @@ export class Matchers {
      *  expect({ foo: 1 }).not.toBe({ foo: 1 });
      */
     toBe(expected, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [expected, "any"],
             [options, ["object", null]],
         ]);
 
-        return this.#resolve({
+        return this._resolve({
             name: "toBe",
             acceptedType: "any",
             predicate: (actual) => strictEqual(actual, expected),
@@ -688,11 +688,11 @@ export class Matchers {
      *  expect(queryOne("input")).toBeEmpty();
      */
     toBeEmpty(options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([[options, ["object", null]]]);
 
-        return this.#resolve({
+        return this._resolve({
             name: "toBeEmpty",
             acceptedType: ["any"],
             predicate: isEmpty,
@@ -714,14 +714,14 @@ export class Matchers {
      *  expect(4 + 2).toBeGreaterThan(5);
      */
     toBeGreaterThan(min, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [min, "number"],
             [options, ["object", null]],
         ]);
 
-        return this.#resolve({
+        return this._resolve({
             name: "toBeGreaterThan",
             acceptedType: "number",
             predicate: (actual) => min < actual,
@@ -748,14 +748,14 @@ export class Matchers {
      *  expect(document.createElement("div")).toBeInstanceOf(HTMLElement);
      */
     toBeInstanceOf(cls, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [cls, "function"],
             [options, ["object", null]],
         ]);
 
-        return this.#resolve({
+        return this._resolve({
             name: "toBeInstanceOf",
             acceptedType: "any",
             predicate: (actual) => actual instanceof cls,
@@ -782,14 +782,14 @@ export class Matchers {
      *  expect(8 - 6).toBeLessThan(3);
      */
     toBeLessThan(max, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [max, "number"],
             [options, ["object", null]],
         ]);
 
-        return this.#resolve({
+        return this._resolve({
             name: "toBeLessThan",
             acceptedType: "number",
             predicate: (actual) => actual < max,
@@ -816,14 +816,14 @@ export class Matchers {
      *  expect({ foo: 1 }).toBeOfType("object");
      */
     toBeOfType(type, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [type, "string"],
             [options, ["object", null]],
         ]);
 
-        return this.#resolve({
+        return this._resolve({
             name: "toBeOfType",
             acceptedType: "any",
             predicate: (actual) => isOfType(actual, type),
@@ -854,7 +854,7 @@ export class Matchers {
      *  expect(100).not.toBeWithin(50, 100);
      */
     toBeWithin(min, max, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [min, "number"],
@@ -869,7 +869,7 @@ export class Matchers {
             throw new HootError(`min and max cannot be equal (did you mean to use \`toBe()\`?)`);
         }
 
-        return this.#resolve({
+        return this._resolve({
             name: "toBeWithin",
             acceptedType: "number",
             predicate: (actual) => min <= actual && actual < max,
@@ -898,14 +898,14 @@ export class Matchers {
      *  expect({ foo: 1 }).toEqual({ foo: 1 });
      */
     toEqual(expected, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [expected, "any"],
             [options, ["object", null]],
         ]);
 
-        return this.#resolve({
+        return this._resolve({
             name: "toEqual",
             acceptedType: "any",
             predicate: (actual) => {
@@ -952,14 +952,14 @@ export class Matchers {
      *  expect(new Set([1, 2])).toHaveLength(2);
      */
     toHaveLength(length, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [length, "integer"],
             [options, ["object", null]],
         ]);
 
-        return this.#resolve({
+        return this._resolve({
             name: "toHaveLength",
             acceptedType: ["string", "array", "object"],
             predicate: (actual) => getLength(actual) === length,
@@ -996,14 +996,14 @@ export class Matchers {
      *  expect(new Set([{ foo: 1 }, { bar: 2 }])).toInclude({ bar: 2 });
      */
     toInclude(item, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [item, "any"],
             [options, ["object", null]],
         ]);
 
-        return this.#resolve({
+        return this._resolve({
             name: "toInclude",
             acceptedType: ["string", "any[]", "object"],
             predicate: (actual) => includes(actual, item),
@@ -1030,14 +1030,14 @@ export class Matchers {
      *  expect("a foo value").toMatch(/fo.*ue/);
      */
     toMatch(matcher, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [matcher, "any"],
             [options, ["object", null]],
         ]);
 
-        return this.#resolve({
+        return this._resolve({
             name: "toMatch",
             acceptedType: "any",
             predicate: (actual) => match(actual, matcher),
@@ -1064,7 +1064,7 @@ export class Matchers {
      *  await expect(Promise.reject("foo")).rejects.toThrow("foo");
      */
     toThrow(matcher = Error, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [matcher, "any"],
@@ -1072,12 +1072,12 @@ export class Matchers {
         ]);
 
         let name;
-        return this.#resolve({
+        return this._resolve({
             name: "toThrow",
             acceptedType: ["function", "error"],
             transform: (received) => {
                 name = received.name || "anonymous function";
-                const { rejects, resolves } = this.#modifiers;
+                const { rejects, resolves } = this._modifiers;
                 if (rejects || resolves) {
                     return received;
                 }
@@ -1092,7 +1092,7 @@ export class Matchers {
                 if (options?.message) {
                     return options.message;
                 }
-                const { rejects, resolves } = this.#modifiers;
+                const { rejects, resolves } = this._modifiers;
                 return pass
                     ? `${name} did[! not] ${
                           rejects || resolves ? "reject" : "throw"
@@ -1118,12 +1118,12 @@ export class Matchers {
      *  expect([/RPCError/, /Invalid domain AST/]).toVerifyErrors();
      */
     toVerifyErrors(options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([[options, ["object", null]]]);
 
         let receivedErrors;
-        return this.#resolve({
+        return this._resolve({
             name: "toVerifyErrors",
             acceptedType: ["string[]", "regex[]"],
             predicate: (expected) => {
@@ -1167,12 +1167,12 @@ export class Matchers {
      *  expect(["web_read_group", "web_search_read"]).toVerifySteps();
      */
     toVerifySteps(options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([[options, ["object", null]]]);
 
         let receivedSteps;
-        return this.#resolve({
+        return this._resolve({
             name: "toVerifySteps",
             acceptedType: "string[]",
             predicate: (actual) => {
@@ -1208,12 +1208,12 @@ export class Matchers {
      *  expect("input[type=checkbox]").toBeChecked();
      */
     toBeChecked(options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([[options, ["object", null]]]);
 
         const prop = options?.indeterminate ? "indeterminate" : "checked";
-        return this.#resolve({
+        return this._resolve({
             name: "toBeChecked",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
@@ -1239,11 +1239,11 @@ export class Matchers {
      *  expect(document.createElement("div")).not.toBeDisplayed();
      */
     toBeDisplayed(options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([[options, ["object", null]]]);
 
-        return this.#resolve({
+        return this._resolve({
             name: "toBeDisplayed",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
@@ -1282,11 +1282,11 @@ export class Matchers {
      *  expect("input[type=radio]").not.toBeEnabled();
      */
     toBeEnabled(options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([[options, ["object", null]]]);
 
-        return this.#resolve({
+        return this._resolve({
             name: "toBeEnabled",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
@@ -1306,11 +1306,11 @@ export class Matchers {
      * @param {ExpectOptions} [options]
      */
     toBeFocused(options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([[options, ["object", null]]]);
 
-        return this.#resolve({
+        return this._resolve({
             name: "toBeFocused",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
@@ -1338,11 +1338,11 @@ export class Matchers {
      *  expect("[style='opacity: 0']").not.toBeVisible();
      */
     toBeVisible(options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([[options, ["object", null]]]);
 
-        return this.#resolve({
+        return this._resolve({
             name: "toBeVisible",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
@@ -1387,7 +1387,7 @@ export class Matchers {
      *  expect("script").toHaveAttribute("src", "./index.js");
      */
     toHaveAttribute(attribute, value, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [attribute, ["string"]],
@@ -1396,7 +1396,7 @@ export class Matchers {
         ]);
 
         const expectsValue = !isNil(value);
-        return this.#resolve({
+        return this._resolve({
             name: "toHaveAttribute",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
@@ -1441,7 +1441,7 @@ export class Matchers {
      *  expect("body").toHaveClass(["o_webclient", "o_dark"]);
      */
     toHaveClass(className, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [className, ["string", "string[]"]],
@@ -1451,7 +1451,7 @@ export class Matchers {
         const rawClassNames = ensureArray(className);
         const classNames = rawClassNames.flatMap((cls) => cls.trim().split(/\s+/g));
 
-        return this.#resolve({
+        return this._resolve({
             name: "toHaveClass",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
@@ -1488,7 +1488,7 @@ export class Matchers {
      *  expect("ul > li").toHaveCount(4);
      */
     toHaveCount(amount, options) {
-        this.#saveStack();
+        this._saveStack();
 
         if (isNil(amount)) {
             amount = false;
@@ -1499,7 +1499,7 @@ export class Matchers {
             [options, ["object", null]],
         ]);
 
-        return this.#resolve({
+        return this._resolve({
             name: "toHaveCount",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
@@ -1532,9 +1532,9 @@ export class Matchers {
      *  `);
      */
     toHaveInnerHTML(expected, options) {
-        this.#saveStack();
+        this._saveStack();
 
-        return this.#toHaveHTML("innerHTML", expected, options);
+        return this._toHaveHTML("innerHTML", expected, options);
     }
 
     /**
@@ -1551,9 +1551,9 @@ export class Matchers {
      *  `);
      */
     toHaveOuterHTML(expected, options) {
-        this.#saveStack();
+        this._saveStack();
 
-        return this.#toHaveHTML("outerHTML", expected, options);
+        return this._toHaveHTML("outerHTML", expected, options);
     }
 
     /**
@@ -1569,7 +1569,7 @@ export class Matchers {
      *  expect("script").toHaveProperty("src", "./index.js");
      */
     toHaveProperty(property, value, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [property, ["string"]],
@@ -1579,7 +1579,7 @@ export class Matchers {
 
         const expectsValue = !isNil(value);
 
-        return this.#resolve({
+        return this._resolve({
             name: "toHaveAttribute",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
@@ -1632,7 +1632,7 @@ export class Matchers {
      *  expect("button").toHaveRect(".container");
      */
     toHaveRect(rect, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [rect, ["object", "string", "node", "node[]"]],
@@ -1647,7 +1647,7 @@ export class Matchers {
         }
 
         const entries = $entries(refRect);
-        return this.#resolve({
+        return this._resolve({
             name: "toHaveRect",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
@@ -1680,7 +1680,7 @@ export class Matchers {
      *  expect("p").toHaveStyle("text-align: center");
      */
     toHaveStyle(style, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [style, ["string", "object"]],
@@ -1688,7 +1688,7 @@ export class Matchers {
         ]);
 
         const styleDef = typeof style === "string" ? parseStyle(style) : style;
-        return this.#resolve({
+        return this._resolve({
             name: "toHaveStyle",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
@@ -1724,7 +1724,7 @@ export class Matchers {
      *  expect("header h1").toHaveText(/odoo/i);
      */
     toHaveText(text, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [text, ["string", "regex", null]],
@@ -1733,7 +1733,7 @@ export class Matchers {
 
         const texts = ensureArray(text);
         const expectsText = !isNil(text);
-        return this.#resolve({
+        return this._resolve({
             name: "toHaveText",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
@@ -1779,7 +1779,7 @@ export class Matchers {
      *  expect("select[multiple]").toHaveValue(["foo", "bar"]);
      */
     toHaveValue(value, options) {
-        this.#saveStack();
+        this._saveStack();
 
         ensureArguments([
             [value, ["string", "string[]", "number", "object[]", "regex", null]],
@@ -1788,7 +1788,7 @@ export class Matchers {
 
         const values = ensureArray(value);
         const expectsValue = !isNil(value);
-        return this.#resolve({
+        return this._resolve({
             name: "toHaveValue",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
@@ -1837,33 +1837,33 @@ export class Matchers {
      * @param {MatcherSpecifications<R, A>} specs
      * @returns {Async extends true ? Promise<void> : void}
      */
-    #resolve(specs) {
-        if (this.#modifiers.rejects || this.#modifiers.resolves) {
-            return Promise.resolve(this.#received).then(
+    _resolve(specs) {
+        if (this._modifiers.rejects || this._modifiers.resolves) {
+            return Promise.resolve(this._received).then(
                 /** @param {PromiseFulfilledResult<R>} reason */
                 (result) => {
-                    if (this.#modifiers.rejects) {
+                    if (this._modifiers.rejects) {
                         throw new HootError(
                             `expected promise to reject, instead resolved with: ${result}`
                         );
                     }
-                    this.#received = result;
-                    return this.#resolveFinalResult(specs);
+                    this._received = result;
+                    return this._resolveFinalResult(specs);
                 },
                 /** @param {PromiseRejectedResult} reason */
                 (reason) => {
-                    if (this.#modifiers.resolves) {
+                    if (this._modifiers.resolves) {
                         throw new HootError(
                             `expected promise to resolve, instead rejected with: ${reason}`,
                             { cause: reason }
                         );
                     }
-                    this.#received = reason;
-                    return this.#resolveFinalResult(specs);
+                    this._received = reason;
+                    return this._resolveFinalResult(specs);
                 }
             );
         } else {
-            return this.#resolveFinalResult(specs);
+            return this._resolveFinalResult(specs);
         }
     }
 
@@ -1871,8 +1871,8 @@ export class Matchers {
      * @param {MatcherSpecifications<R, A>} specs
      * @returns {void}
      */
-    #resolveFinalResult({ acceptedType, name, details, message, predicate, transform }) {
-        const received = this.#received;
+    _resolveFinalResult({ acceptedType, name, details, message, predicate, transform }) {
+        const received = this._received;
         const types = ensureArray(acceptedType);
         if (!types.some((type) => isOfType(received, type))) {
             const strTypes = types.map(formatHumanReadable);
@@ -1885,7 +1885,7 @@ export class Matchers {
         }
 
         const actual = transform ? transform(received) : received;
-        const { not } = this.#modifiers;
+        const { not } = this._modifiers;
         let pass = predicate(actual);
         if (not) {
             pass = !pass;
@@ -1894,21 +1894,21 @@ export class Matchers {
         const assertion = new Assertion({
             label: name,
             message: formatMessage(message(pass), { actual, not, received }),
-            modifiers: this.#modifiers,
+            modifiers: this._modifiers,
             pass,
         });
         if (!pass) {
             const formattedStack = formatStack(currentStack);
             const stackContent = Markup.text(formattedStack, { technical: true });
-            assertion.info = [...details(actual), [Markup.red("Source:"), stackContent]];
+            assertion.info = [...deepCopy(details(actual)), [Markup.red("Source:"), stackContent]];
         }
 
         registerAssertion(assertion);
     }
 
-    #saveStack() {
+    _saveStack() {
         unconsumedMatchers.delete(this);
-        if (!this.#headless) {
+        if (!this._headless) {
             currentStack = new Error().stack;
         }
     }
@@ -1918,7 +1918,7 @@ export class Matchers {
      * @param {string | RegExp} expected
      * @param {ExpectOptions & FormatXmlOptions} [options]
      */
-    #toHaveHTML(fname, expected, options) {
+    _toHaveHTML(fname, expected, options) {
         ensureArguments([
             [expected, ["string", "regex"]],
             [options, ["object", null]],
@@ -1928,7 +1928,7 @@ export class Matchers {
             expected = formatXml(expected, options);
         }
 
-        return this.#resolve({
+        return this._resolve({
             name: fname === "innerHTML" ? "toHaveInnerHTML" : "toHaveOuterHTML",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,

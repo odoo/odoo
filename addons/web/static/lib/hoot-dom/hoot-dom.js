@@ -49,7 +49,6 @@ export {
     waitFor,
     waitForNone,
     waitUntil,
-    watchKeys,
 } from "./helpers/dom";
 export {
     check,

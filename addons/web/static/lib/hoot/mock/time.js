@@ -1,5 +1,4 @@
 /** @odoo-module */
-/* eslint-disable no-restricted-syntax */
 
 import { isNil } from "../hoot_utils";
 
@@ -441,9 +440,9 @@ export async function tick() {
  */
 export class Deferred extends Promise {
     /** @type {typeof Promise.resolve<T>} */
-    #resolve;
+    _resolve;
     /** @type {typeof Promise.reject<T>} */
-    #reject;
+    _reject;
 
     /**
      * @param {(resolve: (value: T) => void, reject: (reason?: any) => void) => void} [executor]
@@ -457,22 +456,22 @@ export class Deferred extends Promise {
             return executor?.(resolve, reject);
         });
 
-        this.#resolve = _resolve;
-        this.#reject = _reject;
+        this._resolve = _resolve;
+        this._reject = _reject;
     }
 
     /**
      * @param {any} [reason]
      */
     reject(reason) {
-        return this.#reject(reason);
+        return this._reject(reason);
     }
 
     /**
      * @param {T} [value]
      */
     resolve(value) {
-        return this.#resolve(value);
+        return this._resolve(value);
     }
 }
 

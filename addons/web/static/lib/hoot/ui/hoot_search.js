@@ -27,7 +27,6 @@ import { HootTagButton } from "./hoot_tag_button";
 
 const {
     Boolean,
-    console: { warn: $warn },
     localStorage,
     Object: { entries: $entries, keys: $keys, values: $values },
 } = globalThis;
@@ -343,11 +342,11 @@ export class HootSearch extends Component {
     setup() {
         const { runner } = this.env;
 
-        runner.__beforeAll(() => {
+        runner.beforeAll(() => {
             this.state.categories = this.findSuggestions();
             this.state.empty &&= !this.hasFilters();
         });
-        runner.__afterAll(() => this.focusSearchInput());
+        runner.afterAll(() => this.focusSearchInput());
 
         this.rootRef = useRef("root");
         this.searchInputRef = useRef("search-input");
@@ -752,7 +751,7 @@ export class HootSearch extends Component {
                 }
             }
             this.__owl__.app.root.render(true);
-            $warn("Secret sequence activated: all tests pass!");
+            console.warn("Secret sequence activated: all tests pass!");
         }
     }
 }

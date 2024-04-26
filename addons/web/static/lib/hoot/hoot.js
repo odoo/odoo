@@ -1,12 +1,14 @@
 /** @odoo-module alias=@odoo/hoot default=false */
 
 import { logger } from "./core/logger";
-import { TestRunner } from "./core/runner";
+import { Runner } from "./core/runner";
+import { makeRuntimeHook } from "./hoot_utils";
+import { setRunner } from "./main_runner";
 import { setupHootUI } from "./ui/setup_hoot_ui";
 
 /**
  * @typedef {{
- *  runner: TestRunner;
+ *  runner: typeof runner;
  *  ui: import("./ui/setup_hoot_ui").UiState
  * }} Environment
  */
@@ -15,8 +17,9 @@ import { setupHootUI } from "./ui/setup_hoot_ui";
 // Internal
 //-----------------------------------------------------------------------------
 
-// - Instantiate the test runner
-const runner = new TestRunner();
+const runner = new Runner();
+
+setRunner(runner);
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -35,27 +38,26 @@ export const expect = runner.expect;
 export const test = runner.test;
 
 // Hooks
-export const after = runner.exportFn(runner.after);
-export const afterAll = runner.exportFn(runner.afterAll);
-export const afterEach = runner.exportFn(runner.afterEach);
-export const before = runner.exportFn(runner.before);
-export const beforeAll = runner.exportFn(runner.beforeAll);
-export const beforeEach = runner.exportFn(runner.beforeEach);
-export const onError = runner.exportFn(runner.onError);
+export const after = makeRuntimeHook("after");
+export const afterEach = makeRuntimeHook("afterEach");
+export const before = makeRuntimeHook("before");
+export const beforeEach = makeRuntimeHook("beforeEach");
+export const onError = makeRuntimeHook("onError");
 
 // Fixture
-export const destroy = runner.fixture.destroy;
 export const getFixture = runner.fixture.get;
 export const mountOnFixture = runner.fixture.mount;
 
 // Other functions
-export const createJobScopedGetter = runner.exportFn(runner.createJobScopedGetter);
 export const dryRun = runner.exportFn(runner.dryRun);
 export const getCurrent = runner.exportFn(runner.getCurrent);
 export const registerPreset = runner.exportFn(runner.registerPreset);
 export const start = runner.exportFn(runner.start);
+export const stop = runner.exportFn(runner.stop);
 
 export { makeExpect } from "./core/expect";
+export { destroy } from "./core/fixture";
+export { createJobScopedGetter } from "./hoot_utils";
 
 // Constants
 export const globals = {
@@ -117,4 +119,4 @@ export const __debug__ = runner;
 // Main
 //-----------------------------------------------------------------------------
 
-setupHootUI(runner);
+setupHootUI();
