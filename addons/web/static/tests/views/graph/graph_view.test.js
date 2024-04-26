@@ -159,6 +159,15 @@ function checkLabels(view, expectedLabels) {
  * @param {GraphView} view
  * @param {string | Iterable<string>} expectedLabels
  */
+function checkYTicks(view, expectedLabels) {
+    const labels = getChart(view).scales.y.ticks.map((l) => l.label);
+    expect(labels).toEqual(expectedLabels);
+}
+
+/**
+ * @param {GraphView} view
+ * @param {string | Iterable<string>} expectedLabels
+ */
 function checkLegend(view, expectedLabels) {
     const chart = getChart(view);
     const labels = chart.config.options.plugins.legend.labels
@@ -1048,6 +1057,32 @@ test("Check if values in tooltip are correctly sorted when groupBy filter are ap
         },
         1
     );
+});
+
+test("format total in hh:mm when measure is unit_amount", async () => {
+    Foo._fields.unit_amount = fields.Float({ string: "Unit Amount" });
+    Foo._records = [{ id: 1, unit_amount: 8 }];
+
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph>
+                <field name="unit_amount" type="measure" widget="float_time" />
+            </graph>
+        `,
+    });
+
+    const { measure, fieldAttrs } = getGraphModelMetaData(view);
+
+    expect(".o_graph_view").toHaveClass("o_view_controller");
+    expect("div.o_graph_canvas_container canvas").toHaveCount(1);
+    expect(measure).toBe("unit_amount", { message: `the measure should be "unit_amount"` });
+    checkLegend(view, "Unit Amount");
+    checkLabels(view, ["Total"]);
+    expect(fieldAttrs[measure].widget).toBe("float_time", { message: "should be a float_time widget" });
+    checkYTicks(view, ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00"]);
+    checkTooltip(view, { title: "Unit Amount", lines: [{ label: "Total", value: "08:00" }] }, 0);
 });
 
 test("Stacked button visible in the line chart", async () => {
