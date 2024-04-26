@@ -1,3 +1,5 @@
+// ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
+
 import { beforeEach } from "@odoo/hoot";
 import { on } from "@odoo/hoot-dom";
 import { mockLocation } from "@odoo/hoot-mock";

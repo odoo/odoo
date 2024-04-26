@@ -1,6 +1,12 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { press, queryAllTexts } from "@odoo/hoot-dom";
-import { Deferred, advanceFrame, advanceTime, animationFrame, mockUserAgent } from "@odoo/hoot-mock";
+import {
+    Deferred,
+    advanceFrame,
+    advanceTime,
+    animationFrame,
+    mockUserAgent,
+} from "@odoo/hoot-mock";
 import {
     contains,
     getService,

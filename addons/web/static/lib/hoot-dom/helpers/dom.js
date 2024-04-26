@@ -87,7 +87,6 @@ const {
     Number: { isInteger: $isInteger, isNaN: $isNaN, parseInt: $parseInt, parseFloat: $parseFloat },
     Object: { keys: $keys, values: $values },
     Promise,
-    Reflect: { ownKeys: $ownKeys },
     RegExp,
     requestAnimationFrame,
     Set,
@@ -1969,45 +1968,4 @@ export async function waitUntil(predicate, options) {
         cancelAnimationFrame(handle);
         clearTimeout(timeoutId);
     });
-}
-
-/**
- * Returns a function checking that the given target does not contain any unexpected
- * key. The list of accepted keys is the initial list of keys of the target, along
- * with an optional `whiteList` argument.
- *
- * @template T
- * @param {T} target
- * @param {string[]} [whiteList]
- * @example
- *  afterEach(watchKeys(window, ["odoo"]));
- */
-export function watchKeys(target, whiteList) {
-    const acceptedKeys = new Set([...$ownKeys(target), ...(whiteList || [])]);
-
-    /**
-     * @param {{ cleanup?: boolean }} [options]
-     */
-    return function checkKeys(options) {
-        if (!isInDOM(target)) {
-            return;
-        }
-        const keysDiff = $ownKeys(target).filter(
-            (key) => $isNaN($parseFloat(key)) && !acceptedKeys.has(key)
-        );
-        if (keysDiff.length) {
-            if (options?.cleanup) {
-                for (const key of keysDiff) {
-                    delete target[key];
-                }
-            } else {
-                console.warn(
-                    `${target.constructor.name} has`,
-                    keysDiff.length,
-                    `unexpected keys:`,
-                    keysDiff
-                );
-            }
-        }
-    };
 }

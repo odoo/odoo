@@ -4,6 +4,7 @@ import { reactive, useExternalListener } from "@odoo/owl";
 import { isNode } from "@web/../lib/hoot-dom/helpers/dom";
 import { isIterable, toSelector } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { DiffMatchPatch } from "./lib/diff_match_patch";
+import { getRunner } from "./main_runner";
 
 /**
  * @typedef {ArgumentPrimitive | `${ArgumentPrimitive}[]` | null} ArgumentType
@@ -33,6 +34,8 @@ import { DiffMatchPatch } from "./lib/diff_match_patch";
  *  tests: number;
  *  todo: number;
  * }} Reporting
+ *
+ * @typedef {import("./core/runner").Runner} Runner
  */
 
 /**
@@ -57,6 +60,7 @@ const {
     Date,
     Error,
     ErrorEvent,
+    JSON: { parse: $parse, stringify: $stringify },
     Map,
     Math: { floor },
     Number: { isInteger: $isInteger, isNaN: $isNaN, parseFloat: $parseFloat },
@@ -87,6 +91,23 @@ const $writeText = $clipboard?.writeText.bind($clipboard);
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
+
+/**
+ * @template {(...args: any[]) => T} T
+ * @param {T} instanceGetter
+ * @returns {T}
+ */
+const memoize = (instanceGetter) => {
+    let called = false;
+    let value;
+    return function memoized(...args) {
+        if (!called) {
+            called = true;
+            value = instanceGetter(...args);
+        }
+        return value;
+    };
+};
 
 /**
  * @param {unknown} number
@@ -154,6 +175,51 @@ export async function copy(text) {
 }
 
 /**
+ * @template T
+ * @template {(previous: T | null) => T} F
+ * @param {F} instanceGetter
+ * @param {() => any} [afterCallback]
+ * @returns {F}
+ */
+export function createJobScopedGetter(instanceGetter, afterCallback) {
+    /** @type {F} */
+    const getInstance = () => {
+        if (runner.dry) {
+            return memoized();
+        }
+
+        const currentJob = runner.state.currentTest || runner.suiteStack.at(-1) || runner;
+        if (!instances.has(currentJob)) {
+            const parentInstance = [...instances.values()].at(-1);
+            instances.set(currentJob, instanceGetter(parentInstance));
+
+            if (canCallAfter) {
+                runner.after(() => {
+                    instances.delete(currentJob);
+
+                    canCallAfter = false;
+                    afterCallback?.();
+                    canCallAfter = true;
+                });
+            }
+        }
+
+        return instances.get(currentJob);
+    };
+
+    const memoized = memoize(instanceGetter);
+
+    /** @type {Map<Job, T>} */
+    const instances = new Map();
+    const runner = getRunner();
+    let canCallAfter = true;
+
+    runner.after(() => instances.clear());
+
+    return getInstance;
+}
+
+/**
  * @param {Reporting} [parentReporting]
  */
 export function createReporting(parentReporting) {
@@ -217,6 +283,49 @@ export function createMock(target, descriptors) {
     }
 
     return mock;
+}
+
+/**
+ * @template T
+ * @param {T} value
+ * @returns {T}
+ */
+export function deepCopy(value) {
+    if (!value) {
+        return value;
+    }
+    if (typeof value === "function") {
+        if (value.name) {
+            return `<function ${value.name}>`;
+        } else {
+            return "<anonymous function>";
+        }
+    }
+    if (typeof value === "object") {
+        if (isNode(value)) {
+            // Nodes
+            return value.cloneNode(true);
+        } else if (isIterable(value)) {
+            // Iterables
+            const copy = [...value].map(deepCopy);
+            if (value instanceof Set || value instanceof Map) {
+                return new value.constructor(copy);
+            } else {
+                return copy;
+            }
+        } else if (Markup.isMarkup(value)) {
+            // Markup helpers
+            value.content = deepCopy(value.content);
+            return value;
+        } else if (value instanceof Date) {
+            // Dates
+            return new value.constructor(value);
+        } else {
+            // Other objects
+            return $parse($stringify(value));
+        }
+    }
+    return value;
 }
 
 /**
@@ -673,106 +782,6 @@ export function lookup(pattern, items, mapFn = normalize) {
     }
 }
 
-export function makeCallbacks() {
-    /**
-     * @template P
-     * @param {string} type
-     * @param {MaybePromise<(...args: P[]) => MaybePromise<((...args: P[]) => void) | void>>} callback
-     * @param {boolean} [once]
-     */
-    const addCallback = (type, callback, once) => {
-        if (callback instanceof Promise) {
-            callback = () =>
-                Promise.resolve(callback).then((result) => {
-                    if (typeof result === "function") {
-                        result();
-                    }
-                });
-        } else if (typeof callback !== "function") {
-            return;
-        }
-
-        if (once) {
-            // Convert callback to be automatically removed
-            const originalCallback = callback;
-            callback = (...args) => {
-                callbackMap.set(
-                    type,
-                    callbackMap.get(type).filter((fn) => fn !== callback)
-                );
-                return originalCallback(...args);
-            };
-            $assign(callback, { original: originalCallback });
-        }
-
-        if (!callbackMap.has(type)) {
-            callbackMap.set(type, []);
-        }
-        if (type.startsWith("after")) {
-            callbackMap.get(type).unshift(callback);
-        } else {
-            callbackMap.get(type).push(callback);
-        }
-    };
-
-    /**
-     * @param {string} type
-     * @param {...any} args
-     */
-    const call = async (type, ...args) => {
-        const fns = callbackMap.get(type);
-        if (!fns?.length) {
-            return;
-        }
-
-        const afterCallback = getAfterCallback(type);
-        for (const fn of fns) {
-            await Promise.resolve(fn(...args)).then(afterCallback, console.error);
-        }
-    };
-
-    /**
-     * @param {string} type
-     * @param {...any} args
-     */
-    const callSync = (type, ...args) => {
-        const fns = callbackMap.get(type);
-        if (!fns?.length) {
-            return;
-        }
-
-        const afterCallback = getAfterCallback(type);
-        for (const fn of fns) {
-            try {
-                const result = fn(...args);
-                afterCallback(result);
-            } catch (err) {
-                console.error(err);
-            }
-        }
-    };
-
-    const clearCallbacks = () => {
-        callbackMap.clear();
-    };
-
-    /**
-     * @param {string} type
-     */
-    const getAfterCallback = (type) => {
-        if (!type.startsWith("before")) {
-            return () => {};
-        }
-        const relatedType = `after${type.slice(6)}`;
-        return (result) => addCallback(relatedType, result, true);
-    };
-
-    /** @type {Map<string, ((...args: any[]) => MaybePromise<((...args: any[]) => void) | void>)[]>} */
-    const callbackMap = new Map();
-
-    return { add: addCallback, call, callSync, clear: clearCallbacks };
-}
-
 /**
  * @param {EventTarget} target
  * @param {string[]} types
@@ -790,6 +799,32 @@ export function makePublicListeners(target, types) {
         });
         target.addEventListener(type, (...args) => listener?.(...args));
     }
+}
+
+/**
+ * @template {keyof Runner} T
+ * @param {T} name
+ * @returns {Runner[T]}
+ */
+export function makeRuntimeHook(name) {
+    return {
+        [name](...callbacks) {
+            const runner = getRunner();
+            if (runner.dry) {
+                return;
+            }
+            let valid = Boolean(runner.suiteStack.length);
+            const last = callbacks.at(-1);
+            if (last && typeof last === "object") {
+                callbacks.pop();
+                valid ||= Boolean(last.global);
+            }
+            if (!valid) {
+                throw new HootError(`cannot call "${name}" callback outside of a suite`);
+            }
+            return runner[name](...callbacks);
+        },
+    }[name];
 }
 
 /**
@@ -874,6 +909,104 @@ export function useWindowListener(type, callback, options) {
     return useExternalListener(windowTarget, type, (ev) => ev.isTrusted && callback(ev), options);
 }
 
+export class Callbacks {
+    /** @type {Map<string, ((...args: any[]) => MaybePromise<((...args: any[]) => void) | void>)[]>} */
+    _callbacks = new Map();
+
+    /**
+     * @template P
+     * @param {string} type
+     * @param {MaybePromise<(...args: P[]) => MaybePromise<((...args: P[]) => void) | void>>} callback
+     * @param {boolean} [once]
+     */
+    add(type, callback, once) {
+        if (callback instanceof Promise) {
+            callback = () =>
+                Promise.resolve(callback).then((result) => {
+                    if (typeof result === "function") {
+                        result();
+                    }
+                });
+        } else if (typeof callback !== "function") {
+            return;
+        }
+
+        if (once) {
+            // Convert callback to be automatically removed
+            const originalCallback = callback;
+            callback = (...args) => {
+                this._callbacks.set(
+                    type,
+                    this._callbacks.get(type).filter((fn) => fn !== callback)
+                );
+                return originalCallback(...args);
+            };
+            $assign(callback, { original: originalCallback });
+        }
+
+        if (!this._callbacks.has(type)) {
+            this._callbacks.set(type, []);
+        }
+        if (type.startsWith("after")) {
+            this._callbacks.get(type).unshift(callback);
+        } else {
+            this._callbacks.get(type).push(callback);
+        }
+    }
+
+    /**
+     * @param {string} type
+     * @param {...any} args
+     */
+    async call(type, ...args) {
+        const fns = this._callbacks.get(type);
+        if (!fns?.length) {
+            return;
+        }
+
+        const afterCallback = this._getAfterCallback(type);
+        for (const fn of fns) {
+            await Promise.resolve(fn(...args)).then(afterCallback, console.error);
+        }
+    }
+
+    /**
+     * @param {string} type
+     * @param {...any} args
+     */
+    callSync(type, ...args) {
+        const fns = this._callbacks.get(type);
+        if (!fns?.length) {
+            return;
+        }
+
+        const afterCallback = this._getAfterCallback(type);
+        for (const fn of fns) {
+            try {
+                const result = fn(...args);
+                afterCallback(result);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+
+    clear() {
+        this._callbacks.clear();
+    }
+
+    /**
+     * @param {string} type
+     */
+    _getAfterCallback(type) {
+        if (!type.startsWith("before")) {
+            return () => {};
+        }
+        const relatedType = `after${type.slice(6)}`;
+        return (result) => this.add(relatedType, result, true);
+    }
+}
+
 export class HootError extends Error {
     name = "HootError";
 }
@@ -923,6 +1056,13 @@ export class Markup {
     /** @param {string} content */
     static green(content) {
         return new this({ className: "text-pass", content });
+    }
+
+    /**
+     * @param {unknown} object
+     */
+    static isMarkup(object) {
+        return object instanceof Markup;
     }
 
     /** @param {string} content */

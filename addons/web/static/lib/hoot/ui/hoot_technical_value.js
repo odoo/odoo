@@ -3,7 +3,7 @@
 import { Component, xml as owlXml, toRaw, useState } from "@odoo/owl";
 import { isNode, toSelector } from "@web/../lib/hoot-dom/helpers/dom";
 import { isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
-import { Markup, toExplicitString } from "../hoot_utils";
+import { Markup, deepCopy, toExplicitString } from "../hoot_utils";
 
 /**
  * @typedef {{
@@ -17,45 +17,12 @@ import { Markup, toExplicitString } from "../hoot_utils";
 
 const {
     Object: { keys: $keys },
-    Set,
     console: { log: $log },
 } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
-
-/**
- * @template T
- * @param {T} value
- */
-const deepCopy = (value) => {
-    if (value && typeof value === "object") {
-        if (isNode(value)) {
-            // Nodes
-            return value.cloneNode(true);
-        } else if (isIterable(value)) {
-            // Iterables
-            const copy = [...value].map(deepCopy);
-            if (value instanceof Set || value instanceof Map) {
-                return new value.constructor(copy);
-            } else {
-                return copy;
-            }
-        } else if (value instanceof Markup) {
-            // Markup helpers
-            value.content = deepCopy(value.content);
-            return value;
-        } else if (value instanceof Date) {
-            // Dates
-            return new Date(value);
-        } else {
-            // Other objects
-            return JSON.parse(JSON.stringify(value));
-        }
-    }
-    return value;
-};
 
 /**
  * Compacted version of {@link owlXml} removing all whitespace between tags.
@@ -161,7 +128,7 @@ export class HootTechnicalValue extends Component {
 
     setup() {
         this.logged = false;
-        this.isMarkup = this.props.value instanceof Markup;
+        this.isMarkup = Markup.isMarkup(this.props.value);
         this.value = deepCopy(toRaw(this.props.value));
         this.state = useState({ open: false });
     }
