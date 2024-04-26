@@ -181,7 +181,6 @@ export class PosStore extends Reactive {
             await this.connectToProxy();
         }
         this.closeOtherTabs();
-        this.preloadImages();
         this.showScreen("ProductScreen");
     }
 
