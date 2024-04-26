@@ -12,11 +12,17 @@ wTourUtils.dragNDrop({
     name: 'Text - Image',
 }),
 {
-    trigger: '.s_text_image img',
+    content: "Open the media dialog from the snippet",
+    trigger: ":iframe .s_text_image img",
     run: "dblclick",
-},
-{
+}, {
+    content: "Search for 'banner' to call the media library", // Mocked call
+    trigger: ".o_select_media_dialog .o_we_search",
+    run: "text banner",
+}, {
+    content: "Check that the media library is available",
     trigger: '.o_select_media_dialog:has(.o_we_search_select option[value="media-library"])',
+    isCheck: true,
 },
 ]);
 
