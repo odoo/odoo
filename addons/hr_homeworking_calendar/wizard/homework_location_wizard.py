@@ -13,7 +13,7 @@ class HomeworkLocationWizard(models.TransientModel):
     work_location_type = fields.Selection(related="work_location_id.location_type")
     employee_id = fields.Many2one('hr.employee', default=lambda self: self.env.user.employee_id, required=True, ondelete="cascade")
     employee_name = fields.Char(related="employee_id.name")
-
+    user_can_edit = fields.Boolean(compute='_compute_user_can_edit')
     weekly = fields.Boolean(default=False)
     date = fields.Date(string="Date")
     day_week_string = fields.Char(compute="_compute_day_week_string")
@@ -22,6 +22,10 @@ class HomeworkLocationWizard(models.TransientModel):
     def _compute_day_week_string(self):
         for record in self:
             record.day_week_string = record.date.strftime("%A")
+
+    @api.depends('date')
+    def _compute_user_can_edit(self):
+        self.user_can_edit = self.env.user.can_edit
 
     def set_employee_location(self):
         self.ensure_one()
@@ -37,7 +41,7 @@ class HomeworkLocationWizard(models.TransientModel):
             # delete any exceptions on the current date
             if employee_location:
                 employee_location.unlink()
-            employee_id.write({
+            employee_id.sudo().user_id.write({
                 default_location_for_current_date: self.work_location_id.id,
             })
         else:
