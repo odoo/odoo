@@ -1995,6 +1995,8 @@ class Task(models.Model):
                     project_ids_to_check.add(project.id)
                     new_vals['project_id'] = project.id
                     new_vals['user_ids'] = parent_task.sudo().user_ids.ids
+                    if not new_vals.get('stage_id'):
+                        new_vals['stage_id'] = project.sudo().type_ids[:1].id
                 else:
                     new_vals['project_id'] = project_shared_id
             new_vals_list.append(new_vals)
