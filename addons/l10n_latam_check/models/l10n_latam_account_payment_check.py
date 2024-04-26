@@ -3,8 +3,8 @@
 import logging
 
 from odoo import models, fields, api, Command, _
-from odoo.exceptions import UserError, ValidationError
-from odoo.tools import index_exists, drop_index
+from odoo.exceptions import ValidationError
+from odoo.tools import index_exists
 
 
 _logger = logging.getLogger(__name__)
@@ -121,11 +121,15 @@ class l10nLatamAccountPaymentCheck(models.Model):
             void_move.action_post()
             (void_move.line_ids[1] + rec.split_move_line_id).reconcile()
 
+    def _get_last_operation(self):
+        self.ensure_one()
+        return (self.payment_id + self.l10n_latam_check_operation_ids).filtered(
+                lambda x: x.state == 'posted').sorted(key=lambda payment: (payment.date, payment.id))[-1:]
+
     @api.depends('state', 'l10n_latam_check_operation_ids.state')
     def _compute_check_info(self):
         for rec in self:
-            last_operation = (rec.payment_id + rec.l10n_latam_check_operation_ids).filtered(
-                lambda x: x.state == 'posted').sorted(key=lambda payment: (payment.date, payment.id))[-1:]
+            last_operation = rec._get_last_operation()
             if not last_operation:
                 rec.l10n_latam_check_current_journal_id = False
                 continue
