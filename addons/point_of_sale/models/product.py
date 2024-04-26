@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from collections import defaultdict
 from itertools import groupby
 from operator import itemgetter
 from datetime import date
@@ -105,11 +106,36 @@ class ProductProduct(models.Model):
         }
 
     def _process_pos_ui_product_product(self, products, config_id):
+
+        def filter_taxes_on_company(product_taxes, taxes_by_company):
+            """
+            Filter the list of tax ids on a single company starting from the current one.
+            If there is no tax in the result, it's filtered on the parent company and so
+            on until a non empty result is found.
+            """
+            taxes, comp = None, self.env.company
+            while not taxes and comp:
+                taxes = list(set(product_taxes) & set(taxes_by_company[comp.id]))
+                comp = comp.parent_id
+            return taxes
+
+        taxes = self.env['account.tax'].search(self.env['account.tax']._check_company_domain(self.env.company))
+        # group all taxes by company in a dict where:
+        # - key: ID of the company
+        # - values: list of tax ids
+        taxes_by_company = defaultdict(set)
+        if self.env.company.parent_id:
+            for tax in taxes:
+                taxes_by_company[tax.company_id.id].add(tax.id)
+
         different_currency = config_id.currency_id != self.env.company.currency_id
         for product in products:
             if different_currency:
                 product['lst_price'] = self.env.company.currency_id._convert(product['lst_price'], config_id.currency_id, self.env.company, fields.Date.today())
             product['image_128'] = bool(product['image_128'])
+
+            if len(taxes_by_company) > 1 and len(product['taxes_id']) > 1:
+                product['taxes_id'] = filter_taxes_on_company(product['taxes_id'], taxes_by_company)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
