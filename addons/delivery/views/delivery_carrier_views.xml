@@ -11,6 +11,10 @@
                 <field name="delivery_type"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="country_ids" widget="many2many_tags" optional="hide"/>
+                <field name="max_weight" optional="show"/>
+                <field name="max_volume" optional="hide"/>
+                <field name="must_have_tag_ids" widget="many2many_tags" optional="hide"/>
+                <field name="excluded_tag_ids" widget="many2many_tags" optional="hide"/>
             </tree>
         </field>
     </record>
@@ -135,26 +139,46 @@
                                 <field name="price_rule_ids" nolabel="1" colspan="2"/>
                             </group>
                         </page>
-                        <page string="Destination Availability" name="destination">
+                        <page string="Availability" name="destination">
                             <group col="1">
                                 <p>
-                                    Filling this form allows you to filter delivery carriers according to the delivery address of your customer.
+                                    Filling this form allows you to make the shipping method available according to the content of the order or its destination.
                                 </p>
-                                <group name="country_details" class="oe_inline">
-                                    <field name="country_ids"
-                                            widget="many2many_tags"
-                                            options="{'no_open': True, 'no_create': True}"/>
-                                    <field name="state_ids"
-                                            widget="many2many_tags"
-                                            domain="[('country_id', 'in', country_ids)]"
-                                            readonly="not country_ids"
-                                            force_save="1"
-                                            options="{'no_create': True}"/>
-                                    <field name="zip_prefix_ids"
-                                            widget="many2many_tags"
-                                            readonly="not country_ids"
-                                            force_save="1"
-                                            options="{'no_create_edit': True}"/>
+                                <group>
+                                    <group name="country_details" string="Destination">
+                                        <field name="country_ids"
+                                                widget="many2many_tags"
+                                                options="{'no_open': True, 'no_create': True}"/>
+                                        <field name="state_ids"
+                                                widget="many2many_tags"
+                                                domain="[('country_id', 'in', country_ids)]"
+                                                readonly="not country_ids"
+                                                force_save="1"
+                                                options="{'no_create': True}"/>
+                                        <field name="zip_prefix_ids"
+                                                widget="many2many_tags"
+                                                readonly="not country_ids"
+                                                force_save="1"
+                                                options="{'no_create_edit': True}"/>
+                                    </group>
+                                    <group name="content" string="Content">
+                                        <label for="max_weight"/>
+                                        <div class="o_row">
+                                            <field name="max_weight" class="oe_inline"/>
+                                            <field name="weight_uom_name"/>
+                                        </div>
+                                        <label for="max_volume"/>
+                                        <div class="o_row">
+                                            <field name="max_volume" class="oe_inline"/>
+                                            <field name="volume_uom_name"/>
+                                        </div>
+                                        <field name="must_have_tag_ids"
+                                                widget="many2many_tags"
+                                                options="{'no_open': True, 'no_create': True}"/>
+                                        <field name="excluded_tag_ids"
+                                                widget="many2many_tags"
+                                                options="{'no_open': True, 'no_create': True}"/>
+                                    </group>
                                 </group>
                                 <p class="fst-italic" invisible="country_ids">
                                     Please select a country before choosing a state or a zip prefix.
