@@ -37,6 +37,7 @@ export const graphView = {
                 fields: fields,
                 groupBy: archInfo.groupBy,
                 measure: archInfo.measure || "__count",
+                widgets: archInfo.widgets,
                 viewMeasures: archInfo.measures,
                 mode: archInfo.mode || "bar",
                 order: archInfo.order || null,

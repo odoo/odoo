@@ -9,7 +9,7 @@ const ORDERS = ["ASC", "DESC", "asc", "desc", null];
 
 export class GraphArchParser {
     parse(arch, fields = {}) {
-        const archInfo = { fields, fieldAttrs: {}, groupBy: [], measures: [] };
+        const archInfo = { fields, fieldAttrs: {}, groupBy: [], measures: [], widgets: {} };
         visitXML(arch, (node) => {
             switch (node.tagName) {
                 case "graph": {
@@ -64,6 +64,9 @@ export class GraphArchParser {
                         }
                         archInfo.fieldAttrs[fieldName].isInvisible = true;
                         break;
+                    }
+                    if (node.hasAttribute("widget")) {
+                        archInfo.widgets[fieldName] = node.getAttribute("widget");
                     }
                     const isMeasure = node.getAttribute("type") === "measure";
                     if (isMeasure) {
