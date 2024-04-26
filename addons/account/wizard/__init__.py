@@ -10,6 +10,5 @@ from . import setup_wizards
 from . import account_move_send
 from . import base_document_layout
 from . import account_payment_register
-from . import account_tour_upload_bill
 from . import accrued_orders
 from . import base_partner_merge

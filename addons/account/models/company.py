@@ -268,6 +268,14 @@ class ResCompany(models.Model):
         for company in self:
             company.max_tax_lock_date = max(company.tax_lock_date or date.min, company.parent_id.sudo().max_tax_lock_date or date.min)
 
+    def _initiate_account_onboardings(self):
+        account_onboarding_routes = [
+            'account_dashboard',
+        ]
+        onboardings = self.env['onboarding.onboarding'].sudo().search([('route_name', 'in', account_onboarding_routes)])
+        for company in self:
+            onboardings.with_company(company)._search_or_create_progress()
+
     @api.model_create_multi
     def create(self, vals_list):
         companies = super().create(vals_list)
@@ -445,7 +453,7 @@ class ResCompany(models.Model):
         context = {'dialog_size': 'medium', **self.env.context}
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Create a Bank Account'),
+            'name': _('Setup Bank Account'),
             'res_model': 'account.setup.bank.manual.config',
             'target': 'new',
             'view_mode': 'form',
@@ -604,6 +612,11 @@ class ResCompany(models.Model):
     def action_save_onboarding_sale_tax(self):
         """ Set the onboarding step as done """
         self.env['onboarding.onboarding.step'].action_validate_step('account.onboarding_onboarding_step_sales_tax')
+
+    def action_save_onboarding_company_data(self):
+        ref = 'account.onboarding_onboarding_step_company_data'
+        self.env['onboarding.onboarding.step'].with_company(self).action_validate_step(ref)
+        return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
 
     def get_chart_of_accounts_or_fail(self):
         account = self.env['account.account'].search(self.env['account.account']._check_company_domain(self), limit=1)

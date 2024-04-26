@@ -32,7 +32,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': _('Inventory Valuation'),
                 'code': 'STJ',
                 'type': 'general',
-                'sequence': 8,
+                'sequence': 10,
                 'show_on_dashboard': False,
             },
         }

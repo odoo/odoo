@@ -2,10 +2,11 @@ import ast
 from babel.dates import format_datetime, format_date
 from collections import defaultdict
 from datetime import datetime, timedelta
+import base64
 import json
 import random
 
-from odoo import models, api, _, fields
+from odoo import models, api, _, fields, Command, tools
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.release import version
@@ -31,6 +32,8 @@ class account_journal(models.Model):
     current_statement_balance = fields.Monetary(compute='_compute_current_statement_balance') # technical field used to avoid computing the value multiple times
     has_statement_lines = fields.Boolean(compute='_compute_current_statement_balance') # technical field used to avoid computing the value multiple times
     entries_count = fields.Integer(compute='_compute_entries_count')
+    has_posted_entries = fields.Boolean(compute='_compute_has_entries')
+    has_entries = fields.Boolean(compute='_compute_has_entries')
     has_sequence_holes = fields.Boolean(compute='_compute_has_sequence_holes')
     has_unhashed_entries = fields.Boolean(string='Unhashed Entries', compute='_compute_has_unhashed_entries')
     last_statement_id = fields.Many2one(comodel_name='account.bank.statement', compute='_compute_last_bank_statement')
@@ -118,8 +121,6 @@ class account_journal(models.Model):
                 'activity_category': activity['activity_category'],
                 'date': odoo_format_date(self.env, activity['date_deadline'])
             }
-            if activity['activity_category'] == 'tax_report' and activity['res_model'] == 'account.move':
-                act['name'] = activity['ref']
 
             activities[activity['journal_id']].append(act)
         for journal in self:
@@ -173,6 +174,37 @@ class account_journal(models.Model):
                 journal.has_unhashed_entries = journal._get_moves_to_hash(include_pre_last_hash=False, early_stop=True)
             else:
                 journal.has_unhashed_entries = False
+
+    def _compute_has_entries(self):
+        sql_query = SQL(
+            """
+                       SELECT j.id,
+                              has_posted_entries.val,
+                              has_entries.val
+                         FROM account_journal j
+            LEFT JOIN LATERAL (
+                                  SELECT bool(m.id) as val
+                                    FROM account_move m
+                                   WHERE m.journal_id = j.id
+                                     AND m.state = 'posted'
+                                   LIMIT 1
+                              ) AS has_posted_entries ON true
+            LEFT JOIN LATERAL (
+                                  SELECT bool(m.id) as val
+                                    FROM account_move m
+                                   WHERE m.journal_id = j.id
+                                   LIMIT 1
+                              ) AS has_entries ON true
+                        WHERE j.id in %(journal_ids)s
+            """,
+            journal_ids=tuple(self.ids),
+        )
+        self.env.cr.execute(sql_query)
+        res = {journal_id: (has_posted, has_entries) for journal_id, has_posted, has_entries in self.env.cr.fetchall()}
+        for journal in self:
+            r = res.get(journal.id, (False, False))
+            journal.has_posted_entries = bool(r[0])
+            journal.has_entries = bool(r[1])
 
     def _compute_entries_count(self):
         res = {
@@ -345,6 +377,7 @@ class account_journal(models.Model):
         self._fill_bank_cash_dashboard_data(dashboard_data)
         self._fill_sale_purchase_dashboard_data(dashboard_data)
         self._fill_general_dashboard_data(dashboard_data)
+        self._fill_onboarding_data(dashboard_data)
         return dashboard_data
 
     def _fill_dashboard_data_count(self, dashboard_data, model, name, domain):
@@ -450,6 +483,10 @@ class account_journal(models.Model):
             misc_balance, number_misc = misc_totals.get(journal.default_account_id, (0, 0))
             currency_consistent = not journal.currency_id or journal.currency_id == journal.default_account_id.currency_id
             accessible = journal.company_id.id in journal.company_id._accessible_branches().ids
+            drag_drop_settings = {
+                'image': '/account/static/src/img/bank.svg' if journal.type == 'bank' else '/web/static/img/rfq.svg',
+                'text': _('Drop to import transactions'),
+            }
 
             dashboard_data[journal.id].update({
                 'number_to_check': number_to_check,
@@ -466,6 +503,7 @@ class account_journal(models.Model):
                 'is_sample_data': journal.has_statement_lines,
                 'nb_misc_operations': number_misc,
                 'misc_operations_balance': currency.format(misc_balance) if currency_consistent else None,
+                'drag_drop_settings': drag_drop_settings,
             })
 
     def _fill_sale_purchase_dashboard_data(self, dashboard_data):
@@ -563,8 +601,17 @@ class account_journal(models.Model):
             amount_total_signed_sum, count = to_check_vals.get(journal.id, (0, 0))
             if journal.type == 'purchase':
                 title_has_sequence_holes = _("Irregularities due to draft, cancelled or deleted bills with a sequence number since last lock date.")
+                drag_drop_settings = {
+                    'image': '/account/static/src/img/Bill.svg',
+                    'text': _('Drop and let the AI process your bills automatically.'),
+                }
             else:
                 title_has_sequence_holes = _("Irregularities due to draft, cancelled or deleted invoices with a sequence number since last lock date.")
+                drag_drop_settings = {
+                    'image': '/web/static/img/quotation.svg',
+                    'text': _('Drop to import your invoices.'),
+                }
+
             dashboard_data[journal.id].update({
                 'number_to_check': count,
                 'to_check_balance': currency.format(amount_total_signed_sum),
@@ -580,6 +627,7 @@ class account_journal(models.Model):
                 'has_unhashed_entries': journal.has_unhashed_entries,
                 'is_sample_data': is_sample_data_by_journal_id[journal.id],
                 'has_entries': not is_sample_data_by_journal_id[journal.id],
+                'drag_drop_settings': drag_drop_settings,
             })
 
     def _fill_general_dashboard_data(self, dashboard_data):
@@ -602,10 +650,46 @@ class account_journal(models.Model):
         for journal in general_journals:
             currency = journal.currency_id or self.env['res.currency'].browse(journal.company_id.sudo().currency_id.id)
             amount_total_signed_sum, count = to_check_vals.get(journal.id, (0, 0))
+            drag_drop_settings = {
+                'image': '/web/static/img/folder.svg',
+                'text': _('Drop to create journal entries with attachments.'),
+                'group': 'account.group_account_user',
+            }
+
             dashboard_data[journal.id].update({
                 'number_to_check': count,
                 'to_check_balance': currency.format(amount_total_signed_sum),
+                'drag_drop_settings': drag_drop_settings,
             })
+
+    def _fill_onboarding_data(self, dashboard_data):
+        """ Populate journals with onboarding data if they have no entries"""
+        journal_onboarding_map = {
+            'sale': 'account_invoice',
+            'general': 'account_dashboard',
+        }
+        onboarding_data = defaultdict(dict)
+        onboarding_progresses = self.env['onboarding.progress'].sudo().search([
+            ('onboarding_id.route_name', 'in', [*journal_onboarding_map.values()]),
+            ('company_id', 'in', self.company_id.ids),
+        ])
+        for progress in onboarding_progresses:
+            ob = progress.onboarding_id
+            ob_vals = ob.with_company(progress.company_id)._prepare_rendering_values()
+            onboarding_data[progress.company_id][ob.route_name] = ob_vals
+            onboarding_data[progress.company_id][ob.route_name]['current_onboarding_state'] = ob.current_onboarding_state
+            onboarding_data[progress.company_id][ob.route_name]['steps'] = [
+                {
+                    'id': step.id,
+                    'title': step.title,
+                    'description': step.description,
+                    'state': ob_vals['state'][step.id],
+                    'action': step.panel_step_open_action_name,
+                }
+                for step in ob_vals['steps']
+            ]
+        for journal in self:
+            dashboard_data[journal.id]['onboarding'] = onboarding_data[journal.company_id].get(journal_onboarding_map.get(journal.type))
 
     def _get_draft_sales_purchases_query(self):
         return self.env['account.move']._where_calc([
@@ -749,10 +833,14 @@ class account_journal(models.Model):
 
     def _get_move_action_context(self):
         ctx = self._context.copy()
-        ctx['default_journal_id'] = self.id
-        if self.type == 'sale':
+        journal = self
+        if not ctx.get('default_journal_id'):
+            ctx['default_journal_id'] = journal.id
+        elif not journal:
+            journal = self.browse(ctx['default_journal_id'])
+        if journal.type == 'sale':
             ctx['default_move_type'] = 'out_refund' if ctx.get('refund') else 'out_invoice'
-        elif self.type == 'purchase':
+        elif journal.type == 'purchase':
             ctx['default_move_type'] = 'in_refund' if ctx.get('refund') else 'in_invoice'
         else:
             ctx['default_move_type'] = 'entry'
@@ -770,22 +858,80 @@ class account_journal(models.Model):
         }
 
     def action_create_vendor_bill(self):
-        """ This function is called by the "Import" button of Vendor Bills,
+        """ This function is called by the "try our sample" button of Vendor Bills,
         visible on dashboard if no bill has been created yet.
         """
-        self.env['onboarding.onboarding.step'].sudo().action_validate_step('account.onboarding_onboarding_step_setup_bill')
+        context = dict(self._context)
+        purchase_journal = self.browse(context.get('default_journal_id'))
+        context['default_move_type'] = 'in_invoice'
+        invoice_date = fields.Date.today() - timedelta(days=12)
+        partner = self.env['res.partner'].search([('name', '=', 'Deco Addict')], limit=1)
+        company = purchase_journal.company_id
+        if not partner:
+            partner = self.env['res.partner'].create({
+                'name': 'Deco Addict',
+                'is_company': True,
+            })
+        default_expense_account = self.env['ir.property'].with_company(company)._get('property_account_expense_categ_id', 'product.category')
+        ref = 'DE%s' % invoice_date.strftime('%Y%m')
+        bill = self.env['account.move'].with_context(default_extract_state='done').create({
+            'move_type': 'in_invoice',
+            'partner_id': partner.id,
+            'ref': ref,
+            'invoice_date': invoice_date,
+            'invoice_date_due': invoice_date + timedelta(days=30),
+            'journal_id': purchase_journal.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': "[FURN_8999] Three-Seat Sofa",
+                    'account_id': purchase_journal.default_account_id.id or default_expense_account.id,
+                    'quantity': 5,
+                    'price_unit': 1500,
+                }),
+                Command.create({
+                    'name': "[FURN_8220] Four Person Desk",
+                    'account_id': purchase_journal.default_account_id.id or default_expense_account.id,
+                    'quantity': 5,
+                    'price_unit': 2350,
+                })
+            ],
+        })
+        # In case of test environment, don't create the pdf
+        if tools.config['test_enable'] or tools.config['test_file']:
+            bill.with_context(no_new_invoice=True).message_post()
+        else:
+            addr = [x for x in [
+                company.street,
+                company.street2,
+                ' '.join([x for x in [company.state_id.name, company.zip] if x]),
+                company.country_id.name,
+            ] if x]
 
-        new_wizard = self.env['account.tour.upload.bill'].create({})
-        view_id = self.env.ref('account.account_tour_upload_bill').id
-
+            html = self.env['ir.qweb']._render('account.bill_preview', {
+                'company_name': company.name,
+                'company_street_address': addr,
+                'invoice_name': 'Invoice ' + ref,
+                'invoice_ref': ref,
+                'invoice_date': invoice_date,
+                'invoice_due_date': invoice_date + timedelta(days=30),
+            })
+            bodies = self.env['ir.actions.report']._prepare_html(html)[0]
+            content = self.env['ir.actions.report']._run_wkhtmltopdf(bodies)
+            attachment = self.env['ir.attachment'].create({
+                'type': 'binary',
+                'name': 'INV-%s-0001.pdf' % invoice_date.strftime('%Y-%m'),
+                'res_model': 'mail.compose.message',
+                'datas': base64.encodebytes(content),
+            })
+            bill.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
         return {
-            'type': 'ir.actions.act_window',
-            'name': _('Import your first bill'),
+            'name': _('Bills'),
+            'res_id': bill.id,
             'view_mode': 'form',
-            'res_model': 'account.tour.upload.bill',
-            'target': 'new',
-            'res_id': new_wizard.id,
-            'views': [[view_id, 'form']],
+            'res_model': 'account.move',
+            'views': [[False, "form"]],
+            'type': 'ir.actions.act_window',
+            'context': context,
         }
 
     def to_check_ids(self):

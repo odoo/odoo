@@ -4,7 +4,7 @@
         <!-- ONBOARDING STEPS -->
         <!-- INVOICING -->
         <record id="onboarding_onboarding_step_company_data" model="onboarding.onboarding.step">
-            <field name="title">Company Data</field>
+            <field name="title">Set Company Data</field>
             <field name="description">Set your company's data for documents header/footer.</field>
             <field name="button_text">Let's start!</field>
             <field name="done_text">Looks great!</field>
@@ -27,21 +27,9 @@
             <field name="sequence">3</field>
         </record>
 
-        <record id="onboarding_onboarding_step_create_invoice" model="onboarding.onboarding.step">
-            <field name="title">Create Invoice</field>
-            <field name="description">Create your first invoice.</field>
-            <field name="button_text">Create</field>
-            <field name="done_text">First invoice sent!</field>
-            <field name="panel_step_open_action_name">action_open_step_create_invoice</field>
-            <field name="step_image" type="base64" file="base/static/img/onboarding_default.png"></field>
-            <field name="step_image_filename">onboarding_default.png</field>
-            <field name="step_image_alt">Onboarding Create Invoice</field>
-            <field name="sequence">4</field>
-        </record>
-
         <!-- DASHBOARD -->
         <record id="onboarding_onboarding_step_fiscal_year" model="onboarding.onboarding.step">
-            <field name="title">Accounting Periods</field>
+            <field name="title">Set Periods</field>
             <field name="description">Define your fiscal years &amp; tax returns periodicity.</field>
             <field name="button_text">Configure</field>
             <field name="done_text">Step completed!</field>
@@ -52,32 +40,8 @@
             <field name="sequence">1</field>
         </record>
 
-        <record id="onboarding_onboarding_step_bank_account" model="onboarding.onboarding.step">
-            <field name="title">Bank Account</field>
-            <field name="description">Connect your financial accounts in seconds.</field>
-            <field name="button_text">Add a bank account</field>
-            <field name="done_text">Step Completed!</field>
-            <field name="panel_step_open_action_name">action_open_step_bank_account</field>
-            <field name="step_image" type="base64" file="base/static/img/onboarding_puzzle.png"></field>
-            <field name="step_image_filename">onboarding_puzzle.png</field>
-            <field name="step_image_alt">Onboarding Bank Account</field>
-            <field name="sequence">2</field>
-        </record>
-
-        <record id="onboarding_onboarding_step_default_taxes" model="onboarding.onboarding.step">
-            <field name="title">Taxes</field>
-            <field name="description">Set default Taxes for sales and purchase transactions.</field>
-            <field name="button_text">Review</field>
-            <field name="done_text">Taxes set!</field>
-            <field name="panel_step_open_action_name">action_open_step_default_taxes</field>
-            <field name="step_image" type="base64" file="base/static/img/onboarding_taxes.png"></field>
-            <field name="step_image_filename">onboarding_taxes.png</field>
-            <field name="step_image_alt">Onboarding Taxes</field>
-            <field name="sequence">3</field>
-        </record>
-
         <record id="onboarding_onboarding_step_chart_of_accounts" model="onboarding.onboarding.step">
-            <field name="title">Chart of Accounts</field>
+            <field name="title">Review Chart of Accounts</field>
             <field name="description">Set up your chart of accounts and record initial balances.</field>
             <field name="button_text">Review</field>
             <field name="done_text">Chart of accounts set!</field>
@@ -89,11 +53,6 @@
         </record>
 
         <!-- WITHOUT PANEL -->
-        <record id="onboarding_onboarding_step_setup_bill" model="onboarding.onboarding.step">
-            <field name="title">Import Vendor Bills</field>
-            <field name="sequence">1000</field>
-        </record>
-
         <record id="onboarding_onboarding_step_sales_tax" model="onboarding.onboarding.step">
             <field name="title">Taxes</field>
             <!-- Fields values used if/when added in a panel within other modules -->
@@ -107,28 +66,14 @@
             <field name="sequence">100</field> <!-- after "Online Payment" -->
         </record>
 
-        <!-- ONBOARDING PANELS -->
-        <record id="onboarding_onboarding_account_invoice" model="onboarding.onboarding">
-            <field name="name">Invoicing Onboarding</field>
-            <field name="step_ids" eval="[
-                Command.link(ref('account.onboarding_onboarding_step_company_data')),
-                Command.link(ref('account.onboarding_onboarding_step_base_document_layout')),
-                Command.link(ref('account.onboarding_onboarding_step_create_invoice'))
-            ]"/>
-            <field name="route_name">account_invoice</field>
-            <field name="panel_close_action_name">action_close_panel_account_invoice</field>
-        </record>
-
         <record id="onboarding_onboarding_account_dashboard" model="onboarding.onboarding">
             <field name="name">Account Dashboard Onboarding</field>
             <field name="step_ids" eval="[
+                Command.link(ref('account.onboarding_onboarding_step_company_data')),
                 Command.link(ref('account.onboarding_onboarding_step_fiscal_year')),
-                Command.link(ref('account.onboarding_onboarding_step_bank_account')),
-                Command.link(ref('account.onboarding_onboarding_step_default_taxes')),
-                Command.link(ref('account.onboarding_onboarding_step_chart_of_accounts'))
+                Command.link(ref('account.onboarding_onboarding_step_chart_of_accounts')),
             ]"/>
             <field name="route_name">account_dashboard</field>
-            <field name="panel_close_action_name">action_close_panel_account_dashboard</field>
         </record>
     </data>
 </odoo>

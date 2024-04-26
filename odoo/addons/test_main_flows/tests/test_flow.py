@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command
+from odoo.addons.account.tests.common import AccountTestMockOnlineSyncCommon
 from odoo.tools import mute_logger
 
 import logging
@@ -8,7 +9,7 @@ import odoo.tests
 _logger = logging.getLogger(__name__)
 
 
-class BaseTestUi(odoo.tests.HttpCase):
+class BaseTestUi(AccountTestMockOnlineSyncCommon):
 
     def main_flow_tour(self):
         # Enable Make to Order

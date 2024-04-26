@@ -16,6 +16,7 @@ class Company(models.Model):
     _name = "res.company"
     _description = 'Companies'
     _order = 'sequence, name'
+    _inherit = ['format.address.mixin', 'format.vat.label.mixin']
     _parent_store = True
 
     def copy(self, default=None):
