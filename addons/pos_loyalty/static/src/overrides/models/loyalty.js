@@ -298,7 +298,8 @@ patch(Order.prototype, {
                     .filter(
                         (program) =>
                             program.pricelist_ids.length > 0 &&
-                            (!pricelist || !program.pricelist_ids.includes(pricelist.id))
+                            (!pricelist || !program.pricelist_ids.some(pl => pl.id === pricelist.id)
+                        )
                     )
                     .map((program) => program.id)
             );
@@ -716,7 +717,7 @@ patch(Order.prototype, {
         }
         if (
             program.pricelist_ids.length > 0 &&
-            (!this.pricelist || !program.pricelist_ids.includes(this.pricelist.id))
+            (!this.pricelist || !program.pricelist_ids.some(pl => pl.id === this.pricelist.id))
         ) {
             return false;
         }
@@ -973,7 +974,7 @@ patch(Order.prototype, {
             const program = this.pos.models["loyalty.program"].get(couponProgram.program_id);
             if (
                 program.pricelist_ids.length > 0 &&
-                (!this.pricelist || !program.pricelist_ids.includes(this.pricelist.id))
+                (!this.pricelist || !program.pricelist_ids.some(pl => pl.id === this.pricelist.id))
             ) {
                 continue;
             }
@@ -1553,7 +1554,7 @@ patch(Order.prototype, {
             const program_pricelists = rule.program_id.pricelist_ids;
             if (
                 program_pricelists.length > 0 &&
-                (!this.pricelist || !program_pricelists.includes(this.pricelist.id))
+                (!this.pricelist || !program_pricelists.some(pl => pl.id === this.pricelist.id))
             ) {
                 return _t("That promo code program requires a specific pricelist.");
             }

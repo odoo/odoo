@@ -174,7 +174,7 @@ patch(PosStore.prototype, {
             const program = this.models["loyalty.program"].get(couponProgram.program_id);
             if (
                 program.pricelist_ids.length > 0 &&
-                (!order.pricelist || !program.pricelist_ids.includes(order.pricelist.id))
+                (!order.pricelist || !program.pricelist_ids.some(pl => pl.id === order.pricelist.id))
             ) {
                 continue;
             }

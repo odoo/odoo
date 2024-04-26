@@ -228,6 +228,7 @@ registry.category("web_tour.tours").add("PosLoyaltyTour6", {
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Partner"),
             ProductScreen.clickDisplayedProduct("Test Product A"),
+            PosLoyalty.checkAddedLoyaltyPoints("26.5"),
             ProductScreen.controlButton("Reward"),
             SelectionPopup.has("$ 1 per point on your order", { run: "click" }),
             ProductScreen.totalAmountIs("138.50"),
