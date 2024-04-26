@@ -76,6 +76,78 @@ class AccountEdiProxyClientUser(models.Model):
             return f'{company.peppol_eas}:{company.peppol_endpoint}'
         return super()._get_proxy_identification(company, proxy_type)
 
+<<<<<<< HEAD
+||||||| parent of b4bd98585591 (temp)
+    def _peppol_import_invoice(self, attachment, partner_endpoint, peppol_state, uuid):
+        """Save new documents in an accounting journal, when one is specified on the company.
+
+        :param attachment: the new document
+        :param partner_endpoint: a string containing the sender's Peppol endpoint
+        :param peppol_state: the state of the received Peppol document
+        :param uuid: the UUID of the Peppol document
+        :return: `True` if the document was saved, `False` if it was not
+        """
+        self.ensure_one()
+        journal = self.company_id.peppol_purchase_journal_id
+        if not journal:
+            return False
+
+        move = self.env['account.move'].create({
+            'journal_id': journal.id,
+            'move_type': 'in_invoice',
+            'peppol_move_state': peppol_state,
+            'extract_can_show_send_button': False,
+            'peppol_message_uuid': uuid,
+        })
+        move._extend_with_attachments(attachment, new=True)
+        move._message_log(
+            body=_(
+                "Peppol document (UUID: %(uuid)s) has been received successfully.\n(Sender endpoint: %(endpoint)s)",
+                uuid=uuid,
+                endpoint=partner_endpoint,
+            ),
+            attachment_ids=attachment.ids,
+        )
+        attachment.write({'res_model': 'account.move', 'res_id': move.id})
+        return True
+
+=======
+    def _peppol_import_invoice(self, attachment, partner_endpoint, peppol_state, uuid):
+        """Save new documents in an accounting journal, when one is specified on the company.
+
+        :param attachment: the new document
+        :param partner_endpoint: a string containing the sender's Peppol endpoint
+        :param peppol_state: the state of the received Peppol document
+        :param uuid: the UUID of the Peppol document
+        :return: `True` if the document was saved, `False` if it was not
+        """
+        self.ensure_one()
+        journal = self.company_id.peppol_purchase_journal_id
+        if not journal:
+            return False
+
+        move = self.env['account.move'].create({
+            'journal_id': journal.id,
+            'move_type': 'in_invoice',
+            'peppol_move_state': peppol_state,
+            'peppol_message_uuid': uuid,
+        })
+        if 'is_in_extractable_state' in move._fields:
+            move.is_in_extractable_state = False
+
+        move._extend_with_attachments(attachment, new=True)
+        move._message_log(
+            body=_(
+                "Peppol document (UUID: %(uuid)s) has been received successfully.\n(Sender endpoint: %(endpoint)s)",
+                uuid=uuid,
+                endpoint=partner_endpoint,
+            ),
+            attachment_ids=attachment.ids,
+        )
+        attachment.write({'res_model': 'account.move', 'res_id': move.id})
+        return True
+
+>>>>>>> b4bd98585591 (temp)
     def _peppol_get_new_documents(self):
         params = {
             'domain': {
