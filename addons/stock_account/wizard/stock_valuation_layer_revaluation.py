@@ -36,11 +36,11 @@ class StockValuationLayerRevaluation(models.TransientModel):
         if 'product_id' in default_fields:
             if not product:
                 raise UserError(_("You cannot adjust valuation without a product"))
-            if product.categ_id.property_cost_method == 'standard':
+            if product.cost_method == 'standard':
                 raise UserError(_("You cannot revalue a product with a standard cost method."))
             if product.quantity_svl <= 0:
                 raise UserError(_("You cannot revalue a product with an empty or negative stock."))
-            if 'account_journal_id' not in res and 'account_journal_id' in default_fields and product.categ_id.property_valuation == 'real_time':
+            if 'account_journal_id' not in res and 'account_journal_id' in default_fields and product.valuation == 'real_time':
                 accounts = product.product_tmpl_id.get_product_accounts()
                 res['account_journal_id'] = accounts['stock_journal'].id
         return res
@@ -51,7 +51,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
     adjusted_layer_ids = fields.Many2many('stock.valuation.layer', string="Valuation Layers", help="Valuations layers being adjusted")
     product_id = fields.Many2one('product.product', "Related product", required=True, check_company=True)
     lot_id = fields.Many2one('stock.lot', "Related lot/serial number", check_company=True)
-    property_valuation = fields.Selection(related='product_id.categ_id.property_valuation')
+    property_valuation = fields.Selection(related='product_id.valuation')
     product_uom_name = fields.Char("Unit of Measure", related='product_id.uom_id.name')
     current_value_svl = fields.Float("Current Value", compute='_compute_current_value_svl')
     current_quantity_svl = fields.Float("Current Quantity", compute='_compute_current_value_svl')
@@ -118,7 +118,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
 
         description = _("Manual Stock Valuation: %s.", self.reason or _("No Reason Given"))
         # Update the stardard price in case of AVCO/FIFO
-        cost_method = product_id.categ_id.property_cost_method
+        cost_method = product_id.cost_method
         if cost_method in ['average', 'fifo']:
             previous_cost = lot_id.standard_price if lot_id else product_id.standard_price
             total_product_qty = sum(layers_with_qty.mapped('remaining_qty'))

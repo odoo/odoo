@@ -10,9 +10,20 @@ class ProductTemplate(models.Model):
 
     def _get_product_accounts(self):
         accounts = super()._get_product_accounts()
-        accounts.update({
-            'production': self.categ_id.property_stock_account_production_cost_id,
-        })
+        if self.categ_id:
+            # If category set on the product take production account from category even if
+            # production account on category is False
+            production_account = self.categ_id.property_stock_account_production_cost_id
+        else:
+            ProductCategory = self.env['product.category']
+            production_account = (
+                self.valuation == 'real_time'
+                and ProductCategory._fields['property_stock_account_production_cost_id'].get_company_dependent_fallback(
+                    ProductCategory
+                )
+                or self.env['account.account']
+            )
+        accounts['production'] = production_account
         return accounts
 
     def action_bom_cost(self):

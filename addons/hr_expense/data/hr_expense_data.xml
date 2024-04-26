@@ -13,6 +13,7 @@
             <field name="can_be_expensed" eval="True"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="False"/>
+            <field name="categ_id" ref="product.product_category_expenses"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/food.svg"/>
         </record>
         <record id="expense_product_travel_accommodation" model="product.product">
@@ -26,6 +27,7 @@
             <field name="can_be_expensed" eval="True"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="False"/>
+            <field name="categ_id" ref="product.product_category_expenses"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/transport.svg"/>
         </record>
         <record id="expense_product_mileage" model="product.product">
@@ -38,6 +40,7 @@
             <field name="can_be_expensed" eval="True"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="False"/>
+            <field name="categ_id" ref="product.product_category_expenses"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/mileage.svg"/>
         </record>
         <record id="expense_product_gift" model="product.product">
@@ -51,6 +54,7 @@
             <field name="can_be_expensed" eval="True"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="False"/>
+            <field name="categ_id" ref="product.product_category_expenses"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/gift.svg"/>
         </record>
         <record id="expense_product_communication" model="product.product">
@@ -64,6 +68,7 @@
             <field name="can_be_expensed" eval="True"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="False"/>
+            <field name="categ_id" ref="product.product_category_expenses"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/communication.svg"/>
         </record>
         <record id="product_product_no_cost" model="product.product">
@@ -71,7 +76,7 @@
             <field name="standard_price">0.0</field>
             <field name="type">service</field>
             <field name="default_code">EXP_GEN</field>
-            <field name="categ_id" ref="product.cat_expense"/>
+            <field name="categ_id" ref="product.product_category_expenses"/>
             <field name="can_be_expensed" eval="True"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/other.svg"/>
         </record>

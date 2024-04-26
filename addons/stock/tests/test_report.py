@@ -21,7 +21,7 @@ class TestReportsCommon(TransactionCase):
         cls.product1 = cls.env['product.product'].create({
             'name': 'Mellohi"',
             'is_storable': True,
-            'categ_id': cls.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_goods').id,
             'tracking': 'lot',
             'default_code': 'C4181234""154654654654',
             'barcode': 'scan""me'
@@ -30,6 +30,7 @@ class TestReportsCommon(TransactionCase):
         product_form = Form(cls.env['product.product'])
         product_form.is_storable = True
         product_form.name = 'Product'
+        product_form.categ_id = cls.env.ref('product.product_category_goods')
         cls.product = product_form.save()
         cls.product_template = cls.product.product_tmpl_id
         cls.wh_2 = cls.env['stock.warehouse'].create({
@@ -76,7 +77,6 @@ class TestReports(TestReportsCommon):
         product_test = self.env['product.product'].create({
             'name': 'Mellohi"',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
             'tracking': 'lot',
             'default_code': 'C4181234""154654654654',
             'barcode': '9745213796142'
@@ -1431,13 +1431,11 @@ class TestReports(TestReportsCommon):
         product2 = self.env['product.product'].create({
             'name': 'Extra Product',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
         })
 
         product3 = self.env['product.product'].create({
             'name': 'Unpopular Product',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
         })
 
         # Creates some deliveries for reception report to match against

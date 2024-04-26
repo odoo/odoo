@@ -33,6 +33,7 @@ class TestStockValuation(TransactionCase):
             # Ignore tax calculations for these tests.
             'supplier_taxes_id': False,
             'is_storable': True,
+            'categ_id': cls.env.ref('product.product_category_goods').id,
         })
         Account = cls.env['account.account']
         cls.stock_input_account = Account.create({
@@ -304,7 +305,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.partner_id = cls.env['res.partner'].create({'name': 'Wood Corner Partner'})
-        cls.product1 = cls.env['product.product'].create({'name': 'Large Desk'})
 
         cls.cat = cls.env['product.category'].create({
             'name': 'cat',
@@ -1078,8 +1078,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         date_po = '2019-01-01'
 
         # SetUp product
-        self.product1.product_tmpl_id.cost_method = 'average'
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.purchase_method = 'purchase'
 
         # SetUp currency and rates
@@ -1136,7 +1136,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         inv.action_post()
 
         move_lines = inv.line_ids
-        self.assertEqual(len(move_lines), 4)
+        self.assertEqual(len(move_lines), 2)
 
         payable_line = move_lines.filtered(lambda l: l.account_id.account_type == 'liability_payable')
 

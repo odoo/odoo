@@ -12,12 +12,48 @@ from datetime import datetime
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    cost_method = fields.Selection(related="categ_id.property_cost_method", readonly=True)
-    valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
+    cost_method = fields.Selection(
+        string="Cost Method",
+        selection=[
+            ('standard', "Standard Price"),
+            ('fifo', "First In First Out (FIFO)"),
+            ('average', "Average Cost (AVCO)"),
+        ],
+        compute='_compute_cost_method',
+    )
+    valuation = fields.Selection(
+        string="Valuation",
+        selection=[
+            ('manual_periodic', "Manual"),
+            ('real_time', "Automated"),
+        ],
+        compute='_compute_valuation',
+    )
     lot_valuated = fields.Boolean(
         "Valuation by Lot/Serial number",
         help="If checked, the valuation will be specific by Lot/Serial number.",
     )
+
+    @api.depends_context('company')
+    @api.depends('categ_id.property_cost_method')
+    def _compute_cost_method(self):
+        for product_template in self:
+            product_template.cost_method = (
+                product_template.categ_id.with_company(
+                    product_template.company_id
+                ).property_cost_method
+                or (product_template.company_id or self.env.company).cost_method
+            )
+
+    @api.depends_context('company')
+    @api.depends('categ_id.property_valuation')
+    def _compute_valuation(self):
+        pt_with_category = self.filtered('categ_id')
+        (self - pt_with_category).valuation = 'manual_periodic'
+        for product_template in pt_with_category:
+            product_template.valuation = product_template.categ_id.with_company(
+                product_template.company_id
+            ).property_valuation
 
     @api.onchange('standard_price')
     def _onchange_standard_price(self):
@@ -40,16 +76,26 @@ will update the cost of every lot/serial number in stock."),
             # When a change of category implies a change of cost method, we empty out and replenish
             # the stock.
             new_product_category = self.env['product.category'].browse(vals.get('categ_id'))
+            if new_product_category:
+                new_cost_method = new_product_category.property_cost_method
+                new_valuation = new_product_category.property_valuation
+            else:
+                ProductCategory = self.env['product.category']
+                new_valuation = 'manual_periodic'
+                if vals.get('company_id'):
+                    new_cost_method = self.env['res.company'].browse(vals['company_id']).cost_method
+                else:
+                    new_cost_method = ProductCategory._fields['property_cost_method'].get_company_dependent_fallback(ProductCategory)
 
             for product_template in self:
                 product_template = product_template.with_company(product_template.company_id)
                 valuation_impacted = False
-                if product_template.cost_method != new_product_category.property_cost_method:
+                if product_template.cost_method != new_cost_method:
                     if product_template.lot_valuated and not 'lot_valuated' in vals\
                             and any(p.stock_valuation_layer_ids for p in product_template.product_variant_ids):
                         raise UserError(_("You cannot change the product category of a product valuated by lot/serial number."))
                     valuation_impacted = True
-                if product_template.valuation != new_product_category.property_valuation:
+                if product_template.valuation != new_valuation:
                     valuation_impacted = True
                 if valuation_impacted is False:
                     continue
@@ -61,7 +107,7 @@ will update the cost of every lot/serial number in stock."),
                     new_category=new_product_category.display_name,
                     product=product_template.display_name,
                     old_method=product_template.cost_method,
-                    new_method=new_product_category.property_cost_method)
+                    new_method=new_cost_method)
                 out_svl_vals_list, products_orig_quantity_svl, products = Product\
                     ._svl_empty_stock(description, product_template=product_template)
                 out_stock_valuation_layers = SVL.create(out_svl_vals_list)
@@ -106,11 +152,32 @@ will update the cost of every lot/serial number in stock."),
         @return: dictionary which contains information regarding stock accounts and super (income+expense accounts)
         """
         accounts = super(ProductTemplate, self)._get_product_accounts()
-        res = self._get_asset_accounts()
+        AccountAccount = self.env['account.account']
         accounts.update({
-            'stock_input': res['stock_input'] or self.categ_id.property_stock_account_input_categ_id,
-            'stock_output': res['stock_output'] or self.categ_id.property_stock_account_output_categ_id,
-            'stock_valuation': self.categ_id.property_stock_valuation_account_id,
+            'stock_input': (
+                self.categ_id.property_stock_account_input_categ_id
+                or (
+                    self.valuation == 'real_time'
+                    and self.categ_id._fields['property_stock_account_input_categ_id'].get_company_dependent_fallback(self.categ_id)
+                )
+                or AccountAccount
+            ),
+            'stock_output': (
+                self.categ_id.property_stock_account_output_categ_id
+                or (
+                    self.valuation == 'real_time'
+                    and self.categ_id._fields['property_stock_account_output_categ_id'].get_company_dependent_fallback(self.categ_id)
+                )
+                or AccountAccount
+            ),
+            'stock_valuation': (
+                self.categ_id.property_stock_valuation_account_id
+                or (
+                    self.valuation == 'real_time'
+                    and self.categ_id._fields['property_stock_valuation_account_id'].get_company_dependent_fallback(self.categ_id)
+                )
+                or AccountAccount
+            ),
         })
         return accounts
 
@@ -119,7 +186,12 @@ will update the cost of every lot/serial number in stock."),
         @return: dictionary which contains all needed information regarding stock accounts and journal and super (income+expense accounts)
         """
         accounts = super(ProductTemplate, self).get_product_accounts(fiscal_pos=fiscal_pos)
-        accounts.update({'stock_journal': self.categ_id.property_stock_journal or False})
+        accounts.update({
+            'stock_journal': (
+                self.categ_id.property_stock_journal
+                or self.categ_id._fields['property_stock_journal'].get_company_dependent_fallback(self.categ_id)
+            )
+        })
         return accounts
 
 
@@ -135,8 +207,6 @@ class ProductProduct(models.Model):
         help="Technical field to correctly show the currently selected company's currency that corresponds "
              "to the totaled value of the product's valuation layers")
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
-    valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
-    cost_method = fields.Selection(related="categ_id.property_cost_method", readonly=True)
 
     def write(self, vals):
         if 'standard_price' in vals and not self.env.context.get('disable_auto_svl'):
@@ -872,18 +942,25 @@ will update the cost of every lot/serial number in stock."),
 class ProductCategory(models.Model):
     _inherit = 'product.category'
 
-    property_valuation = fields.Selection([
-        ('manual_periodic', 'Manual'),
-        ('real_time', 'Automated')], string='Inventory Valuation',
+    property_valuation = fields.Selection(
+        string="Inventory Valuation",
+        selection=[
+            ('manual_periodic', "Manual"),
+            ('real_time', "Automated"),
+        ],
         company_dependent=True, copy=True,
         help="""Manual: The accounting entries to value the inventory are not posted automatically.
         Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.
         """)
-    property_cost_method = fields.Selection([
-        ('standard', 'Standard Price'),
-        ('fifo', 'First In First Out (FIFO)'),
-        ('average', 'Average Cost (AVCO)')], string="Costing Method",
+    property_cost_method = fields.Selection(
+        string="Costing Method",
+        selection=[
+            ('standard', "Standard Price"),
+            ('fifo', "First In First Out (FIFO)"),
+            ('average', "Average Cost (AVCO)"),
+        ],
         company_dependent=True, copy=True,
+        default=lambda self: self.env.company.cost_method,
         help="""Standard Price: The products are valued at their standard cost defined on the product.
         Average Cost (AVCO): The products are valued at weighted average cost.
         First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.

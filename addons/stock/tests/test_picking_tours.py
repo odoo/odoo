@@ -213,7 +213,6 @@ class TestStockPickingTour(HttpCase):
             'name': 'PSerial',
             'is_storable': True,
             'tracking': 'serial',
-            'categ_id': self.env.ref('product.product_category_all').id,
         })
 
         lots = self.env['stock.lot'].create([{

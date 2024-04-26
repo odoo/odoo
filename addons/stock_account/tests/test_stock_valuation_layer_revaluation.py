@@ -245,7 +245,6 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         product2 = self.env['product.product'].create({
             'name': 'product2',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
         })
 
         self._make_in_move(self.product1, 5, unit_cost=4)
