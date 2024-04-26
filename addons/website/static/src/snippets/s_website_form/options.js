@@ -358,8 +358,17 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         const proms = [this._super(...arguments)];
         // Disable text edition
         this.$target.attr('contentEditable', false);
-        // Make button, description, and recaptcha editable
-        this.$target.find('.s_website_form_send, .s_website_form_field_description, .s_website_form_recaptcha').attr('contentEditable', true);
+        // Identify editable elements of the form: buttons, description,
+        // recaptcha and columns which are not fields.
+        const formEditableSelector = [
+            ".s_website_form_send",
+            ".s_website_form_field_description",
+            ".s_website_form_recaptcha",
+            ".row > div:not(.s_website_form_field, .s_website_form_submit, .s_website_form_field *, .s_website_form_submit *)",
+        ].map(selector => `:scope ${selector}`).join(", ");
+        for (const formEditableEl of this.$target[0].querySelectorAll(formEditableSelector)) {
+            formEditableEl.contentEditable = "true";
+        }
         // Get potential message
         this.$message = this.$target.parent().find('.s_website_form_end_message');
         this.showEndMessage = false;
