@@ -105,12 +105,20 @@ function makeLogger(prefix, title) {
     return { request, response };
 }
 
-export function makeServerError({ code, context, description, message, subType, type } = {}) {
+export function makeServerError({
+    code,
+    context,
+    description,
+    message,
+    subType,
+    errorName,
+    type,
+} = {}) {
     return makeErrorFromResponse({
         code: code || 200,
         message: message || "Odoo Server Error",
         data: {
-            name: `odoo.exceptions.${type || "UserError"}`,
+            name: errorName || `odoo.exceptions.${type || "UserError"}`,
             debug: "traceback",
             arguments: [],
             context: context || {},
@@ -755,12 +763,10 @@ export class MockServer {
             Object.values(this.actions).find((action) => action.xml_id === action_id) ||
             Object.values(this.actions).find((a) => a.path === action_id);
         if (!action) {
-            // when the action doesn't exist, the real server doesn't crash, it
-            // simply returns false
-            console.warn(
-                `No action found for ID ${action_id} during test ${QUnit.config.current.testName}`
-            );
-            return false;
+            throw makeServerError({
+                errorName: "odoo.addons.web.controllers.action.MissingActionError",
+                message: `The action ${JSON.stringify(action_id)} does not exist`,
+            });
         }
         if (action.type === "ir.actions.server") {
             if (action.state !== "code") {

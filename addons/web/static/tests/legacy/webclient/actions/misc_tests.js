@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { makeTestEnv } from "../../helpers/mock_env";
 import testUtils from "@web/../tests/legacy_tests/helpers/test_utils";
-import { click, getFixture, hushConsole, nextTick, patchWithCleanup } from "../../helpers/utils";
+import { click, getFixture, nextTick, patchWithCleanup } from "../../helpers/utils";
 import {
     createWebClient,
     doAction,
@@ -18,6 +18,8 @@ import { onWillStart } from "@odoo/owl";
 import { router } from "@web/core/browser/router";
 import { GraphModel } from "@web/views/graph/graph_model";
 import { switchView } from "../../search/helpers";
+import { errorService } from "@web/core/errors/error_service";
+import { WarningDialog } from "@web/core/errors/error_dialogs";
 
 let serverData;
 let target;
@@ -96,16 +98,51 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("properly handle case when action id does not exist", async (assert) => {
-        assert.expect(2);
+        assert.expectErrors();
+        registry.category("services").add("error", errorService);
+        registry
+            .category("error_dialogs")
+            .add("odoo.addons.web.controllers.action.MissingActionError", WarningDialog);
         const webClient = await createWebClient({ serverData });
-        patchWithCleanup(window, { console: hushConsole });
-        patchWithCleanup(webClient.env.services.notification, {
-            add(message) {
-                assert.strictEqual(message, "No action with id '4448' could be found");
-            },
-        });
-        await doAction(webClient, 4448);
-        assert.containsOnce(target, "div.o_invalid_action");
+        doAction(webClient, 4448);
+        await nextTick();
+        assert.containsOnce(target, ".o_error_dialog");
+        assert.strictEqual(
+            document.querySelector(".o_error_dialog .modal-body").innerText,
+            "The action 4448 does not exist"
+        );
+    });
+
+    QUnit.test("properly handle case when action path does not exist", async (assert) => {
+        assert.expectErrors();
+        registry.category("services").add("error", errorService);
+        registry
+            .category("error_dialogs")
+            .add("odoo.addons.web.controllers.action.MissingActionError", WarningDialog);
+        const webClient = await createWebClient({ serverData });
+        doAction(webClient, "plop");
+        await nextTick();
+        assert.containsOnce(target, ".o_error_dialog");
+        assert.strictEqual(
+            document.querySelector(".o_error_dialog .modal-body").innerText,
+            'The action "plop" does not exist'
+        );
+    });
+
+    QUnit.test("properly handle case when action xmlId does not exist", async (assert) => {
+        assert.expectErrors();
+        registry.category("services").add("error", errorService);
+        registry
+            .category("error_dialogs")
+            .add("odoo.addons.web.controllers.action.MissingActionError", WarningDialog);
+        const webClient = await createWebClient({ serverData });
+        doAction(webClient, "not.found.action");
+        await nextTick();
+        assert.containsOnce(target, ".o_error_dialog");
+        assert.strictEqual(
+            document.querySelector(".o_error_dialog .modal-body").innerText,
+            'The action "not.found.action" does not exist'
+        );
     });
 
     QUnit.test("actions can be cached", async function (assert) {
