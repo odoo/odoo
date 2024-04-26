@@ -510,7 +510,8 @@ patch(PosStore.prototype, {
             const program = this.models["loyalty.program"].get(couponProgram.program_id);
             if (
                 program.pricelist_ids.length > 0 &&
-                (!order.pricelist_id || !program.pricelist_ids.includes(order.pricelist_id.id))
+                (!order.pricelist_id ||
+                    !program.pricelist_ids.some((pl) => pl.id === order.pricelist_id.id))
             ) {
                 continue;
             }
