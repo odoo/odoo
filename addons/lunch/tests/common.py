@@ -7,7 +7,7 @@ from odoo.tests import common, new_test_user
 
 fakenow = datetime(2021, 1, 29, 12, 20, 0)
 
-@freeze_time(fakenow)
+@freeze_time(fakenow)  # pylint: disable=E0601 False positive with pylint 3.0
 class TestsCommon(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
