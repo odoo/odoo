@@ -20,6 +20,7 @@
         <WeButton selectClass="'test_class_7'">7</WeButton>
         <WeButton selectClass="'test_class_8'">8</WeButton>
     </WeButtonGroup>
+    <WeInput unit="'px'" step="'5'" selectStyle="'0'" cssProperty="'border-width'" extraClass="'border'"/>
 </t>
 
 <t t-name="web_editor.container_width">
@@ -88,5 +89,28 @@
             </we-selection-items>
         </div>
     </we-button-group>
+</t>
+<t t-name="web_editor.WeInput">
+    <we-input class="o_we_user_value_widget" t-att-class="getAllClasses()">
+        <we-title t-if="props.slots?.title">
+            <t t-slot="title"/>
+        </we-title>
+        <div>
+            <t t-set="isNumber" t-value="this.state._isNumeric() || !! !!this.props.hideUnit"/>
+            <t t-set="showUnit" t-value="(!!this.props.unit || !!this.props.fakeUnit) and !this.props.hideUnit"/>
+            <input t-ref="input" t-att-name="this.props.optionName"
+                t-att-type="isNumber ? 'number' : 'text'"
+                t-att-class="{'text-end': isNumber, 'text-start': !isNumber, o_we_large: !showUnit}"
+                autocomplete="chrome-off"
+                t-att-placeholder="this.props.placeholder"
+                t-on-input="this._onInputInput"
+                t-on-blur="this._onInputBlur"
+                t-on-change="this._onUserValueChange"
+                t-on-keydown="this._onInputKeydown"
+                t-att-value="this.state.value"
+            />
+            <span t-if="showUnit" t-out="this.props.fakeUnit || this.props.unit"/>
+        </div>
+    </we-input>
 </t>
 </templates>
