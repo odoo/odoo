@@ -36,7 +36,7 @@ patch(AttendeeCalendarController.prototype, {
                     confirm: async () => {
                         const dayName = record.start.setLocale("en").weekdayLong.toLowerCase();
                         const locationField = `${dayName}_location_id`;
-                        await this.orm.write('hr.employee', [record.rawRecord.employee_id], {[locationField]: false})
+                        await this.orm.write('res.users', [record.rawRecord.user_id], {[locationField]: false})
                         this.model.load();
                     },
                     cancel: () => {

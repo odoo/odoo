@@ -1,11 +1,23 @@
-/** @odoo-module **/
-
+import { onWillStart } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
 import { AttendeeCalendarCommonPopover } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_popover";
 import { Field } from "@web/views/fields/field"
 
-patch(AttendeeCalendarCommonPopover.prototype, {
+export const patchAttendeeCalendarCommonPopoverClass = {
+    template: "homework.AttendeeCalendarCommonPopover",
+    subTemplates: {
+        ...AttendeeCalendarCommonPopover.subTemplates,
+        body: "homework.AttendeeCalendarCommonPopover.body",
+        footer: "homework.AttendeeCalendarCommonPopover.footer",
+    },
+    components: {
+        ...AttendeeCalendarCommonPopover.components,
+        Field,
+    }
+}
+
+export const patchAttendeeCalendarCommonPopover = {
     setup() {
         this.fieldNames = ["work_location_id", "work_location_name", "work_location_type", "employee_id", "weekday", "weekly", "start_date", "employee_name"];
         super.setup(...arguments);
@@ -29,6 +41,10 @@ patch(AttendeeCalendarCommonPopover.prototype, {
             "date": { name: "date", type: "date"},
             "employee_name": { name: "employee name", type:"char"}
         };
+        onWillStart(async () => {
+            this.userCanEdit = (await this.orm.read("res.users", [user.userId], ["can_edit"]))[0]['can_edit'];
+        });
+
     },
     isWorkLocationEvent(){
         return this.props.record['resModel'] === 'hr.employee.location';
@@ -46,6 +62,9 @@ patch(AttendeeCalendarCommonPopover.prototype, {
         return !('resModel' in this.props.record) || super.isEventViewable;
     },
     get isEventDeletable() {
+        if (this.props.record.homeworking) {
+            return (this.userCanEdit || !this.props.record.ghostRecord) && super.isEventDeletable
+        }
         return super.isEventDeletable;
     },
     get displayAttendeeAnswerChoice() {
@@ -54,18 +73,7 @@ patch(AttendeeCalendarCommonPopover.prototype, {
     get isCurrentUserAttendee() {
         return !('resModel' in this.props.record) && super.isCurrentUserAttendee;
     },
-})
-
-AttendeeCalendarCommonPopover.template = "homework.AttendeeCalendarCommonPopover"
-
-
-AttendeeCalendarCommonPopover.subTemplates = {
-    ...AttendeeCalendarCommonPopover.subTemplates,
-    body: "homework.AttendeeCalendarCommonPopover.body",
-    footer: "homework.AttendeeCalendarCommonPopover.footer",
 }
+export const unpatchAttendeeCalendarCommonPopoverClass = patch(AttendeeCalendarCommonPopover, patchAttendeeCalendarCommonPopoverClass);
 
-AttendeeCalendarCommonPopover.components = {
-    ...AttendeeCalendarCommonPopover.components,
-    Field
-}
+export const unpatchAttendeeCalendarCommonPopover = patch(AttendeeCalendarCommonPopover.prototype, patchAttendeeCalendarCommonPopover)
