@@ -13,7 +13,7 @@ class HomeworkLocationWizard(models.TransientModel):
     work_location_type = fields.Selection(related="work_location_id.location_type")
     employee_id = fields.Many2one('hr.employee', default=lambda self: self.env.user.employee_id, required=True, ondelete="cascade")
     employee_name = fields.Char(related="employee_id.name")
-
+    user_can_edit = fields.Boolean(default=lambda self: self.env.user.can_edit, readonly=True)
     weekly = fields.Boolean(default=False)
     date = fields.Date(string="Date")
     day_week_string = fields.Char(compute="_compute_day_week_string")
