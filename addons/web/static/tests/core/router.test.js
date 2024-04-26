@@ -1,19 +1,19 @@
-import { after, describe, expect, getFixture, test } from "@odoo/hoot";
+import { describe, expect, getFixture, test } from "@odoo/hoot";
+import { click, on } from "@odoo/hoot-dom";
+import { tick } from "@odoo/hoot-mock";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
 import {
     parseHash,
     parseSearchQuery,
-    stateToUrl,
-    urlToState,
     router,
     routerBus,
     startRouter,
+    stateToUrl,
+    urlToState,
 } from "@web/core/browser/router";
 import { redirect } from "@web/core/utils/urls";
-import { tick } from "@odoo/hoot-mock";
-import { patchWithCleanup } from "../web_test_helpers";
-import { click, on } from "@odoo/hoot-dom";
 
 const _urlToState = (url) => urlToState(new URL(url));
 
@@ -1515,7 +1515,7 @@ describe("pushState", () => {
 describe("History", () => {
     test("properly handles history.back and history.forward", async () => {
         redirect("/");
-        after(on(routerBus, "ROUTE_CHANGE", () => expect.step("ROUTE_CHANGE")));
+        on(routerBus, "ROUTE_CHANGE", () => expect.step("ROUTE_CHANGE"));
         createRouter();
 
         router.pushState({ k1: 1 });
@@ -1629,7 +1629,7 @@ describe("Retrocompatibility", () => {
 });
 
 describe("internal links", () => {
-    test.todo("click on internal link does a loadState instead of a full reload", async () => {
+    test("click on internal link does a loadState instead of a full reload", async () => {
         redirect("/odoo");
         createRouter({ onPushState: () => expect.step("pushState") });
         const fixture = getFixture();
@@ -1664,7 +1664,7 @@ describe("internal links", () => {
         expect(defaultPrevented).toBe(true);
     });
 
-    test.todo("click on internal link with target _blank doesn't do a loadState", async () => {
+    test("click on internal link with target _blank doesn't do a loadState", async () => {
         redirect("/odoo");
         createRouter({ onPushState: () => expect.step("pushState") });
         const fixture = getFixture();
@@ -1676,7 +1676,7 @@ describe("internal links", () => {
         expect(router.current).toEqual({});
 
         let defaultPrevented;
-        browser.addEventListener("click", (ev) => {
+        link.addEventListener("click", (ev) => {
             expect.step("click");
             defaultPrevented = ev.defaultPrevented;
             ev.preventDefault();

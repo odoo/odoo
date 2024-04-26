@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { HootError, createReporting, makeCallbacks } from "../hoot_utils";
+import { Callbacks, HootError, createReporting } from "../hoot_utils";
 import { Job } from "./job";
 
 /**
@@ -22,20 +22,13 @@ export function suiteError({ name, parent }, ...message) {
 }
 
 export class Suite extends Job {
-    callbacks = makeCallbacks();
+    callbacks = new Callbacks();
     /** @type {(Suite | Test)[]} */
     currentJobs = [];
     /** @type {(Suite | Test)[]} */
     jobs = [];
     reporting = createReporting();
     weight = 0;
-
-    /**
-     * @returns {boolean}
-     */
-    canRun() {
-        return super.canRun() && this.currentJobs.some((job) => job.canRun());
-    }
 
     increaseWeight() {
         this.weight++;

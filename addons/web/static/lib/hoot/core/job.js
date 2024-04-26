@@ -87,13 +87,6 @@ export class Job {
     }
 
     /**
-     * @returns {boolean}
-     */
-    canRun() {
-        return !this.config.skip;
-    }
-
-    /**
      * @param {JobConfig & { tags?: Iterable<Tag | string> }} config
      */
     configure({ tags, ...config }) {

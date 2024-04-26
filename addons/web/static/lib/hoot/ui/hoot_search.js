@@ -344,11 +344,11 @@ export class HootSearch extends Component {
     setup() {
         const { runner } = this.env;
 
-        runner.__beforeAll(() => {
+        runner.beforeAll(() => {
             this.state.categories = this.findSuggestions();
             this.state.empty &&= !this.hasFilters();
         });
-        runner.__afterAll(() => this.focusSearchInput());
+        runner.afterAll(() => this.focusSearchInput());
 
         this.rootRef = useRef("root");
         this.searchInputRef = useRef("search-input");
