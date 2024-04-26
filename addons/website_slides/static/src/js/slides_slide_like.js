@@ -85,12 +85,12 @@ var SlideLikeWidget = publicWidget.Widget.extend({
     },
 
     _onClickUp: function (ev) {
-        const slideId = ev.currentTarget.dataset.slide_id;
+        const slideId = ev.currentTarget.dataset.slideId;
         return this._onClick(slideId, 'like');
     },
 
     _onClickDown: function (ev) {
-        const slideId = ev.currentTarget.dataset.slide_id;
+        const slideId = ev.currentTarget.dataset.slideId;
         return this._onClick(slideId, 'dislike');
     },
 });

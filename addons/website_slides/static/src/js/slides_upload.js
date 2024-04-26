@@ -30,12 +30,16 @@ publicWidget.registry.websiteSlidesUpload = publicWidget.Widget.extend({
 
     _openDialog: function (element) {
         const dataset = element.dataset;
+        let moduleToInstall;
+        if (dataset.modulesToInstall) {
+            moduleToInstall = JSON.parse(dataset.modulesToInstall)
+        }
         this.call("dialog", "add", SlideUploadDialog, {
             categoryId: dataset.categoryId,
-            channelId: dataset.channelId,
+            channelId: parseInt(dataset.channelId),
             canPublish: dataset.canPublish === "True",
             canUpload: dataset.canUpload === "True",
-            modulesToInstall: dataset.modulesToInstall || [],
+            modulesToInstall: moduleToInstall || [],
             openModal: dataset.openModal,
         });
     },

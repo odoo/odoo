@@ -16,7 +16,7 @@ publicWidget.registry.websiteSlidesSlideArchive = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     _openDialog: function (slideTarget) {
-        const slideId = slideTarget.dataset.slide_id;
+        const slideId = slideTarget.dataset.slideId;
         this.call("dialog", "add", ConfirmationDialog, {
             title: _t("Archive Content"),
             body: _t("Are you sure you want to archive this content?"),

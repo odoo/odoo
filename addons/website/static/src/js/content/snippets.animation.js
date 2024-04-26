@@ -494,16 +494,20 @@ registry.slider = publicWidget.Widget.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         Array.from(this.el.querySelectorAll('img')).forEach(img => {
-            img.removeEventListener('load.slider');
+            img.removeEventListener('load.slider', () => this._computeHeights());
         });
         this.carousel('pause');
         this.el.removeAttribute('data-bs-carousel');
         Array.from(this.el.querySelectorAll('.carousel-item')).forEach(el => {
             el.style.minHeight = '';
         });
-        window.removeEventListener('resize.slider');
-        this.el.removeEventListener('slide.bs.carousel.slider');
-        this.el.removeEventListener('slid.bs.carousel.slider');
+        window.removeEventListener('resize.slider', debounce(() => this._computeHeights(), 250));
+        this.el.removeEventListener('slide.bs.carousel.slider', () => {
+            this.options.wysiwyg.odooEditor.observerUnactive();
+        });
+        this.el.removeEventListener('slid.bs.carousel.slider', () => {
+            this.options.wysiwyg.odooEditor.observerActive();
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -584,9 +588,12 @@ registry.Parallax = Animation.extend({
             bottom: '',
         });
 
-        window.removeEventListener('resize.animation_parallax');
+        window.removeEventListener('resize.animation_parallax', debounce(this._rebuild.bind(this), 500));
         if (this.modalEl) {
-            this.modalEl.removeEventListener('shown.bs.modal.animation_parallax');
+            this.modalEl.removeEventListener('shown.bs.modal.animation_parallax', () => {
+                this._rebuild();
+                this.modalEl.dispatchEvent(new Event('scroll'));
+            });
         }
     },
 
@@ -867,10 +874,10 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
         this._super.apply(this, arguments);
 
         if (this.dropdownParent) {
-            this.dropdownParent.removeEventListener('shown.bs.dropdown.backgroundVideo');
+            this.dropdownParent.removeEventListener('shown.bs.dropdown.backgroundVideo', this.throttledUpdate);
         }
 
-        window.removeEventListener('resize.' + this.iframeID);
+        window.removeEventListener('resize.' + this.iframeID, this.throttledUpdate);
 
         this.throttledUpdate.cancel();
 
@@ -981,7 +988,15 @@ registry.socialShare = publicWidget.Widget.extend({
         });
         popover.show();
 
-        this.el.removeEventListener('mouseleave.socialShare');
+        this.el.removeEventListener('mouseleave.socialShare', function () {
+            const self = this;
+            setTimeout(function () {
+                if (!this.el.querySelector('.popover:hover').length) {
+                    const popover = Popover.getOrCreateInstance(self);
+                    popover.dispose();
+                }
+            }, 200);
+        });
         this.el.addEventListener('mouseleave.socialShare', function () {
             const self = this;
             setTimeout(function () {

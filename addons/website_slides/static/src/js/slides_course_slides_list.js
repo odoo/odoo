@@ -82,17 +82,17 @@ publicWidget.registry.websiteSlidesCourseSlidesList = SlideCoursePage.extend({
      * @private
      */
     _checkForEmptySections: function (){
-        this.el.querySelectorAll('.o_wslides_slide_list_category').forEach(function () {
-            const categoryHeader = this.el.querySelector('.o_wslides_slide_list_category_header');
-            const categorySlideCount = this.el.querySelectorAll('.o_wslides_slides_list_slide:not(.o_not_editable)').length;
+        this.el.querySelectorAll('.o_wslides_slide_list_category').forEach((el) => {
+            const categoryHeader = el.querySelector('.o_wslides_slide_list_category_header');
+            const categorySlideCount = el.querySelectorAll('.o_wslides_slides_list_slide:not(.o_not_editable)').length;
             const emptyFlagContainer = categoryHeader.querySelector('.o_wslides_slides_list_drag');
             const emptyFlag = emptyFlagContainer.querySelector('small');
-            if (categorySlideCount === 0 && emptyFlag.length === 0) {
+            if (categorySlideCount === 0 && emptyFlag) {
                 const smallElement = document.createElement('small');
                 smallElement.className = "ms-1 text-muted fw-bold";
                 smallElement.textContent = _t("(empty)");
                 emptyFlagContainer.appendChild(smallElement);
-            } else if (categorySlideCount > 0 && emptyFlag.length > 0) {
+            } else if (categorySlideCount > 0 && emptyFlag) {
                 emptyFlag.remove();
             }
         });
@@ -100,8 +100,8 @@ publicWidget.registry.websiteSlidesCourseSlidesList = SlideCoursePage.extend({
 
     _getSlides: function (){
         const categories = [];
-        this.el.querySelectorAll('.o_wslides_js_list_item').forEach(() => {
-            categories.push(parseInt(this.dataset.slide_id));
+        this.el.querySelectorAll('.o_wslides_js_list_item').forEach((el) => {
+            categories.push(parseInt(el.dataset?.slideId));
         });
         return categories;
     },
