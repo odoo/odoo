@@ -23,6 +23,7 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         product_landed_cost_3 = self.env['product.product'].create({
             'name': "LC product 3",
             'uom_id': product_uom_unit_round_1.id,
+            'categ_id': self.env.ref('product.product_category_goods').id,
         })
         product_landed_cost_3.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         product_landed_cost_3.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.company_data['default_account_expense']
@@ -31,6 +32,7 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         product_landed_cost_4 = self.env['product.product'].create({
             'name': "LC product 4",
             'uom_id': product_uom_unit_round_1.id,
+            'categ_id': self.env.ref('product.product_category_goods').id,
         })
         product_landed_cost_4.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         product_landed_cost_4.product_tmpl_id.categ_id.property_valuation = 'real_time'
@@ -84,7 +86,10 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         picking_landed_cost_3.action_assign()
         picking_landed_cost_3._action_done()
 
-        virtual_interior_design = self.env['product.product'].create({'name': 'Virtual Interior Design'})
+        virtual_interior_design = self.env['product.product'].create({
+            'name': 'Virtual Interior Design',
+            'categ_id': self.env.ref('product.product_category_goods').id,
+        })
 
         # I create a landed cost for picking 3
         default_vals = self.env['stock.landed.cost'].default_get(list(self.env['stock.landed.cost'].fields_get()))
@@ -160,7 +165,6 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
 
         fifo_pc = self.env['product.category'].create({
             'name': 'Fifo Category',
-            'parent_id': self.env.ref("product.product_category_all").id,
             'property_valuation': 'real_time',
             'property_cost_method': 'fifo',
         })

@@ -448,11 +448,10 @@ class HrExpense(models.Model):
 
     @api.depends('product_id', 'company_id')
     def _compute_account_id(self):
-        property_field = self.env['product.category']._fields['property_account_expense_categ_id']
         for _expense in self:
             expense = _expense.with_company(_expense.company_id)
             if not expense.product_id:
-                expense.account_id = property_field.get_company_dependent_fallback(self.env['product.category'])
+                expense.account_id = _expense.company_id.expense_account_id
                 continue
             account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
             if account:
@@ -973,7 +972,7 @@ class HrExpense(models.Model):
         Returned expense accounts are the first expense account encountered in the following list:
         1. expense account of the expense itself
         2. expense account of the product
-        3. expense account of the product category
+        3. expense account of the company
         4. expense account on the purchase journal for employee expense
         """
 
@@ -987,8 +986,7 @@ class HrExpense(models.Model):
         if self.product_id:
             account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
         else:
-            field = self.env['product.category']._fields['property_account_expense_categ_id']
-            account = field.get_company_dependent_fallback(self.env['product.category'])
+            account = self.env.company.expense_account_id
 
         if account:
             return account

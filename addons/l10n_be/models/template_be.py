@@ -15,8 +15,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '6',
             'property_account_receivable_id': 'a400',
             'property_account_payable_id': 'a440',
-            'property_account_expense_categ_id': 'a600',
-            'property_account_income_categ_id': 'a7000',
         }
 
     @template('be', 'res.company')
@@ -38,6 +36,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_income_account_id': 'a757100',
                 'default_cash_difference_expense_account_id': 'a657100',
                 'transfer_account_id': 'a58',
+                'expense_account_id': 'a600',
+                'income_account_id': 'a7000',
             },
         }
 

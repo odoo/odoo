@@ -33,7 +33,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         for cost_method in cost_methods:
             for picking_type in picking_types:
-                self.product_a.cost_method = cost_method
+                self.product_a.categ_id.property_cost_method = cost_method
                 po = self.env['purchase.order'].create({
                     'name': 'test_picking_qty_changed_after_validate picking',
                     'partner_id': self.partner_a.id,

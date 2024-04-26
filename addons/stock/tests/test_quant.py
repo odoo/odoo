@@ -1355,6 +1355,7 @@ class StockQuantRemovalStrategy(TransactionCase):
         self.product = self.env['product.product'].create({
             'name': 'Product',
             'is_storable': True,
+            'categ_id': self.env.ref('product.product_category_goods').id,
         })
         self.product.categ_id.removal_strategy_id = self.least_package_strategy.id
         self.stock_location = self.env['stock.location'].create({

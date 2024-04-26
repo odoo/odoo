@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'l10n_ie_account_2100',
             'property_account_payable_id': 'l10n_ie_account_34',
-            'property_account_expense_categ_id': 'l10n_ie_account_60',
-            'property_account_income_categ_id': 'l10n_ie_account_70',
             'property_stock_valuation_account_id': 'l10n_ie_account_630',
             'property_advance_tax_payment_account_id': 'l10n_ie_account_2132',
             'code_digits': '6',
@@ -35,5 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_income_account_id': 'l10n_ie_account_731',
                 'account_sale_tax_id': 'ie_tax_sale_goods_23',
                 'account_purchase_tax_id': 'ie_tax_purchase_goods_23',
+                'expense_account_id': 'l10n_ie_account_60',
+                'income_account_id': 'l10n_ie_account_70',
             },
         }

@@ -18,7 +18,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.uom_unit = self.env.ref('uom.product_uom_unit')
 
-        product_category_all = self.env.ref('product.product_category_all')
+        product_category_all = self.product_category
         product_category_all.property_cost_method = 'fifo'
         product_category_all.property_valuation = 'real_time'
         in_account = self.env['account.account'].create({
@@ -167,7 +167,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.uom_unit = self.env.ref('uom.product_uom_unit')
-        product_category_all = self.env.ref('product.product_category_all')
+        product_category_all = self.product_category
         product_category_all.property_cost_method = 'fifo'
         product_category_all.property_valuation = 'real_time'
         in_account = self.env['account.account'].create({
@@ -284,7 +284,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         self.comp1.tracking = 'serial'
         self.comp2.standard_price = 100
         self.finished.tracking = 'serial'
-        self.env.ref('product.product_category_all').property_cost_method = 'fifo'
+        self.product_category.property_cost_method = 'fifo'
 
         # Create a receipt picking from the subcontractor
         picking_form = Form(self.env['stock.picking'])
@@ -347,7 +347,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         Suppose a subcontracted product P with two tracked components, P is FIFO
         Create a receipt for 10 x P, receive 5, then 3 and then 2
         """
-        self.env.ref('product.product_category_all').property_cost_method = 'fifo'
+        self.product_category.property_cost_method = 'fifo'
         self.comp1.tracking = 'lot'
         self.comp1.standard_price = 10
         self.comp2.tracking = 'lot'
@@ -403,7 +403,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.uom_unit = self.env.ref('uom.product_uom_unit')
-        product_category_all = self.env.ref('product.product_category_all')
+        product_category_all = self.product_category
         product_category_all.property_cost_method = 'standard'
         product_category_all.property_valuation = 'real_time'
 
@@ -473,7 +473,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         """
         Test that the production stock account is optional, and we will fallback on input/output accounts.
         """
-        product_category_all = self.env.ref('product.product_category_all')
+        product_category_all = self.product_category
         product_category_all.property_cost_method = 'fifo'
         product_category_all.property_valuation = 'real_time'
         # set the production account to False

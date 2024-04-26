@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'chart20000100',
             'property_account_payable_id': 'chart21000100',
-            'property_account_expense_categ_id': 'chart70010100',
-            'property_account_income_categ_id': 'chart73000100',
             'code_digits': '8',
             'use_storno_accounting': True,
         }
@@ -32,5 +30,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'chart75000900',
                 'default_cash_difference_income_account_id': 'chart75000700',
                 'default_cash_difference_expense_account_id': 'chart75010500',
+                'expense_account_id': 'chart70010100',
+                'income_account_id': 'chart73000100',
             },
         }

@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '4',
             'property_account_receivable_id': 'chart131',
             'property_account_payable_id': 'chart331',
-            'property_account_expense_categ_id': 'chart1561',
-            'property_account_income_categ_id': 'chart5111',
             'display_invoice_amount_total_words': True,
         }
 
@@ -34,5 +32,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_sale_tax_id': 'tax_sale_vat10',
                 'account_purchase_tax_id': 'tax_purchase_vat10',
                 'transfer_account_id': 'chart1131',
+                'expense_account_id': 'chart1561',
+                'income_account_id': 'chart5111',
             },
         }

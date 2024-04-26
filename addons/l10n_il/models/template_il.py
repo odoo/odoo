@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'il_account_101200',
             'property_account_payable_id': 'il_account_111100',
-            'property_account_expense_categ_id': 'il_account_212200',
-            'property_account_income_categ_id': 'il_account_200000',
             'property_stock_account_input_categ_id': 'il_account_101120',
             'property_stock_account_output_categ_id': 'il_account_101130',
             'property_stock_valuation_account_id': 'il_account_101110',
@@ -32,5 +30,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'il_account_202100',
                 'account_sale_tax_id': 'il_vat_sales_17',
                 'account_purchase_tax_id': 'il_vat_self_inv_purchase',
+                'expense_account_id': 'il_account_212200',
+                'income_account_id': 'il_account_200000',
             },
         }

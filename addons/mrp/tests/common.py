@@ -225,7 +225,6 @@ class TestMrpCommon(TestStockCommon):
             'type': 'consu',
             'is_storable': True,
             'tracking': 'none',
-            'categ_id': cls.env.ref('product.product_category_all').id,
         })
         cls.graphics_card = cls.env['product.product'].create({
             'name': 'Individual Workplace',
@@ -234,7 +233,6 @@ class TestMrpCommon(TestStockCommon):
             'type': 'consu',
             'is_storable': True,
             'tracking': 'none',
-            'categ_id': cls.env.ref('product.product_category_all').id,
         })
 
     @classmethod

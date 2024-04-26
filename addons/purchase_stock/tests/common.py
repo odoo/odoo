@@ -28,12 +28,15 @@ class PurchaseTestCommon(TestStockCommon):
 
         cls.route_buy = cls.warehouse_1.buy_pull_id.route_id.id
         cls.route_mto = cls.warehouse_1.mto_pull_id.route_id.id
+        cls.categ_id = cls.env.ref('product.product_category_goods').id
 
         # Update product_1 with type, route and Delivery Lead Time
         cls.product_1.write({
             'is_storable': True,
             'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
-            'seller_ids': [(0, 0, {'partner_id': cls.partner_1.id, 'delay': 5})]})
+            'seller_ids': [(0, 0, {'partner_id': cls.partner_1.id, 'delay': 5})],
+            'categ_id': cls.categ_id,
+        })
 
         cls.t_shirt = cls.env['product.product'].create({
             'name': 'T-shirt',
@@ -46,7 +49,9 @@ class PurchaseTestCommon(TestStockCommon):
         cls.product_2.write({
             'is_storable': True,
             'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
-            'seller_ids': [(0, 0, {'partner_id': cls.partner_1.id, 'delay': 2})]})
+            'seller_ids': [(0, 0, {'partner_id': cls.partner_1.id, 'delay': 2})],
+            'categ_id': cls.categ_id,
+        })
 
         cls.res_users_purchase_user = cls.env['res.users'].create({
             'company_id': cls.env.ref('base.main_company').id,

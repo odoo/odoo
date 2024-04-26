@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '6',
             'property_account_receivable_id': 'pcg_34211',
             'property_account_payable_id': 'pcg_44111',
-            'property_account_income_categ_id': 'pcg_7111',
-            'property_account_expense_categ_id': 'pcg_6111',
             'display_invoice_amount_total_words': True,
         }
 
@@ -35,5 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_loss_account_id': 'pcg_63862',
                 'account_sale_tax_id': 'vat_out_20_80',
                 'account_purchase_tax_id': 'vat_in_20_146',
+                'income_account_id': 'pcg_7111',
+                'expense_account_id': 'pcg_6111',
             },
         }

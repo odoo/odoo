@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'l10n_hk_1240',
             'property_account_payable_id': 'l10n_hk_2211',
-            'property_account_income_categ_id': 'l10n_hk_41',
-            'property_account_expense_categ_id': 'l10n_hk_51',
             'code_digits': '6',
         }
 
@@ -30,5 +28,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'l10n_hk_5240',
                 'account_journal_early_pay_discount_loss_account_id': 'l10n_hk_5250',
                 'account_journal_early_pay_discount_gain_account_id': 'l10n_hk_4250',
+                'income_account_id': 'l10n_hk_41',
+                'expense_account_id': 'l10n_hk_51',
             },
         }

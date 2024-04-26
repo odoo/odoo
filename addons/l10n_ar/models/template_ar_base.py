@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'base_deudores_por_ventas',
             'property_account_payable_id': 'base_proveedores',
-            'property_account_expense_categ_id': 'base_compra_mercaderia',
-            'property_account_income_categ_id': 'base_venta_de_mercaderia',
             'name': _('Generic Chart of Accounts Argentina Single Taxpayer / Basis'),
             'code_digits': '12',
         }
@@ -28,6 +26,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'base_deudores_por_ventas_pos',
                 'income_currency_exchange_account_id': 'base_diferencias_de_cambio',
                 'expense_currency_exchange_account_id': 'base_diferencias_de_cambio',
+                'expense_account_id': 'base_compra_mercaderia',
+                'income_account_id': 'base_venta_de_mercaderia',
             },
         }
 

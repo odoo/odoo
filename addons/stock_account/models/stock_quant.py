@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import itertools
 from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_is_zero
 from odoo.tools.misc import groupby
@@ -17,7 +15,26 @@ class StockQuant(models.Model):
         help="Date at which the accounting entries will be created"
              " in case of automated inventory valuation."
              " If empty, the inventory date will be used.")
-    cost_method = fields.Selection(related="product_categ_id.property_cost_method")
+    cost_method = fields.Selection(
+        string="Cost Method",
+        selection=[
+            ('standard', "Standard Price"),
+            ('fifo', "First In First Out (FIFO)"),
+            ('average', "Average Cost (AVCO)"),
+        ],
+        compute='_compute_cost_method',
+    )
+
+    @api.depends_context('company')
+    @api.depends('product_categ_id.property_cost_method')
+    def _compute_cost_method(self):
+        for quant in self:
+            quant.cost_method = (
+                quant.product_categ_id.with_company(
+                    quant.company_id
+                ).property_cost_method
+                or (quant.company_id or self.env.company).cost_method
+            )
 
     @api.model
     def _should_exclude_for_valuation(self):

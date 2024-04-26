@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'account_template_1201_0201',
             'property_account_payable_id': 'account_template_3101_0201',
-            'property_account_expense_categ_id': 'account_template_6101_0101',
-            'property_account_income_categ_id': 'account_template_5101_0101',
             'property_stock_account_input_categ_id': 'account_template_1407_0101',
             'property_stock_account_output_categ_id': 'account_template_1408_0101',
             'property_stock_valuation_account_id': 'account_template_1401_0101',
@@ -35,5 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'account_template_5701_0101',
                 'account_sale_tax_id': 'account_tax_sale_vat1',
                 'account_purchase_tax_id': 'account_tax_purchase_vat1',
+                'expense_account_id': 'account_template_6101_0101',
+                'income_account_id': 'account_template_5101_0101',
             },
         }

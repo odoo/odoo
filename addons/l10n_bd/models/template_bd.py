@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'l10n_bd_100201',
             'property_account_payable_id': 'l10n_bd_200101',
-            'property_account_expense_categ_id': 'l10n_bd_500200',
-            'property_account_income_categ_id': 'l10n_bd_400100'
         }
 
     @template('bd', 'res.company')
@@ -32,7 +30,9 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_loss_account_id': 'l10n_bd_501107',
                 'account_journal_early_pay_discount_gain_account_id': 'l10n_bd_400304',
                 'account_sale_tax_id': 'VAT_S_IN_BD_10',
-                'account_purchase_tax_id': 'VAT_P_IN_BD_10'
+                'account_purchase_tax_id': 'VAT_P_IN_BD_10',
+                'income_account_id': 'l10n_bd_400100',
+                'expense_account_id': 'l10n_bd_500200',
             },
         }
 

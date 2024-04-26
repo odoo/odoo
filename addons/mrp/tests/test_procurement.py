@@ -103,8 +103,8 @@ class TestProcurement(TestMrpCommon):
         """Check that a manufacturing order create the right procurements when the route are set on
         a parent category of a product"""
         # find a child category id
-        all_categ_id = self.env['product.category'].search([('parent_id', '=', None)], limit=1)
-        child_categ_id = self.env['product.category'].search([('parent_id', '=', all_categ_id.id)], limit=1)
+        child_categ_id = self.env['product.category'].search([('parent_id', '!=', False)], limit=1)
+        all_categ_id = child_categ_id.parent_id
 
         # set the product of `self.bom_1` to this child category
         for bom_line_id in self.bom_1.bom_line_ids:
@@ -564,12 +564,10 @@ class TestProcurement(TestMrpCommon):
             'name': 'product',
             'is_storable': True,
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('mrp.route_warehouse0_manufacture'))],
-            'categ_id': self.env.ref('product.product_category_all').id
         })
         component = self.env['product.product'].create({
             'name': 'component',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id
         })
         self.env['mrp.bom'].create({
             'product_id': product.id,

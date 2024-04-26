@@ -11,9 +11,7 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'ec1102050101',
             'property_account_payable_id': 'ec210301',
-            'property_account_expense_categ_id': 'ec110307',
             'journal_account_expense_categ_id': 'ec52022816',
-            'property_account_income_categ_id': 'ec410101',
             'property_stock_account_input_categ_id': 'ec110307',
             'property_stock_account_output_categ_id': 'ec510102',
             'property_stock_valuation_account_id': 'ec110306',
@@ -39,6 +37,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'ec_expense_cash_difference',
                 'account_sale_tax_id': 'tax_vat_15_411_goods',
                 'account_purchase_tax_id': 'tax_vat_15_510_sup_01',
+                'expense_account_id': 'ec110307',
+                'income_account_id': 'ec410101',
             },
         }
 

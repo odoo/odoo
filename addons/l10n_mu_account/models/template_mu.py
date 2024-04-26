@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'mu_receivable',
             'property_account_payable_id': 'mu_payable',
-            'property_account_expense_categ_id': 'mu_expense',
-            'property_account_income_categ_id': 'mu_income',
             'property_stock_valuation_account_id': 'mu_stock_valuation',
             'property_advance_tax_payment_account_id': 'mu_tax_paid',
             'property_tax_payable_account_id': 'mu_tax_payable',
@@ -38,5 +36,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'mu_cash_diff_expense',
                 'account_sale_tax_id': 'mu_tax_sale_15',
                 'account_purchase_tax_id': 'mu_tax_purchase_15',
+                'expense_account_id': 'mu_expense',
+                'income_account_id': 'mu_income',
             },
         }

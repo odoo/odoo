@@ -39,14 +39,14 @@ def data_method_provider(chart_template_name, country_code):
             'template_data': {
                 'code_digits': 6,
                 'currency_id': 'base.EUR',
-                'property_account_income_categ_id': f'{external_id_prefix}test_account_income_template',
-                'property_account_expense_categ_id': f'{external_id_prefix}test_account_expense_template',
             },
             'res.company': {
                 self.env.company.id: {
                     'bank_account_code_prefix': '1000',
                     'cash_account_code_prefix': '2000',
                     'transfer_account_code_prefix': '3000',
+                    'income_account_id': f'{external_id_prefix}test_account_income_template',
+                    'expense_account_id': f'{external_id_prefix}test_account_expense_template',
                 },
             },
             'account.account': {

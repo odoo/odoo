@@ -422,7 +422,7 @@ class StockValuationAdjustmentLines(models.Model):
         if self.move_id._is_dropshipped():
             debit_account_id = accounts.get('expense') and accounts['expense'].id or False
         already_out_account_id = accounts['stock_output'].id
-        credit_account_id = self.cost_line_id.account_id.id or cost_product.categ_id.property_stock_account_input_categ_id.id
+        credit_account_id = self.cost_line_id.account_id.id or cost_product._get_product_accounts()['stock_input'].id
 
         if not credit_account_id:
             raise UserError(_('Please configure Stock Expense Account for product: %s.', cost_product.name))

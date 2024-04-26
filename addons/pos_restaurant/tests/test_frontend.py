@@ -125,7 +125,6 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'name': 'Coca-Cola',
             'weight': 0.01,
             'pos_categ_ids': [(4, drinks_category.id)],
-            'categ_id': cls.env.ref('point_of_sale.product_category_pos').id,
             'taxes_id': [(6, 0, [])],
         })
 
@@ -135,7 +134,6 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'name': 'Water',
             'weight': 0.01,
             'pos_categ_ids': [(4, drinks_category.id)],
-            'categ_id': cls.env.ref('point_of_sale.product_category_pos').id,
             'taxes_id': [(6, 0, [])],
         })
 
@@ -145,7 +143,6 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'name': 'Minute Maid',
             'weight': 0.01,
             'pos_categ_ids': [(4, drinks_category.id)],
-            'categ_id': cls.env.ref('point_of_sale.product_category_pos').id,
             'taxes_id': [(6, 0, [])],
         })
 
@@ -156,7 +153,6 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'name': 'Test Multi Category Product',
             'weight': 0.01,
             'pos_categ_ids': [(4, drinks_category.id), (4, food_category.id)],
-            'categ_id': cls.env.ref('point_of_sale.product_category_pos').id,
             'taxes_id': [(6, 0, [])],
         })
 

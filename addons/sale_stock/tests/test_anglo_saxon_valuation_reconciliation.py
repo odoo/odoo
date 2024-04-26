@@ -160,6 +160,7 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
             'list_price': 10 * i,
             'standard_price': 10 * i,
             'is_storable': True,
+            'categ_id': self.env.ref('product.product_category_goods').id,
         } for i in range(1, 3)]))
         product_1.categ_id.property_valuation = 'real_time'
         product_1.categ_id.property_cost_method = 'fifo'

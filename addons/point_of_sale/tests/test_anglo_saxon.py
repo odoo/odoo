@@ -17,7 +17,7 @@ class TestAngloSaxonCommon(AccountTestInvoicingCommon):
         cls.company = cls.env.company
         cls.warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.company.id)], limit=1)
         cls.partner = cls.env['res.partner'].create({'name': 'Partner 1'})
-        cls.category = cls.env.ref('product.product_category_all')
+        cls.category = cls.env.ref('product.product_category_services')
         cls.category = cls.category.copy({'name': 'New category','property_valuation': 'real_time'})
         cls.account = cls.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00', 'account_type': 'asset_receivable', 'reconcile': True})
         account_expense = cls.env['account.account'].create({'name': 'Expense', 'code': 'EXP00', 'account_type': 'expense', 'reconcile': True})
