@@ -183,3 +183,11 @@ span.o_force_ltr {
         }
     }
 }
+
+.o_ui_app_icon {
+    width: var(--oi-font-size, 1em);
+
+    :not(:hover) > & {
+        --oi-color: currentColor;
+    }
+ }
