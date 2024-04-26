@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 
 
 class ProductCategory(models.Model):
@@ -59,12 +59,3 @@ class ProductCategory(models.Model):
             return super()._compute_display_name()
         for record in self:
             record.display_name = record.name
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_default_category(self):
-        main_category = self.env.ref('product.product_category_all', raise_if_not_found=False)
-        if main_category and main_category in self:
-            raise UserError(_("You cannot delete this product category, it is the default generic category."))
-        expense_category = self.env.ref('product.cat_expense', raise_if_not_found=False)
-        if expense_category and expense_category in self:
-            raise UserError(_("You cannot delete the %s product category.", expense_category.name))

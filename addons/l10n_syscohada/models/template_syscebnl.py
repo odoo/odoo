@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'syscebnl_409',
             'property_account_payable_id': 'syscebnl_419',
-            'property_account_expense_categ_id': 'syscebnl_601',
-            'property_account_income_categ_id': 'syscebnl_7051',
             'name': 'SYSCEBNL',
             'code_digits': '6',
         }
@@ -31,5 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'syscebnl_773',
                 'default_cash_difference_expense_account_id': 'syscebnl_658',
                 'default_cash_difference_income_account_id': 'syscebnl_758',
+                'expense_account_id': 'syscebnl_601',
+                'income_account_id': 'syscebnl_7051',
             },
         }

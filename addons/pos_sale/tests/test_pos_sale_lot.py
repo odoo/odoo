@@ -19,7 +19,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'tracking': 'serial',
             'is_storable': True,
             'lst_price': 10,
-            'categ_id': self.env.ref('product.product_category_all').id,
         })
 
         lot1 = self.env['stock.lot'].create({
