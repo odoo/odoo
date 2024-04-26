@@ -1,5 +1,5 @@
 from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare
 from odoo.tools.misc import format_date
 
@@ -34,18 +34,20 @@ class AccountPayment(models.Model):
             raise ValidationError('* %s' % '\n* '.join(msgs))
         super().action_post()
         self._l10n_latam_check_split_move()
-        # TODO : to look for another alternative.
-        (self.l10n_latam_check_ids or self.l10n_latam_new_check_ids)._compute_check_info()
+
+    def _get_reconciled_checks_error(self):
+        checks_reconciled = self.l10n_latam_new_check_ids.filtered(lambda x: x.issue_state in ['debited', 'voided'])
+        if checks_reconciled:
+            raise UserError(_('%s. Please unreconciled it before change the payment state') %
+                ', '.join([ 'check %s is %s' % (x.name, x.issue_state) for x in checks_reconciled]))
 
     def action_cancel(self):
+        self._get_reconciled_checks_error()
         super().action_cancel()
-        # TODO : to look for another alternative.
-        (self.l10n_latam_check_ids or self.l10n_latam_new_check_ids)._compute_check_info()
 
     def action_draft(self):
+        self._get_reconciled_checks_error()
         super().action_draft()
-        # TODO : to look for another alternative.
-        (self.l10n_latam_check_ids or self.l10n_latam_new_check_ids)._compute_check_info()
 
     def _l10n_latam_check_split_move(self):
         for payment in self.filtered(lambda x: x.payment_method_code == 'own_checks' and x.payment_type == 'outbound'):
@@ -96,6 +98,36 @@ class AccountPayment(models.Model):
         split_move_ids = self.mapped('l10n_latam_new_check_ids.split_move_line_id.move_id')
         split_move_ids.button_draft()
         split_move_ids.unlink()
+
+    # @api.depends('payment_method_line_id', 'l10n_latam_check_issuer_vat', 'l10n_latam_check_bank_id', 'company_id',
+    #              'l10n_latam_check_number', 'l10n_latam_check_id', 'state', 'date', 'is_internal_transfer', 'amount', 'currency_id')
+    # def _compute_l10n_latam_check_warning_msg(self):
+    #     """
+    #     Compute warning message for latam checks checks
+    #     We use l10n_latam_check_number as de dependency because on the interface this is the field the user is using.
+    #     Another approach could be to add an onchange on _inverse_l10n_latam_check_number method
+    #     """
+    #     self.l10n_latam_check_warning_msg = False
+    #     latam_draft_checks = self.filtered(
+    #         lambda x: x.state == 'draft' and (x.l10n_latam_manual_checks or x.payment_method_line_id.code in [
+    #             'in_third_party_checks', 'out_third_party_checks', 'new_third_party_checks']))
+    #     for rec in latam_draft_checks:
+    #         msgs = rec._get_blocking_l10n_latam_warning_msg()
+    #         # new third party check
+    #         if rec.l10n_latam_check_number and rec.payment_method_line_id.code == 'new_third_party_checks' and \
+    #                 rec.l10n_latam_check_bank_id and rec.l10n_latam_check_issuer_vat:
+    #             same_checks = self.search([
+    #                 ('company_id', '=', rec.company_id.id),
+    #                 ('l10n_latam_check_bank_id', '=', rec.l10n_latam_check_bank_id.id),
+    #                 ('l10n_latam_check_issuer_vat', '=', rec.l10n_latam_check_issuer_vat),
+    #                 ('check_number', '=', rec.l10n_latam_check_number),
+    #                 ('id', '!=', rec._origin.id)])
+    #             if same_checks:
+    #                 msgs.append(_(
+    #                     "Other checks were found with same number, issuer and bank. Please double check you are not "
+    #                     "encoding the same check more than once. List of other payments/checks: %s",
+    #                     ", ".join(same_checks.mapped('display_name'))))
+    #         rec.l10n_latam_check_warning_msg = msgs and '* %s' % '\n* '.join(msgs) or False
 
     def _get_blocking_l10n_latam_warning_msg(self):
         msgs = []

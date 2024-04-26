@@ -59,15 +59,12 @@ class l10nLatamAccountPaymentCheck(models.Model):
     issue_state = fields.Selection([('handed', 'Handed'), ('debited', 'Debited'), ('voided', 'Voided')],
                                    compute='_compute_issue_state', store=True)
 
-    # TODO terminar de implementar
     def _auto_init(self):
         super()._auto_init()
-        # drop_index(self.env.cr, 'l10n_latam_account_payment_check_unique')
-        # drop_index(self.env.cr, "l10n_latam_account_payment_check_unique", self._table)
         if not index_exists(self.env.cr, 'l10n_latam_account_payment_check_unique'):
             # issue_state is used to know that is an own check and also that is posted
             self.env.cr.execute("""
-                CREATE INDEX l10n_latam_account_payment_check_unique
+                CREATE UNIQUE INDEX l10n_latam_account_payment_check_unique
                     ON l10n_latam_account_payment_check(name, payment_method_line_id)
                 WHERE issue_state is not null
             """)
@@ -184,6 +181,12 @@ class l10nLatamAccountPaymentCheck(models.Model):
     def _get_reconciled_move(self):
         reconciled_line = self.split_move_line_id.full_reconcile_id.reconciled_line_ids - self.split_move_line_id
         return (reconciled_line.move_id.line_ids - reconciled_line).mapped('move_id')
+
+    @api.constrains('amount')
+    def _constrains_min_amount(self):
+        min_amount_error = self.filtered(lambda x: x.amount <= 0)
+        if min_amount_error:
+            raise ValidationError(_('The amount of the check must be greater than 0'))
 
     # @api.depends('payment_register_id.payment_method_line_id.code', 'payment_register_id.partner_id')
     # def _compute_l10n_latam_check_bank_id(self):
