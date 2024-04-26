@@ -52,13 +52,13 @@ class AccountTax(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('company_id', '=', data['pos.config']['data'][0]['company_id'])]
+        return self.env['account.tax']._check_company_domain(data['pos.config']['data'][0]['company_id'])
 
     @api.model
     def _load_pos_data_fields(self, config_id):
         return [
             'id', 'name', 'price_include', 'include_base_amount', 'is_base_affected',
-            'amount_type', 'children_tax_ids', 'amount', 'repartition_line_ids', 'id'
+            'amount_type', 'children_tax_ids', 'amount', 'repartition_line_ids', 'company_id', 'id'
         ]
 
     def _load_pos_data(self, data):
