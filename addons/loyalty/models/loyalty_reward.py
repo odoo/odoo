@@ -256,4 +256,5 @@ class LoyaltyReward(models.Model):
             'sale_ok': False,
             'purchase_ok': False,
             'lst_price': 0,
+            'categ_id': self.env.ref('product.product_category_services').id,
         } for reward in self]

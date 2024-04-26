@@ -3,6 +3,7 @@
 
     <record id="product_product_quote_despacho" model="product.product">
         <field name="name">Import Clearance</field>
+        <field name="categ_id" ref="product.product_category_office"/>
         <field name="detailed_type">service</field>
         <field name="default_code">AFIP_DESPACHO</field>
         <field name="sale_ok" eval="False"/>
@@ -13,6 +14,7 @@
 
     <record id="product_product_tasa_estadistica" model="product.product">
         <field name="name">Statistics Rate</field>
+        <field name="categ_id" ref="product.product_category_office"/>
         <field name="detailed_type">service</field>
         <field name="default_code">AFIP_TASA_EST</field>
         <field name="sale_ok" eval="False"/>
@@ -23,6 +25,7 @@
 
     <record id="product_product_arancel" model="product.product">
         <field name="name">Tariff</field>
+        <field name="categ_id" ref="product.product_category_office"/>
         <field name="detailed_type">service</field>
         <field name="default_code">AFIP_ARANCEL</field>
         <field name="sale_ok" eval="False"/>
@@ -33,6 +36,7 @@
 
     <record id="product_product_servicio_de_guarda" model="product.product">
         <field name="name">Guard Service</field>
+        <field name="categ_id" ref="product.product_category_office"/>
         <field name="detailed_type">service</field>
         <field name="default_code">AFIP_SERV_GUARDA</field>
         <field name="sale_ok" eval="False"/>
