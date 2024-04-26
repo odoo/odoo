@@ -1,49 +1,59 @@
 /** @odoo-module */
 
-import { models } from "@web/../tests/web_test_helpers";
+import { before } from "@odoo/hoot";
+import { MockServer, models } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { patchWebsocketWorkerWithCleanup } from "../../mock_websocket";
-
-/**
- * @param {BusBus} BusBus
- * @param {Object} message Message sent through the websocket to the
- * server.
- * @param {string} [message.event_name]
- * @param {any} [message.data]
- */
-function performWebsocketRequest(BusBus, { event_name, data }) {
-    /** @type {import("mock_models").IrWebSocket} */
-    const IrWebSocket = BusBus.env["ir.websocket"];
-
-    if (event_name === "update_presence") {
-        const { inactivity_period, im_status_ids_by_model } = data;
-        IrWebSocket._update_presence(inactivity_period, im_status_ids_by_model);
-    } else if (event_name === "subscribe") {
-        const { channels } = data;
-        BusBus.channelsByUser[BusBus.env?.uid] = channels;
-    }
-    const callbackFn = registry.category("mock_server_websocket_callbacks").get(event_name, null);
-    if (callbackFn) {
-        callbackFn(data);
-    }
-}
 
 export class BusBus extends models.Model {
     _name = "bus.bus";
 
-    wsWorker;
+    wsWorker = null;
     channelsByUser = {};
     lastBusNotificationId = 0;
 
     constructor() {
         super(...arguments);
-        const self = this;
-        this.wsWorker = patchWebsocketWorkerWithCleanup({
-            _sendToServer(message) {
-                performWebsocketRequest(self, message);
-                super._sendToServer(message);
-            },
-        });
+
+        const createWebSocket = () => {
+            const performWebsocketRequest = this._performWebsocketRequest.bind(this);
+            this.wsWorker = patchWebsocketWorkerWithCleanup({
+                _sendToServer(message) {
+                    performWebsocketRequest(message);
+                    return super._sendToServer(message);
+                },
+            });
+        };
+
+        if (MockServer.current) {
+            createWebSocket();
+        } else {
+            before(createWebSocket);
+        }
+    }
+
+    /**
+     * @param {Object} message Message sent through the websocket to the
+     * server.
+     * @param {string} [message.event_name]
+     * @param {any} [message.data]
+     */
+    _performWebsocketRequest({ event_name, data }) {
+        const IrWebSocket = this.env["ir.websocket"];
+
+        if (event_name === "update_presence") {
+            const { inactivity_period, im_status_ids_by_model } = data;
+            IrWebSocket._update_presence(inactivity_period, im_status_ids_by_model);
+        } else if (event_name === "subscribe") {
+            const { channels } = data;
+            this.channelsByUser[this.env?.uid] = channels;
+        }
+        const callbackFn = registry
+            .category("mock_server_websocket_callbacks")
+            .get(event_name, null);
+        if (callbackFn) {
+            callbackFn(data);
+        }
     }
 
     /**

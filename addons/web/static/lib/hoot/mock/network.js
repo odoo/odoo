@@ -109,7 +109,7 @@ export function cleanupNetwork() {
     mockWebSocketConnection = null;
 
     // Workers
-    for (const worker of openWorkers) {
+    for (const [worker] of openWorkers) {
         if ("port" in worker) {
             worker.port.close();
         } else {
@@ -120,10 +120,10 @@ export function cleanupNetwork() {
     mockWorkerConnection = null;
 
     // Other APIs
-    mockCookie.__clear();
-    mockHistory.__clear();
-    mockLocation.__clear();
-    MockBroadcastChannel.__clear();
+    mockCookie._clear();
+    mockHistory._clear();
+    mockLocation._clear();
+    MockBroadcastChannel._clear();
 }
 
 /** @type {typeof fetch} */
@@ -170,9 +170,7 @@ export async function mockedFetch(input, init) {
     if (result instanceof MockResponse) {
         // Mocked response
         logResponse(async () =>
-            headers.get(HEADER.contentType) === HEADER.json
-                ? await result.json()
-                : await result.text()
+            headers.get(HEADER.contentType) === HEADER.json ? result.json() : result.text()
         );
         return result;
     }
@@ -281,7 +279,7 @@ export class MockBroadcastChannel extends BroadcastChannel {
         MockBroadcastChannel._instances.push(this);
     }
 
-    static __clear() {
+    static _clear() {
         while (MockBroadcastChannel._instances.length) {
             MockBroadcastChannel._instances.pop().close();
         }
@@ -311,7 +309,7 @@ export class MockCookie {
         }
     }
 
-    __clear() {
+    _clear() {
         this._jar = {};
     }
 }
@@ -406,7 +404,7 @@ export class MockHistory {
         window.dispatchEvent(new PopStateEvent("popstate", { state: this.state }));
     }
 
-    __clear() {
+    _clear() {
         this._index = 0;
         this._stack = [];
         this.pushState(null, "", this._loc.href);
@@ -511,7 +509,7 @@ export class MockLocation {
         return this._anchor.toString();
     }
 
-    __clear() {
+    _clear() {
         this.href = DEFAULT_URL;
     }
 }
@@ -627,7 +625,9 @@ export class MockSharedWorker extends EventTarget {
      */
     constructor(scriptURL, options) {
         if (!mockWorkerConnection) {
-            return new SharedWorker(...arguments);
+            const worker = new SharedWorker(...arguments);
+            openWorkers.set(worker, Promise.resolve());
+            return worker;
         }
 
         super();
@@ -710,7 +710,9 @@ export class MockWorker extends EventTarget {
      */
     constructor(scriptURL, options) {
         if (!mockWorkerConnection) {
-            return new Worker(...arguments);
+            const worker = new Worker(...arguments);
+            openWorkers.set(worker, Promise.resolve());
+            return worker;
         }
 
         super();

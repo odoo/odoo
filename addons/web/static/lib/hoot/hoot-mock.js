@@ -22,4 +22,4 @@ export {
     setFrameRate,
     tick,
 } from "./mock/time";
-export { mockTouch, watchListeners } from "./mock/window";
+export { mockTouch, watchKeys, watchListeners } from "./mock/window";

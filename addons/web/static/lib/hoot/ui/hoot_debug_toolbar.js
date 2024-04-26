@@ -73,7 +73,7 @@ export class HootDebugToolBar extends Component {
                 </div>
                 <t t-if="state.open">
                     <HootTestResult open="true" test="props.test" t-key="done">
-                        <HootTestPath full="true" test="props.test" />
+                        <HootTestPath canCopy="true" full="true" test="props.test" />
                     </HootTestResult>
                 </t>
             </div>

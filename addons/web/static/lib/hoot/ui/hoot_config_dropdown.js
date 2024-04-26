@@ -4,7 +4,7 @@ import { Component, useRef, useState, xml } from "@odoo/owl";
 import { logLevels } from "../core/logger";
 import { refresh } from "../core/url";
 import { useWindowListener } from "../hoot_utils";
-import { MockMath, generateSeed, internalRandom } from "../mock/math";
+import { generateSeed, internalRandom } from "../mock/math";
 import { toggleColorScheme, useColorScheme } from "./hoot_colors";
 import { HootCopyButton } from "./hoot_copy_button";
 
@@ -188,27 +188,6 @@ export class HootConfigDropdown extends Component {
                         />
                         <span>Enable incentives</span>
                     </label>
-                    <label
-                        class="cursor-pointer flex items-center gap-1 p-1 hover:bg-gray-300 dark:hover:bg-gray-700"
-                        title="Checks keys on global objects after each test"
-                    >
-                        <input
-                            type="checkbox"
-                            class="appearance-none border border-primary rounded-sm w-4 h-4"
-                            t-model="config.watchkeys"
-                        />
-                        <span>Watch global keys</span>
-                    </label>
-                    <t t-if="config.watchkeys">
-                        <small class="flex items-center p-1 pt-0 gap-1">
-                            <span class="text-muted whitespace-nowrap ms-1">Keys:</span>
-                            <input
-                                type="text"
-                                class="w-full outline-none border-b border-primary px-1 w-full"
-                                t-model.number="config.watchkeys"
-                            />
-                        </small>
-                    </t>
 
                     <button
                         type="button"
@@ -293,7 +272,6 @@ export class HootConfigDropdown extends Component {
         const newSeed = generateSeed();
         this.config.random = newSeed;
         internalRandom.seed = newSeed;
-        MockMath.random.seed = newSeed;
     }
 
     /**

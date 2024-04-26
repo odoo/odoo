@@ -5172,9 +5172,9 @@ test.tags("desktop")("environment is updated when (un)folding groups", async () 
 });
 
 test.tags("desktop")("create a column in grouped on m2o", async () => {
-    onRpc("/web/dataset/resequence", (request) => {
+    onRpc("/web/dataset/resequence", async (request) => {
         expect.step("/web/dataset/resequence");
-        const { params } = request.json();
+        const { params } = await request.json();
         expect.step(params.ids.toString());
     });
     onRpc("name_create", () => {
@@ -5263,9 +5263,9 @@ test("create a column in grouped on m2o without sequence field on view model", a
     onRpc("name_create", () => {
         expect.step("name_create");
     });
-    onRpc("/web/dataset/resequence", (request) => {
+    onRpc("/web/dataset/resequence", async (request) => {
         expect.step("resequence");
-        const { params } = request.json();
+        const { params } = await request.json();
         expect.step(params.ids.toString());
         return true;
     });
@@ -5457,8 +5457,8 @@ test.tags("desktop")("show/hide help message (ESC) in quick create [REQUIRE FOCU
 test.tags("desktop")("delete a column in grouped on m2o", async () => {
     stepAllNetworkCalls();
     let resequencedIDs = [];
-    onRpc("/web/dataset/resequence", (request) => {
-        const { params } = request.json();
+    onRpc("/web/dataset/resequence", async (request) => {
+        const { params } = await request.json();
         resequencedIDs = params.ids;
         expect(resequencedIDs.filter(isNaN).length).toBe(0, {
             message: "column resequenced should be existing records with IDs",
@@ -7764,8 +7764,8 @@ test.tags("desktop")("resequence columns in grouped by m2o", async () => {
 
 test.tags("desktop")("resequence all when creating new record + partial resequencing", async () => {
     let resequenceOffset;
-    onRpc("/web/dataset/resequence", (request) => {
-        const { params } = request.json();
+    onRpc("/web/dataset/resequence", async (request) => {
+        const { params } = await request.json();
         expect.step(JSON.stringify({ ids: params.ids, offset: params.offset }));
         resequenceOffset = params.offset || 0;
         return true;
@@ -10458,8 +10458,8 @@ test.tags("desktop")("unset cover image", async () => {
 test.tags("desktop")("ungrouped kanban with handle field", async () => {
     expect.assertions(3);
 
-    onRpc("/web/dataset/resequence", (request) => {
-        const { params } = request.json();
+    onRpc("/web/dataset/resequence", async (request) => {
+        const { params } = await request.json();
         expect(params.ids).toEqual([2, 1, 3, 4], {
             message: "should write the sequence in correct order",
         });

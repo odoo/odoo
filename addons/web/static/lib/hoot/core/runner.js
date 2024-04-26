@@ -1,10 +1,11 @@
 /** @odoo-module */
 
-import { markRaw, reactive, toRaw, whenReady } from "@odoo/owl";
-import { cleanupDOM, watchKeys } from "@web/../lib/hoot-dom/helpers/dom";
+import { markRaw, reactive, toRaw } from "@odoo/owl";
+import { cleanupDOM } from "@web/../lib/hoot-dom/helpers/dom";
 import { enableEventLogs, on } from "@web/../lib/hoot-dom/helpers/events";
 import { isIterable, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
+    Callbacks,
     HootError,
     Markup,
     batch,
@@ -15,14 +16,13 @@ import {
     formatTechnical,
     formatTime,
     getFuzzyScore,
-    makeCallbacks,
     normalize,
 } from "../hoot_utils";
-import { MockMath, internalRandom } from "../mock/math";
+import { internalRandom } from "../mock/math";
 import { cleanupNavigator, mockUserAgent } from "../mock/navigator";
 import { cleanupNetwork } from "../mock/network";
-import { cleanupTime, setFrameRate } from "../mock/time";
-import { cleanupWindow, mockTouch, watchListeners } from "../mock/window";
+import { Deferred, cleanupTime, setFrameRate } from "../mock/time";
+import { cleanupWindow, mockTouch } from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
 import { makeExpect } from "./expect";
 import { makeFixtureManager } from "./fixture";
@@ -55,10 +55,6 @@ import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
  *  tags?: string[];
  *  touch?: boolean;
  * }} Preset
- *
- * @typedef {{
- *  auto?: boolean;
- * }} StartOptions
  */
 
 /**
@@ -83,7 +79,6 @@ import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
 const {
     clearTimeout,
     console: { groupEnd: $groupEnd, log: $log, error: $error, table: $table, warn: $warn },
-    document,
     Map,
     Math: { floor: $floor },
     Object: {
@@ -108,6 +103,18 @@ const $now = performance.now.bind(performance);
 //-----------------------------------------------------------------------------
 
 /**
+ * @param {Job[]} jobs
+ */
+const filterReady = (jobs) =>
+    jobs.filter((job) => {
+        if (job instanceof Suite) {
+            job.currentJobs = filterReady(job.currentJobs);
+            return job.currentJobs.length;
+        }
+        return job.run;
+    });
+
+/**
  * @param {import("./expect").Assertion[]} assertions
  */
 const formatAssertions = (assertions) => {
@@ -120,10 +127,10 @@ const formatAssertions = (assertions) => {
         lines.push(`\n${i + 1}. [${label}] ${message}`);
         if (info) {
             for (let [key, value] of info) {
-                if (key instanceof Markup) {
+                if (Markup.isMarkup(key)) {
                     key = key.content;
                 }
-                if (value instanceof Markup) {
+                if (Markup.isMarkup(value)) {
                     if (value.technical) {
                         continue;
                     }
@@ -242,24 +249,15 @@ export class Runner {
     aborted = false;
     /** @type {boolean | Test | Suite} */
     debug = false;
+    dry = false;
     /** @type {ReturnType<typeof makeExpect>[0]} */
     expect;
     /** @type {ReturnType<typeof makeExpect>[1]} */
     expectHooks;
     presets = reactive(getDefaultPresets());
+    reporting = createReporting();
     /** @type {Suite[]} */
     rootSuites = [];
-    /** @type {Map<string, Suite>} */
-    suites = new Map();
-    /** @type {Set<Tag>} */
-    tags = new Set();
-    /** @type {Map<string, Test>} */
-    tests = new Map();
-    /** @type {string | RegExp} */
-    textFilter = "";
-    totalTime = "n/a";
-
-    reporting = createReporting();
     state = reactive({
         /** @type {Test | null} */
         currentTest: null,
@@ -295,6 +293,17 @@ export class Runner {
          */
         tests: [],
     });
+    /** @type {Map<string, Suite>} */
+    suites = new Map();
+    /** @type {Suite[]} */
+    suiteStack = [];
+    /** @type {Set<Tag>} */
+    tags = new Set();
+    /** @type {Map<string, Test>} */
+    tests = new Map();
+    /** @type {string | RegExp} */
+    textFilter = "";
+    totalTime = "n/a";
 
     /**
      * @type {boolean}
@@ -304,18 +313,21 @@ export class Runner {
     }
 
     // Private properties
-    _callbacks = makeCallbacks();
+    _callbacks = new Callbacks();
     /** @type {Job[]} */
     _currentJobs = [];
-    _dry = false;
     _failed = 0;
     _hasExcludeFilter = false;
     _hasIncludeFilter = false;
     /** @type {(() => MaybePromise<void>)[]} */
     _missedCallbacks = [];
+    _populateState = false;
     _prepared = false;
-    /** @type {Suite[]} */
-    _suiteStack = [];
+    /** @type {() => void} */
+    _pushPendingTest;
+    /** @type {(test: Test) => void} */
+    _pushTest;
+    _started = false;
     _startTime = 0;
 
     /** @type {(reason?: any) => any} */
@@ -328,7 +340,7 @@ export class Runner {
      */
     constructor(config) {
         // Main test methods
-        this.describe = this._addConfigurators(this.addSuite, () => this._suiteStack.at(-1));
+        this.describe = this._addConfigurators(this.addSuite, () => this.suiteStack.at(-1));
         this.fixture = makeFixtureManager(this);
         this.test = this._addConfigurators(this.addTest, false);
 
@@ -344,6 +356,7 @@ export class Runner {
             );
         });
 
+        [this._pushTest, this._pushPendingTest] = batch((test) => this.state.done.push(test), 10);
         [this.expect, this.expectHooks] = makeExpect({
             get headless() {
                 return reactiveConfig.headless;
@@ -379,7 +392,6 @@ export class Runner {
         // Random seed
         if (this.config.random) {
             internalRandom.seed = this.config.random;
-            MockMath.random.seed = this.config.random;
         }
     }
 
@@ -395,17 +407,20 @@ export class Runner {
         const names = ensureArray(name).flatMap((n) => normalize(n).split("/").filter(Boolean));
         const [suiteName, ...otherNames] = names;
         if (names.length > 1) {
-            this.addSuite([], suiteName, () => this.addSuite(config, otherNames, fn));
-            return;
+            let targetSuite;
+            this.addSuite([], suiteName, () => {
+                targetSuite = this.addSuite(config, otherNames, fn);
+            });
+            return targetSuite;
         }
-        const parentSuite = this._suiteStack.at(-1);
+        const parentSuite = this.suiteStack.at(-1);
         if (typeof fn !== "function") {
             throw suiteError(
                 { name: suiteName, parent: parentSuite },
                 `expected second argument to be a function and got ${String(fn)}`
             );
         }
-        if (this.state.status !== "ready") {
+        if (this.state.status === "running") {
             throw suiteError(
                 { name: suiteName, parent: parentSuite },
                 `cannot add a suite after the test runner started`
@@ -425,7 +440,7 @@ export class Runner {
                 suite.reporting = createReporting(this.reporting);
             }
         }
-        this._suiteStack.push(suite);
+        this.suiteStack.push(suite);
 
         this._applyTagModifiers(suite);
 
@@ -433,7 +448,7 @@ export class Runner {
         try {
             result = fn();
         } finally {
-            this._suiteStack.pop();
+            this.suiteStack.pop();
         }
         if (result !== undefined) {
             throw suiteError(
@@ -441,6 +456,8 @@ export class Runner {
                 `the suite function cannot return a value`
             );
         }
+
+        return suite;
     }
 
     /**
@@ -452,7 +469,7 @@ export class Runner {
         if (!name) {
             throw new HootError(`a test name must not be empty, got ${name}`);
         }
-        const parentSuite = this._suiteStack.at(-1);
+        const parentSuite = this.suiteStack.at(-1);
         if (!parentSuite) {
             throw testError({ name, parent: null }, `cannot register a test outside of a suite.`);
         }
@@ -462,27 +479,24 @@ export class Runner {
                 `expected second argument to be a function and got ${String(fn)}`
             );
         }
-        if (this.state.status !== "ready") {
+        if (this.state.status === "running") {
             throw testError(
                 { name, parent: parentSuite },
                 `cannot add a test after the test runner started.`
             );
         }
-        if (this._dry) {
-            fn = null;
-        }
-        let test = markRaw(new Test(parentSuite, name, config, fn));
+        const runFn = this.dry ? null : fn;
+        let test = markRaw(new Test(parentSuite, name, config, runFn));
         const originalTest = this.tests.get(test.id);
         if (originalTest) {
-            if (originalTest.runFn === null) {
-                test = originalTest;
-                test.setRunFn(fn);
-            } else {
+            if (originalTest.run) {
                 throw testError(
                     { name, parent: parentSuite },
                     `a test with that name already exists in the suite "${parentSuite.name}"`
                 );
             }
+            test = originalTest;
+            test.setRunFn(runFn);
         } else {
             parentSuite.jobs.push(test);
             parentSuite.increaseWeight();
@@ -490,6 +504,8 @@ export class Runner {
         }
 
         this._applyTagModifiers(test);
+
+        return test;
     }
 
     /**
@@ -508,23 +524,26 @@ export class Runner {
      * @param {...Callback<Job>} callbacks
      */
     after(...callbacks) {
-        if (this._dry) {
-            return;
+        const { suite, test } = this.getCurrent();
+        if (test) {
+            for (const callback of callbacks) {
+                suite.callbacks.add("after-test", callback, true);
+            }
+        } else {
+            const callbackRegistry = suite ? suite.callbacks : this._callbacks;
+            for (const callback of callbacks) {
+                callbackRegistry.add("after-suite", callback);
+            }
         }
-        this.__after(...callbacks);
     }
 
     /**
-     * Registers a callback that will be executed at the very end of the test runner,
-     * after all suites have been run.
-     *
      * @param {...Callback<never>} callbacks
      */
     afterAll(...callbacks) {
-        if (this._dry) {
-            return;
+        for (const callback of callbacks) {
+            this._callbacks.add("after-all", callback);
         }
-        this.__afterAll(...callbacks);
     }
 
     /**
@@ -538,10 +557,23 @@ export class Runner {
      * @param {...Callback<Test>} callbacks
      */
     afterEach(...callbacks) {
-        if (this._dry) {
-            return;
+        const { suite, test } = this.getCurrent();
+        if (test) {
+            throw testError(test, `cannot call hook "afterEach" inside of a test`);
         }
-        this.__afterEach(...callbacks);
+        const callbackRegistry = suite ? suite.callbacks : this._callbacks;
+        for (const callback of callbacks) {
+            callbackRegistry.add("after-test", callback);
+        }
+    }
+
+    /**
+     * @param {...Callback<Test>} callbacks
+     */
+    afterPostTest(...callbacks) {
+        for (const callback of callbacks) {
+            this._callbacks.add("after-post-test", callback);
+        }
     }
 
     /**
@@ -560,23 +592,26 @@ export class Runner {
      * @param {...Callback<Job>} callbacks
      */
     before(...callbacks) {
-        if (this._dry) {
-            return;
+        const { suite, test } = this.getCurrent();
+        if (test) {
+            for (const callback of callbacks) {
+                suite.callbacks.add("after-test", callback(test), true);
+            }
+        } else {
+            const callbackRegistry = suite ? suite.callbacks : this._callbacks;
+            for (const callback of callbacks) {
+                callbackRegistry.add("before-suite", callback);
+            }
         }
-        this.__before(...callbacks);
     }
 
     /**
-     * Registers a callback that will be executed at the very start of the test
-     * runner, before any suites have been run.
-     *
      * @param {...Callback<never>} callbacks
      */
     beforeAll(...callbacks) {
-        if (this._dry) {
-            return;
+        for (const callback of callbacks) {
+            this._callbacks.add("before-all", callback);
         }
-        this.__beforeAll(...callbacks);
     }
 
     /**
@@ -590,64 +625,34 @@ export class Runner {
      * @param {...Callback<Test>} callbacks
      */
     beforeEach(...callbacks) {
-        if (this._dry) {
-            return;
+        const { suite, test } = this.getCurrent();
+        if (test) {
+            throw testError(test, `cannot call hook "beforeEach" inside of a test`);
         }
-        this.__beforeEach(...callbacks);
-    }
-
-    /**
-     * @template T
-     * @template {(previous: T | null) => T} F
-     * @param {F} instanceGetter
-     * @param {() => any} [afterCallback]
-     * @returns {F}
-     */
-    createJobScopedGetter(instanceGetter, afterCallback) {
-        /** @type {F} */
-        const getInstance = () => {
-            const currentJob = this.state.currentTest || this._suiteStack.at(-1) || this;
-            if (!instances.has(currentJob)) {
-                const parentInstance = [...instances.values()].at(-1);
-                instances.set(currentJob, instanceGetter(parentInstance));
-
-                if (canCallAfter) {
-                    this.after(() => {
-                        instances.delete(currentJob);
-
-                        canCallAfter = false;
-                        afterCallback?.();
-                        canCallAfter = true;
-                    });
-                }
-            }
-
-            return instances.get(currentJob);
-        };
-
-        /** @type {Map<Job, T>} */
-        const instances = new Map();
-        let canCallAfter = true;
-
-        return getInstance;
+        const callbackRegistry = suite ? suite.callbacks : this._callbacks;
+        for (const callback of callbacks) {
+            callbackRegistry.add("before-test", callback);
+        }
     }
 
     /**
      * @param {() => Promise<void>} callback
-     * @returns {Promise<{ suites: Suite[]; tests: Test[] }>}
      */
     async dryRun(callback) {
         if (this.state.status !== "ready") {
             throw new HootError("cannot run a dry run after the test runner started");
         }
+        if (this._prepared) {
+            throw new HootError("cannot run a dry run: runner has already been prepared");
+        }
 
-        this._dry = true;
+        this.dry = true;
 
         await callback();
 
         this._prepareRunner();
 
-        this._dry = false;
+        this.dry = false;
 
         return {
             suites: this.state.suites,
@@ -672,9 +677,13 @@ export class Runner {
      */
     getCurrent() {
         return {
-            suite: this._suiteStack.at(-1) || null,
+            suite: this.suiteStack.at(-1) || null,
             test: this.state.currentTest,
         };
+    }
+
+    manualStart() {
+        this._canStartPromise.resolve(true);
     }
 
     /**
@@ -686,79 +695,10 @@ export class Runner {
      * @param {...Callback<ErrorEvent | PromiseRejectionEvent>} callbacks
      */
     onError(...callbacks) {
-        if (this._dry) {
-            return;
-        }
-        this.__onError(...callbacks);
-    }
-
-    /**
-     * @param {Job[]} [jobs]
-     * @param {boolean} [implicitInclude] fallback include value for sub-jobs
-     * @returns {Job[]}
-     */
-    prepareJobs(jobs = this.rootSuites, implicitInclude = !this._hasIncludeFilter) {
-        if (typeof this.debug !== "boolean") {
-            // Special case: test (or suite with 1 test) with "debug" tag
-            let debugTest = this.debug;
-            while (debugTest instanceof Suite) {
-                if (debugTest.jobs.length > 1) {
-                    throw new HootError(
-                        `cannot debug a suite with more than 1 job, got ${debugTest.jobs.length}`
-                    );
-                }
-                debugTest = debugTest.jobs[0];
-            }
-
-            this.state.tests.push(debugTest);
-
-            const jobs = debugTest.path;
-            for (let i = 0; i < jobs.length - 1; i++) {
-                const suite = jobs[i];
-                suite.currentJobs = [jobs[i + 1]];
-                this.state.suites.push(suite);
-            }
-            return [jobs[0]];
-        }
-
-        const filteredJobs = jobs.filter((job) => {
-            // Priority 1: explicit include or exclude (URL or special tag)
-            const [explicitInclude, explicitExclude] = this._getExplicitIncludeStatus(job);
-            if (explicitExclude) {
-                return false;
-            }
-
-            // Priority 2: implicit exclude
-            if (!explicitInclude && this.isImplicitlyExcluded(job)) {
-                return false;
-            }
-
-            // Priority 3: implicit include
-            let included = explicitInclude || implicitInclude || this._isImplicitlyIncluded(job);
-            if (job instanceof Suite) {
-                // For suites: included if at least 1 included job
-                job.currentJobs = this.prepareJobs(job.jobs, included);
-                included = Boolean(job.currentJobs.length);
-
-                if (included) {
-                    this.state.suites.push(job);
-                }
-            } else if (included) {
-                this.state.tests.push(job);
-            }
-            return included;
-        });
-
-        switch (this.config.order) {
-            case "fifo": {
-                return filteredJobs;
-            }
-            case "lifo": {
-                return filteredJobs.reverse();
-            }
-            case "random": {
-                return shuffle(filteredJobs);
-            }
+        const { suite, test } = this.getCurrent();
+        const callbackRegistry = suite ? suite.callbacks : this._callbacks;
+        for (const callback of callbacks) {
+            callbackRegistry.add("error", callback, Boolean(test));
         }
     }
 
@@ -782,87 +722,54 @@ export class Runner {
      * It will then reset all tests' run functions to allow them to be registered
      * again with the actual run functions.
      *
-     * @param {StartOptions} [options]
+     * @param {...Job} jobs
      */
-    async start(options) {
-        await whenReady();
-
-        if ((options?.auto && this.config.manual) || this.state.status !== "ready") {
-            // Already running or in manual mode
-            return;
+    async start(...jobs) {
+        if (!this._started) {
+            this._started = true;
+            this._prepareRunner();
+            await this._setupStart();
+        } else if (!jobs.length) {
+            throw new HootError("cannot start test runner: runner has already started");
         }
+
+        if (this.state.status === "done") {
+            return false;
+        }
+
+        if (jobs.length) {
+            this._currentJobs = filterReady(jobs);
+        }
+
+        if (this._canStartPromise) {
+            await this._canStartPromise;
+        }
+
         this.state.status = "running";
 
-        this._prepareRunner();
-        this._startTime = $now();
-
-        // Config log
-        const table = { ...toRaw(this.config) };
-        for (const key of FILTER_KEYS) {
-            if (isIterable(table[key])) {
-                table[key] = `[${[...table[key]].join(", ")}]`;
-            }
-        }
-        logger.groupCollapsed("Configuration (click to expand)");
-        $table(table);
-        $groupEnd();
-        logger.logRun("Starting test suites");
-
-        // Adjust debug mode if more or less than 1 test will be run
-        if (this.debug) {
-            const activeSingleTests = this.state.tests.filter(
-                (test) => !test.config.skip && !test.config.multi
-            );
-            if (activeSingleTests.length !== 1) {
-                logger.warn(`disabling debug mode: ${activeSingleTests.length} tests will be run`);
-                this.config.debugTest = false;
-                this.debug = false;
-            }
-        }
-
-        const { fps, watchkeys } = this.config;
-
-        // Register default hooks
-        const [addTestDone, flushTestDone] = batch((test) => this.state.done.push(test), 10);
-        this.__afterAll(
-            flushTestDone,
-            // Catch errors
-            on(window, "error", (ev) => this._onError(ev)),
-            on(window, "unhandledrejection", (ev) => this._onError(ev)),
-            // Warn user events
-            !this.debug && on(window, "pointermove", warnUserEvent),
-            !this.debug && on(window, "pointerdown", warnUserEvent),
-            !this.debug && on(window, "keydown", warnUserEvent),
-            watchListeners()
-        );
-        this.__beforeEach(this.fixture.setup);
-        this.__afterEach(
-            cleanupWindow,
-            cleanupNetwork,
-            cleanupNavigator,
-            this.fixture.cleanup,
-            cleanupDOM,
-            cleanupTime
-        );
-        if (watchkeys) {
-            const keys = watchkeys?.split(/\s*,\s*/g) || [];
-            this.__afterEach(watchKeys(window, keys), watchKeys(document, keys));
-        }
-
-        if (this.debug) {
-            logger.level = logLevels.DEBUG;
-        }
-        enableEventLogs(this.debug);
-        setFrameRate(fps);
-
-        await this._callbacks.call("before-all");
-
-        const nextJob = () => {
+        /**
+         * @param {Job} [job]
+         */
+        const nextJob = (job) => {
             this.state.currentTest = null;
-            job = job.currentJobs?.[job.visited++] || job.parent || this._currentJobs.shift();
+            if (job) {
+                const sibling = job.currentJobs?.[job.visited++];
+                if (sibling) {
+                    return sibling;
+                }
+                const parent = job.parent;
+                if (parent && (!jobs.length || jobs.some((j) => parent.path.includes(j)))) {
+                    return parent;
+                }
+            }
+            const index = this._currentJobs.findIndex(Boolean);
+            if (index >= 0) {
+                return this._currentJobs.splice(index, 1)[0];
+            }
+            return null;
         };
 
-        let job = this._currentJobs.shift();
+        let job = nextJob();
         while (job && this.state.status === "running") {
             const callbackChain = this._getCallbackChain(job);
             if (job instanceof Suite) {
@@ -871,23 +778,21 @@ export class Runner {
 
                 /** @type {Suite} */
                 const suite = job;
-                if (suite.canRun()) {
-                    if (suite.visited === 0) {
+                if (!suite.config.skip) {
+                    if (suite.visited <= 0) {
                         // before suite code
-                        this._suiteStack.push(suite);
+                        this.suiteStack.push(suite);
 
-                        for (const callbackRegistry of [...callbackChain].reverse()) {
-                            await callbackRegistry.call("before-suite", suite);
-                        }
+                        await this._callbacks.call("before-suite", suite);
+                        await suite.callbacks.call("before-suite", suite);
                     }
-                    if (suite.visited === suite.currentJobs.length) {
+                    if (suite.visited >= suite.currentJobs.length) {
                         // after suite code
-                        this._suiteStack.pop();
+                        this.suiteStack.pop();
 
                         await this._execAfterCallback(async () => {
-                            for (const callbackRegistry of callbackChain) {
-                                await callbackRegistry.call("after-suite", suite);
-                            }
+                            await suite.callbacks.call("after-suite", suite);
+                            await this._callbacks.call("after-suite", suite);
                         });
 
                         suite.parent?.reporting.add({ suites: +1 });
@@ -896,7 +801,7 @@ export class Runner {
                         logger.logSuite(suite);
                     }
                 }
-                nextJob();
+                job = nextJob(job);
                 continue;
             }
 
@@ -907,10 +812,10 @@ export class Runner {
             const test = job;
             if (test.config.skip) {
                 // Skipped test
-                addTestDone(test);
+                this._pushTest(test);
                 test.setRunFn(null);
                 test.parent.reporting.add({ skipped: +1 });
-                nextJob();
+                job = nextJob(job);
                 continue;
             }
 
@@ -958,7 +863,7 @@ export class Runner {
                 .catch((error) => {
                     this._rejectCurrent = noop; // prevents loop
 
-                    return this._onError(error);
+                    return this._handleError(error);
                 })
                 .finally(() => {
                     this._rejectCurrent = noop;
@@ -1008,21 +913,30 @@ export class Runner {
                 }
             }
             if (!test.config.multi || test.visited === test.config.multi) {
-                addTestDone(test);
-                test.setRunFn(null);
+                this._pushTest(test);
                 if (this.debug) {
-                    return;
+                    return new Promise(() => {});
                 }
-                nextJob();
+                test.setRunFn(null);
+                job = nextJob(job);
             }
         }
 
-        if (!this.state.tests.length) {
-            logger.error(`no tests to run`);
-            await this.stop();
-        } else if (!this.debug) {
-            await this.stop();
+        if (this.state.status === "done") {
+            return false;
         }
+
+        this._pushPendingTest();
+
+        if (!this.debug) {
+            if (jobs.length) {
+                this.state.status = "ready";
+            } else {
+                await this.stop();
+            }
+        }
+
+        return true;
     }
 
     async stop() {
@@ -1031,7 +945,8 @@ export class Runner {
         this.totalTime = formatTime($now() - this._startTime);
 
         if (this._resolveCurrent !== noop) {
-            return this._resolveCurrent();
+            this._resolveCurrent();
+            return false;
         }
 
         while (this._missedCallbacks.length) {
@@ -1056,106 +971,8 @@ export class Runner {
             // all suites have passed.
             logger.logRun("test suite succeeded");
         }
-    }
 
-    /**
-     * @param {...Callback<Job>} callbacks
-     */
-    __after(...callbacks) {
-        const { suite, test } = this.getCurrent();
-        if (test) {
-            for (const callback of callbacks) {
-                suite.callbacks.add("after-test", callback, true);
-            }
-        } else {
-            const callbackRegistry = suite ? suite.callbacks : this._callbacks;
-            for (const callback of callbacks) {
-                callbackRegistry.add("after-suite", callback);
-            }
-        }
-    }
-
-    /**
-     * @param {...Callback<never>} callbacks
-     */
-    __afterAll(...callbacks) {
-        for (const callback of callbacks) {
-            this._callbacks.add("after-all", callback);
-        }
-    }
-
-    /**
-     * @param {...Callback<Test>} callbacks
-     */
-    __afterEach(...callbacks) {
-        const { suite, test } = this.getCurrent();
-        if (test) {
-            throw testError(test, `cannot call hook "afterEach" inside of a test`);
-        }
-        const callbackRegistry = suite ? suite.callbacks : this._callbacks;
-        for (const callback of callbacks) {
-            callbackRegistry.add("after-test", callback);
-        }
-    }
-
-    /**
-     * @param {...Callback<Test>} callbacks
-     */
-    __afterPostTest(...callbacks) {
-        for (const callback of callbacks) {
-            this._callbacks.add("after-post-test", callback);
-        }
-    }
-
-    /**
-     * @param {...Callback<Job>} callbacks
-     */
-    __before(...callbacks) {
-        const { suite, test } = this.getCurrent();
-        if (test) {
-            for (const callback of callbacks) {
-                suite.callbacks.add("after-test", callback(test), true);
-            }
-        } else {
-            const callbackRegistry = suite ? suite.callbacks : this._callbacks;
-            for (const callback of callbacks) {
-                callbackRegistry.add("before-suite", callback);
-            }
-        }
-    }
-
-    /**
-     * @param {...Callback<never>} callbacks
-     */
-    __beforeAll(...callbacks) {
-        for (const callback of callbacks) {
-            this._callbacks.add("before-all", callback);
-        }
-    }
-
-    /**
-     * @param {...Callback<Test>} callbacks
-     */
-    __beforeEach(...callbacks) {
-        const { suite, test } = this.getCurrent();
-        if (test) {
-            throw testError(test, `cannot call hook "beforeEach" inside of a test`);
-        }
-        const callbackRegistry = suite ? suite.callbacks : this._callbacks;
-        for (const callback of callbacks) {
-            callbackRegistry.add("before-test", callback);
-        }
-    }
-
-    /**
-     * @param {...Callback<ErrorEvent | PromiseRejectionEvent>} callbacks
-     */
-    __onError(...callbacks) {
-        const { suite, test } = this.getCurrent();
-        const callbackRegistry = suite ? suite.callbacks : this._callbacks;
-        for (const callback of callbacks) {
-            callbackRegistry.add("error", callback, Boolean(test));
-        }
+        return false;
     }
 
     /**
@@ -1278,7 +1095,7 @@ export class Runner {
                     this.debug = job;
                 // Falls through
                 case Tag.ONLY:
-                    if (!this._dry) {
+                    if (!this.dry) {
                         logger.warn(
                             `"${job.fullName}" is marked as "${tag.name}". This is not suitable for CI`
                         );
@@ -1362,7 +1179,7 @@ export class Runner {
 
     /**
      * @param {Job} job
-     * @returns {ReturnType<typeof makeCallbacks>[]}
+     * @returns {Callbacks[]}
      */
     _getCallbackChain(job) {
         const chain = [];
@@ -1409,7 +1226,7 @@ export class Runner {
      * @param {Job} job
      * @returns {boolean | null}
      */
-    isImplicitlyExcluded(job) {
+    _isImplicitlyExcluded(job) {
         // By tag name
         for (const [tagName, status] of $entries(this.state.includeSpecs.tags)) {
             if (status < 0 && job.tags.some((tag) => tag.name === tagName)) {
@@ -1450,6 +1267,80 @@ export class Runner {
         return false;
     }
 
+    /**
+     * @param {Job[]} jobs
+     * @param {boolean} [implicitInclude] fallback include value for sub-jobs
+     * @returns {Job[]}
+     */
+    _prepareJobs(jobs, implicitInclude = !this._hasIncludeFilter) {
+        if (typeof this.debug !== "boolean") {
+            // Special case: test (or suite with 1 test) with "debug" tag
+            let debugTest = this.debug;
+            while (debugTest instanceof Suite) {
+                if (debugTest.jobs.length > 1) {
+                    throw new HootError(
+                        `cannot debug a suite with more than 1 job, got ${debugTest.jobs.length}`
+                    );
+                }
+                debugTest = debugTest.jobs[0];
+            }
+
+            if (this._populateState) {
+                this.state.tests.push(debugTest);
+            }
+
+            const jobs = debugTest.path;
+            for (let i = 0; i < jobs.length - 1; i++) {
+                const suite = jobs[i];
+                suite.currentJobs = [jobs[i + 1]];
+                if (this._populateState) {
+                    this.state.suites.push(suite);
+                }
+            }
+            return [jobs[0]];
+        }
+
+        const filteredJobs = jobs.filter((job) => {
+            // Priority 1: explicit include or exclude (URL or special tag)
+            const [explicitInclude, explicitExclude] = this._getExplicitIncludeStatus(job);
+            if (explicitExclude) {
+                return false;
+            }
+
+            // Priority 2: implicit exclude
+            if (!explicitInclude && this._isImplicitlyExcluded(job)) {
+                return false;
+            }
+
+            // Priority 3: implicit include
+            let included = explicitInclude || implicitInclude || this._isImplicitlyIncluded(job);
+            if (job instanceof Suite) {
+                // For suites: included if at least 1 included job
+                job.currentJobs = this._prepareJobs(job.jobs, included);
+                included = Boolean(job.currentJobs.length);
+
+                if (included && this._populateState) {
+                    this.state.suites.push(job);
+                }
+            } else if (included && this._populateState) {
+                this.state.tests.push(job);
+            }
+            return included;
+        });
+
+        switch (this.config.order) {
+            case "fifo": {
+                return filteredJobs;
+            }
+            case "lifo": {
+                return filteredJobs.reverse();
+            }
+            case "random": {
+                return shuffle(filteredJobs);
+            }
+        }
+    }
+
     _prepareRunner() {
         if (this._prepared) {
             return;
@@ -1473,13 +1364,19 @@ export class Runner {
             }
         }
 
-        this._currentJobs = this.prepareJobs();
+        this._populateState = true;
+        this._currentJobs = this._prepareJobs(this.rootSuites);
+        this._populateState = false;
+
+        if (!this.state.tests.length) {
+            throw new HootError(`no tests to run`);
+        }
     }
 
     /**
      * @param {Error | ErrorEvent | PromiseRejectionEvent} ev
      */
-    async _onError(ev) {
+    async _handleError(ev) {
         const error = ensureError(ev);
         if (!(ev instanceof Event)) {
             ev = new ErrorEvent("error", { error });
@@ -1517,5 +1414,64 @@ export class Runner {
             logger.error(error.cause);
         }
         logger.error(error);
+    }
+
+    async _setupStart() {
+        this._startTime = $now();
+        if (this.config.manual) {
+            this._canStartPromise = new Deferred();
+        }
+
+        // Config log
+        const table = { ...toRaw(this.config) };
+        for (const key of FILTER_KEYS) {
+            if (isIterable(table[key])) {
+                table[key] = `[${[...table[key]].join(", ")}]`;
+            }
+        }
+        logger.groupCollapsed("Configuration (click to expand)");
+        $table(table);
+        $groupEnd();
+        logger.logRun("Starting test suites");
+
+        // Adjust debug mode if more or less than 1 test will be run
+        if (this.debug) {
+            const activeSingleTests = this.state.tests.filter(
+                (test) => !test.config.skip && !test.config.multi
+            );
+            if (activeSingleTests.length !== 1) {
+                logger.warn(`disabling debug mode: ${activeSingleTests.length} tests will be run`);
+                this.config.debugTest = false;
+                this.debug = false;
+            }
+        }
+
+        // Register default hooks
+        this.afterAll(
+            // Catch errors
+            on(window, "error", this._handleError.bind(this)),
+            on(window, "unhandledrejection", this._handleError.bind(this)),
+            // Warn user events
+            !this.debug && on(window, "pointermove", warnUserEvent),
+            !this.debug && on(window, "pointerdown", warnUserEvent),
+            !this.debug && on(window, "keydown", warnUserEvent)
+        );
+        this.beforeEach(this.fixture.setup);
+        this.afterEach(
+            cleanupWindow,
+            cleanupNetwork,
+            cleanupNavigator,
+            this.fixture.cleanup,
+            cleanupDOM,
+            cleanupTime
+        );
+
+        if (this.debug) {
+            logger.level = logLevels.DEBUG;
+        }
+        enableEventLogs(this.debug);
+        setFrameRate(this.config.fps);
+
+        await this._callbacks.call("before-all");
     }
 }
