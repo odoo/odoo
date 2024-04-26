@@ -1,13 +1,10 @@
-import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
 import { escape, sprintf } from "@web/core/utils/strings";
-import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
-import { Component, markup, onMounted, xml } from "@odoo/owl";
+import { markup } from "@odoo/owl";
 
 export function displayNotificationAction(env, action) {
     const params = action.params || {};
@@ -26,22 +23,6 @@ export function displayNotificationAction(env, action) {
 }
 
 registry.category("actions").add("display_notification", displayNotificationAction);
-
-class InvalidAction extends Component {
-    static template = xml`<div class="o_invalid_action"></div>`;
-    static props = { ...standardActionServiceProps };
-    setup() {
-        this.notification = useService("notification");
-        onMounted(this.onMounted);
-    }
-
-    onMounted() {
-        const message = _t("No action with id '%s' could be found", this.props.actionId);
-        this.notification.add(message, { type: "danger" });
-    }
-}
-
-registry.category("actions").add("invalid_action", InvalidAction);
 
 /**
  * Client action to reload the whole interface.

@@ -41,12 +41,20 @@ export function getRecordQualifier(record) {
 /**
  * @param {Record<string, string | any>} params
  */
-export function makeServerError({ code, context, description, message, subType, type } = {}) {
+export function makeServerError({
+    code,
+    context,
+    description,
+    message,
+    subType,
+    errorName,
+    type,
+} = {}) {
     return makeErrorFromResponse({
         code: code || 200,
         message: message || "Odoo Server Error",
         data: {
-            name: `odoo.exceptions.${type || "UserError"}`,
+            name: errorName || `odoo.exceptions.${type || "UserError"}`,
             debug: "traceback",
             arguments: [],
             context: context || {},
