@@ -340,7 +340,7 @@ class AccountReportLine(models.Model):
             if report_line.parent_id:
                 report_line.report_id = report_line.parent_id.report_id
 
-    @api.depends('groupby')
+    @api.depends('groupby', 'expression_ids.engine')
     def _compute_user_groupby(self):
         for report_line in self:
             if not report_line.id and not report_line.user_groupby:
