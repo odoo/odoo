@@ -348,8 +348,8 @@ export function makeActionManager(env, router = _router) {
             const ctx = makeContext([user.context, context]);
             delete ctx.params;
             const key = `${JSON.stringify(actionRequest)},${JSON.stringify(ctx)}`;
-            let action;
-            if (!actionCache[key]) {
+            let action = await actionCache[key];
+            if (!action || action.type === "ir.actions.act_window_close") {
                 actionCache[key] = rpc("/web/action/load", {
                     action_id: actionRequest,
                     context: ctx,
@@ -358,8 +358,6 @@ export function makeActionManager(env, router = _router) {
                 if (action.help) {
                     action.help = markup(action.help);
                 }
-            } else {
-                action = await actionCache[key];
             }
             if (!action) {
                 return {
