@@ -140,7 +140,6 @@ class AccountEdiProxyClientUser(models.Model):
                         .with_context(
                             default_move_type='in_invoice',
                             default_peppol_move_state=content['state'],
-                            default_extract_can_show_send_button=False,
                             default_peppol_message_uuid=uuid,
                         )\
                         ._create_document_from_attachment(attachment.id)
@@ -157,7 +156,6 @@ class AccountEdiProxyClientUser(models.Model):
                         'move_type': 'in_invoice',
                         'peppol_move_state': 'done',
                         'company_id': company.id,
-                        'extract_can_show_send_button': False,
                         'peppol_message_uuid': uuid,
                     })
                     attachment_vals.update({
@@ -165,6 +163,8 @@ class AccountEdiProxyClientUser(models.Model):
                         'res_id': move.id,
                     })
                     self.env['ir.attachment'].create(attachment_vals)
+                if 'is_in_extractable_state' in move._fields:
+                    move.is_in_extractable_state = False
 
                 proxy_acks.append(uuid)
 
