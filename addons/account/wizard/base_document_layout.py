@@ -58,15 +58,12 @@ class BaseDocumentLayout(models.TransientModel):
 
     def _inverse_account_number(self):
         for record in self:
-            if not record.qr_code:
-                continue
-
             if record.partner_id.bank_ids and record.account_number:
-                record.partner_id.bank_ids.acc_number = record.account_number
+                record.partner_id.bank_ids[0].acc_number = record.account_number
             elif record.account_number:
                 record.partner_id.bank_ids = [
                     Command.create({
-                        'account_number': record.account_number,
+                        'acc_number': record.account_number,
                         'partner_id': record.partner_id.id,
                     })
                 ]
