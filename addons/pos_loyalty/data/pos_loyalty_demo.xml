@@ -16,7 +16,6 @@
             <field name="minimum_amount">100</field>
             <field name="program_id" ref="pos_loyalty.15_pc_on_next_order"/>
         </record>
-        
         <record id="15_pc_on_next_order_reward" model="loyalty.reward">
             <field name="discount_mode">percent</field>
             <field name="discount">15</field>
@@ -64,6 +63,7 @@
         <field name="default_code">CONS_0002</field>
         <field name="uom_id" ref="uom.product_uom_unit" />
         <field name="uom_po_id" ref="uom.product_uom_unit" />
+         <field name="categ_id" ref="product.product_category_consumable"/>
         <field name="image_1920" type="base64" file="pos_loyalty/static/img/simple_pen.png"/>
     </record>
 

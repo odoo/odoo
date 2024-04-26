@@ -35,7 +35,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             product = self.env['product.product'].create({
                 'name': 'Dummy product',
                 'is_storable': True,
-                'categ_id': self.env.ref('product.product_category_all').id,
+                'categ_id': self.env.ref('product.product_category_services').id,
                 'taxes_id': self.tax_sale_a.ids,
             })
             self.pos_config.open_ui()
@@ -292,7 +292,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'name': 'Product A',
             'is_storable': True,
             'tracking': 'serial',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
         lot1 = self.env['stock.lot'].create({
@@ -672,10 +672,12 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'is_storable': True,
             'tracking': 'lot',
             'available_in_pos': True,
+            'categ_id': self.env.ref('product.product_category_services').id,
         }, {
             'name': 'SuperProduct Untracked',
             'is_storable': True,
             'available_in_pos': True,
+            'categ_id': self.env.ref('product.product_category_services').id,
         }])
         wh_location = self.company_data['default_warehouse'].lot_stock_id
         shelf1_location = self.env['stock.location'].create({
@@ -1174,7 +1176,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         product5 = self.env['product.product'].create({
             'name': 'product5',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': self.env.ref('product.product_category_services').id,
             'taxes_id': dummy_50_perc_tax.ids
         })
 
@@ -1242,13 +1244,15 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'name': 'SuperProduct Tracked',
             'is_storable': True,
             'tracking': 'lot',
-            'available_in_pos': True
+            'available_in_pos': True,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
         tracked_product_2 = self.env['product.product'].create({
             'name': 'SuperProduct Tracked 2',
             'is_storable': True,
             'tracking': 'lot',
-            'available_in_pos': True
+            'available_in_pos': True,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
         tracked_product_2_lot = self.env['stock.lot'].create({
             'name': '80085',
@@ -1392,7 +1396,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         product5 = self.env['product.product'].create({
             'name': 'product5',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
         # sell product thru pos
@@ -1569,7 +1573,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.product2 = self.env['product.product'].create({
             'name': 'Product A',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
         self.env['stock.quant'].with_context(inventory_mode=True).create({
@@ -1692,7 +1696,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'name': 'Product A',
             'is_storable': True,
             'tracking': 'serial',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
         lot1 = self.env['stock.lot'].create({
@@ -1911,6 +1915,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'available_in_pos': True,
             'list_price': 49.99,
             'taxes_id': False,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
         self.pos_config.write({
@@ -1971,6 +1976,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'name': 'Product A',
             'is_storable': True,
             'tracking': 'lot',
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
         lot1 = self.env['stock.lot'].create({
@@ -2111,6 +2117,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'name': 'Product A',
             'is_storable': True,
             'tracking': 'lot',
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
         order = self.PosOrder.create({

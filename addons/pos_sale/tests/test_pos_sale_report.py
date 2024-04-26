@@ -49,6 +49,7 @@ class TestPoSSaleReport(TestPoSCommon):
             'name': 'Sofa',
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
+            'categ_id': self.env.ref('product.product_category_office').id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': prod_attr.id,
                 'value_ids': [(6, 0, prod_attr_values.ids)]

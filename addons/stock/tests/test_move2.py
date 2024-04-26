@@ -114,7 +114,7 @@ class TestPickShip(TestStockCommon):
         product_unreserve = self.env['product.product'].create({
             'name': 'product unreserve',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
         stock_location = self.env['stock.location'].browse(self.stock_location)
         self.env['stock.quant']._update_available_quantity(product_unreserve, stock_location, 4.0)
@@ -2529,7 +2529,7 @@ class TestStockUOM(TestStockCommon):
         product_G = self.env['product.product'].create({
             'name': 'Product G',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': self.env.ref('product.product_category_services').id,
             'uom_id': self.uom_gm.id,
             'uom_po_id': self.uom_gm.id,
         })
@@ -2590,7 +2590,7 @@ class TestStockUOM(TestStockCommon):
         product_LtDA = self.env['product.product'].create({
             'name': 'Product Less than DA',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': self.env.ref('product.product_category_services').id,
             'uom_id': self.uom_gm.id,
             'uom_po_id': self.uom_gm.id,
         })
@@ -2598,7 +2598,7 @@ class TestStockUOM(TestStockCommon):
         product_GtDA = self.env['product.product'].create({
             'name': 'Product Greater than DA',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': self.env.ref('product.product_category_services').id,
             'uom_id': self.uom_gm.id,
             'uom_po_id': self.uom_gm.id,
         })
@@ -2699,7 +2699,7 @@ class TestRoutes(TestStockCommon):
         cls.product1 = cls.env['product.product'].create({
             'name': 'product a',
             'is_storable': True,
-            'categ_id': cls.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_services').id,
         })
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.partner = cls.env['res.partner'].create({'name': 'Partner'})
@@ -3356,7 +3356,7 @@ class TestAutoAssign(TestStockCommon):
             'name': 'PSerial',
             'is_storable': True,
             'tracking': 'serial',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
         move = self.env['stock.move'].create({

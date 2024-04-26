@@ -443,6 +443,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
             'lst_price': 10.0,
             'taxes_id': [],
+            'categ_id': self.product_category.id,
         })
 
         product_b = self.env['product.product'].create({

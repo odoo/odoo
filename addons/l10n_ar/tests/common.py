@@ -190,6 +190,7 @@ class TestAr(AccountTestInvoicingCommon):
             'uom_po_id': uom_unit.id,
             'lst_price': 320.0,
             'standard_price': 800.0,
+            'categ_id': cls.env.ref('product.product_category_services').id,
             'type': "consu",
             'default_code': 'E-COM07',
         })

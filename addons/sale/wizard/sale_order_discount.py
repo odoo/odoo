@@ -43,6 +43,7 @@ class SaleOrderDiscount(models.TransientModel):
             'type': 'service',
             'invoice_policy': 'order',
             'list_price': 0.0,
+            'categ_id': self.env.ref('product.product_category_services').id,
             'company_id': self.company_id.id,
             'taxes_id': None,
         }

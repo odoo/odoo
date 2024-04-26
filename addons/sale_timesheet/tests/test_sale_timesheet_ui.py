@@ -17,7 +17,7 @@ class TestUi(HttpCase):
 
         service_category_id = cls.env['product.category'].create({
             'name': 'Services',
-            'parent_id': cls.env.ref('product.product_category_1').id,
+            'parent_id': cls.env.ref('product.product_category_services').id,
         }).id
 
         uom_hour_id = cls.env.ref('uom.product_uom_hour').id

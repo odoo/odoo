@@ -22,7 +22,7 @@ class TestAccountMoveStockCommon(AccountTestInvoicingCommon):
         ) = _create_accounting_data(cls.env)
 
         # `all_categ` should not be altered, so we can test the `post_init` hook of `stock_account`
-        cls.all_categ = cls.env.ref('product.product_category_all')
+        cls.all_categ = cls.env.ref('product.product_category_services')
 
         cls.auto_categ = cls.env['product.category'].create({
             'name': 'child_category',

@@ -19,6 +19,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
             'type': 'consu',
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
+            'categ_id': cls.env.ref('product.product_category_services').id,
         })
 
         cls.purchase_order = cls.env['purchase.order'].create({
