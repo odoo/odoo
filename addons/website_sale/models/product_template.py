@@ -189,7 +189,7 @@ class ProductTemplate(models.Model):
         for template in self:
             price_reduce = sales_prices[template.id]
 
-            product_taxes = template.sudo().taxes_id.filtered(lambda t: t.company_id in t.env.company.parent_ids)
+            product_taxes = template.sudo().taxes_id._filter_taxes_by_company(self.env.company)
             taxes = fiscal_position.map_tax(product_taxes)
 
             base_price = None
@@ -271,7 +271,7 @@ class ProductTemplate(models.Model):
 
             fpos_id = self.env['website'].sudo()._get_current_fiscal_position_id(partner)
             fiscal_position = self.env['account.fiscal.position'].sudo().browse(fpos_id)
-            product_taxes = product.sudo().taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(company_id))
+            product_taxes = product.sudo().taxes_id._filter_taxes_by_company(company_id)
             taxes = fiscal_position.map_tax(product_taxes)
 
             price = self._price_with_tax_computed(

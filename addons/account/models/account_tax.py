@@ -827,6 +827,18 @@ class AccountTax(models.Model):
             'total_void': sign * total_void,
         }
 
+    def _filter_taxes_by_company(self, company_id):
+        """ Filter taxes by the given company
+            It goes through the company hierarchy until a tax is found
+        """
+        if not self:
+            return self
+        taxes, company = self.env['account.tax'], company_id
+        while not taxes and company:
+            taxes = self.filtered(lambda t: t.company_id == company)
+            company = company.parent_id
+        return taxes
+
     @api.model
     def _convert_to_tax_base_line_dict(
             self, base_line,

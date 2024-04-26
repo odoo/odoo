@@ -91,7 +91,7 @@ class Product(models.Model):
         self.ensure_one()
         fpos_id = self.env['website'].sudo()._get_current_fiscal_position_id(self.env.user.partner_id)
         fiscal_position_sudo = self.env['account.fiscal.position'].sudo().browse(fpos_id)
-        product_taxes = self.sudo().taxes_id.filtered(lambda x: x.company_id in self.env.company.parent_ids)
+        product_taxes = self.sudo().taxes_id._filter_taxes_by_company(self.env.company)
         return self.env['product.template']._price_with_tax_computed(
             self._get_contextual_price(),
             product_taxes,
