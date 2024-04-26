@@ -7,6 +7,11 @@ import {
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
+import {
+    patchAttendeeCalendarCommonPopover,
+    patchAttendeeCalendarCommonPopoverClass
+} from "@hr_homeworking_calendar/calendar/common/popover/calendar_common_popover";
+import { AttendeeCalendarCommonPopover } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_popover";
 
 const { DateTime, Interval } = luxon;
 const mockRegistry = registry.category("mock_server");
@@ -101,16 +106,20 @@ async function createHomeWorkingView(serverData, workLocationMock) {
                 ]);
             } else if (route === "/web/dataset/call_kw/calendar.event/get_default_duration") {
                 return Promise.resolve(1);
+            } else if (route === "/web/dataset/call_kw/res.users/read") {
+                return Promise.resolve([{user : uid, can_edit: true}]);
             }
         },
     });
 }
 
-QUnit.module("homeworking", ({ beforeEach }) => {
+QUnit.module("Homeworking Calendar", ({ beforeEach }) => {
     beforeEach(() => {
         patchDate(2020, 11, 10, 15, 0, 0);
         target = getFixture();
         setupViewRegistries();
+        patchWithCleanup(AttendeeCalendarCommonPopover.prototype, patchAttendeeCalendarCommonPopover);
+        patchWithCleanup(AttendeeCalendarCommonPopover, patchAttendeeCalendarCommonPopoverClass);
         patchWithCleanup(user, {
             userId: uid,
         });
@@ -203,9 +212,10 @@ QUnit.module("homeworking", ({ beforeEach }) => {
                             type: "many2one",
                             relation: "partner",
                         },
+                        can_edit: { string: "User can edit his own record", type: "boolean"},
                     },
                     records: [
-                        { id: uid, display_name: "user 1", partner_id: 1 },
+                        { id: 1, display_name: "user 1", partner_id: 1 , can_edit: true},
                         { id: 4, display_name: "user 4", partner_id: 4 },
                     ],
                 },
@@ -300,7 +310,6 @@ QUnit.module("homeworking", ({ beforeEach }) => {
         assert.deepEqual(worklocationNames, ["Office", "", "", "Home", "Set Location", "Set Location", "Office"]);
 
         await click(workLocations[0], '.o_worklocation_text');
-
         assert.equal(target.querySelector(".o_cw_popover div[name='employee_name']").textContent, "Aaron");
         assert.containsOnce(target, ".o_cw_popover .o_cw_popover_edit", "should show edit button");
         assert.containsOnce(target, ".o_cw_popover .o_cw_popover_delete", "should show delete button");
