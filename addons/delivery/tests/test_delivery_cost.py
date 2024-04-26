@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests import common, Form
 from odoo.tools import float_compare
 
@@ -391,3 +392,86 @@ class TestDeliveryCost(common.TransactionCase):
             qty * list_price * weight * volume,
             "The shipping price is not correctly computed with variable weight*volume.",
         )
+
+    def test_delivery_product_taxes_on_branch(self):
+        """ Check taxes populated on delivery line on branch company.
+            Taxes from the branch company should be taken with a fallback on parent company.
+        """
+        company = self.env.company
+        branch = self.env['res.company'].create({
+            'name': 'Branch',
+            'country_id': company.country_id.id,
+            'parent_id': company.id,
+        })
+        # create taxes for the parent company and its branch
+        tax_groups = self.env['account.tax.group'].create([{
+            'name': 'Tax Group A',
+            'company_id': company.id,
+        }, {
+            'name': 'Tax Group B',
+            'company_id': branch.id,
+        }])
+        tax_a = self.env['account.tax'].create({
+            'name': 'Tax A',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 10,
+            'tax_group_id': tax_groups[0].id,
+            'company_id': company.id,
+        })
+        tax_b = self.env['account.tax'].create({
+            'name': 'Tax B',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 20,
+            'tax_group_id': tax_groups[1].id,
+            'company_id': branch.id,
+        })
+        # create delivery product with taxes from both branch and parent company
+        delivery_product = self.env['product.product'].create({
+            'name': 'Delivery Product',
+            'taxes_id': [Command.set((tax_a + tax_b).ids)],
+        })
+        # create delivery
+        delivery = self.env['delivery.carrier'].create({
+            'name': 'Delivery Charges',
+            'delivery_type': 'fixed',
+            'product_id': delivery_product.id,
+            'company_id': branch.id,
+        })
+        # create a SO from Branch
+        sale_order = self.SaleOrder.create({
+            'partner_id': self.partner_4.id,
+            'company_id': branch.id,
+            'order_line': [Command.create({
+                'product_id': self.product_4.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_uom_unit.id,
+                'price_unit': 750.00,
+            })],
+        })
+        # add delivery
+        wizard = self.env['choose.delivery.carrier'].create({
+            'order_id': sale_order.id,
+            'carrier_id': delivery.id,
+            'company_id': branch.id,
+        })
+        wizard.button_confirm()
+        delivery_line = sale_order.order_line.filtered(lambda l: l.is_delivery)
+
+        # delivery line should have taxes from the branch company
+        self.assertRecordValues(delivery_line, [{'product_id': delivery_product.id, 'tax_id': tax_b.ids}])
+
+        # update delivery product by setting only the tax from parent company
+        delivery_product.write({'taxes_id': [Command.set((tax_a).ids)]})
+        # update delivery
+        wizard = self.env['choose.delivery.carrier'].create({
+            'order_id': sale_order.id,
+            'carrier_id': delivery.id,
+            'company_id': branch.id,
+        })
+        wizard.button_confirm()
+        delivery_line = sale_order.order_line.filtered(lambda l: l.is_delivery)
+
+        # delivery line should have taxes from the parent company as there is no tax from the branch company
+        self.assertRecordValues(delivery_line, [{'product_id': delivery_product.id, 'tax_id': tax_a.ids}])
