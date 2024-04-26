@@ -1520,7 +1520,7 @@ class expression(object):
                     return SQL("(%s IS NULL)", sql_field)
 
             elif isinstance(right, SQL):
-                return SQL("(%s %s %s)", sql_field, sql_operator, right)
+                return SQL("(%s %s (%s))", sql_field, sql_operator, right)
 
             elif isinstance(right, Query):
                 return SQL("(%s %s %s)", sql_field, sql_operator, right.subselect())

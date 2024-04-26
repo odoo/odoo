@@ -12,7 +12,7 @@ from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.fields import Date
 from odoo.models import BaseModel
 from odoo.tests.common import BaseCase, TransactionCase
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, SQL
 from odoo.osv import expression
 from odoo import Command
 
@@ -442,8 +442,13 @@ class TestExpression(SavepointCaseWithUserDemo):
     def test_in_operator(self):
         """ check that we can use the 'in' operator for plain fields """
         menu = self.env['ir.ui.menu']
-        menus = self._search(menu, [('sequence', 'in', [1, 2, 10, 20])])
-        self.assertTrue(menus)
+        menu_sequences = (1, 2, 10, 20)
+        menus_from_values = self._search(menu, [('sequence', 'in', (1, 2, 10, 20))])
+        self.assertTrue(menus_from_values)
+        # Same check, with a sub-select
+        # Not using self._search here, as filtered_domain does not run SQL queries
+        menus_from_sql = menu.search([('id', 'in', SQL("SELECT id from ir_ui_menu WHERE sequence IN %s", menu_sequences))])
+        self.assertEqual(menus_from_sql, menus_from_values)
 
     def test_in_boolean(self):
         """ Check the 'in' operator for boolean fields. """
