@@ -5,6 +5,7 @@ from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
 from markupsafe import Markup, escape
+from operator import itemgetter
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -240,10 +241,10 @@ class PosSession(models.Model):
                 'fields': ['id', 'name', 'parent_id'],
             },
             'account.tax': {
-                'domain': [('company_id', '=', config_id.company_id.id)],
+                'domain': self.env['account.tax']._check_company_domain(config_id.company_id),
                 'fields': [
                     'id', 'name', 'price_include', 'include_base_amount', 'is_base_affected',
-                    'amount_type', 'children_tax_ids', 'amount', 'repartition_line_ids', 'id'
+                    'amount_type', 'children_tax_ids', 'amount', 'repartition_line_ids', 'company_id', 'id'
                 ],
             },
             'account.tax.repartition.line': {
@@ -358,6 +359,12 @@ class PosSession(models.Model):
         # product_product adapation
         if len(models_to_load) == 0 or 'product.product' in models_to_load:
             self._process_pos_ui_product_product(response['data']['product.product'])
+
+            if len(models_to_load) == 0 or 'account.tax' in models_to_load:
+                self._process_pos_ui_product_product_taxes(
+                    response['data']['product.product'],
+                    response['data']['account.tax']
+                )
 
         return response
 
@@ -1967,6 +1974,39 @@ class PosSession(models.Model):
             if different_currency:
                 product['lst_price'] = self.company_id.currency_id._convert(product['lst_price'], self.config_id.currency_id, self.company_id, fields.Date.today())
             product['image_128'] = bool(product['image_128'])
+
+    def _process_pos_ui_product_product_taxes(self, products, taxes):
+        """ If the current company is a branch company, the taxes of the products can come
+            from the branch and its parents.
+            We have to make sure to not mix them together and only use the taxes from the
+            parent if there is no tax from the branch.
+        """
+        def filter_taxes_on_company(product_taxes, taxes_by_company):
+            """
+            Filter the list of tax ids on a single company starting from the current one.
+            If there is no tax in the result, it's filtered on the parent company and so
+            on until a non empty result is found.
+            """
+            taxes, comp = None, self.company_id
+            while not taxes and comp:
+                taxes = list(set(product_taxes) & set(taxes_by_company[comp.id]))
+                comp = comp.parent_id
+            return taxes
+
+        # group all taxes by company in a dict where:
+        # - key: ID of the company
+        # - values: list of tax ids
+        taxes_by_company = defaultdict(set)
+        if self.company_id.parent_id:
+            key_company_id = itemgetter('company_id')
+            key_id = itemgetter('id')
+            for key, group in groupby(taxes, key=key_company_id):
+                taxes_by_company[key] = list(map(key_id, group))
+
+        if len(taxes_by_company) > 1:
+            for product in products:
+                if len(product['taxes_id']) > 1:
+                    product['taxes_id'] = filter_taxes_on_company(product['taxes_id'], taxes_by_company)
 
     def get_pos_ui_res_partner_by_params(self, custom_search_params):
         """
