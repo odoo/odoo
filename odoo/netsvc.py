@@ -148,6 +148,9 @@ def init_logger():
     warnings.filterwarnings('ignore', category=BytesWarning, module='odoo.tools.image')
     # reportlab does a bunch of bytes/str mixing in a hashmap
     warnings.filterwarnings('ignore', category=BytesWarning, module='reportlab.platypus.paraparser')
+    # difficult to fix in 3.7, will be fixed in 16.0 with python 3.8+
+    warnings.filterwarnings('ignore', r'^Attribute .* is deprecated and will be removed in Python 3.14; use .* instead', category=DeprecationWarning)
+    warnings.filterwarnings('ignore', r'^.* is deprecated and will be removed in Python 3.14; use .* instead', category=DeprecationWarning)
 
     from .tools.translate import resetlocale
     resetlocale()
