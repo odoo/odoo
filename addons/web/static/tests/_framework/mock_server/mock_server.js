@@ -23,6 +23,7 @@ import {
     Kwargs,
     MockServerError,
     getRecordQualifier,
+    makeServerError,
     safeSplit,
 } from "./mock_server_utils";
 
@@ -909,9 +910,10 @@ export class MockServer {
                 return action.xml_id === params.action_id || action.path === params.action_id;
             });
         if (!action) {
-            // when the action doesn't exist, the real server doesn't crash, it simply returns false
-            console.warn(`No action found for ID/xmlID/path ${JSON.stringify(params.action_id)}`);
-            return false;
+            throw makeServerError({
+                errorName: "odoo.addons.web.controllers.action.MissingActionError",
+                message: `The action ${JSON.stringify(params.action_id)} does not exist`,
+            });
         }
         if (action.type === "ir.actions.server") {
             if (action.state !== "code") {

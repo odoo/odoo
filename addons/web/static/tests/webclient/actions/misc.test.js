@@ -11,7 +11,6 @@ import {
     getDropdownMenu,
     getService,
     makeMockEnv,
-    mockService,
     models,
     mountWithCleanup,
     onRpc,
@@ -226,18 +225,36 @@ test("action in handler registry", async () => {
 });
 
 test("properly handle case when action id does not exist", async () => {
-    expect.assertions(2);
-    patchWithCleanup(console, {
-        warn: () => {},
-    });
-    mockService("notification", {
-        add(message) {
-            expect(message).toBe("No action with id '4448' could be found");
-        },
-    });
+    expect.errors(1);
     await mountWithCleanup(WebClient);
-    await getService("action").doAction(4448);
-    expect("div.o_invalid_action").toHaveCount(1);
+    getService("action").doAction(4448);
+    await animationFrame();
+    expect(`.modal .o_error_dialog`).toHaveCount(1);
+    expect(queryOne(".o_error_dialog .modal-body").innerText).toBe(
+        "The action 4448 does not exist"
+    );
+});
+
+test("properly handle case when action path does not exist", async () => {
+    expect.errors(1);
+    await mountWithCleanup(WebClient);
+    getService("action").doAction("plop");
+    await animationFrame();
+    expect(`.modal .o_error_dialog`).toHaveCount(1);
+    expect(queryOne(".o_error_dialog .modal-body").innerText).toBe(
+        'The action "plop" does not exist'
+    );
+});
+
+test("properly handle case when action xmlId does not exist", async () => {
+    expect.errors(1);
+    await mountWithCleanup(WebClient);
+    getService("action").doAction("not.found.action");
+    await animationFrame();
+    expect(`.modal .o_error_dialog`).toHaveCount(1);
+    expect(queryOne(".o_error_dialog .modal-body").innerText).toBe(
+        'The action "not.found.action" does not exist'
+    );
 });
 
 test("actions can be cached", async () => {
