@@ -94,9 +94,11 @@ class AccountEdiProxyClientUser(models.Model):
             'journal_id': journal.id,
             'move_type': 'in_invoice',
             'peppol_move_state': peppol_state,
-            'extract_can_show_send_button': False,
             'peppol_message_uuid': uuid,
         })
+        if 'is_in_extractable_state' in move._fields:
+            move.is_in_extractable_state = False
+
         move._extend_with_attachments(attachment, new=True)
         move._message_log(
             body=_(
