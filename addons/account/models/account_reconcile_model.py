@@ -50,19 +50,32 @@ class AccountReconcileModelLine(models.Model):
     company_id = fields.Many2one(related='model_id.company_id', store=True)
     sequence = fields.Integer(required=True, default=10)
     account_id = fields.Many2one('account.account', string='Account', ondelete='cascade',
-        domain="[('deprecated', '=', False), ('account_type', '!=', 'off_balance')]",
-        required=True, check_company=True)
+        domain="[('deprecated', '=', False), ('account_type', '!=', 'off_balance')]", check_company=True)
 
     # This field is ignored in a bank statement reconciliation.
-    journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade',
-        domain="[('type', '=', 'general')]", check_company=True)
+    journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string="Journal",
+        ondelete='cascade',
+        check_company=True,
+        store=True,
+        readonly=False,
+        compute='_compute_journal_id',
+    )
     label = fields.Char(string='Journal Item Label', translate=True)
-    amount_type = fields.Selection([
-        ('fixed', 'Fixed'),
-        ('percentage', 'Percentage of balance'),
-        ('percentage_st_line', 'Percentage of statement line'),
-        ('regex', 'From label'),
-    ], required=True, default='percentage')
+    amount_type = fields.Selection(
+        selection=[
+            ('fixed', 'Fixed'),
+            ('percentage', 'Percentage of balance'),
+            ('percentage_st_line', 'Percentage of statement line'),
+            ('regex', 'From label'),
+        ],
+        required=True,
+        store=True,
+        precompute=True,
+        compute='_compute_amount_type',
+        readonly=False,
+    )
 
     # used to show the force tax included button'
     show_force_tax_included = fields.Boolean(compute='_compute_show_force_tax_included')
@@ -73,7 +86,15 @@ class AccountReconcileModelLine(models.Model):
     * Percentage: Percentage of the balance, between 0 and 100.
     * Fixed: The fixed value of the writeoff. The amount will count as a debit if it is negative, as a credit if it is positive.
     * From Label: There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\nR:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\nYou could enter\nBRT: ([\\d,]+)""")
-    tax_ids = fields.Many2many('account.tax', string='Taxes', ondelete='restrict', check_company=True)
+    tax_ids = fields.Many2many(
+        comodel_name='account.tax',
+        string="Taxes",
+        ondelete='restrict',
+        check_company=True,
+        compute='_compute_tax_ids',
+        readonly=False,
+        store=True,
+    )
 
     @api.onchange('tax_ids')
     def _onchange_tax_ids(self):
@@ -102,6 +123,37 @@ class AccountReconcileModelLine(models.Model):
                 record.amount = float(record.amount_string)
             except ValueError:
                 record.amount = 0
+
+    @api.depends('rule_type', 'model_id.counterpart_type')
+    def _compute_amount_type(self):
+        for line in self:
+            if line.rule_type == 'writeoff_button' and line.model_id.counterpart_type in ('sale', 'purchase'):
+                line.amount_type = line.amount_type or 'percentage_st_line'
+            else:
+                line.amount_type = line.amount_type or 'percentage'
+
+    @api.depends('model_id.counterpart_type')
+    def _compute_journal_id(self):
+        for line in self:
+            if line.journal_id.type != line.model_id.counterpart_type:
+                line.journal_id = None
+            else:
+                line.journal_id = line.journal_id
+
+    @api.depends('model_id.counterpart_type', 'rule_type', 'account_id', 'company_id', 'company_id.account_purchase_tax_id')
+    def _compute_tax_ids(self):
+        for line in self:
+            if line.rule_type == 'writeoff_button' and line.model_id.counterpart_type in ('sale', 'purchase'):
+                line.tax_ids = line.tax_ids.filtered(lambda x: x.type_tax_use == line.model_id.counterpart_type)
+                if not line.tax_ids:
+                    line.tax_ids = line.account_id.tax_ids.filtered(lambda x: x.type_tax_use == line.model_id.counterpart_type)
+                if not line.tax_ids:
+                    if line.model_id.counterpart_type == 'purchase' and line.company_id.account_purchase_tax_id:
+                        line.tax_ids = line.company_id.account_purchase_tax_id
+                    elif line.model_id.counterpart_type == 'sale' and line.company_id.account_sale_tax_id:
+                        line.tax_ids = line.company_id.account_sale_tax_id
+            else:
+                line.tax_ids = line.tax_ids
 
     @api.constrains('amount_string')
     def _validate_amount(self):
@@ -152,6 +204,15 @@ class AccountReconcileModel(models.Model):
         required=True,
         default='old_first',
         tracking=True,
+    )
+    counterpart_type = fields.Selection(
+        selection=[
+            ('general', 'Journal Entry'),
+            ('sale', 'Customer Invoices'),
+            ('purchase', 'Vendor Bills'),
+        ],
+        string="Counterpart Type",
+        default='general',
     )
 
     # ===== Conditions =====
