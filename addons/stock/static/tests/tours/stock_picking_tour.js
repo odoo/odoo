@@ -48,6 +48,71 @@ registry.category("web_tour.tours").add('test_detailed_op_no_save_1', { test: tr
     },
 ]});
 
+registry.category("web_tour.tours").add('test_pick_from_after_unlink', { test: true, steps: () => [
+    {trigger: ".fa-list"},
+    {trigger: "h4:contains('Stock move')"},
+    {
+        trigger: ".o_field_cell[name=quant_id]",
+        run: () => {
+            const nbLines = document.querySelectorAll(".o_field_cell[name=quant_id]").length;
+            if (nbLines !== 2){
+                throw new TourError("wrong number of move lines generated. " + nbLines + " instead of 2");
+            }
+        },
+    },
+    // delete the two reserved move lines
+    {trigger: '.fa-trash-o'},
+    {
+        trigger: ".o_field_cell[name=quant_id]",
+        run: () => {
+            const nbLines = document.querySelectorAll(".o_field_cell[name=quant_id]").length;
+            if (nbLines !== 1){
+                throw new TourError("wrong number of move lines generated. " + nbLines + " instead of 1");
+            }
+        },
+    },
+    {trigger: '.fa-trash-o'},
+    {
+        trigger: "thead",
+        run: () => {
+            const nbLines = document.querySelectorAll(".o_field_cell[name=quant_id]").length;
+            if (nbLines !== 0){
+                throw new TourError("wrong number of move lines generated. " + nbLines + " instead of 0");
+            }
+        },
+    },
+    {trigger: '.o_field_x2many_list_row_add > a'},
+    {trigger: 'h4:contains("Add line:")'},
+    {trigger: '.o_data_cell:contains("50.00")'},
+    {
+        trigger: '.o_list_number:contains("50.00")',
+        run: () => {
+            const nbLines = document.querySelectorAll(".o_field_cell[name=quant_id]").length;
+            if (nbLines !== 1){
+                throw new TourError("wrong number of move lines generated. " + nbLines + " instead of 1");
+            }
+        },
+    },
+    {trigger: '.o_field_x2many_list_row_add > a'},
+    {trigger: 'h4:contains("Add line:")'},
+    {trigger: 'td.o_data_cell:contains("40.00")'},
+    {
+        trigger: '.o_list_number:contains("90.00")',
+        run: () => {
+            const nbLines = document.querySelectorAll(".o_field_cell[name=quant_id]").length;
+            if (nbLines !== 2){
+                throw new TourError("wrong number of move lines generated. " + nbLines + " instead of 2");
+            }
+        },
+    },
+    {trigger: ".o_form_button_save"},
+    {trigger: ".btn-primary[name=button_validate]"},
+    {
+        trigger: ".o_control_panel_actions button:contains('Traceability')",
+        isCheck: true,
+    },
+]}),
+
 registry.category("web_tour.tours").add('test_generate_serial_1', { test: true, steps: () => [
     {trigger: '.o_field_x2many_list_row_add > a'},
     {

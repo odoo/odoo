@@ -49,7 +49,9 @@ export class SMLX2ManyField extends X2ManyField {
         if (alreadySelected.length) {
             domain.push(["id", "not in", alreadySelected.map((line) => line.data.quant_id[0])]);
         }
-        return this.selectCreate({ domain, context, title });
+        this.props.record.save().then(() => {
+            return this.selectCreate({ domain, context, title });
+        });
     }
 
     selectRecord(res_ids) {
