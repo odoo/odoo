@@ -84,7 +84,7 @@ const Link = Widget.extend({
                 $node = $node.parent();
             }
             const linkNode = this.linkEl || this.data.range.cloneContents();
-            const linkText = linkNode.innerText.replaceAll("\u200B", "");
+            const linkText = linkNode.innerText.replaceAll("\u200B", "").replaceAll("\uFEFF", "");
             this.data.content = linkText.replace(/[ \t\r\n]+/g, ' ');
             this.data.originalText = this.data.content;
             if (linkNode instanceof DocumentFragment) {
@@ -504,10 +504,10 @@ const Link = Widget.extend({
     _updateLinkContent($link, linkInfos, { force = false } = {}) {
         if (force || (this.needLabel && (linkInfos.content !== this.data.originalText || linkInfos.url !== this.data.url))) {
             if (linkInfos.content === this.data.originalText) {
-                $link.html(this.data.originalHTML);
+                $link.html(this.data.originalHTML.replaceAll('\u200B', '').replaceAll('\ufeff', ''));
             } else if (linkInfos.content && linkInfos.content.length) {
                 let contentWrapperEl = $link[0];
-                const text = $link[0].innerText.replaceAll("\u200B", "").trim();
+                const text = $link[0].innerText.replaceAll("\u200B", "").replaceAll("\uFEFF", "").trim();
                 // Update the first not ZWS child element that has the same inner text
                 // as the link with the new content while preserving child
                 // elements within the link. (e.g. the link is bold and italic)
@@ -517,7 +517,7 @@ const Link = Widget.extend({
                     child = [...contentWrapperEl.children].find(
                         (element) => !element.hasAttribute("data-o-link-zws")
                     );
-                } while (child?.innerText.replaceAll('\u200B', '').trim() === text);
+                } while (child?.innerText.replaceAll('\u200B', '').replaceAll('\uFEFF', '').trim() === text);
                 contentWrapperEl.innerText = linkInfos.content;
             } else {
                 $link.text(linkInfos.url);

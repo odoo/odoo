@@ -6,8 +6,8 @@ import {
     fillEmpty,
     getListMode,
     isBlock,
-    isEmptyBlock,
     isSelfClosingElement,
+    getAdjacentNextSiblings,
     moveNodes,
     preserveCursor,
     isFontAwesome,
@@ -20,6 +20,10 @@ import {
     EMAIL_REGEX,
     URL_REGEX_WITH_INFOS,
     unwrapContents,
+    padLinkWithZws,
+    getTraversedNodes,
+    ZERO_WIDTH_CHARS_REGEX,
+    setSelection,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -54,7 +58,8 @@ export function areSimilarElements(node, node2) {
         isNotNoneValue(getComputedStyle(node, ':before').getPropertyValue('content')) ||
         isNotNoneValue(getComputedStyle(node, ':after').getPropertyValue('content')) ||
         isNotNoneValue(getComputedStyle(node2, ':before').getPropertyValue('content')) ||
-        isNotNoneValue(getComputedStyle(node2, ':after').getPropertyValue('content'))
+        isNotNoneValue(getComputedStyle(node2, ':after').getPropertyValue('content')) ||
+        isFontAwesome(node) || isFontAwesome(node2)
     ) {
         return false;
     }
@@ -88,7 +93,7 @@ export function areSimilarElements(node, node2) {
  * @returns {String|null}
  */
 function deduceURLfromLabel(link) {
-    const label = link.innerText.trim().replaceAll('\u200B', '');
+    const label = link.innerText.trim().replace(ZERO_WIDTH_CHARS_REGEX, '');
     // Check first for e-mail.
     let match = label.match(EMAIL_REGEX);
     if (match) {
@@ -200,7 +205,7 @@ class Sanitize {
             const anchor = selection && selection.anchorNode;
             const anchorEl = anchor && closestElement(anchor);
             // Remove zero-width spaces added by `fillEmpty` when there is
-            // content and the selection is not next to it.
+            // content.
             if (
                 node.nodeType === Node.TEXT_NODE &&
                 node.textContent.includes('\u200B') &&
@@ -217,15 +222,22 @@ class Sanitize {
                             sibling.length > 0
                     )
                 ) &&
-                !isBlock(node.parentElement) &&
-                anchor !== node
+                !isBlock(node.parentElement)
             ) {
                 const restoreCursor = shouldPreserveCursor(node, this.root) &&
                     preserveCursor(this.root.ownerDocument);
+                const shouldAdaptAnchor = anchor === node && selection.anchorOffset > node.textContent.indexOf('\u200B');
+                const shouldAdaptFocus = selection.focusNode === node && selection.focusOffset > node.textContent.indexOf('\u200B');
                 node.textContent = node.textContent.replace('\u200B', '');
                 node.parentElement.removeAttribute("data-oe-zws-empty-inline");
                 if (restoreCursor) {
                     restoreCursor();
+                }
+                if (shouldAdaptAnchor || shouldAdaptFocus) {
+                    setSelection(
+                        selection.anchorNode, shouldAdaptAnchor ? selection.anchorOffset - 1 : selection.anchorOffset,
+                        selection.focusNode, shouldAdaptFocus ? selection.focusOffset - 1 : selection.focusOffset,
+                    );
                 }
             }
 
@@ -235,25 +247,40 @@ class Sanitize {
                 node.parentElement.tagName === 'LI' &&
                 !node.parentElement.classList.contains('nav-item')
             ) {
+                const previous = node.previousSibling;
+                const nextSiblings = getAdjacentNextSiblings(node);
                 const classes = node.classList;
                 const parent = node.parentElement;
                 const restoreCursor = shouldPreserveCursor(node, this.root) &&
                     preserveCursor(this.root.ownerDocument);
-                if (isEmptyBlock(node)) {
-                    node.remove();
-                } else if (classes.length) {
-                    const spanEl = document.createElement('span');
-                    spanEl.setAttribute('class', classes);
-                    spanEl.append(...node.childNodes);
-                    node.replaceWith(spanEl);
+                if (previous) {
+                    const newLi = document.createElement('li');
+                    newLi.classList.add('oe-nested');
+                    parent.after(newLi);
+                    newLi.append(node, ...nextSiblings);
+                    if (classes.length) {
+                        const spanEl = document.createElement('span');
+                        spanEl.setAttribute('class', classes);
+                        spanEl.append(...node.childNodes);
+                        node.replaceWith(spanEl);
+                    } else {
+                        unwrapContents(node);
+                    }
                 } else {
-                    unwrapContents(node);
+                    if (classes.length) {
+                        const spanEl = document.createElement('span');
+                        spanEl.setAttribute('class', classes);
+                        spanEl.append(...node.childNodes);
+                        node.replaceWith(spanEl);
+                    } else {
+                        unwrapContents(node);
+                    }
                 }
-                node.remove();
                 fillEmpty(parent);
                 if (restoreCursor) {
                     restoreCursor(new Map([[node, parent]]));
                 }
+                node = parent;
             }
 
             // Transform <li> into <p> if they are not in a <ul> / <ol>
@@ -325,12 +352,49 @@ class Sanitize {
                 this._parse(firstChild);
             }
 
-            // Update link URL if label is a new valid link.
-            if (node.nodeName === 'A' && anchorEl === node) {
-                const url = deduceURLfromLabel(node);
-                if (url) {
-                    node.setAttribute('href', url);
+            // Remove link ZWNBSP not in selection
+            const editable = closestElement(this.root, '[contenteditable=true]');
+            if (
+                node.nodeType === Node.TEXT_NODE &&
+                node.textContent.includes('\uFEFF') &&
+                !closestElement(node, 'a') &&
+                !(editable && getTraversedNodes(editable).includes(node))
+            ) {
+                const startsWithLegitZws = node.textContent.startsWith('\uFEFF') && node.previousSibling && node.previousSibling.nodeName === 'A';
+                const endsWithLegitZws = node.textContent.endsWith('\uFEFF') && node.nextSibling && node.nextSibling.nodeName === 'A';
+                let newText = node.textContent.replace(/\uFEFF/g, '');
+                if (startsWithLegitZws) {
+                    newText = '\uFEFF' + newText;
                 }
+                if (endsWithLegitZws) {
+                    newText = newText + '\uFEFF';
+                }
+                if (newText !== node.textContent) {
+                    // We replace the text node with a new text node with the
+                    // update text rather than just changing the text content of
+                    // the node because these two methods create different
+                    // mutations and at least the tour system breaks if all we
+                    // send here is a text content change.
+                    if (newText.length) {
+                        const newTextNode = document.createTextNode(newText);
+                        node.before(newTextNode);
+                        node.remove();
+                        node = newTextNode;
+                    } else {
+                        node.remove();
+                    }
+                }
+            }
+
+            // Update link URL if label is a new valid link.
+            if (node.nodeName === 'A') {
+                if (anchorEl === node) {
+                    const url = deduceURLfromLabel(node);
+                    if (url) {
+                        node.setAttribute('href', url);
+                    }
+                }
+                padLinkWithZws(this.root, node);
             }
             node = node.nextSibling;
         }
