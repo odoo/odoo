@@ -1012,35 +1012,34 @@ class ChromeBrowser():
         self._logger.warning("Chrome executable not found")
         raise unittest.SkipTest("Chrome executable not found")
 
-    def _spawn_chrome(self, cmd):
-        if os.name == 'nt':
-            proc = subprocess.Popen(cmd, stderr=subprocess.DEVNULL)
-            pid = proc.pid
-        else:
-            pid = os.fork()
-        if pid != 0:
-            port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
-            for _ in range(100):
-                time.sleep(0.1)
-                if port_file.is_file() and port_file.stat().st_size > 5:
-                    with port_file.open('r', encoding='utf-8') as f:
-                        self.devtools_port = int(f.readline())
-                    break
-            else:
-                raise unittest.SkipTest('Failed to detect chrome devtools port after 2.5s.')
-            return pid
-        else:
-            if platform.system() != 'Darwin':
-                # since the introduction of pointer compression in Chrome 80 (v8 v8.0),
-                # the memory reservation algorithm requires more than 8GiB of virtual mem for alignment
-                # this exceeds our default memory limits.
-                # OSX already reserve huge memory for processes
+    def _chrome_without_limit(self, cmd):
+        if os.name == 'posix' and platform.system() != 'Darwin':
+            # since the introduction of pointer compression in Chrome 80 (v8 v8.0),
+            # the memory reservation algorithm requires more than 8GiB of
+            # virtual mem for alignment this exceeds our default memory limits.
+            def preexec():
                 import resource
                 resource.setrlimit(resource.RLIMIT_AS, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
-            # redirect browser stderr to /dev/null
-            with open(os.devnull, 'wb', 0) as stderr_replacement:
-                os.dup2(stderr_replacement.fileno(), sys.stderr.fileno())
-            os.execv(cmd[0], cmd)
+        else:
+            preexec = None
+
+        # pylint: disable=subprocess-popen-preexec-fn
+        return subprocess.Popen(cmd, stderr=subprocess.DEVNULL, preexec_fn=preexec)
+
+    def _spawn_chrome(self, cmd):
+        proc = self._chrome_without_limit(cmd)
+        pid = proc.pid
+        port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
+        for _ in range(100):
+            time.sleep(0.1)
+            if port_file.is_file() and port_file.stat().st_size > 5:
+                with port_file.open('r', encoding='utf-8') as f:
+                    self.devtools_port = int(f.readline())
+                break
+        else:
+            raise unittest.SkipTest('Failed to detect chrome devtools port after 2.5s.')
+        return pid
+
 
     def _chrome_start(self):
         if self.chrome_pid is not None:
