@@ -80,3 +80,18 @@ $oi-sizes: (
     mask: url('/web/static/img/barcode.svg') center/contain no-repeat;
     background-color: $o-brand-primary;
 }
+
+.o_fa_stack {
+    display: grid;
+    align-items: baseline;
+    justify-items: center;
+
+    > * {
+        grid-column: 1/-1;
+        grid-row: 1/-1;
+    }
+
+    > :first-child {
+        font-size: 2em;
+    }
+}
