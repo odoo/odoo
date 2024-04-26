@@ -118,8 +118,11 @@ class StockReplenishmentOption(models.TransientModel):
     @api.depends('replenishment_info_id')
     def _compute_lead_time(self):
         for record in self:
-            lead_time = record.route_id.rule_ids._get_lead_days(record.product_id)[0]['total_delay']    #TO FIX: use _get_rule to avoid singleton issue
-            record.lead_time = str(lead_time) + " days"
+            rule = self.env['procurement.group']._get_rule(record.product_id, record.location_id, {
+                'route_ids': record.route_id,
+                'warehouse_id': record.warehouse_id,
+            })
+            record.lead_time = str(rule._get_lead_days(record.product_id)[0]['total_delay'] if rule else 0) + " days"
 
     @api.depends('warehouse_id', 'free_qty', 'uom', 'qty_to_order')
     def _compute_warning_message(self):
