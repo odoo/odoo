@@ -148,3 +148,8 @@ class AccountMove(models.Model):
                 'taxes_data': taxes_data,
             })
         return self.env['account.tax']._l10n_in_get_hsn_summary_table(base_lines, display_uom)
+
+    @api.depends('l10n_in_state_id')
+    def _compute_fiscal_position_id(self):
+        for move in self:
+            super(AccountMove, move).with_context(l10n_in_state_id=move.l10n_in_state_id)._compute_fiscal_position_id()

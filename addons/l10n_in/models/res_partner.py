@@ -72,3 +72,14 @@ class ResPartner(models.Model):
         if vat == TEST_GST_NUMBER:
             return True
         return super().check_vat_in(vat)
+
+    def _get_fpos_ranking_functions(self, partner):
+        res = super()._get_fpos_ranking_functions(partner)
+        if self.env.context.get('l10n_in_state_id') and partner.country_id.code == 'IN' and self.env.company.account_fiscal_country_id.code == 'IN':
+            for re in res:
+                if re[0] == 'state_id':
+                    re[1] = lambda fpos: (
+                        not fpos.state_ids
+                        or (self.env.context['l10n_in_state_id'] in fpos.state_ids and 2)
+                    )
+        return res
