@@ -6868,7 +6868,7 @@
     /**
      * Get a default chart js configuration
      */
-    function getDefaultChartJsRuntime(chart, labels, fontColor, dataSetsFormat) {
+    function getDefaultChartJsRuntime(chart, labels, fontColor, dataSetsFormat, truncateLabels = true) {
         return {
             type: chart.type,
             options: {
@@ -6921,7 +6921,7 @@
                 },
             },
             data: {
-                labels: labels.map(truncateLabel),
+                labels: truncateLabels ? labels.map(truncateLabel) : labels,
                 datasets: [],
             },
         };
@@ -7760,9 +7760,9 @@
         }
         return true;
     }
-    function getLineConfiguration(chart, labels, dataSetFormat) {
+    function getLineConfiguration(chart, labels, dataSetFormat, truncateLabels) {
         const fontColor = chartFontColor(chart.background);
-        const config = getDefaultChartJsRuntime(chart, labels, fontColor, dataSetFormat);
+        const config = getDefaultChartJsRuntime(chart, labels, fontColor, dataSetFormat, truncateLabels);
         const legend = {
             labels: {
                 fontColor,
@@ -7837,8 +7837,9 @@
         if (chart.aggregated) {
             ({ labels, dataSetsValues } = aggregateDataForLabels(labels, dataSetsValues));
         }
+        const truncateLabels = axisType === "category";
         const dataSetFormat = getChartDatasetFormat(getters, chart.dataSets);
-        const config = getLineConfiguration(chart, labels, dataSetFormat);
+        const config = getLineConfiguration(chart, labels, dataSetFormat, truncateLabels);
         const labelFormat = getChartLabelFormat(getters, chart.labelRange);
         if (axisType === "time") {
             config.options.scales.xAxes[0].type = "time";
@@ -29247,7 +29248,7 @@
                     this.clearBorders(cmd.sheetId, cmd.target);
                     break;
                 case "REMOVE_COLUMNS_ROWS":
-                    for (let el of cmd.elements) {
+                    for (let el of [...cmd.elements].sort((a, b) => b - a)) {
                         if (cmd.dimension === "COL") {
                             this.shiftBordersHorizontally(cmd.sheetId, el + 1, -1);
                         }
@@ -48091,9 +48092,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.33';
-    __info__.date = '2024-04-18T16:54:26.487Z';
-    __info__.hash = '89f04ea';
+    __info__.version = '16.3.34';
+    __info__.date = '2024-04-26T07:57:35.342Z';
+    __info__.hash = '196324c';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
