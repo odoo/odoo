@@ -346,7 +346,7 @@ class AccountEdiFormat(models.Model):
                 'discount': discount * refund_sign,
                 'unit_price': (line.balance + discount) / line.quantity * refund_sign,
                 'total': total,
-                'description': regex_sub(r'[^0-9a-zA-Z ]', '', line.name)[:250]
+                'description': regex_sub(r'[^0-9a-zA-Z ]', 'X', line.name)[:250] if line.name and line.name.strip() else "X"
             })
         values['invoice_lines'] = invoice_lines
         # Tax details (desglose)
