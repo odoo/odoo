@@ -1,12 +1,8 @@
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import {
-    defineModels,
-    fields,
-    models,
-    mountView,
-} from "@web/../tests/web_test_helpers";
+import { defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
     is_raining_outside = fields.Boolean();
@@ -28,12 +24,13 @@ class Partner extends models.Model {
             id: 1,
             display_name: "first record",
             is_raining_outside: false,
-            mood: 'happy',
-            color: 'white',
+            mood: "happy",
+            color: "white",
         },
     ];
 }
 
+defineMailModels();
 defineModels([Partner]);
 
 test("radio selection field with filter, empty list", async () => {
@@ -46,8 +43,8 @@ test("radio selection field with filter, empty list", async () => {
                 <field name="color" widget="radio_selection_with_filter"
                        context="{'allowed_selection': []}" />
             </form>
-        `
-    })
+        `,
+    });
 
     expect(".o_radio_input").not.toBeVisible();
 });
@@ -62,8 +59,8 @@ test("radio selection field with filter, single choice", async () => {
                 <field name="color" widget="radio_selection_with_filter"
                        context="{'allowed_selection': ['grey']}" />
             </form>
-        `
-    })
+        `,
+    });
 
     expect(".o_radio_input").toHaveCount(1);
     expect("input[data-value='white']").not.toBeVisible();
@@ -81,8 +78,8 @@ test("radio selection field with filter, all choices", async () => {
                 <field name="color" widget="radio_selection_with_filter"
                        context="{'allowed_selection': ['white', 'grey', 'black']}" />
             </form>
-        `
-    })
+        `,
+    });
 
     expect(".o_radio_input").toHaveCount(3);
     expect("input[data-value='white']").toBeVisible();
@@ -106,8 +103,8 @@ test("radio selection field with filter, synchronize with other field", async ()
                            }" />
                 </group>
             </form>
-        `
-    })
+        `,
+    });
     // not raining outside => sad should be invisible
     expect("[name='is_raining_outside'] input").not.toBeChecked();
     expect("div[name='mood'] .o_radio_input").toHaveCount(1);
@@ -154,8 +151,8 @@ test("radio selection field with filter, cross radio synchronization", async () 
                            }" />
                 </group>
             </form>
-        `
-    })
+        `,
+    });
 
     // happy and white by default, sad and black should be invisible
     expect("div[name='mood'] .o_radio_input").toHaveCount(1);

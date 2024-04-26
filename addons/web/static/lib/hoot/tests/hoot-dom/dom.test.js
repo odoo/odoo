@@ -22,9 +22,9 @@ import {
     waitForNone,
     waitUntil,
 } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, mockTouch } from "@odoo/hoot-mock";
 import { getParentFrame } from "../../../hoot-dom/helpers/dom";
-import { parseUrl } from "../local_helpers";
+import { parseUrl, waitForIframes } from "../local_helpers";
 
 /**
  * @param {...string} queryAllSelectors
@@ -67,21 +67,13 @@ const expectSelector = (...queryAllSelectors) => {
  * @param {HTMLElement} [root]
  * @returns {Promise<HTMLIFrameElement>}
  */
-const makeIframe = (document, root) => {
-    return new Promise((resolve) => {
+const makeIframe = (document, root) =>
+    new Promise((resolve) => {
         const iframe = document.createElement("iframe");
-        iframe.addEventListener("load", async () => resolve(iframe));
+        iframe.addEventListener("load", () => resolve(iframe));
         iframe.srcdoc = "<body></body>";
         (root || document.body).appendChild(iframe);
     });
-};
-
-const waitForIframes = () =>
-    Promise.all(
-        queryAll("iframe").map(
-            (iframe) => new Promise((resolve) => iframe.addEventListener("load", resolve))
-        )
-    );
 
 const FULL_HTML_TEMPLATE = /* html */ `
     <header>
@@ -328,6 +320,15 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         expect(matchMedia("not (prefers-color-scheme: dark)").matches).toBe(true);
         expect(matchMedia("(prefers-reduced-motion: reduce)").matches).toBe(true);
         expect(matchMedia("(prefers-reduced-motion: no-preference)").matches).toBe(false);
+
+        // Touch feature
+        expect(window.matchMedia("(pointer: coarse)").matches).toBe(false);
+        expect(window.ontouchstart).toBe(undefined);
+
+        mockTouch(true);
+
+        expect(window.matchMedia("(pointer: coarse)").matches).toBe(true);
+        expect(window.ontouchstart).not.toBe(undefined);
     });
 
     test("waitFor: already in fixture", async () => {
@@ -412,7 +413,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         await expect(waitUntil(() => false, { timeout: 1 })).rejects.toThrow();
     });
 
-    test("waitUntil: observe fixture", async () => {
+    test("waitUntil: lazy", async () => {
         let value = "";
         waitUntil(() => value).then((v) => expect.step(v));
 
@@ -422,7 +423,6 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
 
         expect([]).toVerifySteps();
 
-        getFixture().setAttribute("data-value", "test"); // trigger mutation observer
         await animationFrame();
 
         expect(["test"]).toVerifySteps();
@@ -829,7 +829,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
             expect(() => queryAll`[href=/]`).toThrow(); // missing quotes
             expect(
                 () =>
-                    queryAll`#o_wblog_posts_loop:has(span:has(i.fa-calendar-o):has(a[href="/blog?search=a"])):has(span:has(i.fa-search):has(a[href^="/blog?date_begin"]))`
+                    queryAll`_o_wblog_posts_loop:has(span:has(i.fa-calendar-o):has(a[href="/blog?search=a"])):has(span:has(i.fa-search):has(a[href^="/blog?date_begin"]))`
             ).toThrow(); // nested :has statements
         });
 
