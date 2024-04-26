@@ -4,6 +4,7 @@
     <record id="product_product_ad_valorem" model="product.product">
         <field name="name">Ad-Valorem</field>
         <field name="type">service</field>
+        <field name="categ_id" ref="product.product_category_office"/>
         <field name="default_code">AD_VALOREM</field>
         <field name="description">Charge for Ad-Valorem calculation in DIN</field>
         <field name="sale_ok" eval="False"/>

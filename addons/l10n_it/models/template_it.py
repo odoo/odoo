@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': '1501',
             'property_account_payable_id': '2501',
-            'property_account_expense_categ_id': '4101',
-            'property_account_income_categ_id': '3101',
         }
 
     @template('it', 'res.company')
@@ -31,5 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_calculation_rounding_method': 'round_globally',
                 'account_sale_tax_id': '22v',
                 'account_purchase_tax_id': '22am',
+                'expense_account_id': '4101',
+                'income_account_id': '3101',
             },
         }

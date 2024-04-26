@@ -21,7 +21,6 @@ class TestPackingNeg(TransactionCase):
         product_neg = self.env['product.product'].create({
             'name': 'Negative product',
             'is_storable': True,
-            'categ_id': self.ref('product.product_category_1'),
             'list_price': 100.0,
             'standard_price': 70.0,
             'seller_ids': [(0, 0, {

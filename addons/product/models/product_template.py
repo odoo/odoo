@@ -23,11 +23,6 @@ class ProductTemplate(models.Model):
     _check_company_domain = models.check_company_domain_parent_of
 
     @tools.ormcache()
-    def _get_default_category_id(self):
-        # Deletion forbidden (at least through unlink)
-        return self.env.ref('product.product_category_all')
-
-    @tools.ormcache()
     def _get_default_uom_id(self):
         # Deletion forbidden (at least through unlink)
         return self.env.ref('uom.product_uom_unit')
@@ -77,9 +72,10 @@ class ProductTemplate(models.Model):
         readonly=False,
     )
     categ_id = fields.Many2one(
-        'product.category', 'Product Category',
-        change_default=True, default=_get_default_category_id, group_expand='_read_group_categ_id',
-        required=True)
+        string="Product Category",
+        comodel_name='product.category',
+        group_expand='_read_group_categ_id',
+    )
 
     currency_id = fields.Many2one(
         'res.currency', 'Currency', compute='_compute_currency_id')

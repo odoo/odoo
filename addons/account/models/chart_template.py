@@ -634,11 +634,11 @@ class AccountChartTemplate(models.AbstractModel):
 
         # Setup default Income/Expense Accounts on Sale/Purchase journals
         sale_journal = self.ref("sale", raise_if_not_found=False)
-        if sale_journal and template_data.get('property_account_income_categ_id'):
-            sale_journal.default_account_id = self.ref(template_data.get('property_account_income_categ_id'))
+        if sale_journal and company.income_account_id:
+            sale_journal.default_account_id = company.income_account_id
         purchase_journal = self.ref("purchase", raise_if_not_found=False)
-        if purchase_journal and template_data.get('property_account_expense_categ_id'):
-            purchase_journal.default_account_id = self.ref(template_data.get('property_account_expense_categ_id'))
+        if purchase_journal and company.expense_account_id:
+            purchase_journal.default_account_id = company.expense_account_id
 
         # Set default Purchase and Sale taxes on the company
         if not company.account_sale_tax_id:
@@ -682,8 +682,6 @@ class AccountChartTemplate(models.AbstractModel):
             **additional_properties,
             'property_account_receivable_id': 'res.partner',
             'property_account_payable_id': 'res.partner',
-            'property_account_expense_categ_id': 'product.category',
-            'property_account_income_categ_id': 'product.category',
             'property_stock_journal': 'product.category',
         }
 

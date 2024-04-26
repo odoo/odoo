@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'gd_acc_120000',
             'property_account_payable_id': 'gd_acc_220000',
-            'property_account_expense_categ_id': 'gd_acc_702000',
-            'property_account_income_categ_id': 'gd_acc_762000',
             'code_digits': '6',
             'use_storno_accounting': True,
         }
@@ -30,5 +28,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'gd_acc_484000',
                 'account_sale_tax_id': 'gd_taxr_3',
                 'account_purchase_tax_id': 'gd_taxp_3',
+                'expense_account_id': 'gd_acc_702000',
+                'income_account_id': 'gd_acc_762000',
             },
         }
