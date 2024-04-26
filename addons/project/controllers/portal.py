@@ -409,18 +409,18 @@ class ProjectCustomerPortal(CustomerPortal):
         values = self._prepare_portal_layout_values()
 
         Task = request.env['project.task']
-        milestone_domain = AND([domain, [('allow_milestones', '=', True)], [('milestone_id', '!=', False)]])
-        milestones_allowed = Task.search_count(milestone_domain, limit=1) == 1
-        searchbar_sortings = dict(sorted(self._task_get_searchbar_sortings(milestones_allowed, project).items(),
-                                         key=lambda item: item[1]["sequence"]))
-        searchbar_inputs = self._task_get_searchbar_inputs(milestones_allowed, project)
-        searchbar_groupby = self._task_get_searchbar_groupby(milestones_allowed, project)
 
         if not domain:
             domain = []
         if not su and Task.check_access_rights('read'):
             domain = AND([domain, request.env['ir.rule']._compute_domain(Task._name, 'read')])
         Task_sudo = Task.sudo()
+        milestone_domain = AND([domain, [('allow_milestones', '=', True)], [('milestone_id', '!=', False)]])
+        milestones_allowed = Task_sudo.search_count(milestone_domain, limit=1) == 1
+        searchbar_sortings = dict(sorted(self._task_get_searchbar_sortings(milestones_allowed, project).items(),
+                                         key=lambda item: item[1]["sequence"]))
+        searchbar_inputs = self._task_get_searchbar_inputs(milestones_allowed, project)
+        searchbar_groupby = self._task_get_searchbar_groupby(milestones_allowed, project)
 
         # default sort by value
         if not sortby or (sortby == 'milestone' and not milestones_allowed):
