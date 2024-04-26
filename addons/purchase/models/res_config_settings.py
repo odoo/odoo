@@ -37,6 +37,19 @@ class ResConfigSettings(models.TransientModel):
         if not self.use_po_lead:
             self.po_lead = 0.0
 
+    @api.onchange('group_product_variant')
+    def _onchange_group_product_variant_purchase(self):
+        """If the user disables the product variants -> disable the product configurator as well"""
+        if self.module_purchase_product_matrix and not self.group_product_variant:
+            self.module_purchase_product_matrix = False
+
+    @api.onchange('module_purchase_product_matrix')
+    def _onchange_module_purchase_product_matrix(self):
+        """The product variant grid requires the product variants activated
+        If the user enables the product configurator -> enable the product variants as well"""
+        if self.module_purchase_product_matrix and not self.group_product_variant:
+            self.group_product_variant = True
+
     def set_values(self):
         super().set_values()
         po_lock = 'lock' if self.lock_confirmed_po else 'edit'
