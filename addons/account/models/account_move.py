@@ -542,6 +542,13 @@ class AccountMove(models.Model):
         store=True,
         readonly=False,
     )
+
+    reconciliation_model_id = fields.Many2one(
+        string='Reconciliation model',
+        comodel_name='account.reconcile.model',
+        store=True,
+    )
+
     # Technical field used to fit the generic behavior in mail templates.
     user_id = fields.Many2one(string='User', related='invoice_user_id')
     invoice_origin = fields.Char(
@@ -3304,6 +3311,17 @@ class AccountMove(models.Model):
                 totals['groups_by_subtotal'][_('Untaxed Amount')][0]['tax_group_amount'] += tax_amount_rounding_error
                 totals['amount_total'] = amount_total
                 self.tax_totals = totals
+
+    def _round_total_amount(self, amount_total):
+        """
+        Rounds total amount of move using _check_total_amount. Verifies that the total
+        amount indeed needs rounding, so larger differences between the desired amount
+        total and the current amount total are not wrongly treated as a rounding error.
+        The currency_id.rounding is used as a threshold to determine that.
+        """
+        difference = abs(amount_total - self.amount_total)
+        if float_compare(difference, self.currency_id.rounding, precision_rounding=self.currency_id.rounding) == 0:
+            self._check_total_amount(amount_total)
 
     # -------------------------------------------------------------------------
     # HASH

@@ -660,6 +660,8 @@ class AccountChartTemplate(models.AbstractModel):
             if value and field in self.env[model]._fields:
                 self.env['ir.property']._set_default(field, model, self.ref(value).id, company=company)
 
+        self._update_reconciliation_models(company)
+
     def _get_chart_template_data(self, template_code):
         template_data = defaultdict(lambda: defaultdict(dict))
         template_data['res.company']  # ensure it's the first property when iterating
@@ -1033,7 +1035,20 @@ class AccountChartTemplate(models.AbstractModel):
                 "match_same_currency": True,
                 "allow_payment_tolerance": False,
                 "match_partner": True,
-            }
+            },
+            "reconcile_bill": {
+                "name": 'Create Bill',
+                "sequence": 5,
+                "rule_type": 'writeoff_button',
+                'counterpart_type': 'purchase',
+                'line_ids': [
+                    Command.create({
+                        'amount_type': 'percentage_st_line',
+                        'amount_string': '100',
+                        'tax_ids': [],
+                    })
+                ]
+            },
         }
 
     # --------------------------------------------------------------------------------
@@ -1310,3 +1325,31 @@ class AccountChartTemplate(models.AbstractModel):
                             break
 
         translation_importer.save(overwrite=False)
+
+    @api.model
+    def _update_reconciliation_models(self, company):
+        """
+        The write-off button default reconciliation model for Bill creation
+        requires tax ids, which need to be set after the default taxes are defined.
+        """
+        lines = self.env['account.reconcile.model'].search([
+            *self.env['account.reconcile.model']._check_company_domain(company),
+            ('counterpart_type', '=', 'purchase'),
+        ]).line_ids
+
+        tax_ids = (
+            self.env['account.tax'].search([
+                *self.env['account.tax']._check_company_domain(company),
+                ('type_tax_use', '=', 'purchase'),
+                ('id', 'in', company.account_purchase_tax_id.ids),
+            ], limit=1)
+            or self.env['account.tax'].search([
+                *self.env['account.tax']._check_company_domain(company),
+                ('type_tax_use', '=', 'purchase'),
+            ], limit=1)
+            or self.env['account.tax'].search([
+                *self.env['account.tax']._check_company_domain(company),
+            ], limit=1)
+        )
+        if tax_ids:  # some localizations (e.g. l10n_hk) do not have taxes, so we only set tax_ids if taxes exist
+            lines.tax_ids = tax_ids

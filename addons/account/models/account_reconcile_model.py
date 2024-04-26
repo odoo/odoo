@@ -50,12 +50,10 @@ class AccountReconcileModelLine(models.Model):
     company_id = fields.Many2one(related='model_id.company_id', store=True)
     sequence = fields.Integer(required=True, default=10)
     account_id = fields.Many2one('account.account', string='Account', ondelete='cascade',
-        domain="[('deprecated', '=', False), ('account_type', '!=', 'off_balance')]",
-        required=True, check_company=True)
+        domain="[('deprecated', '=', False), ('account_type', '!=', 'off_balance')]", check_company=True)
 
     # This field is ignored in a bank statement reconciliation.
-    journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade',
-        domain="[('type', '=', 'general')]", check_company=True)
+    journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', check_company=True)
     label = fields.Char(string='Journal Item Label', translate=True)
     amount_type = fields.Selection([
         ('fixed', 'Fixed'),
@@ -74,6 +72,8 @@ class AccountReconcileModelLine(models.Model):
     * Fixed: The fixed value of the writeoff. The amount will count as a debit if it is negative, as a credit if it is positive.
     * From Label: There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\nR:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\nYou could enter\nBRT: ([\\d,]+)""")
     tax_ids = fields.Many2many('account.tax', string='Taxes', ondelete='restrict', check_company=True)
+    # Relational fields for applying domain in the view
+    tax_ids_domain = fields.Binary(related="model_id.tax_ids_domain", string="Tax ids domain")
 
     @api.onchange('tax_ids')
     def _onchange_tax_ids(self):
@@ -102,6 +102,13 @@ class AccountReconcileModelLine(models.Model):
                 record.amount = float(record.amount_string)
             except ValueError:
                 record.amount = 0
+
+    @api.onchange('model_id')
+    def _onchange_model_id_counterpart_type(self):
+        # New lines added for the creation of moves are more likely to require percentage
+        # of statement line instead of the default percentage of balance (residual amount)
+        if self.model_id.counterpart_type in ('sale', 'purchase'):
+            self.amount_type = 'percentage_st_line'
 
     @api.constrains('amount_string')
     def _validate_amount(self):
@@ -152,6 +159,15 @@ class AccountReconcileModel(models.Model):
         required=True,
         default='old_first',
         tracking=True,
+    )
+    counterpart_type = fields.Selection(
+        selection=[
+            ('general', 'Journal Entry'),
+            ('sale', 'Customer Invoices'),
+            ('purchase', 'Vendor Bills'),
+        ],
+        string="Counterpart Type",
+        default='general',
     )
 
     # ===== Conditions =====
@@ -270,6 +286,12 @@ class AccountReconcileModel(models.Model):
     # used to decide if we should show the decimal separator for the regex matching field
     show_decimal_separator = fields.Boolean(compute='_compute_show_decimal_separator')
     number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')
+    # fields used to set the dynamic conditional domain for taxes and journals depending on counterpart type
+    tax_ids_domain = fields.Binary(
+        string='Taxes domain',
+        help="Dynamic domain for the tax that can be set on reco model",
+        compute='_compute_tax_ids_domain'
+    )
 
     def action_reconcile_stat(self):
         self.ensure_one()
@@ -325,3 +347,26 @@ class AccountReconcileModel(models.Model):
                 name = _("%s (copy)", name)
             vals['name'] = name
         return vals_list
+
+    @api.depends('counterpart_type', 'rule_type')
+    def _compute_tax_ids_domain(self):
+        if self.rule_type == 'writeoff_button' and self.counterpart_type in ('sale', 'purchase'):
+            self.tax_ids_domain = [
+                *self.env['account.tax']._check_company_domain(self.company_id),
+                ('type_tax_use', '=', self.counterpart_type)
+            ]
+        else:
+            self.tax_ids_domain = []
+
+    @api.onchange('counterpart_type', 'rule_type')
+    def _onchange_counterpart_type(self):
+        """
+        If a line is created under a counterpart_type and then changed to a different counterpart type,
+        the reconcile model lines should not include taxes or journals not belonging to the respective domain.
+        """
+        if self.rule_type == 'writeoff_button':
+            for line in self.line_ids:
+                # Remove journal selected, as any change in counterpart type also requires a change in journal type
+                line.journal_id = self.env['account.journal']
+                # Remove taxes selected, to avoid a sales tax being used to create an invoice or vice-versa
+                line.tax_ids = self.env['account.tax']

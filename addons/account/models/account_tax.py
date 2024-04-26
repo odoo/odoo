@@ -1293,6 +1293,27 @@ class AccountTax(models.Model):
         delta = sum(x['tax_amount_factorized'] for x in taxes_computation['taxes_data'] if x['_original_price_include'])
         return price_unit + delta
 
+    def _price_unit_from_total(self, amount_total, tax_ids, quantity, product_values):
+        """ Determine price unit based on the total amount and taxes applied.
+
+        :param amount_total:                The desired total amount of the line, including taxes.
+        :param tax_ids:                     Taxes to be applied to the amount_total.
+        :param quantity:                    The quantity to consider for preparing the context for tax calculation.
+        :param product_values:              The values representing the product.
+        :return:                            The price unit that should be used to achieve the amount_total once
+                                            the taxes are applied.
+        """
+        taxes_data = tax_ids._convert_to_dict_for_taxes_computation()
+        taxes_computation = self._prepare_taxes_computation(taxes_data, special_mode='total_included')
+        evaluation_context = self._eval_taxes_computation_prepare_context(
+            amount_total,
+            quantity,
+            product_values=product_values,
+        )
+        taxes_computation = self._eval_taxes_computation(taxes_computation, evaluation_context)
+        price_unit = taxes_computation['total_excluded'] + sum(x['tax_amount_factorized'] for x in taxes_computation['taxes_data'] if x['_original_price_include'])
+        return price_unit
+
     # -------------------------------------------------------------------------
     # END HELPERS IN BOTH PYTHON/JAVASCRIPT (account_tax.js)
     # -------------------------------------------------------------------------
