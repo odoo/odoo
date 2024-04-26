@@ -203,7 +203,8 @@ patch(PosOrder.prototype, {
                     .filter(
                         (program) =>
                             program.pricelist_ids.length > 0 &&
-                            (!pricelist || !program.pricelist_ids.includes(pricelist.id))
+                            (!pricelist ||
+                                !program.pricelist_ids.some((pl) => pl.id === pricelist.id))
                     )
                     .map((program) => program.id)
             );
@@ -439,7 +440,8 @@ patch(PosOrder.prototype, {
         }
         if (
             program.pricelist_ids.length > 0 &&
-            (!this.pricelist_id || !program.pricelist_ids.includes(this.pricelist_id.id))
+            (!this.pricelist_id ||
+                !program.pricelist_ids.some((pl) => pl.id === this.pricelist_id.id))
         ) {
             return false;
         }
@@ -697,7 +699,8 @@ patch(PosOrder.prototype, {
             const program = this.models["loyalty.program"].get(couponProgram.program_id);
             if (
                 program.pricelist_ids.length > 0 &&
-                (!this.pricelist_id || !program.pricelist_ids.includes(this.pricelist_id.id))
+                (!this.pricelist_id ||
+                    !program.pricelist_ids.some((pl) => pl.id === this.pricelist_id.id))
             ) {
                 continue;
             }
