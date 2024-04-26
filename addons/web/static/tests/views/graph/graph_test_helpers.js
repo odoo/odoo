@@ -123,6 +123,15 @@ export function checkLabels(view, expectedLabels) {
  * @param {GraphView} view
  * @param {string | Iterable<string>} expectedLabels
  */
+export function checkYTicks(view, expectedLabels) {
+    const labels = getChart(view).scales.y.ticks.map((l) => l.label);
+    expect(labels).toEqual(expectedLabels);
+}
+
+/**
+ * @param {GraphView} view
+ * @param {string | Iterable<string>} expectedLabels
+ */
 export function checkLegend(view, expectedLabels) {
     const chart = getChart(view);
     const labels = chart.config.options.plugins.legend.labels
