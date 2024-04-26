@@ -1352,9 +1352,11 @@ class StockQuantRemovalStrategy(TransactionCase):
         super().setUp()
         self.least_package_strategy = self.env['product.removal'].search(
             [('method', '=', 'least_packages')])
+        self.category = self.env['product.category'].create({'name': 'Product Category'})
         self.product = self.env['product.product'].create({
             'name': 'Product',
             'is_storable': True,
+            'categ_id': self.category.id,
         })
         self.product.categ_id.removal_strategy_id = self.least_package_strategy.id
         self.stock_location = self.env['stock.location'].create({

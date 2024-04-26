@@ -27,7 +27,6 @@ SELECT m.id                     AS id,
        m.date                   AS date,
        m.purchase_line_id       AS purchase_line_id,
        m.product_id             AS product_id,
-       Min(pc.id)               AS category_id,
        Min(po.partner_id)       AS partner_id,
        Min(m.product_qty)       AS qty_total,
        Sum(CASE
@@ -45,8 +44,6 @@ FROM   stock_move m
          ON pt.id = p.product_tmpl_id
        JOIN uom_uom pt_uom
          ON pt_uom.id = pt.uom_id
-       JOIN product_category pc
-         ON pc.id = pt.categ_id
        LEFT JOIN stock_move_line ml
          ON ml.move_id = m.id
        LEFT JOIN uom_uom ml_uom

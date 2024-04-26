@@ -1,37 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo noupdate="1">
 
-    <record id="product_category_2" model="product.category">
-        <field name="parent_id" ref="product.product_category_all"/>
-        <field name="name">Internal</field>
-    </record>
-    <record id="product_category_3" model="product.category">
-        <field name="parent_id" ref="product.product_category_1"/>
-        <field name="name">Services</field>
-    </record>
-    <record id="product_category_6" model="product.category">
-        <field name="parent_id" ref="product.product_category_3"/>
-        <field name="name">Saleable</field>
-    </record>
-    <record id="product_category_4" model="product.category">
-        <field name="parent_id" ref="product.product_category_1"/>
-        <field name="name">Software</field>
-    </record>
-    <record id="product_category_5" model="product.category">
-        <field name="parent_id" ref="product_category_1"/>
-        <field name="name">Office Furniture</field>
-    </record>
-    <record id="product_category_consumable" model="product.category">
-        <field name="parent_id" ref="product_category_all"/>
-        <field name="name">Consumable</field>
-    </record>
-    <record id="product_category_construction" model="product.category">
-        <field name="parent_id" ref="product_category_all"/>
-        <field name="name">Home Construction</field>
+    <record id="product_category_office" model="product.category">
+        <field name="parent_id" ref="product.product_category_furniture"/>
+        <field name="name">Office</field>
     </record>
     <record id="product_category_outdoor_furniture" model="product.category">
-        <field name="parent_id" ref="product_category_1"/>
-        <field name="name">Outdoor furniture</field>
+        <field name="parent_id" ref="product.product_category_furniture"/>
+        <field name="name">Outdoor</field>
+    </record>
+    <record id="product_category_construction" model="product.category">
+        <field name="name">Home Construction</field>
+    </record>
+    <record id="product_category_tshirt" model="product.category">
+        <field name="parent_id" ref="product.product_category_clothes"/>
+        <field name="name">T-shirt</field>
     </record>
 
 </odoo>

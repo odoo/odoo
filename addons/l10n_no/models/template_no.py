@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '4',
             'property_account_receivable_id': 'chart1500',
             'property_account_payable_id': 'chart2400',
-            'property_account_expense_categ_id': 'chart4000',
-            'property_account_income_categ_id': 'chart3000',
         }
 
     @template('no', 'res.company')
@@ -31,5 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'chart3082',
                 'account_sale_tax_id': 'tax3',
                 'account_purchase_tax_id': 'tax2',
+                'expense_account_id': 'chart4000',
+                'income_account_id': 'chart3000',
             },
         }

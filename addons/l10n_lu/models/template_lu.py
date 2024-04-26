@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'lu_2011_account_4011',
             'property_account_payable_id': 'lu_2011_account_44111',
-            'property_account_expense_categ_id': 'lu_2011_account_6061',
-            'property_account_income_categ_id': 'lu_2020_account_703001',
             'property_stock_account_input_categ_id': 'lu_2011_account_321',
             'property_stock_account_output_categ_id': 'lu_2011_account_321',
             'property_stock_valuation_account_id': 'lu_2020_account_60761',
@@ -35,6 +33,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'lu_2020_account_75562',
                 'account_sale_tax_id': 'lu_2015_tax_VP-PA-17',
                 'account_purchase_tax_id': 'lu_2015_tax_AP-PA-17',
+                'expense_account_id': 'lu_2011_account_6061',
+                'income_account_id': 'lu_2020_account_703001',
             },
         }
 

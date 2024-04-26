@@ -1025,8 +1025,8 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_discount_with_reward_product_domain(self):
         self.env['loyalty.program'].search([]).write({'active': False})
 
-        product_category_base = self.env.ref('product.product_category_1')
-        product_category_1 = self.env['product.category'].create({
+        product_category_base = self.env.ref('product.product_category_furniture')
+        product_category_office = self.env['product.category'].create({
             'name': 'Office furnitures',
             'parent_id': product_category_base.id
         })
@@ -1049,7 +1049,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'list_price': 50,
                 'available_in_pos': True,
                 'taxes_id': False,
-                'categ_id': product_category_1.id
+                'categ_id': product_category_office.id,
             }
         )
 
@@ -1213,8 +1213,8 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_discount_specific_products(self):
         self.env['loyalty.program'].search([]).write({'active': False})
 
-        product_category_base = self.env.ref('product.product_category_1')
-        product_category_1 = self.env['product.category'].create({
+        product_category_base = self.env.ref('product.product_category_office')
+        product_category_office = self.env['product.category'].create({
             'name': 'Office furnitures',
             'parent_id': product_category_base.id
         })
@@ -1237,7 +1237,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'list_price': 50,
                 'available_in_pos': True,
                 'taxes_id': False,
-                'categ_id': product_category_1.id
+                'categ_id': product_category_office.id
             }
         )
 
@@ -1256,7 +1256,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'discount': 50,
                 'discount_mode': 'percent',
                 'discount_applicability': 'specific',
-                'discount_product_category_id': product_category_1.id,
+                'discount_product_category_id': product_category_office.id,
             })],
             'pos_config_ids': [Command.link(self.main_pos_config.id)],
         })
@@ -1749,10 +1749,8 @@ class TestUi(TestPointOfSaleHttpCommon):
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
-        product_category_base = self.env.ref('product.product_category_1')
         product_category_food = self.env['product.category'].create({
             'name': 'Food',
-            'parent_id': product_category_base.id
         })
 
         self.env['loyalty.program'].search([]).write({'active': False})
@@ -1808,10 +1806,8 @@ class TestUi(TestPointOfSaleHttpCommon):
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
-        product_category_base = self.env.ref('product.product_category_1')
         product_category_food = self.env['product.category'].create({
             'name': 'Food',
-            'parent_id': product_category_base.id
         })
 
         self.env['loyalty.program'].search([]).write({'active': False})

@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '4',
             'property_account_receivable_id': 'ch_coa_1100',
             'property_account_payable_id': 'ch_coa_2000',
-            'property_account_expense_categ_id': 'ch_coa_4200',
-            'property_account_income_categ_id': 'ch_coa_3200',
         }
 
     @template('ch', 'res.company')
@@ -35,5 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'vat_purchase_81',
                 'external_report_layout_id': 'l10n_din5008.external_layout_din5008',
                 'paperformat_id': 'l10n_din5008.paperformat_euro_din',
+                'expense_account_id': 'ch_coa_4200',
+                'income_account_id': 'ch_coa_3200',
             },
         }

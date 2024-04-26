@@ -18,14 +18,13 @@
             <field name="params" eval="{'menu_id': ref('point_of_sale.menu_pos_products')}"/>
         </record>
 
-        <record id="product_category_pos" model="product.category">
-            <field name="parent_id" ref="product.product_category_1"/>
-            <field name="name">PoS</field>
+        <record id="product_category_food" model="product.category">
+            <field name="name">Food</field>
         </record>
 
         <record id="product_product_tip" model="product.product">
             <field name="name">Tips</field>
-            <field name="categ_id" ref="point_of_sale.product_category_pos"/>
+            <field name="categ_id" ref="product_category_food"/>
             <field name="default_code">TIPS</field>
             <field name="weight">0.01</field>
             <field name="available_in_pos">False</field>

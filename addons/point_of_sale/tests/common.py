@@ -203,16 +203,16 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
 
         # Set product categories
         # categ_basic
-        #   - just the plain 'product.product_category_all'
+        #   - just the plain 'product.product_category_services'
         # categ_anglo
         #   - product category with fifo and real_time valuations
         #   - used for checking anglo saxon accounting behavior
-        cls.categ_basic = cls.env.ref('product.product_category_all')
+        cls.categ_basic = cls.env.ref('product.product_category_services')
         cls.env.company.anglo_saxon_accounting = True
         cls.categ_anglo = cls._create_categ_anglo()
 
         # other basics
-        cls.sale_account = cls.categ_basic.property_account_income_categ_id
+        cls.sale_account = cls.company.income_account_id
         cls.other_sale_account = cls.env['account.account'].search([
             ('company_ids', '=', cls.company.id),
             ('account_type', '=', 'income'),

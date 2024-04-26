@@ -6,6 +6,7 @@
         <field name="list_price">50</field>
         <field name="type">service</field>
         <field name="purchase_ok" eval="False"/>
+        <field name="categ_id" ref="product.product_category_services"/>
         <field name="image_1920" type="base64" file="loyalty/static/img/gift_card.png"/>
     </record>
     <!-- Basic product for eWallet programs -->
@@ -14,6 +15,7 @@
         <field name="list_price">50</field>
         <field name="type">service</field>
         <field name="purchase_ok" eval="False"/>
+        <field name="categ_id" ref="product.product_category_services"/>
     </record>
 
     <data noupdate="1">

@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('rs')
     def _get_rs_template_data(self):
         return {
-            'property_account_expense_categ_id': 'rs_501',
-            'property_account_income_categ_id': 'rs_604',
             'property_account_payable_id': 'rs_435',
             'property_account_receivable_id': 'rs_204',
             'code_digits': '4',
@@ -32,5 +30,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'rs_5791',
                 'account_sale_tax_id': 'rs_sale_vat_20',
                 'account_purchase_tax_id': 'rs_purchase_vat_20',
+                'expense_account_id': 'rs_501',
+                'income_account_id': 'rs_604',
             },
         }

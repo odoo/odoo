@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'a_recv',
             'property_account_payable_id': 'a_pay',
-            'property_account_expense_categ_id': 'a_exp_cogs',
-            'property_account_income_categ_id': 'a_sales',
         }
 
     @template('th', 'res.company')
@@ -28,5 +26,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'a_exp_loss',
                 'account_sale_tax_id': 'tax_output_vat',
                 'account_purchase_tax_id': 'tax_input_vat',
+                'expense_account_id': 'a_exp_cogs',
+                'income_account_id': 'a_sales',
             },
         }

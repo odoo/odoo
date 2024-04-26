@@ -38,7 +38,6 @@ class TestBatchPicking(TransactionCase):
             'name': 'Product A',
             'is_storable': True,
             'tracking': 'lot',
-            'categ_id': cls.env.ref('product.product_category_all').id,
         })
         cls.lots_p_a = cls.env['stock.lot'].create([{
             'name': 'lot_product_a_' + str(i + 1),
@@ -48,7 +47,6 @@ class TestBatchPicking(TransactionCase):
             'name': 'Product B',
             'is_storable': True,
             'tracking': 'serial',
-            'categ_id': cls.env.ref('product.product_category_all').id,
         })
         cls.lots_p_b = cls.env['stock.lot'].create([{
             'name': 'lot_product_a_' + str(i + 1),
@@ -329,7 +327,6 @@ class TestBatchPicking(TransactionCase):
         self.productA = self.env['product.product'].create({
             'name': 'Product Test A',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
         })
         picking = self.env['stock.picking'].create({
             'location_id': self.stock_location.id,
@@ -458,12 +455,10 @@ class TestBatchPicking(TransactionCase):
         self.productA = self.env['product.product'].create({
             'name': 'Product Test A',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.productB = self.env['product.product'].create({
             'name': 'Product Test B',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
         })
         picking = self.env['stock.picking'].create({
             'location_id': self.customer_location.id,

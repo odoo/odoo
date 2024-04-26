@@ -416,10 +416,8 @@ class TestLoyalty(TestSaleCouponCommon):
         related to that discount is not in the domain of the loyalty program.
         Expected behavior: The discount is not included in the computation of points
         """
-        product_category_base = self.env.ref('product.product_category_1')
         product_category_food = self.env['product.category'].create({
             'name': "Food",
-            'parent_id': product_category_base.id
         })
 
         self.product_A.categ_id = product_category_food
@@ -462,10 +460,8 @@ class TestLoyalty(TestSaleCouponCommon):
         domain of the loyalty program.
         Expected behavior: The discount is included in the computation of points
         """
-        product_category_base = self.env.ref('product.product_category_1')
         product_category_food = self.env['product.category'].create({
             'name': "Food",
-            'parent_id': product_category_base.id
         })
 
         self.product_A.categ_id = product_category_food

@@ -8,17 +8,59 @@ from odoo.exceptions import ValidationError
 from collections import defaultdict
 from datetime import datetime
 
+COST_METHOD = [
+    ('standard', 'Standard Price'),
+    ('fifo', 'First In First Out (FIFO)'),
+    ('average', 'Average Cost (AVCO)'),
+]
+
+VALUATION = [
+    ('manual_periodic', 'Manual'),
+    ('real_time', 'Automated'),
+]
+
 
 class ProductTemplate(models.Model):
     _name = 'product.template'
     _inherit = 'product.template'
 
-    cost_method = fields.Selection(related="categ_id.property_cost_method", readonly=True)
-    valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
+    cost_method = fields.Selection(
+        string="Cost Method",
+        selection=COST_METHOD,
+        compute='_compute_cost_method',
+        readonly=True,
+    )
+    valuation = fields.Selection(
+        string="Valuation",
+        selection=VALUATION,
+        compute='_compute_valuation',
+        readonly=True,
+    )
     lot_valuated = fields.Boolean(
         "Valuation by Lot/Serial number",
         help="If checked, the valuation will be specific by Lot/Serial number.",
     )
+
+    @api.depends('categ_id.property_valuation')
+    def _compute_valuation(self):
+        pt_with_catogory = self.filtered('categ_id')
+        has_group_stock_accounting_automatic = self.env.user.has_group(
+            'stock_account.group_stock_accounting_automatic'
+        )
+        if has_group_stock_accounting_automatic:
+            (self - pt_with_catogory).valuation = 'real_time'
+        else:
+            (self - pt_with_catogory).valuation = 'manual_periodic'
+        for product_template in pt_with_catogory:
+            product_template.valuation = product_template.categ_id.property_valuation
+
+    @api.depends("categ_id.property_cost_method")
+    def _compute_cost_method(self):
+        for product_template in self:
+            if product_template.categ_id:
+                product_template.cost_method = product_template.categ_id.property_cost_method
+            else:
+                product_template.cost_method = 'standard'
 
     @api.onchange('standard_price')
     def _onchange_standard_price(self):
@@ -107,11 +149,24 @@ will update the cost of every lot/serial number in stock."),
         @return: dictionary which contains information regarding stock accounts and super (income+expense accounts)
         """
         accounts = super(ProductTemplate, self)._get_product_accounts()
-        res = self._get_asset_accounts()
+        IrProperty = self.env['ir.property']
+        AccountAccount = self.env['account.account']
         accounts.update({
-            'stock_input': res['stock_input'] or self.categ_id.property_stock_account_input_categ_id,
-            'stock_output': res['stock_output'] or self.categ_id.property_stock_account_output_categ_id,
-            'stock_valuation': self.categ_id.property_stock_valuation_account_id,
+            'stock_input': (
+                self.categ_id.property_stock_account_input_categ_id
+                or self.valuation == 'real_time' and IrProperty._get('property_stock_account_input_categ_id', 'product.category')
+                or AccountAccount
+            ),
+            'stock_output': (
+                self.categ_id.property_stock_account_output_categ_id
+                or self.valuation == 'real_time' and IrProperty._get('property_stock_account_output_categ_id', 'product.category')
+                or AccountAccount
+            ),
+            'stock_valuation': (
+                self.categ_id.property_stock_valuation_account_id
+                or self.valuation == 'real_time' and IrProperty._get('property_stock_valuation_account_id', 'product.category')
+                or AccountAccount
+            ),
         })
         return accounts
 
@@ -120,7 +175,12 @@ will update the cost of every lot/serial number in stock."),
         @return: dictionary which contains all needed information regarding stock accounts and journal and super (income+expense accounts)
         """
         accounts = super(ProductTemplate, self).get_product_accounts(fiscal_pos=fiscal_pos)
-        accounts.update({'stock_journal': self.categ_id.property_stock_journal or False})
+        accounts.update({
+            'stock_journal': (
+                self.categ_id.property_stock_journal
+                or self.env['ir.property']._get('property_stock_journal', 'product.category')
+            )
+        })
         return accounts
 
 
@@ -136,8 +196,39 @@ class ProductProduct(models.Model):
         help="Technical field to correctly show the currently selected company's currency that corresponds "
              "to the totaled value of the product's valuation layers")
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
-    valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
-    cost_method = fields.Selection(related="categ_id.property_cost_method", readonly=True)
+    cost_method = fields.Selection(
+        string="Cost Method",
+        selection=COST_METHOD,
+        compute='_compute_cost_method',
+        readonly=True,
+    )
+    valuation = fields.Selection(
+        string="Valuation",
+        selection=VALUATION,
+        compute='_compute_valuation',
+        readonly=True,
+    )
+
+    @api.depends('categ_id.property_valuation')
+    def _compute_valuation(self):
+        product_with_catogory = self.filtered('categ_id')
+        has_group_stock_accounting_automatic = self.env.user.has_group(
+            'stock_account.group_stock_accounting_automatic'
+        )
+        if has_group_stock_accounting_automatic:
+            (self - product_with_catogory).valuation = 'real_time'
+        else:
+            (self - product_with_catogory).valuation = 'manual_periodic'
+        for product in product_with_catogory:
+            product.valuation = product.categ_id.property_valuation
+
+    @api.depends("categ_id.property_cost_method")
+    def _compute_cost_method(self):
+        for product in self:
+            if product.categ_id:
+                product.cost_method = product.categ_id.property_cost_method
+            else:
+                product.cost_method = 'standard'
 
     def write(self, vals):
         if 'standard_price' in vals and not self.env.context.get('disable_auto_svl'):
@@ -873,18 +964,17 @@ will update the cost of every lot/serial number in stock."),
 class ProductCategory(models.Model):
     _inherit = 'product.category'
 
-    property_valuation = fields.Selection([
-        ('manual_periodic', 'Manual'),
-        ('real_time', 'Automated')], string='Inventory Valuation',
-        company_dependent=True, copy=True,
+    property_valuation = fields.Selection(
+        string="Inventory Valuation",
+        selection=VALUATION,
+        company_dependent=True, copy=True
         help="""Manual: The accounting entries to value the inventory are not posted automatically.
         Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.
         """)
-    property_cost_method = fields.Selection([
-        ('standard', 'Standard Price'),
-        ('fifo', 'First In First Out (FIFO)'),
-        ('average', 'Average Cost (AVCO)')], string="Costing Method",
-        company_dependent=True, copy=True,
+    property_cost_method = fields.Selection(
+        string="Costing Method",
+        selection=COST_METHOD,
+        company_dependent=True, copy=True
         help="""Standard Price: The products are valued at their standard cost defined on the product.
         Average Cost (AVCO): The products are valued at weighted average cost.
         First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.

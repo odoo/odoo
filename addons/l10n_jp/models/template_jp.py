@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '6',
             'property_account_receivable_id': 'l10n_jp_126000',
             'property_account_payable_id': 'l10n_jp_220000',
-            'property_account_expense_categ_id': 'l10n_jp_510000',
-            'property_account_income_categ_id': 'l10n_jp_410000',
             'property_stock_valuation_account_id': 'l10n_jp_121100',
             'property_stock_account_input_categ_id': 'l10n_jp_121200',
             'property_stock_account_output_categ_id': 'l10n_jp_121300',
@@ -38,5 +36,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'l10n_jp_425000',
                 'account_sale_tax_id': 'l10n_jp_tax_sale_exc_10',
                 'account_purchase_tax_id': 'l10n_jp_tax_purchase_exc_10',
+                'expense_account_id': 'l10n_jp_510000',
+                'income_account_id': 'l10n_jp_410000',
             },
         }

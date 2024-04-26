@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'p10040',
             'property_account_payable_id': 'p11211',
-            'property_account_expense_categ_id': 'p2107',
-            'property_account_income_categ_id': 'p20011',
             'code_digits': '6',
             'display_invoice_amount_total_words': True,
         }
@@ -37,6 +35,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'sgst_purchase_5',
                 'deferred_expense_account_id': 'p10084',
                 'deferred_revenue_account_id': 'p10085',
+                'expense_account_id': 'p2107',
+                'income_account_id': 'p20011',
             },
         }
 

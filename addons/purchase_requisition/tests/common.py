@@ -35,7 +35,6 @@ class TestPurchaseRequisitionCommon(common.TransactionCase):
 
         cls.product_09 = cls.env['product.product'].create({
             'name': 'Pedal Bin',
-            'categ_id': cls.env.ref('product.product_category_all').id,
             'standard_price': 10.0,
             'list_price': 47.0,
             'type': 'consu',
@@ -46,7 +45,6 @@ class TestPurchaseRequisitionCommon(common.TransactionCase):
 
         cls.product_13 = cls.env['product.product'].create({
             'name': 'Corner Desk Black',
-            'categ_id': cls.env.ref('product.product_category_all').id,
             'standard_price': 78.0,
             'list_price': 85.0,
             'type': 'consu',

@@ -66,7 +66,6 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
             'purchase_ok': False,
             'invoice_policy': 'order',
             'default_code': 'FREELARGECABINET',
-            'categ_id': self.env.ref('product.product_category_all').id,
             'taxes_id': False,
         })
 
@@ -78,7 +77,6 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
             'purchase_ok': False,
             'invoice_policy': 'order',
             'default_code': '10PERCENTDISC',
-            'categ_id': self.env.ref('product.product_category_all').id,
             'taxes_id': False,
         })
 

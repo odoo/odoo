@@ -11,6 +11,7 @@ from odoo.tools import format_list, SQL
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
+from odoo.addons.account.models.product import ACCOUNT_DOMAIN
 from odoo.addons.base_vat.models.res_partner import _ref_vat
 
 
@@ -251,6 +252,21 @@ class ResCompany(models.Model):
         help="Default on whether the sales price used on the product and invoices with this Company includes its taxes."
     )
     company_vat_placeholder = fields.Char(compute='_compute_company_vat_placeholder')
+
+    income_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string="Income Account",
+        domain=ACCOUNT_DOMAIN,
+        help="This account will be used when validating a customer invoice.",
+    )
+    expense_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string="Expense Account",
+        domain=ACCOUNT_DOMAIN,
+        help="The expense is accounted for when a vendor bill is validated, except in anglo-saxon"
+             "accounting with perpetual inventory valuation in which case the expense (Cost of"
+             "Goods Sold account) is recognized at the customer invoice validation.",
+    )
 
     def get_next_batch_payment_communication(self):
         '''

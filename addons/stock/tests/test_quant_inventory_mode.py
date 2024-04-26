@@ -19,18 +19,15 @@ class TestEditableQuant(TransactionCase):
         cls.product = Product.create({
             'name': 'Product A',
             'is_storable': True,
-            'categ_id': cls.env.ref('product.product_category_all').id,
         })
         cls.product2 = Product.create({
             'name': 'Product B',
             'is_storable': True,
-            'categ_id': cls.env.ref('product.product_category_all').id,
         })
         cls.product_tracked_sn = Product.create({
             'name': 'Product tracked by SN',
             'is_storable': True,
             'tracking': 'serial',
-            'categ_id': cls.env.ref('product.product_category_all').id,
         })
         cls.warehouse = Location.create({
             'name': 'Warehouse',
