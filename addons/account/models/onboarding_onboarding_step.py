@@ -10,11 +10,12 @@ class OnboardingStep(models.Model):
     @api.model
     def action_open_step_company_data(self):
         """Set company's basic information."""
+        company = self.env['account.journal'].browse(self._context.get('journal_id', None)).company_id or self.env.company
         action = {
             'type': 'ir.actions.act_window',
             'name': _('Set your company data'),
             'res_model': 'res.company',
-            'res_id': self.env.company.id,
+            'res_id': company.id,
             'views': [(self.env.ref('account.res_company_form_view_onboarding').id, "form")],
             'target': 'new',
         }
@@ -58,7 +59,8 @@ class OnboardingStep(models.Model):
     # DASHBOARD ONBOARDING
     @api.model
     def action_open_step_fiscal_year(self):
-        new_wizard = self.env['account.financial.year.op'].create({'company_id': self.env.company.id})
+        company = self.env['account.journal'].browse(self._context.get('journal_id', None)).company_id or self.env.company
+        new_wizard = self.env['account.financial.year.op'].create({'company_id': company.id})
         view_id = self.env.ref('account.setup_financial_year_opening_form').id
 
         return {
@@ -75,27 +77,10 @@ class OnboardingStep(models.Model):
         }
 
     @api.model
-    def action_open_step_default_taxes(self):
-        """ Called by the 'Taxes' button of the setup bar."""
-        self.action_validate_step('account.onboarding_onboarding_step_default_taxes')
-
-        view_id_list = self.env.ref('account.view_onboarding_tax_tree').id
-        view_id_form = self.env.ref('account.view_tax_form').id
-
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Taxes'),
-            'res_model': 'account.tax',
-            'target': 'current',
-            'views': [[view_id_list, 'list'], [view_id_form, 'form']],
-            'context': {'search_default_sale': True, 'search_default_purchase': True, 'active_test': False},
-        }
-
-    @api.model
     def action_open_step_chart_of_accounts(self):
         """ Called by the 'Chart of Accounts' button of the dashboard onboarding panel."""
-        company = self.env.company
-        self.sudo().action_validate_step('account.onboarding_onboarding_step_chart_of_accounts')
+        company = self.env['account.journal'].browse(self._context.get('journal_id', None)).company_id or self.env.company
+        self.sudo().with_company(company).action_validate_step('account.onboarding_onboarding_step_chart_of_accounts')
 
         # If an opening move has already been posted, we open the tree view showing all the accounts
         if company.opening_move_posted():

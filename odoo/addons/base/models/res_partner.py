@@ -38,6 +38,21 @@ def _tz_get(self):
     return _tzs
 
 
+class FormatVATLabelMixin(models.AbstractModel):
+    _name = "format.vat.label.mixin"
+    _description = "Country Specific VAT Label"
+
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
+        if vat_label := self.env.company.country_id.vat_label:
+            for node in arch.iterfind(".//field[@name='vat']"):
+                node.set("string", vat_label)
+            # In some module vat field is replaced and so above string change is not working
+            for node in arch.iterfind(".//label[@for='vat']"):
+                node.set("string", vat_label)
+        return arch, view
+
 class FormatAddressMixin(models.AbstractModel):
     _name = "format.address.mixin"
     _description = 'Address Format'
@@ -163,7 +178,7 @@ class PartnerTitle(models.Model):
 
 class Partner(models.Model):
     _description = 'Contact'
-    _inherit = ['format.address.mixin', 'avatar.mixin']
+    _inherit = ['format.address.mixin', 'format.vat.label.mixin', 'avatar.mixin']
     _name = "res.partner"
     _order = "complete_name ASC, id DESC"
     _rec_names_search = ['complete_name', 'email', 'ref', 'vat', 'company_registry']  # TODO vat must be sanitized the same way for storing/searching
@@ -425,17 +440,6 @@ class Partner(models.Model):
         # exists to allow overrides
         for company in self:
             company.company_registry = company.company_registry
-
-    @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if vat_label := self.env.company.country_id.vat_label:
-            for node in arch.iterfind(".//field[@name='vat']"):
-                node.set("string", vat_label)
-            # In some module vat field is replaced and so above string change is not working
-            for node in arch.iterfind(".//label[@for='vat']"):
-                node.set("string", vat_label)
-        return arch, view
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
