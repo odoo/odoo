@@ -246,11 +246,11 @@ export class HootStatusPanel extends Component {
         let currentTestStart;
         let intervalId = 0;
 
-        runner.__beforeAll(() => {
+        runner.beforeAll(() => {
             this.state.debug = runner.debug;
         });
 
-        runner.__afterAll(() => {
+        runner.afterAll(() => {
             if (!runner.config.headless) {
                 stopTimer();
             }
@@ -267,8 +267,8 @@ export class HootStatusPanel extends Component {
         });
 
         if (!runner.config.headless) {
-            runner.__beforeEach(startTimer);
-            runner.__afterPostTest(stopTimer);
+            runner.beforeEach(startTimer);
+            runner.afterPostTest(stopTimer);
         }
 
         useEffect(

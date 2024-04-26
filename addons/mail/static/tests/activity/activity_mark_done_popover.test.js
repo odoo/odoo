@@ -68,9 +68,9 @@ test("activity mark done popover mark done without feedback", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    onRpc("/web/dataset/call_kw/mail.activity/action_feedback", (request) => {
+    onRpc("/web/dataset/call_kw/mail.activity/action_feedback", async (request) => {
         step("action_feedback");
-        const { params } = request.json();
+        const { params } = await request.json();
         expect(params.args).toHaveLength(1);
         expect(params.args[0]).toHaveLength(1);
         expect(params.args[0][0]).toBe(activityId);
@@ -95,9 +95,9 @@ test("activity mark done popover mark done with feedback", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    onRpc("/web/dataset/call_kw/mail.activity/action_feedback", (request) => {
+    onRpc("/web/dataset/call_kw/mail.activity/action_feedback", async (request) => {
         step("action_feedback");
-        const { params } = request.json();
+        const { params } = await request.json();
         expect(params.args).toHaveLength(1);
         expect(params.args[0]).toHaveLength(1);
         expect(params.args[0][0]).toBe(activityId);
@@ -132,9 +132,9 @@ test("activity mark done popover mark done and schedule next", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    onRpc("/web/dataset/call_kw/mail.activity/action_feedback_schedule_next", (request) => {
+    onRpc("/web/dataset/call_kw/mail.activity/action_feedback_schedule_next", async (request) => {
         step("action_feedback_schedule_next");
-        const { params } = request.json();
+        const { params } = await request.json();
         expect(params.args).toHaveLength(1);
         expect(params.args[0]).toHaveLength(1);
         expect(params.args[0][0]).toBe(activityId);

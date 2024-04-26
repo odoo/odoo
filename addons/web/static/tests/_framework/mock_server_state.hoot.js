@@ -1,4 +1,6 @@
-import { after, before, beforeAll, createJobScopedGetter } from "@odoo/hoot";
+// ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
+
+import { after, before, beforeEach, createJobScopedGetter } from "@odoo/hoot";
 
 const { Settings } = luxon;
 
@@ -82,4 +84,4 @@ export const serverState = new Proxy(SERVER_STATE_VALUES, {
     },
 });
 
-beforeAll(applyDefaults);
+beforeEach(applyDefaults, { global: true });

@@ -3,18 +3,23 @@ import { setInputFiles } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     contains,
-    patchWithCleanup,
-    mountWithCleanup,
     mockService,
+    mountWithCleanup,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { session } from "@web/session";
+import { defineProjectModels } from "./project_models";
 
 import { PortalFileInput } from "@project/project_sharing/components/portal_file_input/portal_file_input";
+import { session } from "@web/session";
+
+defineProjectModels();
 
 mockService("notification", () => ({
     add(message) {
         expect.step("notification");
-        expect(message).toBe("The selected file (4B) is larger than the maximum allowed file size (2B).");
+        expect(message).toBe(
+            "The selected file (4B) is larger than the maximum allowed file size (2B)."
+        );
     },
 }));
 mockService("http", () => ({

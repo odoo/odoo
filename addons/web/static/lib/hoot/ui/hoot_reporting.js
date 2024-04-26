@@ -135,7 +135,7 @@ export class HootReporting extends Component {
         const { showdetail } = this.config;
 
         let didShowDetail = false;
-        runner.__afterPostTest((test) => {
+        runner.afterPostTest((test) => {
             if (
                 showdetail &&
                 !(showdetail === "first-fail" && didShowDetail) &&
