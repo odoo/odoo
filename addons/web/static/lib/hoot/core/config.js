@@ -185,15 +185,6 @@ export const CONFIG_SCHEMA = {
         default: 5_000,
         parse: parseNumber(5_000),
     },
-    /**
-     * Monitors keys added on global objects if truthy. The value is a comma-separated
-     * list of white-listed keys. If left empty, no monitoring will be performed.
-     * @default ""
-     */
-    watchkeys: {
-        default: "",
-        parse: parseString(""),
-    },
 };
 
 export const FILTER_SCHEMA = {

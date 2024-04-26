@@ -115,7 +115,7 @@ export class HootSideBar extends Component {
                         <button
                             class="flex items-center w-full h-full px-2 overflow-hidden"
                             t-att-class="{ 'bg-gray-300 dark:bg-gray-700': state.hovered === item.id or uiState.selectedSuiteId === item.id }"
-                            t-attf-style="margin-left: {{ (item.path.length - 1) * 1 + 'rem' }};"
+                            t-attf-style="margin-left: {{ (item.path.length - 1) + 'rem' }};"
                             t-att-title="item.name"
                             t-on-click="() => this.toggleItem(item.id)"
                             t-on-pointerenter="() => state.hovered = item.id"
@@ -154,7 +154,7 @@ export class HootSideBar extends Component {
             unfolded: new Set(),
         });
 
-        runner.__beforeAll(() => {
+        runner.beforeAll(() => {
             const singleRootSuite = runner.rootSuites.filter((suite) => suite.currentJobs.length);
             if (singleRootSuite.length === 1) {
                 // Unfolds only root suite containing jobs
