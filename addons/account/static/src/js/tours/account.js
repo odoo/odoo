@@ -10,6 +10,17 @@ export const accountTourSteps = {
     goToAccountMenu(description="Open Invoicing Menu") {
         return stepUtils.goToAppSteps('account.menu_finance', description);
     },
+    onboarding() {
+        return [];
+    },
+    newInvoice() {
+        return [
+            {
+                trigger: "button.o_list_button_add",
+                content: _t("Now, we'll create your first invoice"),
+            },
+        ];
+    },
 }
 
 registry.category("web_tour.tours").add('account_tour', {
@@ -17,38 +28,9 @@ registry.category("web_tour.tours").add('account_tour', {
     sequence: 60,
     steps: () => [
     ...accountTourSteps.goToAccountMenu('Send invoices to your customers in no time with the <b>Invoicing app</b>.'),
+    ...accountTourSteps.onboarding(),
+    ...accountTourSteps.newInvoice(),
     {
-        trigger: "a.o_onboarding_step_action[data-method=action_open_step_company_data]",
-        content: _t("Start by checking your company's data."),
-        position: "bottom",
-        skip_trigger: 'a[data-method=action_open_step_company_data].o_onboarding_step_action__done',
-        run: "click",
-    }, {
-        trigger: "button.o_form_button_save",
-        extra_trigger: "a.o_onboarding_step_action[data-method=action_open_step_company_data]",
-        content: _t("Fill your company data and let's continue."),
-        position: "bottom",
-        skip_trigger: 'a[data-method=action_open_step_company_data].o_onboarding_step_action__done',
-        run: "click",
-    }, {
-        trigger: "a.o_onboarding_step_action[data-method=action_open_step_base_document_layout]",
-        content: _t("Customize your layout."),
-        position: "bottom",
-        skip_trigger: 'a[data-method=action_open_step_base_document_layout].o_onboarding_step_action__done',
-        run: "click",
-    }, {
-        trigger: "button[name=document_layout_save]",
-        extra_trigger: "a.o_onboarding_step_action[data-method=action_open_step_base_document_layout]",
-        content: _t("Once everything is as you want it, validate."),
-        position: "top",
-        skip_trigger: 'a[data-method=action_open_step_base_document_layout].o_onboarding_step_action__done',
-        run: "click",
-    }, {
-        trigger: "a.o_onboarding_step_action[data-method=action_open_step_create_invoice]",
-        content: _t("Now, we'll create your first invoice."),
-        position: "bottom",
-        run: "click",
-    }, {
         trigger: "div[name=partner_id] .o_input_dropdown",
         extra_trigger: "[name=move_type] [raw-value=out_invoice]",
         content: markup(_t("Write a customer name to <b>create one</b> or <b>see suggestions</b>.")),
@@ -101,6 +83,11 @@ registry.category("web_tour.tours").add('account_tour', {
         position: "bottom",
         run: "click",
     }, {
+        trigger: "button[name=document_layout_save]",
+        extra_trigger: "div.modal-dialog",
+        content: _t("Configure document layout."),
+    },
+    {
         trigger: "div[name=partner_missing_email] a",
         extra_trigger: "[name=move_type] [raw-value=out_invoice]",
         content: _t("Complete the partner data with email"),

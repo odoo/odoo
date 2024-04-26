@@ -379,7 +379,9 @@ class IrActionsActWindow(models.Model):
             "res_id", "res_model", "search_view_id", "target", "view_id", "view_mode", "views", "embedded_action_ids",
             # `flags` is not a real field of ir.actions.act_window but is used
             # to give the parameters to generate the action
-            "flags"
+            "flags",
+            # this is used by frontend, with the document layout wizard before send and print
+            "close_on_report_download",
         }
 
 

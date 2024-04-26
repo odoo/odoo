@@ -12,6 +12,7 @@ from contextlib import contextmanager
 from functools import wraps
 from lxml import etree
 from unittest import SkipTest
+from unittest.mock import patch
 
 
 class AccountTestInvoicingCommon(ProductCommon):
@@ -672,7 +673,39 @@ class AccountTestInvoicingCommon(ProductCommon):
         finally:
             self.env.registry.leave_test_mode()
 
-class AccountTestInvoicingHttpCommon(AccountTestInvoicingCommon, HttpCase):
+
+class AccountTestMockOnlineSyncCommon(HttpCase):
+    def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
+        with self.mock_online_sync_favorite_institutions():
+            super().start_tour(url_path, tour_name, step_delay, **kwargs)
+
+    @classmethod
+    @contextmanager
+    def mock_online_sync_favorite_institutions(cls):
+        def get_institutions(*args, **kwargs):
+            return [
+                {
+                    'country': 'US',
+                    'id': 3245,
+                    'name': 'BMO Business Banking',
+                    'picture': '/base/static/img/logo_white.png',
+                },
+                {
+                    'country': 'US',
+                    'id': 8192,
+                    'name': 'Banc of California',
+                    'picture': '/base/static/img/logo_white.png'
+                },
+            ]
+        with patch.object(
+             target=cls.registry['account.journal'],
+             attribute='fetch_online_sync_favorite_institutions',
+             new=get_institutions,
+             create=True):
+            yield
+
+
+class AccountTestInvoicingHttpCommon(AccountTestInvoicingCommon, AccountTestMockOnlineSyncCommon):
     pass
 
 

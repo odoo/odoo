@@ -823,9 +823,7 @@ class AccountJournal(models.Model):
         return self.env['res.company'].with_context(default_linked_journal_id=self.id).setting_init_bank_account_action()
 
     def action_new_transaction(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('account.action_bank_statement_tree')
-        action['context'] = {'default_journal_id': self.id}
-        return action
+        return False
 
     def _create_document_from_attachment(self, attachment_ids):
         """ Create the invoices from files."""

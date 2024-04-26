@@ -33,13 +33,45 @@
     <record id="res_company_form_view_onboarding" model="ir.ui.view">
         <field name="name">res.company.form.view.onboarding</field>
         <field name="model">res.company</field>
-        <field name="inherit_id" ref="base.view_company_form"/>
-        <field name="mode">primary</field>
         <field name="priority">1000</field>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='social_media']" position="replace"/>
-            <form position="attributes">
-                <attribute name="js_class">company_onboarding_form</attribute>
+            <form string="Company" duplicate="0">
+                <sheet>
+                    <field name="logo" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. My Company"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="vat"/>
+                            <label for="street" string="Address"/>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                            </div>
+                            <field name="company_registry"/>
+                            <field name="currency_id" options="{'no_create': True, 'no_open': True}" id="company_currency" context="{'active_test': False}"/>
+                        </group>
+                        <group>
+                            <field name="phone" class="o_force_ltr"/>
+                            <field name="mobile" class="o_force_ltr"/>
+                            <field name="email"/>
+                            <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_save_onboarding_company_data" string="Save"
+                            class="oe_highlight" type="object" data-hotkey="S" />
+                    <button special="cancel" data-hotkey="J" string="Discard" />
+                </footer>
             </form>
         </field>
     </record>
