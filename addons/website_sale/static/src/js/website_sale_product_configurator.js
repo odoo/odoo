@@ -17,7 +17,7 @@ publicWidget.registry.WebsiteSale.include({
         if (this.isBuyNow) {
             return this._submitForm();
         }
-        this.optionalProductsModal = new OptionalProductsModal(this.$form, {
+        this.optionalProductsModal = new OptionalProductsModal(this.form, {
             rootProduct: this.rootProduct,
             isWebsite: true,
             okButtonText: _t('Proceed to Checkout'),
@@ -26,7 +26,6 @@ publicWidget.registry.WebsiteSale.include({
             context: this._getContext(),
             forceDialog: this.forceDialog,
         }).open();
-
         this.optionalProductsModal.on('options_empty', null, this._submitForm.bind(this));
         this.optionalProductsModal.on('update_quantity', null, this._onOptionsUpdateQuantity.bind(this));
         this.optionalProductsModal.on('confirm', null, this._onModalSubmit.bind(this, true));
@@ -57,19 +56,18 @@ publicWidget.registry.WebsiteSale.include({
      * @param {integer} quantity
      */
     _onOptionsUpdateQuantity: function (quantity) {
-        var $qtyInput = this.$form
-            .find('.js_main_product input[name="add_qty"]')
-            .first();
+        var qtyInput = this.form.querySelector('.js_main_product input[name="add_qty"]');
 
-        if ($qtyInput.length) {
-            $qtyInput.val(quantity).trigger('change');
+        if (qtyInput.length) {
+            qtyInput.value = quantity;
+            qtyInput.dispatchEvent(new Event('change'));
         } else {
             // This handles the case when the "Select Quantity" customize show
             // is disabled, and therefore the above selector does not find an
             // element.
             // To avoid duplicating all RPC, only trigger the variant change if
             // it is not already done from the above trigger.
-            this.optionalProductsModal.triggerVariantChange(this.optionalProductsModal.$el);
+            this.optionalProductsModal.triggerVariantChange(this.optionalProductsModal.el);
         }
     },
 
@@ -82,22 +80,22 @@ publicWidget.registry.WebsiteSale.include({
      * @param {Boolean} goToShop Triggers a page refresh to the url "shop/cart"
      */
     _onModalSubmit: function (goToShop) {
-        const mainProduct = this.$('.js_product.in_cart.main_product').children('.product_id');
-        const productTrackingInfo = mainProduct.data('product-tracking-info');
+        const mainProduct = this.el.querySelector('.js_product.in_cart.main_product').querySelector('.product_id');
+        const productTrackingInfo = mainProduct.dataset.productTrackingInfo;
         if (productTrackingInfo) {
             const currency = productTrackingInfo['currency'];
             const productsTrackingInfo = [];
-            this.$('.js_product.in_cart').each((i, el) => {
+            this.el.querySelectorAll('.js_product.in_cart').forEach((el) => {
                 productsTrackingInfo.push({
-                    'item_id': el.getElementsByClassName('product_id')[0].value,
-                    'item_name': el.getElementsByClassName('product_display_name')[0].textContent,
-                    'quantity': el.getElementsByClassName('js_quantity')[0].value,
+                    'item_id': el.getElementsByClassName('product_id').value,
+                    'item_name': el.getElementsByClassName('product_display_name').textContent,
+                    'quantity': el.getElementsByClassName('js_quantity').value,
                     'currency': currency,
-                    'price': el.getElementsByClassName('oe_price')[0].getElementsByClassName('oe_currency_value')[0].textContent,
+                    'price': el.getElementsByClassName('oe_price').getElementsByClassName('oe_currency_value').teeachxtContent,
                 });
             });
             if (productsTrackingInfo) {
-                this.$el.trigger('add_to_cart_event', productsTrackingInfo);
+                this.el.dispatchEvent(new CustomEvent('add_to_cart_event', { detail: productsTrackingInfo }));
             }
         }
 
@@ -116,7 +114,7 @@ publicWidget.registry.WebsiteSale.include({
                         wSaleUtils.showCartNotification(callService, values.notification_info);
                     }
                 }).then(() => {
-                    this._getCombinationInfo($.Event('click', {target: $("#add_to_cart")}));
+                    this._getCombinationInfo(this.el.querySelector('#add_to_cart').dispatchEvent(new Event('click')));
                 });
             });
     },

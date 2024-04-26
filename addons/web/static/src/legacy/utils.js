@@ -23,6 +23,7 @@ export async function attachComponent(parent, element, componentClass, props = {
     if (parent.__parentedMixin) {
         parent.__parentedChildren.push({
             get $el() {
+                // TODO: I don't know if we should convert this one or not.
                 return $(app.root.el);
             },
             destroy() {

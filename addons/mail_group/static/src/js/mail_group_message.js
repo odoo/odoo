@@ -17,13 +17,17 @@ publicWidget.registry.MailGroupMessage = publicWidget.Widget.extend({
     start: function () {
         // By default hide the mention of the previous email for which we reply
         // And add a button "Read more" to show the mention of the parent email
-        const body = this.$el.find('.card-body').first();
-        const quoted = body.find('*[data-o-mail-quote]');
-        const readMore = $('<button class="btn btn-light btn-sm ms-1"/>').text('. . .');
-        quoted.first().before(readMore);
-        readMore.on('click', () => {
-            quoted.toggleClass('visible');
-        });
+        const body = this.el.querySelector('.card-body');
+        const quoted = body.querySelectorAll('*[data-o-mail-quote]');
+        const readMore = document.createElement('button');
+        readMore.setAttribute('class', 'btn btn-light btn-sm ms-1');
+        readMore.textContent = '. . .';
+        if (quoted.length) {
+            quoted.parentElement.insertBefore(readMore, quoted[0]);
+            readMore.addEventListener('click', () => {
+                [...quoted].forEach((elem) => elem.classList.toggle('visible'));
+            });
+        }
 
         return this._super.apply(this, arguments);
     },
@@ -39,11 +43,11 @@ publicWidget.registry.MailGroupMessage = publicWidget.Widget.extend({
     _onHideLinkClick: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        const $link = $(ev.currentTarget);
-        const $container = $link.closest('.o_mg_link_parent');
-        $container.find('.o_mg_link_hide').first().addClass('d-none');
-        $container.find('.o_mg_link_show').first().removeClass('d-none');
-        $container.find('.o_mg_link_content').first().removeClass('d-none');
+        const link = ev.currentTarget;
+        const container = link.closest('.o_mg_link_parent');
+        container.querySelector('.o_mg_link_hide').classList.add('d-none');
+        container.querySelector('.o_mg_link_show').classList.remove('d-none');
+        container.querySelector('.o_mg_link_content').classList.remove('d-none');
     },
     /**
      * @private
@@ -52,34 +56,39 @@ publicWidget.registry.MailGroupMessage = publicWidget.Widget.extend({
     _onShowLinkClick: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        const $link = $(ev.currentTarget);
-        const $container = $link.closest('.o_mg_link_parent');
-        $container.find('.o_mg_link_hide').first().removeClass('d-none');
-        $container.find('.o_mg_link_show').first().addClass('d-none');
-        $container.find('.o_mg_link_content').first().addClass('d-none');
+        const link = ev.currentTarget;
+        const container = link.closest('.o_mg_link_parent');
+        container.querySelector('.o_mg_link_hide').classList.remove('d-none');
+        container.querySelector('.o_mg_link_show').classList.add('d-none');
+        container.querySelector('.o_mg_link_content').classList.add('d-none');
     },
     /**
      * @private
      * @param {Event} ev
      */
      _onReadMoreClick: function (ev) {
-        const $link = $(ev.target);
-        rpc($link.data('href'), {
-            last_displayed_id: $link.data('last-displayed-id'),
+        const link = ev.target;
+        rpc(link.getAttribute('data-href'), {
+            last_displayed_id: link.getAttribute('data-last-displayed-id'),
         }).then(function (data) {
             if (!data) {
                 return;
             }
-            const $threadContainer = $link.parents('.o_mg_replies').first().find('ul.list-unstyled').first();
-            if ($threadContainer) {
-                const $data = $(data);
-                const $lastMsg = $threadContainer.children('li.media').last();
-                const $newMessages = $data.find('ul.list-unstyled').first().children('li.media');
-                $newMessages.insertAfter($lastMsg);
-                $data.find('.o_mg_read_more').parent().appendTo($threadContainer);
+            function findAncestor (el, sel) {
+                while ((el = el.parentElement) && !((el.matches || el.matchesSelector).call(el,sel)));
+                return el;
             }
-            const $showMore = $link.parent();
-            $showMore.remove();
+            const repliesElem = findAncestor(link, '.o_mg_replies');
+            const threadContainer = repliesElem.querySelector('ul.list-unstyled');
+            if (threadContainer) {
+                // TODO: MSH: Need to find children method's alternative
+                const lastMsg = $(threadContainer).children('li.media').last()[0];
+                const newMessages = $(data.querySelector('ul.list-unstyled')).children('li.media');
+                lastMsg.insertAdjacentHTML('afterEnd', newMessages.outerHTML)
+                data.querySelector('.o_mg_read_more').parent().appendChild(threadContainer);
+            }
+            const showMore = link.parent();
+            showMore.remove();
         });
      },
 });

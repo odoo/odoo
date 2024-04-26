@@ -18,7 +18,9 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
      */
     _onClickDeleteProduct: function (ev) {
         ev.preventDefault();
-        $(ev.currentTarget).closest('.o_cart_product').find('.js_quantity').val(0).trigger('change');
+        let quantityElement = ev.currentTarget.closest('.o_cart_product').querySelector('.js_quantity');
+        quantityElement.value = 0;
+        quantityElement.dispatchEvent(new Event('change'));
     },
 });
 

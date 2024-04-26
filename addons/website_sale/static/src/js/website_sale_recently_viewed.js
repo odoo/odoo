@@ -27,10 +27,10 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
     /**
      * Debounced method that wait some time before marking the product as viewed.
      * @private
-     * @param {HTMLInputElement} $input
+     * @param {HTMLInputElement} input
      */
-    _updateProductView: function ($input) {
-        var productId = parseInt($input.val());
+    _updateProductView: function (input) {
+        var productId = parseInt(input.value);
         var cookieName = 'seen_product_id_' + productId;
         if (! parseInt(this.el.dataset.viewTrack, 10)) {
             return; // Is not tracked
@@ -38,7 +38,7 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
         if (cookie.get(cookieName)) {
             return; // Already tracked in the last 30min
         }
-        if ($(this.el).find('.js_product.css_not_available').length) {
+        if (this.el.querySelector('.js_product.css_not_available').length) {
             return; // Variant not possible
         }
         rpc('/shop/products/recently_viewed_update', {
@@ -58,6 +58,6 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
      * @param {Event} ev
      */
     _onProductChange: function (ev) {
-        this._updateProductView($(ev.currentTarget));
+        this._updateProductView(ev.currentTarget);
     },
 });

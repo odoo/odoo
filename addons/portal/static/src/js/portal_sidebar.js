@@ -26,12 +26,12 @@ var PortalSidebar = publicWidget.Widget.extend({
      * @private
      */
     _setDelayLabel: function () {
-        var $sidebarTimeago = this.$el.find('.o_portal_sidebar_timeago').toArray();
-        $sidebarTimeago.forEach((el) => {
-            var dateTime = deserializeDateTime($(el).attr('datetime')),
-                today = DateTime.now().startOf('day'),
-                diff = dateTime.diff(today).as("days"),
-                displayStr;
+        const sidebarTimeago = this.el.querySelectorAll('.o_portal_sidebar_timeago');
+        sidebarTimeago.forEach((el) => {
+            const dateTime = deserializeDateTime(el.getAttribute('datetime'));
+            const today = DateTime.now().startOf('day');
+            const diff = dateTime.diff(today).as("days");
+            let displayStr;
 
                 if (diff === 0) {
                     displayStr = _t('Due today');
@@ -42,7 +42,7 @@ var PortalSidebar = publicWidget.Widget.extend({
                 } else {
                     displayStr = _t('%s days overdue', Math.abs(diff).toFixed(1));
                 }
-                $(el).text(displayStr);
+                el.textContent = displayStr;
         });
     },
     /**
@@ -50,13 +50,20 @@ var PortalSidebar = publicWidget.Widget.extend({
      * @param {string} href
      */
     _printIframeContent: function (href) {
+        debugger;
         if (!this.printContent) {
-            this.printContent = $('<iframe id="print_iframe_content" src="' + href + '" style="display:none"></iframe>');
-            this.$el.append(this.printContent);
-            this.printContent.on('load', function () {
+            const iframe = document.createElement('iframe');
+            iframe.setAttribute('id', 'print_iframe_content');
+            iframe.setAttribute('src', href);
+            iframe.setAttribute('style', 'display:none');
+            // TODO: MSH: printContent seems jquery element, need to check
+            this.el.appendChild(this.printContent);
+            this.printContent.addEventListener('load', function () {
+                // TODO: MSH: To test and convert
                 $(this).get(0).contentWindow.print();
             });
         } else {
+            // TODO: MSH: To test and convert
             this.printContent.get(0).contentWindow.print();
         }
     },

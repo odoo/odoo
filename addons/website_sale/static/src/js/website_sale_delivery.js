@@ -184,19 +184,19 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @param {Object} result
      */
     _handleCarrierUpdateResultBadge: function (result) {
-        var $carrierBadge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_wsale_delivery_badge_price');
+        const carrierBadge = this.el.querySelector('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_wsale_delivery_badge_price');
 
         if (result.status === true) {
-             // if free delivery (`free_over` field), show 'Free', not '$0'
+             // if free delivery (`free_over` field), show 'Free', not '0'
              if (result.is_free_delivery) {
-                 $carrierBadge.text(_t('Free'));
+                carrierBadge.textContent = _t('Free');
              } else {
-                 $carrierBadge.html(result.new_amount_delivery);
+                carrierBadge.innerHTML = result.new_amount_delivery;
              }
-             $carrierBadge.removeClass('o_wsale_delivery_carrier_error');
+             carrierBadge.classList.remove('o_wsale_delivery_carrier_error');
         } else {
-            $carrierBadge.addClass('o_wsale_delivery_carrier_error');
-            $carrierBadge.text(result.error_message);
+            carrierBadge.classList.add('o_wsale_delivery_carrier_error');
+            carrierBadge.textContent = result.error_message;
         }
     },
 
@@ -325,7 +325,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         const deliveryType = deliveryTypeInput.getAttribute("delivery_type");
         const deliveryTypeId = deliveryTypeInput.value;
         await this._checkCarrier(ev,deliveryTypeId)
-        $(renderToElement(deliveryType + "_pickup_location_loading")).appendTo($(modal));
+        modal.append(renderToElement(deliveryType + "_pickup_location_loading"))
         const data = await rpc("/shop/access_point/close_locations");
         if (modal.firstChild){
             modal.firstChild.remove();
@@ -341,7 +341,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         var listToRender = deliveryType + "_pickup_location_list";
         var dataToRender = {partner_address: data.partner_address};
         dataToRender[deliveryType + "_pickup_locations"] = data.close_locations;
-        $(renderToElement(listToRender, dataToRender)).appendTo($(modal));
+        modal.append(renderToElement(listToRender, dataToRender));
 
         const showLocations = document.querySelectorAll(".o_show_pickup_locations");
         if (!ev.currentTarget.closest(".o_delivery_carrier_select")) {
@@ -400,17 +400,23 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onSetAddress: function (ev) {
-        var value = $(ev.currentTarget).val();
-        var $providerFree = $('select[name="country_id"]:not(.o_provider_restricted), select[name="state_id"]:not(.o_provider_restricted)');
-        var $providerRestricted = $('select[name="country_id"].o_provider_restricted, select[name="state_id"].o_provider_restricted');
+        const value = ev.currentTarget.value;
+        const providerFree = this.el.querySelector('select[name="country_id"]:not(.o_provider_restricted), select[name="state_id"]:not(.o_provider_restricted)');
+        const providerRestricted = this.el.querySelector('select[name="country_id"].o_provider_restricted, select[name="state_id"].o_provider_restricted');
         if (value === 0) {
             // Ship to the same address : only show shipping countries available for billing
-            $providerFree.hide().attr('disabled', true);
-            $providerRestricted.show().attr('disabled', false).change();
+            providerFree.style.display = 'none';
+            providerFree.setAttribute('disabled', true);
+            providerRestricted.style.display = '';
+            providerRestricted.setAttribute('disabled', false)
+            providerRestricted.dispatchEvent(new Event('change'));
         } else {
             // Create a new address : show all countries available for billing
-            $providerFree.show().attr('disabled', false).change();
-            $providerRestricted.hide().attr('disabled', true);
+            providerFree.style.display = '';
+            providerFree.setAttribute('disabled', false);
+            providerFree.dispatchEvent(new Event('change'))
+            providerRestricted.style.display = 'none';
+            providerRestricted.setAttribute('disabled', true);
         }
     },
 });

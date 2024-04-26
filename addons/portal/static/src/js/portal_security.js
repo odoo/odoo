@@ -90,15 +90,20 @@ publicWidget.registry.portalSecurity = publicWidget.Widget.extend({
      */
     init: function () {
         // Show the "deactivate your account" modal if needed
-        $('.modal.show#portal_deactivate_account_modal').removeClass('d-block').modal('show');
+        const modalElem = document.querySelector('.modal.show#portal_deactivate_account_modal');
+        if (modalElem) {
+            modalElem.classList.remove();
+            const modal = new Modal(modalElem)
+            modal.show();
+        }
 
         // Remove the error messages when we close the modal,
         // so when we re-open it again we get a fresh new form
-        $('.modal#portal_deactivate_account_modal').on('hide.bs.modal', (event) => {
-            const $target = $(event.currentTarget);
-            $target.find('.alert').remove();
-            $target.find('.invalid-feedback').remove();
-            $target.find('.is-invalid').removeClass('is-invalid');
+        document.querySelector('.modal#portal_deactivate_account_modal').addEventListener('hide.bs.modal', (event) => {
+            const target = event.currentTarget;
+            target.querySelectorAll('.alert').forEach(elem => elem.remove());
+            target.querySelectorAll('.invalid-feedback').forEach(elem => elem.remove());
+            target.querySelectorAll('.is-invalid').forEach(elem => elem.classList.remove('is-invalid'));
         });
 
         return this._super(...arguments);

@@ -12,10 +12,11 @@ Fullscreen.include({
      * @override
      */
     _renderSlide: function (){
-        var def = this._super.apply(this, arguments);
-        var $content = this.$('.o_wslides_fs_content');
+        const def = this._super.apply(this, arguments);
+        let content = this.el.querySelector('.o_wslides_fs_content');
         if (this.get('slide').category === "certification"){
-            $content.empty().append(renderToElement('website.slides.fullscreen.certification',{widget: this}));
+            content.innerHTML = '';
+            content.append(renderToElement('website.slides.fullscreen.certification',{widget: this}));
         }
         return Promise.all([def]);
     },

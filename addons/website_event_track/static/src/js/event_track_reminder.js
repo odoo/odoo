@@ -33,16 +33,16 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
         var self = this;
-        var $trackLink = $(ev.currentTarget).find('i');
+        var trackLink = ev.currentTarget.querySelector('i');
 
         if (this.reminderOn === undefined) {
-            this.reminderOn = $trackLink.data('reminderOn');
+            this.reminderOn = trackLink.dataset.reminderOn;
         }
 
         var reminderOnValue = !this.reminderOn;
 
         rpc('/event/track/toggle_reminder', {
-            track_id: $trackLink.data('trackId'),
+            track_id: trackLink.dataset.trackId,
             set_reminder_on: reminderOnValue,
         }).then(function (result) {
             if (result.error && result.error === 'ignored') {
@@ -53,7 +53,7 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
             } else {
                 self.reminderOn = reminderOnValue;
                 var reminderText = self.reminderOn ? _t('Favorite On') : _t('Set Favorite');
-                self.$('.o_wetrack_js_reminder_text').text(reminderText);
+                document.querySelector('.o_wetrack_js_reminder_text').textContent = reminderText;
                 self._updateDisplay();
                 var message = self.reminderOn ? _t('Talk added to your Favorites') : _t('Talk removed from your Favorites');
                 self.notification.add(message, {
@@ -74,13 +74,15 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
     },
 
     _updateDisplay: function () {
-        var $trackLink = this.$el.find('i');
+        var trackLink = this.el.querySelector('i');
         if (this.reminderOn) {
-            $trackLink.addClass('fa-bell').removeClass('fa-bell-o');
-            $trackLink.attr('title', _t('Favorite On'));
+            trackLink.classList.add('fa-bell');
+            trackLink.classList.remove('fa-bell-o');
+            trackLink.setAttribute('title', _t('Favorite On'));
         } else {
-            $trackLink.addClass('fa-bell-o').removeClass('fa-bell');
-            $trackLink.attr('title', _t('Set Favorite'));
+            trackLink.classList.add('fa-bell-o');
+            trackLink.classList.remove('fa-bell');
+            trackLink.setAttribute('title', _t('Set Favorite'));
         }
     },
 

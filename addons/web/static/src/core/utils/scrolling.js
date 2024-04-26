@@ -86,3 +86,20 @@ export function scrollTo(
         }
     }
 }
+
+/**
+ * Get the closest scrollable for a given element.
+ *
+ * @param {HTMLElement} el
+ * @returns {HTMLElement | null}
+ */
+export function closestScrollable (el) {
+    if (!el) {
+        return null;
+    }
+    if (el.scrollHeight > el.clientHeight) {
+        return el;
+    } else {
+        return closestScrollable(el.parentElement);
+    }
+};

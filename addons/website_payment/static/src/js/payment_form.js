@@ -61,9 +61,9 @@ PaymentForm.include({
      * @return {void}
      */
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
-        if ($('.o_donation_payment_form').length) {
+        if (document.querySelector('.o_donation_payment_form')) {
             const errorFields = {};
-            if (!this.$('input[name="email"]')[0].checkValidity()) {
+            if (!this.el.querySelector('input[name="email"]').checkValidity()) {
                 errorFields['email'] = _t("Email is invalid");
             }
             const mandatoryFields = {
@@ -72,17 +72,21 @@ PaymentForm.include({
                 'country_id': _t('Country'),
             };
             for (const id in mandatoryFields) {
-                const $field = this.$('input[name="' + id + '"],select[name="' + id + '"]');
-                $field.removeClass('is-invalid').popover('dispose');
-                if (!$field.val().trim()) {
+                const field = this.el.querySelector('input[name="' + id + '"],select[name="' + id + '"]');
+                field.classList.remove('is-invalid');
+                if (!field.value.trim()) {
                     errorFields[id] = _t("Field '%s' is mandatory", mandatoryFields[id]);
                 }
             }
             if (Object.keys(errorFields).length) {
                 for (const id in errorFields) {
-                    const $field = this.$('input[name="' + id + '"],select[name="' + id + '"]');
-                    $field.addClass('is-invalid');
-                    $field.popover({content: errorFields[id], trigger: 'hover', container: 'body', placement: 'top'});
+                    const field = this.el.querySelector('input[name="' + id + '"],select[name="' + id + '"]');
+                    field.classList.add('is-invalid');
+                    const popover = new Popover(field, {
+                        content: errorFields[id],
+                        position: 'top',
+                    });
+                    popover.show();
                 }
                 this._displayErrorDialog(
                     _t("Payment processing failed"),
@@ -103,19 +107,19 @@ PaymentForm.include({
      */
     _prepareTransactionRouteParams() {
         const transactionRouteParams = this._super(...arguments);
-        return $('.o_donation_payment_form').length ? {
+        return document.querySelector('.o_donation_payment_form') ? {
             ...transactionRouteParams,
             'partner_id': parseInt(this.paymentContext['partnerId']),
             'currency_id': this.paymentContext['currencyId']
                     ? parseInt(this.paymentContext['currencyId']) : null,
             'reference_prefix':this.paymentContext['referencePrefix']?.toString(),
             'partner_details': {
-                'name': this.$('input[name="name"]').val(),
-                'email': this.$('input[name="email"]').val(),
-                'country_id': this.$('select[name="country_id"]').val(),
+                'name': this.el.querySelector('input[name="name"]').value,
+                'email': this.el.querySelector('input[name="email"]').value,
+                'country_id': this.el.querySelector('select[name="country_id"]').value,
             },
-            'donation_comment': this.$('#donation_comment').val(),
-            'donation_recipient_email': this.$('input[name="donation_recipient_email"]').val(),
+            'donation_comment': this.el.querySelector('#donation_comment').value,
+            'donation_recipient_email': this.el.querySelector('input[name="donation_recipient_email"]').value,
         } : transactionRouteParams;
     },
 

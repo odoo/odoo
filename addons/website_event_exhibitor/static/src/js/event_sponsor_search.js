@@ -13,17 +13,17 @@ publicWidget.registry.websiteEventSearchSponsor = publicWidget.Widget.extend({
     },
 
     start: function () {
-        this.form = this.$el.find('.o_wevent_event_tags_form');
-        this.mobileForm = this.$el.find('.o_wevent_event_tags_mobile_form');
+        this.form = this.el.querySelector('.o_wevent_event_tags_form');
+        this.mobileForm = this.el.querySelector('.o_wevent_event_tags_mobile_form');
         return this._super.apply(this, arguments);
     },
 
     _onSearch: function () {
-        const input = this.$el.find('.o_wevent_event_search_box input');
+        const input = this.el.querySelector('.o_wevent_event_search_box input');
         const params = new URLSearchParams(window.location.search);
-        params.set('search', input.val());
+        params.set('search', input.value);
         const url = window.location.pathname + '?' + params.toString();
-        this.form.attr('action', url);
+        this.form.action = url;
         this.form.submit();
     },
 
@@ -36,17 +36,17 @@ publicWidget.registry.websiteEventSearchSponsor = publicWidget.Widget.extend({
     },
 
     _onTagRemove: function (event) {
-        const tag = $(event.target).parent();
-        const data = tag.data();
+        const tag = event.target.parentNode;
+        const data = tag.dataset;
         const selector = 'input[name="' + data.field + '"][value="' + data.value + '"]';
         this._updateFormActionURL(data);
-        this.form.find(selector).prop('checked', false);
+        this.form.querySelector(selector).checked = false;
         this.form.submit();
     },
 
     _onTagReset: function (event) {
-        const dropdown = $(event.target).parent();
-        dropdown.find('input').prop('checked', false);
+        const dropdown = event.target.parentNode;
+        dropdown.querySelectorAll('input').forEach(input => input.checked = false);
         this.form.submit();
     },
 
@@ -63,7 +63,7 @@ publicWidget.registry.websiteEventSearchSponsor = publicWidget.Widget.extend({
         try {
             const ids = JSON.parse(params.get(name));
             params.set(name, JSON.stringify(ids.filter(id => id !== data.value)));
-            this.form.attr('action', `${window.location.href.split('?')[0]}?${params.toString()}`);
+            this.form.action = `${window.location.href.split('?')[0]}?${params.toString()}`;
         } catch {
             return;
         }

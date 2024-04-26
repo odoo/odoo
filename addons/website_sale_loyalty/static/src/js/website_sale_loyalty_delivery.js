@@ -16,7 +16,7 @@ patch(PublicWidget.registry.websiteSaleDelivery, {
         await super._handleCarrierUpdateResult(...arguments);
         if (this.result.new_amount_order_discounted) {
             // Update discount of the order
-            $('#order_discounted').html(this.result.new_amount_order_discounted);
+            this.el.querySelector('#order_discounted').innerHTML = this.result.new_amount_order_discounted;
         }
     },
     /**
@@ -27,7 +27,7 @@ patch(PublicWidget.registry.websiteSaleDelivery, {
         if (result.new_amount_order_discounted) {
             // We are in freeshipping, so every carrier is Free but we don't
             // want to replace error message by 'Free'
-            $('#delivery_carrier .badge:not(.o_wsale_delivery_carrier_error)').text(_t('Free'));
+            this.el.querySelector('#delivery_carrier .badge:not(.o_wsale_delivery_carrier_error)').textContent = _t('Free');
         }
     },
 });

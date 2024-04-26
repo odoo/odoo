@@ -18,13 +18,13 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        var self = this;
+        const self = this;
 
         // ...
-        const $confirmation = this.$('div.oe_website_sale_tx_status');
-        if ($confirmation.length) {
-            const orderID = $confirmation.data('order-id');
-            const json = $confirmation.data('order-tracking-info');
+        const confirmation = this.el.querySelector('div.oe_website_sale_tx_status');
+        if (confirmation && confirmation.length) {
+            const orderID = confirmation.dataset.orderID;
+            const json = confirmation.getAttribute('data-order-tracking-info');
             this._vpv('/stats/ecom/order_confirmed/' + orderID);
             self._trackGA('event', 'purchase', json);
         }
@@ -84,7 +84,7 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
      * @private
      */
     _onAddProductIntoCart: function () {
-        var productID = this.$('input[name="product_id"]').attr('value');
+        const productID = this.el.querySelector('input[name="product_id"]').getAttribute('value');
         this._vpv('/stats/ecom/product_add_to_cart/' + productID);
     },
     /**
@@ -103,7 +103,7 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
      * @private
      */
     _onOrder: function () {
-        if ($('header#top [href="/web/login"]').length) {
+        if (this.el.querySelector('header#top [href="/web/login"]').length) {
             this._vpv('/stats/ecom/customer_signup');
         }
         this._vpv('/stats/ecom/order_checkout');
@@ -112,7 +112,7 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
      * @private
      */
     _onOrderPayment: function () {
-        var method = $('#payment_method input[name=provider]:checked').nextAll('span:first').text();
+        const method = this.el.querySelector('#payment_method input[name=provider]:checked').parentNode.querySelector('span').textContent;
         this._vpv('/stats/ecom/order_payment/' + method);
     },
 });

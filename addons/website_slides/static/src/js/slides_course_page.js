@@ -39,21 +39,21 @@ export const SlideCoursePage = publicWidget.Widget.extend({
      * @param {Boolean} completed
      */
     toggleCompletionButton: function (slide, completed = true) {
-        const $button = this.$(`.o_wslides_sidebar_done_button[data-id="${slide.id}"]`);
+        const button = this.el.querySelector(`.o_wslides_sidebar_done_button[data-id="${slide.id}"]`);
 
-        if (!$button.length) {
+        if (!button.length) {
             return;
         }
 
         const newButton = renderToElement('website.slides.sidebar.done.button', {
             slideId: slide.id,
-            uncompletedIcon: $button.data('uncompletedIcon') ?? 'fa-circle-thin',
+            uncompletedIcon: button.datset.uncompletedIcon ?? 'fa-circle-thin',
             slideCompleted: completed ? 1 : 0,
             canSelfMarkUncompleted: slide.canSelfMarkUncompleted,
             canSelfMarkCompleted: slide.canSelfMarkCompleted,
             isMember: slide.isMember,
         });
-        $button.replaceWith(newButton);
+        button.parentNode.replaceChild(newButton, button);
     },
 
     /**
@@ -65,21 +65,23 @@ export const SlideCoursePage = publicWidget.Widget.extend({
     updateProgressbar: function (channelCompletion) {
         const completion = Math.min(100, channelCompletion);
 
-        const $completed = $('.o_wslides_channel_completion_completed');
-        const $progressbar = $('.o_wslides_channel_completion_progressbar');
+        const completed = this.el.querySelector('.o_wslides_channel_completion_completed');
+        const progressbar = this.el.querySelector('.o_wslides_channel_completion_progressbar');
 
         if (completion < 100) {
             // Hide the "Completed" text and show the progress bar
-            $completed.addClass('d-none');
-            $progressbar.removeClass('d-none').addClass('d-flex');
+            completed.classList.add('d-none');
+            progressbar.classList.remove('d-none')
+            progressbar.classList.add('d-flex');
         } else {
             // Hide the progress bar and show the "Completed" text
-            $completed.removeClass('d-none');
-            $progressbar.addClass('d-none').removeClass('d-flex');
+            completed.classList.remove('d-none');
+            progressbar.classList.add('d-none')
+            progressbar.classList.remove('d-flex');
         }
 
-        $progressbar.find('.progress-bar').css('width', `${completion}%`);
-        $progressbar.find('.o_wslides_progress_percentage').text(completion);
+        progressbar.querySelector('.progress-bar').style.width = `${completion}%`;
+        progressbar.querySelector('.o_wslides_progress_percentage').textContent = completion;
     },
 
     //--------------------------------------------------------------------------
@@ -120,7 +122,7 @@ export const SlideCoursePage = publicWidget.Widget.extend({
      * @param {Integer} slideId
      */
     _getSlide: function (slideId) {
-        return $(`.o_wslides_sidebar_done_button[data-id="${slideId}"]`).data();
+        return this.el.querySelector(`.o_wslides_sidebar_done_button[data-id="${slideId}"]`).dataset;
     },
 
     //--------------------------------------------------------------------------
@@ -137,9 +139,9 @@ export const SlideCoursePage = publicWidget.Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
 
-        const $button = $(ev.currentTarget).closest('.o_wslides_sidebar_done_button');
+        const button = ev.currentTarget.closest('.o_wslides_sidebar_done_button');
 
-        const slideData = $button.data();
+        const slideData = button.dataset;
         const isCompleted = Boolean(slideData.completed);
 
         this._toggleSlideCompleted(slideData, !isCompleted);
