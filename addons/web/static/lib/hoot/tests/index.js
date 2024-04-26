@@ -10,4 +10,4 @@ import "./hoot-dom/events.test.js";
 import "./hoot_utils.test.js";
 import "./mock/network.test.js";
 
-whenReady(start);
+whenReady(() => start());

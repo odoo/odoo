@@ -892,10 +892,10 @@ test("clicking on any button in setting should show discard warning if setting f
     ResConfigSettings._views.search = /* xml */ `<search/>`;
     Task._views.search = /* xml */ `<search/>`;
 
-    onRpc("/web/dataset/call_button", (request) => {
+    onRpc("/web/dataset/call_button", async (request) => {
         const {
             params: { method },
-        } = request.json();
+        } = await request.json();
         expect(method).toBe("execute", { message: "execute method called" });
     });
 
@@ -1389,10 +1389,10 @@ test('call "call_button/execute" when clicking on a button in dirty settings', a
     Task._views.list = /* xml */ `<tree/>`;
     Task._views.search = /* xml */ `<search/>`;
 
-    onRpc("/web/dataset/call_button", (request) => {
+    onRpc("/web/dataset/call_button", async (request) => {
         const {
             params: { method },
-        } = request.json();
+        } = await request.json();
         expect.step(method);
         return true;
     });
@@ -1700,7 +1700,7 @@ test("settings form keeps scrolling by app", async () => {
                         <div id="deepDivCrm" />
                     </block>
                 </app>
-            
+
                 <app string="OtherApp" name="otherapp">
                     <block title="Title of group Other">
                         <setting>
@@ -1765,10 +1765,10 @@ test("server actions are called with the correct context", async () => {
     `;
     ResConfigSettings._views.search = /* xml */ `<search/>`;
 
-    onRpc("/web/action/run", (request) => {
+    onRpc("/web/action/run", async (request) => {
         const {
             params: { context },
-        } = request.json();
+        } = await request.json();
         expect.step("/web/action/run");
         const filterContext = pick(context, "active_id", "active_ids", "active_model");
         expect(filterContext).toEqual({

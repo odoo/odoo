@@ -1,3 +1,4 @@
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
 import { defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 
@@ -17,6 +18,7 @@ class ProjectUpdate extends models.Model {
     _records = [{ id: 1, status: "on_track" }];
 }
 
+defineMailModels();
 defineModels([ProjectUpdate]);
 
 test("project.update (kanban): check that ProjectStatusWithColorSelectionField is displaying the correct informations", async () => {

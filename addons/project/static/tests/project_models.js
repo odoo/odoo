@@ -1,4 +1,5 @@
-import { defineModels, defineWebModels, fields, models } from "@web/../tests/web_test_helpers";
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
+import { defineModels, fields, models } from "@web/../tests/web_test_helpers";
 
 export class ProjectProject extends models.Model {
     _name = "project.project";
@@ -96,7 +97,7 @@ export class ProjectMilestone extends models.Model {
 }
 
 export function defineProjectModels() {
-    defineWebModels();
+    defineMailModels();
     defineModels(projectModels);
 }
 

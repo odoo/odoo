@@ -818,8 +818,8 @@ test.tags("desktop")("execute_action of type object are handled", async () => {
     expect.assertions(4);
     serverState.userContext = { some_key: 2 };
 
-    onRpc("/web/dataset/call_button", (request) => {
-        const { params } = request.json();
+    onRpc("/web/dataset/call_button", async (request) => {
+        const { params } = await request.json();
         expect(params).toEqual(
             {
                 args: [[1]],
