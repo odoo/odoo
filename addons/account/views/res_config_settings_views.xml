@@ -184,6 +184,19 @@
                                 <field name="display_invoice_tax_company_currency"/>
                             </setting>
                         </block>
+                        <block title="Units of Measure">
+                            <setting id="account_uom" help="Sell and purchase products in different units of measure">
+                                <field name="group_uom"/>
+                                <div class="content-group" invisible="not group_uom">
+                                    <button
+                                        name="%(uom.product_uom_categ_form_action)d"
+                                        icon="oi-arrow-right"
+                                        type="action"
+                                        string="Units of Measure"
+                                        class="btn-link"/>
+                                </div>
+                            </setting>
+                        </block>
                         <block title="Customer Payments" id="pay_invoice_online_setting_container">
                             <setting help="Let your customers pay their invoices online"
                                 documentation="/applications/finance/accounting/receivables/customer_payments/online_payment.html">
