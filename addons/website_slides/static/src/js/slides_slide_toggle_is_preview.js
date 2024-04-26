@@ -9,23 +9,27 @@
             'click': '_onPreviewSlideClick',
         },
 
-        _toggleSlidePreview: function($slideTarget) {
+        _toggleSlidePreview: function(slideTarget) {
             rpc('/slides/slide/toggle_is_preview', {
-                slide_id: $slideTarget.data('slideId')
+                slide_id: slideTarget.dataset.slideId,
             }).then(function (isPreview) {
                 if (isPreview) {
-                    $slideTarget.removeClass('text-bg-light badge-hide border');
-                    $slideTarget.addClass('text-bg-success');
+                    slideTarget.classList.remove('text-bg-light');
+                    slideTarget.classList.remove('badge-hide');
+                    slideTarget.classList.remove('border');
+                    slideTarget.classList.add('text-bg-success');
                 } else {
-                    $slideTarget.removeClass('text-bg-success');
-                    $slideTarget.addClass('text-bg-light badge-hide border');
+                    slideTarget.classList.remove('text-bg-success');;
+                    slideTarget.classList.add('text-bg-light');
+                    slideTarget.classList.add('badge-hide');
+                    slideTarget.classList.add('border');
                 }
             });
         },
 
         _onPreviewSlideClick: function (ev) {
             ev.preventDefault();
-            this._toggleSlidePreview($(ev.currentTarget));
+            this._toggleSlidePreview(ev.currentTarget);
         },
     });
 

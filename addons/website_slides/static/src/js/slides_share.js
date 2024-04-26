@@ -3,6 +3,7 @@
 import publicWidget from '@web/legacy/js/public/public_widget';
 import { SlideShareDialog } from './public/components/slide_share_dialog/slide_share_dialog';
 import { browser } from '@web/core/browser/browser';
+import { typeCastDataset } from "@web/core/utils/misc";
 
 
 publicWidget.registry.websiteSlidesShare = publicWidget.Widget.extend({
@@ -24,7 +25,7 @@ publicWidget.registry.websiteSlidesShare = publicWidget.Widget.extend({
     _onClickShareSlide: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
-        const data = ev.currentTarget.dataset;
+        const data = typeCastDataset(ev.currentTarget.dataset);
         this.call("dialog", "add", SlideShareDialog, {
             category: data.category,
             documentMaxPage: data.category == 'document' && this.getDocumentMaxPage(),
@@ -46,13 +47,13 @@ publicWidget.registry.websiteSlidesEmbedShare = publicWidget.Widget.extend({
 
     _onShareLinkCopy: async function (ev) {
         ev.preventDefault();
-        const $clipboardBtn = $(ev.currentTarget);
-        $clipboardBtn.tooltip({title: "Copied!", trigger: "manual", placement: "bottom"});
-        var share_embed_el = this.$('#wslides_share_embed_id_' + $clipboardBtn[0].id.split('id_')[1]);
-        await browser.navigator.clipboard.writeText(share_embed_el.val() || '');
-        $clipboardBtn.tooltip('show');
+        const clipboardBtn = ev.currentTarget;
+        new Tooltip(clipboardBtn, {title: "Copied!", trigger: "manual", placement: "bottom"});
+        const share_embed_el = this.el.querySelector('#wslides_share_embed_id_' + clipboardBtn.id.split('id_')[1]);
+        await browser.navigator.clipboard.writeText(share_embed_el.value || '');
+        new Tooltip(clipboardBtn).show();
         setTimeout(function () {
-            $clipboardBtn.tooltip("hide");
+            new Tooltip(clipboardBtn).hide();
         }, 800);
     },
 });

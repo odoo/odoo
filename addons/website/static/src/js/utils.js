@@ -19,12 +19,12 @@ function loadAnchors(url, body) {
         if (url === window.location.pathname || url[0] === '#') {
             resolve(body ? body : document.body.outerHTML);
         } else if (url.length && !url.startsWith("http")) {
-            $.get(window.location.origin + url).then(resolve, reject);
+            fetch(window.location.origin + url).then(resolve, reject);
         } else { // avoid useless query
             resolve();
         }
     }).then(function (response) {
-        const anchors = $(response).find('[id][data-anchor=true], .modal[id][data-display="onClick"]').toArray().map((el) => {
+        const anchors = [...response.querySelectorAll('[id][data-anchor=true], .modal[id][data-display="onClick"]')].map((el) => {
             return '#' + el.id;
         });
         // Always suggest the top and the bottom of the page as internal link
@@ -74,18 +74,18 @@ function autocompleteWithPages(input, options= {}) {
 }
 
 /**
- * @param {jQuery} $element
- * @param {jQuery} [$excluded]
+ * @param  element
+ * @param  excluded
  */
-function onceAllImagesLoaded($element, $excluded) {
-    var defs = Array.from($element.find("img").addBack("img")).map((img) => {
-        if (img.complete || $excluded && ($excluded.is(img) || $excluded.has(img).length)) {
+function onceAllImagesLoaded(element, excluded) {
+    const defs = Array.from(element.querySelectorAll("img")).concat(element.matches("img") ? [element] : []).map((img) => {
+        if (img.complete || excluded && (excluded === img || excluded.contains(img).length)) {
             return; // Already loaded
         }
-        var def = new Promise(function (resolve, reject) {
-            $(img).one('load', function () {
+        const def = new Promise(function (resolve, reject) {
+            img.addEventListener('load', function () {
                 resolve();
-            });
+            }, { once: true });
         });
         return def;
     });
@@ -142,51 +142,51 @@ function prompt(options, _qweb) {
         btn_secondary_title: _t('Cancel'),
     }, options || {});
 
-    var type = intersection(Object.keys(options), ['input', 'textarea', 'select']);
+    let type = intersection(Object.keys(options), ['input', 'textarea', 'select']);
     type = type.length ? type[0] : 'input';
     options.field_type = type;
     options.field_name = options.field_name || options[type];
 
-    var def = new Promise(function (resolve, reject) {
-        var dialog = $(renderToElement(_qweb, options)).appendTo('body');
-        options.$dialog = dialog;
-        var field = dialog.find(options.field_type).first();
-        field.val(options['default']); // dict notation for IE<9
+    const def = new Promise(function (resolve, reject) {
+        const dialog = document.body.append(renderToElement(_qweb, options));
+        options.dialog = dialog;
+        let field = dialog.querySelectorAll(options.field_type)[0];
+        field.value = options['default']; // dict notation for IE<9
         field.fillWith = function (data) {
-            if (field.is('select')) {
-                var select = field[0];
+            if (field.tagName === 'SELECT') {
                 data.forEach(function (item) {
-                    select.options[select.options.length] = new window.Option(item[1], item[0]);
+                    field.options[field.options.length] = new window.Option(item[1], item[0]);
                 });
             } else {
-                field.val(data);
+                field.value = data;
             }
         };
-        var init = options.init(field, dialog);
+        let init = options.init(field, dialog);
         Promise.resolve(init).then(function (fill) {
             if (fill) {
                 field.fillWith(fill);
             }
-            dialog.modal('show');
+            Modal.getOrCreateInstance(dialog).show();
             field.focus();
-            dialog.on('click', '.btn-primary', function () {
-                var backdrop = $('.modal-backdrop');
-                resolve({ val: field.val(), field: field, dialog: dialog });
-                dialog.modal('hide').remove();
-                    backdrop.remove();
+            dialog.querySelectorAll('.btn-primary').addEventListener('click', function () {
+                const backdrop = document.querySelector('.modal-backdrop');
+                resolve({ val: field.value, field: field, dialog: dialog });
+                dialog.classList.remove('show');
+                dialog.parentNode.removeChild(dialog);
+                backdrop.parentNode.removeChild(backdrop);
             });
         });
-        dialog.on('hidden.bs.modal', function () {
-                var backdrop = $('.modal-backdrop');
+        dialog.addEventListener('hidden.bs.modal', function () {
+            const backdrop = document.querySelector('.modal-backdrop');
             reject();
             dialog.remove();
-                backdrop.remove();
+            backdrop.remove();
         });
-        if (field.is('input[type="text"], select')) {
+        if ((field.tagName === 'INPUT' && field.type === 'text') || field.tagName === 'SELECT') {
             field.keypress(function (e) {
                 if (e.key === "Enter") {
                     e.preventDefault();
-                    dialog.find('.btn-primary').trigger('click');
+                    dialog.querySelector('.btn-primary').click();
                 }
             });
         }

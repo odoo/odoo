@@ -45,7 +45,7 @@ var BarChart = publicWidget.Widget.extend({
             data.push(pt[1]);
         });
 
-        this.$('.title').html(nbClicks + _t(' clicks'));
+        this.el.querySelector('.title').innerHTML = nbClicks + _t(' clicks');
 
         var config = {
             type: 'line',
@@ -61,7 +61,7 @@ var BarChart = publicWidget.Widget.extend({
                 }],
             },
         };
-        var canvas = this.$('canvas')[0];
+        var canvas = this.el.querySelector('canvas');
         var context = canvas.getContext('2d');
         new Chart(context, config);
     },
@@ -95,7 +95,7 @@ var PieChart = publicWidget.Widget.extend({
         }
 
         // Set title
-        this.$('.title').html(this.data.length + _t(' countries'));
+        this.el.querySelector('.title').innerHTML = this.data.length + _t(' countries');
 
         var config = {
             type: 'pie',
@@ -111,7 +111,7 @@ var PieChart = publicWidget.Widget.extend({
             },
         };
 
-        var canvas = this.$('canvas')[0];
+        var canvas = this.el.querySelector('canvas');
         var context = canvas.getContext('2d');
         new Chart(context, config);
     },
@@ -160,9 +160,9 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
             var _lastMonthClicksByCountry = results[4];
 
             if (!_totalClicks) {
-                $('#all_time_charts').prepend(_t("There is no data to show"));
-                $('#last_month_charts').prepend(_t("There is no data to show"));
-                $('#last_week_charts').prepend(_t("There is no data to show"));
+                document.querySelector('all_time_charts').insertAdjacentText('afterbegin', _t("There is no data to show"));
+                document.querySelector('last_month_charts').insertAdjacentText('afterbegin', _t("There is no data to show"));
+                document.querySelector('last_week_charts').insertAdjacentText('afterbegin', _t("There is no data to show"));
                 return;
             }
 
@@ -187,31 +187,31 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
             // Process all time line chart data
             var now = DateTime.now();
             self.charts.all_time_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
-            self.charts.all_time_bar.attachTo($('#all_time_clicks_chart'));
+            self.charts.all_time_bar.attachTo(document.getElementById('all_time_clicks_chart'));
 
             // Process month line chart data
             beginDate = DateTime.now().minus({ days: 30 });
             self.charts.last_month_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
-            self.charts.last_month_bar.attachTo($('#last_month_clicks_chart'));
+            self.charts.last_month_bar.attachTo(document.getElementById('last_month_clicks_chart'));
 
             // Process week line chart data
             beginDate = DateTime.now().minus({ days: 7 });
             self.charts.last_week_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
-            self.charts.last_week_bar.attachTo($('#last_week_clicks_chart'));
+            self.charts.last_week_bar.attachTo(document.getElementById('last_week_clicks_chart'));
 
             // Process pie charts
             self.charts.all_time_pie = new PieChart(self, _clicksByCountry);
-            self.charts.all_time_pie.attachTo($('#all_time_countries_charts'));
+            self.charts.all_time_pie.attachTo(document.getElementById('all_time_countries_charts'));
 
             self.charts.last_month_pie = new PieChart(self, _lastMonthClicksByCountry);
-            self.charts.last_month_pie.attachTo($('#last_month_countries_charts'));
+            self.charts.last_month_pie.attachTo(document.getElementById('last_month_countries_charts'));
 
             self.charts.last_week_pie = new PieChart(self, _lastWeekClicksByCountry);
-            self.charts.last_week_pie.attachTo($('#last_week_countries_charts'));
+            self.charts.last_week_pie.attachTo(document.getElementById('last_week_countries_charts'));
 
-            var rowWidth = $('#all_time_countries_charts').parent().width();
-            var $chartCanvas = $('#all_time_countries_charts,last_month_countries_charts,last_week_countries_charts').find('canvas');
-            $chartCanvas.height(Math.max(_clicksByCountry.length * (rowWidth > 750 ? 1 : 2), 20) + 'em');
+            const rowWidth = document.getElementById('all_time_countries_charts').parent().width();
+            const chartCanvas = document.getElementById('all_time_countries_charts,last_month_countries_charts,last_week_countries_charts').find('canvas');
+            chartCanvas.height(Math.max(_clicksByCountry.length * (rowWidth > 750 ? 1 : 2), 20) + 'em');
 
         });
     },
@@ -299,21 +299,31 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
 
         this.animating_copy = true;
 
-        $('.o_website_links_short_url').clone()
-            .css('position', 'absolute')
-            .css('left', '15px')
-            .css('bottom', '10px')
-            .css('z-index', 2)
-            .removeClass('.o_website_links_short_url')
-            .addClass('animated-link')
-            .appendTo($('.o_website_links_short_url'))
-            .animate({
-                opacity: 0,
-                bottom: '+=20',
-            }, 500, function () {
-                $('.animated-link').remove();
-                this.animating_copy = false;
-            });
+        let shortUrlElement = document.querySelector('.o_website_links_short_url');
+        let clonedElement = shortUrlElement.cloneNode(true);
+
+        clonedElement.style.position = 'absolute';
+        clonedElement.style.left = '15px';
+        clonedElement.style.bottom = '10px';
+        clonedElement.style.zIndex = '2';
+
+        clonedElement.classList.remove('o_website_links_short_url');
+        clonedElement.classList.add('animated-link');
+
+        shortUrlElement.appendChild(clonedElement);
+
+        //TODO-shsa : check it.
+
+        // animate function doesn't have a direct equivalent in vanilla JS
+        // you can use CSS transitions or Web Animations API to achieve similar effects
+        // here's a simple example using CSS transitions
+        clonedElement.style.transition = 'all 0.5s ease';
+        clonedElement.style.opacity = '0';
+        clonedElement.style.bottom = '30px';
+        setTimeout(() => {
+            clonedElement.remove();
+            this.animating_copy = false;
+        }, 500);
     },
 });
 
