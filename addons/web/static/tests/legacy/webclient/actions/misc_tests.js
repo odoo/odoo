@@ -167,6 +167,28 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
+    QUnit.test("server action run shouldn't be cached", async function (assert) {
+        const mockRPC = async (route, args) => {
+            if (route === "/web/action/load") {
+                assert.step(JSON.stringify(args));
+            }
+        };
+
+        setupWebClientRegistries();
+        const env = await makeTestEnv({ serverData, mockRPC });
+
+        const loadAction = env.services.action.loadAction;
+
+        // With no additional params
+        await loadAction(2);
+        await loadAction(2);
+
+        assert.verifySteps([
+            '{"action_id":2,"context":{"lang":"en","tz":"taht","uid":7}}',
+            '{"action_id":2,"context":{"lang":"en","tz":"taht","uid":7}}',
+        ]);
+    });
+
     QUnit.test("action cache: additionalContext is used on the key", async function (assert) {
         assert.expect(6);
 
