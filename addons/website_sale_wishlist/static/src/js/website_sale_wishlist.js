@@ -36,7 +36,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         const self = this;
         const def = this._super.apply(this, arguments);
         let wishDef;
-        if (this.wishlistProductIDs.length != + this.el.querySelector('header#top .my_wish_quantity').textContent) {
+        if (this.wishlistProductIDs.length != + document.querySelector('header#top .my_wish_quantity').textContent) {
             wishDef = await fetch('/shop/wishlist', {
                 count: 1,
             }).then(function (res) {
@@ -58,7 +58,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
 
         this._updateWishlistView();
         // trigger change on only one input
-        if (this.el.querySelector('input.js_product_change').length) { // manage "List View of variants"
+        if (this.el.querySelector('input.js_product_change')) { // manage "List View of variants"
             let checkedProductInput = this.el.querySelector('input.js_product_change:checked');
             // TODO-visp: Check this also
             // checkedProductInput.dispatchEvent(new Event('change'));
@@ -145,10 +145,12 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      */
     _updateWishlistView: function () {
         const wishButton = this.el.querySelector('.o_wsale_my_wish');
-        if (wishButton.classList.contains('o_wsale_my_wish_hide_empty')) {
+        if (wishButton && wishButton.classList.contains('o_wsale_my_wish_hide_empty')) {
             wishButton.classList.toggle('d-none', !this.wishlistProductIDs.length);
         }
-        wishButton.querySelector('.my_wish_quantity').textContent = this.wishlistProductIDs.length;
+        if(wishButton) {
+            wishButton.querySelector('.my_wish_quantity').textContent = this.wishlistProductIDs.length;
+        }
     },
     /**
      * @private

@@ -114,8 +114,11 @@ function updateCartNavBar(data) {
         myCartQuantity.textContent = data.cart_quantity || '';
         myCartQuantity.classList.remove('o_mycart_zoom_animation');
     }, 300);
-    document.querySelector(".js_cart_lines")?.insertAdjacentHTML('beforebegin', data['website_sale.cart_lines']);
-    document.querySelector('.js_cart_lines')?.remove();
+    const jsCartLinesEl = document.querySelector(".js_cart_lines");
+    if (jsCartLinesEl) {
+        jsCartLinesEl.insertAdjacentHTML('beforebegin', data['website_sale.cart_lines']);
+        jsCartLinesEl?.remove();
+    }
     if (document.querySelector("#cart_total")) {
         document.querySelector("#cart_total").outerHTML = data['website_sale.total'];
     }

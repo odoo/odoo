@@ -42,20 +42,22 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         });
         self._updateComparelistView();
 
-        new Popover(this.el.querySelector('#comparelist .o_product_header'), {
-            trigger: 'manual',
-            animation: true,
-            html: true,
-            title: function () {
-                return _t("Compare Products");
-            },
-            container: '.o_product_feature_panel',
-            placement: 'top',
-            template: renderToString('popover'),
-            content: function () {
-                return this.el.querySelector('#comparelist .o_product_panel_content').innerHTML;
-            }
-        });
+        if (this.el.querySelector('#comparelist .o_product_header')) {
+            Popover.getOrCreateInstance(this.el.querySelector('#comparelist .o_product_header'), {
+                trigger: 'manual',
+                animation: true,
+                html: true,
+                title: function () {
+                    return _t("Compare Products");
+                },
+                container: '.o_product_feature_panel',
+                placement: 'top',
+                template: renderToString('popover'),
+                content: function () {
+                    return this.el.querySelector('#comparelist .o_product_panel_content').innerHTML;
+                }
+            });
+        }
         // We trigger a resize to launch the event that checks if this element hides
         // a button when the page is loaded.
         window.dispatchEvent(new Event('resize'));
