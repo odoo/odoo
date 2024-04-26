@@ -94,7 +94,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                 'document_type': 'Invoice',
             },
             FAKE_UUID[1]: {
-                'accounting_supplier_party': '0208:2718281828',
+                'accounting_supplier_party': '0198:dk16356706',
                 'filename': 'test_incoming',
                 'enc_key': file_open(f'{FILE_PATH}/enc_key', mode='rb').read(),
                 'document': b64encode(file_open(f'{FILE_PATH}/document', mode='rb').read()),
@@ -111,13 +111,13 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             '/api/peppol/1/get_all_documents': {'result': {
                 'messages': [
                     {
-                        'accounting_supplier_party': '0208:2718281828',
+                        'accounting_supplier_party': '0198:dk16356706',
                         'filename': 'test_incoming.xml',
                         'uuid': FAKE_UUID[1],
                         'state': 'done',
                         'direction': 'incoming',
                         'document_type': 'Invoice',
-                        'sender': '0208:2718281828',
+                        'sender': '0198:dk16356706',
                         'receiver': '0208:0477472701',
                         'timestamp': '2022-12-30',
                         'error': False if not error else 'Test error',
@@ -146,6 +146,9 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             return response
         if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A2718281828'):
             response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:2718281828</id:ParticipantIdentifier></smp:ServiceGroup>'
+            return response
+        if r.url.endswith('iso6523-actorid-upis%3A%3A0198%3Adk16356706'):
+            response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0198:dk16356706</id:ParticipantIdentifier></smp:ServiceGroup>'
             return response
 
         proxy_documents, responses = cls._get_mock_data(cls.env.context.get('error'))
