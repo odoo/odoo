@@ -620,6 +620,61 @@ font[class*='bg-'] {
     }
 }
 
+@for $-size from 1 through length($o-colors) {
+    .o_color_#{$-size - 1} {
+       // Compute background-color and text-color values for different uses
+        $-bg-solid: nth($o-colors, $-size);
+        $-color-solid: color-contrast($-bg-solid, $min-contrast-ratio: 3);
+
+        $-bg-light: tint-color($-bg-solid, 90%);
+        $-color-light: increase-contrast($-bg-solid, $-bg-light);
+
+        $-color-light-contrast: color-contrast($-bg-light, $min-contrast-ratio: 3);
+
+        // Print CSS variables.
+        --bg-solid: #{$-bg-solid};
+        --color-solid: #{$-color-solid};
+
+        --bg-light: #{$-bg-light};
+        --color-light: #{$-color-light};
+
+        --color-light-contrast: #{$-color-light-contrast};
+
+        // Assign default values
+        background-color: var(--bg, var(--bg-solid));
+        color: var(--color, var(--color-solid));
+        border-color: var(--border, --bg-solid);
+
+        &.badge {
+            --bg: var(--bg-light);
+            --color: var(--color-light);
+
+            border: $border-width solid var(--bg-solid);
+
+            @at-root a#{&}:hover, a:hover > & {
+                --bg: var(--bg-solid);
+                --color: var(--color-solid);
+
+                text-decoration: none;
+            }
+        }
+
+        &.event_track > div {
+            border-top: $border-width * 3 solid var(--bg-solid);
+            background-color: var(--bg-light);
+            color: var(--color-light-contrast);
+        }
+
+        &.o_wesession_list_item {
+            --bg: var(--bg-light);
+            --color: var(--color-light-contrast);
+
+            border: $border-width solid var(--o-border-color);
+            border-left: $border-width * 3 solid var(--bg-solid);
+        }
+    }
+}
+
 // Background Images
 .oe_img_bg {
     background-size: cover;
