@@ -91,10 +91,10 @@ class Evaluacion(models.Model):
 
         self.pregunta_ids = [(5,)]
 
-        template_id_hardcoded = 1
+        template_id = self.env['ir.model.data']._xmlid_to_res_id('evaluaciones.template_clima')
 
-        if template_id_hardcoded:
-            template = self.env["template"].browse(template_id_hardcoded)
+        if template_id:
+            template = self.env["template"].browse(template_id)
             if template:
                 pregunta_ids = template.pregunta_ids.ids
                 print("IDs de preguntas:", pregunta_ids)
@@ -126,10 +126,11 @@ class Evaluacion(models.Model):
 
         self.pregunta_ids = [(5,)]
 
-        template_id_hardcoded = 2
+        template_id = self.env['ir.model.data']._xmlid_to_res_id('evaluaciones.template_nom035')
+        
 
-        if template_id_hardcoded:
-            template = self.env["template"].browse(template_id_hardcoded)
+        if template_id:
+            template = self.env["template"].browse(template_id)
             if template:
                 pregunta_ids = template.pregunta_ids.ids
                 self.pregunta_ids = [(6, 0, pregunta_ids)]
