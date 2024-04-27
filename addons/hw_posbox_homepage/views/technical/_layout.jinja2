@@ -1,0 +1,18 @@
+{% extends "_layout.jinja2" %}
+{% block extra_breadcrumb %}
+ / <select style="width: auto;" onchange="window.location.href=this.value">
+{% for menu in iot.TECHNICAL_MENUS.sub_menus if menu.is_active %}
+    {% set menu_url = menu.url %}
+    <option value="{{ menu_url }}" {% if menu_url == request_path %}selected{% endif %}>
+        {{ menu.name }}
+    </option>
+    {% for sub_menu in menu.sub_menus if sub_menu.is_active %}
+        {% if request_path == sub_menu.url %}
+            <option selected>
+                &boxur;&HorizontalLine; {{ sub_menu.name }}
+            </option>
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+</select>
+{% endblock %}

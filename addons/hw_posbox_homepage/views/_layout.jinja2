@@ -1,10 +1,64 @@
+{% macro get_iot_documentation_url(iot_documentation_link) %}
+    {% set ODOO_DOCUMENTATION_IOT = 'https://www.odoo.com/documentation/17.0/applications/general/iot' %}
+    {{ ODOO_DOCUMENTATION_IOT ~ iot_documentation_link }}
+{% endmacro %}
+
+{% macro add_help(iot_documentation_link, help_message='') %}
+    <a class="float-end" href='{{ get_iot_documentation_url(iot_documentation_link) }}' target="_blank"><i class="fa fa-question-circle"></i> {{help_message}}</a>
+{% endmacro %}
+
+{% macro iot_table(infos_table, empty_text="No Information was found") %}
+    <table class="table_info">
+        {% for info_table in infos_table %}
+        <tr {{ "class=warn-tr" if info_table.is_warning else "" }}>
+            <th style="width: 30%;">
+                {% if info_table.name_icon %}
+                    <i class="fa fa-{{ info_table.name_icon }}"></i>
+                {% endif %}
+                {{ info_table.name }}
+                {% if info_table.iot_documentation_url %}
+                    {{ add_help(info_table.iot_documentation_url) }}
+                {% endif %}
+            </th>
+
+            {% set is_action_visible = info_table.action_url or info_table.action_iot_documentation_url %}
+
+            <td 
+            {% if not is_action_visible %}
+                colspan="2"
+            {% endif %}
+            >
+                {{ info_table.value | safe }}
+            </td>
+
+            {% if is_action_visible %}
+                {% set button_url=info_table.action_url %}
+                {% if info_table.action_iot_documentation_url %}
+                    {% set button_url=get_iot_documentation_url(info_table.action_iot_documentation_url) %}
+                {% endif %}
+                <td style="text-align: right; border:none">
+                    <a class='btn btn-sm' href="{{ button_url }}" {% if info_table.action_target %} target="{{ info_table.action_target }}"{% endif %}>
+                        {{ info_table.action_name }}
+                    </a>
+                </td>
+            {% endif %}
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="3" class="text-center"><i>{{ empty_text }}</i></td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endmacro %}
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="cache-control" content="no-cache" />
         <meta http-equiv="pragma" content="no-cache" />
-        <title>{{ title or "Odoo's IoT Box" }}</title>
+        <title>{{ title or ("Odoo " ~ "IoT Box" if iot.IS_BOX else "Virtual IoT") }}</title>
         <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+        <link rel="stylesheet" href="/web/static/src/libs/fontawesome/css/font-awesome.css">
         <style>
             body {
                 width: 600px;
@@ -31,6 +85,38 @@
             }
             .float-end {
                 float: right;
+            }
+            table.table_info {
+                width: 100%;
+                border-collapse: collapse;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            table.table_info tr {
+                border-bottom: 1px solid #f1f1f1;
+            }
+            table.table_info tr:last-child {
+                border-width: 0px;
+            }
+            table.table_info th {
+                padding: 8px;
+            }
+            table.table_info td {
+                padding: 8px;
+                border-left: 1px solid #f1f1f1;
+            }
+            table.table_info td:first-child {
+                border-left: 0;
+            }
+            .warn-tr {
+                color: #856404;
+                background-color: #fff3cd;
+            }
+            td.heading {
+                font-weight: bold;
+                vertical-align: top;
+                width: 30%;
+                text-align: left;
             }
             .btn {
                 display: inline-block;
@@ -131,16 +217,17 @@
         {% block head %}{% endblock %}
     </head>
     <body>
-        {%if breadcrumb %}
-            <div class="breadcrumb"><a href="/">Home</a> / <span>{{ breadcrumb }}</span></div>
+        {% if breadcrumb %}
+            <div class="breadcrumb"><a href="/">Home</a> / <span>{{ breadcrumb }}</span>{% block extra_breadcrumb %}{% endblock %}</div>
         {% endif %}
         <div class="container">
             {% block content %}{% endblock %}
             <p class="error-message text-red" style="text-align: right;" />
         </div>
         <div class="footer">
-            <a href='https://www.odoo.com/help'>Help</a>
-            <a href='https://www.odoo.com/documentation/17.0/applications/productivity/iot.html'>Documentation</a>
+            <a href='https://www.odoo.com/help'><i class="fa fa-life-ring" aria-hidden="true"></i> Help</a>
+            &nbsp; 
+            {{ add_help('.html', 'IoT Documentation') }}
         </div>
     </body>
 </html>

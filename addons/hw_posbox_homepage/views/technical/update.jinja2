@@ -1,5 +1,5 @@
-{% extends "layout.html" %}
-{% from "loading.html" import loading_block_ui %}
+{% extends "technical/_layout.jinja2" %}
+{% from "loading.jinja2" import loading_block_ui %}
 {% block head %}
     <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
     <script>
@@ -73,7 +73,7 @@
         However the preferred method to upgrade the IoTBox is to flash the sd-card with
         the <a href='https://nightly.odoo.com/master/iotbox/iotbox-latest.zip'>latest image</a>. The upgrade
         procedure is explained into to the
-        <a href='https://www.odoo.com/documentation/17.0/applications/productivity/iot.html'>IoTBox manual</a>
+        <a href='{{ get_iot_documentation_url("/config/updating_iot.html#flashing-the-sd-card-on-iot-box") }}'>IoTBox manual</a>
     </p>
     <p>
         To upgrade the IoTBox, click on the upgrade button. The upgrade will take a few minutes. <b>Do not reboot</b> the IoTBox during the upgrade.
