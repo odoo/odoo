@@ -4,6 +4,7 @@ import { loadBundle } from "@web/core/assets";
 import { attachComponent } from '@web/legacy/utils';
 
 export async function loadWysiwygFromTextarea(parent, textarea, options) {
+    debugger;
     var loading = textarea.nextElementSibling;
     if (loading && !loading.classList.contains('o_wysiwyg_loading')) {
         loading = null;

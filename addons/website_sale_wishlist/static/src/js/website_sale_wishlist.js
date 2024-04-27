@@ -24,7 +24,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      */
     init: function (parent) {
         this._super.apply(this, arguments);
-        this.wishlistProductIDs = JSON.parse(sessionStorage.getItem('website_sale_wishlist_product_ids') || '[]');
+        this.wishlistProductIDs = JSON.parse(JSON.stringify([sessionStorage.getItem('website_sale_wishlist_product_ids')]) || '[]');
     },
     /**
      * Gets the current wishlist items.
@@ -40,7 +40,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
             wishDef = await fetch('/shop/wishlist', {
                 count: 1,
             }).then(function (res) {
-                self.wishlistProductIDs = JSON.parse(res);
+                self.wishlistProductIDs = JSON.parse(JSON.stringify([res]));
                 sessionStorage.setItem('website_sale_wishlist_product_ids', res);
             });
 
@@ -85,10 +85,10 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         const self = this;
         let productID = el.dataset.productProductId;
         if (el.classList.contains('o_add_wishlist_dyn')) {
-            productID = parseInt(el.closest('.js_product').querySelector('.product_id:checked').value);;
+            productID = parseInt(el.closest('.js_product').querySelector('.product_id:checked').value);
         }
         const form = el.closest('form');
-        let templateId = form.querySelector('.product_template_id').value;
+        let templateId = form.querySelector('.product_template_id')?.value;
         // when adding from /shop instead of the product page, need another selector
         if (!templateId) {
             templateId = el.dataset.productTemplateId;
@@ -108,9 +108,9 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
                 return rpc('/shop/wishlist/add', {
                     product_id: productId,
                 }).then(function () {
-                    const navButton = this.el.querySelector('header .o_wsale_my_wish');
+                    const navButton = document.querySelector('header .o_wsale_my_wish');
                     self.wishlistProductIDs.push(productId);
-                    sessionStorage.setItem('website_sale_wishlist_product_ids', JSON.stringify(self.wishlistProductIDs));
+                    sessionStorage.setItem('website_sale_wishlist_product_ids', self.wishlistProductIDs);
                     self._updateWishlistView();
                     wSaleUtils.animateClone(navButton, el.closest('form'), 25, 40);
                     // It might happen that `onChangeVariant` is called at the same time as this function.
@@ -144,7 +144,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @private
      */
     _updateWishlistView: function () {
-        const wishButton = this.el.querySelector('.o_wsale_my_wish');
+        const wishButton = document.querySelector('.o_wsale_my_wish');
         if (wishButton && wishButton.classList.contains('o_wsale_my_wish_hide_empty')) {
             wishButton.classList.toggle('d-none', !this.wishlistProductIDs.length);
         }
@@ -156,7 +156,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @private
      */
     _removeWish: function (e, deferred_redirect) {
-        const tr = e.currentTarget.parents('tr');
+        const tr = e.currentTarget.closest('tr');
         const wish = tr.dataset.wishId;
         const product = tr.dataset.productId;
         const self = this;
@@ -166,7 +166,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         });
 
         this.wishlistProductIDs = this.wishlistProductIDs.filter((p) => p !== product);
-        sessionStorage.setItem('website_sale_wishlist_product_ids', JSON.stringify(this.wishlistProductIDs));
+        sessionStorage.setItem('website_sale_wishlist_product_ids', this.wishlistProductIDs);
         if (this.wishlistProductIDs.length === 0) {
             if (deferred_redirect) {
                 deferred_redirect.then(function () {
@@ -180,14 +180,14 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @private
      */
     _addOrMoveWish: function (e) {
-        const tr = e.currentTarget.parents('tr');
+        const tr = e.currentTarget.closest('tr');
         const product = tr.dataset.productId;
-        this.el.querySelector('.o_wsale_my_cart').classList.remove('d-none');
+        document.querySelector('.o_wsale_my_cart').classList.remove('d-none');
 
-        if (this.el.querySelector('#b2b_wish:checked')) {
-            return this._addToCart(product, tr.querySelector('.add_qty').value || 1);
+        if (document.querySelector('#b2b_wish:checked')) {
+            return this._addToCart(product, tr.querySelector('.add_qty')?.value || 1);
         } else {
-            var adding_deffered = this._addToCart(product, tr.querySelector('.add_qty').value || 1);
+            var adding_deffered = this._addToCart(product, tr.querySelector('.add_qty')?.value || 1);
             this._removeWish(e, adding_deffered);
             return adding_deffered;
         }
