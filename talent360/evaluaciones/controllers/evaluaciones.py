@@ -26,3 +26,27 @@ class EvaluacionesController(http.Controller):
         parametros = evaluacion.action_generar_datos_reporte_generico()
 
         return request.render("evaluaciones.encuestas_reporte", parametros)
+    
+    @http.route(
+        "/evaluacion/responder/<model('evaluacion'):evaluacion>", type="http", auth="user"
+    )
+    def responder_evaluacion_controller(self, evaluacion: Evaluacion):
+        """Método para desplegar el formulario de permitir al usuario responder una evaluación.
+        Este método verifica que el usuario tenga los permisos necesario, obtiene los datos
+        del modelo de evaluaciones y renderiza el formulario con esos datos.
+
+        :return: html renderizado del template con los datos del formulario
+        """
+
+        if not request.env.user.has_group(
+            "evaluaciones.evaluaciones_cliente_cr_group_user"
+        ):
+            raise AccessError("No tienes permitido acceder a este recurso.")
+        
+        evaluacion_id = evaluacion.id
+
+        # Obtén la evaluación basada en el ID
+        evaluacion = request.env['evaluacion'].browse(evaluacion_id)
+        
+        # Renderiza la plantilla con la evaluación
+        return request.render('evaluaciones.evaluacion_header', {'evaluacion': evaluacion})
