@@ -16,8 +16,6 @@ class Evaluacion(models.Model):
 
     _name = "evaluacion"
     _description = "Evaluacion de pesonal"
-    # _inherit = ["mail.thread"]
-
     nombre = fields.Char(required=True)
 
     tipo = fields.Selection(

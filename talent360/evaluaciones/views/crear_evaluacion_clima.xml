@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- CLIMA -->
+    <record id="evaluacion_clima_form" model="ir.ui.view">
+        <field name="name">evaluacion_clima.form</field>
+        <field name="model">evaluacion</field>
+        <field name="arch" type="xml">
+            <form string="Clima" create="false">
+                <sheet>
+                    <h1>
+                        <field name="nombre"/>
+                    </h1>
+                    <p>
+                        <field name="descripcion"/>
+                    </p>
+                    <group>
+                        <group>
+                            <field name="estado"/>
+                        </group>
+                        <notebook>
+                            <page string="Preguntas">
+                                <field name="pregunta_ids" readonly="1"/>
+                            </page>
+                            <page string="Asignados">
+                                <field name="usuario_ids"/>
+                            </page>
+                            <page string="Semaforización">
+                                <field name="piso_rojo" string="Piso Rojo" placeholder="Piso Rojo" class="o_input">
+                                </field>
+
+                            </page>
+                        </notebook>
+                    </group>
+
+                    <div>
+                        <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary"/>
+                    </div>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

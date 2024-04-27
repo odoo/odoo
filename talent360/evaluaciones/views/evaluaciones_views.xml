@@ -134,42 +134,6 @@
         </field>
     </record>
 
-    <!-- CLIMA -->
-    <record id="evaluacion_clima_form" model="ir.ui.view">
-        <field name="name">evaluacion.clima.form</field>
-        <field name="model">evaluacion</field>
-        <field name="arch" type="xml">
-            <form string="Clima" create="false">
-                <sheet>
-                    <h1>
-                        <field name="nombre"/>
-                    </h1>
-                    <p>
-                        <field name="descripcion"/>
-                    </p>
-                    <group>
-                        <group>
-                            <field name="estado"/>
-                        </group>
-                        <notebook>
-                            <page string="Preguntas">
-                                <field name="pregunta_ids" readonly="1"/>
-                            </page>
-                            <page string="Asignados">
-                                <field name="usuario_ids"/>
-                            </page>
-                        </notebook>
-                    </group>
-
-                    <div>
-                        <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary"/>
-                    </div>
-
-                </sheet>
-            </form>
-        </field>
-    </record>
-
     <!-- NOM035 -->
     <record id="evaluacion_nom035_form" model="ir.ui.view">
         <field name="name">evaluacion.nom035.form</field>
