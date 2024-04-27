@@ -103,11 +103,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Según la configuración del producto, se puede calcular de forma automática la cantidad enviada:\n"
-"- Manual: la cantidad se establece de forma manual en la línea\n"
-"- Analítica de gastos: la cantidad equivale a la suma de los gastos registrados\n"
-"- Hojas de horas: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
-"- Movimientos del inventario: la cantidad viene de las recolecciones confirmadas\n"
+"Según la configuración del producto, la cantidad enviada se puede calcular de forma automática con uno de los siguientes mecanismos:\n"
+"  - Manual: la cantidad se establece de forma manual en la línea\n"
+"  - Analítica de gastos: la cantidad equivale a la suma de los gastos registrados\n"
+"  - Hojas de horas: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
+"  - Movimientos del inventario: la cantidad viene de las recolecciones confirmadas\n"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -302,8 +302,8 @@ msgid ""
 "shortest."
 msgstr ""
 "Si entrega todos los productos a la vez, se programará la orden de entrega "
-"según el mayor plazo de entrega del producto. En caso contrario, se basará "
-"en el más corto."
+"según el mayor plazo de entrega del producto. En caso contrario, se tomará "
+"en cuenta el plazo más corto."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
