@@ -21,7 +21,7 @@ import contextlib
 import requests
 import secrets
 
-from odoo import _, http, service
+from odoo import _, http, release, service
 from odoo.tools.func import lazy_property
 from odoo.tools.misc import file_path
 from odoo.modules.module import get_resource_path
@@ -233,7 +233,7 @@ def get_certificate_status(is_first=True):
                                               "The HTTPS certificate was generated correctly")
 
 def get_img_name():
-    major, minor = get_version().split('.')
+    major, minor = get_version()[1:].split('.')
     return 'iotboxv%s_%s.zip' % (major, minor)
 
 def get_ip():
@@ -273,11 +273,29 @@ def get_odoo_server_url():
 def get_token():
     return read_file_first_line('token')
 
-def get_version():
+
+def get_commit_hash():
+    return subprocess.run(
+        ['git', '--work-tree=/home/pi/odoo/', '--git-dir=/home/pi/odoo/.git', 'rev-parse', '--short', 'HEAD'],
+        stdout=subprocess.PIPE,
+        check=True,
+    ).stdout.decode('ascii').strip()
+
+
+def get_version(detailed_version=False):
     if platform.system() == 'Linux':
-        return read_file_first_line('/var/odoo/iotbox_version')
+        image_version = read_file_first_line('/var/odoo/iotbox_version')
     elif platform.system() == 'Windows':
-        return 'W22_11'
+        # updated manually when big changes are made to the windows virtual IoT
+        image_version = '22.11'
+
+    version = platform.system()[0] + image_version
+    if detailed_version:
+        # Note: on windows IoT, the `release.version` finish with the build date
+        version += f"-{release.version}"
+        if platform.system() == 'Linux':
+            version += f'#{get_commit_hash()}'
+    return version
 
 def get_wifi_essid():
     wifi_options = []
