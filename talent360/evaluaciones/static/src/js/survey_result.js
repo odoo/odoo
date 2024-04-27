@@ -101,7 +101,6 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
      */
     start: function () {
         var self = this;
-
         return this._super.apply(this, arguments).then(function () {
             self.graphData = self.$el.data("graphData");
 
@@ -126,36 +125,12 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                         self.chartConfig = self._getPieChartConfig();
                         break;
                 }
-                window.addEventListener("afterprint", self._onAfterPrint.bind(self));
-                window.addEventListener("beforeprint", self._onBeforePrint.bind(self));
-                self.chart = self._loadChart();
             }
         });
     },
 
     willStart: async function () {
         await loadBundle("web.chartjs_lib");
-    },
-
-    // -------------------------------------------------------------------------
-    // Handlers
-    // -------------------------------------------------------------------------
-
-    /**
-     * Prepare chart for media print
-     * @private
-     */
-    _onBeforePrint: function () {
-        const printWidth = 630; // Value to fit any graphic into the width of an A4 portrait page
-        this.chart.resize(printWidth, Math.floor(printWidth / this.chart.aspectRatio));
-    },
-
-    /**
-     * Turn back chart to original size, for media screen
-     * @private
-     */
-    _onAfterPrint: function () {
-        this.chart.resize();
     },
 
     // -------------------------------------------------------------------------
@@ -266,7 +241,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
      * @private
      */
     _getPieChartConfig: function () {
-        var ans = {
+        return {
             type: 'pie',
             data: {
                 labels: this.labels,
@@ -282,8 +257,6 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 aspectRatio: 2,
             },
         };
-        console.log(ans);
-        return ans;
     },
 
     /**
@@ -295,9 +268,15 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         this.$el.css({position: 'relative'});
         var $canvas = this.$('canvas');
         var ctx = $canvas.get(0).getContext('2d');
-        return new Chart(ctx, this.chartConfig);
+        this.chart = new Chart(ctx, this.chartConfig);
     },
 
+    _reloadChart: function () {
+        if (this.chart !== undefined) {
+            this.chart.destroy();
+        }
+        this._loadChart();
+    }
 });
 
 publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
@@ -332,7 +311,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
             }); 
 
             if (allPromises.length !== 0) {
-                return Promise.all(allPromises).finally(seleccionarTab);
+                return Promise.all(allPromises).finally(() => self._attach_listener(self));
             } else {
                 return Promise.resolve();
             }
@@ -343,53 +322,30 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * Call print dialog
      * @private
      */
-    _onPrintResultsClick: function () {
-        // Force a reflow on each chart
-        this.charts.forEach(function(chart) {
-            chart.chart.resize();
-        });
-        
-        // Print the page
+    _onPrintResultsClick: function () {  
         window.print();
     },
+    
+     _attach_listener: function (self){
+        console.log("attatching listeners")
+
+        for (let chart of self.charts) {
+            chart._reloadChart();
+        }
+
+        const tabEls = document.querySelectorAll('a[data-bs-toggle="tab"][data-chart="1"]');
+        tabEls.forEach(function (tabEl) {
+          tabEl.addEventListener("shown.bs.tab", function (event) {
+            const index = Array.from(tabEls).indexOf(event.target);
+            self.charts[index]._reloadChart();
+          });
+        });
+    }
 });
 
 
-function seleccionarTab(){
-    var tabs = $('.nav-tabs');
-    
-    tabs.each(function() {
-        var children = $(this).find('a');
-        var default_tab = undefined;
-
-        children.each(function() {
-            var child = $(this);
-            var done = false;
-
-            if (done) {
-                return;
-            }
-
-            if (default_tab) {
-                child.tab('show');
-                done = true
-            }
-
-            if (child.hasClass('default')) {
-                default_tab = child;
-            }
-        });
-
-        if (default_tab === undefined) {
-            default_tab = $(children[0]);
-        }
-
-        
-        default_tab.tab('show');
 
 
-    });
-}
 
 export default {
     resultWidget: publicWidget.registry.SurveyResultWidget,
