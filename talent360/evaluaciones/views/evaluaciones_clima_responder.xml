@@ -124,7 +124,7 @@
                     <t t-if="p.tipo == 'open_question'" t-call="evaluaciones.question_text_box">
                         <t t-set="question" t-value="p"/>
                     </t>
-                    <t t-if="p.tipo == 'multiple_choice'" t-call="evaluaciones.question_simple_choice">
+                    <t t-if="p.tipo == 'multiple_choice'" t-call="evaluaciones.question_matrix">
                         <t t-set="question" t-value="p"/>
                     </t>
                 </div>
@@ -134,6 +134,7 @@
         </div>
     </template>
 
+    <!-- Open question -->
     <template id="question_text_box" name="Preguntas: pregunta abierta">
         <div class="o_survey_comment_container p-0">
             <textarea class="form-control o_survey_question_text_box bg-transparent text-dark rounded-0 p-0" rows="3"
@@ -142,6 +143,7 @@
         </div>
     </template>
 
+    <!-- Simple choice question -->
     <template id="question_simple_choice" name="Question: simple choice">
         <div class="row g-2 o_survey_answer_wrapper o_survey_form_choice"
             t-att-data-name="question.id"
@@ -156,12 +158,11 @@
                         <t t-call="evaluaciones.survey_selection_key">
                             <t t-set="selection_key_class" t-value="'position-relative o_survey_radio_btn float-start d-flex'"/>
                         </t>
-                        <i class="fa fa-check-circle float-end mt-1 ms-1 position-relative"/>
-                        <i class="fa fa-circle-thin float-end mt-1 ms-1 position-relative"/>
+                        <!-- <i class="fa fa-check-circle float-end mt-1 ms-1 position-relative"/>
+                        <i class="fa fa-circle-thin float-end mt-1 ms-1 position-relative"/> -->
                         <input t-att-id="str(question.id) + '_' + str(label.id)" type="radio" t-att-value='label.id'
-                            t-attf-class="o_survey_form_choice_item invisible position-absolute #{'o_survey_form_choice_item_selected' if answer_selected else ''}"
+                            t-attf-class="o_survey_form_choice_item position-absolute #{'o_survey_form_choice_item_selected' if answer_selected else ''}"
                             t-att-name='question.id'
-                            t-att-checked="'checked' if answer_selected else None"
                             t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
                         <span class="ms-2 text-break" t-field='label.opcion_texto'/>
                     </label>
@@ -170,11 +171,33 @@
         </div>
     </template>
 
-    <template id="survey_selection_key">
-        <div t-if="useKeySelection" t-att-class="'o_survey_choice_key bg-white rounded %s' % selection_key_class">
-             <span class="o_survey_key text-center position-absolute bg-white rounded-start py-0 ps-2"><span class="text-primary text-center text-center w-100 position-relative">Key</span></span>
-             <span class="text-primary text-center w-100 position-relative" t-esc="letters[item_idx]"/>
-        </div>
+    <!-- Matrix question -->
+    <template id="question_matrix" name="Question: matrix">
+        <table class="table table-borderless o_survey_question_matrix text-white text-center mb-0"
+               t-att-data-name="question.id"
+               t-att-data-question-type="question.tipo"
+               t-att-data-sub-questions="question.pregunta_texto">
+            <thead>
+                <tr>
+                    <th class="fw-normal" t-foreach="question.opcion_ids" t-as="col_label"><span t-field="col_label.opcion_texto" /></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- For matrix, we have an extra check because we have rows * columns total options -->
+                <tr class="bg-white text-white" t-foreach="question" t-as="row_label" t-att-id="row_label">
+                    <t t-foreach="question.opcion_ids" t-as="col_label">
+                        <td t-att-class="'o_survey_matrix_btn text-primary position-relative %s'% ('o_survey_selected' if answer else '')">
+                            <input t-att-type="'radio'"
+                                t-att-id="'radio_%s_%s' % (question.id, row_label.id)"
+                                t-att-name="'%s_%s' % (question.id, row_label.id)" t-att-value='col_label.id'
+                                t-att-data-row-id="row_label.id"
+                                t-att-data-col-id="col_label"
+                                class="o_survey_form_choice_item"/>
+                        </td>
+                    </t>
+                </tr>
+            </tbody>
+        </table>
     </template>
 </data>
 </odoo>
