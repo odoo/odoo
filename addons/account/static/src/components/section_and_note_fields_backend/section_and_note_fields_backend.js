@@ -58,7 +58,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     getSectionColumns(columns) {
-        const sectionCols = columns.filter((col) => col.widget === "handle" || col.type === "field" && col.name === this.titleField);
+        const sectionCols = this.allColumns.filter((col) => col.widget === "handle" || col.type === "field" && col.name === this.titleField);
         return sectionCols.map((col) => {
             if (col.name === this.titleField) {
                 return { ...col, colspan: columns.length - sectionCols.length + 1 };
