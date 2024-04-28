@@ -3,8 +3,8 @@
 # 	* sale
 # 
 # Translators:
-# Thi Huong Nguyen, 2024
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-27 04:55+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -761,7 +761,7 @@ msgstr "<strong>Báo giá này đã hết hạn! </strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This quotation has been cancelled.</strong>"
-msgstr ""
+msgstr "<strong>Báo giá này đã bị huỷ.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1460,7 +1460,7 @@ msgstr "Tạo ngày"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Draft"
-msgstr ""
+msgstr "Tạo bản nháp"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -1496,7 +1496,7 @@ msgstr "Tạo một báo giá mới, bước đầu tiên trong hoạt động b
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Create invoice(s)"
-msgstr ""
+msgstr "Tạo (các) hoá đơn"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -1701,6 +1701,8 @@ msgid ""
 "Default period during which the quote is valid and can still be accepted by "
 "the customer. The default can be changed per order or template."
 msgstr ""
+"Khoảng thời gian mặc định mà báo giá có hiệu lực và khách hàng vẫn có thể "
+"chấp nhận. Cài đặt mặc định có thể được thay đổi theo đơn hàng hoặc mẫu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
@@ -1755,6 +1757,8 @@ msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
 "lead time of the order lines."
 msgstr ""
+"Ngày giao hàng bạn có thể hứa với khách hàng, được tính từ thời gian giao "
+"hàng tối thiểu của các dòng đơn hàng."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -1892,13 +1896,13 @@ msgstr "Khoản trả trước"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment (Cancelled)"
-msgstr ""
+msgstr "Khoản trả trước (Bị huỷ)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment (ref: %(reference)s on %(date)s)"
-msgstr ""
+msgstr "Khoản trả trước (mã: %(reference)s vào %(date)s)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
@@ -3653,6 +3657,8 @@ msgid ""
 "Request a payment to confirm orders, in full (100%) or partial. The default "
 "can be changed per order or template."
 msgstr ""
+"Yêu cầu thanh toán để xác nhận đơn hàng, toàn bộ (100%) hoặc một phần. Cài "
+"đặt mặc định có thể được thay đổi theo đơn hàng hoặc mẫu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3660,6 +3666,8 @@ msgid ""
 "Request customers to sign quotations to validate orders. The default can be "
 "changed per order or template."
 msgstr ""
+"Yêu cầu khách hàng ký báo giá để xác nhận đơn hàng. Cài đặt mặc định có thể "
+"được thay đổi theo đơn hàng hoặc mẫu."
 
 #. module: sale
 #. odoo-python
@@ -4384,6 +4392,8 @@ msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "cancelling them or archiving the team instead."
 msgstr ""
+"Bộ phận %(team_name)s có %(sale_order_count)s đơn bán hàng đang mở. Cân nhắc"
+" hủy hoặc lưu trữ bộ phận này. "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

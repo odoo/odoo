@@ -462,14 +462,10 @@ msgstr "Peppol 有效性"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-msgid "Peppol document has been received successfully"
-msgstr "已成功收到 Peppol 文件"
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-msgid "Peppol document has been received successfully. Sender endpoint: %s"
-msgstr "已成功收到 Peppol 文件。发送端点：%s"
+msgid ""
+"Peppol document (UUID: %(uuid)s) has been received successfully.\n"
+"(Sender endpoint: %(endpoint)s)"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_eas
@@ -557,7 +553,6 @@ msgstr "请填写 EAS 代码和参与者 ID 代码。"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
-#, python-format
 msgid "Please install the phonenumbers library."
 msgstr "请安装 phonenumbers 库."
 

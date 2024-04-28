@@ -664,7 +664,7 @@ msgstr "<strong>Phòng ban và Nhân viên</strong>"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "A cancelled leave cannot be modified."
-msgstr ""
+msgstr "Không thể điều chỉnh một đơn nghỉ phép đã bị huỷ."
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
@@ -830,7 +830,7 @@ msgstr "Nhân viên đang hoạt động"
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 msgid "Active but on leave"
-msgstr ""
+msgstr "Hoạt động nhưng nghỉ phép"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_ids
@@ -1361,7 +1361,7 @@ msgstr "Đã hủy"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Cancelled Time Off"
-msgstr ""
+msgstr "Đơn nghỉ phép đã bị hủy"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time
@@ -2290,7 +2290,7 @@ msgstr "Trạng thái phân bổ mới không chính xác"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "Information for multiple employees cannot be displayed"
-msgstr ""
+msgstr "Không thể hiển thị thông tin của nhiều nhân viên"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_is_follower
@@ -2781,6 +2781,8 @@ msgid ""
 "Non-visible allocations can still be selected when taking a leave, but will "
 "simply not be displayed on the leave dashboard."
 msgstr ""
+"Bạn vẫn có thể chọn phân bổ không hiển thị khi nghỉ phép, nhưng phân bổ này "
+"sẽ không được hiển thị trên trang chủ nghỉ phép."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2969,7 +2971,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a manager can modify a canceled leave."
-msgstr ""
+msgstr "Chỉ quản lý mới có thể điều chỉnh đơn nghỉ phép đã bị hủy."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3442,7 +3444,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Start Accruing"
-msgstr ""
+msgstr "Bắt đầu tích luỹ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_from
@@ -3594,7 +3596,7 @@ msgstr "Thời gian phải lớn hơn 0"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_departure_wizard.py:0
 msgid "The employee no longer works in the company"
-msgstr ""
+msgstr "Nhân viên này không còn làm việc tại công ty"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_type_value
@@ -3695,7 +3697,7 @@ msgstr "The time off has been automatically approved"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "The time off has been cancelled: %s"
-msgstr ""
+msgstr "Đơn nghỉ phép đã bị hủy: %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
@@ -3767,7 +3769,7 @@ msgstr "This modification is not allowed in the current state."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "This time off cannot be cancelled."
-msgstr ""
+msgstr "Không thể hủy đơn nghỉ phép này."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -4271,6 +4273,8 @@ msgid ""
 "Validity End date has been updated because Employee no longer works in the "
 "company"
 msgstr ""
+"Ngày hết hiệu lực đã được cập nhật vì Nhân viên không còn làm việc tại công "
+"ty"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -4353,6 +4357,10 @@ msgid ""
 "to zero), All accrued time carried over to the next period; or Carryover "
 "with a maximum)."
 msgstr ""
+"Khi đến Thời điểm chuyển, theo cài đặt Kế hoạch, hãy chọn điều bạn muốn xảy "
+"ra với thời gian nghỉ phép chưa sử dụng: Không (thời gian sẽ được đặt lại về"
+" 0), Tất cả thời gian tích lũy được chuyển sang giai đoạn tiếp theo; hoặc "
+"Chuyển sang năm sau với số ngày tối đa)."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time
@@ -4360,6 +4368,8 @@ msgid ""
 "When the field is checked the accrued time will be capped at the specified "
 "amount of time."
 msgstr ""
+"Khi chọn trường này, thì thời gian tích lũy sẽ được giới hạn trong khoảng "
+"thời gian đã xác định."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__other
@@ -4582,7 +4592,7 @@ msgstr "Đơn nghỉ phép của bạn"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
 msgid "Your time off has been cancelled."
-msgstr ""
+msgstr "Đơn nghỉ phép của bạn đã bị hủy."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
