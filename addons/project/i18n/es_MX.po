@@ -5,10 +5,10 @@
 # Translators:
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Lucia Pacheco, 2023
-# Fernanda Alvarez, 2024
+# Lucia Pacheco, 2022
 # Martin Trigaux, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:05+0000\n"
 "PO-Revision-Date: 2022-06-17 09:53+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -271,9 +271,9 @@ msgid ""
 "    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \n"
 "    or # <b>mentions</b> to reach an entire team."
 msgstr ""
-"<b>Registre notas</b> para la comunicación interna <i>(no se notificará a las personas que sigan esta tarea \n"
-"a menos que los etiquete específicamente)</i>. Utilice <b>las menciones</b> @ para enviar un mensaje a un compañero \n"
-"o <b>las menciones</b> # para contactar a todo el equipo."
+"<b>Registre notas</b> de comunicación interna <i>(las personas que sigan esta tarea no recibirán notificaciones \n"
+" relacionadas con la nota que está registrando a menos que las etiquete)</i>. Utilice @ <b>menciones</b> para contactar a algún compañero \n"
+"o # <b>menciones</b> para que todo el equipo reciba el mensaje."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -634,8 +634,8 @@ msgid ""
 "<span>You cannot delete a project containing tasks. You can either archive "
 "it or first delete all of its tasks.</span>"
 msgstr ""
-"<span>No puede eliminar un proyecto que contenga tareas. Puede archivarlo o "
-"eliminar primero todas sus tareas.</span>"
+"<span>No puede eliminar un proyecto con tareas. Puede archivarlas o eliminar"
+" todas esas tareas primero.</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -712,7 +712,7 @@ msgid ""
 "A personal stage cannot be linked to a project because it is only visible to"
 " its corresponding user."
 msgstr ""
-"No se puede vincular una etapa personal a un proyecto porque solo es visible"
+"Una etapa personal no se puede vincular a un proyecto porque solo es visible"
 " para su usuario correspondiente."
 
 #. module: project
@@ -826,7 +826,8 @@ msgstr "Agregue contactos para compartir el proyecto..."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
 msgid "Add extra content to display in the email"
-msgstr "Agregue contenido adicional para mostrar en el correo electrónico"
+msgstr ""
+"Agregue contenido adicional para que aparezca en el correo electrónico"
 
 #. module: project
 #. openerp-web
@@ -945,8 +946,8 @@ msgid ""
 "Analyze how quickly your team is completing your project's tasks and check "
 "if everything is going according to plan."
 msgstr ""
-"Analice la rapidez con la que su equipo está terminando las tareas de su "
-"proyecto y compruebe que todo avance según lo previsto."
+"Analice la rapidez con la que su equipo termina las tareas de su proyecto y "
+"compruebe que todo avance según lo previsto."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -1127,12 +1128,12 @@ msgstr "Autor"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Auto-generate tasks for regular activities"
-msgstr "Genere tareas de forma automática para actividades frecuentes"
+msgstr "Genere tareas de forma automática para las actividades frecuentes."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr "Estado kanban automático"
+msgstr "Estado de kanban automático"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__auto_validation_kanban_state
@@ -1344,10 +1345,10 @@ msgid ""
 " who print the t-shirt. Organize priorities amongst orders using the %s "
 "icon. %s"
 msgstr ""
-"Comuníquese con los clientes desde la tarea mediante el enlace de correo "
-"electrónico. Adjunte diseños de logos a la tarea, de modo que la información"
-" fluya desde los diseñadores hasta los trabajadores que imprimen la camisa. "
-"Organice las prioridades entre las órdenes utilizando el icono %s. %s"
+"Comuníquese con los clientes desde la tarea mediante la puerta de enlace de "
+"correo electrónico. Adjunte los diseños a la tarea, así la información "
+"llegará a los diseñadores y los trabajadores que imprimen la camisa. "
+"Organice las prioridades entre las órdenes con el icono %s. %s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -1719,20 +1720,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
-"Personas que podrán ver este proyecto y sus tareas.\n"
+"Las personas que podrán ver este proyecto y sus tareas.\n"
 "\n"
 "- Usuarios internos invitados: al seguir un proyecto, los usuarios internos tendrán acceso a todas las tareas. De lo contrario, solo tendrán acceso a las tareas específicas que están siguiendo.\n"
-"Un usuario con el nivel de derecho de acceso de administrador del proyecto puede seguir teniendo acceso a este proyecto y a sus tareas, aunque no forme parte de los seguidores.\n"
+"Un usuario con permisos de acceso de administrador del proyecto puede seguir teniendo acceso a este proyecto y a sus tareas, aunque no pertenezca a los seguidores.\n"
 "\n"
 "- Todos los usuarios internos: todos los usuarios internos tienen acceso al proyecto y a todas sus tareas.\n"
 "\n"
-"- Usuarios del portal invitados y todos los usuarios internos: todos los usuarios internos tienen acceso al proyecto y a todas sus tareas.\n"
-"Al seguir un proyecto, los usuarios del portal tendrán acceso a todas sus tareas. De lo contrario, solo tendrán acceso a las tareas específicas que están siguiendo.\n"
+"- Usuarios invitados del portal y todos los usuarios internos: todos los usuarios internos tienen acceso al proyecto y a todas sus tareas.\n"
+"Al seguir un proyecto, los usuarios del portal tendrán acceso a todas sus tareas. De lo contrario, solo tendrán acceso a las tareas que están siguiendo.\n"
 "\n"
-"Cuando se comparte un proyecto en modo de solo lectura, se dirigirá al usuario del portal a su portal. De esta manera, puede ver las tareas, pero no editarlas..\n"
-"Cuando se comparte un proyecto en modo de edición, se dirigirá al usuario del portal a las vistas de kanban y lista de las tareas. El usuario podrá modificar un número determinado de campos en las tareas.\n"
+"Al compartir un proyecto en modo de solo lectura, el usuario del portal será redirigido a su portal. Podrá ver las tareas, pero no editarlas.\n"
+"Al compartir un proyecto en modo de edición, el usuario del portal será redirigido a las vistas de kanban y a la lista de tareas. El usuario podrá modificar un número específico de campos en las tareas.\n"
 "\n"
-"En cualquier caso, un usuario interno sin derechos de acceso al proyecto puede acceder a una tarea, siempre y cuando cuente con la URL correspondiente (y que forme parte de los seguidores si el proyecto es privado)."
+"En cualquier caso, un usuario interno sin permisos de acceso al proyecto puede acceder a una tarea, siempre y cuando cuente con la URL correspondiente (y que forme parte de los seguidores si el proyecto es privado)."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -2149,8 +2150,8 @@ msgid ""
 "Get a snapshot of the status of your project and share its progress with key"
 " stakeholders."
 msgstr ""
-"Obtenga un panorama del estado de su proyecto y comparta su progreso con las"
-" partes interesadas fundamentales."
+"Obtenga información general del estado de su proyecto y comparta su progreso"
+" con todos los involucrados."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2667,7 +2668,7 @@ msgstr "Última actualización de color"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_status
 msgid "Last Update Status"
-msgstr "Último estado de actualización"
+msgstr "Estado de la última actualización"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
@@ -2754,8 +2755,7 @@ msgid ""
 "Let's go back to the <b>kanban view</b> to have an overview of your next "
 "tasks."
 msgstr ""
-"Regresemos a su <b>vista kanban</b> para tener una vista general de sus "
-"próximas tareas."
+"Regresemos a la <b>vista de kanban</b> para consultar sus próximas tareas."
 
 #. module: project
 #. openerp-web
@@ -3671,7 +3671,7 @@ msgstr "Proyecto compartido"
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_action
 #: model:ir.model,name:project.model_project_share_wizard
 msgid "Project Sharing"
-msgstr "Compartir el proyecto"
+msgstr "Compartir proyectos"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -4131,7 +4131,7 @@ msgstr "Usuario responsable"
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_sms_error
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Error de entrega del SMS"
+msgstr "Error en el envío del SMS"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -4289,8 +4289,7 @@ msgstr "Establecer estado"
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
 msgstr ""
-"Establecer una plantilla de correo electrónico para la valoración de las "
-"etapas"
+"Establezca una plantilla de correo electrónico de calificación en las etapas"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -4507,7 +4506,7 @@ msgstr "Número de subtareas"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
-msgstr "Subtarea"
+msgstr "Subtareas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_planned_hours
@@ -4629,7 +4628,7 @@ msgstr "Cambios en la dependencia de las tareas"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
 msgid "Task Logs"
-msgstr "Registros de tareas"
+msgstr "Registros de la tarea"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_rating
@@ -4836,8 +4835,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Use el seudónimo del correo electrónico, por ejemplo, 'jobs' si desea "
-"recibir correos electrónicos para <jobs@example.odoo.com>"
+"El nombre del seudónimo de correo electrónico. Por ejemplo, \"trabajos\" si "
+"desea recibir correos electrónicos en <trabajos@ejemplo.odoo.com>."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_user_id
@@ -5069,7 +5068,7 @@ msgstr "Actividades de hoy"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
-msgstr "Lleve el seguimiento de la satisfacción del cliente en las tareas"
+msgstr "Lleve seguimiento de la satisfacción del cliente en las tareas."
 
 #. module: project
 #. openerp-web
@@ -5078,38 +5077,39 @@ msgstr "Lleve el seguimiento de la satisfacción del cliente en las tareas"
 #, python-format
 msgid "Track major progress points that must be reached to achieve success."
 msgstr ""
-"Lleve el seguimiento de los principales avances que deben alcanzarse para "
+"Lleve seguimiento de los principales avances que deben alcanzarse para "
 "lograr el éxito."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track the costs and revenues linked to your projects"
-msgstr "Siga los costos e ingresos vinculados a sus proyectos"
+msgstr ""
+"Lleve seguimiento de los costos e ingresos vinculados a sus proyectos."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track the progress of your projects"
-msgstr "Siga el progreso de sus proyectos"
+msgstr "Lleve seguimiento del progreso de sus proyectos."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid ""
 "Track the progress of your projects from their creation to their closing."
 msgstr ""
-"Lleve el seguimiento del progreso de sus proyectos desde su creación hasta "
-"el cierre."
+"Lleve seguimiento del progreso de sus proyectos desde su creación hasta el "
+"cierre."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Track the progress of your tasks from their creation to their closing."
 msgstr ""
-"Lleve el seguimiento del progreso de sus tareas desde su creación hasta el "
+"Lleve seguimiento del progreso de sus tareas desde su creación hasta el "
 "cierre."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr "Lleve el seguimiento del tiempo que se utiliza en proyectos y tareas"
+msgstr "Lleve seguimiento del tiempo que se utiliza en proyectos y tareas."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__tue
@@ -5458,8 +5458,8 @@ msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
 "first delete all of its tasks."
 msgstr ""
-"No puede eliminar un proyecto que contenga tareas. Puede archivarlo o "
-"primero eliminar todas sus tareas."
+"No puede eliminar un proyecto con tareas. Puede archivarlas o eliminar todas"
+" esas tareas primero."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5542,17 +5542,17 @@ msgstr "personas asignadas"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "e.g. New Design"
-msgstr "Por ejemplo, nuevo diseño"
+msgstr "Por ejemplo, Nuevo diseño"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
-msgstr "Por ejemplo, fiesta en la oficina"
+msgstr "Por ejemplo, Fiesta en la oficina"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. office-party"
-msgstr "Por ejemplo, fiesta en la oficina"
+msgstr "Por ejemplo, fiesta-oficina"
 
 #. module: project
 #: code:addons/project/models/project.py:0
