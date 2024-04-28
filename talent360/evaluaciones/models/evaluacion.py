@@ -64,6 +64,8 @@ class Evaluacion(models.Model):
         string="Asignados",
     )
 
+    contestada = fields.Boolean(string="Contestada", default=False)
+
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
         """
@@ -319,3 +321,18 @@ class Evaluacion(models.Model):
             parametros["preguntas"].append(datos_pregunta)
 
         return parametros
+
+    def action_get_evaluaciones(self, evaluacion_id):
+        """
+        Obtiene las preguntas asociadas a la evaluación.
+
+        Este método obtiene las preguntas asociadas a la evaluación actual y las devuelve en un diccionario.
+
+        :return: Un diccionario con las preguntas asociadas a la evaluación.
+
+        """
+
+        return {
+            "evaluacion": self,
+            "pregunta": self.pregunta_ids,
+        }

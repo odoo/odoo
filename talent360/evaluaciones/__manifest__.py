@@ -28,12 +28,6 @@
             "web/static/lib/bootstrap/scss/_variables.scss",
             "evaluaciones/static/src/scss/survey_templates_form.scss",
             "evaluaciones/static/src/scss/survey_templates_results.scss",
-            "evaluaciones/static/src/js/survey_breadcrumb.js",
-            "evaluaciones/static/src/js/survey_form.js",
-            "evaluaciones/static/src/js/survey_image_zoomer.js",
-            "evaluaciones/static/src/js/survey_preload_image_mixin.js",
-            "evaluaciones/static/src/js/survey_quick_access.js",
-            "evaluaciones/static/src/js/survey_timer.js",
         ],
     },
 }

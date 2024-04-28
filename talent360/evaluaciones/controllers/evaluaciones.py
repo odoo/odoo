@@ -28,7 +28,7 @@ class EvaluacionesController(http.Controller):
         return request.render("evaluaciones.encuestas_reporte", parametros)
     
     @http.route(
-        "/evaluacion/responder/<model('evaluacion'):evaluacion>", type="http", auth="user"
+        "/evaluacion/responder/<model('evaluacion'):evaluacion>", type="http", auth="user", website=True
     )
     def responder_evaluacion_controller(self, evaluacion: Evaluacion):
         """Método para desplegar el formulario de permitir al usuario responder una evaluación.
@@ -46,7 +46,7 @@ class EvaluacionesController(http.Controller):
         evaluacion_id = evaluacion.id
 
         # Obtén la evaluación basada en el ID
-        evaluacion = request.env['evaluacion'].browse(evaluacion_id)
+        parametros = evaluacion.action_get_evaluaciones(evaluacion_id)
         
         # Renderiza la plantilla con la evaluación
-        return request.render('evaluaciones.evaluacion_header', {'evaluacion': evaluacion})
+        return request.render('evaluaciones.evaluaciones_responder', parametros)
