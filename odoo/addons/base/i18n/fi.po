@@ -18688,7 +18688,7 @@ msgstr "Ecuador"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec_reports_ats
 msgid "Ecuador - ATS Report"
-msgstr ""
+msgstr "Ecuador - ATS-raportti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec
@@ -19674,7 +19674,7 @@ msgstr "Färsaaret"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_it_edi_website_sale
 msgid "Features for Italian eCommerce eInvoicing"
-msgstr ""
+msgstr "Italian verkkokaupan verkkolaskutuksen ominaisuudet"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__state
@@ -22626,7 +22626,7 @@ msgstr "Virheellinen verkkotunnusmuoto %(expr)s kohdassa %(use)s"
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Invalid domain: %s"
-msgstr ""
+msgstr "Virheellinen verkkotunnus: %s"
 
 #. module: base
 #. odoo-python
@@ -22960,7 +22960,7 @@ msgstr "Italia - Sähköinen laskutus (ennakonpidätys)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_website_sale
 msgid "Italy eCommerce eInvoicing"
-msgstr ""
+msgstr "Italia sähköinen kaupankäynti sähköinen laskutus"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_J
@@ -23773,7 +23773,7 @@ msgstr "Linkkimoduuli pos_hr:n ja pos_restaurantin välillä"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_pos_sale
 msgid "Link module between pos_sale and l10n_be"
-msgstr ""
+msgstr "Linkkimoduuli pos_sale ja l10n_be välillä"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale_loyalty
@@ -23816,7 +23816,7 @@ msgstr "Liettua - Kirjanpitoraportit"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_intrastat
 msgid "Lithuanian Intrastat Declaration"
-msgstr ""
+msgstr "Liettuan Intrastat-ilmoitus"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_saft
@@ -31702,6 +31702,12 @@ msgid "Scheduled Actions Triggers"
 msgstr "Aikataulutetut toiminnot laukaisijat"
 
 #. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid "Scheduled action disabled"
+msgstr "Ajastettu toiminto poistettu käytöstä"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
 msgid "Scheduler User"
 msgstr "Aikatauluttaja-käyttäjä"
@@ -32937,7 +32943,7 @@ msgstr "Taulukkolaskennan kojelauta työaikakirjanpitoa varten"
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_gstr_spreadsheet
 #: model:ir.module.module,summary:base.module_l10n_in_reports_gstr_spreadsheet
 msgid "Spreadsheet document for GSTR1 Report"
-msgstr ""
+msgstr "Taulukkolaskenta GSTR1-raporttia varten"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__sql
@@ -34712,6 +34718,9 @@ msgid ""
 "         Please install the new \"UPS Shipping\" module and uninstall this "
 "one as soon as possible. This integration will stop working in 2024."
 msgstr ""
+"Tämä on UPS:n vanha integrointi, jota ei enää tueta. Asenna uusi \"UPS "
+"Shipping\" -moduuli ja poista tämä mahdollisimman pian. Tämä integraatio "
+"lakkaa toimimasta vuonna 2024."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no
@@ -35027,6 +35036,16 @@ msgstr ""
 #, python-format
 msgid "Those modules cannot be uninstalled: %s"
 msgstr "Näitä moduuleja ei voi poistaa: %s"
+
+#. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid ""
+"This scheduled action has been disabled because its interval number is not a"
+" strictly positive value."
+msgstr ""
+"Tämä ajastettu toiminto on poistettu käytöstä, koska sen aikaväli ei ole "
+"tiukasti positiivinen arvo."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -37354,6 +37373,8 @@ msgid ""
 "You cannot archive the language in which Odoo was setup as it is used by "
 "automated processes."
 msgstr ""
+"Et voi arkistoida kieltä, jolla Odoo on asennettu, koska sitä käytetään "
+"automaattisissa prosesseissa."
 
 #. module: base
 #. odoo-python
@@ -37450,6 +37471,17 @@ msgstr ""
 #, python-format
 msgid "You cannot delete the %s record."
 msgstr "Et voi poistaa %s-tietuetta."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
+msgstr ""
+"Et voi poistaa admin-käyttäjää, koska sitä käytetään useissa paikoissa "
+"(kuten tietoturvamäärityksissä,...). Arkistoi se sen sijaan."
 
 #. module: base
 #. odoo-python
@@ -38018,7 +38050,7 @@ msgstr "json"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_pos_sale
 msgid "l10n_be_pos_sale"
-msgstr ""
+msgstr "l10n_be_pos_sale"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_stock_ddt
