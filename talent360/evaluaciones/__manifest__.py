@@ -22,6 +22,7 @@
             ("include", "web.chartjs_lib"),
             "evaluaciones/static/src/js/survey_print.js",
             "evaluaciones/static/src/js/survey_result.js",
+            "evaluaciones/static/src/js/handle_response_clima.js",
             ("include", "web._assets_helpers"),
             ("include", "web._assets_frontend_helpers"),
             "web/static/src/scss/pre_variables.scss",

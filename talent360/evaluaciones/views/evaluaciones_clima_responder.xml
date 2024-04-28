@@ -65,6 +65,8 @@
             </div>
         </form>
 
+        <t t-call="evaluaciones.evaluacion_responder_form_start"/>
+
         <!-- Modal used to display error message, i.c.o. ajax error -->
         <div role="dialog" class="modal fade" id="MasterTabErrorModal" >
             <div class="modal-dialog">
@@ -84,7 +86,7 @@
         <template id="evaluacion_responder_form_start" name="Evaluacion: comenzar">
             <div class="wrap o_survey_start">
                 <div class='mb32'>
-                    <button type="submit" value="start" class="btn btn-primary btn-lg">
+                    <button onclick="handleResponseClima()" value="start" class="btn btn-primary btn-lg">
                         Enviar
                     </button>
                 </div>
@@ -129,8 +131,6 @@
                     </t>
                 </div>
             </t>
-
-            <t t-call="evaluaciones.evaluacion_responder_form_start"/>
         </div>
     </template>
 
@@ -138,7 +138,8 @@
     <template id="question_text_box" name="Preguntas: pregunta abierta">
         <div class="o_survey_comment_container p-0">
             <textarea class="form-control o_survey_question_text_box bg-transparent text-dark rounded-0 p-0" rows="3"
-                    t-att-name="'question_' + str(question.id)" t-att-placeholder="'Responde aqui...'"
+                    t-att-name="'question_' + str(question.id)" 
+                    t-att-placeholder="'Responde aqui...'"
                     t-att-data-question-type="question.tipo"></textarea>
         </div>
     </template>
@@ -188,8 +189,8 @@
                     <t t-foreach="question.opcion_ids" t-as="col_label">
                         <td t-att-class="'o_survey_matrix_btn text-primary position-relative %s'% ('o_survey_selected' if answer else '')">
                             <input t-att-type="'radio'"
-                                t-att-id="'radio_%s_%s' % (question.id, row_label.id)"
-                                t-att-name="'%s_%s' % (question.id, row_label.id)" t-att-value='col_label.id'
+                                t-att-name="'%s_%s' % (question.id, row_label.id)" 
+                                t-att-value="'%s-%s' % (question.id, col_label.id)"
                                 t-att-data-row-id="row_label.id"
                                 t-att-data-col-id="col_label"
                                 class="o_survey_form_choice_item"/>
