@@ -241,7 +241,7 @@ class AccountBalance(models.Model):
                 for move_line in reconciled_move_lines:
                     payment = move_line.payment_id
                     payment_data = {
-                        'bill_number': move_line.payment_id,
+                        'payment': move_line.payment_id,
                         'id': move_line.id,
                         'amount': move_line.credit,
                         'date': move_line.date,
