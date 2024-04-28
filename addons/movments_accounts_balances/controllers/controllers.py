@@ -230,15 +230,15 @@ class AccountBalance(models.Model):
             )
 
             # Search for move lines linked to this bill that are not yet reconciled
-            move_lines_to_reconcile = self.env['account.move.line'].search([
+            reconciled_move_lines = self.env['account.move.line'].search([
                 ('move_id', 'in', bill_ids),
                 ('reconciled', '=', True),
             ])
 
             # Payments are linked to move lines, so you can reconcile them through move lines
-            if move_lines_to_reconcile:
+            if reconciled_move_lines:
 
-                for move_line in move_lines_to_reconcile:
+                for move_line in reconciled_move_lines:
                     payment = move_line.payment_id
                     payment_data = {
                         'bill_number': move_line.payment_id,
