@@ -161,7 +161,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "%s: Can't split: quantities done can't be above demand"
-msgstr ""
+msgstr "%s: Không thể tách: số lượng hoàn tất không thể vượt quá nhu cầu"
 
 #. module: stock
 #. odoo-python
@@ -170,6 +170,8 @@ msgid ""
 "%s: Nothing to split, all demand is done. For split you need at least one "
 "line not fully fulfilled"
 msgstr ""
+"%s: Không có gì để tách, mọi nhu cầu đã hoàn tất. Để tách, bạn cần ít nhất "
+"một dòng chưa hoàn thành"
 
 #. module: stock
 #. odoo-python
@@ -178,6 +180,8 @@ msgid ""
 "%s: Nothing to split. Fill the quantities you want in a new transfer in the "
 "done quantities"
 msgstr ""
+"%s: Không có gì để tách. Điền số lượng bạn muốn trong điều chuyển mới vào số"
+" lượng hoàn tất"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
@@ -441,6 +445,8 @@ msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
 msgstr ""
+"<br>Sản phẩm sẽ được chuyển đến <b>%(destination)s</b>, <br/> như được chỉ "
+"định từ đích đến của <b>%(operation)s</b>."
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -1542,13 +1548,13 @@ msgstr "Đã hủy"
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Cannot move an empty package"
-msgstr ""
+msgstr "Không thể di chuyển một kiện hàng rỗng"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Cannot remove the location of a non empty package"
-msgstr ""
+msgstr "Không thể xóa vị trí của một kiện hàng rỗng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__capacity_ids
@@ -1786,7 +1792,7 @@ msgstr "Tính toán phí giao hàng và giao bằng Shiprocket"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Starshipit"
-msgstr ""
+msgstr "Tính toán phí vận chuyển và vận chuyển bằng Starshipit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2806,7 +2812,7 @@ msgstr "Vị trí đích"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__location_dest_from_rule
 msgid "Destination location origin from rule"
-msgstr ""
+msgstr "Vị trí đích xuất phát từ quy tắc"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__route_ids
@@ -3070,7 +3076,7 @@ msgstr "Email gửi tới khách hàng khi hoàn tất đơn hàng."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Empty Locations"
-msgstr ""
+msgstr "Vị trí trống"
 
 #. module: stock
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
@@ -3197,18 +3203,18 @@ msgstr "Nhập trước xuất trước (FIFO)"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Lot Number"
-msgstr ""
+msgstr "Số lô đầu tiên"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial
 msgid "First SN/Lot"
-msgstr ""
+msgstr "Số lô/sê-ri đầu tiên"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Serial Number"
-msgstr ""
+msgstr "Số sê-ri đầu tiên"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
@@ -3464,13 +3470,13 @@ msgstr "Tạo"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Lot numbers"
-msgstr ""
+msgstr "Tạo số lô"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Serial numbers"
-msgstr ""
+msgstr "Tạo số sê-ri"
 
 #. module: stock
 #. odoo-javascript
@@ -3938,7 +3944,7 @@ msgstr "Nhập lô"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Serials"
-msgstr ""
+msgstr "Nhập sê-ri"
 
 #. module: stock
 #. odoo-javascript
@@ -3965,7 +3971,7 @@ msgstr "Loại"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
 msgid "In internal locations"
-msgstr ""
+msgstr "Trong vị trí nội bộ"
 
 #. module: stock
 #. odoo-javascript
@@ -4039,7 +4045,7 @@ msgstr "Trung chuyển giữ các kho hàng"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_dest_id
 msgid "Intermediate Location"
-msgstr ""
+msgstr "Vị trí trung gian"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.int_picking
@@ -4259,7 +4265,7 @@ msgstr "Tồn kho tại ngày"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
 msgid "Is Empty"
-msgstr ""
+msgstr "Trống"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_is_follower
@@ -4571,7 +4577,7 @@ msgstr "Hoạt động chậm trễ"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Availability"
-msgstr ""
+msgstr "Có hàng muộn"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
@@ -4771,7 +4777,7 @@ msgstr "Thuộc tính lô"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Lot numbers"
-msgstr ""
+msgstr "Số lô"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
@@ -5466,7 +5472,7 @@ msgstr "Số lượng số sê-ri"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial_count
 msgid "Number of SN/Lots"
-msgstr ""
+msgstr "Số lượng lô/sê-ri"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_has_error_counter
@@ -5982,7 +5988,7 @@ msgstr "Sử dụng kiện hàng"
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Package manually relocated"
-msgstr ""
+msgstr "Kiện hàng được di dời thủ công"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__valid_sscc
@@ -6820,7 +6826,7 @@ msgstr "Số lượng hiện có"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Quantity Received"
-msgstr ""
+msgstr "Số lượng đã nhận"
 
 #. module: stock
 #. odoo-python
@@ -6919,7 +6925,7 @@ msgstr "Phải thiết lập số lượng hoặc số lượng dự trữ."
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Quantity per Lot"
-msgstr ""
+msgstr "Số lượng trên mỗi lô"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_positive_quantity
@@ -7729,7 +7735,7 @@ msgstr "Tìm kiếm phế phẩm"
 #: code:addons/stock/models/stock_move.py:0
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Search not supported without a value."
-msgstr ""
+msgstr "Không hỗ trợ tìm kiếm nếu không có giá trị."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
@@ -7897,7 +7903,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Serial numbers"
-msgstr ""
+msgstr "Số sê-ri"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -7925,6 +7931,13 @@ msgid ""
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting).\n"
 "Least Packages: FIFO but with the least number of packages possible when there are several packages containing the same product."
 msgstr ""
+"Thiết lập chiến lược xuất kho cụ thể được sử dụng cho danh mục sản phẩm này bất kể vị trí nguồn.\n"
+"\n"
+"FIFO: sản phẩm/lô hàng nhập kho trước sẽ được xuất kho trước.\n"
+"LIFO: sản phẩm/lô được nhập kho sau cùng sẽ được xuất kho trước.\n"
+"Vị trí gần nhất: sản phẩm/lô hàng gần vị trí mục tiêu nhất sẽ được xuất kho trước.\n"
+"FEFO: sản phẩm/lô có ngày loại bỏ gần nhất sẽ được xuất kho trước (tính khả dụng của phương pháp này tùy thuộc vào cài đặt \"Ngày hết hạn\").\n"
+"Ít kiện hàng nhất: FIFO nhưng sử dụng ít kiện hàng nhất có thể khi có nhiều kiện hàng chứa cùng một loại sản phẩm."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8238,7 +8251,7 @@ msgstr "Sản phẩm được gắn sao"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_starshipit
 msgid "Starshipit Connector"
-msgstr ""
+msgstr "Kết nối Starshipit"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -8592,6 +8605,8 @@ msgid ""
 "The %s location is required by the Inventory app and cannot be deleted, but "
 "you can archive it."
 msgstr ""
+"Ứng dụng Tồn kho yêu cầu vị trí %s nên không thể xóa vị trí này, nhưng bạn "
+"có thể lưu trữ nó."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__auto
@@ -8634,6 +8649,8 @@ msgid ""
 "The combination of serial number and product must be unique across a company and no company defined.\n"
 "Following combination contains duplicates:\n"
 msgstr ""
+"Sự kết hợp giữa số sê-ri và sản phẩm trong một công ty không được phép trùng lặp và không có công ty nào được xác định.\n"
+"Kết hợp sau chứa các nội dung bị trùng:\n"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
@@ -8712,11 +8729,13 @@ msgid ""
 "operation is part of a chain of operations targeting the destination "
 "location."
 msgstr ""
+"Hoạt động này đưa sản phẩm đến vị trí trung gian. Nhưng hoạt động này là một"
+" phần của chuỗi hoạt động hướng tới vị trí đích."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 msgid "The operation takes and suggests products from this location."
-msgstr ""
+msgstr "Hoạt động lấy và đề xuất sản phẩm từ vị trí này."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -8734,7 +8753,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "The operations brings product to this location"
-msgstr ""
+msgstr "Hoạt động đưa sản phẩm đến vị trí này"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__package_id
@@ -8756,6 +8775,8 @@ msgid ""
 "The procurement quantity will be rounded up to a multiple of this field "
 "quantity. If it is 0, it is not rounded."
 msgstr ""
+"Số lượng thu mua sẽ được làm tròn thành bội số của trường này. Nếu bằng 0, "
+"thì sẽ không được làm tròn."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -8792,7 +8813,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "The quantity per lot should always be a positive value."
-msgstr ""
+msgstr "Số lượng trên mỗi lô phải luôn có giá trị dương."
 
 #. module: stock
 #. odoo-python
@@ -8809,7 +8830,7 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
 "The search does not support the %(operator)s operator or %(value)s value."
-msgstr ""
+msgstr "Tìm kiếm không hỗ trợ toán tử %(operator)s hoặc giá trị %(value)s."
 
 #. module: stock
 #. odoo-python
@@ -8953,12 +8974,8 @@ msgstr ""
 msgid ""
 "This is the default destination location when you create a picking manually "
 "with this operation type. It is possible however to change it or that the "
-"routes put another location. If it is empty, it will check for the customer "
-"location on the partner. "
+"routes put another location."
 msgstr ""
-"Đây là vị trí đích mặc định khi bạn tạo thủ công một phiếu lấy hàng với loại"
-" hoạt động này. Tuy nhiên, có thể thay đổi nó hoặc các tuyến cung ứng có một"
-" vị trí khác. Nếu trống, vị trí khách hàng theo đối tác sẽ được lựa chọn."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_return_id
@@ -8974,13 +8991,8 @@ msgstr ""
 msgid ""
 "This is the default source location when you create a picking manually with "
 "this operation type. It is possible however to change it or that the routes "
-"put another location. If it is empty, it will check for the supplier "
-"location on the partner. "
+"put another location."
 msgstr ""
-"Đây là vị trí nguồn mặc định khi bạn tạo thủ công một phiếu lấy hàng với "
-"loại hoạt động này. Tuy nhiên, có thể thay đổi nó hoặc các tuyến cung ứng có"
-" một vị trí khác. Nếu trống, vị trí nhà cung cấp theo đối tác sẽ được lựa "
-"chọn."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -9487,7 +9499,7 @@ msgstr "Kích hoạt thủ công"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_scrap__should_replenish
 msgid "Trigger replenishment for scrapped products"
-msgstr ""
+msgstr "Kích hoạt bổ sung cho phế phẩm"
 
 #. module: stock
 #. odoo-javascript
@@ -9543,7 +9555,7 @@ msgstr "Ngừng chỉ định"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "Unavailable Serial numbers. Please correct the serial numbers encoded:"
-msgstr ""
+msgstr "Số sê-ri không có sẵn. Vui lòng sửa các số sê-ri đã nhập:"
 
 #. module: stock
 #. odoo-javascript
@@ -10128,6 +10140,8 @@ msgid ""
 "When set to True the destination location of the stock.move will be the "
 "rule.Otherwise, it takes it from the picking type."
 msgstr ""
+"Khi được đặt thành True, vị trí đích của stock.move sẽ là quy tắc. Nếu "
+"không, thông tin sẽ được lấy từ kiểu lấy hàng."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -10145,6 +10159,9 @@ msgid ""
 " Odoo generates a procurement to bring the forecasted quantity above of this"
 " Min Quantity."
 msgstr ""
+"Khi tồn kho ảo xuống dưới số lượng tối thiểu được chỉ định cho trường này, "
+"Odoo sẽ tạo một phiếu thu mua để đưa số lượng dự báo lên cao hơn Số lượng "
+"tối thiểu này."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -10153,6 +10170,9 @@ msgid ""
 "procurement to bring the forecasted quantity up to (or near to) the Max "
 "Quantity specified for this field (or to Min Quantity, whichever is bigger)."
 msgstr ""
+"Khi tồn kho ảo xuống dưới số lượng tối thiểu, Odoo sẽ tạo một phiếu thu mua "
+"để đưa số lượng dự báo lên đến (hoặc gần đến) Số lượng tối đa được chỉ định "
+"cho trường này (hoặc đến Số lượng tối thiểu, tùy theo giá trị nào lớn hơn)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
@@ -10451,6 +10471,8 @@ msgid ""
 "You cannot change the company of a lot/serial number currently in a location"
 " belonging to another company."
 msgstr ""
+"Bạn không thể thay đổi công ty của số sê-ri/lô hiện đang ở vị trí thuộc về "
+"công ty khác."
 
 #. module: stock
 #. odoo-python

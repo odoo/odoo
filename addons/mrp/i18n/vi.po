@@ -377,7 +377,7 @@ msgstr "<span>Hành động</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span>Generate BOM</span>"
-msgstr ""
+msgstr "<span>Tạo ĐMNL</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -954,13 +954,13 @@ msgstr "Chi tiết ĐMNL của ĐMNL được đề cập"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to BoM"
-msgstr ""
+msgstr "Quay lại ĐMNL"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Production"
-msgstr ""
+msgstr "Quay lại sản xuất"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder_line
@@ -1012,7 +1012,7 @@ msgstr "Dựa trên"
 #: model:ir.actions.act_window,name:mrp.action_mrp_batch_produce
 #: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__production_text
 msgid "Batch Production"
-msgstr ""
+msgstr "Sản xuất hàng loạt"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom
@@ -1405,7 +1405,7 @@ msgstr "Nguyên liệu của LSX nháp"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__component_separator
 msgid "Component separator"
-msgstr ""
+msgstr "Phân tách nguyên liệu"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_raw_ids
@@ -1423,7 +1423,7 @@ msgstr "Tình trạng còn hàng của nguyên liệu"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Components Available"
-msgstr ""
+msgstr "Nguyên liệu có sẵn"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_src_id
@@ -2199,7 +2199,7 @@ msgstr "Thời lượng dự kiến (phút)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__production_text_help
 msgid "Explanation for batch production"
-msgstr ""
+msgstr "Giải thích về sản xuất hàng loạt"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__datas
@@ -2230,7 +2230,7 @@ msgstr "Bộ lọc"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_final_id
 msgid "Final Location from procurement"
-msgstr ""
+msgstr "Vị trí cuối cùng từ đơn thu mua"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__done
@@ -2276,7 +2276,7 @@ msgstr "Vị trí thành phẩm"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__lot_name
 msgid "First Lot/SN"
-msgstr ""
+msgstr "Số lô/sê-ri đầu tiên"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__consumption
@@ -2741,7 +2741,7 @@ msgstr "Dịch chuyển tồn kho mà bạn phải quét số lô tại công đ
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_delayed
 msgid "Is Delayed"
-msgstr ""
+msgstr "Bị hoãn"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_is_follower
@@ -2929,7 +2929,7 @@ msgstr "Hoạt động chậm trễ"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Late Availability"
-msgstr ""
+msgstr "Có hàng muộn"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -3015,17 +3015,17 @@ msgstr "Lý do hao hụt"
 #. odoo-python
 #: code:addons/mrp/wizard/mrp_batch_produce.py:0
 msgid "Lot %s does not exist."
-msgstr ""
+msgstr "Lô %s không tồn tại."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__lots_quantity_separator
 msgid "Lot quantity separator"
-msgstr ""
+msgstr "Phân tách số lượng lô"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__lots_separator
 msgid "Lot separator"
-msgstr ""
+msgstr "Phân tách lô"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -3108,7 +3108,7 @@ msgstr "Báo cáo tổng quan ĐMNL"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "MO Pending"
-msgstr ""
+msgstr "LSX đang chờ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reservation_state
@@ -4063,13 +4063,13 @@ msgstr "Vui lòng đặt số sê-ri đầu tiên hoặc số thứ tự mặc �
 #. odoo-python
 #: code:addons/mrp/wizard/mrp_batch_produce.py:0
 msgid "Please specify the first serial number you would like to use."
-msgstr ""
+msgstr "Vui lòng chỉ định số sê-ri đầu tiên bạn muốn sử dụng."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/wizard/mrp_batch_produce.py:0
 msgid "Please specify the serial number you would like to use."
-msgstr ""
+msgstr "Vui lòng chỉ định số sê-ri bạn muốn sử dụng."
 
 #. module: mrp
 #. odoo-python
@@ -4121,7 +4121,7 @@ msgstr "Trước sản xuất"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_batch_produce_form
 msgid "Prepare MO"
-msgstr ""
+msgstr "Chuẩn bị LSX"
 
 #. module: mrp
 #. odoo-javascript
@@ -4203,7 +4203,7 @@ msgstr "Sản xuất tất cả"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_batch_produce
 msgid "Produce a batch of production order"
-msgstr ""
+msgstr "Tiến hành sản xuất một loạt LSX"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
@@ -4813,7 +4813,7 @@ msgstr "Ngày theo kế hoạch"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Scheduled End"
-msgstr ""
+msgstr "Ngày kết thúc đã lên lịch"
 
 #. module: mrp
 #. odoo-python
@@ -5556,7 +5556,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
 msgid "The total should be equal to the quantity to produce."
-msgstr ""
+msgstr "Tổng số phải bằng số lượng cần sản xuất."
 
 #. module: mrp
 #. odoo-python
@@ -6591,7 +6591,7 @@ msgstr "URL bảng công tác"
 msgid ""
 "Write one line per finished product to produce, with serial numbers as "
 "follows:\n"
-msgstr ""
+msgstr "Viết một dòng cho mỗi thành phẩm cần sản xuất, với số sê-ri như sau:\n"
 
 #. module: mrp
 #. odoo-python

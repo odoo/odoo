@@ -803,7 +803,7 @@ msgid ""
 msgstr ""
 "<span class=\"badge rounded-pill text-bg-warning\">\n"
 "                                    <i class=\"fa fa-fw fa-remove\" aria-label=\"キャンセル済\" title=\"Cancelled\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> キャンセル済</span>\n"
+"                                    <span class=\"d-none d-md-inline\"> 取消済</span>\n"
 "                                </span>"
 
 #. module: account
@@ -2585,7 +2585,7 @@ msgstr "分析勘定"
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "分析用配分"
+msgstr "分析分配"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_distribution_model
@@ -2625,7 +2625,7 @@ msgstr "分析計画の適用範囲"
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_plan_menu
 msgid "Analytic Plans"
-msgstr "分析プラン"
+msgstr "分析計画"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_precision
@@ -3592,7 +3592,7 @@ msgstr "現金差損"
 #: model:account.account,name:account.1_cash_discount_gain
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid "Cash Discount Gain"
-msgstr "現金値引益"
+msgstr "現金割引益"
 
 #. module: account
 #. odoo-python
@@ -3600,22 +3600,22 @@ msgstr "現金値引益"
 #: model:account.account,name:account.1_cash_discount_loss
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid "Cash Discount Loss"
-msgstr "現金値引損"
+msgstr "現金割引損"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__early_pay_discount_computation
 msgid "Cash Discount Tax Reduction"
-msgstr "現金値引の税減額"
+msgstr "現金割引の税減額"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_gain_account_id
 msgid "Cash Discount Write-Off Gain Account"
-msgstr "現金値引益償却口座"
+msgstr "現金割引評価益勘定"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_loss_account_id
 msgid "Cash Discount Write-Off Loss Account"
-msgstr "現金値引損償却口座"
+msgstr "現金割引評価損勘定"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -4132,7 +4132,7 @@ msgstr "接続"
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_bank_account
 msgid "Connect your financial accounts in seconds."
-msgstr "金融口座に瞬時に接続"
+msgstr "金融口座に即時接続"
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner
@@ -4409,7 +4409,7 @@ msgstr "新規の販売可能なプロダクトを作成します。"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier
 msgid "Create a new supplier in your address book"
-msgstr "アドレス帳に新しいサプライヤを作成します。"
+msgstr "アドレス帳に新しいサ仕入先を作成します。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_tax_form
@@ -5450,7 +5450,7 @@ msgstr "方向指示サイン"
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__disabled
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Disabled"
-msgstr "無効にします"
+msgstr "無効"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9810,7 +9810,7 @@ msgstr "Odooで顧客に関連したあらゆる活動を簡単に追跡でき�
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier
 msgid "Odoo helps you easily track all activities related to a supplier."
-msgstr "Odooでサプライヤに関連したあらゆる活動を簡単に追跡できます。"
+msgstr "Odooで仕入先に関連したあらゆる活動を簡単に追跡できます。"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__off
@@ -12143,7 +12143,7 @@ msgid ""
 "create new customer invoice or Sales order if we select this product, it "
 "will automatically take this as an analytic account)"
 msgstr ""
-"分析配信の対象となるプロダクトを選択します（例：新規顧客請求書または販売オーダを作成する場合、このプロダクトを選択すると、自動的に分析アカウントとして扱われます）。"
+"分析分配の対象となるプロダクトを選択します（例：新規顧客請求書または販売オーダを作成する場合、このプロダクトを選択すると、自動的に分析勘定として扱われます）。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12927,7 +12927,7 @@ msgstr "適しジャーナル"
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__partner_supplier_rank
 #: model:ir.model.fields,field_description:account.field_res_users__supplier_rank
 msgid "Supplier Rank"
-msgstr "サプライヤランク"
+msgstr "仕入先ランク"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_id
@@ -13469,6 +13469,15 @@ msgid ""
 "The Payment Term must have at least one percent line and the sum of the "
 "percent must be 100%."
 msgstr "支払条件には、少なくとも1つ以上の％の行があり、％の合計が100％である必要があります。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"The Syscohada chart template shouldn't be selected directly. Instead, you "
+"should directly select the chart template related to your country."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -14471,7 +14480,7 @@ msgstr ""
 msgid ""
 "This analytic distribution will apply to all financial accounts sharing the "
 "prefix specified."
-msgstr "この分析分布は、指定されたプレフィックスを共有するすべての勘定科目に適用されます。"
+msgstr "この分析分配は、指定されたプレフィックスを共有するすべての勘定科目に適用されます。"
 
 #. module: account
 #. odoo-python
@@ -15992,7 +16001,7 @@ msgstr "選択した仕訳項目に支払う金額が残っていないため、
 msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
-msgstr ""
+msgstr "インバウンド仕訳とアウトバウンド仕訳の支払いを同時に登録することはできません。"
 
 #. module: account
 #. odoo-python

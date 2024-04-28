@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Larissa Manderfeld, 2024
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -130,7 +130,7 @@ msgstr "Actualizaciones de %(name)s"
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "%(partner_name)s's Tasks"
-msgstr ""
+msgstr "Tareas de %(partner_name)s"
 
 #. module: project
 #. odoo-python
@@ -402,6 +402,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Apreciable <t t-out=\"object.partner_id.name or 'cliente'\">Brandon Freeman</t>,<br><br>\n"
+"    Gracias por contactarnos, también agradecemos su interés en nuestros productos y servicios.<br>\n"
+"    Nuestro equipo está revisando su consulta y responderá a su correo electrónico lo antes posible.<br>\n"
+"    Coméntenos si tiene dudas o preguntas, estamos aquí para ayudarle.<br><br>\n"
+"    Agradecemos su paciencia.<br>\n"
+"    Saludos,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -727,6 +740,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Progress Report\", \"Stand-up Meeting\", ...)"
 msgstr ""
+"Los planes de actividad se utilizan para asignar una lista de actividades con unos pocos clics\n"
+"                    (p. ej. \"Informe de progreso\", \"Reunión semanal\",...)"
 
 #. module: project
 #. odoo-javascript
@@ -770,7 +785,7 @@ msgstr "Agregar contenido adicional para mostrar en el correo electrónico"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add the contacts you would like to share the project with..."
-msgstr ""
+msgstr "Agregue los contactos con los que desea compartir el proyecto..."
 
 #. module: project
 #. odoo-javascript
@@ -1109,6 +1124,9 @@ msgid ""
 "Automatically send an email to customers when a task reaches a specific "
 "stage in a project by setting this template on that stage"
 msgstr ""
+"Envíe automáticamente un correo electrónico a los clientes cuando una tarea "
+"llegue a una etapa específica en un proyecto. Configure una esta plantilla "
+"en esa etapa."
 
 #. module: project
 #. odoo-javascript
@@ -1132,7 +1150,7 @@ msgstr "Calificación promedio (%)"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating (1-5)"
-msgstr ""
+msgstr "Calificación promedio (1-5)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1321,7 +1339,7 @@ msgstr "Tareas cerradas"
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__is_closed
 msgid "Closed state"
-msgstr ""
+msgstr "Estado cerrado"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__closed
@@ -1503,7 +1521,7 @@ msgstr "Crear un proyecto"
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_project_task_plan
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_task_plan
 msgid "Create a Task Activity Plan"
-msgstr ""
+msgstr "Crear un plan de actividades para tareas"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
@@ -1603,7 +1621,7 @@ msgstr "Moneda"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__current_user_same_company_partner
 msgid "Current User Same Company Partner"
-msgstr ""
+msgstr "Usuario actual, mismo contacto de la empresa"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -2144,6 +2162,9 @@ msgid ""
 "project with them. Collaborators will have the ability to edit tasks, send "
 "messages, and access the Kanban view of tasks."
 msgstr ""
+"Comparta el proyecto con todas las partes interesadas para que la "
+"colaboración sea fácil y eficiente. Los colaboradores podrán editar tareas, "
+"enviar mensajes y acceder a la vista de kanban de las tareas."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project
@@ -2280,6 +2301,10 @@ msgid ""
 "tasks of the project are not included). To grant access to tasks to a portal"
 " user, add them as followers for these tasks."
 msgstr ""
+"Agregue a los usuarios del portal como seguidores (las tareas del proyecto "
+"no están incluidas) para proporcionarles acceso al proyecto. Para "
+"proporcionarle acceso a las tareas a un usuario del portal deberá agregarlo "
+"como seguidor de esas tareas."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
@@ -2684,7 +2709,7 @@ msgstr "Mes anterior"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_value
 msgid "Last Rating (1-5)"
-msgstr ""
+msgstr "Última calificación (1-5)"
 
 #. module: project
 #. odoo-python
@@ -2892,19 +2917,19 @@ msgstr "Marcar como hecho"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as incomplete"
-msgstr ""
+msgstr "Marcar como incompleto"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as reached"
-msgstr ""
+msgstr "Marcar como alcanzado"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Mark the task as <b>Cancelled</b>"
-msgstr ""
+msgstr "Marque la tarea como <b>cancelada</b>"
 
 #. module: project
 #. odoo-javascript
@@ -3221,7 +3246,7 @@ msgstr "No se encontraron tipos de actividad, ¡creemos uno!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
 msgid "No collaborators found. Let's invite them!"
-msgstr ""
+msgstr "No se encontraron colaboradores. ¡Invitémoslos!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -3506,7 +3531,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 msgid "Partner's Tasks"
-msgstr ""
+msgstr "Tareas del contacto"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -3535,6 +3560,17 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"Las personas que podrán ver este proyecto y sus tareas.\n"
+"\n"
+"- Usuarios internos invitados: al seguir un proyecto, los usuarios internos tendrán acceso a todas las tareas. De lo contrario, solo tendrán acceso a las tareas específicas que están siguiendo. Un usuario con permiso de acceso de administrador en el proyecto aún puede acceder al proyecto y a sus tareas, incluso si no es parte de los seguidores.\n"
+"\n"
+"- Todos los usuarios internos: todos los usuarios internos pueden acceder al proyecto y a todas sus tareas.\n"
+"\n"
+"- Usuarios del portal invitados y todos los usuarios internos: todos los usuarios internos pueden acceder al proyecto y a todas sus tareas. Al seguir un proyecto, los usuarios del portal solo tendrán acceso a las tareas específicas que estén siguiendo.\n"
+"\n"
+"Al compartir un proyecto en modo de solo lectura, el usuario del portal será redirigido a su portal y podrá ver las tareas que está siguiendo, pero no editarlas. Al compartir un proyecto en modo de edición, el usuario del portal será redirigido a las vistas de kanban y de lista de las tareas. Además, podrá modificar un número determinado de campos en las tareas.\n"
+"\n"
+"En cualquier caso, un usuario interno sin permisos de acceso al proyecto aún puede acceder a una tarea, siempre y cuando cuente con la URL correspondiente (y que forme parte de los seguidores si el proyecto es privado)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -3780,7 +3816,7 @@ msgstr "Compartir el proyecto"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
 msgid "Project Sharing Recurrence"
-msgstr ""
+msgstr "Recurrencia para compartir proyectos"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -4059,7 +4095,7 @@ msgstr "Fecha de solución"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__read
 msgid "Read-only"
-msgstr ""
+msgstr "Solo lectura"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4095,7 +4131,7 @@ msgstr "Recurrente"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 msgid "Recurrent tasks"
-msgstr ""
+msgstr "Tareas recurrentes"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
@@ -4354,7 +4390,7 @@ msgstr "Enviar por correo electrónico"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Send invitation"
-msgstr ""
+msgstr "Enviar invitación"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__sequence
@@ -4440,7 +4476,7 @@ msgstr "Compartir tarea"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
 msgid "Share a Project"
-msgstr ""
+msgstr "Compartir un proyecto"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -4480,6 +4516,10 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"Ordene las tareas de sus sprints por hitos, etiquetas o una propiedad "
+"específica. Al final de cada sprint, solo tienes que elegir las tareas "
+"restantes en su lista y moverlas todas al mismo tiempo al siguiente sprint "
+"al editar el hito, la etiqueta o propiedad."
 
 #. module: project
 #. odoo-javascript
@@ -4711,13 +4751,13 @@ msgstr "Tarea cancelada "
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Cancelled"
-msgstr ""
+msgstr "Tarea cancelada "
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Converted from To-Do"
-msgstr ""
+msgstr "Tarea convertida de actividades pendientes"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
@@ -4743,7 +4783,7 @@ msgstr "Dependencias de tareas"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "Task Description History"
-msgstr ""
+msgstr "Historial de descripción de la tarea"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_done
@@ -4819,7 +4859,7 @@ msgstr "Título de tarea..."
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Transferred from Project %s"
-msgstr ""
+msgstr "Tarea transferida desde el proyecto %s"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4836,7 +4876,7 @@ msgstr "Tarea aprobada"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_canceled
 msgid "Task cancelled"
-msgstr ""
+msgstr "Tarea cancelada "
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
@@ -5058,6 +5098,8 @@ msgid ""
 "The task description lacks any past content that could be restored at the "
 "moment."
 msgstr ""
+"La descripción de la tarea no incluye ningún contenido anterior que se pueda"
+" restaurar en este momento."
 
 #. module: project
 #. odoo-python
@@ -6117,6 +6159,8 @@ msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
 msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: encuesta "
+"de satisfacción"
 
 #. module: project
 #. odoo-javascript

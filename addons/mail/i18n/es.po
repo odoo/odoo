@@ -1806,6 +1806,9 @@ msgid ""
 "in your messages. Type ':' followed by the name of your shortcut (e.g. "
 ":hello) to use in your messages."
 msgstr ""
+"Respuesta predefinida que se sustituirá automáticamente por un contenido más"
+" largo en sus mensajes. Escriba ':' seguido del nombre de su acceso rápido "
+"(por ejemplo, :hola) para utilizarlo en sus mensajes."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
@@ -1820,6 +1823,10 @@ msgid ""
 "                    replaced directly in your message, so that you can still edit\n"
 "                    it before sending."
 msgstr ""
+"Las respuestas predefinidas le permiten insertar mensajes creados con anterioridad en\n"
+"                    sus mensajes al escribir <i>:acceso rápido</i>. El acceso rápido es\n"
+"                    reemplazado directamente en su mensaje para que pueda editarlo\n"
+"                    antes de enviarlo."
 
 #. module: mail
 #. odoo-python
@@ -2294,6 +2301,8 @@ msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel for this user. This includes: creating, joining, pinning"
 msgstr ""
+"Incluye la fecha y hora del último evento interesante que ocurrió en este "
+"canal para este usuario. Esto incluye: crear, unir y fijar."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__last_interest_dt
@@ -2301,11 +2310,13 @@ msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel. This updates itself when new message posted."
 msgstr ""
+"Incluye la fecha y hora del último evento interesante que ocurrió en este "
+"canal. Esto se actualiza cuando se publica un nuevo mensaje."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__unpin_dt
 msgid "Contains the date and time when the channel was unpinned by the user."
-msgstr ""
+msgstr "Incluye la fecha y hora en que el usuario desfijó el canal."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__content
@@ -2345,6 +2356,8 @@ msgid ""
 "Couldn't get your emails. Check out the error message below for more info:\n"
 "%s"
 msgstr ""
+"No pudimos obtener sus correos. Consulte el siguiente mensaje de error para obtener más información:\n"
+"%s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_bounce
@@ -2400,7 +2413,7 @@ msgstr "Crear una nueva respuesta predefinida"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
 msgid "Create an Activity Plan"
-msgstr ""
+msgstr "Crear un plan de actividad"
 
 #. module: mail
 #. odoo-python
@@ -9765,7 +9778,7 @@ msgstr "Desfijar mensaje"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt
 msgid "Unpin date"
-msgstr ""
+msgstr "Fecha en que se desfijó"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__message_unread_counter

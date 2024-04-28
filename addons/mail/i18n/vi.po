@@ -156,7 +156,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web_portal/chatter.js:0
 msgid "%(recipientCount)s more"
-msgstr ""
+msgstr "Thêm %(recipientCount)s "
 
 #. module: mail
 #. odoo-javascript
@@ -370,6 +370,8 @@ msgid ""
 "<button>Change your preferences</button> to receive new notifications in "
 "your inbox."
 msgstr ""
+"<button>Thay đổi tùy chọn của bạn</button> để nhận thông báo mới trong hộp "
+"thư đến."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_kanban
@@ -377,6 +379,8 @@ msgid ""
 "<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
 "title=\"Steps count\"/>"
 msgstr ""
+"<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Số bước\" "
+"title=\"Số bước\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -685,7 +689,7 @@ msgstr "Hoạt động"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Activities To Create"
-msgstr ""
+msgstr "Hoạt động cần tạo"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
@@ -723,7 +727,7 @@ msgstr "Hoạt động Mixin"
 #: model:ir.actions.act_window,name:mail.mail_activity_action
 #: model:ir.ui.menu,name:mail.menu_mail_activities
 msgid "Activity Overview"
-msgstr ""
+msgstr "Tổng quan hoạt động"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_plan
@@ -770,7 +774,7 @@ msgstr "Biểu tượng loại hoạt động"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
 msgid "Activity Type Name"
-msgstr ""
+msgstr "Tên loại hoạt động"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
@@ -790,6 +794,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Onboarding\", \"Prospect Follow-up\", \"Project Milestone Meeting\", ...)"
 msgstr ""
+"Kế hoạch hoạt động được sử dụng để chỉ định danh sách hoạt động chỉ trong vài cú nhấp chuột\n"
+"                 (VD: \"Quy trình nhập môn\", \"Follow-up khách hàng tiềm năng\", \"Họp mốc dự án\",...)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
@@ -942,7 +948,7 @@ msgstr "Tùy chọn nâng cao"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__after_plan_date
 msgid "After Plan Date"
-msgstr ""
+msgstr "Sau ngày kế hoạch"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_exception_decoration__warning
@@ -1475,7 +1481,7 @@ msgstr "Hình đại diện 512"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__avatar_cache_key
 msgid "Avatar Cache Key"
-msgstr ""
+msgstr "Mã khoá cache avatar"
 
 #. module: mail
 #. odoo-javascript
@@ -1535,7 +1541,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__before_plan_date
 msgid "Before Plan Date"
-msgstr ""
+msgstr "Trước ngày kế hoạch"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__is_blacklisted
@@ -1765,12 +1771,12 @@ msgstr "Đã hủy"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_canned_response
 msgid "Canned Response"
-msgstr ""
+msgstr "Câu trả lời soạn sẵn"
 
 #. module: mail
 #: model:res.groups,name:mail.group_mail_canned_response_admin
 msgid "Canned Response Administrator"
-msgstr ""
+msgstr "Quản trị viên câu trả lời soạn sẵn"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_canned_response_action
@@ -1786,7 +1792,7 @@ msgstr "Tìm kiếm câu trả lời soạn sẵn"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_form
 msgid "Canned response"
-msgstr ""
+msgstr "Câu trả lời soạn sẵn"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__source
@@ -1795,11 +1801,14 @@ msgid ""
 "in your messages. Type ':' followed by the name of your shortcut (e.g. "
 ":hello) to use in your messages."
 msgstr ""
+"Câu trả lời soạn sẵn sẽ tự động được thay thế bằng văn bản dài hơn trong "
+"phần nội dung của bạn. Nhập ':' rồi đến tên phím tắt (VD: :hello) để sử dụng"
+" trong phần nội dung."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "Canned responses"
-msgstr ""
+msgstr "Câu trả lời soạn sẵn"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
@@ -1809,6 +1818,10 @@ msgid ""
 "                    replaced directly in your message, so that you can still edit\n"
 "                    it before sending."
 msgstr ""
+"Câu trả lời soạn sẵn cho phép bạn chèn câu trả lời đã viết trước \n"
+"                trong nội dung bằng cách nhập <i>:shortcut</i>. Phím tắt được\n"
+"                thay thế trực tiếp trong nội dung, nên bạn vẫn có thể chỉnh sửa\n"
+"                nội dung trước khi gửi."
 
 #. module: mail
 #. odoo-python
@@ -2032,7 +2045,7 @@ msgstr "Đóng tìm kiếm"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/ptt_ad_banner.xml:0
 msgid "Close banner"
-msgstr ""
+msgstr "Đóng banner"
 
 #. module: mail
 #. odoo-javascript
@@ -2279,6 +2292,8 @@ msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel for this user. This includes: creating, joining, pinning"
 msgstr ""
+"Chứa ngày và giờ của sự kiện được quan tâm cuối cùng đã xảy ra trong kênh "
+"này dành cho người dùng này. Bao gồm: tạo, tham gia, ghim"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__last_interest_dt
@@ -2286,11 +2301,13 @@ msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel. This updates itself when new message posted."
 msgstr ""
+"Chứa ngày và giờ của sự kiện được quan tâm cuối cùng đã xảy ra trong kênh "
+"này. Tự cập nhật khi có tin nhắn mới được đăng."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__unpin_dt
 msgid "Contains the date and time when the channel was unpinned by the user."
-msgstr ""
+msgstr "Chứa ngày và giờ khi người dùng bỏ ghim kênh."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__content
@@ -2330,6 +2347,8 @@ msgid ""
 "Couldn't get your emails. Check out the error message below for more info:\n"
 "%s"
 msgstr ""
+"Không thể lấy email của bạn. Hãy xem thông báo lỗi dưới đây để biết thêm thông tin:\n"
+"%s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_bounce
@@ -2384,7 +2403,7 @@ msgstr "Create a new canned response"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
 msgid "Create an Activity Plan"
-msgstr ""
+msgstr "Tạo một kế hoạch hoạt động"
 
 #. module: mail
 #. odoo-python
@@ -2683,7 +2702,7 @@ msgstr "Tóm tắt mặc định"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
 msgid "Default Summary:"
-msgstr ""
+msgstr "Tóm tắt mặc định"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_user_id
@@ -2700,7 +2719,7 @@ msgstr "Giá trị Mặc định"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Default deadline for the activities..."
-msgstr ""
+msgstr "Thời hạn mặc định cho hoạt động..."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__default_from
@@ -2844,11 +2863,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
 msgid "Determines if the canned response can be edited by the current user"
 msgstr ""
+"Xác định xem người dùng hiện tại có thể chỉnh sửa câu trả lời soạn sẵn hay "
+"không"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_shared
 msgid "Determines if the canned_response is currently shared with other users"
 msgstr ""
+"Xác định xem canned_response hiện có được chia sẻ với người dùng khác hay "
+"không"
 
 #. module: mail
 #. odoo-javascript
@@ -3674,7 +3697,7 @@ msgstr "Yêu thích"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "Feedback:"
-msgstr ""
+msgstr "Phản hồi:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -4882,7 +4905,7 @@ msgstr "Là người theo dõi"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__is_hidden
 msgid "Is Hidden"
-msgstr ""
+msgstr "Bị ẩn"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_member
@@ -5189,7 +5212,7 @@ msgstr "Ngày xem cuối cùng"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__last_used
 msgid "Last time this canned_response was used"
-msgstr ""
+msgstr "Lần cuối cùng canned_response này được sử dụng"
 
 #. module: mail
 #. odoo-javascript
@@ -6043,7 +6066,7 @@ msgstr "My Templates"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "My canned responses"
-msgstr ""
+msgstr "Câu trả lời soạn sẵn của tôi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__name
@@ -6466,6 +6489,8 @@ msgid ""
 "Number of days/week/month before executing the action after or before the "
 "scheduled plan date."
 msgstr ""
+"Số ngày/tuần/tháng trước khi thực hiện hành động này trước hoặc sau ngày "
+"theo kế hoạch đã lên lịch."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_count
@@ -6750,7 +6775,7 @@ msgstr "Tin nhắn gốc đã bị xóa"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "Original note:"
-msgstr ""
+msgstr "Ghi chú gốc:"
 
 #. module: mail
 #. odoo-python
@@ -7005,7 +7030,7 @@ msgstr "Cuộc gọi điện thoại"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Pick an Activity Plan to launch"
-msgstr ""
+msgstr "Chọn một Kế hoạch hoạt động để khởi chạy"
 
 #. module: mail
 #. odoo-javascript
@@ -7341,7 +7366,7 @@ msgstr "Nhà xuất bản: Cập nhật thông báo"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_push_device
 msgid "Push Notification Device"
-msgstr ""
+msgstr "Thiết bị nhận thông báo đẩy"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_push
@@ -8349,7 +8374,7 @@ msgstr "Chia sẻ màn hình"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "Shared canned responses"
-msgstr ""
+msgstr "Câu trả lời soạn sẵn đã chia sẻ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__description
@@ -8906,6 +8931,9 @@ msgid ""
 "The 'To-Do' activity type is used to create reminders from the top bar menu "
 "and the command palette. Consequently, it cannot be archived or deleted."
 msgstr ""
+"Loại hoạt động 'Việc cần làm' được sử dụng để tạo nhắc nhở từ thanh menu "
+"trên cùng và bảng lệnh. Do đó, không thể được lưu trữ hoặc xóa loại hoạt "
+"động này."
 
 #. module: mail
 #. odoo-javascript
@@ -8921,6 +8949,9 @@ msgid ""
 "Push-to-Talk functionality outside of this tab, we recommend downloading our"
 " %(anchor_start)sextension%(anchor_end)s."
 msgstr ""
+"Tính năng Push-to-Talk chỉ có thể truy cập được trong tiêu điểm tab. Để bật "
+"tính năng Push-to-Talk bên ngoài tab này, bạn nên tải xuống %(anchor_start)s"
+" extension %(anchor_end)scủa chúng tôi."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__vat
@@ -9688,7 +9719,7 @@ msgstr "Bỏ ghim tin nhắn"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt
 msgid "Unpin date"
-msgstr ""
+msgstr "Ngày bỏ ghim"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__message_unread_counter
@@ -10524,7 +10555,7 @@ msgstr "Trình duyệt của bạn không hỗ trợ webRTC."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.xml:0
 msgid "Your inbox is empty"
-msgstr ""
+msgstr "Hộp thư đến của bạn đang trống"
 
 #. module: mail
 #. odoo-javascript
@@ -10769,7 +10800,7 @@ msgstr "VD: Liên hệ"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_tree
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "e.g. Discuss Proposal"
-msgstr ""
+msgstr "VD: Thảo luận về đề xuất"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -10782,7 +10813,7 @@ msgstr "vd: Thảo luận về đề xuất"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_form
 msgid "e.g. Log a note"
-msgstr ""
+msgstr "VD: Lưu ghi chú"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form

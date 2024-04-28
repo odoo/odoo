@@ -112,12 +112,12 @@ msgstr "Tất cả các mặt hàng sẽ được loại bỏ khỏi giỏ hàng
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Allow self-order customers to set their order for takeout."
-msgstr ""
+msgstr "Cho phép khách hàng tự gọi đồ để mang đi."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Allow takeout order"
-msgstr ""
+msgstr "Cho phép đơn hàng mang đi"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -129,7 +129,7 @@ msgstr "Đã xảy ra lỗi"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 msgid "Any items already sent will not be cancelled"
-msgstr ""
+msgstr "Các mặt hàng đã được gửi đi sẽ không bị hủy"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -140,12 +140,12 @@ msgstr "Bạn có chắc chắn muốn huỷ đơn hàng này không?"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_category__hour_after
 msgid "Availability After"
-msgstr ""
+msgstr "Sẵn sàng sau"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_category__hour_until
 msgid "Availability Until"
-msgstr ""
+msgstr "Sẵn sàng cho đến"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -163,7 +163,7 @@ msgstr "Ngôn ngữ có sẵn"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_product_pos_category_form_view
 msgid "Available between"
-msgstr ""
+msgstr "Sẵn sàng giữa"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
@@ -395,7 +395,7 @@ msgstr "Tải xuống mã QR"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Download your receipt here"
-msgstr ""
+msgstr "Tải xuống biên lai của bạn ở đây"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1048,7 +1048,7 @@ msgstr "URL tự gọi đồ"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_takeaway
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_takeaway
 msgid "Self Takeaway"
-msgstr ""
+msgstr "Tự gọi đồ mang đi"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1164,19 +1164,20 @@ msgstr "Cảm ơn bạn!"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability After must be set between 00:00 and 24:00"
-msgstr ""
+msgstr "Thời gian Sẵn sàng sau phải được đặt trong khoảng từ 00:00 đến 24:00"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability Until must be greater than Availability After."
-msgstr ""
+msgstr "Thời gian Sẵn sàng cho đến phải lớn hơn thời gian Sẵn sàng sau."
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability Until must be set between 00:00 and 24:00"
 msgstr ""
+"Thời gian Sẵn sàng cho đến phải được đặt trong khoảng từ 00:00 đến 24:00"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1187,12 +1188,12 @@ msgstr "Người dùng mặc định cho Tự gọi đồ phải là người d�
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_category__hour_after
 msgid "The product will be available after this hour."
-msgstr ""
+msgstr "Sản phẩm sẽ có sau giờ này."
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_category__hour_until
 msgid "The product will be available until this hour."
-msgstr ""
+msgstr "Sản phẩm sẽ còn cho đến giờ này."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1227,7 +1228,7 @@ msgstr "Không có sẵn"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 msgid "Unavailable at this time of the day"
-msgstr ""
+msgstr "Không có vào thời gian này trong ngày"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1268,7 +1269,7 @@ msgstr "Có"
 #: code:addons/pos_self_order/models/pos_config.py:0
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "You cannot add cash payment methods in kiosk mode."
-msgstr ""
+msgstr "Bạn không thể thêm phương thức thanh toán tiền mặt ở chế độ ki-ốt."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1299,7 +1300,7 @@ msgstr "Lựa chọn của bạn"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 msgid "Your order has been cancelled"
-msgstr ""
+msgstr "Đơn hàng của bạn đã bị hủy"
 
 #. module: pos_self_order
 #. odoo-javascript
