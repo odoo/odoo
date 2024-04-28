@@ -250,6 +250,13 @@ msgid "45 Days"
 msgstr "45日以内"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid ""
+"<br/>\n"
+"                            on this account:"
+msgstr ""
+
+#. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
@@ -15413,7 +15420,7 @@ msgstr "選択した仕訳項目に支払う金額が残っていないため、
 msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
-msgstr ""
+msgstr "インバウンド仕訳とアウトバウンド仕訳の支払いを同時に登録することはできません。"
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0

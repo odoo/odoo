@@ -40,7 +40,7 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Tuomas Suutari <tuomas.suutari@anders.fi>, 2023
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
@@ -48,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28479,6 +28479,12 @@ msgid "Scheduled Actions Triggers"
 msgstr "Aikataulutetut toiminnot laukaisijat"
 
 #. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid "Scheduled action disabled"
+msgstr "Ajastettu toiminto poistettu käytöstä"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
 msgid "Scheduler User"
 msgstr "Aikatauluttaja-käyttäjä"
@@ -31177,6 +31183,16 @@ msgstr ""
 "%s"
 
 #. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid ""
+"This scheduled action has been disabled because its interval number is not a"
+" strictly positive value."
+msgstr ""
+"Tämä ajastettu toiminto on poistettu käytöstä, koska sen aikaväli ei ole "
+"tiukasti positiivinen arvo."
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
 msgid "Thousands Separator"
 msgstr "Tuhaterotin"
@@ -33401,6 +33417,16 @@ msgstr ""
 "Linkitetyt aktiiviset käyttäjät : %(names)s"
 
 #. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid ""
+"You cannot archive the language in which Odoo was setup as it is used by "
+"automated processes."
+msgstr ""
+"Et voi arkistoida kieltä, jolla Odoo on asennettu, koska sitä käytetään "
+"automaattisissa prosesseissa."
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."
@@ -33465,6 +33491,16 @@ msgstr ""
 #, python-format
 msgid "You cannot delete the %s record."
 msgstr "Et voi poistaa %s-tietuetta."
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
+msgstr ""
+"Et voi poistaa admin-käyttäjää, koska sitä käytetään useissa paikoissa "
+"(kuten tietoturvamäärityksissä,...). Arkistoi se sen sijaan."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0

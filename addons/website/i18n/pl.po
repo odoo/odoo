@@ -38,6 +38,7 @@
 # Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Wil Odoo, 2023
+# Damian Ratus, 2024
 # 
 msgid ""
 msgstr ""
@@ -45,7 +46,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 06:07+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Damian Ratus, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2015,7 +2016,7 @@ msgstr "I świetny podtytuł"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Animate"
-msgstr ""
+msgstr "Animacja"
 
 #. module: website
 #. openerp-web
@@ -2213,7 +2214,7 @@ msgstr "Kolory bazowe BTS"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "Backdrop"
-msgstr ""
+msgstr "Tło"
 
 #. module: website
 #. openerp-web
@@ -3934,6 +3935,17 @@ msgid "Do not activate"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Do not copy/paste code you do not understand, this could put your data at "
+"risk."
+msgstr ""
+"Nie kopiuj/wklejaj kodu, którego nie rozumiesz, ponieważ może to narazić "
+"Twoje dane na ryzyko."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid ""
 "Do you need specific information? Our specialists will help you with "
@@ -4860,7 +4872,7 @@ msgstr "Skontaktuj się"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_github
@@ -5018,6 +5030,18 @@ msgid ""
 "will be possible only up to mid 2023. After that, those services won't work "
 "anymore, at all."
 msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/backend/res_config_settings.js:0
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#, python-format
+msgid ""
+"Google doesn't need to be pinged anymore. It will automatically fetch your "
+"/sitemap.xml."
+msgstr ""
+"Google nie potrzebuje już pingowania. Google automatycznie pobierze plik "
+"/sitemap.xml."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
@@ -5527,6 +5551,15 @@ msgid ""
 msgstr ""
 "Jeśli odrzucisz bieżące zmiany, zostaną one utracone. Możesz anulować, aby "
 "powrócić do trybu edycji."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_embed_code/options.js:0
+#, python-format
+msgid ""
+"If you need to add analytics or marketing tags, inject code in your <head> "
+"or <body> instead. The option is in the \"Theme\" tab."
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -7536,7 +7569,7 @@ msgstr "Zarys"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow_widgets
 msgid "Outset"
-msgstr ""
+msgstr "Początek"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers
@@ -11355,6 +11388,16 @@ msgid ""
 msgstr "Nie możesz usunąć domyślnej strony %s. Spróbuj zmienić jej ustawienia"
 
 #. module: website
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+"Nie można usunąć tego menu witryny, ponieważ służy ono jako domyślne menu "
+"nadrzędne dla nowych witryn (np. /shop, /event, ...)."
+
+#. module: website
 #: code:addons/website/controllers/backend.py:0
 #, python-format
 msgid "You do not have sufficient rights to perform that action."
@@ -11451,7 +11494,7 @@ msgstr "Twój identyfikator klienta:"
 #: code:addons/website/static/src/js/form_editor_registry.js:0
 #, python-format
 msgid "Your Company"
-msgstr ""
+msgstr "Twoja firma"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_template
@@ -11468,6 +11511,17 @@ msgstr ""
 #, python-format
 msgid "Your Email"
 msgstr "Twój email"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_embed_code/000.js:0
+#, python-format
+msgid ""
+"Your Embed Code snippet doesn't have anything to display. Click on Edit to "
+"modify it."
+msgstr ""
+"Twój fragment kodu osadzania nie ma nic do wyświetlenia. Kliknij Edytuj, aby"
+" go zmodyfikować."
 
 #. module: website
 #. openerp-web
@@ -11488,7 +11542,7 @@ msgstr "Twoja nazwa"
 #: code:addons/website/static/src/js/form_editor_registry.js:0
 #, python-format
 msgid "Your Question"
-msgstr ""
+msgstr "Twoje pytanie"
 
 #. module: website
 #. openerp-web
