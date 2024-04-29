@@ -513,7 +513,7 @@ class ProductProduct(models.Model):
                 domain2 = expression.AND([domain, domain2])
                 product_ids = list(self._search(domain2, limit=limit, order=order))
             if not product_ids and operator in positive_operators:
-                ptrn = re.compile('(\[(.*?)\])')
+                ptrn = re.compile(r'(\[(.*?)\])')
                 res = ptrn.search(name)
                 if res:
                     product_ids = list(self._search([('default_code', '=', res.group(2))] + domain, limit=limit, order=order))

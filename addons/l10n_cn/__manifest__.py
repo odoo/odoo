@@ -8,7 +8,7 @@
     'author': 'openerp-china',
     'maintainer': 'jeff@osbzr.com',
     'website': 'https://www.odoo.com/documentation/saas-16.4/applications/finance/fiscal_localizations.html',
-    'description': """
+    'description': r"""
 Includes the following data for the Chinese localization
 ========================================================
 

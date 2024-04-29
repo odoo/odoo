@@ -67,7 +67,7 @@ class TestSanitizer(BaseCase):
             ("<DIV STYLE=\"background-image: url(&#1;javascript:alert('XSS'))\">"),  # div background + extra characters
             ("<IMG SRC='vbscript:msgbox(\"XSS\")'>"),  # VBscrip in an image
             ("<BODY ONLOAD=alert('XSS')>"),  # event handler
-            ("<BR SIZE=\"&{alert('XSS')}\>"),  # & javascript includes
+            ("<BR SIZE=\"&{alert('XSS')}\\>"),  # & javascript includes
             ("<LINK REL=\"stylesheet\" HREF=\"javascript:alert('XSS');\">"),  # style sheet
             ("<LINK REL=\"stylesheet\" HREF=\"http://ha.ckers.org/xss.css\">"),  # remote style sheet
             ("<STYLE>@import'http://ha.ckers.org/xss.css';</STYLE>"),  # remote style sheet 2
