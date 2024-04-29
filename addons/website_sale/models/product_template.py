@@ -507,7 +507,7 @@ class ProductTemplate(models.Model):
 
 
         product_taxes = product_or_template.sudo().taxes_id.filtered(
-            lambda t: t.company_id == self.env.company)
+            lambda t: t.company_id in self.env.company.parent_ids)
         taxes = self.env['account.tax']
         if product_taxes:
             taxes = fiscal_position.map_tax(product_taxes)
