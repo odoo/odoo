@@ -685,6 +685,7 @@ class Picking(models.Model):
         'Properties',
         definition='picking_type_id.picking_properties_definition',
         copy=True)
+    show_next_pickings = fields.Boolean(compute='_compute_show_next_pickings')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -909,6 +910,14 @@ class Picking(models.Model):
         for picking in self:
             picking.return_count = len(picking.return_ids)
 
+    def _get_next_transfers(self):
+        next_pickings = self.move_ids.move_dest_ids.picking_id
+        return next_pickings.filtered(lambda p: p not in self.return_ids)
+
+    @api.depends('move_ids.move_dest_ids')
+    def _compute_show_next_pickings(self):
+        self.show_next_pickings = len(self._get_next_transfers()) != 0
+
     def _search_products_availability_state(self, operator, value):
         def _get_comparison_date(move):
             return move.picking_id.scheduled_date
@@ -1124,6 +1133,24 @@ class Picking(models.Model):
                 'picking_code': self.picking_type_code,
                 'create': self.state not in ('done', 'cancel'),
             }
+        }
+
+    def action_next_transfer(self):
+        next_transfers = self._get_next_transfers()
+
+        if len(next_transfers) == 1:
+            return {
+                "type": "ir.actions.act_window",
+                "res_model": "stock.picking",
+                "views": [[False, "form"]],
+                "res_id": next_transfers.id
+            }
+        return {
+            'name': _('Next Transfers'),
+            "type": "ir.actions.act_window",
+            "res_model": "stock.picking",
+            "views": [[False, "tree"], [False, "form"]],
+            "domain": [('id', 'in', next_transfers.ids)],
         }
 
     def _action_done(self):
