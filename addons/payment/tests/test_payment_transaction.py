@@ -169,6 +169,12 @@ class TestPaymentTransaction(PaymentCommon):
             msg="The partner of the partial capture should be that of the source transaction.",
         )
 
+    def test_compare_notification_data_throws(self):
+        """ Test that `_compare_notification_data` throws if not overridden by the provider. """
+        tx = self._create_transaction('redirect')
+        with self.assertRaises(NotImplementedError):
+            tx._compare_notification_data({})
+
     def test_capturing_child_tx_triggers_source_tx_state_update(self):
         self.provider.support_manual_capture = 'partial'
         self.provider.capture_manually = True

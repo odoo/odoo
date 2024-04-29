@@ -110,7 +110,7 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
         tx = self._create_transaction('redirect', amount=1000.50, currency_id=currency_idr.id)
         with patch(
             'odoo.addons.payment_xendit.models.payment_provider.PaymentProvider'
-            '._xendit_make_request', return_value=self.charge_notification_data
+            '._xendit_make_request', return_value={**self.charge_notification_data, 'amount': 1000}
         ) as mock_req:
             tx._xendit_create_charge('dummytoken')
             payload = mock_req.call_args.kwargs.get('payload')
