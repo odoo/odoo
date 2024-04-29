@@ -117,24 +117,26 @@ class Project(models.Model):
                 ('analytic_distribution', 'in', self.analytic_account_id.ids),
                 '|',
                 ('qty_invoiced', '>', 0),
-                '|', ('qty_to_invoice', '>', 0), ('product_uom_qty', '>', 0),
-            ], ['qty_invoiced', 'qty_to_invoice', 'product_uom_qty', 'price_unit', 'currency_id', 'analytic_distribution'])
+                '|', ('qty_to_invoice', '>', 0), ('product_qty', '>', 0),
+            ], ['qty_invoiced', 'qty_to_invoice', 'product_qty', 'price_subtotal', 'currency_id', 'analytic_distribution'])
             purchase_order_line_invoice_line_ids = self._get_already_included_profitability_invoice_line_ids()
             with_action = with_action and self.user_has_groups('purchase.group_purchase_user, account.group_account_invoice, account.group_account_readonly')
             if purchase_order_lines:
                 amount_invoiced = amount_to_invoice = 0.0
                 for pol in purchase_order_lines:
                     purchase_order_line_invoice_line_ids.extend(pol.invoice_lines.ids)
-                    price_unit = pol.currency_id._convert(pol.price_unit, self.currency_id, self.company_id)
+                    price_subtotal = pol.currency_id._convert(pol.price_subtotal, self.currency_id, self.company_id)
+                    price_subtotal_unit = price_subtotal / pol.product_qty if pol.product_qty else 0.0
+                    # an analytic account can appear several time in an analytic distribution with different repartition percentage
                     analytic_contribution = sum(
                         percentage for ids, percentage in pol.analytic_distribution.items()
                         if str(self.analytic_account_id.id) in ids.split(',')
                     ) / 100.
-                    amount_invoiced -= price_unit * pol.qty_invoiced * analytic_contribution if pol.qty_invoiced > 0 else 0.0
+                    amount_invoiced -= price_subtotal_unit * pol.qty_invoiced * analytic_contribution if pol.qty_invoiced > 0 else 0.0
                     if pol.qty_to_invoice > 0:
-                        amount_to_invoice -= price_unit * pol.qty_to_invoice * analytic_contribution
+                        amount_to_invoice -= price_subtotal_unit * pol.qty_to_invoice * analytic_contribution
                     else:
-                        amount_to_invoice -= price_unit * (pol.product_uom_qty - pol.qty_invoiced) * analytic_contribution
+                        amount_to_invoice -= price_subtotal_unit * (pol.product_qty - pol.qty_invoiced) * analytic_contribution
                 costs = profitability_items['costs']
                 section_id = 'purchase_order'
                 purchase_order_costs = {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': amount_invoiced, 'to_bill': amount_to_invoice}
