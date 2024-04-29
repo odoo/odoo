@@ -10,7 +10,9 @@ class AccountMoveSend(models.TransientModel):
     @api.depends('move_ids')
     def _compute_l10n_ke_edi_warning_message(self):
         for wizard in self:
-            warning_moves = wizard.move_ids.filtered(lambda m: m.country_code == 'KE' and not m._l10n_ke_fiscal_device_details_filled())
+            warning_moves = wizard.move_ids.filtered(
+                lambda m: m.country_code == 'KE' and not m._l10n_ke_fiscal_device_details_filled()
+            )
             if warning_moves:
                 wizard.l10n_ke_edi_warning_message = '\n'.join([
                     _("The following documents have no details related to the fiscal device."),
