@@ -416,6 +416,7 @@ class account_journal(models.Model):
             *self.env['account.move.line']._check_company_domain(self.env.companies),
             ('statement_line_id', '=', False),
             ('parent_state', '=', 'posted'),
+            ('payment_id', '=', False),
       ] + expression.OR(misc_domain)
 
         misc_totals = {
