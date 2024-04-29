@@ -317,6 +317,32 @@ class TestHttpStatic(TestHttpStaticCommon):
         self.assertNotEqual(location.path, bad_path, "loop detected")
         self.assertEqual(res.status_code, 404)
 
+    def test_static20_related_svg(self):
+        user_demo = self.user_demo.with_user(self.user_demo)
+        Attachment = self.env['ir.attachment'].with_user(user_demo)
+
+        # image_1024 is a related field
+        with file_open('test_http/static/src/img/gizeh.svg', 'rb') as file:
+            gizeh_svg = file.read()
+            user_demo.partner_id.image_1024 = base64.b64encode(gizeh_svg)
+
+        binary_attach = Attachment.search([
+            ('res_model', '=', 'res.partner'),
+            ('res_field', '=', 'image_1024'),
+            ('res_id', '=', user_demo.partner_id.id),
+        ])
+        self.assertEqual(binary_attach.raw, gizeh_svg)
+        self.assertEqual(binary_attach.mimetype, 'text/plain', "the svg image must have been neutralized")
+
+        self.authenticate('demo', 'demo')
+        res = self.url_open(f'/web/content/res.partner/{user_demo.partner_id.id}/image_1024')
+        res.raise_for_status()
+        self.assertEqual(
+            (res.headers['Content-Disposition'], res.headers['Content-Type']),
+            ('inline; filename="Marc Demo.txt"', 'text/plain; charset=utf-8'),
+            "the svg image must be downloaded as text/plain and not as image/xml+svg"
+        )
+        self.assertEqual(res.content, gizeh_svg)
 
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):
