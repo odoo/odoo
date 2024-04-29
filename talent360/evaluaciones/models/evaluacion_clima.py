@@ -11,7 +11,6 @@ class EvaluacionClima(models.Model):
     _description = "Evaluaciones de Clima Laboral"
 
     _inherit = ["evaluacion"]
-    
 
     piso_rojo = fields.Float(
         string="Piso Rojo",
@@ -61,25 +60,25 @@ class EvaluacionClima(models.Model):
         default=None,
     )
 
-    description_rojo = fields.Text(
+    descripcion_rojo = fields.Text(
         string="Descripción Rojo",
         required=False,
         default=None,
     )
 
-    description_amarillo = fields.Text(
+    descripcion_amarillo = fields.Text(
         string="Descripción Amarillo",
         required=False,
         default=None,
     )
 
-    description_verde = fields.Text(
+    descripcion_verde = fields.Text(
         string="Descripción Verde",
         required=False,
         default=None,
     )
 
-    description_azul = fields.Text(
+    descripcion_azul = fields.Text(
         string="Descripción Azul",
         required=False,
         default=None,

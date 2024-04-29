@@ -25,8 +25,113 @@
                                 <field name="usuario_ids"/>
                             </page>
                             <page string="Semaforización">
-                                <field name="piso_rojo" string="Piso Rojo" placeholder="Piso Rojo" class="o_input">
-                                </field>
+
+                                <style>
+                                    .my_table td:nth-child(1){
+                                        width: 10%;
+                                    }
+
+
+                                    .my_table td:nth-child(2),
+                                    .my_table td:nth-child(3) {
+                                        width: 20%;
+                                    }
+                                    .my_table td:nth-child(4) {
+                                        width: 60%;
+                                    }
+                                </style>
+
+
+                                <table class="my_table">
+                                    <tr>
+                                        <th></th>
+                                        <th>Piso</th>
+                                        <th>Techo</th>
+                                        <th>Descripción</th>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Rojo</td>
+
+                                        <td style="padding-top:3%;">
+                                            <field name="piso_rojo" string="Piso Rojo" class="o_input doubleInput">
+                                            </field>
+                                        </td>
+
+                                        <td style="padding-top:3%;">
+                                            <field name="techo_rojo" string="Techo Rojo" class="o_input">
+                                            </field>
+                                        </td>
+
+                                        <td>
+                                            <field name="descripcion_rojo" string="Descripción Rojo" class="o_input textInput">
+                                            </field>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>Amarillo</td>
+
+                                        <td style="padding-top:3%;">
+
+                                            <field name="piso_amarillo" string="Piso Amarillo" placeholder="Piso Amarillo" class="o_input">
+                                            </field>
+                                        </td>
+
+                                        <td style="padding-top:3%;">
+                                            <field name="techo_amarillo" string="Techo Amarillo" placeholder="Techo Amarillo" class="o_input">
+                                            </field>
+                                        </td>
+
+                                        <td>
+                                            <field name="descripcion_amarillo" string="Descripción Amarillo" class="o_input">
+                                            </field>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>Verde</td>
+
+                                        <td style="padding-top:3%;">
+                                            <field name="piso_verde" string="Piso Verde" placeholder="Piso Verde" class="o_input">
+                                            </field>
+                                        </td>
+
+                                        <td style="padding-top:3%;">
+                                            <field name="techo_verde" string="Techo Verde" placeholder="Techo Verde" class="o_input">
+                                            </field>
+
+                                        </td>
+
+                                        <td>
+                                            <field name="descripcion_verde" string="Descripción Verde" class="o_input">
+                                            </field>
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td>Azul</td>
+
+
+                                        <td style="padding-top:3%;">
+                                            <field name="piso_azul" string="Piso Azul" placeholder="Piso Azul" class="o_input">
+                                            </field>
+                                        </td>
+
+                                        <td style="padding-top:3%;">
+                                            <field name="techo_azul" string="Techo Azul" placeholder="Techo Azul" class="o_input">
+                                            </field>
+
+                                        </td>
+
+                                        <td>
+                                            <field name="descripcion_azul" string="Descripción Azul" class="o_input">
+                                            </field>
+                                        </td>
+                                    </tr>
+
+                                </table>
 
                             </page>
                         </notebook>
