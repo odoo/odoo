@@ -2,20 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProductInfoPopup">
         <Dialog title="'Product information'">
-            <div class="section-product-info-title d-flex flex-column flex-sm-row text-start gap-3 bg-info text-info bg-opacity-25 mx-n3 mt-n3 p-3">
-                <div class="d-flex flex-column flex-grow-1 text-start w-100 w-sm-25">
-                    <span t-esc="props.product.display_name" class="global-info-title fs-2 fw-bolder text-truncate"/>
-                    <span class="fs-3"><t t-if="props.product.default_code" t-esc="props.product.default_code"/> <t t-if="props.product.default_code and props.product.barcode"> - </t> <t t-if="props.product.barcode" t-esc="props.product.barcode"/></span>
-                </div>
-                <div class="d-flex flex-column justify-content-center text-start text-sm-end w-100 w-sm-25">
-                    <span t-esc="env.utils.formatCurrency(props.info.productInfo.all_prices.price_with_tax)" class="global-info-title fs-2 fw-bolder" />
-                    <span class="fs-3">
-                        <t t-foreach="props.info.productInfo.all_prices.tax_details" t-as="tax" t-key="tax.name">
-                            <div><t t-esc="tax.name"/>: <t t-esc="env.utils.formatCurrency(tax.amount)"/></div>
-                        </t>
-                    </span>
-                </div>
-            </div>
+            <ProductInfoBanner product="props.product" info="props.info"/>
             <div class="section-financials mt-3 mb-4 pb-4 border-bottom text-start">
                 <h3 class="section-title">Financials</h3>
                 <div class="section-financials-body d-flex flex-column flex-sm-row">
@@ -43,9 +30,9 @@
                     </table>
                 </div>
             </div>
-            <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.info.productInfo.warehouses.length > 0">
+            <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="!isVariant and props.info.productInfo.warehouses.length > 0">
                 <h3 class="section-title">
-                    Inventory 
+                    Inventory
                     <t t-if="pos.session.update_stock_at_closing">(as of opening)</t>
                 </h3>
                 <div class="section-inventory-body">
@@ -59,7 +46,7 @@
                                 <span class="me-1 fw-bolder"><t t-esc="warehouse.available_quantity" class="table-name"/></span>
                                 <t t-esc="warehouse.uom"/> available,
                             </div>
-                            <div> 
+                            <div>
                                 <span class="me-1 fw-bolder"><t t-esc="warehouse.forecasted_quantity"/></span>
                                 forecasted
                             </div>

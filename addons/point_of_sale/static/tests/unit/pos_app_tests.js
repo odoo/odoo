@@ -163,6 +163,7 @@ export class MockPosData {
                 "pos.payment": { relations: {}, fields: {}, data: [] },
                 "pos.pack.operation.lot": { relations: {}, fields: {}, data: [] },
                 "product.pricelist.item": { relations: {}, fields: {}, data: [] },
+                "product.attribute.custom.value": { relations: {}, fields: {}, data: [] },
             },
         };
     }

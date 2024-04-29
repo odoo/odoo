@@ -145,6 +145,12 @@ export class ProductScreen extends Component {
     get items() {
         return this.currentOrder.lines?.reduce((items, line) => items + line.qty, 0) ?? 0;
     }
+    getProductName(product) {
+        const productTmplValIds = product.attribute_line_ids
+            .map((l) => l.product_template_value_ids)
+            .flat();
+        return productTmplValIds.length > 1 ? product.name : product.display_name;
+    }
     async _getProductByBarcode(code) {
         let product = this.pos.models["product.product"].getBy("barcode", code.base_code);
 
@@ -162,6 +168,7 @@ export class ProductScreen extends Component {
                 "find_product_by_barcode",
                 [odoo.pos_session_id, code.base_code, this.pos.config.id]
             );
+            await this.pos.processProductAttributes();
 
             if (records && records["product.product"].length > 0) {
                 product = records["product.product"][0];
@@ -178,7 +185,12 @@ export class ProductScreen extends Component {
             return;
         }
 
-        await this.pos.addLineToCurrentOrder({ product_id: product }, { code });
+        const configure =
+            product.isConfigurable() &&
+            product.attribute_line_ids.length > 0 &&
+            !product.attribute_line_ids.every((l) => l.attribute_id.create_variant === "always");
+
+        await this.pos.addLineToCurrentOrder({ product_id: product }, { code }, configure);
         this.numberBuffer.reset();
     }
     async _getPartnerByBarcode(code) {
@@ -278,7 +290,14 @@ export class ProductScreen extends Component {
         }
 
         list = list
-            .filter((product) => !this.getProductListToNotDisplay().includes(product.id))
+            .filter(
+                (product) =>
+                    ![
+                        this.pos.config.tip_product_id?.id,
+                        ...this.pos.hiddenProductIds,
+                        ...this.pos.session._pos_special_products_ids,
+                    ].includes(product.id) && product.available_in_pos
+            )
             .slice(0, 100);
 
         return this.searchWord !== ""
@@ -309,13 +328,6 @@ export class ProductScreen extends Component {
         return this.pos.models["product.product"].filter((p) =>
             p.pos_categ_ids.some((categId) => allCategories.includes(categId))
         );
-    }
-
-    getProductListToNotDisplay() {
-        return [
-            this.pos.config.tip_product_id?.id,
-            ...this.pos.session._pos_special_products_ids,
-        ].filter((id) => !this.pos.models["product.product"].get(id)?.available_in_pos);
     }
 
     async onPressEnterKey() {
@@ -367,6 +379,8 @@ export class ProductScreen extends Component {
                 limit: 30,
             }
         );
+
+        await this.pos.processProductAttributes();
         return product;
     }
 
