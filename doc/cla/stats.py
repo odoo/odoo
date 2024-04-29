@@ -28,7 +28,7 @@ def blamestat(ext='py'):
     kol = []
     p = subprocess.Popen("git ls-tree -r -z --name-only HEAD | grep -z '.%s$' | xargs -0 -n1 git blame --line-porcelain HEAD |grep  '^author-mail ' |sort |uniq -c|sort -nr" % ext, shell=True, stdout = subprocess.PIPE)
     for i in p.stdout.read().split('\n'):
-        mo = re.search('(\d+) author-mail <([^ @<]+@[^ @<]+)>',i)
+        mo = re.search(r'(\d+) author-mail <([^ @<]+@[^ @<]+)>',i)
         if mo:
             lines = int(mo.group(1))
             email = mo.group(2)

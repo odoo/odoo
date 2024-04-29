@@ -15,6 +15,7 @@ registerModel({
         _reset() {
             this.update({
                 attachments: clear(),
+                cannedResponses: clear(),
                 rawMentionedChannels: clear(),
                 rawMentionedPartners: clear(),
                 textInputContent: clear(),
@@ -55,6 +56,7 @@ registerModel({
             },
             default: false,
         }),
+        cannedResponses: many('CannedResponse'),
         composerViews: many('ComposerView', {
             inverse: 'composer',
             isCausal: true,

@@ -3364,18 +3364,45 @@ export class OdooEditor extends EventTarget {
             ev.inputType === 'insertText' &&
             ev.data === null &&
             this._lastBeforeInputType === 'insertParagraph';
+        const isCompositionEvent =
+            ev.inputType === "insertCompositionText" ||
+            (ev.inputType === "insertText" &&
+                (this.keyboardType === KEYBOARD_TYPES.VIRTUAL ||
+                    this.isMobile));
+        if (isCompositionEvent) {
+            this._fromCompositionText = true;
+        }
         if (this.keyboardType === KEYBOARD_TYPES.PHYSICAL || !wasCollapsed) {
-            if (ev.inputType === 'deleteContentBackward') {
+            // Most deletion cases in complex HTML like Bootstrap etc can end
+            // with a wrong result if done by the contenteditable itself.
+            // Intervene as soon as the selection was not collapsed, except
+            // while composing. In that case the composition should be left
+            // alone unless the selection was spanning different blocks.
+            const anchorNode = this.idFind(anchorNodeOid);
+            const focusNode = this.idFind(focusNodeOid);
+            const wasSelectingAcrossDifferentBlocks =
+                anchorNode &&
+                focusNode &&
+                closestBlock(anchorNode) !== closestBlock(focusNode);
+            const shouldInterveneForDeletion =
+                !this._fromCompositionText ||
+                wasSelectingAcrossDifferentBlocks;
+            if (ev.inputType === 'deleteContentBackward' && shouldInterveneForDeletion) {
                 this._compositionStep();
                 this.historyRollback();
                 ev.preventDefault();
                 this._applyCommand('oDeleteBackward');
-            } else if (ev.inputType === 'deleteContentForward' || isChromeDeleteforward) {
+            } else if (
+                (ev.inputType === 'deleteContentForward' || isChromeDeleteforward) &&
+                shouldInterveneForDeletion
+            ) {
                 this._compositionStep();
                 this.historyRollback();
                 ev.preventDefault();
                 this._applyCommand('oDeleteForward');
-            } else if (ev.inputType === 'insertParagraph' || isChromeInsertParagraph) {
+            } else if (
+                (ev.inputType === 'insertParagraph' || isChromeInsertParagraph)
+            ) {
                 this._compositionStep();
                 this.historyRollback();
                 ev.preventDefault();
@@ -3383,17 +3410,18 @@ export class OdooEditor extends EventTarget {
                     this._applyCommand('oShiftEnter');
                 }
             } else if (['insertText', 'insertCompositionText'].includes(ev.inputType)) {
-                // insertCompositionText, courtesy of Samsung keyboard.
                 const selection = this.document.getSelection();
-                // Detect that text was selected and change behavior only if it is the case,
-                // since it is the only text insertion case that may cause problems.
-                const wasTextSelected = anchorNodeOid !== focusNodeOid || anchorOffset !== focusOffset;
                 // Unit tests events are not trusted by the browser,
                 // the insertText has to be done manualy.
                 const isUnitTests = !ev.isTrusted && this.testMode;
                 // we cannot trust the browser to keep the selection inside empty tags.
                 const latestSelectionInsideEmptyTag = this._isLatestComputedSelectionInsideEmptyInlineTag();
-                if (wasTextSelected || isUnitTests || latestSelectionInsideEmptyTag) {
+                const shouldInterveneForInsertion = !wasCollapsed && shouldInterveneForDeletion;
+                if (
+                    shouldInterveneForInsertion ||
+                    latestSelectionInsideEmptyTag ||
+                    isUnitTests
+                ) {
                     ev.preventDefault();
                     if (!isUnitTests) {
                         // First we need to undo the character inserted by the browser.
@@ -3430,7 +3458,10 @@ export class OdooEditor extends EventTarget {
                     // Remove added space
                     textNodeSplitted.pop();
                     const potentialUrl = textNodeSplitted.pop();
-                    const lastWordMatch = potentialUrl.match(URL_REGEX_WITH_INFOS) && !potentialUrl.match(EMAIL_REGEX);
+                    const lastWordMatch =
+                        potentialUrl &&
+                        potentialUrl.match(URL_REGEX_WITH_INFOS) &&
+                        !potentialUrl.match(EMAIL_REGEX);
 
                     if (lastWordMatch) {
                         const matches = getUrlsInfosInString(textSliced);
@@ -3517,8 +3548,9 @@ export class OdooEditor extends EventTarget {
             } else {
                 this.historyStep();
             }
-        } else if (ev.inputType === 'insertCompositionText') {
-            this._fromCompositionText = true;
+        }
+        if (!isCompositionEvent) {
+            this._fromCompositionText = false;
         }
         if (shouldOpenPowerbox) {
             this._isPowerboxOpenOnInput = true;
@@ -3636,7 +3668,7 @@ export class OdooEditor extends EventTarget {
             // backspace
             const selection = this.document.getSelection();
             if (!ev.ctrlKey && !ev.metaKey) {
-                if (selection.isCollapsed) {
+                if (selection.isCollapsed && !this._fromCompositionText) {
                     // We need to hijack it because firefox doesn't trigger a
                     // deleteBackward input event with a collapsed selection in
                     // front of a contentEditable="false" (eg: font awesome).
