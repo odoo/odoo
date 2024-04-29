@@ -12,7 +12,6 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_flutterwave import const
 from odoo.addons.payment_flutterwave.controllers.main import FlutterwaveController
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -126,6 +125,21 @@ class PaymentTransaction(models.Model):
             )
         return tx
 
+    def _compare_notification_data(self, notification_data):
+        """ Override of `payment` to compare the transaction based on Flutterwave data.
+
+        :param dict notification_data: The notification data sent by the provider.
+        :return: None
+        :raise ValidationError: If the transaction's amount and currency don't match the
+            notification data.
+        """
+        if self.provider_code != 'flutterwave':
+            return super()._compare_notification_data(notification_data)
+
+        amount = notification_data.get('amount')
+        currency_code = notification_data.get('currency')
+        self._validate_amount_and_currency(amount, currency_code)
+
     def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Flutterwave data.
 
@@ -139,33 +153,27 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'flutterwave':
             return
 
-        # Verify the notification data.
-        verification_response_content = self.provider_id._flutterwave_make_request(
-            'transactions/verify_by_reference', payload={'tx_ref': self.reference}, method='GET'
-        )
-        verified_data = verification_response_content['data']
-
         # Update the provider reference.
-        self.provider_reference = verified_data['id']
+        self.provider_reference = notification_data['id']
 
         # Update payment method.
-        payment_method_type = verified_data.get('payment_type', '')
+        payment_method_type = notification_data.get('payment_type', '')
         if payment_method_type == 'card':
-            payment_method_type = verified_data.get('card', {}).get('type').lower()
+            payment_method_type = notification_data.get('card', {}).get('type').lower()
         payment_method = self.env['payment.method']._get_from_code(
             payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
         )
         self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.
-        payment_status = verified_data['status'].lower()
+        payment_status = notification_data['status'].lower()
         if payment_status in const.PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
         elif payment_status in const.PAYMENT_STATUS_MAPPING['done']:
             self._set_done()
-            has_token_data = 'token' in verified_data.get('card', {})
+            has_token_data = 'token' in notification_data.get('card', {})
             if self.tokenize and has_token_data:
-                self._flutterwave_tokenize_from_notification_data(verified_data)
+                self._flutterwave_tokenize_from_notification_data(notification_data)
         elif payment_status in const.PAYMENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
         elif payment_status in const.PAYMENT_STATUS_MAPPING['error']:

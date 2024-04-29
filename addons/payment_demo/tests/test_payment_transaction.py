@@ -100,3 +100,10 @@ class TestPaymentTransaction(PaymentDemoCommon, PaymentHttpCommon):
         self.assertEqual(
             child_tx.amount, 10, msg="Child transaction should have the requested amount."
         )
+
+    def test_compare_notification_data_without_provider_code_throws(self):
+        """ Test that comparing notification data without a provider code throws an error. """
+        self.provider.code = 'none'
+        tx = self._create_transaction('direct')
+        with self.assertRaises(NotImplementedError):
+            tx._compare_notification_data(self.notification_data)
