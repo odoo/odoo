@@ -90,7 +90,6 @@ class EvaluacionesController(http.Controller):
             else:
                 continue
 
-            print(resp)
             
         for pregunta_id, textarea_value in textarea_values.items():
             if pregunta_id in textarea_values:
@@ -99,9 +98,10 @@ class EvaluacionesController(http.Controller):
             else:
                 continue
 
-            print(resp)
-
-            
+        # Actualiza el estado de la evaluación para el usuario
+        usuario_eva_mod = request.env["usuario.evaluacion.rel"]
+        usuario_eva_mod.sudo().action_update_estado(user_id, evaluacion_id)
+        
 
 
         # Redirige a la página de inicio

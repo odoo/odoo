@@ -8,7 +8,7 @@ class UsuarioEvaluacionRel(models.Model):
     evaluacion_id = fields.Many2one("evaluacion", string="Evaluacion")
     usuario_id = fields.Many2one("res.users", string="Usuario")
 
-    contestada = fields.Boolean(string="Contestada", default=False)
+    contestada = fields.Boolean("contestada", default=False)
 
     token = fields.Char(string="Token")
     
@@ -23,3 +23,16 @@ class UsuarioEvaluacionRel(models.Model):
             [("usuario_id", "=", user_id), ("evaluacion_id", "=", evaluacion_id)]
         )
         return usuario_evaluacion.contestada
+
+    def action_update_estado(self, user_id, evaluacion_id):
+        """Método para actualizar el estado de la evaluación para el usuario.
+        
+        :param user_id: ID del usuario
+        :param evaluacion_id: ID de la evaluación
+        """
+        usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
+            [("usuario_id", "=", user_id), ("evaluacion_id", "=", evaluacion_id)]
+        )
+        usuario_evaluacion.contestada = True
+
+        
