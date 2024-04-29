@@ -64,8 +64,7 @@ class Evaluacion(models.Model):
         string="Asignados",
     )
 
-    contestada = fields.Boolean(string="Contestada", default=False)
-
+    
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
         """

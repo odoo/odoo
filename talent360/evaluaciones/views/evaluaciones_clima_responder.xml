@@ -61,9 +61,12 @@
             </div>
 
             <div class="o_survey_form_content w-100">
-                <t t-if="evaluacion.estado == 'finalizado'" t-call="evaluaciones.evaluacion_responder_form_closed"/>
+
+                <t t-if="contestada"  t-call="evaluaciones.evaluacion_responder_form_done"/>
+                <t t-elif="evaluacion.estado == 'finalizado'" t-call="evaluaciones.evaluacion_responder_form_closed"/>
                 <t t-elif="evaluacion.estado == 'publicado'" t-call="evaluaciones.preguntas_contenedor"/>
                 <t t-elif="evaluacion.estado == 'borrador'" t-call="evaluaciones.evaluacion_responder_form_draft"/>
+
             </div>
         </form>
 

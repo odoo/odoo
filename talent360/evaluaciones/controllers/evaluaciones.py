@@ -5,6 +5,7 @@ from ..models.evaluacion import Evaluacion
 from ..models.respuesta import Respuesta as respuesta
 from ..models.pregunta import Pregunta as pregunta
 import json
+from ..models.usuario_evaluacion_rel import UsuarioEvaluacionRel as usuario_evaluacion
 
 
 class EvaluacionesController(http.Controller):
@@ -50,9 +51,13 @@ class EvaluacionesController(http.Controller):
 
         # Obtén la evaluación basada en el ID
         parametros = evaluacion.action_get_evaluaciones(evaluacion_id)
+
+        usuario_eva_mod = request.env["usuario.evaluacion.rel"]
+        parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(request.env.user.id, evaluacion_id)
+        
         
         # Renderiza la plantilla con la evaluación
-        return request.render('evaluaciones.evaluaciones_responder', parametros)
+        return request.render("evaluaciones.evaluaciones_responder", parametros)
     
     @http.route(
         "/evaluacion/responder", type="http", auth="user", website=True, methods=["POST"], csrf=False
@@ -72,11 +77,11 @@ class EvaluacionesController(http.Controller):
         
         post_data = json.loads(request.httprequest.data)
 
-        radio_values = post_data.get('radioValues')
-        textarea_values = post_data.get('textareaValues')
-        evaluacion_id = post_data.get('evaluacion_id')
+        radio_values = post_data.get("radioValues")
+        textarea_values = post_data.get("textareaValues")
+        evaluacion_id = post_data.get("evaluacion_id")
         user_id = request.env.user.id
-        respuesta_model = request.env['respuesta']
+        respuesta_model = request.env["respuesta"]
 
         for pregunta_id, radio_value in radio_values.items():
             if pregunta_id in radio_values:
