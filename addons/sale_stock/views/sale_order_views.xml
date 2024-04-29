@@ -71,12 +71,30 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_tree"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='commitment_date']" position="attributes">
+                    <attribute name="decoration-danger">
+                        (
+                            (
+                                commitment_date &lt; effective_date
+                                or commitment_date &lt; datetime.datetime.combine(
+                                    datetime.date.today(),
+                                    datetime.time(0,0,0)
+                                ).to_utc().strftime('%Y-%m-%d %H:%M:%S')
+                            )
+                            and delivery_status == 'pending'
+                            and effective_date &lt;= commitment_date
+                            or delivery_status == 'partial'
+                        )
+                    </attribute>
+                </xpath>
                 <field name="invoice_status" position="before">
                     <field name="effective_date" column_invisible="True"/>
-                    <field name="delivery_status" optional="hide" widget="badge"
-                        decoration-success="commitment_date and (commitment_date &gt; datetime.datetime.combine(datetime.date.today(), datetime.time(23,59,59)).to_utc().strftime('%Y-%m-%d %H:%M:%S') or delivery_status=='full' and effective_date &lt;= commitment_date)"
-                        decoration-danger="commitment_date and (commitment_date &lt; effective_date or commitment_date &lt; datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and delivery_status!='full' and effective_date &lt;= commitment_date)"
-                        decoration-warning="commitment_date and commitment_date &gt;= datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and commitment_date &lt;= datetime.datetime.combine(datetime.date.today(), datetime.time(23,59,59)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and delivery_status!='full'"/>
+                    <field name="delivery_status"
+                        decoration-success="delivery_status == 'full'"
+                        decoration-warning="delivery_status == 'partial'"
+                        decoration-info="delivery_status == 'pending'"
+                        widget="badge"
+                        optional="hide"/>
                 </field>
             </field>
         </record>
