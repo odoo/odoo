@@ -254,6 +254,9 @@
                         <div class="mb-3" t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference">
                             <p name="payment_communication">
                                 Payment Communication: <span class="fw-bold" t-field="o.payment_reference"/>
+                                <t t-if="o.partner_bank_id">
+                                        <br/> on this account: <span t-field="o.partner_bank_id" class="fw-bold"/>
+                                </t>
                             </p>
                         </div>
                         <div id="qrcode" class="d-flex mb-3 avoid-page-break-inside" t-if="o.display_qr_code and o.amount_residual > 0">
