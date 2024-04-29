@@ -564,6 +564,13 @@ export class HierarchyModel extends Model {
         return fieldsToFetch;
     }
 
+    get context() {
+        return {
+            bin_size: true,
+            ...(this.config.context || {}),
+        };
+    }
+
     /**
      * Load the config and data for hierarchy view
      *
@@ -789,7 +796,7 @@ export class HierarchyModel extends Model {
                     this.childFieldName,
                     orderByToString(config.orderBy),
                 ],
-                { context: config.context }
+                { context: this.context }
             );
         };
         let result = await hierarchyRead();
@@ -869,7 +876,7 @@ export class HierarchyModel extends Model {
             domain.toList({}),
             this.fieldsToFetch,
             {
-                context: this.config.context,
+                context: this.context,
                 order: orderByToString(this.config.orderBy),
             },
         );
@@ -908,7 +915,7 @@ export class HierarchyModel extends Model {
             [["id", "in", childrenResIds]],
             this.fieldsToFetch,
             {
-                context: this.config.context,
+                context: this.context,
                 order: orderByToString(this.config.orderBy),
             },
         )
@@ -932,7 +939,7 @@ export class HierarchyModel extends Model {
                 ['id:array_agg'],
                 [this.parentFieldName],
                 {
-                    context: this.config.context || {},
+                    context: this.context || {},
                     orderby: orderByToString(this.config.orderBy),
                 },
             );
@@ -960,7 +967,7 @@ export class HierarchyModel extends Model {
             this.resModel,
             [node.resId],
             { [this.parentFieldName]: parentResId },
-            { context: this.config.context }
+            { context: this.context }
         );
     }
 
@@ -1004,7 +1011,7 @@ export class HierarchyModel extends Model {
         // Reload impacted records.
         const domain = this.computeUpdateParentNodeDomain(node, parentResId, parentNode);
         const data = await this.orm.searchRead(this.resModel, domain, this.fieldsToFetch, {
-            context: this.config.context,
+            context: this.context,
             order: orderByToString(this.config.orderBy),
         });
         const formattedData = this._formatData(data);
