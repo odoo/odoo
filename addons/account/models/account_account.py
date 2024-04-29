@@ -741,10 +741,6 @@ class AccountAccount(models.Model):
         if self.env['account.tax.repartition.line'].search([('account_id', 'in', self.ids)], limit=1):
             raise UserError(_('You cannot remove/deactivate the accounts "%s" which are set on a tax repartition line.', ', '.join(f"{a.code} - {a.name}" for a in self)))
 
-    def action_duplicate_accounts(self):
-        for account in self.browse(self.env.context['active_ids']):
-            account.copy()
-
     def action_open_related_taxes(self):
         related_taxes_ids = self.env['account.tax'].search([
             ('repartition_line_ids.account_id', '=', self.id),
