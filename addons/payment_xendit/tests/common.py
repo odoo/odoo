@@ -15,29 +15,31 @@ class XenditCommon(PaymentCommon):
             'xendit_webhook_token': 'xnd_webhook_token',
         })
         cls.provider = cls.xendit
+        cls.amount = 11100
+        cls.currency = cls._enable_currency('IDR')
         cls.webhook_notification_data = {
-            'amount': 1740,
+            'amount': cls.amount,
             'status': 'PAID',
             'created': '2023-07-12T09:31:13.111Z',
             'paid_at': '2023-07-12T09:31:22.830Z',
             'updated': '2023-07-12T09:31:23.577Z',
             'user_id': '64118d86854d7d89206e732d',
-            'currency': 'IDR',
+            'currency': cls.currency.name,
             'bank_code': 'BNI',
             'description': cls.reference,
             'external_id': cls.reference,
-            'paid_amount': 1740,
+            'paid_amount': cls.amount,
             'merchant_name': 'Odoo',
-            'initial_amount': 1740,
+            'initial_amount': cls.amount,
             'payment_method': 'BANK_TRANSFER',
             'payment_channel': 'BNI',
             'payment_destination': '880891384013',
         }
         cls.charge_notification_data = {
             'status': 'CAPTURED',
-            'authorized_amount': 11100,
-            'capture_amount': 11100,
-            'currency': 'IDR',
+            'authorized_amount': cls.amount,
+            'capture_amount': cls.amount,
+            'currency': cls.currency.name,
             'metadata': {},
             'credit_card_token_id': '6645aaa2f00da60017cdc669',
             'business_id': '64118d86854d7d89206e732d',

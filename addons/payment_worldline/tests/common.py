@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.tests.common import PaymentCommon
 
 
@@ -34,6 +35,10 @@ class WorldlineCommon(AccountTestInvoicingCommon, PaymentCommon):
                         },
                         'token': 'whateverToken'
                     },
+                    'amountOfMoney': {
+                        'amount': payment_utils.to_minor_currency_units(cls.amount, cls.currency),
+                        'currencyCode': cls.currency.name,
+                    }
                 },
                 'id': '1234567890_0',
                 'status': 'CAPTURED',
