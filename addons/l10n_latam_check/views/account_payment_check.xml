@@ -127,6 +127,7 @@
                         <field name="amount"/>
                     </group>
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>
@@ -155,7 +156,6 @@
                     <field name="currency_id" string="Payment Currency" optional="hide"/>
                     <field name="issue_state" widget="badge" decoration-info="issue_state == 'handed'"  decoration-muted="issue_state == 'voided'" decoration-success="issue_state == 'debited'"/>
             </tree>
-
         </field>
     </record>
 
