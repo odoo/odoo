@@ -293,7 +293,7 @@ class AccountEdiFormat(models.Model):
                     invoice_node['ClaveRegimenEspecialOTrascendencia'] = '02'
             else:
                 info['IDFactura']['IDEmisorFactura'] = partner_info
-                info['IDFactura']['NumSerieFacturaEmisor'] = invoice.ref[:60]
+                info["IDFactura"]["NumSerieFacturaEmisor"] = (invoice.ref or "")[:60]
                 if not is_simplified:
                     invoice_node['Contraparte'] = {
                         **partner_info,
