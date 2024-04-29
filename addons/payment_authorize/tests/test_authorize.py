@@ -49,10 +49,14 @@ class AuthorizeTest(AuthorizeCommon):
     def test_voiding_confirmed_tx_cancels_it(self):
         """ Test that voiding a transaction cancels it even if it's already confirmed. """
         source_tx = self._create_transaction('direct', state='done')
-        source_tx._handle_notification_data('authorize', {
-            'response': {
-                'x_response_code': '1',
-                'x_type': 'void',
-            },
-        })
+        with patch(
+            'odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI'
+            '.get_transaction_details', return_value={'transaction': {'authAmount': self.amount}},
+        ):
+            source_tx._handle_notification_data('authorize', {
+                'response': {
+                    'x_response_code': '1',
+                    'x_type': 'void',
+                },
+            })
         self.assertEqual(source_tx.state, 'cancel')
