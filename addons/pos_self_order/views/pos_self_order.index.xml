@@ -9,6 +9,11 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
                 <meta name="apple-mobile-web-app-capable" content="yes"/>
                 <meta name="mobile-web-app-capable" content="yes"/>
+                <t t-set="id" t-value="manifest_data['config_id']"/>
+                <t t-set="token" t-value="manifest_data['access_token']"/>
+                <link rel="manifest" t-attf-href="/pos-self/manifest/{{id}}/{{token}}" crossorigin="use-credentials"/>
+                <meta name="theme-color" content="#71639e"/>
+                <meta name="background-color" content="#71639e"/>
                 <script type="text/javascript">
                     var odoo = {
                         csrf_token: "<t t-nocache="The csrf token must always be up to date." t-esc="request.csrf_token(None)"/>",
