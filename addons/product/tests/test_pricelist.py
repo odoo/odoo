@@ -2,7 +2,7 @@
 
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 from odoo.addons.product.tests.common import ProductCommon
 
@@ -36,6 +36,8 @@ class TestPricelist(ProductCommon):
                 }),
             ],
         })
+        # Enable pricelist feature
+        cls.env.user.groups_id += cls.env.ref('product.group_product_pricelist')
 
     def test_10_discount(self):
         # Make sure the price using a pricelist is the same than without after
@@ -154,3 +156,26 @@ class TestPricelist(ProductCommon):
 
         with self.assertRaises(UserError):
             self.pricelist.company_id = second_company
+
+    def test_pricelists_res_partner_form(self):
+        pricelist_europe = self.env['product.pricelist'].create({
+            'name': 'Sale pricelist',
+            'country_group_ids': self.env.ref('base.europe').ids,
+        })
+
+        default_pricelist = self.env['product.pricelist'].search([('name', 'ilike', ' ')], limit=1)
+
+        with Form(self.env['res.partner']) as partner_form:
+            partner_form.name = "test"
+            self.assertEqual(partner_form.property_product_pricelist, default_pricelist)
+
+            partner_form.country_id = self.env.ref('base.be')
+            self.assertEqual(partner_form.property_product_pricelist, pricelist_europe)
+
+            partner_form.property_product_pricelist = self.sale_pricelist_id
+            self.assertEqual(partner_form.property_product_pricelist, self.sale_pricelist_id)
+
+            partner = partner_form.save()
+
+        with Form(partner) as partner_form:
+            self.assertEqual(partner_form.property_product_pricelist, self.sale_pricelist_id)
