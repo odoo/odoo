@@ -1100,7 +1100,7 @@ test("Open chat window of new inviter", async () => {
     pyEnv["res.users"].create({ partner_id: partnerId });
     // simulate receiving notification of new connection of inviting user
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "res.users/connection", {
+    pyEnv["bus.bus"]._add_to_queue(partner, "res.users/connection", {
         username: "Newbie",
         partnerId,
     });

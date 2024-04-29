@@ -106,7 +106,7 @@ class UserInputSession(http.Controller):
                 'session_question_id': next_question.id,
                 'session_question_start_time': fields.Datetime.now() + relativedelta(seconds=1)
             })
-            request.env['bus.bus']._sendone(survey.access_token, 'next_question', {
+            request.env['bus.bus']._add_to_queue(survey.access_token, 'next_question', {
                 'question_start': now.timestamp()
             })
 

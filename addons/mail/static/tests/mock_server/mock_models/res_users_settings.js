@@ -92,7 +92,7 @@ export class ResUsersSettings extends models.ServerModel {
         this.write(id, changedSettings);
         const [relatedUser] = ResUsers.search_read([["id", "=", oldSettings.user_id]]);
         const [relatedPartner] = ResPartner.search_read([["id", "=", relatedUser.partner_id[0]]]);
-        BusBus._sendone(relatedPartner, "res.users.settings", {
+        BusBus._add_to_queue(relatedPartner, "res.users.settings", {
             ...changedSettings,
             id,
         });

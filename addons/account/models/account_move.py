@@ -4630,9 +4630,8 @@ class AccountMove(models.Model):
         """ Handle Send & Print async processing.
         :param job_count: maximum number of jobs to process if specified.
         """
-        def get_account_notification(partner, moves, is_success):
+        def get_account_notification(moves, is_success: bool):
             return [
-                partner,
                 'account_notification',
                 {
                     'type': 'success' if is_success else 'warning',
@@ -4674,18 +4673,15 @@ class AccountMove(models.Model):
 
             self.env['account.move.send']._process_send_and_print(moves)
 
-            notifications = []
             for partner_id, partner_moves in moves_by_partner.items():
                 partner = self.env['res.partner'].browse(partner_id)
                 partner_moves_error = partner_moves.filtered(lambda m: m.send_and_print_values and m.send_and_print_values.get('error'))
                 if partner_moves_error:
-                    notifications.append(get_account_notification(partner, partner_moves_error, False))
+                    partner._bus_send(*get_account_notification(partner_moves_error, False))
                 partner_moves_success = partner_moves - partner_moves_error
                 if partner_moves_success:
-                    notifications.append(get_account_notification(partner, partner_moves_success, True))
+                    partner._bus_send(*get_account_notification(partner_moves_success, True))
                 partner_moves_error.send_and_print_values = False
-
-            self.env['bus.bus']._sendmany(notifications)
 
         if need_retrigger:
             self.env.ref('account.ir_cron_account_move_send')._trigger()

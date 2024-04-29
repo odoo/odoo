@@ -103,10 +103,8 @@ class WebsiteVisitor(models.Model):
                 'fold_state': 'open',
             })
             discuss_channels_info = discuss_channels._channel_info()
-            notifications = []
             for discuss_channel_info in discuss_channels_info:
-                notifications.append([operator.partner_id, 'website_livechat.send_chat_request', discuss_channel_info])
-            self.env['bus.bus']._sendmany(notifications)
+                operator._bus_send('website_livechat.send_chat_request', discuss_channel_info)
 
     def _merge_visitor(self, target):
         """ Copy sessions of the secondary visitors to the main partner visitor. """

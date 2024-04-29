@@ -286,7 +286,7 @@ test("thread notifications are re-ordered on receiving a new message", async () 
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 2 });
     const channel_1 = pyEnv["discuss.channel"].search_read([["id", "=", channelId_1]])[0];
-    pyEnv["bus.bus"]._sendone(channel_1, "discuss.channel/new_message", {
+    pyEnv["bus.bus"]._add_to_queue(channel_1, "discuss.channel/new_message", {
         id: channelId_1,
         message: {
             author: { id: 7, name: "Demo User" },

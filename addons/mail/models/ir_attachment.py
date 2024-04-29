@@ -10,7 +10,8 @@ from odoo.tools import consteq
 
 
 class IrAttachment(models.Model):
-    _inherit = 'ir.attachment'
+    _name = 'ir.attachment'
+    _inherit = ['ir.attachment', 'bus.listener.mixin']
 
     def _check_attachments_access(self, attachment_tokens):
         """This method relies on access rules/rights and therefore it should not be called from a sudo env."""
@@ -64,12 +65,13 @@ class IrAttachment(models.Model):
         if message:
             # sudo: mail.message - safe write just updating the date, because guests don't have the rights
             message.sudo().write({})  # to make sure write_date on the message is updated
-        self.env['bus.bus']._sendmany((attachment._bus_notification_target(), 'ir.attachment/delete', {
-            'id': attachment.id, 'message': {'id': message.id, 'write_date': message.write_date} if message else None
-        }) for attachment in self)
+        for attachment in self:
+            attachment._bus_send('ir.attachment/delete', {
+                'id': attachment.id, 'message': {'id': message.id, 'write_date': message.write_date} if message else None
+            })
         self.unlink()
 
-    def _bus_notification_target(self):
+    def _bus_channel(self):
         self.ensure_one()
         return self.env.user.partner_id
 

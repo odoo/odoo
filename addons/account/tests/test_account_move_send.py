@@ -1032,6 +1032,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             _hook_invoice_document_before_pdf_report_render,
         ):
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()  # force processing
+            self.env.cr.precommit.run()  # trigger the creation of bus.bus records
 
         bus_1 = self.env['bus.bus'].sudo().search(
             [('channel', 'like', f'"res.partner",{sp_partner_1.id}')],

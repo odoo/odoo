@@ -164,7 +164,7 @@ async function mail_attachment_delete(request) {
 
     const { attachment_id } = await parseRequestParams(request);
     const [partner] = ResPartner.read(this.env.user.partner_id);
-    BusBus._sendone(partner, "ir.attachment/delete", {
+    BusBus._add_to_queue(partner, "ir.attachment/delete", {
         id: attachment_id,
     });
     return IrAttachment.unlink([attachment_id]);
@@ -250,7 +250,6 @@ async function channel_call_leave(request) {
     const rtcSessions = DiscussChannelRtcSession._filter([
         ["channel_member_id", "in", channelMembers.map((channelMember) => channelMember.id)],
     ]);
-    const notifications = [];
     const channelInfo = DiscussChannelRtcSession._mail_rtc_session_format_by_channel(
         rtcSessions.map((rtcSession) => rtcSession.id)
     );
@@ -259,26 +258,25 @@ async function channel_call_leave(request) {
         const notificationRtcSessions = sessionsData.map((sessionsDataPoint) => {
             return { id: sessionsDataPoint.id };
         });
-        notifications.push([
+        BusBus._add_to_queue(
             channel,
             "discuss.channel/rtc_sessions_update",
             {
                 id: Number(channelId), // JS object keys are strings, but the type from the server is number
                 rtcSessions: [["DELETE", notificationRtcSessions]],
             },
-        ]);
+        );
     }
     for (const rtcSession of rtcSessions) {
         const target = rtcSession.guest_id
             ? MailGuest.search_read([["id", "=", rtcSession.guest_id]])[0]
             : ResPartner.search_read([["id", "=", rtcSession.partner_id]])[0];
-        notifications.push([
+        BusBus._add_to_queue(
             target,
             "discuss.channel.rtc.session/ended",
             { sessionId: rtcSession.id },
-        ]);
+        );
     }
-    BusBus._sendmany(notifications);
 }
 
 registerRoute("/discuss/channel/fold", discuss_channel_fold);
@@ -372,7 +370,7 @@ async function discuss_channel_mute(request) {
         mute_until_dt,
     };
     const [partner] = ResPartner.read(this.env.user.partner_id);
-    BusBus._sendone(partner, "mail.record/insert", { Thread: channel_data });
+    BusBus._add_to_queue(partner, "mail.record/insert", { Thread: channel_data });
     return "dummy";
 }
 
@@ -495,7 +493,7 @@ async function mail_link_preview(request) {
         });
         const [linkPreview] = MailLinkPreview.search_read([["id", "=", linkPreviewId]]);
         linkPreviews.push(MailLinkPreview._link_preview_format(linkPreview));
-        BusBus._sendone(MailMessage._bus_notification_target(message_id), "mail.record/insert", {
+        BusBus._add_to_queue(MailMessage._bus_channel(message_id), "mail.record/insert", {
             LinkPreview: linkPreviews,
         });
     }
@@ -514,8 +512,8 @@ async function mail_link_preview_hide(request) {
     const { link_preview_ids } = await parseRequestParams(request);
     const linkPreviews = MailLinkPreview.search_read([["id", "in", link_preview_ids]]);
     for (const linkPreview of linkPreviews) {
-        BusBus._sendone(
-            MailMessage._bus_notification_target(linkPreview.message_id[0]),
+        BusBus._add_to_queue(
+            MailMessage._bus_channel(linkPreview.message_id[0]),
             "mail.record/insert",
             {
                 Message: {
@@ -623,7 +621,7 @@ async function mail_message_update_content(request) {
         MailMessage.write([message_id], { pinned_at: false });
     }
     const [message] = MailMessage.search_read([["id", "=", message_id]]);
-    BusBus._sendone(MailMessage._bus_notification_target(message_id), "mail.record/insert", {
+    BusBus._add_to_queue(MailMessage._bus_channel(message_id), "mail.record/insert", {
         Message: {
             id: message_id,
             body,

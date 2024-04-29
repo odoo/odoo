@@ -341,7 +341,7 @@ test("sidebar: unpin chat from bus", async () => {
     // Simulate receiving a unpin chat notification
     // (e.g. from user interaction from another device or browser tab)
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "discuss.channel/unpin", { id: channelId });
+    pyEnv["bus.bus"]._add_to_queue(partner, "discuss.channel/unpin", { id: channelId });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Demo" });
     await contains(".o-mail-Discuss-threadName", { count: 0, value: "Demo" });
 });
@@ -825,7 +825,7 @@ test("channel - states: close from the bus", async () => {
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-down");
     await contains("button", { text: "channel1" });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "res.users.settings", {
+    pyEnv["bus.bus"]._add_to_queue(partner, "res.users.settings", {
         id: userSettingsId,
         is_discuss_sidebar_category_channel_open: false,
     });
@@ -858,7 +858,7 @@ test("channel - states: open from the bus", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "res.users.settings", {
+    pyEnv["bus.bus"]._add_to_queue(partner, "res.users.settings", {
         id: userSettingsId,
         is_discuss_sidebar_category_channel_open: true,
     });
@@ -977,7 +977,7 @@ test("chat - states: close from the bus", async () => {
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
     await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "res.users.settings", {
+    pyEnv["bus.bus"]._add_to_queue(partner, "res.users.settings", {
         id: userSettingsId,
         is_discuss_sidebar_category_chat_open: false,
     });
@@ -1011,7 +1011,7 @@ test("chat - states: open from the bus", async () => {
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
     await contains(".o-mail-DiscussSidebar button", { count: 0, text: "Mitchell Admin" });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "res.users.settings", {
+    pyEnv["bus.bus"]._add_to_queue(partner, "res.users.settings", {
         id: userSettingsId,
         is_discuss_sidebar_category_chat_open: true,
     });

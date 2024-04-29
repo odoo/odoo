@@ -49,42 +49,28 @@ export class BusBus extends models.Model {
     /**
      * @param {models.Model | string} channel
      * @param {string} notificationType
-     * @param {any} message
+     * @param {any} payload
      */
-    _sendone(channel, notificationType, message) {
-        this._sendmany([[channel, notificationType, message]]);
-    }
-
-    /** @param {[models.Model | string, string, any][]} notifications */
-    _sendmany(notifications) {
+    _add_to_queue(target, notificationType, payload) {
         /** @type {import("mock_models").IrWebSocket} */
         const IrWebSocket = this.env["ir.websocket"];
 
-        if (!notifications.length) {
-            return;
-        }
-        const values = [];
         const authenticatedUserId =
             "res.users" in this.env && this.env.cookie.get("authenticated_user_sid");
         const channels = [
             ...IrWebSocket._build_bus_channel_list(),
             ...(this.channelsByUser[authenticatedUserId] || []),
         ];
-        notifications = notifications.filter(([target]) =>
-            channels.some((channel) => {
-                if (typeof target === "string") {
-                    return channel === target;
-                }
-                return channel?._name === target?.model && channel?.id === target?.id;
-            })
-        );
-        if (notifications.length === 0) {
-            return;
+        if (channels.some((channel) => {
+            if (typeof target === "string") {
+                return channel === target;
+            }
+            return channel?._name === target?.model && channel?.id === target?.id;
+        })) {
+            this.wsWorker.broadcast(
+                "notification",
+                [{ id: ++this.lastBusNotificationId, message: { payload, type: notificationType } }]
+            );
         }
-        for (const notification of notifications) {
-            const [type, payload] = notification.slice(1, notification.length);
-            values.push({ id: ++this.lastBusNotificationId, message: { payload, type } });
-        }
-        this.wsWorker.broadcast("notification", values);
     }
 }

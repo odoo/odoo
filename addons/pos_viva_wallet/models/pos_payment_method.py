@@ -130,7 +130,7 @@ class PosPaymentMethod(models.Model):
         # Send a notification to the point of sale channel to indicate that the transaction are finish
         pos_session_sudo = self.env["pos.session"].browse(int(data.get('pos_session_id', False)))
         if pos_session_sudo:
-            self.env['bus.bus']._sendone(pos_session_sudo._get_bus_channel_name(), 'VIVA_WALLET_LATEST_RESPONSE', pos_session_sudo.config_id.id)
+            self.env['bus.bus']._add_to_queue(pos_session_sudo._get_bus_channel_name(), 'VIVA_WALLET_LATEST_RESPONSE', pos_session_sudo.config_id.id)
 
     def viva_wallet_send_payment_request(self, data):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):

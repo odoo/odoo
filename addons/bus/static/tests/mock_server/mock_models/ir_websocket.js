@@ -19,7 +19,7 @@ export class IrWebSocket extends models.ServerModel {
         if (Object.keys(imStatusNotifications).length > 0) {
             if (this.env.user) {
                 const [partner] = ResPartner.read(this.env.user.partner_id);
-                BusBus._sendone(partner, "mail.record/insert", imStatusNotifications);
+                BusBus._add_to_queue(partner, "mail.record/insert", imStatusNotifications);
             }
         }
     }

@@ -8,14 +8,14 @@ class IrAttachment(models.Model):
 
     voice_ids = fields.One2many("discuss.voice.metadata", "attachment_id")
 
-    def _bus_notification_target(self):
+    def _bus_channel(self):
         self.ensure_one()
         if self.res_model == "discuss.channel" and self.res_id:
             return self.env["discuss.channel"].browse(self.res_id)
         guest = self.env["mail.guest"]._get_guest_from_context()
         if self.env.user._is_public() and guest:
             return guest
-        return super()._bus_notification_target()
+        return super()._bus_channel()
 
     def _attachment_format(self):
         attachment_format = super()._attachment_format()

@@ -143,7 +143,7 @@ class TestWebsocketCaryall(WebsocketCase):
         # Simulate postgres notify. The session with whom the websocket
         # connected has been deleted. WebSocket should be closed without
         # receiving the message.
-        self.env['bus.bus']._sendone('channel1', 'notif type', 'message')
+        self.env['bus.bus']._add_to_queue('channel1', 'notif type', 'message')
         self.trigger_notification_dispatching(["channel1"])
         self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
 
@@ -170,13 +170,13 @@ class TestWebsocketCaryall(WebsocketCase):
     def test_trigger_notification(self):
         websocket = self.websocket_connect()
         self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
-        self.env['bus.bus']._sendone('my_channel', 'notif_type', 'message')
+        self.env['bus.bus']._add_to_queue('my_channel', 'notif_type', 'message')
         self.trigger_notification_dispatching(["my_channel"])
         notifications = json.loads(websocket.recv())
         self.assertEqual(1, len(notifications))
         self.assertEqual(notifications[0]['message']['type'], 'notif_type')
         self.assertEqual(notifications[0]['message']['payload'], 'message')
-        self.env['bus.bus']._sendone('my_channel', 'notif_type', 'another_message')
+        self.env['bus.bus']._add_to_queue('my_channel', 'notif_type', 'another_message')
         self.trigger_notification_dispatching(["my_channel"])
         notifications = json.loads(websocket.recv())
         # First notification has been received, we should only receive
@@ -208,10 +208,8 @@ class TestWebsocketCaryall(WebsocketCase):
         websocket = self.websocket_connect()
         with patch.object(IrWebsocket, "_build_bus_channel_list", return_value=[channel]):
             self.subscribe(websocket, [], self.env['bus.bus']._bus_last_id())
-            self.env["bus.bus"]._sendmany([
-                (channel, "notif_on_global_channel", "message"),
-                ((channel, "PRIVATE"), "notif_on_private_channel", "message"),
-            ])
+            channel._bus_send("notif_on_global_channel", "message")
+            channel._bus_send("notif_on_private_channel", "message", subchannel="PRIVATE")
             self.trigger_notification_dispatching([channel, (channel, "PRIVATE")])
             notifications = json.loads(websocket.recv())
             self.assertEqual(len(notifications), 1)
@@ -220,10 +218,8 @@ class TestWebsocketCaryall(WebsocketCase):
 
         with patch.object(IrWebsocket, "_build_bus_channel_list", return_value=[(channel, "PRIVATE")]):
             self.subscribe(websocket, [], self.env['bus.bus']._bus_last_id())
-            self.env["bus.bus"]._sendmany([
-                (channel, "notif_on_global_channel", "message"),
-                ((channel, "PRIVATE"), "notif_on_private_channel", "message"),
-            ])
+            channel._bus_send("notif_on_global_channel", "message")
+            channel._bus_send("notif_on_private_channel", "message", subchannel="PRIVATE")
             self.trigger_notification_dispatching([channel, (channel, "PRIVATE")])
             notifications = json.loads(websocket.recv())
             self.assertEqual(len(notifications), 1)

@@ -923,7 +923,7 @@ test("Opening thread with needaction messages should mark all messages of thread
     // simulate receiving a new needaction message
     const [formattedMessage] = pyEnv["mail.message"]._message_format(messageId);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", formattedMessage);
+    pyEnv["bus.bus"]._add_to_queue(partner, "mail.message/inbox", formattedMessage);
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await click("button", { text: "General" });
     await contains(".o-discuss-badge", { count: 0 });

@@ -11,7 +11,7 @@ export class LivechatChannel extends models.ServerModel {
         this.write([id], { user_ids: [Command.link(this.env.user.id)] });
         const self = this.read([id])[0];
         const [partner] = this.env["res.partner"].read(this.env.user.partner_id);
-        this.env["bus.bus"]._sendone(partner, "mail.record/insert", {
+        this.env["bus.bus"]._add_to_queue(partner, "mail.record/insert", {
             LivechatChannel: { id, name: self.name, hasSelfAsMember: true },
         });
     }
@@ -21,7 +21,7 @@ export class LivechatChannel extends models.ServerModel {
         this.write(id, { user_ids: [Command.unlink(this.env.user.id)] });
         const [partner] = this.env["res.partner"].read(this.env.user.partner_id);
         const self = this.read([id])[0];
-        this.env["bus.bus"]._sendone(partner, "mail.record/insert", {
+        this.env["bus.bus"]._add_to_queue(partner, "mail.record/insert", {
             LivechatChannel: { id, name: self.name, hasSelfAsMember: false },
         });
     }

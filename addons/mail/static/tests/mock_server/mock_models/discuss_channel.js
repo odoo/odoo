@@ -71,8 +71,8 @@ export class DiscussChannel extends models.ServerModel {
             })
         );
         const [partner] = ResPartner.read(this.env.user.partner_id);
-        BusBus._sendone(partner, "discuss.channel/leave", { id: channel.id });
-        BusBus._sendone(channel, "mail.record/insert", {
+        BusBus._add_to_queue(partner, "discuss.channel/leave", { id: channel.id });
+        BusBus._add_to_queue(channel, "mail.record/insert", {
             Thread: {
                 id: channel.id,
                 channelMembers: [["DELETE", { id: channelMember.id }]],
@@ -120,7 +120,7 @@ export class DiscussChannel extends models.ServerModel {
                     create_uid: this.env.uid,
                 })
             );
-            BusBus._sendone(partner, "discuss.channel/joined", {
+            BusBus._add_to_queue(partner, "discuss.channel/joined", {
                 channel: { ...this.channel_basic_info([channel.id]), is_pinned: true },
                 invited_by_user_id: this.env.uid,
             });
@@ -139,7 +139,7 @@ export class DiscussChannel extends models.ServerModel {
                 ["channel_id", "=", channel.id],
             ]) > 0;
         if (isSelfMember) {
-            BusBus._sendone(channel, "mail.record/insert", {
+            BusBus._add_to_queue(channel, "mail.record/insert", {
                 Thread: {
                     id: channel.id,
                     channelMembers: [
@@ -284,7 +284,7 @@ export class DiscussChannel extends models.ServerModel {
             DiscussChannelMember.write([memberOfCurrentUser.id], {
                 fetched_message_id: lastMessage.id,
             });
-            BusBus._sendone(channel, "discuss.channel.member/fetched", {
+            BusBus._add_to_queue(channel, "discuss.channel.member/fetched", {
                 channel_id: channel.id,
                 id: memberOfCurrentUser.id,
                 last_message_id: lastMessage.id,
@@ -492,11 +492,11 @@ export class DiscussChannel extends models.ServerModel {
         }
         const [partner] = ResPartner.read(this.env.user.partner_id);
         if (!pinned) {
-            BusBus._sendone(partner, "discuss.channel/unpin", {
+            BusBus._add_to_queue(partner, "discuss.channel/unpin", {
                 id: channel.id,
             });
         } else {
-            BusBus._sendone(partner, "mail.record/insert", {
+            BusBus._add_to_queue(partner, "mail.record/insert", {
                 Thread: this._channel_info([channel.id])[0],
             });
         }
@@ -542,7 +542,7 @@ export class DiscussChannel extends models.ServerModel {
             custom_channel_name: name,
         });
         const [partner] = ResPartner.read(this.env.user.partner_id);
-        BusBus._sendone(partner, "mail.record/insert", {
+        BusBus._add_to_queue(partner, "mail.record/insert", {
             Thread: {
                 custom_channel_name: name,
                 id: channelId,
@@ -606,7 +606,7 @@ export class DiscussChannel extends models.ServerModel {
             Type <b>/command</b> to execute a command.<br></span>
         `;
         const [partner] = ResPartner.read(this.env.user.partner_id);
-        BusBus._sendone(partner, "discuss.channel/transient_message", {
+        BusBus._add_to_queue(partner, "discuss.channel/transient_message", {
             body: notifBody,
             thread: { model: "discuss.channel", id: channel.id },
         });
@@ -658,7 +658,7 @@ export class DiscussChannel extends models.ServerModel {
                     .join(", ")} and you`;
             }
             const [partner] = ResPartner.read(this.env.user.partner_id);
-            BusBus._sendone(partner, "discuss.channel/transient_message", {
+            BusBus._add_to_queue(partner, "discuss.channel/transient_message", {
                 body: `<span class="o_mail_notification">${message}</span>`,
                 thread: { model: "discuss.channel", id: channel.id },
             });
@@ -844,7 +844,7 @@ export class DiscussChannel extends models.ServerModel {
             })
         );
         const [channel] = this.read(id);
-        BusBus._sendone(channel, "mail.record/insert", {
+        BusBus._add_to_queue(channel, "mail.record/insert", {
             Message: {
                 id: message_id,
                 pinned_at,
@@ -863,7 +863,7 @@ export class DiscussChannel extends models.ServerModel {
                 avatarCacheKey: DateTime.utc().toFormat("yyyyMMddHHmmss"),
             });
             const channel = this.search_read([["id", "=", firstId]])[0];
-            return BusBus._sendone(channel, "mail.record/insert", {
+            return BusBus._add_to_queue(channel, "mail.record/insert", {
                 Thread: {
                     avatarCacheKey: channel.avatarCacheKey,
                     id: firstId,
@@ -871,7 +871,6 @@ export class DiscussChannel extends models.ServerModel {
                 },
             });
         }
-        const notifications = [];
         const [channel] = this._filter([["id", "=", firstId]]);
         if (channel) {
             const diff = {};
@@ -880,7 +879,7 @@ export class DiscussChannel extends models.ServerModel {
                     diff[key] = values[key];
                 }
             }
-            notifications.push([
+            BusBus._add_to_queue(
                 channel,
                 "mail.record/insert",
                 {
@@ -890,12 +889,9 @@ export class DiscussChannel extends models.ServerModel {
                         ...diff,
                     },
                 },
-            ]);
+            );
         }
         const result = super.write(idOrIds, values, kwargs);
-        if (notifications.length) {
-            BusBus._sendmany(notifications);
-        }
         return result;
     }
 
@@ -911,27 +907,11 @@ export class DiscussChannel extends models.ServerModel {
 
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
-
-        const notifications = this._channel_channel_notifications(ids, partner_ids);
-        BusBus._sendmany(notifications);
-    }
-
-    /**
-     * @param {number} id
-     * @param {number[]} partner_ids
-     */
-    _channel_channel_notifications(ids, partner_ids) {
-        const kwargs = parseModelParams(arguments, "ids", "partner_ids");
-        ids = kwargs.ids;
-        delete kwargs.ids;
-        partner_ids = kwargs.partner_ids;
-
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        const notifications = [];
         for (const partner_id of partner_ids) {
             const user = ResUsers._filter([["partner_id", "in", partner_id]])[0];
             if (!user) {
@@ -942,10 +922,9 @@ export class DiscussChannel extends models.ServerModel {
             const channelInfos = this._channel_info(ids);
             const [relatedPartner] = ResPartner.search_read([["id", "=", partner_id]]);
             for (const channelInfo of channelInfos) {
-                notifications.push([relatedPartner, "mail.record/insert", { Thread: channelInfo }]);
+                BusBus._add_to_queue(relatedPartner, "mail.record/insert", { Thread: channelInfo });
             }
         }
-        return notifications;
     }
 
     /**
@@ -1009,7 +988,7 @@ export class DiscussChannel extends models.ServerModel {
             if (this._types_allowing_seen_infos().includes(channel.channel_type)) {
                 target = channel;
             }
-            BusBus._sendone(target, "discuss.channel.member/seen", {
+            BusBus._add_to_queue(target, "discuss.channel.member/seen", {
                 channel_id: channel.id,
                 id: memberOfCurrentUser?.id,
                 last_message_id: message_id,

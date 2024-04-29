@@ -59,7 +59,7 @@ export class MailMessage extends models.ServerModel {
             });
         }
         const [partner] = ResPartner.read(this.env.user.partner_id);
-        BusBus._sendone(partner, "mail.message/mark_as_read", {
+        BusBus._add_to_queue(partner, "mail.message/mark_as_read", {
             message_ids: messageIds,
             needaction_inbox_counter: ResPartner._get_needaction_count(this.env.user.partner_id),
         });
@@ -259,7 +259,7 @@ export class MailMessage extends models.ServerModel {
                 ),
             });
             const [partner] = ResPartner.read(this.env.user.partner_id);
-            BusBus._sendone(partner, "mail.message/mark_as_read", {
+            BusBus._add_to_queue(partner, "mail.message/mark_as_read", {
                 message_ids: [message.id],
                 needaction_inbox_counter: ResPartner._get_needaction_count(
                     this.env.user.partner_id
@@ -286,7 +286,7 @@ export class MailMessage extends models.ServerModel {
                 ],
             });
             const [partner] = ResPartner.read(this.env.user.partner_id);
-            BusBus._sendone(partner, "mail.message/toggle_star", {
+            BusBus._add_to_queue(partner, "mail.message/toggle_star", {
                 message_ids: [message.id],
                 starred: !wasStarred,
             });
@@ -305,14 +305,14 @@ export class MailMessage extends models.ServerModel {
             { starred_partner_ids: [Command.unlink(this.env.user.partner_id)] }
         );
         const [partner] = ResPartner.read(this.env.user.partner_id);
-        BusBus._sendone(partner, "mail.message/toggle_star", {
+        BusBus._add_to_queue(partner, "mail.message/toggle_star", {
             message_ids: messages.map((message) => message.id),
             starred: false,
         });
     }
 
     /** @param {number} id */
-    _bus_notification_target(id) {
+    _bus_channel(id) {
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").MailGuest} */
@@ -401,7 +401,7 @@ export class MailMessage extends models.ServerModel {
                 ],
             ],
         };
-        BusBus._sendone(this._bus_notification_target(id), "mail.record/insert", {
+        BusBus._add_to_queue(this._bus_channel(id), "mail.record/insert", {
             Message: result,
         });
     }

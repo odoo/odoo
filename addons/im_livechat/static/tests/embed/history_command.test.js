@@ -36,7 +36,7 @@ test("Handle livechat history command", async () => {
     const thread = env.services["im_livechat.livechat"].thread;
     const guestId = pyEnv.cookie.get("dgid");
     const [guest] = pyEnv["mail.guest"].read(guestId);
-    pyEnv["bus.bus"]._sendone(guest, "im_livechat.history_command", {
+    pyEnv["bus.bus"]._add_to_queue(guest, "im_livechat.history_command", {
         id: thread.id,
     });
     await tick();
