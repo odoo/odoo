@@ -55,7 +55,9 @@ class IrAttachment(models.Model):
                 #Ignore AccessError, if you don't have access to modify the document
                 #Just don't set the value
                 try:
-                    related_record.message_main_attachment_id = self
+                    not_allowed_mimetypes = ["application/xml", "application/pkcs7-mime"]
+                    if self.mimetype not in not_allowed_mimetypes:
+                        related_record.message_main_attachment_id = self
                 except AccessError:
                     pass
 
