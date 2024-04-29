@@ -33,13 +33,8 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'xendit':
             return res
 
-        if self.currency_id.name in const.CURRENCY_DECIMALS:
-            rounding = const.CURRENCY_DECIMALS.get(self.currency_id.name)
-        else:
-            rounding = self.currency_id.decimal_places
-        rounded_amount = float_round(self.amount, rounding, rounding_method='DOWN')
         return {
-            'rounded_amount': rounded_amount
+            'rounded_amount': self._get_rounded_amount(),
         }
 
     def _get_specific_rendering_values(self, processing_values):
@@ -83,7 +78,7 @@ class PaymentTransaction(models.Model):
         })
         payload = {
             'external_id': self.reference,
-            'amount': self.amount,
+            'amount': self._get_rounded_amount(),
             'description': self.reference,
             'customer': {
                 'given_names': self.partner_name,
@@ -139,21 +134,22 @@ class PaymentTransaction(models.Model):
         :param str token_ref: The reference of the Xendit token to use to make the payment.
         :return: None
         """
-        if self.currency_id.name in const.CURRENCY_DECIMALS:
-            rounding = const.CURRENCY_DECIMALS.get(self.currency_id.name)
-        else:
-            rounding = self.currency_id.decimal_places
-        rounded_amount = float_round(self.amount, rounding, rounding_method='DOWN')
         payload = {
             'token_id': token_ref,
             'external_id': self.reference,
-            'amount': rounded_amount,
+            'amount': self._get_rounded_amount(),
             'currency': self.currency_id.name,
         }
         charge_notification_data = self.provider_id._xendit_make_request(
             'credit_card_charges', payload=payload
         )
         self._handle_notification_data('xendit', charge_notification_data)
+
+    def _get_rounded_amount(self):
+        decimal_places = const.CURRENCY_DECIMALS.get(
+            self.currency_id.name, self.currency_id.decimal_places
+        )
+        return float_round(self.amount, decimal_places, rounding_method='DOWN')
 
     def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of `payment` to find the transaction based on the notification data.
@@ -179,6 +175,23 @@ class PaymentTransaction(models.Model):
                 "Xendit: " + _("No transaction found matching reference %s.", reference)
             )
         return tx
+
+    def _compare_notification_data(self, notification_data):
+        """ Override of `payment` to compare the transaction based on Xendit data.
+
+        :param dict notification_data: The notification data sent by the provider.
+        :return: None
+        :raise ValidationError: If the transaction's amount and currency don't match the
+            notification data.
+        """
+        if self.provider_code != 'xendit':
+            return super()._compare_notification_data(notification_data)
+
+        amount = notification_data.get('amount') or notification_data.get('authorized_amount')
+        currency_code = notification_data.get('currency')
+        self._validate_amount_and_currency(
+            amount, currency_code, precision_digits=const.CURRENCY_DECIMALS.get(currency_code)
+        )
 
     def _process_notification_data(self, notification_data):
         """ Override of `payment` to process the transaction based on Xendit data.

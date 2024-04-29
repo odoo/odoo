@@ -100,6 +100,22 @@ class PaymentTransaction(models.Model):
             ))
         return tx
 
+    def _compare_notification_data(self, notification_data):
+        """ Override of `payment` to compare the transaction based on Mollie data.
+
+        :param dict notification_data: The notification data sent by the provider.
+        :return: None
+        :raise ValidationError: If the transaction's amount and currency don't match the
+            notification data.
+        """
+        if self.provider_code != 'mollie':
+            return super()._compare_notification_data(notification_data)
+
+        amount_data = notification_data.get('amount', {})
+        amount = amount_data.get('value')
+        currency_code = amount_data.get('currency')
+        self._validate_amount_and_currency(amount, currency_code)
+
     def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Mollie data.
 
@@ -112,21 +128,17 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'mollie':
             return
 
-        payment_data = self.provider_id._mollie_make_request(
-            f'/payments/{self.provider_reference}', method="GET"
-        )
-
         # Update the payment method.
-        payment_method_type = payment_data.get('method', '')
+        payment_method_type = notification_data.get('method', '')
         if payment_method_type == 'creditcard':
-            payment_method_type = payment_data.get('details', {}).get('cardLabel', '').lower()
+            payment_method_type = notification_data.get('details', {}).get('cardLabel', '').lower()
         payment_method = self.env['payment.method']._get_from_code(
             payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
         )
         self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.
-        payment_status = payment_data.get('status')
+        payment_status = notification_data.get('status')
         if payment_status == 'pending':
             self._set_pending()
         elif payment_status == 'authorized':

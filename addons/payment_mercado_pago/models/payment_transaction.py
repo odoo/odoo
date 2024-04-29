@@ -123,6 +123,27 @@ class PaymentTransaction(models.Model):
             )
         return tx
 
+    def _compare_notification_data(self, notification_data):
+        """ Override of `payment` to compare the transaction based on Mercado Pago data.
+
+        :param dict notification_data: The notification data sent by the provider.
+        :return: None
+        :raise ValidationError: If the transaction's amount and currency don't match the
+            notification data.
+        """
+        if self.provider_code != 'mercado_pago':
+            return super()._compare_notification_data(notification_data)
+
+        amount = notification_data.get('additional_info', {}).get('items', [{}])[0].get(
+            'unit_price'
+        )
+        # The currency code isn't included in the notification data, so we can't validate it.
+        self._validate_amount_and_currency(
+            amount,
+            self.currency_id.name,
+            precision_digits=const.CURRENCY_DECIMALS.get(self.currency_id.name),
+        )
+
     def _process_notification_data(self, notification_data):
         """ Override of `payment` to process the transaction based on Mercado Pago data.
 
@@ -137,18 +158,13 @@ class PaymentTransaction(models.Model):
             return
 
         # Update the provider reference.
-        payment_id = notification_data.get('payment_id')
+        payment_id = notification_data.get('id')
         if not payment_id:
             raise ValidationError("Mercado Pago: " + _("Received data with missing payment id."))
         self.provider_reference = payment_id
 
-        # Verify the notification data.
-        verified_payment_data = self.provider_id._mercado_pago_make_request(
-            f'/v1/payments/{self.provider_reference}', method='GET'
-        )
-
         # Update the payment method.
-        payment_method_type = verified_payment_data.get('payment_type_id', '')
+        payment_method_type = notification_data.get('payment_type_id', '')
         for odoo_code, mp_codes in const.PAYMENT_METHODS_MAPPING.items():
             if any(payment_method_type == mp_code for mp_code in mp_codes.split(',')):
                 payment_method_type = odoo_code
@@ -163,7 +179,7 @@ class PaymentTransaction(models.Model):
         self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.
-        payment_status = verified_payment_data.get('status')
+        payment_status = notification_data.get('status')
         if not payment_status:
             raise ValidationError("Mercado Pago: " + _("Received data with missing status."))
 
@@ -174,7 +190,7 @@ class PaymentTransaction(models.Model):
         elif payment_status in const.TRANSACTION_STATUS_MAPPING['canceled']:
             self._set_canceled()
         elif payment_status in const.TRANSACTION_STATUS_MAPPING['error']:
-            status_detail = verified_payment_data.get('status_detail')
+            status_detail = notification_data.get('status_detail')
             _logger.warning(
                 "Received data for transaction with reference %s with status %s and error code: %s",
                 self.reference, payment_status, status_detail

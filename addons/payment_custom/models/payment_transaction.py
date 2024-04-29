@@ -71,6 +71,15 @@ class PaymentTransaction(models.Model):
             )
         return tx
 
+    def _compare_notification_data(self, notification_data):
+        """ Override of `payment` to skip the transaction comparison for custom flows.
+
+        :param dict notification_data: The custom data.
+        :return: None
+        """
+        if self.provider_code != 'custom':
+            return super()._compare_notification_data(notification_data)
+
     def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on custom data.
 

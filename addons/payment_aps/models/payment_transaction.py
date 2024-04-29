@@ -105,6 +105,23 @@ class PaymentTransaction(models.Model):
 
         return tx
 
+    def _compare_notification_data(self, notification_data):
+        """ Override of `payment` to compare the transaction based on APS data.
+
+        :param dict notification_data: The notification data sent by the provider.
+        :return: None
+        :raise ValidationError: If the transaction's amount and currency don't match the
+            notification data.
+        """
+        if self.provider_code != 'aps':
+            return super()._compare_notification_data(notification_data)
+
+        amount = payment_utils.to_major_currency_units(
+            float(notification_data.get('amount', 0)), self.currency_id
+        )
+        currency_code = notification_data.get('currency')
+        self._validate_amount_and_currency(amount, currency_code)
+
     def _process_notification_data(self, notification_data):
         """ Override of `payment' to process the transaction based on APS data.
 

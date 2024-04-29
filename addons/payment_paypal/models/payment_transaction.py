@@ -129,6 +129,22 @@ class PaymentTransaction(models.Model):
             )
         return tx
 
+    def _compare_notification_data(self, notification_data):
+        """ Override of `payment` to compare the transaction based on PayPal data.
+
+        :param dict notification_data: The notification data sent by the provider.
+        :return: None
+        :raise ValidationError: If the transaction's amount and currency don't match the
+            notification data.
+        """
+        if self.provider_code != 'paypal':
+            return super()._compare_notification_data(notification_data)
+
+        amount_data = notification_data.get('amount', {})
+        amount = amount_data.get('value')
+        currency_code = amount_data.get('currency_code')
+        self._validate_amount_and_currency(amount, currency_code)
+
     def _process_notification_data(self, notification_data):
         """ Override of `payment` to process the transaction based on Paypal data.
 
@@ -145,13 +161,6 @@ class PaymentTransaction(models.Model):
         if not notification_data:
             self._set_canceled(state_message=_("The customer left the payment page."))
             return
-
-        amount = notification_data.get('amount').get('value')
-        currency_code = notification_data.get('amount').get('currency_code')
-        assert amount and currency_code, "PayPal: missing amount or currency"
-        assert self.currency_id.compare_amounts(float(amount), self.amount) == 0, \
-            "PayPal: mismatching amounts"
-        assert currency_code == self.currency_id.name, "PayPal: mismatching currency codes"
 
         # Update the provider reference.
         txn_id = notification_data.get('id')

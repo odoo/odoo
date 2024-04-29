@@ -27,6 +27,11 @@ class DPOController(http.Controller):
 
     @staticmethod
     def _verify_and_handle_notification_data(data):
+        """ Verify and process the notification data sent by DPO.
+
+        :param dict data: The notification data.
+        :return: None
+        """
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'dpo', data
         )

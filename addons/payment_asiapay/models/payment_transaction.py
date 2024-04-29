@@ -131,6 +131,22 @@ class PaymentTransaction(models.Model):
 
         return tx
 
+    def _compare_notification_data(self, notification_data):
+        """ Override of `payment` to compare the transaction based on AsiaPay data.
+
+        :param dict notification_data: The notification data sent by the provider.
+        :return: None
+        :raise ValidationError: If the transaction's amount and currency don't match the
+            notification data.
+        """
+        if self.provider_code != 'asiapay':
+            return super()._compare_notification_data(notification_data)
+
+        amount = notification_data.get('Amt')
+        # AsiaPay supports only one currency per account.
+        currency_code = self.provider_id.available_currency_ids[0].name
+        self._validate_amount_and_currency(amount, currency_code)
+
     def _process_notification_data(self, notification_data):
         """ Override of `payment' to process the transaction based on AsiaPay data.
 
