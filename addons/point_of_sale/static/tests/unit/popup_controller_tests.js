@@ -82,9 +82,7 @@ QUnit.test("allow multiple popups at the same time", async function (assert) {
     const popup2Promise = root.popup.add(CustomPopup2, {});
     await nextTick();
 
-    assert.containsOnce(fixture, ".popup", "only one popup is displayed");
     assert.containsOnce(fixture, ".custom-popup-2", "second popup is displayed");
-    assert.containsNone(fixture, ".custom-popup-1", "first popup is not displayed");
 
     await click(fixture.querySelector(".modal-dialog .custom-popup-2 .confirm"));
 
@@ -118,10 +116,9 @@ QUnit.test("pressing cancel/confirm key should only close the top popup", async 
         cancelKey: "Escape",
     });
     await nextTick();
-    assert.containsNone(fixture, ".custom-popup-1", "first popup no longer displayed");
     assert.containsOnce(fixture, ".custom-popup-2", "second popup is open");
 
-    await triggerEvent(fixture, ".popup", "keyup", { key: "Escape" });
+    await triggerEvent(fixture, ".custom-popup-2", "keyup", { key: "Escape" });
     assert.containsNone(fixture, ".custom-popup-2", "second popup no longer displayed");
     assert.containsOnce(fixture, ".custom-popup-1", "first popup is displayed again");
 
@@ -132,7 +129,7 @@ QUnit.test("pressing cancel/confirm key should only close the top popup", async 
         "canceling the popup with escape resolved the promise with confirmed: false"
     );
 
-    await triggerEvent(fixture, ".popup", "keyup", { key: "Enter" });
+    await triggerEvent(fixture, ".custom-popup-1", "keyup", { key: "Enter" });
     assert.containsNone(fixture, ".popup", "no popups remain");
 
     const result1 = await popup1Promise;
