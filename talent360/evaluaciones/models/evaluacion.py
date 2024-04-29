@@ -335,3 +335,6 @@ class Evaluacion(models.Model):
             "evaluacion": self,
             "pregunta": self.pregunta_ids,
         }
+    
+    def action_enviar_evaluacion(self):
+        self.env['usuario.evaluacion.rel'].action_enviar_evaluacion(evaluacion_id=self.id)

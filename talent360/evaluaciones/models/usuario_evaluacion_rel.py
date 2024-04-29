@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+import secrets
 
 class UsuarioEvaluacionRel(models.Model):
     _name = "usuario.evaluacion.rel"
@@ -30,16 +31,24 @@ class UsuarioEvaluacionRel(models.Model):
         usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
             [("usuario_id", "=", user_id), ("evaluacion_id", "=", evaluacion_id)]
         )
-        usuario_evaluacion.contestada = True
 
-    def create(self, vals):
-        from ..controllers.token_generator import TokenGenerator
-        vals["token"] = TokenGenerator.generate_token()
-        return super(UsuarioEvaluacionRel, self).create(vals)
+    def action_enviar_evaluacion(self, evaluacion_id):
+        """
+        Ejecuta la acción de redireccionar a la lista de evaluaciones y devuelve un diccionario
 
-    
-    def write(self, vals):
-        from ..controllers.token_generator import TokenGenerator
-        if "usuario_id" in vals or "evaluacion_id" in vals:
-            vals["token"] = TokenGenerator.generate_token()
-        return super(UsuarioEvaluacionRel, self).write(vals)
+        Este método utiliza los parámetros necesarios para redireccionar a la lista de evaluaciones
+
+        :return: Un diccionario que contiene todos los parámetros necesarios para redireccionar la
+        a una vista de la lista de las evaluaciones.
+
+        """
+
+        length = 32
+
+        usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
+            [("evaluacion_id", "=", evaluacion_id)]
+        )
+
+        for user in usuario_evaluacion:
+            token = secrets.token_hex(length)
+            user.write({"token": token})

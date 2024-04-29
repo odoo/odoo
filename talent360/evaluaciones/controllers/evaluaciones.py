@@ -32,7 +32,7 @@ class EvaluacionesController(http.Controller):
         return request.render("evaluaciones.encuestas_reporte", parametros)
     
     @http.route(
-        "/evaluacion/responder/<model('evaluacion'):evaluacion>", type="http", auth="user", website=True
+        "/evaluacion/responder/<model('evaluacion'):evaluacion>/:token", type="http", auth="user", website=True
     )
     def responder_evaluacion_controller(self, evaluacion: Evaluacion):
         """Método para desplegar el formulario de permitir al usuario responder una evaluación.
