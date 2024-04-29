@@ -584,7 +584,11 @@ class TestUi(TestPointOfSaleHttpCommon):
         configurable_product = self.env['product.product'].search([('name', '=', 'Configurable Chair'), ('available_in_pos', '=', 'True')], limit=1)
         fabrics_line = configurable_product.attribute_line_ids[2]
         fabrics_line.product_template_value_ids[1].ptav_active = False
-
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_manager').id),
+            ]
+        })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('ProductConfiguratorTour')
 
@@ -1084,30 +1088,32 @@ class TestUi(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
         })
 
-        color_attribute = self.env['product.attribute'].create({'name': 'Color', 'sequence': 4})
-        self.env['product.attribute.value'].create([{
-            'name': name,
-            'attribute_id': color_attribute.id,
-            'sequence': 1,
-        } for name in ('White', 'Red')])
+        color_attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'sequence': 4,
+            'value_ids': [(0, 0, {
+                'name': 'White',
+                'sequence': 1,
+            }), (0, 0, {
+                'name': 'Red',
+                'sequence': 2,
+                'default_extra_price': 50,
+            })],
+        })
 
-        product_2 = self.env['product.product'].create({
+        product_2_template = self.env['product.template'].create({
             'name': 'Test Product 2',
             'list_price': 200,
             'taxes_id': False,
             'available_in_pos': True,
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': color_attribute.id,
+                'value_ids': [(6, 0, color_attribute.value_ids.ids)]
+            })],
         })
 
-        product_2_template = product_2.product_tmpl_id
-        product_2_color_attribute_line = self.env['product.template.attribute.line'].create([{
-            'product_tmpl_id': product_2_template.id,
-            'attribute_id': color_attribute.id,
-            'value_ids': [(6, 0, color_attribute.value_ids.ids)]
-        }])
         # Check that two product variant are created
         self.assertEqual(product_2_template.product_variant_count, 2)
-
-        product_2_color_attribute_line.product_template_value_ids[1].price_extra = 50
         product_2_template.product_variant_ids[0].write({'barcode': '0100201'})
         product_2_template.product_variant_ids[1].write({'barcode': '0100202'})
 
@@ -1136,11 +1142,15 @@ class TestUi(TestPointOfSaleHttpCommon):
             'fixed_price': 120,
         }])
         self.main_pos_config.pricelist_id.write({'item_ids': [(6, 0, pricelist_item.ids)]})
-
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'limitedProductPricelistLoading', login="pos_user")
 
     def test_multi_product_options(self):
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_manager').id),
+            ]
+        })
         product_a = self.env['product.product'].create({
             'name': 'Product A',
             'available_in_pos': True,

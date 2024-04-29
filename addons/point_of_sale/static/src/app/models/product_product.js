@@ -38,7 +38,7 @@ export class ProductProduct extends Base {
     async _onScaleNotAvailable() {}
 
     isConfigurable() {
-        return this.attribute_line_ids.some((line) => line.attribute_id);
+        return this.attribute_line_ids.map((a) => a.product_template_value_ids).flat().length > 1;
     }
 
     isCombo() {

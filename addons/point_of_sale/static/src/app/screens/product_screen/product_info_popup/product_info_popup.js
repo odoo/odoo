@@ -1,10 +1,11 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component } from "@odoo/owl";
+import { ProductInfoBanner } from "@point_of_sale/app/components/product_info_banner/product_info_banner";
 
 export class ProductInfoPopup extends Component {
     static template = "point_of_sale.ProductInfoPopup";
-    static components = { Dialog };
+    static components = { Dialog, ProductInfoBanner };
     static props = ["info", "product", "close"];
 
     setup() {
@@ -23,5 +24,10 @@ export class ProductInfoPopup extends Component {
     editProduct() {
         this.pos.editProduct(this.props.product);
         this.props.close();
+    }
+    get isVariant() {
+        return this.pos.models["product.product"].filter(
+            (p) => p.raw.product_tmpl_id === this.props.product.raw.product_tmpl_id
+        );
     }
 }

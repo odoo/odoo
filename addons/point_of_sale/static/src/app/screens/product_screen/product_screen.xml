@@ -26,7 +26,7 @@
                         <ProductCard
                             t-foreach="productsToDisplay" t-as="product" t-key="product.id"
                             class="pos.productViewMode"
-                            name="product.display_name"
+                            name="getProductName(product)"
                             productId="product.id"
                             color="product.pos_categ_ids?.at(-1)?.color"
                             price="pos.getProductPriceFormatted(product)"

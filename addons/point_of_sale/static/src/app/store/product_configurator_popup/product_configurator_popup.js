@@ -1,13 +1,16 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { Component, onMounted, useRef, useState, useSubEnv } from "@odoo/owl";
+import { usePos } from "../pos_hook";
+import { useRefListener, useService } from "@web/core/utils/hooks";
+import { ProductInfoBanner } from "@point_of_sale/app/components/product_info_banner/product_info_banner";
 
 export class BaseProductAttribute extends Component {
     static template = "";
     static props = ["attributeLine"];
     setup() {
         this.env.attribute_components.push(this);
-        this.attribute = this.props.attributeLine.attribute_id;
-        this.values = this.props.attributeLine.product_template_value_ids;
+        this.attributeLine = this.props.attributeLine;
+        this.values = this.attributeLine.product_template_value_ids;
         this.state = useState({
             attribute_value_ids: parseFloat(this.values[0].id),
             custom_value: "",
@@ -16,7 +19,7 @@ export class BaseProductAttribute extends Component {
 
     getValue() {
         const attribute_value_ids =
-            this.attribute.display_type === "multi"
+            this.attributeLine.attribute_id.display_type === "multi"
                 ? this.values.filter((val) => this.state.attribute_value_ids[val.id])
                 : [this.values.find((val) => val.id === parseInt(this.state.attribute_value_ids))];
 
@@ -98,6 +101,7 @@ export class ProductConfiguratorPopup extends Component {
     static template = "point_of_sale.ProductConfiguratorPopup";
     static components = {
         RadioProductAttribute,
+        ProductInfoBanner,
         PillsProductAttribute,
         SelectProductAttribute,
         ColorProductAttribute,
@@ -108,18 +112,24 @@ export class ProductConfiguratorPopup extends Component {
 
     setup() {
         useSubEnv({ attribute_components: [] });
-    }
+        this.pos = usePos();
+        this.ui = useState(useService("ui"));
+        this.inputArea = useRef("input-area");
+        this.state = useState({
+            product: this.props.product,
+            payload: this.env.attribute_components,
+        });
 
-    get attributeLines() {
-        return this.props.product.attribute_line_ids.filter((attr) => attr.attribute_id);
+        this.computeProductProduct();
+        useRefListener(this.inputArea, "touchend", this.computeProductProduct.bind(this));
+        useRefListener(this.inputArea, "click", this.computeProductProduct.bind(this));
     }
-
     computePayload() {
         const attribute_custom_values = [];
         let attribute_value_ids = [];
         var price_extra = 0.0;
 
-        this.env.attribute_components.forEach((attribute_component) => {
+        this.state.payload.forEach((attribute_component) => {
             const { valueIds, extra, custom_value } = attribute_component.getValue();
             attribute_value_ids.push(valueIds);
 
@@ -138,12 +148,37 @@ export class ProductConfiguratorPopup extends Component {
             price_extra,
         };
     }
+    computeProductProduct() {
+        let product = this.props.product;
+        const formattedPayload = this.computePayload();
+        const alwaysVariants = this.props.product.attribute_line_ids.every(
+            (line) => line.attribute_id.create_variant === "always"
+        );
+
+        if (alwaysVariants) {
+            const newProduct = this.pos.models["product.product"]
+                .filter((p) => p.raw.product_template_variant_value_ids.length > 0)
+                .find((p) =>
+                    p.raw.product_template_variant_value_ids.every((v) =>
+                        formattedPayload.attribute_value_ids.includes(v)
+                    )
+                );
+            if (newProduct) {
+                product = newProduct;
+            }
+        }
+
+        this.state.product = product;
+    }
     get imageUrl() {
         const product = this.props.product;
         return `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.write_date}`;
     }
     get unitPrice() {
         return this.env.utils.formatCurrency(this.props.product.lst_price);
+    }
+    close() {
+        this.props.close();
     }
     confirm() {
         this.props.getPayload(this.computePayload());

@@ -36,6 +36,16 @@ export class DataServiceOptions {
                     );
                 },
             },
+            {
+                name: "product.attribute.custom.value",
+                key: "id",
+                condition: (record) => {
+                    return record.models["pos.order.line"].find((l) => {
+                        const customAttrIds = l.custom_attribute_value_ids.map((v) => v.id);
+                        return customAttrIds.includes(record.id);
+                    });
+                },
+            },
         ];
     }
 
