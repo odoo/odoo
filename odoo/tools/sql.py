@@ -333,7 +333,7 @@ def drop_view_if_exists(cr, viewname):
         cr.execute("DROP MATERIALIZED VIEW {} CASCADE".format(viewname))
 
 def escape_psql(to_escape):
-    return to_escape.replace('\\', r'\\').replace('%', '\%').replace('_', '\_')
+    return to_escape.replace('\\', r'\\').replace('%', r'\%').replace('_', r'\_')
 
 def pg_varchar(size=0):
     """ Returns the VARCHAR declaration for the provided size:

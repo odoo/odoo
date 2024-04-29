@@ -65,7 +65,7 @@ class TestTitleToSlug(BaseCase):
     def test_special_chars(self):
         self.assertEqual(
             "o-d-o-o",
-            slugify(u"o!#d{|\o/@~o&%^?")
+            slugify(r"o!#d{|\o/@~o&%^?")
         )
 
     def test_str_to_unicode(self):
