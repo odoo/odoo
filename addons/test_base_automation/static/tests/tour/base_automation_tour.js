@@ -230,7 +230,9 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
         {
             trigger: ".modal-content .o_form_button_save",
         },
-        ...stepUtils.saveForm(),
+        ...stepUtils.saveForm({
+            extra_trigger: ".o-overlay-container:not(:has(.modal-content))",
+        }),
         {
             trigger: ".breadcrumb .o_back_button a",
         },
