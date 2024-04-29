@@ -125,7 +125,7 @@ class AccountMoveLine(models.Model):
         price_unit = super(AccountMoveLine, self)._stock_account_get_anglo_saxon_price_unit()
 
         so_line = self.sale_line_ids and self.sale_line_ids[-1] or False
-        down_payment = self.move_id.invoice_line_ids.filtered(lambda line: line.sale_line_ids.is_downpayment)
+        down_payment = self.move_id.invoice_line_ids.filtered(lambda line: any(line.sale_line_ids.mapped('is_downpayment')))
         if so_line:
             is_line_reversing = False
             if self.move_id.move_type == 'out_refund' and not down_payment:
