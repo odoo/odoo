@@ -54,3 +54,33 @@ class TestWebsitePageManager(odoo.tests.HttpCase):
         website_2 = Website.create({'name': 'website 2'})
         locs = website_2.with_context(website_id=website_2.id)._enumerate_pages(query_string="/test_diverged")
         self.assertEqual(len(list(locs)), 1, "Generic page should be shown")
+
+    def test_unique_view_key_on_duplication_pages(self):
+        Page = self.env['website.page']
+        View = self.env['ir.ui.view']
+
+        test_view = View.create({
+            'name': 'Base',
+            'type': 'qweb',
+            'arch': '<div>Test View</div>',
+            'key': 'website.test-duplicate',
+        })
+        original_page = Page.create({
+            'view_id': test_view.id,
+            'url': '/test-duplicate',
+            'name': 'Test Duplicate',
+            'website_id': 1,
+        })
+
+        pages = Page.search([('name', 'like', 'Test Duplicate')])
+        self.assertEqual(len(pages), 1)
+
+        url = self.env['website'].get_client_action_url('/')
+        self.start_tour(url, 'website_clone_pages', login="admin")
+
+        pages = Page.search([('name', 'like', 'Test Duplicate')])
+        self.assertEqual(len(pages), 4)
+
+        original_view = View.get_related_views(original_page.view_id.key)
+
+        self.assertEqual(len(original_view), 1)
