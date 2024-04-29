@@ -7749,6 +7749,30 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_list_view table", "should have a table in the dom");
     });
 
+    QUnit.test("no empty lists when nocontent helper and no data", async function (assert) {
+        serverData.models.foo.records = [];
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/></tree>',
+            noContentHelp: "click new to add a foo",
+        });
+
+        assert.containsOnce(
+            target,
+            ".o_view_nocontent",
+            "should display the no content helper"
+        );
+        assert.containsN(
+            target.querySelector('.o_list_view table tbody'),
+            "tr",
+            0,
+            "should not have any empty rows"
+        );
+    });
+
     QUnit.test("empty list with sample data", async function (assert) {
         await makeView({
             type: "list",
