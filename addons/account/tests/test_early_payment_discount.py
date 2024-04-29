@@ -161,7 +161,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             {'amount_currency': 900.0},
         ])
 
-    def test_register_discounted_payment_on_single_invoice_with_fixed_tax(self):
+    def test_register_discounted_payment_on_single_invoice_with_fixed_tax_1(self):
         self.early_pay_10_percents_10_days.early_pay_discount_computation = 'included'
         fixed_tax = self.env['account.tax'].create({
             'name': 'Test 0.05',
@@ -194,6 +194,42 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             {'amount_currency': -150.0, 'tax_tag_invert': True},
             {'amount_currency': -22.5, 'tax_tag_invert': True},
             {'amount_currency': 1725.05, 'tax_tag_invert': False},
+        ])
+
+    def test_register_discounted_payment_on_single_invoice_with_fixed_tax_2(self):
+        self.early_pay_10_percents_10_days.early_pay_discount_computation = 'included'
+        fixed_tax = self.env['account.tax'].create({
+            'name': 'Test 0.05',
+            'amount_type': 'fixed',
+            'amount': 0.05,
+            'type_tax_use': 'purchase',
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'line',
+                'price_unit': 50.0,
+                'tax_ids': [Command.set(self.product_a.supplier_taxes_id.ids + fixed_tax.ids)]
+            })],
+            'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+        })
+
+        invoice.action_post()
+        payments = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({'payment_date': '2017-01-01'})\
+            ._create_payments()
+
+        self.assertTrue(payments.is_reconciled)
+        self.assertRecordValues(payments.line_ids.sorted('balance'), [
+            {'amount_currency': -51.80, 'tax_tag_invert': False},
+            {'amount_currency': -5.00, 'tax_tag_invert': True},
+            {'amount_currency': -0.75, 'tax_tag_invert': True},
+            {'amount_currency': 57.55, 'tax_tag_invert': False},
         ])
 
     def test_register_discounted_payment_on_single_invoice_with_tax(self):
