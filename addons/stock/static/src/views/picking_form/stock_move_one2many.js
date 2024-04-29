@@ -38,8 +38,8 @@ export class StockMoveX2ManyField extends X2ManyField {
                 await record._parentRecord.save({ reload: true });
             }
             if (dirty && 'quantity' in record._changes) {
-                await record.model.root.save({ reload: true });
-                record = record.model.root.data[this.props.name].records.find(e => e.resId === record.resId);
+                await record._parentRecord.save({ reload: true });
+                record = record._parentRecord.data[this.props.name].records.find(e => e.resId === record.resId);
                 if (!record) {
                     return;
                 }
