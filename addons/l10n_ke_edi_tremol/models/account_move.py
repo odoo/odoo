@@ -5,7 +5,7 @@ import json
 import re
 from datetime import datetime
 
-from odoo import models, fields, _
+from odoo import models, fields, _, api
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -17,6 +17,18 @@ class AccountMove(models.Model):
     l10n_ke_cu_serial_number = fields.Char(string='CU Serial Number', copy=False)
     l10n_ke_cu_invoice_number = fields.Char(string='CU Invoice Number', copy=False)
     l10n_ke_cu_qrcode = fields.Char(string='CU QR Code', copy=False)
+    l10n_ke_cu_show_send_button = fields.Boolean(string='Show Send to Tremol button', compute='_compute_l10n_ke_cu_show_send_button')
+
+    @api.depends('country_code', 'l10n_ke_cu_qrcode', 'state', 'move_type', 'company_id')
+    def _compute_l10n_ke_cu_show_send_button(self):
+        for move in self:
+            move.l10n_ke_cu_show_send_button = (
+                move.country_code == 'KE'
+                and not move.l10n_ke_cu_qrcode
+                and move.state == 'posted'
+                and move.move_type in ['out_invoice', 'out_refund']
+                and not move.company_id.l10n_ke_oscu_is_active
+            )
 
     # -------------------------------------------------------------------------
     # HELPERS
@@ -82,6 +94,9 @@ class AccountMove(models.Model):
 
     def _l10n_ke_fiscal_device_details_filled(self):
         self.ensure_one()
+        # If the company is configured for OSCU, don't block the Send & Print.
+        if self.company_id.l10n_ke_oscu_is_active:
+            return True
         return all([
             self.country_code == 'KE',
             self.l10n_ke_cu_invoice_number,
@@ -232,6 +247,11 @@ class AccountMove(models.Model):
         """ Returns the client action descriptor dictionary for sending the
             invoice(s) to the control unit (the fiscal device).
         """
+        # If l10n_ke_edi_oscu is configured for the company, disable sending via TREMOL.
+        if self.company_id.l10n_ke_oscu_is_active:
+            raise UserError(
+                _('An OSCU has been initialized for this company. Please send the e-invoice via Send and Print -> Send to eTIMS instead.')
+            )
         # Check the configuration of the invoice
         errors = self._l10n_ke_validate_move()
         if errors:
