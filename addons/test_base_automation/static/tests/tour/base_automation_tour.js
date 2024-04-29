@@ -560,6 +560,11 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
             run: 'text "on_tag_set"',
         },
         {
+            trigger:
+                ".o_field_widget[name='trg_field_ref'] :not(:has(.o-autocomplete--dropdown-menu))",
+            isCheck: true,
+        },
+        {
             trigger: ".o_field_widget[name='trg_field_ref'] input",
         },
         {
