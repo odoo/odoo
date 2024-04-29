@@ -16,6 +16,7 @@
                             <field name="l10n_latam_check_issuer_vat" column_invisible="parent.payment_method_code == 'own_checks'"/>
                             <field name="l10n_latam_check_payment_date" required="parent.payment_method_code == 'own_checks'"/>
                             <field name="amount" />
+                            <button type="object" name="get_formview_action" icon="fa-pencil-square-o" title="open" help="Open" column_invisible="parent.state != 'posted'"/>
                         </tree>
                     </field>
                     <field name="l10n_latam_check_ids" widget="one2many" invisible="payment_method_code not in ['in_third_party_checks', 'out_third_party_checks']"
@@ -26,14 +27,15 @@
                                 if is_internal_transfer else
                             [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', False), ('company_id', '=', company_id)]" options="{'no_create': True}"
                             nolabel="1" colspan="2" readonly="state != 'draft'">
-                        <tree name="mew_checks" editable="bottom" no_open="1">
+                        <tree name="existing_checks">
                             <field name="company_id" column_invisible="True"/>
                             <field name="currency_id" column_invisible="True"/>
                             <field name="name" />
-                            <field name="l10n_latam_check_bank_id"/>
-                            <field name="l10n_latam_check_issuer_vat"/>
-                            <field name="amount" />
-                            <button name="button_open_check_operations" type="object" string="⇒ Check Operations" class="oe_link"/>
+                            <field name="l10n_latam_check_bank_id" optional="hide"/>
+                            <field name="l10n_latam_check_issuer_vat" optional="hide"/>
+                            <field name="l10n_latam_check_payment_date" optional="hide"/>
+                            <field name="amount"/>
+                            <button type="object" name="get_formview_action" icon="fa-pencil-square-o" title="open" help="Open"/>
                         </tree>
                     </field>
                 </group>

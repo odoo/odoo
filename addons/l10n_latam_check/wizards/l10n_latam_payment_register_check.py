@@ -3,6 +3,7 @@
 import logging
 
 from odoo import models, fields, api
+import stdnum
 
 _logger = logging.getLogger(__name__)
 
@@ -52,18 +53,9 @@ class l10nLatamCheckPaymentRegisterCheck(models.TransientModel):
             rec.l10n_latam_check_issuer_vat = rec.payment_register_id.partner_id.vat
         (self - new_third_party_checks).l10n_latam_check_issuer_vat = False
 
-
-    # @api.onchange('l10n_latam_check_issuer_vat')
-    # def _clean_l10n_latam_check_issuer_vat(self):
-    #     for rec in self.filtered(lambda x: x.l10n_latam_check_issuer_vat and x.company_id.country_id.code):
-    #         stdnum_vat = stdnum.util.get_cc_module(rec.company_id.country_id.code, 'vat')
-    #         if hasattr(stdnum_vat, 'compact'):
-    #             rec.l10n_latam_check_issuer_vat = stdnum_vat.compact(rec.l10n_latam_check_issuer_vat)
-
-    # @api.constrains('l10n_latam_check_issuer_vat', 'company_id')
-    # def _check_l10n_latam_check_issuer_vat(self):
-    #     for rec in self.filtered(lambda x: x.l10n_latam_check_issuer_vat and x.company_id.country_id):
-    #         if not self.env['res.partner']._run_vat_test(rec.l10n_latam_check_issuer_vat, rec.company_id.country_id):
-    #             error_message = self.env['res.partner']._build_vat_error_message(
-    #                 rec.company_id.country_id.code.lower(), rec.l10n_latam_check_issuer_vat, 'Check Issuer VAT')
-    #             raise ValidationError(error_message)
+    @api.onchange('l10n_latam_check_issuer_vat')
+    def _clean_l10n_latam_check_issuer_vat(self):
+        for rec in self.filtered(lambda x: x.l10n_latam_check_issuer_vat and x.company_id.country_id.code):
+            stdnum_vat = stdnum.util.get_cc_module(rec.company_id.country_id.code, 'vat')
+            if hasattr(stdnum_vat, 'compact'):
+                rec.l10n_latam_check_issuer_vat = stdnum_vat.compact(rec.l10n_latam_check_issuer_vat)

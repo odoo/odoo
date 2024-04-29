@@ -13,6 +13,7 @@ class AccountPayment(models.Model):
         column1="payment_id",
         column2="check_id",
         required=True,
+        copy=False,
         string="Checks"
     )
     # Warning message in case of unlogical third party check operations
@@ -202,60 +203,11 @@ class AccountPayment(models.Model):
         """ Add is_internal_transfer as a trigger to re-compute """
         return super()._compute_payment_method_line_fields()
 
-    # @api.depends('l10n_latam_manual_checks')
-    # def _compute_show_check_number(self):
-    #     latam_checks = self.filtered(
-    #         lambda x: x.payment_method_line_id.code == 'new_third_party_checks' or
-    #         (x.payment_method_line_id.code == 'check_printing' and x.l10n_latam_manual_checks))
-    #     latam_checks.show_check_number = False
-    #     super(AccountPayment, self - latam_checks)._compute_show_check_number()
-
-    # @api.constrains('check_number', 'journal_id')
-    # def _constrains_check_number_unique(self):
-    #     """ Don't enforce uniqueness for third party checks"""
-    #     third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
-    #     return super(AccountPayment, self - third_party_checks)._constrains_check_number_unique()
-
-    # @api.onchange('l10n_latam_check_id')
-    # def _onchange_check(self):
-    #     for rec in self.filtered('l10n_latam_check_id'):
-    #         rec.amount = rec.l10n_latam_check_id.amount
-
-    # @api.onchange('payment_method_line_id', 'is_internal_transfer', 'journal_id', 'destination_journal_id')
-    # def _onchange_to_reset_check_ids(self):
-    #     # If any of these fields change, the domain of the selectable checks could change
-    #     self.l10n_latam_check_id = False
-
-    # @api.onchange('l10n_latam_check_number')
-    # def _onchange_check_number(self):
-    #     for rec in self.filtered(
-    #         lambda x: x.journal_id.company_id.country_id.code == "AR" and
-    #         x.l10n_latam_check_number and x.l10n_latam_check_number.isdecimal()):
-    #         rec.l10n_latam_check_number = '%08d' % int(rec.l10n_latam_check_number)
-
     def _get_payment_method_codes_to_exclude(self):
         res = super()._get_payment_method_codes_to_exclude()
         if self.is_internal_transfer:
             res.append('new_third_party_checks')
         return res
-
-    # def action_unmark_sent(self):
-    #     """ Unmarking as sent for electronic/deferred check would give the option to print and re-number check but
-    #     it's not implemented yet for this kind of checks"""
-    #     if self.filtered(lambda x: x.payment_method_line_id.code == 'check_printing' and x.l10n_latam_manual_checks):
-    #         raise UserError(_('Unmark sent is not implemented for electronic or deferred checks'))
-    #     return super().action_unmark_sent()
-
-    # def action_post(self):
-    #     msgs = self._get_blocking_l10n_latam_warning_msg()
-    #     if msgs:
-    #         raise ValidationError('* %s' % '\n* '.join(msgs))
-
-    #     res = super().action_post()
-
-    #     # mark own checks that are not printed as sent
-    #     self.filtered(lambda x: x.payment_method_line_id.code == 'check_printing' and x.l10n_latam_manual_checks).write({'is_move_sent': True})
-    #     return res
 
     @api.model
     def _get_trigger_fields_to_synchronize(self):
@@ -275,52 +227,30 @@ class AccountPayment(models.Model):
             })
         return res
 
-    # @api.depends('check_number', 'payment_method_line_id')
-    # def _compute_display_name(self):
-    #     """ Add check number to display_name on check_id m2o field """
-    #     super()._compute_display_name()
-    #     for rec in self:
-    #         if rec.check_number and rec.payment_method_line_id.code == 'new_third_party_checks':
-    #             rec.display_name = "{} {}".format(rec.display_name, _("(Check %s)", rec.check_number))
-
-    # def _create_paired_internal_transfer_payment(self):
-    #     """
-    #     Two modifications when only when transferring from a third party checks journal:
-    #     1. When a paired transfer is created, the default odoo behavior is to use on the paired transfer the first
-    #     available payment method. If we are transferring to another third party checks journal, then set as payment
-    #     method on the paired transfer 'in_third_party_checks' or 'out_third_party_checks'
-    #     2. On the paired transfer set the l10n_latam_check_id field, this field is needed for the
-    #     l10n_latam_check_operation_ids and also for some warnings and constrains.
-    #     """
-    #     third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code in [
-    #         'in_third_party_checks',
-    #         'out_third_party_checks'
-    #     ])
-    #     for rec in third_party_checks:
-    #         dest_payment_method_code = 'in_third_party_checks' if rec.payment_type == 'outbound' else 'out_third_party_checks'
-    #         dest_payment_method = rec.destination_journal_id.inbound_payment_method_line_ids.filtered(
-    #             lambda x: x.code == dest_payment_method_code)
-    #         if dest_payment_method:
-    #             super(AccountPayment, rec.with_context(
-    #                 default_payment_method_line_id=dest_payment_method.id,
-    #                 default_l10n_latam_check_id=rec.l10n_latam_check_id,
-    #             ))._create_paired_internal_transfer_payment()
-    #         else:
-    #             super(AccountPayment, rec.with_context(
-    #                 default_l10n_latam_check_id=rec.l10n_latam_check_id,
-    #             ))._create_paired_internal_transfer_payment()
-    #     super(AccountPayment, self - third_party_checks)._create_paired_internal_transfer_payment()
-
-    # @api.constrains('l10n_latam_check_id')
-    # def _check_l10n_latam_check_id(self):
-    #     if self.filtered(lambda x: x.payment_method_line_id.code == 'out_third_party_checks'):
-    #         payments = self.env['account.payment'].search_count([
-    #             ('l10n_latam_check_id', 'in', self.l10n_latam_check_id.ids),
-    #             ('payment_type', '=', 'outbound'),
-    #             ('journal_id', 'in', self.journal_id.ids),
-    #             ('id', 'not in', self.ids)],
-    #             limit=1)
-    #         if payments:
-    #             raise ValidationError(_(
-    #                 "The check(s) '%s' is already used on another payment. Please select another check or "
-    #                 "deselect the check on this payment.", self.l10n_latam_check_id.mapped('display_name')))
+    def _create_paired_internal_transfer_payment(self):
+        """
+        Two modifications when only when transferring from a third party checks journal:
+        1. When a paired transfer is created, the default odoo behavior is to use on the paired transfer the first
+        available payment method. If we are transferring to another third party checks journal, then set as payment
+        method on the paired transfer 'in_third_party_checks' or 'out_third_party_checks'
+        2. On the paired transfer set the l10n_latam_check_id field, this field is needed for the
+        l10n_latam_check_operation_ids and also for some warnings and constrains.
+        """
+        third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code in [
+            'in_third_party_checks',
+            'out_third_party_checks'
+        ])
+        for rec in third_party_checks:
+            dest_payment_method_code = 'in_third_party_checks' if rec.payment_type == 'outbound' else 'out_third_party_checks'
+            dest_payment_method = rec.destination_journal_id.inbound_payment_method_line_ids.filtered(
+                lambda x: x.code == dest_payment_method_code)
+            if dest_payment_method:
+                super(AccountPayment, rec.with_context(
+                    default_payment_method_line_id=dest_payment_method.id,
+                    default_l10n_latam_check_ids=rec.l10n_latam_check_ids.ids,
+                ))._create_paired_internal_transfer_payment()
+            else:
+                super(AccountPayment, rec.with_context(
+                    default_l10n_latam_check_ids=rec.l10n_latam_check_ids.ids,
+                ))._create_paired_internal_transfer_payment()
+        super(AccountPayment, self - third_party_checks)._create_paired_internal_transfer_payment()

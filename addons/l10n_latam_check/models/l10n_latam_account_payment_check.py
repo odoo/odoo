@@ -1,6 +1,7 @@
 # pylint: disable=protected-access
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+import stdnum
 
 from odoo import models, fields, api, Command, _
 from odoo.exceptions import ValidationError
@@ -35,7 +36,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
     l10n_latam_check_current_journal_id = fields.Many2one(
         comodel_name='account.journal',
         string="Check Current Journal",
-        compute='_compute_check_info', store=True,
+        compute='_compute_l10n_latam_check_current_journal', store=True,
     )
     company_id = fields.Many2one(related='payment_id.company_id')
     currency_id = fields.Many2one(related='payment_id.currency_id')
@@ -47,7 +48,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
     )
     l10n_latam_check_issuer_vat = fields.Char(
         string='Check Issuer VAT',
-        # compute='_compute_l10n_latam_check_issuer_vat', store=True, readonly=False,
+        compute='_compute_l10n_latam_check_issuer_vat', store=True, readonly=False,
     )
     l10n_latam_check_payment_date = fields.Date(
         string='Check Cash-In Date',
@@ -128,7 +129,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
                 lambda x: x.state == 'posted').sorted(key=lambda payment: (payment.date, payment.id))[-1:]
 
     @api.depends('state', 'l10n_latam_check_operation_ids.state')
-    def _compute_check_info(self):
+    def _compute_l10n_latam_check_current_journal(self):
         for rec in self:
             last_operation = rec._get_last_operation()
             if not last_operation:
@@ -193,32 +194,31 @@ class l10nLatamAccountPaymentCheck(models.Model):
         if min_amount_error:
             raise ValidationError(_('The amount of the check must be greater than 0'))
 
-    # @api.depends('payment_register_id.payment_method_line_id.code', 'payment_register_id.partner_id')
-    # def _compute_l10n_latam_check_bank_id(self):
-    #     new_third_party_checks = self.filtered(lambda x: x.payment_register_id.payment_method_line_id.code == 'new_third_party_checks')
-    #     for rec in new_third_party_checks:
-    #         rec.l10n_latam_check_bank_id = rec.payment_register_id.partner_id.bank_ids[:1].bank_id
-    #     (self - new_third_party_checks).l10n_latam_check_bank_id = False
+    @api.depends('payment_method_line_id.code', 'partner_id')
+    def _compute_l10n_latam_check_bank_id(self):
+        new_third_party_checks = self.filtered(lambda x: x.payment_id.payment_method_line_id.code == 'new_third_party_checks')
+        for rec in new_third_party_checks:
+            rec.l10n_latam_check_bank_id = rec.partner_id.bank_ids[:1].bank_id
+        (self - new_third_party_checks).l10n_latam_check_bank_id = False
 
-    # @api.depends('payment_register_id.payment_method_line_id.code', 'payment_register_id.partner_id')
-    # def _compute_l10n_latam_check_issuer_vat(self):
-    #     new_third_party_checks = self.filtered(lambda x: x.payment_register_id.payment_method_line_id.code == 'new_third_party_checks')
-    #     for rec in new_third_party_checks:
-    #         rec.l10n_latam_check_issuer_vat = rec.payment_register_id.partner_id.vat
-    #     (self - new_third_party_checks).l10n_latam_check_issuer_vat = False
+    @api.depends('payment_id.payment_method_line_id.code', 'payment_id.partner_id')
+    def _compute_l10n_latam_check_issuer_vat(self):
+        new_third_party_checks = self.filtered(lambda x: x.payment_id.payment_method_line_id.code == 'new_third_party_checks')
+        for rec in new_third_party_checks:
+            rec.l10n_latam_check_issuer_vat = rec.payment_id.partner_id.vat
+        (self - new_third_party_checks).l10n_latam_check_issuer_vat = False
 
+    @api.onchange('l10n_latam_check_issuer_vat')
+    def _clean_l10n_latam_check_issuer_vat(self):
+        for rec in self.filtered(lambda x: x.l10n_latam_check_issuer_vat and x.company_id.country_id.code):
+            stdnum_vat = stdnum.util.get_cc_module(rec.company_id.country_id.code, 'vat')
+            if hasattr(stdnum_vat, 'compact'):
+                rec.l10n_latam_check_issuer_vat = stdnum_vat.compact(rec.l10n_latam_check_issuer_vat)
 
-    # @api.onchange('l10n_latam_check_issuer_vat')
-    # def _clean_l10n_latam_check_issuer_vat(self):
-    #     for rec in self.filtered(lambda x: x.l10n_latam_check_issuer_vat and x.company_id.country_id.code):
-    #         stdnum_vat = stdnum.util.get_cc_module(rec.company_id.country_id.code, 'vat')
-    #         if hasattr(stdnum_vat, 'compact'):
-    #             rec.l10n_latam_check_issuer_vat = stdnum_vat.compact(rec.l10n_latam_check_issuer_vat)
-
-    # @api.constrains('l10n_latam_check_issuer_vat', 'company_id')
-    # def _check_l10n_latam_check_issuer_vat(self):
-    #     for rec in self.filtered(lambda x: x.l10n_latam_check_issuer_vat and x.company_id.country_id):
-    #         if not self.env['res.partner']._run_vat_test(rec.l10n_latam_check_issuer_vat, rec.company_id.country_id):
-    #             error_message = self.env['res.partner']._build_vat_error_message(
-    #                 rec.company_id.country_id.code.lower(), rec.l10n_latam_check_issuer_vat, 'Check Issuer VAT')
-    #             raise ValidationError(error_message)
+    @api.constrains('l10n_latam_check_issuer_vat', 'company_id')
+    def _check_l10n_latam_check_issuer_vat(self):
+        for rec in self.filtered(lambda x: x.l10n_latam_check_issuer_vat and x.company_id.country_id):
+            if not self.env['res.partner']._run_vat_test(rec.l10n_latam_check_issuer_vat, rec.company_id.country_id):
+                error_message = self.env['res.partner']._build_vat_error_message(
+                    rec.company_id.country_id.code.lower(), rec.l10n_latam_check_issuer_vat, 'Check Issuer VAT')
+                raise ValidationError(error_message)

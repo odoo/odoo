@@ -20,7 +20,6 @@ class AccountPaymentRegister(models.TransientModel):
         for wizard in self.filtered('l10n_latam_check_ids'):
             wizard.amount = sum(wizard.l10n_latam_check_ids.mapped('amount'))
 
-
     def _create_payment_vals_from_wizard(self, batch_result):
         vals = super()._create_payment_vals_from_wizard(batch_result)
         if self.l10n_latam_new_check_ids:
