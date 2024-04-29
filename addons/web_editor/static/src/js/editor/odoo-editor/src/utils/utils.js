@@ -965,7 +965,11 @@ function isZwnbsp(node) {
 }
 
 function isTangible(node) {
-    return isVisible(node) || isZwnbsp(node);
+    return isVisible(node) || isZwnbsp(node) || hasTangibleContent(node);
+}
+
+function hasTangibleContent(node) {
+    return [...(node?.childNodes || [])].some(n => isTangible(n));
 }
 
 export function getDeepestPosition(node, offset) {
@@ -2330,7 +2334,7 @@ export function fillEmpty(el) {
         blockEl.appendChild(br);
         fillers.br = br;
     }
-    if (!isVisible(el) && !el.hasAttribute("data-oe-zws-empty-inline") && !el.hasChildNodes()) {
+    if (!isTangible(el) && !el.hasAttribute("data-oe-zws-empty-inline") && !el.hasChildNodes()) {
         // As soon as there is actual content in the node, the zero-width space
         // is removed by the sanitize function.
         const zws = document.createTextNode('\u200B');
