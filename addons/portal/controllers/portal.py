@@ -492,7 +492,7 @@ class CustomerPortal(Controller):
             ('Content-Length', len(report)),
         ]
         if report_type == 'pdf' and download:
-            filename = "%s.pdf" % (re.sub('\W+', '-', model._get_report_base_filename()))
+            filename = "%s.pdf" % (re.sub(r'\W+', '-', model._get_report_base_filename()))
             reporthttpheaders.append(('Content-Disposition', content_disposition(filename)))
         return request.make_response(report, headers=reporthttpheaders)
 
