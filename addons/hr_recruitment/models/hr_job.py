@@ -202,7 +202,8 @@ class Job(models.Model):
                     ON s.job_id = a.job_id
                    AND a.stage_id = s.stage_id
                    AND a.active IS TRUE
-                   WHERE a.company_id in %s
+                 WHERE a.company_id in %s
+                    OR a.company_id is NULL
               GROUP BY s.job_id
             """, [tuple(self.ids), tuple(self.env.companies.ids)]
         )
