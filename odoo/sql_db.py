@@ -279,6 +279,9 @@ class Cursor(BaseCursor):
         return [self.__build_dict(row) for row in self._obj.fetchmany(size)]
     def dictfetchall(self):
         return [self.__build_dict(row) for row in self._obj.fetchall()]
+    def batched_dictfetchall(self, size):
+        for _ in range(0, int(self._obj.rowcount/size) + 1):
+            yield self.dictfetchmany(size)
 
     def __del__(self):
         if not self._closed and not self._cnx.closed:
