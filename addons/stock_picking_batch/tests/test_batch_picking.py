@@ -801,3 +801,72 @@ class TestBatchPicking02(TransactionCase):
         action = batch.action_done()
         Form(self.env[action['res_model']].with_context(action['context'])).save().process_cancel_backorder()
         self.assertEqual(batch.state, 'done')
+
+    def test_backorder_batching(self):
+        """
+        With autobatch receipts, check that you can create backorders for
+        pickings related to the batch.
+        """
+        warehouse = self.env['stock.warehouse'].create({
+            'name': 'Warehouse test',
+            'code': 'WHTEST',
+            'company_id': self.env.company.id,
+        })
+        warehouse.in_type_id.auto_batch = True
+        warehouse.in_type_id.batch_group_by_partner = True
+        productA, productB = self.productA, self.productB
+        partner = self.env['res.partner'].create({'name': 'Mr. Belougat'})
+        pickings = self.env['stock.picking'].create([
+            {
+                'picking_type_id': warehouse.in_type_id.id,
+                'company_id': self.env.company.id,
+                'partner_id': partner.id,
+            },
+            {
+                'picking_type_id': warehouse.in_type_id.id,
+                'company_id': self.env.company.id,
+                'partner_id': partner.id,
+            },
+        ])
+        picking_1, picking_2 = pickings
+        self.env['stock.move'].create([
+            {
+                'name': productA.name,
+                'product_id': productA.id,
+                'product_uom_qty': 1.0,
+                'product_uom': productA.uom_id.id,
+                'picking_id': picking_1.id,
+                'location_id': picking_1.location_id.id,
+                'location_dest_id': picking_1.location_dest_id.id,
+            },
+            {
+                'name': productA.name,
+                'product_id': productA.id,
+                'product_uom_qty': 1.0,
+                'product_uom': productA.uom_id.id,
+                'picking_id': picking_2.id,
+                'location_id': picking_2.location_id.id,
+                'location_dest_id': picking_2.location_dest_id.id,
+            },
+            {
+                'name': productB.name,
+                'product_id': productB.id,
+                'product_uom_qty': 1.0,
+                'product_uom': productB.uom_id.id,
+                'picking_id': picking_2.id,
+                'location_id': picking_2.location_id.id,
+                'location_dest_id': picking_2.location_dest_id.id,
+            },
+        ])
+        pickings.action_confirm()
+        batch = pickings.batch_id
+        self.assertEqual(batch.picking_ids, picking_1 | picking_2)
+        picking_2.move_ids.filtered(lambda m: m.product_id == productA).quantity = 0.0
+        backorder_wizard_dict = picking_2.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+        self.assertEqual(picking_2.state, 'done')
+        self.assertFalse(picking_2 in batch.picking_ids)
+        backorder = batch.picking_ids - picking_1
+        self.assertTrue(backorder)
+        self.assertRecordValues(backorder.move_ids, [{'product_id': productA.id, 'quantity': 1.0}])
