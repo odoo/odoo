@@ -1,5 +1,3 @@
-console.log("handle_response_clima.js");
-
 // Función que se ejecuta al hacer click en el botón de enviar
 function handleResponseClima() {
     // Recoge todos los inputs de tipo radio
@@ -7,8 +5,8 @@ function handleResponseClima() {
     var selectedValues = {};
     radios.forEach(function(radio) {
         if (radio.checked) {
-            var questionId = radio.value.split('-')[0];
-            selectedValues[questionId] = radio.value.split('-')[1];
+            var questionId = radio.name.split('_')[0];
+            selectedValues[questionId] = radio.value;
         }
     });
 
@@ -20,12 +18,23 @@ function handleResponseClima() {
         textareaValues[questionId] = textarea.value;
     });
 
-    console.log(selectedValues);
-    console.log(textareaValues);
-}
+    var evaluacion_id = document.querySelector('input[name="evaluacion_id"]').value;
+    var csrf_token = document.querySelector('input[name="csrf_token"]').value;
 
-// Envía los valores seleccionados a la base de datos
-// var xhr = new XMLHttpRequest();
-// xhr.open('POST', '/ruta/a/tu/servidor', true);
-// xhr.setRequestHeader('Content-Type', 'application/json');
-// xhr.send(JSON.stringify(selectedValues));
+    // Combina los dos objetos en uno
+    var data = {
+        radioValues: selectedValues,
+        textareaValues: textareaValues,
+        evaluacion_id: evaluacion_id,
+        csrf_token: csrf_token
+    };
+
+    // Envía los valores a la base de datos
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/evaluacion/responder', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(data));
+
+    // reload the page
+    location.reload();
+}

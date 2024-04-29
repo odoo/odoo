@@ -55,6 +55,7 @@
     <template id="evaluacion_responder_form" name="Evaluaciones: contenido principal">
         <form role="form" method="post" t-att-name="evaluacion.id" class="d-flex flex-grow-1 align-items-center">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <input type="hidden" name="evaluacion_id" t-att-value="evaluacion.id"/>
             <div class="o_survey_error alert alert-danger d-none" role="alert">
                 <p>Hubo un error al momento de validar las evaluaciones.</p>
             </div>
@@ -64,8 +65,6 @@
                 <t t-else="" t-call="evaluaciones.preguntas_contenedor"/>
             </div>
         </form>
-
-        <t t-call="evaluaciones.evaluacion_responder_form_start"/>
 
         <!-- Modal used to display error message, i.c.o. ajax error -->
         <div role="dialog" class="modal fade" id="MasterTabErrorModal" >
@@ -131,6 +130,9 @@
                     </t>
                 </div>
             </t>
+
+            <t t-call="evaluaciones.evaluacion_responder_form_start"/>
+
         </div>
     </template>
 
@@ -190,7 +192,7 @@
                         <td t-att-class="'o_survey_matrix_btn text-primary position-relative %s'% ('o_survey_selected' if answer else '')">
                             <input t-att-type="'radio'"
                                 t-att-name="'%s_%s' % (question.id, row_label.id)" 
-                                t-att-value="'%s-%s' % (question.id, col_label.id)"
+                                t-att-value="col_label.opcion_texto"
                                 t-att-data-row-id="row_label.id"
                                 t-att-data-col-id="col_label"
                                 class="o_survey_form_choice_item"/>

@@ -10,3 +10,18 @@ class Respuesta(models.Model):
     evaluacion_id = fields.Many2one("evaluacion", string="Evaluacion")
 
     respuesta_texto = fields.Char("Respuesta", required=True)
+
+
+    def action_guardar_respuesta(self, radios, texto, evaluacion_id, user_id, pregunta_id):
+        """Método para guardar la respuesta de una pregunta.
+        Este método se encarga de guardar la respuesta de una pregunta en la base de datos.
+        """
+
+        resp = self.env["respuesta"].create({
+            "evaluacion_id": evaluacion_id,
+            "user_id": user_id,
+            "pregunta_id": pregunta_id,
+            "respuesta_texto": radios
+        })
+            
+        return resp
