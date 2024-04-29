@@ -20,9 +20,9 @@ class ResPartner(models.Model):
     @api.depends('country_id')
     @api.depends_context('company')
     def _compute_product_pricelist(self):
-        res = self.env['product.pricelist']._get_partner_pricelist_multi(self.ids)
+        res = self.env['product.pricelist']._get_partner_pricelist_multi(self._ids)
         for partner in self:
-            partner.property_product_pricelist = res.get(partner._origin.id)
+            partner.property_product_pricelist = res.get(partner.id)
 
     def _inverse_product_pricelist(self):
         for partner in self:
