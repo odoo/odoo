@@ -23,7 +23,7 @@
             </div>
         </xpath>
         <xpath expr="//div[@name='portal_my_task_allocated_hours']" position="after">
-            <div t-if="task.allocated_hours > 0 and allow_timesheets"><strong>Progress:</strong> <span t-esc="task.progress * 100"/>%</div>
+            <div t-if="task.allocated_hours > 0 and allow_timesheets"><strong>Progress:</strong> <span t-esc="task.progress * 100" t-options='{"widget": "float", "precision": 0}'/>%</div>
         </xpath>
         <xpath expr="//div[@name='portal_my_task_allocated_hours']/t" position="replace">
             <t t-call="hr_timesheet.portal_my_task_allocated_hours_template"></t>
