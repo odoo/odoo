@@ -20,22 +20,29 @@
     </record>
 
     <!-- EVALUACION -->
-   <record id="usuario_evaluacion_rel_view_kanban" model="ir.ui.view">
+    <record id="usuario_evaluacion_rel_view_kanban" model="ir.ui.view">
         <field name="name">usuario.evaluacion.rel.view.kanban</field>
         <field name="model">usuario.evaluacion.rel</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" default_group_by="contestada" quick_create="false" records_draggable ="false">
+            <kanban class="o_kanban_mobile" default_group_by="contestada" quick_create="false">
+                <field name="evaluacion_nombre"/>
+                <field name="evaluacion_estado"/>
+                <field name="evaluacion_tipo"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
                             <div class="oe_kanban_card">
                                 <div class="oe_kanban_card_header">
                                     <div class="oe_kanban_card_header_title">
+                                        <strong>Usuario:</strong>
                                         <field name="usuario_id"/>
                                     </div>
                                 </div>
                                 <div class="oe_kanban_card_content">
-                                    <field name="usuario_id"/>
+                                    <div><strong>Evaluación:</strong> <field name="evaluacion_nombre"/></div>
+                                    <div><strong>Estado:</strong> <field name="evaluacion_estado"/></div>
+                                    <div><strong>Tipo:</strong> <field name="evaluacion_tipo"/></div>
+                                    <div><strong>Contestada:</strong> <field name="contestada"/></div>
                                 </div>
                             </div>
                         </div>
@@ -44,6 +51,7 @@
             </kanban>
         </field>
     </record>
+
 
     <record id="usuario_evaluacion_rel_action_kanban" model="ir.actions.act_window">
         <field name="name">Mis Evaluaciones</field>
