@@ -4567,7 +4567,7 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'helpdesk_repair',
         )
 
-        modules_without_error = set(only_log_modules)
+        modules_without_error = set(self.env['ir.module.module'].search([('state', '=', 'intalled'), ('name', 'in', only_log_modules)]).mapped('name'))
         module_log_views = defaultdict(list)
         module_error_views = defaultdict(list)
         uncommented_regexp = r'''(<field [^>]*invisible=['"](True|1)['"][^>]*>)[\s\t\n ]*(.*)'''
@@ -4594,7 +4594,7 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             _logger.error('%s\n%s', msg, msg_info)
 
         if modules_without_error:
-            _logger.error('Please remove this module names from the white list of this current test: %r', modules_without_error)
+            _logger.error('Please remove this module names from the white list of this current test: %r', sorted(modules_without_error))
 
 class CompRegexTest(common.TransactionCase):
     def test_comp_regex(self):
