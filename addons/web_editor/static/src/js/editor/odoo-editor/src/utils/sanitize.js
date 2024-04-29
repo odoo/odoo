@@ -140,7 +140,12 @@ function sanitizeNode(node, root) {
         }
     }
 
-    if (['SPAN', 'FONT'].includes(node.nodeName) && !node.hasAttributes()) {
+    if (
+        ['SPAN', 'FONT'].includes(node.nodeName)
+        && !node.hasAttributes()
+        && !hasPseudoElementContent(node, "::before")
+        && !hasPseudoElementContent(node, "::after")
+    ) {
         // Unwrap the contents of SPAN and FONT elements without attributes.
         getDeepRange(root, { select: true });
         const restoreCursor = shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
