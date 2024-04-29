@@ -613,9 +613,17 @@ font[class*='bg-'] {
     @each $-color, $-value in $theme-colors {
         &.text-bg-#{$-color} {
             $-bg: tint-color($-value, 80%);
-            background-color: $-bg !important;
+            $-text-color-hover: color-contrast($-value, $min-contrast-ratio: 3);
+
+            background-color: var(--background-color, $-bg) !important;
             border: $border-width solid $-value;
-            color: increase-contrast($-value , $-bg) !important;
+            color: var(--color, increase-contrast($-value , $-bg)) !important;
+
+            @at-root a, a#{&}:hover, a:hover > & {
+                --background-color: #{$-value};
+                --color: #{color-contrast($-value, $min-contrast-ratio: 3)};
+                text-decoration: none;
+            }
         }
     }
 }
@@ -651,7 +659,7 @@ font[class*='bg-'] {
 
             border: $border-width solid var(--bg-solid);
 
-            @at-root a#{&}:hover, a:hover > & {
+            @at-root a, a#{&}:hover, a:hover > & {
                 --bg: var(--bg-solid);
                 --color: var(--color-solid);
 
