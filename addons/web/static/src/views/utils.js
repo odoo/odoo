@@ -161,13 +161,15 @@ export function getFormattedValue(record, fieldName, attrs) {
  * @returns {ViewActiveActions}
  */
 export function getActiveActions(rootNode) {
-    return {
+    const activeActions = {
         type: "view",
         edit: archParseBoolean(rootNode.getAttribute("edit"), true),
         create: archParseBoolean(rootNode.getAttribute("create"), true),
         delete: archParseBoolean(rootNode.getAttribute("delete"), true),
-        duplicate: archParseBoolean(rootNode.getAttribute("duplicate"), true),
     };
+    activeActions.duplicate =
+        activeActions.create && archParseBoolean(rootNode.getAttribute("duplicate"), true);
+    return activeActions;
 }
 
 export function getClassNameFromDecoration(decoration) {
