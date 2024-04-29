@@ -61,8 +61,9 @@
             </div>
 
             <div class="o_survey_form_content w-100">
-                <t t-if="evaluacion.contestada" t-call="evaluaciones.evaluacion_responder_form_done"/>
-                <t t-else="" t-call="evaluaciones.preguntas_contenedor"/>
+                <t t-if="evaluacion.estado == 'finalizado'" t-call="evaluaciones.evaluacion_responder_form_closed"/>
+                <t t-elif="evaluacion.estado == 'publicado'" t-call="evaluaciones.preguntas_contenedor"/>
+                <t t-elif="evaluacion.estado == 'borrador'" t-call="evaluaciones.evaluacion_responder_form_draft"/>
             </div>
         </form>
 
@@ -107,6 +108,40 @@
             </div>
         </div>
     </template>
+
+    <!-- Closed survey page -->
+    <template id="evaluacion_responder_form_closed" name="Evaluaciones: Cerrada">
+        <div class="wrap">
+            <div class="o_survey_finished mt32 mb32">
+                <h1>Gracias!</h1>
+                <div class="row">
+                    <div class="col">
+                        <div class="o_survey_review">
+                            Se ha terminado el plazo para contestar esta evaluacion.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+
+    <!-- Draft survey page -->
+    <template id="evaluacion_responder_form_draft" name="Evaluaciones: No se encuentra">
+        <div class="wrap">
+            <div class="o_survey_finished mt32 mb32">
+                <h1>404</h1>
+                <div class="row">
+                    <div class="col">
+                        <div class="o_survey_review">
+                            Pagina no encontrada
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
 
     <!-- Question widgets -->
     <template id="preguntas_contenedor" name="Evaluaciones: contenedor de  preguntas">

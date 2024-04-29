@@ -17,11 +17,22 @@ class Respuesta(models.Model):
         Este método se encarga de guardar la respuesta de una pregunta en la base de datos.
         """
 
-        resp = self.env["respuesta"].create({
-            "evaluacion_id": evaluacion_id,
-            "user_id": user_id,
-            "pregunta_id": pregunta_id,
-            "respuesta_texto": radios
-        })
+        resp = None
+
+        if texto:
+            resp = self.env["respuesta"].create({
+                "evaluacion_id": evaluacion_id,
+                "user_id": user_id,
+                "pregunta_id": pregunta_id,
+                "respuesta_texto": texto
+            })
+
+        if radios:
+            resp = self.env["respuesta"].create({
+                "evaluacion_id": evaluacion_id,
+                "user_id": user_id,
+                "pregunta_id": pregunta_id,
+                "respuesta_texto": radios
+            })
             
         return resp

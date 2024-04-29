@@ -74,7 +74,6 @@ class EvaluacionesController(http.Controller):
 
         radio_values = post_data.get('radioValues')
         textarea_values = post_data.get('textareaValues')
-
         evaluacion_id = post_data.get('evaluacion_id')
         user_id = request.env.user.id
         respuesta_model = request.env['respuesta']
@@ -88,14 +87,14 @@ class EvaluacionesController(http.Controller):
 
             print(resp)
             
-        # for pregunta_id, textarea_value in textarea_values.items():
-        #     if pregunta_id in textarea_values:
-        #         textarea_value = textarea_values[pregunta_id]
-        #         resp = respuesta_model.sudo().action_guardar_respuesta(None, textarea_value, int(evaluacion_id), int(user_id), int(pregunta_id))
-        #     else:
-        #         continue
+        for pregunta_id, textarea_value in textarea_values.items():
+            if pregunta_id in textarea_values:
+                textarea_value = textarea_values[pregunta_id]
+                resp = respuesta_model.sudo().action_guardar_respuesta(None, textarea_value, int(evaluacion_id), int(user_id), int(pregunta_id))
+            else:
+                continue
 
-        #     print(resp)
+            print(resp)
 
             
 
