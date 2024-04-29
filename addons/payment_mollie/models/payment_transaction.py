@@ -12,7 +12,6 @@ from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 from odoo.addons.payment_mollie import const
 from odoo.addons.payment_mollie.controllers.main import MollieController
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -99,6 +98,21 @@ class PaymentTransaction(models.Model):
                 "No transaction found matching reference %s.", notification_data.get('ref')
             ))
         return tx
+
+    def _compare_notification_data(self, notification_data):
+        """ Override of `payment` to compare the transaction based on Mollie data.
+
+        :param dict notification_data: The notification data sent by the provider.
+        :return: None
+        :raise ValidationError: If the transaction's amount and currency don't match the
+            notification data.
+        """
+        payment_data = self.provider_id._mollie_make_request(
+            f'/payments/{self.provider_reference}', method="GET"
+        )
+        amount = payment_data.get('amount', {}).get('value')
+        currency_code = payment_data.get('amount', {}).get('currency')
+        self._validate_amount_and_currency(amount, currency_code)
 
     def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Mollie data.
