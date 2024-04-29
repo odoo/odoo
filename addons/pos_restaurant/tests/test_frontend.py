@@ -200,7 +200,11 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         cls.pos_config.write({'pricelist_id': pricelist.id})
 
     def test_01_pos_restaurant(self):
-
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('account.group_account_invoice').id),
+            ]
+        })
         self.pos_config.with_user(self.pos_user).open_ui()
 
         self.start_pos_tour('pos_restaurant_sync')
