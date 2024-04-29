@@ -132,7 +132,7 @@
                     </t>
                 </td>
             </tr>
-            <t t-if="!props.list.isGrouped">
+            <t t-if="!props.list.isGrouped and !props.noContentHelp">
                 <tr t-foreach="getEmptyRowIds" t-as="emptyRowId" t-key="emptyRowId">
                     <td t-att-colspan="nbCols">&#8203;</td>
                 </tr>
