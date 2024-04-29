@@ -137,6 +137,13 @@ class StockPicking(models.Model):
 
         return res
 
+    def _create_backorder(self):
+        for picking in self:
+            # Avoid inconsistencies in states of the same batch when validating a single picking in a batch.
+            if picking.batch_id and picking.state != 'done':
+                picking.batch_id = None
+        return super()._create_backorder()
+
     def action_cancel(self):
         res = super().action_cancel()
         for picking in self:

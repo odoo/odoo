@@ -547,8 +547,9 @@ class TestBatchPicking(TransactionCase):
             'picking_ids': [Command.link(picking_1.id), Command.link(picking_2.id)],
         })
         wave.move_ids.filtered(lambda m: m.product_id == self.productB).quantity = 0.0
+        wave.move_ids.picked = True
         wave.action_done()
         self.assertEqual(wave.state, 'done')
         self.assertEqual(wave.picking_ids, picking_1)
         self.assertEqual([picking_1.state, picking_1.move_ids.quantity, picking_1.move_ids.picked], ['done', 2.0, True])
-        self.assertEqual([picking_2.state, picking_2.move_ids.quantity, picking_2.move_ids.picked], ['assigned', 0.0, False])
+        self.assertEqual([picking_2.state, picking_2.move_ids.quantity, picking_2.move_ids.picked], ['assigned', 0.0, True])
