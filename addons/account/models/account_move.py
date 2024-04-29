@@ -3184,7 +3184,12 @@ class AccountMove(models.Model):
                 except RedirectWarning:
                     raise
                 except Exception:
-                    message = _("Error importing attachment '%s' as invoice (decoder=%s)", file_data['filename'], decoder.__name__)
+                    message = _(
+                        "Error importing attachment '%s' as invoice (decoder=%s). Check the file itself, or read the "
+                        "application logs for more information.",
+                        file_data['filename'],
+                        decoder.__name__,
+                    )
                     invoice.sudo().message_post(body=message)
                     _logger.exception(message)
 
