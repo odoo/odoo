@@ -106,6 +106,15 @@ export const mailModels = {
     ResUsersSettingsVolumes,
 };
 
+/**
+ * Register a callback to be executed before an RPC request is processed.
+ *
+ * @param {Function|string} route
+ * - If a function is provided, it will be executed for every RPC call.
+ * - If a string is provided, the callback will only be executed if the RPC
+ *   route matches the provided string.
+ * @param {Function} callback - The function to execute before the RPC call.
+ */
 export function onRpcBefore(route, callback) {
     if (typeof route === "string") {
         const handler = registry.category("mock_rpc").get(route);
