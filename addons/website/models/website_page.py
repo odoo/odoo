@@ -120,6 +120,7 @@ class Page(models.Model):
             if not default.get('view_id'):
                 new_view = page.view_id.copy({'website_id': default.get('website_id')})
                 vals['view_id'] = new_view.id
+                vals['key'] = new_view.key
             vals['url'] = default.get('url', self.env['website'].get_unique_path(page.url))
         return vals_list
 
