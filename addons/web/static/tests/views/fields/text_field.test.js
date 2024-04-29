@@ -163,7 +163,8 @@ test("press enter inside editable list", async () => {
     expect("textarea.o_input").toHaveValue("Description as text");
     expect("textarea.o_input").toBeFocused();
     expect("textarea.o_input").toHaveValue("Description as text");
-    await fieldTextArea("description").press("Enter");
+    // clear selection before enter
+    await fieldTextArea("description").press(["right", "Enter"]);
     expect("textarea.o_input").toHaveValue("Description as text\n");
     expect("textarea.o_input").toBeFocused();
     expect("tr.o_data_row").toHaveCount(1);
