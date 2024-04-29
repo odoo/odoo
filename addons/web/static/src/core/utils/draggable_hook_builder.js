@@ -784,6 +784,19 @@ export function makeDraggableHook(hookParams) {
                 const { container, element, scrollParentX, scrollParentY } = current;
                 // Container rect
                 current.containerRect = dom.getRect(container, { adjust: true });
+                // If the scrolling element is within an iframe and the draggable
+                // element is outside this iframe, the offsets must be computed taking
+                // into account the iframe.
+                let iframeOffsetX = 0;
+                let iframeOffsetY = 0;
+                const iframeEl = container.ownerDocument.defaultView.frameElement;
+                if (iframeEl && !iframeEl.contentDocument.contains(element)) {
+                    const { x, y } = dom.getRect(iframeEl);
+                    iframeOffsetX = x;
+                    iframeOffsetY = y;
+                    current.containerRect.x += iframeOffsetX;
+                    current.containerRect.y += iframeOffsetY;
+                }
                 // Adjust container rect according to its overflowing size
                 current.containerRect.width = container.scrollWidth;
                 current.containerRect.height = container.scrollHeight;
@@ -794,6 +807,8 @@ export function makeDraggableHook(hookParams) {
                     // Adjust container rect according to scrollParents
                     if (scrollParentX) {
                         current.scrollParentXRect = dom.getRect(scrollParentX, { adjust: true });
+                        current.scrollParentXRect.x += iframeOffsetX;
+                        current.scrollParentXRect.y += iframeOffsetY;
                         const right = Math.min(
                             current.containerRect.left + container.scrollWidth,
                             current.scrollParentXRect.right
@@ -806,6 +821,8 @@ export function makeDraggableHook(hookParams) {
                     }
                     if (scrollParentY) {
                         current.scrollParentYRect = dom.getRect(scrollParentY, { adjust: true });
+                        current.scrollParentYRect.x += iframeOffsetX;
+                        current.scrollParentYRect.y += iframeOffsetY;
                         const bottom = Math.min(
                             current.containerRect.top + container.scrollHeight,
                             current.scrollParentYRect.bottom
