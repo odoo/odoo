@@ -779,6 +779,26 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_list_export_xlsx");
     });
 
+   QUnit.test("hide duplicate action for user without create access rights", async (assert) => {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            actionMenus: {},
+            arch: '<tree create="0"><field name="foo"/></tree>',
+        });
+
+        await click(target.querySelector("tbody td.o_list_record_selector input"));
+
+        await toggleActionMenu(target);
+
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o-dropdown--menu .o_menu_item")),
+            ["Export", "Delete"],
+            "The action menu should not include the duplicate button"
+        );
+    });
+
     QUnit.test("list view with adjacent buttons", async function (assert) {
         await makeView({
             type: "list",
