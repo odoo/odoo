@@ -9,7 +9,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserPortal, TransactionCas
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
-''' /!\/!\
+r''' /!\/!\
 Calling `get_pricelist_available` after setting `property_product_pricelist` on
 a partner will not work as expected. That field will change the output of
 `get_pricelist_available` but modifying it will not invalidate the cache.
