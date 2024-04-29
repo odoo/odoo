@@ -127,7 +127,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
 
         following_partners = invoice.message_follower_ids.mapped('partner_id')
         self.assertEqual(following_partners, self.env.user.partner_id)
-        self.assertRegex(invoice.name, 'BILL/\d{4}/\d{2}/0001')
+        self.assertRegex(invoice.name, r'BILL/\d{4}/\d{2}/0001')
 
     def test_supplier_invoice_forwarded_by_internal_user_without_supplier(self):
         """ In this test, the bill was forwarded by an employee,
