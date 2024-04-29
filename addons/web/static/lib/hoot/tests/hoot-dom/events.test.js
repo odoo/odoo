@@ -956,6 +956,37 @@ describe(parseUrl(import.meta.url), () => {
         expect("input").toHaveProperty("selectionEnd", 0);
     });
 
+    test("insert character updates selection", async () => {
+        await mountOnFixture(/* xml */ `<input value="abc" />`);
+
+        click("input");
+
+        const input = queryOne("input");
+        input.selectionStart = 0;
+        input.selectionEnd = 3;
+
+        press("d");
+
+        expect("input").toHaveValue("d");
+        expect("input").toHaveProperty("selectionStart", 1);
+        expect("input").toHaveProperty("selectionEnd", 1);
+
+        press("f");
+
+        expect("input").toHaveValue("df");
+        expect("input").toHaveProperty("selectionStart", 2);
+        expect("input").toHaveProperty("selectionEnd", 2);
+
+        input.selectionStart = 1;
+        input.selectionEnd = 1;
+
+        press("e");
+
+        expect("input").toHaveValue("def");
+        expect("input").toHaveProperty("selectionStart", 2);
+        expect("input").toHaveProperty("selectionEnd", 2);
+    });
+
     test("press 'Enter' on form input", async () => {
         await mountOnFixture(/* xml */ `
             <form t-on-submit.prevent="">

@@ -917,9 +917,29 @@ const _keyDown = (target, eventInit) => {
         return;
     }
 
+    /**
+     * @param {string} toInsert
+     * @param {string} type
+     */
+    const insertValue = (toInsert, type) => {
+        const { selectionStart, selectionEnd, value } = target;
+        inputData = toInsert;
+        inputType = type;
+        if (isNil(selectionStart) && isNil(selectionEnd)) {
+            nextValue += toInsert;
+        } else {
+            nextValue = value.slice(0, selectionStart) + toInsert + value.slice(selectionEnd);
+            if (selectionStart === selectionEnd) {
+                nextSelectionStart = nextSelectionEnd = selectionStart + 1;
+            }
+        }
+    };
+
     const { ctrlKey, key, shiftKey } = keyDownEvent;
     let inputData = null;
     let inputType = null;
+    let nextSelectionEnd = null;
+    let nextSelectionStart = null;
     let nextValue = target.value;
 
     if (isEditable(target)) {
@@ -986,8 +1006,7 @@ const _keyDown = (target, eventInit) => {
             case "Enter": {
                 if (target.tagName === "TEXTAREA") {
                     // Insert new line
-                    nextValue += "\n";
-                    inputType = "insertLineBreak";
+                    insertValue("\n", "insertLineBreak");
                 }
                 break;
             }
@@ -995,16 +1014,10 @@ const _keyDown = (target, eventInit) => {
                 if (key.length === 1 && !ctrlKey) {
                     // Character coming from the keystroke
                     // ! TODO: Doesn't work with non-roman locales
-                    const { selectionStart, selectionEnd, value } = target;
-                    inputData = shiftKey ? key.toUpperCase() : key.toLowerCase();
-                    // Insert character in target value
-                    if (isNil(selectionStart) && isNil(selectionEnd)) {
-                        nextValue += inputData;
-                    } else {
-                        nextValue =
-                            value.slice(0, selectionStart) + inputData + value.slice(selectionEnd);
-                    }
-                    inputType = runTime.isComposing ? "insertCompositionText" : "insertText";
+                    insertValue(
+                        shiftKey ? key.toUpperCase() : key.toLowerCase(),
+                        runTime.isComposing ? "insertCompositionText" : "insertText"
+                    );
                 }
             }
         }
@@ -1130,6 +1143,12 @@ const _keyDown = (target, eventInit) => {
 
     if (target.value !== nextValue) {
         target.value = nextValue;
+        if (!isNil(nextSelectionStart)) {
+            target.selectionStart = nextSelectionStart;
+        }
+        if (!isNil(nextSelectionEnd)) {
+            target.selectionEnd = nextSelectionEnd;
+        }
         dispatchEventSequence(target, ["beforeinput", "input"], {
             data: inputData,
             inputType,
