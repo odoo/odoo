@@ -45,6 +45,7 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
                 'compute_price': 'formula',
                 'price_discount': 0,
             })],
+            'website_ids': [(6, 0, [self.current_website.id])],
             'name': 'With Discount Included',
         })
         with MockRequest(self.env, sale_order_id=self.so.id, website=self.current_website):
@@ -60,6 +61,7 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
                 'compute_price': 'percentage',
                 'percent_price': 10,
             })],
+            'website_ids': [(6, 0, [self.current_website.id])],
             'name': 'Without Discount Included',
         })
         with MockRequest(self.env, sale_order_id=self.so.id, website=self.current_website):
@@ -74,6 +76,7 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
                 'compute_price': 'formula',
                 'price_discount': 10,
             })],
+            'website_ids': [(6, 0, [self.current_website.id])],
             'name': 'With Discount Included',
         })
         with MockRequest(self.env, sale_order_id=self.so.id, website=self.current_website):

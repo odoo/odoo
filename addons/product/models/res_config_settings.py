@@ -35,7 +35,6 @@ class ResConfigSettings(models.TransientModel):
                                  "Every active pricelist will be archived.")
                 }}
 
-
     def set_values(self):
         had_group_pl = self.default_get(['group_product_pricelist'])['group_product_pricelist']
         super().set_values()

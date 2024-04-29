@@ -130,14 +130,11 @@ class ResConfigSettings(models.TransientModel):
             ])
             for pricelist in selected_pricelists:
                 pricelist.website_ids |= website_id
-                pricelist.website_id = website_id
             unselected_pricelists = ProductPricelist.search(
-                ['|', ('website_id', '=', website_id.id),
-                ('website_ids', 'any', [('id', '=', website_id.id)])]
+                [('website_ids', 'any', [('id', '=', website_id.id)])]
             ) - selected_pricelists
             for pricelist in unselected_pricelists:
                 pricelist.website_ids -= website_id
-                pricelist.website_id = False
 
     #=== CRUD METHODS ===#
 

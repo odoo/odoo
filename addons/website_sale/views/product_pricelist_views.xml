@@ -7,8 +7,6 @@
         <field name="inherit_id" ref="product.product_pricelist_view_tree"/>
         <field name="arch" type="xml">
             <field name="currency_id" position="after">
-                <field name="selectable"/>
-                <field name="website_id" groups="website.group_multi_website"/>
                 <field name="website_ids" groups="website.group_multi_website" widget="many2many_tags"/>
             </field>
         </field>

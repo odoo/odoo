@@ -160,7 +160,7 @@ class Website(models.Model):
     all_pricelist_ids = fields.One2many(
         string="All pricelists",
         comodel_name='product.pricelist',
-        inverse_name='website_id',
+        inverse_name='website_ids',
     )
 
     selectable_pricelist_ids = fields.Many2many(
@@ -232,11 +232,12 @@ class Website(models.Model):
         self.ensure_one()
         pricelists = self.env['product.pricelist']
 
-        if show_visible:
-            # Only show selectable or currently used pricelist (cart or session)
-            check_pricelist = lambda pl: pl.selectable or pl.id in (current_pl_id, order_pl_id)
-        else:
-            check_pricelist = lambda _pl: True
+        # Only show selectable or currently used pricelist (cart or session)
+        def check_pricelist(pl):
+            if show_visible:
+                return pl._is_selectable() or pl.id in (current_pl_id, order_pl_id)
+            else:
+                return True
 
         # Note: 1. pricelists from all_pl are already website compliant (went through
         #          `_get_website_pricelists_domain`)

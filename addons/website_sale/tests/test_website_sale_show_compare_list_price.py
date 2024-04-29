@@ -54,16 +54,14 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
         Pricelist.search([]).write({'sequence': 1000})
         cls.pricelist_default = Pricelist.create({
             'name': 'pricelist_default',
-            'website_id': website.id,
+            'website_ids': [Command.link(website.id)],
             'company_id': cls.env.company.id,
-            'selectable': True,
             'sequence': 1,
         })
         cls.pricelist_with_discount = Pricelist.create({
             'name': 'pricelist_with_discount',
-            'website_id': website.id,
+            'website_ids': [Command.link(website.id)],
             'company_id': cls.env.company.id,
-            'selectable': True,
             'sequence': 2,
             'item_ids': [
                 Command.create({
@@ -82,9 +80,8 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
         })
         cls.pricelist_without_discount = Pricelist.create({
             'name': 'pricelist_without_discount',
-            'website_id': website.id,
+            'website_ids': [Command.link(website.id)],
             'company_id': cls.env.company.id,
-            'selectable': True,
             'sequence': 3,
             'item_ids': [
                 Command.create({

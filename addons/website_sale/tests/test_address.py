@@ -171,7 +171,7 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
         so = self._create_so(partner_id=self.env.user.partner_id.id)
         eur_pl = self.env['product.pricelist'].create({
             'name': 'EUR_test',
-            'website_id': self.website.id,
+            'website_ids': [Command.link(self.website.id)],
             'code': 'EUR_test',
         })
 
@@ -191,7 +191,7 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
         })
         pl_with_code = self.env['product.pricelist'].create({
             'name': 'EUR_test',
-            'website_id': self.website.id,
+            'website_ids': [Command.link(self.website.id)],
             'code': 'EUR_test',
         })
         self.website.user_id.partner_id.property_product_pricelist = self.pricelist

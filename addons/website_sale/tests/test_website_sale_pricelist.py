@@ -46,8 +46,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         cls.curr_eur = cls._enable_currency('EUR')
         cls.list_benelux = cls.env['product.pricelist'].create({
             'name': 'Benelux',
-            'selectable': True,
-            'website_id': cls.website.id,
+            'website_ids': [Command.link(cls.website.id)],
             'country_group_ids': [Command.link(cls.benelux.id)],
             'currency_id': cls.curr_eur.id,
             'sequence': 2,
@@ -61,10 +60,10 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         })
 
         cls.europe = cls.env.ref('base.europe')
+        # selectable False
         cls.list_christmas = cls.env['product.pricelist'].create({
             'name': 'Christmas',
-            'selectable': False,
-            'website_id': cls.website.id,
+            'website_ids': [Command.link(cls.website.id)],
             'country_group_ids': [Command.link(cls.europe.id)],
             'sequence': 20,
             'item_ids': [
@@ -78,8 +77,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
 
         cls.list_europe = cls.env['product.pricelist'].create({
             'name': 'EUR',
-            'selectable': True,
-            'website_id': cls.website.id,
+            'website_ids': [Command.link(cls.website.id)],
             'country_group_ids': [Command.link(cls.europe.id)],
             'sequence': 3,
             'currency_id': cls.curr_eur.id,
@@ -97,8 +95,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         })
         cls.env['product.pricelist'].create({
             'name': 'Canada',
-            'selectable': True,
-            'website_id': cls.website.id,
+            'website_ids': [Command.link(cls.website.id)],
             'country_group_ids': [Command.set(ca_group.ids)],
             'sequence': 10
         })
@@ -381,52 +378,51 @@ class TestWebsitePriceListAvailable(WebsiteSaleCommon):
 
         # Set up 2 websites
         cls.website2 = Website.create({'name': 'Website 2'})
-
+        cls.website_ids = [
+            Command.link(cls.website.id),
+            Command.link(cls.website2.id),
+        ]
         # Remove existing pricelists and create new ones
         existing_pricelists = Pricelist.search([])
         cls.backend_pl = Pricelist.create({
             'name': 'Backend Pricelist',
-            'website_id': False,
+            'website_ids': False,
         })
         cls.generic_pl_select = Pricelist.create({
             'name': 'Generic Selectable Pricelist',
-            'selectable': True,
-            'website_id': False,
+            'website_ids': cls.website_ids,
         })
         cls.generic_pl_code = Pricelist.create({
             'name': 'Generic Code Pricelist',
             'code': 'GENERICCODE',
-            'website_id': False,
+            'website_ids': False,
         })
         cls.generic_pl_code_select = Pricelist.create({
             'name': 'Generic Code Selectable Pricelist',
             'code': 'GENERICCODESELECT',
-            'selectable': True,
-            'website_id': False,
+            'website_ids': cls.website_ids,
         })
         cls.w1_pl = Pricelist.create({
             'name': 'Website 1 Pricelist',
-            'website_id': cls.website.id,
+            'website_ids': [Command.link(cls.website.id)],
         })
         cls.w1_pl_select = Pricelist.create({
             'name': 'Website 1 Pricelist Selectable',
-            'website_id': cls.website.id,
-            'selectable': True,
+            'website_ids': [Command.link(cls.website.id)],
         })
         cls.w1_pl_code_select = Pricelist.create({
             'name': 'Website 1 Pricelist Code Selectable',
-            'website_id': cls.website.id,
+            'website_ids': [Command.link(cls.website.id)],
             'code': 'W1CODESELECT',
-            'selectable': True,
         })
         cls.w1_pl_code = Pricelist.create({
             'name': 'Website 1 Pricelist Code',
-            'website_id': cls.website.id,
+            'website_ids': [Command.link(cls.website.id)],
             'code': 'W1CODE',
         })
         cls.w2_pl = Pricelist.create({
             'name': 'Website 2 Pricelist',
-            'website_id': cls.website2.id,
+            'website_ids': [Command.link(cls.website2.id)],
         })
         existing_pricelists.action_archive()
 
@@ -559,7 +555,7 @@ class TestWebsitePriceListHttp(HttpCaseWithUserPortal):
         test_company.flush_recordset()
         self.env['product.pricelist'].create({
             'name': 'Backend Pricelist For "Test Company"',
-            'website_id': False,
+            'website_ids': False,
             'company_id': test_company.id,
             'sequence': 1,
         })
@@ -600,13 +596,13 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         self.c1_pl = self.env['product.pricelist'].create({
             'name': 'Company 1 Pricelist',
             'company_id': self.company1.id,
-            # The `website_id` field will default to the company's website,
+            # The `website_ids` field will default to the company's website,
             # in this case `self.website2`.
         })
         self.c2_pl = self.env['product.pricelist'].create({
             'name': 'Company 2 Pricelist',
             'company_id': self.company2.id,
-            'website_id': False,
+            'website_ids': False,
         })
         self.demo_user.partner_id.with_company(self.company1.id).property_product_pricelist = self.c1_pl
         self.demo_user.partner_id.with_company(self.company2.id).property_product_pricelist = self.c2_pl
@@ -657,7 +653,7 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
             pricelists (considering all companies).
         '''
 
-        self.c2_pl.website_id = self.website
+        self.c2_pl.website_ids = [Command.link(self.website.id)]
         c2_pl2 = self.c2_pl.copy({'name': 'Copy of c2_pl'})
         self.env['product.pricelist'].search([
             ('id', 'not in', (self.c2_pl + self.c1_pl + c2_pl2).ids)
@@ -694,16 +690,14 @@ class TestWebsiteSaleSession(HttpCaseWithUserPortal):
         user_pricelist, _ = self.env['product.pricelist'].create([
             {
                 'name': 'User Pricelist',
-                'website_id': website.id,
+                'website_ids': [Command.link(website.id)],
                 'code': 'User_pricelist',
-                'selectable': True,
                 'sequence': 40, # Be sure not to use it by default
             },
             {
                 'name': 'Other Pricelist',
-                'website_id': website.id,
+                'website_ids': [Command.link(website.id)],
                 'code': 'Other_pricelist',
-                'selectable': True,
                 'sequence': 30,
             }
         ])

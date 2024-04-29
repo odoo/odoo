@@ -227,9 +227,17 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         self.start_tour(self.env['website'].get_client_action_url('/shop?search=Test Product'), 'shop_list_view_b2c', login="admin")
 
     def test_07_editor_shop(self):
+        website = self.env['website'].get_current_website()
         self.env['product.pricelist'].create([
-            {'name': 'Base Pricelist', 'selectable': True},
-            {'name': 'Other Pricelist', 'selectable': True}
+            {
+                'name': 'Base Pricelist',
+                'website_ids': [Command.link(website.id)],
+            },
+            {
+                'name': 'Other Pricelist',
+                'website_ids': [Command.link(website.id)],
+            }
+
         ])
         self.start_tour("/", 'shop_editor', login="admin")
 
