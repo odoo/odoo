@@ -6330,7 +6330,7 @@ class BaseModel(metaclass=MetaModel):
 
         # if any field is context-dependent, the values to flush should
         # be found with a context where the context keys are all None
-        model = self.with_context(context={})
+        model = self.with_context({})
         id_vals = defaultdict(dict)
         for field in self._fields.values():
             ids = self.env.cache.clear_dirty_field(field)
