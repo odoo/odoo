@@ -69,21 +69,21 @@ odoo.define("board.dashboard_tests", function (require) {
                             display_name: "first record",
                             foo: "yop",
                             int_field: 3,
-                            date_field: (new Date()).toISOString().slice(0, -5),
+                            date_field: "2024-04-27 10:00:00",
                         },
                         {
                             id: 2,
                             display_name: "second record",
                             foo: "lalala",
                             int_field: 5,
-                            date_field: (new Date()).toISOString().slice(0, -5),
+                            date_field: "2024-04-27 10:00:00",
                         },
                         {
                             id: 4,
                             display_name: "aaa",
                             foo: "abc",
                             int_field: 2,
-                            date_field: (new Date()).toISOString().slice(0, -5),
+                            date_field: "2024-04-27 10:00:00",
                         },
                     ],
                 },
@@ -1454,6 +1454,8 @@ odoo.define("board.dashboard_tests", function (require) {
     QUnit.test("can have multiple calendars in dashboard", async function (assert) {
         assert.expect(3);
 
+        const unpatchDate = patchDate(2024, 3, 27, 20, 0, 0);
+
         var form = await createView({
             View: BoardView,
             model: "board",
@@ -1505,5 +1507,6 @@ odoo.define("board.dashboard_tests", function (require) {
         assert.containsOnce(form, ".popover", "should only have one popover");
 
         form.destroy();
+        unpatchDate();
     });
 });
