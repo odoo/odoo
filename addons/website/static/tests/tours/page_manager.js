@@ -73,6 +73,71 @@ const deleteSelectedPage = [
 ];
 const homePage = 'tr:contains("Home")';
 
+const refreshPage = [
+    {
+        trigger: "body",
+        run: () => {
+            window.location.reload();
+        },
+    },
+];
+const duplicateSinglePage = [
+    {
+        content: "Click on checkbox",
+        trigger:
+            '.o_list_renderer tr:contains("/test-duplicate") td.o_list_record_selector input[type="checkbox"]',
+    },
+    {
+        content: "Click on Action button",
+        trigger: ".o_cp_action_menus button",
+    },
+    {
+        content: "Click on Duplicate",
+        trigger: '.o-dropdown--menu span:contains("Duplicate")',
+    },
+    {
+        content: "Put your website name as 'Test Duplicate' here",
+        trigger: 'main.modal-body input[type="text"]',
+        run: "text Test Duplicate",
+    },
+    {
+        content: "Click on OK",
+        trigger: ".modal-footer button.btn-primary",
+    },
+    ...refreshPage,
+];
+
+const duplicateMultiplePage = [
+    {
+        content: "Click on checkbox",
+        trigger:
+            '.o_list_renderer tr:contains("/test-duplicate") td.o_list_record_selector input[type="checkbox"]',
+    },
+    {
+        content: "Click on checkbox",
+        trigger:
+            '.o_list_renderer tr:contains("/test-duplicate-1") td.o_list_record_selector input[type="checkbox"]',
+    },
+    {
+        content: "Click on Action button",
+        trigger: ".o_cp_action_menus button",
+    },
+    {
+        content: "Click on Duplicate",
+        trigger: '.o-dropdown--menu span:contains("Duplicate")',
+    },
+    {
+        content: "Put your website name as 'Test Duplicate' here",
+        trigger: 'main.modal-body input[type="text"]',
+        run: "text Test Duplicate",
+    },
+    {
+        content: "Click on OK",
+        trigger: ".modal-footer button.btn-primary",
+    },
+    ...refreshPage,
+];
+
 wTourUtils.registerWebsitePreviewTour('website_page_manager', {
     test: true,
     url: '/',
@@ -148,3 +213,23 @@ registry.category("web_tour.tours").add('website_page_manager_direct_access', {
 	trigger: ".o_dropdown_container.o_website_menu > .dropdown-item:contains('My Website 2')",
     run: () => null, // it's a check
 }]});
+
+wTourUtils.registerWebsitePreviewTour(
+    "website_clone_pages",
+    {
+        test: true,
+        url: "/",
+    },
+    () => [
+        {
+            content: "Click on Site",
+            trigger: 'button.dropdown-toggle[data-menu-xmlid="website.menu_site"]',
+        },
+        {
+            content: "Click on Pages",
+            trigger: 'a.dropdown-item[data-menu-xmlid="website.menu_website_pages_list"]',
+        },
+        ...duplicateSinglePage,
+        ...duplicateMultiplePage,
+    ]
+);
