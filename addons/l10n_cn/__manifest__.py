@@ -14,7 +14,7 @@
     'author': 'www.openerp-china.org',
     'maintainer': 'jeff@osbzr.com',
     'website': 'http://openerp-china.org',
-    'description': """
+    'description': r"""
 Includes the following data for the Chinese localization
 ========================================================
 
