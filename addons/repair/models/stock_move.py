@@ -66,19 +66,20 @@ class StockMove(models.Model):
                 vals['location_dest_id'] = dest_location.id
         moves = super().create(vals_list)
         repair_moves = self.env['stock.move']
-        for move in moves:
+        for move in moves.with_context(no_create_sol=True):
             if not move.repair_id:
                 continue
             move.group_id = move.repair_id.procurement_group_id.id
             move.origin = move.name
             move.picking_type_id = move.repair_id.picking_type_id.id
-            repair_moves |= move
 
+            confirmed_moves = move
             if move.state == 'draft' and move.repair_id.state in ('confirmed', 'under_repair'):
                 move._check_company()
                 move._adjust_procure_method()
-                move._action_confirm()
-                move._trigger_scheduler()
+                confirmed_moves = move._action_confirm()
+                confirmed_moves._trigger_scheduler()
+            repair_moves |= confirmed_moves
         repair_moves._create_repair_sale_order_line()
         return moves
 
@@ -107,7 +108,7 @@ class StockMove(models.Model):
         return super()._action_cancel()
 
     def _create_repair_sale_order_line(self):
-        if not self:
+        if not self or self.env.context.get('no_create_sol', False):
             return
         so_line_vals = []
         for move in self:
