@@ -8,11 +8,12 @@
             <field name="arch" type="xml">
                 <xpath expr="//header/button[@name='action_post']" position="after">
                     <field name="l10n_ke_cu_qrcode" invisible="1"/>
+                    <field name="l10n_ke_cu_show_send_button" invisible="1"/>
                     <button name="l10n_ke_action_cu_post" type="object"
                             class="oe_highlight"
                             groups="account.group_account_manager"
                             string="Send To Fiscal Device"
-                            invisible="country_code != 'KE' or l10n_ke_cu_qrcode or state != 'posted' or move_type not in ['out_invoice', 'out_refund']"/>
+                            invisible="not l10n_ke_cu_show_send_button"/>
                 </xpath>
                 <xpath expr="//group[@id='header_right_group']" position="inside">
                     <field name="l10n_ke_cu_invoice_number" readonly="1" invisible="country_code != 'KE'"/>
