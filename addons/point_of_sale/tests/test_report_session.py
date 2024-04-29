@@ -109,3 +109,6 @@ class TestReportSession(TestPoSCommon):
             session_name = self.env['pos.session'].browse(payment['session']).name
             payment_method_name = self.env['pos.payment.method'].browse(payment['id']).name
             self.assertEqual(payment['name'], payment_method_name + " " + session_name)
+
+        pdf = self.env['ir.actions.report']._render_qweb_pdf('point_of_sale.sale_details_report', res_ids=session_id_2)
+        self.assertTrue(pdf)
