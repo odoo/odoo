@@ -39,11 +39,7 @@ class TestPaymentTransaction(FlutterwaveCommon):
         """ Test that the transaction state is set to 'done' when the notification data indicate a
         successful payment. """
         tx = self._create_transaction(flow='redirect')
-        with patch(
-            'odoo.addons.payment_flutterwave.models.payment_provider.PaymentProvider'
-            '._flutterwave_make_request', return_value=self.verification_data
-        ):
-            tx._process_notification_data(self.redirect_notification_data)
+        tx._process_notification_data(self.verification_data['data'])
         self.assertEqual(tx.state, 'done')
 
     def test_processing_notification_data_tokenizes_transaction(self):
@@ -51,11 +47,8 @@ class TestPaymentTransaction(FlutterwaveCommon):
         include token data. """
         tx = self._create_transaction(flow='redirect', tokenize=True)
         with patch(
-            'odoo.addons.payment_flutterwave.models.payment_provider.PaymentProvider'
-            '._flutterwave_make_request', return_value=self.verification_data
-        ), patch(
             'odoo.addons.payment_flutterwave.models.payment_transaction.PaymentTransaction'
             '._flutterwave_tokenize_from_notification_data'
         ) as tokenize_mock:
-            tx._process_notification_data(self.redirect_notification_data)
+            tx._process_notification_data(self.verification_data['data'])
         self.assertEqual(tokenize_mock.call_count, 1)

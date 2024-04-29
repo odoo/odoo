@@ -145,6 +145,15 @@ class PaymentTransaction(models.Model):
             )
         return tx
 
+    def _compare_notification_data(self, notification_data):
+        """ Override of `payment` to skip the transaction comparison for dummy flows.
+
+        :param dict notification_data: The dummy notification data.
+        :return: None
+        """
+        if self.provider_code != 'demo':
+            return super()._compare_notification_data(notification_data)
+
     def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on dummy data.
 

@@ -112,6 +112,21 @@ class PaymentTransaction(models.Model):
             )
         return tx
 
+    def _compare_notification_data(self, notification_data):
+        """ Override of `payment` to compare the transaction based on DPO data.
+
+        :param dict notification_data: The notification data sent by the provider.
+        :return: None
+        :raise ValidationError: If the transaction's amount and currency don't match the
+            notification data.
+        """
+        if self.provider_code != 'dpo':
+            return super()._compare_notification_data(notification_data)
+
+        amount = notification_data.get('TransactionAmount')
+        currency_code = notification_data.get('TransactionCurrency')
+        self._validate_amount_and_currency(amount, currency_code)
+
     def _process_notification_data(self, notification_data):
         """ Override of `payment` to process the transaction based on DPO data.
 

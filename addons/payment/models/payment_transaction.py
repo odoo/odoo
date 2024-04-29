@@ -12,7 +12,7 @@ from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import email_normalize_all, format_amount
+from odoo.tools import email_normalize_all, float_round, format_amount
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -635,6 +635,7 @@ class PaymentTransaction(models.Model):
         :rtype: recordset of `payment.transaction`
         """
         tx = self._get_tx_from_notification_data(provider_code, notification_data)
+        tx._compare_notification_data(notification_data)
         tx._process_notification_data(notification_data)
         return tx
 
@@ -651,6 +652,21 @@ class PaymentTransaction(models.Model):
         """
         return self
 
+    def _compare_notification_data(self, notification_data):
+        """ Compare the transaction's amount and currency with the notification data.
+
+        For a provider to handle transaction comparison, it must override this method *without
+        calling super* and raise if the transaction's amount and currency don't match the
+        notification data, by calling `_validate_amount_and_currency`.
+
+        :param dict notification_data: The notification data sent by the provider.
+        :return: None
+        :raise NotImplementedError: If the provider does not implement notification data comparison.
+        """
+        raise NotImplementedError(_(
+            "No override of _compare_notification_data found for provider %s", self.provider_id.name
+        ))
+
     def _process_notification_data(self, notification_data):
         """ Update the transaction state and the provider reference based on the notification data.
 
@@ -666,6 +682,45 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         self.ensure_one()
+
+    def _validate_amount_and_currency(
+        self, amount, currency_code, precision_digits=None, rounding_method='DOWN'
+    ):
+        """ Ensure that the transaction's amount and currency match the provided ones.
+
+        :param str|float amount: The expected amount.
+        :param str currency_code: The expected currency_code.
+        :param int precision_digits: The number of fractional digits to round the transaction's
+            amount.
+        :param RoundingMethod rounding_method: The rounding method to round the transaction's
+            amount.
+        :return: None
+        :raise ValidationError: If the transaction's amount and currency don't match the provided
+            ones.
+        """
+        self.ensure_one()
+
+        if not amount or not currency_code:
+            raise ValidationError(_("The amount or currency is missing from the payment data."))
+
+        # Convert the amount to a float, as some providers send it as a string.
+        amount = float(amount)
+        # Negate the amount for refunds, as refunds have a negative amount in Odoo, but all
+        # providers send a positive one.
+        if self.operation == 'refund':
+            amount = -amount
+        tx_amount = self.amount if precision_digits is None else float_round(
+            self.amount, precision_digits=precision_digits, rounding_method=rounding_method
+        )
+        if self.currency_id.compare_amounts(amount, tx_amount) != 0:
+            raise ValidationError(_(
+                "The amount from the payment data doesn't match the one from the transaction."
+            ))
+
+        if currency_code != self.currency_id.name:
+            raise ValidationError(_(
+                "The currency from the payment data doesn't match the one from the transaction."
+            ))
 
     def _set_pending(self, *, state_message=None, extra_allowed_states=()):
         """ Update the transactions' state to `pending`.
