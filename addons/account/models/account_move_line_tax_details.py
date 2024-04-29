@@ -273,7 +273,7 @@ class AccountMoveLine(models.Model):
                 JOIN base_tax_line_mapping tax_line_matching ON
                     tax_line_matching.base_line_id = base_tax_line_mapping.base_line_id
                 JOIN account_move_line tax_line ON
-                    tax_line.id = tax_line_matching.tax_line_id
+                    tax_line.id = base_tax_line_mapping.tax_line_id
                     AND tax_line.tax_line_id = tax_rel.account_tax_id
                 JOIN res_currency curr ON
                     curr.id = tax_line.currency_id
