@@ -125,7 +125,7 @@ class PrinterDriver(Driver):
                     break
         elif device.get('device-make-and-model'):
             device_model = device['device-make-and-model']
-        return re.sub("[\(].*?[\)]", "", device_model).strip()
+        return re.sub(r"[\(].*?[\)]", "", device_model).strip()
 
     @classmethod
     def get_status(cls):
