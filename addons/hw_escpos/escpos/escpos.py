@@ -222,7 +222,7 @@ class XmlSerializer:
         if text:
             text = utfstr(text)
             text = text.strip()
-            text = re.sub('\s+',' ',text)
+            text = re.sub(r'\s+',' ',text)
             if text:
                 self.dirty = True
                 self.escpos.text(text)
@@ -287,7 +287,7 @@ class XmlLineSerializer:
         if text:
             text = utfstr(text)
             text = text.strip()
-            text = re.sub('\s+',' ',text)
+            text = re.sub(r'\s+',' ',text)
             if text:
                 self._txt(text)
 
@@ -538,7 +538,7 @@ class Escpos:
             if not string:
                 string = ''
             string = string.strip()
-            string = re.sub('\s+',' ',string)
+            string = re.sub(r'\s+',' ',string)
             return string
 
         def format_value(value, decimals=3, width=0, decimals_separator='.', thousands_separator=',', autoint=False, symbol='', position='after'):
