@@ -302,7 +302,7 @@ class AccountEdiFormat(models.Model):
                 if invoice._l10n_es_is_dua():
                     partner_info = self._l10n_es_edi_get_partner_info(invoice.company_id.partner_id)
                 info['IDFactura']['IDEmisorFactura'] = partner_info
-                info['IDFactura']['NumSerieFacturaEmisor'] = invoice.ref[:60]
+                info["IDFactura"]["NumSerieFacturaEmisor"] = (invoice.ref or "")[:60]
                 if not is_simplified:
                     invoice_node['Contraparte'] = {
                         **partner_info,
