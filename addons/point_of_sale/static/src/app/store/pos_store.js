@@ -1098,9 +1098,9 @@ export class PosStore extends Reactive {
         const orderLines = order.get_orderlines();
         const productImages = Object.fromEntries(
             await Promise.all(
-                orderLines.map(async ({ product }) => [
-                    product.id,
-                    await getProductImage(product.id, product.writeDate),
+                orderLines.map(async ({ product_id }) => [
+                    product_id.id,
+                    await getProductImage(product_id.id, product_id.write_date),
                 ])
             )
         );
