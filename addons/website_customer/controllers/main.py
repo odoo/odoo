@@ -6,12 +6,29 @@ import werkzeug.urls
 from odoo import http
 from odoo.addons.http_routing.models.ir_http import unslug, slug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website_google_map.controllers.main import GoogleMap
 from odoo.tools.translate import _
 from odoo.http import request
 
 
-class WebsiteCustomer(http.Controller):
+class WebsiteCustomer(GoogleMap):
     _references_per_page = 20
+
+    def _get_gmap_domains(self, **kw):
+        domains = super()._get_gmap_domains(**kw)
+        current_industry = kw.get('current_industry')
+        current_country = kw.get('current_country')
+
+        domain = [('assigned_partner_id', '!=', False)]
+
+        if current_country and current_country != '0':
+            domain += [('country_id', '=', int(current_country))]
+
+        if current_industry and current_industry != '0':
+            domain += [('industry_id', '=', int(current_industry))]
+
+        domains['website_customer.customers'] = domain
+        return domains
 
     def sitemap_industry(env, rule, qs):
         if not qs or qs.lower() in '/customers':
@@ -142,7 +159,7 @@ class WebsiteCustomer(http.Controller):
 
     # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/customers/<partner_id>'], type='http', auth="public", website=True)
-    def partners_detail(self, partner_id, **post):
+    def customers_detail(self, partner_id, **post):
         current_slug = partner_id
         _, partner_id = unslug(partner_id)
         if partner_id:
