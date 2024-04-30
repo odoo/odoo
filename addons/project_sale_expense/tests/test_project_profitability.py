@@ -128,3 +128,28 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
             expense_profitability.get('costs', {}),
             {},
         )
+
+    def test_project_profitability_multi_currency(self):
+        currency_rate = 0.5
+        other_currency = self.env['res.currency'].create({
+            'name': 'TEST',
+            'symbol': 'T',
+            'rate_ids': [(0, 0, {
+                'name': '2020-01-01',
+                'rate': currency_rate,
+            })],
+        })
+        amount_in_other_currency = 100
+        expense = self.env['hr.expense'].create({
+            'name': 'Expense in another currency',
+            'product_id': self.company_data['product_order_sales_price'].id,
+            'total_amount': amount_in_other_currency,
+            'employee_id': self.expense_employee.id,
+            'analytic_distribution': {self.project.analytic_account_id.id: 100},
+            'sale_order_id': self.sale_order.id,
+            'currency_id': other_currency.id,
+        })
+        self.check_project_profitability_before_creating_and_approving_expense_sheet(expense, self.project, self.project_profitability_items_empty)
+
+        expense_profitability = self.project._get_expenses_profitability_items(False)
+        self.assertTrue(expense_profitability['costs']['billed'] == - amount_in_other_currency / currency_rate)
