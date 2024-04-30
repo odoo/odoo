@@ -285,3 +285,7 @@ class HrEmployeeBase(models.AbstractModel):
                     # The employees should be working now according to their work schedule
                     working_now += res_employee_ids.ids
         return working_now
+
+    def _get_subordinates(self, parents=None):
+        # TO OVERRIDE
+        return self.env[self._name]
