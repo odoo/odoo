@@ -13,17 +13,20 @@ class TestOwnChecks(L10nLatamCheckTest):
 
         with Form(self.env['account.payment'].with_context(default_payment_type='outbound')) as payment_form:
             payment_form.partner_id = self.partner_a
-            # payment_form.amount = 50
             payment_form.journal_id = self.bank_journal
-            payment_form.payment_method_line_id = self.bank_journal._get_available_payment_method_lines(
-                'outbound').filtered(lambda x: x.code == 'own_checks')
+            payment_form.payment_method_line_id = self.bank_journal._get_available_payment_method_lines('outbound').filtered(lambda x: x.code == 'own_checks')
 
             payment_form.ref = 'Deferred check'
-            payment_form.l10n_latam_new_check_ids = [
-                Command.create(
-                    {'name': '00000001', 'l10n_latam_check_payment_date': fields.Date.add(fields.Date.today(), months=1), 'amount': 25},
-                    {'name': '00000002', 'l10n_latam_check_payment_date': fields.Date.add(fields.Date.today(), months=2), 'amount': 25},
-                )]
+            with payment_form.l10n_latam_new_check_ids.new() as check:
+                check.name = '00000001'
+                check.l10n_latam_check_payment_date = fields.Date.add(fields.Date.today(), months=1)
+                check.amount =  25
+
+            with payment_form.l10n_latam_new_check_ids.new() as check2:
+                check2.name = '00000002'
+                check2.l10n_latam_check_payment_date = fields.Date.add(fields.Date.today(), months=1)
+                check2.amount =  25
 
         payment = payment_form.save()
         payment.action_post()
+        self.assertEqual(payment.amount, 50)

@@ -126,7 +126,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
     def _get_last_operation(self):
         self.ensure_one()
         return (self.payment_id + self.l10n_latam_check_operation_ids).filtered(
-                lambda x: x.state == 'posted').sorted(key=lambda payment: (payment.date, payment.id))[-1:]
+                lambda x: x.state == 'posted').sorted(key=lambda payment: (payment.date, payment._origin.id))[-1:]
 
     @api.depends('state', 'l10n_latam_check_operation_ids.state')
     def _compute_l10n_latam_check_current_journal(self):

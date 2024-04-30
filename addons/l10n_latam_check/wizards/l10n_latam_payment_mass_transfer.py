@@ -60,7 +60,7 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
             elif not all(check.state == 'posted' for check in checks):
                 raise UserError(_("All the selected checks must be posted"))
             currency_ids = checks.mapped('currency_id')
-            if [currency_ids[0]] * len(currency_ids) != currency_ids:
+            if any([x != currency_ids[0] for x in currency_ids]):
                 raise UserError(_("All the selected checks must use the same currency"))
             res['check_ids'] = checks.ids
         return res
