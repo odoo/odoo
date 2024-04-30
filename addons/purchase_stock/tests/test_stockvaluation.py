@@ -3380,3 +3380,38 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'product_id': product2.id, 'debit': 0.0, 'credit': 20.0},
         ])
         self.assertTrue(all(aml.full_reconcile_id for aml in stock_in_amls))
+
+    def test_incoming_with_negative_qty(self):
+        """
+                FIFO/AVCO Auto
+                Purchase one Product with negative qty
+                Conform PO,
+                It will create outgoing shipment
+                        this transfer is neither returned nor received but it will be a delivery(outgoing).
+                """
+        product1 = self.product1
+        self.cat.property_valuation = 'real_time'
+        shipping_partner = self.env["res.partner"].create({
+            'name': "Shipping Partner",
+            'street': "234 W 18th Ave",
+            'city': "Columbus",
+            'state_id': self.env.ref("base.state_us_30").id,  # Ohio
+            'country_id': self.env.ref("base.us").id,
+            'zip': "43210",
+        })
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product1
+            po_line.product_qty = -2
+            po_line.price_unit = 10.0
+        po = po_form.save()
+        po.button_confirm()
+        delivery = po.picking_ids
+        # it is negative qty transfer so Odoo will create delivery instead of receipt.
+        delivery.partner_id = shipping_partner
+        move_line_vals = delivery.move_ids._prepare_move_line_vals()
+        move_line = self.env['stock.move.line'].create(move_line_vals)
+        move_line.qty_done = 2.
+        delivery.button_validate()
+        self.assertEqual(delivery.state, 'done')
