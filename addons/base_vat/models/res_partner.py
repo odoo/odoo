@@ -33,6 +33,7 @@ _ref_vat = {
     'br': _('either 11 digits for CPF or 14 digits for CNPJ'),
     'ch': _('CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA'),  # Swiss by Yannick Vaucher @ Camptocamp
     'cl': 'CL76086428-5',
+    'cr': _('CR123456789 or 123456789'),
     'co': _('CO213123432-1 or CO213.123.432-1'),
     'cy': 'CY10259033P',
     'cz': 'CZ12345679',
@@ -749,6 +750,16 @@ class ResPartner(models.Model):
         is_cpf_valid = stdnum.get_cc_module('br', 'cpf').is_valid
         is_cnpj_valid = stdnum.get_cc_module('br', 'cnpj').is_valid
         return is_cpf_valid(vat) or is_cnpj_valid(vat)
+
+    __check_vat_cr_re = re.compile(r"^\d{9,12}$")
+
+    def check_vat_cr(self, vat):
+        # CÉDULA FÍSICA: 9 digits, no leading zeros or hyphens
+        # CÉDULA JURÍDICA: 10 digits, no leading zeros or hyphens
+        # CÉDULA DIMEX: 11 or 12 digits, no leading zeros or hyphens
+        # CÉDULA NITE: 10 digits, no leading zeros or hyphens
+
+        return self.__check_vat_cr_re.match(vat) or False
 
     def format_vat_eu(self, vat):
         # Foreign companies that trade with non-enterprises in the EU
