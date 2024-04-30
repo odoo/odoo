@@ -1,4 +1,4 @@
-USA, 2023-06-25
+USA, 2024-04-09
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
