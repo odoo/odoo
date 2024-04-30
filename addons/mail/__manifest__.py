@@ -223,6 +223,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/discuss/**/public/**/*',
             'mail/static/src/discuss/**/public_web/**/*',
             ('remove', 'mail/static/src/discuss/**/*.dark.scss'),
+            ('remove', 'web/static/src/**/*.dark.scss'),
         ]
     },
     'license': 'LGPL-3',
