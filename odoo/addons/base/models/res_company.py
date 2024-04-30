@@ -192,12 +192,12 @@ class Company(models.Model):
         self.env['ir.module.module'].flush_model(['auto_install', 'country_ids', 'dependencies_id'])
         self.env['ir.module.module.dependency'].flush_model()
         self.env.cr.execute("""
-            SELECT country.id,
+            SELECT mc.country_id,
                    ARRAY_AGG(module.id)
-              FROM ir_module_module module,
-                   res_country country
+              FROM ir_module_module module
+              JOIN module_country mc ON mc.module_id = module.id
              WHERE module.auto_install
-               AND state NOT IN %(install_states)s
+               AND module.state NOT IN %(install_states)s
                AND NOT EXISTS (
                        SELECT 1
                          FROM ir_module_module_dependency d
@@ -206,14 +206,8 @@ class Company(models.Model):
                           AND d.auto_install_required
                           AND mdep.state NOT IN %(install_states)s
                    )
-               AND EXISTS (
-                       SELECT 1
-                         FROM module_country mc
-                        WHERE mc.module_id = module.id
-                          AND mc.country_id = country.id
-                   )
-               AND country.id = ANY(%(country_ids)s)
-          GROUP BY country.id
+               AND mc.country_id = ANY(%(country_ids)s)
+          GROUP BY country_id
         """, {
             'country_ids': self.country_id.ids,
             'install_states': ('installed', 'to install', 'to upgrade'),
