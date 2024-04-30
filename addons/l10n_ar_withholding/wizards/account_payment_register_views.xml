@@ -20,8 +20,8 @@
                         </tree>
                     </field>
                     <group colspan="2" invisible="not can_edit_wizard or (can_group_payments and not group_payment)">
-                        <label for="l10n_ar_net_amount" string="Net Amount" invisible="l10n_latam_check_id"/>
-                        <label for="l10n_ar_net_amount" string="Check amount" invisible="not l10n_latam_check_id"/>
+                        <label for="l10n_ar_net_amount" string="Net Amount" invisible="l10n_latam_check_ids or l10n_latam_new_check_ids"/>
+                        <label for="l10n_ar_net_amount" string="Check amount" invisible="not l10n_latam_check_ids and not l10n_latam_new_check_ids"/>
                         <field name="l10n_ar_net_amount" nolabel="1" />
                         <field name="l10n_ar_adjustment_warning" invisible="True"/>
                         <p colspan="2" invisible="not l10n_ar_adjustment_warning" class="alert alert-warning" role="alert">
