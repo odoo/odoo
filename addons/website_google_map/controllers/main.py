@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import contextlib
+
 from odoo import http
 from odoo.http import request
 from odoo.tools.json import scriptsafe
@@ -22,16 +24,30 @@ class GoogleMap(http.Controller):
     directives ``width`` and ``height``.
     '''
 
+    def _get_gmap_domains(self, **kw):
+        return {}
+
     @http.route(['/google_map'], type='http', auth="public", website=True, sitemap=False)
     def google_map(self, *arg, **post):
+        PartnerSudo = request.env['res.partner'].sudo()
         clean_ids = []
-        for partner_id in post.get('partner_ids', "").split(","):
-            try:
-                clean_ids.append(int(partner_id))
-            except ValueError:
-                pass
-        partners = request.env['res.partner'].sudo().search([("id", "in", clean_ids),
-                                                             ('website_published', '=', True), ('is_company', '=', True)])
+        domain = []
+        if post.get('partner_ids'):
+            for partner_id in post['partner_ids'].split(","):
+                with contextlib.suppress(ValueError):
+                    clean_ids.append(int(partner_id))
+            domain += [("id", "in", clean_ids), ('is_company', '=', True)]
+        elif post.get('dom'):
+            domain = self._get_gmap_domains(**post).get(post['dom'], [])
+
+        limit = post.get('limit') and int(post['limit']) or 80
+
+        if domain:  # [] is not allowed
+            domain += [('website_published', '=', True)]
+            partners = PartnerSudo.search(domain, limit=limit)
+        else:
+            partners = PartnerSudo
+
         partner_data = {
             "counter": len(partners),
             "partners": []
