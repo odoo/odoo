@@ -35,14 +35,14 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
         self.env['event.event.ticket'].create([{
             'name': 'Standard',
             'event_id': self.event_2.id,
-            'product_id': self.env.ref('event_sale.product_product_event').id,
+            'product_id': self.env.ref('event_product.product_product_event').id,
             'start_sale_datetime': (Datetime.today() - timedelta(days=5)).strftime('%Y-%m-%d 07:00:00'),
             'end_sale_datetime': (Datetime.today() + timedelta(90)).strftime('%Y-%m-%d'),
             'price': 1000.0,
         }, {
             'name': 'VIP',
             'event_id': self.event_2.id,
-            'product_id': self.env.ref('event_sale.product_product_event').id,
+            'product_id': self.env.ref('event_product.product_product_event').id,
             'end_sale_datetime': (Datetime.today() + timedelta(90)).strftime('%Y-%m-%d'),
             'price': 1500.0,
         }])
@@ -58,7 +58,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
         self.env['event.event.ticket'].create([{
             'name': 'VIP',
             'event_id': self.event_3.id,
-            'product_id': self.env.ref('event_sale.product_product_event').id,
+            'product_id': self.env.ref('event_product.product_product_event').id,
             'end_sale_datetime': (Datetime.today() + timedelta(90)).strftime('%Y-%m-%d'),
             'price': 1500.0,
             'seats_max': 2,
