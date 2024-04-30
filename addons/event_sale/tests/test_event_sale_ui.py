@@ -21,7 +21,7 @@ class TestUi(HttpCase):
             'amount': 10,
         })
 
-        self.product_event = self.env.ref('event_sale.product_product_event')
+        self.product_event = self.env.ref('event_product.product_product_event')
         self.product_event.taxes_id = [(6, 0, self.tax_10.ids)]
 
         event = self.env['event.event'].create({

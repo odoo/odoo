@@ -1,12 +1,8 @@
-from odoo import api, fields, models
+from odoo import api, models
 
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
-
-    service_tracking = fields.Selection(selection_add=[
-        ('event', 'Event Registration'),
-    ], ondelete={'event': 'set default'})
 
     @api.onchange('service_tracking')
     def _onchange_type_event(self):
