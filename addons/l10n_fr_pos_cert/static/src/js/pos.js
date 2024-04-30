@@ -24,7 +24,7 @@ const L10nFrPosGlobalState = (PosGlobalState) => class L10nFrPosGlobalState exte
         let result = super.disallowLineQuantityChange(...arguments);
         let selectedOrderLine = this.selectedOrder.get_selected_orderline();
         //Note: is_reward_line is a field in the pos_loyalty module
-        if (selectedOrderLine.is_reward_line) {
+        if (selectedOrderLine && selectedOrderLine.is_reward_line) {
             //Always allow quantity change for reward lines
             return false || result;
         }
@@ -56,18 +56,13 @@ const L10nFrOrder = (Order) => class L10nFrOrder extends Order {
       result = Boolean(result || this.pos.is_french_country());
       return result;
     }
-    destroy (option) {
-        // SUGGESTION: It's probably more appropriate to apply this restriction
-        // in the TicketScreen.
-        if (option && option.reason == 'abandon' && this.pos.is_french_country() && this.get_orderlines().length) {
-            Gui.showPopup("ErrorPopup", {
-                'title': _t("Fiscal Data Module error"),
-                'body':  _t("Deleting of orders is not allowed."),
-            });
-        } else {
-            super.destroy(...arguments);
-        }
-    }
+    _get_qr_code_data() {
+      if (this.pos.is_french_country()){
+        return false;
+      } else {
+        return super._get_qr_code_data(...arguments);
+      }
+  }
 }
 Registries.Model.extend(Order, L10nFrOrder);
 

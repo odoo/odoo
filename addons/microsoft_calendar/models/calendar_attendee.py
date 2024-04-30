@@ -43,9 +43,8 @@ class Attendee(models.Model):
         params = {"comment": "", "sendResponse": True}
         # Microsoft prevent user to answer the meeting when they are the organizer
         linked_events = self.event_id._get_synced_events()
-        for event in linked_events.filtered(lambda e: e.user_id != self.env.user):
-            event._microsoft_patch(
-                event._get_organizer(),
-                event.ms_organizer_event_id,
-                event._microsoft_values(["attendee_ids"]),
-            )
+        for event in linked_events:
+            if event._check_microsoft_sync_status() and self.env.user != event.user_id and self.env.user.partner_id in event.partner_ids:
+                if event.recurrency:
+                    event._forbid_recurrence_update()
+                event._microsoft_attendee_answer(answer, params)

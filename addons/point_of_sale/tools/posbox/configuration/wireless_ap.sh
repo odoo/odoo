@@ -10,6 +10,14 @@ if ! [ -f "${WIFI_NETWORK_FILE}" ] && [ -z "${FORCE_HOST_AP}" ] ; then
 	while [ "$(hostname -I)" = '' ] && [ "$COUNTER" -le 10 ]; do sleep 2;((COUNTER++)); done
 fi
 
+# Do we have to use the NetworkManager ?
+current_iotbox_version=$(cat "/var/odoo/iotbox_version")
+required_version="23.11"
+if [[ "$current_iotbox_version" < "$required_version" ]]; then
+    logger -t wireless_ap "USING WPA_SUPPLICANT REMOVING NETWORK MANAGER SERVICE"
+    sudo service NetworkManager stop
+fi
+
 WIRED_IP=$(hostname -I)
 
 if [ "$WIRED_IP" ]; then

@@ -85,11 +85,7 @@ QUnit.module("Board", (hooks) => {
         };
 
         LegacyFavoriteMenu.registry.add("add-to-board-menu", LegacyAddToBoard, 10);
-        favoriteMenuRegistry.add(
-            "add-to-board",
-            addToBoardItem,
-            { sequence: 10 }
-        );
+        favoriteMenuRegistry.add("add-to-board", addToBoardItem, { sequence: 10 });
         serverData = { models };
         target = getFixture();
     });
@@ -285,7 +281,7 @@ QUnit.module("Board", (hooks) => {
 
         serverData.views = {
             "partner,false,pivot": '<pivot><field name="foo"/></pivot>',
-            "partner,false,search": '<search/>',
+            "partner,false,search": "<search/>",
         };
         registry.category("services").add("user", makeFakeUserService());
         const webClient = await createWebClient({ serverData });
@@ -331,17 +327,25 @@ QUnit.module("Board", (hooks) => {
             const mockRPC = (route, args) => {
                 if (route === "/board/add_to_dashboard") {
                     assert.deepEqual(args.context_to_save.comparison, {
-                        comparisonId: "previous_period",
-                        fieldName: "date",
-                        fieldDescription: "Date",
-                        rangeDescription: "July 2020",
-                        range: ["&", ["date", ">=", "2020-07-01"], ["date", "<=", "2020-07-31"]],
-                        comparisonRange: [
-                            "&",
-                            ["date", ">=", "2020-06-01"],
-                            ["date", "<=", "2020-06-30"],
+                        domains: [
+                            {
+                                arrayRepr: [
+                                    "&",
+                                    ["date", ">=", "2020-07-01"],
+                                    ["date", "<=", "2020-07-31"],
+                                ],
+                                description: "July 2020",
+                            },
+                            {
+                                arrayRepr: [
+                                    "&",
+                                    ["date", ">=", "2020-06-01"],
+                                    ["date", "<=", "2020-06-30"],
+                                ],
+                                description: "June 2020",
+                            },
                         ],
-                        comparisonRangeDescription: "June 2020",
+                        fieldName: "date",
                     });
                     return Promise.resolve(true);
                 }

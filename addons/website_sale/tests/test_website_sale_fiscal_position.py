@@ -21,6 +21,7 @@ class TestWebsiteSaleFiscalPosition(ProductCommon, HttpCaseWithUserPortal):
             The goal of this test is to check that this template
             is up to date with the fiscal position detected.
         """
+        self.env.company.country_id = self.env.ref('base.us')
         website_id = self.env.ref('website.default_website').id
         belgium_id = self.env.ref('base.be').id
         # Set setting to display tax included on the website

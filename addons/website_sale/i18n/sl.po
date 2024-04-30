@@ -5,25 +5,25 @@
 # Translators:
 # laznikd <laznik@mentis.si>, 2022
 # Tadej Lupšina <tadej@hbs.si>, 2022
-# Boris Kodelja <boris@hbs.si>, 2022
 # Vida Potočnik <vida.potocnik@mentis.si>, 2022
 # matjaz k <matjaz@mentis.si>, 2022
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2022
 # jl2035 <jaka.luthar@gmail.com>, 2022
-# Grega Vavtar <grega@hbs.si>, 2022
 # Nejc G <nejc@luxim.si>, 2022
 # Blaž Korenček, 2023
 # Tomaž Jug <tomaz@editor.si>, 2023
 # Martin Trigaux, 2023
 # Jasmina Macur <jasmina@hbs.si>, 2023
+# Grega Vavtar <grega@hbs.si>, 2023
+# Boris Kodelja <boris@hbs.si>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2023\n"
+"Last-Translator: Boris Kodelja <boris@hbs.si>, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -455,6 +455,11 @@ msgstr ""
 "                                                    <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+msgid "<span>Quantity</span>"
+msgstr "<span>Količina</span>"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid ""
 "<span>Sign In</span>\n"
@@ -485,11 +490,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>Video predogled</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "<strong class=\"align-top\">URL: </strong>"
-msgstr "<strong class=\"align-top\">URL: </strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -611,8 +611,8 @@ msgid "Abandoned Cart"
 msgstr "Opuščena košarica"
 
 #. module: website_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.action_view_abandoned_tree
@@ -1038,17 +1038,8 @@ msgstr "Lahko objavite"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
-msgid "Can not resequence a video at first position."
+msgid "You can't use a video as the product's main image."
 msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence embedded image/video with a non compatible image."
-msgstr ""
-"Vgrajene slike/videoposnetka ni mogoče ponovno preštevilčiti z nezdružljivo "
-"sliko."
 
 #. module: website_sale
 #. odoo-javascript
@@ -1168,17 +1159,6 @@ msgid ""
 msgstr ""
 "Sprememba imena podjetja ni dovoljena po izdaji dokumentov za vaš račun. Za "
 "to operacijo se obrnite neposredno na nas."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-"Spreminjanje tvojega imena ni dovoljeno, če so računi za to konto že bili "
-"izdani. Prosimo, kontaktiraj nas neposredno za to operacijo."
 
 #. module: website_sale
 #. odoo-python
@@ -1534,6 +1514,11 @@ msgid "DHL Express Connector"
 msgstr "Priključek DHL Express"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Default"
 msgstr "Privzeto"
@@ -1635,7 +1620,7 @@ msgstr "Digitalna vsebina"
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__disabled
 #: model:ir.model.fields.selection,name:website_sale.selection__website__account_on_checkout__disabled
 msgid "Disabled (buy as guest)"
-msgstr "Invalidi (kupite kot gost)"
+msgstr "Onemogočeno (kupite kot gost)"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1779,11 +1764,6 @@ msgstr "Elektronsko poslovanje: Obnovitev košarice"
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Edit"
 msgstr "Uredi"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "Edit in Website Builder"
-msgstr "Urejanje v programu Website Builder"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2012,6 +1992,16 @@ msgstr ""
 "zapustili košarico"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -2074,15 +2064,6 @@ msgstr "Takojšnja blagajna namesto dodajanja v košarico"
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-
-#. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
@@ -2438,8 +2419,8 @@ msgstr "Izdelek ni opredeljen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid "No product defined in category \""
-msgstr "V kategoriji ni opredeljenega nobenega izdelka \""
+msgid "No product defined in this category."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
@@ -3147,7 +3128,6 @@ msgstr "Kol:"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #, python-format
 msgid "Quantity"
@@ -3759,11 +3739,6 @@ msgid "Suggested accessories in the eCommerce cart"
 msgstr "Predlagani dodatki v košarici e-trgovine"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "VAT"
-msgstr "ID DDV/DŠ"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tag"
 msgstr "Ključna beseda"
@@ -4110,6 +4085,11 @@ msgstr ""
 "obiskovalci"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "VAT"
+msgstr "ID DDV/DŠ"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 msgid "Variant"
 msgstr "Varianta"
@@ -4454,11 +4434,6 @@ msgstr "Vaša prejšnja košarica je bila že izpolnjena."
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Zip Code"
 msgstr "Poštna številka"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
-msgid "border-primary"
-msgstr "border-primary"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form

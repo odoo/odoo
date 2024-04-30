@@ -6,15 +6,16 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
-# Fernanda Alvarez, 2023
+# Wil Odoo, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,8 +74,8 @@ msgid ""
 "take these into account automatically."
 msgstr ""
 "Seleccione esta casilla para crear una nueva ubicación de subcontratación "
-"dedicada para esta empresa. Tome en cuenta que las rutas de subcontratación "
-"estándar se adaptarán para considerar estas de forma automática."
+"específica para esta empresa. Tome en cuenta que las rutas de "
+"subcontratación estándar se adaptarán para considerarla en automático."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
@@ -168,11 +169,11 @@ msgstr "Ocultar"
 #, python-format
 msgid ""
 "In order to manage stock accurately, subcontracting locations must be type "
-"Internal, linked to the appropriate company and not specific to a warehouse."
+"Internal, linked to the appropriate company."
 msgstr ""
-"Para gestionar las existencias de forma precisa, las ubicaciones de "
-"subcontratación deben ser internas, vinculadas a la empresa adecuada y no "
-"específicas a un almacén."
+"Las ubicaciones de subcontratación deben ser de tipo interno y estar "
+"vinculadas a la empresa adecuada, esto ayudará a gestionar las existencias "
+"de forma precisa."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_filter
@@ -202,6 +203,13 @@ msgid ""
 msgstr ""
 "Lista de productos que se utilizan en la lista de materiales, se utiliza "
 "para filtrar la lista de productos en la vista de portal de subcontratación"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr "Ubicaciones por actualizar"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
@@ -550,7 +558,7 @@ msgstr "Subcontratistas"
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "Lista de precios de proveedor"
+msgstr "Lista de precios del proveedor"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__is_subcontract
@@ -651,21 +659,19 @@ msgstr "No puede alterar la ubicación de subcontratación de la empresa"
 
 #. module: mrp_subcontracting
 #. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_location.py:0
-#, python-format
-msgid ""
-"You cannot change the subcontracting location as it is still linked to a "
-"subcontractor partner"
-msgstr ""
-"No puede cambiar la ubicación de subcontratación porque sigue vinculada a un"
-" partner de subcontratación"
-
-#. module: mrp_subcontracting
-#. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "You cannot write on fields %s in mrp.production."
 msgstr "No puede escribir en campos %s en mrp.production."
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "You might want to update the locations of this transfer's operations"
+msgstr ""
+"Tal vez quiera actualizar las ubicaciones de las operaciones de este "
+"traslado"
 
 #. module: mrp_subcontracting
 #. odoo-python

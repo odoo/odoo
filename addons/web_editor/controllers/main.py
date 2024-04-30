@@ -46,6 +46,9 @@ def handle_history_divergence(record, html_field_name, vals):
     # Do not handle history divergence if the field is not in the values.
     if html_field_name not in vals:
         return
+    # Do not handle history divergence if in module installation mode.
+    if record.env.context.get('install_module'):
+        return
     incoming_html = vals[html_field_name]
     incoming_history_matches = re.search(diverging_history_regex, incoming_html or '')
     # When there is no incoming history id, it means that the value does not
@@ -84,6 +87,26 @@ def handle_history_divergence(record, html_field_name, vals):
     # Save only the latest id.
     vals[html_field_name] = incoming_html[0:incoming_history_matches.start(1)] + last_step_id + incoming_html[incoming_history_matches.end(1):]
 
+def get_existing_attachment(IrAttachment, vals):
+    """
+    Check if an attachment already exists for the same vals. Return it if
+    so, None otherwise.
+    """
+    fields = dict(vals)
+    # Falsy res_id defaults to 0 on attachment creation.
+    fields['res_id'] = fields.get('res_id') or 0
+    raw, datas = fields.pop('raw', None), fields.pop('datas', None)
+    domain = [(field, '=', value) for field, value in fields.items()]
+    if fields.get('type') == 'url':
+        if 'url' not in fields:
+            return None
+        domain.append(('checksum', '=', False))
+    else:
+        if not (raw or datas):
+            return None
+        domain.append(('checksum', '=', IrAttachment._compute_checksum(raw or b64decode(datas))))
+    return IrAttachment.search(domain, limit=1) or None
+
 class Web_Editor(http.Controller):
     #------------------------------------------------------
     # convert font into picture
@@ -115,6 +138,11 @@ class Web_Editor(http.Controller):
 
             :returns PNG image converted from given font
         """
+        # For custom icons, use the corresponding custom font
+        if icon.isdigit():
+            if int(icon) == 57467:
+                font = "/web/static/fonts/tiktok_only.woff"
+
         size = max(width, height, 1) if width else size
         width = width or size
         height = height or size
@@ -145,7 +173,9 @@ class Web_Editor(http.Controller):
         image = Image.new("RGBA", (width, height), color)
         draw = ImageDraw.Draw(image)
 
-        boxw, boxh = draw.textsize(icon, font=font_obj)
+        box = draw.textbbox((0, 0), icon, font=font_obj)
+        boxw = box[2] - box[0]
+        boxh = box[3] - box[1]
         draw.text((0, 0), icon, font=font_obj)
         left, top, right, bottom = image.getbbox()
 
@@ -401,7 +431,8 @@ class Web_Editor(http.Controller):
             if not attachment_data['public']:
                 attachment.sudo().generate_access_token()
         else:
-            attachment = IrAttachment.create(attachment_data)
+            attachment = get_existing_attachment(IrAttachment, attachment_data) \
+                or IrAttachment.create(attachment_data)
 
         return attachment
 
@@ -469,7 +500,7 @@ class Web_Editor(http.Controller):
 
         # Compile regex outside of the loop
         # This will used to exclude library scss files from the result
-        excluded_url_matcher = re.compile("^(.+/lib/.+)|(.+import_bootstrap.+\.scss)$")
+        excluded_url_matcher = re.compile(r"^(.+/lib/.+)|(.+import_bootstrap.+\.scss)$")
 
         # First check the t-call-assets used in the related views
         url_infos = dict()
@@ -575,7 +606,11 @@ class Web_Editor(http.Controller):
             fields['res_id'] = res_id
         if name:
             fields['name'] = name
-        attachment = attachment.copy(fields)
+        existing_attachment = get_existing_attachment(request.env['ir.attachment'], fields)
+        if existing_attachment and not existing_attachment.url:
+            attachment = existing_attachment
+        else:
+            attachment = attachment.copy(fields)
         if attachment.url:
             # Don't keep url if modifying static attachment because static images
             # are only served from disk and don't fallback to attachments.

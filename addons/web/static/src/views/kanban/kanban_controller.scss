@@ -107,7 +107,7 @@
             }
         }
 
-        .o_kanban_record_title {
+        .o_kanban_record_title, .o_kanban_record_title strong {
             @include o-kanban-record-title($font-size: 13px);
             overflow-wrap: break-word;
             word-wrap: break-word;
@@ -515,10 +515,12 @@
         }
     }
 
-    .o_column_quick_create,
-    .o_kanban_group:not(.o_column_folded) .o_kanban_header_title {
-        // Makes them come on top of the "no-content" background gradient.
-        z-index: calc(var(--o-view-nocontent-zindex) + 1);
+    &.o_kanban_has_nocontent {
+        .o_column_quick_create,
+        .o_kanban_group:not(.o_column_folded) .o_kanban_header_title {
+            // Makes them come on top of the "no-content" background gradient.
+            z-index: calc(var(--o-view-nocontent-zindex) + 1);
+        }
     }
 
     .o_group_draggable .o_column_title {

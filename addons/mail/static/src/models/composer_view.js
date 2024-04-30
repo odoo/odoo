@@ -147,6 +147,9 @@ registerModel({
             if (this.composerSuggestionListView.activeSuggestionView.suggestable.partner) {
                 Object.assign(updateData, { rawMentionedPartners: link(this.composerSuggestionListView.activeSuggestionView.suggestable.partner) });
             }
+            if (this.composerSuggestionListView.activeSuggestionView.suggestable.cannedResponse) {
+                Object.assign(updateData, { cannedResponses: link(this.composerSuggestionListView.activeSuggestionView.suggestable.cannedResponse) });
+            }
             this.composer.update(updateData);
             for (const composerView of this.composer.composerViews) {
                 composerView.update({ hasToRestoreContent: true });
@@ -858,6 +861,7 @@ registerModel({
                 body: this._generateMessageBody(),
                 message_type: 'comment',
                 partner_ids: this.composer.recipients.map(partner => partner.id),
+                canned_response_ids: this.composer.cannedResponses.map(response => response.id),
             };
         },
         /**

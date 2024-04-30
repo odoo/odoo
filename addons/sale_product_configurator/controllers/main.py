@@ -8,7 +8,7 @@ from odoo.http import request
 class ProductConfiguratorController(http.Controller):
     @http.route(['/sale_product_configurator/configure'], type='json', auth="user", methods=['POST'])
     def configure(self, product_template_id, pricelist_id, **kw):
-        add_qty = float(kw.get('add_qty', 1))
+        add_qty = float(kw.get('quantity', 1))
         product_template = request.env['product.template'].browse(int(product_template_id))
         pricelist = self._get_pricelist(pricelist_id)
 

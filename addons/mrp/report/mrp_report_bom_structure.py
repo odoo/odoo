@@ -19,7 +19,7 @@ class ReportBomStructure(models.AbstractModel):
 
     @api.model
     def get_warehouses(self):
-        return self.env['stock.warehouse'].search_read([('company_id', '=', self.env.company.id)], fields=['id', 'name'])
+        return self.env['stock.warehouse'].search_read([('company_id', 'in', self.env.companies.ids)], fields=['id', 'name'])
 
     @api.model
     def _compute_current_production_capacity(self, bom_data):
@@ -27,7 +27,7 @@ class ReportBomStructure(models.AbstractModel):
         components_qty_to_produce = defaultdict(lambda: 0)
         components_qty_available = {}
         for comp in bom_data.get('components', []):
-            if comp['product'].type != 'product' or float_is_zero(comp['base_bom_line_qty'], precision_digits=comp['uom'].rounding):
+            if comp['product'].type != 'product' or float_is_zero(comp['base_bom_line_qty'], precision_rounding=comp['uom'].rounding):
                 continue
             components_qty_to_produce[comp['product_id']] += comp['base_bom_line_qty']
             components_qty_available[comp['product_id']] = comp['quantity_available']
@@ -196,7 +196,7 @@ class ReportBomStructure(models.AbstractModel):
         is_minimized = self.env.context.get('minimized', False)
         if not product:
             product = bom.product_id or bom.product_tmpl_id.product_variant_id
-        if not line_qty:
+        if line_qty is False:
             line_qty = bom.product_qty
 
         if not product_info:
@@ -279,7 +279,7 @@ class ReportBomStructure(models.AbstractModel):
             if not line.child_bom_id:
                 no_bom_lines |= line
                 # Update product_info for all the components before computing closest forecasted.
-                self._update_product_info(line.product_id, bom.id, product_info, warehouse, line_quantity, bom=False, parent_bom=bom)
+                self.with_context(parent_product_id=product.id)._update_product_info(line.product_id, bom.id, product_info, warehouse, line_quantity, bom=False, parent_bom=bom)
         components_closest_forecasted = self.with_context(parent_product_id=product.id)._get_components_closest_forecasted(no_bom_lines, line_quantities, bom, product_info, ignore_stock)
         for component_index, line in enumerate(bom.bom_line_ids):
             new_index = f"{index}{component_index}"
@@ -422,6 +422,10 @@ class ReportBomStructure(models.AbstractModel):
         return byproducts, byproduct_cost_portion
 
     @api.model
+    def _get_operation_cost(self, duration, operation):
+        return (duration / 60.0) * operation.workcenter_id.costs_hour
+
+    @api.model
     def _get_operation_line(self, product, bom, qty, level, index):
         operations = []
         total = 0.0
@@ -435,7 +439,7 @@ class ReportBomStructure(models.AbstractModel):
             operation_cycle = float_round(qty / capacity, precision_rounding=1, rounding_method='UP')
             duration_expected = (operation_cycle * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency) + \
                                 operation.workcenter_id._get_expected_duration(product)
-            total = ((duration_expected / 60.0) * operation.workcenter_id.costs_hour)
+            total = self._get_operation_cost(duration_expected, operation)
             operations.append({
                 'type': 'operation',
                 'index': f"{index}{operation_index}",
@@ -556,12 +560,19 @@ class ReportBomStructure(models.AbstractModel):
         found_rules = []
         if self._need_special_rules(self.env.context.get('product_info'), self.env.context.get('parent_bom'), self.env.context.get('parent_product_id')):
             found_rules = self._find_special_rules(product, self.env.context.get('product_info'), self.env.context.get('parent_bom'), self.env.context.get('parent_product_id'))
+            if found_rules and not self._is_resupply_rules(found_rules, bom):
+                # We only want to show the effective resupply (i.e. a form of manufacture or buy)
+                found_rules = []
         if not found_rules:
             found_rules = product._get_rules_from_location(warehouse.lot_stock_id)
         if not found_rules:
             return {}
         rules_delay = sum(rule.delay for rule in found_rules)
         return self._format_route_info(found_rules, rules_delay, warehouse, product, bom, quantity)
+
+    @api.model
+    def _is_resupply_rules(self, rules, bom):
+        return bom and any(rule.action == 'manufacture' for rule in rules)
 
     @api.model
     def _need_special_rules(self, product_info, parent_bom=False, parent_product_id=False):

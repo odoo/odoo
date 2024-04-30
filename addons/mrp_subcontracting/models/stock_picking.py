@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from collections import defaultdict
 from datetime import timedelta
 
 from odoo import api, fields, models, _
@@ -149,6 +149,8 @@ class StockPicking(models.Model):
 
     def _subcontracted_produce(self, subcontract_details):
         self.ensure_one()
+        group_move = defaultdict(list)
+        group_by_company = defaultdict(list)
         for move, bom in subcontract_details:
             # do not create extra production for move that have their quantity updated
             if move.move_orig_ids.production_id:
@@ -156,13 +158,40 @@ class StockPicking(models.Model):
             if float_compare(move.product_qty, 0, precision_rounding=move.product_uom.rounding) <= 0:
                 # If a subcontracted amount is decreased, don't create a MO that would be for a negative value.
                 continue
-            mo = self.env['mrp.production'].with_company(move.company_id).create(self._prepare_subcontract_mo_vals(move, bom))
-            self.env['stock.move'].create(mo._get_moves_raw_values())
-            self.env['stock.move'].create(mo._get_moves_finished_values())
-            mo.date_planned_finished = move.date  # Avoid to have the picking late depending of the MO
-            mo.action_confirm()
+            mo_subcontract = self._prepare_subcontract_mo_vals(move, bom)
+            # Link the move to the id of the MO's procurement group
+            group_move[mo_subcontract['procurement_group_id']] = move
+            # Group the MO by company
+            group_by_company[move.company_id.id].append(mo_subcontract)
 
-            # Link the finished to the receipt move.
+        all_mo = set()
+        for company, group in group_by_company.items():
+            grouped_mo = self.env['mrp.production'].with_company(company).create(group)
+            all_mo.update(grouped_mo.ids)
+
+        all_mo = self.env['mrp.production'].browse(sorted(all_mo))
+        all_mo.action_confirm()
+
+        for mo in all_mo:
+            move = group_move[mo.procurement_group_id.id][0]
             finished_move = mo.move_finished_ids.filtered(lambda m: m.product_id == move.product_id)
             finished_move.write({'move_dest_ids': [(4, move.id, False)]})
-            mo.action_assign()
+
+        all_mo.action_assign()
+
+    @api.onchange('location_id', 'location_dest_id')
+    def _onchange_locations(self):
+        moves = self.move_ids | self.move_ids_without_package
+        moves.filtered(lambda m: m.is_subcontract).update({
+            "location_dest_id": self.location_dest_id,
+        })
+        moves.filtered(lambda m: not m.is_subcontract).update({
+            "location_id": self.location_id,
+            "location_dest_id": self.location_dest_id,
+        })
+        if any(line.reserved_qty or line.qty_done for line in self.move_ids.move_line_ids):
+            return {'warning': {
+                    'title': _("Locations to update"),
+                    'message': _("You might want to update the locations of this transfer's operations"),
+                }
+            }

@@ -34,9 +34,9 @@ class MailMail(models.Model):
     def default_get(self, fields):
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
         # To remove when automatic context propagation is removed in web client
-        if self._context.get('default_type') not in type(self).message_type.base_field.selection:
+        if self._context.get('default_type') not in self._fields['message_type'].base_field.selection:
             self = self.with_context(dict(self._context, default_type=None))
-        if self._context.get('default_state') not in type(self).state.base_field.selection:
+        if self._context.get('default_state') not in self._fields['state'].base_field.selection:
             self = self.with_context(dict(self._context, default_state='outgoing'))
         return super(MailMail, self).default_get(fields)
 
@@ -120,6 +120,24 @@ class MailMail(models.Model):
     def _search_body_content(self, operator, value):
         return [('body_html', operator, value)]
 
+    @api.model
+    def fields_get(self, *args, **kwargs):
+        # related selection will fetch translations from DB
+        # selections added in stable won't be in DB -> add them on the related model if not already added
+        message_type_field = self.env['mail.message']._fields['message_type']
+        if 'auto_comment' not in {value for value, name in message_type_field.get_description(self.env)['selection']}:
+            self._fields_get_message_type_update_selection(message_type_field.selection)
+        return super().fields_get(*args, **kwargs)
+
+    def _fields_get_message_type_update_selection(self, selection):
+        """Update the field selection for message type on mail.message to match the runtime values.
+
+        DO NOT USE it is only there for a stable fix and should not be used for any reason other than hotfixing.
+        """
+        self.env['ir.model.fields'].invalidate_model(['selection_ids'])
+        self.env['ir.model.fields.selection'].sudo()._update_selection('mail.message', 'message_type', selection)
+        self.env.registry.clear_caches()
+
     @api.model_create_multi
     def create(self, values_list):
         # notification field: if not set, set if mail comes from an existing mail.message
@@ -171,9 +189,8 @@ class MailMail(models.Model):
         SQL queries.
         """
         super()._add_inherited_fields()
-        cls = type(self)
         for field in ('email_from', 'reply_to', 'subject'):
-            cls._fields[field].related_sudo = True
+            self._fields[field].related_sudo = True
 
     def action_retry(self):
         self.filtered(lambda mail: mail.state == 'exception').mark_outgoing()

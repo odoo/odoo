@@ -25,14 +25,14 @@ class AccountMove(models.Model):
 
     def _get_invoice_reference(self):
         self.ensure_one()
-        vendor_refs = [ref for ref in set(self.line_ids.mapped('purchase_line_id.order_id.partner_ref')) if ref]
+        vendor_refs = [ref for ref in set(self.invoice_line_ids.mapped('purchase_line_id.order_id.partner_ref')) if ref]
         if self.ref:
             return [ref for ref in self.ref.split(', ') if ref and ref not in vendor_refs] + vendor_refs
         return vendor_refs
 
     @api.onchange('purchase_vendor_bill_id', 'purchase_id')
     def _onchange_purchase_auto_complete(self):
-        ''' Load from either an old purchase order, either an old vendor bill.
+        r''' Load from either an old purchase order, either an old vendor bill.
 
         When setting a 'purchase.bill.union' in 'purchase_vendor_bill_id':
         * If it's a vendor bill, 'invoice_vendor_bill_id' is set and the loading is done by '_onchange_invoice_vendor_bill'.
@@ -53,7 +53,7 @@ class AccountMove(models.Model):
         # Copy data from PO
         invoice_vals = self.purchase_id.with_company(self.purchase_id.company_id)._prepare_invoice()
         new_currency_id = self.invoice_line_ids and self.currency_id or invoice_vals.get('currency_id')
-        del invoice_vals['ref']
+        del invoice_vals['ref'], invoice_vals['payment_reference']
         del invoice_vals['company_id']  # avoid recomputing the currency
         if self.move_type == invoice_vals['move_type']:
             del invoice_vals['move_type'] # no need to be updated if it's same value, to avoid recomputes
@@ -76,8 +76,11 @@ class AccountMove(models.Model):
         self.ref = ', '.join(refs)
 
         # Compute payment_reference.
-        if len(refs) == 1:
-            self.payment_reference = refs[0]
+        if not self.payment_reference:
+            if len(refs) == 1:
+                self.payment_reference = refs[0]
+            elif len(refs) > 1:
+                self.payment_reference = refs[-1]
 
         self.purchase_id = False
 
@@ -208,7 +211,7 @@ class AccountMove(models.Model):
                 'no_match': no result found
             * recordset of matched 'purchase.order.line' (could come from more than one purchase.order)
         """
-        common_domain = [('company_id', '=', self.company_id.id), ('state', '=', 'purchase'), ('invoice_status', 'in', ('to invoice', 'no'))]
+        common_domain = [('company_id', '=', self.company_id.id), ('state', 'in', ('purchase', 'done')), ('invoice_status', 'in', ('to invoice', 'no'))]
 
         matching_pos = self.env['purchase.order']
         if po_references and amount_total:

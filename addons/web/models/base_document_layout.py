@@ -208,7 +208,7 @@ class BaseDocumentLayout(models.TransientModel):
         if not logo:
             return False, False
         # The "===" gives different base64 encoding a correct padding
-        logo += b'===' if type(logo) == bytes else '==='
+        logo += b'===' if isinstance(logo, bytes) else '==='
         try:
             # Catches exceptions caused by logo not being an image
             image = tools.image_fix_orientation(tools.base64_to_image(logo))

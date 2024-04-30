@@ -15,6 +15,7 @@ const modifierFields = [
     'originalSrc',
     'resizeWidth',
     'aspectRatio',
+    "bgSrc",
 ];
 const isGif = (mimetype) => mimetype === 'image/gif';
 
@@ -343,12 +344,29 @@ async function applyModifications(img, dataOptions = {}) {
  * @param {String} src URL of the image to load
  * @param {HTMLImageElement} [img] img element in which to load the image
  * @returns {Promise<HTMLImageElement>} Promise that resolves to the loaded img
+ *     or a placeholder image if the src is not found.
  */
 function loadImage(src, img = new Image()) {
+    const handleImage = (source, resolve, reject) => {
+        img.addEventListener("load", () => resolve(img), {once: true});
+        img.addEventListener("error", reject, {once: true});
+        img.src = source;
+    };
+    // The server will return a placeholder image with the following src.
+    const placeholderHref = "/web/image/__odoo__unknown__src__/";
+
     return new Promise((resolve, reject) => {
-        img.addEventListener('load', () => resolve(img), {once: true});
-        img.addEventListener('error', reject, {once: true});
-        img.src = src;
+        fetch(src)
+            .then(response => {
+                if (!response.ok) {
+                    src = placeholderHref;
+                }
+                handleImage(src, resolve, reject);
+            })
+            .catch(error => {
+                src = placeholderHref;
+                handleImage(src, resolve, reject);
+            });
     });
 }
 
@@ -430,25 +448,28 @@ async function loadImageInfo(img, rpc, attachmentSrc = '') {
     if (img.dataset.originalSrc || !src) {
         return;
     }
+    // In order to be robust to absolute, relative and protocol relative URLs,
+    // the src of the img is first converted to an URL object. To do so, the URL
+    // of the document in which the img is located is used as a base to build
+    // the URL object if the src of the img is a relative or protocol relative
+    // URL. The original attachment linked to the img is then retrieved thanks
+    // to the path of the built URL object.
+    const srcUrl = new URL(src, img.ownerDocument.defaultView.location.href);
+    const relativeSrc = srcUrl.pathname;
 
-    // Only consider the "relative" part of the URL. Needed because some
-    // relative URLs were wrongly converted to absolute URLs at some point and
-    // user domains could have been changed meanwhile.
-    let relativeSrc;
-    try {
-        const srcUrl = new URL(src);
-        relativeSrc = srcUrl.pathname;
-    } catch {
-        relativeSrc = src;
-    }
     const {original} = await rpc({
         route: '/web_editor/get_image_info',
-        params: {src: relativeSrc.split(/[?#]/)[0]},
+        params: {src: relativeSrc},
     });
     // If src was an absolute "external" URL, we consider unlikely that its
     // relative part matches something from the DB and even if it does, nothing
     // bad happens, besides using this random image as the original when using
-    // the options, instead of having no option.
+    // the options, instead of having no option. Note that we do not want to
+    // check if the image is local or not here as a previous bug converted some
+    // local (relative src) images to absolute URL... and that before users had
+    // setup their website domain. That means they can have an absolute URL that
+    // looks like "https://mycompany.odoo.com/web/image/123" that leads to a
+    // "local" image even if the domain name is now "mycompany.be".
     if (original && original.image_src) {
         img.dataset.originalId = original.id;
         img.dataset.originalSrc = original.image_src;
@@ -512,7 +533,7 @@ return {
     activateCropper,
     loadImageInfo,
     loadImage,
-    removeOnImageChangeAttrs: [...cropperDataFields, ...modifierFields, 'aspectRatio'],
+    removeOnImageChangeAttrs: [...cropperDataFields, ...modifierFields],
     isImageSupportedForProcessing,
     isImageSupportedForStyle,
     createDataURL,

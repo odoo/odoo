@@ -534,7 +534,7 @@
                                         <field name="alias_enabled" invisible="1"/>
                                         <label for="alias_name" class="fw-bold o_form_label" string="Create tasks by sending an email to"/>
                                         <field name="alias_value" class="oe_read_only d-inline" readonly="1" widget="email" attrs="{'invisible':  [('alias_name', '=', False)]}" />
-                                        <span class="oe_edit_only">
+                                        <span class="oe_edit_only" dir="ltr">
                                             <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                         </span>
                                     </div>
@@ -756,8 +756,8 @@
                         </h1>
                     </div>
                     <field name="user_id" invisible="1"/>
-                    <div class="row mt16 o_settings_container"/>
-                    <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                    <div class="row o_settings_container"/>
+                    <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}" dir="ltr">
                         <label for="alias_name" class="oe_inline mt-4" string="Create tasks by sending an email to"/>
                         <field name="alias_enabled" invisible="1"/>
                         <span>
@@ -1288,7 +1288,7 @@
                                             <field name="repeat_interval" attrs="{'required': [('recurring_task', '=', True)]}" />
                                             <field name="repeat_unit" attrs="{'required': [('recurring_task', '=', True)]}" />
                                         </div>
-                                        <widget name="week_days" attrs="{'invisible': [('repeat_show_dow', '=', False)]}"/>
+                                        <widget name="week_days" attrs="{'invisible': [('repeat_show_dow', '=', False)]}" groups="project.group_project_user"/>
                                     </div>
 
                                     <label for="repeat_on_month" string="Repeat On" attrs="{'invisible': [('repeat_unit', 'not in', ('month', 'year'))]}" />
@@ -1319,7 +1319,7 @@
                                     </div>
                                 </group>
                             </group>
-                            <group attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_message', '=', False)]}">
+                            <group attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_message', '=', False)]}" groups="project.group_project_user">
                                 <div class="alert alert-success o_form_project_recurrence_message" role="status" colspan="2">
                                     <field name="recurrence_message" widget="html" class="mb-0" />
                                 </div>
@@ -1444,11 +1444,11 @@
                                         </span>
                                         <br />
                                         <t t-if="record.partner_id.value">
-                                            <span t-if="!record.partner_is_company.raw_value">
-                                                <field name="commercial_partner_id"/>
+                                            <span t-if="!record.partner_is_company.raw_value" t-attf-title="#{record.commercial_partner_id.value}">
+                                                <field name="commercial_partner_id" class="text-truncate d-block"/>
                                             </span>
-                                            <span t-else="">
-                                                <field name="partner_id"/>
+                                            <span t-else="" t-attf-title="#{record.partner_id.value}">
+                                                <field name="partner_id" class="text-truncate d-block"/>
                                             </span>
                                         </t>
                                         <t t-else="record.email_from.raw_value"><span><field name="email_from"/></span></t>

@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests.common import TransactionCase, users
+from odoo.tests.common import users
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
-class TestSaleProject(TransactionCase):
+class TestSaleProject(TransactionCaseWithUserDemo):
 
     @classmethod
     def setUpClass(cls):

@@ -6,11 +6,11 @@
                 <DettaglioLinee>
                     <NumeroLinea t-esc="line_dict['line_number']"/>
                     <CodiceArticolo t-if="line.product_id.barcode">
-                        <CodiceTipo>EAN</CodiceTipo>
+                        <CodiceTipo t-translation="off">EAN</CodiceTipo>
                         <CodiceValore t-esc="format_alphanumeric(line.product_id.barcode)[:35]"/>
                     </CodiceArticolo>
                     <CodiceArticolo t-elif="line.product_id.default_code">
-                        <CodiceTipo>INTERNAL</CodiceTipo>
+                        <CodiceTipo t-translation="off">INTERNAL</CodiceTipo>
                         <CodiceValore t-esc="format_alphanumeric(line.product_id.default_code)[:35]"/>
                     </CodiceArticolo>
                     <Descrizione t-esc="format_alphanumeric(line_dict['description'])[:1000]"/>
@@ -26,12 +26,12 @@
                     <AliquotaIVA t-elif="vat_tax.amount_type != 'percent'" t-esc="'0.00'"/>
                     <Natura t-if="vat_tax.l10n_it_has_exoneration" t-esc="vat_tax.l10n_it_kind_exoneration"/>
                     <AltriDatiGestionali t-if="conversion_rate">
-                        <TipoDato>Currency</TipoDato>
+                        <TipoDato t-translation="off">DIVISA</TipoDato>
                         <RiferimentoTesto t-esc="format_alphanumeric(record.currency_id.name)"/>
                         <RiferimentoNumero t-esc="'%.06f' % line.price_subtotal"/>
                     </AltriDatiGestionali>
                     <AltriDatiGestionali t-if="conversion_rate">
-                        <TipoDato>Exch.Rate</TipoDato>
+                        <TipoDato t-translation="off">CAMBIO</TipoDato>
                         <RiferimentoNumero t-esc="conversion_rate"/>
                         <RiferimentoData t-esc="format_date(record.invoice_date)"/>
                     </AltriDatiGestionali>
@@ -58,17 +58,9 @@
         </DatiTrasmissione>
         <CedentePrestatore>
             <DatiAnagrafici>
-                <IdFiscaleIVA t-if="seller.vat and in_eu(seller)">
-                    <IdPaese t-esc="get_vat_country(seller.vat)"/>
-                    <IdCodice t-esc="get_vat_number(seller.vat)"/>
-                </IdFiscaleIVA>
-                <IdFiscaleIVA t-if="seller.vat and not in_eu(seller)">
-                    <IdPaese t-esc="seller.country_id.code"/>
-                    <IdCodice t-esc="'OO99999999999'"/>
-                </IdFiscaleIVA>
-                <IdFiscaleIVA t-if="not seller.vat and seller.country_id.code != 'IT'">
-                    <IdPaese t-esc="seller.country_id.code"/>
-                    <IdCodice t-esc="'0000000'"/>
+                <IdFiscaleIVA>
+                    <IdPaese t-out="seller_info['country_code']"/>
+                    <IdCodice t-out="seller_info['vat']"/>
                 </IdFiscaleIVA>
                 <CodiceFiscale t-if="seller.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(seller.l10n_it_codice_fiscale)"/>
                 <Anagrafica>
@@ -107,17 +99,9 @@
         </RappresentanteFiscale>
         <CessionarioCommittente>
             <DatiAnagrafici>
-                <IdFiscaleIVA t-if="buyer.vat and in_eu(buyer)">
-                    <IdPaese t-esc="get_vat_country(buyer.vat)"/>
-                    <IdCodice t-esc="get_vat_number(buyer.vat)"/>
-                </IdFiscaleIVA>
-                <IdFiscaleIVA t-if="buyer.vat and not in_eu(buyer)">
-                    <IdPaese t-esc="buyer.country_id.code"/>
-                    <IdCodice t-esc="'OO99999999999'"/>
-                </IdFiscaleIVA>
-                <IdFiscaleIVA t-if="not buyer.vat and buyer.country_id.code != 'IT'">
-                    <IdPaese t-esc="buyer.country_id.code"/>
-                    <IdCodice t-esc="'0000000'"/>
+                <IdFiscaleIVA>
+                    <IdPaese t-out="buyer_info['country_code']"/>
+                    <IdCodice t-out="buyer_info['vat']"/>
                 </IdFiscaleIVA>
                 <CodiceFiscale t-if="buyer.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(buyer.l10n_it_codice_fiscale)"/>
                 <Anagrafica>
@@ -143,7 +127,7 @@
                 <Data t-esc="format_date(record.invoice_date)"/>
                 <Numero t-esc="format_alphanumeric(record.name[-20:])"/>
                 <DatiBollo t-if="record.l10n_it_stamp_duty">
-                    <BolloVirtuale>SI</BolloVirtuale>
+                    <BolloVirtuale t-translation="off">SI</BolloVirtuale>
                     <ImportoBollo t-esc="format_numbers(record.l10n_it_stamp_duty)"/>
                 </DatiBollo>
                 <ImportoTotaleDocumento t-esc="format_monetary(document_total, currency)"/>
@@ -202,10 +186,10 @@
         </DatiBeniServizi>
         <DatiPagamento t-if="partner_bank and record.move_type != 'out_refund'">
             <t t-set="payments" t-value="record.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))"/>
-            <CondizioniPagamento><t t-if="len(payments) == 1">TP02</t><t t-else="">TP01</t></CondizioniPagamento>
+            <CondizioniPagamento t-translation="off"><t t-if="len(payments) == 1">TP02</t><t t-else="">TP01</t></CondizioniPagamento>
             <t t-foreach="payments" t-as="payment">
                 <DettaglioPagamento>
-                    <ModalitaPagamento>MP05</ModalitaPagamento>
+                    <ModalitaPagamento t-translation="off">MP05</ModalitaPagamento>
                     <DataScadenzaPagamento t-esc="format_date(payment.date_maturity)"/>
                     <ImportoPagamento t-esc="format_monetary(abs(payment.amount_currency), currency)"/>
                     <IstitutoFinanziario t-if="partner_bank.bank_id" t-esc="format_alphanumeric(partner_bank.bank_id.name[:80])"/>
@@ -217,7 +201,7 @@
         </DatiPagamento>
         <Allegati t-if="pdf">
             <NomeAttachment t-esc="format_alphanumeric(pdf_name[:60])"/>
-            <FormatoAttachment>PDF</FormatoAttachment>
+            <FormatoAttachment t-translation="off">PDF</FormatoAttachment>
             <Attachment t-esc="pdf"/>
         </Allegati>
     </FatturaElettronicaBody>

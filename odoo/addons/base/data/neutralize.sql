@@ -14,6 +14,7 @@ UPDATE ir_cron
          FROM ir_model_data
         WHERE model = 'ir.cron'
           AND name = 'autovacuum_job'
+          AND module = 'base'
 );
 
 -- neutralization flag for the database

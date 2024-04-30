@@ -14,6 +14,14 @@ from odoo.addons.hw_drivers.tools import helpers
 _logger = logging.getLogger(__name__)
 
 try:
+    import schedule
+except ImportError:
+    schedule = None
+    # For now, it is intended to not be installed on the iot-box as it uses native Unix cron system
+    if platform.system() == 'Windows':
+        _logger.warning('Could not import library schedule')
+
+try:
     from dbus.mainloop.glib import DBusGMainLoop
 except ImportError:
     DBusGMainLoop = None
@@ -78,8 +86,10 @@ class Manager(Thread):
         """
 
         helpers.start_nginx_server()
-        if platform.system() == 'Linux':
+        _logger.info("IoT Box Image version: %s", helpers.get_version())
+        if platform.system() == 'Linux' and helpers.get_odoo_server_url():
             helpers.check_git_branch()
+            helpers.generate_password()
         is_certificate_ok, certificate_details = helpers.get_certificate_status()
         if not is_certificate_ok:
             _logger.warning("An error happened when trying to get the HTTPS certificate: %s",
@@ -100,6 +110,9 @@ class Manager(Thread):
             except Exception as e:
                 _logger.error("Error in %s: %s", str(interface), e)
 
+        # Set scheduled actions
+        schedule and schedule.every().day.at("00:00").do(helpers.get_certificate_status)
+
         # Check every 3 secondes if the list of connected devices has changed and send the updated
         # list to the connected DB.
         self.previous_iot_devices = []
@@ -109,6 +122,7 @@ class Manager(Thread):
                     self.previous_iot_devices = iot_devices.copy()
                     self.send_alldevices()
                 time.sleep(3)
+                schedule and schedule.run_pending()
             except Exception:
                 # No matter what goes wrong, the Manager loop needs to keep running
                 _logger.error(format_exc())

@@ -277,6 +277,9 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      */
     _addToolbar() {
         this._super(...arguments);
+        if (this.options.enableTranslation) {
+            this._$toolbarContainer[0].querySelector(":scope .o_we_animate_text").classList.add("d-none");
+        }
         this.$('#o_we_editor_toolbar_container > we-title > span').after($(`
             <div class="btn fa fa-fw fa-2x o_we_highlight_animated_text d-none
                 ${this.$body.hasClass('o_animated_text_highlighted') ? 'fa-eye text-success' : 'fa-eye-slash'}"
@@ -317,6 +320,18 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      */
     _isValidSelection(sel) {
         return sel.rangeCount && [...this.getEditableArea()].some(el => el.contains(sel.anchorNode));
+    },
+
+    /**
+     * The goal here is to disable parents editors for `s_popup` snippets
+     * since they should not display their parents options.
+     * TODO: Update in master to set the `o_no_parent_editor` class in the
+     * snippet's XML.
+     *
+     * @override
+     */
+    _allowParentsEditors($snippet) {
+        return this._super(...arguments) && !$snippet[0].classList.contains("s_popup");
     },
 
     //--------------------------------------------------------------------------

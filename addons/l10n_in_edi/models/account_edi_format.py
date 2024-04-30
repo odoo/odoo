@@ -108,8 +108,7 @@ class AccountEdiFormat(models.Model):
         return error_message
 
     def _l10n_in_edi_get_iap_buy_credits_message(self, company):
-        base_url = "https://iap-sandbox.odoo.com/iap/1/credit" if not company.sudo().l10n_in_edi_production_env else ""
-        url = self.env["iap.account"].get_credits_url(service_name="l10n_in_edi", base_url=base_url)
+        url = self.env["iap.account"].get_credits_url(service_name="l10n_in_edi")
         return markupsafe.Markup("""<p><b>%s</b></p><p>%s <a href="%s">%s</a></p>""") % (
             _("You have insufficient credits to send this document!"),
             _("Please buy more credits and retry: "),
@@ -198,6 +197,7 @@ class AccountEdiFormat(models.Model):
                         error_codes = [e.get("code") for e in error]
             if "9999" in error_codes:
                 response = {}
+                error = []
                 odoobot = self.env.ref("base.partner_root")
                 invoice.message_post(author_id=odoobot.id, body=_(
                     "Somehow this invoice had been cancelled to government before." \
@@ -211,7 +211,7 @@ class AccountEdiFormat(models.Model):
                     "error": self._l10n_in_edi_get_iap_buy_credits_message(invoice.company_id),
                     "blocking_level": "error",
                 }}
-            else:
+            if error:
                 error_message = "<br/>".join(["[%s] %s" % (e.get("code"), html_escape(e.get("message"))) for e in error])
                 return {invoice: {
                     "success": False,
@@ -221,37 +221,41 @@ class AccountEdiFormat(models.Model):
         if not response.get("error"):
             json_dump = json.dumps(response.get("data", {}))
             json_name = "%s_cancel_einvoice.json" % (invoice.name.replace("/", "_"))
-            attachment = self.env["ir.attachment"].create({
-                "name": json_name,
-                "raw": json_dump.encode(),
-                "res_model": "account.move",
-                "res_id": invoice.id,
-                "mimetype": "application/json",
-            })
+            attachment = False
+            if json_dump:
+                attachment = self.env["ir.attachment"].create({
+                    "name": json_name,
+                    "raw": json_dump.encode(),
+                    "res_model": "account.move",
+                    "res_id": invoice.id,
+                    "mimetype": "application/json",
+                })
             return {invoice: {"success": True, "attachment": attachment}}
 
     def _l10n_in_validate_partner(self, partner, is_company=False):
         self.ensure_one()
         message = []
         if not re.match("^.{3,100}$", partner.street or ""):
-            message.append(_("\n- Street required min 3 and max 100 characters"))
+            message.append(_("- Street required min 3 and max 100 characters"))
         if partner.street2 and not re.match("^.{3,100}$", partner.street2):
-            message.append(_("\n- Street2 should be min 3 and max 100 characters"))
+            message.append(_("- Street2 should be min 3 and max 100 characters"))
         if not re.match("^.{3,100}$", partner.city or ""):
-            message.append(_("\n- City required min 3 and max 100 characters"))
-        if not re.match("^.{3,50}$", partner.state_id.name or ""):
-            message.append(_("\n- State required min 3 and max 50 characters"))
+            message.append(_("- City required min 3 and max 100 characters"))
+        if partner.country_id.code == "IN" and not re.match("^.{3,50}$", partner.state_id.name or ""):
+            message.append(_("- State required min 3 and max 50 characters"))
         if partner.country_id.code == "IN" and not re.match("^[0-9]{6,}$", partner.zip or ""):
-            message.append(_("\n- Zip code required 6 digits"))
+            message.append(_("- Zip code required 6 digits"))
         if partner.phone and not re.match("^[0-9]{10,12}$",
             self._l10n_in_edi_extract_digits(partner.phone)
         ):
-            message.append(_("\n- Mobile number should be minimum 10 or maximum 12 digits"))
+            message.append(_("- Mobile number should be minimum 10 or maximum 12 digits"))
         if partner.email and (
             not re.match(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$", partner.email)
             or not re.match("^.{6,100}$", partner.email)
         ):
-            message.append(_("\n- Email address should be valid and not more then 100 characters"))
+            message.append(_("- Email address should be valid and not more then 100 characters"))
+        if message:
+            message.insert(0, "%s" %(partner.display_name))
         return message
 
     def _get_l10n_in_edi_saler_buyer_party(self, move):
@@ -620,8 +624,7 @@ class AccountEdiFormat(models.Model):
         return {'error': [{
             'code': '0',
             'message': _(
-                "Unable to send e-Invoice."
-                "Create an API user in NIC portal, and set it using the top menu: Configuration > Settings."
+                "Ensure GST Number set on company setting and API are Verified."
             )}
         ]}
 

@@ -4,19 +4,19 @@
 # 
 # Translators:
 # gezza <geza.nagy@oregional.hu>, 2022
-# Martin Trigaux, 2022
 # Ákos Nagy <akos.nagy@oregional.hu>, 2022
 # Tamás Németh <ntomasz81@gmail.com>, 2022
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2022
 # krnkris, 2022
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: krnkris, 2022\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,28 +30,28 @@ msgid "Attribute Values"
 msgstr "Tulajdonság értékek"
 
 #. module: purchase_product_matrix
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_product_matrix/static/src/js/purchase_product_field.js:0
 #, python-format
 msgid "Choose Product Variants"
 msgstr ""
 
 #. module: purchase_product_matrix
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_product_matrix/static/src/js/purchase_product_field.js:0
 #, python-format
 msgid "Close"
 msgstr "Bezárás"
 
 #. module: purchase_product_matrix
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_product_matrix/static/src/js/purchase_product_field.js:0
 #, python-format
 msgid "Confirm"
 msgstr "Megerősítés"
 
 #. module: purchase_product_matrix
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_product_matrix/static/src/js/purchase_product_field.js:0
 #, python-format
 msgid "Edit Configuration"
@@ -100,6 +100,11 @@ msgid "Product Template"
 msgstr "Terméksablon"
 
 #. module: purchase_product_matrix
+#: model_terms:ir.ui.view,arch_db:purchase_product_matrix.purchase_order_form_matrix
+msgid "Product Variant"
+msgstr "Termékváltozat"
+
+#. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__product_no_variant_attribute_value_ids
 msgid "Product attribute values that do not create variants"
 msgstr "Terméktulajdonság értékek, amelyek nem hoznak létre változatokat"
@@ -133,6 +138,7 @@ msgid "Whether the grid field contains a new matrix to apply or not."
 msgstr ""
 
 #. module: purchase_product_matrix
+#. odoo-python
 #: code:addons/purchase_product_matrix/models/purchase.py:0
 #, python-format
 msgid ""

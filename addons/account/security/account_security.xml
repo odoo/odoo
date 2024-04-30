@@ -122,31 +122,31 @@
     <record id="account_move_comp_rule" model="ir.rule">
         <field name="name">Account Entry</field>
         <field name="model_id" ref="model_account_move"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="account_move_line_comp_rule" model="ir.rule">
         <field name="name">Entry lines</field>
         <field name="model_id" ref="model_account_move_line"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="journal_group_comp_rule" model="ir.rule">
         <field name="name">Journal Group multi-company</field>
         <field name="model_id" ref="model_account_journal_group"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record id="journal_comp_rule" model="ir.rule">
         <field name="name">Journal multi-company</field>
         <field name="model_id" ref="model_account_journal"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record id="account_comp_rule" model="ir.rule">
         <field name="name">Account multi-company</field>
         <field name="model_id" ref="model_account_account"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record id="account_group_comp_rule" model="ir.rule">
@@ -158,67 +158,67 @@
     <record id="account_root_comp_rule" model="ir.rule">
         <field name="name">Account Root multi-company</field>
         <field name="model_id" ref="model_account_root"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="tax_comp_rule" model="ir.rule">
         <field name="name">Tax multi-company</field>
         <field name="model_id" ref="model_account_tax"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record id="tax_rep_comp_rule" model="ir.rule">
         <field name="name">Tax Repartition multi-company</field>
         <field name="model_id" ref="model_account_tax_repartition_line"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record id="invoice_analysis_comp_rule" model="ir.rule">
         <field name="name">Invoice Analysis multi-company</field>
         <field name="model_id" ref="model_account_invoice_report"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="account_fiscal_position_comp_rule" model="ir.rule">
         <field name="name">Account fiscal Mapping company rule</field>
         <field name="model_id" ref="model_account_fiscal_position"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record model="ir.rule" id="account_bank_statement_comp_rule">
         <field name="name">Account bank statement company rule</field>
         <field name="model_id" ref="model_account_bank_statement"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="account_bank_statement_line_comp_rule">
         <field name="name">Account bank statement line company rule</field>
         <field name="model_id" ref="model_account_bank_statement_line"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="account_reconcile_model_template_comp_rule">
         <field name="name">Account reconcile model template company rule</field>
         <field name="model_id" ref="model_account_reconcile_model"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record model="ir.rule" id="account_reconcile_model_line_template_comp_rule">
         <field name="name">Account reconcile model_line template company rule</field>
         <field name="model_id" ref="model_account_reconcile_model_line"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record model="ir.rule" id="account_payment_comp_rule">
         <field name="name">Account payment company rule</field>
         <field name="model_id" ref="model_account_payment"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record model="ir.rule" id="account_payment_term_comp_rule">
         <field name="name">Account payment term company rule</field>
         <field name="model_id" ref="model_account_payment_term"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <!-- Billing record rules for account.move -->

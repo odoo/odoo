@@ -217,10 +217,17 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         # To this purpose, we will ensure that only the public_pricelist is available for the default_website.
         public_pricelist = self.env.ref('product.list0')
         default_website = self.env.ref('website.default_website')
+        website_2 = self.env.ref('website.website2', raise_if_not_found=False)
+        if not website_2:
+            website_2 = self.env['website'].create({
+                'name': 'My Website 2',
+                'domain': '',
+                'sequence': 20,
+            })
         self.env['product.pricelist'].search([
             ('id', '!=', public_pricelist.id),
             ('website_id', 'in', [False, default_website.id])]
-        ).website_id = self.env.ref('website.website2')
+        ).website_id = website_2
         public_pricelist.currency_id = self.env.company.currency_id
 
         self.start_tour("/", 'shop_zoom', login="admin")
@@ -245,9 +252,9 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         product_green.image_variant_1920 = False
         images = product_green._get_images()
         # images on fields are resized to max 1920
-        image = Image.open(io.BytesIO(base64.b64decode(images[0].image_1920)))
-        self.assertEqual(image.size, (1268, 1920))
-        self.assertEqual(images[1].image_1920, red_image)
+        image_png = Image.open(io.BytesIO(base64.b64decode(images[1].image_1920)))
+        self.assertEqual(images[0].image_1920, red_image)
+        self.assertEqual(image_png.size, (1268, 1920))
         self.assertEqual(images[2].image_1920, image_gif)
         self.assertEqual(images[3].image_1920, image_svg)
 

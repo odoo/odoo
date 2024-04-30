@@ -33,6 +33,10 @@ const BaseAnimatedHeader = animations.Animation.extend({
      * @override
      */
     start: function () {
+        // Used to prevent the editor's unbreakable protection from restoring
+        // the menu's auto-hide updates in edit mode.
+        this.el.addEventListener("autoMoreMenu.willAdapt", () => this.options.wysiwyg
+            && this.options.wysiwyg.odooEditor.unbreakableStepUnactive());
         this.$main = this.$el.next('main');
         this.isOverlayHeader = !!this.$el.closest('.o_header_overlay, .o_header_overlay_theme').length;
         this.$dropdowns = this.$el.find('.dropdown, .dropdown-menu');
@@ -40,7 +44,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
 
         // While scrolling through navbar menus on medium devices, body should not be scrolled with it
         this.$navbarCollapses.on('show.bs.collapse.BaseAnimatedHeader', function () {
-            if (config.device.size_class <= config.device.SIZES.SM) {
+            if (config.device.size_class < config.device.SIZES.LG) {
                 $(document.body).addClass('overflow-hidden');
             }
         }).on('hide.bs.collapse.BaseAnimatedHeader', function () {
@@ -239,7 +243,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
     _updateHeaderOnResize: function () {
         this._adaptFixedHeaderPosition();
         if (document.body.classList.contains('overflow-hidden')
-                && config.device.size_class > config.device.SIZES.SM) {
+                && config.device.size_class >= config.device.SIZES.LG) {
             document.body.classList.remove('overflow-hidden');
             this.$el.find('.navbar-collapse').removeClass('show');
         }
@@ -604,7 +608,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      */
     _dropdownHover: function () {
         this.$dropdownMenus.attr('data-bs-popper', 'none');
-        if (config.device.size_class > config.device.SIZES.SM) {
+        if (config.device.size_class >= config.device.SIZES.LG) {
             this.$dropdownMenus.css('margin-top', '0');
             this.$dropdownMenus.css('top', 'unset');
         } else {
@@ -629,7 +633,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      */
     _updateDropdownVisibility: function (ev, method) {
         const { currentTarget } = ev;
-        if (config.device.size_class <= config.device.SIZES.SM) {
+        if (config.device.size_class < config.device.SIZES.LG) {
             return;
         }
         if (currentTarget.classList.contains('o_extra_menu_items')) {
@@ -656,9 +660,21 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
                 return;
             }
         }
+        // Get the previously focused element of the page.
+        const focusedEl = this.el.ownerDocument.querySelector(":focus")
+            || window.frameElement && window.frameElement.ownerDocument.querySelector(":focus");
+
         // The user must click on the dropdown if he is on mobile (no way to
         // hover) or if the dropdown is the extra menu ('+').
         this._updateDropdownVisibility(ev, 'show');
+
+        // Keep the focus on the previously focused element if any, otherwise do
+        // not focus the dropdown on hover.
+        if (focusedEl) {
+            focusedEl.focus();
+        } else {
+            ev.currentTarget.querySelector(".dropdown-toggle").blur();
+        }
     },
     /**
      * @private

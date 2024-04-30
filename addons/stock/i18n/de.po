@@ -6,15 +6,16 @@
 # Friederike Fasterling-Nesselbosch, 2022
 # Stefan Reisich <nafex@gmx.net>, 2023
 # Martin Trigaux, 2023
-# Larissa Manderfeld, 2023
+# Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,6 +146,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
+msgid "%(name)s (copy)(%(id)s)"
+msgstr "%(name)s (Kopie)(%(id)s)"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
 msgid "%(warehouse)s: Supply Product from %(supplier)s"
 msgstr "%(warehouse)s: Produkt nachliefern aus %(supplier)s"
 
@@ -152,6 +160,7 @@ msgstr "%(warehouse)s: Produkt nachliefern aus %(supplier)s"
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_package_type.py:0
+#: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/models/stock_storage_category.py:0
 #, python-format
 msgid "%s (copy)"
@@ -1194,8 +1203,8 @@ msgid "Automatic No Step Added"
 msgstr "Automatisch ohne Folgeschritt"
 
 #. module: stock
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
@@ -1819,6 +1828,11 @@ msgid ""
 msgstr ""
 "Die Umrechnung zwischen Maßeinheiten kann nur erfolgen, wenn sie derselben "
 "Kategorie angehören. Die Umrechnung erfolgt auf Basis der Kennzahlen."
+
+#. module: stock
+#: model:ir.actions.server,name:stock.stock_quant_stock_move_line_desynchronization
+msgid "Correct inconsistencies for reservation"
+msgstr "Inkonsistenzen für Reservierung korrigieren"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -3003,6 +3017,13 @@ msgid "First SN"
 msgstr "Erste SN"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Fix discrepancies"
+msgstr "Ungereimtheiten beheben"
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
 msgid "Fixed"
 msgstr "Fest"
@@ -3851,6 +3872,7 @@ msgstr "Ungültiger linker Domain-Operand %s"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "Ungültiger Domain-Operator %s"
@@ -3858,6 +3880,7 @@ msgstr "Ungültiger Domain-Operator %s"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
 msgstr ""
@@ -4080,10 +4103,28 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
+"It is not possible to reserve more products of %s than you have in stock.\n"
+"\n"
+"You can fix the discrepancies by clicking on the button below.\n"
+"The correction will remove the reservation of the impacted operations on all companies.\n"
+"If the error persists, or you see this message appear often, please submit a Support Ticket at https://www.odoo.com/help"
 msgstr ""
-"Es ist nicht möglich, die Reservierung für mehr Produkte von %s aufzuheben "
-"als im Lager vorhanden sind."
+"Es ist nicht möglich, mehr Produkte von %s zu reservieren, als Sie auf Lager haben.\n"
+"\n"
+"Sie können die Unstimmigkeiten korrigieren, indem Sie auf die Schaltfläche unten klicken.\n"
+"Durch die Korrektur wird die Reservierung der betroffenen Vorgänge für alle Unternehmen aufgehoben.\n"
+"Wenn der Fehler weiterhin besteht oder diese Meldung häufig auftritt, senden Sie bitte ein Supportticket an https://www.odoo.com/help"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"It is not possible to unreserve more products of %s than you have in stock.\n"
+"Please contact your system administrator to rectify this issue."
+msgstr ""
+"Es ist nicht möglich, mehr Produkte von %s zu reservieren, als Sie auf Lager haben.\n"
+"Bitte wenden Sie sich an Ihren Systemadministrator, um dieses Problem zu beheben."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -4517,6 +4558,13 @@ msgid "Locations"
 msgstr "Lagerorte"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr "Zu aktualisierende Standorte"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Lock"
 msgstr "Sperren"
@@ -4635,7 +4683,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__mto_pull_id
 msgid "MTO rule"
-msgstr "Einzelfertigungsregel"
+msgstr "Auftragsfertigungsregel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_main_attachment_id
@@ -4650,7 +4698,7 @@ msgstr "Hauptanhang"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Make To Order"
-msgstr "Einzelfertigung"
+msgstr "Auftragsfertigung"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -5185,8 +5233,8 @@ msgid "Normal"
 msgstr "Normal"
 
 #. module: stock
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
@@ -6894,7 +6942,7 @@ msgstr "Standort auffüllen"
 #. module: stock
 #: model:stock.route,name:stock.route_warehouse0_mto
 msgid "Replenish on Order (MTO)"
-msgstr "Auffüllung nach Auftrag (Einzelfertigung)"
+msgstr "Auffüllung nach Auftrag (Auftragsfertigung)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
@@ -7196,6 +7244,14 @@ msgid ""
 msgstr ""
 "Routen werden auch für die Beschaffung aus eigenen Lagerhäusern definiert "
 "und können bei Produkten oder Produktkategorien ausgewählt werden."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr "Regel %s gehört zu %s, während die Route zu %s gehört."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -7503,13 +7559,6 @@ msgstr "Sequenz Kommissionierung"
 #, python-format
 msgid "Sequence return"
 msgstr "Sequenz Retoure"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "Sequenzen %s bestehen bereits."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -8174,7 +8223,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_out_id
 msgid "Store to sublocation"
-msgstr "An Unterstandort speichern"
+msgstr "Im Unterstandort lagern"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__supplied_wh_id
@@ -8786,6 +8835,21 @@ msgstr ""
 "verwendet werden."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
+"Dieses Sequenzpräfix wird bereits von einer anderen Vorgangsart verwendet. "
+"Es wird empfohlen, ein eindeutiges Präfix zu wählen, um Probleme und/oder "
+"wiederholte Referenzwerte zu vermeiden, oder die vorhandene Referenzfolge "
+"dieser Vorgangsart zuzuweisen."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
 #: model:ir.model.fields,help:stock.field_product_template__property_stock_production
 msgid ""
@@ -8985,7 +9049,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Track product location in your warehouse"
-msgstr "Verfolgen Sie den Aufbewahrungsort des Produkts in Ihrem Lagerhaus"
+msgstr "Verfolgen Sie den Lagerort von Produkten in Ihrem Lagerhaus"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -10103,6 +10167,28 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from both "
+"immediate and planned transfers."
+msgstr ""
+"Sie können keine Produkte in ein und dasselbe Paket packen, wenn sie sowohl "
+"aus sofortigen als auch aus geplanten Transfers stammen."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+"Sie können keine Produkte in ein und dasselbe Paket packen, wenn sie aus "
+"verschiedenen Transfers mit unterschiedlichen Vorgangsarten stammen."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -10218,6 +10304,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "Sie haben weniger Produkte verarbeitet als ursprünglich angefragt:"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"Sie haben Produkte auf Lager, für die die Nachverfolgung der Los-/Seriennummer aktiviert ist. \n"
+"Schalten Sie die Nachverfolgung bei allen Produkten aus, bevor Sie diese Einstellung deaktivieren."
 
 #. module: stock
 #. odoo-python
@@ -10423,6 +10520,7 @@ msgid "e.g. CW"
 msgstr "z. B. CW"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "e.g. Central Warehouse"
 msgstr "z. B. Zentrales Lager"

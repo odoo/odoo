@@ -196,7 +196,7 @@ X-Attachment-Id: f_hkpb27k00
 dGVzdAo=
 --089e01536c4ed4d17204e49b8e96--"""
 
-MAIL_MULTIPART_MIXED_TWO = """X-Original-To: raoul@grosbedon.fr
+MAIL_MULTIPART_MIXED_TWO = r"""X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
 Received: by mail1.grosbedon.com (Postfix, from userid 10002)
     id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)
@@ -401,7 +401,7 @@ PEludm9pY2U+Q2hhdXNzw6llIGRlIEJydXhlbGxlczwvSW52b2ljZT4=
 """
 
 
-MAIL_SINGLE_BINARY = """X-Original-To: raoul@grosbedon.fr
+MAIL_SINGLE_BINARY = r"""X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
 Received: by mail1.grosbedon.com (Postfix, from userid 10002)
     id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)
@@ -1292,3 +1292,44 @@ To: lucie@petitebedaine.fr
 From: "Bruce Wayne" <bruce@wayneenterprises.com>
 
 SSBhbSB0aGUgQmF0TWFuCg=="""
+
+MAIL_PDF_MIME_TEMPLATE = """\
+To: {to}
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+    boundary="----=_Part_4200734_24778174.1344608186754"
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+
+------=_Part_4200734_24778174.1344608186754
+Content-Type: {pdf_mime}; name="scan_soraya.lernout_1691652648.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgICAgL0tpZHMgWzMgMCBSXQogICAgIC9Db3VudCAxCiAgICAgL01lZGlhQm94IFswIDAgMzAwIDE0NF0KICA+PgplbmRvYmoKCjMgMCBvYmoKICA8PCAgL1R5cGUgL1BhZ2UKICAgICAgL1BhcmVudCAyIDAgUgogICAgICAvUmVzb3VyY2VzCiAgICAgICA8PCAvRm9udAogICAgICAgICAgIDw8IC9GMQogICAgICAgICAgICAgICA8PCAvVHlwZSAvRm9udAogICAgICAgICAgICAgICAgICAvU3VidHlwZSAvVHlwZTEKICAgICAgICAgICAgICAgICAgL0Jhc2VGb250IC9UaW1lcy1Sb21hbgogICAgICAgICAgICAgICA+PgogICAgICAgICAgID4+CiAgICAgICA+PgogICAgICAvQ29udGVudHMgNCAwIFIKICA+PgplbmRvYmoKCjQgMCBvYmoKICA8PCAvTGVuZ3RoIDU1ID4+CnN0cmVhbQogIEJUCiAgICAvRjEgMTggVGYKICAgIDAgMCBUZAogICAgKEhlbGxvIFdvcmxkKSBUagogIEVUCmVuZHN0cmVhbQplbmRvYmoKCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAwMCBuIAowMDAwMDAwMDc3IDAwMDAwIG4gCjAwMDAwMDAxNzggMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICA+PgpzdGFydHhyZWYKNTY1CiUlRU9GCg==
+
+------=_Part_4200734_24778174.1344608186754--
+"""
+
+PDF_PARSED = b'''%PDF-1.1\n%\xc2\xa5\xc2\xb1\xc3\xab\n\n1 0 obj\n  << /Type /Catalog\n     /Pages 2 0 R\n  >>\nendobj\n\n2 0 obj\n  << /Type /Pages\n     /Kids [3 0 R]\n     /Count 1\n     /MediaBox [0 0 300 144]\n  >>\nendobj\n\n3 0 obj\n  <<  /Type /Page\n      /Parent 2 0 R\n      /Resources\n       << /Font\n           << /F1\n               << /Type /Font\n                  /Subtype /Type1\n                  /BaseFont /Times-Roman\n               >>\n           >>\n       >>\n      /Contents 4 0 R\n  >>\nendobj\n\n4 0 obj\n  << /Length 55 >>\nstream\n  BT\n    /F1 18 Tf\n    0 0 Td\n    (Hello World) Tj\n  ET\nendstream\nendobj\n\nxref\n0 5\n0000000000 65535 f \n0000000018 00000 n \n0000000077 00000 n \n0000000178 00000 n \n0000000457 00000 n \ntrailer\n  <<  /Root 1 0 R\n      /Size 5\n  >>\nstartxref\n565\n%%EOF\n'''
+
+THAI_EMAIL_WINDOWS_874 = '''\
+From: Thai Customer <outlook_windows@outlook.com>
+To: "Thai Odoo User" <thai-user@odoo.com>
+Subject: =?windows-874?B?4MPX6M2n?=
+Thread-Topic: =?windows-874?B?4MPX6M2n?=
+Thread-Index: AQHahRQ4qiMBoXtK0U2XwaGg8w9Y9g==
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date: Tue, 2 Apr 2024 15:42:24 +0000
+Message-ID: <PH7P220MB158617DEAEC85ECA2A0D2CAFBC3E2@PH7P220MB1586.NAMP220.PROD.OUTLOOK.COM>
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator:
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+msip_labels:
+Content-Type: text/plain; charset="windows-874"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+=C3=E8=D2=A7=A1=D2=C2='''

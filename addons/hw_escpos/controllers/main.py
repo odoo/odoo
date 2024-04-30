@@ -11,12 +11,13 @@ import time
 import netifaces as ni
 import traceback
 
-try: 
+escpos = printer = None
+try:
     from .. escpos import *
     from .. escpos.exceptions import *
     from .. escpos.printer import Usb
 except ImportError:
-    escpos = printer = None
+    pass
 
 from queue import Queue
 from threading import Thread, Lock
@@ -148,8 +149,8 @@ class EscposDriver(Thread):
             _logger.error('ESC/POS cannot initialize, please verify system dependencies.')
             return
         while True:
+            error = True
             try:
-                error = True
                 timestamp, task, data = self.queue.get(True)
 
                 printer = self.get_escpos_printer()

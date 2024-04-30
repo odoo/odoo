@@ -3,7 +3,7 @@
 from odoo.api import model
 from typing import Iterator, Mapping
 from collections import abc
-from odoo.tools import ReadonlyDict
+from odoo.tools import ReadonlyDict, email_normalize
 from odoo.addons.microsoft_calendar.utils.event_id_storage import combine_ids
 
 
@@ -166,9 +166,14 @@ class MicrosoftEvent(abc.Set):
         """
         if self.isOrganizer:
             return env.user.id
-        if self.organizer.get('emailAddress') and self.organizer.get('emailAddress').get('address'):
+
+        if not self.organizer:
+            return False
+
+        organizer_email = self.organizer.get('emailAddress') and email_normalize(self.organizer.get('emailAddress').get('address'))
+        if organizer_email:
             # Warning: In Microsoft: 1 email = 1 user; but in Odoo several users might have the same email
-            user = env['res.users'].search([('email', '=', self.organizer.get('emailAddress').get('address'))], limit=1)
+            user = env['res.users'].search([('email', '=', organizer_email)], limit=1)
             return user.id if user else False
         return False
 

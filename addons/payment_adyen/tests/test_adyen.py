@@ -10,6 +10,7 @@ from odoo.tools import mute_logger
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo.addons.payment_adyen import utils as adyen_utils
 from odoo.addons.payment_adyen.controllers.main import AdyenController
 from odoo.addons.payment_adyen.tests.common import AdyenCommon
 
@@ -36,7 +37,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             'odoo.addons.payment.utils.generate_access_token', new=self._generate_test_access_token
         ):
             self.assertTrue(payment_utils.check_access_token(
-                processing_values['access_token'], self.reference, converted_amount, self.partner.id
+                processing_values['access_token'], self.reference, converted_amount, self.currency.id, self.partner.id
             ))
 
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
@@ -334,3 +335,14 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         payload = dict(self.webhook_notification_payload, additionalData={'hmacSignature': 'dummy'})
         tx = self._create_transaction('direct')
         self.assertRaises(Forbidden, AdyenController._verify_notification_signature, payload, tx)
+
+    @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
+    def test_no_information_missing_from_partner_address(self):
+        test_partner = self.env['res.partner'].create({
+            'name': 'Dummy Partner',
+            'email': 'norbert.buyer@example.com',
+            'phone': '0032 12 34 56 78',
+        })
+        test_address = adyen_utils.format_partner_address(test_partner)
+        for key in ('city', 'country', 'stateOrProvince', 'street',):
+            self.assertTrue(test_address.get(key))

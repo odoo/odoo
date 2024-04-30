@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import server_logger
 from . import connection_manager
 from . import controllers
 from . import driver

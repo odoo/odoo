@@ -35,7 +35,7 @@
 
     <t t-name="HrAttendanceKioskMode">
         <t t-call="HrAttendanceCardLayout">
-            <t t-set="kioskModeClasses">o_barcode_main pt-5</t>
+            <t t-set="kioskModeClasses" t-translation="off">o_barcode_main pt-5</t>
             <t t-set="bodyContent">
                 <h2 class="mb-2"><small>Welcome to</small> <t t-esc="widget.company_name"/></h2>
                 <img t-attf-src="{{widget.company_image_url}}" alt="Company Logo" class="o_hr_attendance_kiosk_company_image align-self-center img img-fluid mb-3" width="200"/>

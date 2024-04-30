@@ -39,10 +39,21 @@ according to the enabled options.
             <!-- Filters -->
             <div t-if="tag or date_begin or search" class="col-12 mb-3">
                 <div t-if="posts" class="h4 mb-3">
+                    <t t-esc="search_count"/>
+                    <t t-if="search_count &lt; 2">Article</t>
+                    <t t-else="">Articles</t>
+                </div>
+                <!-- TODO: in master, remove the next useless lines. They have
+                    to be kept in the stable versions in case of a potential
+                    customization that would do a 'xpath' on them.-->
+                <t t-set="posts_save" t-value="posts"/>
+                <t t-set="posts" t-value="False"/>
+                <div t-if="posts" class="h4 mb-3">
                     <t t-esc="len(posts)"/>
                     <t t-if="len(posts) &lt; 2">Article</t>
                     <t t-else="">Articles</t>
                 </div>
+                <t t-set="posts" t-value="posts_save"/>
                 <span t-if="search" class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
                     <i class="fa fa-search me-2 text-muted"/>
                     <t t-esc="search"/>

@@ -65,7 +65,7 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
     load_translations: function(session, modules, lang, url) {
         var self = this;
         var cacheId = session.cache_hashes && session.cache_hashes.translations;
-        url = url || '/web/webclient/translations';
+        url = url || new URL("/web/webclient/translations", session.origin || location.origin).href;
         url += '/' + (cacheId ? cacheId : Date.now());
         const paramsGet = {};
         if (modules) {

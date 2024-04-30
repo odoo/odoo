@@ -11,6 +11,7 @@ import threading
 import time
 from email.utils import getaddresses
 from urllib.parse import urlparse
+import html as htmllib
 
 import idna
 import markupsafe
@@ -201,6 +202,9 @@ def html_normalize(src, filter_callback=None):
     try:
         src = src.replace('--!>', '-->')
         src = re.sub(r'(<!-->|<!--->)', '<!-- -->', src)
+        # On the specific case of Outlook desktop it adds unnecessary '<o:.*></o:.*>' tags which are parsed
+        # in '<p></p>' which may alter the appearance (eg. spacing) of the mail body
+        src = re.sub(r'</?o:.*?>', '', src)
         doc = html.fromstring(src)
     except etree.ParserError as e:
         # HTML comment only string, whitespace only..
@@ -311,7 +315,7 @@ def is_html_empty(html_content):
     """
     if not html_content:
         return True
-    tag_re = re.compile(r'\<\s*\/?(?:p|div|span|br|b|i|font)(?:(?=\s+\w*)[^/>]*|\s*)/?\s*\>')
+    tag_re = re.compile(r'\<\s*\/?(?:p|div|section|span|br|b|i|font)(?:(?=\s+\w*)[^/>]*|\s*)/?\s*\>')
     return not bool(re.sub(tag_re, '', html_content).strip())
 
 def html_keep_url(text):
@@ -338,6 +342,7 @@ def html_to_inner_content(html):
     processed = re.sub(HTML_NEWLINES_REGEX, ' ', html)
     processed = re.sub(HTML_TAGS_REGEX, '', processed)
     processed = re.sub(r' {2,}|\t', ' ', processed)
+    processed = htmllib.unescape(processed)
     processed = processed.strip()
     return processed
 
@@ -387,7 +392,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     html = html.replace('<em>', '/').replace('</em>', '/')
     html = html.replace('<tr>', '\n')
     html = html.replace('</p>', '\n')
-    html = re.sub('<br\s*/?>', '\n', html)
+    html = re.sub(r'<br\s*/?>', '\n', html)
     html = re.sub('<.*?>', ' ', html)
     html = html.replace(' ' * 2, ' ')
     html = html.replace('&gt;', '>')
@@ -488,7 +493,8 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
 
 def prepend_html_content(html_body, html_content):
     """Prepend some HTML content at the beginning of an other HTML content."""
-    html_content = type(html_content)(re.sub(r'(?i)(</?(?:html|body|head|!\s*DOCTYPE)[^>]*>)', '', html_content))
+    replacement = re.sub(r'(?i)(</?(?:html|body|head|!\s*DOCTYPE)[^>]*>)', '', html_content)
+    html_content = markupsafe.Markup(replacement) if isinstance(html_content, markupsafe.Markup) else replacement
     html_content = html_content.strip()
 
     body_match = re.search(r'<body[^>]*>', html_body) or re.search(r'<html[^>]*>', html_body)
@@ -549,13 +555,25 @@ def email_split_tuples(text):
 
     if not text:
         return []
-    return list(map(_parse_based_on_spaces, [
+
+    # found valid pairs, filtering out failed parsing
+    valid_pairs = [
         (addr[0], addr[1]) for addr in getaddresses([text])
         # getaddresses() returns '' when email parsing fails, and
         # sometimes returns emails without at least '@'. The '@'
         # is strictly required in RFC2822's `addr-spec`.
         if addr[1] and '@' in addr[1]
-    ]))
+    ]
+    # corner case: returning '@gmail.com'-like email (see test_email_split)
+    if any(pair[1].startswith('@') for pair in valid_pairs):
+        filtered = [
+            found_email for found_email in email_re.findall(text)
+            if found_email and not found_email.startswith('@')
+        ]
+        if filtered:
+            valid_pairs = [('', found_email) for found_email in filtered]
+
+    return list(map(_parse_based_on_spaces, valid_pairs))
 
 def email_split(text):
     """ Return a list of the email addresses found in ``text`` """

@@ -2,13 +2,14 @@
 
 import logging
 import pprint
+from urllib.parse import quote as url_quote
 
 from werkzeug import urls
 
-from odoo import _, models
+from odoo import _, api, models
 from odoo.exceptions import UserError, ValidationError
 
-from odoo.addons.payment_mercado_pago.const import TRANSACTION_STATUS_MAPPING
+from odoo.addons.payment_mercado_pago.const import ERROR_MESSAGE_MAPPING, TRANSACTION_STATUS_MAPPING
 from odoo.addons.payment_mercado_pago.controllers.main import MercadoPagoController
 
 
@@ -55,8 +56,9 @@ class PaymentTransaction(models.Model):
         """
         base_url = self.provider_id.get_base_url()
         return_url = urls.url_join(base_url, MercadoPagoController._return_url)
+        sanitized_reference = url_quote(self.reference)
         webhook_url = urls.url_join(
-            base_url, f'{MercadoPagoController._webhook_url}/{self.reference}'
+            base_url, f'{MercadoPagoController._webhook_url}/{sanitized_reference}'
         )  # Append the reference to identify the transaction from the webhook notification data.
 
         # In the case where we are issuing a preference request in CLP or COP, we must ensure that
@@ -160,6 +162,14 @@ class PaymentTransaction(models.Model):
             self._set_done()
         elif payment_status in TRANSACTION_STATUS_MAPPING['canceled']:
             self._set_canceled()
+        elif payment_status in TRANSACTION_STATUS_MAPPING['error']:
+            status_detail = verified_payment_data.get('status_detail')
+            _logger.warning(
+                "Received data for transaction with reference %s with status %s and error code: %s",
+                self.reference, payment_status, status_detail
+            )
+            error_message = self._mercado_pago_get_error_msg(status_detail)
+            self._set_error(error_message)
         else:  # Classify unsupported payment status as the `error` tx state.
             _logger.warning(
                 "Received data for transaction with reference %s with invalid payment status: %s",
@@ -168,3 +178,15 @@ class PaymentTransaction(models.Model):
             self._set_error(
                 "Mercado Pago: " + _("Received data with invalid status: %s", payment_status)
             )
+
+    @api.model
+    def _mercado_pago_get_error_msg(self, status_detail):
+        """ Return the error message corresponding to the payment status.
+
+        :param str status_detail: The status details sent by the provider.
+        :return: The error message.
+        :rtype: str
+        """
+        return "Mercado Pago: " + ERROR_MESSAGE_MAPPING.get(
+            status_detail, ERROR_MESSAGE_MAPPING['cc_rejected_other_reason']
+        )

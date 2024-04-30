@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from collections import defaultdict
 
-from odoo import models, fields, api, _
+from odoo import Command, models, fields, api, _
 from odoo.exceptions import UserError
 from odoo.tools import frozendict
 
@@ -380,14 +380,10 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('payment_type', 'company_id', 'can_edit_wizard')
     def _compute_available_journal_ids(self):
         for wizard in self:
-            if wizard.can_edit_wizard:
-                batch = wizard._get_batches()[0]
-                wizard.available_journal_ids = wizard._get_batch_available_journals(batch)
-            else:
-                wizard.available_journal_ids = self.env['account.journal'].search([
-                    ('company_id', '=', wizard.company_id.id),
-                    ('type', 'in', ('bank', 'cash')),
-                ])
+            available_journals = self.env['account.journal']
+            for batch in wizard._get_batches():
+                available_journals |= wizard._get_batch_available_journals(batch)
+            wizard.available_journal_ids = [Command.set(available_journals.ids)]
 
     @api.depends('available_journal_ids')
     def _compute_journal_id(self):
@@ -609,7 +605,7 @@ class AccountPaymentRegister(models.TransientModel):
             if len(lines.company_id) > 1:
                 raise UserError(_("You can't create payments for entries belonging to different companies."))
             if len(set(available_lines.mapped('account_type'))) > 1:
-                raise UserError(_("You can't register payments for journal items being either all inbound, either all outbound."))
+                raise UserError(_("You can't register payments for both inbound and outbound moves at the same time."))
 
             res['line_ids'] = [(6, 0, available_lines.ids)]
 

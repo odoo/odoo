@@ -261,7 +261,7 @@ functionRegistry.add("ODOO.BALANCE", {
 functionRegistry.add("ODOO.FISCALYEAR.START", {
     description: _t("Returns the starting date of the fiscal year encompassing the provided date."),
     args: args(`
-        date (date) ${_t("Reference date.")}
+        day (date) ${_t("The day from which to extract the fiscal year start.")}
         company_id (number, optional) ${_t("The company.")}
     `),
     returns: ["NUMBER"],
@@ -278,7 +278,7 @@ functionRegistry.add("ODOO.FISCALYEAR.START", {
 functionRegistry.add("ODOO.FISCALYEAR.END", {
     description: _t("Returns the ending date of the fiscal year encompassing the provided date."),
     args: args(`
-        date (date) ${_t("Reference date.")}
+        day (date) ${_t("The day from which to extract the fiscal year end.")}
         company_id (number, optional) ${_t("The company.")}
     `),
     returns: ["NUMBER"],
@@ -295,7 +295,7 @@ functionRegistry.add("ODOO.FISCALYEAR.END", {
 functionRegistry.add("ODOO.ACCOUNT.GROUP", {
     description: _t("Returns the account ids of a given group."),
     args: args(`
-        type (string) ${_t("Account type.")}
+        type (string) ${_t("The account type (income, expense, asset_current,...).")}
     `),
     returns: ["NUMBER"],
     computeFormat: () => "m/d/yyyy",

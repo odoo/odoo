@@ -15,23 +15,24 @@ class Employee(models.Model):
 
         # We need to create timesheet entries for the global time off that are already created
         # and are planned for after this employee creation date
-
-        self._create_future_public_holidays_timesheets(employees)
+        self.with_context(allowed_company_ids=employees.company_id.ids) \
+            ._create_future_public_holidays_timesheets(employees)
         return employees
 
     def write(self, vals):
         result = super(Employee, self).write(vals)
+        self_company = self.with_context(allowed_company_ids=self.company_id.ids)
         if 'active' in vals:
             if vals.get('active'):
                 # Create future holiday timesheets
-                self._create_future_public_holidays_timesheets(self)
+                self_company._create_future_public_holidays_timesheets(self)
             else:
                 # Delete future holiday timesheets
-                self._delete_future_public_holidays_timesheets()
+                self_company._delete_future_public_holidays_timesheets()
         elif 'resource_calendar_id' in vals:
             # Update future holiday timesheets
-            self._delete_future_public_holidays_timesheets()
-            self._create_future_public_holidays_timesheets(self)
+            self_company._delete_future_public_holidays_timesheets()
+            self_company._create_future_public_holidays_timesheets(self)
         return result
 
     def _delete_future_public_holidays_timesheets(self):

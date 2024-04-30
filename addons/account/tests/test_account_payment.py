@@ -1002,3 +1002,22 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             {'account_id': bank_2.inbound_payment_method_line_ids.payment_account_id.id},
             {'account_id': transfer_account.id},
         ])
+
+    def test_journal_onchange(self):
+        """Ensure that the payment method line is recomputed when switching journal in form view."""
+
+        context = {
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+        }
+        with Form(self.env['account.payment'].with_context(context)) as payment:
+            default_journal = payment.journal_id
+            self.assertTrue(default_journal)
+            self.assertEqual(payment.payment_method_line_id.journal_id.id, default_journal.id)
+
+            other_journal = self.bank_journal_2 if default_journal != self.bank_journal_2 else self.bank_journal_1
+            payment.journal_id = other_journal
+            self.assertEqual(payment.payment_method_line_id.journal_id.id, other_journal.id)
+
+            payment.journal_id = default_journal
+            self.assertEqual(payment.payment_method_line_id.journal_id.id, default_journal.id)

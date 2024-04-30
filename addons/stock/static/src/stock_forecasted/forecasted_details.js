@@ -28,6 +28,7 @@ export class ForecastedDetails extends Component{
             model,
             'do_unreserve',
             [[modelId]],
+            {context: {unreserve_parent: true}},
         );
         this.props.reloadReport();
     }

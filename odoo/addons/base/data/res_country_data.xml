@@ -264,13 +264,13 @@
             <field name="name">Democratic Republic of the Congo</field>
             <field name="code">cd</field>
             <field name="currency_id" ref="CDF" />
-            <field eval="242" name="phone_code" />
+            <field eval="243" name="phone_code" />
         </record>
         <record id="cg" model="res.country">
             <field name="name">Congo</field>
             <field name="code">cg</field>
             <field name="currency_id" ref="XAF" />
-            <field eval="243" name="phone_code" />
+            <field eval="242" name="phone_code" />
         </record>
         <record id="ch" model="res.country">
             <field name="name">Switzerland</field>
@@ -857,6 +857,7 @@
         <record id="lu" model="res.country">
             <field name="name">Luxembourg</field>
             <field name="code">lu</field>
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s \n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="EUR" />
             <field eval="352" name="phone_code" />
             <field name="vat_label">VAT</field>
@@ -895,7 +896,7 @@
         <record id="me" model="res.country">
             <field name="name">Montenegro</field>
             <field name="code">me</field>
-            <field name="currency_id" ref="LYD" />
+            <field name="currency_id" ref="EUR" />
             <field eval="382" name="phone_code" />
         </record>
         <record id="mf" model="res.country">

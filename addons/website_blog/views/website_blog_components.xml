@@ -5,9 +5,10 @@
 <!-- ======   Template: Blogs Navbar   =========================================
 ============================================================================ -->
 <template id="blogs_nav" name="Blogs Bar Template">
-    <nav t-attf-class="navbar navbar-expand-sm navbar-light #{additionnal_classes}">
-        <div class="container">
-            <ul class="navbar-nav" t-if="len(blogs) > 1">
+    <nav t-attf-class="navbar navbar-expand-sm navbar-light pt-4 pb-0 px-0 #{additionnal_classes}">
+        <div class="o_website_blog_nav_container container flex-wrap flex-sm-nowrap gap-2 w-100">
+            <!-- Desktop -->
+            <ul t-if="len(blogs) > 1" class="navbar-nav d-none d-lg-flex">
                 <li class="nav-item">
                     <span class="nav-link disabled ps-0">Blogs:</span>
                 </li>
@@ -21,9 +22,29 @@
                     </a>
                 </li>
             </ul>
+            <!-- Mobile -->
+            <div t-if="len(blogs) > 1" class="dropdown order-2 d-lg-none flex-grow-1 flex-sm-grow-0 min-w-0">
+                <a class="btn btn-light dropdown-toggle d-flex align-items-center justify-content-between" type="button" role="button" t-attf-title="{{blog.name if blog else 'All Blogs'}}" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span t-if="blog" class="d-inline-block text-truncate" t-out="blog.name"/>
+                    <span t-else="" class="d-inline-block text-truncate">All</span>
+                </a>
+                <ul t-if="len(blogs) > 1" class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a href="/blog" t-attf-class="dropdown-item #{(not blog) and 'active'}" title="All">All</a>
+                    </li>
+                    <li t-foreach="blogs" t-as="nav_blog">
+                        <a t-attf-href="/blog/#{slug(nav_blog)}"
+                           t-attf-class="dropdown-item #{(blog and nav_blog.id == blog.id) and 'active' or ''}"
+                           t-att-title="nav_blog.name">
+                            <span t-field="nav_blog.name"/>
+                        </a>
+                    </li>
+                </ul>
+            </div>
             <!-- 'Search Box' -->
             <t t-call="website.website_search_box_input">
-                <t t-set="_classes" t-valuef="w-100 w-md-auto pt-2 pt-md-0 d-md-flex"/>
+                <t t-set="_form_classes" t-valuef="#{not len(blogs) &gt; 1 and 'ms-auto'} flex-grow-1 flex-sm-grow-0"/>
+                <t t-set="_classes" t-valuef=""/>
                 <t t-set="search_type" t-valuef="blogs"/>
                 <t t-set="action" t-value="blog_url(tag=tag,search=search)"/>
                 <t t-set="display_description" t-valuef="true"/>
@@ -136,7 +157,7 @@ Options:
                 <a t-if="website.social_youtube" t-att-href="website.social_youtube" t-att-class="classes"><i class="fa fa-youtube-play text-youtube" aria-label="Youtube" title="Youtube"/></a>
                 <a t-if="website.social_github" t-att-href="website.social_github" t-att-class="classes"><i class="fa fa-github text-github" aria-label="Github" title="Github"/></a>
                 <a t-if="website.social_instagram" t-att-href="website.social_instagram" t-att-class="classes"><i class="fa fa-instagram text-instagram" aria-label="Instagram" title="Instagram"/></a>
-                <a t-if="blog" t-att-href="'/blog/%s/feed' % (blog.id)" t-att-class="classes"><i class="fa fa-rss-square" aria-label="RSS" title="RSS"/></a>
+                <a t-if="blog" t-att-href="'/blog/%s/feed' % slug(blog)" t-att-class="classes"><i class="fa fa-rss-square" aria-label="RSS" title="RSS"/></a>
             </div>
             <t t-call="website_mail.follow" t-if="blog">
                 <t t-set="email" t-value="user_id.email"/>
@@ -240,7 +261,7 @@ Display a sidebar beside the post content.
             <t t-if="blog_post.tag_ids">
                 <div class="h5">
                     <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                        <a class="badge border post_link text-decoration-none text-primary" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
+                        <a class="badge border post_link text-decoration-none text-primary" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-esc="one_tag.name"/>
                     </t>
                 </div>
             </t>

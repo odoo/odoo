@@ -190,9 +190,7 @@ class SaleOrderLine(models.Model):
             line.product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
 
     def unlink(self):
-        for line in self:
-            if line.is_delivery:
-                line.order_id.carrier_id = False
+        self.filtered('is_delivery').order_id.filtered('carrier_id').carrier_id = False
         return super(SaleOrderLine, self).unlink()
 
     def _is_delivery(self):
@@ -212,3 +210,8 @@ class SaleOrderLine(models.Model):
 
         undeletable_lines = super()._check_line_unlink()
         return undeletable_lines.filtered(lambda line: not line.is_delivery)
+
+    def _compute_pricelist_item_id(self):
+        delivery_lines = self.filtered('is_delivery')
+        super(SaleOrderLine, self - delivery_lines)._compute_pricelist_item_id()
+        delivery_lines.pricelist_item_id = False

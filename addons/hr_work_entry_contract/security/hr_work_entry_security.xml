@@ -4,7 +4,7 @@
     <record id="ir_rule_hr_work_entry_multi_company" model="ir.rule">
         <field name="name">HR Work Entry Contract: Multi Company</field>
         <field name="model_id" ref="model_hr_work_entry"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
 </odoo>

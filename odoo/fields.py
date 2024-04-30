@@ -37,6 +37,7 @@ from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
 from .tools.mimetypes import guess_mimetype
 
+from odoo import SUPERUSER_ID
 from odoo.exceptions import CacheMiss
 from odoo.osv import expression
 
@@ -344,8 +345,8 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def __repr__(self):
         if self.name is None:
-            return "<%s.%s>" % (__name__, type(self).__name__)
-        return "%s.%s" % (self.model_name, self.name)
+            return f"{'<%s.%s>'!r}" % (__name__, type(self).__name__)
+        return f"{'%s.%s'!r}" % (self.model_name, self.name)
 
     ############################################################################
     #
@@ -1195,7 +1196,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
             elif self.store and record._origin and not (self.compute and self.readonly):
                 # new record with origin: fetch from origin
-                value = self.convert_to_cache(record._origin[self.name], record)
+                value = self.convert_to_cache(record._origin[self.name], record, validate=False)
                 env.cache.set(record, self, value)
 
             elif self.compute:
@@ -1209,14 +1210,18 @@ class Field(MetaField('DummyField', (object,), {})):
                         self.compute_value(recs)
                     except (AccessError, MissingError):
                         self.compute_value(record)
-                    try:
-                        value = env.cache.get(record, self)
-                    except CacheMiss:
+                        recs = record
+
+                    missing_recs_ids = tuple(env.cache.get_missing_ids(recs, self))
+                    if missing_recs_ids:
+                        missing_recs = record.browse(missing_recs_ids)
                         if self.readonly and not self.store:
-                            raise ValueError("Compute method failed to assign %s.%s" % (record, self.name))
-                        # fallback to null value if compute gives nothing
-                        value = self.convert_to_cache(False, record, validate=False)
-                        env.cache.set(record, self, value)
+                            raise ValueError(f"Compute method failed to assign {missing_recs}.{self.name}")
+                        # fallback to null value if compute gives nothing, do it for every unset record
+                        false_value = self.convert_to_cache(False, record, validate=False)
+                        env.cache.update(missing_recs, self, itertools.repeat(false_value))
+
+                    value = env.cache.get(record, self)
 
             elif self.type == 'many2one' and self.delegate and not record.id:
                 # parent record of a new record: new record, with the same
@@ -1679,7 +1684,7 @@ class _String(Field):
         return func(term)
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        cache_value = self.convert_to_cache(value, record)
+        cache_value = self.convert_to_cache(value, record, validate)
         if cache_value is None:
             return None
         if callable(self.translate):
@@ -1818,6 +1823,8 @@ class _String(Field):
                     matches = get_close_matches(old_term_text, text2terms, 1, 0.9)
                     if matches:
                         closest_term = get_close_matches(old_term, text2terms[matches[0]], 1, 0)[0]
+                        if closest_term in translation_dictionary:
+                            continue
                         old_is_text = old_term == self.get_text_content(old_term)
                         closest_is_text = closest_term == self.get_text_content(closest_term)
                         if old_is_text or not closest_is_text:
@@ -1969,7 +1976,7 @@ class Html(_String):
     _description_strip_classes = property(attrgetter('strip_classes'))
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        return super().convert_to_column(self._convert(value, record, True), record, values, validate)
+        return super().convert_to_column(self._convert(value, record, validate=True), record, values, validate=False)
 
     def convert_to_cache(self, value, record, validate=True):
         return self._convert(value, record, validate)
@@ -3247,6 +3254,9 @@ class Properties(Field):
 
     def _setup_attrs(self, model_class, name):
         super()._setup_attrs(model_class, name)
+        self._setup_definition_attrs()
+
+    def _setup_definition_attrs(self):
         if self.definition:
             # determine definition_record and definition_record_field
             assert self.definition.count(".") == 1
@@ -3255,6 +3265,12 @@ class Properties(Field):
             # make the field computed, and set its dependencies
             self._depends = (self.definition_record, )
             self.compute = self._compute
+
+    def setup_related(self, model):
+        super().setup_related(model)
+        if self.inherited_field and not self.definition:
+            self.definition = self.inherited_field.definition
+            self._setup_definition_attrs()
 
     # Database/cache format: a value is either None, or a dict mapping property
     # names to their corresponding value, like
@@ -3509,7 +3525,7 @@ class Properties(Field):
             current_model = env[self.model_name]
             definition_record_field = current_model._fields[self.definition_record]
             container_model_name = definition_record_field.comodel_name
-            container_id = env[container_model_name].browse(container_id)
+            container_id = env[container_model_name].sudo().browse(container_id)
 
         properties_definition = container_id[self.definition_record_field]
         if not properties_definition:
@@ -4274,6 +4290,13 @@ class _RelationalMulti(_Relational):
             assert not any(record_ids)
             return self.write_new(records_commands_list)
 
+    def _check_sudo_commands(self, comodel):
+        # if the model doesn't accept sudo commands
+        if not comodel._allow_sudo_commands:
+            # Then, disable sudo and reset the transaction origin user
+            return comodel.sudo(False).with_user(comodel.env.uid_origin)
+        return comodel
+
 
 class One2many(_RelationalMulti):
     """One2many field; the value of such a field is the recordset of all the
@@ -4390,6 +4413,7 @@ class One2many(_RelationalMulti):
 
         model = records_commands_list[0][0].browse()
         comodel = model.env[self.comodel_name].with_context(**self.context)
+        comodel = self._check_sudo_commands(comodel)
 
         ids = OrderedSet(rid for recs, cs in records_commands_list for rid in recs.ids)
         records = records_commands_list[0][0].browse(ids)
@@ -4501,6 +4525,7 @@ class One2many(_RelationalMulti):
         model = records_commands_list[0][0].browse()
         cache = model.env.cache
         comodel = model.env[self.comodel_name].with_context(**self.context)
+        comodel = self._check_sudo_commands(comodel)
 
         ids = {record.id for records, _ in records_commands_list for record in records}
         records = model.browse(ids)
@@ -4768,6 +4793,7 @@ class Many2many(_RelationalMulti):
 
         model = records_commands_list[0][0].browse()
         comodel = model.env[self.comodel_name].with_context(**self.context)
+        comodel = self._check_sudo_commands(comodel)
         cr = model.env.cr
 
         # determine old and new relation {x: ys}
@@ -4932,6 +4958,7 @@ class Many2many(_RelationalMulti):
 
         model = records_commands_list[0][0].browse()
         comodel = model.env[self.comodel_name].with_context(**self.context)
+        comodel = self._check_sudo_commands(comodel)
         new = lambda id_: id_ and NewId(id_)
 
         # determine old and new relation {x: ys}

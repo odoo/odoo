@@ -29,7 +29,6 @@ registerModel({
         async onClickDone() {
             const chatter = this.activityViewOwner && this.activityViewOwner.activityBoxView.chatter;
             const webRecord = this.webRecord;
-            const thread = this.activity.thread;
             await this.activity.markAsDone({
                 feedback: this.feedbackTextareaRef.el.value,
             });
@@ -37,7 +36,7 @@ registerModel({
                 chatter.reloadParentView();
             }
             if (webRecord) {
-                webRecord.model.load({ resId: thread.id });
+                webRecord.model.load({ offset: webRecord.model.root.offset });
             }
         },
         /**
@@ -46,7 +45,6 @@ registerModel({
         async onClickDoneAndScheduleNext() {
             const chatter = this.activityViewOwner && this.activityViewOwner.activityBoxView.chatter;
             const webRecord = this.webRecord;
-            const thread = this.activity.thread;
             const activityListViewOwner = this.activityListViewItemOwner && this.activityListViewItemOwner.activityListViewOwner;
             const activity = this.activity;
             const feedback = this.feedbackTextareaRef.el.value;
@@ -58,7 +56,7 @@ registerModel({
                 chatter.reloadParentView();
             }
             if (webRecord) {
-                webRecord.model.load({ resId: thread.id });
+                webRecord.model.load({ offset: webRecord.model.root.offset });
             }
         },
         /**

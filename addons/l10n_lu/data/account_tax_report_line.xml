@@ -1374,8 +1374,19 @@
                     <record id="account_tax_report_line_2f_supply_goods_base" model="account.report.line">
                         <field name="name">767 - Supply of goods for which the purchaser is liable for the payment of VAT - base</field>
                         <field name="code">LUTAX_767</field>
-                        <field name="aggregation_formula">LUTAX_763.balance + LUTAX_963.balance</field>
+                        <field name="aggregation_formula">LUTAX_769.balance + LUTAX_763.balance + LUTAX_963.balance</field>
                         <field name="children_ids">
+                            <record id="account_tax_report_line_2f_supply_goods_base_17" model="account.report.line">
+                                <field name="name">769 - base 17%</field>
+                                <field name="code">LUTAX_769</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2f_supply_goods_base_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">769</field>
+                                    </record>
+                                </field>
+                            </record>
                             <record id="account_tax_report_line_2f_supply_goods_base_8" model="account.report.line">
                                 <field name="name">763 - base 8%</field>
                                 <field name="code">LUTAX_763</field>
@@ -1403,8 +1414,19 @@
                     <record id="account_tax_report_line_2f_supply_goods_tax" model="account.report.line">
                         <field name="name">768 - Supply of goods for which the purchaser is liable for the payment of VAT - tax</field>
                         <field name="code">LUTAX_768</field>
-                        <field name="aggregation_formula">LUTAX_764.balance + LUTAX_964.balance</field>
+                        <field name="aggregation_formula">LUTAX_770.balance + LUTAX_764.balance + LUTAX_964.balance</field>
                         <field name="children_ids">
+                            <record id="account_tax_report_line_2f_supply_goods_tax_17" model="account.report.line">
+                                <field name="name">770 - tax 17%</field>
+                                <field name="code">LUTAX_770</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2f_supply_goods_tax_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">770</field>
+                                    </record>
+                                </field>
+                            </record>
                             <record id="account_tax_report_line_2f_supply_goods_tax_8" model="account.report.line">
                                 <field name="name">764 - tax 8%</field>
                                 <field name="code">LUTAX_764</field>

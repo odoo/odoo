@@ -83,6 +83,10 @@ function registerView(name, LegacyView) {
                 this.viewParams.domain = this.props.domain;
             }
 
+            if (this.props.groupBy && this.props.groupBy.length) {
+                this.viewParams.groupBy = this.props.groupBy;
+            }
+
             // To open a new empty form view
             // Legacy demands undefined ids, not False
             if (this.viewParams.currentId === false) {
@@ -175,6 +179,7 @@ function registerView(name, LegacyView) {
         icon: LegacyView.prototype.icon,
         isMobileFriendly: LegacyView.prototype.mobile_friendly,
         multiRecord: LegacyView.prototype.multi_record,
+        accessKey: LegacyView.prototype.accesskey,
         isLegacy: true,
         Controller,
     };

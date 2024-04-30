@@ -183,3 +183,70 @@ wTourUtils.clickOnSnippet(snippets[1]),
     run: () => {}, // it is a check
 },
 ]);
+
+wTourUtils.registerWebsitePreviewTour("conditional_visibility_5", {
+    edition: true,
+    test: true,
+    url: "/",
+}, [
+    wTourUtils.dragNDrop(snippets[0]),
+    {
+        content: "Click on the image of the dragged snippet",
+        trigger: "iframe .s_text_image img",
+    },
+    wTourUtils.changeOption("DeviceVisibility", 'we-button[data-toggle-device-visibility="no_desktop"]'),
+    {
+        content: "Check that the Column has been added in the 'Invisible Elements' panel",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Column')",
+        run: () => {}, // it is a check
+    },
+    {
+        content: "Click on the 'Text - Image' snippet",
+        trigger: "iframe .s_text_image",
+    },
+    wTourUtils.changeOption("ConditionalVisibility", 'we-button[data-toggle-device-visibility="no_desktop"]'),
+    {
+        content: "Check that the 'Text - Image' is the parent of 'Column' in the 'Invisible Elements' panel",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image') + ul .o_we_invisible_entry.o_we_sublevel_1:contains('Column')",
+        run: () => {}, // it is a check
+    },
+    {
+        content: "Click on the 'Text - Image' entry on the 'Invisible Elements' panel",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image')",
+    },
+    {
+        content: "Check that the snippet is visible on the website",
+        trigger: "iframe .s_text_image.o_snippet_desktop_invisible.o_snippet_override_invisible",
+        run: () => {}, // it is a check
+    },
+    wTourUtils.changeOption("ConditionalVisibility", 'we-button[data-toggle-device-visibility="no_mobile"]'),
+    {
+        content: "Check that the 'Text - Image' has been removed from the 'Invisible Elements' panel",
+        trigger: ".o_we_invisible_el_panel:not(.o_we_invisible_entry:contains('Text - Image'))",
+        run: () => {}, // it is a check
+    },
+    {
+        content: "Click on the 'Column' entry on the 'Invisible Elements' panel",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Column')",
+    },
+    {
+        content: "Check that the column is visible on the website",
+        trigger: "iframe .s_text_image .row > .o_snippet_desktop_invisible.o_snippet_override_invisible",
+        run: () => {}, // it is a check
+    },
+    wTourUtils.changeOption("DeviceVisibility", 'we-button[data-toggle-device-visibility="no_mobile"]'),
+    {
+        content: "Check that the column has been removed from the 'Invisible Elements' panel",
+        trigger: "#oe_snippets:not(:has(.o_we_invisible_entry:contains('Column')))",
+        run: () => {}, // it is a check
+    },
+    {
+        content: "Activate mobile preview",
+        trigger: ".o_we_website_top_actions button[data-action='mobile']",
+    },
+    {
+        content: "Check that the 'Text - Image' is the parent of 'Column' in the 'Invisible Elements' panel",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image') + ul .o_we_invisible_entry.o_we_sublevel_1:contains('Column')",
+        run: () => {}, // it is a check
+    },
+]);

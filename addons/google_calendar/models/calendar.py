@@ -33,7 +33,7 @@ class Meeting(models.Model):
     @api.model
     def _get_google_synced_fields(self):
         return {'name', 'description', 'allday', 'start', 'date_end', 'stop',
-                'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active'}
+                'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active', 'show_as'}
 
     @api.model
     def _restart_google_sync(self):
@@ -125,6 +125,9 @@ class Meeting(models.Model):
             'videocall_location': google_event.get_meeting_url(),
             'show_as': 'free' if google_event.is_available() else 'busy'
         }
+        # Remove 'videocall_location' when not sent by Google, otherwise the local videocall will be discarded.
+        if not values.get('videocall_location'):
+            values.pop('videocall_location', False)
         if partner_commands:
             # Add partner_commands only if set from Google. The write method on calendar_events will
             # override attendee commands if the partner_ids command is set but empty.
@@ -289,10 +292,12 @@ class Meeting(models.Model):
                 'useDefault': False,
             }
         }
-        if not self.google_id and not self.videocall_location:
+        if not self.google_id and not self.videocall_location and not self.location:
             values['conferenceData'] = {'createRequest': {'requestId': uuid4().hex}}
         if self.privacy:
             values['visibility'] = self.privacy
+        if self.show_as:
+            values['transparency'] = 'opaque' if self.show_as == 'busy' else 'transparent'
         if not self.active:
             values['status'] = 'cancelled'
         if self.user_id and self.user_id != self.env.user and not bool(self.user_id.sudo().google_calendar_token):

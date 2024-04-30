@@ -22,14 +22,15 @@ from ..websocket import (
     Opcode,
     TimeoutManager,
     TimeoutReason,
-    Websocket
+    Websocket,
+    _websocket_instances
 )
 
 @common.tagged('post_install', '-at_install')
 class TestWebsocketCaryall(WebsocketCase):
     def test_lifecycle_hooks(self):
         events = []
-        with patch.object(Websocket, '_event_callbacks', defaultdict(set)):
+        with patch.object(Websocket, '_Websocket__event_callbacks', defaultdict(set)):
             @Websocket.onopen
             def onopen(env, websocket):  # pylint: disable=unused-variable
                 self.assertIsInstance(env, Environment)
@@ -51,7 +52,7 @@ class TestWebsocketCaryall(WebsocketCase):
         gc.collect()
         first_ws = self.websocket_connect()
         second_ws = self.websocket_connect()
-        self.assertEqual(len(Websocket._instances), 2)
+        self.assertEqual(len(_websocket_instances), 2)
         first_ws.close(CloseCode.CLEAN)
         second_ws.close(CloseCode.CLEAN)
         self.wait_remaining_websocket_connections()
@@ -59,7 +60,7 @@ class TestWebsocketCaryall(WebsocketCase):
         # collected. Stop it now.
         self._serve_forever_patch.stop()
         gc.collect()
-        self.assertEqual(len(Websocket._instances), 0)
+        self.assertEqual(len(_websocket_instances), 0)
 
     def test_timeout_manager_no_response_timeout(self):
         with freeze_time('2022-08-19') as frozen_time:
@@ -238,17 +239,6 @@ class TestWebsocketCaryall(WebsocketCase):
             self.assertEqual(notifications[0]['message']['type'], 'notif_type')
             self.assertEqual(notifications[0]['message']['payload'], 'another_message')
 
-    def test_opening_websocket_connection_during_tests(self):
-        # During tests, browsers can't open websocket connections.
-        headers = ['User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36']
-        with self.assertRaises(WebSocketBadStatusException) as error_catcher:
-            self.websocket_connect(header=headers)
-        self.assertEqual(error_catcher.exception.status_code, 503)
-
-        # But ChromeHeadless still can.
-        headers = ['User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/102.0.0.0 Safari/537.36']
-        self.websocket_connect()
-
     def test_subscribe_higher_last_notification_id(self):
         subscribe_done_event = Event()
         server_last_notification_id = self.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
@@ -286,7 +276,7 @@ class TestWebsocketCaryall(WebsocketCase):
             subscribe_done_event.wait()
 
     def test_no_cursor_when_no_callback_for_lifecycle_event(self):
-        with patch.object(Websocket, '_event_callbacks', defaultdict(set)):
+        with patch.object(Websocket, '_Websocket__event_callbacks', defaultdict(set)):
             with patch('odoo.addons.bus.websocket.acquire_cursor') as mock:
                 self.websocket_connect()
                 self.assertFalse(mock.called)

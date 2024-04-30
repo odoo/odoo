@@ -213,30 +213,32 @@ class Project(models.Model):
     _check_company_auto = True
 
     def _compute_attached_docs_count(self):
-        self.env.cr.execute(
-            """
-            WITH docs AS (
-                 SELECT res_id as id, count(*) as count
-                   FROM ir_attachment
-                  WHERE res_model = 'project.project'
-                    AND res_id IN %(project_ids)s
-               GROUP BY res_id
+        docs_count = {}
+        if self.ids:
+            self.env.cr.execute(
+                """
+                WITH docs AS (
+                     SELECT res_id as id, count(*) as count
+                       FROM ir_attachment
+                      WHERE res_model = 'project.project'
+                        AND res_id IN %(project_ids)s
+                   GROUP BY res_id
 
-              UNION ALL
+                  UNION ALL
 
-                 SELECT t.project_id as id, count(*) as count
-                   FROM ir_attachment a
-                   JOIN project_task t ON a.res_model = 'project.task' AND a.res_id = t.id
-                  WHERE t.project_id IN %(project_ids)s
-               GROUP BY t.project_id
+                     SELECT t.project_id as id, count(*) as count
+                       FROM ir_attachment a
+                       JOIN project_task t ON a.res_model = 'project.task' AND a.res_id = t.id
+                      WHERE t.project_id IN %(project_ids)s
+                   GROUP BY t.project_id
+                )
+                SELECT id, sum(count)
+                  FROM docs
+              GROUP BY id
+                """,
+                {"project_ids": tuple(self.ids)}
             )
-            SELECT id, sum(count)
-              FROM docs
-          GROUP BY id
-            """,
-            {"project_ids": tuple(self.ids)}
-        )
-        docs_count = dict(self.env.cr.fetchall())
+            docs_count = dict(self.env.cr.fetchall())
         for project in self:
             project.doc_count = docs_count.get(project.id, 0)
 
@@ -1247,50 +1249,50 @@ class Task(models.Model):
         ('subsequent', 'This and following tasks'),
         ('all', 'All tasks'),
     ], default='this', store=False)
-    recurrence_message = fields.Char(string='Next Recurrencies', compute='_compute_recurrence_message')
+    recurrence_message = fields.Char(string='Next Recurrencies', compute='_compute_recurrence_message', groups="project.group_project_user")
 
-    repeat_interval = fields.Integer(string='Repeat Every', default=1, compute='_compute_repeat', readonly=False)
+    repeat_interval = fields.Integer(string='Repeat Every', default=1, compute='_compute_repeat', readonly=False, groups="project.group_project_user")
     repeat_unit = fields.Selection([
         ('day', 'Days'),
         ('week', 'Weeks'),
         ('month', 'Months'),
         ('year', 'Years'),
-    ], default='week', compute='_compute_repeat', readonly=False)
+    ], default='week', compute='_compute_repeat', readonly=False, groups="project.group_project_user")
     repeat_type = fields.Selection([
         ('forever', 'Forever'),
         ('until', 'End Date'),
         ('after', 'Number of Repetitions'),
-    ], default="forever", string="Until", compute='_compute_repeat', readonly=False)
-    repeat_until = fields.Date(string="End Date", compute='_compute_repeat', readonly=False)
-    repeat_number = fields.Integer(string="Repetitions", default=1, compute='_compute_repeat', readonly=False)
+    ], default="forever", string="Until", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    repeat_until = fields.Date(string="End Date", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    repeat_number = fields.Integer(string="Repetitions", default=1, compute='_compute_repeat', readonly=False, groups="project.group_project_user")
 
     repeat_on_month = fields.Selection([
         ('date', 'Date of the Month'),
         ('day', 'Day of the Month'),
-    ], default='date', compute='_compute_repeat', readonly=False)
+    ], default='date', compute='_compute_repeat', readonly=False, groups="project.group_project_user")
 
     repeat_on_year = fields.Selection([
         ('date', 'Date of the Year'),
         ('day', 'Day of the Year'),
-    ], default='date', compute='_compute_repeat', readonly=False)
+    ], default='date', compute='_compute_repeat', readonly=False, groups="project.group_project_user")
 
-    mon = fields.Boolean(string="Mon", compute='_compute_repeat', readonly=False)
-    tue = fields.Boolean(string="Tue", compute='_compute_repeat', readonly=False)
-    wed = fields.Boolean(string="Wed", compute='_compute_repeat', readonly=False)
-    thu = fields.Boolean(string="Thu", compute='_compute_repeat', readonly=False)
-    fri = fields.Boolean(string="Fri", compute='_compute_repeat', readonly=False)
-    sat = fields.Boolean(string="Sat", compute='_compute_repeat', readonly=False)
-    sun = fields.Boolean(string="Sun", compute='_compute_repeat', readonly=False)
+    mon = fields.Boolean(string="Mon", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    tue = fields.Boolean(string="Tue", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    wed = fields.Boolean(string="Wed", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    thu = fields.Boolean(string="Thu", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    fri = fields.Boolean(string="Fri", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    sat = fields.Boolean(string="Sat", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    sun = fields.Boolean(string="Sun", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
 
     repeat_day = fields.Selection([
         (str(i), str(i)) for i in range(1, 32)
-    ], compute='_compute_repeat', readonly=False)
+    ], compute='_compute_repeat', readonly=False, groups="project.group_project_user")
     repeat_week = fields.Selection([
         ('first', 'First'),
         ('second', 'Second'),
         ('third', 'Third'),
         ('last', 'Last'),
-    ], default='first', compute='_compute_repeat', readonly=False)
+    ], default='first', compute='_compute_repeat', readonly=False, groups="project.group_project_user")
     repeat_weekday = fields.Selection([
         ('mon', 'Monday'),
         ('tue', 'Tuesday'),
@@ -1299,7 +1301,7 @@ class Task(models.Model):
         ('fri', 'Friday'),
         ('sat', 'Saturday'),
         ('sun', 'Sunday'),
-    ], string='Day Of The Week', compute='_compute_repeat', readonly=False)
+    ], string='Day Of The Week', compute='_compute_repeat', readonly=False, groups="project.group_project_user")
     repeat_month = fields.Selection([
         ('january', 'January'),
         ('february', 'February'),
@@ -1313,12 +1315,12 @@ class Task(models.Model):
         ('october', 'October'),
         ('november', 'November'),
         ('december', 'December'),
-    ], compute='_compute_repeat', readonly=False)
+    ], compute='_compute_repeat', readonly=False, groups="project.group_project_user")
 
-    repeat_show_dow = fields.Boolean(compute='_compute_repeat_visibility')
-    repeat_show_day = fields.Boolean(compute='_compute_repeat_visibility')
-    repeat_show_week = fields.Boolean(compute='_compute_repeat_visibility')
-    repeat_show_month = fields.Boolean(compute='_compute_repeat_visibility')
+    repeat_show_dow = fields.Boolean(compute='_compute_repeat_visibility', groups="project.group_project_user")
+    repeat_show_day = fields.Boolean(compute='_compute_repeat_visibility', groups="project.group_project_user")
+    repeat_show_week = fields.Boolean(compute='_compute_repeat_visibility', groups="project.group_project_user")
+    repeat_show_month = fields.Boolean(compute='_compute_repeat_visibility', groups="project.group_project_user")
 
     # Account analytic
     analytic_account_id = fields.Many2one('account.analytic.account', ondelete='set null', compute='_compute_analytic_account_id', store=True, readonly=False,
@@ -1735,7 +1737,16 @@ class Task(models.Model):
         if self.recurrence_id:
             default['recurrence_id'] = self.recurrence_id.copy().id
         if self.allow_subtasks:
-            default['child_ids'] = [child.copy({'name': child.name} if has_default_name else None).id for child in self.child_ids]
+            default_child_ids = []
+            should_copy_stage_id = bool(default.get('stage_id', False))
+            for child in self.child_ids:
+                subtask_default = {}
+                if has_default_name:
+                    subtask_default['name'] = child.name
+                if should_copy_stage_id:
+                    subtask_default['stage_id'] = child.stage_id.id
+                default_child_ids.append(child.copy(subtask_default).id)
+            default['child_ids'] = default_child_ids
         task_copy = super(Task, self).copy(default)
         if self.allow_task_dependencies:
             task_mapping = self.env.context.get('task_mapping')
@@ -1899,6 +1910,33 @@ class Task(models.Model):
                     error_message = _('You cannot write on %s fields in task.', ', '.join(unauthorized_fields))
                 raise AccessError(error_message)
 
+    def _get_portal_sudo_vals(self, vals, defaults=False):
+        """ returns the values which must be written without and with sudo when a portal user creates / writes a task.
+            :param vals: dict of {field: value}, the values to create/write
+            :return: a tuple with 2 dicts:
+                - the first with the values to write without sudo
+                - the second with the values to write with sudo
+        """
+        vals_no_sudo = {key: val for key, val in vals.items() if self._fields[key].type in ('one2many', 'many2many')}
+        if defaults:
+            vals_no_sudo.update({
+                key[8:]: value
+                for key, value in self.env.context.items()
+                if key.startswith('default_') and key[8:] in self.SELF_WRITABLE_FIELDS and self._fields[key[8:]].type in ('one2many', 'many2many')
+            })
+        vals_sudo = {key: val for key, val in vals.items() if key not in vals_no_sudo}
+        return vals_no_sudo, vals_sudo
+
+    @api.model
+    def _get_portal_sudo_context(self):
+        return {
+            key: value for key, value in self.env.context.items()
+            if key == 'default_project_id'
+            or key == 'default_user_ids' and value is False \
+            or not key.startswith('default_')
+            or key[8:] in (field for field in self.SELF_WRITABLE_FIELDS if self._fields[field].type not in ('one2many', 'many2many'))
+        }
+
     def read(self, fields=None, load='_classic_read'):
         self._ensure_fields_are_accessible(fields)
         return super(Task, self).read(fields=fields, load=load)
@@ -1975,6 +2013,7 @@ class Task(models.Model):
         if is_portal_user:
             self.check_access_rights('create')
         default_stage = dict()
+        is_superuser = self._uid == SUPERUSER_ID
         for vals in vals_list:
             if is_portal_user:
                 self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
@@ -2004,8 +2043,8 @@ class Task(models.Model):
                 vals['date_assign'] = fields.Datetime.now()
                 if not project_id:
                     user_ids = self._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self)
-                    if self.env.user.id not in user_ids:
-                        vals['user_ids'] = [Command.set(list(user_ids) + [self.env.user.id])]
+                    if self.env.user.id not in user_ids and not is_superuser:
+                        vals['user_ids'] = [Command.set(list(user_ids) + [self.env.uid])]
             # Stage change: Update date_end if folded stage and date_last_stage_update
             if vals.get('stage_id'):
                 vals.update(self.update_date_end(vals['stage_id']))
@@ -2022,15 +2061,12 @@ class Task(models.Model):
         # in order to compute the field tracking
         was_in_sudo = self.env.su
         if is_portal_user:
-            ctx = {
-                key: value for key, value in self.env.context.items()
-                if key == 'default_project_id' \
-                    or key == 'default_user_ids' and value is False \
-                    or not key.startswith('default_') \
-                    or key[8:] in self.SELF_WRITABLE_FIELDS
-            }
-            self = self.with_context(ctx).sudo()
-        tasks = super(Task, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+            vals_list_no_sudo, vals_list = zip(*(self._get_portal_sudo_vals(vals, defaults=True) for vals in vals_list))
+            self_no_sudo, self = self, self.with_context(self._get_portal_sudo_context()).sudo()
+        tasks = super(Task, self).create(vals_list)
+        if is_portal_user:
+            for task, vals in zip(tasks.with_env(self_no_sudo.env), vals_list_no_sudo):
+                task.write(vals)
         tasks._populate_missing_personal_stages()
         self._task_message_auto_subscribe_notify({task: task.user_ids - self.env.user for task in tasks})
 
@@ -2109,7 +2145,8 @@ class Task(models.Model):
         # requires the write access on others models, as rating.rating
         # in order to keep the same name than the task.
         if portal_can_write:
-            tasks = tasks.sudo()
+            tasks_no_sudo, tasks = tasks, tasks.sudo()
+            vals_no_sudo, vals = self._get_portal_sudo_vals(vals)
 
         # Track user_ids to send assignment notifications
         old_user_ids = {t: t.user_ids for t in self}
@@ -2118,6 +2155,8 @@ class Task(models.Model):
             del vals['personal_stage_type_id']
 
         result = super(Task, tasks).write(vals)
+        if portal_can_write:
+            super(Task, tasks_no_sudo).write(vals_no_sudo)
 
         if 'user_ids' in vals:
             tasks._populate_missing_personal_stages()

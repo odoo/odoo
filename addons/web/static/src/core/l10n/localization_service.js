@@ -25,9 +25,10 @@ const NUMBERING_SYSTEMS = [
 export const localizationService = {
     dependencies: ["user"],
     start: async (env, { user }) => {
+        const locale = document.documentElement.getAttribute("lang") || "";
         const cacheHashes = session.cache_hashes || {};
         const translationsHash = cacheHashes.translations || new Date().getTime().toString();
-        const lang = user.lang || null;
+        const lang = user.lang || locale.replace(/-/g, "_");
         const translationURL = session.translationURL || "/web/webclient/translations";
         let url = `${translationURL}/${translationsHash}`;
         if (lang) {
@@ -61,7 +62,11 @@ export const localizationService = {
             // Setup lang inside luxon. The locale codes received from the server contain "_",
             // whereas the Intl codes use "-" (Unicode BCP 47). There's only one exception, which
             // is locale "sr@latin", for which we manually fallback to the "sr-Latn-RS" locale.
-            const locale = lang === "sr@latin" ? "sr-Latn-RS" : lang.replace(/_/g, "-");
+            const momentJSLangCodesMap = {
+                "sr_RS": "sr-cyrl",
+                "sr@latin": "sr-Latn-RS",
+            };
+            const locale = momentJSLangCodesMap[lang] || lang.replace(/_/g, "-");
             Settings.defaultLocale = locale;
             for (const [re, numberingSystem] of NUMBERING_SYSTEMS) {
                 if (re.test(locale)) {

@@ -42,7 +42,7 @@
                     <div class="o_left_field_panel h-100 overflow-auto border">
                         <div class="o_field_tree_structure">
                             <t t-if="fieldsAvailable">
-                                <t t-foreach="rootFields" t-as="field" t-key="field.id + '_' + state.search.length">
+                                <t t-foreach="rootFields" t-as="field" t-key="field.id + '_' + state.search.length + '_' + state.isCompatible">
                                     <ExportDataItem
                                         exportList="state.exportList"
                                         field="field"

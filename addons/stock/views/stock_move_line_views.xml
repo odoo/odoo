@@ -106,6 +106,18 @@
         </field>
     </record>
 
+    <record id="view_move_line_mobile_form" model="ir.ui.view">
+        <field name="name">stock.move.line.mobile.form</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_form"/>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="edit">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="stock_move_line_view_search" model="ir.ui.view">
         <field name="name">stock.move.line.search</field>
         <field name="model">stock.move.line</field>

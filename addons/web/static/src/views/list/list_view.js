@@ -10,6 +10,7 @@ export const listView = {
     type: "list",
     display_name: "List",
     icon: "oi oi-view-list",
+    accessKey: "l",
     multiRecord: true,
     Controller: ListController,
     Renderer: ListRenderer,

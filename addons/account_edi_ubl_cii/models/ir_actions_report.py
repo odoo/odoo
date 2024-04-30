@@ -59,7 +59,7 @@ class IrActionsReport(models.Model):
 
         if collected_streams \
                 and res_ids \
-                and self._get_report(report_ref).report_name in ('account.report_invoice_with_payments', 'account.report_invoice'):
+                and self._is_invoice_report(report_ref):
             for res_id, stream_data in collected_streams.items():
                 invoice = self.env['account.move'].browse(res_id)
                 self._add_pdf_into_invoice_xml(invoice, stream_data)

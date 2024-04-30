@@ -158,6 +158,7 @@ class EventTrackController(http.Controller):
             'today_tz': today_tz,
             # search information
             'searches': searches,
+            'search_count': len(tracks_sudo),
             'search_key': searches['search'],
             'search_wishlist': searches['search_wishlist'],
             'search_tags': search_tags,

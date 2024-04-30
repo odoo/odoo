@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.tests import Form
 
 class TestReturnPicking(TestStockCommon):
 
@@ -110,3 +111,84 @@ class TestReturnPicking(TestStockCommon):
         picking2.move_ids.move_line_ids.qty_done = 1
         picking2.button_validate()
         self.assertFalse(self.env['stock.quant']._gather(product_serial, customer_location, lot_id=serial1))
+
+    def test_return_picking_validation_with_tracked_product(self):
+        """
+        Test That return picking can be validated when the product is tracked by serial number
+        - Create an incoming immediate transfer with a tracked picking, validate it
+        - Create a return and validate it
+        """
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        sn_1, sn_2 = [self.env['stock.lot'].create({
+            'name': str(i),
+            'product_id': product.id,
+        }) for i in range(2)]
+        # create an immediate transfer
+        picking_in = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'immediate_transfer': True,
+        })
+        move = self.env['stock.move'].create({
+                'picking_id': picking_in.id,
+                'name': product.name,
+                'product_id': product.id,
+                'quantity_done': 2,
+                'product_uom': product.uom_id.id,
+                'location_id': self.supplier_location,
+                'location_dest_id': self.stock_location,
+        })
+        self.assertEqual(picking_in.state, 'assigned')
+        move.move_line_ids[0].write({'lot_id': sn_1.id, 'qty_done': 1})
+        move.move_line_ids[1].write({'lot_id': sn_2.id, 'qty_done': 1})
+        picking_in.button_validate()
+        # create a return picking
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking_in.ids, active_id=picking_in.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking.product_return_moves.quantity = 2.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        self.assertEqual(return_picking.state, 'assigned')
+        wiz = return_picking.button_validate()
+        wiz = Form(self.env['stock.immediate.transfer'].with_context(wiz['context'])).save().process()
+        self.assertEqual(return_picking.move_ids.quantity_done, 2)
+        self.assertEqual(return_picking.state, 'done')
+
+    def test_return_incoming_picking(self):
+        """
+            Test returns of incoming pickings have the same partner assigned to them
+        """
+        partner = self.env['res.partner'].create({'name': 'Jean'})
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'partner_id': partner.id,
+            'move_ids': [(0, 0, {
+                'name': self.UnitA.name,
+                'product_id': self.UnitA.id,
+                'product_uom_qty': 1,
+                'quantity_done': 1,
+                'product_uom': self.uom_unit.id,
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+            })],
+        })
+        receipt.button_validate()
+        # create a return picking
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=receipt.ids, active_id=receipt.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking.product_return_moves.quantity = 1.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_picking.button_validate()
+        self.assertEqual(return_picking.move_ids[0].partner_id.id, receipt.partner_id.id)

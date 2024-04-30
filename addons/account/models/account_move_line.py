@@ -460,10 +460,7 @@ class AccountMoveLine(models.Model):
     def _compute_name(self):
         for line in self:
             if line.display_type == 'payment_term':
-                if line.move_id.payment_reference:
-                    line.name = line.move_id.payment_reference
-                elif not line.name:
-                    line.name = ''
+                line.name = line.move_id.payment_reference or ''
                 continue
             if not line.product_id or line.display_type in ('line_section', 'line_note'):
                 continue
@@ -757,14 +754,16 @@ class AccountMoveLine(models.Model):
                 and foreign_curr.is_zero(line.amount_residual_currency)
             )
 
-    @api.depends('move_id.move_type', 'tax_ids', 'tax_repartition_line_id', 'debit', 'credit', 'tax_tag_ids', 'is_refund')
+    @api.depends('move_id.move_type', 'tax_ids', 'tax_repartition_line_id', 'debit', 'credit', 'tax_tag_ids', 'is_refund',
+                 'move_id.tax_cash_basis_origin_move_id')
     def _compute_tax_tag_invert(self):
         for record in self:
+            origin_move_id = record.move_id.tax_cash_basis_origin_move_id or record.move_id
             if not record.tax_repartition_line_id and not record.tax_ids:
                 # Invoices imported from other softwares might only have kept the tags, not the taxes.
-                record.tax_tag_invert = record.tax_tag_ids and record.move_id.is_inbound()
+                record.tax_tag_invert = record.tax_tag_ids and origin_move_id.is_inbound()
 
-            elif record.move_id.move_type == 'entry':
+            elif origin_move_id.move_type == 'entry':
                 # For misc operations, cash basis entries and write-offs from the bank reconciliation widget
                 tax = record.tax_repartition_line_id.tax_id or record.tax_ids[:1]
                 is_refund = record.is_refund
@@ -772,7 +771,7 @@ class AccountMoveLine(models.Model):
                 record.tax_tag_invert = (tax_type == 'purchase' and is_refund) or (tax_type == 'sale' and not is_refund)
             else:
                 # For invoices with taxes
-                record.tax_tag_invert = record.move_id.is_inbound()
+                record.tax_tag_invert = origin_move_id.is_inbound()
 
     @api.depends('tax_tag_ids', 'debit', 'credit', 'journal_id', 'tax_tag_invert')
     def _compute_tax_audit(self):
@@ -804,7 +803,10 @@ class AccountMoveLine(models.Model):
     @api.depends('display_type')
     def _compute_quantity(self):
         for line in self:
-            line.quantity = 1 if line.display_type == 'product' else False
+            if line.display_type == 'product':
+                line.quantity = line.quantity if line.quantity else 1
+            else:
+                line.quantity = False
 
     @api.depends('display_type')
     def _compute_sequence(self):
@@ -890,7 +892,7 @@ class AccountMoveLine(models.Model):
                 tax_ids = self.move_id.company_id.account_purchase_tax_id
         else:
             # Miscellaneous operation.
-            tax_ids = self.account_id.tax_ids
+            tax_ids = False if self.env.context.get('skip_computed_taxes') else self.account_id.tax_ids
 
         if self.company_id and tax_ids:
             tax_ids = tax_ids.filtered(lambda tax: tax.company_id == self.company_id)
@@ -954,7 +956,7 @@ class AccountMoveLine(models.Model):
                     'group_tax_id': tax['group'] and tax['group'].id or False,
                     'account_id': tax['account_id'] or line.account_id.id,
                     'currency_id': line.currency_id.id,
-                    'analytic_distribution': (tax['analytic'] or not tax['use_in_tax_closing']) and line.analytic_distribution,
+                    'analytic_distribution': ((tax['analytic'] or not tax['use_in_tax_closing']) and line.move_id.state == 'draft') and line.analytic_distribution,
                     'tax_ids': [(6, 0, tax['tax_ids'])],
                     'tax_tag_ids': [(6, 0, tax['tag_ids'])],
                     'partner_id': line.move_id.partner_id.id or line.partner_id.id,
@@ -1142,7 +1144,6 @@ class AccountMoveLine(models.Model):
                 line.debit = 0
             line.balance = line.debit - line.credit
 
-    @api.onchange('analytic_distribution')
     def _inverse_analytic_distribution(self):
         """ Unlink and recreate analytic_lines when modifying the distribution."""
         lines_to_modify = self.env['account.move.line'].browse([
@@ -1467,9 +1468,8 @@ class AccountMoveLine(models.Model):
                 line_to_write -= line
                 continue
 
-            if line.parent_state == 'posted':
-                if any(key in vals for key in ('tax_ids', 'tax_line_id')):
-                    raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
+            if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in ('tax_ids', 'tax_line_id')):
+                raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
 
             # Check the lock date.
             if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in protected_fields['fiscal']):
@@ -1674,12 +1674,12 @@ class AccountMoveLine(models.Model):
             )
 
         def get_odoo_rate(vals, other_line=None):
+            if not is_payment(vals) and other_line and is_payment(other_line):
+                return get_accounting_rate(other_line)
             if vals.get('record') and vals['record'].move_id.is_invoice(include_receipts=True):
                 exchange_rate_date = vals['record'].move_id.invoice_date
             else:
                 exchange_rate_date = vals['date']
-            if not is_payment(vals) and other_line and is_payment(other_line):
-                exchange_rate_date = other_line['date']
             return recon_currency._get_conversion_rate(company_currency, recon_currency, vals['company'], exchange_rate_date)
 
         def get_accounting_rate(vals):
@@ -2024,7 +2024,7 @@ class AccountMoveLine(models.Model):
 
         return partials
 
-    def _prepare_exchange_difference_move_vals(self, amounts_list, company=None, exchange_date=None):
+    def _prepare_exchange_difference_move_vals(self, amounts_list, company=None, exchange_date=None, **kwargs):
         """ Prepare values to create later the exchange difference journal entry.
         The exchange difference journal entry is there to fix the debit/credit of lines when the journal items are
         fully reconciled in foreign currency.
@@ -2079,8 +2079,8 @@ class AccountMoveLine(models.Model):
                 exchange_line_account = income_exchange_account
 
             sequence = len(move_vals['line_ids'])
-            move_vals['line_ids'] += [
-                Command.create({
+            line_vals = [
+                {
                     'name': _('Currency exchange rate difference'),
                     'debit': -amount_residual if amount_residual < 0.0 else 0.0,
                     'credit': amount_residual if amount_residual > 0.0 else 0.0,
@@ -2089,8 +2089,8 @@ class AccountMoveLine(models.Model):
                     'currency_id': line.currency_id.id,
                     'partner_id': line.partner_id.id,
                     'sequence': sequence,
-                }),
-                Command.create({
+                },
+                {
                     'name': _('Currency exchange rate difference'),
                     'debit': amount_residual if amount_residual > 0.0 else 0.0,
                     'credit': -amount_residual if amount_residual < 0.0 else 0.0,
@@ -2099,8 +2099,13 @@ class AccountMoveLine(models.Model):
                     'currency_id': line.currency_id.id,
                     'partner_id': line.partner_id.id,
                     'sequence': sequence + 1,
-                }),
+                },
             ]
+
+            if kwargs.get('exchange_analytic_distribution'):
+                line_vals[1].update({'analytic_distribution': kwargs['exchange_analytic_distribution']})
+
+            move_vals['line_ids'] += [Command.create(vals) for vals in line_vals]
             to_reconcile.append((line, sequence))
 
         return {'move_vals': move_vals, 'to_reconcile': to_reconcile}

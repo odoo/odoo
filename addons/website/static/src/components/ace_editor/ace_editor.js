@@ -96,14 +96,17 @@ export const WebsiteAceEditor = AceEditor.extend({
     /**
      * @override
      */
-    _rpc(options) {
+    _rpc(options, settings) {
         let context;
         this.trigger_up('context_get', {
             callback: (ctx) => {
                 context = ctx;
             },
         });
-        return this._super({...options, context: context});
+        return this._super({
+            ...options,
+            context: context,
+        }, settings);
     },
 });
 

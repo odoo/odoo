@@ -31,6 +31,24 @@ class PaymentTransaction(models.Model):
             'reference': self.reference,
         }
 
+    def _get_communication(self):
+        """ Return the communication the user should use for their transaction.
+
+        This communication might change according to the settings and the accounting localization.
+
+        Note: self.ensure_one()
+
+        :return: The selected communication.
+        :rtype: str
+        """
+        self.ensure_one()
+        communication = ""
+        if hasattr(self, 'invoice_ids') and self.invoice_ids:
+            communication = self.invoice_ids[0].payment_reference
+        elif hasattr(self, 'sale_order_ids') and self.sale_order_ids:
+            communication = self.sale_order_ids[0].reference
+        return communication or self.reference
+
     def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of payment to find the transaction based on custom data.
 

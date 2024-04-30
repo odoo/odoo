@@ -33,12 +33,15 @@ class IrActionsReport(models.Model):
         if not res_ids:
             return res
         report = self._get_report(report_ref)
-        if report.report_name in ('account.report_invoice_with_payments', 'account.report_invoice'):
+        if self._is_invoice_report(report_ref):
             invoices = self.env[report.model].browse(res_ids)
             # Determine which invoices need a QR/ISR.
             qr_inv_ids = []
             isr_inv_ids = []
             for invoice in invoices:
+                # avoid duplicating existing streams
+                if report.attachment_use and report.retrieve_attachment(invoice):
+                    continue
                 if invoice.l10n_ch_is_qr_valid:
                     qr_inv_ids.append(invoice.id)
                 elif invoice.company_id.country_code == 'CH' and invoice.l10n_ch_isr_valid:

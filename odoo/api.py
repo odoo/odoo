@@ -456,7 +456,9 @@ def _call_kw_multi(method, self, args, kwargs):
 
 def call_kw(model, name, args, kwargs):
     """ Invoke the given method ``name`` on the recordset ``model``. """
-    method = getattr(type(model), name)
+    method = getattr(type(model), name, None)
+    if not method:
+        raise AttributeError(f"The method '{name}' does not exist on the model '{model._name}'")
     api = getattr(method, '_api', None)
     if api == 'model':
         result = _call_kw_model(method, model, args, kwargs)
@@ -500,11 +502,16 @@ class Environment(Mapping):
         """ Reset the transaction, see :meth:`Transaction.reset`. """
         self.transaction.reset()
 
-    def __new__(cls, cr, uid, context, su=False):
+    def __new__(cls, cr, uid, context, su=False, uid_origin=None):
         if uid == SUPERUSER_ID:
             su = True
+
+        # isinstance(uid, int) is to handle `RequestUID`
+        uid_origin = uid_origin or (uid if isinstance(uid, int) else None)
+        if uid_origin == SUPERUSER_ID:
+            uid_origin = None
+
         assert context is not None
-        args = (cr, uid, context, su)
 
         # determine transaction object
         transaction = cr.transaction
@@ -513,13 +520,14 @@ class Environment(Mapping):
 
         # if env already exists, return it
         for env in transaction.envs:
-            if env.args == args:
+            if (env.cr, env.uid, env.context, env.su, env.uid_origin) == (cr, uid, context, su, uid_origin):
                 return env
 
         # otherwise create environment, and add it in the set
+        assert isinstance(cr, BaseCursor)
         self = object.__new__(cls)
-        args = (cr, uid, frozendict(context), su)
-        self.cr, self.uid, self.context, self.su = self.args = args
+        self.cr, self.uid, self.context, self.su = self.args = (cr, uid, frozendict(context), su)
+        self.uid_origin = uid_origin
 
         self.transaction = self.all = transaction
         self.registry = transaction.registry
@@ -574,7 +582,7 @@ class Environment(Mapping):
         uid = self.uid if user is None else int(user)
         context = self.context if context is None else context
         su = (user is None and self.su) if su is None else su
-        return Environment(cr, uid, context, su)
+        return Environment(cr, uid, context, su, self.uid_origin)
 
     def ref(self, xml_id, raise_if_not_found=True):
         """ Return the record corresponding to the given ``xml_id``.
@@ -1165,10 +1173,17 @@ class Cache(object):
             if name != 'id' and record.id in self._get_field_cache(record, field):
                 yield field
 
-    def get_records(self, model, field):
-        """ Return the records of ``model`` that have a value for ``field``. """
-        field_cache = self._get_field_cache(model, field)
-        return model.browse(field_cache)
+    def get_records(self, model, field, all_contexts=False):
+        """ Return the records of ``model`` that have a value for ``field``.
+        By default the method checks for values in the current context of ``model``.
+        But when ``all_contexts`` is true, it checks for values *in all contexts*.
+        """
+        if all_contexts and model.pool.field_depends_context[field]:
+            field_cache = self._data.get(field, EMPTY_DICT)
+            ids = OrderedSet(id_ for sub_cache in field_cache.values() for id_ in sub_cache)
+        else:
+            ids = self._get_field_cache(model, field)
+        return model.browse(ids)
 
     def get_missing_ids(self, records, field):
         """ Return the ids of ``records`` that have no value for ``field``. """
@@ -1316,3 +1331,4 @@ class Starred:
 # keep those imports here in order to handle cyclic dependencies correctly
 from odoo import SUPERUSER_ID
 from odoo.modules.registry import Registry
+from .sql_db import BaseCursor

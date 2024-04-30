@@ -1,3 +1,6 @@
+from odoo import _
+from odoo.exceptions import ValidationError
+
 from odoo.addons.payment import utils as payment_utils
 
 
@@ -47,12 +50,16 @@ def format_partner_address(partner):
     :rtype: dict
     """
     street_data = partner._get_street_split()
+    # Unlike what is stated in https://docs.adyen.com/risk-management/avs-checks/, not all fields
+    # are required at all time. Thus, we fall back to 'Unknown' when a field is not set to avoid
+    # blocking the payment (empty string are not accepted) or passing `False` (which may not pass
+    # the fraud check).
     return {
-        'city': partner.city,
+        'city': partner.city or 'Unknown',
         'country': partner.country_id.code or 'ZZ',  # 'ZZ' if the country is not known.
-        'stateOrProvince': partner.state_id.code,
-        'postalCode': partner.zip,
+        'stateOrProvince': partner.state_id.code or 'Unknown',  # The state is not always required.
+        'postalCode': partner.zip or '',
         # Fill in the address fields if the format is supported, or fallback to the raw address.
-        'street': street_data.get('street_name', partner.street),
-        'houseNumberOrName': street_data.get('street_number'),
+        'street': street_data.get('street_name', partner.street) or 'Unknown',
+        'houseNumberOrName': street_data.get('street_number') or '',
     }

@@ -3,7 +3,7 @@
 
 {
     'name': 'Project',
-    'version': '1.2',
+    'version': '1.3',
     'website': 'https://www.odoo.com/app/project',
     'category': 'Services/Project',
     'sequence': 45,
@@ -83,6 +83,7 @@
             'project/static/src/js/portal_rating.js',
         ],
         'web.qunit_suite_tests': [
+            'project/static/src/project_sharing/components/portal_file_input/portal_file_input.js',
             'project/static/tests/**/*.js',
         ],
         'web.assets_tests': [

@@ -189,9 +189,10 @@
         t-on-keyup="onKeyup"
         t-on-click="onClick"
         t-on-blur="onBlur"
-        t-on-paste.stop=""
+        t-on-paste="onPaste"
         t-on-compositionstart="onCompositionStart"
         t-on-compositionend="onCompositionEnd"
+        t-on-contextmenu="onContextMenu"
       />
 
       <div
@@ -279,14 +280,7 @@
 
   <t t-name="o-spreadsheet-GridComposer" owl="1">
     <div class="o-grid-composer" t-att-style="containerStyle" t-ref="gridComposer">
-      <Composer
-        focus="props.focus"
-        inputStyle="composerStyle"
-        rect="composerState.rect"
-        delimitation="composerState.delimitation"
-        onComposerUnmounted="props.onComposerUnmounted"
-        onComposerContentFocused="props.onComposerContentFocused"
-      />
+      <Composer t-props="composerProps"/>
     </div>
   </t>
 
@@ -313,7 +307,7 @@
         <div
           t-foreach="getClickableCells()"
           t-as="clickableCell"
-          t-key="clickableCell.cell.id"
+          t-key="clickableCell_index"
           class="o-dashboard-clickable-cell"
           t-on-click="() => this.selectClickableCell(clickableCell)"
           t-on-contextmenu.prevent=""
@@ -377,7 +371,7 @@
         t-ref="figure"
         t-att-style="props.style"
         tabindex="0"
-        t-on-keydown.stop="(ev) => this.onKeyDown(ev)"
+        t-on-keydown="(ev) => this.onKeyDown(ev)"
         t-on-keyup.stop="">
         <t
           t-component="figureRegistry.get(props.figure.tag).Component"
@@ -592,7 +586,7 @@
       class="o-grid"
       tabindex="-1"
       t-att-class="{'o-two-columns': !props.sidePanelIsOpen}"
-      t-on-click="focus"
+      t-on-click="focusDefaultElement"
       t-on-keydown="onKeydown"
       t-on-wheel="onMouseWheel"
       t-ref="grid">
@@ -605,26 +599,15 @@
         onGridMoved.bind="moveCanvas"
         gridOverlayDimensions="gridOverlayDimensions"
         sidePanelIsOpen="props.sidePanelIsOpen"
-        onFigureDeleted.bind="focus"
+        onFigureDeleted.bind="focusDefaultElement"
       />
       <HeadersOverlay onOpenContextMenu="(type, x, y) => this.toggleContextMenu(type, x, y)"/>
-
-      <t t-if="env.model.getters.getEditionMode() !== 'inactive'">
-        <GridComposer
-          onComposerUnmounted="() => this.focus()"
-          onComposerContentFocused="props.onComposerContentFocused"
-          focus="props.focusComposer"
-        />
-      </t>
-      <t else="1">
-        <input
-          class="position-absolute"
-          style="z-index:-1000;"
-          t-on-input="onInput"
-          t-on-contextmenu="onInputContextMenu"
-          t-ref="hiddenInput"
-        />
-      </t>
+      <GridComposer
+        onComposerContentFocused="props.onComposerContentFocused"
+        onComposerCellFocused="props.onGridComposerCellFocused"
+        focus="props.focusComposer"
+        onInputContextMenu.bind="onInputContextMenu"
+      />
       <canvas t-ref="canvas"/>
       <t
         t-foreach="env.model.getters.getClientsToDisplay()"
@@ -1206,10 +1189,9 @@
       />
     </svg>
   </t>
-  /** Font Awesome by Dave Gandy
- *  http://fontawesome.io/
- *  https://fontawesome.com/license
- */
+  <!-- Font Awesome by Dave Gandy
+http://fontawesome.io/
+https://fontawesome.com/license -->
   <t t-name="o-spreadsheet-Icon.CARET_UP" owl="1">
     <svg class="caret-up" viewBox="0 0 320 512">
       <path
@@ -3257,7 +3239,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.0.22';
-  __info__.date = '2023-10-19T15:24:23.252Z';
-  __info__.hash = '7f76b56';
+  __info__.version = '16.0.40';
+  __info__.date = '2024-04-26T07:56:40.045Z';
+  __info__.hash = '70a6783';
 -->

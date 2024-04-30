@@ -6,19 +6,19 @@
 # keecome <7017511@qq.com>, 2022
 # digitalliuzg8888, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Emily Jia <eji@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Chloe Wang, 2023
 # Ryan <ouyang.em@gmail.com>, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Ryan <ouyang.em@gmail.com>, 2023\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,7 +120,7 @@ msgid ""
 "        </t>\n"
 "        is expected for \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date(object.get_localized_date_planned()) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">undefined</span>.\n"
@@ -134,32 +134,6 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        亲爱的<t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>，\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            （<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>）\n"
-"        </t>\n"
-"        <br><br>\n"
-"        在此提醒，采购订单 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\"> P00015 </span>的交货时间\n"
-"        <t t-if=\"object.partner_ref\">\n"
-"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</span>\n"
-"        </t>\n"
-"        预计为 \n"
-"        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\"> 2021 年 5 月 5 日</span>.\n"
-"        </t>\n"
-"         <t t-else=\"\">\n"
-"            <span style=\"font-weight:bold;\">未定义</span>。\n"
-"        </t>\n"
-"        请确认能否按时交货？\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
-"        </t>\n"
-"        <br><br>\n"
-"    </p>\n"
-"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -179,7 +153,7 @@ msgid ""
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
 "        <br><br>\n"
 "        <t t-if=\"object.date_planned\">\n"
-"            The receipt is expected for <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            The receipt is expected for <span style=\"font-weight:bold;\" t-out=\"format_date(object.get_localized_date_planned()) or ''\">05/05/2021</span>.\n"
 "            <br><br>\n"
 "            Could you please acknowledge the receipt of this order?\n"
 "        </t>\n"
@@ -191,32 +165,6 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"亲爱的 <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
-"<t t-if=\"object.partner_id.parent_id\">\n"
-"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
-"</t>\n"
-"<br><br>\n"
-"附件中有一份采购订单 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
-"<t t-if=\"object.partner_ref\">\n"
-"，参考编号：<t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
-"</t>\n"
-"，金额为 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
-"，来自 <t t-out=\"object.company_id.name or ''\">YourCompany</t>。\n"
-"<br><br>\n"
-"<t t-if=\"object.date_planned\">\n"
-"预计收货日期为 <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>。\n"
-"<br><br>\n"
-"请确认收到此订单吗？\n"
-"</t>\n"
-"<t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"<br><br>\n"
-"<t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
-"</t>\n"
-"<br><br>\n"
-"</p>\n"
-"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -644,7 +592,7 @@ msgstr "添加节"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Add several variants to the purchase order from a grid"
-msgstr "在购买订单中用网格方式添加几个变体"
+msgstr "在采购订单中用网格方式添加几个变体"
 
 #. module: purchase
 #. odoo-javascript
@@ -807,7 +755,6 @@ msgid "Automatically remind the receipt date to your vendors"
 msgstr "自动提醒收货日期到您的供应商"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__receipt_reminder_email
 #: model:ir.model.fields,help:purchase.field_res_partner__receipt_reminder_email
 #: model:ir.model.fields,help:purchase.field_res_users__receipt_reminder_email
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1379,7 +1326,7 @@ msgstr "如果启用，启用3路供应商账单匹配：项目必须收到以�
 msgid ""
 "If installed, the product variants will be added to purchase orders through "
 "a grid entry."
-msgstr "如果安装，产品的变种将被添加到购买订单，通过一个网格条目。"
+msgstr "如果安装，产品的变种将被添加到采购订单，通过一个网格条目。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_packaging__purchase
@@ -1437,12 +1384,12 @@ msgstr "关注者"
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
 msgid "Journal Entry"
-msgstr "会计凭证"
+msgstr "日记账分录"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move_line
 msgid "Journal Item"
-msgstr "会计分录"
+msgstr "日记账项目"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union____last_update
@@ -1765,7 +1712,6 @@ msgid "Number of Actions"
 msgstr "动作数量"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__reminder_date_before_receipt
 #: model:ir.model.fields,help:purchase.field_res_partner__reminder_date_before_receipt
 #: model:ir.model.fields,help:purchase.field_res_users__reminder_date_before_receipt
 msgid "Number of days to send reminder email before the promised receipt date"
@@ -2199,7 +2145,7 @@ msgstr "包含未结算明细的采购单"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase products by multiple of unit # per package"
-msgstr "按每包单位#的倍数购买产品"
+msgstr "按每包单位#的倍数采购产品"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
@@ -2210,7 +2156,7 @@ msgstr "采购提醒"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase variants of a product using attributes (size, color, etc.)"
-msgstr "使用属性（大小、颜色等）购买产品的变体"
+msgstr "使用属性（大小、颜色等）采购产品的变体"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_done
@@ -2496,7 +2442,7 @@ msgstr "询价"
 msgid ""
 "Requests for quotation are documents that will be sent to your suppliers to request prices for different products you consider buying.\n"
 "                Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders."
-msgstr "询价是发送给您的供应商以咨询您购买产品价格的单据， 与供应商达成协议后，将对其进行确认并转换为采购订单。"
+msgstr "询价是发送给您的供应商以咨询您采购产品价格的单据， 与供应商达成协议后，将对其进行确认并转换为采购订单。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -2820,7 +2766,7 @@ msgid ""
 "This analysis allows you to easily check and analyse your company purchase history and performance.\n"
 "                You can track your negotiation performance, the delivery performance of your vendors, etc"
 msgstr ""
-"这种分析使您可以轻松检查和分析您公司的购买历史和业绩。\n"
+"这种分析使您可以轻松检查和分析您公司的采购历史和业绩。\n"
 "                 您可以跟踪您的谈判表现、供应商的交付表现等等"
 
 #. module: purchase
@@ -2851,7 +2797,7 @@ msgstr "本条备注被添加到采购订单"
 msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should "
 "purchase %(quantity).2f %(unit)s."
-msgstr "这个产品是由%(pack_size).2f%(pack_name)s包裹的。您应该购买%(quantity).2f。%(unit)s."
+msgstr "这个产品是由%(pack_size).2f%(pack_name)s包裹的。您应该采购%(quantity).2f。%(unit)s."
 
 #. module: purchase
 #. odoo-python

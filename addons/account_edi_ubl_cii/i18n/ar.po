@@ -5,15 +5,15 @@
 # Translators:
 # Martin Trigaux, 2022
 # Niyas Raphy, 2022
-# Malaz Abuidris <msea@odoo.com>, 2023
+# Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -159,6 +159,13 @@ msgstr "يجب أن يكون لكل بند فاتورة ضريبة واحدة ف
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "Each invoice line should have a product or a label."
+msgstr "يجب أن يحتوي كل بند فاتورة على منتج أو بطاقة عنوان. "
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
@@ -247,34 +254,6 @@ msgid "Odoo"
 msgstr "أودو"
 
 #. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, python-format
-msgid "Output VAT, reduced rate, low"
-msgstr "ضريبة المخرجات، الأسعار المخفضة، منخفض "
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, python-format
-msgid "Output VAT, reduced rate, middle"
-msgstr "ضريبة المخرجات، الأسعار المخفضة، متوسط "
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, python-format
-msgid "Output VAT, reduced rate, raw fish"
-msgstr "ضريبة المخرجات، الأسعار المخفضة، سمك نيئ "
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, python-format
-msgid "Output VAT, regular rate"
-msgstr "ضريبة المخرجات، السعر العادي "
-
-#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
 msgid "Report Action"
 msgstr "إجراء التقرير"
@@ -306,6 +285,13 @@ msgid ""
 msgstr ""
 "يبدو أن رقم ضريبة القيمة المضافة للمورّد غير صالح. يجب أن يكون بالصيغة "
 "التالية: NO179728982MVA. "
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "The VAT of the %s should be prefixed with its country code."
+msgstr "The VAT of the %s should be prefixed with its country code."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -344,6 +330,17 @@ msgstr "الحقل %s مطلوب في %s. "
 msgid ""
 "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr "الحقل 'رقم الحساب السليم' مطلوب في الحساب البنكي للمستلم. "
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid ""
+"The invoice contains line(s) with a negative unit price, which is not "
+"allowed. You might need to set a negative quantity instead."
+msgstr ""
+"تحتوي الفاتورة على بنود بها سعر وحدة سالب، وهو أمر غير مسموح به. قد تحتاج "
+"إلى تعيين كمية سالبة عوضاً عن ذلك. "
 
 #. module: account_edi_ubl_cii
 #. odoo-python

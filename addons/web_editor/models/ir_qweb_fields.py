@@ -211,7 +211,7 @@ class ManyToOne(models.AbstractModel):
     def attributes(self, record, field_name, options, values):
         attrs = super(ManyToOne, self).attributes(record, field_name, options, values)
         if options.get('inherit_branding'):
-            many2one = getattr(record, field_name)
+            many2one = record[field_name]
             if many2one:
                 attrs['data-oe-many2one-id'] = many2one.id
                 attrs['data-oe-many2one-model'] = many2one._name
@@ -613,7 +613,7 @@ def _collapse_whitespace(text):
     """ Collapses sequences of whitespace characters in ``text`` to a single
     space
     """
-    return re.sub('\s+', ' ', text)
+    return re.sub(r'\s+', ' ', text)
 
 
 def _realize_padding(it):

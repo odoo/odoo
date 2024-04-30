@@ -7,7 +7,7 @@
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
-# Rasareeyar Lappiam, 2023
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -140,11 +140,28 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"  เรียน <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
+"  เรายินดีที่แจ้งให้ทราบว่าข้อเสนอของคุณสำหรับ <t t-out=\"object.name or ''\">กิจกรรมนี้เกี่ยวกับอะไร</t> ได้รับการยอมรับและยืนยันสำหรับกิจกรรม <t t-out=\"object.event_id.name or ''\">เปิดเผยคอลเลกชัน OpenWood ออนไลน์</t> แล้ว\n"
+"<br>\n"
+"คุณสามารถดูรายละเอียดเพิ่มเติมได้ที่นี่:\n"
+"<div style=\"margin: 16px 0px 16px 0px;\">\n"
+"    <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        ดูการพูดคุย\n"
+"    </a>\n"
+"</div>\n"
+"<br><br>\n"
+"ขอขอบคุณ,\n"
+"<t t-if=\"user.signature\">\n"
+"    <br>\n"
+"    <t t-out=\"user.signature or ''\">--<br>แอดมิน Mitchell</t>\n"
+"</t>\n"
+"</div>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
 msgid "<i class=\"fa fa-ban me-2\"/>Unpublished"
-msgstr ""
+msgstr "<i class=\"fa fa-ban me-2\"/>ไม่เผยแพร่"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
@@ -221,7 +238,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "<span id=\"search_number\" class=\"me-1\">0</span>Results"
-msgstr ""
+msgstr "<span id=\"search_number\" class=\"me-1\">0</span>ผลลัพธ์"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -712,7 +729,7 @@ msgstr "กำหนดป้ายกำกับที่อธิบายส
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_location__sequence
 msgid "Define the order in which the location will appear on \"Agenda\" page"
-msgstr ""
+msgstr "กำหนดลำดับสถานที่ที่จะแสดงในหน้า \"กำหนดการ\""
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
@@ -853,7 +870,7 @@ msgstr "ตำแหน่งอีเวนต์"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
 msgid "Event Page"
-msgstr ""
+msgstr "เพจกิจกรรม"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
@@ -917,7 +934,7 @@ msgstr "สรุปสั้น ๆ ของอีเวนต์"
 #. module: website_event_track
 #: model:mail.template,name:website_event_track.mail_template_data_track_confirmation
 msgid "Event: Track Confirmation"
-msgstr ""
+msgstr "กิจกรรม: การยืนยันการติดตาม"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
@@ -952,7 +969,7 @@ msgstr "ตัวกรองแทร็ก..."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
 msgid "Filter by Tags"
-msgstr ""
+msgstr "กรองตามแท็ก"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
@@ -1826,6 +1843,8 @@ msgid ""
 "Sent to speakers whose track proposal is accepted (set the template on the "
 "right stage)"
 msgstr ""
+"ส่งไปยังวิทยากรที่ได้รับการยอมรับข้อเสนอของแทร็ค "
+"(กำหนดเทมเพลตให้อยู่ในระยะที่ถูกต้อง)"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
@@ -1926,7 +1945,7 @@ msgstr "ชื่อสถานะ"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
 msgid "Starting now!"
-msgstr ""
+msgstr "เริ่มตอนนี้!"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track28
@@ -2119,7 +2138,7 @@ msgstr "ขั้นตอนนี้เสร็จสิ้น คลิก�
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "This track does not have a description."
-msgstr ""
+msgstr "เพลงนี้ไม่มีคำอธิบาย"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2572,7 +2591,7 @@ msgstr "คุณออฟไลน์อยู่!"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "a few seconds"
-msgstr ""
+msgstr "ไม่กี่วินาที"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -2582,13 +2601,13 @@ msgstr "ที่ผ่านมา"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. \"John Doe was born in...\""
-msgstr ""
+msgstr "เช่น \"John Doe เกิดที่...\""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. \"This talk will be about...\""
-msgstr ""
+msgstr "เช่น “การพูดคุยครั้งนี้จะเกี่ยวกับ...”"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form

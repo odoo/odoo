@@ -524,6 +524,13 @@ class BaseModel(metaclass=MetaModel):
     as attribute.
     """
 
+    _allow_sudo_commands = True
+    """Allow One2many and Many2many Commands targeting this model in an environment using `sudo()` or `with_user()`.
+    By disabling this flag, security-sensitive models protect themselves
+    against malicious manipulation of One2many or Many2many fields
+    through an environment using `sudo` or a more priviledged user.
+    """
+
     _depends = frozendict()
     """dependencies of models backed up by SQL views
     ``{model_name: field_names}``, where ``field_names`` is an iterable.
@@ -547,7 +554,7 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     def _add_field(self, name, field):
         """ Add the given ``field`` under the given ``name`` in the class """
-        cls = type(self)
+        cls = self.env.registry[self._name]
         # add field as an attribute and in cls._fields (for reflection)
         if not isinstance(getattr(cls, name, field), Field):
             _logger.warning("In model %r, field %r overriding existing value", cls._name, name)
@@ -561,7 +568,7 @@ class BaseModel(metaclass=MetaModel):
         """ Remove the field with the given ``name`` from the model.
             This method should only be used for manual fields.
         """
-        cls = type(self)
+        cls = self.env.registry[self._name]
         field = cls._fields.pop(name, None)
         discardattr(cls, name)
         if cls._rec_name == name:
@@ -755,7 +762,7 @@ class BaseModel(metaclass=MetaModel):
                 return func(self)
             return wrapper
 
-        cls = type(self)
+        cls = self.env.registry[self._name]
         methods = []
         for attr, func in getmembers(cls, is_constraint):
             if callable(func._constrains):
@@ -778,7 +785,7 @@ class BaseModel(metaclass=MetaModel):
         def is_ondelete(func):
             return callable(func) and hasattr(func, '_ondelete')
 
-        cls = type(self)
+        cls = self.env.registry[self._name]
         methods = [func for _, func in getmembers(cls, is_ondelete)]
         # optimization: memoize results on cls, it will not be recomputed
         cls._ondelete_methods = methods
@@ -791,7 +798,7 @@ class BaseModel(metaclass=MetaModel):
             return callable(func) and hasattr(func, '_onchange')
 
         # collect onchange methods on the model's class
-        cls = type(self)
+        cls = self.env.registry[self._name]
         methods = defaultdict(list)
         for attr, func in getmembers(cls, is_onchange):
             missing = []
@@ -1005,7 +1012,7 @@ class BaseModel(metaclass=MetaModel):
             # collect all the tuples in "lines" (along with their coordinates)
             for i, line in enumerate(lines):
                 for j, cell in enumerate(line):
-                    if type(cell) is tuple:
+                    if isinstance(cell, tuple):
                         bymodels[cell[0]].add(cell[1])
                         xidmap[cell].append((i, j))
             # for each model, xid-export everything and inject in matrix
@@ -1712,7 +1719,7 @@ class BaseModel(metaclass=MetaModel):
         # columns should be displayed even if they don't contain any record.
         group_expand = field.group_expand
         if isinstance(group_expand, str):
-            group_expand = getattr(type(self), group_expand)
+            group_expand = getattr(self.env.registry[self._name], group_expand)
         assert callable(group_expand)
 
         # determine all groups that should be returned
@@ -1959,8 +1966,12 @@ class BaseModel(metaclass=MetaModel):
             if is_many2one_id:
                 order_field = order_field[:-3]
             if order_field == 'id' or order_field in groupby_fields:
-                order_field_name = order_field.split(':')[0]
-                if self._fields[order_field_name].type == 'many2one' and not is_many2one_id:
+                field = self._fields[order_field.split(':')[0]]
+                if (
+                    field.type == 'many2one'
+                    and not self.env[field.comodel_name]._order == 'id'
+                    and not is_many2one_id
+                ):
                     order_clause = self._generate_order_by(order_part, query)
                     order_clause = order_clause.replace('ORDER BY ', '')
                     if order_clause:
@@ -2695,13 +2706,13 @@ class BaseModel(metaclass=MetaModel):
                     field.required = True
                 if field.ondelete.lower() not in ('cascade', 'restrict'):
                     field.ondelete = 'cascade'
-                type(self)._inherits = {**self._inherits, field.comodel_name: field.name}
+                self.pool[self._name]._inherits = {**self._inherits, field.comodel_name: field.name}
                 self.pool[field.comodel_name]._inherits_children.add(self._name)
 
     @api.model
     def _prepare_setup(self):
         """ Prepare the setup of the model. """
-        cls = type(self)
+        cls = self.env.registry[self._name]
         cls._setup_done = False
 
         # changing base classes is costly, do it only when necessary
@@ -2715,7 +2726,7 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     def _setup_base(self):
         """ Determine the inherited and custom fields of the model. """
-        cls = type(self)
+        cls = self.env.registry[self._name]
         if cls._setup_done:
             return
 
@@ -2800,7 +2811,7 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     def _setup_fields(self):
         """ Setup the fields, except for recomputation triggers. """
-        cls = type(self)
+        cls = self.env.registry[self._name]
 
         # set up fields
         bad_fields = []
@@ -2823,7 +2834,7 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     def _setup_complete(self):
         """ Setup recomputation triggers, and complete the model setup. """
-        cls = type(self)
+        cls = self.env.registry[self._name]
 
         # register constraints and onchange methods
         cls._init_constraints_onchanges()
@@ -4497,6 +4508,9 @@ class BaseModel(metaclass=MetaModel):
         # figure out the applicable order_by for the m2o
         dest_model = self.env[field.comodel_name]
         m2o_order = dest_model._order
+        if m2o_order == 'id':
+            order_direction = 'DESC' if reverse_direction else ''
+            return ['"%s"."%s" %s' % (alias, order_field, order_direction)]
         if not regex_order.match(m2o_order):
             # _order is complex, can't use it here, so we default to _rec_name
             m2o_order = dest_model._rec_name
@@ -4867,12 +4881,14 @@ class BaseModel(metaclass=MetaModel):
         query = 'SELECT "%s" FROM "%s" WHERE id = %%s' % (parent, self._table)
         for id in self.ids:
             current_id = id
+            seen_ids = {current_id}
             while current_id:
                 cr.execute(query, (current_id,))
                 result = cr.fetchone()
                 current_id = result[0] if result else None
-                if current_id == id:
+                if current_id in seen_ids:
                     return False
+                seen_ids.add(current_id)
         return True
 
     def _check_m2m_recursion(self, field_name):
@@ -5195,6 +5211,8 @@ class BaseModel(metaclass=MetaModel):
 
         """
         assert isinstance(flag, bool)
+        if flag == self.env.su:
+            return self
         return self.with_env(self.env(su=flag))
 
     def with_user(self, user):
@@ -5554,11 +5572,16 @@ class BaseModel(metaclass=MetaModel):
             records.sorted(key=lambda r: r.name)
         """
         if key is None:
-            recs = self.search([('id', 'in', self.ids)])
-            return self.browse(reversed(recs._ids)) if reverse else recs
-        if isinstance(key, str):
-            key = itemgetter(key)
-        return self.browse(item.id for item in sorted(self, key=key, reverse=reverse))
+            if any(self._ids):
+                ids = self.search([('id', 'in', self.ids)])._ids
+            else:  # Don't support new ids because search() doesn't work on new records
+                ids = self._ids
+            ids = tuple(reversed(ids)) if reverse else ids
+        else:
+            if isinstance(key, str):
+                key = itemgetter(key)
+            ids = tuple(item.id for item in sorted(self, key=key, reverse=reverse))
+        return self.__class__(self.env, ids, self._prefetch_ids)
 
     def update(self, values):
         """ Update the records in ``self`` with ``values``. """
@@ -5894,7 +5917,7 @@ class BaseModel(metaclass=MetaModel):
         """
         if isinstance(key, str):
             # important: one must call the field's getter
-            return self._fields[key].__get__(self, type(self))
+            return self._fields[key].__get__(self, self.env.registry[self._name])
         elif isinstance(key, slice):
             return self.browse(self._ids[key])
         else:
@@ -6034,6 +6057,63 @@ class BaseModel(metaclass=MetaModel):
         #  - mark I to recompute on inverse(W, inverse(X, records)),
         #  - mark J to recompute on inverse(Y, records).
 
+        if before:
+            # When called before modification, we should determine what
+            # currently depends on self, and it should not be recomputed before
+            # the modification.  So we only collect what should be marked for
+            # recomputation.
+            marked = self.env.all.tocompute     # {field: ids}
+            tomark = defaultdict(OrderedSet)    # {field: ids}
+        else:
+            # When called after modification, one should traverse backwards
+            # dependencies by taking into account all fields already known to
+            # be recomputed.  In that case, we mark fieds to compute as soon as
+            # possible.
+            marked = {}
+            tomark = self.env.all.tocompute
+
+        # determine what to trigger (with iterators)
+        todo = [self._modified([self._fields[fname] for fname in fnames], create)]
+
+        # process what to trigger by lazily chaining todo
+        for field, records, create in itertools.chain.from_iterable(todo):
+            records -= self.env.protected(field)
+            if not records:
+                continue
+
+            if field.recursive:
+                # discard already processed records, in order to avoid cycles
+                if field.compute and field.store:
+                    ids = (marked.get(field) or set()) | (tomark.get(field) or set())
+                    records = records.browse(id_ for id_ in records._ids if id_ not in ids)
+                else:
+                    records = records & self.env.cache.get_records(records, field, all_contexts=True)
+                if not records:
+                    continue
+                # recursively trigger recomputation of field's dependents
+                todo.append(records._modified([field], create))
+
+            # mark for recomputation (now or later, depending on 'before')
+            if field.compute and field.store:
+                tomark[field].update(records._ids)
+            else:
+                # Don't force the recomputation of compute fields which are
+                # not stored as this is not really necessary.
+                self.env.cache.invalidate([(field, records._ids)])
+
+        if before:
+            # effectively mark for recomputation now
+            for field, ids in tomark.items():
+                records = self.env[field.model_name].browse(ids)
+                self.env.add_to_compute(field, records)
+
+    def _modified(self, fields, create):
+        """ Return an iterator traversing a tree of field triggers on ``self``,
+        traversing backwards field dependencies along the way, and yielding
+        tuple ``(field, records, created)`` to recompute.
+        """
+        cache = self.env.cache
+
         # The fields' trigger trees are merged in order to evaluate all triggers
         # at once. For non-stored computed fields, `_modified_triggers` might
         # traverse the tree (at the cost of extra queries) only to know which
@@ -6041,47 +6121,14 @@ class BaseModel(metaclass=MetaModel):
         # fields have no data in cache, so they can be ignored from the start.
         # This allows us to discard subtrees from the merged tree when they
         # only contain such fields.
-        cache = self.env.cache
-        tree = self.pool.get_trigger_tree(
-            [self._fields[fname] for fname in fnames],
-            select=lambda field: (field.compute and field.store) or cache.contains_field(field),
-        )
+        def select(field):
+            return (field.compute and field.store) or cache.contains_field(field)
+
+        tree = self.pool.get_trigger_tree(fields, select=select)
         if not tree:
-            return
+            return ()
 
-        # determine what to compute (through an iterator)
-        tocompute = self.sudo().with_context(active_test=False)._modified_triggers(tree, create)
-
-        # When called after modification, one should traverse backwards
-        # dependencies by taking into account all fields already known to be
-        # recomputed.  In that case, we mark fieds to compute as soon as
-        # possible.
-        #
-        # When called before modification, one should mark fields to compute
-        # after having inversed all dependencies.  This is because we
-        # determine what currently depends on self, and it should not be
-        # recomputed before the modification!
-        if before:
-            tocompute = list(tocompute)
-
-        # process what to compute
-        for field, records, create in tocompute:
-            records -= self.env.protected(field)
-            if not records:
-                continue
-            if field.compute and field.store:
-                if field.recursive:
-                    recursively_marked = self.env.not_to_compute(field, records)
-                self.env.add_to_compute(field, records)
-            else:
-                # Don't force the recomputation of compute fields which are
-                # not stored as this is not really necessary.
-                if field.recursive:
-                    recursively_marked = records & self.env.cache.get_records(records, field)
-                self.env.cache.invalidate([(field, records._ids)])
-            # recursively trigger recomputation of field's dependents
-            if field.recursive:
-                recursively_marked.modified([field.name], create)
+        return self.sudo().with_context(active_test=False)._modified_triggers(tree, create)
 
     def _modified_triggers(self, tree, create=False):
         """ Return an iterator traversing a tree of field triggers on ``self``,

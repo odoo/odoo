@@ -280,6 +280,14 @@ export class Record extends DataPoint {
                         this._setInvalidField(fieldName);
                     }
                     break;
+                case "json":
+                    if (
+                        this.isRequired(fieldName) &&
+                        (!this.data[fieldName] || !Object.keys(this.data[fieldName]).length)
+                    ) {
+                        this.setInvalidField(fieldName);
+                    }
+                    break;
                 default:
                     if (!isSet && this.isRequired(fieldName) && !this.data[fieldName]) {
                         this._setInvalidField(fieldName);
@@ -396,6 +404,13 @@ export class Record extends DataPoint {
         const bm = this.model.__bm__;
         bm.setDirty(this.__bm_handle__);
         this._setInvalidField(fieldName);
+    }
+
+    resetFieldValidity(fieldName) {
+        const bm = this.model.__bm__;
+        bm.setDirty(this.__bm_handle__);
+        this._invalidFields.delete(fieldName);
+        this.model.notify();
     }
 
     isInvalid(fieldName) {
@@ -646,6 +661,9 @@ export class Record extends DataPoint {
             useSaveErrorDialog: false,
         }
     ) {
+        if (this._closeUrgentSaveNotification) {
+            this._closeUrgentSaveNotification();
+        }
         const shouldSwitchToReadonly = !options.stayInEdition && this.isInEdition;
         let resolveSavePromise;
         this._savePromise = new Promise((r) => {
@@ -723,15 +741,36 @@ export class Record extends DataPoint {
         this.model.env.bus.trigger("RELATIONAL_MODEL:WILL_SAVE_URGENTLY");
         await Promise.resolve();
         this.__syncData();
-        let isValid = true;
+        let succeeded = true;
         if (this.isDirty) {
-            isValid = await this.checkValidity(true);
-            if (isValid) {
-                this.model.__bm__.save(this.__bm_handle__, { reload: false });
+            succeeded = await this.checkValidity(true);
+            if (succeeded) {
+                this.model.__bm__.useSendBeacon = true;
+                try {
+                    await this.model.__bm__.save(this.__bm_handle__, { reload: false });
+                } catch (e) {
+                    if (e === "send beacon failed") {
+                        if (this._closeUrgentSaveNotification) {
+                            this._closeUrgentSaveNotification();
+                        }
+                        this._closeUrgentSaveNotification = this.model.notificationService.add(
+                            markup(
+                                this.model.env._t(
+                                    `Heads up! Your recent changes are too large to save automatically. Please click the <i class="fa fa-cloud-upload fa-fw"></i> button now to ensure your work is saved before you exit this tab.`
+                                )
+                            ),
+                            { sticky: true }
+                        );
+                        succeeded = false;
+                    } else {
+                        throw e;
+                    }
+                }
+                delete this.model.__bm__.useSendBeacon;
             }
         }
         this.model.__bm__.bypassMutex = false;
-        return isValid;
+        return succeeded;
     }
 
     async archive() {
@@ -774,6 +813,9 @@ export class Record extends DataPoint {
     }
 
     async discard() {
+        if (this._closeUrgentSaveNotification) {
+            this._closeUrgentSaveNotification();
+        }
         await this._savePromise;
         this._closeInvalidFieldsNotification();
         this.model.__bm__.discardChanges(this.__bm_handle__);
@@ -927,7 +969,12 @@ export class StaticList extends DataPoint {
     /** Creates a Draft record from nothing and edits it. Relevant in editable x2m's */
     async addNew(params) {
         const position = params.position;
-        const operation = { context: [params.context], operation: "CREATE", position };
+        const operation = {
+            context: [params.context],
+            operation: "CREATE",
+            position,
+            allowWarning: params.allowWarning,
+        };
         await this.model.__bm__.save(this.__bm_handle__, { savePoint: true });
         this.model.__bm__.freezeOrder(this.__bm_handle__);
         await this.__syncParent(operation);

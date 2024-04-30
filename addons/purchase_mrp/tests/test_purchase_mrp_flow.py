@@ -3,24 +3,25 @@
 
 from datetime import timedelta
 
-from odoo.tests.common import Form, TransactionCase
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests.common import Form
 from odoo.tests import tagged
 from odoo import fields
 from odoo.fields import Command
 
 
 @tagged('post_install', '-at_install')
-class TestPurchaseMrpFlow(TransactionCase):
+class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
         # Useful models
         cls.UoM = cls.env['uom.uom']
         cls.categ_unit = cls.env.ref('uom.product_uom_categ_unit')
         cls.categ_kgm = cls.env.ref('uom.product_uom_categ_kgm')
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
-        cls.warehouse = cls.env.ref('stock.warehouse0')
+        cls.warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.company.id)])
+        cls.stock_location = cls.warehouse.lot_stock_id
 
         grp_uom = cls.env.ref('uom.group_uom')
         group_user = cls.env.ref('base.group_user')
@@ -501,7 +502,7 @@ class TestPurchaseMrpFlow(TransactionCase):
         replenish more that needed if others procurements have the same products
         than the production component. """
 
-        warehouse = self.env.ref('stock.warehouse0')
+        warehouse = self.warehouse
         buy_route = warehouse.buy_pull_id.route_id
         manufacture_route = warehouse.manufacture_pull_id.route_id
 
@@ -572,7 +573,7 @@ class TestPurchaseMrpFlow(TransactionCase):
         self.assertEqual(purchase.order_line.product_qty, 5)
 
     def test_01_purchase_mrp_kit_qty_change(self):
-        self.partner = self.env.ref('base.res_partner_1')
+        self.partner = self.env['res.partner'].create({'name': 'Test Partner'})
 
         # Create a PO with one unit of the kit product
         self.po = self.env['purchase.order'].create({
@@ -778,7 +779,7 @@ class TestPurchaseMrpFlow(TransactionCase):
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
             'product_id': product.id,
             'qty_to_order': 5,
-            'warehouse_id': self.env.ref('stock.warehouse0').id,
+            'warehouse_id': self.warehouse.id,
             'route_id': self.env.ref('mrp.route_warehouse0_manufacture').id,
         })
         # lead_days_date should be today + manufacturing security lead time + product manufacturing lead time
@@ -793,7 +794,7 @@ class TestPurchaseMrpFlow(TransactionCase):
             With enough stock for the first line and two incoming
             POs for the second line and third line.
         """
-        location = self.env.ref('stock.stock_location_stock')
+        location = self.stock_location
         uom_unit = self.env.ref('uom.product_uom_unit')
         final_product_tmpl = self.env['product.template'].create({'name': 'Final Product', 'type': 'product'})
         component_product = self.env['product.product'].create({'name': 'Compo 1', 'type': 'product'})
@@ -890,3 +891,54 @@ class TestPurchaseMrpFlow(TransactionCase):
         line2_values = report_values['lines']['components'][1]
         self.assertEqual(line1_values['availability_state'], 'expected', 'The first component should be expected as there is an incoming PO.')
         self.assertEqual(line2_values['availability_state'], 'expected', 'The second component should be expected as there is an incoming PO.')
+
+    def test_valuation_with_backorder(self):
+        fifo_category = self.env['product.category'].create({
+            'name': 'FIFO',
+            'property_cost_method': 'fifo',
+            'property_valuation': 'real_time'
+        })
+        kit, cmp1, cmp2 = self.env['product.product'].create([{
+            'name': name,
+            'standard_price': 0,
+            'type': 'product',
+            'categ_id': fifo_category.id,
+        } for name in ['Kit', 'Cmp1', 'Cmp2']])
+        kit.uom_id = self.uom_gm.id
+        cmp1.uom_id = self.uom_gm.id
+        cmp2.uom_id = self.uom_kg.id
+
+        self.env['mrp.bom'].create({
+            'product_uom_id': self.uom_kg.id,
+            'product_qty': 3,
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': cmp1.id, 'product_qty': 2, 'product_uom_id': self.uom_kg.id}),
+                (0, 0, {'product_id': cmp2.id, 'product_qty': 1, 'product_uom_id': self.uom_gm.id})]
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        partner = self.env['res.partner'].create({'name': 'My Test Partner'})
+        po_form.partner_id = partner
+        with po_form.order_line.new() as pol_form:
+            pol_form.product_id = kit
+            pol_form.product_qty = 30
+            pol_form.product_uom = self.uom_kg
+            pol_form.price_unit = 90000
+            pol_form.taxes_id.clear()
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_line_ids[0].qty_done = 4
+        receipt.move_line_ids[1].qty_done = 2
+        action = receipt.button_validate()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.process()
+        # Price Unit for 1 gm of the kit = 90000/1000 = 90
+        # unit_cost for cmp1 = 90 *1000* 3 / 2 / 2 / 1000 = 67.5
+        # unit_cost for cmp2  = 90 *1000* 3 / 2 / 1  * 1000 = 135000000
+        svl = po.picking_ids[0].move_ids.stock_valuation_layer_ids
+        self.assertEqual(svl[0].unit_cost, 67.5)
+        self.assertEqual(svl[1].unit_cost, 135000000)

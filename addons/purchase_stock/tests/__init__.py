@@ -20,3 +20,4 @@ from . import test_product_template
 from . import test_routes
 from . import test_purchase_stock_accrued_entries
 from . import test_uninstall
+from . import test_purchase_method

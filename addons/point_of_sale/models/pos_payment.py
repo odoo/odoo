@@ -16,7 +16,7 @@ class PosPayment(models.Model):
     _order = "id desc"
 
     name = fields.Char(string='Label', readonly=True)
-    pos_order_id = fields.Many2one('pos.order', string='Order', required=True)
+    pos_order_id = fields.Many2one('pos.order', string='Order', required=True, index=True)
     amount = fields.Monetary(string='Amount', required=True, currency_field='currency_id', readonly=True, help="Total amount of the payment.")
     payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', required=True)
     payment_date = fields.Datetime(string='Date', required=True, readonly=True, default=lambda self: fields.Datetime.now())
@@ -63,7 +63,7 @@ class PosPayment(models.Model):
     def export_for_ui(self):
         return self.mapped(self._export_for_ui) if self else []
 
-    def _create_payment_moves(self):
+    def _create_payment_moves(self, is_reverse=False):
         result = self.env['account.move']
         for payment in self:
             order = payment.pos_order_id
@@ -75,7 +75,7 @@ class PosPayment(models.Model):
             journal = pos_session.config_id.journal_id
             payment_move = self.env['account.move'].with_context(default_journal_id=journal.id).create({
                 'journal_id': journal.id,
-                'date': fields.Date.context_today(payment),
+                'date': fields.Date.context_today(order, order.date_order),
                 'ref': _('Invoice payment for %s (%s) using %s') % (order.name, order.account_move.name, payment_method.name),
                 'pos_payment_ids': payment.ids,
             })
@@ -87,9 +87,17 @@ class PosPayment(models.Model):
                 'partner_id': accounting_partner.id,
                 'move_id': payment_move.id,
             }, amounts['amount'], amounts['amount_converted'])
+            is_split_transaction = payment.payment_method_id.split_transactions
+            if is_split_transaction and is_reverse:
+                reversed_move_receivable_account_id = accounting_partner.with_company(order.company_id).property_account_receivable_id.id
+            elif is_reverse:
+                reversed_move_receivable_account_id = payment.payment_method_id.receivable_account_id.id or self.company_id.account_default_pos_receivable_account_id.id
+            else:
+                reversed_move_receivable_account_id = self.company_id.account_default_pos_receivable_account_id.id
             debit_line_vals = pos_session._debit_amounts({
-                'account_id': pos_session.company_id.account_default_pos_receivable_account_id.id,
+                'account_id': reversed_move_receivable_account_id,
                 'move_id': payment_move.id,
+                'partner_id': accounting_partner.id if is_split_transaction and is_reverse else False,
             }, amounts['amount'], amounts['amount_converted'])
             self.env['account.move.line'].with_context(check_move_validity=False).create([credit_line_vals, debit_line_vals])
             payment_move._post()

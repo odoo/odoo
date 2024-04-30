@@ -11,6 +11,7 @@
                             <div class="col-12">
                                 <a type="object" name="action_checks_to_print">
                                     <t t-esc="dashboard.num_checks_to_print"/>
+                                    <span>&amp;nbsp;</span>
                                     <t t-if="dashboard.num_checks_to_print == 1">Check to print</t>
                                     <t t-if="dashboard.num_checks_to_print != 1">Checks to print</t>
                                 </a>

@@ -345,7 +345,10 @@ class Warehouse(models.Model):
                 self[picking_type].write(values)
             else:
                 data[picking_type].update(create_data[picking_type])
+                existing_sequence = IrSequenceSudo.search_count([('company_id', '=', sequence_data[picking_type]['company_id']), ('name', '=', sequence_data[picking_type]['name'])], limit=1)
                 sequence = IrSequenceSudo.create(sequence_data[picking_type])
+                if existing_sequence:
+                    sequence.name = _("%(name)s (copy)(%(id)s)", name=sequence.name, id=str(sequence.id))
                 values.update(warehouse_id=self.id, color=color, sequence_id=sequence.id)
                 warehouse_data[picking_type] = PickingType.create(values).id
 
@@ -373,11 +376,15 @@ class Warehouse(models.Model):
 
     def _find_global_route(self, xml_id, route_name):
         """ return a route record set from an xml_id or its name. """
-        route = self.env.ref(xml_id, raise_if_not_found=False)
+        data_route = route = self.env.ref(xml_id, raise_if_not_found=False)
+        if not route or (route.company_id and route.company_id != self.company_id):
+            route = self.env['stock.route'].search([
+                ('name', 'like', route_name), ('company_id', 'in', [False, self.company_id.id])
+            ], order='company_id', limit=1)
         if not route:
-            route = self.env['stock.route'].search([('name', 'like', route_name)], limit=1)
-        if not route:
-            raise UserError(_('Can\'t find any generic route %s.') % (route_name))
+            if not data_route:
+                raise UserError(_('Can\'t find any generic route %s.') % (route_name))
+            route = data_route.copy({'company_id': self.company_id.id, 'rule_ids': False})
         return route
 
     def _get_global_route_rules_values(self):
@@ -780,7 +787,7 @@ class Warehouse(models.Model):
             'product_categ_selectable': True,
             'supplied_wh_id': self.id,
             'supplier_wh_id': supplier_warehouse.id,
-            'company_id': self.company_id.id,
+            'company_id': (self.company_id & supplier_warehouse.company_id).id,
         }
 
     # Pull / Push tools

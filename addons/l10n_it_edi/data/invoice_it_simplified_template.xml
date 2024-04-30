@@ -92,7 +92,7 @@
                     </t>
                     <Allegati t-if="pdf">
                         <NomeAttachment t-esc="format_alphanumeric(pdf_name[:60])"/>
-                        <FormatoAttachment>PDF</FormatoAttachment>
+                        <FormatoAttachment t-translation="off">PDF</FormatoAttachment>
                         <Attachment t-esc="pdf"/>
                     </Allegati>
                 </FatturaElettronicaBody>

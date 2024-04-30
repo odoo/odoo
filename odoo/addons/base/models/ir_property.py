@@ -35,6 +35,7 @@ TYPE2CLEAN = {
 class Property(models.Model):
     _name = 'ir.property'
     _description = 'Company Property'
+    _allow_sudo_commands = False
 
     name = fields.Char(index=True)
     res_id = fields.Char(string='Resource', index=True, help="If not set, acts as a default value for new resources",)
@@ -111,12 +112,7 @@ class Property(models.Model):
         # we're writing a res_id=False on any record
         default_set = False
         if self._ids:
-            self.env.cr.execute(
-                'SELECT EXISTS (SELECT 1 FROM ir_property WHERE id in %s AND res_id IS NULL)', [self._ids])
-            default_set = self.env.cr.rowcount == 1 or any(
-                v.get('res_id') is False
-                for v in values
-            )
+            default_set = values.get('res_id') is False or any(not p.res_id for p in self)
         r = super(Property, self).write(self._update_values(values))
         if default_set:
             # DLE P44: test `test_27_company_dependent`
@@ -139,13 +135,7 @@ class Property(models.Model):
         return r
 
     def unlink(self):
-        default_deleted = False
-        if self._ids:
-            self.env.cr.execute(
-                'SELECT EXISTS (SELECT 1 FROM ir_property WHERE id in %s)',
-                [self._ids]
-            )
-            default_deleted = self.env.cr.rowcount == 1
+        default_deleted = any(not p.res_id for p in self)
         r = super().unlink()
         if default_deleted:
             self.clear_caches()
@@ -304,6 +294,7 @@ class Property(models.Model):
             return dict.fromkeys(ids, False)
 
         # retrieve values
+        self.flush_model()
         cr = self.env.cr
         result = {}
         refs = {"%s,%s" % (model, id) for id in ids}

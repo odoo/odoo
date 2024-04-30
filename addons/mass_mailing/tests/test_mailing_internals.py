@@ -314,6 +314,68 @@ class TestMassMailValues(MassMailCommon):
         self.assertEqual(literal_eval(mailing.mailing_domain), [('email', 'ilike', 'test.example.com')])
 
     @users('user_marketing')
+    def test_mailing_computed_fields_default_email_from(self):
+        # Testing if the email_from is correctly computed when an
+        # alias domain for the company is set
+
+        # Setup mail outgoing server for use cases
+
+        from_filter_match, from_filter_missmatch = self.env['ir.mail_server'].sudo().create([
+            # Case where alias domain is set and there is a default outgoing email server
+            # for mass mailing. from_filter matches domain of company alias domain
+            # before record creation
+            {
+                    'name': 'mass_mailing_test_match_from_filter',
+                    'from_filter': self.alias_domain,
+                    'smtp_host': 'not_real@smtp.com',
+            },
+            # Case where alias domain is set and there is a default outgoing email server
+            # for mass mailing. from_filter DOES NOT match domain of company alias domain
+            # before record creation
+            {
+                    'name': 'mass_mailing_test_from_missmatch',
+                    'from_filter': 'notcompanydomain.com',
+                    'smtp_host': 'not_real@smtp.com',
+            },
+        ])
+
+        # Expected combos of server vs FROM values
+
+        servers = [
+            self.env['ir.mail_server'],
+            from_filter_match,
+            from_filter_missmatch,
+        ]
+        expected_from_all = [
+            self.env.user.email_formatted,  # default when no server
+            self.env['ir.mail_server']._get_default_from_address(),  # matches company alias domain
+            self.env.user.email_formatted,  # not matching from filter -> back to user from
+        ]
+
+        for mail_server, expected_from in zip(servers, expected_from_all):
+            with self.subTest(server_name=mail_server.name):
+                # When a mail server is set, we update the mass mailing
+                # settings to designate a dedicated outgoing email server
+                if mail_server:
+                    self.env['res.config.settings'].sudo().create({
+                        'mass_mailing_mail_server_id': mail_server.id,
+                        'mass_mailing_outgoing_mail_server': mail_server,
+                    }).execute()
+
+                # Create mailing
+                mailing = self.env['mailing.mailing'].create({
+                    'name': f'TestMailing {mail_server.name}',
+                    'subject': f'Test {mail_server.name}',
+                })
+
+                # Check email_from
+                self.assertEqual(mailing.email_from, expected_from)
+
+                # If configured, check if dedicated email outgoing server is
+                # on mailing record
+                self.assertEqual(mailing.mail_server_id, mail_server)
+
+    @users('user_marketing')
     def test_mailing_computed_fields_form(self):
         mailing_form = Form(self.env['mailing.mailing'].with_context(
             default_mailing_domain="[('email', 'ilike', 'test.example.com')]",

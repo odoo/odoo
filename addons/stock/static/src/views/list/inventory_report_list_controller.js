@@ -41,8 +41,8 @@ export class InventoryReportListController extends ListController {
             // hack so we don't show some of the default actions when it's inappropriate to
             const {print, action, other} = actionMenus;
             return {
-                print: print.filter(a => a.name !== this.env._t('Count Sheet')),
-                action: action.filter(a => a.name !== this.env._t('Set')),
+                print: Array.isArray(print) ? print.filter(a => a.name !== this.env._t('Count Sheet')) : print,
+                action: Array.isArray(action) ? action.filter(a => a.name !== this.env._t('Set')) : action,
                 other: other,
             };
         }

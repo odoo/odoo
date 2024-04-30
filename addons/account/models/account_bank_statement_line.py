@@ -647,7 +647,7 @@ class AccountBankStatementLine(models.Model):
             account_number_nums = sanitize_account_number(self.account_number)
             if account_number_nums:
                 domain = [('sanitized_acc_number', 'ilike', account_number_nums)]
-                for extra_domain in ([('company_id', '=', self.company_id.id)], []):
+                for extra_domain in ([('company_id', '=', self.company_id.id)], [('company_id', '=', False)]):
                     bank_accounts = self.env['res.partner.bank'].search(extra_domain + domain)
                     if len(bank_accounts.partner_id) == 1:
                         return bank_accounts.partner_id
@@ -665,8 +665,9 @@ class AccountBankStatementLine(models.Model):
                 ],
             )
             for domain in domains:
-                partner = self.env['res.partner'].search(list(domain) + [('parent_id', '=', False)], limit=1)
-                if partner:
+                partner = self.env['res.partner'].search(list(domain) + [('parent_id', '=', False)], limit=2)
+                # Return the partner if there is only one with this name
+                if len(partner) == 1:
                     return partner
 
         # Retrieve the partner from the 'reconcile models'.

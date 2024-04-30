@@ -298,7 +298,8 @@ export function _convertColumnToGrid(rowEl, columnEl, columnWidth, columnHeight)
 /**
  * Checks whether the column only contains an image or not. An image is
  * considered alone if the column only contains empty textnodes and line breaks
- * in addition to the image.
+ * in addition to the image. Note that "image" also refers to an image link
+ * (i.e. `a > img`).
  *
  * @private
  * @param {Element} columnEl
@@ -306,7 +307,7 @@ export function _convertColumnToGrid(rowEl, columnEl, columnWidth, columnHeight)
  */
 export function _checkIfImageColumn(columnEl) {
     let isImageColumn = false;
-    const imageEls = columnEl.querySelectorAll(':scope > img');
+    const imageEls = columnEl.querySelectorAll(":scope > img, :scope > a > img");
     const columnChildrenEls = [...columnEl.children].filter(el => el.nodeName !== 'BR');
     if (imageEls.length === 1 && columnChildrenEls.length === 1) {
         // If there is only one image and if this image is the only "real"
@@ -319,8 +320,7 @@ export function _checkIfImageColumn(columnEl) {
 }
 /**
  * Removes the line breaks and textnodes of the column, adds the grid class and
- * sets the image width to default so it can be displayed as expected. Also
- * blocks the edition of the column.
+ * sets the image width to default so it can be displayed as expected.
  *
  * @private
  * @param {Element} columnEl a column containing only an image.

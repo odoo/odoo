@@ -5,7 +5,7 @@ import logging
 from datetime import timedelta
 
 import requests
-from requests.exceptions import ConnectionError as RequestConnectionError
+from requests.exceptions import ConnectionError as RequestConnectionError, Timeout as RequestTimeout
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -232,7 +232,7 @@ class ProductFetchImageWizard(models.TransientModel):
                     raise UserError(_(
                         "Your API Key or your Search Engine ID is incorrect."
                     ))
-            except (RequestConnectionError):
+            except (RequestConnectionError, RequestTimeout):
                 nb_timeouts += 1
                 if nb_timeouts <= 3:  # Temporary loss of service
                     continue  # Let the image of this product be fetched by the next cron run
@@ -258,6 +258,7 @@ class ProductFetchImageWizard(models.TransientModel):
                             break  # Stop at the first valid image
                     except (
                         RequestConnectionError,
+                        RequestTimeout,
                         UserError,  # Raised when the image couldn't be decoded as base64
                     ):
                         pass  # Move on to the next image

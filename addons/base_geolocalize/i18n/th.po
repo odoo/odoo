@@ -24,7 +24,7 @@ msgstr ""
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_id
 msgid "API"
-msgstr ""
+msgstr "API"
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
@@ -33,11 +33,13 @@ msgid ""
 "API key for GeoCoding (Places) required.\n"
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 msgstr ""
+"ต้องใช้คีย์ API สำหรับ GeoCoding (สถานที่)\n"
+"เยี่ยมชม https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "API:"
-msgstr ""
+msgstr "API:"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -78,22 +80,22 @@ msgstr "แสดงชื่อ"
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid "Error with geolocation server:"
-msgstr ""
+msgstr "เกิดข้อผิดพลาดกับเซิร์ฟเวอร์ระบุตำแหน่ง:"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
 msgid "Geo Coder"
-msgstr ""
+msgstr "Geo Coder"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geo Location"
-msgstr ""
+msgstr "ที่ตั้งทางภูมิศาสตร์"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geo_provider
 msgid "Geo Provider"
-msgstr ""
+msgstr "ผู้ให้บริการทางภูมิศาสตร์"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -104,7 +106,7 @@ msgstr "ตำแหน่งทางภูมิศาสตร์"
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__date_localization
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_users__date_localization
 msgid "Geolocation Date"
-msgstr ""
+msgstr "วันที่ระบุตำแหน่งทางภูมิศาสตร์"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
@@ -119,7 +121,7 @@ msgstr "ไอดี"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "Key:"
-msgstr ""
+msgstr "คีย์:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider____last_update
@@ -139,12 +141,12 @@ msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Lat :"
-msgstr ""
+msgstr "ละติจูด :"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Long:"
-msgstr ""
+msgstr "Long:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__name
@@ -155,7 +157,7 @@ msgstr "ชื่อ"
 #: code:addons/base_geolocalize/models/res_partner.py:0
 #, python-format
 msgid "No match found for %(partner_names)s address(es)."
-msgstr ""
+msgstr "ไม่พบรายการที่ตรงกันสำหรับที่อยู่ %(partner_names)s"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -166,7 +168,7 @@ msgstr "การมอบหมายพาร์ทเนอร์"
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid "Provider %s is not implemented for geolocation service."
-msgstr ""
+msgstr "ผู้ให้บริการ %s ไม่ได้ถูกนำมาใช้สำหรับบริการระบุตำแหน่ง"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -196,11 +198,18 @@ msgid ""
 "Then, go to Developer Console, and enable the APIs:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 msgstr ""
+"ไม่สามารถระบุตำแหน่งทางภูมิศาสตร์ได้ เกิดข้อผิดพลาด:\n"
+"%s\n"
+"\n"
+"Google ทำให้ฟีเจอร์นี้เป็นฟีเจอร์ที่ต้องชำระเงิน\n"
+"คุณควรเปิดใช้งานการเรียกเก็บเงินในบัญชี Google ของคุณก่อน\n"
+"จากนั้นไปที่คอนโซลสำหรับนักพัฒนาซอฟต์แวร์และเปิดใช้งาน API:\n"
+"การระบุพิกัดทางภูมิศาสตร์, แผนที่แบบคงที่, แผนที่ Javascript\n"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Updated on:"
-msgstr ""
+msgstr "อัปเดตเมื่อ:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
@@ -208,6 +217,8 @@ msgid ""
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
 " for more information."
 msgstr ""
+"เยี่ยมชม https://developers.google.com/maps/documentation/geocoding/get-api-"
+"key for more information."
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/res_partner.py:0

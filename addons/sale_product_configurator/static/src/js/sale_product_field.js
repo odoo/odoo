@@ -175,6 +175,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
                     position: 'bottom',
                     context: optionalProductLineCreationContext,
                     mode: 'readonly',  // whatever but not edit !
+                    allowWarning: true,
                 });
                 // FIXME: update sets the field dirty otherwise on the next edit and click out it gets deleted
                 line.update({ sequence: line.data.sequence });

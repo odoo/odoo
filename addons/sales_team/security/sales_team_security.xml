@@ -43,7 +43,7 @@
         <record model="ir.rule" id="sale_team_comp_rule">
             <field name="name">Sales Team multi-company</field>
             <field name="model_id" ref="model_crm_team"/>
-            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
         </record>
 
         <record id="base.default_user" model="res.users">

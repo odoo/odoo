@@ -212,3 +212,111 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
     <NumSerieDispositivo>___ignore___</NumSerieDispositivo>
   </HuellaTBAI>
 </T:AnulaTicketBai>""".encode("utf-8")
+
+    L10N_ES_TBAI_SAMPLE_XML_POST_IN = """
+<lrpjframp:LROEPJ240FacturasRecibidasAltaModifPeticion xmlns:lrpjframp="https://www.batuz.eus/fitxategiak/batuz/LROE/esquemas/LROE_PJ_240_2_FacturasRecibidas_AltaModifPeticion_V1_0_1.xsd">
+    <Cabecera>
+        <Modelo>240</Modelo>
+        <Capitulo>2</Capitulo>
+        <Operacion>A00</Operacion>
+        <Version>1.0</Version>
+        <Ejercicio>2022</Ejercicio>
+        <ObligadoTributario>
+            <NIF>09760433S</NIF>
+            <ApellidosNombreRazonSocial>EUS Company</ApellidosNombreRazonSocial>
+        </ObligadoTributario>
+    </Cabecera>
+    <FacturasRecibidas>
+        <FacturaRecibida>
+                <EmisorFacturaRecibida>
+                    <IDOtro>
+                        <IDType>02</IDType>
+                        <ID>BE0477472701</ID>
+                    </IDOtro>
+                    <ApellidosNombreRazonSocial>&amp;@àÁ$£€èêÈÊöÔÇç¡⅛™³</ApellidosNombreRazonSocial>
+                </EmisorFacturaRecibida>
+                <CabeceraFactura>
+                    <SerieFactura>INVTEST</SerieFactura>
+                    <NumFactura>01</NumFactura>
+                    <FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura>
+                    <FechaRecepcion>01-01-2022</FechaRecepcion>
+                    <TipoFactura>F1</TipoFactura>
+                </CabeceraFactura>
+                <DatosFactura>
+                    <Claves>
+                        <IDClave>
+                            <ClaveRegimenIvaOpTrascendencia>01</ClaveRegimenIvaOpTrascendencia>
+                        </IDClave>
+                    </Claves>
+                    <ImporteTotalFactura>4840.00</ImporteTotalFactura>
+                </DatosFactura>
+                <IVA>
+                    <DetalleIVA>
+                        <CompraBienesCorrientesGastosBienesInversion>C</CompraBienesCorrientesGastosBienesInversion>
+                        <InversionSujetoPasivo>N</InversionSujetoPasivo>
+                        <BaseImponible>4000.0</BaseImponible>
+                        <TipoImpositivo>21.0</TipoImpositivo>
+                        <CuotaIVASoportada>840.0</CuotaIVASoportada>
+                        <CuotaIVADeducible>840.0</CuotaIVADeducible>
+                    </DetalleIVA>
+                </IVA>
+        </FacturaRecibida>
+    </FacturasRecibidas>
+</lrpjframp:LROEPJ240FacturasRecibidasAltaModifPeticion>"""
+
+
+    L10N_ES_TBAI_SAMPLE_XML_POST_IN_IC = """
+<lrpjframp:LROEPJ240FacturasRecibidasAltaModifPeticion xmlns:lrpjframp="https://www.batuz.eus/fitxategiak/batuz/LROE/esquemas/LROE_PJ_240_2_FacturasRecibidas_AltaModifPeticion_V1_0_1.xsd">
+    <Cabecera>
+        <Modelo>240</Modelo>
+        <Capitulo>2</Capitulo>
+        <Operacion>A00</Operacion>
+        <Version>1.0</Version>
+        <Ejercicio>2022</Ejercicio>
+        <ObligadoTributario>
+            <NIF>09760433S</NIF>
+            <ApellidosNombreRazonSocial>EUS Company</ApellidosNombreRazonSocial>
+        </ObligadoTributario>
+    </Cabecera>
+    <FacturasRecibidas>
+        <FacturaRecibida>
+                <EmisorFacturaRecibida>
+                    <NIF>F35999705</NIF>
+                    <ApellidosNombreRazonSocial>partner_b</ApellidosNombreRazonSocial>
+                </EmisorFacturaRecibida>
+                <CabeceraFactura>
+                    <SerieFactura>INVTEST</SerieFactura>
+                    <NumFactura>01</NumFactura>
+                    <FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura>
+                    <FechaRecepcion>01-01-2022</FechaRecepcion>
+                    <TipoFactura>F1</TipoFactura>
+                </CabeceraFactura>
+                <DatosFactura>
+                    <Claves>
+                        <IDClave>
+                            <ClaveRegimenIvaOpTrascendencia>09</ClaveRegimenIvaOpTrascendencia>
+                        </IDClave>
+                    </Claves>
+                    <ImporteTotalFactura>12000.00</ImporteTotalFactura>
+                </DatosFactura>
+                <IVA>
+                    <DetalleIVA>
+                        <CompraBienesCorrientesGastosBienesInversion>C</CompraBienesCorrientesGastosBienesInversion>
+                        <InversionSujetoPasivo>N</InversionSujetoPasivo>
+                        <BaseImponible>4000.0</BaseImponible>
+                        <TipoImpositivo>21.0</TipoImpositivo>
+                        <CuotaIVASoportada>840.0</CuotaIVASoportada>
+                        <CuotaIVADeducible>840.0</CuotaIVADeducible>
+                    </DetalleIVA><DetalleIVA>
+                        <CompraBienesCorrientesGastosBienesInversion>G</CompraBienesCorrientesGastosBienesInversion>
+                        <InversionSujetoPasivo>N</InversionSujetoPasivo>
+                        <BaseImponible>8000.0</BaseImponible>
+                        <TipoImpositivo>21.0</TipoImpositivo>
+                        <CuotaIVASoportada>1680.0</CuotaIVASoportada>
+                        <CuotaIVADeducible>1680.0</CuotaIVADeducible>
+                    </DetalleIVA>
+                </IVA>
+            </FacturaRecibida>
+        </FacturasRecibidas>
+    </lrpjframp:LROEPJ240FacturasRecibidasAltaModifPeticion>
+    """

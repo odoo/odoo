@@ -51,10 +51,11 @@ class PrinterInterface(Interface):
         return dict(self.printer_devices)
 
     def get_identifier(self, path):
+        allowed_characters = '[^a-zA-Z0-9_-]'
         if 'uuid=' in path:
-            identifier = sub('[^a-zA-Z0-9_]', '', path.split('uuid=')[1])
+            identifier = sub(allowed_characters, '', path.split('uuid=')[1])
         elif 'serial=' in path:
-            identifier = sub('[^a-zA-Z0-9_]', '', path.split('serial=')[1])
+            identifier = sub(allowed_characters, '', path.split('serial=')[1])
         else:
-            identifier = sub('[^a-zA-Z0-9_]', '', path)
+            identifier = sub(allowed_characters, '', path)
         return identifier

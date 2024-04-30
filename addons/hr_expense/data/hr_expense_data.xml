@@ -6,6 +6,7 @@
             <field name="name">Meals</field>
             <field name="description">Restaurants, business lunches, etc.</field>
             <field name="standard_price">0.0</field>
+            <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FOOD</field>
@@ -30,6 +31,7 @@
         <record id="expense_product_mileage" model="product.product">
             <field name="name">Mileage</field>
             <field name="standard_price">1.0</field>
+            <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_km"/>
             <field name="uom_po_id" ref="uom.product_uom_km"/>
             <field name="default_code">MIL</field>
@@ -42,6 +44,7 @@
             <field name="name">Gifts</field>
             <field name="description">Gifts to customers or vendors</field>
             <field name="standard_price">0.0</field>
+            <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_km"/>
             <field name="uom_po_id" ref="uom.product_uom_km"/>
             <field name="default_code">GIFT</field>
@@ -54,6 +57,7 @@
             <field name="name">Communication</field>
             <field name="description">Phone bills, postage, etc.</field>
             <field name="standard_price">0.0</field>
+            <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_km"/>
             <field name="uom_po_id" ref="uom.product_uom_km"/>
             <field name="default_code">COMM</field>

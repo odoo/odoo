@@ -37,7 +37,7 @@ QUnit.module("Kanban Compiler", (hooks) => {
                 </t>
             </templates>
         </kanban>`;
-        const expected = `<t>
+        const expected = `<t t-translation="off">
             <kanban>
                 <templates>
                     <t t-name="kanban-box">

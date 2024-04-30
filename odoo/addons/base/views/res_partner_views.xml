@@ -58,7 +58,8 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Contacts" sample="1" multi_edit="1">
-                    <field name="display_name" string="Name"/>
+                    <field name="display_name" string="Name" invisible="1"/>
+                    <field name="translated_display_name" string="Name"/>
                     <field name="function" invisible="1"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
                     <field name="email" optional="show"/>
@@ -485,7 +486,8 @@
                                 </div>
                                 <div class="oe_kanban_details d-flex flex-column justify-content-between">
                                     <div>
-                                        <strong class="o_kanban_record_title oe_partner_heading"><field name="display_name"/></strong>
+                                        <strong class="o_kanban_record_title oe_partner_heading"><field name="display_name" invisible="1"/></strong>
+                                        <strong class="o_kanban_record_title oe_partner_heading"><field name="translated_display_name"/></strong>
                                         <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
                                         <ul>
                                             <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>

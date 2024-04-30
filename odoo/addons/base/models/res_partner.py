@@ -8,6 +8,7 @@ import hashlib
 import pytz
 import threading
 import re
+import warnings
 
 import requests
 from collections import defaultdict
@@ -173,6 +174,7 @@ class Partner(models.Model):
     _inherit = ['format.address.mixin', 'avatar.mixin']
     _name = "res.partner"
     _order = "display_name ASC, id DESC"
+    _allow_sudo_commands = False
     _rec_names_search = ['display_name', 'email', 'ref', 'vat', 'company_registry']  # TODO vat must be sanitized the same way for storing/searching
 
     def _default_category(self):
@@ -197,6 +199,7 @@ class Partner(models.Model):
 
     name = fields.Char(index=True, default_export_compatible=True)
     display_name = fields.Char(compute='_compute_display_name', recursive=True, store=True, index=True)
+    translated_display_name = fields.Char(compute='_compute_translated_display_name')
     date = fields.Date(index=True)
     title = fields.Many2one('res.partner.title')
     parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
@@ -345,6 +348,13 @@ class Partner(models.Model):
         names = dict(self.with_context({}).name_get())
         for partner in self:
             partner.display_name = names.get(partner.id)
+
+    @api.depends_context('lang')
+    @api.depends('display_name')
+    def _compute_translated_display_name(self):
+        names = dict(self.with_context({'lang': self.env.lang}).name_get())
+        for partner in self:
+            partner.translated_display_name = names.get(partner.id)
 
     @api.depends('lang')
     def _compute_active_lang_count(self):
@@ -846,7 +856,8 @@ class Partner(models.Model):
 
         if partner.company_name or partner.parent_id:
             if not name and partner.type in ['invoice', 'delivery', 'other']:
-                name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
+                types = dict(self._fields['type']._description_selection(self.env))
+                name = types[partner.type]
             if not partner.is_company:
                 name = self._get_contact_name(partner, name)
         if self._context.get('show_address_only'):
@@ -974,8 +985,7 @@ class Partner(models.Model):
         return base64.b64encode(res.content)
 
     def _email_send(self, email_from, subject, body, on_error=None):
-        for partner in self.filtered('email'):
-            tools.email_send(email_from, [partner.email], subject, body, on_error)
+        warnings.warn("Partner._email_send has not done anything but raise errors since 15.0", stacklevel=2, category=DeprecationWarning)
         return True
 
     def address_get(self, adr_pref=None):
@@ -1051,7 +1061,7 @@ class Partner(models.Model):
             'company_name': self.commercial_company_name or '',
         })
         for field in self._formatting_address_fields():
-            args[field] = getattr(self, field) or ''
+            args[field] = self[field] or ''
         if without_company:
             args['company_name'] = ''
         elif self.commercial_company_name:

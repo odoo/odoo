@@ -175,7 +175,7 @@
                     <t t-set="bg_color" t-value="td_product['ribbon']['bg_color'] or ''"/>
                     <t t-set="text_color" t-value="td_product['ribbon']['text_color']"/>
                     <t t-set="bg_class" t-value="td_product['ribbon']['html_class']"/>
-                    <span t-attf-class="o_ribbon o_not_editable #{bg_class}" t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}" t-field="product.website_ribbon_id.html"/>
+                    <span t-attf-class="o_ribbon o_not_editable #{bg_class}" t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}" t-out="td_product['ribbon']['html'] or ''"/>
                 </a>
             </div>
             <div class="o_wsale_product_information position-relative d-flex flex-column flex-grow-1 flex-shrink-1">
@@ -191,7 +191,7 @@
                     <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
                     <div class="o_wsale_product_btn"/>
                     <div class="product_price" itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer">
-                        <t t-if="'base_price' in template_price_vals and (template_price_vals['base_price'] &gt; template_price_vals['price_reduce'])">
+                        <t t-if="'base_price' in template_price_vals and (template_price_vals['base_price'] &gt; template_price_vals['price_reduce']) and (template_price_vals['price_reduce'] or not website.prevent_zero_price_sale)">
                             <del t-attf-class="text-muted me-1 h6 mb-0" style="white-space: nowrap;">
                                 <em class="small" t-esc="template_price_vals['base_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                             </del>
@@ -293,7 +293,7 @@
                 <div class="container oe_website_sale pt-2">
                     <div class="row o_wsale_products_main_row align-items-start flex-nowrap">
                         <aside t-if="hasLeftColumn" id="products_grid_before" class="d-none d-lg-block position-sticky col-3 px-3 clearfix">
-                            <div class="o_wsale_products_grid_before_rail vh-100 pe-lg-2 pb-lg-5 overflow-y-auto">
+                            <div class="o_wsale_products_grid_before_rail vh-100 pe-lg-2 pb-lg-5 overflow-y-scroll">
                                 <div t-if="opt_wsale_categories" class="products_categories mb-3">
                                     <t t-call="website_sale.products_categories_list"/>
                                 </div>
@@ -384,10 +384,10 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div t-else="" class="text-center text-muted mt128 mb256">
+                            <div t-nocache="get the actual search" t-else="" class="text-center text-muted mt128 mb256">
                                 <t t-if="not search">
                                     <h3 class="mt8">No product defined</h3>
-                                    <p t-if="category">No product defined in category "<strong t-esc="category.display_name"/>".</p>
+                                    <p t-if="category">No product defined in this category.</p>
                                 </t>
                                 <t t-else="">
                                     <h3 class="mt8">No results</h3>
@@ -477,7 +477,7 @@
     </template>
 
     <template id="website_sale.add_grid_or_list_option" active="True" name="Grid or List button">
-        <t t-set="_activeClasses">border-primary</t>
+        <t t-set="_activeClasses" t-translation="off">border-primary</t>
         <div t-attf-class="o_wsale_apply_layout btn-group ms-3 {{_classes}}" t-att-data-active-classes="_activeClasses">
             <input type="radio" class="btn-check" name="wsale_products_layout" id="o_wsale_apply_grid"  t-att-checked="'checked' if layout_mode != 'list' else None" value="grid"/>
             <label t-attf-class="btn btn-{{navClass}} #{_activeClasses if layout_mode != 'list' else None} o_wsale_apply_grid" title="Grid" for="o_wsale_apply_grid">
@@ -918,7 +918,8 @@
                                 <li class="breadcrumb-item o_not_editable">
                                     <a t-att-href="keep(category=0)">All Products</a>
                                 </li>
-                                <li t-if="category" class="breadcrumb-item">
+                                <li t-nocache="The category does not have to be cached, as the product can be accessed via different paths."
+                                    t-if="category" class="breadcrumb-item">
                                     <a t-att-href="keep('/shop/category/%s' % slug(category), category=0)" t-field="category.name" />
                                 </li>
                                 <li class="breadcrumb-item active">
@@ -1050,7 +1051,7 @@
         </div>
     </template>
 
-    <template id="product_custom_text" inherit_id="website_sale.product" active="True" name="Terms and Conditions" priority="21">
+    <template id="product_custom_text" inherit_id="website_sale.product" customize_show="True" active="True" name="Terms and Conditions" priority="21">
         <xpath expr="//div[@id='o_product_terms_and_share']" position="inside">
             <p class="text-muted mb-0">
                 <a href="/terms" class="text-muted"><u>Terms and Conditions</u></a><br/>
@@ -1803,9 +1804,9 @@
                                     <h2 class="o_page_header mt8">Shipping Address </h2>
                                 </t>
                                 <t t-if="partner_id == website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id">
-                                    <div class="alert alert-warning" role="alert" t-if="not only_services">
+                                    <div class="alert alert-warning" role="alert" t-if="not only_services" groups="account.group_delivery_invoice_address">
                                         <h4 class="alert-heading">Be aware!</h4>
-                                        <p  groups="account.group_delivery_invoice_address">
+                                        <p>
                                             You are editing your <b>billing and shipping</b> addresses at the same time!<br/>
                                             If you want to modify your shipping address, create a <a href='/shop/address'>new address</a>.
                                         </p>
@@ -1989,13 +1990,15 @@
 
                             <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_payment_1"/>
 
-                            <t t-if="website_sale_order.amount_total">
+                            <t t-if="not errors and website_sale_order.amount_total" name="website_sale_non_free_cart">
                                 <div t-if="providers or tokens" id="payment_method" class="mt-3">
                                     <h3 class="mb24">Pay with </h3>
-                                    <t t-call="payment.checkout">
-                                        <t t-set="footer_template_id" t-value="'website_sale.payment_footer'"/>
-                                        <t t-set="submit_button_label">Pay Now</t>
-                                    </t>
+                                    <div class="o_not_editable">
+                                        <t t-call="payment.checkout">
+                                            <t t-set="footer_template_id" t-value="'website_sale.payment_footer'"/>
+                                            <t t-set="submit_button_label">Pay Now</t>
+                                        </t>
+                                    </div>
                                 </div>
                                 <div t-else="" class="alert alert-warning">
                                     <strong>No suitable payment option could be found.</strong><br/>
@@ -2010,7 +2013,7 @@
                                         <i class="fa fa-arrow-right"></i> Add payment providers
                                 </a>
                             </div>
-                            <div class="js_payment mt-3" t-if="not website_sale_order.amount_total" id="payment_method" name="o_website_sale_free_cart">
+                            <div class="js_payment mt-3" t-if="not errors and not website_sale_order.amount_total" id="payment_method" name="o_website_sale_free_cart">
                                 <form name="o_wsale_confirm_order" target="_self" action="/shop/payment/validate" method="post">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                     <t t-call="website_sale.payment_footer">
@@ -2333,12 +2336,15 @@
     </template>
 
     <template id="sale_order_portal_content_inherit_website_sale" name="Orders Followup Products Links" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//section[@id='details']//div[hasclass('table-responsive')]" position="attributes">
+            <attribute name="class" remove="table-responsive" separator=" "/>
+        </xpath>
         <xpath expr="//section[@id='details']//td[@id='product_name']/*" position="replace">
-            <a t-if="line.product_id.website_published" t-att-href="line.product_id.website_url">
+            <a t-if="line.product_id.website_published" t-att-href="line.product_id.website_url" class="d-block text-wrap" style="max-width: 35vw">
                 <span t-field="line.name" />
             </a>
             <t t-if="not line.product_id.website_published">
-                <span t-field="line.name" />
+                <span t-field="line.name" class="d-block text-wrap" style="max-width: 35vw"/>
             </t>
         </xpath>
     </template>

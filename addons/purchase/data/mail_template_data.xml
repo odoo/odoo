@@ -58,7 +58,7 @@
         from <t t-out="object.company_id.name or ''">YourCompany</t>. 
         <br/><br/>
         <t t-if="object.date_planned">
-            The receipt is expected for <span style="font-weight:bold;" t-out="format_date(object.date_planned) or ''">05/05/2021</span>.
+            The receipt is expected for <span style="font-weight:bold;" t-out="format_date(object.get_localized_date_planned()) or ''">05/05/2021</span>.
             <br/><br/>
             Could you please acknowledge the receipt of this order?
         </t>
@@ -96,7 +96,7 @@
         </t>
         is expected for 
         <t t-if="object.date_planned">
-            <span style="font-weight:bold;" t-out="format_date(object.date_planned) or ''">05/05/2021</span>.
+            <span style="font-weight:bold;" t-out="format_date(object.get_localized_date_planned()) or ''">05/05/2021</span>.
         </t>
          <t t-else="">
             <span style="font-weight:bold;">undefined</span>.

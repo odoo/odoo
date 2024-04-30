@@ -117,15 +117,28 @@ let PaymentStripe = PaymentInterface.extend({
         ));
     },
 
-    _getInteracTransactionId: function (processPayment) {
-        const intentCharge = processPayment.paymentIntent.charges.data[0];
+    _getCapturedCardAndTransactionId: function (processPayment) {
+        const charges = processPayment.paymentIntent.charges;
+        if (!charges) {
+            return [false, false];
+        }
+
+        const intentCharge = charges.data[0];
         const processPaymentDetails = intentCharge.payment_method_details;
 
         if (processPaymentDetails.type === 'interac_present') {
-            return intentCharge.id;
+            // Canadian interac payments should not be captured:
+            // https://stripe.com/docs/terminal/payments/regional?integration-country=CA#create-a-paymentintent
+            return ['interac', intentCharge.id];
+        }
+        const cardPresentBrand = this.getCardBrandFromPaymentMethodDetails(processPaymentDetails);
+        if (cardPresentBrand.includes('eftpos')) {
+            // Australian eftpos should not be captured:
+            // https://stripe.com/docs/terminal/payments/regional?integration-country=AU
+            return [cardPresentBrand, intentCharge.id];
         }
 
-        return false;
+        return [false, false];
     },
 
     collectPayment: async function (amount) {
@@ -152,12 +165,10 @@ let PaymentStripe = PaymentInterface.extend({
             } else if (processPayment.paymentIntent) {
                 line.set_payment_status('waitingCapture');
 
-                const interacTransactionId = this._getInteracTransactionId(processPayment);
-                if (interacTransactionId) {
-                    // Canadian interac payments should not be captured:
-                    // https://stripe.com/docs/terminal/payments/regional?integration-country=CA#create-a-paymentintent
-                    line.card_type = 'interac';
-                    line.transaction_id = interacTransactionId;
+                const [captured_card_type, captured_transaction_id] = this._getCapturedCardAndTransactionId(processPayment);
+                if (captured_card_type && captured_transaction_id) {
+                    line.card_type = captured_card_type;
+                    line.transaction_id = captured_transaction_id;
                 } else {
                     await this.captureAfterPayment(processPayment, line);
                 }
@@ -183,10 +194,24 @@ let PaymentStripe = PaymentInterface.extend({
         }
     },
 
+    getCardBrandFromPaymentMethodDetails(paymentMethodDetails) {
+        // Both `card_present` and `interac_present` are "nullable" so we need to check for their existence, see:
+        // https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-card_present
+        // https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-interac_present
+        // In Canada `card_present` might not be present, but `interac_present` will be 
+        if (paymentMethodDetails.card_present) {
+            return paymentMethodDetails.card_present.brand;
+        } 
+        if (paymentMethodDetails.interac_present) {
+            return paymentMethodDetails.interac_present.brand;
+        }
+        return "";
+    },
+
     captureAfterPayment: async function (processPayment, line) {
         let capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
         if (capturePayment.charges)
-            line.card_type = capturePayment.charges.data[0].payment_method_details.card_present.brand;
+            line.card_type = this.getCardBrandFromPaymentMethodDetails(capturePayment.charges.data[0].payment_method_details);
         line.transaction_id = capturePayment.id;
     },
 
@@ -226,7 +251,7 @@ let PaymentStripe = PaymentInterface.extend({
             }
             return data.client_secret;
         } catch (error) {
-            const message = error.message.code === 200 ? error.message.data.message : error.message.message;
+            const message = error.message.code === 200 ? error.message.data.message : error.message.message || error.message;
             this._showError(message, 'Fetch Secret');
             return false;
         };

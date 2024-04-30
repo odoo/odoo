@@ -28,6 +28,8 @@ import {
     isVisible,
     isUnbreakable,
     isEmptyBlock,
+    getOffsetAndCharSize,
+    ZERO_WIDTH_CHARS,
 } from '../utils/utils.js';
 
 /**
@@ -48,22 +50,28 @@ export function deleteText(charSize, offset, direction, alreadyMoved) {
     // Do remove the character, then restore the state of the surrounding parts.
     const restore = prepareUpdate(parentElement, firstSplitOffset, parentElement, secondSplitOffset);
     const isSpace = !isVisibleStr(middleNode) && !isInPre(middleNode);
-    const isZWS = middleNode.nodeValue === '\u200B';
+    const isZWS = ZERO_WIDTH_CHARS.includes(middleNode.nodeValue);
     middleNode.remove();
     restore();
 
     // If the removed element was not visible content, propagate the deletion.
+    const parentState = getState(parentElement, firstSplitOffset, direction);
     if (
         isZWS ||
         (isSpace &&
-            getState(parentElement, firstSplitOffset, direction).cType !== CTYPES.CONTENT)
+            (parentState.cType !== CTYPES.CONTENT || parentState.node === undefined))
     ) {
-        if(direction === DIRECTIONS.LEFT) {
+        if (direction === DIRECTIONS.LEFT) {
             parentElement.oDeleteBackward(firstSplitOffset, alreadyMoved);
         } else {
-            parentElement.oDeleteForward(firstSplitOffset, alreadyMoved);
+            if (isSpace && parentState.node == undefined) {
+                // multiple invisible space at the start of the node
+                this.oDeleteForward(offset, alreadyMoved);
+            } else {
+                parentElement.oDeleteForward(firstSplitOffset, alreadyMoved);
+            }
         }
-        if (isZWS) {
+        if (isZWS && parentElement.isConnected) {
             fillEmpty(parentElement);
         }
         return;
@@ -82,8 +90,8 @@ Text.prototype.oDeleteForward = function (offset, alreadyMoved = false) {
         return;
     }
     // Get the size of the unicode character to remove.
-    const charSize = [...this.nodeValue.slice(0, offset + 1)].pop().length;
-    deleteText.call(this, charSize, offset, DIRECTIONS.RIGHT, alreadyMoved);
+    const [newOffset, charSize] = getOffsetAndCharSize(this.nodeValue, offset + 1, DIRECTIONS.RIGHT);
+    deleteText.call(this, charSize, newOffset, DIRECTIONS.RIGHT, alreadyMoved);
 };
 
 HTMLElement.prototype.oDeleteForward = function (offset) {
@@ -105,6 +113,13 @@ HTMLElement.prototype.oDeleteForward = function (offset) {
         this.parentElement.remove();
         restore();
         HTMLElement.prototype.oDeleteForward.call(grandparent, parentIndex);
+        return;
+    } else if (
+        firstLeafNode &&
+        firstLeafNode.nodeType === Node.TEXT_NODE &&
+        firstLeafNode.textContent === '\ufeff'
+    ) {
+        firstLeafNode.oDeleteForward(1);
         return;
     }
     if (

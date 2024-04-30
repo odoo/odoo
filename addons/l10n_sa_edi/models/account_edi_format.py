@@ -1,8 +1,9 @@
 import json
+import pytz
 from hashlib import sha256
 from base64 import b64decode, b64encode
 from lxml import etree
-from datetime import date, datetime
+from datetime import datetime
 from odoo import models, fields, _, api
 from odoo.exceptions import UserError
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
@@ -210,6 +211,9 @@ class AccountEdiFormat(models.Model):
         """
         signed_xml = self._l10n_sa_sign_xml(unsigned_xml, x509_cert, invoice.l10n_sa_invoice_signature)
         if invoice._l10n_sa_is_simplified():
+            # Applying with_prefetch() to set the _prefetch_ids = _ids,
+            # preventing premature QR code computation for other invoices.
+            invoice = invoice.with_prefetch()
             return self._l10n_sa_apply_qr_code(invoice, signed_xml)
         return signed_xml
 
@@ -227,18 +231,22 @@ class AccountEdiFormat(models.Model):
         try:
             PCSID_data = invoice.journal_id._l10n_sa_api_get_pcsid()
         except UserError as e:
-            return {'error': _("Could not generate PCSID values: \n") + e.args[0], 'blocking_level': 'error'}
+            return ({
+                'error': _("Could not generate PCSID values: \n") + e.args[0],
+                'blocking_level': 'error',
+                'response': unsigned_xml
+            }, unsigned_xml)
         x509_cert = PCSID_data['binarySecurityToken']
 
         # Apply Signature/QR code on the generated XML document
         try:
             signed_xml = self._l10n_sa_get_signed_xml(invoice, unsigned_xml, x509_cert)
         except UserError as e:
-            return {
+            return ({
                 'error': _("Could not generate signed XML values: \n") + e.args[0],
                 'blocking_level': 'error',
                 'response': unsigned_xml
-            }
+            }, unsigned_xml)
 
         # Once the XML content has been generated and signed, we submit it to ZATCA
         return self._l10n_sa_submit_einvoice(invoice, signed_xml, PCSID_data), signed_xml
@@ -319,6 +327,7 @@ class AccountEdiFormat(models.Model):
                 'blocking_level': 'error',
                 'response': None,
             }}
+
         xml_content = None
         if not invoice.l10n_sa_chain_index:
             # If the Invoice doesn't have a chain index, it means it either has not been submitted before,
@@ -427,7 +436,7 @@ class AccountEdiFormat(models.Model):
             errors.append(_set_missing_partner_fields(supplier_missing_info, _("Supplier")))
         if customer_missing_info:
             errors.append(_set_missing_partner_fields(customer_missing_info, _("Customer")))
-        if invoice.invoice_date > date.today():
+        if invoice.invoice_date > fields.Date.context_today(self.with_context(tz='Asia/Riyadh')):
             errors.append(_("- Please, make sure the invoice date is set to either the same as or before Today."))
         if invoice.move_type in ('in_refund', 'out_refund') and not invoice._l10n_sa_check_refund_reason():
             errors.append(

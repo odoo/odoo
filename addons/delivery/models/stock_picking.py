@@ -181,7 +181,7 @@ class StockPicking(models.Model):
         except (ValueError, TypeError):
             return False
 
-    @api.depends('move_ids')
+    @api.depends('move_ids.weight')
     def _cal_weight(self):
         for picking in self:
             picking.weight = sum(move.weight for move in picking.move_ids if move.state != 'cancel')
@@ -196,12 +196,15 @@ class StockPicking(models.Model):
     def _pre_put_in_pack_hook(self, move_line_ids):
         res = super(StockPicking, self)._pre_put_in_pack_hook(move_line_ids)
         if not res:
-            if self.carrier_id:
-                return self._set_delivery_package_type()
+            if move_line_ids.carrier_id:
+                if len(move_line_ids.carrier_id) > 1 or any(not ml.carrier_id for ml in move_line_ids):
+                    # avoid (duplicate) costs for products
+                    raise UserError(_("You cannot pack products into the same package when they have different carriers (i.e. check that all of their transfers have a carrier assigned and are using the same carrier)."))
+                return self._set_delivery_package_type(batch_pack=len(move_line_ids.picking_id) > 1)
         else:
             return res
 
-    def _set_delivery_package_type(self):
+    def _set_delivery_package_type(self, batch_pack=False):
         """ This method returns an action allowing to set the package type and the shipping weight
         on the stock.quant.package.
         """
@@ -210,7 +213,8 @@ class StockPicking(models.Model):
         context = dict(
             self.env.context,
             current_package_carrier_type=self.carrier_id.delivery_type,
-            default_picking_id=self.id
+            default_picking_id=self.id,
+            batch_pack=batch_pack,
         )
         # As we pass the `delivery_type` ('fixed' or 'base_on_rule' by default) in a key who
         # correspond to the `package_carrier_type` ('none' to default), we make a conversion.
@@ -239,14 +243,16 @@ class StockPicking(models.Model):
         self.carrier_price = res['exact_price'] * (1.0 + (self.carrier_id.margin / 100.0))
         if res['tracking_number']:
             related_pickings = self.env['stock.picking'] if self.carrier_tracking_ref and res['tracking_number'] in self.carrier_tracking_ref else self
-            previous_moves = self.move_ids.move_orig_ids
+            accessed_moves = previous_moves = self.move_ids.move_orig_ids
             while previous_moves:
                 related_pickings |= previous_moves.picking_id
-                previous_moves = previous_moves.move_orig_ids
-            next_moves = self.move_ids.move_dest_ids
+                previous_moves = previous_moves.move_orig_ids - accessed_moves
+                accessed_moves |= previous_moves
+            accessed_moves = next_moves = self.move_ids.move_dest_ids
             while next_moves:
                 related_pickings |= next_moves.picking_id
-                next_moves = next_moves.move_dest_ids
+                next_moves = next_moves.move_dest_ids - accessed_moves
+                accessed_moves |= next_moves
             without_tracking = related_pickings.filtered(lambda p: not p.carrier_tracking_ref)
             without_tracking.carrier_tracking_ref = res['tracking_number']
             for p in related_pickings - without_tracking:

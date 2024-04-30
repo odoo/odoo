@@ -16,8 +16,8 @@
         <a class="s_blog_posts_post_cover flex-grow-0 flex-shrink-0 align-self-baseline position-relative" t-att-href="data['call_to_action_url']" t-att-title="'Read' + data['name']">
             <t t-call="website.record_cover">
                 <t t-set="_record" t-value="record"/>
-                <t t-set="_resize_height" t-value="128"/>
-                <t t-set="_resize_width" t-value="128"/>
+                <t t-set="_resize_height" t-value="256"/>
+                <t t-set="_resize_width" t-value="256"/>
                 <t t-set="additionnal_classes" t-value="'w-100 h-100 bg-200 position-absolute'"/>
             </t>
         </a>
@@ -82,8 +82,8 @@
             <a class="s_blog_posts_post_cover" t-att-href="data['call_to_action_url']">
                 <t t-call="website.record_cover">
                     <t t-set="_record" t-value="record"/>
-                    <t t-set="_resize_height" t-value="256"/>
-                    <t t-set="_resize_width" t-value="256"/>
+                    <t t-set="_resize_height" t-value="512"/>
+                    <t t-set="_resize_width" t-value="512"/>
                     <t t-set="additionnal_classes" t-value="'thumb'"/>
                 </t>
             </a>

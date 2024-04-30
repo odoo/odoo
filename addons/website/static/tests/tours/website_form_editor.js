@@ -185,7 +185,63 @@ odoo.define('website.tour.form_editor', function (require) {
             content: 'Change the label position of the phone field',
             trigger: 'we-button[data-select-label-position="right"]',
         },
+        ...addCustomField("char", "text", "Conditional Visibility Check 1", false),
+        ...addCustomField("char", "text", "Conditional Visibility Check 2", false),
+        ...selectButtonByData("data-set-visibility='conditional'"),
+        ...selectButtonByData("data-set-visibility-dependency='Conditional Visibility Check 1'"),
+        ...addCustomField("char", "text", "Conditional Visibility Check 2", false),
+        ...selectFieldByLabel("Conditional Visibility Check 1"),
+        ...selectButtonByData("data-set-visibility='conditional'"),
+        {
+            content: "Check that 'Conditional Visibility Check 2' is not in the list of the visibility selector of Conditional Visibility Check 1",
+            trigger: "we-select[data-name='hidden_condition_opt']:not(:has(we-button[data-set-visibility-dependency='Conditional Visibility Check 2']))",
+            run: () => null,
+        },
+        ...addCustomField("char", "text", "Conditional Visibility Check 3", false),
+        ...addCustomField("char", "text", "Conditional Visibility Check 4", false),
+        ...selectButtonByData("data-set-visibility='conditional'"),
+        ...selectButtonByData("data-set-visibility-dependency='Conditional Visibility Check 3'"),
+        {
+            content: "Change the label of 'Conditional Visibility Check 4' and change it to 'Conditional Visibility Check 3'",
+            trigger: 'we-input[data-set-label-text] input',
+            run: "text Conditional Visibility Check 3",
+        },
+        {
+            content: "Check that the conditional visibility of the renamed field is removed",
+            trigger: "we-customizeblock-option.snippet-option-WebsiteFieldEditor we-select:contains('Visibility'):has(we-toggler:contains('Always Visible'))",
+            run: () => null,
+        },
+        ...addCustomField("char", "text", "Conditional Visibility Check 5", false),
+        ...addCustomField("char", "text", "Conditional Visibility Check 6", false),
+        ...selectButtonByData("data-set-visibility='conditional'"),
+        {
+            content: "Change the label of 'Conditional Visibility Check 6' and change it to 'Conditional Visibility Check 5'",
+            trigger: 'we-input[data-set-label-text] input',
+            run: "text Conditional Visibility Check 5",
+        },
+        {
+            content: "Check that 'Conditional Visibility Check 5' is not in the list of the renamed field",
+            trigger: "we-customizeblock-option.snippet-option-WebsiteFieldEditor we-select[data-name='hidden_condition_opt']:not(:has(we-button:contains('Conditional Visibility Check 5')))",
+            run: () => null,
+        },
         ...addExistingField('email_cc', 'text', 'Test conditional visibility', false, {visibility: CONDITIONALVISIBILITY, condition: 'odoo'}),
+        // Check that visibility condition is deleted on dependency type change.
+        ...addCustomField("char", "text", "dependent", false, {visibility: CONDITIONALVISIBILITY}),
+        ...addCustomField("selection", "radio", "dependency", false),
+        ...selectFieldByLabel("dependent"),
+        ...selectButtonByData('data-set-visibility-dependency="dependency"'),
+        ...selectFieldByLabel("dependency"),
+        ...selectButtonByData('data-custom-field="char"'),
+        ...selectFieldByLabel("dependent"),
+        {
+            content: "Open the select",
+            trigger: 'we-select:has(we-button[data-set-visibility="visible"]) we-toggler',
+        },
+        {
+            content: "Check that the field no longer has conditional visibility",
+            trigger: "we-select we-button[data-set-visibility='visible'].active",
+            run: () => null,
+        },
 
         ...addExistingField('date', 'text', 'Test Date', true),
 
@@ -259,6 +315,7 @@ odoo.define('website.tour.form_editor', function (require) {
             run: 'text Management Service',
         }, {
             content: "Mark the field as not required",
+            extra_trigger: "we-list table input:eq(3)[name='Management Service']",
             trigger: 'we-button[data-name="required_opt"] we-checkbox',
         }, {
             content: "Check the resulting field",
@@ -304,7 +361,7 @@ odoo.define('website.tour.form_editor', function (require) {
             run: 'text 44 - UK',
         }, {
             content: "Check that the input value is the full option value",
-            trigger: 'we-list table input:eq(3)',
+            trigger: "we-list table input:eq(3)[name='44 - UK']",
             run: () => {
                 const addedOptionEl = document.querySelector('iframe.o_iframe').contentDocument.querySelector('.s_website_form_field select option[value="44 - UK"]');
                 if (!addedOptionEl) {
@@ -422,6 +479,16 @@ odoo.define('website.tour.form_editor', function (require) {
         ...addCustomField("char", "text", "field C", false),
         ...selectFieldByLabel("field B"),
         ...selectButtonByText(CONDITIONALVISIBILITY),
+        ...selectButtonByText(CONDITIONALVISIBILITY),
+        {
+            content: "Check that there is a comparator after two clicks on 'Visible only if'",
+            trigger: "[data-attribute-name='visibilityComparator']",
+            run: function () {
+                if (!this.$anchor[0].querySelector("we-button.active")) {
+                    console.error("A default comparator should be set");
+                }
+            },
+        },
         ...selectButtonByData('data-set-visibility-dependency="field C"'),
         ...selectButtonByData('data-select-data-attribute="set"'),
         {
@@ -559,6 +626,10 @@ odoo.define('website.tour.form_editor', function (require) {
             content: "Change a random option",
             trigger: '[data-set-mark] input',
             run: 'text_blur **',
+        }, {
+            content: "Check that the recipient email is correct",
+            trigger: 'we-input[data-field-name="email_to"] input:propValue("website_form_contactus_edition_no_email@mail.com")',
+            run: () => null, // it's a check.
         },
     ]));
 
@@ -676,6 +747,74 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: 'iframe body:not(:has([data-snippet="s_website_form"])) .fa-check-circle',
             run: () => null,
         }
+    ]);
+
+    wTourUtils.registerWebsitePreviewTour('website_form_contactus_change_random_option', {
+        test: true,
+        url: '/contactus',
+        edition: true,
+    }, editContactUs([
+        {
+            content: "Change a random option",
+            trigger: '[data-set-mark] input',
+            run: 'text_blur **',
+        },
+    ]));
+
+    // Check that the editable form content is actually editable.
+    wTourUtils.registerWebsitePreviewTour("website_form_editable_content", {
+        test: true,
+        url: "/",
+        edition: true,
+    }, [
+        {
+            ...wTourUtils.dragNDrop({id: "s_website_form", name: "Form"}),
+            run: "drag_and_drop iframe #wrap",
+        },
+        {
+            content: "Check that a form field is not editable",
+            extra_trigger: "iframe .s_website_form_field",
+            trigger: "iframe section.s_website_form input",
+            run: function () {
+                if (this.$anchor[0].isContentEditable) {
+                    console.error("A form field should not be editable.");
+                }
+            },
+        },
+        {
+            content: "Go back to blocks",
+            trigger: ".o_we_add_snippet_btn",
+        },
+        wTourUtils.dragNDrop({id: "s_three_columns", name: "Columns"}),
+        {
+            content: "Select the first column",
+            trigger: "iframe .s_three_columns .row > :nth-child(1)",
+        },
+        {
+            content: "Drag and drop the selected column inside the form",
+            trigger: "iframe .o_overlay_move_options .ui-draggable-handle",
+            run: "drag_and_drop iframe section.s_website_form",
+        },
+        {
+            content: "Click on the text inside the dropped form column",
+            trigger: "iframe section.s_website_form h3.card-title",
+            run: "dblclick",
+        },
+        {   // Simulate a user interaction with the editable content.
+            content: "Update the text inside the form column",
+            trigger: "iframe section.s_website_form h3.card-title",
+            run: "keydown 65 66 67",
+        },
+        {
+            content: "Check that the new text value was correctly set",
+            trigger: "iframe section.s_website_form h3:containsExact(ABC)",
+            run: () => null, // it's a check
+        },
+        {   content: "Remove the dropped column",
+            trigger: "iframe .oe_overlay.oe_active .oe_snippet_remove",
+            run: "click",
+        },
+        ...wTourUtils.clickOnSave(),
     ]);
 
     return {};

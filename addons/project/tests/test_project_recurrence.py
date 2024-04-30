@@ -837,3 +837,20 @@ class TestProjectrecurrence(TransactionCase):
 
         self.assertFalse(any((task_a + task_b + task_c).mapped('recurring_task')),
                          "All tasks in the recurrence should have their recurrence disabled")
+
+    def test_recurrence_weekday_per_month(self):
+        with freeze_time("2023-10-01"):
+            task = self.env['project.task'].create({
+                'name': 'test recurring task',
+                'project_id': self.project_recurring.id,
+                'recurring_task': True,
+                # Second Tuesday of the month
+                'repeat_interval': 1,
+                'repeat_unit': 'month',
+                'repeat_week': 'second',
+                'repeat_on_month': 'day',
+                'repeat_on_year': 'date',
+                'repeat_weekday': 'tue',
+                'repeat_type': 'forever',
+            })
+            self.assertEqual(task.recurrence_id.next_recurrence_date, date(2023, 10, 10))

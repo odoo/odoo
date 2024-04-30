@@ -2,7 +2,7 @@
 
 <templates>
     <t t-name="website_sale_stock.product_availability">
-        <t t-if="product_type == 'product'">
+        <t t-if="product_type == 'product' and !prevent_zero_price_sale">
             <div t-if="free_qty lte 0 and !cart_qty" t-attf-class="availability_message_#{product_template} mb-1">
                 <div id="out_of_stock_message">
                     <t t-if='has_out_of_stock_message' t-out='out_of_stock_message'/>

@@ -5,16 +5,16 @@
 # Translators:
 # Samkhann Seang <seangsamkhann@gmail.com>, 2023
 # Sengtha Chay <sengtha@gmail.com>, 2023
-# Lux Sok <sok.lux@gmail.com>, 2023
 # Chan Nath <channath@gmail.com>, 2023
+# Lux Sok <sok.lux@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Chan Nath <channath@gmail.com>, 2023\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2023\n"
 "Language-Team: Khmer (https://app.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,14 +96,14 @@ msgid "Add a new tag"
 msgstr "បន្ថែមស្លាកថ្មី"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Add a note"
 msgstr "បន្ថែមចំណាំ"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Add new note"
@@ -125,7 +125,7 @@ msgid "By sticky note Category"
 msgstr "តាមប្រភេទចំណាំយ៉ាងជាប់លាប់"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Channel"
@@ -247,7 +247,6 @@ msgstr "ប្រសិនបើបានគូសធីកសារថ្មី
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
-#: model:ir.model.fields,help:note.field_note_note__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "ប្រសិនបើបានគូសធីកសារខ្លះមានកំហុសបញ្ជូន។"
 
@@ -360,6 +359,7 @@ msgid "Note Tag"
 msgstr "ស្លាកសម្គាល់"
 
 #. module: note
+#. odoo-python
 #: code:addons/note/models/res_users.py:0
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
@@ -411,7 +411,7 @@ msgid "Related Note"
 msgstr "កំណត់សម្គាល់ដែលពាក់ព័ន្ធ"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Remember..."
@@ -429,16 +429,11 @@ msgid "Responsible User"
 msgstr "អ្នកទទួលខុសត្រូវ"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "SAVE"
 msgstr "រក្សាទុក"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
@@ -518,7 +513,7 @@ msgid "Tags"
 msgstr "ធែក"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/models/activity_menu_view.js:0
 #, python-format
 msgid "Today"
@@ -543,13 +538,3 @@ msgstr ""
 #: model:ir.model,name:note.model_res_users
 msgid "User"
 msgstr "អ្នកប្រើប្រាស់"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__website_message_ids
-msgid "Website Messages"
-msgstr "សារវែបសាយ"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__website_message_ids
-msgid "Website communication history"
-msgstr "ប្រវត្តិទំនាក់ទំនងវែបសាយ"

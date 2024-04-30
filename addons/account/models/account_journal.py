@@ -115,7 +115,7 @@ class AccountJournal(models.Model):
                                           "This is a regex that can include all the following capture groups: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"\
                                           "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"\
 
-                                          "e.g: ^(?P<prefix1>.*?)(?P<year>\d{4})(?P<prefix2>\D*?)(?P<month>\d{2})(?P<prefix3>\D+?)(?P<seq>\d+)(?P<suffix>\D*?)$")
+                                          r"e.g: ^(?P<prefix1>.*?)(?P<year>\d{4})(?P<prefix2>\D*?)(?P<month>\d{2})(?P<prefix3>\D+?)(?P<seq>\d+)(?P<suffix>\D*?)$")
 
     inbound_payment_method_line_ids = fields.One2many(
         comodel_name='account.payment.method.line',
@@ -334,6 +334,9 @@ class AccountJournal(models.Model):
                 journal.suspense_account_id = False
 
     def _inverse_type(self):
+        if self._context.get('account_journal_skip_alias_sync'):
+            return
+
         # Create an alias for purchase/sales journals
         for journal in self:
             if journal.type not in ('purchase', 'sale'):
@@ -348,7 +351,7 @@ class AccountJournal(models.Model):
                 journal.type,
             ) if string and is_encodable_as_ascii(string))
 
-            if journal.company_id != self.env.ref('base.main_company'):
+            if not journal.alias_name:
                 if is_encodable_as_ascii(journal.company_id.name):
                     alias_name = f"{alias_name}-{journal.company_id.name}"
                 else:
@@ -549,7 +552,7 @@ class AccountJournal(models.Model):
                     if bank_account.partner_id != company.partner_id:
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
             if 'restrict_mode_hash_table' in vals and not vals.get('restrict_mode_hash_table'):
-                journal_entry = self.env['account.move'].sudo().search([('journal_id', '=', self.id), ('state', '=', 'posted'), ('secure_sequence_number', '!=', 0)], limit=1)
+                journal_entry = self.env['account.move'].sudo().search([('journal_id', '=', journal.id), ('state', '=', 'posted'), ('secure_sequence_number', '!=', 0)], limit=1)
                 if journal_entry:
                     field_string = self._fields['restrict_mode_hash_table'].get_description(self.env)['string']
                     raise UserError(_("You cannot modify the field %s of a journal that already has accounting entries.", field_string))
@@ -662,6 +665,10 @@ class AccountJournal(models.Model):
             # Create the bank_account_id if necessary
             if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+
+            # Create the secure_sequence_id if necessary
+            if journal.restrict_mode_hash_table and not journal.secure_sequence_id:
+                journal._create_secure_sequence(['secure_sequence_id'])
 
         return journals
 
@@ -779,7 +786,7 @@ class AccountJournal(models.Model):
 
     # TODO move to `account_reports` in master (simple read_group)
     def _get_journal_bank_account_balance(self, domain=None):
-        ''' Get the bank balance of the current journal by filtering the journal items using the journal's accounts.
+        r''' Get the bank balance of the current journal by filtering the journal items using the journal's accounts.
 
         /!\ The current journal is not part of the applied domain. This is the expected behavior since we only want
         a logic based on accounts.

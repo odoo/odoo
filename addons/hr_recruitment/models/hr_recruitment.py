@@ -50,7 +50,11 @@ class RecruitmentSource(models.Model):
                     'source_id': source.source_id.id,
                 },
             }
-            source.alias_id = self.env['mail.alias'].create(vals)
+
+            # check that you can create source before to call mail.alias in sudo with known/controlled vals
+            source.check_access_rights('create')
+            source.check_access_rule('create')
+            source.alias_id = self.env['mail.alias'].sudo().create(vals)
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
@@ -509,7 +513,7 @@ class Applicant(models.Model):
             'res_model': 'ir.attachment',
             'name': _('Documents'),
             'context': {
-                'default_res_model': 'hr.job',
+                'default_res_model': 'hr.applicant',
                 'default_res_id': self.ids[0],
                 'show_partner_name': 1,
             },

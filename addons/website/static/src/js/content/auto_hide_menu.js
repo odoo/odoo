@@ -27,7 +27,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         initAutoMoreMenu(topMenu, {
             unfoldable: unfoldable,
             images: images,
-            loadingStyleClasses: ['o_menu_loading']
+            loadingStyleClasses: ['o_menu_loading'],
+            // The "auto-hide" menu is closed when clicking inside the extra
+            // menu items. The goal here is to prevent this default behaviour
+            // on "edit" mode to allow correct editing of extra menu items, mega
+            // menu content...
+            autoClose: () => !document.body.classList.contains("editor_enable"),
         });
     }
 });

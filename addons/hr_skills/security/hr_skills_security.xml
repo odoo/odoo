@@ -54,6 +54,6 @@
     <record id="hr_employee_skill_report_multicompany" model="ir.rule">
         <field name="name">Employee Skill Report: Multi-Company Rule</field>
         <field name="model_id" ref="model_hr_employee_skill_report"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 </odoo>

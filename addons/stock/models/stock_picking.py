@@ -32,7 +32,7 @@ class PickingType(models.Model):
     sequence = fields.Integer('Sequence', help="Used to order the 'All Operations' kanban view")
     sequence_id = fields.Many2one(
         'ir.sequence', 'Reference Sequence',
-        check_company=True, copy=True)
+        check_company=True, copy=False)
     sequence_code = fields.Char('Sequence Prefix', required=True)
     default_location_src_id = fields.Many2one(
         'stock.location', 'Default Source Location',
@@ -136,6 +136,12 @@ class PickingType(models.Model):
                     })
         return super(PickingType, self).write(vals)
 
+    def copy(self, default=None):
+        default = dict(default or {})
+        if 'sequence_code' not in default and 'sequence_id' not in default:
+            default.update(sequence_code=_("%s (copy)") % self.sequence_code)
+        return super().copy(default)
+
     @api.depends('code')
     def _compute_hide_reservation_method(self):
         for rec in self:
@@ -222,6 +228,23 @@ class PickingType(models.Model):
         if self.show_operations and self.code != 'incoming':
             self.show_reserved = True
 
+    @api.onchange('sequence_code')
+    def _onchange_sequence_code(self):
+        if not self.sequence_code:
+            return
+        domain = [('sequence_code', '=', self.sequence_code), '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)]
+        if self._origin.id:
+            domain += [('id', '!=', self._origin.id)]
+        picking_type = self.env['stock.picking.type'].search(domain, limit=1)
+        if picking_type and picking_type.sequence_id != self.sequence_id:
+            return {
+                'warning': {
+                    'message': _(
+                        "This sequence prefix is already being used by another operation type. It is recommended that you select a unique prefix "
+                        "to avoid issues and/or repeated reference values or assign the existing reference sequence to this operation type.")
+                }
+            }
+
     @api.constrains('default_location_dest_id')
     def _check_default_location(self):
         for record in self:
@@ -267,18 +290,6 @@ class PickingType(models.Model):
     def get_stock_picking_action_picking_type(self):
         return self._get_action('stock.stock_picking_action_picking_type')
 
-    @api.constrains('sequence_id')
-    def _check_sequence_code(self):
-        domain = expression.OR([[('company_id', '=', record.company_id.id), ('name', '=', record.sequence_id.name)]
-                                for record in self])
-        record_counts = self.env['ir.sequence']._read_group(
-            domain, ['company_id', 'name'], ['company_id', 'name'], lazy=False)
-        duplicate_records = list(filter(
-            lambda r: r['__count'] > 1, record_counts))
-        if duplicate_records:
-            duplicate_names = list(map(lambda r: r['name'], duplicate_records))
-            raise UserError(_("Sequences %s already exist.",
-                            ', '.join(duplicate_names)))
 
 class Picking(models.Model):
     _name = "stock.picking"
@@ -766,7 +777,7 @@ class Picking(models.Model):
         })
         if any(line.reserved_qty or line.qty_done for line in self.move_ids.move_line_ids):
             return {'warning': {
-                    'title': 'Locations to update',
+                    'title': _("Locations to update"),
                     'message': _("You might want to update the locations of this transfer's operations")
                 }
             }
@@ -948,7 +959,7 @@ class Picking(models.Model):
         return move_ids_without_package.filtered(lambda move: not move.scrap_ids)
 
     def _check_move_lines_map_quant_package(self, package):
-        return package._check_move_lines_map_quant(self.move_line_ids.filtered(lambda ml: ml.package_id == package), 'reserved_qty')
+        return package._check_move_lines_map_quant(self.move_line_ids.filtered(lambda ml: ml.package_id == package and ml.product_id.type == 'product'), 'reserved_qty')
 
     def _get_entire_pack_location_dest(self, move_line_ids):
         location_dest_ids = move_line_ids.mapped('location_dest_id')
@@ -984,15 +995,14 @@ class Picking(models.Model):
                     else:
                         move_lines_in_package_level = move_lines_to_pack.filtered(lambda ml: ml.move_id.package_level_id)
                         move_lines_without_package_level = move_lines_to_pack - move_lines_in_package_level
+
+                        if pack.package_use == 'disposable':
+                            (move_lines_in_package_level | move_lines_without_package_level).result_package_id = pack
+                        move_lines_in_package_level.result_package_id = pack
                         for ml in move_lines_in_package_level:
-                            ml.write({
-                                'result_package_id': pack.id,
-                                'package_level_id': ml.move_id.package_level_id.id,
-                            })
-                        move_lines_without_package_level.write({
-                            'result_package_id': pack.id,
-                            'package_level_id': package_level_ids[0].id,
-                        })
+                            ml.package_level_id = ml.move_id.package_level_id.id
+
+                        move_lines_without_package_level.package_level_id = package_level_ids[0]
                         for pl in package_level_ids:
                             pl.location_dest_id = self._get_entire_pack_location_dest(pl.move_line_ids) or picking.location_dest_id.id
 
@@ -1243,13 +1253,13 @@ class Picking(models.Model):
                     'move_line_ids': [],
                     'backorder_id': picking.id
                 })
-                picking.message_post(
-                    body=_('The backorder %s has been created.', backorder_picking._get_html_link())
-                )
                 moves_to_backorder.write({'picking_id': backorder_picking.id})
                 moves_to_backorder.move_line_ids.package_level_id.write({'picking_id':backorder_picking.id})
                 moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
                 backorders |= backorder_picking
+                picking.message_post(
+                    body=_('The backorder %s has been created.', backorder_picking._get_html_link())
+                )
                 if backorder_picking.picking_type_id.reservation_method == 'at_confirm':
                     bo_to_assign |= backorder_picking
         if bo_to_assign:
@@ -1347,7 +1357,7 @@ class Picking(models.Model):
         """
         for (parent, responsible), rendering_context in documents.items():
             note = render_method(rendering_context)
-            parent.activity_schedule(
+            parent.sudo().activity_schedule(
                 'mail.mail_activity_data_warning',
                 date.today(),
                 note=note,
@@ -1491,25 +1501,36 @@ class Picking(models.Model):
                 })
         return package
 
+    def _package_move_lines(self, batch_pack=False):
+        picking_move_lines = self.move_line_ids
+        # in theory, the following values in the "if" statement after this should always be the same
+        # (i.e. for batch transfers), but customizations may bypass it and cause unexpected behavior
+        # so we avoid allowing those situations
+        if len(self.picking_type_id) > 1:
+            raise UserError(_("You cannot pack products into the same package when they are from different transfers with different operation types."))
+        if len(set(self.mapped("immediate_transfer"))) > 1:
+            raise UserError(_("You cannot pack products into the same package when they are from both immediate and planned transfers."))
+        if (
+            not self.picking_type_id.show_reserved
+            and any(not p.immediate_transfer for p in self)
+            and not self.env.context.get('barcode_view')
+        ):
+            picking_move_lines = self.move_line_nosuggest_ids
+
+        move_line_ids = picking_move_lines.filtered(lambda ml:
+            float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
+            and not ml.result_package_id
+        )
+        if not move_line_ids:
+            move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.reserved_uom_qty, 0.0,
+                                    precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
+                                    precision_rounding=ml.product_uom_id.rounding) == 0)
+        return move_line_ids
+
     def action_put_in_pack(self):
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
-            picking_move_lines = self.move_line_ids
-            if (
-                not self.picking_type_id.show_reserved
-                and not self.immediate_transfer
-                and not self.env.context.get('barcode_view')
-            ):
-                picking_move_lines = self.move_line_nosuggest_ids
-
-            move_line_ids = picking_move_lines.filtered(lambda ml:
-                float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
-                and not ml.result_package_id
-            )
-            if not move_line_ids:
-                move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.reserved_uom_qty, 0.0,
-                                     precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
-                                     precision_rounding=ml.product_uom_id.rounding) == 0)
+            move_line_ids = self._package_move_lines()
             if move_line_ids:
                 res = self._pre_put_in_pack_hook(move_line_ids)
                 if not res:

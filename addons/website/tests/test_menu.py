@@ -73,6 +73,13 @@ class TestMenu(common.TransactionCase):
 
     def test_04_specific_menu_translation(self):
         IrModuleModule = self.env['ir.module.module']
+        if self.env['website'].search_count([]) == 1:
+            self.env['website'].create({
+                'name': 'My Website 2',
+                'domain': '',
+                'sequence': 20,
+            })
+
         Menu = self.env['website.menu']
         existing_menus = Menu.search([])
 
@@ -220,3 +227,14 @@ class TestMenuHttp(common.HttpCase):
         self.assertIn(b"french_mega_menu_content", page.content)
         page = self.url_open('/%s?edit_translations=1' % fr.url_code)
         self.assertIn(b"french_mega_menu_content", page.content)
+
+    def test_menu_empty_url(self):
+        website = self.env['website'].browse(1)
+        menu = self.env['website.menu'].create({
+            'name': 'Test Empty URL menu',
+            'parent_id': website.menu_id.id,
+            'website_id': website.id,
+        })
+        self.assertFalse(menu.url, "Menu URL should be empty")
+        # this should not crash
+        website.is_menu_cache_disabled()

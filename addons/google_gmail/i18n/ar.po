@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -74,6 +74,7 @@ msgid "Access Token Expiration Timestamp"
 msgstr "الطابع الزمني لانتهاء صلاحية رمز الوصول "
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/controllers/main.py:0
 #: code:addons/google_gmail/controllers/main.py:0
 #, python-format
@@ -81,6 +82,7 @@ msgid "An error occur during the authentication process."
 msgstr "حدث خطأ أثناء عملية المصادقة. "
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token."
@@ -104,6 +106,7 @@ msgid "Config Settings"
 msgstr "تهيئة الإعدادات "
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/fetchmail_server.py:0
 #, python-format
 msgid ""
@@ -114,6 +117,7 @@ msgstr ""
 "ستتم إعادة توجيهم إلى صفحة تسجيل دخول Gmail حيث ستحتاج إلى قبول الإذن. "
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -160,6 +164,7 @@ msgid "Incoming Mail Server"
 msgstr "خادم البريد الوارد "
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -175,18 +180,21 @@ msgid "Mail Server"
 msgstr "خادم البريد الإلكتروني "
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Only the administrator can link a Gmail mail server."
 msgstr "وحده المدير بوسعه ربط خادم بريد Gmail. "
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Please configure your Gmail credentials."
 msgstr "يرجى تهيئة بيانات اعتماد Gmail الخاصة بك. "
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -198,6 +206,7 @@ msgstr ""
 "البريد الإلكتروني). يجب أن يكون ذلك نفس الحساب المستخدَم لرمز مصادقة Gmail. "
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -250,16 +259,6 @@ msgstr ""
 #: model:ir.model.fields,help:google_gmail.field_ir_mail_server__google_gmail_uri
 msgid "The URL to generate the authorization code from Google"
 msgstr "رابط URL المستخدم في إنشاء رمز التفويض من Google "
-
-#. module: google_gmail
-#: code:addons/google_gmail/models/ir_mail_server.py:0
-#, python-format
-msgid ""
-"This server %r can only be used for your personal email address. Please fill"
-" the \"from_filter\" field with %r."
-msgstr ""
-"يمكن استخدام هذا الخادم %r فقط لعنوان بريدك الإلكتروني الخاص. يرجى تعبئة حقل"
-" \"from_filter\" بـ %r. "
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_uri

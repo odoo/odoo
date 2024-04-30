@@ -147,7 +147,6 @@ class SaleOrder(models.Model):
         # filter on the task of the current SO
         action['domain'] = [('id', 'in', self.tasks_ids.ids)]
         action.setdefault('context', {})
-        action['context'].update({'search_default_sale_order_id': self.id})
         return action
 
     def action_view_project_ids(self):

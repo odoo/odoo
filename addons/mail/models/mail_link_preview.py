@@ -107,6 +107,8 @@ class LinkPreview(models.Model):
             'image/tiff',
             'image/x-icon',
         )
+        if not response.headers.get('Content-Type'):
+            return False
         # Content-Type header can return a charset, but we just need the
         # mimetype (eg: image/jpeg;charset=ISO-8859-1)
         content_type = response.headers['Content-Type'].split(';')

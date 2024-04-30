@@ -212,6 +212,7 @@ class SaleOrderLine(models.Model):
     qty_delivered = fields.Float(
         string="Delivery Quantity",
         compute='_compute_qty_delivered',
+        default=0.0,
         digits='Product Unit of Measure',
         store=True, readonly=False, copy=False)
 
@@ -307,11 +308,12 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id:
                 continue
-            if not line.order_partner_id.is_public:
-                line = line.with_context(lang=line.order_partner_id.lang)
+            lang = line.order_id._get_lang()
+            if lang != self.env.lang:
+                line = line.with_context(lang=lang)
             name = line._get_sale_order_line_multiline_description_sale()
             if line.is_downpayment and not line.display_type:
-                context = {'lang': line.order_partner_id.lang}
+                context = {'lang': lang}
                 dp_state = line._get_downpayment_state()
                 if dp_state == 'draft':
                     name = _("%(line_description)s (Draft)", line_description=name)
@@ -403,6 +405,7 @@ class SaleOrderLine(models.Model):
                     continue
                 fiscal_position = line.order_id.fiscal_position_id
                 cache_key = (fiscal_position.id, company.id, tuple(taxes.ids))
+                cache_key += line._get_custom_compute_tax_cache_key()
                 if cache_key in cached_taxes:
                     result = cached_taxes[cache_key]
                 else:
@@ -410,6 +413,10 @@ class SaleOrderLine(models.Model):
                     cached_taxes[cache_key] = result
                 # If company_id is set, always filter taxes by the company
                 line.tax_id = result
+
+    def _get_custom_compute_tax_cache_key(self):
+        """Hook method to be able to set/get cached taxes while computing them"""
+        return tuple()
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_pricelist_item_id(self):
@@ -429,20 +436,20 @@ class SaleOrderLine(models.Model):
         for line in self:
             # check if there is already invoiced amount. if so, the price shouldn't change as it might have been
             # manually edited
-            if line.qty_invoiced > 0:
+            if line.qty_invoiced > 0 or (line.product_id.expense_policy == 'cost' and line.is_expense):
                 continue
-            if not line.product_uom or not line.product_id or not line.order_id.pricelist_id:
+            if not line.product_uom or not line.product_id:
                 line.price_unit = 0.0
             else:
-                price = line.with_company(line.company_id)._get_display_price()
-                line.price_unit = line.product_id._get_tax_included_unit_price(
-                    line.company_id,
-                    line.order_id.currency_id,
-                    line.order_id.date_order,
-                    'sale',
+                line = line.with_company(line.company_id)
+                price = line._get_display_price()
+                line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
+                    price,
+                    line.currency_id or line.order_id.currency_id,
+                    product_taxes=line.product_id.taxes_id.filtered(
+                        lambda tax: tax.company_id == line.env.company
+                    ),
                     fiscal_position=line.order_id.fiscal_position_id,
-                    product_price_unit=price,
-                    product_currency=line.currency_id
                 )
 
     def _get_display_price(self):
@@ -484,9 +491,10 @@ class SaleOrderLine(models.Model):
         product = self.product_id.with_context(**self._get_product_price_context())
         qty = self.product_uom_qty or 1.0
         uom = self.product_uom or self.product_id.uom_id
+        currency = self.currency_id or self.order_id.company_id.currency_id
 
         price = pricelist_rule._compute_price(
-            product, qty, uom, order_date, currency=self.currency_id)
+            product, qty, uom, order_date, currency=currency)
 
         return price
 
@@ -1043,6 +1051,9 @@ class SaleOrderLine(models.Model):
             order_lines = self.filtered(lambda x: x.order_id == order)
             msg = "<b>" + _("The ordered quantity has been updated.") + "</b><ul>"
             for line in order_lines:
+                if 'product_id' in values and values['product_id'] != line.product_id.id:
+                    # tracking is meaningless if the product is changed as well.
+                    continue
                 msg += "<li> %s: <br/>" % line.product_id.display_name
                 msg += _(
                     "Ordered Quantity: %(old_qty)s -> %(new_qty)s",

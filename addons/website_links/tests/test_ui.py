@@ -9,7 +9,7 @@ import odoo.tests
 class TestUi(odoo.tests.HttpCase):
 
     def setUp(self):
-        super(TestUi, self).setUp()
+        super().setUp()
 
         def _get_title_from_url(addr, **kw):
             return 'Contact Us | My Website'
@@ -19,9 +19,9 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_01_test_ui(self):
         self.env['link.tracker'].search_or_create({
-            'campaign_id': 2,
-            'medium_id': 2,
-            'source_id': 2,
+            'campaign_id': self.env['utm.campaign'].create({'name': 'Sale'}).id,
+            'medium_id': self.env['utm.medium'].create({'name': 'Website'}).id,
+            'source_id': self.env['utm.source'].create({'name': 'Search'}).id,
             'url': self.env["ir.config_parameter"].sudo().get_param("web.base.url") + '/contactus',
         })
         self.start_tour("/", 'website_links_tour', login="admin")

@@ -88,7 +88,7 @@
                                 </thead>
                                 <tbody>
                                     <!-- In case you come across duplicated lines, ask NIM or LAP -->
-                                    <t t-foreach="o.move_line_ids_without_package" t-as="ml">
+                                    <t t-foreach="o.move_line_ids_without_package.sorted(lambda ml: (ml.location_id.complete_name, ml.location_dest_id.complete_name))" t-as="ml">
                                         <tr>
                                             <td>
                                                 <span t-field="ml.product_id.display_name"/><br/>

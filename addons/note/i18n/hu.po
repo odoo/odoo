@@ -6,17 +6,17 @@
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2022
 # Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
 # Ákos Nagy <akos.nagy@oregional.hu>, 2022
-# Tamás Dombos, 2022
 # Tamás Németh <ntomasz81@gmail.com>, 2022
+# Tamás Dombos, 2022
 # Martin Trigaux, 2022
 # krnkris, 2022
 # gezza <geza.nagy@oregional.hu>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: gezza <geza.nagy@oregional.hu>, 2023\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
@@ -100,14 +100,14 @@ msgid "Add a new tag"
 msgstr "Új címke hozzáadása"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Add a note"
 msgstr "Új megjegyzés hozzáadása"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Add new note"
@@ -129,7 +129,7 @@ msgid "By sticky note Category"
 msgstr "Felragasztós jegyzet kategória"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Channel"
@@ -251,7 +251,6 @@ msgstr "Ha be van jelölve, akkor az új üzenetek figyelmet igényelnek."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
-#: model:ir.model.fields,help:note.field_note_note__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 "Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépett fel."
@@ -365,6 +364,7 @@ msgid "Note Tag"
 msgstr "Jegyzetek cimkéi"
 
 #. module: note
+#. odoo-python
 #: code:addons/note/models/res_users.py:0
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
@@ -413,7 +413,7 @@ msgid "Related Note"
 msgstr ""
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Remember..."
@@ -431,16 +431,11 @@ msgid "Responsible User"
 msgstr "Felelős felhasználó"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "SAVE"
 msgstr "MENTÉS"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "SMS kézbesítési hiba"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
@@ -522,7 +517,7 @@ msgid "Tags"
 msgstr "Címkék"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/models/activity_menu_view.js:0
 #, python-format
 msgid "Today"
@@ -547,13 +542,3 @@ msgstr "Kivétel tevékenység típusa a rekordon."
 #: model:ir.model,name:note.model_res_users
 msgid "User"
 msgstr "Felhasználó"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__website_message_ids
-msgid "Website Messages"
-msgstr "Honlap üzenetek"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__website_message_ids
-msgid "Website communication history"
-msgstr "Weboldali kommunikációs előzmények"

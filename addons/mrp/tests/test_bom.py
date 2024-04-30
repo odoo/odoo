@@ -12,6 +12,11 @@ from freezegun import freeze_time
 @freeze_time(fields.Date.today())
 class TestBoM(TestMrpCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('product.group_product_variant').id)]})
+
     def test_01_explode(self):
         boms, lines = self.bom_1.explode(self.product_4, 3)
         self.assertEqual(set([bom[0].id for bom in boms]), set(self.bom_1.ids))
@@ -456,6 +461,115 @@ class TestBoM(TestMrpCommon):
         location = self.env.ref('stock.stock_location_stock')
         self.env['stock.quant']._update_available_quantity(product_dozens, location, 1.0)
         self.assertEqual(product_unit.qty_available, 12.0)
+
+    def test_19_bom_kit_field_is_kits_bom_with_product_id(self):
+        kit_products = self.env['product.product'].create({
+            'name': 'No Kit',
+            'type': 'product',
+            'uom_id': self.uom_unit.id,
+        })
+        self.env['mrp.bom'].create({
+            'product_id': kit_products.id,
+            'product_tmpl_id': kit_products.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 4.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {
+                    'product_id': self.product_2.id,
+                    'product_qty': 2,
+                }),
+                (0, 0, {
+                    'product_id': self.product_3.id,
+                    'product_qty': 2,
+                })
+            ]
+        })
+        self.assertTrue(kit_products.is_kits)
+        self.assertTrue(kit_products.product_tmpl_id.is_kits)
+
+        no_kit_products = self.env['product.product'].create({
+            'name': 'No Kit',
+            'type': 'product',
+            'uom_id': self.uom_unit.id,
+        })
+        self.assertFalse(no_kit_products.is_kits)
+        self.assertFalse(no_kit_products.product_tmpl_id.is_kits)
+
+        product_with_kit = self.env['product.product'].search(
+            [('is_kits', '=', True)])
+        product_tmpl_with_kit = self.env['product.template'].search(
+            [('is_kits', '=', True)])
+        self.assertIn(kit_products, product_with_kit)
+        self.assertIn(kit_products.product_tmpl_id, product_tmpl_with_kit)
+        self.assertNotIn(no_kit_products, product_with_kit)
+        self.assertNotIn(no_kit_products.product_tmpl_id,
+                         product_tmpl_with_kit)
+
+        product_without_kit = self.env['product.product'].search(
+            [('is_kits', '=', False)])
+        product_tmpl_without_kit = self.env['product.template'].search(
+            [('is_kits', '=', False)])
+        self.assertIn(no_kit_products, product_without_kit)
+        self.assertIn(no_kit_products.product_tmpl_id,
+                      product_tmpl_without_kit)
+        self.assertNotIn(kit_products, product_without_kit)
+        self.assertNotIn(kit_products.product_tmpl_id,
+                         product_tmpl_without_kit)
+
+    def test_19_bom_kit_field_is_kits_bom_without_product_id(self):
+        kit_products = self.env['product.product'].create({
+            'name': 'No Kit',
+            'type': 'product',
+            'uom_id': self.uom_unit.id,
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_products.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 4.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {
+                    'product_id': self.product_2.id,
+                    'product_qty': 2,
+                }),
+                (0, 0, {
+                    'product_id': self.product_3.id,
+                    'product_qty': 2,
+                })
+            ]
+        })
+        self.assertTrue(kit_products.is_kits)
+        self.assertTrue(kit_products.product_tmpl_id.is_kits)
+
+        no_kit_products = self.env['product.product'].create({
+            'name': 'No Kit',
+            'type': 'product',
+            'uom_id': self.uom_unit.id,
+        })
+        self.assertFalse(no_kit_products.is_kits)
+        self.assertFalse(no_kit_products.product_tmpl_id.is_kits)
+
+        product_with_kit = self.env['product.product'].search(
+            [('is_kits', '=', True)])
+        product_tmpl_with_kit = self.env['product.template'].search(
+            [('is_kits', '=', True)])
+        self.assertIn(kit_products, product_with_kit)
+        self.assertIn(kit_products.product_tmpl_id, product_tmpl_with_kit)
+        self.assertNotIn(no_kit_products, product_with_kit)
+        self.assertNotIn(no_kit_products.product_tmpl_id,
+                         product_tmpl_with_kit)
+
+        product_without_kit = self.env['product.product'].search(
+            [('is_kits', '=', False)])
+        product_tmpl_without_kit = self.env['product.template'].search(
+            [('is_kits', '=', False)])
+        self.assertIn(no_kit_products, product_without_kit)
+        self.assertIn(no_kit_products.product_tmpl_id,
+                      product_tmpl_without_kit)
+        self.assertNotIn(kit_products, product_without_kit)
+        self.assertNotIn(kit_products.product_tmpl_id,
+                         product_tmpl_without_kit)
 
     def test_20_bom_report(self):
         """ Simulate a crumble receipt with mrp and open the bom structure
@@ -1013,7 +1127,7 @@ class TestBoM(TestMrpCommon):
                 }),
                 Command.create({
                     'product_id': product_two.id,
-                    'product_qty': 1,
+                    'product_qty': 0.1,
                     'product_uom_id': uom_unit.id,
                 })
             ]
@@ -1022,8 +1136,8 @@ class TestBoM(TestMrpCommon):
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
 
         # The first product shouldn't affect the producible quantity because the target needs none of it
-        # So with 4 of the second product available, we can produce 4 items
-        self.assertEqual(report_values["lines"]["producible_qty"], 4)
+        # So with 4 of the second product available, we can produce 40 items
+        self.assertEqual(report_values["lines"]["producible_qty"], 40)
 
     def test_bom_report_capacity_with_duplicate_components(self):
         location = self.env.ref('stock.stock_location_stock')
@@ -1081,6 +1195,19 @@ class TestBoM(TestMrpCommon):
         line2_values = report_values['lines']['components'][1]
         self.assertEqual(line1_values['availability_state'], 'available', 'The first component should be available.')
         self.assertEqual(line2_values['availability_state'], 'unavailable', 'The second component should be marked as unavailable')
+
+    def test_report_data_bom_with_0_qty(self):
+        """
+        Test that a bom with a child-bom set with a zero qty will still have have 0 qty for the child-bom on the report.
+        """
+        self.bom_4.bom_line_ids = [(0, 0, {
+            'product_id': self.bom_2.product_id.id,
+            'product_qty': 1.0,
+        })]
+        self.bom_4.bom_line_ids.product_qty = 0
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=self.bom_4.id, searchQty=1, searchVariant=False)
+
+        self.assertEqual(sum([value['quantity'] for value in report_values['lines']['components'][:2]]), 0, 'The quantity should be set to 0 for all components of the bom.')
 
     def test_validate_no_bom_line_with_same_product(self):
         """
@@ -1159,12 +1286,14 @@ class TestBoM(TestMrpCommon):
 
         uom_kg = self.env.ref('uom.product_uom_kgm')
         uom_gram = self.env.ref('uom.product_uom_gram')
+        manufacturing_route_id = self.ref('mrp.route_warehouse0_manufacture')
 
         product_gram = self.env['product.product'].create({
             'name': 'Product sold in grams',
             'type': 'product',
             'uom_id': uom_gram.id,
             'uom_po_id': uom_gram.id,
+            'route_ids': [(4, manufacturing_route_id)],
         })
         # We create a BoM that manufactures 2kg of product
         self.env['mrp.bom'].create({
@@ -1187,7 +1316,6 @@ class TestBoM(TestMrpCommon):
         self.env.flush_all()
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
         orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', product_gram.id)])
-        manufacturing_route_id = self.ref('mrp.route_warehouse0_manufacture')
         self.assertEqual(orderpoint.route_id.id, manufacturing_route_id)
         self.assertEqual(orderpoint.qty_multiple, 2000.0)
         self.assertEqual(orderpoint.qty_to_order, 4000.0)

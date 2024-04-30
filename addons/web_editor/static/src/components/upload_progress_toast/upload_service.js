@@ -3,6 +3,10 @@
 import { registry } from '@web/core/registry';
 import { UploadProgressToast } from './upload_progress_toast';
 import { getDataURLFromFile } from 'web.utils';
+import { _t } from "@web/core/l10n/translation";
+import { checkFileSize } from "@web/core/utils/files";
+import { humanNumber } from "@web/core/utils/numbers";
+import { sprintf } from "@web/core/utils/strings";
 
 import { reactive } from "@odoo/owl";
 
@@ -69,14 +73,20 @@ export const uploadService = {
                 const sortedFiles = Array.from(files).sort((a, b) => a.size - b.size);
                 for (const file of sortedFiles) {
                     let fileSize = file.size;
+                    if (!checkFileSize(fileSize, env.services.notification)) {
+                        // FIXME
+                        // Note that the notification service is not added as a
+                        // dependency of this service, in order to avoid introducing
+                        // a breaking change in a stable version.
+                        // If the notification service is not available, the
+                        // checkFileSize function will not display any notification
+                        // but will still return the correct value.
+                        return null;
+                    }
                     if (!fileSize) {
                         fileSize = null;
-                    } else if (fileSize < 1024) {
-                        fileSize = fileSize.toFixed(2) + " bytes";
-                    } else if (fileSize < 1048576) {
-                        fileSize = (fileSize / 1024).toFixed(2) + " KB";
                     } else {
-                        fileSize = (fileSize / 1048576).toFixed(2) + " MB";
+                        fileSize = humanNumber(fileSize) + "B";
                     }
 
                     const id = ++fileId;
@@ -98,7 +108,20 @@ export const uploadService = {
                 // limited by bandwidth.
                 for (const sortedFile of sortedFiles) {
                     const file = progressToast.files[sortedFile.progressToastId];
-                    const dataURL = await getDataURLFromFile(sortedFile);
+                    let dataURL;
+                    try {
+                        dataURL = await getDataURLFromFile(sortedFile);
+                    } catch {
+                        deleteFile(file.id);
+                        env.services.notification.add(
+                            sprintf(
+                                _t('Could not load the file "%s".'),
+                                sortedFile.name
+                            ),
+                            { type: 'danger' }
+                        );
+                        continue
+                    }
                     try {
                         const xhr = new XMLHttpRequest();
                         xhr.upload.addEventListener('progress', ev => {

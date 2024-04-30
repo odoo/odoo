@@ -47,7 +47,7 @@ _DEFAULT_MANIFEST = {
     'live_test_url': '',  # website themes
     #name, mandatory
     'post_init_hook': '',
-    'post_load': None,
+    'post_load': '',
     'pre_init_hook': '',
     'sequence': 100,
     'snippet_lists': {},  # website themes
@@ -156,7 +156,7 @@ class UpgradeHook(object):
             return self
 
     def find_spec(self, fullname, path=None, target=None):
-        if re.match(r"^odoo.addons.base.maintenance.migrations\b", fullname):
+        if re.match(r"^odoo\.addons\.base\.maintenance\.migrations\b", fullname):
             # We can't trigger a DeprecationWarning in this case.
             # In order to be cross-versions, the multi-versions upgrade scripts (0.0.0 scripts),
             # the tests, and the common files (utility functions) still needs to import from the
@@ -431,7 +431,6 @@ def load_manifest(module, mod_path=None):
 
     return manifest
 
-@functools.lru_cache(maxsize=None)
 def get_manifest(module, mod_path=None):
     """
     Get the module manifest.
@@ -444,6 +443,10 @@ def get_manifest(module, mod_path=None):
         when the manifest was not found.
     :rtype: dict
     """
+    return copy.deepcopy(_get_manifest_cached(module, mod_path))
+
+@functools.lru_cache(maxsize=None)
+def _get_manifest_cached(module, mod_path=None):
     return load_manifest(module, mod_path)
 
 def load_information_from_description_file(module, mod_path=None):
@@ -508,7 +511,7 @@ def get_modules():
             _logger.warning("addons path does not exist: %s", ad)
             continue
         plist.extend(listdir(ad))
-    return list(set(plist))
+    return sorted(set(plist))
 
 def get_modules_with_version():
     modules = get_modules()

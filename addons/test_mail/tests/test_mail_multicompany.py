@@ -335,6 +335,9 @@ class TestMultiCompanyRedirect(TestMailCommon, HttpCase):
                 if not login:
                     path = url_parse(response.url).path
                     self.assertEqual(path, '/web/login')
+                    decoded_fragment = url_decode(url_parse(response.url).fragment)
+                    self.assertTrue("cids" in decoded_fragment)
+                    self.assertEqual(decoded_fragment['cids'], str(mc_record.company_id.id))
                 else:
                     user = self.env['res.users'].browse(self.session.uid)
                     self.assertEqual(user.login, login)
@@ -356,3 +359,49 @@ class TestMultiCompanyRedirect(TestMailCommon, HttpCase):
                             self.assertEqual(cids, f'{mc_record.company_id.id}')
                         else:
                             self.assertEqual(cids, f'{user.company_id.id},{mc_record.company_id.id}')
+
+    def test_redirect_to_records_nothread(self):
+        """ Test no thread models and redirection """
+        nothreads = self.env['mail.test.nothread'].create([
+            {
+                'company_id': company.id,
+                'name': f'Test with {company.name}',
+            }
+            for company in (self.company_admin, self.company_2, self.env['res.company'])
+        ])
+
+        # when being logged, cids should be based on current user's company unless
+        # there is an access issue (not tested here, see 'test_redirect_to_records')
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        for test_record in nothreads:
+            for user_company in self.company_admin, self.company_2:
+                with self.subTest(record_name=test_record.name, user_company=user_company):
+                    self.user_admin.write({'company_id': user_company.id})
+                    response = self.url_open(
+                        f'/mail/view?model={test_record._name}&res_id={test_record.id}',
+                        timeout=15
+                    )
+                    self.assertEqual(response.status_code, 200)
+
+                    decoded_fragment = url_decode(url_parse(response.url).fragment)
+                    self.assertTrue("cids" in decoded_fragment)
+                    self.assertEqual(decoded_fragment['cids'], str(user_company.id))
+
+        # when being not logged, cids should be added based on
+        # '_get_mail_redirect_suggested_company'
+        self.authenticate(None, None)
+        for test_record in nothreads:
+            with self.subTest(record_name=test_record.name, user_company=user_company):
+                self.user_admin.write({'company_id': user_company.id})
+                response = self.url_open(
+                    f'/mail/view?model={test_record._name}&res_id={test_record.id}',
+                    timeout=15
+                )
+                self.assertEqual(response.status_code, 200)
+
+                decoded_fragment = url_decode(url_parse(response.url).fragment)
+                if test_record.company_id:
+                    self.assertIn('cids', decoded_fragment)
+                    self.assertEqual(decoded_fragment['cids'], str(test_record.company_id.id))
+                else:
+                    self.assertNotIn('cids', decoded_fragment)

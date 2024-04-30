@@ -1387,6 +1387,48 @@ class PropertiesCase(TransactionCase):
             values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, 'Test Tag'))
 
+    @users('test')
+    def test_properties_field_no_parent_access(self):
+        """We can read the child, but not the definition record.
+
+        Check that the user does not get an `AccessError` when creating a new
+        record having a property field whose property definition is stored on
+        a record the user does not have access to. The newly created record
+        should have the right schema and should be populated with the default
+        values stored on the property definition.
+        """
+        def _mocked_check_access_rights(records, operation, raise_exception=True):
+            if records.env.su:
+                return True
+            if raise_exception:
+                raise AccessError('')
+            return False
+
+        self.env.invalidate_all()
+        with patch('odoo.addons.test_new_api.models.test_new_api.Discussion.check_access_rights', _mocked_check_access_rights):
+            message = self.env['test_new_api.message'].create({
+                'name': 'Test Message',
+                'discussion': self.discussion_1.id,
+                'author': self.user.id,
+                'attributes': {
+                    'moderator_partner_id': self.partner.id,
+                }
+            })
+
+            self.assertEqual(message.attributes, [{
+                'name': 'discussion_color_code',
+                'string': 'Color Code',
+                'type': 'char',
+                'default': 'blue',
+                'value': 'blue'
+            }, {
+                'name': 'moderator_partner_id',
+                'string': 'Partner',
+                'type': 'many2one',
+                'comodel': 'test_new_api.partner',
+                'value': self.partner.id
+            }])
+
     def _get_sql_properties(self, message):
         self.env.flush_all()
 
@@ -1414,3 +1456,20 @@ class PropertiesCase(TransactionCase):
         value = self.env.cr.fetchone()
         self.assertTrue(value and value[0])
         return value[0]
+
+    def test_properties_inherits(self):
+        email = self.env['test_new_api.emailmessage'].create({
+            'discussion': self.discussion_1.id,
+            'attributes': [{
+                'name': 'discussion_color_code',
+                'type': 'char',
+                'string': 'Color Code',
+                'default': 'blue',
+                'value': 'red',
+            }],
+        })
+
+        values = email.read(['attributes'])
+        self.assertEqual(values[0]['attributes'][0]['value'], 'red')
+        values = email.message.read(['attributes'])
+        self.assertEqual(values[0]['attributes'][0]['value'], 'red')

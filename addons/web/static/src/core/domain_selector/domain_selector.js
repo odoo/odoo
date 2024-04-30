@@ -44,7 +44,10 @@ export class DomainSelector extends Component {
             if (ctx.currentElement === "!") {
                 ctx.next();
                 this.traverseNode(ctx, !negate);
-            } else if (typeof ctx.currentElement === "string" && ["&", "|"].includes(ctx.currentElement)) {
+            } else if (
+                typeof ctx.currentElement === "string" &&
+                ["&", "|"].includes(ctx.currentElement)
+            ) {
                 this.traverseBranchNode(ctx, negate);
             } else {
                 this.traverseLeafNode(ctx, negate);
@@ -192,6 +195,10 @@ export class DomainSelector extends Component {
         } else {
             return this.makeLeafNode(ctx, op, [field, value]);
         }
+    }
+
+    resetDomain() {
+        this.props.update("[]");
     }
 }
 

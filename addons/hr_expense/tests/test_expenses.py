@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
+
 from freezegun import freeze_time
 
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged, Form
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import formatLang, format_date
 from odoo import fields, Command
 from odoo.exceptions import UserError
 
@@ -1179,3 +1181,213 @@ class TestExpenses(TestExpenseCommon):
         self.env['hr.expense'].create_expense_from_attachments(attachment.id)
         expense = self.env['hr.expense'].search([], order='id desc', limit=1)
         self.assertEqual(expense.account_id, product.property_account_expense_id, "The expense account should be the default one of the product")
+
+    def test_expense_sheet_attachments_sync(self):
+        """
+        Test that the hr.expense.sheet attachments stay in sync with the attachments associated with the expense lines
+        Syncing should happen when:
+        - When adding/removing expense_line_ids on a hr.expense.sheet <-> changing sheet_id on an expense
+        - When deleting an expense that is associated with an hr.expense.sheet
+        - When adding/removing an attachment of an expense that is associated with an hr.expense.sheet
+        """
+        def assert_attachments_are_synced(sheet, attachments_on_sheet, sheet_has_attachment):
+            if sheet_has_attachment:
+                self.assertTrue(bool(attachments_on_sheet), "Attachment that belongs to the hr.expense.sheet only was removed unexpectedly")
+            self.assertSetEqual(
+                set(sheet.expense_line_ids.attachment_ids.mapped('checksum')),
+                set((sheet.attachment_ids - attachments_on_sheet).mapped('checksum')),
+                "Attachments between expenses and their sheet is not in sync.",
+            )
+
+        for sheet_has_attachment in (False, True):
+            expense_1, expense_2, expense_3 = self.env['hr.expense'].create([{
+                'name': 'expense_1',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'total_amount': 1000,
+            }, {
+                'name': 'expense_2',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'total_amount': 999,
+            }, {
+                'name': 'expense_3',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'total_amount': 998,
+            }])
+            self.env['ir.attachment'].create([{
+                'name': "test_file_1.txt",
+                'datas': base64.b64encode(b'content'),
+                'res_id': expense_1.id,
+                'res_model': 'hr.expense',
+            }, {
+                'name': "test_file_2.txt",
+                'datas': base64.b64encode(b'other content'),
+                'res_id': expense_2.id,
+                'res_model': 'hr.expense',
+            }, {
+                'name': "test_file_3.txt",
+                'datas': base64.b64encode(b'different content'),
+                'res_id': expense_3.id,
+                'res_model': 'hr.expense',
+            }])
+
+            sheet = self.env['hr.expense.sheet'].create({
+                'company_id': self.env.company.id,
+                'employee_id': self.expense_employee.id,
+                'name': 'test sheet',
+                'expense_line_ids': [Command.set([expense_1.id, expense_2.id, expense_3.id])],
+            })
+
+            sheet_attachment = self.env['ir.attachment'].create({
+                'name': "test_file_4.txt",
+                'datas': base64.b64encode(b'yet another different content'),
+                'res_id': sheet.id,
+                'res_model': 'hr.expense.sheet',
+            }) if sheet_has_attachment else self.env['ir.attachment']
+
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            expense_1.attachment_ids.unlink()
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            self.env['ir.attachment'].create({
+                'name': "test_file_1.txt",
+                'datas': base64.b64encode(b'content'),
+                'res_id': expense_1.id,
+                'res_model': 'hr.expense',
+            })
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            expense_2.sheet_id = False
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            expense_2.sheet_id = sheet
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            sheet.expense_line_ids = [Command.set([expense_1.id, expense_3.id])]
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            expense_3.unlink()
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            sheet.attachment_ids.filtered(
+                lambda att: att.checksum in sheet.expense_line_ids.attachment_ids.mapped('checksum')
+            ).unlink()
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+
+    def test_create_report_name(self):
+        """
+            When an expense sheet is created from one or more expense, the report name is generated through the expense name or date.
+            As the expense sheet is created directly from the hr.expense._get_default_expense_sheet_values method,
+            we only need to test the method.
+        """
+        expense_with_date_1, expense_with_date_2, expense_without_date = self.env['hr.expense'].create([{
+            'company_id': self.company_data['company'].id,
+            'name': f'test expense {i}',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_a.id,
+            'unit_amount': self.product_a.standard_price,
+            'date': '2021-01-01',
+            'quantity': i + 1,
+        } for i in range(3)])
+        expense_without_date.date = False
+
+        # CASE 1: only one expense with or without date -> expense name
+        sheet_name = expense_with_date_1._get_default_expense_sheet_values()[0]['name']
+        self.assertEqual(expense_with_date_1.name, sheet_name, "The report name should be the same as the expense name")
+        sheet_name = expense_without_date._get_default_expense_sheet_values()[0]['name']
+        self.assertEqual(expense_without_date.name, sheet_name, "The report name should be the same as the expense name")
+
+        # CASE 2: two expenses with the same date -> expense date
+        expenses = expense_with_date_1 | expense_with_date_2
+        sheet_name = expenses._get_default_expense_sheet_values()[0]['name']
+        self.assertEqual(format_date(self.env, expense_with_date_1.date), sheet_name, "The report name should be the same as the expense date")
+
+        # CASE 3: two expenses with different dates -> date range
+        expense_with_date_2.date = '2021-01-02'
+        sheet_name = expenses._get_default_expense_sheet_values()[0]['name']
+        self.assertEqual(
+            f"{format_date(self.env, expense_with_date_1.date)} - {format_date(self.env, expense_with_date_2.date)}",
+            sheet_name,
+            "The report name should be the date range of the expenses",
+        )
+
+        # CASE 4: One or more expense doesn't have a date (single sheet) -> No fallback name
+        expenses |= expense_without_date
+        sheet_name = expenses._get_default_expense_sheet_values()[0]['name']
+        self.assertFalse(
+            sheet_name,
+            "The report (with the empty expense date) name should be empty as a fallback when several reports are created",
+        )
+        expenses.date = False
+        sheet_name = expenses._get_default_expense_sheet_values()[0]['name']
+        self.assertFalse(sheet_name, "The report name should be empty as a fallback")
+
+        # CASE 5: One or more expense doesn't have a date (multiple sheets) -> Fallback name
+        expenses |= self.env['hr.expense'].create([{
+            'company_id': self.company_data['company'].id,
+            'name': f'test expense by company {i}',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_a.id,
+            'unit_amount': self.product_a.standard_price,
+            'payment_mode': 'company_account',
+            'date': '2021-01-01',
+            'quantity': i + 1,
+        } for i in range(3)])
+        sheet_names = [sheet['name'] for sheet in expenses._get_default_expense_sheet_values()]
+        self.assertSequenceEqual(
+            ("New Expense Report, paid by employee", format_date(self.env, expenses[-1].date)),
+            sheet_names,
+            "The report name should be 'New Expense Report, paid by (employee|company)' as a fallback",
+        )
+
+    def test_expense_product_update(self):
+        """ Test that the expense line is correctly updated or not when its product price is updated."""
+        #pylint: disable=bad-whitespace
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'lst_price': 100.0,
+            'standard_price': 0.0,
+            'property_account_income_id': self.company_data['default_account_revenue'].id,
+            'property_account_expense_id': self.company_data['default_account_expense'].id,
+            'supplier_taxes_id': False,
+        })
+
+        sheet_no_update, sheet_update = sheets = self.env['hr.expense.sheet'].create([{
+            'company_id': self.env.company.id,
+            'employee_id': self.expense_employee.id,
+            'name': name,
+            'expense_line_ids': [
+                Command.create({
+                    'name': name,
+                    'date': '2016-01-01',
+                    'product_id': product.id,
+                    'total_amount': 100.0,
+                    'employee_id': self.expense_employee.id
+                }),
+            ],
+        } for name in ('test sheet no update', 'test sheet update')])
+
+        sheet_no_update.action_submit_sheet()  # No update when sheet is submitted
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'unit_amount': 100.0, 'quantity': 1, 'total_amount': 100.0},
+            {'name':    'test sheet update', 'unit_amount': 100.0, 'quantity': 1, 'total_amount': 100.0},
+        ])
+        product.standard_price = 50.0
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'unit_amount': 100.0, 'quantity': 1, 'total_amount': 100.0},
+            {'name':    'test sheet update', 'unit_amount':  50.0, 'quantity': 1, 'total_amount':  50.0},  # unit_amount is updated
+        ])
+        sheet_update.expense_line_ids.quantity = 5
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'unit_amount': 100.0, 'quantity': 1, 'total_amount': 100.0},
+            {'name':    'test sheet update', 'unit_amount':  50.0, 'quantity': 5, 'total_amount': 250.0},  # quantity & total are updated
+        ])
+        product.standard_price = 0.0
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'unit_amount': 100.0, 'quantity': 1, 'total_amount': 100.0},
+            {'name':    'test sheet update', 'unit_amount': 250.0, 'quantity': 1, 'total_amount': 250.0},  # quantity & unit_amount only are updated
+        ])
+
+        sheet_update.action_submit_sheet()  # This sheet should not be updated any more
+        product.standard_price = 300.0
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'unit_amount': 100.0, 'quantity': 1, 'total_amount': 100.0},
+            {'name':    'test sheet update', 'unit_amount': 250.0, 'quantity': 1, 'total_amount': 250.0},  # no update
+        ])

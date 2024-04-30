@@ -83,20 +83,22 @@ class TestPoSSaleReport(TestPoSCommon):
 
     def test_different_shipping_address(self):
         product_0 = self.create_product('Product 0', self.categ_basic, 0.0, 0.0)
+        partner_1 = self.env['res.partner'].create({'name': 'Test Partner 1'})
+        partner_2 = self.env['res.partner'].create({'name': 'Test Partner 2'})
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_1').id,
-            'partner_shipping_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': partner_1.id,
+            'partner_shipping_id': partner_2.id,
             'order_line': [(0, 0, {
                 'product_id': product_0.id,
             })],
         })
         self.open_new_session()
 
-        data = self.create_ui_order_data([(product_0, 1)], self.env.ref('base.res_partner_1'), True)
+        data = self.create_ui_order_data([(product_0, 1)], partner_1, True)
         data['data']['lines'][0][2]['sale_order_origin_id'] = sale_order.read()[0]
         data['data']['lines'][0][2]['sale_order_line_id'] = sale_order.order_line[0].read()[0]
         order_ids = self.env['pos.order'].create_from_ui([data])
 
         move_id = self.env['account.move'].browse(order_ids[0]['account_move'])
-        self.assertEqual(move_id.partner_id.id, self.env.ref('base.res_partner_1').id)
-        self.assertEqual(move_id.partner_shipping_id.id, self.env.ref('base.res_partner_2').id)
+        self.assertEqual(move_id.partner_id.id, partner_1.id)
+        self.assertEqual(move_id.partner_shipping_id.id, partner_2.id)

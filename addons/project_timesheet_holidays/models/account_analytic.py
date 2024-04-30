@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 
 class AccountAnalyticLine(models.Model):
@@ -10,7 +11,7 @@ class AccountAnalyticLine(models.Model):
 
     holiday_id = fields.Many2one("hr.leave", string='Leave Request', copy=False)
     global_leave_id = fields.Many2one("resource.calendar.leaves", string="Global Time Off", ondelete='cascade')
-    task_id = fields.Many2one(domain="[('project_id.allow_timesheets', '=', True),"
+    task_id = fields.Many2one(domain="[('allow_timesheets', '=', True),"
         "('project_id', '=?', project_id), ('is_timeoff_task', '=', False)]")
 
     @api.ondelete(at_uninstall=False)
@@ -34,3 +35,9 @@ class AccountAnalyticLine(models.Model):
         if not self._check_can_update_timesheet():
             raise UserError(_('You cannot modify timesheets that are linked to time off requests. Please use the Time Off application to modify your time off requests instead.'))
         return super().write(vals)
+
+    def _get_favorite_project_id_domain(self, employee_id=False):
+        return expression.AND([
+            super()._get_favorite_project_id_domain(employee_id),
+            [('holiday_id', '=', False), ('global_leave_id', '=', False)],
+        ])

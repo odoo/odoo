@@ -1,6 +1,7 @@
 odoo.define('pos_reataurant.tour.synchronized_table_management', function (require) {
     'use strict';
 
+    const { BillScreen } = require('pos_restaurant.tour.BillScreenTourMethods');
     const { PaymentScreen } = require('point_of_sale.tour.PaymentScreenTourMethods');
     const { ReceiptScreen } = require('point_of_sale.tour.ReceiptScreenTourMethods');
     const { Chrome } = require('pos_restaurant.tour.ChromeTourMethods');
@@ -106,4 +107,20 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
     FloorScreen.check.orderCountSyncedInTableIs('T4', '1');
 
     Tour.register('pos_restaurant_sync_second_login', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.confirmOpeningPopup();
+    FloorScreen.do.clickTable("5");
+    ProductScreen.do.clickDisplayedProduct("Coca-Cola");
+    BillScreen.do.clickBillButton();
+    BillScreen.check.isShown();
+    BillScreen.check.isQRCodeNotShown();
+    BillScreen.do.clickOk();
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.do.clickPaymentMethod("Bank");
+    PaymentScreen.do.clickValidate();
+    BillScreen.check.isQRCodeShown();
+
+    Tour.register('BillScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });

@@ -249,6 +249,15 @@ class TestPurchaseStockReports(TestReportsCommon):
             - 4 x P in Child Location 02
         -> 100% received
         """
+        if not self.stock_location.child_ids:
+            self.env['stock.location'].create([{
+                'name': 'Shelf 1',
+                'location_id': self.stock_location.id,
+            }, {
+                'name': 'Shelf 2',
+                'location_id': self.stock_location.id,
+            }])
+
         child_loc_01, child_loc_02 = self.stock_location.child_ids
 
         po_form = Form(self.env['purchase.order'])

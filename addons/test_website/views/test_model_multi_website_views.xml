@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<odoo>
+
+<!-- test.model.multi.website views -->
+<record id="test_model_multi_website_view_kanban" model="ir.ui.view">
+    <field name="name">test.model.multi.website.kanban</field>
+    <field name="model">test.model.multi.website</field>
+    <field name="arch" type="xml">
+        <kanban js_class="website_pages_kanban" class="o_kanban_mobile" action="open_website_url" type="object" sample="1">
+            <field name="name"/>
+            <field name="website_url"/>
+            <templates>
+                <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click d-flex flex-column">
+                        <div class="row mb-auto">
+                            <strong class="col-8">
+                                <span class="o_text_overflow" t-esc="record.name.value"/>
+                                <div class="text-muted" t-if="record.website_id.value" groups="website.group_multi_website">
+                                    <i class="fa fa-globe me-1" title="Website"/>
+                                    <field name="website_id"/>
+                                </div>
+                            </strong>
+                        </div>
+                        <div class="border-top mt-2 pt-2">
+                            <field name="is_published" widget="boolean_toggle"/>
+                            <t t-if="record.is_published.raw_value">Published</t>
+                            <t t-else="">Not Published</t>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+</record>
+<record id="test_model_multi_website_view_list" model="ir.ui.view">
+    <field name="name">Test Multi Model Pages Tree</field>
+    <field name="model">test.model.multi.website</field>
+    <field name="priority">99</field>
+    <field name="arch" type="xml">
+        <tree js_class="website_pages_list" type="object" action="open_website_url" multi_edit="1">
+            <field name="name"/>
+            <field name="website_url"/>
+            <field name="website_id" groups="website.group_multi_website"/>
+        </tree>
+    </field>
+</record>
+<record id="action_test_model_multi_website" model="ir.actions.act_window">
+    <field name="name">Test Multi Model Pages</field>
+    <field name="res_model">test.model.multi.website</field>
+    <field name="view_mode">tree,kanban,form</field>
+    <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('test_model_multi_website_view_list')}),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('test_model_multi_website_view_kanban')}),
+    ]"/>
+</record>
+
+<!-- js_class bug records -->
+<record id="test_model_multi_website_view_list_js_class_bug" model="ir.ui.view">
+    <field name="name">Test Multi Model Pages Tree js_class bug</field>
+    <field name="model">test.model.multi.website</field>
+    <field name="priority">99</field>
+    <!-- Omitting `website_pages_list` on purpose to test it does not crash -->
+    <field name="arch" type="xml">
+        <tree type="object" action="open_website_url" multi_edit="1">
+            <field name="name"/>
+            <field name="website_url"/>
+            <field name="website_id" groups="website.group_multi_website"/>
+        </tree>
+    </field>
+</record>
+<record id="action_test_model_multi_website_js_class_bug" model="ir.actions.act_window">
+    <field name="name">Test Multi Model Pages js_class bug</field>
+    <field name="res_model">test.model.multi.website</field>
+    <field name="view_mode">tree,kanban,form</field>
+    <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('test_model_multi_website_view_list_js_class_bug')}),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('test_model_multi_website_view_kanban')}),
+    ]"/>
+</record>
+
+</odoo>

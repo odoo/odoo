@@ -44,8 +44,8 @@ describe('Copy', () => {
                     const clipboardData = new DataTransfer();
                     await triggerEvent(editor.editable, 'copy', { clipboardData });
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('bcd');
-                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('bcd');
-                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('bcd');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<p>bcd</p>');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<p>bcd</p>');
                 },
             });
             await testEditor(BasicEditor, {
@@ -54,8 +54,8 @@ describe('Copy', () => {
                     const clipboardData = new DataTransfer();
                     await triggerEvent(editor.editable, 'copy', { clipboardData });
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('abc\nefg');
-                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('abc<br>efg');
-                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('abc<br>efg');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<p>abc<br>efg</p>');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<p>abc<br>efg</p>');
                 },
             });
             await testEditor(BasicEditor, {
@@ -66,6 +66,72 @@ describe('Copy', () => {
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('a');
                     window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<table><tbody><tr><td><ul><li>a</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>');
                     window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<table><tbody><tr><td><ul><li>a</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>');
+                },
+            });
+        });
+        it('should wrap the selected text with clones of ancestors up to a block element to keep styles', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>[<span style="font-size: 16px;">Test</span> <span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">Test</font></span>]</p>',
+                stepFunction: async editor => {
+                    const clipboardData = new DataTransfer();
+                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('Test Test');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<p><span style="font-size: 16px;">Test</span> <span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">Test</font></span></p>');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<p><span style="font-size: 16px;">Test</span> <span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">Test</font></span></p>');
+                },
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p><strong><em><u><font class="text-o-color-1">hello [there]</font></u></em></strong></p>',
+                stepFunction: async editor => {
+                    const clipboardData = new DataTransfer();
+                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('there');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<p><strong><em><u><font class="text-o-color-1">there</font></u></em></strong></p>');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<p><strong><em><u><font class="text-o-color-1">there</font></u></em></strong></p>');
+                },
+            });
+        });
+        it('should copy the selection as a single list item', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li>[First]</li><li>Second</li>',
+                stepFunction: async editor => {
+                    const clipboardData = new DataTransfer();
+                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('First');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('First');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('First');
+                },
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li>First [List]</li><li>Second</li>',
+                stepFunction: async editor => {
+                    const clipboardData = new DataTransfer();
+                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('List');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('List');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('List');
+                },
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li><span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">[First]</font></span></li><li>Second</li>',
+                stepFunction: async editor => {
+                    const clipboardData = new DataTransfer();
+                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('First');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">First</font></span>');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">First</font></span>');
+                },
+            });
+        })
+        it('should copy the selection as a list with multiple list items', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li>[First</li><li>Second]</li>',
+                stepFunction: async editor => {
+                    const clipboardData = new DataTransfer();
+                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('First\nSecond');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<ul><li>First</li><li>Second</li></ul>');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<ul><li>First</li><li>Second</li></ul>');
                 },
             });
         });
@@ -103,8 +169,8 @@ describe('Cut', () => {
                     const clipboardData = new DataTransfer();
                     await triggerEvent(editor.editable, 'cut', { clipboardData });
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('bcd');
-                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('bcd');
-                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('bcd');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<p>bcd</p>');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<p>bcd</p>');
                 },
                 contentAfter: '<p>a[]e</p>',
             });
@@ -114,8 +180,8 @@ describe('Cut', () => {
                     const clipboardData = new DataTransfer();
                     await triggerEvent(editor.editable, 'cut', { clipboardData });
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('abc\nefg');
-                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('abc<br>efg');
-                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('abc<br>efg');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<p>abc<br>efg</p>');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<p>abc<br>efg</p>');
                 },
                 contentAfter: '<p>[]<br></p>',
             });
@@ -171,20 +237,13 @@ describe('Paste', () => {
 
             });
             it('should keep whitelisted Tags tag (2)', async () => {
-                const tagsToKeep = [
-                    'a<img src="http://www.imgurl.com/img.jpg">d', // img tag
-                    'a<br>b' // br tags
-                ];
-
-                for (const tagToKeep of tagsToKeep) {
-                    await testEditor(BasicEditor, {
-                        contentBefore: '<p>123[]</p>',
-                        stepFunction: async editor => {
-                            await pasteHtml(editor, tagToKeep);
-                        },
-                        contentAfter: '<p>123' + tagToKeep + '[]</p>',
-                    });
-                }
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>123[]</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, 'a<img src="http://www.imgurl.com/img.jpg">d');
+                    },
+                    contentAfter: '<p>123a<img src="http://www.imgurl.com/img.jpg">d[]</p>',
+                });
             });
             it('should keep tables Tags tag and add classes', async () => {
                 await testEditor(BasicEditor, {
@@ -336,6 +395,24 @@ describe('Paste', () => {
                                   '<p style="margin-bottom: 0px;">b</p>' +
                                   '<p style="margin-bottom: 0px;">c</p>' +
                                   '<p>d[]<br></p>',
+                });
+            });
+            it('should paste text and understand \\n newlines within UNBREAKABLE node', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div>[]<br></div>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'a\nb\nc\nd');
+                    },
+                    contentAfter: '<div>a<br>b<br>c<br>d[]<br></div>',
+                });
+            });
+            it('should paste text and understand \\n newlines within UNBREAKABLE node(2)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div><span style="font-size: 9px;">a[]</span></div>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'b\nc\nd');
+                    },
+                    contentAfter: '<div><span style="font-size: 9px;">ab<br>c<br>d[]<br></span></div>',
                 });
             });
         });
@@ -680,6 +757,141 @@ describe('Paste', () => {
                         await pasteHtml(editor, simpleHtmlCharX);
                     },
                     contentAfter: '<div>3a<p>bx[]e</p>f</div>',
+                });
+            });
+        });
+    });
+    describe('Simple html elements containing <br>', () => {
+        describe('breaking <br> elements', () => {
+            it('should split h1 with <br> into seperate h1 elements', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc<br>def<br>ghi<br>jkl</h1>');
+                    },
+                    contentAfter: '<p>abc</p><h1>def</h1><h1>ghi</h1><p>jkl[]<br></p>',
+                });
+            });
+            it('should split h2 with <br> into seperate h2 elements', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h2>abc<br>def<br>ghi<br>jkl</h2>');
+                    },
+                    contentAfter: '<p>abc</p><h2>def</h2><h2>ghi</h2><p>jkl[]<br></p>',
+                });
+            });
+            it('should split h3 with <br> into seperate h3 elements', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h3>abc<br>def<br>ghi<br>jkl</h3>');
+                    },
+                    contentAfter: '<p>abc</p><h3>def</h3><h3>ghi</h3><p>jkl[]<br></p>',
+                });
+            });
+            it('should split h4 with <br> into seperate h4 elements', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h4>abc<br>def<br>ghi<br>jkl</h4>');
+                    },
+                    contentAfter: '<p>abc</p><h4>def</h4><h4>ghi</h4><p>jkl[]<br></p>',
+                });
+            });
+            it('should split h5 with <br> into seperate h5 elements', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h5>abc<br>def<br>ghi<br>jkl</h5>');
+                    },
+                    contentAfter: '<p>abc</p><h5>def</h5><h5>ghi</h5><p>jkl[]<br></p>',
+                });
+            });
+            it('should split h6 with <br> into seperate h6 elements', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h6>abc<br>def<br>ghi<br>jkl</h6>');
+                    },
+                    contentAfter: '<p>abc</p><h6>def</h6><h6>ghi</h6><p>jkl[]<br></p>',
+                });
+            });
+            it('should split p with <br> into seperate p elements', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<p>abc<br>def<br>ghi<br>jkl</p>');
+                    },
+                    contentAfter: '<p>abc</p><p>def</p><p>ghi</p><p>jkl[]<br></p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<p>abc<br>def<br>ghi<br>jkl</p><p>mno</p>');
+                    },
+                    contentAfter: '<p>abc</p><p>def</p><p>ghi</p><p>jkl</p><p>mno[]<br></p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<p>abc<br>def<br>ghi<br>jkl</p><p><br></p><p>mno</p>');
+                    },
+                    contentAfter: '<p>abc</p><p>def</p><p>ghi</p><p>jkl</p><p><br></p><p>mno[]<br></p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<p>abc<br>def<br><br><br>ghi</p>');
+                    },
+                    contentAfter: '<p>abc</p><p>def</p><p><br></p><p><br></p><p>ghi[]<br></p>',
+                });
+            });
+            it('should split multiple elements with <br>', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<p>abc<br>def</p><h1>ghi<br>jkl</h1><h2><br></h2><h3>mno<br>pqr</h3>');
+                    },
+                    contentAfter: '<p>abc</p><p>def</p><h1>ghi</h1><h1>jkl</h1><h2><br></h2><h3>mno</h3><p>pqr[]<br></p>',
+                });
+            });
+            it('should split div with <br>', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<div>abc<br>def</div>');
+                    },
+                    contentAfter: '<p>abc</p><p>def[]<br></p>',
+                });
+            });
+        });
+        describe('not breaking <br> elements', async () => {
+            it('should not split li with <br>', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<ul><li>abc<br>def</li></ul>');
+                    },
+                    contentAfter: '<ul><li>abc<br>def</li></ul><p>[]<br></p>',
+                });
+            });
+            it('should not split blockquote with <br>', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<blockquote>abc<br>def</blockquote>');
+                    },
+                    contentAfter: '<blockquote>abc<br>def</blockquote><p>[]<br></p>',
+                });
+            });
+            it('should not split pre with <br>', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<pre>abc<br>def</pre>');
+                    },
+                    contentAfter: '<pre>abc<br>def</pre><p>[]<br></p>',
                 });
             });
         });
@@ -1469,7 +1681,8 @@ describe('Paste', () => {
                 });
                 const imageUrl = 'https://download.odoocdn.com/icons/website/static/description/icon.png';
                 await testEditor(BasicEditor, {
-                    contentBefore: '<p>xy<a href="#" oe-zws-empty-inline="">\u200B[]</a>z</p>',
+                    contentBefore: '<p>xy<a href="#">[]</a>z</p>',
+                    contentBeforeEdit: '<p>xy\ufeff<a href="#" class="o_link_in_selection">[]\ufeff</a>\ufeffz</p>',
                     stepFunction: async editor => {
                         await pasteText(editor, imageUrl);
                         // Ensure the powerbox is active
@@ -1515,7 +1728,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<a href="www.odoo.com">odoo.com</a><br><a href="www.google.com">google.com</a>');
                     },
-                    contentAfter: '<p><a href="www.odoo.com">odoo.com</a><br><a href="www.google.com">google.com</a>[]</p>',
+                    contentAfter: '<p><a href="www.odoo.com">odoo.com</a></p><p><a href="www.google.com">google.com</a>[]</p>',
                 });
             });
             it('should paste and transform URL among text', async () => {
@@ -1752,7 +1965,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<a href="www.odoo.com">odoo.com</a><br><a href="www.google.com">google.com</a>');
                     },
-                    contentAfter: '<p><a href="www.odoo.com">odoo.com</a><br><a href="www.google.com">google.com</a>[]</p>',
+                    contentAfter: '<p><a href="www.odoo.com">odoo.com</a></p><p><a href="www.google.com">google.com</a>[]</p>',
                 });
             });
         });

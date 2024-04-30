@@ -5,15 +5,17 @@
 # Translators:
 # Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-# Jolien De Paepe, 2023
+# Jolien De Paepe, 2024
+# Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,6 +144,13 @@ msgstr "Punt(en) kortingsbon"
 #, python-format
 msgid "Current Balance:"
 msgstr "Huidig saldo:"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/xml/OrderReceipt.xml:0
+#, python-format
+msgid "Customer"
+msgstr "Klant"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -327,6 +336,13 @@ msgstr "Met deze kortingsbon kan geen beloning worden geclaimd."
 #, python-format
 msgid "No rewards available."
 msgstr "Geen beloningen beschikbaar."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid "No valid eWallet found"
+msgstr "Geen geldige eWallet gevonden"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -734,7 +750,7 @@ msgstr "Of deze regel nu onderdeel is van een beloning of niet."
 #: code:addons/pos_loyalty/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "Won:"
-msgstr "Won:"
+msgstr "Gewonnen:"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -758,6 +774,15 @@ msgid "You cannot set negative quantity or price to gift card or ewallet."
 msgstr ""
 "Je kunt geen negatieve hoeveelheid of prijs instellen op cadeaubon of "
 "e-wallet."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid ""
+"You either have not created an eWallet or all your eWallets have expired."
+msgstr ""
+"Je hebt nog geen eWallet aangemaakt of al je eWallets zijn reeds verlopen."
 
 #. module: pos_loyalty
 #. odoo-python

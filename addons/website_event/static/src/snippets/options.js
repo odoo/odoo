@@ -18,11 +18,11 @@ options.registry.WebsiteEvent = options.Class.extend({
             method: 'read',
             args: [
                 [this.eventId],
-                ['website_menu'],
+                ['website_menu', 'website_url'],
             ],
         });
-        this.data.reload = this.currentWebsiteUrl;
         this.websiteMenu = rpcData[0]['website_menu'];
+        this.data.reload = rpcData[0]['website_url'];
         return res;
     },
 
@@ -62,7 +62,7 @@ options.registry.WebsiteEvent = options.Class.extend({
      * @private
      */
     _getEventObjectId() {
-        const objectIds = this.currentWebsiteUrl.match(/-\d+(?![-\w\d])/);
-        return parseInt(objectIds[0].replace('-', '')) | 0;
+        const objectIds = this.currentWebsiteUrl.match(/\d+(?![-\w])/);
+        return parseInt(objectIds[0]) | 0;
     },
 });

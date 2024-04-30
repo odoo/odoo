@@ -48,33 +48,35 @@ weWidgets.LinkTools.include({
     _adaptPageAnchor: function () {
         const urlInputValue = this.$('input[name="url"]').val();
         const $pageAnchor = this.$('.o_link_dialog_page_anchor');
-        const isFromWebsite = urlInputValue[0] === '/';
+        const showAnchorSelector = urlInputValue[0] === '/';
         const $selectMenu = this.$('we-selection-items[name="link_anchor"]');
 
         if ($selectMenu.data("anchor-for") !== urlInputValue) { // avoid useless query
-            $pageAnchor.toggleClass('d-none', !isFromWebsite);
+            $pageAnchor.toggleClass('d-none', !showAnchorSelector);
             $selectMenu.empty();
-            const always = () => {
-                const anchor = `#${urlInputValue.split('#')[1]}`;
-                let weTogglerText = '\u00A0';
-                if (anchor) {
-                    const weButtonEls = $selectMenu[0].querySelectorAll('we-button');
-                    if (Array.from(weButtonEls).some(el => el.textContent === anchor)) {
-                        weTogglerText = anchor;
+            if (showAnchorSelector) {
+                const always = () => {
+                    const anchor = `#${urlInputValue.split('#')[1]}`;
+                    let weTogglerText = '\u00A0';
+                    if (anchor) {
+                        const weButtonEls = $selectMenu[0].querySelectorAll('we-button');
+                        if (Array.from(weButtonEls).some(el => el.textContent === anchor)) {
+                            weTogglerText = anchor;
+                        }
                     }
-                }
-                $pageAnchor[0].querySelector('we-toggler').textContent = weTogglerText;
-            };
-            const urlWithoutHash = urlInputValue.split("#")[0];
-            wUtils.loadAnchors(urlWithoutHash, this.$editable[0].ownerDocument.body).then(anchors => {
-                for (const anchor of anchors) {
-                    const $option = $('<we-button class="dropdown-item">');
-                    $option.text(anchor);
-                    $option.data('value', anchor);
-                    $selectMenu.append($option);
-                }
-                always();
-            }).guardedCatch(always);
+                    $pageAnchor[0].querySelector('we-toggler').textContent = weTogglerText;
+                };
+                const urlWithoutHash = urlInputValue.split("#")[0];
+                wUtils.loadAnchors(urlWithoutHash, this.$editable[0].ownerDocument.body).then(anchors => {
+                    for (const anchor of anchors) {
+                        const $option = $('<we-button class="dropdown-item">');
+                        $option.text(anchor);
+                        $option.data('value', anchor);
+                        $selectMenu.append($option);
+                    }
+                    always();
+                }).guardedCatch(always);
+            }
         }
         $selectMenu.data("anchor-for", urlInputValue);
     },

@@ -68,31 +68,31 @@
         <record id="ir_rule_lunch_supplier_multi_company" model="ir.rule">
             <field name="name">Lunch supplier: Multi Company</field>
             <field name="model_id" ref="model_lunch_supplier"/>
-            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
         </record>
 
         <record id="ir_rule_lunch_order_multi_company" model="ir.rule">
             <field name="name">Lunch order: Multi Company</field>
             <field name="model_id" ref="model_lunch_order"/>
-            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
         </record>
 
         <record id="ir_rule_lunch_product_multi_company" model="ir.rule">
             <field name="name">Lunch product: Multi Company</field>
             <field name="model_id" ref="model_lunch_product"/>
-            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
         </record>
 
         <record id="ir_rule_lunch_product_category_multi_company" model="ir.rule">
             <field name="name">Lunch product category: Multi Company</field>
             <field name="model_id" ref="model_lunch_product_category"/>
-            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
         </record>
 
         <record id="ir_rule_lunch_location_multi_company" model="ir.rule">
             <field name="name">Lunch location: Multi Company</field>
             <field name="model_id" ref="model_lunch_location"/>
-            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
         </record>
     </data>
 </odoo>

@@ -39,3 +39,8 @@ class ProductTemplate(models.Model):
         for product_template in expense_products:
             if not product_template.visible_expense_policy:
                 product_template.visible_expense_policy = visibility
+
+    @api.depends('can_be_expensed')
+    def _compute_expense_policy(self):
+        super()._compute_expense_policy()
+        self.filtered(lambda t: not t.can_be_expensed).expense_policy = 'no'

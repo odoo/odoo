@@ -139,6 +139,13 @@ class WebsiteTest(Home):
     def test_model_converter_seoname(self, rec, **kw):
         return request.make_response('ok')
 
+    @http.route(['/test_website/model_item/<int:record_id>'], type='http', methods=['GET'], auth="public", website=True, sitemap=False)
+    def test_model_item(self, record_id):
+        values = {
+            'record': request.env['test.model'].sudo().browse(record_id),
+        }
+        return request.render("test_website.model_item", values)
+
     @http.route(['/test_website/test_redirect_view_qs'], type='http', auth="public", website=True, sitemap=False)
     def test_redirect_view_qs(self, **kw):
         return request.render('test_website.test_redirect_view_qs')

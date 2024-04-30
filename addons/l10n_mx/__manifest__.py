@@ -8,7 +8,7 @@
 
 {
     "name": "Mexico - Accounting",
-    "version": "2.0",
+    "version": "2.1",
     "author": "Vauxoo",
     'category': 'Accounting/Localizations/Account Charts',
     "description": """

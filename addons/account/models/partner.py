@@ -106,7 +106,7 @@ class AccountFiscalPosition(models.Model):
             return taxes
         result = self.env['account.tax']
         for tax in taxes:
-            taxes_correspondance = self.tax_ids.filtered(lambda t: t.tax_src_id == tax._origin)
+            taxes_correspondance = self.tax_ids.filtered(lambda t: t.tax_src_id == tax._origin and (not t.tax_dest_id or t.tax_dest_active))
             result |= taxes_correspondance.tax_dest_id if taxes_correspondance else tax
         return result
 
@@ -170,11 +170,7 @@ class AccountFiscalPosition(models.Model):
     def _get_fpos_by_region(self, country_id=False, state_id=False, zipcode=False, vat_required=False):
         if not country_id:
             return False
-        base_domain = [
-            ('auto_apply', '=', True),
-            ('vat_required', '=', vat_required),
-            ('company_id', 'in', [self.env.company.id, False]),
-        ]
+        base_domain = self._prepare_fpos_base_domain(vat_required)
         null_state_dom = state_domain = [('state_ids', '=', False)]
         null_zip_dom = zip_domain = [('zip_from', '=', False), ('zip_to', '=', False)]
         null_country_dom = [('country_id', '=', False), ('country_group_id', '=', False)]
@@ -207,6 +203,13 @@ class AccountFiscalPosition(models.Model):
             fpos = self.search(base_domain + null_country_dom, limit=1)
         return fpos
 
+    def _prepare_fpos_base_domain(self, vat_required):
+        return [
+            ('auto_apply', '=', True),
+            ('vat_required', '=', vat_required),
+            ('company_id', 'in', [self.env.company.id, False]),
+        ]
+
     @api.model
     def _get_fiscal_position(self, partner, delivery=None):
         """
@@ -228,7 +231,10 @@ class AccountFiscalPosition(models.Model):
             delivery = partner
 
         # partner manually set fiscal position always win
-        manual_fiscal_position = delivery.property_account_position_id or partner.property_account_position_id
+        manual_fiscal_position = (
+            delivery.with_company(company).property_account_position_id
+            or partner.with_company(company).property_account_position_id
+        )
         if manual_fiscal_position:
             return manual_fiscal_position
 
@@ -258,6 +264,7 @@ class AccountFiscalPositionTax(models.Model):
     company_id = fields.Many2one('res.company', string='Company', related='position_id.company_id', store=True)
     tax_src_id = fields.Many2one('account.tax', string='Tax on Product', required=True, check_company=True)
     tax_dest_id = fields.Many2one('account.tax', string='Tax to Apply', check_company=True)
+    tax_dest_active = fields.Boolean(related="tax_dest_id.active")
 
     _sql_constraints = [
         ('tax_src_dest_uniq',
@@ -304,6 +311,10 @@ class ResPartner(models.Model):
 
     @api.depends_context('company')
     def _credit_debit_get(self):
+        if not self.ids:
+            self.debit = False
+            self.credit = False
+            return
         tables, where_clause, where_params = self.env['account.move.line']._where_calc([
             ('parent_state', '=', 'posted'),
             ('company_id', '=', self.env.company.id)
@@ -341,7 +352,7 @@ class ResPartner(models.Model):
     def _asset_difference_search(self, account_type, operator, operand):
         if operator not in ('<', '=', '>', '>=', '<='):
             return []
-        if type(operand) not in (float, int):
+        if not isinstance(operand, (float, int)):
             return []
         sign = 1
         if account_type == 'liability_payable':

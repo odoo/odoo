@@ -653,6 +653,9 @@ class MailThread(models.AbstractModel):
         for _field_name, (template, post_kwargs) in templates.items():
             if not template:
                 continue
+            # defaults to automated notifications targeting customer
+            # whose answers should be considered as comments
+            post_kwargs.setdefault('message_type', 'auto_comment')
             if isinstance(template, str):
                 self._fallback_lang().message_post_with_view(template, **post_kwargs)
             else:
@@ -730,7 +733,7 @@ class MailThread(models.AbstractModel):
                 bounced_record_done = bounced_record_done or (bounced_record and model.model == bounced_model and bounced_record in rec_bounce_w_email)
 
             # set record as bounced unless already done due to blacklist mixin
-            if bounced_record and not bounced_record_done and issubclass(type(bounced_record), self.pool['mail.thread']):
+            if bounced_record and not bounced_record_done and isinstance(bounced_record, self.pool['mail.thread']):
                 bounced_record._message_receive_bounce(bounced_email, bounced_partner)
 
             if bounced_partner and bounced_message:
@@ -1119,6 +1122,18 @@ class MailThread(models.AbstractModel):
                     email_from, email_to, message_id, fallback_model, thread_id, custom_values, user_id)
                 return [route]
 
+        # 4. Recipients contain catchall and unroutable emails -> bounce
+        if rcpt_tos_localparts and catchall_alias and any(email_localpart == catchall_alias for email_localpart in email_to_localparts):
+            _logger.info(
+                'Routing mail from %s to %s with Message-Id %s: write to catchall + other unroutable emails, bounce',
+                email_from, email_to, message_id
+            )
+            body = self.env['ir.qweb']._render('mail.mail_bounce_catchall', {
+                'message': message,
+            })
+            self._routing_create_bounce_email(email_from, body, message, references=message_id, reply_to=self.env.company.email)
+            return []
+
         # ValueError if no routes found and if no bounce occurred
         raise ValueError(
             'No possible route found for incoming message from %s to %s (Message-Id %s:). '
@@ -1404,6 +1419,10 @@ class MailThread(models.AbstractModel):
                     part.set_charset('utf-8')
                 encoding = part.get_content_charset()  # None if attachment
 
+                # Correcting MIME type for PDF files
+                if part.get('Content-Type', '').startswith('pdf;'):
+                    part.replace_header('Content-Type', 'application/pdf' + part.get('Content-Type', '')[3:])
+
                 content = part.get_content()
                 info = {'encoding': encoding}
                 # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment
@@ -1596,12 +1615,22 @@ class MailThread(models.AbstractModel):
                 order='create_date DESC, id DESC',
                 limit=1)
         if parent_ids:
-            msg_dict['parent_id'] = parent_ids.id
-            msg_dict['is_internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
+            msg_dict.update(self._message_parse_extract_from_parent(parent_ids))
 
         msg_dict.update(self._message_parse_extract_payload(message, save_original=save_original))
         msg_dict.update(self._message_parse_extract_bounce(message, msg_dict))
         return msg_dict
+
+    def _message_parse_extract_from_parent(self, parent_message):
+        """Derive message values from the parent."""
+        if parent_message:
+            parent_is_internal = bool(parent_message.subtype_id and parent_message.subtype_id.internal)
+            parent_is_auto_comment = parent_message.message_type == 'auto_comment'
+            return {
+                'is_internal': parent_is_internal and not parent_is_auto_comment,
+                'parent_id': parent_message.id,
+            }
+        return {}
 
     # ------------------------------------------------------
     # RECIPIENTS MANAGEMENT TOOLS
@@ -1636,7 +1665,8 @@ class MailThread(models.AbstractModel):
         """ Returns suggested recipients for ids. Those are a list of
         tuple (partner_id, partner_name, reason), to be managed by Chatter. """
         result = dict((res_id, []) for res_id in self.ids)
-        if 'user_id' in self._fields:
+        user_field = self._fields.get('user_id')
+        if user_field and user_field.type == 'many2one' and user_field.comodel_name == 'res.users':
             for obj in self.sudo():  # SUPERUSER because of a read on res.users that would crash otherwise
                 if not obj.user_id or not obj.user_id.partner_id:
                     continue
@@ -1741,10 +1771,18 @@ class MailThread(models.AbstractModel):
           If no partner has been found and/or created for a given emails its
           matching partner is an empty record.
         """
-        if records and issubclass(type(records), self.pool['mail.thread']):
+        if records and isinstance(records, self.pool['mail.thread']):
             followers = records.mapped('message_partner_ids')
         else:
             followers = self.env['res.partner']
+        if records and 'company_id' in records:
+            sort_key = lambda p: (
+                self.env.user.partner_id == p,      # prioritize user
+                p.company_id in records.company_id, # then partner associated w/ records
+                not p.company_id,                   # otherwise prefer partner w/out company_id
+            )
+        else:
+            sort_key = lambda p: (self.env.user.partner_id == p, not p.company_id)
         catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
 
         # first, build a normalized email list and remove those linked to aliases
@@ -1769,10 +1807,9 @@ class MailThread(models.AbstractModel):
 
         partners = self._mail_search_on_partner(remaining, extra_domain=extra_domain)
         done_partners += [partner for partner in partners]
-        remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
 
-        # prioritize current user if exists in list
-        done_partners.sort(key=lambda p: self.env.user.partner_id != p)
+        # prioritize current user if exists in list, and partners with matching company ids
+        done_partners.sort(key=sort_key, reverse=True) # reverse because False < True
 
         # iterate and keep ordering
         partners = []
@@ -2115,7 +2152,7 @@ class MailThread(models.AbstractModel):
 
     def message_post_with_view(self, views_or_xmlid, **kwargs):
         """ Helper method to send a mail / post a message using a view_id """
-        return self._message_compose_with_view(views_or_xmlid, **kwargs)
+        return self._message_compose_with_view(views_or_xmlid, **dict(kwargs, message_log=False))
 
     def message_post_with_template(self, template_id, email_layout_xmlid=None, auto_commit=False, **kwargs):
         """ Helper method to send a mail with a template
@@ -3333,20 +3370,6 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
     # CONTROLLERS
     # ------------------------------------------------------
-
-    def _get_mail_redirect_suggested_company(self):
-        """ Return the suggested company to be set on the context
-        in case of a mail redirection to the record. To avoid multi
-        company issues when clicking on a link sent by email, this
-        could be called to try setting the most suited company on
-        the allowed_company_ids in the context. This method can be
-        overridden, for example on the hr.leave model, where the
-        most suited company is the company of the leave type, as
-        specified by the ir.rule.
-        """
-        if 'company_id' in self:
-            return self.company_id
-        return False
 
     def _get_mail_thread_data_attachments(self):
         self.ensure_one()

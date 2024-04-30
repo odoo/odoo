@@ -22,43 +22,43 @@
     &.o_masonry {
         &.o_spc-none div.o_masonry_col {
             padding: 0;
-            > img, > a > img {
+            > img, > a > img, > .media_iframe_video {
                 margin: 0 !important;
             }
         }
         &.o_spc-small div.o_masonry_col {
             padding: 0 ($spacer * .5);
-            > img, > a > img {
+            > img, > a > img, > .media_iframe_video {
                 margin-bottom: $spacer !important;
             }
         }
         &.o_spc-medium div.o_masonry_col {
             padding: 0 $spacer;
-            > img, > a > img {
+            > img, > a > img, > .media_iframe_video {
                 margin-bottom: $spacer * 2 !important;
             }
         }
         &.o_spc-big div.o_masonry_col {
             padding: 0 ($spacer * 1.5);
-            > img, > a > img {
+            > img, > a > img, > .media_iframe_video {
                 margin-bottom: $spacer * 3 !important;
             }
         }
     }
     &.o_nomode {
-        &.o_spc-none .row div {
+        &.o_spc-none .row > div {
             padding-top: 0;
             padding-bottom: 0;
         }
-        &.o_spc-small .row div {
+        &.o_spc-small .row > div {
             padding-top: $spacer * .5;
             padding-bottom: $spacer * .5;
         }
-        &.o_spc-medium .row div {
+        &.o_spc-medium .row > div {
             padding-top: $spacer;
             padding-bottom: $spacer;
         }
-        &.o_spc-big .row div {
+        &.o_spc-big .row > div {
             padding-top: $spacer * 1.5;
             padding-bottom: $spacer * 1.5;
         }
@@ -79,6 +79,12 @@
             }
             ul.carousel-indicators li {
                 border: 1px solid #aaa;
+            }
+            .media_iframe_video {
+                // 70% because the carousel controls are each 15% and the user
+                // must be able to click on the video buttons.
+                width: 70%;
+                height: 100%;
             }
         }
         ul.carousel-indicators {

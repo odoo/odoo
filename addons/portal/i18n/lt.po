@@ -18,14 +18,15 @@
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # Jonas Zinkevicius <jozi@odoo.com>, 2023
+# Šarūnas Misevičius, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:24+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2023\n"
+"Last-Translator: Šarūnas Misevičius, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -127,6 +128,18 @@ msgstr ""
 " jei jau esame išrašę bent vieną Sąskaitą-Faktūrą Jūsų paskyrai. "
 "<br/>Prašome susisiekite su mumis, jei norite atnaujinti savo PVM "
 "kodą.</small>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -296,13 +309,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
 msgid "Already Registered"
 msgstr ""
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid "An access token must be provided for each attachment."
-msgstr "Kiekvienam priedui turi būti pateiktas prieigos simbolis (token)."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -602,7 +608,7 @@ msgstr "Pamiršote slaptažodį?"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Access"
-msgstr ""
+msgstr "Suteikti prieigą"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard
@@ -816,7 +822,6 @@ msgstr "Naujas slaptažodis:"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
 msgstr "Kitas"
@@ -920,11 +925,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Powered by"
 msgstr "Technologija"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.pager
-msgid "Prev"
-msgstr "Ankst."
 
 #. module: portal
 #. odoo-javascript
@@ -1097,14 +1097,6 @@ msgstr "Priedas %s negali būti pašalintas, nes yra susietas su pranešimu."
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr "Priedas %s negali būti pašalintas, nes jis nėra laukimo būsenoje."
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid ""
-"The attachment %s does not exist or you do not have the rights to access it."
-msgstr "Priedas %s neegzistuoja arba neturite prieigos teisių. "
 
 #. module: portal
 #. odoo-python

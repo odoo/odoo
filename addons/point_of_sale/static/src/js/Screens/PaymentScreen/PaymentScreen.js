@@ -212,7 +212,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 // 2. Invoice.
                 if (this.shouldDownloadInvoice() && this.currentOrder.is_to_invoice()) {
                     if (syncOrderResult.length) {
-                        await this.env.legacyActionManager.do_action('account.account_invoices', {
+                        await this.env.legacyActionManager.do_action(this.env.pos.invoiceReportAction, {
                             additional_context: {
                                 active_ids: [syncOrderResult[0].account_move],
                             },
@@ -236,6 +236,8 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     }
                 }
             } catch (error) {
+                // unblock the UI before showing the error popup
+                this.env.services.ui.unblock();
                 if (error.code == 700 || error.code == 701)
                     this.error = true;
 

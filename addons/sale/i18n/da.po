@@ -5,16 +5,16 @@
 # Translators:
 # Martin Trigaux, 2023
 # Mads Søndergaard, 2023
-# Sanne Kristensen <sanne@vkdata.dk>, 2023
 # lhmflexerp <lhm@flexerp.dk>, 2023
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2023\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -344,6 +344,24 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"object.type_name\"></t>\n"
+"        Kære <t t-out=\"object.partner_id.name or ''\">bruger</t>,\n"
+"        <br><br>\n"
+"        Vær opmærksom på, at dit\n"
+"        <t t-out=\"doc_name or ''\">tilbud</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (med reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"        </t>\n"
+"        er blevet aflyst. Derfor bør du ikke blive opkrævet yderligere for denne ordre.\n"
+"        Hvis det er nødvendigt med tilbagebetaling, vil dette blive udført efter bedste bekvemmelighed.\n"
+"        <br><br>\n"
+"        Tøv ikke med at kontakte os, hvis du har spørgsmål.\n"
+"        <br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -764,7 +782,7 @@ msgstr "Konto bruges til forudbetalinger"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
 msgid "Accrued Revenue Entry"
-msgstr ""
+msgstr "Påløbne indtægter"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
@@ -848,6 +866,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"En ordre er mersalgs når leverede mængder er større end det oprindeligt\n"
+"                bestilte antal, og fakturerings policen er baseret på bestilte mængder."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
@@ -863,7 +883,7 @@ msgstr "Analysekonto"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr ""
+msgstr "Analytisk distributionssøgning"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
@@ -878,7 +898,7 @@ msgstr "Analytisk linje"
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "Anvendelsesmuligheder for analytiske planer"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_precision
@@ -914,6 +934,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"For eksempel, hvis du sælger forudbetalte timer med tjenester, anbefaler Odoo dig\n"
+"at sælge ekstra timer, når alle bestilte timer er opbrugt."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -980,6 +1002,10 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"Boost dit salg med flere slags programmer: Kuponer, Kampagner, Gavekort, "
+"Loyalitet. Der kan opstilles specifikke betingelser (produkter, kunder, "
+"minimumskøbsbeløb, periode). Belønninger kan være rabatter (% eller beløb) "
+"eller gratis produkter."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1840,7 +1866,7 @@ msgstr "Sortér efter"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr ""
+msgstr "Har Fiscal stilling ændret"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2770,12 +2796,12 @@ msgstr "Emballering"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_qty
 msgid "Packaging Quantity"
-msgstr ""
+msgstr "Pakke Antal"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr ""
+msgstr "Partnerkreditadvarsel"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2861,7 +2887,7 @@ msgstr "Prisreduktion ekskl. moms"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax incl"
-msgstr ""
+msgstr "Prisnedsættelse inkl. moms"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
@@ -2872,7 +2898,7 @@ msgstr "Prisliste"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__pricelist_item_id
 msgid "Pricelist Item"
-msgstr ""
+msgstr "Prisliste vare"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
@@ -3310,7 +3336,7 @@ msgstr "Salgsordrer"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
 msgid "Sale Payment provider onboarding wizard"
-msgstr ""
+msgstr "Salg Betalingsudbyder onboarding guide"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3983,7 +4009,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr ""
+msgstr "Adgangs tokenen er ugyldig."
 
 #. module: sale
 #. odoo-python
@@ -4021,6 +4047,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment provider.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"Fakturaen genereres automatisk og er tilgængelig i kundeportalen, når transaktionen er bekræftet af betalingsudbyderen.\n"
+"Fakturaen markeres som betalt og betalingen registreres i betalingsjournalen defineret i betalingsudbyderens konfiguration.\n"
+"Denne tilstand anbefales, hvis du udsteder den endelige faktura ved ordren og ikke efter levering."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4076,6 +4105,9 @@ msgid ""
 "to \"Ordered quantities\". Please update your deposit product to be able to "
 "create a deposit invoice."
 msgstr ""
+"Det produkt, der bruges til at fakturere en forudbetaling, skal have en "
+"fakturapolitik sat til \"Bestilte mængder\". Opdater venligst dit "
+"indbetalingsprodukt for at kunne oprette en indbetalingsfaktura."
 
 #. module: sale
 #. odoo-python
@@ -4454,7 +4486,7 @@ msgstr "Mulighed for mersalg"
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
-msgstr ""
+msgstr "Bruges af sælgere, når de sender tilbud eller proforma til kunder"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -4579,6 +4611,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"Du kan vælge alle ordrer og fakturere dem i partier<br>\n"
+"                eller tjekke hver ordre og fakturere dem enkeltvis."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type
