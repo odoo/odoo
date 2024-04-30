@@ -21,26 +21,6 @@
 
     <!-- EVALUACION -->
 
-    <record id="evaluacion_action" model="ir.actions.act_window">
-        <field name="name">Evaluaciones</field>
-        <field name="res_model">evaluacion</field>
-        <field name="view_mode">tree</field>
-    </record>
-
-    <record id="evaluacion_generica_action" model="ir.actions.act_window">
-        <field name="name">Evaluaciones</field>
-        <field name="res_model">evaluacion</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="evaluacion_reporte_form"/>
-    </record>
-
-    <record id="evaluacion_competencias_action" model="ir.actions.act_window">
-        <field name="name">Evaluaciones</field>
-        <field name="res_model">evaluacion</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="evaluacion_360_form"/>
-    </record>
-
     <!-- Vista de lista de todas las evaluaciones-->
     <record id="evaluacion_view_tree" model="ir.ui.view">
         <field name="name">evaluacion.tree</field>
@@ -57,11 +37,17 @@
         </field>
     </record>
 
+    <record id="evaluacion_action" model="ir.actions.act_window">
+        <field name="name">Evaluaciones</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="evaluacion_view_tree"/>
+    </record>
+
     <!-- Vista de lista de todas las preguntas de una evaluación-->
-    <record id="evaluacion_reporte_form" model="ir.ui.view">
+    <record id="evaluacion_generica_form" model="ir.ui.view">
         <field name="name">evaluacion.form</field>
         <field name="model">evaluacion</field>
-
         <field name="arch" type="xml">
             <form>
                 <header>
@@ -99,6 +85,37 @@
             </form>
         </field>
     </record>
+
+    <record id="evaluacion_generica_action" model="ir.actions.act_window">
+        <field name="name">Evaluaciones</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="evaluacion_generica_form"/>
+    </record>
+
+    <!-- Reportes-->
+    <record id="reportes_tree" model="ir.ui.view">
+        <field name="name">reporte.form</field>
+        <field name="model">evaluacion</field>
+        <field name="arch" type="xml">
+            <tree create="false">
+                <field class="text-primary font-weight-bold h5 align-middle" name="nombre" readonly="1"/>
+                <field name="estado" readonly="1"/>
+                <field name="tipo" readonly="1"/>
+                <field name="conteo_asignados" readonly="1"/>
+                <button class="btn btn-primary" name="action_reporte_generico" string="Reporte" type="object"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="reportes_action" model="ir.actions.act_window">
+        <field name="name">Reportes</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="reportes_tree"/>
+        <field name="domain" eval="[('estado', '=', 'finalizado')]"/>
+    </record>
+
 
 
     <!-- OPCION -->
