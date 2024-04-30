@@ -25,20 +25,32 @@ def _local_load_region(code):
 
 try:
     import phonenumbers
-    # MONKEY PATCHING phonemetadata of Ivory Coast if phonenumbers is too old
-    if parse_version('7.6.1') <= parse_version(phonenumbers.__version__) < parse_version('8.12.32'):
-        # loading updated region_CI.py from current directory
-        # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.12.32/python/phonenumbers/data/region_CI.py
-        phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('CI', _local_load_region)
-    # MONKEY PATCHING phonemetadata of Mauritius if phonenumbers is too old
-    if parse_version(phonenumbers.__version__) < parse_version('8.12.13'):
-        # loading updated region_MU.py from current directory
-        # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.13.31/python/phonenumbers/data/region_MU.py
-        phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('MU', _local_load_region)
-    # MONKEY PATCHING phonemetadata of Panama if phonenumbers is too old
-    if parse_version(phonenumbers.__version__) < parse_version('8.12.43'):
-        # region_PA.py in the current directory was copied from external source:
-        # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.12.43/python/phonenumbers/data/region_PA.py
-        phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('PA', _local_load_region)
 except ImportError:
     pass
+else:
+    # Over time, phone number formats change. The following monkey patches ensure phone number parsing stays up to date:
+    # The most common type of patch occurs when the phonenumbers library is updated, but Odoo is still using an older version.
+    # In such cases, we need to:
+    # 1. Grab the newest metadata describing the phone number for a certain country.
+    # 2. Create/update a metadata file in the current directory (e.g., files named like region_SN for the Senegal patch).
+    # 3. Load the metadata file. Please add a reference to the upstream from which the update was taken.
+
+    if parse_version('7.6.1') <= parse_version(phonenumbers.__version__) < parse_version('8.12.32'):
+        # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.12.32/python/phonenumbers/data/region_CI.py
+        phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('CI', _local_load_region)
+
+    if parse_version(phonenumbers.__version__) < parse_version('8.13.32'):
+        # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.13.32/python/phonenumbers/data/region_MA.py
+        phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('MA', _local_load_region)
+
+    if parse_version(phonenumbers.__version__) < parse_version('8.12.13'):
+        # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.13.31/python/phonenumbers/data/region_MU.py
+        phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('MU', _local_load_region)
+
+    if parse_version(phonenumbers.__version__) < parse_version('8.12.43'):
+        # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.12.43/python/phonenumbers/data/region_PA.py
+        phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('PA', _local_load_region)
+
+    if parse_version(phonenumbers.__version__) < parse_version('8.12.29'):
+        # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.12.57/python/phonenumbers/data/region_SN.py
+        phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('SN', _local_load_region)
