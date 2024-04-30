@@ -52,6 +52,28 @@ class AccountJournal(models.Model):
                     return model
         return 'odoo'
 
+    def _get_default_account_domain(self):
+        return """[
+            ('deprecated', '=', False),
+            ('company_id', '=', company_id),
+            ('user_type_id.type', 'not in', ('receivable', 'payable')),
+            '|',
+            ('user_type_id', 'in', %(bank)s if type == 'bank'
+                                   else %(cash)s if type == 'cash'
+                                   else %(sale)s if type == 'sale'
+                                   else %(purchase)s if type == 'purchase'
+                                   else ()),
+            ('user_type_id', 'in', type_control_ids)
+        ]""" % {
+            'bank': (
+                self.env.ref('account.data_account_type_liquidity').id,
+                self.env.ref('account.data_account_type_credit_card').id,
+            ),
+            'cash': (self.env.ref('account.data_account_type_liquidity').id,),
+            'sale': (self.env.ref('account.data_account_type_revenue').id,),
+            'purchase': (self.env.ref('account.data_account_type_expenses').id,),
+        }
+
     name = fields.Char(string='Journal Name', required=True)
     code = fields.Char(string='Short Code', size=5, required=True, help="Shorter name used for display. The journal entries of this journal will also be named using this prefix by default.")
     active = fields.Boolean(default=True, help="Set active to false to hide the Journal without removing it.")
@@ -71,13 +93,12 @@ class AccountJournal(models.Model):
     account_control_ids = fields.Many2many('account.account', 'journal_account_control_rel', 'journal_id', 'account_id', string='Allowed accounts',
         check_company=True,
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('is_off_balance', '=', False)]")
+    # TODO: Transform this field in a computed Many2many in master and use that instead in the domain of default_account_id.
     default_account_type = fields.Many2one('account.account.type', compute="_compute_default_account_type")
     default_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
         string='Default Account',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id),"
-               "'|', ('user_type_id', '=', default_account_type), ('user_type_id', 'in', type_control_ids),"
-               "('user_type_id.type', 'not in', ('receivable', 'payable'))]")
+        domain=_get_default_account_domain)
     suspense_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True,
         compute='_compute_suspense_account_id',
