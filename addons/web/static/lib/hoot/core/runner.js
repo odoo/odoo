@@ -31,6 +31,7 @@ import { Suite, suiteError } from "./suite";
 import { Tag } from "./tag";
 import { Test, testError } from "./test";
 import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
+import { cleanupNetwork } from "../mock/network";
 
 /**
  * @typedef {{
@@ -362,7 +363,7 @@ export class TestRunner {
         // Text filter
         if (this.config.filter) {
             this.#hasIncludeFilter = true;
-            this.textFilter = parseRegExp(normalize(this.config.filter));
+            this.textFilter = parseRegExp(normalize(this.config.filter), { safe: true });
         }
 
         // Suites
@@ -837,11 +838,12 @@ export class TestRunner {
             !this.debug && on(window, "pointermove", warnUserEvent),
             !this.debug && on(window, "pointerdown", warnUserEvent),
             !this.debug && on(window, "keydown", warnUserEvent),
-            watchListeners(window, document, document.documentElement, document.head, document.body)
+            watchListeners()
         );
         this.__beforeEach(this.fixture.setup);
         this.__afterEach(
             cleanupWindow,
+            cleanupNetwork,
             cleanupNavigator,
             this.fixture.cleanup,
             cleanupDOM,
@@ -894,6 +896,7 @@ export class TestRunner {
                         });
 
                         suite.parent?.reporting.add({ suites: +1 });
+                        suite.callbacks.clear();
 
                         logger.logSuite(suite);
                     }
@@ -910,6 +913,7 @@ export class TestRunner {
             if (test.config.skip) {
                 // Skipped test
                 addTestDone(test);
+                test.setRunFn(null);
                 test.parent.reporting.add({ skipped: +1 });
                 nextJob();
                 continue;
@@ -1010,6 +1014,10 @@ export class TestRunner {
             }
             if (!test.config.multi || test.visited === test.config.multi) {
                 addTestDone(test);
+                test.setRunFn(null);
+                if (this.debug) {
+                    return;
+                }
                 nextJob();
             }
         }
@@ -1291,6 +1299,11 @@ export class TestRunner {
                     this.debug = job;
                 // Falls through
                 case Tag.ONLY:
+                    if (!this.#dry) {
+                        logger.warn(
+                            `"${job.fullName}" is marked as "${tag.name}". This is not suitable for CI`
+                        );
+                    }
                     this.#include(job instanceof Suite ? "suites" : "tests", [job.id], true);
                     ignoreSkip = true;
                     break;

@@ -1,8 +1,12 @@
+import {
+    assertSteps,
+    defineMailModels,
+    start as start2,
+    step,
+} from "@mail/../tests/mail_test_helpers";
 import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { reactive, toRaw } from "@odoo/owl";
-import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
 import { mockService } from "@web/../tests/web_test_helpers";
-import { assertSteps, defineMailModels, start as start2, step } from "../mail_test_helpers";
 
 import { Record, Store, makeStore } from "@mail/core/common/record";
 import { Markup } from "@mail/model/misc";
@@ -34,7 +38,7 @@ const localRegistry = registry.category("discuss.model.test");
 beforeEach(() => {
     Record.register(localRegistry);
     Store.register(localRegistry);
-    mockService("store", () => makeStore(getMockEnv(), { localRegistry }));
+    mockService("store", (env) => makeStore(env, { localRegistry }));
 });
 afterEach(() => {
     for (const [modelName] of localRegistry.getEntries()) {

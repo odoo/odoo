@@ -1,15 +1,20 @@
 import {
     after,
     before,
+    beforeAll,
     createJobScopedGetter,
     expect,
+    getCurrent,
     globals,
     registerDebugInfo,
 } from "@odoo/hoot";
 import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
+import { assets } from "@web/core/assets";
+import { RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { isIterable } from "@web/core/utils/arrays";
 import { deepCopy, isObject } from "@web/core/utils/objects";
+import { patch } from "@web/core/utils/patch";
 import { serverState } from "../mock_server_state.hoot";
 import { fetchModelDefinitions, registerModelToFetch } from "../module_set.hoot";
 import { DEFAULT_FIELD_VALUES, FIELD_SYMBOL } from "./mock_fields";
@@ -157,6 +162,22 @@ const modelNotFoundError = (modelName, consequence) => {
 };
 
 /**
+ * @template T
+ * @param {Promise<T>} promise
+ * @returns {Promise<T>}
+ */
+const returnIfSameTest = async (promise) => {
+    const originalTestId = getCurrent().test?.id;
+    if (originalTestId) {
+        const result = await promise;
+        if (originalTestId === getCurrent().test?.id) {
+            return result;
+        }
+    }
+    return new Promise(() => {});
+};
+
+/**
  * @param {unknown} value
  */
 const toDisplayName = (value) => {
@@ -219,7 +240,25 @@ const DEFAULT_MENU = {
 };
 const R_DATASET_ROUTE = /\/web\/dataset\/call_(button|kw)\/[\w.-]+\/(?<step>\w+)/;
 const R_WEBCLIENT_ROUTE = /(?<step>\/web\/webclient\/\w+)/;
+
 const serverFields = new WeakSet();
+
+beforeAll(() =>
+    patch(assets, {
+        async getBundle() {
+            return returnIfSameTest(super.getBundle(...arguments));
+        },
+        async loadBundle() {
+            return returnIfSameTest(super.loadBundle(...arguments));
+        },
+        async loadCSS() {
+            return returnIfSameTest(super.loadCSS(...arguments));
+        },
+        async loadJS() {
+            return returnIfSameTest(super.loadJS(...arguments));
+        },
+    })
+);
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -277,10 +316,7 @@ export class MockServer {
     /** @type {import("@odoo/hoot-mock").ServerWebSocket[]} */
     websockets = [];
 
-    /**
-     * @param {ServerParams} [params]
-     */
-    constructor(params) {
+    constructor() {
         if (MockServer.current) {
             throw new MockServerError(
                 `cannot instantiate a new MockServer: one is already running`
@@ -299,26 +335,11 @@ export class MockServer {
         this.onRpc("/web/webclient/load_menus", this.mockLoadMenus, { pure: true });
         this.onRpc("/web/webclient/translations", this.mockLoadTranslations, { pure: true });
 
-        // Add routes from "mock_rpc" registry
-        for (const [route, callback] of registry.category("mock_rpc").getEntries()) {
-            if (typeof callback === "function") {
-                this.onRpc(route, callback);
-            }
-        }
-
-        this.configure(getCurrentParams());
-        if (params) {
-            this.configure(params);
-        }
-
-        const restoreFetch = mockFetch((input, init) => this.handle(input, init));
-        const restoreWebSocket = mockWebSocket((ws) => this.websockets.push(ws));
+        mockFetch((input, init) => this.handle(input, init));
+        mockWebSocket((ws) => this.websockets.push(ws));
 
         after(() => {
             MockServer.current = null;
-
-            restoreFetch();
-            restoreWebSocket();
         });
     }
 
@@ -565,10 +586,17 @@ export class MockServer {
 
         let result = null;
         for (const [callback, routeParams, routeOptions] of listeners) {
-            result = await callback.call(this, request, routeParams);
+            try {
+                result = await callback.call(this, request, routeParams);
+            } catch (error) {
+                result = ensureError(error);
+            }
             if (!isNil(result) || (options.alwaysReturns ?? routeOptions.alwaysReturns)) {
                 if (options.pure ?? routeOptions.pure) {
                     return result;
+                }
+                if (result instanceof RPCError) {
+                    return { error: result, result: null };
                 }
                 if (result instanceof Error) {
                     return {
@@ -911,18 +939,13 @@ export class MockServer {
 
         const parent = () => this.callOrm(route, params);
         const callbackParams = { parent, request, route, ...params };
-        let result = null;
         for (const callback of [...this.findOrmListeners(params), parent]) {
-            try {
-                result = await callback.call(this, callbackParams);
-            } catch (error) {
-                return ensureError(error);
-            }
+            const result = await callback.call(this, callbackParams);
             if (!isNil(result)) {
                 return result;
             }
         }
-        return result;
+        return null;
     }
 
     /** @type {RouteCallback} */
@@ -1055,22 +1078,10 @@ export function defineParams(params, mode) {
             }
         }
 
-        if (MockServer.current) {
-            MockServer.current.configure(params);
-        }
+        MockServer.current?.configure(params);
     });
 
     return params;
-}
-
-/**
- * @type {typeof MockServer["prototype"]["getWebSockets"]}
- */
-export function getServerWebSockets(url) {
-    if (!MockServer.current) {
-        throw new MockServerError(`cannot get websockets: no MockServer is currently running`);
-    }
-    return MockServer.current.getWebSockets(url);
 }
 
 /**
@@ -1090,15 +1101,23 @@ export function logout() {
 
 /**
  * Shortcut function to create and start a {@link MockServer}.
- *
- * @param {ServerParams} params
  */
-export async function makeMockServer(params) {
-    const server = new MockServer(params);
+export async function makeMockServer() {
+    const mockServer = new MockServer();
 
-    registerDebugInfo(server);
+    // Add routes from "mock_rpc" registry
+    for (const [route, callback] of registry.category("mock_rpc").getEntries()) {
+        if (typeof callback === "function") {
+            mockServer.onRpc(route, callback);
+        }
+    }
 
-    return server.start();
+    // Add other ambiant params
+    mockServer.configure(getCurrentParams());
+
+    registerDebugInfo(mockServer);
+
+    return mockServer.start();
 }
 
 /**

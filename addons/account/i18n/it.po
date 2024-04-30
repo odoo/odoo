@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Marianna Ciofani, 2024
 # Wil Odoo, 2024
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-29 11:36+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1930,7 +1930,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Accountant"
-msgstr ""
+msgstr "Contabile"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -2385,6 +2385,8 @@ msgstr ""
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "All selected moves for reversal must belong to the same company."
 msgstr ""
+"Tutti i movimenti selezionati per lo storno devono appartenere alla stessa "
+"azienda."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -2634,6 +2636,8 @@ msgid ""
 "An error occurred when computing the inalterability. A gap has been detected"
 " in the sequence."
 msgstr ""
+"Si è verificato un errore durante il calcolo dell'inalterabilità. È stato "
+"individuato un vuoto nella sequenza. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -3397,7 +3401,7 @@ msgstr "Messaggio di blocco"
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Bookkeeper"
-msgstr ""
+msgstr "Contabile"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -4319,7 +4323,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %s (%s)."
-msgstr ""
+msgstr "Dati corrotti nella registrazione contabile con ID%s (%s)."
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -5130,7 +5134,7 @@ msgstr "Controllo inalterabilità dei dati"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Data Inalterability Check Report -"
-msgstr ""
+msgstr "Rendiconto controllo inalterabilità dati - "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -6244,7 +6248,7 @@ msgstr "Conteggio voci"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Entries are correctly hashed"
-msgstr ""
+msgstr "Alle registrazioni è stato correttamente assegnato l'hash"
 
 #. module: account
 #. odoo-python
@@ -6319,6 +6323,8 @@ msgstr "Patrimonio netto"
 #: code:addons/account/models/account_move.py:0
 msgid "Error importing attachment '%s' as invoice (decoder=%s)"
 msgstr ""
+"Errore durante l'importazione dell'allegato \"%s\" come fattura "
+"(decodificatore=%s)"
 
 #. module: account
 #. odoo-python
@@ -7158,7 +7164,7 @@ msgstr "Instradamento HTTP"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__integer_rounding__half-up
 msgid "Half-up (away from 0)"
-msgstr ""
+msgstr "Per eccesso (lontano da 0)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
@@ -7512,6 +7518,9 @@ msgid ""
 "If ticked, the hash chain will be computed from the last move hashed to the "
 "new move to be hashed. The hash is performed on demand."
 msgstr ""
+"Se selezionato, la catena hash verrà calcolata dall'ultimo movimento con "
+"hash al nuovo movimento privo di hash. L'attività di hash viene eseguita su "
+"richiesta."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -7523,6 +7532,9 @@ msgid ""
 "the last move hashed to the new move to be hashed. The hash can also be "
 "performed on demand."
 msgstr ""
+"Se selezionato, quando la fattura viene inviata, la catena hash verrà "
+"calcolata dall'ultimo movimento con hash al nuovo movimento privo di hash. "
+"L'attività di hash può essere eseguita su richiesta."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7713,7 +7725,7 @@ msgstr "Hash di inalterabilità"
 #: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
 #: model:ir.model.fields,field_description:account.field_account_payment__secure_sequence_number
 msgid "Inalterability No Gap Sequence #"
-msgstr ""
+msgstr "N. sequenza di inalterabilità senza spazi vuoti"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -8368,6 +8380,8 @@ msgid ""
 "Irregularities due to draft, cancelled or deleted bills with a sequence "
 "number since last lock date."
 msgstr ""
+"Irregolarità dovute alla bozza, fatture fornitore annullate o eliminate con "
+"una sequenza numerica dall'ultima data di blocco."
 
 #. module: account
 #. odoo-python
@@ -8376,6 +8390,8 @@ msgid ""
 "Irregularities due to draft, cancelled or deleted invoices with a sequence "
 "number since last lock date."
 msgstr ""
+"Irregolarità dovute alla bozza, fatture annullate o eliminate con una "
+"sequenza numerica dall'ultima data di blocco."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_being_sent
@@ -8549,7 +8565,7 @@ msgstr "Registrazioni contabili per data"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/company.py:0
 msgid "Journal Entries to Hash"
-msgstr ""
+msgstr "Registrazioni contabili a cui assegnare hash"
 
 #. module: account
 #. odoo-javascript
@@ -9168,7 +9184,7 @@ msgstr "Messaggio data di blocco"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Lock Entries Manually"
-msgstr ""
+msgstr "Blocca registrazioni manualmente"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -9176,7 +9192,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_payment__restrict_mode_hash_table
 msgid "Lock Sent Invoices with Hash"
-msgstr ""
+msgstr "Blocca fatture inviate con hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
@@ -9949,7 +9965,7 @@ msgstr "Non pagata"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_sent_values__not_sent
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Sent"
-msgstr ""
+msgstr "Non inviato"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_note
@@ -11389,7 +11405,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.1_prepaid_expenses
 msgid "Prepaid Expenses"
-msgstr ""
+msgstr "Spese prepagate"
 
 #. module: account
 #: model:account.account,name:account.1_prepayments
@@ -11636,7 +11652,7 @@ msgstr "Riordina sequenza"
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
 msgid "Read-only"
-msgstr ""
+msgstr "Sola lettura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -12722,7 +12738,7 @@ msgstr "Fatture in fase di invio"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "Sending these invoices will create a gap in the sequence."
-msgstr ""
+msgstr "L'invio delle fatture creerà un buco nella sequenza."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__move_sent_values
@@ -12803,7 +12819,7 @@ msgstr "Sequenza"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__sequence_gap_warning
 msgid "Sequence Gap Warning"
-msgstr ""
+msgstr "Avviso buco sequenza"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sequence_number
@@ -12971,7 +12987,7 @@ msgstr "Mostra forza imposta inclusa"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show Journal Entries to Hash"
-msgstr ""
+msgstr "Mostra registrazioni contabili a cui assegnare hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
@@ -13050,6 +13066,8 @@ msgid ""
 "Some journal entries have not been hashed yet. You should hash them before "
 "locking the fiscal year."
 msgstr ""
+"Alcune registrazioni contabili non presentano nessun hash. Dovresti farlo "
+"prima di bloccare l'anno fiscale."
 
 #. module: account
 #. odoo-python
@@ -13908,6 +13926,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"The Syscohada chart template shouldn't be selected directly. Instead, you "
+"should directly select the chart template related to your country."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid ""
 "The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
@@ -13994,6 +14021,8 @@ msgid ""
 "The amount for %(partner_name)s appears unusual. Based on your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
+"L'importo per %(partner_name)s sembra insolito. In base alla cronologia dei dati, l'importo previsto è pari a%(mean)s (± %(wiggle)s).\n"
+"Verifica che l'importo sia corretto."
 
 #. module: account
 #. odoo-python
@@ -14906,6 +14935,8 @@ msgstr ""
 msgid ""
 "There is no journal entry flagged for accounting data inalterability yet."
 msgstr ""
+"Non sono ancora presenti registrazioni contabili segnalate per "
+"l'inalterabilità dei dati."
 
 #. module: account
 #. odoo-python
@@ -15053,6 +15084,8 @@ msgid ""
 "This document is protected by a hash. Therefore, you cannot edit the "
 "following fields: %s."
 msgstr ""
+"Il documento è protetto da hash. Di conseguenza, non è possibile modificare "
+"i seguenti campi: %s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -15146,7 +15179,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "This journal is not restricted"
-msgstr ""
+msgstr "Il registro non è riservato"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
@@ -15173,12 +15206,15 @@ msgid ""
 "- some move with the same sequence prefix has a higher number. You may need to resequence it.\n"
 "- the move's date is anterior to the lock date"
 msgstr ""
+"Non è stato possibile bloccare il movimento perché:\n"
+"- alcuni movimenti con lo stesso prefisso di sequenza hanno un numero più grande. Potrebbe essere necessario rimetterli in sequenza.\n"
+"- La data del movimento precede la data di blocco"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This move has been locked."
-msgstr ""
+msgstr "Il movimento è stato bloccato."
 
 #. module: account
 #. odoo-python
@@ -15676,12 +15712,12 @@ msgstr "Espandi tutto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_unhashed_entries
 msgid "Unhashed Entries"
-msgstr ""
+msgstr "Registrazioni prive di hash"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Unhashed entries"
-msgstr ""
+msgstr "Registrazioni prive di hash"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
@@ -16673,11 +16709,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid ""
-"You can't register payments for journal items being either all inbound, "
-"either all outbound."
+"You can't register payments for both inbound and outbound moves at the same "
+"time."
 msgstr ""
-"Impossibile registrare pagamenti per movimenti contabili che sono o tutti in"
-" entrata o tutti in uscita."
+"Non è possibile registrare nello stesso momento pagamenti sia per i "
+"movimenti in entrata che in uscita."
 
 #. module: account
 #. odoo-python
@@ -16892,6 +16928,10 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
+"Non è possibile importare \"openning_balance\" se il movimento di apertura "
+"(%s) è già stato registrato.                 Se sei convinto di voler "
+"modificare il saldo di apertura dei tuoi conti, riporta il movimento allo "
+"stato di bozza."
 
 #. module: account
 #. odoo-python
@@ -16905,6 +16945,8 @@ msgstr "Non è possibile abbinare i conti."
 msgid ""
 "You cannot modify a sent entry of this journal because it is in strict mode."
 msgstr ""
+"Impossibile modificare una registrazione pubblicata, il registro è in "
+"modalità limitata."
 
 #. module: account
 #. odoo-python

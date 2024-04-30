@@ -1,6 +1,6 @@
-import { expect, test } from "@odoo/hoot";
+import { afterEach, expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryOne } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, mockDate, runAllTimers } from "@odoo/hoot-mock";
 import { onRendered } from "@odoo/owl";
 
 import {
@@ -16,7 +16,6 @@ import {
     mountView,
     mountWithCleanup,
     onRpc,
-    patchDate,
     patchWithCleanup,
     saveFavorite,
     switchView,
@@ -331,6 +330,8 @@ class Foo extends models.Model {
 }
 
 defineModels([Foo, Color, Product]);
+
+afterEach(runAllTimers);
 
 test("simple bar chart rendering", async () => {
     const view = await mountView({ type: "graph", resModel: "foo" });
@@ -3034,7 +3035,7 @@ test("action name is displayed in breadcrumbs", async () => {
 test("clicking on bar charts triggers a do_action", async () => {
     expect.assertions(6);
 
-    mockService("action", () => ({
+    mockService("action", {
         doAction(actionRequest, options) {
             expect(actionRequest).toEqual({
                 context: { allowed_company_ids: [1], lang: "en", tz: "taht", uid: 7 },
@@ -3050,7 +3051,7 @@ test("clicking on bar charts triggers a do_action", async () => {
             });
             expect(options).toEqual({ viewType: "list" });
         },
-    }));
+    });
 
     const view = await mountView({
         type: "graph",
@@ -3073,7 +3074,7 @@ test("clicking on bar charts triggers a do_action", async () => {
 test("Clicking on bar charts removes group_by and search_default_* context keys", async () => {
     expect.assertions(2);
 
-    mockService("action", () => ({
+    mockService("action", {
         doAction(actionRequest, options) {
             expect(actionRequest).toEqual({
                 context: { allowed_company_ids: [1], lang: "en", tz: "taht", uid: 7 },
@@ -3089,7 +3090,7 @@ test("Clicking on bar charts removes group_by and search_default_* context keys"
             });
             expect(options).toEqual({ viewType: "list" });
         },
-    }));
+    });
 
     const view = await mountView({
         type: "graph",
@@ -3114,7 +3115,7 @@ test("clicking on a pie chart trigger a do_action with correct views", async () 
     Foo._views[["list", 364]] = /* xml */ `<list />`;
     Foo._views[["form", 29]] = /* xml */ `<form />`;
 
-    mockService("action", () => ({
+    mockService("action", {
         doAction(actionRequest, options) {
             expect(actionRequest).toEqual({
                 context: { allowed_company_ids: [1], lang: "en", tz: "taht", uid: 7 },
@@ -3130,7 +3131,7 @@ test("clicking on a pie chart trigger a do_action with correct views", async () 
             });
             expect(options).toEqual({ viewType: "list" });
         },
-    }));
+    });
 
     const view = await mountView({
         type: "graph",
@@ -3157,11 +3158,11 @@ test("clicking on a pie chart trigger a do_action with correct views", async () 
 });
 
 test('graph view with attribute disable_linking="1"', async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doAction() {
             throw new Error("should not perform a `doAction`");
         },
-    }));
+    });
 
     const view = await mountView({
         type: "graph",
@@ -3720,7 +3721,7 @@ test("fill_temporal can be changed throught the context", async () => {
 });
 
 test("fake data in line chart", async () => {
-    patchDate("2020-05-19 01:00:00");
+    mockDate("2020-05-19 01:00:00");
 
     Foo._records = [];
 
@@ -3749,7 +3750,7 @@ test("fake data in line chart", async () => {
 });
 
 test("no filling color for period of comparison", async () => {
-    patchDate("2020-05-19 01:00:00");
+    mockDate("2020-05-19 01:00:00");
 
     for (const record of Foo._records) {
         record.date = record.date?.replace(/^\d{4}/, "2019");
@@ -3887,7 +3888,7 @@ test("renders banner_route", async () => {
 });
 
 test("In the middle of a year, a graph view grouped by a date field with granularity 'year' should have a single group of SampleServer.MAIN_RECORDSET_SIZE records", async () => {
-    patchDate("2023-06-15 08:00:00");
+    mockDate("2023-06-15 08:00:00");
 
     const view = await mountView({
         type: "graph",

@@ -3172,8 +3172,8 @@ msgstr "ILY"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
-msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"today\"."
-msgstr "วันที่ในรูปแบบ ISO (เช่น \"2018-12-31\") หรือ \"วันนี้\""
+msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"%s\"."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4268,6 +4268,8 @@ msgstr "ชื่อ:"
 
 #. module: web
 #. odoo-javascript
+#. odoo-python
+#: code:addons/web/controllers/action.py:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
@@ -5346,15 +5348,11 @@ msgstr "อ่านเท่านั้น:"
 #. odoo-javascript
 #: code:addons/web/static/src/core/confirmation_dialog/confirmation_dialog.js:0
 msgid ""
-"Ready to make your record disappear into thin air? Are you sure?\n"
-"It will be gone forever!\n"
-"\n"
+"Ready to make your record disappear into thin air? Are you sure?\r\n"
+"It will be gone forever!\r\n"
+"\r\n"
 "Think twice before you click that 'Delete' button!"
 msgstr ""
-"พร้อมที่จะทำให้บันทึกของคุณหายไปแล้วหรือยัง? คุณแน่ใจไหม?\n"
-"บันทึกจะหายไปตลอดกาล!\n"
-"\n"
-"คิดให้ดีก่อนคลิกปุ่ม 'ลบ'!"
 
 #. module: web
 #. odoo-javascript
@@ -6188,6 +6186,7 @@ msgstr "เสื้อเชิ้ต"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 msgid "TIP"
 msgstr "TIP"
@@ -7655,6 +7654,7 @@ msgstr "สมอ"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/core/domain_selector/utils.js:0
 #: code:addons/web/static/src/core/tree_editor/utils.js:0
 msgid "and"
@@ -29564,6 +29564,13 @@ msgstr "ซอมบี้"
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 msgid "— press"
 msgstr "— กด"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "— search for"
+msgstr ""
 
 #. module: web
 #. odoo-javascript

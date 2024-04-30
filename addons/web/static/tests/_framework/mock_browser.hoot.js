@@ -1,3 +1,5 @@
+import { beforeEach } from "@odoo/hoot";
+import { on } from "@odoo/hoot-dom";
 import { mockLocation } from "@odoo/hoot-mock";
 
 //-----------------------------------------------------------------------------
@@ -18,6 +20,8 @@ const READONLY_PROPERTIES = [
     "setInterval",
     "setTimeout",
 ];
+
+const anchorHrefDescriptor = Object.getOwnPropertyDescriptor(HTMLAnchorElement.prototype, "href");
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -48,6 +52,38 @@ export function mockBrowserFactory(name, { fn }) {
         }
 
         Object.defineProperties(browserModule.browser, properties);
+
+        beforeEach(function mockAnchorHref() {
+            Object.defineProperty(HTMLAnchorElement.prototype, "href", {
+                ...anchorHrefDescriptor,
+                get() {
+                    return new URL(this.getAttribute("href")).href;
+                },
+            });
+
+            const offHrefClick = on(window, "click", (ev) => {
+                const href = ev.target.closest("a[href]")?.href;
+                if (!href || ev.defaultPrevented) {
+                    return;
+                }
+
+                ev.preventDefault();
+
+                // Assign href to mock location instead of actual location
+                mockLocation.href = href;
+
+                // Scroll to the target element if the href is/has a hash
+                const hash = href.startsWith("#") ? href : new URL(href).hash;
+                if (hash) {
+                    document.getElementById(hash.slice(1))?.scrollIntoView();
+                }
+            });
+
+            return function restoreAnchorHref() {
+                offHrefClick();
+                Object.defineProperty(HTMLAnchorElement.prototype, "href", anchorHrefDescriptor);
+            };
+        });
 
         return browserModule;
     };

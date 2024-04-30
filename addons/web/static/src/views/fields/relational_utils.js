@@ -285,6 +285,9 @@ export class Many2XAutocomplete extends Component {
             this.props.setInputFloats(true);
         }
     }
+    onCancel() {
+        this.props.setInputFloats(false);
+    }
 
     onSelect(option, params = {}) {
         if (option.action) {
@@ -629,7 +632,7 @@ export class X2ManyFieldDialog extends Component {
     }
 }
 
-async function getFormViewInfo({ list, activeField, viewService, env }) {
+async function getFormViewInfo({ list, context, activeField, viewService, env }) {
     let formArchInfo = activeField.views.form;
     let fields = activeField.fields;
     const comodel = list.resModel;
@@ -639,7 +642,7 @@ async function getFormViewInfo({ list, activeField, viewService, env }) {
             relatedModels,
             views,
         } = await viewService.loadViews({
-            context: list.context,
+            context: makeContext([list.context, context]),
             resModel: comodel,
             views: [[false, "form"]],
         });
@@ -702,6 +705,7 @@ export function useOpenX2ManyRecord({
         const list = getList();
         const { archInfo, fields: _fields } = await getFormViewInfo({
             list,
+            context,
             activeField,
             viewService,
             env,

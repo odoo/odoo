@@ -306,18 +306,7 @@ class ResConfigInstaller(models.TransientModel, ResConfigModuleInstallationMixin
 
         IrModule = self.env['ir.module.module']
         modules = IrModule.search([('name', 'in', to_install)])
-        module_names = {module.name for module in modules}
-        to_install_missing_names = [name for name in to_install if name not in module_names]
-
-        result = self._install_modules(modules)
-        #FIXME: if result is not none, the corresponding todo will be skipped because it was just marked done
-        if to_install_missing_names:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'apps',
-                'params': {'modules': to_install_missing_names},
-            }
-        return result
+        return self._install_modules(modules)
 
 
 class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin):
@@ -695,7 +684,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         What if there is another substitution in the message already?
         -------------------------------------------------------------
         You could have a situation where the error message you want to upgrade already contains a substitution. Example:
-            Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Journals\Journals.
+            Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\\Journals\\Journals.
         What you want to do here is simply to replace the path by %menu:account.menu_account_config)s, and leave the rest alone.
         In order to do that, you can use the double percent (%%) to escape your new substitution, like so:
             Cannot find any account journal of %s type for this company.\n\nYou can create one in the %%(menu:account.menu_account_config)s.

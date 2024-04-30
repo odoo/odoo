@@ -4,6 +4,7 @@
 # 
 # Translators:
 # JH CHOI <hwangtog@gmail.com>, 2024
+# Sarah Park, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
@@ -243,8 +244,6 @@ msgid "...and switch the timeline contents to fit your needs."
 msgstr "...타임라인 콘텐츠를 필요한대로 전환합니다."
 
 #. module: website
-#: model:website,contact_us_button_url:website.default_website
-#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -2341,6 +2340,7 @@ msgstr "백엔드"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Background"
@@ -3061,6 +3061,7 @@ msgstr "클라이언트"
 #. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor.xml:0
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
+#: code:addons/website/static/src/components/views/theme_preview.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/xml/website.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -3772,7 +3773,6 @@ msgstr "기본 사용 권한"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_searchbar/options.js:0
-#, python-format
 msgid "Default Input Style"
 msgstr ""
 
@@ -5641,6 +5641,7 @@ msgstr "제목 1"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
+#: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Headings"
 msgstr "제목"
 
@@ -5650,26 +5651,36 @@ msgid "Headings 1"
 msgstr "제목 1"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Headings 2"
 msgstr "제목 2"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Headings 3"
 msgstr "제목 3"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Headings 4"
 msgstr "제목 4"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Headings 5"
 msgstr "제목 5"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Headings 6"
 msgstr "제목 6"
@@ -6585,7 +6596,6 @@ msgstr "기본값을 사용하려면 비워 두십시오."
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_asset__key
 #: model:ir.model.fields,field_description:website.field_ir_attachment__key
-#: model:ir.model.fields,field_description:website.field_product_document__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_attachment__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__key
@@ -6888,7 +6898,6 @@ msgstr "라이브러리"
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_searchbar/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_options
-#, python-format
 msgid "Light"
 msgstr "가볍게"
 
@@ -6975,6 +6984,8 @@ msgid "Linkedin"
 msgstr "링크드인"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Links"
 msgstr "링크"
@@ -7908,12 +7919,6 @@ msgid "None"
 msgstr "없음"
 
 #. module: website
-#: model:website,prevent_zero_price_sale_text:website.default_website
-#: model:website,prevent_zero_price_sale_text:website.website2
-msgid "Not Available For Sale"
-msgstr "판매 불가"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Not Published"
 msgstr "게시 안됨"
@@ -8452,6 +8457,8 @@ msgid "Page Layout"
 msgstr "페이지 배치"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
 msgid "Page Name"
 msgstr "페이지 명"
@@ -8784,6 +8791,12 @@ msgstr "사전 설정"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
+msgid "Press %(key)s to exit full screen"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/js/backend/view_hierarchy/view_hierarchy.xml:0
 msgid "Press <Tab> for next ["
 msgstr "<Tab> 를 눌러 다음 ["
@@ -8846,6 +8859,12 @@ msgstr "요금제"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Primary"
 msgstr "기본"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "Primary Buttons"
+msgstr "기본 버튼 색상"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9651,6 +9670,12 @@ msgid "Secondary"
 msgstr "2차"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "Secondary Buttons"
+msgstr "추가 버튼 색상"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Secondary Style"
 msgstr "2차 스타일"
@@ -10402,7 +10427,6 @@ msgstr "구조"
 #: code:addons/website/static/src/snippets/s_searchbar/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#, python-format
 msgid "Style"
 msgstr "스타일"
 
@@ -10578,6 +10602,8 @@ msgid "Test your robots.txt with Google Search Console"
 msgstr "Google Search 콘솔로 robots.txt를 테스트하세요"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.grid_layout_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -10859,7 +10885,6 @@ msgstr "테마 색상"
 #: model:ir.model.fields,field_description:website.field_ir_asset__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_attachment__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__theme_template_id
-#: model:ir.model.fields,field_description:website.field_product_document__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_controller_page__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_menu__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_page__theme_template_id
@@ -12025,7 +12050,7 @@ msgstr "방문자가 웹사이트에 방문하여 기록을 확인하고 참여�
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Warning"
-msgstr "경고"
+msgstr "주의"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -12184,7 +12209,6 @@ msgstr "웹사이트 방문자"
 #: model:ir.model.fields,field_description:website.field_ir_asset__website_id
 #: model:ir.model.fields,field_description:website.field_ir_attachment__website_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_id
-#: model:ir.model.fields,field_description:website.field_product_document__website_id
 #: model:ir.model.fields,field_description:website.field_res_company__website_id
 #: model:ir.model.fields,field_description:website.field_res_partner__website_id
 #: model:ir.model.fields,field_description:website.field_res_users__website_id
@@ -12602,6 +12626,12 @@ msgstr "고객이 알고 싶은 것을 쓰십시오. <br/>당신이 보여주고
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_options
 msgid "Year"
 msgstr "년"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website_form_editor.xml:0
+msgid "Yes"
+msgstr "예"
 
 #. module: website
 #. odoo-javascript

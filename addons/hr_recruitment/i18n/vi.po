@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,12 +101,12 @@ msgstr "<span class=\"o_stat_text\">Truy vết</span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<span class=\"text-bg-danger\">Refused</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">Đã từ chối</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<span class=\"text-bg-secondary\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-secondary\">Đã lưu trữ</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -693,6 +694,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Language Test\", \"Prepare Offer\", ...)"
 msgstr ""
+"Kế hoạch hoạt động được sử dụng để chỉ định danh sách hoạt động chỉ trong vài cú nhấp chuột\n"
+"                 (VD: \"Kiểm tra trình độ ngôn ngữ\", \"Chuẩn bị thư mời\", ...)"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_mail_activity_schedule
@@ -1170,7 +1173,7 @@ msgstr "Tạo một Ví trí Công việc"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_plan_action_config_hr_applicant
 msgid "Create a Recruitment Activity Plan"
-msgstr ""
+msgstr "Tạo một kế hoạch hoạt động tuyển dụng"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1402,7 +1405,7 @@ msgstr "Sao chép"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates_count
 msgid "Duplicates Count"
-msgstr ""
+msgstr "Số bản trùng lặp"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_from
@@ -1442,7 +1445,7 @@ msgstr "Email cc"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "Ví dụ miền email 'example.com' trong 'odoo@example.com'"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2546,7 +2549,7 @@ msgstr "Phân tích Tuyển dụng"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_activity_plan_action_config_hr_applicant
 msgid "Recruitment Plans"
-msgstr ""
+msgstr "Kế hoạch tuyển dụng"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2628,7 +2631,7 @@ msgstr "Các lý do từ chối"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "Refuse the"
-msgstr ""
+msgstr "Từ chối"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__refused
@@ -2645,6 +2648,8 @@ msgid ""
 "Refused automatically because this application has been identified as a "
 "duplicate of %(link)s"
 msgstr ""
+"Tự động bị từ chối vì đơn ứng tuyển này được xác định là trùng lặp với "
+"%(link)s"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_3
@@ -2832,7 +2837,7 @@ msgstr "Gửi Khảo sát phỏng vấn cho ứng viên trong quá trình tuyể
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_send_mail
 msgid "Send mails to applicants"
-msgstr "Gửi thư cho người ứng viên"
+msgstr "Gửi thư cho ứng viên"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2879,7 +2884,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Some values do not exist in the application status"
-msgstr ""
+msgstr "Một số giá trị không tồn tại trong trạng thái đơn ứng tuyển"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__source_id
@@ -3049,6 +3054,8 @@ msgid ""
 "The applicant is linked to an employee, to avoid losing information, archive"
 " it instead."
 msgstr ""
+"Ứng viên này được liên kết với một nhân viên, để tránh mất thông tin, hãy "
+"lưu trữ thông tin đó."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
@@ -3068,7 +3075,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_send_mail.py:0
 msgid "The following applicants are missing an email address: %s."
-msgstr "Những người nộp đơn sau thiếu địa chỉ email: %s."
+msgstr "Các ứng viên sau thiếu địa chỉ email: %s."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_model_id
@@ -3175,6 +3182,8 @@ msgid ""
 "Try to add some records, or make sure that there is no active filter in the "
 "search bar."
 msgstr ""
+"Hãy thử thêm một số tập dữ liệu hoặc đảm bảo rằng không có bộ lọc đang hoạt "
+"động nào trên thanh tìm kiếm."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_exception_decoration
@@ -3359,7 +3368,7 @@ msgstr "VD: domain.com"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "VD: mycompany.com"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -3369,7 +3378,7 @@ msgstr "vd Quản lý bán hàng"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "other application(s)"
-msgstr ""
+msgstr "(các) đơn ứng tuyển khác"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form

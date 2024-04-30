@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools import SQL
 from odoo.exceptions import UserError
 
 
@@ -38,15 +39,20 @@ class AccountAnalyticDistributionModel(models.Model):
 
     @api.constrains('company_id')
     def _check_company_accounts(self):
-        query = """
+        """Ensure accounts specific to a company isn't used in any distribution model that wouldn't be specific to the company"""
+        query = SQL(
+            """
             SELECT model.id
               FROM account_analytic_distribution_model model
               JOIN account_analytic_account account
-                ON model.analytic_distribution ? CAST(account.id AS VARCHAR)
-             WHERE account.company_id IS NOT NULL 
+                ON ARRAY[account.id::text] && %s
+             WHERE account.company_id IS NOT NULL AND model.id = ANY(%s)
                AND (model.company_id IS NULL 
                 OR model.company_id != account.company_id)
-        """
+            """,
+            self._query_analytic_accounts('model'),
+            self.ids,
+        )
         self.flush_model(['company_id', 'analytic_distribution'])
         self.env.cr.execute(query)
         if self.env.cr.dictfetchone():

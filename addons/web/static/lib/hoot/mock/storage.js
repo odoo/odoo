@@ -4,7 +4,7 @@
 // Global
 //-----------------------------------------------------------------------------
 
-const { Map, StorageEvent } = globalThis;
+const { Map, StorageEvent, String } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -42,7 +42,7 @@ export class MockStorage {
 
     /** @type {typeof Storage.prototype.setItem} */
     setItem(key, value) {
-        this.items.set(key, value);
+        this.items.set(key, String(value));
         window.dispatchEvent(new StorageEvent("storage", { key, newValue: value }));
     }
 }

@@ -376,7 +376,7 @@ msgstr "<span>アクション</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span>Generate BOM</span>"
-msgstr ""
+msgstr "<span>部品表を生成</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -943,13 +943,13 @@ msgstr "参照した部品表の部品表明細"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to BoM"
-msgstr ""
+msgstr "部品表に戻る"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Production"
-msgstr ""
+msgstr "製造に戻る"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder_line
@@ -976,13 +976,13 @@ msgstr "バックオーダ製造オーダの"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__backorder_sequence
 msgid "Backorder Sequence"
-msgstr "バックオーダ付番"
+msgstr "バックオーダシーケンス"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__backorder_sequence
 msgid ""
 "Backorder sequence, if equals to 0 means there is not related backorder"
-msgstr "バックオーダ付番が0に等しい場合は、関連するバックオーダがないことを意味します。"
+msgstr "バックオーダシーケンスが0に等しい場合は、関連するバックオーダがないことを意味します。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__barcode
@@ -2199,7 +2199,7 @@ msgstr "フィルタ"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_final_id
 msgid "Final Location from procurement"
-msgstr ""
+msgstr "調達からの最終的なロケーション"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__done
@@ -4702,6 +4702,12 @@ msgid "Routing"
 msgstr "工順"
 
 #. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr "在庫に戻る"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
 msgid "Routing Lines"
 msgstr "工順明細"
@@ -4743,7 +4749,7 @@ msgstr "計画日"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Scheduled End"
-msgstr ""
+msgstr "終了予定"
 
 #. module: mrp
 #. odoo-python
@@ -4845,19 +4851,19 @@ msgstr "シーケンス"
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "Sequence picking before manufacturing"
-msgstr "製造前のピッキングを付番する"
+msgstr "製造前のピッキングを採番する"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "Sequence production"
-msgstr "生産付番"
+msgstr "製造を採番する"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "Sequence stock after manufacturing"
-msgstr "製造後の在庫付番"
+msgstr "製造後の在庫を採番する"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
@@ -6040,12 +6046,12 @@ msgstr "とても高い"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "View WorkOrder"
-msgstr "作業オーダを参照"
+msgstr "作業オーダ照会"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "View and allocate manufactured quantities"
-msgstr "製造数量を参照し、割り当てる"
+msgstr "製造数量を照会し、割当てる"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days
@@ -6664,6 +6670,15 @@ msgstr "生産量が当初の需要以下"
 #: code:addons/mrp/models/mrp_unbuild.py:0
 msgid "You should provide a lot number for the final product."
 msgstr "完成品用にロット番号を付与して下さい。"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid ""
+"You should update the components quantity instead of directly updating the "
+"quantity of the kit product."
+msgstr "キットプロダクトの数量を直接更新するのではなく、構成品の数量を更新する必要があります。"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__zpl

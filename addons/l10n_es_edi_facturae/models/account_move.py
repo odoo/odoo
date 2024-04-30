@@ -130,7 +130,7 @@ class AccountMove(models.Model):
 
     def _l10n_es_edi_facturae_get_refunded_invoices(self):
         self.env['account.partial.reconcile'].flush_model()
-        invoices_refunded_mapping = {invoice.id: invoice.reversed_entry_id for invoice in self}
+        invoices_refunded_mapping = {invoice.id: invoice.reversed_entry_id.id for invoice in self}
 
         queries = []
         for source_field, counterpart_field in (('debit', 'credit'), ('credit', 'debit')):

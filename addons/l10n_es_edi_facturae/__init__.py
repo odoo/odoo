@@ -21,7 +21,7 @@ def _edit_tax_types(env, template_data):
         return
     xmlid2tax = {
         xml_id.split('.')[1].split('_', maxsplit=1)[1]: env['account.tax'].browse(record)
-        for record, xml_id in current_taxes.get_external_id().items() if xml_id
+        for record, xml_id in current_taxes.get_external_id().items() if xml_id.startswith('account.')
     }
     for xmlid, values in template_data.items():
         # Only update the tax_type fields

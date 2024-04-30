@@ -560,3 +560,34 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
         action = project.action_open_project_purchase_orders()
         self.assertTrue(action)
         self.assertEqual(action['res_id'], purchase_order.id)
+
+    def test_cross_analytics_contribution(self):
+        cross_plan = self.env['account.analytic.plan'].create({'name': 'Cross Plan'})
+        cross_account = self.env['account.analytic.account'].create({
+            'name': "Cross Analytic Account",
+            'plan_id': cross_plan.id,
+            "company_id": self.env.company.id,
+        })
+        cross_distribution = 42
+
+        cross_order = self.env['purchase.order'].create({
+            'name': 'Cross Purchase Order',
+            "partner_id": self.partner_a.id,
+            "company_id": self.env.company.id,
+            'order_line': [
+                Command.create({
+                    'analytic_distribution': {
+                        f"{self.project.analytic_account_id.id},{cross_account.id}": cross_distribution,
+                    },
+                    "product_id": self.product_order.id,
+                    "product_qty": 1,
+                    "price_unit": self.product_order.standard_price,
+                    "currency_id": self.env.company.currency_id.id,
+                }),
+            ],
+        })
+
+        cross_order.button_confirm()
+        cross_order.action_create_invoice()
+        items = self.project._get_profitability_items()
+        self.assertEqual(items['costs']['data'][0]['to_bill'], self.product_order.standard_price * -cross_distribution / 100.)

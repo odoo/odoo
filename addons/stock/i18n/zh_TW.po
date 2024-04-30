@@ -156,7 +156,7 @@ msgstr "%s 使用倉庫 %s 中將被歸檔的預設來源或目標位置."
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "%s: Can't split: quantities done can't be above demand"
-msgstr ""
+msgstr "%s：未能分拆：已完成數量不可高於需求"
 
 #. module: stock
 #. odoo-python
@@ -164,7 +164,7 @@ msgstr ""
 msgid ""
 "%s: Nothing to split, all demand is done. For split you need at least one "
 "line not fully fulfilled"
-msgstr ""
+msgstr "%s：沒有資料可分拆，所有要求都已完成。要執行分拆，需要有最少一個未完全執行的資料行"
 
 #. module: stock
 #. odoo-python
@@ -172,7 +172,7 @@ msgstr ""
 msgid ""
 "%s: Nothing to split. Fill the quantities you want in a new transfer in the "
 "done quantities"
-msgstr ""
+msgstr "%s：沒有資料可分拆。請在已完成數量的新轉移中，填寫所需的數量"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
@@ -430,6 +430,7 @@ msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
 msgstr ""
+"<br>該些產品將會移至 <b>%(destination)s</b>，<br/>即 <b>%(operation)s</b> 操作指定之目的地。"
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -1750,7 +1751,7 @@ msgstr "使用Shiprocket計算運輸成本及發貨"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Starshipit"
-msgstr ""
+msgstr "計算運送成本，並以 Starshipit 送貨"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2747,7 +2748,7 @@ msgstr "目的庫位"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__location_dest_from_rule
 msgid "Destination location origin from rule"
-msgstr ""
+msgstr "使用規則的目標位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__route_ids
@@ -7761,6 +7762,13 @@ msgid ""
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting).\n"
 "Least Packages: FIFO but with the least number of packages possible when there are several packages containing the same product."
 msgstr ""
+"設定將使用的特定刪除策略，無論此產品類別的來源位置如何.\n"
+"\n"
+"先進先出: 最先入庫的產品/批次將最先移出(FIFO).\n"
+"後進先出: 最後入庫的產品/批次將最先移出(LIFO).\n"
+"封閉位置: 最靠近目標位置的產品/批次將首先移出.\n"
+"臨期先出: 到期日期最近的產品/批次將首先移出(FEFO) ( 此方法的可用性取決於“到期日期”設定).\n"
+"最少包裹：等同先進先出，但當有多個包裹包含相同產品時，會盡可能使用最少包裹。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8414,7 +8422,7 @@ msgstr "範本文字"
 msgid ""
 "The %s location is required by the Inventory app and cannot be deleted, but "
 "you can archive it."
-msgstr ""
+msgstr "位置「%s」是庫存應用程式所必需，不可刪除，但你可將其封存。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__auto
@@ -8454,6 +8462,8 @@ msgid ""
 "The combination of serial number and product must be unique across a company and no company defined.\n"
 "Following combination contains duplicates:\n"
 msgstr ""
+"序號和產品的組合在整個公司中必須是唯一的，而且未有定義公司資料。\n"
+"以下組合包含重複項目：\n"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
@@ -8529,12 +8539,12 @@ msgid ""
 "The operation brings the products to the intermediate location.But this "
 "operation is part of a chain of operations targeting the destination "
 "location."
-msgstr ""
+msgstr "此操作會將產品移至中間位置。但此操作是針對目標位置的操作鏈的一部份。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 msgid "The operation takes and suggests products from this location."
-msgstr ""
+msgstr "該操作會從此位置獲取及建議產品。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -8551,7 +8561,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "The operations brings product to this location"
-msgstr ""
+msgstr "該操作會將產品運送至此位置。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__package_id
@@ -8570,7 +8580,7 @@ msgstr "包含此位置的上級位置.示例:「分配區域」是「1號門」
 msgid ""
 "The procurement quantity will be rounded up to a multiple of this field "
 "quantity. If it is 0, it is not rounded."
-msgstr ""
+msgstr "採購數量會四捨五入至此欄位數值的整數倍數。若為 0（零），便不作四捨五入。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -8604,7 +8614,7 @@ msgstr "產品“%s”的完成數量不符合度量單位“%s”上定義的�
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "The quantity per lot should always be a positive value."
-msgstr ""
+msgstr "每批次數量應始終為正數數值。"
 
 #. module: stock
 #. odoo-python
@@ -8619,7 +8629,7 @@ msgstr "請求的操作無法處理，因為一個程式錯誤，設定`product_
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
 "The search does not support the %(operator)s operator or %(value)s value."
-msgstr ""
+msgstr "搜尋不支援 %(operator)s 運算符或 %(value)s 值。"
 
 #. module: stock
 #. odoo-python
@@ -8744,9 +8754,8 @@ msgstr "此欄位將填寫揀貨源和其移動的名稱"
 msgid ""
 "This is the default destination location when you create a picking manually "
 "with this operation type. It is possible however to change it or that the "
-"routes put another location. If it is empty, it will check for the customer "
-"location on the partner. "
-msgstr "這是使用此操作類型以手動建立揀貨時的預設目的地位置.但是可以改變它或者將路線放在另一位置.如果它是空的，它將於合作夥伴上檢查客戶位置. "
+"routes put another location."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_return_id
@@ -8760,9 +8769,8 @@ msgstr "若退貨是根據此操作類型的揀貨而建立，這是預設退貨
 msgid ""
 "This is the default source location when you create a picking manually with "
 "this operation type. It is possible however to change it or that the routes "
-"put another location. If it is empty, it will check for the supplier "
-"location on the partner. "
-msgstr "當您使用此操作類型手動建立揀貨時的預設來源位置.但是有可能改變它或者將路線放置在另一位置.如果它是空的，它將檢查合作夥伴上的供應商位置. "
+"put another location."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -9283,7 +9291,7 @@ msgstr "取消分配"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "Unavailable Serial numbers. Please correct the serial numbers encoded:"
-msgstr ""
+msgstr "序列號碼不可用。請更正已編碼的序號："
 
 #. module: stock
 #. odoo-javascript
@@ -9857,7 +9865,7 @@ msgstr "當產品到達 <b>%s</b> 時, 將建立 <br/> <b>%s</b> 以在 <b>%s</b
 msgid ""
 "When set to True the destination location of the stock.move will be the "
 "rule.Otherwise, it takes it from the picking type."
-msgstr ""
+msgstr "設定為 True（真）時，stock.move 的目標位置會依照規則。否則，會使用提取類型中的資料。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -9872,7 +9880,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity specified for this field,"
 " Odoo generates a procurement to bring the forecasted quantity above of this"
 " Min Quantity."
-msgstr ""
+msgstr "虛擬庫存低於此欄位指定的最低數量時，Odoo 會產生採購動作，以將預測數量提高至高於此最低數量。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -9880,7 +9888,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity, Odoo generates a "
 "procurement to bring the forecasted quantity up to (or near to) the Max "
 "Quantity specified for this field (or to Min Quantity, whichever is bigger)."
-msgstr ""
+msgstr "虛擬庫存低於最低數量時，Odoo 會產生採購動作，以使預測數量達到（或接近）為此欄位指定的最高數量（或最低數量，以數值較高者為準）。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
@@ -10142,7 +10150,7 @@ msgstr "您不能更改已設定為“完成”的庫存移動的計量單位."
 msgid ""
 "You cannot change the company of a lot/serial number currently in a location"
 " belonging to another company."
-msgstr ""
+msgstr "目前位於其他公司位置的批次/序號的庫存，不可更改公司。"
 
 #. module: stock
 #. odoo-python

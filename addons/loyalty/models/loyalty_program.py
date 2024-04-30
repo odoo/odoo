@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -13,6 +12,17 @@ class LoyaltyProgram(models.Model):
     _description = 'Loyalty Program'
     _order = 'sequence'
     _rec_name = 'name'
+
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super().default_get(fields_list)
+        program_type = defaults.get('program_type')
+        if program_type:
+            program_default_values = self._program_type_default_values()
+            if program_type in program_default_values:
+                default_values = program_default_values[program_type]
+                defaults.update({k: v for k, v in default_values.items() if k in fields_list})
+        return defaults
 
     name = fields.Char('Program Name', required=True, translate=True)
     active = fields.Boolean(default=True)

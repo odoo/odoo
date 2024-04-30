@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Tony Ng, 2024
 # Wil Odoo, 2024
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-29 11:36+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1861,7 +1861,7 @@ msgstr "此賬戶用作誌賬已開啟 auto_post 功能、會計日期截至今�
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Accountant"
-msgstr ""
+msgstr "會計人員"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -2306,7 +2306,7 @@ msgstr "我們所有的合作關係將受"
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "All selected moves for reversal must belong to the same company."
-msgstr ""
+msgstr "所有已選取的撤銷分錄，必須屬於同一公司。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -2547,7 +2547,7 @@ msgstr "發生了錯誤."
 msgid ""
 "An error occurred when computing the inalterability. A gap has been detected"
 " in the sequence."
-msgstr ""
+msgstr "計算不變性時發生錯誤。序列中偵測到間隙。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -3293,7 +3293,7 @@ msgstr "受阻消息"
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Bookkeeper"
-msgstr ""
+msgstr "簿記員"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3872,7 +3872,7 @@ msgstr "使用歐洲SEPA服務一步點選即可支付"
 msgid ""
 "Collect information and produce statistics on the trade in goods in Europe "
 "with intrastat"
-msgstr "通過內部統計收集資訊並建立歐洲貨物貿易統計資料"
+msgstr "透過 Intrastat 收集貨物在歐洲內貿易的資訊，並編製統計數據"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__color
@@ -4168,7 +4168,7 @@ msgstr "很好，看來你沒有任何供應商的賬單要付了。"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %s (%s)."
-msgstr ""
+msgstr "日記賬記項數據損毀：識別碼 %s（%s）。"
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -6126,7 +6126,7 @@ msgstr "權益"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Error importing attachment '%s' as invoice (decoder=%s)"
-msgstr ""
+msgstr "將附件 %s 匯入為發票時，發生錯誤（解碼器：%s）"
 
 #. module: account
 #. odoo-python
@@ -7263,7 +7263,7 @@ msgstr "如果勾選此選框，則表示帳戶在建立傳票時不確定此傳
 msgid ""
 "If ticked, the hash chain will be computed from the last move hashed to the "
 "new move to be hashed. The hash is performed on demand."
-msgstr ""
+msgstr "如果勾選，雜湊鏈會從最後的已雜湊分錄計算，供需要雜湊的新分錄使用。雜湊功能是按要求而執行。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -7274,7 +7274,7 @@ msgid ""
 "If ticked, when the invoice is sent, the hash chain will be computed from "
 "the last move hashed to the new move to be hashed. The hash can also be "
 "performed on demand."
-msgstr ""
+msgstr "如果勾選，發送發票時，雜湊鏈會從最後的已雜湊分錄計算，供需要雜湊的新分錄使用。你亦可以按需要，自行執行雜湊功能。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7686,7 +7686,7 @@ msgstr "國際商業條款是一系列用於國際交易的事先定義的商業
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_intrastat
 msgid "Intrastat"
-msgstr "國際貿易統計組織"
+msgstr "Intrastat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
@@ -8077,7 +8077,7 @@ msgstr ""
 msgid ""
 "Irregularities due to draft, cancelled or deleted bills with a sequence "
 "number since last lock date."
-msgstr ""
+msgstr "由於有草稿、已取消或已刪除的賬單，而賬單包括上次鎖定日期之後的序列號碼，導致出現不一致。"
 
 #. module: account
 #. odoo-python
@@ -8085,7 +8085,7 @@ msgstr ""
 msgid ""
 "Irregularities due to draft, cancelled or deleted invoices with a sequence "
 "number since last lock date."
-msgstr ""
+msgstr "由於有草稿、已取消或已刪除的發票，而發票包括上次鎖定日期之後的序列號碼，導致出現不一致。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_being_sent
@@ -12311,7 +12311,7 @@ msgstr "正在傳送發票"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "Sending these invoices will create a gap in the sequence."
-msgstr ""
+msgstr "發送這些發票會令序列間斷。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__move_sent_values
@@ -12626,7 +12626,7 @@ msgstr "實體郵寄"
 msgid ""
 "Some journal entries have not been hashed yet. You should hash them before "
 "locking the fiscal year."
-msgstr ""
+msgstr "部份日記賬記項尚未經過雜湊處理。你應該在鎖定財政年度之前，對它們進行雜湊處理。"
 
 #. module: account
 #. odoo-python
@@ -13446,6 +13446,15 @@ msgstr "付款期限必須至少有一行計算百分比的資料行，而所有
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"The Syscohada chart template shouldn't be selected directly. Instead, you "
+"should directly select the chart template related to your country."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid ""
 "The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
@@ -13518,6 +13527,8 @@ msgid ""
 "The amount for %(partner_name)s appears unusual. Based on your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
+"%(partner_name)s 的金額似乎不正常。根據你的歷史數據，預計金額是 %(mean)s（± %(wiggle)s）。\n"
+"請核實該金額是否正確。"
 
 #. module: account
 #. odoo-python
@@ -14316,7 +14327,7 @@ msgstr "似乎沒有任何項目可以為所選訂單開立應收憑單. 但是�
 #: code:addons/account/models/company.py:0
 msgid ""
 "There is no journal entry flagged for accounting data inalterability yet."
-msgstr ""
+msgstr "尚未有日記賬記項被標幟作會計資料不變性檢查。"
 
 #. module: account
 #. odoo-python
@@ -14453,7 +14464,7 @@ msgstr "這只能用於日記帳項目"
 msgid ""
 "This document is protected by a hash. Therefore, you cannot edit the "
 "following fields: %s."
-msgstr ""
+msgstr "此文件受雜湊值保護，因此你無法編輯以下欄位：%s。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -14558,6 +14569,9 @@ msgid ""
 "- some move with the same sequence prefix has a higher number. You may need to resequence it.\n"
 "- the move's date is anterior to the lock date"
 msgstr ""
+"此分錄未能鎖定，因為：\n"
+"- 有序列字首相同的分錄擁有更高數字。你可能需要重新排列序列。\n"
+"- 分錄的日期早於鎖定日期"
 
 #. module: account
 #. odoo-python
@@ -15954,9 +15968,9 @@ msgstr "您無法登記付款，因為所選日記帳項目沒有任何餘款要
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid ""
-"You can't register payments for journal items being either all inbound, "
-"either all outbound."
-msgstr "您不能為全部收入或全部支出的日記帳項目登記付款.即使全部是境外."
+"You can't register payments for both inbound and outbound moves at the same "
+"time."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -16047,7 +16061,7 @@ msgstr "您不能刪除稅金明細，因為它會影響稅金務報表"
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
 "definition."
-msgstr ""
+msgstr "你不可刪除此賬戶標籤（%s），因為它要用於賬目總表的定義內。"
 
 #. module: account
 #. odoo-python
@@ -16134,6 +16148,8 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
+"若期初分錄（%s）已完成過賬，便不可匯入 openning_balance。                 "
+"如果絕對肯定想修改賬戶的期初結餘，請將分錄重設為草稿。"
 
 #. module: account
 #. odoo-python
@@ -16146,7 +16162,7 @@ msgstr "你不可合併賬戶。"
 #: code:addons/account/models/account_move.py:0
 msgid ""
 "You cannot modify a sent entry of this journal because it is in strict mode."
-msgstr ""
+msgstr "你不可修改此日記賬的已傳送記項，因為它處於限制模式。"
 
 #. module: account
 #. odoo-python

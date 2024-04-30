@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.CashOpeningPopup">
-        <Dialog title="'Opening Cash Control'" size="'md'">
+        <Dialog size="'md'">
+            <t t-set-slot="header">
+                <h4 class="modal-title text-break">
+                    Opening Cash Control
+                </h4>
+            </t>
             <div class="opening-cash-section mb-3">
                 <span class="info-title d-flex flex-grow-1 align-items-start">Opening cash</span>
                 <div class="cash-input-sub-section input-group">

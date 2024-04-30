@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +44,7 @@ msgstr "600,00$"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(date_from)s - %(date_to)s"
-msgstr ""
+msgstr "%(date_from)s - %(date_to)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -368,7 +369,7 @@ msgstr "Tệp đính kèm"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
 msgid "Attachments of expenses"
-msgstr ""
+msgstr "Tệp đính kèm chi phí"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
@@ -1344,7 +1345,7 @@ msgstr "Tên"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "New Expense Report, paid by %(paid_by)s"
-msgstr ""
+msgstr "Báo cáo chi phí mới, được thanh toán bởi %(paid_by)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -1778,6 +1779,13 @@ msgid "Scan"
 msgstr "Quét"
 
 #. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/components/qrcode_action.xml:0
+#, python-format
+msgid "Scan this QR code to get the Odoo app:"
+msgstr "Quét mã QR này để tải ứng dụng Odoo:"
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
@@ -1840,7 +1848,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "Show missing work email employees"
-msgstr ""
+msgstr "Hiển thị nhân viên thiếu email công việc"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
@@ -1881,7 +1889,7 @@ msgstr "Chia tách có thể"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__standard_price_update_warning
 msgid "Standard Price Update Warning"
-msgstr ""
+msgstr "Cảnh báo cập nhật giá tiêu chuẩn"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
@@ -2057,6 +2065,8 @@ msgid ""
 "The work email of some employees is missing. Please add it on the employee "
 "form"
 msgstr ""
+"Email công việc của một số nhân viên bị thiếu. Vui lòng thêm email vào hồ sơ"
+" nhân viên."
 
 #. module: hr_expense
 #. odoo-python
@@ -2066,6 +2076,9 @@ msgid ""
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
 msgstr ""
+"Có các khoản chi phí chưa được gửi liên quan đến danh mục này. Việc cập nhật"
+" chi phí danh mục sẽ thay đổi số tiền chi phí, nên hãy chắc chắn rằng đây là"
+" điều bạn muốn làm."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2080,6 +2093,8 @@ msgid ""
 "This expense report is empty. You cannot submit or approve an empty expense "
 "report."
 msgstr ""
+"Báo cáo chi phí này rỗng. Bạn không thể gửi hoặc phê duyệt báo cáo chi phí "
+"rỗng."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -2332,6 +2347,8 @@ msgstr ""
 msgid ""
 "You cannot create accounting entries for an expense report without expenses."
 msgstr ""
+"Bạn không thể tạo các bút toán kế toán cho báo cáo chi phí mà không có chi "
+"phí."
 
 #. module: hr_expense
 #. odoo-python
@@ -2399,6 +2416,8 @@ msgid ""
 "You cannot remove all expenses from a submitted, approved or paid expense "
 "report."
 msgstr ""
+"Bạn không thể xoá tất cả các khoản chi phí khỏi một báo cáo chi phí đã được "
+"nộp, phê duyệt hoặc thanh toán."
 
 #. module: hr_expense
 #. odoo-python
@@ -2435,12 +2454,15 @@ msgid ""
 "You cannot set the expense total in currency to 0 if it's linked to a "
 "report."
 msgstr ""
+"Bạn không thể đặt tổng chi phí bằng đơn vị tiền tệ thành 0 nếu nó được liên "
+"kết với một báo cáo."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot set the expense total to 0 if it's linked to a report."
 msgstr ""
+"Bạn không thể đặt tổng chi phí thành 0 nếu nó được liên kết với một báo cáo."
 
 #. module: hr_expense
 #. odoo-python
@@ -2477,7 +2499,7 @@ msgstr "Chi phí của bạn đã được đăng ký thành công."
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "alias"
-msgstr ""
+msgstr "bí danh"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -2497,7 +2519,7 @@ msgstr "ví dụ. Chuyến đi đến Nha Trang"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "VD: mycompany.com"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason

@@ -3177,8 +3177,8 @@ msgstr "أحبك "
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
-msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"today\"."
-msgstr "تاريج بتنسيق ISO (مثال: \"31-12-2018\") أو \"اليوم\". "
+msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"%s\"."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4277,6 +4277,8 @@ msgstr "الاسم:"
 
 #. module: web
 #. odoo-javascript
+#. odoo-python
+#: code:addons/web/controllers/action.py:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
@@ -4557,7 +4559,7 @@ msgstr "ليس في الحالة نشط، انقر لتغيير ذلك "
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.js:0
 #, python-format
 msgid "Number of files"
-msgstr ""
+msgstr "عدد الملفات "
 
 #. module: web
 #. odoo-javascript
@@ -5358,15 +5360,11 @@ msgstr "للقراءة فقط: "
 #. odoo-javascript
 #: code:addons/web/static/src/core/confirmation_dialog/confirmation_dialog.js:0
 msgid ""
-"Ready to make your record disappear into thin air? Are you sure?\n"
-"It will be gone forever!\n"
-"\n"
+"Ready to make your record disappear into thin air? Are you sure?\r\n"
+"It will be gone forever!\r\n"
+"\r\n"
 "Think twice before you click that 'Delete' button!"
 msgstr ""
-"هل أنت مستعد لتوديع سجلك للأبد؟ أأنت واثق؟\n"
-"لن تتمكن من رؤيته مجدداً!\n"
-"\n"
-"فكر ملياً قبل الضغط على زر 'حذف'! "
 
 #. module: web
 #. odoo-javascript
@@ -6200,6 +6198,7 @@ msgstr "قميص "
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 msgid "TIP"
 msgstr "نصيحة "
@@ -7667,6 +7666,7 @@ msgstr "مرساة "
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/core/domain_selector/utils.js:0
 #: code:addons/web/static/src/core/tree_editor/utils.js:0
 msgid "and"
@@ -29576,6 +29576,13 @@ msgstr "زومبي "
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 msgid "— press"
 msgstr "— اضغط "
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "— search for"
+msgstr ""
 
 #. module: web
 #. odoo-javascript

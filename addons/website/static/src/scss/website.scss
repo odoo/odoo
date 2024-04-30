@@ -411,6 +411,17 @@ $-header-nav-link-height: $nav-link-height;
     }
 }
 
+hr {
+    // Move the set up color as a border color. Indeed, we may use color-mix to
+    // define that color as a function of currentColor, in which case
+    // Safari 16.5 is known to crash when using that to set the color property.
+    border-top: $hr-height solid $hr-color;
+    color: inherit;
+    // Bootstrap sets up a "background-color" on the hr tag. As we may use a
+    // transparent color as $hr-color, we do not want that.
+    background-color: transparent;
+}
+
 h2 {
     color: map-get($colors, 'o-cc1-h2');
 }
@@ -1701,7 +1712,7 @@ input[value*="data-oe-translation-initial-sha"] {
 .o_wanim_overflow_xy_hidden {
     overflow-x: hidden !important;
 
-    &.o_rtl {
+    &.o_rtl, .o_rtl {
         // Fix for Chrome and Edge bug: resolves slow/stuck scrolling during
         // left-overflowing animations on RTL web pages. Note: using overflow on
         // the main element hides animated elements outside of it (e.g. "Framed"

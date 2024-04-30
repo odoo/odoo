@@ -280,33 +280,25 @@ class Channel(models.Model):
             failing_channels = self.filtered(lambda channel: channel.channel_type != vals.get('channel_type'))
             if failing_channels:
                 raise UserError(_('Cannot change the channel type of: %(channel_names)s', channel_names=', '.join(failing_channels.mapped('name'))))
+        old_vals = {channel: channel._channel_basic_info() for channel in self}
+        result = super().write(vals)
         notifications = []
         for channel in self:
-            current_val = channel.read(vals.keys())[0]
+            info = channel._channel_basic_info()
             diff = {}
-            for key in vals.keys():
-                if current_val.get(key) != vals.get(key) and key != "image_128":
-                    diff[key] = vals[key]
+            for key, value in info.items():
+                if value != old_vals[channel][key]:
+                    diff[key] = value
             if diff:
                 notifications.append([channel, "mail.record/insert", {
                     "Thread": {
-                        "id": current_val["id"],
+                        "id": channel.id,
                         "model": "discuss.channel",
                         **diff
                     }
                 }])
-        result = super().write(vals)
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
-        if 'image_128' in vals:
-            for channel in self:
-                notifications.append([channel, 'mail.record/insert', {
-                    'Thread': {
-                        'avatarCacheKey': channel.avatar_cache_key,
-                        'id': channel.id,
-                        'model': "discuss.channel",
-                    }
-                }])
         self.env['bus.bus']._sendmany(notifications)
         return result
 
@@ -830,7 +822,6 @@ class Channel(models.Model):
             'defaultDisplayMode': self.default_display_mode,
             'description': self.description,
             'uuid': self.uuid,
-            'is_editable': self.is_editable,
             'group_based_subscription': bool(self.group_ids),
             'create_uid': self.create_uid.id,
             'authorizedGroupFullName': self.group_public_id.full_name,
@@ -885,6 +876,7 @@ class Channel(models.Model):
                 member_of_current_user_by_channel[member.channel_id] = member
         for channel in self:
             info = channel._channel_basic_info()
+            info["is_editable"] = channel.is_editable
             info["fetchChannelInfoState"] = "fetched"
             # find the channel member state
             if current_partner or current_guest:

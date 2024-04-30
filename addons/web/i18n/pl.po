@@ -5,6 +5,7 @@
 # Translators:
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2024
 # Wil Odoo, 2024
+# Damian Ratus, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:06+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Damian Ratus, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3160,7 +3161,7 @@ msgstr "ILY"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
-msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"today\"."
+msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"%s\"."
 msgstr ""
 
 #. module: web
@@ -4250,6 +4251,8 @@ msgstr "Nazwa:"
 
 #. module: web
 #. odoo-javascript
+#. odoo-python
+#: code:addons/web/controllers/action.py:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
@@ -5200,7 +5203,7 @@ msgstr "Pasek postępu"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_components/column_progress.xml:0
 msgid "Progress bar"
-msgstr ""
+msgstr "Pasek postępu"
 
 #. module: web
 #. odoo-javascript
@@ -5331,9 +5334,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/confirmation_dialog/confirmation_dialog.js:0
 msgid ""
-"Ready to make your record disappear into thin air? Are you sure?\n"
-"It will be gone forever!\n"
-"\n"
+"Ready to make your record disappear into thin air? Are you sure?\r\n"
+"It will be gone forever!\r\n"
+"\r\n"
 "Think twice before you click that 'Delete' button!"
 msgstr ""
 
@@ -6167,6 +6170,7 @@ msgstr "T-shirt"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 msgid "TIP"
 msgstr "Podpowiedź"
@@ -7633,6 +7637,7 @@ msgstr "kotwica"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/core/domain_selector/utils.js:0
 #: code:addons/web/static/src/core/tree_editor/utils.js:0
 msgid "and"
@@ -29542,6 +29547,13 @@ msgstr "zombie"
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 msgid "— press"
 msgstr "- prasa"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "— search for"
+msgstr ""
 
 #. module: web
 #. odoo-javascript

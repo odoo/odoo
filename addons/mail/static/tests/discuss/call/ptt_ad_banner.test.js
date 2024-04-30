@@ -1,4 +1,3 @@
-import { describe, test } from "@odoo/hoot";
 import {
     click,
     contains,
@@ -7,10 +6,9 @@ import {
     openDiscuss,
     start,
     startServer,
-} from "../../mail_test_helpers";
-import { pttExtensionHookService } from "@mail/discuss/call/common/ptt_extension_service";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, test } from "@odoo/hoot";
 import { mockService } from "@web/../tests/web_test_helpers";
-import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -19,12 +17,11 @@ test("display banner when ptt extension is not enabled", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    mockService("discuss.ptt_extension", () => ({
-        ...pttExtensionHookService.start(getMockEnv(), {}),
+    mockService("discuss.ptt_extension", {
         get isEnabled() {
             return false;
         },
-    }));
+    });
     await start();
     await openDiscuss(channelId);
     await click("[title='Show Call Settings']");

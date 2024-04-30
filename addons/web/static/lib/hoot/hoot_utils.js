@@ -33,11 +33,6 @@ import { DiffMatchPatch } from "./lib/diff_match_patch";
  *  tests: number;
  *  todo: number;
  * }} Reporting
- *
- * @typedef {{
- *  tabSize: number;
- *  keepInlineTextNodes: boolean;
- * }} formatXMLOptions
  */
 
 /**
@@ -55,11 +50,11 @@ import { DiffMatchPatch } from "./lib/diff_match_patch";
 //-----------------------------------------------------------------------------
 
 const {
-    Array,
+    Array: { isArray: $isArray },
+    Boolean,
     clearTimeout,
     console: { debug: $debug },
     Date,
-    DOMParser,
     Error,
     ErrorEvent,
     Map,
@@ -76,7 +71,7 @@ const {
     },
     Promise,
     PromiseRejectionEvent,
-    Reflect: { ownKeys },
+    Reflect: { ownKeys: $ownKeys },
     RegExp,
     Set,
     setTimeout,
@@ -85,93 +80,13 @@ const {
     window,
 } = globalThis;
 /** @type {Clipboard["readText"]} */
-const $readText = $clipboard.readText.bind($clipboard);
+const $readText = $clipboard?.readText.bind($clipboard);
 /** @type {Clipboard["writeText"]} */
-const $writeText = $clipboard.writeText.bind($clipboard);
+const $writeText = $clipboard?.writeText.bind($clipboard);
 
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
-
-/**
- * @param {Element} node
- * @param {number} level
- * @param {boolean} [keepInlineTextNodes=false]
- * @returns {Object[]}
- */
-const extractLayers = (node, level, keepInlineTextNodes = false) => {
-    const layers = [];
-    if (node.nodeType === 8) {
-        // COMMENT_NODE
-        return layers;
-    }
-    if (node.nodeType === 3) {
-        // TEXT_NODE
-        const textContent = node.nodeValue.replaceAll(/\n/g, "");
-        const trimmedTextContent = textContent.trim();
-        if (trimmedTextContent) {
-            const type = textContent === trimmedTextContent ? "inline-text" : "text";
-            layers.push({ level, type, value: { textContent: trimmedTextContent } });
-        }
-        return layers;
-    }
-    const [open, close] = node.outerHTML.replace(`>${node.innerHTML}<`, ">\n<").split("\n");
-    const layer = { level, type: "element", value: { open, close } };
-    layers.push(layer);
-    const childLayers = [...node.childNodes].map((child) => extractLayers(child, level + 1)).flat();
-    if (keepInlineTextNodes && childLayers.length === 1 && childLayers[0].type === "inline-text") {
-        layer.value.textContent = childLayers[0].value.textContent;
-    } else {
-        layers.push(...childLayers);
-    }
-    return layers;
-};
-
-/**
- * @param {Object[]} layers
- * @param {number} tabSize
- * @returns {string}
- */
-const generateStringFromLayers = (layers, tabSize) => {
-    let layerIndex = 0;
-    let result = "";
-    while (layers.length > 0) {
-        const layer = layers[layerIndex];
-        const { level, value } = layer;
-        const pad = new Array(tabSize * level + 1).join(" ");
-        let nextLayerIndex = layerIndex + 1;
-        if (value.open) {
-            if (value.textContent) {
-                // node with inline textContent (no wrapping white-spaces)
-                result += `${pad}${value.open}${value.textContent}${value.close}\n`;
-                layers.splice(layerIndex, 1);
-                nextLayerIndex--;
-            } else {
-                result += `${pad}${value.open}\n`;
-                delete value.open;
-            }
-        } else {
-            if (value.close) {
-                result += `${pad}${value.close}\n`;
-            } else if (value.textContent) {
-                result += `${pad}${value.textContent}\n`;
-            }
-            layers.splice(layerIndex, 1);
-            nextLayerIndex--;
-        }
-        if (nextLayerIndex >= layers.length) {
-            layerIndex = nextLayerIndex - 1;
-            continue;
-        }
-        const nextLayer = layers[nextLayerIndex];
-        if (nextLayer.level > layers[nextLayerIndex - 1].level) {
-            layerIndex = nextLayerIndex;
-        } else {
-            layerIndex = nextLayerIndex - 1;
-        }
-    }
-    return result;
-};
 
 /**
  * @param {unknown} number
@@ -195,24 +110,6 @@ const ordinal = (number) => {
             return `${strNumber}th`;
         }
     }
-};
-
-const parser = new DOMParser();
-
-/**
- * @param {string} str
- * @returns {Element}
- */
-const parseXML = (str) => {
-    const xml = parser.parseFromString(str, "text/xml");
-    if (xml.getElementsByTagName("parsererror").length > 0) {
-        throw new Error(
-            `An error occured while parsing ${str}: ${
-                xml.getElementsByTagName("parsererror")[0].innerText
-            }`
-        );
-    }
-    return xml.documentElement;
 };
 
 const R_OBJECT = /^\[object \w+\]$/;
@@ -288,7 +185,7 @@ export function createReporting(parentReporting) {
 /**
  * @template T
  * @param {T} target
- * @param {Record<string, PropertyDescriptor>} descriptors
+ * @param {Record<keyof T, PropertyDescriptor>} descriptors
  * @returns {T}
  */
 export function createMock(target, descriptors) {
@@ -297,7 +194,7 @@ export function createMock(target, descriptors) {
     let keys;
 
     while (!keys?.length) {
-        keys = ownKeys(owner);
+        keys = $ownKeys(owner);
         owner = $getPrototypeOf(owner);
     }
 
@@ -388,30 +285,43 @@ export function deepEqual(a, b, cache = new Set()) {
         return true;
     }
     const aType = typeof a;
-    if (aType !== typeof b || !a || !b) {
+    if (aType !== typeof b || !a || !b || aType !== "object") {
         return false;
     }
-    if (aType === "object") {
-        cache.add(a);
-        if (a instanceof File) {
-            return a.name === b.name && a.size === b.size && a.type === b.type;
-        }
-        if (isIterable(a) && isIterable(b)) {
-            if (!Array.isArray(a)) {
-                a = [...a];
-            }
-            if (!Array.isArray(b)) {
-                b = [...b];
-            }
-            return a.length === b.length && a.every((v, i) => deepEqual(v, b[i], cache));
-        }
-        const aEntries = $entries(a);
-        if (aEntries.length !== $keys(b).length) {
-            return false;
-        }
-        return aEntries.every(([key, value]) => deepEqual(value, b[key], cache));
+
+    cache.add(a);
+    if (a instanceof File) {
+        // Files
+        return a.name === b.name && a.size === b.size && a.type === b.type;
     }
-    return false;
+    if (a instanceof Date || a instanceof RegExp) {
+        // Dates & regular expressions
+        return strictEqual(String(a), String(b));
+    }
+
+    const aIsIterable = isIterable(a);
+    if (aIsIterable !== isIterable(b)) {
+        return false;
+    }
+    if (!aIsIterable) {
+        // All non-iterable objects
+        const aKeys = $ownKeys(a);
+        return (
+            aKeys.length === $ownKeys(b).length &&
+            aKeys.every((key) => deepEqual(a[key], b[key], cache))
+        );
+    }
+
+    // Iterables
+    const aIsArray = $isArray(a);
+    if (aIsArray !== $isArray(b)) {
+        return false;
+    }
+    if (!aIsArray) {
+        a = [...a];
+        b = [...b];
+    }
+    return a.length === b.length && a.every((v, i) => deepEqual(v, b[i], cache));
 }
 
 /**
@@ -539,7 +449,7 @@ export function formatTechnical(
         return `${baseIndent}${prefix} { ... }`;
     } else if (value && typeof value === "object") {
         if (cache.has(value)) {
-            return `${baseIndent}${Array.isArray(value) ? "[...]" : "{ ... }"}`;
+            return `${baseIndent}${$isArray(value) ? "[...]" : "{ ... }"}`;
         } else {
             cache.add(value);
             const startIndent = " ".repeat((depth + 1) * 2);
@@ -622,17 +532,6 @@ export function formatTime(value, unit) {
 }
 
 /**
- * @param {string} value
- * @param {formatXMLOptions} [options={}]
- * @returns {string}
- */
-export function formatXML(value, options = {}) {
-    const xml = parseXML(value);
-    const layers = extractLayers(xml, 0, options.keepInlineTextNodes);
-    return generateStringFromLayers(layers, options.tabSize || 4);
-}
-
-/**
  * Based on Java's String.hashCode, a simple but not rigorously collision resistant
  * hashing function.
  *
@@ -683,6 +582,10 @@ export function getFuzzyScore(pattern, string) {
     }
 
     return patternIndex === pattern.length ? totalScore : 0;
+}
+
+export function hasClipboard() {
+    return Boolean($clipboard);
 }
 
 /**

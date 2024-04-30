@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Junko Augias, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -263,7 +264,7 @@ msgstr "分析勘定"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_distribution
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "分析用配分"
+msgstr "分析分配"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_analytic_applicability
@@ -1745,6 +1746,13 @@ msgid "Scan"
 msgstr "スキャン"
 
 #. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/components/qrcode_action.xml:0
+#, python-format
+msgid "Scan this QR code to get the Odoo app:"
+msgstr "このQRコードをスキャンして、Odooアプリを入手してください。"
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
@@ -2019,6 +2027,7 @@ msgid ""
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
 msgstr ""
+"このカテゴリには未計上の経費がリンクされています。カテゴリ経費を更新すると、経費の金額が変更されます。本当にそれがやりたいことなのかをご確認下さい。"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2032,7 +2041,7 @@ msgstr "経費管理を簡単に説明するとこうなります！"
 msgid ""
 "This expense report is empty. You cannot submit or approve an empty expense "
 "report."
-msgstr ""
+msgstr "この経費報告書は空です。空の経費報告書を提出または承認することはできません。"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -2174,12 +2183,12 @@ msgstr "添付を見る"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "View Expense"
-msgstr "経費を表示"
+msgstr "経費照会"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "View Report"
-msgstr "報告を表示"
+msgstr "レポート照会"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2275,7 +2284,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid ""
 "You cannot create accounting entries for an expense report without expenses."
-msgstr ""
+msgstr "経費のない経費報告書に会計項目を作成することはできません。"
 
 #. module: hr_expense
 #. odoo-python
@@ -2335,7 +2344,7 @@ msgstr ""
 msgid ""
 "You cannot remove all expenses from a submitted, approved or paid expense "
 "report."
-msgstr ""
+msgstr "提出済、承認済、または支払済の経費報告書から全ての経費を削除することはできません。"
 
 #. module: hr_expense
 #. odoo-python
@@ -2367,13 +2376,13 @@ msgstr "同じ明細を2回報告することはできません！"
 msgid ""
 "You cannot set the expense total in currency to 0 if it's linked to a "
 "report."
-msgstr ""
+msgstr "レポートにリンクされている場合、通貨建ての支出合計を0に設定することはできません。"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot set the expense total to 0 if it's linked to a report."
-msgstr ""
+msgstr "レポートにリンクされている場合、支出合計を0に設定することはできません。"
 
 #. module: hr_expense
 #. odoo-python

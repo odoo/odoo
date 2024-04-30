@@ -35,6 +35,16 @@ class EventCase(common.TransactionCase):
             notification_type='email',
             tz='Europe/Brussels',
         )
+        cls.user_public = mail_new_test_user(
+            cls.env,
+            company_id=cls.company_admin.id,
+            email='paulette.public@test.example.com',
+            groups='base.group_public',
+            login='public_test',
+            name='Paulette Public',
+            notification_type='email',
+            tz='Europe/Brussels',
+        )
         cls.user_employee = mail_new_test_user(
             cls.env,
             company_id=cls.company_admin.id,

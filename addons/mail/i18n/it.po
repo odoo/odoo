@@ -158,7 +158,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web_portal/chatter.js:0
 msgid "%(recipientCount)s more"
-msgstr ""
+msgstr "Più di %(recipientCount)s"
 
 #. module: mail
 #. odoo-javascript
@@ -380,6 +380,8 @@ msgid ""
 "<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
 "title=\"Steps count\"/>"
 msgstr ""
+"<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
+"title=\"Steps count\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -731,7 +733,7 @@ msgstr "Combinazione attività"
 #: model:ir.actions.act_window,name:mail.mail_activity_action
 #: model:ir.ui.menu,name:mail.menu_mail_activities
 msgid "Activity Overview"
-msgstr ""
+msgstr "Panoramica attività"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_plan
@@ -778,7 +780,7 @@ msgstr "Icona tipo di attività"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
 msgid "Activity Type Name"
-msgstr ""
+msgstr "Nome tipo attività"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
@@ -798,6 +800,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Onboarding\", \"Prospect Follow-up\", \"Project Milestone Meeting\", ...)"
 msgstr ""
+"I piani attività vengono utilizzati per assegnare un elenco di attività in pochi clic\n"
+"                    (ad es. \"Onboarding\", \"Follow-up potenziale cliente\", \"Riunione obiettivi progetto\"...)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
@@ -951,7 +955,7 @@ msgstr "Opzioni avanzate"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__after_plan_date
 msgid "After Plan Date"
-msgstr ""
+msgstr "Dopo della data del piano"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_exception_decoration__warning
@@ -1485,7 +1489,7 @@ msgstr "Avatar 512"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__avatar_cache_key
 msgid "Avatar Cache Key"
-msgstr ""
+msgstr "Chiave cache avatar"
 
 #. module: mail
 #. odoo-javascript
@@ -1545,7 +1549,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__before_plan_date
 msgid "Before Plan Date"
-msgstr ""
+msgstr "Prima della data del piano"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__is_blacklisted
@@ -1776,12 +1780,12 @@ msgstr "Annullato"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_canned_response
 msgid "Canned Response"
-msgstr ""
+msgstr "Risposta predefinita"
 
 #. module: mail
 #: model:res.groups,name:mail.group_mail_canned_response_admin
 msgid "Canned Response Administrator"
-msgstr ""
+msgstr "Amministratore risposta predefinita"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_canned_response_action
@@ -1797,7 +1801,7 @@ msgstr "Ricerca risposte predefinite"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_form
 msgid "Canned response"
-msgstr ""
+msgstr "Risposta predefinita"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__source
@@ -1806,11 +1810,14 @@ msgid ""
 "in your messages. Type ':' followed by the name of your shortcut (e.g. "
 ":hello) to use in your messages."
 msgstr ""
+"Risposta predefinita che verrà sostituita automaticamente nel tuo messaggio "
+"con del contenuto più lungo. Digita \":\" seguito dal nome della scelta "
+"rapida (ad es. :ciao) per utilizzarla nei tuoi messaggi."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "Canned responses"
-msgstr ""
+msgstr "Risposte predefinite"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
@@ -1820,6 +1827,10 @@ msgid ""
 "                    replaced directly in your message, so that you can still edit\n"
 "                    it before sending."
 msgstr ""
+"Le risposte predefinite consentono di inserire testi precompilate nei\n"
+"                    messaggi digitando una <i>:scorciatoia</i>. Questa viene\n"
+"                    sostituita direttamente nel messaggio, così da poter essere modificata\n"
+"                    prima dell'invio."
 
 #. module: mail
 #. odoo-python
@@ -2288,6 +2299,9 @@ msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel for this user. This includes: creating, joining, pinning"
 msgstr ""
+"Contiene la data e l'orario dell'ultimo evento interessante tenutosi in "
+"questo canale, per l'utente indicato. Include: creare, partecipare e fissare"
+" in alto"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__last_interest_dt
@@ -2295,11 +2309,16 @@ msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel. This updates itself when new message posted."
 msgstr ""
+"Contiene data e orario dell'ultimo evento interessante tenutosi in questo "
+"canale. Il campo si aggiorna automaticamente quando vengono pubblicati nuovi"
+" messaggi."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__unpin_dt
 msgid "Contains the date and time when the channel was unpinned by the user."
 msgstr ""
+"Contiene la data e l'orario relativa alla rimozione dall'alto del canale da "
+"parte dell'utente."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__content
@@ -2339,6 +2358,8 @@ msgid ""
 "Couldn't get your emails. Check out the error message below for more info:\n"
 "%s"
 msgstr ""
+"Impossibile ottenere le e-mail. Controlla il seguente messaggio di errore per maggiori informazioni:\n"
+"%s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_bounce
@@ -2691,7 +2712,7 @@ msgstr "Riassunto Predefinito"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
 msgid "Default Summary:"
-msgstr ""
+msgstr "Riepilogo predefinito:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_user_id
@@ -2852,11 +2873,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
 msgid "Determines if the canned response can be edited by the current user"
 msgstr ""
+"Determina se la risposta predefinita può essere modificata dall'utente "
+"corrente"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_shared
 msgid "Determines if the canned_response is currently shared with other users"
-msgstr ""
+msgstr "Determina se la canned_response è condivisa con altri utenti"
 
 #. module: mail
 #. odoo-javascript
@@ -4901,7 +4924,7 @@ msgstr "Sta seguendo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__is_hidden
 msgid "Is Hidden"
-msgstr ""
+msgstr "È nascosto"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_member
@@ -5207,7 +5230,7 @@ msgstr "Data ultima visualizzazione"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__last_used
 msgid "Last time this canned_response was used"
-msgstr ""
+msgstr "L'ultima volta in cui è stata utilizzata la canned_response"
 
 #. module: mail
 #. odoo-javascript
@@ -6063,7 +6086,7 @@ msgstr "I miei modelli"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "My canned responses"
-msgstr ""
+msgstr "Le mie risposte predefinite"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__name
@@ -6486,6 +6509,8 @@ msgid ""
 "Number of days/week/month before executing the action after or before the "
 "scheduled plan date."
 msgstr ""
+"Numero di giorni/settimane/mesi che precedono l'esecuzione dell'azione in "
+"seguito o prima della data del piano pianificata."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_count
@@ -6775,7 +6800,7 @@ msgstr "Il messaggio originale è stato cancellato"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "Original note:"
-msgstr ""
+msgstr "Nota originale:"
 
 #. module: mail
 #. odoo-python
@@ -7030,7 +7055,7 @@ msgstr "Chiamata"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Pick an Activity Plan to launch"
-msgstr ""
+msgstr "Scegli un piano attività da avviare"
 
 #. module: mail
 #. odoo-javascript
@@ -8380,7 +8405,7 @@ msgstr "Condividi schermo"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "Shared canned responses"
-msgstr ""
+msgstr "Risposte predefinite condivise"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__description
@@ -9727,7 +9752,7 @@ msgstr "Rimuovi messaggio dall'alto"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt
 msgid "Unpin date"
-msgstr ""
+msgstr "Rimuovi data dall'alto"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__message_unread_counter

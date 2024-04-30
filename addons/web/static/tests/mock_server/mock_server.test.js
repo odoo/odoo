@@ -774,6 +774,45 @@ test("performRPC: read_group, group by m2m", async () => {
     ]);
 });
 
+test("performRPC: read_group, order by date with granularity", async () => {
+    await makeMockServer();
+    let result = await ormRequest({
+        model: "bar",
+        method: "read_group",
+        kwargs: {
+            fields: ["foo"],
+            domain: [],
+            groupby: ["date:day"],
+            orderby: "date:day ASC",
+        },
+    });
+    expect(result.map((x) => x["date:day"])).toEqual([
+        "2016-04-11",
+        "2016-10-26",
+        "2016-12-14",
+        "2016-12-15",
+        "2019-12-30",
+    ]);
+
+    result = await ormRequest({
+        model: "bar",
+        method: "read_group",
+        kwargs: {
+            fields: ["foo"],
+            domain: [],
+            groupby: ["date:day"],
+            orderby: "date:day DESC",
+        },
+    });
+    expect(result.map((x) => x["date:day"])).toEqual([
+        "2019-12-30",
+        "2016-12-15",
+        "2016-12-14",
+        "2016-10-26",
+        "2016-04-11",
+    ]);
+});
+
 test("performRPC: read_group, group by m2o", async () => {
     Partner._fields.sequence = fields.Integer();
     Partner._records[0].sequence = 1;

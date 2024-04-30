@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Tony Ng, 2024
 # Wil Odoo, 2024
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:06+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -114,6 +114,10 @@ msgid ""
 "        (1) Return next greater item if no match. \n"
 "        (2) Wildcard match."
 msgstr ""
+"(0) 完全相符。 \n"
+"        (-1) 若無符合項目，傳回下一個較小的項目。 \n"
+"        (1) 若無符合項目，傳回下一個較大的項目。 \n"
+"        (2) 萬用字元配對。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -371,7 +375,7 @@ msgstr "指定字串末尾的子字串。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "A table can only be created on a continuous selection."
-msgstr ""
+msgstr "只能在連續選擇上建立表格。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1278,7 +1282,7 @@ msgstr "找不到工作簿關係檔案"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot have filters without a header row"
-msgstr ""
+msgstr "篩選器必須有標題列"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2344,7 +2348,7 @@ msgstr "兩個數的差額。"
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 msgid "Dimensions don't match the pivot definition"
-msgstr ""
+msgstr "維度不符樞紐分析定義"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2884,7 +2888,7 @@ msgstr "函數 [[FUNCTION_NAME]] 要求的值為 %s，但收到的是 %s。"
 msgid ""
 "Function [[FUNCTION_NAME]] expects the parameter '%s' to be a single value "
 "or a single cell reference, not a range."
-msgstr ""
+msgstr "函數 [[FUNCTION_NAME]] 要求參數 %s 是一個單一值或一個儲存格引用，而不是一個範圍。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4773,7 +4777,7 @@ msgstr "特定日期所在的季度"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "R1C1 notation is not supported."
-msgstr ""
+msgstr "不支援 R1C1 參照表示法。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5002,7 +5006,7 @@ msgstr "傳回與所提供邏輯值相反的值。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Returns the content of a cell, specified by a string."
-msgstr ""
+msgstr "根據字串所指定，傳回儲存格內容。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5097,7 +5101,7 @@ msgstr "根據標準規則四捨五入數字。"
 msgid ""
 "Rounds a number down to the nearest integer that is less than or equal to "
 "it."
-msgstr ""
+msgstr "將數字向下捨入，取整至小於或等於該數字的最接近整數。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6775,7 +6779,7 @@ msgstr "連結的完整網址，前後加引號。"
 msgid ""
 "The function [[FUNCTION_NAME]] expects a boolean value, but '%s' is a text, "
 "and cannot be coerced to a boolean."
-msgstr ""
+msgstr "函數 [[FUNCTION_NAME]] 要求一個真假值，但 '%s' 是文字，不能強制轉換為真假值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7484,7 +7488,7 @@ msgstr "要傳回的數字"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The number to round down to the nearest integer."
-msgstr ""
+msgstr "要向下取整至最接近整數的數字。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7785,7 +7789,7 @@ msgstr "範圍無效"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The range is out of the sheet"
-msgstr ""
+msgstr "引用範圍超出試算表範圍"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8402,7 +8406,7 @@ msgstr "要從數值 value1 中減去的減數。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The table zone is invalid for an unknown reason"
-msgstr ""
+msgstr "表格區域無效，原因未明"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9373,7 +9377,7 @@ msgstr "類型"
 #: code:addons/spreadsheet/models/spreadsheet_mixin.py:0
 #: code:addons/spreadsheet/models/spreadsheet_mixin.py:0
 msgid "Uh-oh! Looks like the spreadsheet file contains invalid data."
-msgstr ""
+msgstr "哎唷！試算表檔案似乎包含無效資料。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10031,7 +10035,7 @@ msgstr "你無法合併現有篩選器內的儲存格。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You cannot create overlapping tables."
-msgstr ""
+msgstr "你不可建立重疊的表格。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10169,7 +10173,7 @@ msgstr "lookup_range 應為單列或單欄。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "match_mode should be a value in [-1, 0, 1, 2]."
-msgstr ""
+msgstr "match_mode 應該是 [-1, 0, 1, 2] 其中一個值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10217,7 +10221,7 @@ msgstr "return_range 應該與 lookup_range 具有相同維度。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "search_mode should be a value in [-1, 1, -2, 2]."
-msgstr ""
+msgstr "search_mode 應該是 [-1, 1, -2, 2] 其中一個值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10231,7 +10235,7 @@ msgstr "start_date（%s）應在 end_date（%s）之前。"
 msgid ""
 "the search and match mode combination is not supported for XLOOKUP "
 "evaluation."
-msgstr ""
+msgstr "XLOOKUP 的計算，不支援該搜尋及配對模式組合。"
 
 #. module: spreadsheet
 #. odoo-javascript

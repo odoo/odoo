@@ -66,6 +66,20 @@ class TestGetOperator(HttpCase):
         self.assertEqual(fr_operator, livechat_channel._get_operator(lang="fr_FR"))
         self.assertEqual(en_operator, livechat_channel._get_operator(lang="en_US"))
 
+    def test_get_by_lang_both_operator_active(self):
+        fr_operator = self._create_operator("fr_FR")
+        en_operator = self._create_operator("en_US")
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {
+                "name": "Livechat Channel",
+                "user_ids": [fr_operator.id, en_operator.id],
+            }
+        )
+        self._create_chat(livechat_channel, fr_operator)
+        self._create_chat(livechat_channel, en_operator)
+        self._create_chat(livechat_channel, en_operator)
+        self.assertEqual(en_operator, livechat_channel._get_operator(lang="en_US"))
+
     def test_get_by_lang_no_operator_matching_lang(self):
         fr_operator = self._create_operator("fr_FR")
         livechat_channel = self.env["im_livechat.channel"].create(

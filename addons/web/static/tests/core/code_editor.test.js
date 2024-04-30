@@ -48,15 +48,6 @@ function getFakeAceEditor() {
     };
 }
 
-const keyToKeyCode = {
-    Control: 17,
-    Command: 224,
-    z: 90,
-};
-const defaultKeyBoardEvent = {
-    bubbles: true,
-};
-
 /*
 A custom implementation to dispatch keyboard events for ace specifically
 It is very naive and simple, and could extended
@@ -71,28 +62,8 @@ FIXME: Specificities of Ace 1.32.3
     So, instead of patching the useragent, we send to ace what it wants. (ie: Command + metaKey: true)
 */
 function dispatchKeyboardEvents(el, tupleArray) {
-    let metaKey = false;
-    function modify(evType, eventInit) {
-        if (eventInit.key === "Command") {
-            if (evType === "keydown") {
-                metaKey = true;
-            }
-            if (evType === "keyup") {
-                metaKey = false;
-            }
-        }
-    }
-
     for (const [evType, eventInit] of tupleArray) {
-        modify(evType, eventInit);
-        const evInit = {
-            ...defaultKeyBoardEvent,
-            keyCode: keyToKeyCode[eventInit.key],
-            metaKey,
-            eventInit,
-        };
-        el.dispatchEvent(new KeyboardEvent(evType, evInit));
-        modify(evType, eventInit);
+        el.dispatchEvent(new KeyboardEvent(evType, { ...eventInit, bubbles: true }));
     }
 }
 
@@ -147,17 +118,7 @@ test("onChange props called when code is edited", async () => {
 
     await mountWithCleanup(Parent);
     await editAce("Some Text");
-    expect([
-        "S",
-        "So",
-        "Som",
-        "Some",
-        "Some ",
-        "Some T",
-        "Some Te",
-        "Some Tex",
-        "Some Text",
-    ]).toVerifySteps();
+    expect(["Some Text"]).toVerifySteps();
 });
 
 test("onChange props not called when value props is updated", async () => {
@@ -323,12 +284,12 @@ test("initial value cannot be undone", async () => {
 
     const aceContent = queryOne(".ace_editor textarea");
     dispatchKeyboardEvents(aceContent, [
-        ["keydown", { key: "Command" }],
-        ["keypress", { key: "Command" }],
-        ["keydown", { key: "z" }],
-        ["keypress", { key: "z" }],
-        ["keyup", { key: "z" }],
-        ["keyup", { key: "Command" }],
+        ["keydown", { key: "Control", keyCode: 17 }],
+        ["keypress", { key: "Control", keyCode: 17 }],
+        ["keydown", { key: "z", keyCode: 90, ctrlKey: true }],
+        ["keypress", { key: "z", keyCode: 90, ctrlKey: true }],
+        ["keyup", { key: "z", keyCode: 90, ctrlKey: true }],
+        ["keyup", { key: "Control", keyCode: 17 }],
     ]);
     await animationFrame();
     expect(".ace_editor .ace_content").toHaveText("some value");

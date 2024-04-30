@@ -32,6 +32,7 @@ from odoo.tools import (
     groupby,
     index_exists,
     is_html_empty,
+    create_index,
 )
 
 _logger = logging.getLogger(__name__)
@@ -638,6 +639,13 @@ class AccountMove(models.Model):
                           ON account_move (journal_id, sequence_prefix desc, (sequence_number+1) desc)
             """)
 
+    def init(self):
+        super().init()
+        create_index(self.env.cr,
+                     indexname='account_move_journal_id_company_id_idx',
+                     tablename='account_move',
+                     expressions=['journal_id', 'company_id', 'date'])
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
@@ -682,6 +690,8 @@ class AccountMove(models.Model):
                 accounting_date = move._get_accounting_date(move.invoice_date, move._affect_tax_report())
             if accounting_date and accounting_date != move.date:
                 move.date = accounting_date
+                # _affect_tax_report may trigger premature recompute of line_ids.date
+                self.env.add_to_compute(move.line_ids._fields['date'], move.line_ids)
                 # might be protected because `_get_accounting_date` requires the `name`
                 self.env.add_to_compute(self._fields['name'], move)
 
@@ -2140,7 +2150,10 @@ class AccountMove(models.Model):
         return {**default_data, **new_default_data}
 
     def _get_product_catalog_order_data(self, products, **kwargs):
-        return {product.id: self._get_product_price_and_data(product) for product in products}
+        product_catalog = super()._get_product_catalog_order_data(products, **kwargs)
+        for product in products:
+            product_catalog[product.id] |= self._get_product_price_and_data(product)
+        return product_catalog
 
     def _get_product_price_and_data(self, product):
         """
@@ -2643,8 +2656,8 @@ class AccountMove(models.Model):
             user_fiscal_lock_date = move.company_id._get_user_fiscal_lock_date()
             if (default_date or move.date) <= user_fiscal_lock_date:
                 vals['date'] = user_fiscal_lock_date + timedelta(days=1)
-        if not self.journal_id.active and 'journal_id' in vals_list:
-            del vals['journal_id']
+            if not move.journal_id.active and 'journal_id' in vals:
+                del vals['journal_id']
         return vals_list
 
     def copy(self, default=None):
@@ -2669,9 +2682,9 @@ class AccountMove(models.Model):
                 for command, line_id, *line_vals in vals['invoice_line_ids']
                 if command == Command.UPDATE
             }
-            for command, line_id, line_vals in vals['line_ids']:
+            for command, line_id, *line_vals in vals['line_ids']:
                 if command == Command.UPDATE and line_id in update_vals:
-                    line_vals.update(update_vals.pop(line_id))
+                    line_vals[0].update(update_vals.pop(line_id))
             for line_id, line_vals in update_vals.items():
                 vals['line_ids'] += [Command.update(line_id, line_vals)]
             for command, line_id, *line_vals in vals['invoice_line_ids']:
@@ -3479,7 +3492,7 @@ class AccountMove(models.Model):
                 close_file(file_data)
                 continue
 
-            decoder = self._get_edi_decoder(file_data, new=new)
+            decoder = (current_invoice or current_invoice.new(self.default_get(['move_type', 'journal_id'])))._get_edi_decoder(file_data, new=new)
             if decoder:
                 try:
                     with self.env.cr.savepoint():
@@ -3509,7 +3522,7 @@ class AccountMove(models.Model):
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
 
-    def _prepare_invoice_aggregated_taxes(self, filter_invl_to_apply=None, filter_tax_values_to_apply=None, grouping_key_generator=None):
+    def _prepare_invoice_aggregated_taxes(self, filter_invl_to_apply=None, filter_tax_values_to_apply=None, grouping_key_generator=None, distribute_total_on_line=True):
         self.ensure_one()
         company = self.company_id
         invoice_lines = self.line_ids.filtered(lambda x: x.display_type == 'product' and (not filter_invl_to_apply or filter_invl_to_apply(x)))
@@ -3596,6 +3609,7 @@ class AccountMove(models.Model):
             company,
             filter_tax_values_to_apply=filter_tax_values_to_apply,
             grouping_key_generator=grouping_key_generator,
+            distribute_total_on_line=distribute_total_on_line,
         )
 
     def _get_invoice_counterpart_amls_for_early_payment_discount_per_payment_term_line(self):
@@ -5127,7 +5141,7 @@ class AccountMove(models.Model):
             'in_receipt': _('Purchase Receipt Created'),
         }[self.move_type]
 
-    def _notify_by_email_prepare_rendering_context(self, message, msg_vals, model_description=False,
+    def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False):
         # EXTENDS mail mail.thread
         render_context = super()._notify_by_email_prepare_rendering_context(

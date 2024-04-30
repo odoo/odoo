@@ -48,7 +48,7 @@ const formatIncludes = (values) =>
  */
 const getPattern = (query) => {
     query = query.match(R_QUERY_CONTENT)[1];
-    return parseRegExp(normalize(query));
+    return parseRegExp(normalize(query), { safe: true });
 };
 
 /**
@@ -568,6 +568,8 @@ export class HootSearch extends Component {
     onSearchInputInput(ev) {
         this.state.query = ev.target.value;
         this.state.empty = !this.hasFilters();
+
+        this.env.ui.resultsPage = 0;
 
         this.updateParams(true);
         this.updateSuggestions();

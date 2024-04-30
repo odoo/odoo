@@ -205,15 +205,25 @@ export function getPreviousTabableElement(container = document.body) {
         : tabableElements[index - 1] || null;
 }
 
-export function addLoadingEffect(btn) {
-    btn.setAttribute("disabled", "1");
-    btn.classList.add("o_btn_loading", "disabled");
-    const loader = document.createElement("span");
-    loader.className = "fa fa-refresh fa-spin me-2";
-    btn.prepend(loader);
+/**
+ * Gives the button a loading effect by disabling it and adding a `fa` spinner
+ * icon. The existing button `fa` icons will be hidden through css.
+ *
+ * @param {HTMLElement} btnEl - the button to disable/load
+ * @return {function} a callback function that will restore the button to its
+ *         initial state
+ */
+export function addLoadingEffect(btnEl) {
+    // Note that pe-none is used alongside "disabled" so that the behavior is
+    // the same on links not using the "btn" class -> pointer-events disabled.
+    btnEl.classList.add("o_btn_loading", "disabled", "pe-none");
+    btnEl.disabled = true;
+    const loaderEl = document.createElement("span");
+    loaderEl.classList.add("fa", "fa-refresh", "fa-spin", "me-2");
+    btnEl.prepend(loaderEl);
     return () => {
-        btn.removeAttribute("disabled");
-        btn.classList.remove("o_btn_loading", "disabled");
-        loader.remove();
+        btnEl.classList.remove("o_btn_loading", "disabled", "pe-none");
+        btnEl.disabled = false;
+        loaderEl.remove();
     };
 }

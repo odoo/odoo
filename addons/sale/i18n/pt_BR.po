@@ -1189,20 +1189,16 @@ msgstr "Permite enviar uma fatura pro forma."
 #: model:ir.model.fields,help:sale.field_product_document__attached_on
 msgid ""
 "Allows you to share the document with your customers within a sale.\n"
-"Leave it empty if you don't want to share this document with sales customer.\n"
 "On quote: the document will be sent to and accessible by customers at any time.\n"
 "e.g. this option can be useful to share Product description files.\n"
 "On order confirmation: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote pdf: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
 msgstr ""
-"Permite que você compartilhe o documento com seus clientes dentro de uma venda.\n"
-"Deixe em branco se não quiser compartilhar esse documento com o cliente da venda.\n"
+"Permite que você compartilhe o documento com clientes durante a própria venda.\n"
 "Na cotação: o documento será enviado e poderá ser acessado pelos clientes a qualquer momento.\n"
-"por exemplo, essa opção pode ser útil para compartilhar arquivos de descrição do produto.\n"
-"Na confirmação do pedido: o documento será enviado e poderá ser acessado pelos clientes.\n"
-"por exemplo, essa opção pode ser útil para compartilhar o Manual do Usuário ou o conteúdo digital comprado no comércio eletrônico. \n"
-"Dentro do pdf da cotação: O documento será incluído no pdf da cotação entre as páginas de cabeçalho e a tabela de cotação."
+"Essa opção pode ser útil, por exemplo, para compartilhar arquivos de descrição de produtos.\n"
+"Confirmação do pedido: o documento será enviado e poderá ser acessado pelos clientes.\n"
+"Essa opção pode ser útil, por exemplo, para compartilhar o Manual do Usuário ou conteúdo digital comprado no e-Commerce."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -2008,14 +2004,10 @@ msgstr "Quantidade entregue"
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
-"lead time of the order lines in case of Service products. In case of "
-"shipping, the shipping policy of the order will be taken into account to "
-"either use the minimum or maximum lead time of the order lines."
+"lead time of the order lines."
 msgstr ""
-"A data de entrega prometida ao cliente, calculada a partir do menor prazo "
-"das linhas do pedido, no caso de serviços. No caso de entregas (produtos), a"
-" política de envio do pedido será levada em consideração para usar o menor "
-"ou maior prazo das linhas do pedido."
+"Data de entrega que você pode prometer ao cliente, calculada a partir do "
+"prazo mínimo de entrega das linhas de pedido."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2203,6 +2195,12 @@ msgstr "Entrada (porcentagem)"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Down payment <br/>"
 msgstr "Entrada <br/>"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+msgid "Down payment invoice"
+msgstr "Fatura de entrada"
 
 #. module: sale
 #. odoo-python
@@ -3025,11 +3023,6 @@ msgid "New Quotation"
 msgstr "Nova cotação"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Evento no calendário para a próxima atividade"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Prazo da próxima atividade"
@@ -3410,11 +3403,6 @@ msgid "Other Info"
 msgstr "Outras informações"
 
 #. module: sale
-#: model:ir.actions.report,name:sale.action_report_saleorder
-msgid "PDF Quote"
-msgstr "Cotação por PDF"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "PDF Quote builder"
@@ -3784,6 +3772,11 @@ msgid "Quotation #"
 msgstr "Cotação nº"
 
 #. module: sale
+#: model:ir.actions.report,name:sale.action_report_saleorder
+msgid "Quotation / Order"
+msgstr "Cotação/Pedido"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
 msgstr "Contagem de cotações"
@@ -3864,11 +3857,6 @@ msgstr "Cotação e vendas"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
 msgstr "Cotações a revisar"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
-msgid "Ratings"
-msgstr "Avaliações"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -4235,17 +4223,6 @@ msgstr "Equipes de vendas"
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
 msgstr "Avisos de vendas"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
-msgid ""
-"Sales order item to which the time spent will be added in order to be "
-"invoiced to your customer. Remove the sales order item for the timesheet "
-"entry to be non-billable."
-msgstr ""
-"Item do pedido de venda ao qual o tempo gasto será adicionado para que seja "
-"faturado ao cliente. Remova o item do pedido de venda para que a entrada na "
-"planilha de horas seja não faturável."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -5456,7 +5433,6 @@ msgstr "Não é possível cancelar um pedido bloqueado. Desbloqueie-o primeiro."
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
-#, python-format
 msgid "You cannot change the pricelist of a confirmed order !"
 msgstr "Não é possível alterar a lista de preços de um pedido confirmado."
 

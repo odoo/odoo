@@ -341,6 +341,10 @@ class Company(models.Model):
 
         res = super(Company, self).write(values)
 
+        # Archiving a company should also archive all of its branches
+        if values.get('active') is False:
+            self.child_ids.active = False
+
         for company in self:
             # Copy modified delegated fields from root to branches
             if (changed := set(values) & set(self._get_company_root_delegated_field_names())) and not company.parent_id:

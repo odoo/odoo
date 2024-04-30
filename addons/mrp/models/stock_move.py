@@ -565,6 +565,7 @@ class StockMove(models.Model):
         :return: The quantity delivered or received
         """
         qty_ratios = []
+        kit_qty = kit_qty / kit_bom.product_qty
         boms, bom_sub_lines = kit_bom.explode(product_id, kit_qty)
         for bom_line, bom_line_data in bom_sub_lines:
             # skip service since we never deliver them
@@ -579,8 +580,8 @@ class StockMove(models.Model):
                 # We compute the quantities needed of each components to make one kit.
                 # Then, we collect every relevant moves related to a specific component
                 # to know how many are considered delivered.
-                uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False)
+                uom_qty_per_kit = bom_line_data['qty'] / (bom_line_data['original_qty'])
+                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit / kit_bom.product_qty, bom_line.product_id.uom_id, round=False)
                 if not qty_per_kit:
                     continue
                 incoming_moves = bom_line_moves.filtered(filters['incoming_moves'])
@@ -637,6 +638,8 @@ class StockMove(models.Model):
         res = super()._get_relevant_state_among_moves()
         if res == 'partially_available'\
                 and self.raw_material_production_id\
-                and all(move.should_consume_qty and float_compare(move.quantity, move.should_consume_qty, precision_rounding=move.product_uom.rounding) >= 0 for move in self):
+                and all(move.should_consume_qty and float_compare(move.quantity, move.should_consume_qty, precision_rounding=move.product_uom.rounding) >= 0
+                        or (float_compare(move.quantity, move.product_uom_qty, precision_rounding=move.product_uom.rounding) >= 0 or (move.manual_consumption and move.picked))
+                        for move in self):
             res = 'assigned'
         return res

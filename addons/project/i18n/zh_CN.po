@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3427,6 +3428,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"可查看此项目及其任务的人员。\n"
+"\n"
+"- 受邀内部用户：关注项目时，内部用户将无差别地访问其所有任务。否则，他们只能访问正在关注的特定任务。\n"
+" 具有“项目 > 管理员”访问权限等级的用户，仍然可以访问此项目及其任务，即使未有明确列为关注者。\n"
+"\n"
+"- 所有内部用户：所有内部用户都可以无差别地访问项目及其所有任务。\n"
+"\n"
+"- 受邀窗口网站用户及所有内部用户：所有内部用户都可以无差別地访问项目及其所有任务。\n"
+"关注项目时，窗口用户只能访问他们正在关注的特定任务。\n"
+"\n"
+"如项目以仅读方式共享，窗口用户将被重新导向至自己的窗口网页。他们可以查看正在关注的任务，但不能编辑任务。\n"
+"如以编辑模式共享项目，窗口用户将被重新导向至任务的看板及列表视图画面。他们可修改任务的部份特定字段。\n"
+"\n"
+"在任何情況下，没有项目访问权限的内部用户，仍然可以访问任务，只要他们有相应的 URL 网址。如果项目是私密的，而他们是关注者，也可访问任务。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -3564,7 +3579,7 @@ msgstr "私人任务"
 msgid ""
 "Private tasks cannot be converted into sub-tasks. Please set a project on "
 "the task to gain access to this feature."
-msgstr ""
+msgstr "私人任务不能转换为子任务。请在任务上设置一个项目，以使用此功能。"
 
 #. module: project
 #. odoo-javascript
@@ -3937,7 +3952,7 @@ msgstr "到达日期"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__read
 msgid "Read-only"
-msgstr ""
+msgstr "只读"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -3973,7 +3988,7 @@ msgstr "循环"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 msgid "Recurrent tasks"
-msgstr ""
+msgstr "周期任务"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
@@ -4080,7 +4095,7 @@ msgstr "恢复"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "Restore History"
-msgstr ""
+msgstr "恢复历史记录"
 
 #. module: project
 #. odoo-javascript
@@ -4088,7 +4103,7 @@ msgstr ""
 msgid ""
 "Restoring will replace the current content with the selected version. Any "
 "unsaved changes will be lost."
-msgstr ""
+msgstr "恢复操作会将目前内容取代所选版本。任何未保存的更改都将丢失。"
 
 #. module: project
 #. odoo-javascript
@@ -4230,7 +4245,7 @@ msgstr "通过EMail发送"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Send invitation"
-msgstr ""
+msgstr "发送邀请"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__sequence
@@ -4310,7 +4325,7 @@ msgstr "分享任务"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
 msgid "Share a Project"
-msgstr ""
+msgstr "分享项目"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -4348,6 +4363,7 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"使用里程碑、标签或专用属性，按冲刺阶段对任务进行分类。在每个冲刺阶段结束时，只需选择清单中的剩余任务，然后编辑里程碑、标签或属性，将它们一次性移到下一个冲刺阶段。"
 
 #. module: project
 #. odoo-javascript
@@ -4576,7 +4592,7 @@ msgstr "任务取消"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Cancelled"
-msgstr ""
+msgstr "任务取消"
 
 #. module: project
 #. odoo-python
@@ -5737,7 +5753,7 @@ msgstr "例如：待办事项"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "e.g. mycompany.com"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified

@@ -2079,7 +2079,7 @@ msgstr "Base de datos"
 #: model_terms:ir.ui.view,arch_db:web.neutralize_banner
 msgid "Database neutralized for testing: no emails sent, etc."
 msgstr ""
-"Base de datos neutralizada para pruebas: ningún correo electrónico enviado, "
+"Base de datos neutralizada para pruebas: no se envían correos electrónicos, "
 "etc."
 
 #. module: web
@@ -2125,7 +2125,7 @@ msgstr "Desactivar modo de solución de bugs"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_dev_tool.xml:0
 msgid "Deactivate the developer mode"
-msgstr "Desactivar modo desarrollador"
+msgstr "Desactivar el modo de desarrollador"
 
 #. module: web
 #. odoo-javascript
@@ -2417,7 +2417,7 @@ msgstr "Dominio"
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector_dialog/domain_selector_dialog.js:0
 msgid "Domain is invalid. Please correct it"
-msgstr "El dominio no es válido, por favor corríjalo"
+msgstr "El dominio no es válido, corríjalo."
 
 #. module: web
 #. odoo-javascript
@@ -2697,7 +2697,7 @@ msgstr "No se permite exportar datos agrupados a csv."
 #. odoo-javascript
 #: code:addons/web/static/src/core/expression_editor_dialog/expression_editor_dialog.js:0
 msgid "Expression is invalid. Please correct it"
-msgstr "La expresión no es válida, por favor corríjala."
+msgstr "La expresión no es válida, corríjala."
 
 #. module: web
 #. odoo-javascript
@@ -3188,8 +3188,8 @@ msgstr "Te amo (ILY)"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
-msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"today\"."
-msgstr "Fecha con formato ISO (por ejemplo, \"2018-12-31\") u \"hoy\"."
+msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"%s\"."
+msgstr "Fecha con formato ISO (por ejemplo, \"2018-12-31\") o \"%s\"."
 
 #. module: web
 #. odoo-javascript
@@ -4294,6 +4294,8 @@ msgstr "Nombre:"
 
 #. module: web
 #. odoo-javascript
+#. odoo-python
+#: code:addons/web/controllers/action.py:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
@@ -4574,7 +4576,7 @@ msgstr "No en estado activo, haga clic para cambiarlo"
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.js:0
 #, python-format
 msgid "Number of files"
-msgstr ""
+msgstr "Número de archivos"
 
 #. module: web
 #. odoo-javascript
@@ -5378,15 +5380,15 @@ msgstr "Solo lectura:"
 #. odoo-javascript
 #: code:addons/web/static/src/core/confirmation_dialog/confirmation_dialog.js:0
 msgid ""
-"Ready to make your record disappear into thin air? Are you sure?\n"
-"It will be gone forever!\n"
-"\n"
+"Ready to make your record disappear into thin air? Are you sure?\r\n"
+"It will be gone forever!\r\n"
+"\r\n"
 "Think twice before you click that 'Delete' button!"
 msgstr ""
-"¿Está seguro de que desea eliminar el registro?\n"
-"\n"
-"\n"
-"Recuerde que una vez que lo haya eliminado no lo podrá recuperar."
+"¿Está seguro de que desea eliminar el registro?\r\n"
+"No podrá recuperarlo después.\r\n"
+"\r\n"
+"Asegúrese de querer eliminarlo."
 
 #. module: web
 #. odoo-javascript
@@ -5759,7 +5761,7 @@ msgstr "Buscar más..."
 #. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 msgid "Search for a command..."
-msgstr "Buscar un comando..."
+msgstr "Busque un comando..."
 
 #. module: web
 #. odoo-javascript
@@ -6220,6 +6222,7 @@ msgstr "Playera"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 msgid "TIP"
 msgstr "CONSEJO"
@@ -7707,6 +7710,7 @@ msgstr "ancla"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/core/domain_selector/utils.js:0
 #: code:addons/web/static/src/core/tree_editor/utils.js:0
 msgid "and"
@@ -24914,7 +24918,7 @@ msgstr "rebanada"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "slider"
-msgstr "control de volumen"
+msgstr "control deslizante"
 
 #. module: web
 #. odoo-javascript
@@ -29616,6 +29620,13 @@ msgstr "zombi "
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 msgid "— press"
 msgstr "— presione"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "— search for"
+msgstr "— busque"
 
 #. module: web
 #. odoo-javascript

@@ -78,12 +78,13 @@ export class Orderline extends PosModel {
         if (options.json) {
             try {
                 this.init_from_JSON(options.json);
-            } catch {
+            } catch (error) {
                 console.error(
                     "ERROR: attempting to recover product ID",
                     options.json.product_id[0],
                     "not available in the point of sale. Correct the product or clean the browser cache."
                 );
+                throw error;
             }
             return;
         }
@@ -1874,6 +1875,11 @@ export class Order extends PosModel {
             });
         }
 
+        this.hasJustAddedProduct = true;
+        clearTimeout(this.productReminderTimeout);
+        this.productReminderTimeout = setTimeout(() => {
+            this.hasJustAddedProduct = false;
+        }, 3000);
         return this.selected_orderline;
     }
 
@@ -2486,5 +2492,8 @@ export class Order extends PosModel {
     }
     _generateTicketCode() {
         return random5Chars();
+    }
+    _getOrderOptions() {
+        return {};
     }
 }

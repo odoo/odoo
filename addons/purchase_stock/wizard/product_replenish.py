@@ -46,6 +46,7 @@ class ProductReplenish(models.TransientModel):
         res = super()._prepare_run_values()
         if self.supplier_id:
             res['supplierinfo_id'] = self.supplier_id
+            res['group_id'].partner_id = self.supplier_id.partner_id
         return res
 
     def action_stock_replenishment_info(self):
@@ -73,7 +74,7 @@ class ProductReplenish(models.TransientModel):
             action = self.env.ref('purchase.action_rfq_form')
             return [{
                 'label': order_line.order_id.display_name,
-                'url': f'#action={action.id}&id={order_line.order_id.id}&model=purchase.order',
+                'url': f'/web#action={action.id}&id={order_line.order_id.id}&model=purchase.order',
             }]
         return super()._get_replenishment_order_notification_link(order_line)
 

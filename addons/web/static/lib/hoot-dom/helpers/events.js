@@ -5,9 +5,9 @@ import {
     getActiveElement,
     getDocument,
     getNextFocusableElement,
+    getNodeRect,
     getNodeValue,
     getPreviousFocusableElement,
-    getNodeRect,
     getWindow,
     isCheckable,
     isEditable,
@@ -75,7 +75,7 @@ const {
     console: { dir: $dir, groupCollapsed: $groupCollapsed, groupEnd: $groupEnd, log: $log },
     DataTransfer,
     document,
-    Math: { ceil: $ceil },
+    Math: { ceil: $ceil, max: $max, min: $min },
     Object: { assign: $assign, values: $values },
     String,
     Touch,
@@ -89,6 +89,14 @@ const $hasFocus = document.hasFocus.bind(document);
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
+
+/**
+ * @param {EventTarget} target
+ * @param {EventType} type
+ */
+const catchNextEvent = (target, type) => {
+    target.addEventListener(type, (event) => currentEvents.push(event), { once: true });
+};
 
 /**
  * @param {EventTarget} target
@@ -276,6 +284,13 @@ const getEventConstructor = (eventType) => {
         case "wheel":
             return [WheelEvent, mapWheelEvent];
 
+        case "beforeunload":
+            // BeforeUnloadEvent cannot be constructed.
+            return [Event, mapNonBubblingCancelableEvent];
+
+        case "unload":
+            return [Event, mapNonBubblingEvent];
+
         // Default: base Event constructor
         default:
             return [Event, mapBubblingEvent];
@@ -441,15 +456,13 @@ const logEvents = (actionName) => {
  * @returns {KeyboardEventInit}
  */
 const parseKeyStrokes = (keyStrokes, options) =>
-    (isIterable(keyStrokes) ? [...keyStrokes] : [keyStrokes])
-        .flatMap((keyStroke) => keyStroke.split(/\s*[,+]\s*/))
-        .map((key) => {
-            const lower = key.toLowerCase();
-            return {
-                ...options,
-                key: lower.length === 1 ? key : KEY_ALIASES[lower] || key,
-            };
-        });
+    (isIterable(keyStrokes) ? [...keyStrokes] : [keyStrokes]).map((key) => {
+        const lower = key.toLowerCase();
+        return {
+            ...options,
+            key: lower.length === 1 ? key : KEY_ALIASES[lower] || key,
+        };
+    });
 
 /**
  * @param {Event} ev
@@ -667,6 +680,9 @@ const triggerFocus = (target) => {
         return;
     }
     if (previous !== target.ownerDocument.body) {
+        if ($hasFocus()) {
+            catchNextEvent(previous, "blur");
+        }
         // If document is focused, this will trigger a trusted "blur" event
         previous.blur();
         if (!$hasFocus()) {
@@ -678,6 +694,9 @@ const triggerFocus = (target) => {
         const previousSelection = getStringSelection(target);
 
         // If document is focused, this will trigger a trusted "focus" event
+        if ($hasFocus()) {
+            catchNextEvent(target, "focus");
+        }
         target.focus();
         if (!$hasFocus()) {
             // When document is not focused: manually trigger a "focus" event
@@ -905,6 +924,29 @@ const _keyDown = (target, eventInit) => {
 
     if (isEditable(target)) {
         switch (key) {
+            case "ArrowDown":
+            case "ArrowLeft":
+            case "ArrowUp":
+            case "ArrowRight": {
+                const { selectionStart, selectionEnd, value } = target;
+                if (isNil(selectionStart) || isNil(selectionEnd)) {
+                    break;
+                }
+                const start = key === "ArrowLeft" || key === "ArrowUp";
+                let selectionTarget;
+                if (ctrlKey) {
+                    // Move to the start/end of the line
+                    selectionTarget = start ? 0 : value.length;
+                } else {
+                    // Move the cursor left or right
+                    selectionTarget = start ? selectionStart - 1 : selectionEnd + 1;
+                }
+                target.selectionStart = target.selectionEnd = $max(
+                    $min(selectionTarget, value.length),
+                    0
+                );
+                break;
+            }
             case "Backspace": {
                 const { selectionStart, selectionEnd, value } = target;
                 if (fullClear) {
@@ -974,6 +1016,10 @@ const _keyDown = (target, eventInit) => {
                 // Select all
                 if (isEditable(target)) {
                     dispatch(target, "select");
+                    if (!isNil(target.selectionStart) && !isNil(target.selectionEnd)) {
+                        target.selectionStart = 0;
+                        target.selectionEnd = target.value.length;
+                    }
                 } else {
                     const selection = globalThis.getSelection();
                     const range = $createRange();
@@ -998,6 +1044,30 @@ const _keyDown = (target, eventInit) => {
                 dispatch(target, "copy", {
                     clipboardData: eventInit.dataTransfer || new DataTransfer(),
                 });
+            }
+            break;
+        }
+        case "Enter": {
+            const tag = getTag(target);
+            const parentForm = target.closest("form");
+            if (parentForm && target.type !== "button") {
+                /**
+                 * Special action: <form> 'Enter'
+                 *  On: unprevented 'Enter' keydown on any element that
+                 *      is not a <button type="button"/> in a form element
+                 *  Do: triggers a 'submit' event on the form
+                 */
+                dispatch(parentForm, "submit");
+            } else if (
+                !keyDownEvent.repeat &&
+                (tag === "a" || tag === "button" || (tag === "input" && target.type === "button"))
+            ) {
+                /**
+                 * Special action: <a>, <button> or <input type="button"> 'Enter'
+                 *  On: unprevented and unrepeated 'Enter' keydown on mentioned elements
+                 *  Do: triggers a 'click' event on the element
+                 */
+                dispatch(target, "click", { button: 0 });
             }
             break;
         }
@@ -1076,25 +1146,6 @@ const _keyUp = (target, eventInit) => {
 
     registerSpecialKey(eventInit, false);
 
-    if (eventInit.key === "Enter") {
-        let parentForm;
-        if (getTag(target) === "button" && target.type === "button") {
-            /**
-             * Special action: button 'Enter'
-             *  On: unprevented 'Enter' keydown on a <button type="button"/>
-             *  Do: triggers a 'click' event on the button
-             */
-            triggerClick(target, { button: 0 });
-        } else if ((parentForm = target.closest("form"))) {
-            /**
-             * Special action: form 'Enter'
-             *  On: unprevented 'Enter' keydown on any element that
-             *      is not a <button type="button"/> in a form element
-             *  Do: triggers a 'submit' event on the form
-             */
-            dispatch(parentForm, "submit");
-        }
-    }
     if (eventInit.key === " " && getTag(target) === "input" && target.type === "checkbox") {
         /**
          * Special action: input[type=checkbox] 'Space'
@@ -1154,6 +1205,7 @@ const _pointerUp = (target, options) => {
     const eventInit = {
         ...runTime.currentPosition,
         button: options?.button || 0,
+        detail: runTime.currentClickCount,
     };
 
     if (runTime.isDragging) {
@@ -1179,11 +1231,12 @@ const _pointerUp = (target, options) => {
     );
 
     if (!prevented) {
+        const clickEventInit = { ...eventInit, detail: runTime.currentClickCount + 1 };
         if (target === runTime.currentPointerDownTarget) {
-            triggerClick(target, eventInit);
+            triggerClick(target, clickEventInit);
             runTime.currentClickCount++;
             if (!hasTouch() && runTime.currentClickCount % 2 === 0) {
-                dispatch(target, "dblclick", eventInit);
+                dispatch(target, "dblclick", clickEventInit);
             }
         }
     }
@@ -1319,13 +1372,22 @@ const mapBubblingEvent = (eventInit) => ({
 
 /**
  * - does not bubble
+ * - can be canceled
+ * @param {EventInit} [eventInit]
+ */
+const mapNonBubblingCancelableEvent = (eventInit) => ({
+    ...mapNonBubblingEvent(eventInit),
+    cancelable: true,
+});
+
+/**
+ * - does not bubble
  * - cannot be canceled
  * @param {EventInit} [eventInit]
  */
 const mapNonBubblingEvent = (eventInit) => ({
     composed: true,
     ...eventInit,
-    bubbles: false,
 });
 
 // Pointer & wheel event mappers
@@ -2016,6 +2078,7 @@ export function scroll(target, position, options) {
         dispatch(element, "wheel");
     }
     // This will trigger a trusted "scroll" event
+    catchNextEvent(element, "scroll");
     element.scrollTo(scrollOptions);
 
     return logEvents("scroll");
@@ -2142,4 +2205,14 @@ export function uncheck(target, options) {
     }
 
     return logEvents("uncheck");
+}
+
+/**
+ * Triggers a "beforeunload" event the current window.
+ *
+ * @returns {Event[]}
+ */
+export function unload() {
+    dispatch(getWindow(), "beforeunload");
+    return logEvents("unload");
 }

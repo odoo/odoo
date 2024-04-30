@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:05+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,6 +75,9 @@ msgid ""
 "deregister from that service, or request a migration key before trying "
 "again."
 msgstr ""
+"Một người tham gia có thông tin này đã đăng ký tài khoản. Nếu trước đây bạn "
+"đã đăng ký dịch vụ Peppol khác, vui lòng hủy đăng ký dịch vụ đó hoặc yêu cầu"
+" mã khóa chuyển đổi trước khi thử lại."
 
 #. module: account_peppol
 #. odoo-python
@@ -221,7 +225,7 @@ msgstr "Xác nhận"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Connection error, please try again later."
-msgstr ""
+msgstr "Lỗi kết nối, vui lòng thử lại sau."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_partner
@@ -466,14 +470,10 @@ msgstr "Hiệu lực Peppol"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-msgid "Peppol document has been received successfully"
-msgstr "Chứng từ Peppol đã được nhận thành công"
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-msgid "Peppol document has been received successfully. Sender endpoint: %s"
-msgstr "Chứng từ Peppol đã được nhận thành công. Endpoint của người gửi: %s"
+msgid ""
+"Peppol document (UUID: %(uuid)s) has been received successfully.\n"
+"(Sender endpoint: %(endpoint)s)"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_eas
@@ -563,7 +563,7 @@ msgstr "Vui lòng điền mã EAS và mã ID đối tượng tham gia."
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid "Please install the phonenumbers library."
-msgstr ""
+msgstr "Vui lòng cài đặt danh bạ."
 
 #. module: account_peppol
 #. odoo-python
@@ -619,7 +619,7 @@ msgstr "Mã xác minh SMS"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 msgid "Send again"
-msgstr ""
+msgstr "Gửi lại"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_move_send__checkbox_send_peppol
@@ -729,6 +729,7 @@ msgid ""
 "The recommended EAS code for Belgium is 0208. The Endpoint should be the "
 "Company Registry number."
 msgstr ""
+"Mã EAS được đề xuất cho Bỉ là 0208. Endpoint phải là mã số đăng ký công ty."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -744,7 +745,7 @@ msgstr "ID duy nhất định danh người dùng này, thường là vat"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "The verification code is not correct"
-msgstr ""
+msgstr "Mã xác minh không chính xác"
 
 #. module: account_peppol
 #. odoo-python
@@ -756,13 +757,13 @@ msgstr "Mã xác minh phải chứa sáu chữ số."
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "This verification code has expired. Please request a new one."
-msgstr ""
+msgstr "Mã xác thực này đã hết hạn. Vui lòng yêu cầu một mã mới."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Too many attempts to request an SMS code. Please try again later."
-msgstr ""
+msgstr "Bạn đã yêu cầu mã SMS quá nhiều lần. Vui lòng thử lại sau."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
@@ -890,4 +891,4 @@ msgstr "Mã khoá di chuyển của bạn là:"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your registration should be activated within a day."
-msgstr ""
+msgstr "Đăng ký của bạn sẽ được kích hoạt trong vòng một ngày."

@@ -1,6 +1,5 @@
 import datetime
 import string
-import zeep
 import re
 import stdnum
 from stdnum.eu.vat import check_vies
@@ -11,6 +10,7 @@ from stdnum import luhn
 import logging
 
 from odoo import api, models, fields, tools, _
+from odoo.tools import zeep
 from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError
 
@@ -41,12 +41,11 @@ _ref_vat = {
     'do': _('DO1-01-85004-3 or 101850043'),
     'ec': _('1792060346001 or 1792060346'),
     'ee': 'EE123456780',
-    'el': 'EL12345670',
     'es': 'ESA12345674',
     'fi': 'FI12345671',
     'fr': 'FR23334175221',
     'gb': _('GB123456782 or XI123456782'),
-    'gr': 'GR12345670',
+    'gr': 'EL123456783',
     'hu': _('HU12345676 or 12345678-1-11 or 8071592153'),
     'hr': 'HR01234567896',  # Croatia, contributed by Milan Tribuson
     'ie': 'IE1234567FA',

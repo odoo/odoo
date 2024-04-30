@@ -4082,3 +4082,36 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             move_reversal.refund_moves()
 
         self.assertEqual(error_catcher.exception.args[0], "All selected moves for reversal must belong to the same company.")
+
+    def test_update_lines_date_when_invoice_date_changes(self):
+        move = self.init_invoice(
+            move_type='in_invoice',
+            partner=self.partner_a,
+            amounts=[1000.0],
+        )
+
+        move.invoice_date = fields.Date.from_string('2024-01-01')
+        self.env.flush_all()
+
+        for line in move.line_ids:
+            self.assertEqual(line.date, move.date)
+
+    def test_invoice_copy_data(self):
+        """User should be able to duplicate invoices with different journals"""
+
+        new_sale_journal = self.company_data['default_journal_sale'].copy()
+
+        invoice_1, invoice_2 = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_sale'].id,
+        }, {
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'journal_id': new_sale_journal.id,
+        }])
+
+        invoices_duplicate = (invoice_1 + invoice_2).copy_data()
+
+        self.assertEqual(invoice_1.journal_id.id, invoices_duplicate[0]['journal_id'])
+        self.assertEqual(invoice_2.journal_id.id, invoices_duplicate[1]['journal_id'])

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Junko Augias, 2024
 # 
 msgid ""
@@ -129,7 +130,7 @@ msgstr "%(name)sのアップデート"
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "%(partner_name)s's Tasks"
-msgstr ""
+msgstr "%(partner_name)sのタスク"
 
 #. module: project
 #. odoo-python
@@ -398,6 +399,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>様、<br><br>\n"
+"    ご連絡ありがとうございます。当社のプロダクト/サービスにご興味を持って頂きありがとうございます。<br>\n"
+"    現在、当社のチームがお客様のお問合せを確認しており、なるべく早くメールにてお返事させて頂きます。<br>\n"
+"   その間にさらにご質問やご不明な点がございましたら、ご遠慮なくお知らせ下さい。私たちがお手伝いさせて頂きます。<br><br>\n"
+"    ご理解のほど宜しくお願い致します。<br>\n"
+"    宜しくお願い致します。\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -714,6 +728,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Progress Report\", \"Stand-up Meeting\", ...)"
 msgstr ""
+"活動プランは、数回のクリックで活動リストを割当てるために使用されます。\n"
+"                    (例 \"進捗レポート\"、\"スタンドアップミーティング\"、 ...)"
 
 #. module: project
 #. odoo-javascript
@@ -755,7 +771,7 @@ msgstr "メールに表示するコンテンツを追加する"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add the contacts you would like to share the project with..."
-msgstr ""
+msgstr "プロジェクトを共有したい連絡先を追加します。"
 
 #. module: project
 #. odoo-javascript
@@ -857,7 +873,7 @@ msgstr "分析勘定"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__analytic_plan_id
 msgid "Analytic Plan"
-msgstr "分析プラン"
+msgstr "分析計画"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__analytic_account_id
@@ -1089,6 +1105,7 @@ msgid ""
 "Automatically send an email to customers when a task reaches a specific "
 "stage in a project by setting this template on that stage"
 msgstr ""
+"このテンプレートをプロジェクトの特定のステージに設定することで、タスクがプロジェクトの特定のステージに達したときに、自動的に顧客に電子メールを送信します。"
 
 #. module: project
 #. odoo-javascript
@@ -1112,7 +1129,7 @@ msgstr "平均評価（％）"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating (1-5)"
-msgstr ""
+msgstr "平均評価 (1-5)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1297,7 +1314,7 @@ msgstr "終了済タスク"
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__is_closed
 msgid "Closed state"
-msgstr ""
+msgstr "クローズ済ステータス"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__closed
@@ -1477,7 +1494,7 @@ msgstr "プロジェクト作成"
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_project_task_plan
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_task_plan
 msgid "Create a Task Activity Plan"
-msgstr ""
+msgstr "タスク活動計画を作成する"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
@@ -1571,7 +1588,7 @@ msgstr "通貨"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__current_user_same_company_partner
 msgid "Current User Same Company Partner"
-msgstr ""
+msgstr "現在のユーザ同一の会社取引先"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -2086,6 +2103,7 @@ msgid ""
 "project with them. Collaborators will have the ability to edit tasks, send "
 "messages, and access the Kanban view of tasks."
 msgstr ""
+"プロジェクトを共有することで、主要な関係者との効率的なコラボレーションを促進します。共同作業者は、タスクの編集、メッセージの送信、タスクのかんばんビューへのアクセスができます。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project
@@ -2216,6 +2234,7 @@ msgid ""
 "tasks of the project are not included). To grant access to tasks to a portal"
 " user, add them as followers for these tasks."
 msgstr ""
+"ポータルユーザをフォロワーとして追加することで、プロジェクトへのアクセスを許可します(プロジェクトのタスクは含まれません)。ポータルユーザにタスクへのアクセスを許可するには、タスクのフォロワーとして追加します。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
@@ -2606,7 +2625,7 @@ msgstr "先月"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_value
 msgid "Last Rating (1-5)"
-msgstr ""
+msgstr "最終評価 (1-5)"
 
 #. module: project
 #. odoo-python
@@ -2812,19 +2831,19 @@ msgstr "完了とする"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as incomplete"
-msgstr ""
+msgstr "未完了としてマーク"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as reached"
-msgstr ""
+msgstr "達成済とマーク"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Mark the task as <b>Cancelled</b>"
-msgstr ""
+msgstr "タスクを<b>取消済</b>としてマーク"
 
 #. module: project
 #. odoo-javascript
@@ -3137,7 +3156,7 @@ msgstr "活動タイプが見つかりません。作成しましょう！"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
 msgid "No collaborators found. Let's invite them!"
-msgstr ""
+msgstr "共同作業者がみつかりません。彼らを招待しましょう!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -3412,7 +3431,7 @@ msgstr "取引先企業は、割当てられたタスクの企業と異なるこ
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 msgid "Partner's Tasks"
-msgstr ""
+msgstr "取引先のタスク"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -3439,6 +3458,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"このプロジェクトとタスクが表示される人\n"
+"\n"
+"- 招待された内部ユーザ: プロジェクトをフォローすると、内部ユーザーは区別なく全てのタスクにアクセスできます。そうでない場合は、フォローしている特定のタスクにのみアクセスできます。\n"
+"プロジェクト > 管理者のアクセス権を持つユーザは、フォロワーでなくても、プロジェクトとタスクにアクセスできます。\n"
+"\n"
+"- 全ての内部ユーザ：全ての内部ユーザは、区別なくプロジェクトとその全てのタスクにアクセスできます。\n"
+"\n"
+"- 招待されたポータルユーザと全ての内部ユーザ：全ての内部ユーザは、プロジェクトとその全てのタスクに区別なくアクセスできます。\n"
+"プロジェクトをフォローしている場合、ポータルユーザはフォローしている特定のタスクにのみアクセスできます。\n"
+"\n"
+"プロジェクトが読み取り専用で共有されている場合、ポータルユーザはそのポータルにリダイレクトされます。タスクは閲覧できますが、編集はできません。\n"
+"編集でプロジェクトが共有されると、ポータルユーザはタスクのかんばんビューとリストビューにリダイレクトされます。ポータルユーザはタスクの選択された数のフィールドを変更することができます。\n"
+"\n"
+"どのような場合でも、プロジェクトのアクセス権を持たない内部ユーザは、対応する URL が与えられていれば、タスクにアクセスすることができます(プロジェクトが非公開の場合は、フォロワーの一部となります)。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -3678,7 +3711,7 @@ msgstr "プロジェクト共有"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
 msgid "Project Sharing Recurrence"
-msgstr ""
+msgstr "プロジェクト共有繰返し"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -3950,7 +3983,7 @@ msgstr "到達日"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__read
 msgid "Read-only"
-msgstr ""
+msgstr "読取り専用"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -3986,7 +4019,7 @@ msgstr "定期"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 msgid "Recurrent tasks"
-msgstr ""
+msgstr "繰返しタスク"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
@@ -4243,7 +4276,7 @@ msgstr "Eメールで送信"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Send invitation"
-msgstr ""
+msgstr "招待状を送付"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__sequence
@@ -4323,7 +4356,7 @@ msgstr "タスクを共有"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
 msgid "Share a Project"
-msgstr ""
+msgstr "プロジェクトを共有"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -4361,6 +4394,7 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"マイルストン、タグ、または専用のプロパティを使用して、スプリントごとにタスクを並べ替えます。各スプリントの終了時に、リスト内の残りのタスクを選び、マイルストン、タグ、またはプロパティを編集して全て次のスプリントに移動します。"
 
 #. module: project
 #. odoo-javascript
@@ -4589,13 +4623,13 @@ msgstr "タスクキャンセル済"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Cancelled"
-msgstr ""
+msgstr "タスクが取消されました"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Converted from To-Do"
-msgstr ""
+msgstr "ToDoから変換されたタスク"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
@@ -4621,7 +4655,7 @@ msgstr "タスク依存関係"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "Task Description History"
-msgstr ""
+msgstr "タスク説明理履歴"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_done
@@ -4697,7 +4731,7 @@ msgstr "タスク名..."
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Transferred from Project %s"
-msgstr ""
+msgstr "プロジェクト%sから移管されたタスク"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4714,7 +4748,7 @@ msgstr "タスク承認済"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_canceled
 msgid "Task cancelled"
-msgstr ""
+msgstr "タスクが取消されました"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
@@ -4918,7 +4952,7 @@ msgstr ""
 msgid ""
 "The task description lacks any past content that could be restored at the "
 "moment."
-msgstr ""
+msgstr "タスクの説明には、現時点で復元可能な過去の内容がありません。"
 
 #. module: project
 #. odoo-python
@@ -5169,7 +5203,7 @@ msgstr "プロジェクトに関連する分析アカウントを関連文書に
 msgid ""
 "Track the profitability of your project with analytic accounting. Select the"
 " analytic plan for new projects:"
-msgstr "分析会計でプロジェクトの収益性を追跡します。新規プロジェクトの分析プランを選択します："
+msgstr "分析会計でプロジェクトの収益性を追跡します。新規プロジェクトの分析計画を選択します："
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5177,7 +5211,7 @@ msgid ""
 "Track the profitability of your projects. Any project, its tasks and "
 "timesheets are linked to an analytic account and any analytic account "
 "belongs to a plan."
-msgstr "プロジェクトの収益性を追跡します。プロジェクト、タスク、タイムシートは分析勘定にリンクされ、分析勘定はプランに属します。"
+msgstr "プロジェクトの収益性を追跡します。プロジェクト、タスク、タイムシートは分析勘定にリンクされ、分析勘定は計画に属します。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5383,7 +5417,7 @@ msgstr "タスク照会"
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_project
 msgid "View Tasks"
-msgstr "タスクを表示"
+msgstr "タスク照会"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
@@ -5917,6 +5951,7 @@ msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
 msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: 満足度調査"
 
 #. module: project
 #. odoo-javascript

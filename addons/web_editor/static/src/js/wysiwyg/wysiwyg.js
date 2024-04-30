@@ -1021,8 +1021,10 @@ export class Wysiwyg extends Component {
         $editable.find('[data-editor-message]').removeAttr('data-editor-message');
         $editable.find('a.o_image, span.fa, i.fa').html('');
         $editable.find('[aria-describedby]').removeAttr('aria-describedby').removeAttr('data-bs-original-title');
-        this.odooEditor && this.odooEditor.cleanForSave($editable[0]);
-        this._attachHistoryIds($editable[0]);
+        if (this.odooEditor) {
+            this.odooEditor.cleanForSave($editable[0]);
+            this._attachHistoryIds($editable[0]);
+        }
         return $editable.html();
     }
     /**
@@ -2044,18 +2046,23 @@ export class Wysiwyg extends Component {
                 // Make it important so it has priority over selection color.
                 td.style.setProperty(propName, td.style[propName], previewMode ? 'important' : '');
             }
-        } else if (!this.lastMediaClicked && coloredElements && coloredElements.length && Array.isArray(coloredElements)) {
+        } else if (color && !this.lastMediaClicked && coloredElements && coloredElements.length && Array.isArray(coloredElements)) {
             // Ensure the selection in the fonts tags, otherwise an undetermined
             // race condition could generate a wrong selection later.
             const first = coloredElements[0];
             const last = coloredElements[coloredElements.length - 1];
 
             const sel = this.odooEditor.document.getSelection();
-            sel.removeAllRanges();
-            const range = new Range();
+            const range = sel.getRangeAt(0);
+            const isSelForward = sel.anchorNode === range.startContainer && sel.anchorOffset === range.startOffset;
             range.setStart(first, 0);
             range.setEnd(...endPos(last));
-            sel.addRange(getDeepRange(this.odooEditor.editable, { range }));
+                const { startContainer, startOffset, endContainer, endOffset } = getDeepRange(this.odooEditor.editable, { range });
+            if (isSelForward) {
+                sel.setBaseAndExtent(startContainer, startOffset, endContainer, endOffset);
+            } else {
+                sel.setBaseAndExtent(endContainer, endOffset, startContainer, startOffset);
+            }
         }
 
         const hexColor = this._colorToHex(color);

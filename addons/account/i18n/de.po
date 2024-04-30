@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-29 11:36+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1307,7 +1307,7 @@ msgstr "<strong>Lieferadresse:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Source:</strong><br/>"
-msgstr "<strong>Quelle:</strong><br/>"
+msgstr "<strong>Verweis:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -1929,7 +1929,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Accountant"
-msgstr ""
+msgstr "Buchhalter"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -2634,6 +2634,8 @@ msgid ""
 "An error occurred when computing the inalterability. A gap has been detected"
 " in the sequence."
 msgstr ""
+"Bei der Berechnung der Unveränderlichkeit ist ein Fehler aufgetreten. Es "
+"wurde eine Lücke in der Sequenz entdeckt."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -3396,7 +3398,7 @@ msgstr "Blockierende Meldung"
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Bookkeeper"
-msgstr ""
+msgstr "Buchführer"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -4317,7 +4319,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %s (%s)."
-msgstr ""
+msgstr "Korrupte Daten in Journalbuchung mit ID %s (%s)."
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -5132,7 +5134,7 @@ msgstr "Unveränderlichkeitsprüfung von Daten"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Data Inalterability Check Report -"
-msgstr ""
+msgstr "Bericht über Unveränderlichkeitsprüfung von Daten -"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -6247,7 +6249,7 @@ msgstr "Anzahl Buchungen"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Entries are correctly hashed"
-msgstr ""
+msgstr "Einträge sind korrekt gehasht"
 
 #. module: account
 #. odoo-python
@@ -7519,6 +7521,9 @@ msgid ""
 "If ticked, the hash chain will be computed from the last move hashed to the "
 "new move to be hashed. The hash is performed on demand."
 msgstr ""
+"Wenn angekreuzt, wird die Hash-Kette von der letzten gehashten Bewegung bis "
+"zur neuen ghashten Bewegung errechnet. Der Hash wird bei Bedarf "
+"durchgeführt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -7530,6 +7535,9 @@ msgid ""
 "the last move hashed to the new move to be hashed. The hash can also be "
 "performed on demand."
 msgstr ""
+"Wenn angekreuzt, wird die Hash-Kette, wenn die Rechnung gesendet wurde, von "
+"der letzten gehashten Bewegung bis zur neuen gehashten Bewegung errechnet. "
+"Der Hash wird auch bei Bedarf durchgeführt."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7721,7 +7729,7 @@ msgstr "Unveränderlichkeitshash"
 #: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
 #: model:ir.model.fields,field_description:account.field_account_payment__secure_sequence_number
 msgid "Inalterability No Gap Sequence #"
-msgstr ""
+msgstr "Unveränderlichkeit, Keine Lücke Sequenz #"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -8557,7 +8565,7 @@ msgstr "Journalbuchungen nach Datum"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/company.py:0
 msgid "Journal Entries to Hash"
-msgstr ""
+msgstr "Zu hashende Journalbuchungen"
 
 #. module: account
 #. odoo-javascript
@@ -9180,7 +9188,7 @@ msgstr "Nachricht zum Sperrdatum"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Lock Entries Manually"
-msgstr ""
+msgstr "Buchungen manuell sperren"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -9188,7 +9196,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_payment__restrict_mode_hash_table
 msgid "Lock Sent Invoices with Hash"
-msgstr ""
+msgstr "Gesendete Rechnungen mit Hash sperren"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
@@ -13000,7 +13008,7 @@ msgstr "„Steuer inklusive erzwingen“ anzeigen"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show Journal Entries to Hash"
-msgstr ""
+msgstr "Zu hashende Journalbuchungen anzeigen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
@@ -13079,6 +13087,8 @@ msgid ""
 "Some journal entries have not been hashed yet. You should hash them before "
 "locking the fiscal year."
 msgstr ""
+"Einige Journalbuchungen sind noch nicht gehasht worden. Sie sollten sie "
+"hashen, bevor Sie das Geschäftsjahr sperren."
 
 #. module: account
 #. odoo-python
@@ -13938,6 +13948,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"The Syscohada chart template shouldn't be selected directly. Instead, you "
+"should directly select the chart template related to your country."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid ""
 "The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
@@ -14024,6 +14043,8 @@ msgid ""
 "The amount for %(partner_name)s appears unusual. Based on your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
+"Der Betrag für %(partner_name)s scheint ungewöhnlich zu sein. Basierend auf Ihren Verlaufsdaten ist der erwartete Betrag %(mean)s (± %(wiggle)s).\n"
+"Bitte prüfen Sie die Richtigkeit des Betrags."
 
 #. module: account
 #. odoo-python
@@ -14941,6 +14962,8 @@ msgstr ""
 msgid ""
 "There is no journal entry flagged for accounting data inalterability yet."
 msgstr ""
+"Es gibt noch keine Journalbuchung, die für die Unveränderbarkeit von "
+"Buchhaltungsdaten gekennzeichnet ist."
 
 #. module: account
 #. odoo-python
@@ -15088,6 +15111,8 @@ msgid ""
 "This document is protected by a hash. Therefore, you cannot edit the "
 "following fields: %s."
 msgstr ""
+"Dieses Dokument ist durch einen Hash-Wert geschützt. Daher können Sie die "
+"folgenden Felder nicht bearbeiten: %s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -15182,7 +15207,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "This journal is not restricted"
-msgstr ""
+msgstr "Dieses Journal ist nicht eingeschränkt"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
@@ -15209,12 +15234,15 @@ msgid ""
 "- some move with the same sequence prefix has a higher number. You may need to resequence it.\n"
 "- the move's date is anterior to the lock date"
 msgstr ""
+"Diese Buchung konnte auch nicht gesperrt werden, weil:\n"
+"- eine Buchung mit demselben Sequenzpräfix eine höhere Nummer hat. Möglicherweise müssen Sie sie neu sequenzieren.\n"
+"- das Datum der Buchung vor dem Sperrdatum liegt"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This move has been locked."
-msgstr ""
+msgstr "Diese Buchung wurde gesperrt."
 
 #. module: account
 #. odoo-python
@@ -15722,12 +15750,12 @@ msgstr "Alle ausklappen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_unhashed_entries
 msgid "Unhashed Entries"
-msgstr ""
+msgstr "Nicht gehashte Buchungen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Unhashed entries"
-msgstr ""
+msgstr "Nicht gehashte Buchungen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
@@ -16722,11 +16750,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid ""
-"You can't register payments for journal items being either all inbound, "
-"either all outbound."
+"You can't register payments for both inbound and outbound moves at the same "
+"time."
 msgstr ""
-"Sie können keine Zahlungen für Buchungszeilen erfassen, die entweder alle "
-"eingehend oder alle ausgehend sind."
+"Sie können nicht gleichzeitig Zahlungen für sowohl ein- als auch ausgehende "
+"Bewegungen registrieren."
 
 #. module: account
 #. odoo-python

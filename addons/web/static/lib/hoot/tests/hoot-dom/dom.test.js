@@ -1,8 +1,10 @@
 /** @odoo-module */
 
-import { getActiveElement, getParentFrame, queryAllRects } from "../../../hoot-dom/helpers/dom";
-import { click } from "../../../hoot-dom/helpers/events";
+import { describe, expect, getFixture, mountOnFixture, test } from "@odoo/hoot";
 import {
+    click,
+    formatXml,
+    getActiveElement,
     getFocusableElements,
     getNextFocusableElement,
     getPreviousFocusableElement,
@@ -12,15 +14,16 @@ import {
     isFocusable,
     isVisible,
     queryAll,
+    queryAllRects,
     queryAllTexts,
     queryOne,
     queryRect,
     waitFor,
     waitForNone,
     waitUntil,
-} from "../../../hoot-dom/hoot-dom";
-import { describe, expect, getFixture, mountOnFixture, test } from "../../hoot";
-import { tick } from "../../hoot-mock";
+} from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
+import { getParentFrame } from "../../../hoot-dom/helpers/dom";
 import { parseUrl } from "../local_helpers";
 
 /**
@@ -130,6 +133,34 @@ const SVG_URL = "http://www.w3.org/2000/svg";
 describe.tags("ui")(parseUrl(import.meta.url), () => {
     test.todo("should crash", async () => {
         expect().toBeFalsy();
+    });
+
+    test("formatXml", () => {
+        expect(formatXml("")).toBe("");
+        expect(formatXml("<input />")).toBe("<input/>");
+        expect(
+            formatXml(/* xml */ `
+            <div>
+                A
+            </div>
+        `)
+        ).toBe(`<div>\n    A\n</div>`);
+        expect(formatXml(/* xml */ `<div>A</div>`)).toBe(`<div>\n    A\n</div>`);
+
+        // Inline
+        expect(
+            formatXml(
+                /* xml */ `
+            <div>
+                A
+            </div>
+        `,
+                { keepInlineTextNodes: true }
+            )
+        ).toBe(`<div>\n    A\n</div>`);
+        expect(formatXml(/* xml */ `<div>A</div>`, { keepInlineTextNodes: true })).toBe(
+            `<div>A</div>`
+        );
     });
 
     test("getActiveElement", async () => {
@@ -309,7 +340,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
 
         expect([]).toVerifySteps();
 
-        await tick();
+        await animationFrame();
 
         expect(["title"]).toVerifySteps();
     });
@@ -330,7 +361,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
             return el;
         });
 
-        await tick();
+        await animationFrame();
 
         expect([]).toVerifySteps();
 
@@ -345,7 +376,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         waitForNone(".title").then(() => expect.step("none"));
         expect([]).toVerifySteps();
 
-        await tick();
+        await animationFrame();
 
         expect(["none"]).toVerifySteps();
     });
@@ -356,7 +387,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         await expect(waitForNone(".title", { timeout: 1 })).rejects.toThrow();
     });
 
-    test("waitForNone; delete elements", async () => {
+    test("waitForNone: delete elements", async () => {
         await mountOnFixture(FULL_HTML_TEMPLATE);
 
         waitForNone(".title").then(() => expect.step("none"));
@@ -367,7 +398,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
 
             title.remove();
 
-            await tick();
+            await animationFrame();
         }
 
         expect(["none"]).toVerifySteps();
@@ -392,7 +423,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         expect([]).toVerifySteps();
 
         getFixture().setAttribute("data-value", "test"); // trigger mutation observer
-        await tick();
+        await animationFrame();
 
         expect(["test"]).toVerifySteps();
     });

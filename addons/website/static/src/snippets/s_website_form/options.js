@@ -116,7 +116,11 @@ const FormEditor = options.Class.extend({
                 display_name: el[1],
             }));
         } else if (field.relation && field.relation !== 'ir.attachment') {
-            field.records = await this.orm.searchRead(field.relation, field.domain || [], ["display_name"]);
+            const fieldNames = field.fieldName ? [field.fieldName] : ["display_name"];
+            field.records = await this.orm.searchRead(field.relation, field.domain || [], fieldNames);
+            if (field.fieldName) {
+                field.records.forEach(r => r["display_name"] = r[field.fieldName]);
+            }
         }
         return field.records;
     },
@@ -422,9 +426,6 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         // e.g. User should not be enable to change existing job application form
         // to opportunity form in 'Apply job' page.
         this.modelCantChange = this.$target.attr('hide-change-model') !== undefined;
-        if (this.modelCantChange) {
-            return _super(...arguments);
-        }
 
         // Get list of website_form compatible models.
         this.models = await this.orm.call("ir.model", "get_compatible_form_models");
@@ -432,16 +433,19 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         const targetModelName = this.$target[0].dataset.model_name || 'mail.mail';
         this.activeForm = this.models.find(m => m.model === targetModelName);
         currentActionName = this.activeForm.website_form_label;
-        // Create the Form Action select
-        this.selectActionEl = document.createElement('we-select');
-        this.selectActionEl.setAttribute('string', 'Action');
-        this.selectActionEl.dataset.noPreview = 'true';
-        this.models.forEach(el => {
-            const option = document.createElement('we-button');
-            option.textContent = el.website_form_label;
-            option.dataset.selectAction = el.id;
-            this.selectActionEl.append(option);
-        });
+
+        if (!this.modelCantChange) {
+            // Create the Form Action select
+            this.selectActionEl = document.createElement('we-select');
+            this.selectActionEl.setAttribute('string', 'Action');
+            this.selectActionEl.dataset.noPreview = 'true';
+            this.models.forEach(el => {
+                const option = document.createElement('we-button');
+                option.textContent = el.website_form_label;
+                option.dataset.selectAction = el.id;
+                this.selectActionEl.append(option);
+            });
+        }
 
         return _super(...arguments);
     },
@@ -1530,7 +1534,9 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const inputEl = this.$target[0].querySelector('input');
         const dataFillWith = inputEl ? inputEl.dataset.fillWith : undefined;
         const hasConditionalVisibility = this.$target[0].classList.contains('s_website_form_field_hidden_if');
-        const previousName = this.$target[0].querySelector('.s_website_form_input').name;
+        const previousInputEl = this.$target[0].querySelector('.s_website_form_input');
+        const previousName = previousInputEl.name;
+        const previousType = previousInputEl.type;
         [...this.$target[0].childNodes].forEach(node => node.remove());
         [...fieldEl.childNodes].forEach(node => this.$target[0].appendChild(node));
         [...fieldEl.attributes].forEach(el => this.$target[0].removeAttribute(el.nodeName));
@@ -1539,8 +1545,10 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             this.$target[0].classList.add('s_website_form_field_hidden_if', 'd-none');
         }
         const dependentFieldEls = this.formEl.querySelectorAll(`.s_website_form_field[data-visibility-dependency="${previousName}"]`);
-        const newName = this.$target[0].querySelector('.s_website_form_input').name;
-        if (previousName !== newName && dependentFieldEls) {
+        const newFormInputEl = this.$target[0].querySelector('.s_website_form_input');
+        const newName = newFormInputEl.name;
+        const newType = newFormInputEl.type;
+        if ((previousName !== newName || previousType !== newType) && dependentFieldEls) {
             // In order to keep the visibility conditions consistent,
             // when the name has changed, it means that the type has changed so
             // all fields whose visibility depends on this field must be updated so that
@@ -1562,10 +1570,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      _setVisibilityDependency(value) {
         delete this.$target[0].dataset.visibilityCondition;
         delete this.$target[0].dataset.visibilityComparator;
-        const previousDependency = this._getDependencyEl();
-        if (this.formEl.querySelector(`.s_website_form_input[name="${value}"]`).type !== (previousDependency && previousDependency.type)) {
-            this.rerender = true;
-        }
+        this.rerender = true;
         this.$target[0].dataset.visibilityDependency = value;
     },
     /**

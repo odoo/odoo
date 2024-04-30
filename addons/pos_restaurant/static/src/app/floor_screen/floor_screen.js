@@ -73,19 +73,18 @@ export class FloorScreen extends Component {
             this.state.floorWidth = window.innerWidth + "px";
             return;
         }
-        const tables = this.activeFloor.table_ids;
+        const tables = this.activeTables;
         const floorV = this.floorMapRef.el.clientHeight;
         const floorH = this.floorMapRef.el.offsetWidth;
-        const positionH = Math.max(
-            ...tables.map((table) => table.position_h + table.width),
-            floorH
-        );
-        const positionV = Math.max(
-            ...tables.map((table) => table.position_v + table.height),
-            floorV
-        );
+        const positionH = tables
+            ? Math.max(...tables.map((table) => table.position_h + table.width), floorH)
+            : floorH;
 
-        if (this.activeFloor.floor_background_image) {
+        const positionV = tables
+            ? Math.max(...tables.map((table) => table.position_v + table.height), floorV)
+            : floorV;
+
+        if (this.activeFloor?.floor_background_image) {
             const img = new Image();
             img.onload = () => {
                 const height = Math.max(img.height, positionV);
@@ -128,7 +127,7 @@ export class FloorScreen extends Component {
         await this.pos.unsetTable();
     }
     get floorBackround() {
-        return this.activeFloor.floor_background_image
+        return this.activeFloor?.floor_background_image
             ? "data:image/png;base64," + this.activeFloor.floor_background_image
             : "none";
     }
@@ -263,6 +262,7 @@ export class FloorScreen extends Component {
             }
 
             newTableData = {
+                active: true,
                 position_v: posV,
                 position_h: posH,
                 width: widthTable,

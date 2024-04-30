@@ -76,6 +76,41 @@ class AccountEdiProxyClientUser(models.Model):
             return f'{company.peppol_eas}:{company.peppol_endpoint}'
         return super()._get_proxy_identification(company, proxy_type)
 
+    def _peppol_import_invoice(self, attachment, partner_endpoint, peppol_state, uuid):
+        """Save new documents in an accounting journal, when one is specified on the company.
+
+        :param attachment: the new document
+        :param partner_endpoint: a string containing the sender's Peppol endpoint
+        :param peppol_state: the state of the received Peppol document
+        :param uuid: the UUID of the Peppol document
+        :return: `True` if the document was saved, `False` if it was not
+        """
+        self.ensure_one()
+        journal = self.company_id.peppol_purchase_journal_id
+        if not journal:
+            return False
+
+        move = self.env['account.move'].create({
+            'journal_id': journal.id,
+            'move_type': 'in_invoice',
+            'peppol_move_state': peppol_state,
+            'peppol_message_uuid': uuid,
+        })
+        if 'is_in_extractable_state' in move._fields:
+            move.is_in_extractable_state = False
+
+        move._extend_with_attachments(attachment, new=True)
+        move._message_log(
+            body=_(
+                "Peppol document (UUID: %(uuid)s) has been received successfully.\n(Sender endpoint: %(endpoint)s)",
+                uuid=uuid,
+                endpoint=partner_endpoint,
+            ),
+            attachment_ids=attachment.ids,
+        )
+        attachment.write({'res_model': 'account.move', 'res_id': move.id})
+        return True
+
     def _peppol_get_new_documents(self):
         params = {
             'domain': {
@@ -104,7 +139,6 @@ class AccountEdiProxyClientUser(models.Model):
             if not message_uuids:
                 continue
 
-            company = edi_user.company_id
             # retrieve attachments for filtered messages
             all_messages = edi_user._make_request(
                 f"{edi_user._get_server_url()}/api/peppol/1/get_document",
@@ -114,59 +148,22 @@ class AccountEdiProxyClientUser(models.Model):
             for uuid, content in all_messages.items():
                 enc_key = content["enc_key"]
                 document_content = content["document"]
-                filename = content["filename"] or 'attachment' # default to attachment, which should not usually happen
+                filename = content["filename"] or f'peppol_document_{uuid}'  # default to peppol_document_{uuid}, which should not usually happen
                 partner_endpoint = content["accounting_supplier_party"]
                 decoded_document = edi_user._decrypt_data(document_content, enc_key)
 
-                journal_id = company.peppol_purchase_journal_id
-                # use the first purchase journal if the Peppol journal is not set up
-                # to create the move anyway
-                if not journal_id:
-                    journal_id = self.env['account.journal'].search([
-                        *self.env['account.journal']._check_company_domain(company),
-                        ('type', '=', 'purchase')
-                    ], limit=1)
+                attachment = self.env["ir.attachment"].create(
+                    {
+                        "name": f"{filename}.xml",
+                        "raw": decoded_document,
+                        "type": "binary",
+                        "mimetype": "application/xml",
+                    }
+                )
 
-                attachment_vals = {
-                    'name': f'{filename}.xml',
-                    'raw': decoded_document,
-                    'type': 'binary',
-                    'mimetype': 'application/xml',
-                }
-
-                try:
-                    attachment = self.env['ir.attachment'].create(attachment_vals)
-                    move = journal_id\
-                        .with_context(
-                            default_move_type='in_invoice',
-                            default_peppol_move_state=content['state'],
-                            default_extract_can_show_send_button=False,
-                            default_peppol_message_uuid=uuid,
-                        )\
-                        ._create_document_from_attachment(attachment.id)
-                    if partner_endpoint:
-                        move._message_log(body=_(
-                            'Peppol document has been received successfully. Sender endpoint: %s', partner_endpoint))
-                    else:
-                        move._message_log(body=_('Peppol document has been received successfully'))
-                # pylint: disable=broad-except
-                except Exception:
-                    # if the invoice creation fails for any reason,
-                    # we want to create an empty invoice with the attachment
-                    move = self.env['account.move'].create({
-                        'move_type': 'in_invoice',
-                        'peppol_move_state': 'done',
-                        'company_id': company.id,
-                        'extract_can_show_send_button': False,
-                        'peppol_message_uuid': uuid,
-                    })
-                    attachment_vals.update({
-                        'res_model': 'account.move',
-                        'res_id': move.id,
-                    })
-                    self.env['ir.attachment'].create(attachment_vals)
-
-                proxy_acks.append(uuid)
+                if edi_user._peppol_import_invoice(attachment, partner_endpoint, content["state"], uuid):
+                    # Only acknowledge when we saved the document somewhere
+                    proxy_acks.append(uuid)
 
             if not tools.config['test_enable']:
                 self.env.cr.commit()

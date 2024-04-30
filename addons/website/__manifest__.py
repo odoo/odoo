@@ -115,6 +115,8 @@
         'views/neutralize_views.xml',
         'wizard/base_language_install_views.xml',
         'wizard/website_robots.xml',
+        # Replaces a post_init_hook that should be run on upgrade too.
+        'data/update_theme_images.xml',
     ],
     'demo': [
         'data/website_demo.xml',
@@ -194,6 +196,7 @@
             'website/static/src/components/fields/*',
             'website/static/src/components/fullscreen_indication/fullscreen_indication.js',
             'website/static/src/components/fullscreen_indication/fullscreen_indication.scss',
+            'website/static/src/components/fullscreen_indication/fullscreen_indication.xml',
             'website/static/src/components/website_loader/website_loader.js',
             'website/static/src/components/website_loader/website_loader.scss',
             'website/static/src/components/views/*',

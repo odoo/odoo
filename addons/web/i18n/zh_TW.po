@@ -3148,8 +3148,8 @@ msgstr "ILY"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
-msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"today\"."
-msgstr "ISO 格式日期（例如 \"2018-12-31\"）或 \"今天\"。"
+msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"%s\"."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3250,7 +3250,7 @@ msgstr ""
 msgid ""
 "Install the app on your device to access it easily. Here are the steps to "
 "follow:"
-msgstr ""
+msgstr "在裝置上安裝應用程式，以便輕鬆存取。以下是操作步驟："
 
 #. module: web
 #. odoo-javascript
@@ -3258,7 +3258,7 @@ msgstr ""
 msgid ""
 "Install the application for fast access from your home screen, notifications"
 " and more!"
-msgstr ""
+msgstr "安裝該應用程式，在主畫面、推播通知等快速存取資訊！"
 
 #. module: web
 #. odoo-javascript
@@ -4238,6 +4238,8 @@ msgstr "名稱:"
 
 #. module: web
 #. odoo-javascript
+#. odoo-python
+#: code:addons/web/controllers/action.py:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
@@ -5307,15 +5309,11 @@ msgstr "唯讀："
 #. odoo-javascript
 #: code:addons/web/static/src/core/confirmation_dialog/confirmation_dialog.js:0
 msgid ""
-"Ready to make your record disappear into thin air? Are you sure?\n"
-"It will be gone forever!\n"
-"\n"
+"Ready to make your record disappear into thin air? Are you sure?\r\n"
+"It will be gone forever!\r\n"
+"\r\n"
 "Think twice before you click that 'Delete' button!"
 msgstr ""
-"準備讓你的記錄消失得無影無蹤？你確定嗎？\n"
-"刪除後，它將永遠消失！\n"
-"\n"
-"按下「刪除」按鈕前，請三思！"
 
 #. module: web
 #. odoo-javascript
@@ -6147,6 +6145,7 @@ msgstr "T恤"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 msgid "TIP"
 msgstr "提示"
@@ -7157,7 +7156,7 @@ msgstr "你無權限存取 \"%s\" 資料集。"
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid "You don't have access to this record"
-msgstr ""
+msgstr "你沒有權限存取此項記錄"
 
 #. module: web
 #. odoo-javascript
@@ -7592,6 +7591,7 @@ msgstr "錨"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/core/domain_selector/utils.js:0
 #: code:addons/web/static/src/core/tree_editor/utils.js:0
 msgid "and"
@@ -24917,13 +24917,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "smiling cat face with heart eyes"
-msgstr ""
+msgstr "微笑、心形眼睛的貓臉"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "smiling cat face with heart-eyes"
-msgstr ""
+msgstr "微笑、心形眼睛的貓臉"
 
 #. module: web
 #. odoo-javascript
@@ -24949,7 +24949,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "smiling face with heart eyes"
-msgstr ""
+msgstr "微笑、心形眼睛的臉"
 
 #. module: web
 #. odoo-javascript
@@ -24977,14 +24977,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "smiling face with open hands"
-msgstr ""
+msgstr "微笑的臉，張開雙手"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "smiling face with smiling eyes"
-msgstr ""
+msgstr "微笑的臉和微笑的眼睛"
 
 #. module: web
 #. odoo-javascript
@@ -29501,6 +29501,13 @@ msgstr ""
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 msgid "— press"
 msgstr "— 按"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "— search for"
+msgstr ""
 
 #. module: web
 #. odoo-javascript

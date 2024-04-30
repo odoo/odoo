@@ -965,6 +965,59 @@ class TestReorderingRule(TransactionCase):
             self.assertNotEqual(po05, po04, 'A new PO should be generated')
             self.assertEqual(po05.order_line.product_id, product_02)
 
+    def test_reordering_rule_visibility_days(self):
+        """
+            Test the visibility days on the reordering rule update the qty_to_order but do not
+            update the forecasted quantity of the current day.
+
+            ex:
+            - We are January 14th
+            - visibility days = 10
+            - A sale order is scheduled on January 20th
+            -> 2 scenarios
+            1. Today's forecasted quantity is < orderpoint's min qty
+                the sale order will be taken into account in the forecasted quantity
+            2. Todays's forecasted quantity is >= orderpoint's min qty
+                the sale order will not be taken into account in the forecasted quantity
+        """
+        # create reordering rule
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        op = self.env['stock.warehouse.orderpoint'].create({
+            'warehouse_id': wh.id,
+            'location_id': wh.lot_stock_id.id,
+            'product_id': self.product_01.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+            'visibility_days': 10,
+        })
+
+        # out move on January 20th
+        move = self.env['stock.move'].create({
+            'name': 'Test move',
+            'product_id': self.product_01.id,
+            'product_uom': self.product_01.uom_id.id,
+            'product_uom_qty': 1,
+            'location_id': wh.lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'date': dt.today() + td(days=6),
+        })
+        move._action_confirm()
+        self.assertEqual(op.qty_to_order, 0, 'sale order is ignored')
+        # out move today to force the forecast to be negative
+        move = self.env['stock.move'].create({
+            'name': 'Test move',
+            'product_id': self.product_01.id,
+            'product_uom': self.product_01.uom_id.id,
+            'product_uom_qty': 1,
+            'location_id': wh.lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+        })
+        move._action_confirm()
+
+        # virtual available is -1 but we need to replenish 2
+        self.product_01.virtual_available = -1
+        self.assertEqual(op.qty_to_order, 2, 'sale order is ignored')
+
     def test_update_po_line_without_purchase_access_right(self):
         """ Test that a user without purchase access right can update a PO line from picking."""
         # create a user with only inventory access right

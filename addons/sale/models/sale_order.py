@@ -657,7 +657,7 @@ class SaleOrder(models.Model):
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             order.tax_totals = self.env['account.tax']._prepare_tax_totals(
                 [x._convert_to_tax_base_line_dict() for x in order_lines],
-                order.currency_id or order.company_id.currency_id,
+                order.currency_id or order.company_id.currency_id or self.env.company.currency_id,
                 order.company_id,
             )
 
@@ -1400,14 +1400,15 @@ class SaleOrder(models.Model):
                         continue
                     inv_amt = order_amt = 0
                     for invoice_line in order_line.invoice_lines:
+                        sign = 1 if invoice_line.move_id.is_inbound() else -1
                         if invoice_line.move_id == move:
-                            inv_amt += invoice_line.price_total
+                            inv_amt += invoice_line.price_total * sign
                         elif invoice_line.move_id.state != 'cancel':  # filter out canceled dp lines
-                            order_amt += invoice_line.price_total
+                            order_amt += invoice_line.price_total * sign
                     if inv_amt and order_amt:
                         # if not inv_amt, this order line is not related to current move
                         # if no order_amt, dp order line was not invoiced
-                        delta_amount += (inv_amt * (1 if move.is_inbound() else -1)) + order_amt
+                        delta_amount += inv_amt + order_amt
 
                 if not move.currency_id.is_zero(delta_amount):
                     receivable_line = move.line_ids.filtered(
@@ -1515,7 +1516,7 @@ class SaleOrder(models.Model):
 
         return groups
 
-    def _notify_by_email_prepare_rendering_context(self, message, msg_vals, model_description=False,
+    def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False):
         render_context = super()._notify_by_email_prepare_rendering_context(
             message, msg_vals, model_description=model_description,
@@ -1848,9 +1849,9 @@ class SaleOrder(models.Model):
             date=self.date_order,
             **kwargs,
         )
-        res = {}
+        res = super()._get_product_catalog_order_data(products, **kwargs)
         for product in products:
-            res[product.id] = {'price': pricelist.get(product.id)}
+            res[product.id]['price'] = pricelist.get(product.id)
             if product.sale_line_warn != 'no-message' and product.sale_line_warn_msg:
                 res[product.id]['warning'] = product.sale_line_warn_msg
             if product.sale_line_warn == "block":

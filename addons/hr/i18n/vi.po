@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -356,6 +357,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Onboarding\", \"Offboarding\", ...)"
 msgstr ""
+"Kế hoạch hoạt động được sử dụng để chỉ định danh sách hoạt động chỉ trong vài cú nhấp chuột\n"
+"                 (VD: \"Quy trình nhập môn\", \"Quy trình nghỉ việc\",...)"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_schedule
@@ -382,6 +385,8 @@ msgid ""
 "Additional Information: \n"
 " %(description)s"
 msgstr ""
+"Thông tin bổ sung: \n"
+" %(description)s"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
@@ -886,17 +891,17 @@ msgstr "Thêm phòng ban mới"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
 msgid "Create a new employment type"
-msgstr ""
+msgstr "Tạo một loại hình công việc mới"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
 msgid "Create a new work location"
-msgstr ""
+msgstr "Tạo một vị trí làm việc mới"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.mail_activity_plan_action
 msgid "Create an Activity Plan"
-msgstr ""
+msgstr "Tạo một kế hoạch hoạt động"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1015,7 +1020,7 @@ msgstr "Bộ phận"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan__department_assignable
 msgid "Department Assignable"
-msgstr ""
+msgstr "Phòng ban có thể phân công"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__name
@@ -1245,7 +1250,7 @@ msgstr "Tên nhân viên"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.mail_activity_plan_action
 msgid "Employee Plans"
-msgstr ""
+msgstr "Kế hoạch nhân viên"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__employee_properties_definition
@@ -2136,7 +2141,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 msgid "No information"
-msgstr ""
+msgstr "Không có thông tin"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2183,7 +2188,7 @@ msgstr "Số trẻ em phụ thuộc"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
 msgid "Number of Employees"
-msgstr ""
+msgstr "Số lượng nhân viên"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_employee
@@ -2415,11 +2420,13 @@ msgid ""
 "Plan %(plan_names)s cannot use a department as it is used only for some HR "
 "plans."
 msgstr ""
+"Kế hoạch %(plan_names)s không thể sử dụng một phòng ban vì nó chỉ được sử "
+"dụng cho các kế hoạch nhân sự."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_schedule__plan_department_filterable
 msgid "Plan Department Filterable"
-msgstr ""
+msgstr "Plan Department Filterable"
 
 #. module: hr
 #. odoo-python
@@ -2675,7 +2682,7 @@ msgstr "Nhân viên liên quan"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__related_partners_count
 msgid "Related Partners Count"
-msgstr ""
+msgstr "Số lượng đối tác liên quan"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2878,7 +2885,7 @@ msgstr "Nhà phát triển phần mềm"
 #. odoo-python
 #: code:addons/hr/models/hr_employee_base.py:0
 msgid "Some employee already have a work contact"
-msgstr ""
+msgstr "Một số nhân viên đã có liên hệ công việc."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3036,6 +3043,10 @@ msgid ""
 "              He defines the products and customers portfolio according to the marketing plan.\n"
 "              This mission requires strong collaboration with Technical Service and Sales."
 msgstr ""
+"Quản lý Marketing xác định chiến lược marketing trung và dài hạn cho các phân khúc thị trường mà mình phụ trách trên Thế giới.\n"
+"                Phát triển và giám sát ngân sách hàng năm với sự cộng tác của Bộ phận Kinh doanh.\n"
+"                Xác định danh mục khách hàng và sản phẩm theo kế hoạch marketing.\n"
+"                Nhiệm vụ này đòi hỏi mối quan hệ hợp tác chặt chẽ với Bộ phận Dịch vụ Kỹ thuật và Kinh doanh."
 
 #. module: hr
 #. odoo-python
@@ -3282,7 +3293,7 @@ msgstr "Xem hồ sơ"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expiration Date"
-msgstr ""
+msgstr "Ngày hết hạn visa"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -3301,6 +3312,8 @@ msgstr "Cảnh báo"
 msgid ""
 "We are currently looking for someone like that to join our Consultant team."
 msgstr ""
+"Chúng tôi hiện đang tìm kiếm một người như vậy để tham gia đội ngũ Tư vấn "
+"viên của mình"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_developer
@@ -3308,6 +3321,8 @@ msgid ""
 "We are currently looking for someone like that to join our Web team.\n"
 "                Someone who can snap out of coding and perform analysis or meet clients to explain the technical possibilities that can meet their needs."
 msgstr ""
+"Chúng tôi hiện đang tìm kiếm một người như vậy để tham gia Bộ phận Web của mình.\n"
+"                 Ai đó có thể gác viết mã sang một bên và tiến hành phân tích hoặc gặp gỡ khách hàng để giải thích các khả năng kỹ thuật có thể đáp ứng nhu cầu của họ."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo

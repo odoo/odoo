@@ -1,4 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models
 from odoo.addons.account.models.chart_template import template
 
@@ -29,7 +28,5 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'pcg_676',
                 'account_journal_early_pay_discount_loss_account_id': 'pcg_6019',
                 'account_journal_early_pay_discount_gain_account_id': 'pcg_7019',
-                'account_sale_tax_id': 'tva_sale_18',
-                'account_purchase_tax_id': 'tva_purchase_18',
             },
         }

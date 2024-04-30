@@ -12,7 +12,7 @@ import { deduceUrl, getOnNotified } from "@point_of_sale/utils";
 import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { memoize } from "@web/core/utils/functions";
-import { ConnectionLostError } from "@web/core/network/rpc";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { _t } from "@web/core/l10n/translation";
 import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";
@@ -114,6 +114,16 @@ export class PosStore extends Reactive {
             pos_data,
         }
     ) {
+        if (pos_data instanceof Error) {
+            let message = _t("An error occurred while loading the Point of Sale: \n");
+            if (pos_data instanceof RPCError) {
+                message += pos_data.data.message;
+            } else {
+                message += pos_data.message;
+            }
+            window.alert(message);
+            window.location = "/web#action=point_of_sale.action_client_pos_menu";
+        }
         this.env = env;
         this.numberBuffer = number_buffer;
         this.barcodeReader = barcode_reader;
@@ -192,7 +202,6 @@ export class PosStore extends Reactive {
             await this.connectToProxy();
         }
         this.closeOtherTabs();
-        this.preloadImages();
         this.showScreen("ProductScreen");
     }
 
@@ -702,30 +711,20 @@ export class PosStore extends Reactive {
         await this._loadMissingPartners(jsons);
         var orders = [];
 
-        for (var i = 0; i < jsons.length; i++) {
-            var json = jsons[i];
-            if (json.pos_session_id === this.session.id) {
-                try {
-                    orders.push(this.createReactiveOrder(json));
-                } catch (error) {
-                    console.warn(error);
-                }
-            }
-        }
-        for (i = 0; i < jsons.length; i++) {
-            json = jsons[i];
+        for (const json of jsons) {
             if (
-                json.pos_session_id !== this.session.id &&
-                (json.lines.length > 0 || json.statement_ids.length > 0)
+                json.pos_session_id === this.session.id ||
+                json.lines.length > 0 ||
+                json.statement_ids.length > 0
             ) {
                 try {
                     orders.push(this.createReactiveOrder(json));
+                    continue;
                 } catch (error) {
-                    console.warn(error);
+                    console.error("There was an error while loading the order", json, error);
                 }
-            } else if (json.pos_session_id !== this.session.id) {
-                this.db.remove_unpaid_order(jsons[i]);
             }
+            this.db.remove_unpaid_order(json);
         }
 
         orders = orders.sort(function (a, b) {
@@ -1114,17 +1113,21 @@ export class PosStore extends Reactive {
     }
 
     push_orders(opts = {}) {
+        // The 'printedOrders' is added to prevent printed orders from being reverted to draft
+        opts = Object.assign({ printedOrders: true }, opts);
         return this.pushOrderMutex.exec(() => this._flush_orders(this.db.get_orders(), opts));
     }
 
     push_single_order(order) {
         const order_id = this.db.add_order(order.export_as_JSON());
-        return this.pushOrderMutex.exec(() => this._flush_orders([this.db.get_order(order_id)]));
+        return this.pushOrderMutex.exec(() =>
+            this._flush_orders([this.db.get_order(order_id)], order._getOrderOptions())
+        );
     }
 
     // Send validated orders to the backend.
     // Resolves to the backend ids of the synced orders.
-    async _flush_orders(orders, options) {
+    async _flush_orders(orders, options = {}) {
         try {
             const server_ids = await this._save_to_server(orders, options);
             for (let i = 0; i < server_ids.length; i++) {
@@ -1133,7 +1136,7 @@ export class PosStore extends Reactive {
             }
             return server_ids;
         } catch (error) {
-            if (!(error instanceof ConnectionLostError)) {
+            if (!(error instanceof ConnectionLostError) && !options.printedOrders) {
                 for (const order of orders) {
                     const reactiveOrder = this.orders.find((o) => o.uid === order.id);
                     reactiveOrder.finalized = false;

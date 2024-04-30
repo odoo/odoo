@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,13 +28,13 @@ msgstr "全て"
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__bharatqr
 msgid "BHARATQR"
-msgstr ""
+msgstr "BHARATQR"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/razorpay_pos_request.py:0
 msgid "Cannot decode Razorpay POS response"
-msgstr ""
+msgstr "Razorpay POSレスポンスをデコードできません。"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -52,6 +53,8 @@ msgid ""
 "Choose allow payment mode: \n"
 " All/Card/UPI or QR"
 msgstr ""
+"可能な支払モードを選択して下さい:\n"
+"全て/カード/UPIまたはQR"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -67,6 +70,8 @@ msgid ""
 "Device Serial No \n"
 " ex: 7000012300"
 msgstr ""
+"デバイスシリアル番号 \n"
+" 例: 7000012300"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -74,7 +79,7 @@ msgstr ""
 msgid ""
 "Payment has been queued. You may choose to wait for the payment to initiate "
 "on terminal or proceed to cancel this transaction"
-msgstr ""
+msgstr "支払の順番待ちです。端末で支払が開始されるのを待つか、この取引を取消するか選択できます。"
 
 #. module: pos_razorpay
 #: model:ir.model,name:pos_razorpay.model_pos_order
@@ -94,53 +99,53 @@ msgstr "POS支払い"
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_api_key
 msgid "Razorpay API Key"
-msgstr ""
+msgstr "Razorpay APIキー"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_authcode
 msgid "Razorpay APPR Code"
-msgstr ""
+msgstr "Razorpay APPRコード"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_allowed_payment_modes
 msgid "Razorpay Allowed Payment Modes"
-msgstr ""
+msgstr "Razorpay許可済支払モード"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_card_owner_name
 msgid "Razorpay Card Owner Name"
-msgstr ""
+msgstr "Razorpayカード所有者名"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_card_scheme
 msgid "Razorpay Card Scheme"
-msgstr ""
+msgstr "Razorpayカードスキーム"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_tid
 msgid "Razorpay Device Serial No"
-msgstr ""
+msgstr "Razorpayデバイスシリアル番号"
 
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
 msgid "Razorpay Error"
-msgstr ""
+msgstr "Razorpayエラー"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_issuer_card_no
 msgid "Razorpay Issue Card No Last 4 digits"
-msgstr ""
+msgstr "Razorpay発行カード番号 下4桁"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_issuer_bank
 msgid "Razorpay Issuer Bank"
-msgstr ""
+msgstr "Razorpay発行者銀行"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_reference_no
 msgid "Razorpay Merchant Reference No."
-msgstr ""
+msgstr "Razorpayマーチャント参照番号"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -148,14 +153,14 @@ msgstr ""
 msgid ""
 "Razorpay POS payment cancel request expected errorCode not found in the "
 "response"
-msgstr ""
+msgstr "Razorpay POSの支払取消リクエストのerrorCodeがレスポンスに見つかりません。"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 msgid ""
 "Razorpay POS payment request expected errorCode not found in the response"
-msgstr ""
+msgstr "Razorpay POSの支払リクエストのerrorCodeがレスポンスに見つかりません。"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -163,39 +168,39 @@ msgstr ""
 msgid ""
 "Razorpay POS payment status request expected errorCode not found in the "
 "response"
-msgstr ""
+msgstr "Razorpay POSの支払ステータス要求で予想されたerrorCodeがレスポンスに見つかりません。"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 msgid "Razorpay POS transaction canceled successfully"
-msgstr ""
+msgstr "Razorpay POS取引は正常に取消されました。"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 msgid "Razorpay POS transaction failed"
-msgstr ""
+msgstr "Razorpay POS取引に失敗しました"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_payment_method
 msgid "Razorpay Payment Method"
-msgstr ""
+msgstr "Razorpay支払方法"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_reverse_ref_no
 msgid "Razorpay Reverse Reference No."
-msgstr ""
+msgstr "Razorpayリバース参照番号"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_test_mode
 msgid "Razorpay Test Mode"
-msgstr ""
+msgstr "Razorpayテストモード"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_username
 msgid "Razorpay Username"
-msgstr ""
+msgstr "Razorpayユーザ名"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -213,17 +218,17 @@ msgstr "この決済端末はINR通貨のみに有効です。"
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
 msgid "Transaction failed due to inactivity"
-msgstr ""
+msgstr "無効のため取引に失敗しました。"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_test_mode
 msgid "Turn it on when in Test Mode"
-msgstr ""
+msgstr "テストモードでオンにします。"
 
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__upi
 msgid "UPI"
-msgstr ""
+msgstr "UPI"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_api_key
@@ -231,6 +236,8 @@ msgid ""
 "Used when connecting to Razorpay: "
 "https://razorpay.com/docs/payments/dashboard/account-settings/api-keys/"
 msgstr ""
+"Razorpayに接続する際に使用されます: https://razorpay.com/docs/payments/dashboard/account-"
+"settings/api-keys/"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_username
@@ -238,3 +245,5 @@ msgid ""
 "Username(Device Login) \n"
 " ex: 1234500121"
 msgstr ""
+"ユーザ名(デバイスログイン) \n"
+" 例: 1234500121"

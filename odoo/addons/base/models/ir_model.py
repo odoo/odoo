@@ -1751,13 +1751,9 @@ class IrModelConstraint(models.Model):
          'Constraints with the same name are unique per module.'),
     ]
 
-    def _module_data_uninstall(self):
-        """
-        Delete PostgreSQL foreign keys and constraints tracked by this model.
-        """
-        if not self.env.is_system():
-            raise AccessError(_('Administrator access is required to uninstall a module'))
-
+    def unlink(self):
+        self.check_access_rights('unlink')
+        self.check_access_rule('unlink')
         ids_set = set(self.ids)
         for data in self.sorted(key='id', reverse=True):
             name = tools.ustr(data.name)
@@ -1802,7 +1798,7 @@ class IrModelConstraint(models.Model):
                         sql.Identifier(table), sql.Identifier(hname)))
                     _logger.info('Dropped CONSTRAINT %s@%s', name, data.model.model)
 
-        self.unlink()
+        return super().unlink()
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
@@ -1872,9 +1868,11 @@ class IrModelConstraint(models.Model):
             conname = '%s_%s' % (model._table, key)
             module = constraint_module.get(key)
             record = self._reflect_constraint(model, conname, 'u', cons_text(definition), module, message)
+            xml_id = '%s.constraint_%s' % (module, conname)
             if record:
-                xml_id = '%s.constraint_%s' % (module, conname)
                 data_list.append(dict(xml_id=xml_id, record=record))
+            else:
+                self.env['ir.model.data']._load_xmlid(xml_id)
         if data_list:
             self.env['ir.model.data']._update_xmlids(data_list)
 
@@ -2445,8 +2443,6 @@ class IrModelData(models.Model):
         modules._remove_copied_views()
 
         # remove constraints
-        constraints = self.env['ir.model.constraint'].search([('module', 'in', modules.ids)])
-        constraints._module_data_uninstall()
         delete(self.env['ir.model.constraint'].browse(unique(constraint_ids)))
 
         # If we delete a selection field, and some of its values have ondelete='cascade',

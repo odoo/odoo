@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, hover, leave, queryOne } from "@odoo/hoot-dom";
+import { click, hover, leave } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
 import { getService, makeMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
@@ -52,9 +52,7 @@ test("can display a notification with markup content", async () => {
     getService("notification").add(markup("<b>I'm a <i>markup</i> notification</b>"));
     await animationFrame();
     expect(".o_notification").toHaveCount(1);
-    expect(queryOne(".o_notification_content").innerHTML).toBe(
-        "<b>I'm a <i>markup</i> notification</b>"
-    );
+    expect(".o_notification_content").toHaveInnerHTML("<b>I'm a <i>markup</i> notification</b>");
 });
 
 test("can display a notification of type danger", async () => {

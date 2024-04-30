@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:05+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -727,6 +728,30 @@ msgid "Odoo"
 msgstr "Odoo"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"Peppol EAS code 9901 is deprecated. Please use a different Danish EAS code "
+"instead."
+msgstr "Peppol EASコード9901は非推奨です。代わりに別のデンマークEASコードをご使用下さい。"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid "Peppol EAS code 9955 is deprecated. Please use 0007 instead."
+msgstr "Peppol EAS コード 9955 は非推奨です。代わりに0007をご使用下さい。"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"Peppol EAS codes 0212 and 0213 are deprecated. Please use 0216 instead."
+msgstr "Peppol EAS コード 0212 および 0213 は非推奨です。代わりに0216を使用して下さい。"
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__peppol_endpoint
 msgid "Peppol Endpoint"
@@ -778,13 +803,20 @@ msgstr "Peppol エンドポイントは無効です。期待されるフォー�
 msgid ""
 "The VAT number of the supplier does not seem to be valid. It should be of "
 "the form: NO179728982MVA."
-msgstr "サプライヤのVAT番号が有効でないようです。以下の形式でなければなりません： no179728982mva."
+msgstr "仕入先のVAT番号が有効でないようです。以下の形式でなければなりません： no179728982mva."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "The VAT of the %s should be prefixed with its country code."
 msgstr "%sのVATの前に国コードを付けなければいけません。"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "The country is required for the %s."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -822,6 +854,8 @@ msgid ""
 "Please check those in their Accounting tab. Otherwise, the generated files "
 "will be incomplete."
 msgstr ""
+"次の取引先に Peppol EAS または Peppol Endpoint "
+"フィールドがありません:%s。会計タブでこれらを確認して下さい。そうしないと、生成されたファイルが不完全になります。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -847,7 +881,7 @@ msgstr "請求書が貸方票に変換され、数量が元に戻されました
 msgid ""
 "This partner is missing Peppol EAS or Peppol Endpoint field. Please check "
 "those in its Accounting tab or the generated file will be incomplete."
-msgstr ""
+msgstr "この取引先には、Peppol EASまたはPeppol Endpointフィールドがありません。会計タブでこれらをチェックして下さい。"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20

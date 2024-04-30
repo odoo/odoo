@@ -153,7 +153,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web_portal/chatter.js:0
 msgid "%(recipientCount)s more"
-msgstr ""
+msgstr "%(recipientCount)s 以上"
 
 #. module: mail
 #. odoo-javascript
@@ -367,6 +367,8 @@ msgid ""
 "<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
 "title=\"Steps count\"/>"
 msgstr ""
+"<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
+"title=\"Steps count\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -667,7 +669,7 @@ msgstr "活動"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Activities To Create"
-msgstr ""
+msgstr "未作成活動"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
@@ -704,7 +706,7 @@ msgstr "アクティビティミックスイン"
 #: model:ir.actions.act_window,name:mail.mail_activity_action
 #: model:ir.ui.menu,name:mail.menu_mail_activities
 msgid "Activity Overview"
-msgstr ""
+msgstr "活動概要"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_plan
@@ -751,7 +753,7 @@ msgstr "活動種別アイコン"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
 msgid "Activity Type Name"
-msgstr ""
+msgstr "活動タイプ名"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
@@ -771,6 +773,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Onboarding\", \"Prospect Follow-up\", \"Project Milestone Meeting\", ...)"
 msgstr ""
+"活動プランは、数回クリックするだけで、活動のリストを割当てるために使用されます。\n"
+" (例 \"オンボーディング\"、 \"見込客フォローアップ\"、\"プロジェクトマイルストンミーティング\" ...)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
@@ -919,7 +923,7 @@ msgstr "詳細オプション"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__after_plan_date
 msgid "After Plan Date"
-msgstr ""
+msgstr "計画日後"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_exception_decoration__warning
@@ -1440,7 +1444,7 @@ msgstr "アバター 512"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__avatar_cache_key
 msgid "Avatar Cache Key"
-msgstr ""
+msgstr "アバターキャッシュキー"
 
 #. module: mail
 #. odoo-javascript
@@ -1498,7 +1502,7 @@ msgstr "バッチログは、1つ以上のドキュメントの添付ファイ�
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__before_plan_date
 msgid "Before Plan Date"
-msgstr ""
+msgstr "計画日前"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__is_blacklisted
@@ -1726,12 +1730,12 @@ msgstr "取消済"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_canned_response
 msgid "Canned Response"
-msgstr ""
+msgstr "返信定型文"
 
 #. module: mail
 #: model:res.groups,name:mail.group_mail_canned_response_admin
 msgid "Canned Response Administrator"
-msgstr ""
+msgstr "返信定型文責任管理者"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_canned_response_action
@@ -1747,7 +1751,7 @@ msgstr "返信定型文検索"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_form
 msgid "Canned response"
-msgstr ""
+msgstr "返信定型文"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__source
@@ -1755,12 +1759,12 @@ msgid ""
 "Canned response that will automatically be substituted with longer content "
 "in your messages. Type ':' followed by the name of your shortcut (e.g. "
 ":hello) to use in your messages."
-msgstr ""
+msgstr "定型文は、メッセージの中で自動的に長い内容に置き換えられます。:'の後にショートカット名(例:hello)を入力して下さい。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "Canned responses"
-msgstr ""
+msgstr "返信定型文"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
@@ -1770,6 +1774,10 @@ msgid ""
 "                    replaced directly in your message, so that you can still edit\n"
 "                    it before sending."
 msgstr ""
+"返信定型文によって\n"
+"                <i>:ショートカット</i>と入力することで、メッセージ中に事前に書かれた回答を挿入します。ショートカットは\n"
+"                直接メッセージ中で置換されるので、送信する前に\n"
+"                編集することができます。"
 
 #. module: mail
 #. odoo-python
@@ -2231,19 +2239,19 @@ msgstr "コンテナモデル"
 msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel for this user. This includes: creating, joining, pinning"
-msgstr ""
+msgstr "このユーザにとって、このチャネルでの最新の興味のあるイベントの日時が含まれます。これには、作成、参加、ピン留めが含まれます。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__last_interest_dt
 msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel. This updates itself when new message posted."
-msgstr ""
+msgstr "このチャンネルで最後に起こった興味のあるイベントの日時を含みます。新しいメッセージが投稿されると更新されます。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__unpin_dt
 msgid "Contains the date and time when the channel was unpinned by the user."
-msgstr ""
+msgstr "ユーザがチャンネルの固定を解除した日時を含みます。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__content
@@ -2280,7 +2288,7 @@ msgstr "会話折りたたみ状態"
 msgid ""
 "Couldn't get your emails. Check out the error message below for more info:\n"
 "%s"
-msgstr ""
+msgstr "メールが届きません。詳しくは下記のエラーメッセージをご覧下さい:%s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_bounce
@@ -2335,7 +2343,7 @@ msgstr "新しい返信定型文を作成"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
 msgid "Create an Activity Plan"
-msgstr ""
+msgstr "活動プランを作成"
 
 #. module: mail
 #. odoo-python
@@ -2632,7 +2640,7 @@ msgstr "デフォルト概要"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
 msgid "Default Summary:"
-msgstr ""
+msgstr "デフォルト概要:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_user_id
@@ -2649,7 +2657,7 @@ msgstr "デフォルト値"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Default deadline for the activities..."
-msgstr ""
+msgstr "活動のデフォルト期限..."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__default_from
@@ -2784,12 +2792,12 @@ msgstr "招待リンクからチャネルを開いたときのデフォルトの
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
 msgid "Determines if the canned response can be edited by the current user"
-msgstr ""
+msgstr "返信定型文を現在のユーザが編集できるかどうかを決定します"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_shared
 msgid "Determines if the canned_response is currently shared with other users"
-msgstr ""
+msgstr "canned_responseが現在他のユーザと共有されているかどうかを判断します"
 
 #. module: mail
 #. odoo-javascript
@@ -3599,7 +3607,7 @@ msgstr "お気に入り"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "Feedback:"
-msgstr ""
+msgstr "フィードバック:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -4767,7 +4775,7 @@ msgstr "フォロー中　"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__is_hidden
 msgid "Is Hidden"
-msgstr ""
+msgstr "非表示"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_member
@@ -5069,7 +5077,7 @@ msgstr "最終閲覧日"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__last_used
 msgid "Last time this canned_response was used"
-msgstr ""
+msgstr "最後にこのcanned_responseが使用された時"
 
 #. module: mail
 #. odoo-javascript
@@ -5892,7 +5900,7 @@ msgstr "自分のテンプレート"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "My canned responses"
-msgstr ""
+msgstr "自分の返信定型文"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__name
@@ -6306,7 +6314,7 @@ msgstr "アクション数"
 msgid ""
 "Number of days/week/month before executing the action after or before the "
 "scheduled plan date."
-msgstr ""
+msgstr "予定された計画日の後または前にアクションを実行するまでの日数/週/月。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_count
@@ -6581,7 +6589,7 @@ msgstr "元のメッセージが削除されました"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "Original note:"
-msgstr ""
+msgstr "元のメモ:"
 
 #. module: mail
 #. odoo-python
@@ -6833,7 +6841,7 @@ msgstr "電話"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Pick an Activity Plan to launch"
-msgstr ""
+msgstr "開始する活動プランを選ぶ"
 
 #. module: mail
 #. odoo-javascript
@@ -7721,7 +7729,7 @@ msgstr "新しいテンプレートとして保存"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Save editing"
-msgstr ""
+msgstr "編集を保存"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_gif_favorite
@@ -8161,7 +8169,7 @@ msgstr "画面を共有"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "Shared canned responses"
-msgstr ""
+msgstr "共有済の返信定型文"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__description
@@ -9466,7 +9474,7 @@ msgstr "メッセージの固定を解除する"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt
 msgid "Unpin date"
-msgstr ""
+msgstr "日にちを解除する"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__message_unread_counter
@@ -10510,7 +10518,7 @@ msgstr "例: 連絡先"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_tree
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "e.g. Discuss Proposal"
-msgstr ""
+msgstr "例: 提案を話し合う"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -10523,7 +10531,7 @@ msgstr "例: 提案内容説明"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_form
 msgid "e.g. Log a note"
-msgstr ""
+msgstr "例:メモを記録する"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form

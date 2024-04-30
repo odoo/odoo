@@ -5,16 +5,16 @@ import { getCurrentDimensions, isInDOM, mockedMatchMedia } from "@web/../lib/hoo
 import { MockMath } from "./math";
 import { mockNavigator } from "./navigator";
 import {
-    ClearableBroadcastChannel,
-    MockCookie,
-    MockHistory,
-    MockLocation,
+    MockBroadcastChannel,
     MockRequest,
     MockResponse,
     MockSharedWorker,
+    MockURL,
     MockWebSocket,
     MockWorker,
     MockXMLHttpRequest,
+    mockCookie,
+    mockHistory,
     mockedFetch,
 } from "./network";
 import { MockNotification } from "./notification";
@@ -46,8 +46,10 @@ const {
         getPrototypeOf: $getPrototypeOf,
         hasOwn: $hasOwn,
     },
+    ontouchstart,
     outerHeight,
     outerWidth,
+    window,
 } = globalThis;
 
 //-----------------------------------------------------------------------------
@@ -74,6 +76,30 @@ const applyPropertyDescriptors = (target, descriptors) => {
         $defineProperty(owner, property, descriptor);
     }
 };
+
+const cleanupListeners = () => {
+    for (const [target, listeners] of listenerMap) {
+        if (!isInDOM(target)) {
+            continue;
+        }
+        for (const [type, callbacks] of $entries(listeners)) {
+            for (const callback of callbacks) {
+                target.removeEventListener(type, callback, optionsMap.get(callback));
+            }
+        }
+    }
+};
+
+/**
+ * @param  {...EventTarget} additionalTargets
+ */
+const getMainDomTargets = (...additionalTargets) => [
+    document,
+    document.documentElement,
+    document.head,
+    document.body,
+    ...additionalTargets,
+];
 
 /**
  * @template T
@@ -114,7 +140,7 @@ const mockEventListeners = (target) => {
     /** @type {addEventListener} */
     const mockedAddEventListener = (type, callback, options) => {
         const listeners = listenerMap.get(target);
-        if (listeners && !R_OWL_SYNTHETIC_LISTENER.test(String(callback))) {
+        if (callback && listeners && !R_OWL_SYNTHETIC_LISTENER.test(String(callback))) {
             if (options?.once) {
                 const originalCallback = callback;
                 callback = (...args) => {
@@ -130,7 +156,7 @@ const mockEventListeners = (target) => {
     /** @type {removeEventListener} */
     const mockedRemoveEventListener = (type, callback, options) => {
         const listeners = listenerMap.get(target);
-        if (listeners) {
+        if (callback && listeners) {
             unregisterListener(listeners, type, callback);
         }
         return removeEventListener.call(target, type, callback, options);
@@ -171,17 +197,12 @@ const unregisterListener = (listeners, type, callback) => {
 
 const R_OWL_SYNTHETIC_LISTENER = /\bnativeToSyntheticEvent\b/;
 
-// Early export: needed for mockHistory
-export const mockLocation = new MockLocation();
-
 /** @type {{ descriptor: PropertyDescriptor; owner: any; property: string; target: any }[]} */
 const originalDescriptors = [];
 /** @type {Map<EventTarget, Record<string, Set<EventListener>>} */
 const listenerMap = new Map();
 const optionsMap = new WeakMap();
 
-const mockCookie = new MockCookie();
-const mockHistory = new MockHistory(mockLocation);
 const mockLocalStorage = new MockStorage();
 const mockSessionStorage = new MockStorage();
 const originalConsole = { ...console };
@@ -199,7 +220,7 @@ const DOCUMENT_MOCK_DESCRIPTORS = {
     },
 };
 const WINDOW_MOCK_DESCRIPTORS = {
-    BroadcastChannel: { value: ClearableBroadcastChannel, writable: false },
+    BroadcastChannel: { value: MockBroadcastChannel },
     cancelAnimationFrame: { value: mockedCancelAnimationFrame, writable: false },
     clearInterval: { value: mockedClearInterval, writable: false },
     clearTimeout: { value: mockedClearTimeout, writable: false },
@@ -222,6 +243,7 @@ const WINDOW_MOCK_DESCRIPTORS = {
     setInterval: { value: mockedSetInterval, writable: false },
     setTimeout: { value: mockedSetTimeout, writable: false },
     SharedWorker: { value: MockSharedWorker },
+    URL: { value: MockURL },
     WebSocket: { value: MockWebSocket },
     Worker: { value: MockWorker },
     XMLHttpRequest: { value: MockXMLHttpRequest },
@@ -232,11 +254,6 @@ const WINDOW_MOCK_DESCRIPTORS = {
 //-----------------------------------------------------------------------------
 
 export function cleanupWindow() {
-    // Cookies, history and location
-    mockCookie.clear();
-    mockHistory.__clear();
-    mockLocation.__clear();
-
     // Storages
     mockLocalStorage.clear();
     mockSessionStorage.clear();
@@ -247,20 +264,11 @@ export function cleanupWindow() {
     // Console
     $assign(console, originalConsole);
 
-    // Listeners
-    for (const [target, listeners] of listenerMap) {
-        if (!isInDOM(target)) {
-            continue;
-        }
-        for (const [type, callbacks] of $entries(listeners)) {
-            for (const callback of callbacks) {
-                target.removeEventListener(type, callback, optionsMap.get(callback));
-            }
-        }
-    }
+    // Touch
+    globalThis.ontouchstart = ontouchstart;
 
-    // Other web APIs
-    ClearableBroadcastChannel.cleanup();
+    // Listeners
+    cleanupListeners();
 }
 
 export function getTitle() {
@@ -291,7 +299,7 @@ export function patchWindow({ document, window } = globalThis) {
     mockEventListeners(window);
     whenReady(() => {
         applyPropertyDescriptors(document, DOCUMENT_MOCK_DESCRIPTORS);
-        for (const target of [document, document.body, document.head]) {
+        for (const target of getMainDomTargets()) {
             mockEventListeners(target);
         }
     });
@@ -323,14 +331,21 @@ export function unpatchWindow() {
  * Returns a function checking that no listeners are left on the given target, and
  * optionally removing them.
  *
- * @param {...EventTarget} targets
+ * @param {EventTarget[]} targets
  */
-export function watchListeners(...targets) {
-    for (const target of targets) {
+export function watchListeners(targets) {
+    for (const target of targets || getMainDomTargets(window)) {
         listenerMap.set(target, {});
     }
 
-    return function unwatchListeners() {
+    /**
+     * @param {{ cleanup?: boolean }} [options]
+     */
+    return function unwatchListeners(options) {
+        if (options?.cleanup) {
+            cleanupListeners();
+        }
+
         listenerMap.clear();
     };
 }

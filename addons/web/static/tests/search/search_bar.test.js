@@ -29,6 +29,7 @@ import {
     fields,
     getFacetTexts,
     models,
+    mountWithSearch,
     onRpc,
     removeFacet,
     serverState,
@@ -36,7 +37,6 @@ import {
     toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
-import { mountWithSearch } from "./helpers";
 
 import { browser } from "@web/core/browser/browser";
 import { pick } from "@web/core/utils/objects";
@@ -414,7 +414,7 @@ test("open search view autocomplete on paste value using mouse", async () => {
     // Simulate paste text through the mouse.
     navigator.clipboard.writeTextSync("ABC");
     pointerDown(".o_searchview input");
-    press("ctrl+v");
+    press(["ctrl", "v"]);
     await animationFrame();
     expect(`.o_searchview_autocomplete`).toHaveCount(1);
 });

@@ -1,4 +1,4 @@
-import { describe, destroy, expect, getFixture, test } from "@odoo/hoot";
+import { describe, destroy, expect, test } from "@odoo/hoot";
 import { keyDown, keyUp, press, queryAllTexts, queryOne, resize } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onMounted, useState, xml } from "@odoo/owl";
@@ -326,8 +326,6 @@ test("can be the UI active element", async () => {
 });
 
 test("dialog can be moved", async () => {
-    getFixture().style.transform ||= "rotate(0)"; // force different stacking context
-
     class Parent extends Component {
         static template = xml`<Dialog>content</Dialog>`;
         static props = ["*"];
@@ -358,8 +356,6 @@ test("dialog can be moved", async () => {
 });
 
 test("dialog's position is reset on resize", async () => {
-    getFixture().style.transform ||= "rotate(0)"; // force different stacking context
-
     class Parent extends Component {
         static template = xml`<Dialog>content</Dialog>`;
         static props = ["*"];
@@ -388,7 +384,7 @@ test("dialog's position is reset on resize", async () => {
         top: `${modalRect.x + 50}px`,
     });
 
-    resize(window, "resize");
+    resize();
     await animationFrame();
     expect(".modal-content").toHaveStyle({
         left: "0px",

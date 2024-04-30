@@ -380,7 +380,7 @@ class PurchaseOrder(models.Model):
 
         return groups
 
-    def _notify_by_email_prepare_rendering_context(self, message, msg_vals, model_description=False,
+    def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False):
         render_context = super()._notify_by_email_prepare_rendering_context(
             message, msg_vals, model_description=model_description,
@@ -852,7 +852,10 @@ class PurchaseOrder(models.Model):
         return expression.AND([super()._get_product_catalog_domain(), [('purchase_ok', '=', True)]])
 
     def _get_product_catalog_order_data(self, products, **kwargs):
-        return {product.id: self._get_product_price_and_data(product) for product in products}
+        res = super()._get_product_catalog_order_data(products, **kwargs)
+        for product in products:
+            res[product.id] |= self._get_product_price_and_data(product)
+        return res
 
     def _get_product_catalog_record_lines(self, product_ids, child_field=False):
         grouped_lines = defaultdict(lambda: self.env['purchase.order.line'])

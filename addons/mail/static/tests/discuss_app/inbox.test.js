@@ -1,4 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
 import {
     assertSteps,
     click,
@@ -11,11 +10,13 @@ import {
     startServer,
     step,
     triggerHotkey,
-} from "../mail_test_helpers";
-import { Command, mockService, serverState } from "@web/../tests/web_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
-import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
-import { actionService } from "@web/webclient/actions/action_service";
+import { Command, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { rpcWithEnv } from "@mail/utils/common/misc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -440,26 +441,21 @@ test("click on (non-channel/non-partner) origin thread link should redirect to f
         res_partner_id: serverState.partnerId,
     });
     const def = new Deferred();
-    mockService("action", () => {
-        const ogService = actionService.start(getMockEnv());
-        return {
-            ...ogService,
-            doAction(action) {
-                if (action?.res_model === "res.fake") {
-                    // Callback of doing an action (action manager).
-                    // Expected to be called on click on origin thread link,
-                    // which redirects to form view of record related to origin thread
-                    step("do-action");
-                    expect(action.type).toBe("ir.actions.act_window");
-                    expect(action.views).toEqual([[false, "form"]]);
-                    expect(action.res_model).toBe("res.fake");
-                    expect(action.res_id).toBe(fakeId);
-                    def.resolve();
-                    return Promise.resolve();
-                }
-                return ogService.doAction.call(this, ...arguments);
-            },
-        };
+    mockService("action", {
+        async doAction(action) {
+            if (action?.res_model !== "res.fake") {
+                return super.doAction(...arguments);
+            }
+            // Callback of doing an action (action manager).
+            // Expected to be called on click on origin thread link,
+            // which redirects to form view of record related to origin thread
+            step("do-action");
+            expect(action.type).toBe("ir.actions.act_window");
+            expect(action.views).toEqual([[false, "form"]]);
+            expect(action.res_model).toBe("res.fake");
+            expect(action.res_id).toBe(fakeId);
+            def.resolve();
+        },
     });
     await start();
     await openDiscuss();
@@ -623,4 +619,46 @@ test("emptying inbox doesn't display rainbow man in another thread", async () =>
     await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
     // weak test, no guarantee that we waited long enough for the potential rainbow man to show
     await contains(".o_reward_rainbow", { count: 0 });
+});
+
+test("Counter should be incremented by 1 when receiving a message with a mention in a channel", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], { notification_type: "inbox" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Thread" });
+    const partnerUserId = pyEnv["res.partner"].create({ name: "partner1" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerUserId });
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "res.partner",
+        needaction: true,
+        needaction_partner_ids: [serverState.partnerId],
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create([
+        {
+            mail_message_id: messageId,
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        },
+    ]);
+    const env = await start();
+    rpc = rpcWithEnv(env);
+    await openDiscuss();
+    await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
+    const mention = [serverState.partnerId];
+    const mentionName = serverState.partnerName;
+    withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: `<a href="https://www.hoot.test/web#model=res.partner&amp;id=17" class="o_mail_redirect" data-oe-id="${mention[0]}" data-oe-model="res.partner" target="_blank" contenteditable="false">@${mentionName}</a> mention`,
+                message_type: "comment",
+                partner_ids: mention,
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });
 });

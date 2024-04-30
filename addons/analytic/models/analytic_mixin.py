@@ -25,15 +25,21 @@ class AnalyticMixin(models.AbstractModel):
                     WHERE table_name=%s '''
         self.env.cr.execute(query, [self._table])
         if self.env.cr.dictfetchone() and self._fields['analytic_distribution'].store:
-            query = f"""
-                CREATE INDEX IF NOT EXISTS {self._table}_analytic_distribution_gin_index
-                                        ON {self._table} USING gin(analytic_distribution);
+            query = fr"""
+                CREATE INDEX IF NOT EXISTS {self._table}_analytic_distribution_accounts_gin_index
+                                        ON {self._table} USING gin(regexp_split_to_array(jsonb_path_query_array(analytic_distribution, '$.keyvalue()."key"')::text, '\D+'));
             """
             self.env.cr.execute(query)
         super().init()
 
     def _compute_analytic_distribution(self):
         pass
+
+    def _query_analytic_accounts(self, table=False):
+        return SQL(
+            r"""regexp_split_to_array(jsonb_path_query_array(%s, '$.keyvalue()."key"')::text, '\D+')""",
+            self._field_to_sql(table or self._table, 'analytic_distribution'),
+        )
 
     def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query: Query) -> SQL:
         # Don't use this override when account_report_analytic_groupby is truly in the context
@@ -54,30 +60,60 @@ class AnalyticMixin(models.AbstractModel):
             ))
             operator = 'in' if operator in ('=', 'ilike') else 'not in'
 
-        analytic_distribution_sql = self._field_to_sql(alias, 'analytic_distribution', query)
+        # keys can be comma-separated ids, we will split those into an array and then make an array comparison with the list of ids to check
+        analytic_accounts_query = self._query_analytic_accounts()
         value = [str(id_) for id_ in value if id_]  # list of ids -> list of string
-        if operator == 'in':  # 'in' -> ?|
+        if operator == 'in':
             return SQL(
-                "%s ?| ARRAY[%s]",
-                analytic_distribution_sql,
+                "%s && %s",
+                analytic_accounts_query,
                 value,
             )
         if operator == 'not in':
             return SQL(
-                "(NOT %s ?| ARRAY[%s] OR %s IS NULL)",
-                analytic_distribution_sql,
+                "(NOT %s && %s OR %s IS NULL)",
+                analytic_accounts_query,
                 value,
-                analytic_distribution_sql,
+                self._field_to_sql(alias, 'analytic_distribution', query),
             )
         raise UserError(_('Operation not supported'))
 
     def _read_group_groupby(self, groupby_spec: str, query: Query) -> SQL:
+        """To group by `analytic_distribution`, we first need to separate the analytic_ids and associate them with the ids to be counted
+        Do note that only '__count' can be passed in the `aggregates`"""
         if groupby_spec == 'analytic_distribution':
-            return SQL(
-                'jsonb_object_keys(%s)',
-                self._field_to_sql(self._table, 'analytic_distribution', query),
-            )
+            query._tables = {
+                'distribution': SQL(
+                    r"""(SELECT DISTINCT %s, (regexp_matches(jsonb_object_keys(%s), '\d+', 'g'))[1]::int AS account_id FROM %s WHERE %s)""",
+                    self._get_count_id(query),
+                    self._field_to_sql(self._table, 'analytic_distribution', query),
+                    query.from_clause,
+                    query.where_clause,
+                )
+            }
+
+            # After using the from and where clauses in the nested query, they are no longer needed in the main one
+            query._joins = {}
+            query._where_clauses = []
+            return SQL("account_id")
+
         return super()._read_group_groupby(groupby_spec, query)
+
+    def _read_group_select(self, aggregate_spec: str, query: Query) -> SQL:
+        if query.table == 'distribution' and aggregate_spec != '__count':
+            raise ValueError(f"analytic_distribution grouping does not accept {aggregate_spec} as aggregate.")
+        return super()._read_group_select(aggregate_spec, query)
+
+    def _get_count_id(self, query):
+        ids = {
+            'account_move_line': "move_id",
+            'purchase_order_line': "order_id",
+            'account_asset': "id",
+            'hr_expense': "id",
+        }
+        if query.table not in ids:
+            raise ValueError(f"{query.table} does not support analytic_distribution grouping.")
+        return SQL(ids.get(query.table))
 
     def write(self, vals):
         """ Format the analytic_distribution float value, so equality on analytic_distribution can be done """

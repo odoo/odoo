@@ -26,7 +26,7 @@ import {
 } from "../../../hoot-dom/hoot-dom";
 import { after, describe, expect, mountOnFixture, test } from "../../hoot";
 import { mockUserAgent } from "../../mock/navigator";
-import { animationFrame } from "../../mock/time";
+import { advanceTime, animationFrame } from "../../mock/time";
 import { parseUrl } from "../local_helpers";
 
 /**
@@ -187,6 +187,31 @@ describe(parseUrl(import.meta.url), () => {
             // Double click event
             "button.dblclick",
         ]).toVerifySteps();
+    });
+
+    test("triple click", async () => {
+        await mountOnFixture(/* xml */ `<button autofocus="" type="button">Click me</button>`);
+
+        const allEvents = [
+            // trigger 3 clicks
+            click("button"),
+            click("button"),
+            click("button"),
+        ].flat();
+
+        const clickEvents = allEvents.filter((ev) => ev.type === "click");
+
+        expect(clickEvents).toHaveLength(3);
+        expect(allEvents.filter((ev) => ev.type === "dblclick")).toHaveLength(1);
+        expect(clickEvents[0].detail).toBe(1);
+        expect(clickEvents[1].detail).toBe(2);
+        expect(clickEvents[2].detail).toBe(3);
+
+        await advanceTime(1_000);
+
+        const clickEvent = click("button").find((ev) => ev.type === "click");
+
+        expect(clickEvent.detail).toBe(1);
     });
 
     test("drag & drop: draggable items", async () => {
@@ -882,6 +907,55 @@ describe(parseUrl(import.meta.url), () => {
         expect("input").toHaveValue(42);
     });
 
+    test("press arrow keys on input", async () => {
+        await mountOnFixture(/* xml */ `<input value="value" />`);
+
+        click("input");
+
+        expect("input").toHaveProperty("selectionStart", 5);
+        expect("input").toHaveProperty("selectionEnd", 5);
+
+        press("left");
+
+        expect("input").toHaveProperty("selectionStart", 4);
+        expect("input").toHaveProperty("selectionEnd", 4);
+
+        press("left");
+        press("left");
+        press("right");
+
+        expect("input").toHaveProperty("selectionStart", 3);
+        expect("input").toHaveProperty("selectionEnd", 3);
+
+        press(["control", "a"]);
+
+        expect("input").toHaveProperty("selectionStart", 0);
+        expect("input").toHaveProperty("selectionEnd", 5);
+
+        press("right");
+
+        expect("input").toHaveProperty("selectionStart", 5);
+        expect("input").toHaveProperty("selectionEnd", 5);
+
+        press(["ctrl", "a"]);
+        press("down");
+
+        expect("input").toHaveProperty("selectionStart", 5);
+        expect("input").toHaveProperty("selectionEnd", 5);
+
+        press(["ctrl", "a"]);
+        press("left");
+
+        expect("input").toHaveProperty("selectionStart", 0);
+        expect("input").toHaveProperty("selectionEnd", 0);
+
+        press(["ctrl", "a"]);
+        press("up");
+
+        expect("input").toHaveProperty("selectionStart", 0);
+        expect("input").toHaveProperty("selectionEnd", 0);
+    });
+
     test("press 'Enter' on form input", async () => {
         await mountOnFixture(/* xml */ `
             <form t-on-submit.prevent="">
@@ -905,10 +979,9 @@ describe(parseUrl(import.meta.url), () => {
             // Enter
             "input.keydown",
             "form.keydown",
+            "form.submit",
             "input.keyup",
             "form.keyup",
-            // Form submit
-            "form.submit",
         ]).toVerifySteps();
     });
 
@@ -935,11 +1008,10 @@ describe(parseUrl(import.meta.url), () => {
             // Enter
             "button.keydown",
             "form.keydown",
-            "button.keyup",
-            "form.keyup",
-            // Click triggered by Enter
             "button.click",
             "form.click",
+            "button.keyup",
+            "form.keyup",
         ]).toVerifySteps();
     });
 
@@ -966,10 +1038,9 @@ describe(parseUrl(import.meta.url), () => {
             // Enter
             "button.keydown",
             "form.keydown",
+            "form.submit",
             "button.keyup",
             "form.keyup",
-            // Form submit
-            "form.submit",
         ]).toVerifySteps();
     });
 
@@ -1094,7 +1165,7 @@ describe(parseUrl(import.meta.url), () => {
             "keyup:Control.ctrl",
         ]).toVerifySteps();
 
-        press("shift+b");
+        press(["shift", "b"]);
 
         expect([
             "keydown:Shift.shift",
@@ -1105,7 +1176,7 @@ describe(parseUrl(import.meta.url), () => {
             "keyup:Shift.shift",
         ]).toVerifySteps();
 
-        press("Alt+Control+b");
+        press(["Alt", "Control", "b"]);
 
         expect([
             "keydown:Alt.alt",

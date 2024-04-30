@@ -63,7 +63,7 @@ describe(parseUrl(import.meta.url), () => {
     test("can register test tags", async () => {
         const runner = new TestRunner();
         runner.describe("suite", () => {
-            let testFn = runner.test.debug.only; // 2
+            let testFn = runner.test;
             for (let i = 1; i <= 10; i++) {
                 // 10
                 testFn = testFn.tags`Tag-${i}`;
@@ -72,7 +72,7 @@ describe(parseUrl(import.meta.url), () => {
             testFn("tagged test", () => {});
         });
 
-        expect(runner.tags).toHaveLength(12);
-        expect(runner.tests.values().next().value.tags).toHaveLength(12);
+        expect(runner.tags).toHaveLength(10);
+        expect(runner.tests.values().next().value.tags).toHaveLength(10);
     });
 });

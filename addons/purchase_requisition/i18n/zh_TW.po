@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:05+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -423,7 +424,7 @@ msgstr "結束日期"
 msgid ""
 "End date cannot be earlier than start date. Please check dates for "
 "agreements: %s"
-msgstr ""
+msgstr "停止日期不可早於開始日期。請檢查協議的日期：%s"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_follower_ids
@@ -556,7 +557,7 @@ msgstr "逾期活動"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.res_config_settings_view_form_purchase_requisition
 msgid "Link RFQs together and compare them"
-msgstr ""
+msgstr "將報價請求互相連結並進行比較"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
@@ -1106,19 +1107,19 @@ msgstr "只能刪除草稿或已取消的請求。"
 msgid ""
 "You cannot change the Agreement Type or Company of a not draft purchase "
 "agreement."
-msgstr ""
+msgstr "非草稿採購協議不可更改協議類型或公司。"
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "You cannot confirm a blanket order with lines missing a price."
-msgstr ""
+msgstr "若一攬子訂單中有資料行缺漏價格，便不可確認。"
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "You cannot confirm a blanket order with lines missing a quantity."
-msgstr ""
+msgstr "若一攬子訂單中有資料行缺漏數量，便不可確認。"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1126,7 +1127,7 @@ msgstr ""
 msgid ""
 "You cannot confirm agreement '%(agreement)s' because it does not contain any"
 " product lines."
-msgstr ""
+msgstr "未能確認協議「%(agreement)s」，因為它未有任何產品資料行。"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1135,7 +1136,7 @@ msgstr ""
 msgid ""
 "You cannot have a negative or unit price of 0 for an already confirmed "
 "blanket order."
-msgstr ""
+msgstr "已經確認的一攬子訂單，不可包括負數或數值為 0（零）的單價。"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

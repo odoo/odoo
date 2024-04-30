@@ -18,6 +18,7 @@ import {
     isOptionSelected,
     mockService,
     models,
+    mountWithSearch,
     onRpc,
     openAddCustomFilterDialog,
     patchWithCleanup,
@@ -25,7 +26,6 @@ import {
     toggleMenuItemOption,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { mountWithSearch } from "../helpers";
 import { Foo, Partner, defineSearchBarModels } from "./models";
 
 import { SearchBar } from "@web/search/search_bar/search_bar";
@@ -698,13 +698,13 @@ test("display of is (not) (not) set in facets", async () => {
 
 test("Add a custom filter: notification on invalid domain", async () => {
     patchWithCleanup(odoo, { debug: true });
-    mockService("notification", () => ({
+    mockService("notification", {
         add(message, options) {
             expect.step("notification");
             expect(message).toBe("Domain is invalid. Please correct it");
             expect(options).toEqual({ type: "danger" });
         },
-    }));
+    });
 
     onRpc("/web/domain/validate", () => false);
     await mountWithSearch(SearchBar, {

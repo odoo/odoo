@@ -1,5 +1,5 @@
-import { expect, formatXML } from "@odoo/hoot";
-import { waitFor } from "@odoo/hoot-dom";
+import { expect } from "@odoo/hoot";
+import { formatXml, waitFor } from "@odoo/hoot-dom";
 import { Component, useSubEnv, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -30,6 +30,7 @@ import { MockServer } from "./mock_server/mock_server";
  *  text?: string;
  * }} SelectorOptions
  *
+ * @typedef {import("@odoo/hoot-dom").FormatXmlOptions} FormatXmlOptions
  * @typedef {import("./mock_server/mock_model").ViewType} ViewType
  */
 
@@ -64,38 +65,6 @@ const buildSelector = (base, params) => {
         selector += ` ${params.target}`;
     }
     return selector;
-};
-
-/**
- * @param {MountViewParams} params
- * @returns {typeof View.props}
- */
-export const parseViewProps = (params) => {
-    const viewProps = { ...params };
-
-    // View & search view arch
-    if (
-        "arch" in params ||
-        "searchViewArch" in params ||
-        "searchViewId" in params ||
-        "viewId" in params
-    ) {
-        viewProps.viewId ||= 123_456_789;
-        viewProps.searchViewId ||= 987_654_321;
-        registerDefaultView(viewProps.resModel, viewProps.viewId, viewProps.type, viewProps.arch);
-        registerDefaultView(
-            viewProps.resModel,
-            viewProps.searchViewId,
-            "search",
-            viewProps.searchViewArch
-        );
-    }
-
-    delete viewProps.arch;
-    delete viewProps.config;
-    delete viewProps.searchViewArch;
-
-    return viewProps;
 };
 
 /**
@@ -178,6 +147,21 @@ export async function clickViewButton(options) {
 }
 
 /**
+ * @param {string} value
+ */
+export function expectMarkup(value) {
+    return {
+        /**
+         * @param {string} expected
+         * @param {FormatXmlOptions} [options]
+         */
+        toBe(expected, options) {
+            expect(formatXml(value, options)).toBe(formatXml(expected, options));
+        },
+    };
+}
+
+/**
  * @param {string} name
  * @param {SelectorOptions} options
  */
@@ -213,26 +197,45 @@ export async function mountViewInDialog(params) {
 
 /**
  * @param {MountViewParams} params
+ * @param {HTMLElement} [target]
  */
-export async function mountView(params) {
+export async function mountView(params, target = null) {
     const config = { ...getDefaultConfig(), ...params.config };
     return mountWithCleanup(View, {
         env: params.env || getMockEnv() || (await makeMockEnv({ config })),
         props: parseViewProps(params),
+        target,
     });
 }
 
 /**
- * @param {string} value
+ * @param {MountViewParams} params
+ * @returns {typeof View.props}
  */
-export function expectMarkup(value) {
-    return {
-        /**
-         * @param {string} expected
-         * @param {object} [options]
-         */
-        toBe(expected, options) {
-            expect(formatXML(value, options)).toBe(formatXML(expected, options));
-        },
-    };
+export function parseViewProps(params) {
+    const viewProps = { ...params };
+
+    // View & search view arch
+    if (
+        "arch" in params ||
+        "searchViewArch" in params ||
+        "searchViewId" in params ||
+        "viewId" in params
+    ) {
+        viewProps.viewId ||= 123456789;
+        viewProps.searchViewId ||= 987654321;
+        registerDefaultView(viewProps.resModel, viewProps.viewId, viewProps.type, viewProps.arch);
+        registerDefaultView(
+            viewProps.resModel,
+            viewProps.searchViewId,
+            "search",
+            viewProps.searchViewArch
+        );
+    }
+
+    delete viewProps.arch;
+    delete viewProps.config;
+    delete viewProps.searchViewArch;
+
+    return viewProps;
 }

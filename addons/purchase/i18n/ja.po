@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -267,7 +269,7 @@ msgstr "<i class=\"fa fa-fw fa-check\"/>支払済"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/>Reversed"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/>予約済"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -510,6 +512,7 @@ msgid ""
 "supplier to deliver goods or services to the buyer at a preset price for a "
 "period of time."
 msgstr ""
+"包括購買オーダとは、購買者と仕入先の間で交わされる、一定期間、あらかじめ設定された価格で購買者に商品やサービスを提供する購入契約のことです。"
 
 #. module: purchase
 #. odoo-python
@@ -688,7 +691,7 @@ msgstr "分析勘定"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "分析用配分"
+msgstr "分析分配"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_applicability
@@ -1461,7 +1464,7 @@ msgstr "注文した製品が入荷済の仕入先請求書のみ支払可とす
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage blanket orders and purchase templates"
-msgstr ""
+msgstr "包括オーダと購買テンプレートを管理する"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
@@ -1726,7 +1729,7 @@ msgstr "ベンダーから価格を入手したら、適切な価格で注文書
 msgid ""
 "Once you ordered your products to your supplier, confirm your request for "
 "quotation and it will turn into a purchase order."
-msgstr "サプライヤにプロダクトをオーダして見積依頼を確認すると、購買オーダになります。"
+msgstr "仕入先にプロダクトをオーダして見積依頼を確認すると、購買オーダになります。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__order_id
@@ -1782,7 +1785,7 @@ msgstr "オーダ"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Order due %(date)s"
-msgstr ""
+msgstr "Order due %(date)s"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2402,7 +2405,7 @@ msgid ""
 "Requests for quotation are documents that will be sent to your suppliers to request prices for different products you consider buying.\n"
 "                Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders."
 msgstr ""
-"見積依頼は、購入を検討しているさまざまな製品の価格見積を依頼するためにサプライヤに送られるドキュメントです。サプライヤと合意が取れると、見積依頼は確認され、発注書に変換されます。"
+"見積依頼は、購入を検討しているさまざまな製品の価格見積を依頼するために仕入先に送られるドキュメントです。仕入先と合意が取れると、見積依頼は確認され、発注書に変換されます。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -2632,12 +2635,12 @@ msgstr "税抜合計"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__property_purchase_currency_id
 #: model:ir.model.fields,field_description:purchase.field_res_users__property_purchase_currency_id
 msgid "Supplier Currency"
-msgstr "サプライヤ通貨"
+msgstr "仕入先通貨"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "サプライヤ価格リスト"
+msgstr "仕入先価格リスト"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_tax

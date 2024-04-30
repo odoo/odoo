@@ -1,18 +1,17 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryOne, scroll } from "@odoo/hoot-dom";
-import { animationFrame, mockTimeZone } from "@odoo/hoot-mock";
+import { animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import { getPickerCell, zoomOut } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickSave,
     contains,
     defineModels,
+    defineParams,
     fieldInput,
     fields,
-    makeMockServer,
     models,
     mountView,
     onRpc,
-    patchDate,
     serverState,
 } from "@web/../tests/web_test_helpers";
 
@@ -326,7 +325,7 @@ test("date field should select its content onclick when there is one", async () 
 });
 
 test("date field supports custom formats", async () => {
-    makeMockServer({ lang_parameters: { date_format: "dd-MM-yyyy" } });
+    defineParams({ lang_parameters: { date_format: "dd-MM-yyyy" } });
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 
     const dateViewValue = queryOne(".o_field_date input").value;
@@ -366,7 +365,8 @@ test("hit enter should update value", async () => {
 });
 
 test("allow to use compute dates (+5d for instance)", async () => {
-    patchDate({ year: 2021, month: 2, day: 15 });
+    mockDate({ year: 2021, month: 2, day: 15 });
+
     Partner._fields.date = fields.Date({
         string: "Date",
         default: "2019-09-15",
