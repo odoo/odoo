@@ -702,7 +702,7 @@ class AccountBankStatementLine(models.Model):
             else:
                 other_lines += line
         if not liquidity_lines:
-            liquidity_lines = self.move_id.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_cash')
+            liquidity_lines = self.move_id.line_ids.filtered(lambda l: l.account_id.account_type in ('asset_cash', 'liability_credit_card'))
             other_lines -= liquidity_lines
         return liquidity_lines, suspense_lines, other_lines
 
