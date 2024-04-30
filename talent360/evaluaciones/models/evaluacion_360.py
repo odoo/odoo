@@ -15,7 +15,7 @@ class Evaluacion360(models.Model):
     preguntas_360_ids = fields.Many2many(
         "pregunta",
         compute="_compute_preguntas_360_ids",
-        string="Preguntas 360",
+        string="Resumen de preguntas",
         store=False,
     )
 
