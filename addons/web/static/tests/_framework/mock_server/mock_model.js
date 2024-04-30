@@ -102,6 +102,43 @@ const { DateTime } = luxon;
  * } & Partial<T>} KwArgs
  */
 
+const READ_GROUP_NUMBER_GRANULARITY = [
+    "year_number",
+    "quarter_number",
+    "month_number",
+    "iso_week_number",
+    "day_of_year",
+    "day_of_month",
+    "day_of_week",
+    "hour_number",
+    "minute_number",
+    "second_number",
+];
+
+const DATE_FORMAT = {
+    day: (date) => date.toFormat("yyyy-MM-dd"),
+    day_of_week: (date) => date.weekday,
+    day_of_month: (date) => date.day,
+    day_of_year: (date) => date.ordinal,
+    week: (date) => `W${date.toFormat("WW kkkk")}`,
+    iso_week_number: (date) => date.weekNumber,
+    month_number: (date) => date.month,
+    quarter: (date) => `Q${date.toFormat("q yyyy")}`,
+    quarter_number: (date) => date.quarter,
+    year: (date) => date.toFormat("yyyy"),
+    year_number: (date) => date.year,
+};
+
+const DATETIME_FORMAT = {
+    ...DATE_FORMAT,
+    second_number: (date) => date.second,
+    minute_number: (date) => date.minute,
+    // The year is added to the format because is needed to correctly compute the
+    // domain and the range (startDate and endDate).
+    hour: (date) => date.toFormat("HH:00 dd MMM yyyy"),
+    hour_number: (date) => date.hour,
+};
+
 /**
  * @param {Model} model
  * @param {ModelRecord} record
@@ -243,36 +280,14 @@ const formatFieldValue = (fields, groupByField, val) => {
     const { type } = fields[fieldName];
     if (type === "date") {
         const date = deserializeDate(String(val));
-        switch (aggregateFunction) {
-            case "day":
-                return date.toFormat("yyyy-MM-dd");
-            case "week":
-                return `W${date.toFormat("WW kkkk")}`;
-            case "quarter":
-                return `Q${date.toFormat("q yyyy")}`;
-            case "year":
-                return date.toFormat("yyyy");
-            default:
-                return date.toFormat("MMMM yyyy");
-        }
+        return aggregateFunction in DATE_FORMAT
+            ? DATE_FORMAT[aggregateFunction](date)
+            : date.toFormat("MMMM yyyy");
     } else if (type === "datetime") {
         const date = deserializeDateTime(val);
-        switch (aggregateFunction) {
-            // The year is added to the format because is needed to correctly compute the
-            // domain and the range (startDate and endDate).
-            case "hour":
-                return date.toFormat("HH:00 dd MMM yyyy");
-            case "day":
-                return date.toFormat("yyyy-MM-dd");
-            case "week":
-                return `W${date.toFormat("WW kkkk")}`;
-            case "quarter":
-                return `Q${date.toFormat("q yyyy")}`;
-            case "year":
-                return date.toFormat("yyyy");
-            default:
-                return date.toFormat("MMMM yyyy");
-        }
+        return aggregateFunction in DATETIME_FORMAT
+            ? DATETIME_FORMAT[aggregateFunction](date)
+            : date.toFormat("MMMM yyyy");
     } else if (Array.isArray(val)) {
         return val.length !== 0 && (isX2MField(type) ? val : val[0]);
     } else {
@@ -306,6 +321,32 @@ const getDateSortingValue = (group, fieldName) => {
     // return false or the latest range start (related to the shortest
     // granularity (i.e. day, week, ...))
     return max ?? false;
+};
+
+/**
+ * Extract a sorting value for date/datetime fields from read_group when the
+ * date is groupby by a date number (month_number, year_number, ...)
+ * The value for the shortest granularity is taken since it is the most specific
+ * for a given group.
+ *
+ * @param {{ __range: Record<string, { from?: string | false; to?: string | false }> }} group
+ * @param {string} fieldName
+ * @returns {number | false}
+ */
+const getDateNumberSortingValue = (group, fieldName) => {
+    let max = -1;
+    let value = false;
+    for (const groupedBy in group) {
+        if (groupedBy.startsWith(fieldName)) {
+            const [, granularity] = groupedBy.split(":");
+            const index = READ_GROUP_NUMBER_GRANULARITY.indexOf(granularity);
+            if (index !== -1 && index > max) {
+                max = index;
+                value = group[groupedBy];
+            }
+        }
+    }
+    return value;
 };
 
 /**
@@ -694,6 +735,9 @@ const orderByField = (model, orderBy, records) => {
                 if (r1.__range && r2.__range) {
                     v1 = getDateSortingValue(r1, field.name);
                     v2 = getDateSortingValue(r2, field.name);
+                } else {
+                    v1 = getDateNumberSortingValue(r1, field.name);
+                    v2 = getDateNumberSortingValue(r2, field.name);
                 }
                 break;
             }
@@ -1904,7 +1948,7 @@ export class Model extends Array {
                     continue;
                 }
 
-                const [fieldName, dateRange] = safeSplit(gbField, ":");
+                const [fieldName, granularity] = safeSplit(gbField, ":");
                 const value = Number.isInteger(group[gbField])
                     ? group[gbField]
                     : group[gbField] || false;
@@ -1921,52 +1965,61 @@ export class Model extends Array {
 
                 if (isDateField(type)) {
                     if (value) {
-                        let startDate, endDate;
-                        switch (dateRange) {
-                            case "hour": {
-                                startDate = parseDateTime(value, { format: "HH:00 dd MMM yyyy" });
-                                endDate = startDate.plus({ hours: 1 });
-                                // Remove the year from the result value of the group. It was needed
-                                // to compute the startDate and endDate.
-                                group[gbField] = startDate.toFormat("HH:00 dd MMM");
-                                break;
+                        if (!READ_GROUP_NUMBER_GRANULARITY.includes(granularity)) {
+                            let startDate, endDate;
+                            switch (granularity) {
+                                case "hour": {
+                                    startDate = parseDateTime(value, {
+                                        format: "HH:00 dd MMM yyyy",
+                                    });
+                                    endDate = startDate.plus({ hours: 1 });
+                                    // Remove the year from the result value of the group. It was needed
+                                    // to compute the startDate and endDate.
+                                    group[gbField] = startDate.toFormat("HH:00 dd MMM");
+                                    break;
+                                }
+                                case "day": {
+                                    startDate = parseDateTime(value, { format: "yyyy-MM-dd" });
+                                    endDate = startDate.plus({ days: 1 });
+                                    break;
+                                }
+                                case "week": {
+                                    startDate = parseDateTime(value, { format: "WW kkkk" });
+                                    endDate = startDate.plus({ weeks: 1 });
+                                    break;
+                                }
+                                case "quarter": {
+                                    startDate = parseDateTime(value, { format: "q yyyy" });
+                                    endDate = startDate.plus({ quarters: 1 });
+                                    break;
+                                }
+                                case "year": {
+                                    startDate = parseDateTime(value, { format: "y" });
+                                    endDate = startDate.plus({ years: 1 });
+                                    break;
+                                }
+                                case "month":
+                                default: {
+                                    startDate = parseDateTime(value, { format: "MMMM yyyy" });
+                                    endDate = startDate.plus({ months: 1 });
+                                    break;
+                                }
                             }
-                            case "day": {
-                                startDate = parseDateTime(value, { format: "yyyy-MM-dd" });
-                                endDate = startDate.plus({ days: 1 });
-                                break;
-                            }
-                            case "week": {
-                                startDate = parseDateTime(value, { format: "WW kkkk" });
-                                endDate = startDate.plus({ weeks: 1 });
-                                break;
-                            }
-                            case "quarter": {
-                                startDate = parseDateTime(value, { format: "q yyyy" });
-                                endDate = startDate.plus({ quarters: 1 });
-                                break;
-                            }
-                            case "year": {
-                                startDate = parseDateTime(value, { format: "y" });
-                                endDate = startDate.plus({ years: 1 });
-                                break;
-                            }
-                            case "month":
-                            default: {
-                                startDate = parseDateTime(value, { format: "MMMM yyyy" });
-                                endDate = startDate.plus({ months: 1 });
-                                break;
-                            }
+                            const serialize = type === "date" ? serializeDate : serializeDateTime;
+                            const from = serialize(startDate);
+                            const to = serialize(endDate);
+                            group.__range[gbField] = { from, to };
+                            group.__domain = [
+                                [fieldName, ">=", from],
+                                [fieldName, "<", to],
+                                ...group.__domain,
+                            ];
+                        } else {
+                            group.__domain = [
+                                [`${fieldName}.${granularity}`, "=", value],
+                                ...group.__domain,
+                            ];
                         }
-                        const serialize = type === "date" ? serializeDate : serializeDateTime;
-                        const from = serialize(startDate);
-                        const to = serialize(endDate);
-                        group.__range[gbField] = { from, to };
-                        group.__domain = [
-                            [fieldName, ">=", from],
-                            [fieldName, "<", to],
-                            ...group.__domain,
-                        ];
                     } else {
                         group.__range[gbField] = false;
                         group.__domain = [[fieldName, "=", value], ...group.__domain];
