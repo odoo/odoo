@@ -302,6 +302,13 @@
         <div class="oe_structure" t-else=""></div>
     </template>
 
+    <template id="footer_name_page">
+        <div t-if="report_type == 'pdf'" class="text-muted">
+            <div t-if="o and 'name' in o" t-out="o.name">(document name)</div>
+            <div>Page <span class="page"/> / <span class="topage"/></div>
+        </div>
+    </template>
+
     <template id="external_layout_striped">
         <div t-attf-class="o_company_#{company.id}_layout header">
             <div class="d-flex">
@@ -351,8 +358,7 @@
         <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
             <div class="o_footer_content border-top pt-2 text-center">
                 <div t-field="company.report_footer"/>
-                <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="o.name">(document name)</div>
-                <div t-if="report_type == 'pdf'" class="text-muted">Page <span class="page"/> / <span class="topage"/></div>
+                <t t-call="web.footer_name_page"/>
             </div>
         </div>
     </template>
@@ -409,7 +415,7 @@
                 </div>
                 <div class="col-4 text-end">
                     <strong t-if="company.report_header" t-field="company.report_header" class="o_company_tagline">Company tagline</strong>
-                    <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
+                    <span t-if="o and 'name' in o and report_type == 'pdf'" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
                     <span t-if="report_type == 'pdf'" class="text-muted">Page <span class="page"/> / <span class="topage"/></span>
                 </div>
             </div>
@@ -466,7 +472,7 @@
                 </div>
                 <div class="col-4 text-end">
                     <strong t-if="company.report_header" t-field="company.report_header" class="o_company_tagline">Company tagline</strong>
-                    <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
+                    <span t-if="o and 'name' in o and report_type == 'pdf'" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
                     <span t-if="report_type == 'pdf'" class="text-muted">Page <span class="page"/> / <span class="topage"/></span>
                 </div>
             </div>
@@ -520,9 +526,8 @@
         <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
             <div class="o_footer_content d-flex border-top pt-2">
                 <div class="flex-grow-1 text-start me-2" t-field="company.report_footer"/>
-                <div class="text-end text-muted">
-                    <div t-if="report_type == 'pdf' and display_name_in_footer" t-out="o.name">(document name)</div>
-                    <div t-if="report_type == 'pdf'">Page <span class="page"/> / <span class="topage"/></div>
+                <div class="text-end">
+                    <t t-call="web.footer_name_page"/>
                 </div>
             </div>
         </div>
@@ -598,9 +603,8 @@
         <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
             <div class="o_footer_content d-flex border-top pt-2">
                 <div class="flex-grow-1 me-2 text-start" t-field="company.report_footer"/>
-                <div class="text-end text-muted">
-                    <div t-if="report_type == 'pdf' and display_name_in_footer" t-out="o.name">(document name)</div>
-                    <div t-if="report_type == 'pdf'">Page <span class="page"/> / <span class="topage"/></div>
+                <div class="text-end">
+                    <t t-call="web.footer_name_page"/>
                 </div>
             </div>
         </div>
@@ -666,7 +670,7 @@
             </svg>
             <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-5 text-center">
                 <div t-field="company.report_footer"/>
-                <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
+                <span t-if="o and 'name' in o and report_type == 'pdf'" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
                 <span t-if="report_type == 'pdf'" class="text-muted">Page <span class="page"/> / <span class="topage"/></span>
             </div>
         </div>
@@ -732,7 +736,7 @@
             </svg>
             <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-4 text-center">
                 <div class="border-top pt-2" t-field="company.report_footer"/>
-                <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
+                <span t-if="o and 'name' in o and report_type == 'pdf'" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
                 <span t-if="report_type == 'pdf'" class="text-muted">Page <span class="page"/> / <span class="topage"/></span>
             </div>
         </div>
