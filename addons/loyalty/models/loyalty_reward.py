@@ -204,9 +204,11 @@ class LoyaltyReward(models.Model):
     @api.depends('reward_type', 'discount_applicability', 'discount_mode')
     def _compute_is_global_discount(self):
         for reward in self:
-            reward.is_global_discount = reward.reward_type == 'discount' and\
-                                        reward.discount_applicability == 'order' and\
-                                        reward.discount_mode == 'percent'
+            reward.is_global_discount = (
+                reward.reward_type == 'discount'
+                and reward.discount_applicability == 'order'
+                and reward.discount_mode in ['per_order', 'percent']
+            )
 
     @api.depends_context('uid')
     @api.depends("reward_type")
