@@ -500,6 +500,66 @@ test("performRPC: read_group, group by date", async () => {
     ]);
 });
 
+test("performRPC: read_group, group by date with number granularity", async () => {
+    await makeMockServer();
+
+    const allGranularity = [
+        {
+            granularity: "day_of_week",
+            result: [1, 3, 4],
+            count: [2, 2, 2],
+        },
+        {
+            granularity: "day_of_month",
+            result: [11, 14, 15, 26, 30],
+            count: [1, 1, 2, 1, 1],
+        },
+        {
+            granularity: "day_of_year",
+            result: [102, 300, 349, 350, 364],
+            count: [1, 1, 1, 2, 1],
+        },
+        {
+            granularity: "iso_week_number",
+            result: [1, 15, 43, 50],
+            count: [1, 1, 1, 3],
+        },
+        {
+            granularity: "month_number",
+            result: [4, 10, 12],
+            count: [1, 1, 4],
+        },
+        {
+            granularity: "quarter_number",
+            result: [2, 4],
+            count: [1, 5],
+        },
+        {
+            granularity: "year_number",
+            result: [2016, 2019],
+            count: [5, 1],
+        },
+    ];
+
+    for (const { granularity, result, count } of allGranularity) {
+        const response = await ormRequest({
+            model: "bar",
+            method: "read_group",
+            kwargs: {
+                fields: ["foo"],
+                domain: [],
+                groupby: [`date:${granularity}`],
+            },
+        });
+
+        expect(response.map((x) => x[`date:${granularity}`])).toEqual(result);
+        expect(response.map((x) => x.date_count)).toEqual(count);
+        expect(response.map((x) => x.__domain)).toEqual(
+            result.map((r) => [[`date.${granularity}`, "=", r]])
+        );
+    }
+});
+
 test("performRPC: read_group, group by datetime", async () => {
     await makeMockServer();
     let result = await ormRequest({
@@ -740,6 +800,81 @@ test("performRPC: read_group, group by datetime", async () => {
         { from: "2015-12-31 23:00:00", to: "2016-12-31 23:00:00" },
         { from: "2018-12-31 23:00:00", to: "2019-12-31 23:00:00" },
     ]);
+});
+
+test("performRPC: read_group, group by datetime with number granularity", async () => {
+    await makeMockServer();
+
+    const allGranularity = [
+        {
+            granularity: "second_number",
+            result: [56],
+            count: [6],
+        },
+        {
+            granularity: "minute_number",
+            result: [34],
+            count: [6],
+        },
+        {
+            granularity: "hour_number",
+            result: [13],
+            count: [6],
+        },
+        {
+            granularity: "day_of_week",
+            result: [1, 3, 4],
+            count: [2, 2, 2],
+        },
+        {
+            granularity: "day_of_month",
+            result: [11, 14, 15, 26, 30],
+            count: [1, 1, 2, 1, 1],
+        },
+        {
+            granularity: "day_of_year",
+            result: [102, 300, 349, 350, 364],
+            count: [1, 1, 1, 2, 1],
+        },
+        {
+            granularity: "iso_week_number",
+            result: [1, 15, 43, 50],
+            count: [1, 1, 1, 3],
+        },
+        {
+            granularity: "month_number",
+            result: [4, 10, 12],
+            count: [1, 1, 4],
+        },
+        {
+            granularity: "quarter_number",
+            result: [2, 4],
+            count: [1, 5],
+        },
+        {
+            granularity: "year_number",
+            result: [2016, 2019],
+            count: [5, 1],
+        },
+    ];
+
+    for (const { granularity, result, count } of allGranularity) {
+        const response = await ormRequest({
+            model: "bar",
+            method: "read_group",
+            kwargs: {
+                fields: ["foo"],
+                domain: [],
+                groupby: [`datetime:${granularity}`],
+            },
+        });
+
+        expect(response.map((x) => x[`datetime:${granularity}`])).toEqual(result);
+        expect(response.map((x) => x.datetime_count)).toEqual(count);
+        expect(response.map((x) => x.__domain)).toEqual(
+            result.map((r) => [[`datetime.${granularity}`, "=", r]])
+        );
+    }
 });
 
 test("performRPC: read_group, group by m2m", async () => {
