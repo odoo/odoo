@@ -44,6 +44,7 @@ class UsuarioEvaluacionRel(models.Model):
         """
 
         length = 32
+        base_url = "http://localhost:8069/evaluacion/responder"
 
         usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
             [("evaluacion_id", "=", evaluacion_id)]
@@ -52,3 +53,44 @@ class UsuarioEvaluacionRel(models.Model):
         for user in usuario_evaluacion:
             token = secrets.token_hex(length)
             user.write({"token": token})
+
+            # print(evaluacion_id, token, user.usuario_id.email)
+            # print(f'{base_url}/{evaluacion_id}/{token}')
+            mail_values = {
+                'subject': 'Invitación para completar la evaluación',
+                'email_from': self.env.user.email_formatted,
+                'email_to': user.usuario_id.email,
+                'body_html': f'<p>Hola, <strong>{user.usuario_id.name}</strong></p>'
+                            f'<p>Por favor completa la evaluación siguiendo este enlace: '
+                            f'<a href="{base_url}/{evaluacion_id}/{token}">'
+                            'Completa la Evaluación</a></p>',
+            }
+
+            mail = self.env['mail.mail'].create(mail_values)
+            # mail.send()
+
+            if mail.state == 'sent':
+                print(f"Correo enviado exitosamente a {user.usuario_id.email}")
+            elif mail.state == 'exception':
+                print(f"Fallo al enviar correo a {user.usuario_id.email}")
+            else:
+                print(f"Correo en estado pendiente o desconocido: {mail.state}")
+
+        notification = {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Asignación de Evaluación',
+                'message': f"Todos los correos han sido enviados exitosamente.",
+                'sticky': False,  # True si la notificación debe permanecer hasta que el usuario la cierre
+            },
+        }
+        return notification
+    
+        # return {
+        #     "type": "ir.actions.act_window",
+        #     "name": "Evaluaciones",
+        #     "res_model": "evaluacion",
+        #     "view_mode": "tree",
+        #     "target": "current",
+        # }        

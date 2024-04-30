@@ -32,9 +32,9 @@ class EvaluacionesController(http.Controller):
         return request.render("evaluaciones.encuestas_reporte", parametros)
     
     @http.route(
-        "/evaluacion/responder/<model('evaluacion'):evaluacion>/:token", type="http", auth="user", website=True
+        "/evaluacion/responder/<model('evaluacion'):evaluacion>/<string:token>", type="http", auth="user", website=True
     )
-    def responder_evaluacion_controller(self, evaluacion: Evaluacion):
+    def responder_evaluacion_controller(self, evaluacion: Evaluacion, token):
         """Método para desplegar el formulario de permitir al usuario responder una evaluación.
         Este método verifica que el usuario tenga los permisos necesario, obtiene los datos
         del modelo de evaluaciones y renderiza el formulario con esos datos.
@@ -46,15 +46,22 @@ class EvaluacionesController(http.Controller):
             "evaluaciones.evaluaciones_cliente_cr_group_user"
         ):
             raise AccessError("No tienes permitido acceder a este recurso.")
+
+        usuario_eva_mod = request.env["usuario.evaluacion.rel"]
+        user_eval_relation = usuario_eva_mod.sudo().search([
+            ("usuario_id", "=", request.env.user.id),
+            ("evaluacion_id", "=", evaluacion.id),
+            ("token", "=", token)
+        ])
+        
+        if not user_eval_relation:
+            return request.redirect('/error/404')
         
         evaluacion_id = evaluacion.id
 
         # Obtén la evaluación basada en el ID
         parametros = evaluacion.action_get_evaluaciones(evaluacion_id)
-
-        usuario_eva_mod = request.env["usuario.evaluacion.rel"]
         parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(request.env.user.id, evaluacion_id)
-        
         
         # Renderiza la plantilla con la evaluación
         return request.render("evaluaciones.evaluaciones_responder", parametros)
