@@ -366,7 +366,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         
         const targetModelName = this.$target[0].dataset.model_name || 'mail.mail';
         this.activeForm = this.models.find(m => m.model === targetModelName);
-        currentActionName = this.activeForm.website_form_label;
+        currentActionName = this.activeForm && this.activeForm.website_form_label;
 
         if (!this.modelCantChange) {
             // Create the Form Action select
@@ -1661,6 +1661,10 @@ options.registry.WebsiteFormFieldRequired = DisableOverlayButtonOption.extend({
      * @override
      */
     async _renderCustomXML(uiFragment) {
+        if (!currentActionName) {
+            return;
+        }
+
         const fieldName = this.$target[0]
             .querySelector("input.s_website_form_input").getAttribute("name");
         const spanEl = document.createElement("span");
