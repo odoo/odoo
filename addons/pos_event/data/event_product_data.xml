@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="event_product.product_product_event" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_event.pos_category_event')])]"/>
+        </record>
+    </data>
+</odoo>

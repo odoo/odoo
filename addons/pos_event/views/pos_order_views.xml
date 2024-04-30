@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_order_form_view_inherit" model="ir.ui.view">
+        <field name="name">pos.order.form.view.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_view_attendee_list" type="object"
+                    class="oe_stat_button" icon="fa-users" invisible="attendee_count == 0">
+                    <field name="attendee_count" widget="statinfo" string="Attendees"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

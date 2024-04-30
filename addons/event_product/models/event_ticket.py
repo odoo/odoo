@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -33,7 +32,7 @@ class EventTemplateTicket(models.Model):
     def _compute_price(self):
         for ticket in self:
             if ticket.product_id and ticket.product_id.lst_price:
-                ticket.price = ticket.product_id.lst_price or 0
+                ticket.price = ticket.product_id.lst_price
             elif not ticket.price:
                 ticket.price = 0
 
@@ -60,7 +59,7 @@ class EventTemplateTicket(models.Model):
 
     def _init_column(self, column_name):
         if column_name != "product_id":
-            return super(EventTemplateTicket, self)._init_column(column_name)
+            return super()._init_column(column_name)
 
         # fetch void columns
         self.env.cr.execute("SELECT id FROM %s WHERE product_id IS NULL" % self._table)
@@ -92,10 +91,18 @@ class EventTemplateTicket(models.Model):
             (product_id, tuple(ticket_type_ids))
         )
 
+    def _get_ticket_multiline_description(self):
+        """ If people set a description on their product it has more priority
+        than the ticket name itself for the SO description. """
+        self.ensure_one()
+        if self.product_id.description_sale:
+            return '%s\n%s' % (self.product_id.description_sale, self.event_id.display_name)
+        return super(EventTicket, self)._get_ticket_multiline_description()
+
     @api.model
     def _get_event_ticket_fields_whitelist(self):
-        """ Add sale specific fields to copy from template to ticket """
-        return super(EventTemplateTicket, self)._get_event_ticket_fields_whitelist() + ['product_id', 'price']
+        """ Add product specific fields to copy from template to ticket """
+        return super()._get_event_ticket_fields_whitelist() + ['product_id', 'price']
 
 
 class EventTicket(models.Model):

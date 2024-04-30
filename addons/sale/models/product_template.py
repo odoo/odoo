@@ -19,16 +19,7 @@ class ProductTemplate(models.Model):
         help="Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
              "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
              "Create a task and track hours: Create a task on the sales order validation and track the work hours.")
-    service_tracking = fields.Selection(selection=[
-            ('no', 'Nothing'),
-        ],
-        string="Create on Order",
-        default="no",
-        compute="_compute_service_tracking",
-        required=True,
-        store=True,
-        readonly=False,
-    )
+
     sale_line_warn = fields.Selection(
         WARNING_MESSAGE, string="Sales Order Line",
         help=WARNING_HELP, required=True, default="no-message")

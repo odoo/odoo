@@ -22,7 +22,6 @@ this event.
     'data': [
         'views/event_registration_views.xml',
         'views/event_views.xml',
-        'views/product_template_views.xml',
         'views/sale_order_views.xml',
         'data/event_sale_data.xml',
         'data/mail_templates.xml',
@@ -31,6 +30,7 @@ this event.
         'security/ir_rule.xml',
         'security/event_security.xml',
         'wizard/event_edit_registration.xml',
+        'wizard/event_configurator_views.xml',
     ],
     'demo': [
         'data/event_sale_demo.xml',

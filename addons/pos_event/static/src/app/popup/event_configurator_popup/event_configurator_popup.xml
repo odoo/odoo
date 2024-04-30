@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_event.EventConfiguratorPopup">
+        <Dialog title="'Tickets'">
+            <div class="o_event_configurator_popup">
+                <t t-foreach="this.props.tickets" t-as="ticket" t-key="ticket.id">
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex flex-column">
+                            <div class="fs-5">
+                                <span t-esc="ticket.product_id.display_name"/>
+                                for <span t-esc="this.props.tickets[0].event_id.name" />
+                             </div>
+                            <span t-if="ticket.seats_max === 0" class="fs-6 text-success">
+                                Unlimited
+                            </span>
+                            <span t-else="" t-attf-class="{{ this.ticketIsAvailable(ticket) ? 'text-success' : 'text-danger'}} fs-6">
+                                <t t-esc="ticket.seats_available - this.getOrderAlreadyBooked(ticket)" /> left
+                            </span>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <span t-esc="pos.getProductPriceFormatted(ticket.product_id)" />
+                            <NumericInput class="'w-100'" tModel="[this.state[ticket.id], 'qty']" min="0"/>
+                        </div>
+                    </div>
+                    <hr t-if="ticket_index !== this.props.tickets.length - 1" class="hr" />
+                </t>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-secondary o-default-button" t-on-click="cancel">Cancel</button>
+                <button class="btn btn-primary o-default-button" t-on-click="confirm">Confirm</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

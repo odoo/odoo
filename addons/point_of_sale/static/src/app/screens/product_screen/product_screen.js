@@ -258,8 +258,25 @@ export class ProductScreen extends Component {
         this.pos.scanning = false;
         this.pos.switchPane();
     }
+
+    getProductName(product) {
+        return product.display_name;
+    }
+
+    getProductPrice(product) {
+        return this.pos.getProductPriceFormatted(product);
+    }
+
+    getProductImage(product) {
+        return product.getImageUrl();
+    }
+
     get searchWord() {
         return this.pos.searchProductWord.trim();
+    }
+
+    get products() {
+        return this.pos.models["product.product"].getAll();
     }
 
     get productsToDisplay() {
@@ -270,7 +287,7 @@ export class ProductScreen extends Component {
         } else if (this.pos.selectedCategory?.id) {
             list = this.getProductsByCategory(this.pos.selectedCategory);
         } else {
-            list = this.pos.models["product.product"].getAll();
+            list = this.products;
         }
 
         if (!list) {
@@ -289,7 +306,7 @@ export class ProductScreen extends Component {
     getProductsBySearchWord(searchWord) {
         const products = this.pos.selectedCategory?.id
             ? this.getProductsByCategory(this.pos.selectedCategory)
-            : this.pos.models["product.product"].getAll();
+            : this.products;
 
         const exactMatches = products.filter((product) => product.exactMatch(searchWord));
 
@@ -306,7 +323,7 @@ export class ProductScreen extends Component {
 
     getProductsByCategory(category) {
         const allCategories = category.getAllChildren();
-        return this.pos.models["product.product"].filter((p) =>
+        return this.products.filter((p) =>
             p.pos_categ_ids.some((categId) => allCategories.includes(categId))
         );
     }

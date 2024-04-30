@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_event.EventRegistrationPopup">
+        <Dialog title="'Tickets'">
+            <div class="o_event_registration_popup">
+                <div t-foreach="this.dataInQty" t-as="data" t-key="data_index" class="mb-4">
+                    <div>
+                        <span class="fs-3">
+                            Ticket #<t t-esc="data_index + 1" />
+                        </span>
+                        <hr class="hr mt-1" />
+                    </div>
+                    <div>
+                        <div class="d-flex gap-3">
+                            <div class="input-group flex-1">
+                                <span class="input-group-text">Name *</span>
+                                <input t-model.lazy.trim="this.state[data_index].name" class="form-control flex-grow-1"/>
+                            </div>
+                            <div class="input-group flex-1">
+                                <span class="input-group-text">Phone *</span>
+                                <input t-model.lazy.trim="this.state[data_index].phone" class="form-control flex-grow-1"/>
+                            </div>
+                        </div>
+                        <div class="input-group mt-3">
+                            <span class="input-group-text">Email *</span>
+                            <input t-model.lazy.trim="this.state[data_index].email" class="form-control flex-grow-1"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-secondary o-default-button" t-on-click="cancel">Cancel</button>
+                <button class="btn btn-primary o-default-button" t-on-click="confirm">Confirm</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

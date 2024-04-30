@@ -30,6 +30,7 @@ const SERIALIZABLE_MODELS = [
     "pos.payment",
     "pos.pack.operation.lot",
     "product.attribute.custom.value",
+    "event.registration", // FIXME should be overrided from pos_event
 ];
 
 function processModelDefs(modelDefs) {

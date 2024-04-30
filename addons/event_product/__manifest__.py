@@ -1,13 +1,13 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Events Product',
-    'version': '1.3',
+    'version': '1.0',
     'category': 'Marketing/Events',
     'depends': ['event', 'product'],
     'data': [
         'views/event_ticket_views.xml',
-        'security/ir.model.access.csv',
+        'views/product_template_views.xml',
         'data/event_product_data.xml',
     ],
     'demo': [
