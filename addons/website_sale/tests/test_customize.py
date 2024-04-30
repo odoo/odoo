@@ -380,27 +380,24 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         product_template = self.env['product.template'].create({
             'name': 'Test Product 2',
             'is_published': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute.id,
+                    'value_ids': [Command.set(attribute_values.filtered(lambda pav: pav.attribute_id == attribute).ids)]
+                }) for attribute in (attribute_1, attribute_2, attribute_3)
+            ]
         })
 
-        self.env['product.template.attribute.line'].create([
-            {
-                'attribute_id': attribute_1.id,
-                'product_tmpl_id': product_template.id,
-                'value_ids': [(6, 0, attribute_values.filtered(lambda v: v.attribute_id == attribute_1).ids)],
-            },
-            {
-                'attribute_id': attribute_2.id,
-                'product_tmpl_id': product_template.id,
-                'value_ids': [(6, 0, attribute_values.filtered(lambda v: v.attribute_id == attribute_2).ids)],
-            },
-            {
-                'attribute_id': attribute_3.id,
-                'product_tmpl_id': product_template.id,
-                'value_ids': [(6, 0, attribute_values.filtered(lambda v: v.attribute_id == attribute_3).ids)],
-            },
-        ])
-
-        product_template.product_variant_ids[-1].active = False
+        # Archive (Small, Black, Brand B) variant
+        combination_to_archive = product_template.attribute_line_ids.product_template_value_ids.filtered(
+            lambda ptav: ptav.product_attribute_value_id.name in ('Small', 'Black', 'Brand B')
+        )
+        variant_to_archive = product_template._get_variant_for_combination(
+            combination_to_archive
+        )
+        self.assertTrue(variant_to_archive)
+        variant_to_archive.action_archive()
+        self.assertFalse(variant_to_archive.active)
 
         self.start_tour("/", 'tour_shop_archived_variant_multi', login="portal")
 
