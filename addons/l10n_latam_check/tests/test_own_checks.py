@@ -19,12 +19,12 @@ class TestOwnChecks(L10nLatamCheckTest):
             payment_form.ref = 'Deferred check'
             with payment_form.l10n_latam_new_check_ids.new() as check:
                 check.name = '00000001'
-                check.l10n_latam_check_payment_date = fields.Date.add(fields.Date.today(), months=1)
+                check.payment_date = fields.Date.add(fields.Date.today(), months=1)
                 check.amount =  25
 
             with payment_form.l10n_latam_new_check_ids.new() as check2:
                 check2.name = '00000002'
-                check2.l10n_latam_check_payment_date = fields.Date.add(fields.Date.today(), months=1)
+                check2.payment_date = fields.Date.add(fields.Date.today(), months=1)
                 check2.amount =  25
 
         payment = payment_form.save()

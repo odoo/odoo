@@ -37,8 +37,8 @@ msgstr ""
 
 #. module: l10n_latam_check
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_form_inherited
-msgid "<span attrs=\"{'invisible': [('l10n_latam_check_current_journal_id', '!=', False)]}\">Not in Wallet</span>"
-msgstr "<span attrs=\"{'invisible': [('l10n_latam_check_current_journal_id', '!=', False)]}\">No en Mano</span>"
+msgid "<span attrs=\"{'invisible': [('current_journal_id', '!=', False)]}\">Not in Wallet</span>"
+msgstr "<span attrs=\"{'invisible': [('current_journal_id', '!=', False)]}\">No en Mano</span>"
 
 #. module: l10n_latam_check
 #: model:ir.model,name:l10n_latam_check.model_account_chart_template
@@ -94,30 +94,30 @@ msgid "Check '%s' is on journal '%s', it can't be received it again"
 msgstr "Cheque '%s' está en el diario '%s', no podemos recibirlo nuevamente"
 
 #. module: l10n_latam_check
-#: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment__l10n_latam_check_bank_id
-#: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment_register__l10n_latam_check_bank_id
+#: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment__bank_id
+#: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment_register__bank_id
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_form_inherited
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_register_form
 msgid "Check Bank"
 msgstr "Banco del Cheque"
 
 #. module: l10n_latam_check
-#: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment__l10n_latam_check_payment_date
-#: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment_register__l10n_latam_check_payment_date
+#: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment__payment_date
+#: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment_register__payment_date
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_third_party_checks_search
 msgid "Check Cash-In Date"
 msgstr "Fecha de Pago del Cheque"
 
 #. module: l10n_latam_check
-#: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment__l10n_latam_check_current_journal_id
+#: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment__current_journal_id
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_form_inherited
 msgid "Check Current Journal"
 msgstr "Diario del Cheque"
 
 #. module: l10n_latam_check
-#: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment__l10n_latam_check_issuer_vat
-#: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment_register__l10n_latam_check_issuer_vat
+#: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment__issuer_vat
+#: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment_register__issuer_vat
 msgid "Check Issuer VAT"
 msgstr "CUIT Emisor del Cheque"
 
@@ -136,7 +136,7 @@ msgstr "Número de Cheque"
 #. module: l10n_latam_check
 #. odoo-python
 #: code:addons/l10n_latam_check/models/account_payment.py:0
-#: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment__l10n_latam_check_operation_ids
+#: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment__operation_ids
 msgid "Check Operations"
 msgstr "Operaciones del Cheque"
 
@@ -193,8 +193,8 @@ msgid "Customer"
 msgstr "Cliente"
 
 #. module: l10n_latam_check
-#: model:ir.model.fields,help:l10n_latam_check.field_account_payment__l10n_latam_check_payment_date
-#: model:ir.model.fields,help:l10n_latam_check.field_account_payment_register__l10n_latam_check_payment_date
+#: model:ir.model.fields,help:l10n_latam_check.field_account_payment__payment_date
+#: model:ir.model.fields,help:l10n_latam_check.field_account_payment_register__payment_date
 msgid "Date from when you can cash in the check, turn the check into cash"
 msgstr "Fecha a partir de la cual puedes cobrar el checque, convertirlo en dinero"
 

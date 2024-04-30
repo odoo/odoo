@@ -76,14 +76,14 @@ class AccountPayment(models.Model):
                     msgs.append(_('Selecteds check "%s" are not posted',
                                   rec.l10n_latam_check_ids.filtered(lambda x: x.state != 'posted').mapped('display_name')))
                 elif (rec.payment_type == 'outbound' and
-                        any(check.l10n_latam_check_current_journal_id != rec.journal_id for check in rec.l10n_latam_check_ids)) or (
+                        any(check.current_journal_id != rec.journal_id for check in rec.l10n_latam_check_ids)) or (
                         rec.payment_type == 'inbound' and rec.is_internal_transfer and
-                        any(check.l10n_latam_check_current_journal_id != rec.destination_journal_id for check in rec.l10n_latam_check_ids)):
+                        any(check.current_journal_id != rec.destination_journal_id for check in rec.l10n_latam_check_ids)):
                     # check outbound payment and transfer or inbound transfer
                     msgs.append(_(
                         'Some checks are not anymore in journal, it seems it has been moved by another payment.'))
                 elif rec.payment_type == 'inbound' and not rec.is_internal_transfer and \
-                        any(rec.l10n_latam_check_ids.mapped('l10n_latam_check_current_journal_id')):
+                        any(rec.l10n_latam_check_ids.mapped('current_journal_id')):
                     msgs.append(_("Some checks are already in hand and can't be received again. Checks: %s",
                                 ', '.join(rec.l10n_latam_check_ids.mapped('display_name'))))
 
@@ -133,7 +133,7 @@ class AccountPayment(models.Model):
                 # Checks liquidity line
                 move_line = self.env['account.move.line'].with_context(check_move_validity=False).create({
                     'name': check.name,
-                    'date_maturity': check.l10n_latam_check_payment_date,
+                    'date_maturity': check.payment_date,
                     'amount_currency': liquidity_amount_currency,
                     'currency_id': check.currency_id.id,
                     'debit': liquidity_balance if liquidity_balance > 0.0 else 0.0,
@@ -166,7 +166,7 @@ class AccountPayment(models.Model):
 
     @api.depends(
         'payment_method_line_id', 'state',  'date', 'is_internal_transfer', 'amount', 'currency_id', 'company_id',
-        'l10n_latam_check_ids.l10n_latam_check_issuer_vat', 'l10n_latam_check_ids.l10n_latam_check_bank_id', 'l10n_latam_check_ids.date',
+        'l10n_latam_check_ids.issuer_vat', 'l10n_latam_check_ids.bank_id', 'l10n_latam_check_ids.date',
         'l10n_latam_new_check_ids.amount', 'l10n_latam_new_check_ids.name',
     )
     def _compute_l10n_latam_check_warning_msg(self):
@@ -183,11 +183,11 @@ class AccountPayment(models.Model):
                 same_checks = self.env['l10n_latam.account.payment.check']
                 for check in rec.l10n_latam_new_check_ids.filtered(
                         lambda x: x.name and x.payment_method_line_id.code == 'new_third_party_checks' and
-                        x.l10n_latam_check_bank_id and x.l10n_latam_check_issuer_vat):
+                        x.bank_id and x.issuer_vat):
                     same_checks += same_checks.search([
                         ('company_id', '=', rec.company_id.id),
-                        ('l10n_latam_check_bank_id', '=', check.l10n_latam_check_bank_id.id),
-                        ('l10n_latam_check_issuer_vat', '=', check.l10n_latam_check_issuer_vat),
+                        ('bank_id', '=', check.bank_id.id),
+                        ('issuer_vat', '=', check.issuer_vat),
                         ('name', '=', check.name),
                         ('state', '=', 'posted'),
                         ('id', '!=', check._origin.id)], limit=1)
@@ -234,7 +234,7 @@ class AccountPayment(models.Model):
         available payment method. If we are transferring to another third party checks journal, then set as payment
         method on the paired transfer 'in_third_party_checks' or 'out_third_party_checks'
         2. On the paired transfer set the l10n_latam_check_id field, this field is needed for the
-        l10n_latam_check_operation_ids and also for some warnings and constrains.
+        operation_ids and also for some warnings and constrains.
         """
         third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code in [
             'in_third_party_checks',

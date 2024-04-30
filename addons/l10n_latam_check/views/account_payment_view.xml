@@ -12,28 +12,28 @@
                             <field name="company_id" column_invisible="True"/>
                             <field name="currency_id" column_invisible="True"/>
                             <field name="name" />
-                            <field name="l10n_latam_check_bank_id" column_invisible="parent.payment_method_code == 'own_checks'"/>
-                            <field name="l10n_latam_check_issuer_vat" column_invisible="parent.payment_method_code == 'own_checks'"/>
-                            <field name="l10n_latam_check_payment_date" required="parent.payment_method_code == 'own_checks'"/>
+                            <field name="bank_id" column_invisible="parent.payment_method_code == 'own_checks'"/>
+                            <field name="issuer_vat" column_invisible="parent.payment_method_code == 'own_checks'"/>
+                            <field name="payment_date" required="parent.payment_method_code == 'own_checks'"/>
                             <field name="amount" />
                             <button type="object" name="get_formview_action" icon="fa-pencil-square-o" title="open" help="Open" column_invisible="parent.state != 'posted'"/>
                         </tree>
                     </field>
                     <field name="l10n_latam_check_ids" widget="one2many" invisible="payment_method_code not in ['in_third_party_checks', 'out_third_party_checks']"
                         domain="
-                            [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', journal_id), ('company_id', '=', company_id)]
+                            [('payment_method_code', '=', 'new_third_party_checks'), ('current_journal_id', '=', journal_id), ('company_id', '=', company_id)]
                                 if payment_type == 'outbound' else
-                            [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', destination_journal_id), ('company_id', '=', company_id)]
+                            [('payment_method_code', '=', 'new_third_party_checks'), ('current_journal_id', '=', destination_journal_id), ('company_id', '=', company_id)]
                                 if is_internal_transfer else
-                            [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', False), ('company_id', '=', company_id)]" options="{'no_create': True}"
+                            [('payment_method_code', '=', 'new_third_party_checks'), ('current_journal_id', '=', False), ('company_id', '=', company_id)]" options="{'no_create': True}"
                             nolabel="1" colspan="2" readonly="state != 'draft'">
                         <tree name="existing_checks">
                             <field name="company_id" column_invisible="True"/>
                             <field name="currency_id" column_invisible="True"/>
                             <field name="name" />
-                            <field name="l10n_latam_check_bank_id" optional="hide"/>
-                            <field name="l10n_latam_check_issuer_vat" optional="hide"/>
-                            <field name="l10n_latam_check_payment_date" optional="hide"/>
+                            <field name="bank_id" optional="hide"/>
+                            <field name="issuer_vat" optional="hide"/>
+                            <field name="payment_date" optional="hide"/>
                             <field name="amount"/>
                             <button type="object" name="get_formview_action" icon="fa-pencil-square-o" title="open" help="Open"/>
                         </tree>
@@ -49,22 +49,22 @@
             <!-- <field name="destination_journal_id" position="after"> -->
                 <!-- Move Third party checks -->
                 <!-- <field name="l10n_latam_check_id" invisible="payment_method_code not in ['in_third_party_checks', 'out_third_party_checks'] and not l10n_latam_check_id" readonly="state != 'draft'" required="payment_method_code in ['in_third_party_checks', 'out_third_party_checks']" domain="
-                        [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', journal_id), ('state', '=', 'posted'), ('company_id', '=', company_id)]
+                        [('payment_method_code', '=', 'new_third_party_checks'), ('current_journal_id', '=', journal_id), ('state', '=', 'posted'), ('company_id', '=', company_id)]
                             if payment_type == 'outbound' else
-                        [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', destination_journal_id), ('state', '=', 'posted'), ('company_id', '=', company_id)]
+                        [('payment_method_code', '=', 'new_third_party_checks'), ('current_journal_id', '=', destination_journal_id), ('state', '=', 'posted'), ('company_id', '=', company_id)]
                             if is_internal_transfer else
-                        [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', False), ('state', '=', 'posted'), ('company_id', '=', company_id)]" context="{'search_view_ref': 'l10n_latam_check.view_account_payment_third_party_checks_search'}" options="{'no_create': True}" /> -->
+                        [('payment_method_code', '=', 'new_third_party_checks'), ('current_journal_id', '=', False), ('state', '=', 'posted'), ('company_id', '=', company_id)]" context="{'search_view_ref': 'l10n_latam_check.view_account_payment_third_party_checks_search'}" options="{'no_create': True}" /> -->
             <!-- </field> -->
             <!-- <field name="payment_method_line_id" position="after">
                 <field name="l10n_latam_manual_checks" invisible="1"/>
                 <field name="l10n_latam_check_number" string='Check Number' invisible="payment_method_code != 'new_third_party_checks' and (payment_method_code != 'check_printing' or not l10n_latam_manual_checks)" readonly="state != 'draft'" required="payment_method_code == 'new_third_party_checks' or (payment_method_code == 'check_printing' and l10n_latam_manual_checks)"/>
-                <field name="l10n_latam_check_payment_date" invisible="payment_method_code != 'new_third_party_checks' and (payment_method_code != 'check_printing' or not l10n_latam_manual_checks)" readonly="state != 'draft'"/>
-                <field name="l10n_latam_check_bank_id" string="Check Bank" invisible="payment_method_code != 'new_third_party_checks'" readonly="state in ['cancel', 'posted']"/>
-                <field name="l10n_latam_check_issuer_vat" string="Check Issuer Vat" invisible="payment_method_code != 'new_third_party_checks'" readonly="state in ['cancel', 'posted']"/>
-                <label for="l10n_latam_check_current_journal_id" string="Check Current Journal" invisible="state != 'posted' or payment_method_code != 'new_third_party_checks'"/>
+                <field name="payment_date" invisible="payment_method_code != 'new_third_party_checks' and (payment_method_code != 'check_printing' or not l10n_latam_manual_checks)" readonly="state != 'draft'"/>
+                <field name="bank_id" string="Check Bank" invisible="payment_method_code != 'new_third_party_checks'" readonly="state in ['cancel', 'posted']"/>
+                <field name="issuer_vat" string="Check Issuer Vat" invisible="payment_method_code != 'new_third_party_checks'" readonly="state in ['cancel', 'posted']"/>
+                <label for="current_journal_id" string="Check Current Journal" invisible="state != 'posted' or payment_method_code != 'new_third_party_checks'"/>
                 <div class="oe_inline" invisible="state != 'posted' or payment_method_code != 'new_third_party_checks'">
-                    <field name="l10n_latam_check_current_journal_id"/>
-                    <span invisible="l10n_latam_check_current_journal_id">Not in Wallet</span>
+                    <field name="current_journal_id"/>
+                    <span invisible="current_journal_id">Not in Wallet</span>
                 </div>
             </field> -->
         </field>

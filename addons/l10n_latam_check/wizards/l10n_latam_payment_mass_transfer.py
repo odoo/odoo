@@ -40,8 +40,8 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
     @api.depends('check_ids')
     def _compute_journal_company(self):
         # use ._origin because if not a NewId for the checks is used and the returned
-        # value for l10n_latam_check_current_journal_id is wrong
-        journal = self.check_ids._origin.mapped("l10n_latam_check_current_journal_id")
+        # value for current_journal_id is wrong
+        journal = self.check_ids._origin.mapped("current_journal_id")
         if len(journal) != 1 or not journal.inbound_payment_method_line_ids.filtered(
            lambda x: x.code == 'in_third_party_checks'):
             raise UserError(_("All selected checks must be on the same journal and on hand"))

@@ -15,7 +15,7 @@ class TestThirdChecks(L10nLatamCheckTest):
             'partner_id': self.partner_a.id,
             'payment_type': 'inbound',
             'journal_id': journal.id,
-            'l10n_latam_new_check_ids': {'name': check_number, 'l10n_latam_check_payment_date': fields.Date.add(fields.Date.today(), months=1), 'amount': 1},
+            'l10n_latam_new_check_ids': {'name': check_number, 'payment_date': fields.Date.add(fields.Date.today(), months=1), 'amount': 1},
             'payment_method_line_id': journal._get_available_payment_method_lines('inbound').filtered(lambda x: x.code == 'new_third_party_checks').id,
         }
 
@@ -29,13 +29,13 @@ class TestThirdChecks(L10nLatamCheckTest):
         is properly working. """
         vals_list = [{
             'partner_id': self.partner_a.id,
-            'l10n_latam_new_check_ids': [Command.create({'name': '00000001', 'l10n_latam_check_payment_date': fields.Date.add(fields.Date.today(), months=1), 'amount': 1})],
+            'l10n_latam_new_check_ids': [Command.create({'name': '00000001', 'payment_date': fields.Date.add(fields.Date.today(), months=1), 'amount': 1})],
             'payment_type': 'inbound',
             'journal_id': self.third_party_check_journal.id,
             'payment_method_line_id': self.third_party_check_journal._get_available_payment_method_lines('inbound').filtered(lambda x: x.code == 'new_third_party_checks').id,
         }, {
             'partner_id': self.partner_a.id,
-            'l10n_latam_new_check_ids': [Command.create({'name': '00000002', 'l10n_latam_check_payment_date': fields.Date.add(fields.Date.today(), months=2), 'amount': 1})],
+            'l10n_latam_new_check_ids': [Command.create({'name': '00000002', 'payment_date': fields.Date.add(fields.Date.today(), months=2), 'amount': 1})],
             'payment_type': 'inbound',
             'journal_id': self.third_party_check_journal.id,
             'payment_method_line_id': self.third_party_check_journal._get_available_payment_method_lines('inbound').filtered(lambda x: x.code == 'new_third_party_checks').id,
@@ -44,7 +44,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         payments.action_post()
         self.assertEqual(len(payments), 2, 'Checks where not created properly')
         self.assertRecordValues(payments, [{
-            'l10n_latam_check_current_journal_id': self.third_party_check_journal.id,
+            'current_journal_id': self.third_party_check_journal.id,
         }]*2)
 
     # def test_02_third_party_check_delivery(self):
@@ -61,7 +61,7 @@ class TestThirdChecks(L10nLatamCheckTest):
     #     }
     #     delivery = self.env['account.payment'].create(vals)
     #     delivery.action_post()
-    #     self.assertFalse(check.l10n_latam_check_current_journal_id, 'Current journal was not computed properly on delivery')
+    #     self.assertFalse(check.current_journal_id, 'Current journal was not computed properly on delivery')
     #     # check dont delivery twice
     #     with self.assertRaisesRegex(ValidationError, "is already used on another payment"), self.cr.savepoint():
     #         self.env['account.payment'].create(vals).action_post()
@@ -77,7 +77,7 @@ class TestThirdChecks(L10nLatamCheckTest):
     #     }
     #     supplier_return = self.env['account.payment'].create(vals)
     #     supplier_return.action_post()
-    #     self.assertEqual(check.l10n_latam_check_current_journal_id, self.rejected_check_journal, 'Current journal was not computed properly on return')
+    #     self.assertEqual(check.current_journal_id, self.rejected_check_journal, 'Current journal was not computed properly on return')
     #     # check dont return twice
     #     with self.assertRaisesRegex(ValidationError, "it can't be received it again"), self.cr.savepoint():
     #         self.env['account.payment'].create(vals).action_post()
@@ -93,7 +93,7 @@ class TestThirdChecks(L10nLatamCheckTest):
     #     }
     #     customer_return = self.env['account.payment'].create(vals)
     #     customer_return.action_post()
-    #     self.assertFalse(check.l10n_latam_check_current_journal_id, 'Current journal was not computed properly on customer return')
+    #     self.assertFalse(check.current_journal_id, 'Current journal was not computed properly on customer return')
     #     # check dont claim twice
     #     with self.assertRaisesRegex(ValidationError, "is already used on another payment"), self.cr.savepoint():
     #         self.env['account.payment'].create(vals).action_post()
@@ -109,7 +109,7 @@ class TestThirdChecks(L10nLatamCheckTest):
     #     # Check Deposit
     #     deposit = self.env['l10n_latam.payment.mass.transfer'].with_context(
     #         active_model='account.payment', active_ids=[check.id]).create({'destination_journal_id': bank_journal.id})._create_payments()
-    #     self.assertEqual(check.l10n_latam_check_current_journal_id, bank_journal, 'Current journal was not computed properly on delivery')
+    #     self.assertEqual(check.current_journal_id, bank_journal, 'Current journal was not computed properly on delivery')
     #     # check dont deposit twice
     #     with self.assertRaisesRegex(UserError, "All selected checks must be on the same journal and on hand"), self.cr.savepoint():
     #         self.env['l10n_latam.payment.mass.transfer'].with_context(
@@ -127,7 +127,7 @@ class TestThirdChecks(L10nLatamCheckTest):
     #     }
     #     bank_rejection = self.env['account.payment'].create(vals)
     #     bank_rejection.action_post()
-    #     self.assertEqual(check.l10n_latam_check_current_journal_id, self.rejected_check_journal, 'Current journal was not computed properly on return')
+    #     self.assertEqual(check.current_journal_id, self.rejected_check_journal, 'Current journal was not computed properly on return')
     #     # check dont reject twice
     #     with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.cr.savepoint():
     #         self.env['account.payment'].create(vals).action_post()
@@ -143,7 +143,7 @@ class TestThirdChecks(L10nLatamCheckTest):
     #     }
     #     customer_return = self.env['account.payment'].create(vals)
     #     customer_return.action_post()
-    #     self.assertFalse(check.l10n_latam_check_current_journal_id, 'Current journal was not computed properly on customer return')
+    #     self.assertFalse(check.current_journal_id, 'Current journal was not computed properly on customer return')
     #     # check dont return twice
     #     with self.assertRaisesRegex(ValidationError, "is already used on another payment"), self.cr.savepoint():
     #         self.env['account.payment'].create(vals).action_post()
@@ -162,7 +162,7 @@ class TestThirdChecks(L10nLatamCheckTest):
     #     # Transfer to rejected checks journal (usually is to another third party checks journal, but for test purpose is the same)
     #     self.env['l10n_latam.payment.mass.transfer'].with_context(
     #         active_model='account.payment', active_ids=[check.id]).create({'destination_journal_id': self.rejected_check_journal.id})._create_payments()
-    #     self.assertEqual(check.l10n_latam_check_current_journal_id, self.rejected_check_journal, 'Current journal was not computed properly on delivery')
+    #     self.assertEqual(check.current_journal_id, self.rejected_check_journal, 'Current journal was not computed properly on delivery')
 
     #     # test that checks created on different journals but that are on same current journal, can be transfered together
     #     check2 = self.create_third_party_check(journal=self.rejected_check_journal)

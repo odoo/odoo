@@ -13,8 +13,8 @@
             </filter>
             <filter name="groupby_date" position="after">
                 <filter string="Check Cash-In Date"
-                    name="groupby_l10n_latam_check_payment_date"
-                    context="{'group_by': 'l10n_latam_check_payment_date'}"/>
+                    name="groupby_payment_date"
+                    context="{'group_by': 'payment_date'}"/>
                 <separator/>
                 <filter string="On hand" name="checks_on_hand" domain="[('issue_state', '=', 'handed')]"/>
                 <filter string="Voided" name="checks_voided" domain="[('issue_state', '=', 'voided')]"/>
@@ -31,26 +31,26 @@
         <field name="inherit_id" ref="account.view_account_payment_search"/>
         <field name="arch" type="xml">
             <field name="journal_id" position="after">
-                <field name="l10n_latam_check_current_journal_id"/>
+                <field name="current_journal_id"/>
             </field>
             <filter name="date" position="after">
                 <separator/>
                 <filter string="Checks on hand" name="checks_on_hand"
                     domain="[('state', '=', 'posted'),
-                                ('l10n_latam_check_current_journal_id.inbound_payment_method_line_ids.payment_method_id.code', '=', 'in_third_party_checks')]"/>
+                                ('current_journal_id.inbound_payment_method_line_ids.payment_method_id.code', '=', 'in_third_party_checks')]"/>
             </filter>
             <filter name="journal" position="after">
                 <filter name="groupby_third_party_check_current_journal"
                     string="Current Journal"
-                    context="{'group_by': 'l10n_latam_check_current_journal_id'}"/>
+                    context="{'group_by': 'current_journal_id'}"/>
             </filter>
             <filter name="unmatched" position="attributes">
                 <attribute name="invisible">1</attribute>
             </filter>
             <filter name="groupby_date" position="after">
                 <filter string="Check Cash-In Date"
-                    name="groupby_l10n_latam_check_payment_date"
-                    context="{'group_by': 'l10n_latam_check_payment_date'}"/>
+                    name="groupby_payment_date"
+                    context="{'group_by': 'payment_date'}"/>
             </filter>
         </field>
     </record>
@@ -75,7 +75,7 @@
         <field name="arch" type="xml">
             <calendar
                     mode="month"
-                    date_start="l10n_latam_check_payment_date"
+                    date_start="payment_date"
                     color="journal_id">
                 <field name="amount"/>
             </calendar>
@@ -87,8 +87,8 @@
         <field name="model">l10n_latam.account.payment.check</field>
         <field name="arch" type="xml">
             <pivot>
-                <field name="l10n_latam_check_payment_date" type="row" interval="month"/>
-                <field name="l10n_latam_check_payment_date" type="row" interval="week"/>
+                <field name="payment_date" type="row" interval="month"/>
+                <field name="payment_date" type="row" interval="week"/>
             <field name="amount" type="measure"/>
             </pivot>
         </field>
@@ -119,10 +119,10 @@
                     <group>
                         <field name="company_id" groups="base.group_multi_company"/>
                         <field name="name"/>
-                        <field name="l10n_latam_check_current_journal_id" invisible="issue_state"/>
-                        <field name="l10n_latam_check_bank_id"  invisible="issue_state"/>
-                        <field name="l10n_latam_check_issuer_vat"  invisible="issue_state"/>
-                        <field name="l10n_latam_check_payment_date"/>
+                        <field name="current_journal_id" invisible="issue_state"/>
+                        <field name="bank_id"  invisible="issue_state"/>
+                        <field name="issuer_vat"  invisible="issue_state"/>
+                        <field name="payment_date"/>
                         <field name="currency_id"/>
                         <field name="amount"/>
                     </group>
@@ -146,7 +146,7 @@
                     <field name="suitable_journal_ids" column_invisible="True"/>
                     <field name="available_payment_method_line_ids" column_invisible="True"/>
                     <field name="date"/>
-                    <field name="l10n_latam_check_payment_date" optional="show"/>
+                    <field name="payment_date" optional="show"/>
                     <field name="name"/>
                     <field name="journal_id"/>
                     <field name="company_id" optional="hide" groups="base.group_multi_company"/>
@@ -187,7 +187,7 @@
                 <attribute name="column_invisible">1</attribute>
             </field>
             <field name="journal_id" position="replace">
-                <field name="l10n_latam_check_current_journal_id" string="Current Journal"/>
+                <field name="current_journal_id" string="Current Journal"/>
             </field>
 
             <tree position="inside">
