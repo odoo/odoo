@@ -62,7 +62,7 @@
         'web.assets_tests': [
             'mrp/static/tests/tours/**/*',
         ],
-        'web.qunit_suite_tests': [
+        'web.assets_unit_tests': [
             'mrp/static/tests/**/*',
         ],
     },
