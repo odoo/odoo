@@ -50,9 +50,16 @@
         'web.assets_backend': [
             'hr/static/src/**/*',
         ],
-        'web.qunit_suite_tests': [
+        # Unit test files
+        'web.assets_unit_tests': [
             'hr/static/tests/**/*',
+            ('remove', 'hr/static/tests/legacy/**/*'),  # to remove when all legacy tests are ported
+            ('remove', 'hr/static/tests/helpers/**/*'),
             ('remove', 'hr/static/tests/tours/**/*'),
+        ],
+        'web.qunit_suite_tests': [
+            'hr/static/tests/legacy/**/*',
+            'hr/static/tests/helpers/**/*',
         ],
         'web.assets_tests': [
             'hr/static/tests/tours/**/*',
