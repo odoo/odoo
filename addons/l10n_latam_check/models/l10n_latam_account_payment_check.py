@@ -4,7 +4,7 @@ import logging
 import stdnum
 
 from odoo import models, fields, api, Command, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import index_exists
 
 
@@ -222,3 +222,8 @@ class l10nLatamAccountPaymentCheck(models.Model):
                 error_message = self.env['res.partner']._build_vat_error_message(
                     rec.company_id.country_id.code.lower(), rec.l10n_latam_check_issuer_vat, 'Check Issuer VAT')
                 raise ValidationError(error_message)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_payment_is_draft(self):
+        if any(check.state == 'posted' for check in self):
+            raise UserError("Can't delete a check if payment is posted!")

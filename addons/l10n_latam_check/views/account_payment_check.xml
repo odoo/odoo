@@ -101,7 +101,7 @@
             <form create="False" edit="False">
                 <field name="split_move_line_id" invisible="True"/>
                 <header>
-                    <button name="action_void" string="Void Check" invisible="issue_state != 'handed'" type="object" class="oe_highlight" confirm="Marking a check as void will generate a new entry that will re-enable the debt."  data-hotkey="v"/>
+                    <button name="action_void" string="Void Check" invisible="issue_state != 'handed'" type="object" class="oe_highlight" confirm="Marking a check as void will cancel the check and generate a new entry that will re-open the debt."  data-hotkey="v"/>
                     <field name="issue_state" statusbar_visible="issue_state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -184,7 +184,7 @@
         <field name="inherit_id" ref="view_account_own_check_tree"/>
         <field name="arch" type="xml">
             <field name="issue_state" position="attributes">
-                <attribute name="column_invisible" eval="True"/>
+                <attribute name="column_invisible">1</attribute>
             </field>
             <field name="journal_id" position="replace">
                 <field name="l10n_latam_check_current_journal_id" string="Current Journal"/>
