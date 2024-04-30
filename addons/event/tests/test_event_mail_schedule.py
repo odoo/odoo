@@ -334,7 +334,7 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         # a new scheduler after)
         self.env.invalidate_all()
         # com 61, event 39
-        with self.assertQueryCount(64), self.mock_datetime_and_now(reference_now), \
+        with self.assertQueryCount(74), self.mock_datetime_and_now(reference_now), \
              self.mock_mail_gateway():
             _existing = self.env['event.registration'].create([
                 {

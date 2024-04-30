@@ -25,12 +25,13 @@
                     <div t-elif="productsToDisplay.length != 0 and pos.session._has_available_products" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
                         <ProductCard
                             t-foreach="productsToDisplay" t-as="product" t-key="product.id"
+                            productId="product.id"
+                            product="product"
                             class="pos.productViewMode"
                             name="getProductName(product)"
-                            productId="product.id"
                             color="product.pos_categ_ids?.at(-1)?.color"
-                            price="pos.getProductPriceFormatted(product)"
-                            imageUrl="pos.config.show_product_images and product.getImageUrl()"
+                            price="this.getProductPrice(product)"
+                            imageUrl="pos.config.show_product_images and this.getProductImage(product)"
                             onClick.bind="() => this.addProductToOrder(product)"
                             productInfo="true"
                             onProductInfoClick.bind="() => this.onProductInfoClick(product)" />

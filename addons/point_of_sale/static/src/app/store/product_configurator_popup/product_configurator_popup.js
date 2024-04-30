@@ -157,7 +157,7 @@ export class ProductConfiguratorPopup extends Component {
 
         if (alwaysVariants) {
             const newProduct = this.pos.models["product.product"]
-                .filter((p) => p.raw.product_template_variant_value_ids.length > 0)
+                .filter((p) => p.raw?.product_template_variant_value_ids?.length > 0)
                 .find((p) =>
                     p.raw.product_template_variant_value_ids.every((v) =>
                         formattedPayload.attribute_value_ids.includes(v)
