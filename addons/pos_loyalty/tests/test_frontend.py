@@ -1627,3 +1627,40 @@ class TestUi(TestPointOfSaleHttpCommon):
             'PosLoyaltyMinAmountAndSpecificProductTour',
             login='pos_user',
         )
+
+    def test_gift_card_price_no_tax(self):
+        """
+        Test that the gift card has the right price (especially does not include taxes)
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        # But activate the gift_card_product_50 because it's shared among new gift card programs.
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+
+        # Change the gift card program settings
+        self.main_pos_config.write({'gift_card_settings': 'scan_use'})
+
+        # Create gift card program
+        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+
+        # Set a tax which should not be applied
+        gift_card_program.payment_program_discount_product_id.taxes_id = self.env['account.tax'].create({
+            'name': "Test Tax",
+            "amount_type": "percent",
+            'amount': 15,
+        })
+
+        # Generate 1$ gift card.
+        self.env["loyalty.generate.wizard"].with_context(
+            {"active_id": gift_card_program.id}
+        ).create({"coupon_qty": 1, 'points_granted': 1}).generate_coupons()
+        # Change the code of the gift card.
+        gift_card_program.coupon_ids.code = '043123456'
+
+        # Run the tour. It will use the gift card.
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "GiftCardProgramPriceNoTaxTour",
+            login="pos_user"
+        )
