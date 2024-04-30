@@ -152,7 +152,7 @@
                             <td class="product_text_info">
                                 <ul>
                                     <li t-esc="orderline.get_full_product_name()" />
-                                    <t t-if="orderline.get_discount_str() !== '0'">
+                                    <t t-if="orderline.get_discount_str()">
                                         <li class="product_details">
                                             <i class="fa fa-tag" role="img" aria-label="Discount" title="Discount" />
                                         <t t-esc="orderline.get_discount_str()" />% <span class="gray">discount</span>
@@ -197,7 +197,7 @@
             <t t-if="order">
                 <t t-foreach="order.payment_ids" t-as="paymentline"  t-key="paymentline_index">
                     <div class="pos-amount-container pos-spaced-line-container">
-                        <span class="name"><t t-esc="paymentline.name" />:</span>
+                        <span class="name"><t t-esc="paymentline.payment_method_id.name" />:</span>
                         <div class="spacer" />
                         <div class="pos-spaced-line-container">
                             <div class="spacer" />
