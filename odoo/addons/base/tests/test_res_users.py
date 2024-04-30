@@ -227,6 +227,21 @@ class TestUsers(TransactionCase):
 @tagged('post_install', '-at_install')
 class TestUsers2(TransactionCase):
 
+    def test_change_user_login(self):
+        """ Check that partner email is updated when changing user's login """
+
+        User = self.env['res.users']
+        with Form(User, view='base.view_users_form') as UserForm:
+            UserForm.name = "Test User"
+            UserForm.login = "test-user1"
+            self.assertFalse(UserForm.email)
+
+            UserForm.login = "test-user1@mycompany.example.org"
+            self.assertEqual(
+                UserForm.email, "test-user1@mycompany.example.org",
+                "Setting a valid email as login should update the partner's email"
+            )
+
     def test_reified_groups(self):
         """ The groups handler doesn't use the "real" view with pseudo-fields
         during installation, so it always works (because it uses the normal

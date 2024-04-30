@@ -144,6 +144,7 @@
                         <div class="oe_title">
                             <label for="name"/>
                             <h1><field name="name" placeholder="e.g. John Doe" required="1"/></h1>
+                            <field name="email" invisible="1"/><!-- needed to update partner's email from on_change_login() -->
                             <label for="login" string="Email Address"/>
                             <h2>
                                 <field name="login"
@@ -199,6 +200,7 @@
                         <div class="oe_title">
                             <label for="name"/>
                             <h1><field name="name" placeholder="e.g. John Doe" required="1"/></h1>
+                            <field name="email" invisible="1"/><!-- needed to update partner's email from on_change_login() -->
                             <label for="login" string="Email Address"/>
                             <h2><field name="login" placeholder="e.g. email@yourcompany.com"/></h2>
                             <group>
