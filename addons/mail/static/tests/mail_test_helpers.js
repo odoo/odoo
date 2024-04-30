@@ -68,10 +68,12 @@ useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.mocked; // 
 //-----------------------------------------------------------------------------
 
 export function defineMailModels() {
-    return defineModels({ ...webModels, ...busModels, ...mailModels });
+    return defineModels(mailModels);
 }
 
 export const mailModels = {
+    ...webModels,
+    ...busModels,
     Base,
     DiscussChannel,
     DiscussChannelMember,
