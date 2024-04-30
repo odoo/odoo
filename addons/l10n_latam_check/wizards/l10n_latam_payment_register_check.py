@@ -19,16 +19,12 @@ class l10nLatamCheckPaymentRegisterCheck(models.TransientModel):
     name = fields.Char(string='Number')
     bank_id = fields.Many2one(
         comodel_name='res.bank',
-        string='Check Bank',
         compute='_compute_bank_id', store=True, readonly=False,
     )
     issuer_vat = fields.Char(
-        string='Check Issuer VAT',
         compute='_compute_issuer_vat', store=True, readonly=False,
     )
     payment_date = fields.Date(
-        string='Check Cash-In Date',
-        help="Date from when you can cash in the check, turn the check into cash",
         readonly=False,
     )
     amount = fields.Monetary()

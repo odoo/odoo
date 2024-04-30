@@ -214,19 +214,6 @@ class AccountPayment(models.Model):
         res = super()._get_trigger_fields_to_synchronize()
         return res + ('l10n_latam_check_ids',)
 
-    def _prepare_move_line_default_vals(self, write_off_line_vals=None, force_balance=None):
-        """ Add check name and operation on liquidity line """
-        res = super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals, force_balance=force_balance)
-        # check = self if (self.payment_method_line_id.code == 'new_third_party_checks' or (self.payment_method_line_id.code == 'own_printing' and self.l10n_latam_manual_checks)) \
-        #     else self.l10n_latam_check_id
-        if self.l10n_latam_check_ids:
-            document_names = (_('Check %s received') if self.payment_type == 'inbound' else _('Check %s delivered')) % (
-                     ', '.join(self.l10n_latam_check_ids.mapped('name')))
-            res[0].update({
-                'name': document_names + ' - ' + ''.join([item[1] for item in self._get_aml_default_display_name_list()]),
-            })
-        return res
-
     def _create_paired_internal_transfer_payment(self):
         """
         Two modifications when only when transferring from a third party checks journal:
