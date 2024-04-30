@@ -283,9 +283,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour9", {
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.claimReward("$ 5"),
             ProductScreen.totalAmountIs("205.00"),
-            PosLoyalty.isRewardButtonHighlighted(true),
-            PosLoyalty.claimReward("$ 5"),
-            ProductScreen.totalAmountIs("200.00"),
         ].flat(),
 });
 

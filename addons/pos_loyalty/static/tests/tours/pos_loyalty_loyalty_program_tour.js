@@ -161,6 +161,6 @@ registry.category("web_tour.tours").add("PosLoyaltyPromotion", {
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Partner"),
             ProductScreen.addOrderline("Test Product 1", "1.00", "100"),
-            ProductScreen.totalAmountIs("80.00"),
+            ProductScreen.totalAmountIs("90.00"),
         ].flat(),
 });

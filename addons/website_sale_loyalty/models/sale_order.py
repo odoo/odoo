@@ -215,7 +215,11 @@ class SaleOrder(models.Model):
         for coupon in loyality_cards:
             points = self._get_real_points_for_coupon(coupon)
             for reward in coupon.program_id.reward_ids:
-                if reward.is_global_discount and global_discount_reward and global_discount_reward.discount >= reward.discount:
+                if (
+                    reward.is_global_discount
+                    and global_discount_reward
+                    and self._best_global_discount_already_applied(global_discount_reward, reward)
+                ):
                     continue
                 if reward.reward_type == 'discount' and total_is_zero:
                     continue
