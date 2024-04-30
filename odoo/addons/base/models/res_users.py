@@ -819,11 +819,16 @@ class Users(models.Model):
             with cls.pool.cursor() as cr:
                 self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
                 with self._assert_can_auth(user=login):
-                    user = self.search(self._get_login_domain(login), order=self._get_login_order(), limit=1)
+                    user = self.with_context(active_test=False).search(self._get_login_domain(login), order=self._get_login_order(), limit=1)
                     if not user:
                         raise AccessDenied()
                     user = user.with_user(user)
                     user._check_credentials(password, user_agent_env)
+                    if not user.active:
+                        _logger.info('Archived user %s attempted login to db:%s from %s', user.name, db, ip)
+                        raise AccessError(_(
+                            'This account is archived. Please contact the systems administrator for more information.'
+                        ))
                     tz = request.httprequest.cookies.get('tz') if request else None
                     if tz in pytz.all_timezones and (not user.tz or not user.login_date):
                         # first login or missing tz -> set tz to browser tz
