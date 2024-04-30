@@ -9,7 +9,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
-from odoo.tools.float_utils import float_is_zero, float_round
+from odoo.tools import float_round, lazy
 
 
 def _generate_random_reward_code():
@@ -43,9 +43,7 @@ class SaleOrder(models.Model):
             order.reward_amount = reward_amount
 
     def _get_no_effect_on_threshold_lines(self):
-        """
-        Returns the lines that have no effect on the minimum amount to reach
-        """
+        """Return the lines that have no effect on the minimum amount to reach."""
         self.ensure_one()
         return self.env['sale.order.line']
 
@@ -157,15 +155,32 @@ class SaleOrder(models.Model):
         }]
 
     def _discountable_order(self, reward):
-        """
-        Returns the discountable and discountable_per_tax for a discount that applies to the whole order
+        """Compute the `discountable` amount (and amounts per tax group) for the current order.
+
+        :param reward: if provided, the reward whose discountable amounts must be computed.
+            It must be applicable at the order level.
+        :type reward: `loyalty.reward` record, can be empty to compute the amounts regardless of the
+            program configuration
+
+        :return: A tuple with the first element being the total discountable amount of the order,
+            and the second a dictionary mapping each non-fixed taxes group to its corresponding
+            total untaxed amount of the eligible order lines.
+        :rtype: tuple(float, dict(account.tax: float))
         """
         self.ensure_one()
+        reward.ensure_one()
         assert reward.discount_applicability == 'order'
 
         discountable = 0
         discountable_per_tax = defaultdict(int)
-        lines = self.order_line if reward.program_id.is_payment_program else (self.order_line - self._get_no_effect_on_threshold_lines())
+
+        if reward.program_id.is_payment_program:
+            # Gift cards and eWallets are applied on the total order amount
+            lines = self.order_line
+        else:
+            # Other types of programs are not expected to apply on delivery lines
+            lines = self.order_line - self._get_no_effect_on_threshold_lines()
+
         for line in lines:
             # Ignore lines from this reward
             if not line.product_uom_qty or not line.price_unit:
