@@ -20,7 +20,8 @@ class OnchangeChecker(lint_case.NodeVisitor):
         # domains or does not
         return itertools.islice((
             n for n in walker
-            if isinstance(n, ast.Constant) and n.value == 'domain'
+            if isinstance(n, getattr(ast, 'Str', type(None))) and n.s == 'domain'
+            or isinstance(n, getattr(ast, 'Constant', type(None))) and n.value == 'domain'
         ), 1)
 
 
