@@ -73,6 +73,8 @@ class EvaluacionesController(http.Controller):
         else:
             parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(None, evaluacion_id, token)
         
+        parametros["token"] = token
+
         # Renderiza la plantilla con la evaluación
         return request.render("evaluaciones.evaluaciones_responder", parametros)
     
@@ -104,6 +106,7 @@ class EvaluacionesController(http.Controller):
         evaluacion_id = post_data.get("evaluacion_id")
         user_id = user
         respuesta_model = request.env["respuesta"]
+        token = post_data.get("token")
 
         for pregunta_id, radio_value in radio_values.items():
             if pregunta_id in radio_values:
@@ -111,7 +114,6 @@ class EvaluacionesController(http.Controller):
                 if request.env.user != request.env.ref('base.public_user'):
                     resp = respuesta_model.sudo().action_guardar_respuesta(radio_value, None, int(evaluacion_id), int(user_id), int(pregunta_id), None)
                 else:
-                    token = post_data.get("token")
                     resp = respuesta_model.sudo().action_guardar_respuesta(radio_value, None, int(evaluacion_id), None, int(pregunta_id), token)
             else:
                 continue
@@ -123,7 +125,6 @@ class EvaluacionesController(http.Controller):
                 if request.env.user != request.env.ref('base.public_user'):
                     resp = respuesta_model.sudo().action_guardar_respuesta(None, textarea_value, int(evaluacion_id), int(user_id), int(pregunta_id), None)
                 else:
-                    token = post_data.get("token")
                     resp = respuesta_model.sudo().action_guardar_respuesta(None, textarea_value, int(evaluacion_id), None, int(pregunta_id), token)
             else:
                 continue
@@ -134,9 +135,9 @@ class EvaluacionesController(http.Controller):
         if request.env.user != request.env.ref('base.public_user'):
             usuario_eva_mod.sudo().action_update_estado(user_id, evaluacion_id, None)
         else:
+            print("noAuth token " + token)
             usuario_eva_mod.sudo().action_update_estado(None, evaluacion_id, token)
-        
-
+    
 
         # Redirige a la página de inicio
-        # return request.redirect('/evaluacion/responder/12')
+        return request.redirect('/evaluacion/responder/' + str(evaluacion_id) + '/' + token)

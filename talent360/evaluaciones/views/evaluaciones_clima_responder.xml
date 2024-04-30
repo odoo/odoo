@@ -56,6 +56,7 @@
         <form role="form" method="post" t-att-name="evaluacion.id" class="d-flex flex-grow-1 align-items-center">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="evaluacion_id" t-att-value="evaluacion.id"/>
+            <input type="hidden" name="token" t-att-value="token"/>
             <div class="o_survey_error alert alert-danger d-none" role="alert">
                 <p>Hubo un error al momento de validar las evaluaciones.</p>
             </div>

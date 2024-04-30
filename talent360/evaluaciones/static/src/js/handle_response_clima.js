@@ -21,12 +21,15 @@ function handleResponseClima() {
     var evaluacion_id = document.querySelector('input[name="evaluacion_id"]').value;
     var csrf_token = document.querySelector('input[name="csrf_token"]').value;
 
+    token = document.querySelector('input[name="token"]').value;
+
     // Combina los dos objetos en uno
     var data = {
         radioValues: selectedValues,
         textareaValues: textareaValues,
         evaluacion_id: evaluacion_id,
-        csrf_token: csrf_token
+        csrf_token: csrf_token,
+        token: token,
     };
 
     // Envía los valores a la base de datos
@@ -34,7 +37,4 @@ function handleResponseClima() {
     xhr.open('POST', '/evaluacion/responder', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(data));
-
-    // reload the page
-    location.reload();
 }
