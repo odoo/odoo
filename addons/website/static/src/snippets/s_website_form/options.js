@@ -162,17 +162,7 @@ const FormEditor = options.Class.extend({
             labelWidth: this.$target[0].querySelector('.s_website_form_label').style.width,
             labelPosition: 'left',
             multiPosition: 'horizontal',
-            requiredMark: this._isRequiredMark(),
-            optionalMark: this._isOptionalMark(),
-            mark: this._getMark(),
         };
-    },
-    /**
-     * @private
-     * @returns {string}
-     */
-    _getMark: function () {
-        return this.$target[0].dataset.mark;
     },
     /**
      * Replace all `"` character by `&quot;`, all `'` character by `&apos;` and
@@ -188,20 +178,6 @@ const FormEditor = options.Class.extend({
                    .replaceAll(/'/g, character => `&apos;`)
                    .replaceAll(/`/g, character => `&lsquo;`)
                    .replaceAll("\\", character => `&bsol;`);
-    },
-    /**
-     * @private
-     * @returns {boolean}
-     */
-    _isOptionalMark: function () {
-        return this.$target[0].classList.contains('o_mark_optional');
-    },
-    /**
-     * @private
-     * @returns {boolean}
-     */
-    _isRequiredMark: function () {
-        return this.$target[0].classList.contains('o_mark_required');
     },
     /**
      * @private
@@ -293,21 +269,12 @@ const FieldEditor = FormEditor.extend({
      * @returns {Object}
      */
     _getFieldFormat: function () {
-        let requiredMark, optionalMark;
-        const mark = this.$target[0].querySelector('.s_website_form_mark');
-        if (mark) {
-            requiredMark = this._isFieldRequired();
-            optionalMark = !requiredMark;
-        }
         const multipleInput = this._getMultipleInputs();
         const format = {
             labelPosition: this._getLabelPosition(),
             labelWidth: this.$target[0].querySelector('.s_website_form_label').style.width,
             multiPosition: multipleInput && multipleInput.dataset.display || 'horizontal',
             col: [...this.$target[0].classList].filter(el => el.match(/^col-/g)).join(' '),
-            requiredMark: requiredMark,
-            optionalMark: optionalMark,
-            mark: mark && mark.textContent,
         };
         return format;
     },
@@ -337,7 +304,9 @@ const FieldEditor = FormEditor.extend({
      */
     _getLabelPosition: function () {
         const label = this.$target[0].querySelector('.s_website_form_label');
-        if (this.$target[0].querySelector('.row:not(.s_website_form_multiple)')) {
+        if (this.$target[0].querySelector(":scope .form-floating")) {
+            return "floating";
+        } else if (this.$target[0].querySelector('.row:not(.s_website_form_multiple)')) {
             return label.classList.contains('text-end') ? 'right' : 'left';
         } else {
             return label.classList.contains('d-none') ? 'none' : 'top';
@@ -527,14 +496,9 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
      */
     notify: function (name, data) {
         this._super(...arguments);
-        if (name === 'field_mark') {
-            this._setLabelsMark();
-        } else if (name === 'add_field') {
+        if (name === 'add_field') {
             const field = this._getCustomField('char', 'Custom Text');
             field.formatInfo = data.formatInfo;
-            field.formatInfo.requiredMark = this._isRequiredMark();
-            field.formatInfo.optionalMark = this._isOptionalMark();
-            field.formatInfo.mark = this._getMark();
             const fieldEl = this._renderField(field);
             data.$target.after(fieldEl);
             this.trigger_up('activate_snippet', {
@@ -630,22 +594,6 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         this.rerender = true;
     },
     /**
-     * @override
-     */
-    selectClass: function (previewMode, value, params) {
-        this._super(...arguments);
-        if (params.name === 'field_mark_select') {
-            this._setLabelsMark();
-        }
-    },
-    /**
-     * Set the mark string on the form
-     */
-    setMark: function (previewMode, value, params) {
-        this.$target[0].dataset.mark = value.trim();
-        this._setLabelsMark();
-    },
-    /**
      * Toggle the recaptcha legal terms
      */
     toggleRecaptchaLegal: function (previewMode, value, params) {
@@ -693,8 +641,6 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             }
             case 'onSuccess':
                 return this.$target[0].dataset.successMode;
-            case 'setMark':
-                return this._getMark();
             case 'toggleRecaptchaLegal':
                 return !this.$target[0].querySelector('.s_website_form_recaptcha') || '';
         }
@@ -881,32 +827,6 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                 this.$target.find('.s_website_form_submit, .s_website_form_recaptcha').first().before(this._renderField(field));
             });
         }
-    },
-    /**
-     * Set the correct mark on all fields.
-     *
-     * @private
-     */
-    _setLabelsMark: function () {
-        this.$target[0].querySelectorAll('.s_website_form_mark').forEach(el => el.remove());
-        const mark = this._getMark();
-        if (!mark) {
-            return;
-        }
-        let fieldsToMark = [];
-        const requiredSelector = '.s_website_form_model_required, .s_website_form_required';
-        const fields = Array.from(this.$target[0].querySelectorAll('.s_website_form_field'));
-        if (this._isRequiredMark()) {
-            fieldsToMark = fields.filter(el => el.matches(requiredSelector));
-        } else if (this._isOptionalMark()) {
-            fieldsToMark = fields.filter(el => !el.matches(requiredSelector));
-        }
-        fieldsToMark.forEach(field => {
-            let span = document.createElement('span');
-            span.classList.add('s_website_form_mark');
-            span.textContent = ` ${mark}`;
-            field.querySelector('.s_website_form_label').appendChild(span);
-        });
     },
     /**
      * Redirects the user to the page of a specified action.
@@ -1141,10 +1061,6 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const isRequired = this.$target[0].classList.contains(params.activeValue);
         this.$target[0].classList.toggle(params.activeValue, !isRequired);
         this.$target[0].querySelectorAll('input, select, textarea').forEach(el => el.toggleAttribute('required', !isRequired));
-        this.trigger_up('option_update', {
-            optionName: 'WebsiteFormEditor',
-            name: 'field_mark',
-        });
     },
     /**
      * Apply the we-list on the target and rebuild the input(s)
@@ -1322,6 +1238,10 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 return fieldEl.classList.contains("s_website_form_custom") ||
                     ["one2many", "many2many"].includes(fieldEl.dataset.type);
             }
+            case "input_label_position_floating_opt":
+                return !["boolean", "one2many", "selection", "date", "datetime", "binary"].includes(
+                    this.$target[0].dataset.type
+                );
         }
         return this._super(...arguments);
     },
