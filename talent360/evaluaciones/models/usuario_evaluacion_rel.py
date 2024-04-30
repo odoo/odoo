@@ -7,4 +7,11 @@ class UsuarioEvaluacionRel(models.Model):
 
     evaluacion_id = fields.Many2one("evaluacion", string="Evaluacion")
     usuario_id = fields.Many2one("res.users", string="Usuario")
-    contestada = fields.Boolean(string="Contestada", default=False)
+    estado_evaluacion = fields.Selection(
+        [
+            ("pendiente", "Pendiente"),
+            ("contestada", "Contestada"),
+        ],
+        default="pendiente",
+        required=True,
+    )
