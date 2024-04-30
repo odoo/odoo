@@ -46,8 +46,17 @@ If you need to manage your meetings, you should install the CRM module.
         'web.assets_backend': [
             'calendar/static/src/**/*',
         ],
+        # Unit test files
+        'web.assets_unit_tests': [
+            'calendar/static/tests/**/*.js',
+            ('remove', 'calendar/static/tests/legacy/**/*'),  # to remove when all legacy tests are ported
+            ('remove', 'calendar/static/tests/helpers/**/*'),
+            ('remove', 'calendar/static/tests/tours/**/*'),
+        ],
         'web.qunit_suite_tests': [
-            'calendar/static/tests/**/*',
+            'calendar/static/tests/legacy/**/*',
+            'calendar/static/tests/helpers/**/*',
+            'calendar/static/tests/tours/**/*',
         ],
         'web.assets_tests': [
             'calendar/static/tests/tours/**/*',
