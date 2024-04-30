@@ -891,7 +891,7 @@ class Task(models.Model):
             self.check_access_rights('create')
         default_stage = dict()
         for vals in vals_list:
-            project_id = vals.get('project_id')
+            project_id = vals.get('project_id') or self.env.context.get('default_project_id')
             if vals.get('user_ids'):
                 vals['date_assign'] = fields.Datetime.now()
                 if not (vals.get('parent_id') or project_id or self._context.get('default_project_id')):
