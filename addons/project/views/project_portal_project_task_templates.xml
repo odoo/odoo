@@ -25,8 +25,8 @@
                         <th t-attf-colspan="{{2 if groupby != 'priority' else 1}}"/>
                         <th>Name</th>
                         <th>Assignees</th>
-                        <th t-if="groupby != 'milestone_id' and allow_milestone" name="project_portal_milestones">Milestone</th>
                         <th t-if="groupby != 'project_id' and multiple_projects">Project</th>
+                        <th t-if="groupby != 'milestone_id' and allow_milestone" name="project_portal_milestones">Milestone</th>
                         <th t-if="groupby != 'state'"/>
                         <th t-if="groupby != 'stage_id'" class="text-end">Stage</th>
                     </tr>
@@ -86,13 +86,13 @@
                                         </span>
                                     </div>
                                 </td>
+                                <td t-if="groupby != 'project_id' and multiple_projects">
+                                    <span title="Current project of the task" t-out="task.project_id.name" />
+                                </td>
                                 <td t-if="groupby != 'milestone_id' and allow_milestone" name="project_portal_milestones">
                                     <t t-if="task.milestone_id and task.allow_milestones">
                                         <span t-esc="task.milestone_id.name" />
                                     </t>
-                                </td>
-                                <td t-if="groupby != 'project_id' and multiple_projects">
-                                    <span title="Current project of the task" t-esc="task.project_id.name" />
                                 </td>
                                 <td t-if="groupby != 'state'" align="right" class="align-middle">
                                     <t t-call="project.portal_my_tasks_state_widget_template">
@@ -206,7 +206,7 @@
                                     <t t-if="task.partner_id">
                                         <t t-call="portal.portal_my_contact">
                                             <t t-set="_contactAvatar" t-value="image_data_uri(task.partner_id.avatar_512)"/>
-                                            <t t-set="_contactName" t-value="task.partner_id.name"/>
+                                            <t t-set="_contactName" t-value="task.partner_id.display_name"/>
                                             <div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone"]}'/>
                                         </t>
                                     </t>
