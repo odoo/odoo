@@ -34,8 +34,11 @@ class Certificate(models.Model):
         """
         self.ensure_one()
         content, password = b64decode(self.with_context(bin_size=False).content), self.password.encode() if self.password else None
-        private_key, certificate, *_dummy = pkcs12.load_key_and_certificates(content, password, backend=default_backend())
-        return private_key, certificate
+        private_key, certificate, certificates = pkcs12.load_key_and_certificates(content, password, backend=default_backend())
+        if certificate is None:
+            return private_key, certificates[0]
+        else:
+            return private_key, certificate
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
