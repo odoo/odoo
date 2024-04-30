@@ -14,5 +14,10 @@ List of contributors:
 
 Daniel Dico ddico@oerp.ca https://github.com/ddico
 Yash Pathak yp@oerp.ca https://github.com/yp-oerp
+<<<<<<< HEAD
 Lucas Jagel lj@oerp.ca https://github.com/lj-oerp
 Daryl Chen dc@oerp.ca https://github.com/dc-oerp
+||||||| parent of 31ceeba268b0 (temp)
+=======
+Hetal Solanki hs@oerp.ca https://github.com/hs-oerp
+>>>>>>> 31ceeba268b0 (temp)
