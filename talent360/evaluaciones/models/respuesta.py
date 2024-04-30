@@ -13,6 +13,8 @@ class Respuesta(models.Model):
 
     token = fields.Char(string="Token")
 
+    
+
 
     def action_guardar_respuesta(self, radios, texto, evaluacion_id, user_id, pregunta_id, token):
         """Método para guardar la respuesta de una pregunta.
@@ -20,6 +22,7 @@ class Respuesta(models.Model):
         """
 
         resp = None
+        radios = str(radios)
 
         if user_id:
             if texto:

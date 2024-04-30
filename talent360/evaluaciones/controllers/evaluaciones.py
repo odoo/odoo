@@ -54,7 +54,6 @@ class EvaluacionesController(http.Controller):
             ])
 
         else:
-            print("auth" + token)
             user_eval_relation = usuario_eva_mod.sudo().search([
             # ("evaluacion_id", "=", evaluacion.id),
             ("token", "=", token)

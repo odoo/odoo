@@ -231,7 +231,7 @@
                         <td t-att-class="'o_survey_matrix_btn text-primary position-relative %s'% ('o_survey_selected' if answer else '')">
                             <input t-att-type="'radio'"
                                 t-att-name="'%s_%s' % (question.id, row_label.id)" 
-                                t-att-value="col_label.opcion_texto"
+                                t-att-value="col_label.id"
                                 t-att-data-row-id="row_label.id"
                                 t-att-data-col-id="col_label"
                                 class="o_survey_form_choice_item"/>
