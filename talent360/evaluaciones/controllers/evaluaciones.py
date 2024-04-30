@@ -32,9 +32,9 @@ class EvaluacionesController(http.Controller):
         return request.render("evaluaciones.encuestas_reporte", parametros)
     
     @http.route(
-        "/evaluacion/responder/<model('evaluacion'):evaluacion>/<string:token>", type="http", auth="public", website=True
+        "/evaluacion/responder/<int:evaluacion_id>/<string:token>", type="http", auth="public", website=True
     )
-    def responder_evaluacion_controller(self, evaluacion: Evaluacion, token):
+    def responder_evaluacion_controller(self, evaluacion_id, token):
         """Método para desplegar el formulario de permitir al usuario responder una evaluación.
         Este método verifica que el usuario tenga los permisos necesario, obtiene los datos
         del modelo de evaluaciones y renderiza el formulario con esos datos.
@@ -43,9 +43,10 @@ class EvaluacionesController(http.Controller):
         """
         usuario_eva_mod = request.env["usuario.evaluacion.rel"]
 
-        evaluacion_id = evaluacion.id
+        evaluacion = request.env["evaluacion"].sudo().browse(evaluacion_id)
 
-        if request.env.user or request.env.user.id:
+        if request.env.user != request.env.ref('base.public_user'):
+            print("auth" + token)
             user_eval_relation = usuario_eva_mod.sudo().search([
                 ("usuario_id", "=", request.env.user.id),
                 ("evaluacion_id", "=", evaluacion.id),
@@ -53,8 +54,9 @@ class EvaluacionesController(http.Controller):
             ])
 
         else:
+            print("auth" + token)
             user_eval_relation = usuario_eva_mod.sudo().search([
-            ("evaluacion_id", "=", evaluacion.id),
+            # ("evaluacion_id", "=", evaluacion.id),
             ("token", "=", token)
         ])
         
@@ -65,7 +67,7 @@ class EvaluacionesController(http.Controller):
         # Obtén la evaluación basada en el ID
         parametros = evaluacion.action_get_evaluaciones(evaluacion_id)
         
-        if request.env.user and request.env.user.id:
+        if request.env.user != request.env.ref('base.public_user'):
             parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(request.env.user.id, evaluacion_id, None)
         
         else:
@@ -87,7 +89,7 @@ class EvaluacionesController(http.Controller):
 
         user = None
 
-        if request.env.user or request.env.user.id:
+        if request.env.user != request.env.ref('base.public_user'):
             if not request.env.user.has_group(
                 "evaluaciones.evaluaciones_cliente_cr_group_user"
             ):
@@ -106,7 +108,7 @@ class EvaluacionesController(http.Controller):
         for pregunta_id, radio_value in radio_values.items():
             if pregunta_id in radio_values:
                 radio_value = radio_values[pregunta_id]
-                if request.env.user.id:
+                if request.env.user != request.env.ref('base.public_user'):
                     resp = respuesta_model.sudo().action_guardar_respuesta(radio_value, None, int(evaluacion_id), int(user_id), int(pregunta_id), None)
                 else:
                     token = post_data.get("token")
@@ -118,7 +120,7 @@ class EvaluacionesController(http.Controller):
         for pregunta_id, textarea_value in textarea_values.items():
             if pregunta_id in textarea_values:
                 textarea_value = textarea_values[pregunta_id]
-                if request.env.user.id:
+                if request.env.user != request.env.ref('base.public_user'):
                     resp = respuesta_model.sudo().action_guardar_respuesta(None, textarea_value, int(evaluacion_id), int(user_id), int(pregunta_id), None)
                 else:
                     token = post_data.get("token")
@@ -129,7 +131,7 @@ class EvaluacionesController(http.Controller):
         # Actualiza el estado de la evaluación para el usuario
         usuario_eva_mod = request.env["usuario.evaluacion.rel"]
 
-        if request.env.user.id:
+        if request.env.user != request.env.ref('base.public_user'):
             usuario_eva_mod.sudo().action_update_estado(user_id, evaluacion_id, None)
         else:
             usuario_eva_mod.sudo().action_update_estado(None, evaluacion_id, token)
