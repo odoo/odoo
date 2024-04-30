@@ -32,7 +32,7 @@ class EvaluacionesController(http.Controller):
         return request.render("evaluaciones.encuestas_reporte", parametros)
     
     @http.route(
-        "/evaluacion/responder/<model('evaluacion'):evaluacion>/<string:token>", type="http", auth="none", website=True
+        "/evaluacion/responder/<model('evaluacion'):evaluacion>/<string:token>", type="http", auth="public", website=True
     )
     def responder_evaluacion_controller(self, evaluacion: Evaluacion, token):
         """Método para desplegar el formulario de permitir al usuario responder una evaluación.
@@ -43,20 +43,17 @@ class EvaluacionesController(http.Controller):
         """
         usuario_eva_mod = request.env["usuario.evaluacion.rel"]
 
+        evaluacion_id = evaluacion.id
+
         if request.env.user or request.env.user.id:
-            if not request.env.user.has_group(
-                "evaluaciones.evaluaciones_cliente_cr_group_user"
-            ):
-                raise AccessError("No tienes permitido acceder a este recurso.")
-            
-            user_id = request.env.user.id
             user_eval_relation = usuario_eva_mod.sudo().search([
                 ("usuario_id", "=", request.env.user.id),
                 ("evaluacion_id", "=", evaluacion.id),
                 ("token", "=", token)
             ])
 
-        user_eval_relation = usuario_eva_mod.sudo().search([
+        else:
+            user_eval_relation = usuario_eva_mod.sudo().search([
             ("evaluacion_id", "=", evaluacion.id),
             ("token", "=", token)
         ])
@@ -64,18 +61,21 @@ class EvaluacionesController(http.Controller):
         
         if not user_eval_relation:
             return request.redirect('/error/404')
-        
-        evaluacion_id = evaluacion.id
 
         # Obtén la evaluación basada en el ID
         parametros = evaluacion.action_get_evaluaciones(evaluacion_id)
-        parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(request.env.user.id, evaluacion_id)
+        
+        if request.env.user and request.env.user.id:
+            parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(request.env.user.id, evaluacion_id, None)
+        
+        else:
+            parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(None, evaluacion_id, token)
         
         # Renderiza la plantilla con la evaluación
         return request.render("evaluaciones.evaluaciones_responder", parametros)
     
     @http.route(
-        "/evaluacion/responder", type="http", auth="user", website=True, methods=["POST"], csrf=False
+        "/evaluacion/responder", type="http", auth="public", website=True, methods=["POST"], csrf=False
     )
     def responder_evaluacion_controller_post(self, **post):
         """Método para procesar la respuesta del formulario de evaluación.
@@ -106,7 +106,11 @@ class EvaluacionesController(http.Controller):
         for pregunta_id, radio_value in radio_values.items():
             if pregunta_id in radio_values:
                 radio_value = radio_values[pregunta_id]
-                resp = respuesta_model.sudo().action_guardar_respuesta(radio_value, None, int(evaluacion_id), int(user_id), int(pregunta_id))
+                if request.env.user.id:
+                    resp = respuesta_model.sudo().action_guardar_respuesta(radio_value, None, int(evaluacion_id), int(user_id), int(pregunta_id), None)
+                else:
+                    token = post_data.get("token")
+                    resp = respuesta_model.sudo().action_guardar_respuesta(radio_value, None, int(evaluacion_id), None, int(pregunta_id), token)
             else:
                 continue
 
@@ -114,13 +118,21 @@ class EvaluacionesController(http.Controller):
         for pregunta_id, textarea_value in textarea_values.items():
             if pregunta_id in textarea_values:
                 textarea_value = textarea_values[pregunta_id]
-                resp = respuesta_model.sudo().action_guardar_respuesta(None, textarea_value, int(evaluacion_id), int(user_id), int(pregunta_id))
+                if request.env.user.id:
+                    resp = respuesta_model.sudo().action_guardar_respuesta(None, textarea_value, int(evaluacion_id), int(user_id), int(pregunta_id), None)
+                else:
+                    token = post_data.get("token")
+                    resp = respuesta_model.sudo().action_guardar_respuesta(None, textarea_value, int(evaluacion_id), None, int(pregunta_id), token)
             else:
                 continue
 
         # Actualiza el estado de la evaluación para el usuario
         usuario_eva_mod = request.env["usuario.evaluacion.rel"]
-        usuario_eva_mod.sudo().action_update_estado(user_id, evaluacion_id)
+
+        if request.env.user.id:
+            usuario_eva_mod.sudo().action_update_estado(user_id, evaluacion_id, None)
+        else:
+            usuario_eva_mod.sudo().action_update_estado(None, evaluacion_id, token)
         
 
 

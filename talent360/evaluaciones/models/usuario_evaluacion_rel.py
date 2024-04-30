@@ -10,27 +10,41 @@ class UsuarioEvaluacionRel(models.Model):
     contestada = fields.Boolean("contestada", default=False)
     token = fields.Char(string="Token")
     
-    def action_get_estado(self, user_id, evaluacion_id):
+    def action_get_estado(self, user_id, evaluacion_id, token):
         """Método para obtener el estado de la evaluación para el usuario.
         
         :param user_id: ID del usuario
         :param evaluacion_id: ID de la evaluación
         :return: estado de la evaluación
         """
-        usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-            [("usuario_id", "=", user_id), ("evaluacion_id", "=", evaluacion_id)]
-        )
+        if user_id:
+            usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
+                [("usuario_id", "=", user_id), ("evaluacion_id", "=", evaluacion_id)]
+            )
+        else:
+            usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
+                [("evaluacion_id", "=", evaluacion_id), ("token", "=", token)]
+            )
+
         return usuario_evaluacion.contestada
 
-    def action_update_estado(self, user_id, evaluacion_id):
+    def action_update_estado(self, user_id, evaluacion_id, token):
         """Método para actualizar el estado de la evaluación para el usuario.
         
         :param user_id: ID del usuario
         :param evaluacion_id: ID de la evaluación
         """
-        usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-            [("usuario_id", "=", user_id), ("evaluacion_id", "=", evaluacion_id)]
-        )
+        
+        if user_id:
+            usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
+                [("usuario_id", "=", user_id), ("evaluacion_id", "=", evaluacion_id)]
+            )
+        else:
+            usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
+                [("evaluacion_id", "=", evaluacion_id), ("token", "=", token)]
+            )
+
+        usuario_evaluacion.write({"contestada": True})
 
     def action_enviar_evaluacion(self, evaluacion_id):
         """
