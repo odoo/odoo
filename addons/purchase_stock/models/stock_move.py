@@ -161,7 +161,7 @@ class StockMove(models.Model):
         layer = self.env['stock.valuation.layer'].browse(svl_id)
         returned_move = self.origin_returned_move_id
 
-        if self._is_out() and self._is_returned(valued_type='out'):
+        if returned_move and self._is_out() and self._is_returned(valued_type='out'):
             returned_layer = returned_move.stock_valuation_layer_ids.filtered(lambda svl: not svl.stock_valuation_layer_id)[:1]
             returned_unit_cost = returned_layer.value / returned_layer.quantity
             unit_diff = layer.unit_cost - returned_unit_cost
