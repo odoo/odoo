@@ -32,7 +32,7 @@ class EvaluacionesController(http.Controller):
         return request.render("evaluaciones.encuestas_reporte", parametros)
     
     @http.route(
-        "/evaluacion/responder/<model('evaluacion'):evaluacion>/<string:token>", type="http", auth="user", website=True
+        "/evaluacion/responder/<model('evaluacion'):evaluacion>/<string:token>", type="http", auth="none", website=True
     )
     def responder_evaluacion_controller(self, evaluacion: Evaluacion, token):
         """Método para desplegar el formulario de permitir al usuario responder una evaluación.
@@ -41,18 +41,26 @@ class EvaluacionesController(http.Controller):
 
         :return: html renderizado del template con los datos del formulario
         """
-
-        if not request.env.user.has_group(
-            "evaluaciones.evaluaciones_cliente_cr_group_user"
-        ):
-            raise AccessError("No tienes permitido acceder a este recurso.")
-
         usuario_eva_mod = request.env["usuario.evaluacion.rel"]
+
+        if request.env.user or request.env.user.id:
+            if not request.env.user.has_group(
+                "evaluaciones.evaluaciones_cliente_cr_group_user"
+            ):
+                raise AccessError("No tienes permitido acceder a este recurso.")
+            
+            user_id = request.env.user.id
+            user_eval_relation = usuario_eva_mod.sudo().search([
+                ("usuario_id", "=", request.env.user.id),
+                ("evaluacion_id", "=", evaluacion.id),
+                ("token", "=", token)
+            ])
+
         user_eval_relation = usuario_eva_mod.sudo().search([
-            ("usuario_id", "=", request.env.user.id),
             ("evaluacion_id", "=", evaluacion.id),
             ("token", "=", token)
         ])
+        
         
         if not user_eval_relation:
             return request.redirect('/error/404')
@@ -77,17 +85,22 @@ class EvaluacionesController(http.Controller):
         :return: redirección a la página de inicio
         """
 
-        if not request.env.user.has_group(
-            "evaluaciones.evaluaciones_cliente_cr_group_user"
-        ):
-            raise AccessError("No tienes permitido acceder a este recurso.")
+        user = None
+
+        if request.env.user or request.env.user.id:
+            if not request.env.user.has_group(
+                "evaluaciones.evaluaciones_cliente_cr_group_user"
+            ):
+                raise AccessError("No tienes permitido acceder a este recurso.")
+            
+            user = request.env.user.id
         
         post_data = json.loads(request.httprequest.data)
 
         radio_values = post_data.get("radioValues")
         textarea_values = post_data.get("textareaValues")
         evaluacion_id = post_data.get("evaluacion_id")
-        user_id = request.env.user.id
+        user_id = user
         respuesta_model = request.env["respuesta"]
 
         for pregunta_id, radio_value in radio_values.items():

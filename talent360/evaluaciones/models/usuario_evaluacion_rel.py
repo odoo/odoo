@@ -52,29 +52,29 @@ class UsuarioEvaluacionRel(models.Model):
 
         for user in usuario_evaluacion:
             token = secrets.token_hex(length)
-            user.write({"token": token})
+            if not user.token:
+                user.write({"token": token})
 
-            # print(evaluacion_id, token, user.usuario_id.email)
-            # print(f'{base_url}/{evaluacion_id}/{token}')
-            mail_values = {
-                'subject': 'Invitación para completar la evaluación',
-                'email_from': self.env.user.email_formatted,
-                'email_to': user.usuario_id.email,
-                'body_html': f'<p>Hola, <strong>{user.usuario_id.name}</strong></p>'
-                            f'<p>Por favor completa la evaluación siguiendo este enlace: '
-                            f'<a href="{base_url}/{evaluacion_id}/{token}">'
-                            'Completa la Evaluación</a></p>',
-            }
+                print(f'{base_url}/{evaluacion_id}/{token}')
+                mail_values = {
+                    'subject': 'Invitación para completar la evaluación',
+                    'email_from': self.env.user.email_formatted,
+                    'email_to': user.usuario_id.email,
+                    'body_html': f'<p>Hola, <strong>{user.usuario_id.name}</strong></p>'
+                                f'<p>Por favor completa la evaluación siguiendo este enlace: '
+                                f'<a href="{base_url}/{evaluacion_id}/{token}">'
+                                'Completa la Evaluación</a></p>',
+                }
 
-            mail = self.env['mail.mail'].create(mail_values)
-            # mail.send()
+                mail = self.env['mail.mail'].create(mail_values)
+                # mail.send()
 
-            if mail.state == 'sent':
-                print(f"Correo enviado exitosamente a {user.usuario_id.email}")
-            elif mail.state == 'exception':
-                print(f"Fallo al enviar correo a {user.usuario_id.email}")
-            else:
-                print(f"Correo en estado pendiente o desconocido: {mail.state}")
+                if mail.state == 'sent':
+                    print(f"Correo enviado exitosamente a {user.usuario_id.email}")
+                elif mail.state == 'exception':
+                    print(f"Fallo al enviar correo a {user.usuario_id.email}")
+                else:
+                    print(f"Correo en estado pendiente o desconocido: {mail.state}")
     
         return {
             "type": "ir.actions.act_window",
