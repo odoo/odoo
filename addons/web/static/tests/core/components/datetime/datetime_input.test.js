@@ -86,12 +86,11 @@ describe("DateTimeInput (date)", () => {
             },
         });
 
-        click(".o_datetime_input");
+        await contains(".o_datetime_input").click();
         await contains(".o_datetime_picker .o_next").click();
 
         expect([]).toVerifySteps();
-        click(getPickerCell("8").at(0));
-        await animationFrame();
+        await contains(getPickerCell("8").at(0)).click();
 
         expect(".o_datetime_input").toHaveValue("08/02/1997");
         // the onchange is called twice (when clicking and whe the popover is closing)
@@ -119,7 +118,7 @@ describe("DateTimeInput (date)", () => {
 
         expect(".o_datetime_input").toHaveValue("09 janv., 1997");
 
-        click(".o_datetime_input");
+        await contains(".o_datetime_input").click();
         await contains(".o_zoom_out").click();
         await contains(getPickerCell("sept.")).click();
         await contains(getPickerCell("19")).click();
@@ -150,8 +149,7 @@ describe("DateTimeInput (date)", () => {
 
         expect(".o_datetime_input").toHaveValue("09 જાન્યુ, 1997");
 
-        click(".o_datetime_input");
-        await animationFrame();
+        await contains(".o_datetime_input").click();
 
         expect(".o_datetime_input").toHaveValue("09 જાન્યુ, 1997");
 
@@ -182,8 +180,9 @@ describe("DateTimeInput (date)", () => {
 
         expect([]).toVerifySteps();
 
-        click(".o_datetime_input");
+        await contains(".o_datetime_input").click();
         edit("08/02/1997");
+        await animationFrame();
         click(document.body);
         await animationFrame();
 
@@ -207,8 +206,7 @@ describe("DateTimeInput (date)", () => {
         expect(".o_datetime_input").toHaveValue("1997/01/09");
 
         // Forces an update to assert that the registered format is the correct one
-        click(".o_datetime_input");
-        await animationFrame();
+        await contains(".o_datetime_input").click();
 
         expect(".o_datetime_input").toHaveValue("1997/01/09");
     });
@@ -235,8 +233,7 @@ describe("DateTimeInput (datetime)", () => {
 
         expect(".o_datetime_input").toHaveValue("09/01/1997 12:30:01");
 
-        click(".o_datetime_input");
-        await animationFrame();
+        await contains(".o_datetime_input").click();
 
         assertDateTimePicker({
             title: "January 1997",
@@ -271,7 +268,7 @@ describe("DateTimeInput (datetime)", () => {
 
         expect(".o_datetime_input").toHaveValue("09/01/1997 12:30:01");
 
-        click(".o_datetime_input");
+        await contains(".o_datetime_input").click();
 
         // Select February 8th
         await contains(".o_datetime_picker .o_next").click();
@@ -304,7 +301,7 @@ describe("DateTimeInput (datetime)", () => {
 
         expect(".o_datetime_input").toHaveValue("09 janv., 1997 12:30:01");
 
-        click(".o_datetime_input");
+        await contains(".o_datetime_input").click();
 
         await contains(".o_zoom_out").click();
         await contains(getPickerCell("sept.")).click();
@@ -342,8 +339,7 @@ describe("DateTimeInput (datetime)", () => {
 
         expect(".o_datetime_input").toHaveValue("09/01/1997 08:30:01");
 
-        click(".o_datetime_input");
-        await animationFrame();
+        await contains(".o_datetime_input").click();
 
         const [, minuteSelect] = queryAll(".o_time_picker_select");
         select("15", { target: minuteSelect });
@@ -372,15 +368,15 @@ describe("DateTimeInput (datetime)", () => {
 
         expect([]).toVerifySteps();
 
-        click(".o_datetime_input");
+        await contains(".o_datetime_input").click();
         edit("08/02/1997 15:45:05");
+        await animationFrame();
         click(document.body);
         await animationFrame();
 
         expect(["datetime-changed"]).toVerifySteps();
 
-        click(".o_datetime_input");
-        await animationFrame();
+        await contains(".o_datetime_input").click();
 
         expect(".o_datetime_input").toHaveValue("08/02/1997 15:45:05");
         expect(getPickerCell("8").at(0)).toHaveClass("o_selected");
@@ -402,8 +398,7 @@ describe("DateTimeInput (datetime)", () => {
         expect(".o_datetime_input").toHaveValue("12:30:01 1997/01/09");
 
         // Forces an update to assert that the registered format is the correct one
-        click(".o_datetime_input");
-        await animationFrame();
+        await contains(".o_datetime_input").click();
 
         expect(".o_datetime_input").toHaveValue("12:30:01 1997/01/09");
     });
@@ -430,13 +425,11 @@ describe("DateTimeInput (datetime)", () => {
         expect(".o_datetime_input").toHaveValue("09 apr., 1997");
 
         // Forces an update to assert that the registered format is the correct one
-        click(".o_datetime_input");
-        await animationFrame();
+        await contains(".o_datetime_input").click();
 
         expect(".o_datetime_input").toHaveValue("09 apr., 1997");
 
-        click(getPickerCell("1").at(0));
-        await animationFrame();
+        await contains(getPickerCell("1").at(0)).click();
         expect(".o_datetime_input").toHaveValue("01 apr., 1997");
         expect(["datetime-changed"]).toVerifySteps();
 
@@ -457,8 +450,7 @@ describe("DateTimeInput (datetime)", () => {
         expect(".o_datetime_input").toHaveValue("10.03,2023");
 
         // Forces an update to assert that the registered format is the correct one
-        click(".o_datetime_input");
-        await animationFrame();
+        await contains(".o_datetime_input").click();
 
         expect(".o_datetime_input").toHaveValue("10.03,2023");
     });
@@ -482,8 +474,9 @@ describe("DateTimeInput (datetime)", () => {
         expect(".o_datetime_input").toHaveValue("");
         expect([]).toVerifySteps();
 
-        click(".o_datetime_input");
+        await contains(".o_datetime_input").click();
         edit("08/02/1997 15:45:05");
+        await animationFrame();
         click(document.body);
         await animationFrame();
 
@@ -499,7 +492,7 @@ describe("DateTimeInput (datetime)", () => {
                 format: "dd MMM, yyyy HH:mm:ss",
             },
         });
-        click(".o_datetime_input");
+        await contains(".o_datetime_input").click();
         await contains(".o_datetime_picker .o_datetime_buttons .btn-secondary").click();
 
         expect(".o_datetime_picker").toHaveCount(0);
@@ -525,10 +518,8 @@ describe("DateTimeInput (datetime)", () => {
 
         expect(".o_datetime_input").toHaveValue("Jan/09/1997");
 
-        click(".o_datetime_input");
-        await animationFrame();
-        click(getPickerCell("5").at(0));
-        await animationFrame();
+        await contains(".o_datetime_input").click();
+        await contains(getPickerCell("5").at(0)).click();
 
         expect(".o_datetime_input").toHaveValue("Jan/05/1997");
         expect(onChangeDate.toFormat("dd/MM/yyyy")).toBe("05/01/1997");
@@ -546,15 +537,17 @@ describe("DateTimeInput (datetime)", () => {
 
         await mountWithCleanup(DateTimeInputComp);
 
-        click(".o_datetime_input");
+        await contains(".o_datetime_input").click();
         edit("٠٤ يونيو, ٢٠٢٣ ١١:٣٣:٠٠");
+        await animationFrame();
         click(document.body);
         await animationFrame();
 
         expect(".o_datetime_input").toHaveValue("٠٤ يونيو, ٢٠٢٣ ١١:٣٣:٠٠");
 
-        click(".o_datetime_input");
+        await contains(".o_datetime_input").click();
         edit("15 07, 2020 12:30:43");
+        await animationFrame();
         click(document.body);
         await animationFrame();
 
