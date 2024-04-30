@@ -519,6 +519,76 @@ QUnit.module("MockServer", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "performRPC: read_group, group by date with number granularity",
+        async function (assert) {
+            const server = new MockServer(data, {});
+            const allGranularity = [
+                {
+                    granularity: "day_of_week",
+                    result: [1, 3, 4],
+                    count: [2, 2, 2],
+                },
+                {
+                    granularity: "day_of_month",
+                    result: [11, 14, 15, 26, 30],
+                    count: [1, 1, 2, 1, 1],
+                },
+                {
+                    granularity: "day_of_year",
+                    result: [102, 300, 349, 350, 364],
+                    count: [1, 1, 1, 2, 1],
+                },
+                {
+                    granularity: "iso_week_number",
+                    result: [1, 15, 43, 50],
+                    count: [1, 1, 1, 3],
+                },
+                {
+                    granularity: "month_number",
+                    result: [4, 10, 12],
+                    count: [1, 1, 4],
+                },
+                {
+                    granularity: "quarter_number",
+                    result: [2, 4],
+                    count: [1, 5],
+                },
+                {
+                    granularity: "year_number",
+                    result: [2016, 2019],
+                    count: [5, 1],
+                },
+            ];
+
+            for (const { granularity, result, count } of allGranularity) {
+                const response = await server.performRPC("", {
+                    model: "bar",
+                    method: "read_group",
+                    args: [[]],
+                    kwargs: {
+                        fields: ["foo"],
+                        domain: [],
+                        groupby: [`date:${granularity}`],
+                    },
+                });
+
+                assert.deepEqual(
+                    response.map((x) => x[`date:${granularity}`]),
+                    result
+                );
+                assert.deepEqual(
+                    response.map((x) => x.date_count),
+                    count
+                );
+                assert.deepEqual(
+                    response.map((x) => x.__domain),
+                    result.map((r) => [[`date.${granularity}`, "=", r]])
+                );
+            }
+        }
+    );
+
     QUnit.test("performRPC: read_group, group by datetime", async function (assert) {
         const server = new MockServer(data, {});
         let result = await server.performRPC("", {
@@ -810,6 +880,91 @@ QUnit.module("MockServer", (hooks) => {
             ]
         );
     });
+
+    QUnit.test(
+        "performRPC: read_group, group by datetime with number granularity",
+        async function (assert) {
+            const server = new MockServer(data, {});
+            const allGranularity = [
+                {
+                    granularity: "second_number",
+                    result: [56],
+                    count: [6],
+                },
+                {
+                    granularity: "minute_number",
+                    result: [34],
+                    count: [6],
+                },
+                {
+                    granularity: "hour_number",
+                    result: [13],
+                    count: [6],
+                },
+                {
+                    granularity: "day_of_week",
+                    result: [1, 3, 4],
+                    count: [2, 2, 2],
+                },
+                {
+                    granularity: "day_of_month",
+                    result: [11, 14, 15, 26, 30],
+                    count: [1, 1, 2, 1, 1],
+                },
+                {
+                    granularity: "day_of_year",
+                    result: [102, 300, 349, 350, 364],
+                    count: [1, 1, 1, 2, 1],
+                },
+                {
+                    granularity: "iso_week_number",
+                    result: [1, 15, 43, 50],
+                    count: [1, 1, 1, 3],
+                },
+                {
+                    granularity: "month_number",
+                    result: [4, 10, 12],
+                    count: [1, 1, 4],
+                },
+                {
+                    granularity: "quarter_number",
+                    result: [2, 4],
+                    count: [1, 5],
+                },
+                {
+                    granularity: "year_number",
+                    result: [2016, 2019],
+                    count: [5, 1],
+                },
+            ];
+
+            for (const { granularity, result, count } of allGranularity) {
+                const response = await server.performRPC("", {
+                    model: "bar",
+                    method: "read_group",
+                    args: [[]],
+                    kwargs: {
+                        fields: ["foo"],
+                        domain: [],
+                        groupby: [`datetime:${granularity}`],
+                    },
+                });
+
+                assert.deepEqual(
+                    response.map((x) => x[`datetime:${granularity}`]),
+                    result
+                );
+                assert.deepEqual(
+                    response.map((x) => x.datetime_count),
+                    count
+                );
+                assert.deepEqual(
+                    response.map((x) => x.__domain),
+                    result.map((r) => [[`datetime.${granularity}`, "=", r]])
+                );
+            }
+        }
+    );
 
     QUnit.test("performRPC: read_group, group by m2m", async function (assert) {
         const server = new MockServer(data, {});
