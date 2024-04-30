@@ -1509,3 +1509,31 @@ class Meeting(models.Model):
         res = res or ir_default_get('calendar.event', 'duration', company_id=True)
         res = res or ir_default_get('calendar.event', 'duration')
         return res or 1
+
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
+        groups = super()._notify_get_recipients_groups(message, model_description, msg_vals=msg_vals)
+        if not self or not msg_vals.get('partner_ids'):
+            return groups
+        all_attendee = self.attendee_ids.filtered(
+            lambda new_attendee: new_attendee.partner_id.id in msg_vals['partner_ids']
+        )
+        for attendee in all_attendee:
+            customer_group = next(group for group in groups if group[0] == 'customer')
+            customer_group[2].update({
+                'active': True,
+                'has_button_access': True
+            })
+            access_opt = customer_group[2].setdefault('button_access', {'title': _('View')})
+            access_opt['url'] = self.get_base_url() + '/calendar/meeting/view?token=%s&id=%s' % (attendee.access_token, self.id)
+            actions = customer_group[2].setdefault('actions', list())
+            actions.extend([
+                {
+                    'url': self.get_base_url() + '/calendar/meeting/accept?token=%s&id=%s' % (attendee.access_token, self.id),
+                    'title': _('Accept')
+                },
+                {
+                    'url': self.get_base_url() + '/calendar/meeting/decline?token=%s&id=%s' % (attendee.access_token, self.id),
+                    'title': _('Decline')
+                },
+            ])
+            return groups

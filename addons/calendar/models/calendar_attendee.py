@@ -149,7 +149,7 @@ class Attendee(models.Model):
                     body=body,
                     subject=subject,
                     partner_ids=attendee.partner_id.ids,
-                    email_layout_xmlid='mail.mail_notification_light',
+                    email_layout_xmlid='mail.mail_notification_layout',
                     attachment_ids=attachment_ids,
                     force_send=force_send,
                 )

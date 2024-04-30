@@ -257,6 +257,8 @@ class SurveyInvite(models.TransientModel):
                 'message': self.env['mail.message'].sudo().new(dict(body=mail_values['body_html'], record_name=self.survey_id.title)),
                 'model_description': self.env['ir.model']._get('survey.survey').display_name,
                 'company': self.env.company,
+                'url': answer.get_start_url(),
+                'title': answer.survey_id.certification and _('Start Certification') or _('Start Survey') if self.env.context['active_model'] == 'survey.survey' else _('Start the written interview')
             }
             body = self.env['ir.qweb']._render(email_layout_xmlid, template_ctx, minimal_qcontext=True, raise_if_not_found=False)
             if body:

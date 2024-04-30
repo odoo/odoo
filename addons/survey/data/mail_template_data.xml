@@ -18,17 +18,6 @@
         <t t-else="">
             We are conducting a survey and your response would be appreciated.
         </t>
-        <div style="margin: 16px 0px 16px 0px;">
-            <a t-att-href="(object.get_start_url())"
-                style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
-                <t t-if="object.survey_id.certification">
-                    Start Certification
-                </t>
-                <t t-else="">
-                    Start Survey
-                </t>
-            </a>
-        </div>
         <t t-if="object.deadline">
             Please answer the survey for <t t-out="format_date(object.deadline) or ''">05/05/2021</t>.<br/><br/>
         </t>

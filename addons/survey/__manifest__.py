@@ -23,6 +23,7 @@ sent mails with personal token for the invitation of the survey.
         'web_tour',
         'gamification'],
     'data': [
+        'data/mail_templates_email_layouts.xml',
         'report/survey_templates.xml',
         'report/survey_reports.xml',
         'data/ir_actions_server_data.xml',

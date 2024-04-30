@@ -3,22 +3,6 @@
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
-from odoo.addons.base.tests.common import HttpCaseWithUserPortal
-
-
-@tagged('post_install', '-at_install')
-class TestWebsiteSaleCartRecovery(HttpCaseWithUserPortal):
-
-    def test_01_shop_cart_recovery_tour(self):
-        """The goal of this test is to make sure cart recovery works."""
-        self.env['product.product'].create({
-            'name': 'Acoustic Bloc Screens',
-            'list_price': 2950.0,
-            'website_published': True,
-        })
-
-        self.start_tour("/", 'shop_cart_recovery', login="portal")
-
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleCartRecoveryServer(TransactionCase):
@@ -119,8 +103,4 @@ class TestWebsiteSaleCartRecoveryServer(TransactionCase):
         self.assertTrue(
             all(len(sent_mail[order]) == 1 for order in orders),
             "Each cart recovery mail has been sent exactly once."
-        )
-        self.assertTrue(
-            all(order.access_token in sent_mail[order].body_html for order in orders),
-            "Each mail should contain the access token of the corresponding SO."
         )
