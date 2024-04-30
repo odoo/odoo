@@ -117,6 +117,140 @@ For more specific needs, you may also assign custom-defined actions
     'installable': True,
     'application': True,
     'assets': {
+<<<<<<< HEAD
+||||||| parent of a2371b2d9ec5 (temp)
+        'mail.assets_core_messaging': [
+            'mail/static/src/model/*.js',
+            'mail/static/src/core_models/*.js',
+        ],
+        'mail.assets_messaging': [
+            ('include', 'mail.assets_core_messaging'),
+            'mail/static/src/models/*.js',
+            'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
+        ],
+        'mail.assets_model_data': [
+            'mail/static/src/models_data/*.js',
+        ],
+        # Custom bundle in case we want to remove things that are later added to web.assets_common
+        'mail.assets_common_discuss_public': [
+            ('include', 'web.assets_common'),
+        ],
+        'mail.assets_discuss_public': [
+            # SCSS dependencies (the order is important)
+            ('include', 'web._assets_helpers'),
+            'web/static/src/scss/bootstrap_overridden.scss',
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/src/scss/import_bootstrap.scss',
+            'web/static/src/scss/utilities_custom.scss',
+            'web/static/lib/bootstrap/scss/utilities/_api.scss',
+            'web/static/src/scss/bootstrap_review.scss',
+            'web/static/src/webclient/webclient.scss',
+            'web/static/src/core/utils/*.scss',
+            # depends on BS variables, can't be loaded in assets_primary or assets_secondary
+            'mail/static/src/scss/variables/derived_variables.scss',
+            'mail/static/src/scss/composer.scss',
+            # Dependency of notification_group, notification_request, thread_needaction_preview and thread_preview
+            'mail/static/src/components/notification_list/notification_list_item.scss',
+            'mail/static/src/component_hooks/*.js',
+            'mail/static/src/components/*/*',
+            # Unused by guests and depends on ViewDialogs, better to remove it instead of pulling the whole view dependency tree
+            ('remove', 'mail/static/src/components/composer_suggested_recipient/*'),
+            ('remove', 'mail/static/src/components/activity_menu_container/*'),
+            'mail/static/src/js/emojis.js',
+            'mail/static/src/js/utils.js',
+            ('include', 'mail.assets_messaging'),
+            'mail/static/src/public/*',
+            'mail/static/src/services/*.js',
+            ('remove', 'mail/static/src/services/systray_service.js'),
+            'mail/static/src/utils/*.js',
+            # Framework JS
+            'web/static/lib/luxon/luxon.js',
+            'web/static/src/core/**/*',
+            # FIXME: debug menu currently depends on webclient, once it doesn't we don't need to remove the contents of the debug folder
+            ('remove', 'web/static/src/core/debug/**/*'),
+            'web/static/src/env.js',
+            'web/static/src/legacy/js/core/misc.js',
+            'web/static/src/legacy/js/env.js',
+            'web/static/src/legacy/js/fields/field_utils.js',
+            'web/static/src/legacy/js/owl_compatibility.js',
+            'web/static/src/legacy/js/services/data_manager.js',
+            'web/static/src/legacy/js/services/session.js',
+            'web/static/src/legacy/js/widgets/date_picker.js',
+            'web/static/src/legacy/legacy_load_views.js',
+            'web/static/src/legacy/legacy_promise_error_handler.js',
+            'web/static/src/legacy/legacy_rpc_error_handler.js',
+            'web/static/src/legacy/utils.js',
+            'web/static/src/legacy/xml/base.xml',
+        ],
+=======
+        'mail.assets_core_messaging': [
+            'mail/static/src/model/*.js',
+            'mail/static/src/core_models/*.js',
+        ],
+        'mail.assets_messaging': [
+            ('include', 'mail.assets_core_messaging'),
+            'mail/static/src/models/*.js',
+            'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
+        ],
+        'mail.assets_model_data': [
+            'mail/static/src/models_data/*.js',
+        ],
+        # Custom bundle in case we want to remove things that are later added to web.assets_common
+        'mail.assets_common_discuss_public': [
+            ('include', 'web.assets_common'),
+        ],
+        'mail.assets_discuss_public': [
+            # SCSS dependencies (the order is important)
+            ('include', 'web._assets_helpers'),
+            'web/static/src/scss/bootstrap_overridden.scss',
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/src/scss/import_bootstrap.scss',
+            'web/static/src/scss/utilities_custom.scss',
+            'web/static/lib/bootstrap/scss/utilities/_api.scss',
+            'web/static/src/scss/bootstrap_review.scss',
+            'web/static/src/webclient/webclient.scss',
+            'web/static/src/core/utils/*.scss',
+            # depends on BS variables, can't be loaded in assets_primary or assets_secondary
+            'mail/static/src/scss/variables/derived_variables.scss',
+            'mail/static/src/scss/composer.scss',
+            # Dependency of notification_group, notification_request, thread_needaction_preview and thread_preview
+            'mail/static/src/components/notification_list/notification_list_item.scss',
+            'mail/static/src/component_hooks/*.js',
+            'mail/static/src/components/*/*',
+
+            ('remove', 'mail/static/src/**/*.dark.scss'),
+            # Unused by guests and depends on ViewDialogs, better to remove it instead of pulling the whole view dependency tree
+            ('remove', 'mail/static/src/components/composer_suggested_recipient/*'),
+            ('remove', 'mail/static/src/components/activity_menu_container/*'),
+            'mail/static/src/js/emojis.js',
+            'mail/static/src/js/utils.js',
+            ('include', 'mail.assets_messaging'),
+            'mail/static/src/public/*',
+            'mail/static/src/services/*.js',
+            ('remove', 'mail/static/src/services/systray_service.js'),
+            'mail/static/src/utils/*.js',
+            # Framework JS
+            'web/static/lib/luxon/luxon.js',
+            'web/static/src/core/**/*',
+            # FIXME: debug menu currently depends on webclient, once it doesn't we don't need to remove the contents of the debug folder
+            ('remove', 'web/static/src/core/debug/**/*'),
+            'web/static/src/env.js',
+            'web/static/src/legacy/js/core/misc.js',
+            'web/static/src/legacy/js/env.js',
+            'web/static/src/legacy/js/fields/field_utils.js',
+            'web/static/src/legacy/js/owl_compatibility.js',
+            'web/static/src/legacy/js/services/data_manager.js',
+            'web/static/src/legacy/js/services/session.js',
+            'web/static/src/legacy/js/widgets/date_picker.js',
+            'web/static/src/legacy/legacy_load_views.js',
+            'web/static/src/legacy/legacy_promise_error_handler.js',
+            'web/static/src/legacy/legacy_rpc_error_handler.js',
+            'web/static/src/legacy/utils.js',
+            'web/static/src/legacy/xml/base.xml',
+        ],
+>>>>>>> a2371b2d9ec5 (temp)
         'web._assets_primary_variables': [
             'mail/static/src/**/primary_variables.scss',
         ],
