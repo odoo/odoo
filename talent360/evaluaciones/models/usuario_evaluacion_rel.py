@@ -75,22 +75,11 @@ class UsuarioEvaluacionRel(models.Model):
                 print(f"Fallo al enviar correo a {user.usuario_id.email}")
             else:
                 print(f"Correo en estado pendiente o desconocido: {mail.state}")
-
-        notification = {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': 'Asignación de Evaluación',
-                'message': f"Todos los correos han sido enviados exitosamente.",
-                'sticky': False,  # True si la notificación debe permanecer hasta que el usuario la cierre
-            },
-        }
-        return notification
     
-        # return {
-        #     "type": "ir.actions.act_window",
-        #     "name": "Evaluaciones",
-        #     "res_model": "evaluacion",
-        #     "view_mode": "tree",
-        #     "target": "current",
-        # }        
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Evaluaciones",
+            "res_model": "evaluacion",
+            "view_mode": "tree",
+            "target": "current",
+        }        
