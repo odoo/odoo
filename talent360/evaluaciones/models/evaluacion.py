@@ -243,19 +243,13 @@ class Evaluacion(models.Model):
         """
 
         if self.tipo == "competencia":
-            view_id = self.env.ref("evaluaciones.evaluacion_360_form").id
+            action = self.env["ir.actions.act_window"]._for_xml_id("evaluaciones.evaluacion_competencias_action")
         else:
-            view_id = self.env.ref("evaluaciones.evaluacion_reporte_form").id
+            action = self.env["ir.actions.act_window"]._for_xml_id("evaluaciones.evaluacion_generica_action")
 
-        return {
-            "type": "ir.actions.act_window",
-            "name": "Evaluación",
-            "res_model": "evaluacion",
-            "view_mode": "form",
-            "view_id": view_id,
-            "target": "current",
-            "res_id": self.id,
-        }
+        action['res_id'] = self.id
+
+        return action
 
     def action_reporte_generico(self):
         """

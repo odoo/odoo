@@ -26,6 +26,21 @@
         <field name="res_model">evaluacion</field>
         <field name="view_mode">tree</field>
     </record>
+
+    <record id="evaluacion_generica_action" model="ir.actions.act_window">
+        <field name="name">Evaluaciones</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="evaluacion_reporte_form"/>
+    </record>
+
+    <record id="evaluacion_competencias_action" model="ir.actions.act_window">
+        <field name="name">Evaluaciones</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="evaluacion_360_form"/>
+    </record>
+
     <!-- Vista de lista de todas las evaluaciones-->
     <record id="evaluacion_view_tree" model="ir.ui.view">
         <field name="name">evaluacion.tree</field>
@@ -49,6 +64,10 @@
 
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <!-- Generación de reporte de una evaluación-->
+                    <button class="btn btn-primary" name="action_reporte_generico" string="Reporte" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
+                </header>
                 <sheet string="Evaluacion de personal">
                     <h1>
                         <field class="text-primary font-weight-bold" name="nombre"/>
@@ -76,8 +95,6 @@
                             </page>
                         </notebook>
                     </group>
-                    <!-- Generación de reporte de una evaluación-->
-                    <button class="btn btn-primary btn-lg px-4 font-weight-bold lh-m my-2" name="action_reporte_generico" string="Reporte" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
                 </sheet>
             </form>
         </field>
