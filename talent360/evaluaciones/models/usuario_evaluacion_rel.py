@@ -6,7 +6,14 @@ class UsuarioEvaluacionRel(models.Model):
 
     evaluacion_id = fields.Many2one("evaluacion", string="Evaluacion")
     usuario_id = fields.Many2one("res.users", string="Usuario")
-    contestada = fields.Boolean(string="Contestada", default=False)
+    contestada = fields.Selection(
+        [
+            ("pendiente", "Pendiente"),
+            ("contestada", "Contestada"),
+        ],
+        default="pendiente",
+        required=True,
+    )
 
     # Campos relacionados para acceder a atributos de evaluacion
     evaluacion_nombre = fields.Char(related="evaluacion_id.nombre", string="Nombre de Evaluación", readonly=True)
