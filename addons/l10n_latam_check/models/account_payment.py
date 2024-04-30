@@ -6,9 +6,9 @@ from odoo.tools.misc import format_date
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
-    l10n_latam_new_check_ids = fields.One2many('l10n_latam.account.payment.check', 'payment_id')
+    l10n_latam_new_check_ids = fields.One2many('l10n_latam.check', 'payment_id', string='New Checks')
     l10n_latam_check_ids = fields.Many2many(
-        comodel_name='l10n_latam.account.payment.check',
+        comodel_name='l10n_latam.check',
         relation='account_payment_account_payment_check_rel',
         column1="payment_id",
         column2="check_id",
@@ -59,7 +59,7 @@ class AccountPayment(models.Model):
         elif self._is_latam_check_payment(check_subtype='move_check'):
             return self.l10n_latam_check_ids
         else:
-            return self.env['l10n_latam.account.payment.check']
+            return self.env['l10n_latam.check']
 
     def _get_blocking_l10n_latam_warning_msg(self):
         msgs = []
@@ -180,7 +180,7 @@ class AccountPayment(models.Model):
             msgs = rec._get_blocking_l10n_latam_warning_msg()
             # new third party check uniqueness warning (on own checks it's done by a sql constraint)
             if rec.payment_method_code == 'new_third_party_checks':
-                same_checks = self.env['l10n_latam.account.payment.check']
+                same_checks = self.env['l10n_latam.check']
                 for check in rec.l10n_latam_new_check_ids.filtered(
                         lambda x: x.name and x.payment_method_line_id.code == 'new_third_party_checks' and
                         x.bank_id and x.issuer_vat):

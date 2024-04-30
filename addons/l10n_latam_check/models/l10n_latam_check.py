@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 
 
 class l10nLatamAccountPaymentCheck(models.Model):
-    _name = 'l10n_latam.account.payment.check'
+    _name = 'l10n_latam.check'
     _description = 'Account payment check'
     _check_company_auto = True
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -59,11 +59,11 @@ class l10nLatamAccountPaymentCheck(models.Model):
 
     def _auto_init(self):
         super()._auto_init()
-        if not index_exists(self.env.cr, 'l10n_latam_account_payment_check_unique'):
+        if not index_exists(self.env.cr, 'l10n_latam_check_unique'):
             # issue_state is used to know that is an own check and also that is posted
             self.env.cr.execute("""
-                CREATE UNIQUE INDEX l10n_latam_account_payment_check_unique
-                    ON l10n_latam_account_payment_check(name, payment_method_line_id)
+                CREATE UNIQUE INDEX l10n_latam_check_unique
+                    ON l10n_latam_check(name, payment_method_line_id)
                 WHERE issue_state is not null
             """)
 

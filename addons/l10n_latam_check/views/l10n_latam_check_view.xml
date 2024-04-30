@@ -3,7 +3,7 @@
     <!-- Own checks search view -->
     <record model="ir.ui.view" id="view_account_payment_search">
         <field name="name">account.check.search</field>
-        <field name="model">l10n_latam.account.payment.check</field>
+        <field name="model">l10n_latam.check</field>
         <field name="priority">20</field>
         <field name="mode">primary</field>
         <field name="inherit_id" ref="account.view_account_payment_search"/>
@@ -25,7 +25,7 @@
     <!-- Third party checks search view -->
     <record model="ir.ui.view" id="view_account_payment_third_party_checks_search">
         <field name="name">account.check.search</field>
-        <field name="model">l10n_latam.account.payment.check</field>
+        <field name="model">l10n_latam.check</field>
         <field name="priority">22</field>
         <field name="mode">primary</field>
         <field name="inherit_id" ref="account.view_account_payment_search"/>
@@ -71,7 +71,7 @@
     </record>
     <record model="ir.ui.view" id="view_account_check_calendar">
         <field name="name">account.check.calendar</field>
-        <field name="model">l10n_latam.account.payment.check</field>
+        <field name="model">l10n_latam.check</field>
         <field name="arch" type="xml">
             <calendar
                     mode="month"
@@ -84,7 +84,7 @@
 
     <record model="ir.ui.view" id="view_account_check_pivot">
         <field name="name">account.check.calendar</field>
-        <field name="model">l10n_latam.account.payment.check</field>
+        <field name="model">l10n_latam.check</field>
         <field name="arch" type="xml">
             <pivot>
                 <field name="payment_date" type="row" interval="month"/>
@@ -94,9 +94,9 @@
         </field>
     </record>
 
-    <record id="l10n_latam_account_payment_check_view_form" model="ir.ui.view">
-        <field name="name">l10n_latam_account_payment_check.view.form</field>
-        <field name="model">l10n_latam.account.payment.check</field>
+    <record id="l10n_latam_check_view_form" model="ir.ui.view">
+        <field name="name">l10n_latam_check.view.form</field>
+        <field name="model">l10n_latam.check</field>
         <field name="arch" type="xml">
             <form create="False" edit="False">
                 <field name="split_move_line_id" invisible="True"/>
@@ -136,7 +136,7 @@
 
     <record model="ir.ui.view" id="view_account_own_check_tree">
         <field name="name">account.check.tree</field>
-        <field name="model">l10n_latam.account.payment.check</field>
+        <field name="model">l10n_latam.check</field>
         <field name="priority">100</field>
         <field name="arch" type="xml">
             <tree edit="false" sample="1" decoration-info="issue_state == 'handed'" decoration-muted="issue_state == 'voided'">
@@ -161,7 +161,7 @@
 
     <record model="ir.actions.act_window" id="action_own_check">
         <field name="name">Own Checks</field>
-        <field name="res_model">l10n_latam.account.payment.check</field>
+        <field name="res_model">l10n_latam.check</field>
         <field name="view_mode">tree,form,calendar,graph,pivot</field>
         <field name="view_id" ref="view_account_own_check_tree"/>
         <field name="search_view_id" ref="view_account_payment_search"/>
@@ -178,7 +178,7 @@
 <!-- Third party check Views and menus -->
     <record model="ir.ui.view" id="view_account_third_party_check_tree">
         <field name="name">account.check.tree</field>
-        <field name="model">l10n_latam.account.payment.check</field>
+        <field name="model">l10n_latam.check</field>
         <field name="priority">110</field>
         <field name="mode">primary</field>
         <field name="inherit_id" ref="view_account_own_check_tree"/>
@@ -200,7 +200,7 @@
 
     <record model="ir.actions.act_window" id="action_third_party_check">
         <field name="name">Third Party Checks</field>
-        <field name="res_model">l10n_latam.account.payment.check</field>
+        <field name="res_model">l10n_latam.check</field>
         <field name="view_mode">tree,form,calendar,graph,pivot</field>
         <field name="view_id" ref="view_account_third_party_check_tree"/>
         <field name="search_view_id" ref="l10n_latam_check.view_account_payment_third_party_checks_search"/>

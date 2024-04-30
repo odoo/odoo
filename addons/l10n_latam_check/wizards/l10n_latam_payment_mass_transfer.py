@@ -33,7 +33,7 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
         compute="_compute_journal_company"
     )
     check_ids = fields.Many2many(
-        'l10n_latam.account.payment.check', 'latam_tranfer_check_rel'
+        'l10n_latam.check', 'latam_tranfer_check_rel'
         'transfer_id', 'check_id', check_company=True,
     )
 
@@ -52,9 +52,9 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
     def default_get(self, fields_list):
         res = super().default_get(fields_list)
         if 'check_ids' in fields_list and 'check_ids' not in res:
-            if self._context.get('active_model') != 'l10n_latam.account.payment.check':
+            if self._context.get('active_model') != 'l10n_latam.check':
                 raise UserError(_("The register payment wizard should only be called on account.payment records."))
-            checks = self.env['l10n_latam.account.payment.check'].browse(self._context.get('active_ids', []))
+            checks = self.env['l10n_latam.check'].browse(self._context.get('active_ids', []))
             if checks.filtered(lambda x: x.payment_method_line_id.code != 'new_third_party_checks'):
                 raise 'You have select some payments that are not checks. Please call this action from the Third Party Checks menu'
             elif not all(check.state == 'posted' for check in checks):

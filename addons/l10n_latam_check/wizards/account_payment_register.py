@@ -4,10 +4,10 @@ from odoo import models, fields, api, Command
 class AccountPaymentRegister(models.TransientModel):
     _inherit = 'account.payment.register'
 
-    l10n_latam_new_check_ids = fields.One2many('l10n_latam.payment.register.check', 'payment_register_id', string="Checks")
+    l10n_latam_new_check_ids = fields.One2many('l10n_latam.payment.register.check', 'payment_register_id', string="New Checks")
 
     l10n_latam_check_ids = fields.Many2many(
-        comodel_name='l10n_latam.account.payment.check',
+        comodel_name='l10n_latam.check',
         string='Checks',
     )
 
