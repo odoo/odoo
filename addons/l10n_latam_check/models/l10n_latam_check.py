@@ -30,12 +30,10 @@ class l10nLatamAccountPaymentCheck(models.Model):
         column1="check_id",
         column2="payment_id",
         required=True,
-        string='Check Operations',
         readonly=True,
     )
     current_journal_id = fields.Many2one(
         comodel_name='account.journal',
-        string="Check Current Journal",
         compute='_compute_current_journal', store=True,
     )
     company_id = fields.Many2one(related='payment_id.company_id')

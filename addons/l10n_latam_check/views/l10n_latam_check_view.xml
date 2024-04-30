@@ -22,6 +22,7 @@
             </filter>
         </field>
     </record>
+
     <!-- Third party checks search view -->
     <record model="ir.ui.view" id="view_account_payment_third_party_checks_search">
         <field name="name">account.check.search</field>
@@ -54,6 +55,7 @@
             </filter>
         </field>
     </record>
+
     <record model="ir.ui.view" id="view_account_third_party_check_operations_tree">
         <field name="name">account.check.operations.tree</field>
         <field name="model">account.payment</field>
@@ -69,6 +71,7 @@
             </tree>
         </field>
     </record>
+
     <record model="ir.ui.view" id="view_account_check_calendar">
         <field name="name">account.check.calendar</field>
         <field name="model">l10n_latam.check</field>
@@ -107,7 +110,7 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button  icon="fa-bars" type="object" name="button_open_check_operations">
-                            <span>Check Operations</span>
+                            <span>Operations</span>
                         </button>
                         <button  icon="fa-bars" type="object" invisible="not split_move_line_id" name="action_show_split_move">
                             <span>Split move</span>
@@ -117,14 +120,19 @@
                         </button>
                     </div>
                     <group>
-                        <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="name"/>
-                        <field name="current_journal_id" invisible="issue_state"/>
-                        <field name="bank_id"  invisible="issue_state"/>
-                        <field name="issuer_vat"  invisible="issue_state"/>
-                        <field name="payment_date"/>
-                        <field name="currency_id"/>
-                        <field name="amount"/>
+                        <group>
+                            <field name="name"/>
+                            <field name="payment_date"/>
+                            <field name="journal_id"/>
+                            <field name="current_journal_id" invisible="issue_state"/>
+                        </group>
+                        <group>
+                            <field name="amount"/>
+                            <field name="bank_id"  invisible="issue_state"/>
+                            <field name="issuer_vat"  invisible="issue_state"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
                     </group>
                 </sheet>
                 <chatter/>
@@ -207,9 +215,11 @@
         <field name="domain">[('payment_method_code', '=', 'new_third_party_checks'), ('state', '=', 'posted')]</field>
         <field name="context">{'search_default_checks_on_hand': 1}</field>
     </record>
+
     <menuitem
         action="action_third_party_check"
         id="menu_third_party_check"
         sequence="40"
         parent="account.menu_finance_receivables"/>
+
 </odoo>
