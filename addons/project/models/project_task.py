@@ -1023,6 +1023,7 @@ class Task(models.Model):
                     if milestone_project_id != project_id:
                         vals['milestone_id'] = False
 
+            project_id = project_id or self.env.context.get('default_project_id')
             if project_id and not "company_id" in vals:
                 vals["company_id"] = self.env["project.project"].browse(
                     project_id
