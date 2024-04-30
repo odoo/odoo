@@ -20,18 +20,9 @@
             <t t-set="depTemplate">
                 <t t-call="{{ constructor.popoverTemplate }}"/>
             </t>
-            <t t-if="props.type === 'key'">
-                <div t-att-data-bs-template="depTemplate" data-bs-html="true" title="Dependencies" t-ref="action">
-                    It looks like your file is being called by
-                    <a href="#" t-on-click="showDependencies"><t t-esc="depText" /></a>.
-                    Changing its name will break these calls.
-                </div>
-            </t>
-            <t t-else="">
-                <div t-att-data-bs-template="depTemplate" data-bs-html="true" title="Dependencies" t-ref="action">
-                    (could be used in <a href="#" t-on-click="showDependencies"><t t-esc="state.depText" /></a>)
-                </div>
-            </t>
+            <div t-att-data-bs-template="depTemplate" data-bs-html="true" title="Dependencies" t-ref="action">
+                (could be used in <a href="#" t-on-click="showDependencies"><t t-esc="state.depText" /></a>)
+            </div>
         </t>
         <t t-else="">
             <p class="text-warning">We found these ones:</p>
