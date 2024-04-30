@@ -83,7 +83,7 @@ class OptionalFieldsDropdown extends Dropdown {
     static template = "web.ListRenderer.OptionalFieldsDropdown";
     static props = {
         ...Dropdown.props,
-        listRendererClass: String,
+        listRendererClass:  { type: String, optional: true },
     };
 
     onWindowClicked(ev) {
