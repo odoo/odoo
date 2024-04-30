@@ -39,6 +39,7 @@ import {
     onRendered,
     status,
     useEffect,
+    useExternalListener,
     useRef,
     useState,
 } from "@odoo/owl";
@@ -304,17 +305,11 @@ export class FormController extends Component {
             );
         }
 
-        useEffect(
-            () => {
-                const listener = document.addEventListener("visibilitychange", () => {
-                    if (document.visibilityState === "hidden") {
-                        this.model.root.save();
-                    }
-                });
-                return () => document.removeEventListener("visibilitychange", listener);
-            },
-            () => []
-        );
+        useExternalListener(document, "visibilitychange", () => {
+            if (document.visibilityState === "hidden") {
+                this.model.root.save();
+            }
+        });
     }
 
     get modelParams() {
