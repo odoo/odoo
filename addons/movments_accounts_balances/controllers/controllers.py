@@ -7,6 +7,22 @@ class AccountBalance(models.Model):
     _inherit = 'account.account'
 
     @api.model
+    def get_all_payment_method_line(self):
+        lines = self.env['account.payment.method.line'].search([])
+
+        line_data = [{'id': line.id, 'name': line.name} for line in lines]
+
+        return line_data
+
+    @api.model
+    def get_all_journals(self):
+        journals = self.env['account.journal'].search([])
+
+        journal_data = [{'id': journal.id, 'name': journal.name} for journal in journals]
+
+        return journal_data
+
+    @api.model
     def get_all_accounts(self):
         accounts = self.env['account.account'].search([])
 
@@ -21,6 +37,30 @@ class AccountBalance(models.Model):
         account_data = [{'id': account.id, 'name': account.name} for account in accounts]
 
         return account_data
+
+    @api.model
+    def get_all_bills(self):
+        bills = self.env['account.move'].search([('move_type', '=', 'in_invoice')])
+
+        account_data = [{'id': bill.id, 'name': bill.name} for bill in bills]
+
+        return account_data
+
+    @api.model
+    def get_all_inv(self):
+        bills = self.env['account.move'].search([('move_type', '=', 'out_invoice')])
+
+        account_data = [{'id': bill.id, 'name': bill.name} for bill in bills]
+
+        return account_data
+
+    @api.model
+    def get_all_payments(self):
+        payments = self.env['account.move'].search([('move_type', '=', 'entry')])
+
+        payment_data = [{'id': payment.id, 'name': payment.name} for payment in payments]
+
+        return payment_data
 
     @api.model
     def get_all_partners(self):
@@ -97,7 +137,7 @@ class AccountBalance(models.Model):
 
     ##create/get/delete_bills
     @api.model
-    def create_bill(self, description, quantity, price_unit, account_id, analytic_account_id, partner_id,
+    def create_bill(self, ref, quantity, price_unit, account_id, analytic_account_id, partner_id,
                     bill_date, bill_date_due, narration):
         """
         Create a bill and corresponding analytic line based on the provided data.
@@ -107,12 +147,12 @@ class AccountBalance(models.Model):
         if analytic_account_id:
             analytic_line_vals.append((0, 0, {
                 'account_id': analytic_account_id,
-                'name': description,
+                'name': ref,
             }))
 
         # Prepare the bill line
         bill_line_vals = {
-            'name': description,
+            'name': ref,
             'quantity': quantity,
             'price_unit': price_unit,
             'account_id': account_id,
@@ -122,6 +162,7 @@ class AccountBalance(models.Model):
         # Create a new Bill record
         bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
+            'ref': ref,
             'partner_id': partner_id,
             'invoice_date': bill_date,
             'invoice_date_due': bill_date_due,
@@ -130,7 +171,16 @@ class AccountBalance(models.Model):
         })
         bill.action_post()
 
-        return bill
+        return {
+            'Bill ID': bill.id,
+            'Bill reference': bill.ref,
+            'Bill Number': bill.name,
+            'Bill Date': bill.invoice_date,
+            'Bill Due Date': bill.invoice_date_due,
+            'Supplier': bill.partner_id.name,
+            'Amount Total': bill.amount_total,
+            'State': bill.payment_state,
+        }
 
     @api.model
     def get_bill(self, bill_id):
@@ -199,7 +249,6 @@ class AccountBalance(models.Model):
         except Exception as e:
             return "Failed to delete bill: {}".format(e)
 
-    ##create/get/delete_bills payment
     @api.model
     def create_bill_payment(self, bill_ids, journal_id, payment_date, payment_method_line_id):
         AccountMove = self.env['account.move']
@@ -219,37 +268,33 @@ class AccountBalance(models.Model):
             'payment_method_line_id': payment_method_line_id,
         })
 
-        payment_register.action_create_payments()
+        payments = payment_register.action_create_payments()
 
-        payment_data_list = []  # Initialize an empty list to store payment data
+        payment_data_list = []
 
         for bill in bills:
-            # Adjust the lambda to the correct field and value for 'payable' account types
-            account_move_lines_to_reconcile = bill.line_ids.filtered(
-                lambda line: not line.reconciled and line.account_id.account_type == 'payable'
-            )
+            # Directly accessing move lines and their full_reconcile_id
+            for move_line in bill.line_ids:
+                if move_line.full_reconcile_id:
+                    # Fetch other move lines that share the same full_reconcile_id and have a non-null payment_id
+                    reconciled_move_lines = self.env['account.move.line'].search([
+                        ('full_reconcile_id', '=', move_line.full_reconcile_id.id),
+                        ('payment_id', '!=', False),
+                        ('reconciled', '=', True),
+                    ])
 
-            # Search for move lines linked to this bill that are not yet reconciled
-            reconciled_move_lines = self.env['account.move.line'].search([
-                ('move_id', 'in', bill_ids),
-                ('reconciled', '=', True),
-            ])
+                    for r_move_line in reconciled_move_lines:
+                        payment_data = {
+                            'id': r_move_line.payment_id.id,  # ID of the payment
+                            'bill.id': r_move_line.move_id.id,  # ID of the bill move associated with the payment
+                            'amount': r_move_line.debit if r_move_line.debit else 0.0,  # Credit amount
+                            'date': r_move_line.date or '',  # Date of the move line
+                            'partner_id': r_move_line.partner_id.id if r_move_line.partner_id else 0,  # Partner ID
+                            'journal_id': r_move_line.journal_id.id if r_move_line.journal_id else 0,  # Journal ID
+                        }
+                        payment_data_list.append(payment_data)
 
-            # Payments are linked to move lines, so you can reconcile them through move lines
-            if reconciled_move_lines:
-
-                for move_line in reconciled_move_lines:
-                    payment_data = {
-                        'payment': move_line.payment_id,
-                        'id': move_line.id,
-                        'amount': move_line.credit,
-                        'date': move_line.date,
-                        'partner_id': move_line.partner_id.id,
-                        'journal_id': move_line.journal_id.id,
-                    }
-                    payment_data_list.append(payment_data)
-
-            return payment_data_list
+        return payment_data_list
 
     @api.model
     def setup_payment_journal(self, journal_name, account_id, journal_type, payment_method_name):
@@ -358,10 +403,8 @@ class AccountBalance(models.Model):
 
     #### create / get / delete_invoice_payment
 
-
-
     @api.model
-    def cancel_and_delete_bill_payment(self, payment_id):
+    def cancel_and_delete_bill_payment(self, payment_id=615):
         Payment = self.env['account.move']
         payment = Payment.browse(payment_id)
 
@@ -371,11 +414,10 @@ class AccountBalance(models.Model):
         # Attempt to cancel the payment if it's not already in a cancellable state
         if payment.state not in ['draft', 'cancelled']:
             try:
-
+                # Attempt to cancel the payment
+                payment.button_draft()
             except UserError as e:
                 return "Failed to cancel payment: {}".format(e)
-            except ValidationError as e:
-                return "Validation error occurred: {}".format(e)
             except Exception as e:
                 return "Unexpected error occurred: {}".format(e)
 
@@ -388,22 +430,3 @@ class AccountBalance(models.Model):
                 return "Failed to delete payment: {}".format(e)
         else:
             return "Payment cannot be deleted as it is not in draft or cancelled state."
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
