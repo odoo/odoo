@@ -116,7 +116,7 @@ class Project(models.Model):
                 ('parent_state', 'in', ['draft', 'posted']),
                 ('analytic_distribution', 'in', self.analytic_account_id.ids),
                 ('purchase_line_id', '!=', False),
-            ], ['parent_state', 'currency_id', 'price_unit', 'quantity', 'analytic_distribution'])
+            ], ['parent_state', 'currency_id', 'price_subtotal', 'analytic_distribution'])
             purchase_order_line_invoice_line_ids = self._get_already_included_profitability_invoice_line_ids()
             with_action = with_action and (
                 self.env.user.has_group('purchase.group_purchase_user')
@@ -127,12 +127,13 @@ class Project(models.Model):
                 amount_invoiced = amount_to_invoice = 0.0
                 purchase_order_line_invoice_line_ids.extend(invoice_lines.ids)
                 for line in invoice_lines:
-                    price_unit = line.currency_id._convert(line.price_unit, self.currency_id, self.company_id)
+                    price_subtotal = line.currency_id._convert(line.price_subtotal, self.currency_id, self.company_id)
+                    # an analytic account can appear several time in an analytic distribution with different repartition percentage
                     analytic_contribution = sum(
                         percentage for ids, percentage in line.analytic_distribution.items()
                         if str(self.analytic_account_id.id) in ids.split(',')
                     ) / 100.
-                    cost = price_unit * line.quantity * analytic_contribution if line.quantity > 0 else 0.0
+                    cost = price_subtotal * analytic_contribution
                     if line.parent_state == 'posted':
                         amount_invoiced -= cost
                     else:
