@@ -131,7 +131,7 @@ export class Orderline extends PosModel {
                 }
             }
 
-            this.tax_ids = validTax.length > 0 ? validTax : undefined;
+            this.tax_ids = validTax.length > 0 ? validTax : [];
         }
     }
 

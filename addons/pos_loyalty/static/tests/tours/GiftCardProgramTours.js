@@ -36,6 +36,25 @@ registry.category("web_tour.tours").add("GiftCardProgramCreateSetTour2", {
 });
 //#endregion
 
+//#region GiftCardProgramPriceTour
+registry.category("web_tour.tours").add("GiftCardProgramPriceNoTaxTour", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+
+            // Use gift card
+            ProductScreen.addOrderline("Magnetic Board", "1", "1.98", "1.98"),
+            PosLoyalty.enterCode("043123456"),
+            Dialog.confirm(),
+            ProductScreen.clickOrderline("Gift Card"),
+            ProductScreen.selectedOrderlineHas("Gift Card", "1.00", "-1.00"),
+            PosLoyalty.orderTotalIs("0.98"),
+        ].flat(),
+});
+//#endregion
+
 //#region GiftCardProgramScanUseTour
 registry.category("web_tour.tours").add("GiftCardProgramScanUseTour", {
     test: true,
