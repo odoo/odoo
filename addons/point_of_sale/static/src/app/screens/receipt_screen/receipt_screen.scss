@@ -43,4 +43,10 @@
         top: 0;
         left: 0;
     }
+    .o-main-components-container > *:not(.render-container-parent) {
+        display: none !important;
+    }
+    .render-container-parent > *:not(.render-container) {
+        display: none !important;
+    }
 }
