@@ -313,7 +313,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         else:
             percentage = self.fixed_amount / order.amount_total if order.amount_total else 1
 
-        order_lines = order.order_line.filtered(lambda l: not l.display_type)
+        order_lines = order.order_line.filtered(lambda l: not l.display_type and not l.is_downpayment)
         base_downpayment_lines_values = self._prepare_base_downpayment_line_values(order)
 
         tax_base_line_dicts = [
