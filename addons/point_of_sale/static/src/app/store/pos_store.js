@@ -501,7 +501,7 @@ export class PosStore extends Reactive {
 
             if (payload) {
                 const productFound = this.models["product.product"]
-                    .filter((p) => p.raw.product_template_variant_value_ids.length > 0)
+                    .filter((p) => p.raw?.product_template_variant_value_ids?.length > 0)
                     .find((p) =>
                         p.raw.product_template_variant_value_ids.every((v) =>
                             payload.attribute_value_ids.includes(v)

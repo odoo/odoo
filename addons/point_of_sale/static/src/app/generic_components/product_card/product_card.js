@@ -5,7 +5,8 @@ export class ProductCard extends Component {
     static props = {
         class: { String, optional: true },
         name: String,
-        productId: Number,
+        product: Object,
+        productId: Number | String,
         price: String,
         color: { type: [Number, undefined], optional: true },
         imageUrl: [String, Boolean],

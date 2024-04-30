@@ -18,6 +18,7 @@
                                 <ProductCard name="product.display_name"
                                     class="'flex-column h-100 border'"
                                     productId="product.id"
+                                    product="product"
                                     price="formattedComboPrice(combo_line)"
                                     imageUrl="product.getImageUrl()"
                                     onClick="(ev) => this.onClickProduct({ product, combo_line }, ev)" />
