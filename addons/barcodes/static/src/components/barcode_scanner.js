@@ -14,6 +14,7 @@ export class BarcodeScanner extends Component {
     setup() {
         this.notification = useService("notification");
         this.isBarcodeScannerSupported = isBarcodeScannerSupported();
+        this.scanBarcode = () => scanBarcode(this.env, this.facingMode);
     }
 
     get facingMode() {
@@ -24,7 +25,7 @@ export class BarcodeScanner extends Component {
         let error = null;
         let barcode = null;
         try {
-            barcode = await scanBarcode(this.env, this.facingMode);
+            barcode = await this.scanBarcode();
         } catch (err) {
             error = err.message;
         }

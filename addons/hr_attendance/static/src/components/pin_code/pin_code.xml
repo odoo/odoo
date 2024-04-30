@@ -23,13 +23,11 @@
                                     <input t-att-value="state.codePin" class="o_hr_attendance_PINbox py-0 border-0 bg-white text-center fs-3" type="password" disabled="true"/>
                                 </div>
                                 <div class="row g-2">
-                                    <t t-foreach="padButtons" t-as="btn" t-key="btn[0]">
-                                        <div class="col-4">
-                                            <a href="#" t-on-click="() => this.onClickPadButton(btn[0])" t-attf-class="o_hr_attendance_PINbox_button btn {{btn[1]? btn[1] : 'btn-secondary'}} d-flex align-items-center justify-content-center py-2 py-xl-3 rounded-1">
-                                                <t t-esc="btn[0]"/>
-                                            </a>
-                                        </div>
-                                    </t>
+                                    <div class="col-4" t-foreach="padButtons" t-as="btn" t-key="btn[0]">
+                                        <a href="#" t-on-click="() => this.onClickPadButton(btn[0])" t-attf-class="o_hr_attendance_PINbox_button btn {{btn[1]? btn[1] : 'btn-secondary'}} d-flex align-items-center justify-content-center py-2 py-xl-3 rounded-1">
+                                            <t t-esc="btn[0]"/>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -44,11 +42,13 @@
             </button>
         </div>
     </t>
-        <div t-else="" class="alert alert-danger mx-3" role="alert">
+    <t t-else="">
+        <div class="alert alert-danger mx-3" role="alert">
             <h4 class="alert-heading">Error: could not find corresponding employee.</h4>
             <p>Please return to the main menu.</p>
         </div>
         <a role="button" class="oe_attendance_sign_in_out" aria-label="Sign out" title="Sign out"/>
+    </t>
 </t>
 
 </templates>

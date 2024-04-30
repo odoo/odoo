@@ -34,8 +34,9 @@ actions(Check in/Check out) performed by them.
     'application': True,
     'assets': {
         'web.assets_backend': [
-            'hr_attendance/static/src/**/*',
-            ('remove', 'hr_attendance/static/src/*.scss'),
+            'hr_attendance/static/src/**/*.js',
+            'hr_attendance/static/src/**/*.xml',
+            'hr_attendance/static/src/scss/views/*.scss'
         ],
         'web.qunit_suite_tests': [
             'hr_attendance/static/tests/hr_attendance_mock_server.js',
@@ -45,12 +46,12 @@ actions(Check in/Check out) performed by them.
         ],
         'hr_attendance.assets_public_attendance': [
             # Define attendance variables (takes priority)
-            'hr_attendance/static/src/primary_variables.scss',
+            'hr_attendance/static/src/scss/kiosk/primary_variables.scss',
 
             # Front-end libraries
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_primary_variables'),
-            'hr_attendance/static/src/bootstrap_overridden.scss',
+            'hr_attendance/static/src/scss/kiosk/bootstrap_overridden.scss',
             ('include', 'web._assets_frontend_helpers'),
             'web/static/lib/jquery/jquery.js',
             'web/static/src/scss/pre_variables.scss',
@@ -68,9 +69,9 @@ actions(Check in/Check out) performed by them.
 
             # Public Kiosk app and its components
             "hr_attendance/static/src/public_kiosk/**/*",
-                'hr_attendance/static/src/components/**/*',
+            'hr_attendance/static/src/components/**/*',
 
-            'hr_attendance/static/src/hr_attendance.scss',
+            'hr_attendance/static/src/scss/kiosk/hr_attendance.scss',
             "web/static/src/views/fields/formatters.js",
 
             # Barcode reader utils
