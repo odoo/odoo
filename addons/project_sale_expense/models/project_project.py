@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from collections import defaultdict
 
-from odoo import models
+from odoo import fields, models
 
 
 class Project(models.Model):
@@ -16,8 +17,8 @@ class Project(models.Model):
         query = self.env['hr.expense']._search([('is_refused', '=', False), ('state', 'in', ['approved', 'done'])])
         query.add_where('hr_expense.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
         query.order = None
-        query_string, query_param = query.select('sale_order_id', 'product_id', 'array_agg(id) as ids', 'SUM(untaxed_amount) as untaxed_amount')
-        query_string = f"{query_string} GROUP BY sale_order_id, product_id"
+        query_string, query_param = query.select('sale_order_id', 'product_id', 'currency_id', 'array_agg(id) as ids', 'SUM(untaxed_amount) as untaxed_amount')
+        query_string = f"{query_string} GROUP BY sale_order_id, product_id, currency_id"
         self._cr.execute(query_string, query_param)
         expenses_read_group = [expense for expense in self._cr.dictfetchall()]
         if not expenses_read_group:
@@ -25,13 +26,22 @@ class Project(models.Model):
         expenses_per_so_id = {}
         expense_ids = []
         amount_billed = 0.0
+        dict_amount_per_currency = defaultdict(lambda: 0.0)
         for res in expenses_read_group:
             so_id = res['sale_order_id']
             product_id = res['product_id']
             expenses_per_so_id.setdefault(so_id, {})[product_id] = res['ids']
             if can_see_expense:
                 expense_ids.extend(res['ids'])
-            amount_billed += res['untaxed_amount']
+            dict_amount_per_currency[res['currency_id']] += res['untaxed_amount']
+        date = fields.Date.context_today(self)
+        for currency_id in dict_amount_per_currency:
+            if currency_id == self.company_id.currency_id.id:
+                amount_billed += dict_amount_per_currency[currency_id]
+                continue
+            currency = self.env['res.currency'].browse(currency_id)
+            amount_billed += currency._convert(dict_amount_per_currency[currency_id], self.company_id.currency_id, self.company_id, date)
+
         sol_read_group = self.env['sale.order.line'].sudo()._read_group(
             [
                 ('order_id', 'in', list(expenses_per_so_id.keys())),
