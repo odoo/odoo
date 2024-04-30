@@ -434,8 +434,12 @@ class Contains {
         if (this.options.dropFiles) {
             message = `${message} and dropped ${this.options.dropFiles.length} file(s)`;
             const ev = new Event("drop", { bubbles: true });
+            const dataTransfer = new window.DataTransfer();
+            for (const file of this.options.dropFiles) {
+                dataTransfer.items.add(file);
+            }
             Object.defineProperty(ev, "dataTransfer", {
-                value: createFakeDataTransfer(this.options.dropFiles),
+                value: dataTransfer,
             });
             el.dispatchEvent(ev);
         }
