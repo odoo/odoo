@@ -10,6 +10,7 @@ from odoo import exceptions
 from odoo.fields import Datetime as FieldsDatetime
 from odoo.tests import Form, users, tagged
 from odoo.tools import mute_logger
+from dateutil.relativedelta import relativedelta
 
 
 class TestEventInternalsCommon(EventCase):
