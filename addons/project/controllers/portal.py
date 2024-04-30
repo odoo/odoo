@@ -414,7 +414,12 @@ class ProjectCustomerPortal(CustomerPortal):
             domain = AND([domain, self._task_get_search_domain(search_in, search, milestones_allowed, project)])
 
         # content according to pager and archive selected
-        group_field = None if groupby == 'none' else groupby
+        if groupby == 'none':
+            group_field = None
+        elif groupby == 'priority':
+            group_field = 'priority desc'
+        else:
+            group_field = groupby
         order = '%s, %s' % (group_field, sortby) if group_field else sortby
 
         def get_grouped_tasks(pager_offset):
@@ -483,7 +488,7 @@ class ProjectCustomerPortal(CustomerPortal):
         }
 
         # extends filterby criteria with project the customer has access to
-        projects = request.env['project.project'].search(project_domain or [])
+        projects = request.env['project.project'].search(project_domain or [], order="id")
         for project in projects:
             searchbar_filters.update({
                 str(project.id): {'label': project.name, 'domain': [('project_id', '=', project.id)]}
@@ -520,7 +525,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'grouped_tasks': grouped_tasks,
             'show_project': True,
             'pager': pager,
-            'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
+            'searchbar_filters': searchbar_filters,
             'filterby': filterby,
         })
         return request.render("project.portal_my_tasks", values)
