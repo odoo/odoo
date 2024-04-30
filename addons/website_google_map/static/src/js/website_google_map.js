@@ -6,7 +6,9 @@ function initialize_map() {
     var map = new google.maps.Map(document.getElementById('odoo-google-map'), {
         zoom: 1,
         center: {lat: 0.0, lng: 0.0},
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        gestureHandling: "greedy",
+
     });
 
     // ENABLE ADDRESS GEOCODING
@@ -81,6 +83,13 @@ function initialize_map() {
             set_marker(odoo_partner_data.partners[i]);
         }
         new MarkerClusterer(map, markers, options);
+
+        // auto center map and auto zoom
+        const bounds = new google.maps.LatLngBounds();
+        markers.forEach(n => bounds.extend(n.position));
+        map.setCenter(bounds.getCenter());
+        map.fitBounds(bounds);
+        map.setZoom(map.getZoom() - 1);
     }
     /* eslint-enable no-undef */
 }

@@ -13,6 +13,7 @@ from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import CustomerPortal
+from odoo.addons.website_google_map.controllers.main import GoogleMap
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
 
 from odoo.tools.translate import _
@@ -183,8 +184,26 @@ class WebsiteAccount(CustomerPortal):
             })
 
 
-class WebsiteCrmPartnerAssign(WebsitePartnerPage):
+class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
     _references_per_page = 40
+
+    def _get_gmap_domains(self, **kw):
+        domains = super()._get_gmap_domains(**kw)
+        current_grade = kw.get('current_grade')
+        current_country = kw.get('current_country')
+
+        domain = [('grade_id', '!=', False), ('is_company', '=', True)]
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            domain += [('grade_id.website_published', '=', True)]
+
+        if current_country:
+            domain += [('country_id', '=', int(current_country))]
+
+        if current_grade:
+            domain += [('grade_id', '=', int(current_grade))]
+
+        domains['website_crm_partner_assign.partners'] = domain
+        return domains
 
     def sitemap_partners(env, rule, qs):
         if not qs or qs.lower() in '/partners':
