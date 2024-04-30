@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from ast import literal_eval
 
 from odoo import api, Command, fields, models, _
@@ -64,6 +62,20 @@ class AccountJournal(models.Model):
                     return model
         return 'odoo'
 
+    def _get_default_account_domain(self):
+        return """[
+            ('deprecated', '=', False),
+            ('account_type', 'in', ('asset_cash', 'liability_credit_card') if type == 'bank'
+                                   else ('asset_cash',) if type == 'cash'
+                                   else ('income', 'income_other') if type == 'sale'
+                                   else ('expense', 'expense_depreciation', 'expense_direct_cost') if type == 'purchase'
+                                   else ('asset_receivable', 'asset_cash', 'asset_current', 'asset_non_current',
+                                         'asset_prepayments', 'asset_fixed', 'liability_payable',
+                                         'liability_credit_card', 'liability_current', 'liability_non_current',
+                                         'equity', 'equity_unaffected', 'income', 'income_other', 'expense',
+                                         'expense_depreciation', 'expense_direct_cost', 'off_balance'))
+        ]"""
+
     name = fields.Char(string='Journal Name', required=True, translate=True)
     code = fields.Char(
         string='Short Code',
@@ -92,9 +104,7 @@ class AccountJournal(models.Model):
     default_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
         string='Default Account',
-        domain="[('deprecated', '=', False), ('account_type', '=like', default_account_type)]",
-    )
-
+        domain=_get_default_account_domain)
     suspense_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True,
         compute='_compute_suspense_account_id',
