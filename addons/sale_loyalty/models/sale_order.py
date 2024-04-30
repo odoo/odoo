@@ -154,6 +154,41 @@ class SaleOrder(models.Model):
             'tax_id': [(Command.CLEAR, 0, 0)] + [(Command.LINK, tax.id, False) for tax in taxes]
         }]
 
+    def _discountable_amount(self, rewards_to_ignore):
+        """Compute the `discountable` amount for the current order, ignoring the provided rewards.
+
+        :param rewards_to_ignore: the rewards to ignore from the total amount (if they were already
+            applied on the order)
+        :type reward: `loyalty.reward` recordset
+
+        :return: The discountable amount
+        :rtype: float
+        """
+        self.ensure_one()
+
+        discountable = 0
+
+        for line in self.order_line - self._get_no_effect_on_threshold_lines():
+            if rewards_to_ignore and line.reward_id in rewards_to_ignore:
+                # Ignore the existing reward line if it was already applied
+                continue
+            if not line.product_uom_qty or not line.price_unit:
+                # Ignore lines whose amount will be 0 (bc of empty qty or 0 price)
+                continue
+            tax_data = line.tax_id.compute_all(
+                line.price_unit,
+                quantity=line.product_uom_qty,
+                product=line.product_id,
+                partner=line.order_partner_id,
+            )
+            # To compute the discountable amount we get the subtotal and add
+            # non-fixed tax totals. This way fixed taxes will not be discounted
+            taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
+            discountable += tax_data['total_excluded'] + sum(
+                tax['amount'] for tax in tax_data['taxes'] if tax['id'] in taxes.ids
+            )
+        return discountable
+
     def _discountable_order(self, reward):
         """Compute the `discountable` amount (and amounts per tax group) for the current order.
 
@@ -609,6 +644,80 @@ class SaleOrder(models.Model):
         self.write({'order_line': command_list})
         return self.env['sale.order.line'] if delete else old_lines[len(reward_vals):]
 
+    def _best_global_discount_already_applied(self, current_reward, new_reward, discountable=None):
+        """Determine whether current_reward is better than new_reward.
+
+        This function compares the discount amount of two rewards to determine whether the current
+        one is better than another one.
+
+        Notes
+        -----
+
+            If the discount amounts of both the current and the new rewards exceed the order total,
+            the reward with the smaller discount amount is considered the best.
+            This is to ensure that the most advantageous discount is applied for the customer,
+            who will keep the most important voucher, having saved the same amount in the end.
+
+        :param loyalty.reward current_reward: The reward currently applied on the sale order.
+        :param loyalty.reward new_reward: The reward to compare with.
+        :param float discountable: The total discountable amount of the sale order.
+            If not provided, it will be calculated on the fly.
+        :return: True if current_reward is considered better than new_reward.
+        :rtype: bool
+        """
+        self.ensure_one()
+        current_reward.ensure_one()
+        new_reward.ensure_one()
+
+        if current_reward == new_reward:
+            return True
+
+        if discountable is None:  # Only recompute if discountable is not given, not if its zero
+            discountable = self._discountable_amount(current_reward)
+
+        def compute_discount(reward, discountable):
+            """Compute the discount amount for the given reward, w.r.t. the discountable amount.
+
+            :param loyalty.reward reward: The reward for which to calculate the maximum discount.
+            :param float discountable: The total discountable amount of the sale order.
+            :return: The maximum discount amount.
+            :rtype: float
+            """
+            if reward.discount_mode == 'per_order':
+                return reward.currency_id._convert(
+                    from_amount=reward.discount,
+                    to_currency=self.currency_id,
+                    company=self.company_id,
+                    date=fields.Date.today(),
+                )
+            elif reward.discount_mode == 'percent':
+                return discountable * (reward.discount / 100)
+
+        discount_current_reward = compute_discount(current_reward, discountable)
+        discount_new_reward = compute_discount(new_reward, discountable)
+
+        discount_current_bigger_than_discountable = self.currency_id.compare_amounts(
+            amount1=discount_current_reward,
+            amount2=discountable,
+        ) >= 0
+        discount_new_bigger_than_discountable = self.currency_id.compare_amounts(
+            amount1=discount_new_reward,
+            amount2=discountable,
+        ) >= 0
+        compare_current_and_new_reward = self.currency_id.compare_amounts(
+            amount1=discount_current_reward,
+            amount2=discount_new_reward,
+        )
+
+        if discount_current_bigger_than_discountable and discount_new_bigger_than_discountable:
+            # If both discounts are greater than the discountable amount, the lower discount
+            # is better as it reduces the discount amount 'spent' by the customer.
+            return compare_current_and_new_reward <= 0
+
+        # Return True only if the discount of the new reward is greater than the current reward
+        # discount.
+        return compare_current_and_new_reward >= 0
+
     def _apply_program_reward(self, reward, coupon, **kwargs):
         """
         Applies the reward to the order provided the given coupon has enough points.
@@ -626,8 +735,12 @@ class SaleOrder(models.Model):
         if reward.is_global_discount:
             global_discount_reward_lines = self._get_applied_global_discount_lines()
             global_discount_reward = global_discount_reward_lines.reward_id
-            if global_discount_reward and global_discount_reward != reward and global_discount_reward.discount >= reward.discount:
-                return {'error': _('A better global discount is already applied.')}
+            if (
+                global_discount_reward
+                and global_discount_reward != reward
+                and self._best_global_discount_already_applied(global_discount_reward, reward)
+            ):
+                return {'error': _("A better global discount is already applied.")}
             elif global_discount_reward and global_discount_reward != reward:
                 # Invalidate the old global discount as it may impact the new discount to apply
                 global_discount_reward_lines._reset_loyalty(True)
@@ -651,13 +764,21 @@ class SaleOrder(models.Model):
         self.ensure_one()
         all_coupons = forced_coupons or (self.coupon_point_ids.coupon_id | self.order_line.coupon_id | self.applied_coupon_ids)
         has_payment_reward = any(line.reward_id.program_id.is_payment_program for line in self.order_line)
-        total_is_zero = float_is_zero(self.amount_total, precision_digits=2)
-        result = defaultdict(lambda: self.env['loyalty.reward'])
         global_discount_reward = self._get_applied_global_discount()
+        discountable = lazy(lambda: self._discountable_amount(global_discount_reward))
+
+        total_is_zero = self.currency_id.is_zero(discountable)
+        result = defaultdict(lambda: self.env['loyalty.reward'])
         for coupon in all_coupons:
             points = self._get_real_points_for_coupon(coupon)
             for reward in coupon.program_id.reward_ids:
-                if reward.is_global_discount and global_discount_reward and global_discount_reward.discount >= reward.discount:
+                if (
+                    reward.is_global_discount
+                    and global_discount_reward
+                    and self._best_global_discount_already_applied(
+                        global_discount_reward, reward, discountable
+                    )
+                ):
                     continue
                 # Discounts are not allowed if the total is zero unless there is a payment reward, in which case we allow discounts.
                 # If the total is 0 again without the payment reward it will be removed.
@@ -1016,6 +1137,20 @@ class SaleOrder(models.Model):
             return {'error': _('The program is not available for this order.')}
         elif program in self._get_applied_programs():
             return {'error': _('This program is already applied to this order.'), 'already_applied': True}
+        elif program.reward_ids:
+            global_reward = program.reward_ids.filtered('is_global_discount')
+            applied_global_reward = self._get_applied_global_discount()
+            if (
+                global_reward
+                and applied_global_reward
+                and self._best_global_discount_already_applied(applied_global_reward, global_reward)
+            ):
+                return {'error': _(
+                    'This discount (%s) is not compatible with "%s". '
+                    'Please remove it in order to apply this one.',
+                    global_reward.description,
+                    applied_global_reward.program_id.reward_ids.description,
+                )}
         # Check for applicability from the program's triggers/rules.
         # This step should also compute the amount of points to give for that program on that order.
         status = self._program_check_compute_points(program)[program]
