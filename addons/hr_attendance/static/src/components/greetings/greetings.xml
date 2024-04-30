@@ -5,7 +5,7 @@
         <div class="o_hr_attendance_user_badge text-center">
             <img
                 class="o_hr_attendance_employee_badge img rounded-circle"
-                t-attf-src="data:image/png;base64,{{employeeAvatar}}"
+                t-attf-src="{{employeeAvatar}}"
                 t-attf-height="{{ employeeAvatarHeight or '120'}}"/>
         </div>
     </t>
@@ -36,7 +36,10 @@
                                     </t>
                                 </div>
                                 <div class="d-flex flex-column w-100">
-                                    <div class="alert alert-info text-center p-3" role="status" t-if="this.hoursToday">
+                                    <div
+                                        class="alert alert-info text-center p-3"
+                                        t-if="this.hoursToday != '00:00'"
+                                        role="status">
                                         <t t-if="attendance.check_out">
                                             Hours Today: <strong><t t-esc="this.hoursToday"/></strong>
                                         </t>
@@ -71,7 +74,7 @@
                 </button>
             </div>
         </t>
-        <t t-else="">  
+        <t t-else="">
             <div class="o_hr_kiosk_mode_main d-flex flex-grow-1 justify-content-center align-items-center">
                 <div class="alert alert-warning px-5 text-center" role="alert">
                     <h4 class="alert-heading mt-3">Invalid request</h4>

@@ -4,6 +4,7 @@
 from collections import defaultdict
 from pytz import timezone, UTC
 from datetime import date, datetime, time
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.osv import expression
@@ -137,6 +138,32 @@ class Employee(models.Model):
             if employee_contracts:
                 res[employee.id] = contracts[0].resource_calendar_id.sudo(False)
         return res
+
+    def _get_calendar_periods(self, start, stop):
+        calendar_periods_by_employee = defaultdict(list)
+        contracts_by_employee = self.env['hr.contract'].sudo()._read_group(domain=[
+            '|',
+                ('state', 'in', ['open', 'close']),
+                '&',
+                    ('state', '=', 'draft'),
+                    ('kanban_state', '=', 'done'),
+            ('date_start', '<=', stop),
+            '|',
+                ('date_end', '=', False),
+                ('date_end', '>=', start),
+            ('employee_id', 'in', self.ids),
+        ], groupby=['employee_id'], aggregates=['id:recordset'])
+        for employee, contracts in contracts_by_employee:
+            for contract in contracts:
+                calendar_tz = timezone(contract.resource_calendar_id.tz)
+                utc = timezone('UTC')
+                date_start = datetime.combine(contract.date_start, time(0, 0, 0)).replace(tzinfo=calendar_tz).astimezone(utc)
+                if contract.date_end:
+                    date_end = datetime.combine(contract.date_end + relativedelta(days=1), time(0, 0, 0)).replace(tzinfo=calendar_tz).astimezone(utc)
+                else:
+                    date_end = stop
+                calendar_periods_by_employee[employee].append((max(date_start, start), min(date_end, stop), contract.resource_calendar_id))
+        return calendar_periods_by_employee
 
     @api.model
     def _get_all_contracts(self, date_from, date_to, states=['open']):

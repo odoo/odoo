@@ -16,14 +16,14 @@
 
 <t t-name="hr_attendance.public_kiosk_app">
     <MainComponentsContainer/>
-    <CardLayout fromEmptyScreen="this.props.fromEmptyScreen">
+    <CardLayout fromTrialMode="this.props.fromTrialMode" kioskReturn.bind="kioskReturn">
         <t t-if="this.state.active_display === 'settings'">
             <div class="align-self-center h2 mt-5">
                 How do you want to record attendances ?
             </div>
             <div class="o_hr_kiosk_mode_main d-flex flex-column gap-5 flex-sm-row m-auto">
                 <div class="align-items-center">
-                    <button t-on-click="() => this.setSetting('manual')"  class="btn btn-light btn-lg rounded-3">
+                    <button t-on-click="() => this.setSetting('manual')" class="btn btn-light btn-lg rounded-3">
                         <img src="/hr_attendance/static/img/tablet-pin.svg" height="170px" alt="Manual Attendance"/>
                     </button>
                     <h5 class="d-block d-flex justify-content-center mt-2">Select on Tablet</h5>
@@ -50,15 +50,18 @@
             </div>
         </t>
         <t t-if="this.state.active_display === 'main'">
-            <t t-if="state.displayDemoMessage">
-                <div class="alert alert-info col-6 row justify-content-between align-self-center">
-                        No barcode or RFID reader ? Click the image to try with camera
-                    <button t-on-click="removeDemoMessage" type="button" class="btn-close" title="Close"/>
-                </div>
-            </t>
+            <div
+                t-if="state.displayDemoMessage"
+                class="alert alert-info col-6 row justify-content-between align-self-center">
+                No barcode or RFID reader ? Click the image to try with camera
+                <button t-on-click="removeDemoMessage" type="button" class="btn-close" title="Close"/>
+            </div>
             <div class="o_hr_kiosk_mode_main d-flex flex-column flex-sm-row gap-3 m-auto">
                 <t t-if="this.props.kioskMode !== 'manual'">
-                <KioskBarcodeScanner token="this.props.token" barcodeSource="this.props.barcodeSource" onBarcodeScanned="(ev) => this.onBarcodeScanned(ev)"/>
+                <KioskBarcodeScanner
+                    token="this.props.token"
+                    barcodeSource="this.props.barcodeSource"
+                    onBarcodeScanned="(ev) => this.onBarcodeScanned(ev)"/>
                 </t>
             </div>
             <div class="o_hr_kiosk_mode_bottom d-flex flex-column flex-md-row gap-2 align-items-center justify-content-between my-5">
@@ -79,13 +82,21 @@
             </div>
         </t>
         <t t-if="this.state.active_display === 'manual'">
-            <KioskManualSelection employees="this.props.employees" displayBackButton="this.manualKioskMode" departments="this.props.departments" onSelectEmployee="(e) => this.kioskConfirm(e)" onClickBack="() => this.kioskReturn()"/>
+            <KioskManualSelection
+                employees="this.props.employees"
+                displayBackButton="!this.manualKioskMode || this.props.fromTrialMode"
+                departments="this.props.departments"
+                onSelectEmployee="(e) => this.kioskConfirm(e)"
+                onClickBack="() => this.kioskReturn()"/>
         </t>
         <t t-if="this.state.active_display === 'greet'">
             <KioskGreetings employeeData="this.employeeData" kioskReturn="() => this.kioskReturn(true)"/>
         </t>
         <t t-if="this.state.active_display === 'pin'">
-            <KioskPinCode employeeData="this.employeeData" onPinConfirm="(id, pin) => this.onManualSelection(id, pin)" onClickBack="() => this.kioskReturn()"/>
+            <KioskPinCode
+                employeeData="this.employeeData"
+                onPinConfirm="(id, pin) => this.onManualSelection(id, pin)"
+                onClickBack="() => this.kioskReturn()"/>
         </t>
     </CardLayout>
 </t>
