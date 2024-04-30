@@ -14,6 +14,11 @@ $o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
         box-shadow: 0 -7px 20px -5px rgba(#000, 0.3);
         animation: o_onboarding_slideInUp $o-onboarding-base-time ease-out;
     }
+    
+    // !important required for compatibility (z-index-1 in xml)
+    .o_onboarding_btn_close {
+        z-index: 2 !important;
+    }
 
     // = Step Design
     // ------------------------------------------------------------------------
