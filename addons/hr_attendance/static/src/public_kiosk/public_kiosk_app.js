@@ -1,6 +1,4 @@
-/** @odoo-module **/
-
-import {App, whenReady, Component, useState} from "@odoo/owl";
+import { App, whenReady, Component, useState } from "@odoo/owl";
 import { CardLayout } from "@hr_attendance/components/card_layout/card_layout";
 import { KioskManualSelection } from "@hr_attendance/components/manual_selection/manual_selection";
 import { makeEnv, startServices } from "@web/env";
@@ -10,9 +8,10 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { rpc } from "@web/core/network/rpc";
 import { useService, useBus } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
-import {KioskGreetings} from "@hr_attendance/components/greetings/greetings";
-import {KioskPinCode} from "@hr_attendance/components/pin_code/pin_code";
-import {KioskBarcodeScanner} from "@hr_attendance/components/kiosk_barcode/kiosk_barcode";
+import { KioskGreetings } from "@hr_attendance/components/greetings/greetings";
+import { KioskPinCode } from "@hr_attendance/components/pin_code/pin_code";
+import { KioskBarcodeScanner } from "@hr_attendance/components/kiosk_barcode/kiosk_barcode";
+import { browser } from "@web/core/browser/browser";
 
 class kioskAttendanceApp extends Component{
     static template = "hr_attendance.public_kiosk_app";
@@ -34,28 +33,46 @@ class kioskAttendanceApp extends Component{
         });
         this.state = useState({
             active_display: "settings",
-            displayDemoMessage: browser.localStorage.getItem("hr_attendance.ShowDemoMessage") !== "false"
+            displayDemoMessage: browser.localStorage.getItem("hr_attendance.ShowDemoMessage") !== "false",
         });
         this.lockScanner = false;
-        if (this.props.kioskMode === 'settings' || this.props.fromEmptyScreen){
+        if (this.props.kioskMode === 'settings' || this.props.fromTrialMode){
             this.manualKioskMode = false;
-        }
-        else if (this.props.kioskMode !== 'manual'){
             useBus(this.barcode.bus, "barcode_scanned", (ev) => this.onBarcodeScanned(ev.detail.barcode));
-            this.state = useState({active_display: "main"});
-            this.manualKioskMode = false
-        }else{
-            this.manualKioskMode = true
-            this.state = useState({active_display: "manual"});
+        }
+        else if (this.props.kioskMode !== 'manual') {
+            useBus(this.barcode.bus, "barcode_scanned", (ev) => this.onBarcodeScanned(ev.detail.barcode));
+            this.state.active_display = "main";
+            this.manualKioskMode = false;
+        } else {
+            this.manualKioskMode = true;
+            this.state.active_display = "manual";
         }
     }
 
     switchDisplay(screen) {
-        const displays = ["main", "greet", "manual", "pin"]
-        if (displays.includes(screen)){
+        const displays = ["main", "greet", "manual", "pin", "settings"];
+        if (displays.includes(screen)) {
             this.state.active_display = screen;
-        }else{
+        } else {
             this.state.active_display = "main";
+        }
+    }
+
+    async setSetting(mode) {
+        await rpc("/hr_attendance/set_settings", {
+            token: this.props.token,
+            mode: mode,
+        });
+        this.props.kioskMode = mode;
+        if (mode !== "manual") {
+            this.manualKioskMode = false;
+            this.state.active_display = "main";
+            this.props.kioskMode = mode;
+        } else {
+            this.manualKioskMode = true;
+            this.state.active_display = "manual";
+            this.props.kioskMode = "manual";
         }
     }
 
@@ -76,10 +93,19 @@ class kioskAttendanceApp extends Component{
     }
 
     kioskReturn() {
-        if (this.props.kioskMode !== 'manual'){
-            this.switchDisplay('main')
-        }else{
-            this.switchDisplay('manual')
+        if (this.state.active_display === "settings"){
+            history.back();
+        } else if (
+            (["manual", "barcode"].includes(this.props.kioskMode) ||
+                (this.props.kioskMode === "barcode_manual" &&
+                    this.state.active_display === "main")) &&
+            this.props.fromTrialMode
+        ) {
+            this.switchDisplay("settings");
+        } else if (this.props.kioskMode === 'manual') {
+            this.switchDisplay("manual");
+        } else {
+            this.switchDisplay("main");
         }
     }
 
@@ -122,6 +148,12 @@ class kioskAttendanceApp extends Component{
         }
         this.lockScanner = false
     }
+
+    removeDemoMessage() {
+        this.state.displayDemoMessage = false;
+        browser.localStorage.setItem("hr_attendance.ShowDemoMessage", "false");
+        return;
+    }
 }
 
 export async function createPublicKioskAttendance(document, kiosk_backend_info) {
@@ -140,7 +172,7 @@ export async function createPublicKioskAttendance(document, kiosk_backend_info) 
                 departments: kiosk_backend_info.departments,
                 kioskMode: kiosk_backend_info.kiosk_mode,
                 barcodeSource: kiosk_backend_info.barcode_source,
-                fromEmptyScreen: kiosk_backend_info.from_trial_mode,
+                fromTrialMode: kiosk_backend_info.from_trial_mode,
             },
         dev: env.debug,
         translateFn: _t,

@@ -1,20 +1,21 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
 
 from collections import defaultdict
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 from pytz import timezone
+from random import randint
 
 from odoo import models, fields, api, exceptions, _
 from odoo.addons.resource.models.utils import Intervals
 from odoo.tools import format_datetime
 from odoo.osv.expression import AND, OR
 from odoo.tools.float_utils import float_is_zero
-from odoo.exceptions import AccessError
-from odoo.tools import format_duration
+from odoo.exceptions import AccessDenied, AccessError
+from odoo.tools import convert, format_duration
 
 def get_google_maps_url(latitude, longitude):
     return "https://maps.google.com?q=%s,%s" % (latitude, longitude)
@@ -29,9 +30,12 @@ class HrAttendance(models.Model):
     def _default_employee(self):
         return self.env.user.employee_id
 
-    employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee, required=True, ondelete='cascade', index=True)
+    employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee, required=True,
+        ondelete='cascade', index=True, group_expand='_read_group_employee_id')
     department_id = fields.Many2one('hr.department', string="Department", related="employee_id.department_id",
         readonly=True)
+    manager_id = fields.Many2one(comodel_name='hr.employee', related="employee_id.parent_id", readonly=True,
+        export_string_translation=False)
     check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True, tracking=True)
     check_out = fields.Datetime(string="Check Out", tracking=True)
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
@@ -124,7 +128,7 @@ class HrAttendance(models.Model):
                 )
             else:
                 attendance.display_name = _(
-                    "%(worked_hours)s : (%(check_in)s-%(check_out)s)",
+                    "%(worked_hours)s (%(check_in)s-%(check_out)s)",
                     worked_hours=format_duration(attendance.worked_hours),
                     check_in=format_datetime(self.env, attendance.check_in, dt_format="HH:mm"),
                     check_out=format_datetime(self.env, attendance.check_out, dt_format="HH:mm"),
@@ -433,3 +437,152 @@ class HrAttendance(models.Model):
             'url': get_google_maps_url(self.out_latitude, self.out_longitude),
             'target': 'new'
         }
+
+    def _load_demo_data(self):
+        # Check if demo data was already installed
+        if not self.env.user.has_group("hr_attendance.group_hr_attendance_manager"):
+            raise AccessDenied()
+        employee_sj = self.env.ref('hr_attendance.employee_sj', raise_if_not_found=False)
+        if employee_sj:
+            return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': _("Demo data was already loaded."),
+            }
+        }
+        # Load employees, schedules, departments and partners
+        convert.convert_file(self.env, 'hr_attendance', 'data/scenarios/hr_attendance.xml', None, mode='init', kind='data')
+
+        employee_sj = self.env.ref('hr_attendance.employee_sj')
+        employee_mw = self.env.ref('hr_attendance.employee_mw')
+        employee_eg = self.env.ref('hr_attendance.employee_eg')
+
+        # Retrieve employee from xml file
+        # Calculate attendances records for the previous month and the current until today
+        now = datetime.now()
+        date_range = now.day + (now.replace(day=31) - relativedelta(months=1)).day
+        city_coordinates = (50.27, 5.31)
+        city_coordinates_exception = (51.01, 2.82)
+        city_dict = {
+                    'latitude': city_coordinates_exception[0],
+                    'longitude': city_coordinates_exception[1],
+                    'city': 'Rellemstraat'
+                }
+        city_exception_dict = {
+            'latitude': city_coordinates[0],
+            'longitude': city_coordinates[1],
+            'city': 'Waillet'
+        }
+        attendance_values = []
+        for i in range(1, date_range):
+            check_in_date = now.replace(hour=6, minute=0, second=randint(0, 59)) + timedelta(days=-i, minutes=randint(-2, 3))
+            if check_in_date.weekday() not in range(0, 5):
+                continue
+            check_out_date = now.replace(hour=10, minute=0, second=randint(0, 59)) + timedelta(days=-i, minutes=randint(-2, -1))
+            check_in_date_after_lunch = now.replace(hour=11, minute=0, second=randint(0, 59)) + timedelta(days=-i, minutes=randint(-2, -1))
+            check_out_date_after_lunch = now.replace(hour=15, minute=0, second=randint(0, 59)) + timedelta(days=-i, minutes=randint(1, 3))
+
+            # employee_eg doesn't work on friday
+            eg_data = []
+            if check_in_date.weekday() != 4:
+                # employee_eg will compensate her work's hours between weeks.
+                if check_in_date.isocalendar().week % 2:
+                    employee_eg_hours = {
+                        'check_in_date': check_in_date + timedelta(hours=1),
+                        'check_out_date': check_out_date,
+                        'check_in_date_after_lunch': check_in_date_after_lunch,
+                        'check_out_date_after_lunch': check_out_date_after_lunch + timedelta(hours=-1),
+                    }
+                else:
+                    employee_eg_hours = {
+                        'check_in_date': check_in_date,
+                        'check_out_date': check_out_date,
+                        'check_in_date_after_lunch': check_in_date_after_lunch,
+                        'check_out_date_after_lunch': check_out_date_after_lunch + timedelta(hours=1, minutes=30),
+                    }
+                eg_data = [{
+                    'employee_id': employee_eg.id,
+                    'check_in': employee_eg_hours['check_in_date'],
+                    'check_out': employee_eg_hours['check_out_date'],
+                    'in_mode': "kiosk",
+                    'out_mode': "kiosk"
+                }, {
+                    'employee_id': employee_eg.id,
+                    'check_in': employee_eg_hours['check_in_date_after_lunch'],
+                    'check_out': employee_eg_hours['check_out_date_after_lunch'],
+                    'in_mode': "kiosk",
+                    'out_mode': "kiosk",
+                }]
+
+            # calculate GPS coordination for employee_mw (systray attendance)
+            if randint(1, 10) == 1:
+                city_data = city_exception_dict
+            else:
+                city_data = city_dict
+            mw_data = [{
+                'employee_id': employee_mw.id,
+                'check_in': check_in_date,
+                'check_out': check_out_date,
+                'in_mode': "systray",
+                'out_mode': "systray",
+                'in_longitude': city_data['longitude'],
+                'out_longitude': city_data['longitude'],
+                'in_latitude': city_data['latitude'],
+                'out_latitude': city_data['latitude'],
+                'in_city': city_data['city'],
+                'out_city': city_data['city'],
+                'in_ip_address': "127.0.0.1",
+                'out_ip_address': "127.0.0.1",
+                'in_browser': 'chrome',
+                'out_browser': 'chrome'
+            }, {
+                'employee_id': employee_mw.id,
+                'check_in': check_in_date_after_lunch,
+                'check_out': check_out_date_after_lunch,
+                'in_mode': "systray",
+                'out_mode': "systray",
+                'in_longitude': city_data['longitude'],
+                'out_longitude': city_data['longitude'],
+                'in_latitude': city_data['latitude'],
+                'out_latitude': city_data['latitude'],
+                'in_city': city_data['city'],
+                'out_city': city_data['city'],
+                'in_ip_address': "127.0.0.1",
+                'out_ip_address': "127.0.0.1",
+                'in_browser': 'chrome',
+                'out_browser': 'chrome'
+            }]
+            sj_data = [{
+                'employee_id': employee_sj.id,
+                'check_in': check_in_date + timedelta(minutes=randint(-10, -5)),
+                'check_out': check_out_date,
+                'in_mode': "manual",
+                'out_mode': "manual"
+            }, {
+                'employee_id': employee_sj.id,
+                'check_in': check_in_date_after_lunch,
+                'check_out': check_out_date_after_lunch + timedelta(hours=1, minutes=randint(-20, 10)),
+                'in_mode': "manual",
+                'out_mode': "manual"
+            }]
+            attendance_values.extend(eg_data + mw_data + sj_data)
+        self.env['hr.attendance'].create(attendance_values)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
+    def action_try_kiosk(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': self.env.company.attendance_kiosk_url + '?from_trial_mode=True'
+        }
+
+    def _read_group_employee_id(self, resources, domain):
+        employee_domain = [
+            ('company_id', 'in', self.env.context.get('allowed_company_ids', [])),
+        ]
+        return self.env['hr.employee'].search(employee_domain)

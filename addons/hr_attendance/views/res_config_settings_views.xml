@@ -11,6 +11,10 @@
                     <block title="Modes" name="kiosk_mode_setting_container">
                         <setting string="Kiosk Mode" company_dependent="1" help="Define the way the user will be identified by the application.">
                             <field name="attendance_kiosk_mode" required="1" class="w-75"/>
+                            <div>
+                                <a href="https://www.odoo.com/documentation/master/applications/hr/attendances/hardware.html"
+                                    target="_blank"><i class="fa fa-fw fa-arrow-right"/>Installation Manual</a>
+                            </div>
                         </setting>
                         <setting string="Attendances from Backend" company_dependent="1" help="Allow Users to Check in/out from Odoo.">
                             <field name="attendance_from_systray" required="1"/>
@@ -26,14 +30,9 @@
                         <setting title="Set PIN codes in the employee detail form (in HR Settings tab)." invisible="attendance_kiosk_mode == 'barcode'" help="Use PIN codes (defined on the Employee's profile) to check-in.">
                             <field name="attendance_kiosk_use_pin"/>
                         </setting>
-                        <setting title="Kiosk Mode Adress" help="Use this url to access your kiosk mode from any device. Warning, anybody with the link can access your kiosk.">
+                        <setting title="Kiosk Mode Adress" help="Use this url to access your kiosk mode from any device.">
                             <field name="attendance_kiosk_url" class="o_hr_kiosk_url_media w-100" style="width:100% !important;" widget="CopyClipboardURL"/>
-                            <br/>
-                            <span>
-                                If your address is compromised, you can refresh it to generate a new one.
-                            </span>
-                            <br/>
-                            <button name="regenerate_kiosk_key" type="object" string="Generate a new Kiosk Mode URL" class="btn-link" icon="fa-refresh"/>
+                            <button name="regenerate_kiosk_key" type="object" string="Generate new URL" class="btn-link" icon="fa-refresh"/>
                         </setting>
                     </block>
                     <block title="Extra Hours" name="overtime_settings">

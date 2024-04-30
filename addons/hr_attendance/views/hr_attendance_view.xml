@@ -12,21 +12,21 @@
                 <field name="check_in"/>
                 <field name="check_out" options="{}"/>
                 <field name="worked_hours" string="Work Hours" widget="float_time"/>
-                <field name="overtime_hours" string="Over Time" optional="show" widget="float_time"/>
-                <field name="color" column_invisible="1"/>
-                <field name="in_latitude" optional="hidden"/>
-                <field name="in_longitude" optional="hidden"/>
-                <field name="out_latitude" optional="hidden"/>
-                <field name="out_longitude" optional="hidden"/>
-                <field name="in_country_name" optional="hidden"/>
-                <field name="out_country_name" optional="hidden"/>
-                <field name="in_mode" optional="hidden"/>
-                <field name="out_mode" optional="hidden"/>
-                <field name="in_city" optional="hidden"/>
-                <field name="out_city" optional="hidden"/>
+                <field name="overtime_hours" string="Extra Hours" optional="show" widget="float_time"/>
+                <field name="in_mode" string="Input Mode (In)" optional="hidden"/>
+                <field name="out_mode" string="Input Mode (Out)" optional="hidden"/>
+                <field name="in_latitude" string="Latitude (In)" optional="hidden"/>
+                <field name="in_longitude" string="Longitude (In)" optional="hidden"/>
+                <field name="out_latitude" string="Latitude (Out)" optional="hidden"/>
+                <field name="out_longitude" string="Longitude (Out)" optional="hidden"/>
+                <field name="in_city" string="City (In)" optional="hidden"/>
+                <field name="out_city" string="City (Out)" optional="hidden"/>
+                <field name="in_country_name" string="Country (In)" optional="hidden"/>
+                <field name="out_country_name" string="Country (Out)" optional="hidden"/>
                 <field name="create_uid" optional="hidden"/>
                 <field name="write_uid" optional="hidden"/>
                 <field name="write_date" optional="hidden"/>
+                <field name="color" column_invisible="1"/>
             </tree>
         </field>
     </record>
@@ -69,15 +69,19 @@
                             <group col="1">
                                 <field name="employee_id" widget="many2one_avatar_user"/>
                                 <field name="check_in" options="{'rounding': 0}"/>
-                                <field name="check_out" options="{'rounding': 0}"/>
+                                <field name="check_out" options="{'rounding': 0}" placeholder="Currently Working"/>
                             </group>
                             <group col="2">
                                 <field name="worked_hours" widget="float_time"/>
-                                <field name="overtime_hours" widget="float_time" string="Extra Hours"/>
+                                <field
+                                    name="overtime_hours"
+                                    widget="float_time"
+                                    string="Extra Hours"
+                                    invisible="not overtime_hours"/>
                             </group>
                         </group>
                         <separator string="Check In"/>
-                        <group colspan="2">
+                        <group name="check_in_group" colspan="2">
                             <group>
                                 <group>
                                     <field name="in_mode"/>
@@ -116,8 +120,8 @@
                                 </div>
                             </group>
                         </group>
-                        <separator string="Check Out" invisible="not check_out"/>
-                        <group colspan="2" invisible="not check_out">
+                        <separator string="Check Out" name="check_out_separator" invisible="not check_out"/>
+                        <group colspan="2" name="check_out_group" invisible="not check_out">
                             <group>
                                 <group>
                                     <field name="out_mode" string="Mode"/>
@@ -215,8 +219,12 @@
                         )
                     )]"/>
                 <group expand="0" string="Group By">
-                    <filter string="Check In" name="groupby_name" context="{'group_by': 'check_in:week'}"/>
                     <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Departement" name="departement" context="{'group_by': 'department_id'}"/>
+                    <filter string="Manager" name="manager" context="{'group_by': 'manager_id'}"/>
+                    <filter string="Mode (In)" name="groupby_mode_in" context="{'group_by': 'check_in'}"/>
+                    <filter string="Mode (Out)" name="groupby_mode_out" context="{'group_by': 'check_out'}"/>
+                    <filter string="Check In" name="groupby_name" context="{'group_by': 'check_in:week'}"/>
                     <filter string="Check Out" name="groupby_check_out" context="{'group_by': 'check_out'}"/>
                 </group>
             </search>
@@ -224,6 +232,20 @@
     </record>
 
     <!-- actions -->
+
+    <record id="action_try_kiosk" model="ir.actions.server">
+        <field name="name">Try kiosk</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_try_kiosk()</field>
+    </record>
+
+    <record id="action_load_demo_data" model="ir.actions.server">
+        <field name="name">Load demo data</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="state">code</field>
+        <field name="code">action = model._load_demo_data()</field>
+    </record>
 
     <record id="hr_attendance_action" model="ir.actions.act_window">
         <field name="name">Attendances</field>
@@ -237,10 +259,39 @@
         </field>
         <field name="search_view_id" ref="hr_attendance_view_filter"/>
         <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-                No attendance records found
-            </p><p>
-                The attendance records of your employees will be displayed here.
+            <p class="oe_view_nocontent_attendance">
+                Ready to track attendances ?
+                <div class="d-flex align">
+                    <div class="mx-5" >
+                        <img src="/hr_attendance/static/img/mock-tablet.png" height="180" class="mb-2"/>
+                        <div class="row justify-content-center mt-1">
+                            <a type="action" class="btn btn-primary d-block col-6" name="%(action_try_kiosk)d">
+                                Try the kiosk
+                            </a>
+                        </div>
+                    </div>
+                    <div class="mx-5" >
+                        <img src="/hr_attendance/static/img/attendance_dot.gif" height="180" class="mb-2"/>
+                        <p class="mt-2"><em>Try the top
+                            <i class="fa fa-circle text-danger" role="img" aria-label="Attendance"/>
+                            icon (e.g for work from home)</em></p>
+                    </div>
+                </div>
+                <div class="d-flex gap-3 align-items-center or-separator">
+                    <hr class="flex-grow-1"/>
+                    or
+                    <hr class="flex-grow-1"/>
+                </div>
+                <div class="px-2 py-2">
+                    <div class="m-2">
+                        Try the backend and reporting:
+                    </div>
+                    <div class="row justify-content-center">
+                        <a type="action" class="btn btn-secondary d-block col-2" name="%(action_load_demo_data)d">
+                            Load sample data
+                        </a>
+                    </div>
+                </div>
             </p>
         </field>
     </record>

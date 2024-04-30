@@ -18,12 +18,13 @@
     <t t-name="hr_attendance.public_kiosk_manual_selection">
         <div class="position-absolute top-0 start-0 w-100 h-100">
             <div class="d-flex gap-2 p-2 bg-white" style="top: 0px;">
-                <t t-if="!this.props.displayBackButton">
-                    <button t-on-click="() => this.props.onClickBack()" class="o_hr_attendance_back_button btn btn-secondary rounded-pill">
+                    <button
+                        t-on-click="() => this.props.onClickBack()"
+                        class="o_hr_attendance_back_button btn btn-secondary rounded-pill"
+                        t-if="this.props.displayBackButton">
                         <i class="oi oi-chevron-left me-1" role="img" aria-label="Go back" title="Go back"/>
                         Back
                     </button>
-                </t>
                 <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start flex-grow-1">
                     <div class="o_cp_searchview d-flex input-group h-100">
                         <div class="o_searchview form-control d-print-contents d-flex align-items-center px-3 rounded-pill border">
