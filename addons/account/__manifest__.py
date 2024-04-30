@@ -101,6 +101,13 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/js/search/search_bar/search_bar.js',
             'account/static/src/helpers/*.js',
         ],
+        # Unit test files
+        'web.assets_unit_tests': [
+            'account/static/tests/**/*',
+            ('remove', 'account/static/tests/legacy/**/*'),  # to remove when all legacy tests are ported
+            ('remove', 'account/static/tests/helpers/**/*'),
+            ('remove', 'account/static/tests/tours/**/*'),
+        ],
         'web.assets_frontend': [
             'account/static/src/js/account_portal_sidebar.js',
             'account/static/src/js/account_portal.js',
@@ -112,7 +119,7 @@ You could use this simplified accounting in case you work with an (external) acc
         ],
         'web.qunit_suite_tests': [
             'account/static/tests/helpers/*.js',
-            'account/static/tests/*.js',
+            'account/static/tests/legacy/*.js',
         ],
         'web.report_assets_common': [
             'account/static/src/css/report_invoice.css',
