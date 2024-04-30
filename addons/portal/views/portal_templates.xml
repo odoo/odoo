@@ -177,6 +177,7 @@
                         </div>
                         <div class="row justify-content-between">
                             <div t-attf-class="o_portal_content col-12 col-lg-8 mb-5">
+                                <span>Hello world !!!!</span>
                                 <t t-out="0"/>
                             </div>
                             <div class="d-none d-lg-flex justify-content-end col-lg-4">
@@ -824,12 +825,22 @@
                 </div>
             </div>
             <div class="o_portal_my_details">
+                <span>Hello world !!!!</span>
                 <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address"]}'/>
             </div>
+                <span>.......................</span>
             <a role="button" href="/my/account" class="btn btn-link p-0 mt-3"><i class="fa fa-pencil"/> Edit information</a>
+                <span>.......................</span>
             <hr t-if="sales_user"/>
             <div class="o_my_contact" t-if="sales_user">
+                <span>.......................</span>
                 <t t-call="portal.portal_contact"/>
+            </div>
+            <div>
+            <t t-foreach="user_id.loyalty_ids" t-as="data">
+                <span>E-Wallet</span>
+                <t t-field="data.description"/>
+            </t>
             </div>
         </div>
     </template>

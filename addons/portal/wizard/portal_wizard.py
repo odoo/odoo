@@ -84,6 +84,7 @@ class PortalWizardUser(models.TransientModel):
     email = fields.Char('Email')
 
     user_id = fields.Many2one('res.users', string='User', compute='_compute_user_id', compute_sudo=True)
+    loyalty_ids = fields.Many2many('loyalty.reward')
     login_date = fields.Datetime(related='user_id.login_date', string='Latest Authentication')
     is_portal = fields.Boolean('Is Portal', compute='_compute_group_details')
     is_internal = fields.Boolean('Is Internal', compute='_compute_group_details')
