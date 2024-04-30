@@ -41,8 +41,8 @@ class TestReadProgressBar(common.TransactionCase):
             }
         }
 
-        groups = self.Model.with_context(context).read_group(
-            [('name', "like", "testWeekGrouping%")], fields=['date', 'name'], groupby=[groupby])
+        groups = self.Model.with_context(context).web_read_group(
+            [('name', "like", "testWeekGrouping%")], groupby=[groupby])['groups']
         progressbars = self.Model.with_context(context).read_progress_bar(
             [('name', "like", "testWeekGrouping%")], group_by=groupby, progress_bar=progress_bar)
         self.assertEqual(len(groups), 2)
@@ -54,7 +54,7 @@ class TestReadProgressBar(common.TransactionCase):
             next(record_name for record_name, count in data.items() if count): group_name
             for group_name, data in progressbars.items()
         }
-
+        # TODO compare raw value or labeled one. (raw) I think
         self.assertEqual(groups[0][groupby], pg_groups["testWeekGrouping_first"])
         self.assertEqual(groups[1][groupby], pg_groups["testWeekGrouping_second"])
 
