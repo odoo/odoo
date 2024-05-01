@@ -140,20 +140,33 @@ class CustomerPortal(payment_portal.PaymentPortal):
             if session_obj_date != today:
                 # store the date as a string in the session to allow serialization
                 request.session['view_quote_%s' % order_sudo.id] = today
-                # The "Quotation viewed by customer" log note is an information
-                # dedicated to the salesman and shouldn't be translated in the customer/website lgg
-                context = {'lang': order_sudo.user_id.partner_id.lang or order_sudo.company_id.partner_id.lang}
-                msg = _('Quotation viewed by customer %s', order_sudo.partner_id.name if request.env.user._is_public() else request.env.user.partner_id.name)
-                del context
-                _message_post_helper(
-                    "sale.order",
-                    order_sudo.id,
-                    message=msg,
-                    token=order_sudo.access_token,
-                    message_type="notification",
-                    subtype_xmlid="mail.mt_note",
-                    partner_ids=order_sudo.user_id.sudo().partner_id.ids,
-                )
+
+                order_viewed_subtype_id = request.env.ref('sale.mt_order_viewed')
+                order_user_partner = order_sudo.user_id.partner_id
+                order_user_subtypes = order_sudo.message_follower_ids.filtered(
+                    lambda follower: follower.partner_id == order_user_partner
+                ).subtype_ids
+                if order_viewed_subtype_id in order_user_subtypes:
+                    # The "Quotation viewed by customer" log note is an information
+                    # dedicated to the salesman and shouldn't be translated in the customer/website lgg
+                    context = {
+                        'lang': order_user_partner.lang or order_sudo.company_id.partner_id.lang,
+                    }
+                    msg = _(
+                        'Quotation viewed by customer %s',
+                        order_sudo.partner_id.name if request.env.user._is_public()
+                        else request.env.user.partner_id.name,
+                    )
+                    del context
+                    _message_post_helper(
+                        "sale.order",
+                        order_sudo.id,
+                        message=msg,
+                        token=order_sudo.access_token,
+                        message_type="notification",
+                        subtype_xmlid="mail.mt_note",
+                        partner_ids=order_user_partner.ids,
+                    )
 
         backend_url = f'/web#model={order_sudo._name}'\
                       f'&id={order_sudo.id}'\
