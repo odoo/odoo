@@ -1258,13 +1258,10 @@ class PosOrderLine(models.Model):
         return super().write(values)
 
     @api.model
-    def get_existing_lots(self, company_id, product_id):
+    def get_existing_lots(self, product_id):
         self.check_access_rights('read')
         self.check_access_rule('read')
-        existing_lots_sudo = self.sudo().env['stock.lot'].search([
-            ('company_id', '=', company_id),
-            ('product_id', '=', product_id),
-        ])
+        existing_lots_sudo = self.sudo().env['stock.lot'].search([('product_id', '=', product_id)])
 
         if existing_lots_sudo and existing_lots_sudo[0].product_id.tracking == 'serial':
             existing_lots_sudo = existing_lots_sudo.filtered(lambda l: float_compare(l.product_qty, 1, precision_rounding=l.product_uom_id.rounding) >= 0)

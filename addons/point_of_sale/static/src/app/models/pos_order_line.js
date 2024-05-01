@@ -138,21 +138,7 @@ export class PosOrderline extends Base {
     }
 
     setPackLotLines({ modifiedPackLotLines, newPackLotLines, setQuantity = true }) {
-        const lotLinesToRemove = [];
-
-        for (const lotLine of this.pack_lot_ids) {
-            const modifiedLotName = modifiedPackLotLines[lotLine.uuid];
-            if (modifiedLotName) {
-                lotLine.lot_name = modifiedLotName;
-            } else {
-                lotLinesToRemove.push(lotLine);
-            }
-        }
-
-        // Remove those that needed to be removed.
-        for (const lotLine of lotLinesToRemove) {
-            this.pack_lot_ids = this.pack_lot_ids.filter((pll) => pll.uuid !== lotLine.uuid);
-        }
+        this.modifyPackLotLines(modifiedPackLotLines);
 
         for (const newLotLine of newPackLotLines) {
             this.models["pos.pack.operation.lot"].create({
@@ -164,6 +150,24 @@ export class PosOrderline extends Base {
         // Set the qty of the line based on number of pack lots.
         if (!this.product_id.to_weight && setQuantity) {
             this.set_quantity_by_lot();
+        }
+    }
+
+    modifyPackLotLines(modifiedPackLotLines) {
+        const lotLinesToRemove = [];
+
+        for (const lotLine of this.pack_lot_ids) {
+            const modifiedLotName = modifiedPackLotLines[lotLine.id];
+            if (modifiedLotName) {
+                lotLine.lot_name = modifiedLotName;
+            } else {
+                lotLinesToRemove.push(lotLine);
+            }
+        }
+
+        // Remove those that needed to be removed.
+        for (const lotLine of lotLinesToRemove) {
+            this.pack_lot_ids = this.pack_lot_ids.filter((pll) => pll.id !== lotLine.id);
         }
     }
 
@@ -306,10 +310,14 @@ export class PosOrderline extends Base {
                 Boolean(this.get_customer_note()) === false) ||
             orderline.get_customer_note() === this.get_customer_note();
 
+        const isSameNote =
+            (Boolean(orderline.getNote()) === false && Boolean(this.getNote()) === false) ||
+            orderline.getNote() === this.getNote();
+
         // only orderlines of the same product can be merged
         return (
             !this.skip_change &&
-            orderline.getNote() === this.getNote() &&
+            isSameNote &&
             this.get_product().id === orderline.get_product().id &&
             this.is_pos_groupable() &&
             // don't merge discounted orderlines
@@ -336,6 +344,21 @@ export class PosOrderline extends Base {
     merge(orderline) {
         this.order_id.assert_editable();
         this.set_quantity(this.get_quantity() + orderline.get_quantity());
+        if (orderline.pack_lot_ids.length > 0) {
+            const lotLines = orderline.get_lot_lines();
+            const lotLineIds = [];
+            for (const lotLine of lotLines) {
+                lotLine.pos_order_line_id = this;
+                lotLineIds.push(lotLine.id);
+            }
+            for (const lotLine of this.pack_lot_ids) {
+                lotLineIds.push(lotLine.id);
+            }
+            this.pack_lot_ids = this.models["pos.pack.operation.lot"].filter((lot) =>
+                lotLineIds.includes(lot.id)
+            );
+            this.set_quantity_by_lot();
+        }
     }
 
     set_unit_price(price) {

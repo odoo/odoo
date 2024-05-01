@@ -362,6 +362,7 @@ export class PosStore extends Reactive {
 
         let order = this.get_order();
         order.assert_editable();
+        let modifiedLots;
 
         if (!order) {
             order = this.add_new_order();
@@ -519,8 +520,10 @@ export class PosStore extends Reactive {
             if (!pack_lot_ids) {
                 return;
             } else {
+                modifiedLots = pack_lot_ids.modifiedPackLotLines;
                 const packLotLine = pack_lot_ids.newPackLotLines;
                 values.pack_lot_ids = packLotLine.map((lot) => ["create", lot]);
+                values.qty = pack_lot_ids.newPackLotLines.length;
             }
         }
 
@@ -580,6 +583,9 @@ export class PosStore extends Reactive {
         }
 
         if (to_merge_orderline) {
+            if (modifiedLots) {
+                to_merge_orderline.modifyPackLotLines(modifiedLots);
+            }
             to_merge_orderline.merge(line);
             line.delete();
             this.selectOrderLine(order, to_merge_orderline);
@@ -1487,7 +1493,6 @@ export class PosStore extends Reactive {
         let existingLots = [];
         try {
             existingLots = await this.data.call("pos.order.line", "get_existing_lots", [
-                this.company.id,
                 product.id,
             ]);
             if (!canCreateLots && (!existingLots || existingLots.length === 0)) {
