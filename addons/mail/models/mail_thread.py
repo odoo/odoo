@@ -1833,7 +1833,7 @@ class MailThread(models.AbstractModel):
             partner_info = self._message_partner_info_from_emails([email])[0]
             if partner_info.get('partner_id'):
                 partner = self.env['res.partner'].sudo().browse([partner_info['partner_id']])[0]
-        if email and email in [val['email'] for val in result]:  # already existing email -> skip
+        if email and email in [val['email'] for val in result if val.get('email')]:  # already existing email -> skip
             return result
         if partner and partner in self.message_partner_ids:  # recipient already in the followers -> skip
             return result
