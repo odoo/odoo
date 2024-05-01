@@ -8,9 +8,8 @@ export async function loadWysiwygFromTextarea(parent, textarea, options) {
     if (loading && !loading.classList.contains('o_wysiwyg_loading')) {
         loading = null;
     }
-    const $textarea = $(textarea);
     const currentOptions = Object.assign({}, options);
-    currentOptions.value = currentOptions.value || $textarea.val() || '';
+    currentOptions.value = currentOptions.value || textarea.value || "";
     if (!currentOptions.value.trim()) {
         currentOptions.value = '<p><br></p>';
     }
@@ -25,39 +24,43 @@ export async function loadWysiwygFromTextarea(parent, textarea, options) {
         }
     }
 
-    const $wysiwygWrapper = $textarea.closest('.o_wysiwyg_textarea_wrapper');
-    const $form = $textarea.closest('form');
+    const wysiwygWrapper = textarea.closest(".o_wysiwyg_textarea_wrapper");
+    const form = textarea.closest("form");
 
     // hide and append the $textarea in $form so it's value will be send
     // through the form.
-    $textarea.hide();
-    $form.append($textarea);
-    $wysiwygWrapper.html('');
-    const wysiwygWrapper = $wysiwygWrapper[0];
+    textarea.style.display = "none";
+    form?.append(textarea);
+    wysiwygWrapper.innerHTML = "";
     await attachComponent(parent, wysiwygWrapper, LegacyWysiwyg, {
         options: currentOptions,
         editingValue: currentOptions.value,
     });
 
-    $form.find('.note-editable').data('wysiwyg', wysiwyg);
+    const editableEL = form?.querySelector(".note-editable");
+    if (editableEL) {
+        editableEL.dataset.wysiwyg = wysiwyg;
 
-    // o_we_selected_image has not always been removed when
-    // saving a post so we need the line below to remove it if it is present.
-    $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
+        // o_we_selected_image has not always been removed when
+        // saving a post so we need the line below to remove it if it is present.
+        editableEL.querySelectorAll("img.o_we_selected_image").forEach((imgEl) => {
+            imgEl.classList.remove('o_we_selected_image');
+        });
+    }
 
     let b64imagesPending = true;
-    $form.on('click', 'button[type=submit]', (ev) => {
+    form?.querySelector("button[type=submit]").addEventListener("click", (ev) => {
         if (b64imagesPending) {
             ev.preventDefault();
             wysiwyg.savePendingImages().finally(() => {
                 b64imagesPending = false;
-                ev.currentTarget.click();
+                ev.target?.click();
             });
         } else {
-            $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
-            // float-start class messes up the post layout OPW 769721
-            $form.find('.note-editable').find('img.float-start').removeClass('float-start');
-            $textarea.html(wysiwyg.getValue());
+            editableEL
+                ?.querySelectorAll("img.o_we_selected_image, img.float-start")
+                .forEach((img) => img.classList.remove("o_we_selected_image", "float-start"));
+            textarea.innerHTML = wysiwyg.getValue();
         }
     });
 
