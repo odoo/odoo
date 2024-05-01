@@ -127,6 +127,15 @@ class AccrualPlanLevel(models.Model):
     postpone_max_days = fields.Integer("Maximum amount of accruals to transfer",
         help="Set a maximum of accruals an allocation keeps at the end of the year.")
     can_modify_value_type = fields.Boolean(compute="_compute_can_modify_value_type")
+    accrual_validity = fields.Boolean(string="Accrual Validity")
+    accrual_validity_count = fields.Integer(
+        "Accrual Validity Count",
+        help="You can define a period of time where the days carried over will be available", default="1")
+    accrual_validity_type = fields.Selection(
+        [('day', 'Days'),
+         ('month', 'Months')],
+        default='day', string="Accrual Validity Type", required=True,
+        help="This field defines the unit of time after which the accrual ends.")
 
     _sql_constraints = [
         ('check_dates',

@@ -95,6 +95,19 @@
                                 </span>
                             </span>
                         </div>
+                        <field name="postpone_max_days" class="w-25" invisible="action_with_unused_accruals != 'postponed'"/>
+                        <div class="o_td_label" invisible="action_with_unused_accruals == 'lost'">
+                            <label for="accrual_validity_count" string="Carry Over Validity"/>
+                        </div>
+                        <div class="col-lg-2 d-flex" invisible="action_with_unused_accruals == 'lost'">
+                            <div>
+                                <field name="accrual_validity" style="width: 9.35rem"/>
+                                <div class="d-flex" invisible="not accrual_validity">
+                                    <field name="accrual_validity_count" />
+                                    <field name="accrual_validity_type" />
+                                </div>
+                            </div>
+                        </div>
                     </group>
                 </sheet>
             </form>
@@ -160,6 +173,8 @@
                             <kanban default_order="sequence">
                                 <field name="sequence"/>
                                 <field name="action_with_unused_accruals"/>
+                                <field name="accrual_validity_count"/>
+                                <field name="accrual_validity_type"/>
                                 <field name="cap_accrued_time"/>
                                 <templates>
                                     <div t-name="kanban-card" class="bg-transparent border-0">
@@ -226,9 +241,10 @@
                                                     <div class="pe-0 me-0" style="width: 6rem;">
                                                         Carry over:
                                                     </div>
-                                                    <div class="col-3 m-0 ps-1">
-                                                        <t t-if="record.action_with_unused_accruals.raw_value === 'all'">all</t>
-                                                        <t t-elif="record.action_with_unused_accruals.raw_value == 'maximum'">up to <field name="postpone_max_days" /> <field name="added_value_type" /></t>
+                                                    <div class="col-6 m-0 ps-1">
+                                                        <t t-if="record.action_with_unused_accruals.raw_value === 'all'">all - Valid for <field name="accrual_validity_count"/> <field name="accrual_validity_type"/></t>
+                                                        <t t-elif="record.action_with_unused_accruals.raw_value === 'maximum'">up to <field name="postpone_max_days" /> <t t-esc="record.added_value_type.raw_value" />
+                                                        - Valid for <field name="accrual_validity_count"/> <field name="accrual_validity_type"/></t>
                                                         <t t-else="">no</t>
                                                     </div>
                                                 </div>
