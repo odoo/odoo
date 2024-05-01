@@ -16,6 +16,10 @@ class Evaluacion(models.Model):
 
     _name = "evaluacion"
     _description = "Evaluacion de pesonal"
+
+    # Cambiar el titulo del form view
+    _rec_name = "nombre"
+
     # _inherit = ["mail.thread"]
 
     nombre = fields.Char(required=True)
@@ -160,7 +164,7 @@ class Evaluacion(models.Model):
             "name": "Evaluación Clima",
             "res_model": "evaluacion",
             "view_mode": "form",
-            "view_id": self.env.ref("evaluaciones.evaluacion_clima_form").id,
+            "view_id": self.env.ref("evaluaciones.evaluacion_clima_view_form").id,
             "target": "current",
             "res_id": self.id,
         }
@@ -185,7 +189,7 @@ class Evaluacion(models.Model):
             "name": "NOM 035",
             "res_model": "evaluacion",
             "view_mode": "form",
-            "view_id": self.env.ref("evaluaciones.evaluacion_nom035_form").id,
+            "view_id": self.env.ref("evaluaciones.evaluacion_nom035_view_form").id,
             "target": "current",
             "res_id": self.id,
         }
@@ -206,7 +210,7 @@ class Evaluacion(models.Model):
             "name": "360",
             "res_model": "evaluacion",
             "view_mode": "form",
-            "view_id": self.env.ref("evaluaciones.evaluacion_360_form").id,
+            "view_id": self.env.ref("evaluaciones.evaluacion_360_view_form").id,
             "target": "current",
             "res_id": self.id,
         }
