@@ -49,6 +49,23 @@
                                     .my_table td:nth-child(4) {
                                         width: 60%;
                                     }
+
+                                   .color-pill {
+                                        display: inline-block;
+                                        width: 50px;
+                                        height: 25px;
+                                        border-radius: 10%;
+                                        background-color: inherit; 
+                                        margin-top : 20%;
+                                        margin-left : 20%;
+                                    }
+
+                                    .rojo { background-color: #E46053; }
+                                    .naranja { background-color: #FBBD40; }
+                                    .amarillo { background-color: #FFD93B; }
+                                    .verde { background-color: #BDD261; }
+                                    .azul { background-color: #36BCC2; }
+
                                 </style>
                                 <table class="my_table">
                                     <thead>
@@ -61,8 +78,10 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Rojo</td>
-                                            <td style="padding-top:4%   ;">
+                                            <td>
+                                                <div class="color-pill rojo"></div>
+                                            </td>
+                                            <td style="padding-top:4%;">
                                                 <field name="piso_rojo" string="Piso Rojo" class="o_input  text-secondary" readonly="1"/>
                                             </td>
                                             <td style="padding-top:3.5%;">
@@ -72,10 +91,29 @@
                                                 <field name="descripcion_rojo" string="Descripción Rojo" class="o_input "/>
                                             </td>
                                         </tr>
+
                                         <tr>
-                                            <td>Amarillo</td>
+                                            <td>
+                                                <div class="color-pill naranja"></div>
+                                            </td>
+                                            <td style="padding-top:4%;">
+                                                <field name="techo_rojo" string="Piso Naranja" placeholder="Piso Naranja" class="o_input text-secondary" readonly="1"/>
+                                            </td>
+                                            <td style="padding-top:3.5%;">
+                                                <field name="techo_naranja" string="Techo Naranja" placeholder="Techo Naranja" class="o_input"/>
+                                            </td>
+                                            <td>
+                                                <field name="descripcion_naranja" string="Descripción Naranja" class="o_input"/>
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <div class="color-pill amarillo"></div>
+                                            </td>
                                             <td style="padding-top:4%%;">
-                                                <field name="techo_rojo" string="Piso Amarillo" placeholder="Piso Amarillo" class="o_input text-secondary" readonly="1"/>
+                                                <field name="techo_naranja" string="Piso Amarillo" placeholder="Piso Amarillo" class="o_input text-secondary" readonly="1"/>
                                             </td>
                                             <td style="padding-top:3.5%;">
                                                 <field name="techo_amarillo" string="Techo Amarillo" placeholder="Techo Amarillo" class="o_input"/>
@@ -85,7 +123,9 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Verde</td>
+                                            <td>
+                                                <div class="color-pill verde"></div>
+                                            </td>
                                             <td style="padding-top:4%;">
                                                 <field name="techo_amarillo" string="Piso Verde" placeholder="Piso Verde" class="o_input text-secondary" readonly="1"/>
                                             </td>
@@ -97,7 +137,9 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Azul</td>
+                                            <td>
+                                                <div class="color-pill azul"></div>
+                                            </td>
                                             <td style="padding-top:4%;">
                                                 <field name="techo_verde" string="Piso Azul" placeholder="Piso Azul" class="o_input text-secondary" readonly="1"/>
                                             </td>
