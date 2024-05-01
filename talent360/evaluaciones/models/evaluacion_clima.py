@@ -46,27 +46,27 @@ class EvaluacionClima(models.Model):
 
     descripcion_rojo = fields.Text(
         required=False,
-        default=None,
+        default="Deficiente",
     )
 
     descripcion_naranja = fields.Text(
         required=False,
-        default=None,
+        default="Regular",
     )
 
     descripcion_amarillo = fields.Text(
         required=False,
-        default=None,
+        default="Marginal",
     )
 
     descripcion_verde = fields.Text(
         required=False,
-        default=None,
+        default="Suficiente",
     )
 
     descripcion_azul = fields.Text(
         required=False,
-        default=None,
+        default="Superior",
     )
 
     @api.constrains("techo_rojo", "techo_naranja", "techo_amarillo", "techo_verde", "techo_azul")
