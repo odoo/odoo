@@ -16,6 +16,7 @@ import {
     descendants,
     isVisibleTextNode,
     nodeSize,
+    getTraversedNodes,
 } from '../utils/utils.js';
 
 Text.prototype.oEnter = function (offset) {
@@ -151,7 +152,9 @@ HTMLQuoteElement.prototype.oEnter = HTMLHeadingElement.prototype.oEnter;
  */
 HTMLLIElement.prototype.oEnter = function () {
     // If not empty list item, regular block split
-    if (this.textContent) {
+    const traverseNodes = getTraversedNodes(this);
+    const isContainUnbreakable = traverseNodes.some(isUnbreakable);
+    if (this.textContent || isContainUnbreakable) {
         const node = HTMLElement.prototype.oEnter.call(this, ...arguments);
         if (node.classList.contains('o_checked')) {
             toggleClass(node, 'o_checked');
