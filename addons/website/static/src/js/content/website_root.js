@@ -38,7 +38,9 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      */
     start: function () {
         // Enable magnify on zommable img
-        this.$('.zoomable img[data-zoom]').zoomOdoo();
+        this.el.querySelectorAll(".zoomable img[data-zoom]").forEach(img => {
+            window.zoomOdoo(img);
+        });
 
         return this._super.apply(this, arguments);
     },
@@ -158,11 +160,11 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
         if (document.body.classList.contains('editor_enable')) {
             return;
         }
-        var $target = $(ev.currentTarget);
+        const target = ev.currentTarget;
         // retrieve the hash before the redirect
         var redirect = {
-            lang: encodeURIComponent($target.data('url_code')),
-            url: encodeURIComponent($target.attr('href').replace(/[&?]edit_translations[^&?]+/, '')),
+            lang: encodeURIComponent(target.getAttribute("url_code")),
+            url: encodeURIComponent(target.getAttribute("href").replace(/[&?]edit_translations[^&?]+/, '')),
             hash: encodeURIComponent(window.location.hash)
         };
         window.location.href = `/website/lang/${redirect.lang}?r=${redirect.url}${redirect.hash}`;
@@ -205,7 +207,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      * if not found
      */
     _unslugHtmlDataObject: function (dataAttr) {
-        var repr = $('html').data(dataAttr);
+        const repr = window.getAttribute('data='+dataAttr)
         var match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
         if (!match) {
             return null;
@@ -225,18 +227,16 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
             return;
         }
 
-        const publishEl = ev.currentTarget.closest(".js_publish_management");
-        this.orm.call(
-            publishEl.dataset.object,
-            "website_publish_button",
-            [[parseInt(publishEl.dataset.id, 10)]]
-        ).then(function (result) {
-            publishEl.classList.toggle("css_published", result);
-            publishEl.classList.toggle("css_unpublished", !result);
-            const itemEl = publishEl.closest("[data-publish]");
-            if (itemEl) {
-                itemEl.dataset.publish = result ? 'on' : 'off';
-            }
+        const data = ev.currentTarget.closest(".js_publish_management");
+        rpc(data.getAttribute("controller") || "/website/publish", {
+            id: + data.getAttribute("id"),
+            object: data.dataset.object,
+        })
+        .then(function (result) {
+            data.classList.toggle("css_published", result);
+            data.classList.toggle("css_unpublished", !result);
+            data.querySelectorAll("input").forEach(input => input.checked = result);
+            data.closest("[data-publish]").setAttribute('data-publish', result ? "on" : "off");
         });
     },
     /**
@@ -244,7 +244,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      * @param {Event} ev
      */
     _onModalShown: function (ev) {
-        $(ev.target).addClass('modal_shown');
+        ev.target.classList.add("modal_shown");
     },
 });
 

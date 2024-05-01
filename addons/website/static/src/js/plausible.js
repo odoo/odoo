@@ -25,8 +25,8 @@ publicWidget.registry.o_plausible_push = publicWidget.Widget.extend({
      * `data-event-params`
      */
     _push() {
-        const evName = this.$el.data('event-name').toString();
-        const evParams = this.$el.data('event-params') || {};
+        const evName = this.el.dataset.eventName.toString();
+        const evParams = this.el.dataset.eventParams|| {};
         window.plausible(evName, {props: evParams});
     },
 });
