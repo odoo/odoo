@@ -75,9 +75,12 @@ class UsuarioEvaluacionRel(models.Model):
                     'email_from': self.env.user.email_formatted,
                     'email_to': user.usuario_id.email,
                     'body_html': f'<p>Hola, <strong>{user.usuario_id.name}</strong></p>'
-                                f'<p>Por favor completa la evaluación siguiendo este enlace: '
-                                f'<a href="{base_url}/{evaluacion_id}/{token}">'
-                                'Completa la Evaluación</a></p>',
+                                f'<p>En <strong>{self.env.user.company_id.name}</strong> estamos muy interesados'
+                                f'<p>en conocer tu opinión, a fin de identificar áreas de mejora que nos permitan mejorar</p>'
+                                f'<p>tu experiencia con nosotros. Por ello, te invitamos a responder la Encuesta de Clima</p>'
+                                f'<p>Laboral: <strong>(Nombre de evaluación)</strong></p>'
+                                f'<p>Disponible del <strong>(Fecha Inicio)</strong> al <strong>(Fecha Fin)</strong></p>'
+                                f'<a href="{base_url}/{evaluacion_id}/{token}">',
                 }
 
                 mail = self.env['mail.mail'].create(mail_values)
