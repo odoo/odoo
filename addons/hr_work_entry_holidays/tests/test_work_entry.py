@@ -84,8 +84,8 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'request_date_from': date(2015, 11, 2),
             'request_date_to': date(2015, 11, 2),
             'request_unit_hours': True,
-            'request_hour_from': '11',
-            'request_hour_to': '17',
+            'request_hour_from': 11,
+            'request_hour_to': 17,
         })
         leave.action_validate()
 
