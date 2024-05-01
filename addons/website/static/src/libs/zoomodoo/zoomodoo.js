@@ -337,7 +337,6 @@ ZoomOdoo.prototype._move = function (e) {
 
         this.opts.onMove.call(this, top, left);
     }
-
 };
 
 /**

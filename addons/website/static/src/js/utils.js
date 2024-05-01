@@ -152,7 +152,7 @@ function prompt(options, _qweb) {
         const dialog = document.body.append(renderToElement(_qweb, options));
         options.dialog = dialog;
         let field = dialog.querySelectorAll(options.field_type)[0];
-        field.value = options["default"]; // dict notation for IE<9
+        field.value = options['default']; // dict notation for IE<9
         field.fillWith = function (data) {
             if (field.tagName === "SELECT") {
                 data.forEach(function (item) {
@@ -181,7 +181,7 @@ function prompt(options, _qweb) {
             const backdrop = document.querySelector(".modal-backdrop");
             reject();
             dialog.remove();
-                backdrop.remove();
+            backdrop.remove();
         });
         if ((field.tagName === "INPUT" && field.type === "text") || field.tagName === "SELECT") {
             field.keypress(function (e) {

@@ -1204,8 +1204,9 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
      */
     async start() {
         this.scrollingElement = document.scrollingElement;
+        this.$scrollingTarget = $().getScrollingTarget(this.$scrollingElement);
         this.__hideBottomFixedElements = debounce(() => this._hideBottomFixedElements(), 100);
-        this.scrollingElement.addEventListener("scroll", this.__hideBottomFixedElements.bind(this));
+        this.$scrollingTarget.on('scroll.bottom_fixed_element', this.__hideBottomFixedElements);
         window.addEventListener("resize.bottom_fixed_element", this.__hideBottomFixedElements);
         return this._super(...arguments);
     },
@@ -1214,12 +1215,7 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
      */
     destroy() {
         this._super(...arguments);
-        this.scrollingElement?.removeEventListener("scroll", this.__hideBottomFixedElements);
-        window.removeEventListener("resize.bottom_fixed_element", this.__hideBottomFixedElements);
-        this._restoreBottomFixedElements(this.el.querySelectorAll(".o_bottom_fixed_element"));
-    },
-
-    //--------------------------------------------------------------------------
+        this.$scrollingTarget.off('.bottom_fixed_element');
     // Private
     //--------------------------------------------------------------------------
 
@@ -1305,7 +1301,8 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
      */
     start() {
         this.lastScroll = 0;
-        this.scrollingElement = document.scrollingElement;;
+        this.scrollingElement = document.scrollingElement;
+        this.$scrollingTarget = $().getScrollingTarget(this.$scrollingElement);
         this.animatedElements = this.el.querySelectorAll(".o_animate");
 
         // Fix for "transform: none" not overriding keyframe transforms on
@@ -1376,7 +1373,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
             window.removeEventListener(event, this._scrollWebsiteAnimate(this.scrollingElement));
         });
         this.__onScrollWebsiteAnimate.cancel();
-        this.scrollingElement?.removeEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
+        this.$scrollingTarget[0].removeEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
         this.scrollingElement.classList.remove('o_wanim_overflow_xy_hidden');
     },
 
@@ -1585,10 +1582,7 @@ registry.ImagesLazyLoading = publicWidget.Widget.extend({
         // the image intrinsic min-height.
         const imgEls = this.el.querySelectorAll('img[loading="lazy"]');
         for (const imgEl of imgEls) {
-            // Write initial min-height on the dataset, so that it can also
-            // be properly restored on widget destroy.
-            imgEl.dataset.lazyLoadingInitialMinHeight = imgEl.style.minHeight;
-            imgEl.style.minHeight = '1px';
+            this._updateImgMinHeight(imgEl);
             wUtils.onceAllImagesLoaded(imgEl).then(() => {
                 if (this.isDestroyed()) {
                     return;
