@@ -572,7 +572,7 @@ class AccountTax(models.Model):
         #   amount_tax = 4311 + 8744 = 13055
         #   amount_total = 31865 + 13055 = 37920
         base = price_unit * quantity
-        if self._context.get('round_base', True):
+        if self._context.get('round_base', False):
             base = currency.round(base)
 
         # For the computation of move lines, we could have a negative base value.
@@ -636,7 +636,7 @@ class AccountTax(models.Model):
                 is_base_affected = tax.is_base_affected
 
         total_excluded = recompute_base(base, incl_tax_amounts)
-        if self._context.get('round_base', True):
+        if self._context.get('round_base', False):
             total_excluded = currency.round(total_excluded)
 
         # 4) Iterate the taxes in the sequence order to compute missing tax amounts.
