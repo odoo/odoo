@@ -22,7 +22,6 @@ class Respuesta(models.Model):
         """
 
         resp = None
-        radios = str(radios)
 
         if user_id:
             if texto:
