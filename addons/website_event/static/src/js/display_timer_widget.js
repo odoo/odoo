@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { getElementData } from "@web/core/utils/ui";
 
 publicWidget.registry.displayTimerWidget = publicWidget.Widget.extend({
     selector: '.o_display_timer',
@@ -17,7 +18,7 @@ publicWidget.registry.displayTimerWidget = publicWidget.Widget.extend({
     start: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
-            self.options = self.$el.data();
+            self.options = getElementData(self.el);
             self.preCountdownDisplay = self.options["preCountdownDisplay"];
             self.preCountdownTime = self.options["preCountdownTime"];
             self.preCountdownText = self.options["preCountdownText"];
@@ -29,7 +30,7 @@ publicWidget.registry.displayTimerWidget = publicWidget.Widget.extend({
             self.displayClass = self.options["displayClass"];
 
             if (self.preCountdownDisplay) {
-                $(self.$el).parent().removeClass('d-none');
+                self.el.parentNode.classList.remove("d-none");
             }
 
             self._checkTimer();
@@ -49,15 +50,15 @@ publicWidget.registry.displayTimerWidget = publicWidget.Widget.extend({
 
         var remainingPreSeconds = this.preCountdownTime - (now.getTime()/1000);
         if (remainingPreSeconds <= 1) {
-            this.$('.o_countdown_text').text(this.mainCountdownText);
+            this.el.querySelector(".o_countdown_text").textContent = this.mainCountdownText;
             if (this.mainCountdownDisplay) {
-                $(this.$el).parent().removeClass('d-none');
+                this.el.parentNode.classList.remove("d-none");
             }
             var remainingMainSeconds = this.mainCountdownTime - (now.getTime()/1000);
             if (remainingMainSeconds <= 1) {
                 clearInterval(this.interval);
-                $(this.displayClass).removeClass('d-none');
-                $(this.$el).parent().addClass('d-none');
+                document.querySelector(this.displayClass).classList.remove("d-none");
+                this.el.parentNode.classList.add("d-none");
             } else {
                 this._updateCountdown(remainingMainSeconds);
             }
@@ -85,10 +86,14 @@ publicWidget.registry.displayTimerWidget = publicWidget.Widget.extend({
 
         remainingSeconds = Math.floor(remainingSeconds % 60);
 
-        this.$("span.o_timer_days").text(days);
-        this.$("span.o_timer_hours").text(this._zeroPad(hours, 2));
-        this.$("span.o_timer_minutes").text(this._zeroPad(minutes, 2));
-        this.$("span.o_timer_seconds").text(this._zeroPad(remainingSeconds, 2));
+        const daysEl = this.el.querySelector("span.o_timer_days");
+        daysEl ? (daysEl.textContent = days) : "";
+        const hoursEl = this.el.querySelector("span.o_timer_hours");
+        hoursEl ? (hoursEl.textContent = this._zeroPad(hours, 2)) : "";
+        const minutesEl = this.el.querySelector("span.o_timer_minutes");
+        minutesEl ? (minutesEl.textContent = this._zeroPad(minutes, 2)) : "";
+        const secondsEl = this.el.querySelector("span.o_timer_seconds");
+        secondsEl ? (secondsEl.textContent = this._zeroPad(remainingSeconds, 2)) : "";
     },
 
     /**
