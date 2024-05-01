@@ -27,7 +27,7 @@ export async function loadWysiwygFromTextarea(parentEl, textareaEl, options) {
     const wysiwygWrapperEl = textareaEl.closest(".o_wysiwyg_textarea_wrapper");
     const formEl = textareaEl.closest("form");
 
-    // hide and append the $textarea in $form so it's value will be send
+    // hide and append the textareaEl in formEl so it's value will be send
     // through the form.
     textareaEl.style.display = "none";
     formEl?.append(textareaEl);
@@ -58,13 +58,9 @@ export async function loadWysiwygFromTextarea(parentEl, textareaEl, options) {
             });
         } else {
             editableEL
-                ?.querySelectorAll("img.o_we_selected_image")
-                .forEach((img) => img.classList.remove("o_we_selected_image"));
-            // float-start class messes up the post layout OPW 769721
-            editableEL
-                ?.querySelectorAll("img.float-start")
-                .forEach((img) => img.classList.remove("float-start"));
-            textareaEl.innerHTML = wysiwyg.getValue();
+                ?.querySelectorAll("img.o_we_selected_image, img.float-start")
+                .forEach((img) => img.classList.remove("o_we_selected_image", "float-start"));
+            textareaEl.value = wysiwyg.getValue();
         }
     });
 
