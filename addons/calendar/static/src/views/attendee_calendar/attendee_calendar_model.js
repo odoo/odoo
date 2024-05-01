@@ -207,5 +207,20 @@ export class AttendeeCalendarModel extends CalendarModel {
         }
         await this.load();
     }
+
+    async createFilter(fieldName, filterValue) {
+        const info = this.meta.filtersInfo[fieldName];
+        if (!info || !info.writeFieldName || !info.writeResModel) return;
+
+        const normalizedFilterValue = Array.isArray(filterValue) ? filterValue : [filterValue];
+        const dataArray = normalizedFilterValue.map(value => ({
+            user_id: user.userId,
+            [info.writeFieldName]: value,
+            ...info.filterFieldName && { [info.filterFieldName]: true }
+        }));
+
+        await this.orm.create(info.writeResModel, dataArray);
+        await this.load();
+    }
 }
 AttendeeCalendarModel.services = [...CalendarModel.services, "dialog", "orm"];
