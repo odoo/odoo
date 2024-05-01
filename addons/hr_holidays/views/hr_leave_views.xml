@@ -290,9 +290,9 @@
                             <label for="request_hour_from" string="" invisible="not request_unit_hours"/>
                             <div class="o_row o_row_readonly" invisible="not request_unit_hours">
                                 <label for="request_hour_from" string="From" />
-                                <field name="request_hour_from" invisible="not request_unit_hours" readonly="state == 'validate'" required="request_unit_hours" />
+                                <field name="request_hour_from" invisible="not request_unit_hours" readonly="state == 'validate'" required="request_unit_hours" widget="float_time"/>
                                 <label for="request_hour_to" string="To" />
-                                <field name="request_hour_to" invisible="not request_unit_hours" readonly="state == 'validate'" required="request_unit_hours" />
+                                <field name="request_hour_to" invisible="not request_unit_hours" readonly="state == 'validate'" required="request_unit_hours" widget="float_time"/>
                             </div>
                             <field name="number_of_days" invisible="1"/>
                             <field name="number_of_hours" invisible="1"/>
