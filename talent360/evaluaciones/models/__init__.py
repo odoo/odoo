@@ -12,3 +12,4 @@ from . import opcion
 from . import evaluacion_360
 from . import objetivo
 from . import pregunta_escala
+from . import reporte_resumen
