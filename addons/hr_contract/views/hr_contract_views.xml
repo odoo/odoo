@@ -269,6 +269,7 @@
                     <field name="wage" widget="monetary" readonly="1" optional="hidden"/>
                     <field name="resource_calendar_id" optional="show"/>
                     <field name="structure_type_id" optional="hidden"/>
+                    <field name="kanban_state" widget="state_selection" nolabel="1"/>
                     <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'close'" decoration-success="state == 'open'"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hidden"/>
                 </tree>
