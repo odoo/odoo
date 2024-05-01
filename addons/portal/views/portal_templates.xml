@@ -412,9 +412,9 @@
             <h5>Your contact</h5>
             <hr class="mt-1"/>
             <h6 t-esc="sales_user.name"/>
-            <div class="d-flex mb-1">
+            <div class="d-flex align-items-baseline mb-1">
                 <i class="fa fa-envelope fa-fw me-1 text-600"/>
-                <a t-att-href="'mailto:'+sales_user.email" t-esc="sales_user.email"/>
+                <a class="text-break w-100" t-att-href="'mailto:'+sales_user.email" t-esc="sales_user.email"/>
             </div>
             <div class="d-flex flex-nowrap align-items-center mb-1">
                 <i class="fa fa-phone fa-fw me-1 text-600"/>
@@ -822,7 +822,7 @@
         <div t-if="isOffcanvas" class="offcanvas-header justify-content-end">
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"/>
         </div>
-        <div t-attf-class="{{'offcanvas-body' if isOffcanvas else 'mt-3'}}">
+        <div t-attf-class="{{'offcanvas-body' if isOffcanvas else 'mt-3 mw-100'}}">
             <div class="d-flex justify-content-start align-items-start gap-3 mb-4">
                 <img class="o_portal_contact_img rounded o_object_fit_cover" t-att-src="image_data_uri(user_id.partner_id.avatar_128)" alt="Contact" width="50"/>
                 <div class="d-flex flex-column justify-content-center">
