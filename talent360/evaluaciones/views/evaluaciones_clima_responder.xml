@@ -167,6 +167,9 @@
                     <t t-if="p.tipo == 'multiple_choice'" t-call="evaluaciones.question_matrix">
                         <t t-set="question" t-value="p"/>
                     </t>
+                    <t t-if="p.tipo == 'escala'" t-call="evaluaciones.question_scale">
+                        <t t-set="question" t-value="p"/>
+                    </t>
                 </div>
             </t>
 
@@ -214,7 +217,7 @@
     </template>
 
     <!-- Matrix question -->
-    <template id="question_matrix" name="Question: matrix">
+    <template id="question_matrix" name="Pregunta: Opcion multiple">
         <table class="table table-borderless o_survey_question_matrix text-white text-center mb-0"
                t-att-data-name="question.id"
                t-att-data-question-type="question.tipo"
@@ -235,6 +238,50 @@
                                 t-att-data-row-id="row_label.id"
                                 t-att-data-col-id="col_label"
                                 class="o_survey_form_choice_item"/>
+                        </td>
+                    </t>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+
+    <!-- Scale question -->
+    <template id="question_scale" name="Pregunta: escala">
+        <t t-set="opciones" t-value="['Nunca', 'Casi nunca', 'A veces', 'Casi siempre', 'Siempre']"/>
+        <t t-set="desc" t-value="[5, 4, 3, 2, 1]"/>
+        <t t-set="asc" t-value="[1, 2, 3, 4, 5]"/>
+        <table class="table table-borderless o_survey_question_matrix text-white text-center mb-0"
+               t-att-data-name="question.id"
+               t-att-data-question-type="question.tipo"
+               t-att-data-sub-questions="question.pregunta_texto">
+            <thead>
+                <tr>
+                    <th class="fw-normal" t-foreach="opciones" t-as="col_label"><span t-esc="col_label" /></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- For matrix, we have an extra check because we have rows * columns total options -->
+                <tr class="bg-white text-white" t-foreach="question" t-as="row_label" t-att-id="row_label">
+                    <!-- iterador -->
+                    <t t-set="iterador" t-value="0"/>
+                    <t t-foreach="opciones" t-as="col_label">
+                        <td t-att-class="'o_survey_matrix_btn text-primary position-relative %s'% ('o_survey_selected' if answer else '')">
+                            <t t-if="row_label.ponderacion == 'descendente'">
+                                <input t-att-type="'radio'"
+                                    t-att-name="'%s_%s' % (question.id, row_label.id)" 
+                                    t-att-value="desc[iterador]"
+                                    t-att-data-row-id="row_label.id"
+                                    t-att-data-col-id="col_label"
+                                    class="o_survey_form_choice_item"/>
+                            </t>
+                            <t t-else="">
+                                <input t-att-type="'radio'"
+                                    t-att-name="'%s_%s' % (question.id, row_label.id)" 
+                                    t-att-value="asc[iterador]"
+                                    t-att-data-row-id="row_label.id"
+                                    t-att-data-col-id="col_label"
+                                    class="o_survey_form_choice_item"/>
+                            </t>
                         </td>
                     </t>
                 </tr>
