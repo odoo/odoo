@@ -8933,5 +8933,137 @@ describe('List', () => {
                 });
             });
         });
+        describe('table as direct child of list', () => {
+            it('should create table inside an empty list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>[]<br></li></ul>',
+                    stepFunction: async editor => {
+                        await insertText(editor, '/table');
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                    },
+                    contentAfter: unformat(`
+                        <ul>
+                            <li>
+                                <br>
+                                <table class="table table-bordered o_table">
+                                    <tbody>
+                                        <tr>
+                                            <td><p>[]<br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br>
+                            </li>
+                        </ul>`
+                    ),
+                })
+            });
+            it('should create table inside a non-empty list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>abc[]</li></ul>',
+                    stepFunction: async editor => {
+                        await insertText(editor, '/table');
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                    },
+                    contentAfter: unformat(`
+                        <ul>
+                            <li>abc
+                                <table class="table table-bordered o_table">
+                                    <tbody>
+                                        <tr>
+                                            <td><p>[]<br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br>
+                            </li>
+                        </ul>`
+                    ),
+                })
+            });
+            it('should add an empty list item after a list item', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <ul>
+                            <li><br>
+                                <table class="table table-bordered o_table">
+                                    <tbody>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                []<br>
+                            </li>
+                        </ul>`
+                    ),
+                    stepFunction: insertParagraphBreak,
+                    contentAfter: unformat(`
+                        <ul>
+                            <li><br>
+                                <table class="table table-bordered o_table">
+                                    <tbody>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                            <li>[]<br></li>
+                        </ul>`
+                    ),
+                })
+            });
+        });
     });
 });
