@@ -9,12 +9,11 @@ class Respuesta(models.Model):
     user_id = fields.Many2one("res.users", string="Usuario")
     evaluacion_id = fields.Many2one("evaluacion", string="Evaluacion")
 
-    respuesta_texto = fields.Char("Respuesta", required=True)
+    respuesta_texto = fields.Char("Respuesta")
 
     token = fields.Char(string="Token")
 
-    
-
+    opcion_id = fields.Many2one("opcion", string="Opción")
 
     def action_guardar_respuesta(self, radios, texto, evaluacion_id, user_id, pregunta_id, token):
         """Método para guardar la respuesta de una pregunta.
@@ -37,7 +36,7 @@ class Respuesta(models.Model):
                     "evaluacion_id": evaluacion_id,
                     "user_id": user_id,
                     "pregunta_id": pregunta_id,
-                    "respuesta_texto": radios
+                    "opcion_id": radios
                 })
 
         else:
@@ -54,7 +53,7 @@ class Respuesta(models.Model):
                     "evaluacion_id": evaluacion_id,
                     "token": token,
                     "pregunta_id": pregunta_id,
-                    "respuesta_texto": radios
+                    "opcion_id": radios
                 })
             
         return resp
