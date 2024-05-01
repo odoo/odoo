@@ -13,8 +13,8 @@ publicWidget.registry.websiteSlides = publicWidget.Widget.extend({
     start: function (parent) {
         var defs = [this._super.apply(this, arguments)];
 
-        $("timeago.timeago").toArray().forEach((el) => {
-            var datetime = $(el).attr('datetime');
+        [...this.el.querySelectorAll("timeago.timeago")].forEach((el) => {
+            const datetime = el.getAttribute("datetime");
             var datetimeObj = deserializeDateTime(datetime);
             // if presentation 7 days, 24 hours, 60 min, 60 second, 1000 millis old(one week)
             // then return fix formate string else timeago
@@ -24,7 +24,7 @@ publicWidget.registry.websiteSlides = publicWidget.Widget.extend({
             } else {
                 displayStr = datetimeObj.toRelative();
             }
-            $(el).text(displayStr);
+            el.textContent = displayStr;
         });
 
         return Promise.all(defs);
