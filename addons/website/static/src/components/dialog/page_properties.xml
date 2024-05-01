@@ -21,7 +21,7 @@
                 <t t-call="{{ constructor.popoverTemplate }}"/>
             </t>
             <div t-att-data-bs-template="depTemplate" data-bs-html="true" title="Dependencies" t-ref="action">
-                (could be used in <a href="#" t-on-click="showDependencies"><t t-esc="state.depText" /></a>)
+                Could be used in many places, see here: <a href="#" t-on-click="showDependencies">Dependencies</a>
             </div>
         </t>
         <t t-else="">
