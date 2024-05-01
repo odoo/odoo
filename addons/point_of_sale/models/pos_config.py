@@ -177,6 +177,7 @@ class PosConfig(models.Model):
                                                    "In the meantime, you can use the 'Load Customers' button to load partners from database.")
     limited_partners_amount = fields.Integer(default=10000)
     partner_load_background = fields.Boolean(default=False)
+    download_invoice = fields.Boolean(default=True)
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):
