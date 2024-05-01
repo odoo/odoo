@@ -43,47 +43,45 @@ export const cartHandlerMixin = {
     },
 };
 
-function animateClone(cart, elem, offsetTop, offsetLeft) {
-    if (!cart.length) {
+function animateClone($cart, $elem, offsetTop, offsetLeft) {
+    if (!$cart.length) {
         return Promise.resolve();
     }
-
-    cart.classList.remove('d-none');
-    const animateBlink = cart.querySelector('.o_animate_blink');
-    animateBlink.classList.add('o_red_highlight', 'o_shadow_animation');
-    setTimeout(() => {
-        animateBlink.classList.remove('o_shadow_animation');
-    }, 500);
-    setTimeout(() => {
-        animateBlink.classList.remove('o_red_highlight');
-    }, 2500);
-
+    $cart.removeClass('d-none').find('.o_animate_blink').addClass('o_red_highlight o_shadow_animation').delay(500).queue(function () {
+        $(this).removeClass("o_shadow_animation").dequeue();
+    }).delay(2000).queue(function () {
+        $(this).removeClass("o_red_highlight").dequeue();
+    });
     return new Promise(function (resolve, reject) {
-        if(!elem) resolve();
-        const imgtodrag = elem.querySelector('img');
-        if (imgtodrag.length) {
-            const imgclone = imgtodrag.cloneNode(true);
-            imgclone.style.position = 'absolute';
-            imgclone.style.top = imgtodrag.offsetTop + 'px';
-            imgclone.style.left = imgtodrag.offsetLeft + 'px';
-            imgclone.className = '';
-            imgclone.classList.add('o_website_sale_animate');
-            document.body.appendChild(imgclone);
-            imgclone.style.width = imgtodrag.offsetWidth + 'px';
-            imgclone.style.height = imgtodrag.offsetHeight + 'px';
-            //TODO_VISP: to check if we create animate function here
-            imgclone.style.transition = 'all 0.5s ease-in-out';
-            imgclone.style.top = cart.offsetTop + offsetTop + 'px';
-            imgclone.style.left = cart.offsetLeft + offsetLeft + 'px';
-            imgclone.style.width = '75px';
-            imgclone.style.height = '75px';
+        if(!$elem) resolve();
+        var $imgtodrag = $elem.find('img').eq(0);
+        if ($imgtodrag.length) {
+            var $imgclone = $imgtodrag.clone()
+                .offset({
+                    top: $imgtodrag.offset().top,
+                    left: $imgtodrag.offset().left
+                })
+                .removeClass()
+                .addClass('o_website_sale_animate')
+                .appendTo(document.body)
+                .css({
+                    // Keep the same size on cloned img.
+                    width: $imgtodrag.width(),
+                    height: $imgtodrag.height(),
+                })
+                .animate({
+                    top: $cart.offset().top + offsetTop,
+                    left: $cart.offset().left + offsetLeft,
+                    width: 75,
+                    height: 75,
+                }, 500);
             // TODO-visp: remove animate
-            imgclone.animate({
+            $imgclone.animate({
                 width: 0,
                 height: 0,
             }, function () {
                 resolve();
-                this.remove();
+                $(this).detach();
             });
         } else {
             resolve();

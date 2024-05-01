@@ -85,7 +85,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         const self = this;
         let productID = el.dataset.productProductId;
         if (el.classList.contains('o_add_wishlist_dyn')) {
-            productID = parseInt(el.closest('.js_product').querySelector('.product_id:checked').value);
+            productID = parseInt(el.closest('.js_product').querySelector('.product_id:checked')?.value);
         }
         const form = el.closest('form');
         let templateId = form.querySelector('.product_template_id')?.value;

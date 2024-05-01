@@ -1365,14 +1365,14 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
      * @param {HTMLElement} elements bottom fixed elements to restore.
      */
     _restoreBottomFixedElements(elements) {
-        if (elements.length) {
-            elements.classList.remove('o_bottom_fixed_element_hidden');
-            elements.forEach(element => {
+        elements.forEach(element => {
+            if (element) {
+                element.classList.remove('o_bottom_fixed_element_hidden');
                 if (element.classList.contains('o_bottom_fixed_element_move_up')) {
                     element.style.marginBottom = '';
                 }
-            });
-        }
+            }
+        });
     },
 });
 

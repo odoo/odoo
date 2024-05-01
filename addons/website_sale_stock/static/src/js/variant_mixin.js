@@ -26,7 +26,7 @@ import { markup } from "@odoo/owl";
 VariantMixin._onChangeCombinationStock = function (ev, parent, combination) {
     let product_id = 0;
     // needed for list view of variants
-    if (parent.querySelector('input.product_id:checked').length) {
+    if (parent.querySelector('input.product_id:checked')) {
         product_id = parent.querySelector('input.product_id:checked').value;
     } else {
         product_id = parent.querySelector('.product_id').value;

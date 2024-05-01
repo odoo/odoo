@@ -11,6 +11,6 @@ WebsiteSale.include({
      */
     _toggleDisable: function (parent, isCombinationPossible) {
         this._super(...arguments);
-        parent.querySelector('button.o_wish_add').classList.toggle('disabled', !isCombinationPossible);
+        parent.querySelector('button.o_wish_add')?.classList.toggle('disabled', !isCombinationPossible);
     },
 });
