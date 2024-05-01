@@ -275,8 +275,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_unit_hours': True,
             'request_date_from': date(2019, 5, 6),
             'request_date_to': date(2019, 5, 6),
-            'request_hour_from': '8',  # 8:00 AM in the employee's timezone
-            'request_hour_to': '17',  # 5:00 PM in the employee's timezone
+            'request_hour_from': 8,  # 8:00 AM in the employee's timezone
+            'request_hour_to': 17,  # 5:00 PM in the employee's timezone
         })
         self.assertEqual(leave.date_from, datetime(2019, 5, 5, 20, 0, 0), "It should have been localized before saving in UTC")
         self.assertEqual(leave.date_to, datetime(2019, 5, 6, 5, 0, 0), "It should have been localized before saving in UTC")
@@ -293,8 +293,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'company_id': company.id,
             'request_date_from': date(2019, 5, 6),
             'request_date_to': date(2019, 5, 6),
-            'request_hour_from': '8',  # 8:00 AM in the company's timezone
-            'request_hour_to': '17',  # 5:00 PM in the company's timezone
+            'request_hour_from': 8,  # 8:00 AM in the company's timezone
+            'request_hour_to': 17,  # 5:00 PM in the company's timezone
         })
         self.assertEqual(leave.date_from, datetime(2019, 5, 6, 6, 0, 0), "It should have been localized in the Employee timezone")
         self.assertEqual(leave.date_to, datetime(2019, 5, 6, 15, 0, 0), "It should have been localized in the Employee timezone")
@@ -1079,8 +1079,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_unit_hours': True,
             'request_date_from': '2019-12-26',
             'request_date_to': '2019-12-26',
-            'request_hour_from': '8',
-            'request_hour_to': '12',
+            'request_hour_from': 8,
+            'request_hour_to': 12,
         })
 
         self.assertEqual(sick_leave.duration_display, '3 days')
