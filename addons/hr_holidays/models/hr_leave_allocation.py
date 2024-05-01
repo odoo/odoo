@@ -122,7 +122,8 @@ class HolidaysAllocation(models.Model):
         domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]")
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
-
+    expiring_carryover_days = fields.Float("The number of carried over days that will expire on carried_over_days_expiration_date")
+    carried_over_days_expiration_date = fields.Date("Carried over days expiration date")
     _sql_constraints = [
         ('duration_check', "CHECK( ( number_of_days > 0 AND allocation_type='regular') or (allocation_type != 'regular'))", "The duration must be greater than 0."),
     ]
@@ -453,7 +454,7 @@ class HolidaysAllocation(models.Model):
                 # this is used to prorate the first number of days given to the employee
                 period_start = current_level._get_previous_date(allocation.lastcall)
                 period_end = current_level._get_next_date(allocation.lastcall)
-                # There are 2 cases where nextcall could be closer than the normal period:
+                # There are 3 cases where nextcall could be closer than the normal period:
                 # 1. Passing from one level to another, if mode is set to 'immediately'
                 current_level_last_date = False
                 if current_level_idx < (len(level_ids) - 1) and allocation.accrual_plan_id.transition_mode == 'immediately':
@@ -465,17 +466,44 @@ class HolidaysAllocation(models.Model):
                 carryover_date = allocation._get_carryover_date(allocation.nextcall)
                 if allocation.nextcall < carryover_date < nextcall:
                     nextcall = min(nextcall, carryover_date)
-                # if it's the carry-over date, adjust days using current level's carry-over policy, then continue
-                # Apply carryover policy on days accrued before the carryover_date
+
+                if current_level.accrual_validity:
+                    # 3. On carried over days expiration date
+                    expiration_date = allocation.carried_over_days_expiration_date
+                    # - not expiration_date -> expiration_date needs to be initialized.
+                    # - allocation.nextcall > expiration_date -> the expiration date has passed and the new one should be computed.
+                    # - allocation.expiring_carryover_days == 0 -> If the carryover date of the accrual plan was changed or if a level
+                    #   transition occurred, then the expiration date needs to be updated. However, if allocation.expiring_carryover_days != 0,
+                    #   then this means that some days will expire on expiration_date and that expiration date should be respected and
+                    #   Expiration date will be updated correctly when allocation.nextcall is greater than expiration_date.
+                    if not expiration_date or allocation.nextcall > expiration_date or allocation.expiring_carryover_days == 0:
+                        expiration_date = carryover_date + relativedelta(**{current_level.accrual_validity_type + 's': current_level.accrual_validity_count})
+                        allocation.carried_over_days_expiration_date = expiration_date
+                    if allocation.nextcall < expiration_date < nextcall:
+                        nextcall = expiration_date
+                    if allocation.nextcall == expiration_date:
+                        # Given that allocation.number_of_days = employee time off balance + leaves_taken. So,
+                        # the leaves_taken are included in allocation.number_of_days.
+                        # Also, allocation.expiring_carryover_days includes the leaves_taken before the carryover date
+                        # and allocation.leaves_taken includes all the leaves_taken before the carryover date + all the leaves_taken
+                        # between the carryover date and the expiration_date. So, the number of expiring days will be
+                        # allocation.expiring_carryover_days - allocation.leaves_taken or 0 if all the expiring days were used
+                        # to take time off.
+                        # This ensures that only the days that weren't used to take time off will expire.
+                        expiring_days = max(0, allocation.expiring_carryover_days - allocation.leaves_taken)
+                        allocation.number_of_days = max(0, allocation.number_of_days - expiring_days)
+                        allocation.expiring_carryover_days = 0
+
+                # if it's the carry-over date, adjust days using current level's carry-over policy
                 if allocation.nextcall == carryover_date:
                     allocation.last_executed_carryover_date = carryover_date
                     if current_level.action_with_unused_accruals in ['lost', 'maximum']:
                         allocation_days = allocation.number_of_days + leaves_taken
                         allocation_max_days = current_level.postpone_max_days + leaves_taken
                         allocation.number_of_days = min(allocation_days, allocation_max_days)
+                    allocation.expiring_carryover_days = allocation.number_of_days
 
-                # Only accrue on the end of the accrual period, on level transition date or on carryover date.
-                # Don't accrue on expiration date.
+                # Only accrue on the end of the accrual period or on level transition date
                 is_accrual_date = allocation.nextcall == period_end or allocation.nextcall == current_level_last_date
                 if not allocation.already_accrued and is_accrual_date:
                     allocation._add_days_to_allocation(current_level, current_level_maximum_leave, leaves_taken, period_start, period_end)
@@ -622,6 +650,10 @@ class HolidaysAllocation(models.Model):
                     next_level = accrual_plan.level_ids[current_level_idx + 1]
                     next_level_start = allocation.date_from + get_timedelta(next_level.start_count, next_level.start_type)
                     allocation.nextcall = min(allocation.nextcall, next_level_start)
+                # If the expiration date didn't pass (expiration date is in the future)
+                expiration_date = allocation.carried_over_days_expiration_date
+                if expiration_date and expiration_date > allocation.lastcall:
+                    allocation.nextcall = min(allocation.nextcall, expiration_date)
 
     def add_follower(self, employee_id):
         employee = self.env['hr.employee'].browse(employee_id)
