@@ -1925,7 +1925,11 @@ export class Order extends PosModel {
                 setQuantity: options.quantity === undefined,
             });
         }
-
+        this.hasJustAddedProduct = true;
+        clearTimeout(this.productReminderTimeout);
+        this.productReminderTimeout = setTimeout(() => {
+            this.hasJustAddedProduct = false;
+        }, 3000);
         return this.selected_orderline;
     }
 
