@@ -69,7 +69,13 @@
                     </t>
                 </div>
                 <t t-if="ui.isSmall">
+<<<<<<< HEAD
                     <div class="product-reminder d-flex justify-content-center align-items-center py-1 text-bg-warning bg-opacity-50 fw-bolder" t-if="pos.selectedOrder.selected_orderline and pos.selectedOrder.hasJustAddedProduct" t-key="animationKey" >
+||||||| parent of 01bce6d55fd4 (temp)
+                    <div class="product-reminder d-flex justify-content-center align-items-center py-1 text-bg-warning bg-opacity-50 fw-bolder" t-if="state.showProductReminder" t-key="animationKey" >
+=======
+                    <div class="product-reminder d-flex justify-content-center align-items-center py-1 text-bg-warning bg-opacity-50 fw-bolder" t-if="currentOrder.get_selected_orderline() and currentOrder.hasJustAddedProduct" t-key="animationKey" >
+>>>>>>> 01bce6d55fd4 (temp)
                         <span><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/> <t t-esc="selectedOrderlineTotal"/></span>
                     </div>
                     <div class="switchpane d-flex">

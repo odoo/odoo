@@ -137,6 +137,53 @@ export class ProductScreen extends Component {
         }
         this.numberBuffer.sendKey(buttonValue);
     }
+<<<<<<< HEAD
+||||||| parent of 01bce6d55fd4 (temp)
+
+    clickEvent(e) {
+        if (!this.ui.isSmall) {
+            return;
+        }
+
+        const isProductCard = (() => {
+            let element = e.target;
+            // 3 because product DOM dept is 3
+            for (let i = 0; i < 3; i++) {
+                if (element.classList.contains("product")) {
+                    return true;
+                } else {
+                    element = element.parentElement;
+                }
+            }
+            return false;
+        })();
+
+        this.state.showProductReminder =
+            this.currentOrder &&
+            this.currentOrder.get_selected_orderline() &&
+            this.selectedOrderlineQuantity &&
+            isProductCard;
+    }
+
+    /**
+     * To be overridden by modules that checks availability of
+     * connected scale.
+     * @see _onScaleNotAvailable
+     */
+    get partner() {
+        return this.currentOrder ? this.currentOrder.get_partner() : null;
+    }
+=======
+
+    /**
+     * To be overridden by modules that checks availability of
+     * connected scale.
+     * @see _onScaleNotAvailable
+     */
+    get partner() {
+        return this.currentOrder ? this.currentOrder.get_partner() : null;
+    }
+>>>>>>> 01bce6d55fd4 (temp)
     get currentOrder() {
         return this.pos.get_order();
     }
