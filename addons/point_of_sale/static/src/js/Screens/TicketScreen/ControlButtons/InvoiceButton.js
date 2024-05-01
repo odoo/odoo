@@ -26,6 +26,7 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
         }
         async _downloadInvoice(orderId) {
             try {
+                if (!this.env.pos.config.download_invoice) return;
                 const [orderWithInvoice] = await this.rpc({
                     method: 'read',
                     model: 'pos.order',

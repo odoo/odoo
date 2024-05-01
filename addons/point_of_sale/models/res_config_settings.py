@@ -103,6 +103,7 @@ class ResConfigSettings(models.TransientModel):
     pos_use_pricelist = fields.Boolean(related='pos_config_id.use_pricelist', readonly=False)
     pos_warehouse_id = fields.Many2one(related='pos_config_id.warehouse_id', readonly=False, string="Warehouse (PoS)")
     point_of_sale_use_ticket_qr_code = fields.Boolean(related='company_id.point_of_sale_use_ticket_qr_code', readonly=False)
+    pos_download_invoice = fields.Boolean(related="pos_config_id.download_invoice", readonly=False)
 
     @api.model
     def _keep_new_vals(self, pos_config, pos_fields_vals):
