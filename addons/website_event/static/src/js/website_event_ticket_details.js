@@ -7,7 +7,7 @@
             'change .form-select': '_onTicketQuantityChange'
         },
         start: function (){
-            this.foldedByDefault = this.$el.data('foldedByDefault') === 1;
+            this.foldedByDefault = parseInt(this.el.dataset.foldedByDefault) === 1;
             return this._super.apply(this, arguments);
         },
 
@@ -20,8 +20,9 @@
          */
         _getTotalTicketCount: function (){
             var ticketCount = 0;
-            this.$('.form-select').each(function (){
-                ticketCount += parseInt($(this).val());
+            const selectEls = this.el.querySelectorAll(".form-select");
+            selectEls.forEach(function (selectEl) {
+                ticketCount += parseInt(selectEl.value);
             });
             return ticketCount;
         },
@@ -33,7 +34,8 @@
          * @private
          */
         _onTicketQuantityChange: function (){
-            this.$('button.btn-primary').attr('disabled', this._getTotalTicketCount() === 0);
+            const ticketQuantityChangeBtnEl = this.el.querySelector("button.btn-primary");
+            ticketQuantityChangeBtnEl.disabled = this._getTotalTicketCount() === 0;
         }
     });
 
