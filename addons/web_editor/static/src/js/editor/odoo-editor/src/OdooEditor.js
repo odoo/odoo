@@ -2404,7 +2404,7 @@ export class OdooEditor extends EventTarget {
                 this._selectTableCells(range);
                 appliedCustomSelection = true;
             }
-        } else if (!traversedNodes.every(node => node.parentElement && closestElement(node.parentElement, 'table'))) {
+        } else if (!traversedNodes.every(node => node.parentElement && closestElement(node.parentElement, 'table')) && !selection.isCollapsed) {
             // The selection goes through a table but also outside of it ->
             // select the whole table.
             this.observerUnactive('handleSelectionInTable');
