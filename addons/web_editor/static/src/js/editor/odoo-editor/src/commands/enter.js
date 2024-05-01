@@ -151,7 +151,7 @@ HTMLQuoteElement.prototype.oEnter = HTMLHeadingElement.prototype.oEnter;
  */
 HTMLLIElement.prototype.oEnter = function () {
     // If not empty list item, regular block split
-    if (this.textContent) {
+    if (this.textContent || this.querySelector('table')) {
         const node = HTMLElement.prototype.oEnter.call(this, ...arguments);
         if (node.classList.contains('o_checked')) {
             toggleClass(node, 'o_checked');
