@@ -924,7 +924,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_tag_mapper(self, template_code):
         tags = {x.name: x.id for x in self.env['account.account.tag'].with_context(active_test=False).search([
             ('applicability', '=', 'taxes'),
-            ('country_id', '=', self._get_chart_template_mapping()[template_code]['country_id']),
+            ('country_id', '=', self._get_chart_template_mapping(get_all=True)[template_code]['country_id']),
         ])}
 
         def mapping_getter(*args):
@@ -957,7 +957,7 @@ class AccountChartTemplate(models.AbstractModel):
         model_fields = Model._fields
 
         if module is None:
-            module = self._get_chart_template_mapping().get(template_code)['module']
+            module = self._get_chart_template_mapping(get_all=True).get(template_code)['module']
         assert re.fullmatch(r"[a-z0-9_]+", module)
 
         res = {}
