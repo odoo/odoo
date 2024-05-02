@@ -1943,10 +1943,11 @@ class PosSession(models.Model):
         return []
 
     def _process_pos_ui_product_product(self, products):
-        if self.config_id.currency_id != self.company_id.currency_id:
-            for product in products:
+        different_currency = self.config_id.currency_id != self.company_id.currency_id
+        for product in products:
+            if different_currency:
                 product['lst_price'] = self.company_id.currency_id._convert(product['lst_price'], self.config_id.currency_id, self.company_id, fields.Date.today())
-                product['image_128'] = bool(product['image_128'])
+            product['image_128'] = bool(product['image_128'])
 
     def get_pos_ui_res_partner_by_params(self, custom_search_params):
         """
