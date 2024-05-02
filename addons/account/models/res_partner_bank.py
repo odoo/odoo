@@ -281,14 +281,22 @@ class ResPartnerBank(models.Model):
         # leaves them vulnerable to edits via the shell/... So we need to ensure that the user has the rights to edit
         # these fields when writing too.
         # While we do lock changes if the account is trusted, we still want to allow to change them if we go from not trusted -> trusted or from trusted -> not trusted.
-        any_trusted_accounts = any(account.lock_trust_fields for account in self)
-        if not any_trusted_accounts:
+        trusted_accounts = self.filtered(lambda x: x.lock_trust_fields)
+        if not trusted_accounts:
             should_allow_changes = True  # If we were on a non-trusted account, we will allow to change (setting/... one last time before trusting)
         else:
             # If we were on a trusted account, we only allow changes if the account is moving to untrusted.
             should_allow_changes = ('allow_out_payment' in vals and vals['allow_out_payment'] is False)
 
-        if ('acc_number' in vals or 'partner_id' in vals) and not should_allow_changes:
+        lock_fields = {'acc_number', 'sanitized_acc_number', 'partner_id', 'acc_type'}
+        if not should_allow_changes and any(
+            account[fname] != account._fields[fname].convert_to_record(
+                account._fields[fname].convert_to_cache(vals[fname], account),
+                account,
+            )
+            for fname in lock_fields & set(vals)
+            for account in trusted_accounts
+        ):
             raise UserError(_("You cannot modify the account number or partner of an account that has been trusted."))
 
         if 'allow_out_payment' in vals and not self.user_has_groups('account.group_validate_bank_account') and not self.env.su:
