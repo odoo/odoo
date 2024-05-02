@@ -816,18 +816,14 @@ class MrpProduction(models.Model):
         self.ensure_one()
         sn = sn or self.lot_producing_id
         if self.product_id.tracking == 'serial' and sn:
+            move_raw_lots = [lot.id.origin for lot in self.move_raw_ids.lot_ids]
+            is_reproducing = ((self.lot_producing_id.id in move_raw_lots) and (self.product_id in self.move_raw_ids.product_id))
+            if is_reproducing:
+                return True
             message, dummy = self.env['stock.quant'].sudo()._check_serial_number(self.product_id, sn, self.company_id)
             if message:
                 return {'warning': {'title': _('Warning'), 'message': message}}
         return True
-
-    @api.onchange('product_id', 'move_raw_ids')
-    def _onchange_product_id(self):
-        for move in self.move_raw_ids:
-            if self.product_id == move.product_id:
-                message = _("The component %s should not be the same as the product to produce.", self.product_id.display_name)
-                self.move_raw_ids = self.move_raw_ids - move
-                return {'warning': {'title': _('Warning'), 'message': message}}
 
     @api.constrains('move_finished_ids')
     def _check_byproducts(self):
@@ -1989,6 +1985,15 @@ class MrpProduction(models.Model):
     def _action_confirm_mo_backorders(self):
         self.workorder_ids._action_confirm()
 
+    def _reproduce_same_sn(self):
+        for order in self:
+            mls = order.move_raw_ids.move_line_ids.filtered(
+                lambda ml: ml.lot_id and
+                    ml.lot_id == order.lot_producing_id and
+                        ml.move_id.product_id == order.product_id
+            )
+            mls.picked = True
+
     def button_mark_done(self):
         res = self.pre_button_mark_done()
         if res is not True:
@@ -2002,6 +2007,8 @@ class MrpProduction(models.Model):
             productions_to_backorder = self.env['mrp.production']
 
         self.workorder_ids.button_finish()
+
+        self._reproduce_same_sn()
 
         backorders = productions_to_backorder and productions_to_backorder._split_productions()
         backorders = backorders - productions_to_backorder
@@ -2603,6 +2610,9 @@ class MrpProduction(models.Model):
 
     def _is_finished_sn_already_produced(self, lot, excluded_sml=None):
         if not lot:
+            return False
+        is_reproducing = ((lot in self.move_raw_ids.lot_ids) and (self.product_id in self.move_raw_ids.product_id))
+        if is_reproducing:
             return False
         excluded_sml = excluded_sml or self.env['stock.move.line']
         domain = [
