@@ -16,3 +16,4 @@ Daniel Dico ddico@oerp.ca https://github.com/ddico
 Yash Pathak yp@oerp.ca https://github.com/yp-oerp
 Lucas Jagel lj@oerp.ca https://github.com/lj-oerp
 Daryl Chen dc@oerp.ca https://github.com/dc-oerp
+Foram Darji fd@oerp.ca https://github.com/fd-oerp
