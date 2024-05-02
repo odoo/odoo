@@ -7,7 +7,13 @@ class UsuarioEvaluacionRel(models.Model):
 
     evaluacion_id = fields.Many2one("evaluacion", string="Evaluacion")
     usuario_id = fields.Many2one("res.users", string="Usuario")
-    contestada = fields.Boolean("Contestada", default=False)
+    contestada = fields.Selection(
+        [
+            ("pendiente", "Pendiente"),
+            ("contestada", "Contestada"),
+        ],
+        default="pendiente",
+    )
     token = fields.Char(string="Token")
     
     def action_get_estado(self, user_id, evaluacion_id, token):
@@ -100,3 +106,4 @@ class UsuarioEvaluacionRel(models.Model):
             "view_mode": "tree",
             "target": "current",
         }        
+    
