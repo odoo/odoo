@@ -29,5 +29,13 @@ patch(PublicWidget.registry.websiteSaleDelivery, {
             // want to replace error message by 'Free'
             $('#delivery_carrier .badge:not(.o_wsale_delivery_carrier_error)').text(_t('Free'));
         }
+        else if (this.result.new_amount_order_discounted) {
+             const cart_summary_discount_line = document.querySelector(
+                '[data-reward-type="discount"]'
+            );
+            if (cart_summary_discount_line) {
+                cart_summary_discount_line.innerHTML = this.result.new_amount_order_discounted;
+            }
+        }
     },
 });
