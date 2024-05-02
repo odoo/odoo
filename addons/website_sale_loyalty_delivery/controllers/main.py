@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import http
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery
 from odoo.http import request
 
@@ -29,6 +30,9 @@ class WebsiteSaleLoyaltyDelivery(WebsiteSaleDelivery):
                 'new_amount_total': Monetary.value_to_html(order.amount_total, {'display_currency': currency}),
                 'new_amount_order_discounted': Monetary.value_to_html(order.reward_amount - amount_free_shipping, {'display_currency': currency}),
                 'new_amount_total_raw': order.amount_total,
+                'delivery_discount_minor_amount': payment_utils.to_minor_currency_units(
+                    amount_free_shipping, currency
+                ),
             })
         return result
 

@@ -28,6 +28,7 @@ odoo.define('website.tour.form_editor', function (require) {
         });
     }
 
+    // TODO: in master only keep the conversion of the double quotes character.
     // Replace all `"` character by `&quot;`, all `'` character by `&apos;` and
     // all "`" character by `&lsquo;`.
     const getQuotesEncodedName = function (name) {
@@ -815,6 +816,46 @@ odoo.define('website.tour.form_editor', function (require) {
             run: "click",
         },
         ...wTourUtils.clickOnSave(),
+    ]);
+
+    wTourUtils.registerWebsitePreviewTour("website_form_special_characters", {
+        test: true,
+        url: "/",
+        edition: true,
+    }, [
+        {
+            ...wTourUtils.dragNDrop({id: "s_website_form", name: "Form"}),
+            run: "drag_and_drop iframe #wrap",
+        },
+        {
+            content: "Select form by clicking on an input field",
+            extra_trigger: "iframe .s_website_form_field",
+            trigger: "iframe section.s_website_form input",
+        },
+        ...addCustomField("char", "text", `Test1"'`, false),
+        ...addCustomField("char", "text", 'Test2`\\', false),
+        ...wTourUtils.clickOnSave(),
+        ...essentialFieldsForDefaultFormFillInSteps,
+        {
+            content: "Complete 'Your Question' field",
+            trigger: "iframe textarea[name='description']",
+            run: "text test",
+        }, {
+            content: "Complete the first added field",
+            trigger: "iframe input[name='Test1&quot;&apos;']",
+            run: "text test1",
+        }, {
+            content: "Complete the second added field",
+            trigger: "iframe input[name='Test2&lsquo;&bsol;']",
+            run: "text test2",
+        }, {
+            content: "Click on 'Submit'",
+            trigger: "iframe a.s_website_form_send",
+        }, {
+            content: "Check the form was again sent (success page without form)",
+            trigger: "iframe body:not(:has([data-snippet='s_website_form'])) .fa-check-circle",
+            run: () => null,
+        },
     ]);
 
     return {};
