@@ -313,6 +313,7 @@ export class Composer extends Component {
             ...this.suggestion.state.items.mainSuggestions,
             ...this.suggestion.state.items.extraSuggestions
         );
+        const specialSuggestions = this.suggestion.state.items.specialSuggestions;
         switch (this.suggestion.state.items.type) {
             case "Partner":
                 return {
@@ -322,6 +323,15 @@ export class Composer extends Component {
                         return {
                             label: suggestion.name,
                             partner: suggestion,
+                            classList: "o-mail-Composer-suggestion",
+                        };
+                    }),
+                    specialOptions: specialSuggestions.map((suggestion) => {
+                        return {
+                            label: suggestion.label,
+                            type: suggestion.type,
+                            name: suggestion.name,
+                            description: suggestion.description,
                             classList: "o-mail-Composer-suggestion",
                         };
                     }),

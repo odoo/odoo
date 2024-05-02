@@ -23,7 +23,7 @@ export class NavigableList extends Component {
         position: { type: String, optional: true },
         isLoading: { type: Boolean, optional: true },
     };
-    static defaultProps = { position: "bottom", isLoading: false };
+    static defaultProps = { position: "bottom", isLoading: false, specialOptions: [] };
 
     setup() {
         this.rootRef = useRef("root");
@@ -57,7 +57,7 @@ export class NavigableList extends Component {
     }
 
     get show() {
-        return Boolean(this.state.open && (this.props.isLoading || this.props.options.length));
+        return Boolean(this.state.open && (this.props.isLoading || this.props.options.length || this.props.specialOptions.length));
     }
 
     open() {
@@ -71,7 +71,14 @@ export class NavigableList extends Component {
         this.state.activeIndex = null;
     }
 
-    selectOption(ev, index, params = {}) {
+    selectOption(ev, index, isSpecial = false, params = {}) {
+        if (isSpecial) {
+            this.props.onSelect(ev, this.props.specialOptions[index - this.props.options.length], {
+                ...params,
+            });
+            this.close();
+            return
+        }
         const option = this.props.options[index];
         if (option.unselectable) {
             this.close();
@@ -91,7 +98,7 @@ export class NavigableList extends Component {
                 targetId = 0;
                 break;
             case "last":
-                targetId = this.props.options.length - 1;
+                targetId = this.props.options.length + this.props.specialOptions.length - 1;
                 break;
             case "previous":
                 targetId = activeOptionId - 1;
@@ -102,7 +109,7 @@ export class NavigableList extends Component {
                 break;
             case "next":
                 targetId = activeOptionId + 1;
-                if (targetId > this.props.options.length - 1) {
+                if (targetId > this.props.options.length + this.props.specialOptions.length - 1) {
                     this.navigate("first");
                     return;
                 }
@@ -124,7 +131,8 @@ export class NavigableList extends Component {
                     return;
                 }
                 markEventHandled(ev, "NavigableList.select");
-                this.selectOption(ev, this.state.activeIndex);
+                // checking if is special option
+                this.selectOption(ev, this.state.activeIndex, this.state.activeIndex >= this.props.options.length ? true : false);
                 break;
             case "escape":
                 markEventHandled(ev, "NavigableList.close");

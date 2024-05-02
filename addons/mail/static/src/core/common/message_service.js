@@ -91,12 +91,16 @@ export class MessageService {
         const validMentions = {};
         const partners = [];
         const threads = [];
-        for (const partner of mentionedPartners) {
-            const index = body.indexOf(`@${partner.name}`);
-            if (index === -1) {
-                continue;
+        if (body.includes("@everyone")) {
+            partners.push(...mentionedPartners);
+        } else {
+            for (const partner of mentionedPartners) {
+                const index = body.indexOf(`@${partner.name}`);
+                if (index === -1) {
+                    continue;
+                }
+                partners.push(partner);
             }
-            partners.push(partner);
         }
         for (const thread of mentionedChannels) {
             const index = body.indexOf(`#${thread.displayName}`);

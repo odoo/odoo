@@ -115,6 +115,15 @@
     </button>
 </t>
 
+    <t t-name="mail.Composer.suggestionSpecial">
+        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
+            <t t-esc="option.name"/>
+        </strong>
+        <em class="text-600 text-truncate align-self-center">
+            (<t t-esc="option.description"/>)
+        </em>
+    </t>
+
     <t t-name="mail.Composer.suggestionPartner">
         <t t-set="partner" t-value="option.partner"/>
         <ImStatus t-if="partner" persona="partner"/>

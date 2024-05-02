@@ -96,6 +96,16 @@ export function useSuggestion() {
                 textRight = content.substring(cursorPosition, content.length);
             }
             const recordReplacement = option.label;
+            if (option.type) {
+                if (option.type === "everyone") {
+                    for (const channelMember of self.thread.channelMembers) {
+                        comp.props.composer.mentionedPartners.add({
+                            id: channelMember.persona.id,
+                            type: "partner",
+                        });
+                    }
+                }
+            }
             if (option.partner) {
                 comp.props.composer.mentionedPartners.add({
                     id: option.partner.id,
@@ -134,8 +144,8 @@ export function useSuggestion() {
                 thread: self.thread,
                 sort: true,
             });
-            const { type, mainSuggestions, extraSuggestions = [] } = suggestions;
-            if (!mainSuggestions.length && !extraSuggestions.length) {
+            const { type, mainSuggestions, extraSuggestions = [], specialSuggestions = [] } = suggestions;
+            if (!mainSuggestions.length && !extraSuggestions.length && !specialSuggestions.length) {
                 self.state.items = undefined;
                 return;
             }
@@ -147,7 +157,7 @@ export function useSuggestion() {
                 extraSuggestions.length,
                 limit - mainSuggestions.length
             );
-            self.state.items = { type, mainSuggestions, extraSuggestions };
+            self.state.items = { type, mainSuggestions, extraSuggestions, specialSuggestions };
         },
     };
     useEffect(
@@ -176,7 +186,8 @@ export function useSuggestion() {
                     self.search.position === position &&
                     self.search.term === term &&
                     !self.state.items?.mainSuggestions.length &&
-                    !self.state.items?.extraSuggestions.length
+                    !self.state.items?.extraSuggestions.length &&
+                    !self.state.items?.specialSuggestions.length
                 ) {
                     self.clearSearch();
                 }

@@ -23,6 +23,21 @@
                             <t t-else="" t-esc="option.label"/>
                         </a>
                     </div>
+                    <div class="border mt-2" t-if="props.options.length &amp;&amp; props.specialOptions.length"/>
+                    <div t-if="props.specialOptions.length">
+                        <div
+                            t-foreach="props.specialOptions" t-as="option" t-key="option_index"
+                            class="o-mail-NavigableList-item"
+                            t-att-class="option.classList"
+                            t-on-mouseenter="() => this.onOptionMouseEnter(option_index + props.options.length)"
+                            t-on-click="(ev) => this.selectOption(ev, option_index + props.options.length, true)"
+                        >
+                            <a href="#" class="d-flex align-items-center w-100 py-2 px-4" t-att-class="{ 'o-mail-NavigableList-active bg-300': state.activeIndex === option_index + props.options.length}">
+                                <t t-if="props.optionTemplate" t-call="mail.Composer.suggestionSpecial"/>
+                                <t t-else="" t-esc="option.label"/>
+                            </a>
+                        </div>
+                    </div>
                 </t>
             </div>
         </div>

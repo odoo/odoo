@@ -117,6 +117,7 @@ export class SuggestionService {
         }
         const mainSuggestionList = [];
         const extraSuggestionList = [];
+        const specialSuggestionList = []
         for (const partner of partners) {
             if (!partner.name) {
                 continue;
@@ -132,6 +133,11 @@ export class SuggestionService {
                 }
             }
         }
+        if (thread.type === "group" || thread.type === "channel") {
+            if (/\bever(y|yo|yon|yone)?\b$/.test(cleanedSearchTerm)) {
+                specialSuggestionList.push({label: "everyone", type: "everyone", name: "Everyone", description: "Notify everyone"})
+            }
+        }
         return {
             type: "Partner",
             mainSuggestions: sort
@@ -140,6 +146,7 @@ export class SuggestionService {
             extraSuggestions: sort
                 ? this.sortPartnerSuggestions(extraSuggestionList, cleanedSearchTerm, thread)
                 : extraSuggestionList,
+            specialSuggestions: specialSuggestionList
         };
     }
 
