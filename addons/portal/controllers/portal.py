@@ -5,6 +5,7 @@ import base64
 import json
 import math
 import re
+from odoo import api, fields, models, Command
 
 from werkzeug import urls
 
@@ -137,6 +138,16 @@ class CustomerPortal(Controller):
     OPTIONAL_BILLING_FIELDS = ["street2", "zipcode", "state_id", "vat", "company_name"]
 
     _items_per_page = 80
+    # reward_test_ids = fields.Many2one('loyalty.reward', compute='_compute_reward_ids')
+
+    # def _compute_reward_ids(self):
+    #     for portal in self:
+    #         print('*'*256)
+    #         portal.reward_test_ids = False #self.env['loyalty.reward'].search([])
+    #         print('*'*256)
+    #         # for e in portal.reward_test_ids:
+    #         #     print(e.description)
+    #         # print('*'*256)
 
     def _prepare_portal_layout_values(self):
         """Values for /my/* templates rendering.
@@ -146,6 +157,9 @@ class CustomerPortal(Controller):
         # get customer sales rep
         sales_user_sudo = request.env['res.users']
         partner_sudo = request.env.user.partner_id
+        reward_ids = request.env['loyalty.reward'].search([
+            'program_id.coupon_ids.partner_id', 'is', partner_sudo.id,
+        ])
         if partner_sudo.user_id and not partner_sudo.user_id._is_public():
             sales_user_sudo = partner_sudo.user_id
         else:
@@ -155,6 +169,7 @@ class CustomerPortal(Controller):
 
         return {
             'sales_user': sales_user_sudo,
+            'reward_ids': reward_ids,
             'page_name': 'home',
         }
 

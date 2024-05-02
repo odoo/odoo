@@ -837,9 +837,12 @@
                 <t t-call="portal.portal_contact"/>
             </div>
             <div>
-            <t t-foreach="user_id.loyalty_ids" t-as="data">
+            <span>reward_test_ids</span>
+            <t t-out="reward_test_ids"/>
+            <t t-esc="reward_test_ids"/>
+            <t t-foreach="reward_ids" t-as="data">
                 <span>E-Wallet</span>
-                <t t-field="data.description"/>
+                <t t-out="data.description"/>
             </t>
             </div>
         </div>
