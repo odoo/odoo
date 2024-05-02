@@ -214,7 +214,6 @@ class MrpProduction(models.Model):
     production_location_id = fields.Many2one('stock.location', "Production Location", compute="_compute_production_location", store=True)
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this manufacturing order')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
-    confirm_cancel = fields.Boolean(compute='_compute_confirm_cancel')
     consumption = fields.Selection([
         ('flexible', 'Allowed'),
         ('warning', 'Allowed with warning'),
@@ -447,23 +446,6 @@ class MrpProduction(models.Model):
                 } for late_document in production.move_raw_ids.filtered(lambda m: m.delay_alert_date).move_orig_ids._delay_alert_get_documents()
                 ]
             })
-
-    @api.depends('move_raw_ids.state', 'move_finished_ids.state')
-    def _compute_confirm_cancel(self):
-        """ If the manufacturing order contains some done move (via an intermediate
-        post inventory), the user has to confirm the cancellation.
-        """
-        domain = [
-            ('state', '=', 'done'),
-            '|',
-                ('production_id', 'in', self.ids),
-                ('raw_material_production_id', 'in', self.ids)
-        ]
-        res = self.env['stock.move']._read_group(domain, ['production_id', 'raw_material_production_id'])
-        self.confirm_cancel = False
-        for production, raw_material_production in res:
-            production_record = production or raw_material_production
-            production_record.confirm_cancel = True
 
     @api.depends('procurement_group_id', 'procurement_group_id.stock_move_ids.group_id')
     def _compute_picking_ids(self):
