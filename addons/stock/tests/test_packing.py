@@ -1556,6 +1556,61 @@ class TestPacking(TestPackingCommon):
         move_lines_to_pack = (internal_picking_1 | internal_picking_2)._package_move_lines()
         self.assertEqual(len(move_lines_to_pack), 2, "all move lines in pickings should have been selected to pack")
 
+    def test_pick_another_pack(self):
+        """ Do a receipt and split the products in three different packages.
+        Enable move entire package for the delivery picking type
+        Create a delivery that require the quantities in the first two packages.
+        Remove the second package and use the third instead. Pick both package.
+        Check availability on the picking.
+        Ensure it results with the two first package reserved. The first and the third package
+        should be picked.
+        """
+        self.warehouse.write({'delivery_steps': 'ship_only'})
+
+        pack1, pack2, pack3 = self.env['stock.quant.package'].create([
+            {'name': 'pack1'},
+            {'name': 'pack2'},
+            {'name': 'pack3'}
+        ])
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1, package_id=pack1)
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1, package_id=pack2)
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1, package_id=pack3)
+
+        # Enable move entire package for the delivery picking type
+        self.warehouse.out_type_id.show_entire_packs = True
+
+        # Create a delivery that require the quantities in the first two packages
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2.0,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+        })
+        delivery.action_confirm()
+        self.assertEqual(delivery.package_level_ids.package_id, pack1 | pack2, 'The two first packages should be picked')
+        delivery.package_level_ids[-1].unlink()
+        self.env['stock.package_level'].create({
+            'package_id': pack3.id,
+            'picking_id': delivery.id,
+            'company_id': delivery.company_id.id,
+            'location_dest_id': delivery.location_dest_id.id,
+        })
+        delivery.package_level_ids.is_done = True
+        delivery.action_assign()
+        delivery.invalidate_cache()
+        self.assertRecordValues(delivery.package_level_ids, [
+            {'package_id': pack1.id, 'state': 'assigned', 'is_done': True},
+            {'package_id': pack3.id, 'state': 'confirmed', 'is_done': True},
+            {'package_id': pack2.id, 'state': 'assigned', 'is_done': False},
+        ])
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPackagePropagation(TestPackingCommon):
