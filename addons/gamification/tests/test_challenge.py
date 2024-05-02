@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
+from freezegun import freeze_time
 
+from odoo import Command
 from odoo.addons.gamification.tests.common import TransactionCaseGamification
 from odoo.exceptions import UserError
 from odoo.tools import mute_logger
@@ -20,6 +22,12 @@ class TestGamificationCommon(TransactionCaseGamification):
             'name': 'R2D2',
             'login': 'r2d2@openerp.com',
             'email': 'r2d2@openerp.com',
+            'groups_id': [(6, 0, [employees_group.id])]
+        })
+        self.player1 = self.env['res.users'].with_context(no_reset_password=True).create({
+            'name': 'Player 1',
+            'login': 'player1@example.com',
+            'email': 'player1@example.com',
             'groups_id': [(6, 0, [employees_group.id])]
         })
         self.badge_good_job = self.env.ref('gamification.badge_good_job')
@@ -136,6 +144,57 @@ class test_challenge(TestGamificationCommon):
             unchanged_goal_id.user_id,
             "Only portal user last logged in before last challenge update should not have been updated.",
         )
+
+    def test_30_close_goals(self):
+        Goals = self.env['gamification.goal']
+
+        admin_user = self.env.ref('base.user_admin')
+
+        definition = self.env['gamification.goal.definition'].create({
+            'name': 'Dummy Goal Definition',
+            'computation_mode': 'manually',
+        })
+
+        reward = self.env['gamification.badge'].create({
+            'name': 'Dummy Reward'
+        })
+
+        # Create a challenge in the past
+        challenge = self.env['gamification.challenge'].create({
+            'name': 'Dummy Challenge',
+            'period': 'once',
+            'visibility_mode': 'personal',
+            'report_message_frequency': 'never',
+            'user_domain': [('id', 'in', [self.robot.id, admin_user.id, self.player1.id])],
+            'state': 'inprogress',
+            'start_date': '2024-04-29',
+            'end_date': '2024-04-30',
+            'line_ids': [(Command.CREATE, 0, {'target_goal': 4, 'definition_id': definition.id})],
+            'reward_id': reward.id,
+        })
+
+        # Generate the goals
+        with freeze_time('2024-04-29 00:00:00'):
+            challenge.action_check()
+
+        goals = Goals.search([('challenge_id', '=', challenge.id)])
+        admin_goal = goals.filtered(lambda x: x.user_id == admin_user)
+        player1_goal = goals.filtered(lambda x: x.user_id == self.player1)
+        robot_goal = goals.filtered(lambda x: x.user_id == self.robot)
+
+        # Set the current values
+        admin_goal.current = 4  # Reached target
+        player1_goal.current = 2  # Failed target
+        robot_goal.current = 0  # Failed target
+
+        # Run the challenge check cron
+        self.env['gamification.challenge']._cron_update(commit=False)
+
+        self.assertEqual(challenge.state, 'done', "Challenge failed the change of state")
+        self.assertEqual(admin_goal.state, 'reached', "Incorrect state for Admin user's goal")
+        self.assertIn(reward, admin_user.badge_ids.mapped("badge_id"), "Admin user wasn't rewarded")
+        self.assertEqual(player1_goal.state, 'failed', "Incorrect state for Player1 user's goal")
+        self.assertEqual(robot_goal.state, 'failed', "Incorrect state for Robot user's goal")
 
 
 class test_badge_wizard(TestGamificationCommon):
