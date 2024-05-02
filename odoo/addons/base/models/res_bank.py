@@ -6,6 +6,7 @@ from collections.abc import Iterable
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
+from odoo.exceptions import ValidationError
 
 def sanitize_account_number(acc_number):
     if acc_number:
@@ -95,6 +96,12 @@ class ResPartnerBank(models.Model):
     def _compute_sanitized_acc_number(self):
         for bank in self:
             bank.sanitized_acc_number = sanitize_account_number(bank.acc_number)
+
+    @api.constrains('sanitized_acc_number')
+    def _check_sanitized_acc_number(self):
+        for bank in self:
+            if bank.sanitized_acc_number and bank.acc_number and bank.sanitized_acc_number != sanitize_account_number(bank.acc_number):
+                raise ValidationError(_('The sanitized account number is invalid.'))
 
     @api.depends('acc_number')
     def _compute_acc_type(self):
