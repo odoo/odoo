@@ -14,6 +14,10 @@ import { _t } from "@web/core/l10n/translation";
 import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
 import { browser } from "@web/core/browser/browser";
 
+/**
+ * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
+ */
+
 let prevLastMessageId = null;
 let temporaryIdOffset = 0.01;
 
@@ -202,6 +206,16 @@ export class Store extends BaseStore {
     fetchSilent = true;
 
     cannedReponses = this.makeCachedFetchData({ canned_responses: true });
+
+    specialMentions = [
+        {
+            isSpecial: true,
+            label: "everyone",
+            channel_types: ["channel", "group"],
+            displayName: "Everyone",
+            description: _t("Notify everyone"),
+        },
+    ];
 
     get initMessagingParams() {
         return {
@@ -449,30 +463,24 @@ export class Store extends BaseStore {
         );
     }
 
-    getMentionsFromText(body, { mentionedChannels = [], mentionedPartners = [] } = {}) {
+    getMentionsFromText(
+        body,
+        { mentionedChannels = [], mentionedPartners = [], specialMentions = [] } = {}
+    ) {
         if (this.self.type !== "partner") {
             // mentions are not supported for guests
             return {};
         }
         const validMentions = {};
-        const partners = [];
-        const threads = [];
-        for (const partner of mentionedPartners) {
-            const index = body.indexOf(`@${partner.name}`);
-            if (index === -1) {
-                continue;
-            }
-            partners.push(partner);
-        }
-        for (const thread of mentionedChannels) {
-            const index = body.indexOf(`#${thread.displayName}`);
-            if (index === -1) {
-                continue;
-            }
-            threads.push(thread);
-        }
-        validMentions.partners = partners;
-        validMentions.threads = threads;
+        validMentions.threads = mentionedChannels.filter((thread) =>
+            body.includes(`#${thread.displayName}`)
+        );
+        validMentions.partners = mentionedPartners.filter((partner) =>
+            body.includes(`@${partner.name}`)
+        );
+        validMentions.specialMentions = this.specialMentions
+            .filter((special) => body.includes(`@${special.label}`))
+            .map((special) => special.label);
         return validMentions;
     }
 
@@ -528,6 +536,7 @@ export class Store extends BaseStore {
             partner_additional_values: recipientAdditionalValues,
             thread_id: thread.id,
             thread_model: thread.model,
+            special_mentions: validMentions?.specialMentions ?? [],
         };
     }
 

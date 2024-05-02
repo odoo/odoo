@@ -166,6 +166,16 @@ export class SuggestionService {
                 suggestions.push(partner);
             }
         }
+        suggestions.push(
+            ...this.store.specialMentions.filter(
+                (special) =>
+                    thread &&
+                    special.channel_types.includes(thread.channel_type) &&
+                    cleanedSearchTerm.length >= Math.min(4, special.label.length) &&
+                    (special.label.startsWith(cleanedSearchTerm) ||
+                        cleanTerm(special.description.toString()).includes(cleanedSearchTerm))
+            )
+        );
         return {
             type: "Partner",
             suggestions: sort
@@ -175,7 +185,7 @@ export class SuggestionService {
     }
 
     /**
-     * @param {[import("models").Persona]} [partners]
+     * @param {[import("models").Persona | import("@mail/core/common/store_service").SpecialMention]} [partners]
      * @param {String} [searchTerm]
      * @param {import("models").Thread} thread
      * @returns {[import("models").Persona]}
@@ -185,6 +195,9 @@ export class SuggestionService {
         const compareFunctions = partnerCompareRegistry.getAll();
         const context = { recentChatPartnerIds: this.store.getRecentChatPartnerIds() };
         return partners.sort((p1, p2) => {
+            if (p1.isSpecial || p2.isSpecial) {
+                return 0;
+            }
             for (const fn of compareFunctions) {
                 const result = fn(p1, p2, {
                     env: this.env,

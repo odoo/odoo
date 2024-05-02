@@ -69,6 +69,7 @@ test("can post a message on a record thread", async () => {
             attachment_tokens: [],
             partner_additional_values: {},
             partner_emails: [],
+            special_mentions: [],
             thread_id: partnerId,
             thread_model: "res.partner",
         };
@@ -101,6 +102,7 @@ test("can post a note on a record thread", async () => {
                 partner_ids: [],
                 subtype_xmlid: "mail.mt_note",
             },
+            special_mentions: [],
             attachment_tokens: [],
             canned_response_ids: [],
             partner_additional_values: {},

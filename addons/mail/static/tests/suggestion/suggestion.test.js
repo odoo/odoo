@@ -314,3 +314,19 @@ test("Current user that is a follower should be considered as such", async () =>
         before: [".o-mail-Composer-suggestion", { text: "Person A(a@test.com)" }],
     });
 });
+
+test("Mention with @everyone", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-suggestionList");
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await contains(".o-mail-Composer-input", { value: "" });
+    await insertText(".o-mail-Composer-input", "@ever");
+    await click(".o-mail-Composer-suggestion");
+    await contains(".o-mail-Composer-input", { value: "@everyone " });
+});

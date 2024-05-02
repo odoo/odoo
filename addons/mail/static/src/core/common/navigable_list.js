@@ -59,6 +59,10 @@ export class NavigableList extends Component {
         return Boolean(this.state.open && (this.props.isLoading || this.props.options.length));
     }
 
+    get sortedOptions() {
+        return this.props.options.sort((o1, o2) => (o1.group ?? 0) - (o2.group ?? 0));
+    }
+
     open() {
         this.state.open = true;
         this.state.activeIndex = null;
