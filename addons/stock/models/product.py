@@ -120,7 +120,7 @@ class Product(models.Model):
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state', 'stock_move_ids.quantity')
     @api.depends_context(
         'lot_id', 'owner_id', 'package_id', 'from_date', 'to_date',
-        'location', 'warehouse',
+        'location', 'warehouse', 'allowed_company_ids'
     )
     def _compute_quantities(self):
         products = self.with_context(prefetch_fields=False).filtered(lambda p: p.type != 'service').with_context(prefetch_fields=True)
@@ -294,7 +294,9 @@ class Product(models.Model):
             if location:
                 location_ids = _search_ids('stock.location', location)
             else:
-                location_ids = set(Warehouse.search([]).mapped('view_location_id').ids)
+                location_ids = set(Warehouse.search(
+                    [('company_id', 'in', self.env.companies.ids)]
+                ).mapped('view_location_id').ids)
 
         return self._get_domain_locations_new(location_ids)
 
