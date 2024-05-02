@@ -11,9 +11,9 @@ class WebsiteSaleLoyaltyDelivery(WebsiteSaleDelivery):
         result = super()._update_website_sale_delivery_return(order, **post)
         if order:
             free_shipping_lines = order._get_free_shipping_lines()
+            Monetary = request.env['ir.qweb.field.monetary']
+            currency = order.currency_id
             if free_shipping_lines:
-                Monetary = request.env['ir.qweb.field.monetary']
-                currency = order.currency_id
                 amount_free_shipping = sum(free_shipping_lines.mapped('price_subtotal'))
                 result.update({
                     'new_amount_delivery_discount': Monetary.value_to_html(
@@ -24,4 +24,8 @@ class WebsiteSaleLoyaltyDelivery(WebsiteSaleDelivery):
                         amount_free_shipping, currency
                     ),
                 })
+            else:
+                result.update({'new_amount_order_discounted': Monetary.value_to_html(
+                    order.reward_amount, {'display_currency': currency}
+                )})
         return result
