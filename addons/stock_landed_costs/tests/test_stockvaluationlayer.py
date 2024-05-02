@@ -584,3 +584,74 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
 
         self.assertEqual(self.product1.quantity_svl, 10)
         self.assertEqual(self.product1.value_svl, 150)
+
+    def test_create_landed_cost_from_bill_multi_currencies(self):
+        # create a vendor bill in EUR where base currency in USD
+        company = self.env.user.company_id
+        usd_currency = self.env.ref('base.USD')
+        eur_currency = self.env.ref('base.EUR')
+
+        company.currency_id = usd_currency
+
+        invoice_date = '2023-01-01'
+        accounting_date = '2024-01-31'
+
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (usd_currency.id, company.id))
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': invoice_date,
+            'rate': 1.0,
+            'currency_id': usd_currency.id,
+            'company_id': company.id,
+        })
+
+        self.env['res.currency.rate'].create({
+            'name': invoice_date,
+            'rate': 0.5,
+            'currency_id': eur_currency.id,
+            'company_id': company.id,
+        })
+
+        self.env['res.currency.rate'].create({
+            'name': accounting_date,
+            'rate': 0.25,
+            'currency_id': eur_currency.id,
+            'company_id': company.id,
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.vendor1
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 1
+            po_line.price_unit = 10
+            po_line.taxes_id.clear()
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_line_ids.qty_done = 1
+        receipt.button_validate()
+
+        action = po.action_create_invoice()
+        bill = self.env['account.move'].browse(action['res_id'])
+        bill_form = Form(bill)
+        bill_form.invoice_date = invoice_date
+        bill_form.date = accounting_date
+        bill_form.currency_id = eur_currency
+
+        with bill_form.invoice_line_ids.new() as inv_line:
+            inv_line.product_id = self.productlc1
+            inv_line.price_unit = 5
+            inv_line.currency_id = eur_currency
+
+        bill = bill_form.save()
+        bill.action_post()
+
+        action = bill.button_create_landed_costs()
+        lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc_form.picking_ids.add(receipt)
+        lc = lc_form.save()
+        lc.button_validate()
+
+        self.assertEqual(lc.cost_lines.price_unit, 10)
