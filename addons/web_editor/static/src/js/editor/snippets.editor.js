@@ -665,7 +665,6 @@ var SnippetEditor = Widget.extend({
         const proms = _.sortBy(styles, '__order').map(style => {
             return show ? style.onTargetShow() : style.onTargetHide();
         });
-        this.trigger_up("reload_snippet_dropzones");
         await Promise.all(proms);
         return show;
     },
@@ -3360,7 +3359,9 @@ var SnippetsMenu = Widget.extend({
         const $snippet = $(this.invisibleDOMMap.get(ev.currentTarget));
         const isVisible = await this._execWithLoadingEffect(async () => {
             const editor = await this._createSnippetEditor($snippet);
-            return editor.toggleTargetVisibility();
+            const show = editor.toggleTargetVisibility();
+            this._disableUndroppableSnippets();
+            return show;
         }, true);
         $(ev.currentTarget).find('.fa')
             .toggleClass('fa-eye', isVisible)
