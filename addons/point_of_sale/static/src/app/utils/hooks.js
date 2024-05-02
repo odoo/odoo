@@ -103,14 +103,23 @@ export function useAsyncLockedMethod(method) {
  * @param {(...args: any[]) => Promise<any>} asyncFn
  */
 export function useTrackedAsync(asyncFn) {
+    /**
+     * @type {{
+     *  status: 'idle' | 'loading' | 'error' | 'success',
+     * result: any,
+     * lastArgs: any[]
+     * }}
+     */
     const state = useState({
-        status: "idle", // idle, loading, error, success
+        status: "idle",
         result: null,
+        lastArgs: null,
     });
 
     const lockedCall = useAsyncLockedMethod(async (...args) => {
         state.status = "loading";
         state.result = null;
+        state.lastArgs = args;
         try {
             const result = await asyncFn(...args);
             state.status = "success";
@@ -120,13 +129,15 @@ export function useTrackedAsync(asyncFn) {
             state.result = error;
         }
     });
-
     return {
         get status() {
             return state.status;
         },
         get result() {
             return state.result;
+        },
+        get lastArgs() {
+            return state.lastArgs;
         },
         call: lockedCall,
     };
