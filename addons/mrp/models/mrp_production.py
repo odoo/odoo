@@ -820,14 +820,6 @@ class MrpProduction(models.Model):
                 return {'warning': {'title': _('Warning'), 'message': message}}
         return True
 
-    @api.onchange('product_id', 'move_raw_ids')
-    def _onchange_product_id(self):
-        for move in self.move_raw_ids:
-            if self.product_id == move.product_id:
-                message = _("The component %s should not be the same as the product to produce.", self.product_id.display_name)
-                self.move_raw_ids = self.move_raw_ids - move
-                return {'warning': {'title': _('Warning'), 'message': message}}
-
     @api.constrains('move_finished_ids')
     def _check_byproducts(self):
         for order in self:
