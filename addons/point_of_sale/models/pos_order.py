@@ -1008,21 +1008,21 @@ class PosOrder(models.Model):
             'is_total_cost_computed': False
         }
 
-    def _prepare_mail_values(self, name, client, ticket):
+    def _prepare_mail_values(self, email, ticket):
         message = Markup(
             _("<p>Dear %(client_name)s,<br/>Here is your electronic ticket for the %(pos_name)s. </p>")
         ) % {
-            'client_name': client['name'],
-            'pos_name': name,
+            'client_name': self.partner_id.name or _('Customer'),
+            'pos_name': self.name,
         }
 
         return {
-            'subject': _('Receipt %s', name),
+            'subject': _('Receipt %s', self.name),
             'body_html': message,
             'author_id': self.env.user.partner_id.id,
             'email_from': self.env.company.email or self.env.user.email_formatted,
-            'email_to': client['email'],
-            'attachment_ids': self._add_mail_attachment(name, ticket),
+            'email_to': email,
+            'attachment_ids': self._add_mail_attachment(self.name, ticket),
         }
 
     def _refund(self):
@@ -1087,14 +1087,8 @@ class PosOrder(models.Model):
 
         return attachment
 
-    def action_receipt_to_customer(self, name, client, ticket):
-        if not self:
-            return False
-        if not client.get('email'):
-            return False
-
-        mail = self.env['mail.mail'].sudo().create(self._prepare_mail_values(name, client, ticket))
-        mail.send()
+    def action_send_receipt(self, email, ticket_image):
+        self.env['mail.mail'].sudo().create(self._prepare_mail_values(email, ticket_image)).send()
 
     @api.model
     def remove_from_ui(self, server_ids):
