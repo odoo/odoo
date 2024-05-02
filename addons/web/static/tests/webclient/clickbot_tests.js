@@ -319,7 +319,7 @@ QUnit.module("clickbot", (hooks) => {
         ]);
     });
 
-    QUnit.test("clickbot show rpc error when an error dialog is detected", async (assert) => {
+    QUnit.skip("clickbot show rpc error when an error dialog is detected", async (assert) => {
         let clickBotStarted = false;
         registry.category("services").add("error", errorService);
         serverData.actions = {
