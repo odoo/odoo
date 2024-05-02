@@ -189,7 +189,7 @@ class ReportSaleDetails(models.AbstractModel):
                         payment['cash_moves'] = cash_in_out_list
                         payment['count'] = True
             if not is_cash_method:
-                cash_name = 'Cash ' + str(session.name)
+                cash_name = _('Cash') + ' ' + str(session.name)
                 payments.insert(0, {
                     'name': cash_name,
                     'total': 0,
