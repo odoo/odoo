@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
+from freezegun import freeze_time
 
+from odoo import Command
 from odoo.addons.gamification.tests.common import TransactionCaseGamification
 from odoo.exceptions import UserError
 from odoo.tools import mute_logger
@@ -136,6 +138,57 @@ class test_challenge(TestGamificationCommon):
             unchanged_goal_id.user_id,
             "Only portal user last logged in before last challenge update should not have been updated.",
         )
+
+    def test_30_close_goals(self):
+        Goals = self.env['gamification.goal']
+
+        admin_user = self.env.ref('base.user_admin')
+        demo_user = self.robot
+
+        definition = self.env['gamification.goal.definition'].create({
+            'name': 'Dummy Goal Definition',
+            'computation_mode': 'manually',
+        })
+
+        # Create a challenge in the past
+        challenge = self.env['gamification.challenge'].create({
+            'name': 'Dummy Challenge',
+            'period': 'once',
+            'visibility_mode': 'personal',
+            'report_message_frequency': 'never',
+            'user_domain': [('id', 'in', [self.robot.id, admin_user.id, demo_user.id])],
+            'state': 'inprogress',
+            'start_date': '2024-04-29',
+            'end_date': '2024-04-30',
+            'line_ids': [(Command.CREATE, 0, {'target_goal': 4, 'definition_id': definition.id})]
+        })
+
+        # Generate the goals
+        with freeze_time('2024-04-29 00:00:00'):
+            challenge.action_check()
+
+        goals = Goals.search([('challenge_id', '=', challenge.id)])
+        admin_goal = goals.filtered(lambda x: x.user_id == admin_user)
+        demo_goal = goals.filtered(lambda x: x.user_id == demo_user)
+        robot_goal = goals.filtered(lambda x: x.user_id == self.robot)
+
+        # Set the current values
+        admin_goal.current = 4  # Reached target
+        demo_goal.current = 2  # Failed target
+        robot_goal.current = 0  # Failed target
+
+        # Run the challenge check cron
+        self.env['gamification.challenge']._cron_update(commit=False)
+
+        # Make sure the challenge was marked done
+        self.assertEqual(challenge.state, 'done', "Challenge failed the change of state")
+
+        # Check if Admin reached the goal
+        self.assertEqual(admin_goal.state, 'reached', "Incorrect state for Admin user's goal")
+
+        # Check if Demo and Robot failed the goal
+        self.assertEqual(demo_goal.state, 'failed', "Incorrect state for Demo user's goal")
+        self.assertEqual(robot_goal.state, 'failed', "Incorrect state for Robot user's goal")
 
 
 class test_badge_wizard(TestGamificationCommon):
