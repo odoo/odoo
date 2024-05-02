@@ -105,10 +105,11 @@ class ProductProduct(models.Model):
         }
 
     def _process_pos_ui_product_product(self, products, config_id):
+        different_currency = config_id.currency_id != self.env.company.currency_id
         for product in products:
-            product['image_128'] = bool(product['image_128'])
-            if config_id.currency_id != self.env.company.currency_id:
+            if different_currency:
                 product['lst_price'] = self.env.company.currency_id._convert(product['lst_price'], config_id.currency_id, self.env.company, fields.Date.today())
+            product['image_128'] = bool(product['image_128'])
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
