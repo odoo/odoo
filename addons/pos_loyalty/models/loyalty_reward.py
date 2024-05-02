@@ -76,3 +76,8 @@ class LoyaltyReward(models.Model):
             if isinstance(condition, (list, tuple)) and len(condition) == 3:
                 parsed_domain[index] = condition
         return parsed_domain
+
+    def unlink(self):
+        if len(self) == 1 and self.env['pos.order.line'].search_count([('reward_id', 'in', self.ids)], limit=1):
+            return self.action_archive()
+        return super().unlink()
