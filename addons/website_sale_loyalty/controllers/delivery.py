@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.website_sale.controllers.delivery import WebsiteSaleDelivery
+from odoo.addons.payment import utils as payment_utils
 from odoo.http import request, route
 
 
@@ -20,6 +21,9 @@ class WebsiteSaleLoyaltyDelivery(WebsiteSaleDelivery):
                 result.update({
                     'new_amount_delivery': Monetary.value_to_html(0.0, {'display_currency': currency}),
                     'new_amount_order_discounted': Monetary.value_to_html(order.reward_amount - amount_free_shipping, {'display_currency': currency}),
+                    'delivery_discount_minor_amount': payment_utils.to_minor_currency_units(
+                        amount_free_shipping, currency
+                    ),
                 })
         return result
 
