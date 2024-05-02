@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { useEffect } from '@odoo/owl';
+import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
@@ -51,6 +52,7 @@ export class SaleOrderLineProductField extends Many2OneField {
     setup() {
         super.setup();
         this.dialog = useService("dialog");
+        this.notification = useService("notification");
         this.orm = useService("orm")
         let isMounted = false;
         let isInternalUpdate = false;
@@ -143,6 +145,21 @@ export class SaleOrderLineProductField extends Many2OneField {
                 }
             }
         } else {
+            if (result && result.sale_warning) {
+                const {type, title, message} = result.sale_warning
+                if (type === 'block') {
+                    // display warning block, and remove blocking product
+                    this.dialog.add(WarningDialog, { title, message });
+                    this.props.record.update({'product_template_id': false})
+                    return
+                } else if (type == 'warning') {
+                    // show the warning but proceed with the configurator opening
+                    this.notification.add(message, {
+                        title,
+                        type: "warning",
+                    });
+                }
+            }
             if (!result.mode || result.mode === 'configurator') {
                 this._openProductConfigurator();
             } else {
