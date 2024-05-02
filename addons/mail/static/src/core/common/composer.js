@@ -326,11 +326,20 @@ export class Composer extends Component {
                     ...props,
                     optionTemplate: "mail.Composer.suggestionPartner",
                     options: suggestions.map((suggestion) => {
-                        return {
-                            label: suggestion.name,
-                            partner: suggestion,
-                            classList: "o-mail-Composer-suggestion",
-                        };
+                        if (suggestion.isSpecial) {
+                            return {
+                                ...suggestion,
+                                group: 1,
+                                optionTemplate: "mail.Composer.suggestionSpecial",
+                                classList: "o-mail-Composer-suggestion",
+                            };
+                        } else {
+                            return {
+                                label: suggestion.name,
+                                partner: suggestion,
+                                classList: "o-mail-Composer-suggestion",
+                            };
+                        }
                     }),
                 };
             case "Thread":
