@@ -98,10 +98,22 @@
             <field name="template_id" ref="email_template_data_applicant_not_interested"/>
         </record>
 
-        <record model="ir.config_parameter" id="hr_recruitment_blacklisted_emails" forcecreate="False">
-            <field name="key">hr_recruitment.blacklisted_emails</field>
-            <field name="value"> </field>
-        </record>
+    <record id="linkedin_job_platform" model="hr.job.platform">
+        <field name="name">Linkedin</field>
+        <field name="email">jobs-listings@linkedin.com</field>
+        <field name="regex">New application:.*from (.*)</field>
+    </record>
 
+    <record id="jobsdb_job_platform" model="hr.job.platform">
+        <field name="name">Jobsdb</field>
+        <field name="email">cs@jobsdb.com</field>
+        <field name="regex">from (.+?) for</field>
+    </record>
+
+    <record id="indeed_job_platform" model="hr.job.platform">
+        <field name="name">Indeed</field>
+        <field name="email">no-reply@indeed.com</field>
+        <field name="regex">^([^ ]+ [^ ]+)</field>
+    </record>
 </data>
 </odoo>

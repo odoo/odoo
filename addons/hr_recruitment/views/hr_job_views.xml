@@ -337,4 +337,70 @@
     <menuitem name="By Job Positions" parent="menu_crm_case_categ0_act_job"
         id="menu_hr_job_position_interviewer" action="action_hr_job_interviewer"
         sequence="1" groups="hr_recruitment.group_hr_recruitment_interviewer" />
+
+    <record id="hr_job_platform_form" model="ir.ui.view">
+        <field name="name">hr.job.platform.form</field>
+        <field name="model">hr.job.platform</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group col="2">
+                        <group>
+                            <field name="name" placeholder="e.g. Linkedin"/>
+                            <field name="regex" placeholder="e.g. ^New application:.*from (.*)"/>
+                        </group>
+                        <group>
+                            <field name="email" placeholder="e.g. jobs-listings@linkedin.com"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_job_platform_tree" model="ir.ui.view">
+        <field name="name">hr.job.platform.tree</field>
+        <field name="model">hr.job.platform</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="regex"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_hr_job_platforms">
+        <field name="name">Emails</field>
+        <field name="res_model">hr.job.platform</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No rules have been defined.
+            </p>
+            <p>
+                Create a new rule to process emails from specific job boards.
+            </p>
+            <p>
+                Define a regex: Extract the applicant's name from the email's subject or body.
+            </p>
+            <p>
+                Without a regex: The applicant's name will be the email's subject.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        name="Job Boards"
+        parent="menu_hr_recruitment_configuration"
+        id="menu_hr_job_boards"
+        sequence="50"/>
+
+    <menuitem
+        name="Emails"
+        parent="menu_hr_job_boards"
+        id="menu_hr_recruitment_emails"
+        action="action_hr_job_platforms"
+        sequence="50"/>
+
 </odoo>
