@@ -610,7 +610,6 @@ var SnippetEditor = Widget.extend({
         const proms = sortBy(styles, "__order").map((style) => {
             return show ? style.onTargetShow() : style.onTargetHide();
         });
-        this.options.reloadSnippetDropzones();
         await Promise.all(proms);
         return show;
     },
@@ -4087,7 +4086,9 @@ class SnippetsMenu extends Component {
         const $snippet = $(invisibleEntry.snippetEl);
         const isVisible = await this._execWithLoadingEffect(async () => {
             const editor = await this._createSnippetEditor($snippet);
-            return editor.toggleTargetVisibility();
+            const show = editor.toggleTargetVisibility();
+            this._disableUndroppableSnippets();
+            return show;
         }, true);
         invisibleEntry.isVisible = isVisible;
         return this._activateSnippet(isVisible ? $snippet : false);
