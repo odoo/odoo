@@ -107,3 +107,15 @@ SUPPORTED_COUNTRIES = {
     'TH',  # Beta
     'US',
 }
+
+# Businesses in supported outlying territories should register for a Stripe account with the parent
+# territory selected as the Country.
+# See https://support.stripe.com/questions/stripe-availability-for-outlying-territories-of-supported-countries.
+COUNTRY_MAPPING = {
+    'MQ': 'FR',  # Martinique
+    'GP': 'FR',  # Guadeloupe
+    'GF': 'FR',  # French Guiana
+    'RE': 'FR',  # Réunion
+    'YT': 'FR',  # Mayotte
+    'MF': 'FR',  # Saint-Martin
+}
