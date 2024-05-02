@@ -12,9 +12,10 @@ paymentExpressCheckoutForm.include({
      *
      * @private
      * @param {number} deliveryAmount - The delivery costs.
+     * @param {number} amountFreeShipping - The free shipping discount amount, <= 0.
      * @returns {Object} The information to be displayed on the payment form.
      */
-    _getOrderDetails(deliveryAmount) {
+    _getOrderDetails(deliveryAmount, amountFreeShipping) {
         const pending = this.paymentContext['shippingInfoRequired'] && deliveryAmount === undefined;
         const minorAmount = parseInt(this.paymentContext['minorAmount'])
         const displayItems = [
@@ -29,10 +30,16 @@ paymentExpressCheckoutForm.include({
                 amount: deliveryAmount,
             });
         }
+        if (amountFreeShipping) {
+            displayItems.push({
+                label: _t("Free Shipping"),
+                amount: amountFreeShipping,
+            });
+        }
         return {
             total: {
                 label: this.paymentContext['merchantName'],
-                amount: minorAmount + (deliveryAmount ?? 0),
+                amount: minorAmount + (deliveryAmount ?? 0) + (amountFreeShipping ?? 0),
                 // Delay the display of the amount until the shipping price is retrieved.
                 pending: pending,
             },
@@ -186,9 +193,18 @@ paymentExpressCheckoutForm.include({
 
             // When the customer selects a different shipping option, update the displayed total.
             paymentRequest.on('shippingoptionchange', async (ev) => {
+                const result = await this._rpc({
+                    route: '/shop/update_carrier',
+                    params: {
+                        carrier_id: parseInt(ev.shippingOption.id),
+                    },
+                });
                 ev.updateWith({
                     status: 'success',
-                    ...this._getOrderDetails(ev.shippingOption.amount),
+                    ...this._getOrderDetails(
+                        ev.shippingOption.amount,
+                        result.delivery_discount_minor_amount || 0,
+                    ),
                 });
             });
         }
