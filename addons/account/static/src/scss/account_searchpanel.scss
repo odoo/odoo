@@ -1,6 +1,11 @@
 .o_search_panel.account_root {
     padding: 6px !important; // need to override bootstrap ps-4 rule
     scrollbar-width: thin;
+    min-width: 55px;
+    > button:first-child {
+        // hide the expand/fold button
+        display: none;
+    }
     .o_search_panel_section_header {
         display: none;
     }
