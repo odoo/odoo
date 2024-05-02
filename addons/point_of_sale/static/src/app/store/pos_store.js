@@ -830,7 +830,8 @@ export class PosStore extends Reactive {
         const orderToCreate = this.models["pos.order"].filter(
             (order) =>
                 this.pendingOrder.create.has(order.id) &&
-                (order.finalized || order.lines.length > 0)
+                (order.lines.length > 0 ||
+                    order.payment_ids.some((p) => p.payment_method_id.type === "pay_later"))
         );
         const orderToUpdate = this.models["pos.order"].filter((order) =>
             this.pendingOrder.write.has(order.id)
@@ -863,6 +864,7 @@ export class PosStore extends Reactive {
         try {
             const { orderToCreate, orderToUpdate, paidOrdersNotSent } = this.getPendingOrder();
             const orders = [...orderToCreate, ...orderToUpdate, ...paidOrdersNotSent];
+
             this.preSyncAllOrders(orders);
             const idsToDelete = [...this.pendingOrder.delete];
             const context = this.getSyncAllOrdersContext(orders);
