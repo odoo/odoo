@@ -10,6 +10,7 @@ from odoo.addons.web.controllers.home import ensure_db, Home, SIGN_UP_REQUEST_PA
 from odoo.addons.base_setup.controllers.main import BaseSetup
 from odoo.exceptions import UserError
 from odoo.http import request
+from markupsafe import Markup
 
 _logger = logging.getLogger(__name__)
 
@@ -58,7 +59,7 @@ class AuthSignupHome(Home):
                     qcontext["error"] = _("Another user is already registered using this email address.")
                 else:
                     _logger.warning("%s", e)
-                    qcontext['error'] = _("Could not create a new account.") + "\n" + str(e)
+                    qcontext['error'] = _("Could not create a new account.") + Markup('<br/>') + str(e)
 
         elif 'signup_email' in qcontext:
             user = request.env['res.users'].sudo().search([('email', '=', qcontext.get('signup_email')), ('state', '!=', 'new')], limit=1)
