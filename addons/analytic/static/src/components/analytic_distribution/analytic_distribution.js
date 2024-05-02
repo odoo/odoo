@@ -48,6 +48,7 @@ export class AnalyticDistribution extends Component {
 
     setup(){
         this.orm = useService("orm");
+        this.batchedOrm = useService("batchedOrm");
 
         this.state = useState({
             showDropdown: false,
@@ -361,7 +362,7 @@ export class AnalyticDistribution extends Component {
             context: [],
         }
         // batched call
-        const records = await this.props.record.model.orm.read("account.analytic.account", domain[0][2], args.fields, {});
+        const records = await this.batchedOrm.read("account.analytic.account", domain[0][2], args.fields, {});
         return Object.assign({}, ...records.map((r) => {
             const {id, ...rest} = r;
             return {[id]: rest};
