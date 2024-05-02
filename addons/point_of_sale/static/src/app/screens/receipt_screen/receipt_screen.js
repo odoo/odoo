@@ -2,12 +2,12 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { useErrorHandlers, useTrackedAsync } from "@point_of_sale/app/utils/hooks";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { useState, Component, onMounted } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class ReceiptScreen extends Component {
     static template = "point_of_sale.ReceiptScreen";
@@ -21,16 +21,13 @@ export class ReceiptScreen extends Component {
         this.ui = useState(useService("ui"));
         this.renderer = useService("renderer");
         this.dialog = useService("dialog");
-
         this.currentOrder = this.pos.get_order();
         const partner = this.currentOrder.get_partner();
         this.state = useState({
-            inputEmail: (partner && partner.email) || "",
+            input: partner?.email || "",
         });
-
-        this.doSendEmail = useTrackedAsync(() => this._sendReceiptToCustomer());
+        this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
         this.doPrint = useTrackedAsync(() => this.pos.printReceipt());
-
         onMounted(() => {
             const order = this.pos.get_order();
             this.pos.sendOrderInPreparation(order);
@@ -39,28 +36,6 @@ export class ReceiptScreen extends Component {
 
     _addNewOrder() {
         this.pos.add_new_order();
-    }
-    get emailNotice() {
-        switch (this.doSendEmail.status) {
-            case "loading":
-                return { class: "text-info", message: _t("Sending in progress.") };
-            case "success": {
-                return { class: "successful text-success", message: _t("Email sent.") };
-            }
-            case "error": {
-                return {
-                    class: "failed text-danger",
-                    message: _t("Sending email failed. Please try again."),
-                };
-            }
-            default: {
-                throw new Error("Shouldn't be reached.");
-            }
-        }
-    }
-    isValidEmail() {
-        // A basic check of whether the `inputEmail` is an email or not.
-        return /^.+@.+$/.test(this.state.inputEmail);
     }
     get orderAmountPlusTip() {
         const order = this.currentOrder;
@@ -100,27 +75,9 @@ export class ReceiptScreen extends Component {
     isResumeVisible() {
         return this.pos.get_order_list().length > 1;
     }
-    async _sendReceiptToCustomer() {
-        const partner = this.currentOrder.get_partner();
-        const orderPartner = {
-            email: this.state.inputEmail,
-            name: partner ? partner.name : this.state.inputEmail,
-        };
-        await this.sendToCustomer(orderPartner, "action_receipt_to_customer");
-    }
-    async sendToCustomer(orderPartner, methodName) {
-        const ticketImage = await this.renderer.toJpeg(
-            OrderReceipt,
-            {
-                data: this.pos.orderExportForPrinting(this.pos.get_order()),
-                formatCurrency: this.env.utils.formatCurrency,
-            },
-            { addClass: "pos-receipt-print" }
-        );
+    async _sendReceiptToCustomer({ action }) {
         const order = this.currentOrder;
-        const orderName = order.display_name;
-        const order_id = order.id;
-        if (typeof order_id !== "number") {
+        if (typeof order.id !== "number") {
             this.dialog.add(ConfirmationDialog, {
                 title: _t("Unsynced order"),
                 body: _t(
@@ -129,12 +86,18 @@ export class ReceiptScreen extends Component {
             });
             return Promise.reject();
         }
-        await this.pos.data.call("pos.order", methodName, [
-            [order_id],
-            orderName,
-            orderPartner,
-            ticketImage,
-        ]);
+        const ticketImage = await this.renderer.toJpeg(
+            OrderReceipt,
+            {
+                data: this.pos.orderExportForPrinting(this.pos.get_order()),
+                formatCurrency: this.env.utils.formatCurrency,
+            },
+            { addClass: "pos-receipt-print" }
+        );
+        await this.pos.data.call("pos.order", action, [[order.id], this.state.input, ticketImage]);
+    }
+    isValidEmail(email) {
+        return email && /^.+@.+$/.test(email);
     }
 }
 

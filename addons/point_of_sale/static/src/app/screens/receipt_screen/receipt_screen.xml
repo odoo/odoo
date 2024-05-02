@@ -20,18 +20,17 @@
                                     <i t-attf-class="fa {{doPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Receipt
                                 </button>
                             </div>
-                            <form t-on-submit.prevent="() => doSendEmail.call()" class="send-email d-flex">
-                                <div class="input-email input-group">
-                                    <input type="email" class="form-control py-3 bg-view" t-attf-placeholder="Email: {{currentOrder.getEmailItems().join(', ')}}" t-model="state.inputEmail" />
-                                    <button class="send btn px-5" t-att-class="isValidEmail() ? 'highlight btn btn-primary' : 'btn-secondary disabled'" type="submit">
-                                        <i t-attf-class="fa {{doSendEmail.status !== 'loading' ? 'fa-paper-plane' : 'fa-fw fa-spin fa-circle-o-notch'}}" aria-hidden="true" />
-                                    </button>
-                                </div>
-                            </form>
+                            <div class="input-group">
+                                <input type="text" class="form-control py-3 bg-view" t-attf-placeholder="eg.: john.doe@mail.com" t-model="state.input" />
+                                <button t-att-disabled="!isValidEmail(state.input)" t-on-click="() => sendReceipt.call({action:'action_send_receipt', name:'Email'})" class="btn btn-primary px-5" >
+                                    <i t-attf-class="fa {{sendReceipt.status === 'loading' and sendReceipt.lastArgs?.[0]?.name === 'Email' ?  'fa-fw fa-spin fa-circle-o-notch' : 'fa-envelope'}}" aria-hidden="true" />
+                                </button>
+                            </div>
                             <div class="notice mt-2">
-                                <div t-if="doSendEmail.status !== 'idle'" t-attf-class="{{ emailNotice.class }}">
-                                    <t t-esc="emailNotice.message"></t>
-                                </div>
+                                <t t-set="usedMethod" t-value="sendReceipt.lastArgs?.[0]?.name" />
+                                <div t-if="sendReceipt.status === 'loading'" class="text-info">Sending <t t-esc="usedMethod"/> in progress</div>
+                                <div t-if="sendReceipt.status === 'success'" class="text-success"><t t-esc="usedMethod"/> sent</div>
+                                <div t-if="sendReceipt.status === 'error'" class="text-danger">Sending <t t-esc="usedMethod"/> failed. Please try again</div>
                             </div>
                         </div>
                         <t t-set="splittedOrder" t-value="this.currentOrder.originalSplittedOrder and !this.currentOrder.originalSplittedOrder.finalized"/>
