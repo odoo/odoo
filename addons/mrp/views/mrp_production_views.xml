@@ -137,7 +137,6 @@
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
                 <header>
-                    <field name="confirm_cancel" invisible="1"/>
                     <field name="show_lock" invisible="1"/>
                     <field name="show_produce" invisible="1"/>
                     <field name="show_produce_all" invisible="1"/>
@@ -159,10 +158,8 @@
                     <field name="show_serial_mass_produce" invisible="1"/>
                     <button name="action_serial_mass_produce_wizard" invisible="not show_serial_mass_produce" string="Mass Produce" type="object"/>
                     <button name="action_cancel" type="object" string="Cancel" data-hotkey="x"
-                            invisible="not id or state in ('done', 'cancel') or confirm_cancel"/>
-                    <button name="action_cancel" type="object" string="Cancel" data-hotkey="x"
-                            invisible="not id or state in ('done', 'cancel') or not confirm_cancel"
-                            confirm="Some product moves have already been confirmed, this manufacturing order can't be completely cancelled. Are you still sure you want to process?"/>
+                            invisible="not id or state in ('done', 'cancel')"
+                            confirm="Are you sure you want to cancel this manufacturing order?"/>
                     <button name="button_unbuild" type="object" string="Unbuild" invisible="state != 'done'" data-hotkey="shift+v"/>
                     <button string="Print Labels" type="object" name="action_open_label_type"/>
                 </header>

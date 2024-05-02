@@ -475,6 +475,7 @@ class MrpProduction(models.Model):
     def _compute_confirm_cancel(self):
         """ If the manufacturing order contains some done move (via an intermediate
         post inventory), the user has to confirm the cancellation.
+        TODO remove in master: field still computed for poeple with the template not updated
         """
         domain = [
             ('state', '=', 'done'),
