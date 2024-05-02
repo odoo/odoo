@@ -76,6 +76,9 @@
             <xpath expr="//field[@name='create_date']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+            <xpath expr="//field[@name='rating']" position="attributes">
+                <attribute name="string">Rating (1-5)</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -88,6 +91,9 @@
         <field name="arch" type="xml">
             <xpath expr="//graph" position="attributes">
                 <attribute name="js_class">project_rating_graph</attribute>
+            </xpath>
+            <xpath expr="//field[@name='rating']" position="attributes">
+                <attribute name="string">Rating (1-5)</attribute>
             </xpath>
         </field>
     </record>
