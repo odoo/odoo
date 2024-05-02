@@ -96,22 +96,32 @@ class TestRecruitmentProcess(TestHrCommon):
             user.partner_id in new_application_message.notified_partner_ids
         )
 
-    def test_blacklist_providers(self):
-        """Test blacklisting providers feature.
-           In case the mail comes from the blacklisted mails list,
-           we should not:
-           - set the email_from to the newly created applicant
-           - create an partner for the blaclisted mail and link it
-                with the newly created applicant
-        """
-        self.env['ir.config_parameter'].set_param('hr_recruitment.blacklisted_emails',
-                                                  'bla@com.com, mail-to-blacklist@gmail.com, bla1@odoo.com')
+    def test_job_platforms(self):
+        self.env['hr.job.platform'].create({
+            'name': 'YourJobPlatform',
+            'email': 'yourjobplatform@platform.com',
+            'regex': '^New application:.*from (.*)'
+        })
+        # Regex applied on Subject
         applicant = self.env['hr.applicant'].message_new({
             'message_id': 'message_id_for_rec',
-            'email_from': '"Mail to Blacklist Name" <mail-to-blacklist@gmail.com>',
-            'from': '"Mail to Blacklist Name" <mail-to-blacklist@gmail.com>',
-            'subject': 'CV',
+            'email_from': '"Job Platform Application" <yourjobplatform@platform.com>',
+            'from': '"Job Platform Application" <yourjobplatform@platform.com>',
+            'subject': 'New application: ERP Implementation Consultant from John Doe',
             'body': 'I want to apply to your company',
         })
+
+        # Regex applied on Body
+        applicant2 = self.env['hr.applicant'].message_new({
+            'message_id': 'message_id_for_rec',
+            'email_from': '"Job Platform Application" <yourjobplatform@platform.com>',
+            'from': '"Job Platform Application" <yourjobplatform@platform.com>',
+            'subject': 'Very badly formatted subject :D',
+            'body': 'New application: ERP Implementation Consultant from John Doe',
+        })
+
+        self.assertEqual(applicant.partner_name, 'John Doe')
         self.assertFalse(applicant.email_from)
-        self.assertFalse(applicant.partner_id)
+
+        self.assertEqual(applicant2.partner_name, 'John Doe')
+        self.assertFalse(applicant2.email_from)
