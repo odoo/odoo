@@ -195,35 +195,8 @@
             <textarea class="form-control o_survey_question_text_box bg-transparent text-dark rounded-0 p-0" rows="3"
                     t-att-name="'question_' + str(question.id)" 
                     t-att-placeholder="'Responde aqui...'"
-                    t-att-data-question-type="question.tipo"></textarea>
-        </div>
-    </template>
-
-    <!-- Simple choice question -->
-    <template id="question_simple_choice" name="Question: simple choice">
-        <div class="row g-2 o_survey_answer_wrapper o_survey_form_choice"
-            t-att-data-name="question.id"
-            data-question-type="simple_choice_radio">
-            <t t-set="item_idx" t-value="0"/>
-            <t t-foreach='question.opcion_ids' t-as='label'>
-                <t t-set="item_idx" t-value="label_index"/>
-
-                <div t-attf-class="col-sm-12 #{use_half_col_lg}">
-                    <label t-att-for="str(question.id) + '_' + str(label.id)"
-                        t-attf-class="o_survey_choice_btn py-1 px-3 w-100 h-100 rounded #{answer_class} #{'o_survey_selected' if answer_selected else ''}">
-                        <t t-call="evaluaciones.survey_selection_key">
-                            <t t-set="selection_key_class" t-value="'position-relative o_survey_radio_btn float-start d-flex'"/>
-                        </t>
-                        <!-- <i class="fa fa-check-circle float-end mt-1 ms-1 position-relative"/>
-                        <i class="fa fa-circle-thin float-end mt-1 ms-1 position-relative"/> -->
-                        <input t-att-id="str(question.id) + '_' + str(label.id)" type="radio" t-att-value='label.id'
-                            t-attf-class="o_survey_form_choice_item position-absolute #{'o_survey_form_choice_item_selected' if answer_selected else ''}"
-                            t-att-name='question.id'
-                            t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
-                        <span class="ms-2 text-break" t-field='label.opcion_texto'/>
-                    </label>
-                </div>
-            </t>
+                    t-att-data-question-type="question.tipo"
+                    required="required"></textarea>
         </div>
     </template>
 
@@ -248,7 +221,8 @@
                                 t-att-value="col_label.id"
                                 t-att-data-row-id="row_label.id"
                                 t-att-data-col-id="col_label"
-                                class="o_survey_form_choice_item"/>
+                                class="o_survey_form_choice_item"
+                                required="required"/>
                         </td>
                     </t>
                 </tr>
@@ -283,7 +257,8 @@
                                     t-att-value="desc[iterador]"
                                     t-att-data-row-id="row_label.id"
                                     t-att-data-col-id="col_label"
-                                    class="o_survey_form_choice_item"/>
+                                    class="o_survey_form_choice_item"
+                                    required="required"/>
                             </t>
                             <t t-else="">
                                 <input t-att-type="'radio'"
@@ -291,7 +266,8 @@
                                     t-att-value="asc[iterador]"
                                     t-att-data-row-id="row_label.id"
                                     t-att-data-col-id="col_label"
-                                    class="o_survey_form_choice_item"/>
+                                    class="o_survey_form_choice_item"
+                                    required="required"/>
                             </t>
                         </td>
                     </t>

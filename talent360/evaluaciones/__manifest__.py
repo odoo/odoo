@@ -10,7 +10,7 @@
         "views/objetivos_views.xml",
         "views/evaluaciones_menus.xml",
         "views/evaluaciones_templates.xml",
-        "views/evaluaciones_clima_responder.xml",
+        "views/evaluaciones_responder.xml",
         "data/pregunta.csv",
         "data/competencia.csv",
         "data/opcion.csv",
