@@ -3,6 +3,7 @@ import requests
 from unittest.mock import patch
 
 import odoo
+from odoo.modules.registry import Registry, DummyRLock
 from odoo.tests import HOST
 from odoo.tests.common import BaseCase, tagged, get_db_name
 
@@ -16,6 +17,7 @@ class TestAuthLDAP(BaseCase):
 
     def setUp(self):
         super().setUp()
+        self.patch(Registry, "_lock", DummyRLock())  # prevent deadlock (see #161438)
         self.opener = requests.Session()
 
         def remove_ldap_user():
