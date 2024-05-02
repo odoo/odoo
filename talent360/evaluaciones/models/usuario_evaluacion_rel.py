@@ -50,7 +50,7 @@ class UsuarioEvaluacionRel(models.Model):
                 [("evaluacion_id", "=", evaluacion_id), ("token", "=", token)]
             )
 
-        usuario_evaluacion.write({"contestada": True})
+        usuario_evaluacion.write({"contestada": "contestada"})
 
     def action_enviar_evaluacion(self, evaluacion_id):
         """

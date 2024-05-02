@@ -17,9 +17,6 @@ class Evaluacion(models.Model):
     _name = "evaluacion"
     _description = "Evaluacion de pesonal"
 
-    # Cambiar el titulo del form view
-    _rec_name = "nombre"
-
     # _inherit = ["mail.thread"]
 
     nombre = fields.Char(required=True)
@@ -65,7 +62,7 @@ class Evaluacion(models.Model):
         "usuario_evaluacion_rel",
         "evaluacion_id",
         "usuario_id",
-        string="Asignados",
+        string="Asigned",
     )
 
     
