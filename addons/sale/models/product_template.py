@@ -187,4 +187,10 @@ class ProductTemplate(models.Model):
                     has_optional_products = True
                     break
             res.update({'has_optional_products': has_optional_products})
+        if self.sale_line_warn != 'no-message':
+            res['sale_warning'] = {
+                'type': self.sale_line_warn,
+                'title': _("Warning for %s", self.name),
+                'message': self.sale_line_warn_msg,
+            }
         return res
