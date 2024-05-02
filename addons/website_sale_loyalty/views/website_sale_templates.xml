@@ -69,7 +69,17 @@
                                                         <strong t-esc="reward.description"/>
                                                     </t>
                                                     <t t-else="">
-                                                        <strong t-esc="reward.description"/>
+                                                        <strong t-esc="reward.description" class="w-100"/>
+                                                        <div t-if="program.program_type == 'buy_x_get_y'" class="mt-1 pe-3">
+                                                            <select t-if="len(reward.reward_product_ids) &gt; 1" class="o_select w-100 form-select form-select-sm css_attribute_select" name="Product">
+                                                                <option t-foreach="reward.reward_product_ids" t-as="product" t-att-value="product.id">
+                                                                    <t t-esc="product.display_name" />
+                                                                </option>
+                                                            </select>                                                                 
+                                                            <t t-else="">
+                                                                <t t-esc="reward.reward_product_ids.display_name" t-att-value="product"/>
+                                                            </t> 
+                                                        </div>
                                                         <div t-if="program.portal_visible">
                                                             <t t-if="not program.is_nominative">
                                                                 <span t-out="points"/>
@@ -85,7 +95,7 @@
                                                         </div>
                                                     </t>
                                                 </div>
-                                                <div class="justify-content-end">
+                                                <div class="justify-content-end m-auto">
                                                     <a class="btn btn-primary a-submit" href="#" role="button">
                                                         <t t-if="reward.program_id.program_type == 'ewallet'">
                                                             Pay with eWallet

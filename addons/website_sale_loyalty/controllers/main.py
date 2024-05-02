@@ -80,10 +80,13 @@ class WebsiteSale(main.WebsiteSale):
         except ValueError:
             reward_id = None
 
+        product = None
         reward_sudo = request.env['loyalty.reward'].sudo().browse(reward_id).exists()
         if not reward_sudo or reward_sudo.multi_product:
-            return request.redirect(redirect)
-
+            if reward_sudo.multi_product and reward_sudo.program_id.program_type == "buy_x_get_y" and post["Product"]:
+                product = request.env["product.product"].sudo().browse(int(post["Product"]))
+            else:
+                return request.redirect(redirect)
         program_sudo = reward_sudo.program_id
         claimable_rewards = order_sudo._get_claimable_and_showable_rewards()
         coupon = request.env['loyalty.card']
@@ -98,17 +101,20 @@ class WebsiteSale(main.WebsiteSale):
                 ):
                     return self.pricelist(code)
         if coupon:
-            self._apply_reward(order_sudo, reward_sudo, coupon)
+            self._apply_reward(order_sudo, reward_sudo, coupon, product)
         return request.redirect(redirect)
 
-    def _apply_reward(self, order, reward, coupon):
+    def _apply_reward(self, order, reward, coupon, product=None):
         """Try to apply the given program reward
 
         :returns: whether the reward was successfully applied
         :rtype: bool
         """
         try:
-            reward_status = order._apply_program_reward(reward, coupon)
+            if product:
+                reward_status = order._apply_program_reward(reward, coupon, product=product)
+            else:
+                reward_status = order._apply_program_reward(reward, coupon)
         except UserError as e:
             request.session['error_promo_code'] = str(e)
             return False
