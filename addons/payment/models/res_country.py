@@ -12,4 +12,6 @@ class ResCountry(models.Model):
     @api.depends('code')
     def _compute_is_stripe_supported_country(self):
         for country in self:
-            country.is_stripe_supported_country = country.code in stripe.const.SUPPORTED_COUNTRIES
+            country.is_stripe_supported_country = stripe.const.COUNTRY_MAPPING.get(
+                country.code, country.code
+            ) in stripe.const.SUPPORTED_COUNTRIES
