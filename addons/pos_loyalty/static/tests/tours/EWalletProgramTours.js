@@ -119,3 +119,20 @@ registry
             Dialog.confirm(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosLoyaltyPointsEwallet", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAA"),
+            PosLoyalty.eWalletButtonState({ highlighted: false }),
+            ProductScreen.addOrderline("product_a", "1"),
+            PosLoyalty.eWalletButtonState({ highlighted: true, text: getEWalletText("Pay") }),
+            PosLoyalty.clickEWalletButton(getEWalletText("Pay")),
+            PosLoyalty.pointsAwardedAre("100"),
+            PosLoyalty.finalizeOrder("Cash", "90.00"),
+        ].flat(),
+});
