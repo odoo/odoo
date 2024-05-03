@@ -46,7 +46,7 @@ $-seen-urls: ();
     // 3) The values in the $colors map are also printed by Bootstrap. However,
     // we have color variables which can contain a reference to a color
     // combination and that is the info we want in that case.
-    @each $key in ('menu', 'header-sales_one', 'header-sales_two', 'header-sales_three', 'header-sales_four', 'footer', 'copyright') {
+    @each $key in ('menu', 'header-sales_one', 'header-sales_two', 'header-sales_three', 'header-sales_four', 'footer', 'breadcrumb', 'copyright') {
         $-value: map-get($o-color-palette, $key);
         @if type-of($-value) == 'number' {
             @include print-variable($key, $-value);
@@ -219,6 +219,43 @@ body {
 #wrapwrap {
     @if o-website-value('body-image') {
         @include body-image-bg-style();
+    }
+
+    > main:not(.o_breadcrumb_overlay) {
+        div.o_page_breadcrumb {
+            nav {
+                @include o-apply-colors('breadcrumb');
+                @include o-apply-colors('breadcrumb-custom');
+                @include o-add-gradient('breadcrumb-gradient');
+            }
+            a, .breadcrumb-item, li::before {
+                color: inherit !important;
+            }
+        }
+    }
+
+    &.o_header_overlay div.o_page_breadcrumb {
+        @include o-position-absolute(auto, auto, auto, auto);
+        z-index: 1 !important;
+        width: 100%;
+    }
+
+    > main.o_breadcrumb_overlay {
+        div.o_page_breadcrumb {
+            @include o-position-absolute(auto, auto, auto, auto);
+            z-index: 1 !important;
+            width: 100%;
+            a, .breadcrumb-item, li::before {
+                color: inherit !important;
+            }
+            nav {
+                @include o-apply-colors(1);
+                background-color: transparent !important;
+                background-image: none !important;
+                border-color: transparent;
+                color: inherit;
+            }
+        }
     }
 
     @if o-website-value('layout') != 'full' {

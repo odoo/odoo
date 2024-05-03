@@ -201,6 +201,10 @@ class WebsitePageProperties(models.TransientModel):
     group_ids = fields.Many2many(related='target_model_id.group_ids', readonly=False)
     is_new_page_template = fields.Boolean(related='target_model_id.is_new_page_template', readonly=False)
 
+    has_parent_page = fields.Boolean(compute='_compute_has_parent_page', readonly=False,
+        help="Improve navigation and hierarchy of site by adding parent page in breadcrumbs format.")
+    parent_id = fields.Many2one(related='target_model_id.parent_id', readonly=False,
+        domain="['|', ('website_id', '=?', website_id), ('website_id', '=', False), ('id', '!=', target_model_id)]")
     old_url = fields.Char()
     redirect_old_url = fields.Boolean(default=False, store=False)
     redirect_type = fields.Selection(
@@ -224,14 +228,31 @@ class WebsitePageProperties(models.TransientModel):
             current_homepage_url = record.website_id.homepage_url or '/'
             record.is_homepage = url == current_homepage_url
 
+    @api.depends('parent_id')
+    def _compute_has_parent_page(self):
+        for page in self:
+            page.has_parent_page = bool(page.parent_id)
+
+    @api.onchange('has_parent_page')
+    def _onchange_has_parent_page(self):
+        domain = self.website_id.website_domain() + [('url', '=', self.website_id.homepage_url or '/')]
+        homepage = self.env['website.page'].search(domain, limit=1)
+        self.parent_id = (self.has_parent_page and (self.parent_id or homepage)) or False
+
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('is_homepage'):
+                vals['parent_id'] = False
         records = super().create(vals_list)
         for record in records:
             record.old_url = record.url
         return records
 
     def write(self, vals):
+        # If the page is being set as homepage, clear its parent page
+        if 'is_homepage' in vals:
+            vals['parent_id'] = False
         write_result = super().write(vals)
 
         # Once website.page has been written, the url might have been modified.
