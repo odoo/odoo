@@ -1817,6 +1817,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             assert order.id == request.session.get('sale_last_order_id')
 
+        if not order:
+            return request.redirect('/shop')
+
         errors = self._get_shop_payment_errors(order)
         if errors:
             first_error = errors[0]  # only display first error
