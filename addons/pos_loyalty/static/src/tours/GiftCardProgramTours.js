@@ -101,3 +101,29 @@ registry
             return getSteps(); 
         } 
     });
+
+registry
+    .category('web_tour.tours')
+    .add("PosLoyaltyPointsGiftcard", {
+        test: true,
+        url: "/pos/ui",
+        steps: () => {
+            startSteps();
+            ProductScreen.do.confirmOpeningPopup();
+            ProductScreen.do.clickHomeCategory();
+            ProductScreen.do.clickDisplayedProduct('Gift Card');
+            TextInputPopup.check.isShown();
+            TextInputPopup.do.inputText('044123456');
+            TextInputPopup.do.clickConfirm();
+            PosLoyalty.check.orderTotalIs('50.00');
+            PosLoyalty.exec.finalizeOrder('Cash', '50');
+            ProductScreen.do.clickPartnerButton();
+            ProductScreen.do.clickCustomer("partner_a");
+            ProductScreen.exec.addOrderline("product_a", "1");
+            PosLoyalty.do.enterCode("044123456");
+            PosLoyalty.check.orderTotalIs("50.00");
+            PosLoyalty.check.pointsAwardedAre("100");
+            PosLoyalty.exec.finalizeOrder("Cash", "50");
+            return getSteps();
+        }
+    });

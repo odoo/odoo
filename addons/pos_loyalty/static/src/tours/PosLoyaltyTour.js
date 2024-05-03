@@ -422,3 +422,75 @@ registry
 
         return getSteps();
     }});
+
+function createOrderCoupon(totalAmount, couponName, couponAmount, loyaltyPoints) {
+    return [
+        ProductScreen.do.confirmOpeningPopup(),
+        ProductScreen.do.clickHomeCategory(),
+        ProductScreen.do.clickPartnerButton(),
+        ProductScreen.do.clickCustomer("partner_a"),
+        ProductScreen.exec.addOrderline("product_a", "1"),
+        ProductScreen.exec.addOrderline("product_b", "1"),
+        PosLoyalty.do.enterCode("promocode"),
+        PosLoyalty.check.hasRewardLine(`${couponName}`, `${couponAmount}`),
+        PosLoyalty.check.orderTotalIs(`${totalAmount}`),
+        PosLoyalty.check.pointsAwardedAre(`${loyaltyPoints}`),
+        PosLoyalty.exec.finalizeOrder("Cash", `${totalAmount}`),
+        ];
+    }
+
+registry
+    .category("web_tour.tours")
+    .add("PosLoyaltyPointsDiscountNoDomainProgramNoDomain", {
+        test: true,
+        url: "/pos/web",
+        steps: () => {
+            startSteps();
+            createOrderCoupon("135.00", "10% on your order", "-15.00", "135");
+            return getSteps();
+        }
+    });
+
+registry
+    .category("web_tour.tours")
+    .add("PosLoyaltyPointsDiscountNoDomainProgramDomain", {
+        test: true,
+        url: "/pos/web",
+        steps: () => {
+            startSteps();
+            createOrderCoupon("135.00", "10% on your order", "-15.00", "100");
+            return getSteps();
+        }
+    });
+
+registry
+    .category("web_tour.tours")
+    .add("PosLoyaltyPointsDiscountWithDomainProgramDomain", {
+        test: true,
+        url: "/pos/web",
+        steps: () => {
+            startSteps();
+            createOrderCoupon("140.00", "10% on food", "-10.00", "90");
+            return getSteps();
+        }
+    });
+
+registry
+    .category("web_tour.tours")
+    .add("PosLoyaltyPointsGlobalDiscountProgramNoDomain", {
+        test: true,
+        url: "/pos/web",
+        steps: () => {
+            startSteps();
+            ProductScreen.do.confirmOpeningPopup();
+            ProductScreen.do.clickHomeCategory();
+            ProductScreen.do.clickPartnerButton();
+            ProductScreen.do.clickCustomer("partner_a");
+            ProductScreen.exec.addOrderline("product_a", "1");
+            PosLoyalty.check.hasRewardLine('10% on your order', '-10.00');
+            PosLoyalty.check.orderTotalIs('90');
+            PosLoyalty.check.pointsAwardedAre("90");
+            PosLoyalty.exec.finalizeOrder("Cash", "90");
+            return getSteps();
+        }
+    });
