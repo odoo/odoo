@@ -396,3 +396,52 @@ registry.category("web_tour.tours").add("PosLoyaltyTour12", {
             PosLoyalty.hasRewardLine("Free Product", "-10.00"),
         ].flat(),
 });
+
+function createOrderCoupon(totalAmount, couponName, couponAmount, loyaltyPoints) {
+    return [
+        Dialog.confirm("Open session"),
+        ProductScreen.clickPartnerButton(),
+        ProductScreen.clickCustomer("AAAA"),
+        ProductScreen.addOrderline("product_a", "1"),
+        ProductScreen.addOrderline("product_b", "1"),
+        PosLoyalty.enterCode("promocode"),
+        PosLoyalty.hasRewardLine(`${couponName}`, `${couponAmount}`),
+        PosLoyalty.orderTotalIs(`${totalAmount}`),
+        PosLoyalty.pointsAwardedAre(`${loyaltyPoints}`),
+        PosLoyalty.finalizeOrder("Cash", `${totalAmount}`),
+    ].flat();
+}
+
+registry.category("web_tour.tours").add("PosLoyaltyPointsDiscountNoDomainProgramNoDomain", {
+    test: true,
+    url: "/pos/web",
+    steps: () => [createOrderCoupon("135.00", "10% on your order", "-15.00", "135")].flat(),
+});
+
+registry.category("web_tour.tours").add("PosLoyaltyPointsDiscountNoDomainProgramDomain", {
+    test: true,
+    url: "/pos/web",
+    steps: () => [createOrderCoupon("135.00", "10% on your order", "-15.00", "100")].flat(),
+});
+
+registry.category("web_tour.tours").add("PosLoyaltyPointsDiscountWithDomainProgramDomain", {
+    test: true,
+    url: "/pos/web",
+    steps: () => [createOrderCoupon("140.00", "10% on food", "-10.00", "90")].flat(),
+});
+
+registry.category("web_tour.tours").add("PosLoyaltyPointsGlobalDiscountProgramNoDomain", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAA"),
+            ProductScreen.addOrderline("product_a", "1"),
+            PosLoyalty.hasRewardLine("10% on your order", "-10.00"),
+            PosLoyalty.orderTotalIs("90"),
+            PosLoyalty.pointsAwardedAre("90"),
+            PosLoyalty.finalizeOrder("Cash", "90"),
+        ].flat(),
+});

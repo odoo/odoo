@@ -1060,8 +1060,17 @@ class SaleOrder(models.Model):
                         points += rule.reward_point_amount
                     elif rule.reward_point_mode == 'money':
                         # Compute amount paid for rule
-                        # NOTE: this does not account for discounts -> 1 point per $ * (100$ - 30%) will result in 100 points
-                        amount_paid = sum(max(0, line.price_total) for line in order_lines if line.product_id in rule_products)
+                        # NOTE: this accounts for discounts -> 1 point per $ * (100$ - 30%) will
+                        # result in 70 points
+                        amount_paid = 0.0
+                        rule_products = so_products_per_rule.get(rule, [])
+                        for line in self.order_line - self._get_no_effect_on_threshold_lines():
+                            if line.reward_id.program_id.program_type in [
+                                'ewallet', 'gift_card', program.program_type
+                            ]:
+                                continue
+                            amount_paid += line.price_total if line.product_id in rule_products else 0.0
+
                         points += float_round(rule.reward_point_amount * amount_paid, precision_digits=2, rounding_method='DOWN')
                     elif rule.reward_point_mode == 'unit':
                         points += rule.reward_point_amount * ordered_rule_products_qty
