@@ -133,18 +133,7 @@ export class DuplicatePageDialog extends Component {
     }
 }
 DuplicatePageDialog.components = {WebsiteDialog};
-DuplicatePageDialog.template = xml`
-<WebsiteDialog close="props.close" primaryClick="() => this.duplicate()">
-    <div class="mb-3 row">
-        <label class="col-form-label col-md-3">
-            Page Name
-        </label>
-        <div class="col-md-9">
-            <input type="text" t-model="state.name" class="form-control" required="required" t-ref="autofocus"/>
-        </div>
-    </div>
-</WebsiteDialog>
-`;
+DuplicatePageDialog.template = "website.DuplicatePageDialog";
 DuplicatePageDialog.props = {
     onDuplicate: Function,
     close: Function,

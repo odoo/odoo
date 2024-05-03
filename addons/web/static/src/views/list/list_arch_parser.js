@@ -183,7 +183,15 @@ export class ListArchParser {
                 treeAttr.activeActions = activeActions;
 
                 treeAttr.className = xmlDoc.getAttribute("class") || null;
-                treeAttr.editable = xmlDoc.getAttribute("editable");
+                let editableAttr = xmlDoc.getAttribute("editable");
+                // FIXME: supported values for the editable attribute are normally "top"/"bottom".
+                // However, form views aren't validated, and a few x2many list have editable="1".
+                // In master, we'll throw to enforce valid values, but in 17, let's fallback on
+                // "bottom".
+                if (editableAttr && !["top", "bottom"].includes(editableAttr)) {
+                    editableAttr = archParseBoolean(editableAttr) ? "bottom" : null;
+                }
+                treeAttr.editable = editableAttr;
                 treeAttr.multiEdit = activeActions.edit
                     ? archParseBoolean(node.getAttribute("multi_edit") || "")
                     : false;
@@ -218,7 +226,8 @@ export class ListArchParser {
         });
 
         if (!treeAttr.defaultOrder.length && handleField) {
-            treeAttr.defaultOrder = stringToOrderBy(handleField);
+            const handleFieldSort = `${handleField}, id`;
+            treeAttr.defaultOrder = stringToOrderBy(handleFieldSort);
         }
 
         return {

@@ -93,12 +93,12 @@ msgstr ""
 "    </p>\n"
 "\n"
 "    <p style=\"margin: 16px 0px 16px 0px;\">\n"
-"        También le recomendamos activar la autenticación de dos pasos con una aplicación de autenticación para ayudarle a asegurar su cuenta.\n"
+"        También le recomendamos activar la autenticación de dos factores con una aplicación de autenticación para ayudarle a asegurar su cuenta.\n"
 "    </p>\n"
 "\n"
 "    <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
 "        <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
-"            Activar la autenticación de dos pasos\n"
+"            Activar la autenticación de dos factores\n"
 "        </a>\n"
 "    </p>\n"
 "</div>\n"
@@ -111,7 +111,7 @@ msgid ""
 "                To login, enter below the six-digit authentication code just sent via email to"
 msgstr ""
 "<i class=\"fa fa-envelope-o\"/>\n"
-"                Para iniciar sesión ingrese el código de verificación e seis dígitos que se le envió al correo"
+"                Para iniciar sesión ingrese el código de verificación de seis dígitos que se le envió al correo"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_settings__auth_totp_policy__all_required
@@ -130,7 +130,7 @@ msgstr ""
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__auth_totp_rate_limit_log__limit_type__code_check
 msgid "Code Checking"
-msgstr "Comprobar código"
+msgstr "Comprobación del código"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_res_config_settings
@@ -164,14 +164,14 @@ msgid ""
 "users (including portal users) if they didn't enable any other two-factor "
 "authentication method."
 msgstr ""
-"Establezca la verificación de dos factores por correo electrónico para los "
+"Establezca la autenticación de dos factores por correo electrónico para los "
 "empleados o todos los usuarios (incluyendo los usuarios del portal) si no "
 "activaron este método."
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_enforce
 msgid "Enforce two-factor authentication"
-msgstr "Establecer la autenticación en dos pasos"
+msgstr "Forzar la autenticación de dos factores"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__id
@@ -221,7 +221,7 @@ msgstr "Enviar correo electrónico"
 #. module: auth_totp_mail_enforce
 #: model:mail.template,name:auth_totp_mail_enforce.mail_template_totp_mail_code
 msgid "Settings: 2Fa New Login"
-msgstr "Configuración: Nuevo inicio de sesión 2FA"
+msgstr "Configuración: nuevo inicio de sesión A2F"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_auth_totp_rate_limit_log
@@ -231,7 +231,7 @@ msgstr "Cantidad límite de registros de TOTP"
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_policy
 msgid "Two-factor authentication enforcing policy"
-msgstr "Política de cumplimiento de verificación de dos pasos"
+msgstr "Política de cumplimiento de autenticación de dos factores"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_res_users

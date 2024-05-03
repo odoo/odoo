@@ -652,22 +652,20 @@ export class PosStore extends Reactive {
         await this._loadMissingPartners(jsons);
         var orders = [];
 
-        for (var i = 0; i < jsons.length; i++) {
-            var json = jsons[i];
-            if (json.pos_session_id === this.pos_session.id) {
-                orders.push(this.createReactiveOrder(json));
-            }
-        }
-        for (i = 0; i < jsons.length; i++) {
-            json = jsons[i];
+        for (const json of jsons) {
             if (
-                json.pos_session_id !== this.pos_session.id &&
-                (json.lines.length > 0 || json.statement_ids.length > 0)
+                json.pos_session_id === this.pos_session.id ||
+                json.lines.length > 0 ||
+                json.statement_ids.length > 0
             ) {
-                orders.push(this.createReactiveOrder(json));
-            } else if (json.pos_session_id !== this.pos_session.id) {
-                this.db.remove_unpaid_order(jsons[i]);
+                try {
+                    orders.push(this.createReactiveOrder(json));
+                    continue;
+                } catch (error) {
+                    console.error("There was an error while loading the order", json, error);
+                }
             }
+            this.db.remove_unpaid_order(json);
         }
 
         orders = orders.sort(function (a, b) {
@@ -1165,17 +1163,19 @@ export class PosStore extends Reactive {
     }
 
     push_orders(opts = {}) {
+        // The 'printedOrders' is added to prevent printed orders from being reverted to draft
+        opts = Object.assign({ printedOrders: true }, opts);
         return this.pushOrderMutex.exec(() => this._flush_orders(this.db.get_orders(), opts));
     }
 
     push_single_order(order) {
         const order_id = this.db.add_order(order.export_as_JSON());
-        return this.pushOrderMutex.exec(() => this._flush_orders([this.db.get_order(order_id)]));
+        return this.pushOrderMutex.exec(() => this._flush_orders([this.db.get_order(order_id)], order._getOrderOptions()));
     }
 
     // Send validated orders to the backend.
     // Resolves to the backend ids of the synced orders.
-    async _flush_orders(orders, options) {
+    async _flush_orders(orders, options = {}) {
         try {
             const server_ids = await this._save_to_server(orders, options);
             for (let i = 0; i < server_ids.length; i++) {
@@ -1184,7 +1184,7 @@ export class PosStore extends Reactive {
             }
             return server_ids;
         } catch (error) {
-            if (!(error instanceof ConnectionLostError)) {
+            if (!(error instanceof ConnectionLostError) && !options.printedOrders) {
                 for (const order of orders) {
                     const reactiveOrder = this.orders.find((o) => o.uid === order.id);
                     reactiveOrder.finalized = false;

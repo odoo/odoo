@@ -6,7 +6,6 @@ import { formatMonetary } from "@web/views/fields/formatters";
 import { Product } from "@pos_self_order/app/models/product";
 import { Combo } from "@pos_self_order/app/models/combo";
 import { session } from "@web/session";
-import { getColor } from "@web/core/colors/colors";
 import { categorySorter, attributeFormatter, attributeFlatter } from "@pos_self_order/app/utils";
 import { Order } from "@pos_self_order/app/models/order";
 import { batched } from "@web/core/utils/timing";
@@ -55,7 +54,6 @@ export class SelfOrder extends Reactive {
         this.comboByIds = {};
         this.ordering = false;
         this.orders = [];
-        this.color = getColor(this.company.color);
         this.kitchenPrinters = [];
 
         this.initData();

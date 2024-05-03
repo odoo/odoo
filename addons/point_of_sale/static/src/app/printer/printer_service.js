@@ -38,7 +38,11 @@ export class PrinterService {
     async print(component, props, options) {
         const el = await this.renderer.toHtml(component, props);
         // Load all images before printing
-        await loadAllImages(el);
+        try {
+            await loadAllImages(el);
+        } catch (e) {
+            console.error("Images could not be loaded correctly", e);
+        }
         return await this.printHtml(el, options);
     }
     is = () => Boolean(this.device?.printReceipt);

@@ -711,6 +711,7 @@ class HrExpenseSheet(models.Model):
             'ref': self.name,
             'move_type': 'in_invoice',
             'partner_id': self.employee_id.sudo().work_contact_id.id,
+            'partner_bank_id': self.employee_id.sudo().bank_account_id.id,
             'currency_id': self.currency_id.id,
             'line_ids': [Command.create(expense._prepare_move_lines_vals()) for expense in self.expense_line_ids],
             'attachment_ids': [

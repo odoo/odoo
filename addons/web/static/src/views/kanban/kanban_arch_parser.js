@@ -154,7 +154,7 @@ export class KanbanArchParser {
         const cardColorEl = cardDoc.querySelector("[color]");
         const cardColorField = cardColorEl && cardColorEl.getAttribute("color");
 
-        const colorEl = cardDoc.querySelector(".oe_kanban_colorpicker[data-field]");
+        const colorEl = xmlDoc.querySelector("templates .oe_kanban_colorpicker[data-field]");
         const colorField = (colorEl && colorEl.getAttribute("data-field")) || "color";
 
         if (!defaultOrder.length && handleField) {

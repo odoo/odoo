@@ -27,7 +27,13 @@ export const SEE_RECORDS_PIVOT_VISIBLE = (position, env) => {
     const cell = env.model.getters.getCorrespondingFormulaCell(position);
     const evaluatedCell = env.model.getters.getEvaluatedCell(position);
     const argsDomain = env.model.getters.getPivotDomainArgsFromPosition(position);
+    const pivotId = env.model.getters.getPivotIdFromPosition(position);
+    if (!env.model.getters.isExistingPivot(pivotId)) {
+        return false;
+    }
+    const dataSource = env.model.getters.getPivotDataSource(pivotId);
     return (
+        dataSource.isReady() &&
         evaluatedCell.type !== "empty" &&
         evaluatedCell.type !== "error" &&
         argsDomain !== undefined &&
@@ -59,7 +65,6 @@ export function SET_FILTER_MATCHING_CONDITION(position, env) {
     const matchingFilters = env.model.getters.getFiltersMatchingPivotArgs(pivotId, domainArgs);
     const pivotFunction = getFirstPivotFunction(cell.compiledFormula.tokens).functionName;
     return (
-        SEE_RECORDS_PIVOT_VISIBLE(position, env) &&
         (pivotFunction === "ODOO.PIVOT" ||
             pivotFunction === "ODOO.PIVOT.HEADER" ||
             pivotFunction === "ODOO.PIVOT.TABLE") &&

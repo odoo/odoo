@@ -245,6 +245,16 @@ class StockMove(models.Model):
         super()._compute_show_info()
         self.filtered(lambda m: m.byproduct_id or m in self.production_id.move_finished_ids).show_quant = False
 
+    @api.depends('picking_type_id.use_create_components_lots')
+    def _compute_display_assign_serial(self):
+        super()._compute_display_assign_serial()
+        for move in self:
+            if move.display_import_lot \
+                    and move.raw_material_production_id \
+                    and not move.raw_material_production_id.picking_type_id.use_create_components_lots:
+                move.display_import_lot = False
+                move.display_assign_serial = False
+
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
         if self.raw_material_production_id and self.has_tracking == 'none':
@@ -299,7 +309,6 @@ class StockMove(models.Model):
                         product = product.browse(values['product_id'])
                     product_id_to_product[values['product_id']] = product
                     values['location_dest_id'] = mo.production_location_id.id
-                    values['price_unit'] = product.standard_price
                     if not values.get('location_id'):
                         values['location_id'] = mo.location_src_id.id
                     continue
@@ -619,6 +628,8 @@ class StockMove(models.Model):
         res = super()._get_relevant_state_among_moves()
         if res == 'partially_available'\
                 and self.raw_material_production_id\
-                and all(move.should_consume_qty and float_compare(move.quantity, move.should_consume_qty, precision_rounding=move.product_uom.rounding) >= 0 for move in self):
+                and all(move.should_consume_qty and float_compare(move.quantity, move.should_consume_qty, precision_rounding=move.product_uom.rounding) >= 0
+                        or (float_compare(move.quantity, move.product_uom_qty, precision_rounding=move.product_uom.rounding) >= 0 or (move.manual_consumption and move.picked))
+                        for move in self):
             res = 'assigned'
         return res

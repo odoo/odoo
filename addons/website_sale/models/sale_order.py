@@ -499,11 +499,12 @@ class SaleOrder(models.Model):
             phone = order.partner_shipping_id.phone
 
             # we can check if the current partner has a partner of type "delivery" that has the same address
-            existing_partner = order.env['res.partner'].search(['&', '&', '&', '&',
+            existing_partner = order.env['res.partner'].search(['&', '&', '&', '&', '&',
                                                                 ('street', '=', street),
                                                                 ('city', '=', city),
                                                                 ('state_id', '=', state),
                                                                 ('country_id', '=', country),
+                                                                ('parent_id', '=', parent_id),
                                                                 ('type', '=', 'delivery')], limit=1)
 
             if existing_partner:

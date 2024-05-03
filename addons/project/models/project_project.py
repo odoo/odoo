@@ -413,6 +413,11 @@ class Project(models.Model):
         subtasks_not_displayed = all_subtasks.filtered(
             lambda task: not task.display_in_project
         )
+        all_subtasks.filtered(
+            lambda child: child.project_id == self
+        ).write({
+            'project_id': project.id
+        })
         project.write({'tasks': [Command.set(new_tasks.ids)]})
         subtasks_not_displayed.write({
             'display_in_project': False

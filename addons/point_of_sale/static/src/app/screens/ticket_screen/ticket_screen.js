@@ -276,7 +276,7 @@ export class TicketScreen extends Component {
 
         const invoicedOrderIds = new Set(
             allToRefundDetails
-                .filter(detail => this._state.syncedOrders.cache[detail.orderline.orderBackendId].state === "invoiced")
+                .filter(detail => this._state.syncedOrders.cache[detail.orderline.orderBackendId]?.state === "invoiced")
                 .map(detail => detail.orderline.orderBackendId)
         );
 

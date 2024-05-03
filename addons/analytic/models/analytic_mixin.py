@@ -125,7 +125,9 @@ class AnalyticMixin(models.AbstractModel):
 
     def _apply_analytic_distribution_domain(self, domain):
         return [
-            ('analytic_distribution_search', leaf[1], leaf[2]) if len(leaf) == 3 and leaf[0] == 'analytic_distribution' and isinstance(leaf[2], (str, tuple, list)) else leaf
+            ('analytic_distribution_search', leaf[1], leaf[2])
+            if len(leaf) == 3 and leaf[0] == 'analytic_distribution' and isinstance(leaf[2], (str, tuple, list))
+            else leaf
             for leaf in domain
         ]
 

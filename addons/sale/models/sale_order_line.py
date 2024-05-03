@@ -207,6 +207,7 @@ class SaleOrderLine(models.Model):
     qty_delivered = fields.Float(
         string="Delivery Quantity",
         compute='_compute_qty_delivered',
+        default=0.0,
         digits='Product Unit of Measure',
         store=True, readonly=False, copy=False)
 
@@ -824,6 +825,16 @@ class SaleOrderLine(models.Model):
                 line.invoice_status = 'invoiced'
             else:
                 line.invoice_status = 'no'
+
+    def _can_be_invoiced_alone(self):
+        """ Whether a given line is meaningful to invoice alone.
+
+        It is generally meaningless/confusing or even wrong to invoice some specific SOlines
+        (delivery, discounts, rewards, ...) without others, unless they are the only left to invoice
+        in the SO.
+        """
+        self.ensure_one()
+        return self.product_id.id != self.company_id.sale_discount_product_id.id
 
     @api.depends('invoice_lines', 'invoice_lines.price_total', 'invoice_lines.move_id.state', 'invoice_lines.move_id.move_type')
     def _compute_untaxed_amount_invoiced(self):

@@ -134,3 +134,24 @@ class TestTaskState(TestProjectCommon):
 
         self.assertEqual(self.task_1.state, '01_in_progress', "The task_1 should have both tasks as dependencies and so should stay go to 'done' when both dependencies are completed")
         self.assertEqual(self.task_1_copy.state, '01_in_progress', "The task_1_copy should have both tasks as dependencies and so should stay go to 'done' when both dependencies are completed")
+
+    def test_duplicate_task_state_retention_with_closed_dependencies(self):
+        self.project_pigs.allow_task_dependencies = True
+        self.task_1.depend_on_ids = self.task_2
+        self.task_2.write({'state': '1_done'})
+        self.task_1.write({'state': '03_approved'})
+
+        task_1_copy = self.task_1.copy()
+
+        self.assertEqual(self.task_1.state, '03_approved', "The task_1 should retain its state after being copied.")
+        self.assertEqual(task_1_copy.state, '01_in_progress', "The task_1_copy should have a state of 'in progress'.")
+
+    def test_duplicate_task_state_retention_with_open_dependencies(self):
+        self.project_pigs.allow_task_dependencies = True
+        self.task_1.depend_on_ids = self.task_2
+        self.task_2.write({'state': '01_in_progress'})
+
+        task_1_copy = self.task_1.copy()
+
+        self.assertEqual(self.task_1.state, '04_waiting_normal')
+        self.assertEqual(task_1_copy.state, '04_waiting_normal')

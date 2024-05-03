@@ -39,6 +39,9 @@ patch(Order.prototype, {
     export_for_printing() {
         var result = super.export_for_printing(...arguments);
         result.l10n_fr_hash = this.get_l10n_fr_hash();
+        if (this.pos.is_french_country()){
+            result.pos_qr_code = false;
+        }
         return result;
     },
     set_l10n_fr_hash(l10n_fr_hash) {

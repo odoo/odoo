@@ -1,4 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import Counter
+
+from psycopg2.extras import execute_values
 
 from odoo import fields, models, _
 
@@ -15,42 +18,66 @@ class HrExpenseSheet(models.Model):
     def _get_sale_order_lines(self):
         """
             This method is used to try to find the sale order lines created by expense sheets.
-
-            :return: sale.order.line
-            :rtype: recordset
+            It is used to reset the quantities of the sale order lines when the expense sheet is reset.
+            It uses several shared fields to try to find the sale order lines:
+                - order_id
+                - product_id
+                - product_uom_qty
+                - sale order line's price_unit (computed from the product_id, then rounded to the currency's rounding)
+                - name
         """
-        expensed_amls = self.account_move_ids.line_ids.filtered(lambda aml: aml.expense_id.sale_order_id and aml.balance >= 0)
+        # Get the product account move lines created by an expense
+        expensed_amls = self.account_move_ids.line_ids.filtered(lambda aml: aml.expense_id.sale_order_id and aml.balance >= 0 and not aml.tax_line_id)
         if not expensed_amls:
             return self.env['sale.order.line']
+
+        # Get the sale orders linked to the related expenses
         aml_to_so_map = expensed_amls._sale_determine_order()
-        sale_order_ids = tuple(set(aml_to_so_map[aml.id].id for aml in expensed_amls))
-        aml_sol_unit_price_map = dict(expensed_amls.mapped(lambda aml: (aml.id, aml._sale_get_invoice_price(aml_to_so_map[aml.id]))))
-        product_ids = tuple(expensed_amls.product_id.ids)
-        quantities = tuple(expensed_amls.mapped('quantity'))
-        names = tuple(expensed_amls.mapped('name'))
+
         self.env['sale.order.line'].flush_model(['order_id', 'product_id', 'product_uom_qty', 'price_unit', 'name'])
+        self.env['res.company'].flush_model(['currency_id'])
+        self.env['res.currency'].flush_model(['rounding'])
         query = """
-            SELECT 
-                DISTINCT ON (sol.order_id, sol.product_id, sol.product_uom_qty, sol.price_unit, sol.name)
-                sol.order_id, sol.product_id, sol.product_uom_qty, sol.price_unit, sol.name, sol.id
-            FROM sale_order_line AS sol
-            WHERE sol.is_expense = TRUE
-                AND sol.order_id IN %s
-                AND sol.product_id IN %s
-                AND sol.product_uom_qty IN %s
-                AND sol.price_unit IN %s
-                AND sol.name IN %s
-            ORDER BY sol.order_id, sol.product_id, sol.product_uom_qty, sol.price_unit, sol.name
+              WITH aml(key_id, key_count, order_id, product_id, product_uom_qty, price_unit, name) AS (VALUES %s)
+            SELECT ARRAY_AGG(sol.id ORDER BY sol.id), aml.key_count
+              FROM aml,
+                   sale_order_line AS sol
+              JOIN res_company AS company ON sol.company_id = company.id
+              JOIN res_currency AS company_currency ON company.currency_id = company_currency.id
+         LEFT JOIN res_currency AS currency ON sol.currency_id = currency.id
+             WHERE sol.is_expense = TRUE
+               AND sol.order_id = aml.order_id
+               AND sol.product_id = aml.product_id
+               AND sol.product_uom_qty = aml.product_uom_qty
+               AND sol.name = aml.name
+               AND ROUND(sol.price_unit::numeric, COALESCE(currency.rounding, company_currency.rounding)::int)
+                   = ROUND(aml.price_unit::numeric, COALESCE(currency.rounding, company_currency.rounding)::int)
+               GROUP BY aml.key_id, aml.key_count
         """
-        self.env.cr.execute(query, (sale_order_ids, product_ids, quantities, tuple(set(aml_sol_unit_price_map.values())), names))
-        potential_sols_map = {
-            (row['order_id'], row['product_id'], row['product_uom_qty'], row['price_unit'], row['name']): row['id']
-            for row in self.env.cr.dictfetchall()
-        }
-        expensed_amls_keys = set(expensed_amls.mapped(
-            lambda aml: (aml.expense_id.sale_order_id.id, aml.product_id.id, aml.quantity, aml_sol_unit_price_map[aml.id], aml.name)
-        ))
-        return self.env['sale.order.line'].browse(sol_id for key, sol_id in potential_sols_map.items() if key in expensed_amls_keys)
+
+        # Get the keys used to fetch the corresponding sale order lines, and the number of times they are used
+        # We need the occurrences count to filter out the sale order lines so that we keep exactly one per expense
+        expense_keys_counter = Counter(expensed_amls.mapped(lambda aml: (
+            aml.expense_id.sale_order_id.id,
+            aml.product_id.id,
+            aml.quantity,
+            aml.currency_id.round(aml._sale_get_invoice_price(aml_to_so_map[aml.id])),
+            aml.name,
+        )))
+        expensed_amls_keys_and_count = tuple(
+            (key_id, key_count, *key) for key_id, (key, key_count) in enumerate(expense_keys_counter.items())
+        )
+        execute_values(
+            self.env.cr._obj,
+            query,
+            expensed_amls_keys_and_count,
+        )
+
+        # Filters out the sale order lines so that we only keep one per expense
+        sol_ids = []
+        for all_sol_ids_per_key, expense_count_per_key in self.env.cr.fetchall():
+            sol_ids += all_sol_ids_per_key[:expense_count_per_key]
+        return self.env['sale.order.line'].browse(sol_ids)
 
     def _sale_expense_reset_sol_quantities(self):
         sale_order_lines = self._get_sale_order_lines()

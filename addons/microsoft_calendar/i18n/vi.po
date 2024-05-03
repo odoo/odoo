@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -186,6 +186,8 @@ msgid ""
 "Due to an Outlook Calendar limitation, recurrence updates must be done "
 "directly in Outlook Calendar."
 msgstr ""
+"Do giới hạn của Outlook Lịch, các cập nhật định kỳ phải được thực hiện trực "
+"tiếp trong Outlook Lịch."
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -195,6 +197,8 @@ msgid ""
 "Due to an Outlook Calendar limitation, recurrence updates must be done directly in Outlook Calendar.\n"
 "If this recurrence is not shown in Outlook Calendar, you must delete it in Odoo Calendar and recreate it in Outlook Calendar."
 msgstr ""
+"Do giới hạn của Outlook Lịch, các cập nhật định kỳ phải được thực hiện trực tiếp trong Outlook Lịch.\n"
+"Nếu thời gian định kỳ này không được hiển thị trong Outlook Lịch, bạn phải xóa nó trong Odoo Lịch và tạo lại trong Outlook Lịch."
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -204,6 +208,8 @@ msgid ""
 "Due to an Outlook Calendar limitation, recurrent events must be created "
 "directly in Outlook Calendar."
 msgstr ""
+"Do giới hạn của Outlook Lịch, các sự kiện định kỳ phải được tạo trực tiếp "
+"trong Outlook Lịch."
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_recurrence
@@ -231,6 +237,8 @@ msgid ""
 "For having a different organizer in your event, it is necessary that the "
 "organizer have its Odoo Calendar synced with Outlook Calendar."
 msgstr ""
+"Để có một người tổ chức khác trong sự kiện của bạn, thì người tổ chức đó "
+"phải đồng bộ hóa Odoo Lịch với Outlook Lịch."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
@@ -250,18 +258,29 @@ msgstr ""
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_res_config_settings__cal_microsoft_sync_paused
 msgid "Indicates if synchronization with Outlook Calendar is paused or not."
+msgstr "Cho biết liệu đồng bộ hóa với Outlook Lịch có bị tạm dừng hay không."
+
+#. module: microsoft_calendar
+#. odoo-python
+#: code:addons/microsoft_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"It is necessary adding the proposed organizer as attendee before saving the "
+"event."
 msgstr ""
+"Cần phải thêm người tổ chức được đề xuất làm người tham dự trước khi lưu sự "
+"kiện."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__last_sync_date
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_last_sync_date
 msgid "Last Sync Date"
-msgstr ""
+msgstr "Ngày đồng bộ cuối cùng"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
 msgid "Last Sync Time"
-msgstr ""
+msgstr "Thời gian đồng bộ cuối cùng"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__write_uid
@@ -279,7 +298,7 @@ msgstr "Cập nhật lần cuối vào"
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_credentials__last_sync_date
 #: model:ir.model.fields,help:microsoft_calendar.field_res_users__microsoft_last_sync_date
 msgid "Last synchronization date with Outlook Calendar"
-msgstr ""
+msgstr "Ngày đồng bộ cuối cùng với Outlook Lịch"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__dont_delete
@@ -289,12 +308,12 @@ msgstr "Leave them untouched"
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_calendar_account_id
 msgid "Microsoft Calendar Account"
-msgstr ""
+msgstr "Tài khoản Microsoft Lịch"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_microsoft_calendar_credentials
 msgid "Microsoft Calendar Account Data"
-msgstr ""
+msgstr "Dữ liệu Tài khoản Microsoft Lịch"
 
 #. module: microsoft_calendar
 #: model:ir.actions.act_window,name:microsoft_calendar.microsoft_calendar_reset_account_action
@@ -341,7 +360,7 @@ msgstr "Microsoft Recurrence Master Id"
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_config_settings__cal_microsoft_sync_paused
 msgid "Microsoft Synchronization Paused"
-msgstr ""
+msgstr "Đồng bộ hóa Microsoft đã tạm dừng"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__need_sync_m
@@ -372,7 +391,7 @@ msgstr "Thông báo"
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__ms_organizer_event_id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__ms_organizer_event_id
 msgid "Organizer event Id"
-msgstr ""
+msgstr "Id sự kiện của người tổ chức"
 
 #. module: microsoft_calendar
 #. odoo-javascript
@@ -403,6 +422,9 @@ msgid ""
 "the day of the previous event, and cannot be moved to or after the day of "
 "the following event."
 msgstr ""
+"Giới hạn của Outlook: trong trường hợp định kỳ, không thể di chuyển một sự "
+"kiện đến hoặc trước ngày diễn ra sự kiện trước đó và không thể di chuyển đến"
+" hoặc sau ngày diễn ra sự kiện tiếp theo."
 
 #. module: microsoft_calendar
 #: model:ir.actions.server,name:microsoft_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -412,7 +434,7 @@ msgstr "Outlook: đồng bộ hóa"
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.res_config_settings_view_form
 msgid "Pause Synchronization"
-msgstr ""
+msgstr "Tạm ngừng đồng bộ hoá"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
@@ -434,7 +456,7 @@ msgstr "Đặt lại tài khoản lịch Outlook"
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid "Stop Synchronization"
-msgstr ""
+msgstr "Tắt đồng bộ hoá"
 
 #. module: microsoft_calendar
 #. odoo-javascript
@@ -486,7 +508,7 @@ msgstr "Đồng bộ hóa với Outlook calendar đã được dừng thành cô
 #. module: microsoft_calendar
 #: model:ir.model.constraint,message:microsoft_calendar.constraint_res_users_microsoft_token_uniq
 msgid "The user has already a microsoft account"
-msgstr ""
+msgstr "Người dùng đã có tài khoản microsoft"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
@@ -503,7 +525,7 @@ msgstr "Tính hợp lệ Token"
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__ms_universal_event_id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__ms_universal_event_id
 msgid "Universal event Id"
-msgstr ""
+msgstr "Id sự kiện chung"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_res_users
@@ -538,4 +560,4 @@ msgstr ""
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid "Your administrator paused the synchronization with Outlook Calendar."
-msgstr ""
+msgstr "Quản trị viên đã tạm dừng việc đồng bộ hóa với Outlook Lịch."

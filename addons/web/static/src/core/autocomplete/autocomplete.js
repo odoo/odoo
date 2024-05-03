@@ -104,6 +104,16 @@ export class AutoComplete extends Component {
         this.state.activeSourceOption = null;
     }
 
+    cancel() {
+        if (this.inputRef.el.value.length) {
+            if (this.props.autoSelect) {
+                this.inputRef.el.value = this.props.value;
+                this.props.onCancel();
+            }
+        }
+        this.close();
+    }
+
     async loadSources(useInput) {
         this.sources = [];
         this.state.activeSourceOption = null;
@@ -237,21 +247,10 @@ export class AutoComplete extends Component {
             this.ignoreBlur = false;
             return;
         }
-        const value = this.inputRef.el.value;
-        if (
-            this.props.autoSelect &&
-            this.state.activeSourceOption &&
-            value.length > 0 &&
-            value !== this.props.value
-        ) {
-            this.selectOption(this.state.activeSourceOption, { triggeredOnBlur: true });
-        } else {
-            this.props.onBlur({
-                inputValue: value,
-            });
-            this.inEdition = false;
-            this.close();
-        }
+        this.props.onBlur({
+            inputValue: this.inputRef.el.value,
+        });
+        this.inEdition = false;
     }
     onInputClick() {
         if (!this.isOpened) {
@@ -325,7 +324,7 @@ export class AutoComplete extends Component {
                 if (!this.isOpened) {
                     return;
                 }
-                this.close();
+                this.cancel();
                 break;
             case "tab":
                 if (!this.isOpened) {
@@ -373,7 +372,7 @@ export class AutoComplete extends Component {
 
     externalClose(ev) {
         if (this.isOpened && !this.root.el.contains(ev.target)) {
-            this.close();
+            this.cancel();
         }
     }
 }
@@ -397,6 +396,7 @@ Object.assign(AutoComplete, {
         placeholder: { type: String, optional: true },
         autoSelect: { type: Boolean, optional: true },
         resetOnSelect: { type: Boolean, optional: true },
+        onCancel: { type: Function, optional: true },
         onInput: { type: Function, optional: true },
         onChange: { type: Function, optional: true },
         onBlur: { type: Function, optional: true },
@@ -411,6 +411,7 @@ Object.assign(AutoComplete, {
         placeholder: "",
         autoSelect: false,
         dropdown: true,
+        onCancel: () => {},
         onInput: () => {},
         onChange: () => {},
         onBlur: () => {},

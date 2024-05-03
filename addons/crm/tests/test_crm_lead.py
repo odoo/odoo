@@ -3,6 +3,7 @@
 
 from datetime import datetime
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo import fields
 from odoo.addons.base.tests.test_format_address_mixin import FormatAddressCase
@@ -561,11 +562,23 @@ class TestCRMLead(TestCrmCommon):
 
     @users('user_sales_manager')
     def test_crm_lead_stages(self):
-        lead = self.lead_1.with_user(self.env.user)
-        self.assertEqual(lead.team_id, self.sales_team_1)
+        first_now = datetime(2023, 11, 6, 8, 0, 0)
+        with patch.object(self.env.cr, 'now', lambda: first_now), \
+             freeze_time(first_now):
+            self.lead_1.write({'date_open': first_now})
 
-        lead.convert_opportunity(self.contact_1)
+        lead = self.lead_1.with_user(self.env.user)
+        self.assertEqual(lead.date_open, first_now)
         self.assertEqual(lead.team_id, self.sales_team_1)
+        self.assertEqual(lead.user_id, self.user_sales_leads)
+
+        second_now = datetime(2023, 11, 8, 8, 0, 0)
+        with patch.object(self.env.cr, 'now', lambda: second_now), \
+             freeze_time(second_now):
+            lead.convert_opportunity(self.contact_1)
+        self.assertEqual(lead.date_open, first_now)
+        self.assertEqual(lead.team_id, self.sales_team_1)
+        self.assertEqual(lead.user_id, self.user_sales_leads)
 
         lead.action_set_won()
         self.assertEqual(lead.probability, 100.0)
@@ -635,6 +648,96 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.phone_state, 'incorrect')
         self.assertEqual(self.contact_company_1.email, 'broken')
         self.assertEqual(self.contact_company_1.phone, 'alsobroken')
+
+    @users('user_sales_manager')
+    def test_crm_lead_update_dates(self):
+        """ Test date_open / date_last_stage_update update, check those dates
+        are not erased too often """
+        first_now = datetime(2023, 11, 6, 8, 0, 0)
+        with patch.object(self.env.cr, 'now', lambda: first_now), \
+             freeze_time(first_now):
+            leads = self.env['crm.lead'].create([
+                {
+                    'email_from': 'testlead@customer.company.com',
+                    'name': 'Lead_1',
+                    'team_id': self.sales_team_1.id,
+                    'type': 'lead',
+                    'user_id': False,
+                }, {
+                    'email_from': 'testopp@customer.company.com',
+                    'name': 'Opp_1',
+                    'type': 'opportunity',
+                    'user_id': self.user_sales_salesman.id,
+                },
+            ])
+            leads.flush_recordset()
+        for lead in leads:
+            self.assertEqual(lead.date_last_stage_update, first_now,
+                             "Stage updated at create time with default value")
+            self.assertEqual(lead.stage_id, self.stage_team1_1)
+            self.assertEqual(lead.team_id, self.sales_team_1)
+        self.assertFalse(leads[0].date_open, "No user -> no assign date")
+        self.assertFalse(leads[0].user_id)
+        self.assertEqual(leads[1].date_open, first_now, "Default user assigned")
+        self.assertEqual(leads[1].user_id, self.user_sales_salesman, "Default user assigned")
+
+        # changing user_id may change team_id / stage_id; update date_open and
+        # maybe date_last_stage_update
+        updated_time = datetime(2023, 11, 23, 8, 0, 0)
+        with patch.object(self.env.cr, 'now', lambda: updated_time), \
+             freeze_time(updated_time):
+            leads.write({"user_id": self.user_sales_salesman.id})
+            leads.flush_recordset()
+        for lead in leads:
+            self.assertEqual(lead.stage_id, self.stage_team1_1)
+            self.assertEqual(lead.team_id, self.sales_team_1)
+        self.assertEqual(
+            leads[0].date_last_stage_update, first_now,
+            'Setting same stage when changing user_id, should not update')
+        self.assertEqual(
+            leads[0].date_open, updated_time,
+            'User assigned -> assign date updated')
+        self.assertEqual(
+            leads[1].date_last_stage_update, first_now,
+            'Setting same stage when changing user_id, should not update')
+        self.assertEqual(
+            leads[1].date_open, updated_time,
+            'Should not update date_open, was already the same user_id, but done in batch so ...')
+
+        # set won changes stage -> update date_last_stage_update
+        newer_time = datetime(2023, 11, 26, 8, 0, 0)
+        with patch.object(self.env.cr, 'now', lambda: newer_time), \
+             freeze_time(newer_time):
+            leads[1].action_set_won()
+            leads[1].flush_recordset()
+        self.assertEqual(
+            leads[1].date_last_stage_update, newer_time,
+            'Mark as won updates stage hence stage update date')
+        self.assertEqual(leads[1].stage_id, self.stage_gen_won)
+
+        # merge may change user_id and then may change team_id / stage_id; in this
+        # case no real value change is happening
+        last_time = datetime(2023, 11, 29, 8, 0, 0)
+        with patch.object(self.env.cr, 'now', lambda: last_time), \
+             freeze_time(last_time):
+            leads.merge_opportunity(
+                user_id=self.user_sales_salesman.id,
+                auto_unlink=False,
+            )
+            leads.flush_recordset()
+        self.assertEqual(leads[0].date_last_stage_update, first_now)
+        self.assertEqual(leads[0].date_open, updated_time)
+        self.assertEqual(leads[0].stage_id, self.stage_team1_1)
+        self.assertEqual(leads[0].team_id, self.sales_team_1)
+        self.assertEqual(
+            leads[1].date_last_stage_update, newer_time,
+            'Should not rewrite when setting same stage')
+        self.assertEqual(
+            leads[1].date_open, updated_time,
+            'Should not rewrite when setting same user_id')
+        self.assertEqual(leads[1].stage_id, self.stage_gen_won)
+        self.assertEqual(leads[1].team_id, self.sales_team_1)
+        self.assertEqual(leads[1].user_id, self.user_sales_salesman)
 
     @users('user_sales_manager')
     def test_crm_team_alias(self):

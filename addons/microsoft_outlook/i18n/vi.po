@@ -33,6 +33,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                        Connect your Outlook account"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                        Kết nối tài khoản Outlook của bạn"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
@@ -41,6 +43,9 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"server_type != 'outlook' or not microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"                        Token Outlook hợp lệ\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -49,6 +54,9 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"smtp_authentication != 'outlook' or not microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"                        Token Outlook hợp lệ\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -82,6 +90,8 @@ msgid ""
 "Connect your Outlook account with the OAuth Authentication process.  \n"
 "By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
 msgstr ""
+"Kết nối tài khoản Outlook của bạn với quy trình xác thực OAuth.\n"
+"Theo mặc định, chỉ người dùng có địa chỉ email phù hợp mới có thể sử dụng máy chủ này. Để mở rộng khả năng sử dụng, bạn nên thiết lập tham số hệ thống \"mail.default.from\"."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -91,6 +101,8 @@ msgid ""
 "Connect your personal Outlook account using OAuth. \n"
 "You will be redirected to the Outlook login page to accept the permissions."
 msgstr ""
+"Kết nối tài khoản Outlook cá nhân của bạn bằng OAuth.\n"
+"Bạn sẽ được chuyển hướng đến trang đăng nhập Outlook để chấp nhận quyền."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
@@ -105,7 +117,7 @@ msgstr "ID"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "ID of your Outlook app"
-msgstr ""
+msgstr "ID ứng dụng Outlook của bạn"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_fetchmail_server
@@ -120,6 +132,8 @@ msgid ""
 "Incorrect Connection Security for Outlook mail server %r. Please set it to "
 "\"TLS (STARTTLS)\"."
 msgstr ""
+"Bảo mật kết nối không chính xác cho máy chủ thư Outlook %r. Vui lòng đặt là "
+"\"TLS (STARTTLS)\"."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__is_microsoft_outlook_configured
@@ -136,7 +150,7 @@ msgstr "Máy chủ gửi thư"
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_microsoft_outlook_mixin
 msgid "Microsoft Outlook Mixin"
-msgstr ""
+msgstr "Mixin Microsoft Outlook"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -157,7 +171,7 @@ msgstr "Outlook Access Token"
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token_expiration
 msgid "Outlook Access Token Expiration Timestamp"
-msgstr ""
+msgstr "Dấu thời gian hết hạn token truy cập Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_identifier
@@ -173,7 +187,7 @@ msgstr "Mật khẩu khách Outlook"
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__fetchmail_server__server_type__outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__ir_mail_server__smtp_authentication__outlook
 msgid "Outlook OAuth Authentication"
-msgstr ""
+msgstr "Xác minh OAuth Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
@@ -194,7 +208,7 @@ msgstr "Hãy cấu hình chứng thực cho Outlook của bạn."
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please connect with your Outlook account before using it."
-msgstr ""
+msgstr "Vui lòng kết nối với tài khoản Outlook của bạn trước khi sử dụng."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -205,6 +219,9 @@ msgid ""
 "(your email address). This should be the same account as the one used for "
 "the Outlook OAuthentication Token."
 msgstr ""
+"Vui lòng điền tên người dùng Outlook/Office365 của bạn (địa chỉ email của "
+"bạn) vào trường \"Tên người dùng\". Bạn nên chọn cùng tài khoản với tài "
+"khoản được sử dụng cho Token OAuth Outlook."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -214,6 +231,8 @@ msgid ""
 "Please leave the password field empty for Outlook mail server %r. The OAuth "
 "process does not require it"
 msgstr ""
+"Vui lòng để trống trường mật khẩu cho máy chủ thư Outlook %r. Quá trình "
+"OAuth không yêu cầu mật khẩu."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -225,7 +244,7 @@ msgstr "Tìm hiểu thêm"
 #: code:addons/microsoft_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid "SSL is required for the server %r."
-msgstr ""
+msgstr "SSL được yêu cầu cho máy chủ %r."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
@@ -235,7 +254,7 @@ msgstr "Secret"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "Secret of your Outlook app"
-msgstr ""
+msgstr "Mã bí mật ứng dụng Outlook của bạn"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__server_type
@@ -249,6 +268,8 @@ msgid ""
 "Setup your Outlook API credentials in the general settings to link a Outlook"
 " account."
 msgstr ""
+"Thiết lập thông tin đăng nhập Outlook API trong cài đặt chung để liên kết "
+"tài khoản Outlook."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,help:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri

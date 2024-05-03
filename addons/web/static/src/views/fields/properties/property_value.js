@@ -293,10 +293,6 @@ export class PropertyValue extends Component {
      * @param {object} params
      */
     async onQuickCreate(name, params = {}) {
-        if (params.triggeredOnBlur) {
-            this.onValueChange(false);
-            return;
-        }
         const result = await this.orm.call(this.props.comodel, "name_create", [name], {
             context: this.props.context,
         });

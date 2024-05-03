@@ -143,7 +143,7 @@ msgstr ""
 #: code:addons/website_forum/models/forum_post_vote.py:0
 #, python-format
 msgid "%d karma required to downvote."
-msgstr "%d puntos de karma requeridos para decrementar la votación."
+msgstr "%d puntos de karma requeridos para votar en contra."
 
 #. module: website_forum
 #. odoo-python
@@ -190,7 +190,7 @@ msgstr "%d puntos de karma requeridos para rechazar una publicación."
 #: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to retag."
-msgstr "%d puntos de karma requeridos para reetiquetar."
+msgstr "%d puntos de karma requeridos para volver a etiquetar."
 
 #. module: website_forum
 #. odoo-python
@@ -205,7 +205,7 @@ msgstr ""
 #: code:addons/website_forum/models/forum_post_vote.py:0
 #, python-format
 msgid "%d karma required to upvote."
-msgstr "%d puntos de karma requeridos para incremenar la votación."
+msgstr "%d puntos de karma requeridos para votar a favor."
 
 #. module: website_forum
 #. odoo-python
@@ -261,7 +261,7 @@ msgid ""
 "<b class=\"d-block \">This answer has been flagged</b>\n"
 "                            As a moderator, you can either validate or reject this answer."
 msgstr ""
-"<b class=\"d-block \">Se marcó esta respuesta</b>\n"
+"<b class=\"d-block \">Se ha marcado esta respuesta</b>\n"
 "                            Como moderador, puede validar o rechazar esta respuesta. "
 
 #. module: website_forum
@@ -340,10 +340,10 @@ msgid ""
 "include links to other questions or answers providing relevant additional "
 "information."
 msgstr ""
-"<b>Las respuestas no deben solo apuntar a otras preguntas</b>. En su lugar, "
-"agregue un comentario indicando <i>\"Posible duplicado de...\"</i>. Sin "
-"embargo, se pueden incluir enlaces a otras preguntas o respuestas agregando "
-"información relevante."
+"<b>Las respuestas no deben simplemente referirse a otras preguntas</b>. "
+"Mejor agregue un comentario en el que se indique <i>\"Posible duplicado "
+"de...\"</i>. Sin embargo, está bien incluir enlaces a otras preguntas o "
+"respuestas que proporcionen información adicional relevante."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -379,8 +379,8 @@ msgid ""
 "<b>Please avoid asking questions that are too subjective and "
 "argumentative</b> or not relevant to this community."
 msgstr ""
-"<b>Por favor evite hacer preguntas subjetivas o argumentativas</b> o que no "
-"sean relevantes para esta comunidad."
+"<b>Evite hacer preguntas subjetivas, argumentativas</b> o que no sean "
+"relevantes para esta comunidad."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
@@ -770,12 +770,12 @@ msgstr "Una nueva pregunta"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_answer_accept_own
 msgid "Accept an answer on own questions"
-msgstr "Aceptar respuesta en preguntas propias"
+msgstr "Aceptar una respuesta para sus propias preguntas"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_answer_accept_all
 msgid "Accept an answer to all questions"
-msgstr "Aceptar una respuesta en todas las preguntas"
+msgstr "Aceptar una respuesta para todas las preguntas"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
@@ -893,7 +893,7 @@ msgstr "Respuesta aceptada con 15 o más votos"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_downvote
 msgid "Answer downvoted"
-msgstr "Respuesta votada en contra"
+msgstr "Respuesta con votos en contra"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_flagged
@@ -908,22 +908,22 @@ msgstr "Responder preguntas"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_upvote
 msgid "Answer upvoted"
-msgstr "Respuesta votada a favor"
+msgstr "Respuesta con votos a favor"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_4
 msgid "Answer voted up 15 times"
-msgstr "Respuesta valorada más de 15 veces"
+msgstr "Respuesta con 15 votos a favor"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_2
 msgid "Answer voted up 4 times"
-msgstr "Respuesta valorada más de 4 veces"
+msgstr "Respuesta con 4 votos a favor"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_3
 msgid "Answer voted up 6 times"
-msgstr "Respuesta valorada más de 6 veces"
+msgstr "Respuesta con 6 votos a favor"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_5
@@ -958,7 +958,7 @@ msgstr "Respondido el"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_8
 msgid "Answered own question with at least 4 up votes"
-msgstr "Pregunta propia respondida valorada al menos 4 veces"
+msgstr "Su respuesta a su propia pregunta tiene al menos 4 votos a favor"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__child_count
@@ -1142,7 +1142,7 @@ msgstr "Mejor respuesta"
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
 #, python-format
 msgid "By sharing you answer, you will get additional"
-msgstr "Si comparte su respuesta, obtendrá más"
+msgstr "Al compartir su respuesta, obtendrá"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_accept
@@ -1304,7 +1304,7 @@ msgstr "Cerrado por"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__closed_date
 msgid "Closed on"
-msgstr "Cerrado en"
+msgstr "Cerrado el"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
@@ -1319,7 +1319,7 @@ msgstr "Razón de cerrar"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "Comment"
-msgstr "Comentario"
+msgstr "Comentar"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_all
@@ -1431,7 +1431,7 @@ msgstr "Crear nuevas etiquetas"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_32
 msgid "Created a tag used by 15 questions"
-msgstr "Creada una etiqueta usada por 15 preguntas"
+msgstr "Creó una etiqueta que se utilizó en 15 preguntas"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__create_uid
@@ -1485,7 +1485,7 @@ msgstr "Por defecto"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "Default Sort"
-msgstr "Clasificación predeterminada"
+msgstr "Clasificación por defecto"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_gamification_challenge__challenge_category
@@ -1524,7 +1524,7 @@ msgstr "Eliminado"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_23
 msgid "Deleted own post with 3 or more downvotes"
-msgstr "Eliminó publicaciones propias con 3 votos o menos"
+msgstr "Eliminó una propria publicación con 3 o menos votos en contra"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_6
@@ -1596,7 +1596,7 @@ msgstr "Mostrar biografía detallada del usuario"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_downvote
 #: model_terms:ir.ui.view,arch_db:website_forum.vote
 msgid "Downvote"
-msgstr "Voto negativo"
+msgstr "Voto en contra"
 
 #. module: website_forum
 #. odoo-python
@@ -1755,7 +1755,7 @@ msgstr "Primer parámetro relevante"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_5
 msgid "First downvote"
-msgstr "Primer voto negativo"
+msgstr "Primer voto en contra"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_7
@@ -1765,7 +1765,7 @@ msgstr "Primera edición"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_31
 msgid "First upvote"
-msgstr "Primer voto positivo"
+msgstr "Primer voto a favor"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
@@ -1992,7 +1992,7 @@ msgstr "Agrupar por"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__faq
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "Guidelines"
-msgstr "Lineamientos"
+msgstr "Reglas"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_6
@@ -2008,7 +2008,7 @@ msgstr "Gurú (15)"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__uid_has_answered
 msgid "Has Answered"
-msgstr "Ha sido respondida"
+msgstr "Ha respondido"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__has_message
@@ -2499,7 +2499,7 @@ msgstr "No es relevante o es antiguo"
 #: model:gamification.badge,name:website_forum.badge_q_2
 #: model:gamification.challenge,name:website_forum.challenge_notable_question
 msgid "Notable Question"
-msgstr "Pregunta Notable "
+msgstr "Pregunta destacada"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_needaction_counter
@@ -2575,7 +2575,7 @@ msgstr "Publicaciones ofensivas"
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
 #, python-format
 msgid "On average,"
-msgstr "En el promedio,"
+msgstr "Por lo general,"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -2597,7 +2597,7 @@ msgstr "Orden y visibilidad"
 #: model:gamification.challenge,name:website_forum.challenge_peer_pressure
 #: model:gamification.goal.definition,name:website_forum.definition_peer_pressure
 msgid "Peer Pressure"
-msgstr "Presión de pares"
+msgstr "Presión social"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__plain_content
@@ -2643,7 +2643,7 @@ msgstr "Voto positivo"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__post_id
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
 msgid "Post"
-msgstr "Publicar"
+msgstr "Publicación"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
@@ -2673,7 +2673,7 @@ msgstr "Número de publicaciones"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_vote
 msgid "Post Vote"
-msgstr "Publicar voto"
+msgstr "Voto para publicación"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -2744,9 +2744,9 @@ msgid ""
 "Signed In: Forum is visible for signed in users\n"
 "Some users: Forum and their content are hidden for non members of selected group"
 msgstr ""
-"Público: El foro es público\n"
-"Registrados: El foro es visible para los usuarios registrados\n"
-"Algunos usuarios: El foro y su contenido están ocultos para quienes no son miembros del grupo seleccionado"
+"Público: el foro es público\n"
+"Registrados: el foro es visible para los usuarios conectados\n"
+"Algunos usuarios: el foro y su contenido están ocultos para quienes no son miembros del grupo seleccionado"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_25
@@ -2794,7 +2794,7 @@ msgstr "Pregunta editada"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_downvote
 msgid "Question downvoted"
-msgstr "Pregunta votada en negativo"
+msgstr "Pregunta votada en contra"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
@@ -2826,22 +2826,22 @@ msgstr "La pregunta no debe estar vacía."
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_upvote
 msgid "Question upvoted"
-msgstr "Pregunta votada en positivo"
+msgstr "Pregunta votada a favor"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_q_10
 msgid "Question voted up 15 times"
-msgstr "Pregunta valorada más de 15 veces"
+msgstr "Pregunta con 15 votos a favor"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_q_8
 msgid "Question voted up 4 times"
-msgstr "Pregunta valorada más de 4 veces"
+msgstr "Pregunta con 4 votos a favor"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_q_9
 msgid "Question voted up 6 times"
-msgstr "Pregunta valorada más de 6 veces"
+msgstr "Pregunta con 6 votos a favor"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -2864,8 +2864,8 @@ msgid ""
 "Questions mode: only one answer allowed\n"
 " Discussions mode: multiple answers allowed"
 msgstr ""
-"Modalidad de preguntas: Solo una respuesta permitida\n"
-" Modalidad de discusión: Mútliples respuestas permitidas"
+"Modo de preguntas: sólo una respuesta permitida\n"
+" Modo de discusión: mútliples respuestas permitidas"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_15
@@ -2958,7 +2958,7 @@ msgstr "Reabrir"
 #: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "Reopen a banned question"
-msgstr "Volver a abrir una pregunta excluida "
+msgstr "Volver a abrir una pregunta prohibida"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -3092,7 +3092,7 @@ msgid ""
 msgstr ""
 "Comparta y comente sobre el mejor contenido y las mejores ideas de "
 "marketing. Construya su perfil profesional y conviértase en un mejor "
-"mercadólogo. "
+"mercadólogo."
 
 #. module: website_forum
 #. odoo-javascript
@@ -3139,7 +3139,7 @@ msgstr "Inscribirse"
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__privacy__connected
 msgid "Signed In"
-msgstr "Conectados"
+msgstr "Conectado"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -3481,7 +3481,7 @@ msgstr "El título no debería estar vacío."
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__recipient_id
 msgid "To"
-msgstr "Hasta"
+msgstr "A"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -3496,8 +3496,8 @@ msgid ""
 "To prevent your question from being flagged and possibly removed, avoid "
 "asking subjective questions where …"
 msgstr ""
-"Para prevenir que tu pregunta sea marcada y posiblemente borrada, evita "
-"hacer preguntas subjetivas donde …"
+"Para prevenir que su pregunta sea marcada y posiblemente borrada, evite "
+"hacer preguntas subjetivas en las que…"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_9
@@ -3573,7 +3573,7 @@ msgstr "Desmarcar como mejor respuesta"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Unsolved"
-msgstr "Sin resolver"
+msgstr "No resuelto"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
@@ -3599,27 +3599,27 @@ msgstr "Actualizado el"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_upvote
 #: model_terms:ir.ui.view,arch_db:website_forum.vote
 msgid "Upvote"
-msgstr "Voto positivo"
+msgstr "Voto a favor"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_student
 msgid "Upvoted question (1)"
-msgstr "Pregunta aceptada (1)"
+msgstr "Pregunta con voto a favor (1)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_great_question
 msgid "Upvoted question (15)"
-msgstr "Pregunta aceptada (15)"
+msgstr "Pregunta con voto a favor (15)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_nice_question
 msgid "Upvoted question (4)"
-msgstr "Pregunta aceptada (4)"
+msgstr "Pregunta con voto a favor (4)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_good_question
 msgid "Upvoted question (6)"
-msgstr "Pregunta aceptada (6)"
+msgstr "Pregunta con voto a favor (6)"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -3666,7 +3666,7 @@ msgstr "Validar pregunta"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_stats
 msgid "View"
-msgstr "Ver"
+msgstr "Vista"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
@@ -3805,11 +3805,11 @@ msgid ""
 "rough measure of the community trust to him/her. Various moderation tasks "
 "are gradually assigned to the users based on those points."
 msgstr ""
-"Cuando se incrementa la votación de una pregunta o respuesta, el usuario que"
-" la publicó ganará puntos, llamados \"puntos de karma\". Estos puntos sirven"
-" como una medida aproximada de la confianza que la comunidad ha depositado "
-"en este usuario. Varias tareas de moderación son asignadas gradualmente a "
-"los usuarios basadas en esos puntos."
+"Cuando una pregunta o respuesta recibe votos a favor, el usuario que la "
+"publicó ganará puntos llamados \"puntos de karma\" que funcionan como una "
+"medida aproximada de la confianza que la comunidad ha depositado en este "
+"usuario. Dependiendo de esos puntos, los usuarios podrán realizar diferentes"
+" tareas de moderación."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3835,7 +3835,7 @@ msgstr "Ya tiene una publicación pendiente"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "You are only allowed one answer"
-msgstr "Solo tiene permitido publicar una respuesta"
+msgstr "Sólo puede dar una respuesta"
 
 #. module: website_forum
 #. odoo-javascript
@@ -3904,9 +3904,9 @@ msgid ""
 " that you face. Chatty, open-ended questions diminish the usefulness of this"
 " site and push other questions off the front page."
 msgstr ""
-"Debe hacer únicamente preguntas prácticas y \"respondibles\" basadas en "
-"problemas reales que esté enfrentando. Preguntas abiertas disminuyen la "
-"utilidad del sitio y tendrán su visibilidad reducida."
+"Solo debe hacer preguntas prácticas que se puedan responder según problemas "
+"reales que esté enfrentando. Las preguntas abiertas disminuyen la utilidad "
+"del sitio y evitan que otras preguntas estén en la página principal."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -3932,7 +3932,7 @@ msgstr "Su favorito"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "accept any answer"
-msgstr "Aceptar cualquier respuesta"
+msgstr "aceptar cualquier respuesta"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -3947,7 +3947,7 @@ msgstr "y buscar"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.author_box
 msgid "at"
-msgstr "en"
+msgstr "a"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
@@ -3962,7 +3962,7 @@ msgstr "por"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "close any posts"
-msgstr "cerrar cualquier post"
+msgstr "cerrar cualquier publicación"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
@@ -3982,7 +3982,7 @@ msgstr "eliminar comentario propio"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "downvote"
-msgstr "voto negativo"
+msgstr "voto en contra"
 
 #. module: website_forum
 #. odoo-python
@@ -3994,12 +3994,12 @@ msgstr "votado en contra "
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "e.g. Help"
-msgstr "por ejemplo, ayuda"
+msgstr "p. ej. ayuda"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form_add
 msgid "e.g. Technical Assistance"
-msgstr "p.ej. Asistencia técnica"
+msgstr "p. ej. asistencia técnica"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_form
@@ -4009,7 +4009,7 @@ msgstr "p. ej., ¿Cuándo debería plantar mis tomates?"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "edit any post, view offensive flags"
-msgstr "editar cualquier post, ver marcas ofensivas"
+msgstr "editar cualquier publicación, ver avisos ofensivos"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -4021,7 +4021,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "flag offensive, close own questions"
-msgstr "marca ofensiva, cierre sus propias preguntas"
+msgstr "marcar como ofensiva, cerrar sus propias preguntas"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -4098,7 +4098,7 @@ msgstr "en sus publicaciones"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "insert text link, upload files"
-msgstr "Insertar enlace a textos, subir archivos"
+msgstr "insertar enlace a textos, subir archivos"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -4109,14 +4109,14 @@ msgstr "en cambio."
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "it is a rant disguised as a question: “______ sucks, am I right?”"
-msgstr "es un enmascaramiento de la pregunta: \"______ es una basura, ¿no?\""
+msgstr "sea una queja disfrazada de pregunta: “______ apesta, ¿no?”"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "karma is required to perform this action. "
-msgstr "Se requiere karma para realizar esta acción."
+msgstr "puntos de karma requeridos para realizar esta acción."
 
 #. module: website_forum
 #. odoo-javascript
@@ -4128,7 +4128,7 @@ msgstr "puntos de karma"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "matching \""
-msgstr "coincide con \" "
+msgstr "que coincide con \" "
 
 #. module: website_forum
 #. odoo-python
@@ -4156,7 +4156,7 @@ msgstr "no más votos a favor "
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "on"
-msgstr "de"
+msgstr "el"
 
 #. module: website_forum
 #. odoo-javascript
@@ -4166,8 +4166,8 @@ msgid ""
 "on social networks get an answer within\n"
 "        5 hours. Questions shared on two social networks have"
 msgstr ""
-"en las redes sociales obtener una respuesta en\n"
-"5 horas. Las preguntas compartidas en dos redes sociales tienen"
+"en las redes sociales obtienen una respuesta dentro de\n"
+"5 horas. Las preguntas compartidas en dos redes sociales tienen un"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
@@ -4210,7 +4210,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "upvote, add comments"
-msgstr "votar positivo, agregar comentarios"
+msgstr "votar a favor, agregar comentarios"
 
 #. module: website_forum
 #. odoo-python
@@ -4260,7 +4260,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "your biography can be seen as tooltip"
-msgstr "su biografía puede ser vista como una herramienta de información"
+msgstr "se puede ver su biografía como información"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.follow

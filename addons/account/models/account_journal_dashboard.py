@@ -9,7 +9,7 @@ from odoo import models, api, _, fields
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.release import version
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, SQL
 from odoo.tools.misc import formatLang, format_date as odoo_format_date, get_lang
 
 
@@ -123,23 +123,26 @@ class account_journal(models.Model):
             journal.json_activity_data = json.dumps({'activities': activities[journal.id]})
 
     def _query_has_sequence_holes(self):
-        self.env['res.company'].flush_model(['fiscalyear_lock_date'])
         self.env['account.move'].flush_model(['journal_id', 'date', 'sequence_prefix', 'sequence_number', 'state'])
-        self.env.cr.execute("""
-            SELECT move.journal_id,
-                   move.sequence_prefix
-              FROM account_move move
-              JOIN res_company company ON company.id = move.company_id
-             WHERE move.journal_id = ANY(%(journal_ids)s)
-               AND move.company_id = ANY(%(company_ids)s)
-               AND (move.state = 'posted' OR (move.state = 'draft' AND move.name != '/'))
-               AND (company.fiscalyear_lock_date IS NULL OR move.date > company.fiscalyear_lock_date)
-          GROUP BY move.journal_id, move.sequence_prefix
-            HAVING COUNT(*) != MAX(move.sequence_number) - MIN(move.sequence_number) + 1
-        """, {
-            'journal_ids': self.ids,
-            'company_ids': self.env.companies.ids,
-        })
+        queries = []
+        for company in self.env.companies:
+            queries.append(SQL(
+                """
+                    SELECT move.journal_id,
+                           move.sequence_prefix
+                      FROM account_move move
+                     WHERE move.journal_id = ANY(%(journal_ids)s)
+                       AND move.company_id = %(company_id)s
+                       AND (move.state = 'posted' OR (move.state = 'draft' AND move.name != '/'))
+                       AND %(fiscalyear_lock_date_clause)s
+                  GROUP BY move.journal_id, move.sequence_prefix
+                    HAVING COUNT(*) != MAX(move.sequence_number) - MIN(move.sequence_number) + 1
+                """,
+                journal_ids=self.ids,
+                company_id=company.id,
+                fiscalyear_lock_date_clause=SQL('move.date > %s', lock_date) if (lock_date := company.fiscalyear_lock_date) else SQL('TRUE')
+            ))
+        self.env.cr.execute(SQL(' UNION ALL '.join(['%s'] * len(queries)), *queries))
         return self.env.cr.fetchall()
 
     def _compute_has_sequence_holes(self):
@@ -420,6 +423,7 @@ class account_journal(models.Model):
             has_outstanding, outstanding_pay_account_balance = outstanding_pay_account_balances[journal.id]
             to_check_balance, number_to_check = to_check.get(journal, (0, 0))
             misc_balance, number_misc = misc_totals.get(journal.default_account_id, (0, 0))
+            currency_consistent = not journal.currency_id or journal.currency_id == journal.default_account_id.currency_id
             accessible = journal.company_id.id in journal.company_id._accessible_branches().ids
 
             dashboard_data[journal.id].update({
@@ -436,7 +440,7 @@ class account_journal(models.Model):
                 'bank_statements_source': journal.bank_statements_source,
                 'is_sample_data': journal.has_statement_lines,
                 'nb_misc_operations': number_misc,
-                'misc_operations_balance': currency.format(misc_balance),
+                'misc_operations_balance': currency.format(misc_balance) if currency_consistent else None,
             })
 
     def _fill_sale_purchase_dashboard_data(self, dashboard_data):
@@ -508,7 +512,23 @@ class account_journal(models.Model):
             )
         }
 
-        sale_purchase_journals._fill_dashboard_data_count(dashboard_data, 'account.move', 'entries_count', [])
+        self.env.cr.execute(SQL("""
+            SELECT id, moves_exists
+            FROM account_journal journal
+            LEFT JOIN LATERAL (
+                SELECT EXISTS(SELECT 1
+                              FROM account_move move
+                              WHERE move.journal_id = journal.id
+                              AND move.company_id = ANY (%(companies_ids)s) AND
+                                  move.journal_id = ANY (%(journal_ids)s)) AS moves_exists
+            ) moves ON TRUE
+            WHERE journal.id = ANY (%(journal_ids)s);
+        """,
+            journal_ids=sale_purchase_journals.ids,
+            companies_ids=self.env.companies.ids,
+        ))
+        is_sample_data_by_journal_id = {row[0]: not row[1] for row in self.env.cr.fetchall()}
+
         for journal in sale_purchase_journals:
             # User may have read access on the journal but not on the company
             currency = journal.currency_id or self.env['res.currency'].browse(journal.company_id.sudo().currency_id.id)
@@ -527,7 +547,7 @@ class account_journal(models.Model):
                 'sum_waiting': currency.format(sum_waiting),
                 'sum_late': currency.format(sum_late),
                 'has_sequence_holes': journal.has_sequence_holes,
-                'is_sample_data': dashboard_data[journal.id]['entries_count'],
+                'is_sample_data': is_sample_data_by_journal_id[journal.id],
             })
 
     def _fill_general_dashboard_data(self, dashboard_data):
@@ -721,7 +741,7 @@ class account_journal(models.Model):
         """ This function is called by the "Import" button of Vendor Bills,
         visible on dashboard if no bill has been created yet.
         """
-        self.env['onboarding.onboarding.step'].action_validate_step('account.onboarding_onboarding_step_setup_bill')
+        self.env['onboarding.onboarding.step'].sudo().action_validate_step('account.onboarding_onboarding_step_setup_bill')
 
         new_wizard = self.env['account.tour.upload.bill'].create({})
         view_id = self.env.ref('account.account_tour_upload_bill').id

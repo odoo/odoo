@@ -4,6 +4,34 @@ import wTourUtils from "@website/js/tours/tour_utils";
 
 const columnCountOptSelector = ".snippet-option-layout_column we-select[data-name='column_count_opt']";
 const columnsSnippetRow = "iframe .s_three_columns .row";
+const textImageSnippetRow = "iframe .s_text_image .row";
+const changeFirstAndSecondColumnsMobileOrder = (snippetRowSelector, snippetName) => {
+    return [{
+        content: `Click on the first column of the '${snippetName}' snippet`,
+        trigger: `${snippetRowSelector} > div:nth-child(1)`,
+    }, {
+        content: "Change the orders of the 1st and 2nd columns",
+        trigger: "iframe .o_overlay_move_options [data-name='move_right_opt']",
+    }];
+};
+
+const addMobileOrderToTextImageSnippet = [
+    ...changeFirstAndSecondColumnsMobileOrder(textImageSnippetRow, "Text-Image"),
+    {
+        content: "Check that the mobile order classes and styles are correct",
+        trigger: `${textImageSnippetRow}:has(.order-lg-0[style*='order: 1;']:nth-child(1))`
+            + ":has(.order-lg-0[style*='order: 0;']:nth-child(2))",
+        isCheck: true,
+    },
+];
+
+const checkIfNoMobileOrder = (snippetRowSelector) => {
+    return {
+        content: "Check that the mobile order classes and styles were removed",
+        trigger: `${snippetRowSelector}:not(:has(.order-lg-0[style*='order: ']))`,
+        isCheck: true,
+    };
+};
 
 wTourUtils.registerWebsitePreviewTour("website_update_column_count", {
     test: true,
@@ -115,4 +143,53 @@ wTourUtils.clickOnSnippet({
     trigger: `${columnsSnippetRow}:not(:has([style*='order: 0;'])):not(:has(.order-lg-0))`,
     isCheck: true,
 },
+]);
+
+wTourUtils.registerWebsitePreviewTour("website_mobile_order_with_drag_and_drop", {
+    test: true,
+    url: "/",
+    edition: true,
+}, () => [
+    wTourUtils.dragNDrop({id: "s_three_columns", name: "Columns"}),
+    wTourUtils.dragNDrop({id: "s_text_image", name: "Text - Image"}),
+    ...wTourUtils.toggleMobilePreview(true),
+    // Add a mobile order to the "Columns" snippet columns.
+    ...changeFirstAndSecondColumnsMobileOrder(columnsSnippetRow, "Columns"),
+    {
+        content: "Check that the mobile order classes and styles are correct",
+        trigger: `${columnsSnippetRow}:has(.order-lg-0[style*='order: 1;']:nth-child(1))`
+            + ":has(.order-lg-0[style*='order: 0;']:nth-child(2))"
+            + ":has(.order-lg-0[style*='order: 2;']:nth-child(3))",
+        isCheck: true,
+    },
+    // Add a mobile order to the "Text-Image" snippet columns.
+    ...addMobileOrderToTextImageSnippet,
+    // Test the drag and drop in the same snippet.
+    ...wTourUtils.toggleMobilePreview(false),
+    {
+        content: "Drag a 'Text-Image' column and drop it in the same snippet",
+        trigger: "iframe .o_overlay_move_options .o_move_handle",
+        run: `drag_and_drop_native ${textImageSnippetRow}`,
+    },
+    checkIfNoMobileOrder(textImageSnippetRow),
+    // Add again a mobile order to the "Text-Image" snippet columns.
+    ...wTourUtils.toggleMobilePreview(true),
+    ...addMobileOrderToTextImageSnippet,
+    // Test the drag and drop from "Columns" to "Text-Image".
+    ...wTourUtils.toggleMobilePreview(false),
+    {
+        content: "Click on the second column of the 'Columns' snippet",
+        trigger: `${columnsSnippetRow} > div:nth-child(2)`,
+    }, {
+        content: "Drag the second column of 'Columns' and drop it in 'Text-Image'",
+        trigger: "iframe .o_overlay_move_options .o_move_handle",
+        run: `drag_and_drop_native ${textImageSnippetRow}`,
+    },
+    checkIfNoMobileOrder(textImageSnippetRow),
+    {
+        content: "Check that the order gap left in 'Columns' was filled",
+        trigger: `${columnsSnippetRow}:has(.order-lg-0[style*='order: 0;']:nth-child(1))`
+            + ":has(.order-lg-0[style*='order: 1;']:nth-child(2))",
+        isCheck: true,
+    },
 ]);

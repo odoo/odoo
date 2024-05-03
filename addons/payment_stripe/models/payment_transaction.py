@@ -227,7 +227,9 @@ class PaymentTransaction(models.Model):
                 f'{OPTION_PATH_PREFIX}[interval_count]': mandate_values['recurrence_duration'],
             })
         if self.operation == 'validation':
-            currency_name = self.provider_id._get_validation_currency().name.lower()
+            currency_name = self.provider_id.with_context(
+                validation_pm=self.payment_method_id  # Will be converted to a kwarg in master.
+            )._get_validation_currency().name.lower()
             mandate_options[f'{OPTION_PATH_PREFIX}[currency]'] = currency_name
 
         return mandate_options
@@ -371,7 +373,9 @@ class PaymentTransaction(models.Model):
             payment_method_type = payment_method.get('type')
             if self.payment_method_id.code == payment_method_type == 'card':
                 payment_method_type = notification_data['payment_method']['card']['brand']
-            payment_method = self.env['payment.method']._get_from_code(payment_method_type)
+            payment_method = self.env['payment.method']._get_from_code(
+                payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
+            )
             self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the provider reference and the payment state.

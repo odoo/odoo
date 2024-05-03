@@ -328,9 +328,15 @@ class Applicant(models.Model):
                     'phone': applicant.partner_phone,
                 })
             else:
-                applicant.partner_id.email = applicant.email_from
-                applicant.partner_id.mobile = applicant.partner_mobile
-                applicant.partner_id.phone = applicant.partner_phone
+                if applicant.email_from and \
+                    tools.email_normalize(applicant.email_from) != tools.email_normalize(applicant.partner_id.email):
+                    # change email on a partner will trigger other heavy code, so avoid to change the email when
+                    # it is the same. E.g. "email@example.com" vs "My Email" <email@example.com>""
+                    applicant.partner_id.email = applicant.email_from
+                if applicant.partner_mobile:
+                    applicant.partner_id.mobile = applicant.partner_mobile
+                if applicant.partner_phone:
+                    applicant.partner_id.phone = applicant.partner_phone
 
     @api.depends('partner_phone')
     def _compute_partner_phone_sanitized(self):
@@ -446,17 +452,6 @@ class Applicant(models.Model):
             and not self.user_has_groups('hr_recruitment.group_hr_recruitment_user'):
             view_id = self.env.ref('hr_recruitment.hr_applicant_view_form_interviewer').id
         return super().get_view(view_id, view_type, **options)
-
-    def _notify_get_recipients(self, message, msg_vals, **kwargs):
-        """
-            Do not notify members of the Recruitment Interviewer group that are not part of
-            Recruitment User group as well, as this
-            might leak some data they shouldn't have access to.
-        """
-        recipients = super()._notify_get_recipients(message, msg_vals, **kwargs)
-        interviewer_group = self.env.ref('hr_recruitment.group_hr_recruitment_interviewer').id
-        user_group = self.env.ref('hr_recruitment.group_hr_recruitment_user').id
-        return [recipient for recipient in recipients if not (interviewer_group in recipient['groups'] and user_group not in recipient['groups'])]
 
     def action_makeMeeting(self):
         """ This opens Meeting's calendar view to schedule meeting on current applicant
@@ -623,7 +618,9 @@ class Applicant(models.Model):
             defaults['stage_id'] = stage.id
         if custom_values:
             defaults.update(custom_values)
-        return super(Applicant, self).message_new(msg, custom_values=defaults)
+        res = super().message_new(msg, custom_values=defaults)
+        res._compute_partner_phone_email()
+        return res
 
     def _message_post_after_hook(self, message, msg_vals):
         if self.email_from and not self.partner_id:

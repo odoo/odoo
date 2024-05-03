@@ -7,7 +7,9 @@ import { patch } from "@web/core/utils/patch";
 
 patch(SuggestionService.prototype, {
     getSupportedDelimiters(thread) {
-        return thread?.model !== "discuss.channel" || thread.type === "livechat"
+        return (thread.type === "chat" && thread.correspondent?.eq(this.store.odoobot)) ||
+            thread.model !== "discuss.channel" ||
+            thread.type === "livechat"
             ? [...super.getSupportedDelimiters(...arguments), [":"]]
             : super.getSupportedDelimiters(...arguments);
     },

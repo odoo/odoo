@@ -28,8 +28,8 @@
 # marcescu, 2023
 # Quim - eccit <quim@eccit.com>, 2023
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2023
-# Óscar Fonseca <tecnico@pyming.com>, 2024
 # Iván Infantes Castarnado, 2024
+# Óscar Fonseca <tecnico@pyming.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Iván Infantes Castarnado, 2024\n"
+"Last-Translator: Óscar Fonseca <tecnico@pyming.com>, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -806,7 +806,7 @@ msgstr "Aplica a les variants"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
 msgid "Archive Operation"
-msgstr "Operació d'arxiu"
+msgstr "Arxivar operació"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -4876,6 +4876,12 @@ msgid "Routing"
 msgstr "Procés productiu"
 
 #. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
 msgid "Routing Lines"
 msgstr "Línies de ruta"
@@ -6463,10 +6469,11 @@ msgid ""
 " operation type. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
-"Quan una adquisició té una ruta de «producció» amb un conjunt de tipus "
-"d'operació, intentarà crear una Ordre de Fabricació per a aquest producte "
-"utilitzant un LdM del mateix tipus d'operació. Això permet definir normes de"
-" borsa que desencadenen diferents ordres de fabricació amb diferents LdM."
+"Quan un proveïment té una ruta 'Producció' amb un tipus d'operació "
+"especificat, intentarà crear una ordre de producció per a aquest producte "
+"utilitzant una LdM del mateix tipus d'operació. Això permet definir regles "
+"d'inventari que desencadenen diferents ordres de producció amb diferents "
+"llistes de materials."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__manual_consumption
@@ -7039,6 +7046,15 @@ msgstr "Heu produït menys que la demanda inicial"
 #, python-format
 msgid "You should provide a lot number for the final product."
 msgstr "Cal que faciliteu un lot pel producte final."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid ""
+"You should update the components quantity instead of directly updating the "
+"quantity of the kit product."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__zpl

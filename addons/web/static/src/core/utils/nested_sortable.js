@@ -139,7 +139,7 @@ export const useNestedSortable = makeDraggableHook({
             ctx.prevNestX = ctx.pointer.x;
         }
         ctx.current.placeHolder = ctx.current.element.cloneNode(false);
-        ctx.current.placeHolder.classList.add("w-100", "d-block", "py-0");
+        ctx.current.placeHolder.classList.add("w-100", "d-block");
         if (ctx.useElementSize) {
             ctx.current.placeHolder.style.height = getComputedStyle(ctx.current.element).height;
             ctx.current.placeHolder.classList.add("o_nested_sortable_placeholder_realsize");

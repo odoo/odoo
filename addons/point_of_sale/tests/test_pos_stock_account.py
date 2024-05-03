@@ -267,3 +267,11 @@ class TestPoSStock(TestPoSCommon):
         self.pos_session.action_pos_session_validate()
         expense_account_move_line = self.env['account.move.line'].search([('account_id', '=', self.expense_account.id)])
         self.assertEqual(expense_account_move_line.balance, 0.0, "Expense account should be 0.0")
+
+    def test_stock_user_without_pos_permissions_can_create_product(self):
+        stock_manager = odoo.tests.common.new_test_user(
+            self.env, 'temp_stock_manager', 'stock.group_stock_manager',
+        )
+        self.env['product.product'].with_user(stock_manager).create({
+            'name': 'temp', 'type': 'product', 'available_in_pos': False,
+        })

@@ -4879,6 +4879,12 @@ msgid "Routing"
 msgstr "Маршрути"
 
 #. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr "Повернутися до Складу"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
 msgid "Routing Lines"
 msgstr "Рядки маршрутизації"
@@ -7071,6 +7077,17 @@ msgstr "Ви виготовили менше, ніж початковий поп
 #, python-format
 msgid "You should provide a lot number for the final product."
 msgstr "Необхідно вказати номер партії для готового товару."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid ""
+"You should update the components quantity instead of directly updating the "
+"quantity of the kit product."
+msgstr ""
+"Вам слід оновити кількість компонентів замість безпосереднього оновлення "
+"кількості комплекту товару."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__zpl

@@ -195,7 +195,7 @@ export class CalendarCommonRenderer extends Component {
         this.highlightEvent(info.event, "o_cw_custom_highlight");
     }
     onDateClick(info) {
-        if (info.jsEvent.defaultPrevented) {
+        if (info?.jsEvent?.defaultPrevented) {
             return;
         }
         this.props.createRecord(this.fcEventToRecord(info));

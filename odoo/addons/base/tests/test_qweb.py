@@ -670,6 +670,36 @@ class TestQWebNS(TransactionCase):
         with self.assertRaises(QWebException, msg=error_msg):
             self.env['ir.qweb']._render(view1.id)
 
+
+    def test_render_static_xml_with_void_element(self):
+        """ Test the rendering on a namespaced view with dynamic URI (need default namespace uri).
+        """
+        tempate = """
+            <rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
+                <g:brand>Odoo</g:brand>
+                <g:link>My Link</g:link>
+            </rss>
+        """
+        expected_result = """
+            <rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
+                <g:brand>Odoo</g:brand>
+                <g:link>My Link</g:link>
+            </rss>
+
+        """
+
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">%s</t>
+            """ % tempate
+        })
+
+        rendering = self.env['ir.qweb']._render(view1.id)
+
+        self.assertEqual(etree.fromstring(rendering), etree.fromstring(expected_result))
+
 class TestQWebBasic(TransactionCase):
     def test_compile_expr(self):
         tests = [

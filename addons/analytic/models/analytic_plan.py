@@ -233,7 +233,12 @@ class AccountAnalyticPlan(models.Model):
         else:
             score = 0
             applicability = self.default_applicability
-            for applicability_rule in self.applicability_ids.filtered(lambda rule: rule.company_id == self.env.company):
+            for applicability_rule in self.applicability_ids.filtered(
+                    lambda rule:
+                    not rule.company_id
+                    or not kwargs.get('company_id')
+                    or rule.company_id.id == kwargs.get('company_id')
+            ):
                 score_rule = applicability_rule._get_score(**kwargs)
                 if score_rule > score:
                     applicability = applicability_rule.applicability
@@ -304,7 +309,10 @@ class AccountAnalyticApplicability(models.Model):
     def _get_score(self, **kwargs):
         """ Gives the score of an applicability with the parameters of kwargs """
         self.ensure_one()
+        # 0.5 is because company is less important than other fields for an equal number of valid fields
+        # No company on the applicability and the kwargs together are not considered a more fitting rule
+        score = 0.5 if self.company_id and kwargs.get('company_id') else 0
         if not kwargs.get('business_domain'):
-            return 0
+            return score
         else:
-            return 1 if kwargs.get('business_domain') == self.business_domain else -1
+            return score + 1 if kwargs.get('business_domain') == self.business_domain else -1

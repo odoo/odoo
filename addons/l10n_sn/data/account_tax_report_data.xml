@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_tax_report_sn" model="account.report">
+        <field name="name">VAT Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.sn"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="account_tax_report_sn_base" model="account.report.column">
+                <field name="name">Base</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="account_tax_report_sn_tax" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_tax_report_line_sn_operations" model="account.report.line">
+                <field name="name">Total amount of operations</field>
+                <field name="code">SN_OPE</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_sn_operations_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">SN_Export.base + SN_NON_TAXED.base + SN_SUSPENSION.base + SN_EXEMPT.base + SN_SELF.base + SN_TAXABLE.base</field>
+                    </record>
+                    <record id="account_tax_report_line_sn_operations_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">SN_TAXABLE.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_sn_exportation" model="account.report.line">
+                        <field name="name">Exportations</field>
+                        <field name="code">SN_Export</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_sn_exportation_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">export</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_sn_non_taxed" model="account.report.line">
+                        <field name="name">Non Taxed Domestic Operation</field>
+                        <field name="code">SN_NON_TAXED</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_sn_non_taxed_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">non_taxed</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_sn_suspension" model="account.report.line">
+                        <field name="name">Operation done under suspension of VAT</field>
+                        <field name="code">SN_SUSPENSION</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_sn_suspension_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">suspension</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_sn_exempt" model="account.report.line">
+                        <field name="name">Operations exempted</field>
+                        <field name="code">SN_EXEMPT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_sn_exempt_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">sale_exempt</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_sn_self_delivery" model="account.report.line">
+                        <field name="name">Self delivery or service</field>
+                        <field name="code">SN_SELF</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_sn_self_delivery_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">sale_self</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_sn_taxable" model="account.report.line">
+                        <field name="name">Taxable operations</field>
+                        <field name="code">SN_TAXABLE</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_sn_taxable_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SN_TAXABLE_18.base + SN_TAXABLE_10.base</field>
+                            </record>
+                            <record id="account_tax_report_line_sn_taxable_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SN_TAXABLE_18.tax + SN_TAXABLE_10.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_sn_taxable_18" model="account.report.line">
+                                <field name="name">Taxable - normal rate</field>
+                                <field name="code">SN_TAXABLE_18</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_sn_taxable_18_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_sale_18</field>
+                                    </record>
+                                    <record id="account_tax_report_line_sn_taxable_18_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">tax_sale_18</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_sn_taxable_10" model="account.report.line">
+                                <field name="name">Taxable - reduced rate</field>
+                                <field name="code">SN_TAXABLE_10</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_sn_taxable_10_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_sale_10</field>
+                                    </record>
+                                    <record id="account_tax_report_line_sn_taxable_10_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">tax_sale_10</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_sn_deductible" model="account.report.line">
+                <field name="name">Deductible</field>
+                <field name="code">SN_VAT_DEDUCT</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_sn_deductible_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">SN_PREPAY.base + SN_IMPORT.base + SN_DOMESTIC.base</field>
+                    </record>
+                    <record id="account_tax_report_line_sn_deductible_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">SN_PREPAY.tax + SN_IMPORT.tax + SN_DOMESTIC.tax + SN_REIMBURSEMENT_ACCEPTED.tax + SN_CREDIT.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_sn_prepayment" model="account.report.line">
+                        <field name="name">Tax Prepayment</field>
+                        <field name="code">SN_PREPAY</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_sn_prepayment_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SN_WITHHOLDING.base</field>
+                            </record>
+                            <record id="account_tax_report_line_sn_prepayment_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SN_WITHHOLDING.tax + SN_DDI.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_sn_withholding" model="account.report.line">
+                                <field name="name">Withholding</field>
+                                <field name="code">SN_WITHHOLDING</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_sn_withholding_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_withholding</field>
+                                    </record>
+                                    <record id="account_tax_report_line_sn_withholding_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">tax_withholding</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_sn_ddi" model="account.report.line">
+                                <field name="name">DDI checks</field>
+                                <field name="code">SN_DDI</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_sn_ddi_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ddi</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_sn_deductible_import" model="account.report.line">
+                        <field name="name">Importations</field>
+                        <field name="code">SN_IMPORT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_sn_deductible_import_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">base_import</field>
+                            </record>
+                            <record id="account_tax_report_line_sn_deductible_import_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">tax_import</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_sn_deductible_taxable" model="account.report.line">
+                        <field name="name">Domestic purchases</field>
+                        <field name="code">SN_DOMESTIC</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_sn_deductible_taxable_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">base_purchase</field>
+                            </record>
+                            <record id="account_tax_report_line_sn_deductible_taxable_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">tax_purchase</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_sn_reimbursement_accepted" model="account.report.line">
+                        <field name="name">Reimbursements accepted</field>
+                        <field name="code">SN_REIMBURSEMENT_ACCEPTED</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_reimbursement_accepted_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_sn_tva_credit" model="account.report.line">
+                        <field name="name">Last month's credit</field>
+                        <field name="code">SN_CREDIT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_sn_tva_credit_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_tax_period</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="account_tax_report_line_sn_due" model="account.report.line">
+                <field name="name">Balance due</field>
+                <field name="code">SN_DUE</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_sn_due_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">SN_OPE.tax - SN_VAT_DEDUCT.tax</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_sn_to_report" model="account.report.line">
+                <field name="name">Credit to report</field>
+                <field name="code">SN_REPORT</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_sn_to_report_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">SN_VAT_DEDUCT.tax - SN_OPE.tax</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                        <field name="carryover_target">SN_CREDIT.tax</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_sn_reimbursement_review" model="account.report.line">
+                <field name="name">Reimbursement under review</field>
+                <field name="code">SN_REIMBURSEMENT_REVIEW</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_sn_reimbursement_review_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=2</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>
