@@ -52,7 +52,7 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-oe-transient-content', 'data-behavior-props', 'data-prop-name',  # legacy editor
      'data-publish', 'data-id', 'data-res_id', 'data-interval', 'data-member_id', 'data-scroll-background-ratio', 'data-view-id',
      'data-class', 'data-mimetype',
-     'data-shape', 'data-shape-colors', 'data-file-name', 'data-original-mimetype',
+     'data-shape', 'data-shape-colors', 'data-file-name', 'data-mimetype-before-shape',
      ])
 SANITIZE_TAGS = {
     # allow new semantic HTML5 tags

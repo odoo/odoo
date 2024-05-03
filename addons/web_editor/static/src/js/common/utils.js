@@ -91,7 +91,7 @@ const DEFAULT_PALETTE = {
  */
 const IMAGE_SHAPE_OPTIONS = new Set([
     "shape", "shape_animation_speed", "shape_colors", "shape_flip", "shape_rotate", "file_name",
-    "original_mimetype",
+    "mimetype_before_shape",
 ]);
 /**
  * Set of the image options to keep on the DOM.

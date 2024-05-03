@@ -6273,8 +6273,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         const values = widgetValue.split(' ');
         this.imageData.resize_width = values[0];
         if (this.imageData.shape) {
-            // If the image has a shape, modify its originalMimetype attribute.
-            this.imageData.original_mimetype = values[1];
+            // If the image has a shape, modify its mimetype_before_shape
+            // attribute.
+            this.imageData.mimetype_before_shape = values[1];
         } else {
             // If the image does not have a shape, modify its mimetype
             // attribute.
@@ -6405,12 +6406,13 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     },
     /**
      * Returns a list of valid formats for a given image or an empty list if
-     * there is no mimetypeBeforeConversion data attribute on the image.
+     * there is no mimetype_before_format_conversion data attribute on the
+     * image.
      *
      * @private
      */
     async _computeAvailableFormats() {
-        if (!this.mimetypeBeforeConversion) {
+        if (!this.mimetypeBeforeFormatConversion) {
             return [];
         }
         const img = this._getImg();
@@ -6427,9 +6429,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         };
         widths[img.naturalWidth] = [_t("%spx", img.naturalWidth), 'image/webp'];
         widths[optimizedWidth] = [_t("%spx (Suggested)", optimizedWidth), 'image/webp'];
-        const mimetypeBeforeConversion = this.imageData.mimetype_before_conversion;
-        widths[maxWidth] = [_t("%spx (Original)", maxWidth), mimetypeBeforeConversion];
-        if (mimetypeBeforeConversion !== "image/webp") {
+        const mimetypeBeforeFormatConversion = this.imageData.mimetype_before_format_conversion;
+        widths[maxWidth] = [_t("%spx (Original)", maxWidth), mimetypeBeforeFormatConversion];
+        if (mimetypeBeforeFormatConversion !== "image/webp") {
             // Avoid a key collision by subtracting 0.1 - putting the webp
             // above the original format one of the same size.
             widths[maxWidth - 0.1] = [_t("%spx", maxWidth), 'image/webp'];
@@ -6506,7 +6508,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         this.imageData = weUtils.getImageData(img, Object.assign({}, this.imageShape, preImageData));
         this.originalId = this.imageData.original_id;
         this.originalSrc = this.imageData.original_src;
-        this.mimetypeBeforeConversion = this.imageData.mimetype_before_conversion;
+        this.mimetypeBeforeFormatConversion = this.imageData.mimetype_before_format_conversion;
     },
     /**
      * Sets the image's width to its suggested size.
@@ -6520,8 +6522,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             // Convert to recommended format and width.
             this.imageData.mimetype = "image/webp";
             this.imageData.resize_width = this.optimizedWidth;
-        } else if (this.imageData.shape && this.imageData.original_mimetype !== "image/gif") {
-            this.imageData.original_mimetype = "image/webp";
+        } else if (this.imageData.shape && this.imageData.mimetype_before_shape !== "image/gif") {
+            this.imageData.mimetype_before_shape = "image/webp";
             this.imageData.resize_width = this.optimizedWidth;
         }
         await this._applyOptions();
@@ -6590,7 +6592,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @override
      */
     _computeWidgetVisibility(widgetName, params) {
-        if (widgetName === "format_select_opt" && !this.mimetypeBeforeConversion) {
+        if (widgetName === "format_select_opt" && !this.mimetypeBeforeFormatConversion) {
             return false;
         }
         if (this._isImageProcessingWidget(widgetName, params)) {
@@ -6703,7 +6705,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         } else {
             await imageCropWrapper.component.cropSquare(false);
             if (isGif(this._getImageMimetype(img))) {
-                this.imageData[this.imageData.shape ? "original_mimetype" : "mimetype"] = "image/png";
+                this.imageData[this.imageData.shape ? "mimetype_before_shape" : "mimetype"] = "image/png";
                 weUtils.updateImageDataRegistry(img.getAttribute("src"), this.imageData);
             }
         }
@@ -6738,7 +6740,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         await new Promise(resolve => {
             this.$target.one('image_cropper_destroyed', async () => {
                 if (isGif(this._getImageMimetype(img))) {
-                    this.imageData[this.imageData.shape ? 'original_mimetype' : 'mimetype'] = 'image/png';
+                    this.imageData[this.imageData.shape ? 'mimetype_before_shape' : 'mimetype'] = 'image/png';
                     weUtils.updateImageDataRegistry(img.getAttribute("src"), this.imageData);
                 }
                 await this._reapplyCurrentShape();
@@ -6861,7 +6863,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             await imageCropWrapper.component.cropSquare(previewMode);
             if (previewMode === false) {
                 if (isGif(this._getImageMimetype(img))) {
-                    this.imageData[this.imageData.shape ? "original_mimetype" : "mimetype"] = "image/png";
+                    this.imageData[this.imageData.shape ? 'mimetype_before_shape' : 'mimetype'] = 'image/png';
                     weUtils.updateImageDataRegistry(img.getAttribute("src"), this.imageData);
                 }
                 this.isImageCropped = true;
@@ -6902,7 +6904,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                 // If the preview mode === false we want to save the colors
                 // as the user chose their shape
                 if (saveData && this.imageData.mimetype !== "image/svg+xml") {
-                    this.imageData.original_mimetype = this.imageData.mimetype;
+                    this.imageData.mimetype_before_shape = this.imageData.mimetype;
                     this.imageData.mimetype = "image/svg+xml";
                 }
                 // When the user selects a shape, we remove the data attributes
@@ -6937,8 +6939,8 @@ registry.ImageTools = ImageHandlerOption.extend({
             delete this.imageData.shape_rotate;
             delete this.imageData.shape_animation_speed;
             if (saveData) {
-                this.imageData.mimetype = this.imageData.original_mimetype;
-                delete this.imageData.original_mimetype;
+                this.imageData.mimetype = this.imageData.mimetype_before_shape;
+                delete this.imageData.mimetype_before_shape;
             }
             await this._applyOptions();
         }
@@ -7561,8 +7563,8 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @override
      */
     _getImageMimetype(img) {
-        if (this.imageData.shape && this.imageData.original_mimetype) {
-            return this.imageData.original_mimetype;
+        if (this.imageData.shape && this.imageData.mimetype_before_shape) {
+            return this.imageData.mimetype_before_shape;
         }
         return this._super(...arguments);
     },
@@ -7629,13 +7631,13 @@ registry.ImageTools = ImageHandlerOption.extend({
         const img = this._getImg();
         if (this.imageData.shape) {
             if (this.imageData.mimetype !== "image/svg+xml") {
-                this.imageData.original_mimetype = this.imageData.mimetype;
+                this.imageData.mimetype_before_shape = this.imageData.mimetype;
             }
             if (!this._isImageSupportedForProcessing(img)) {
                 delete this.imageData.shape;
                 delete this.imageData.shape_colors;
                 delete this.imageData.file_name;
-                delete this.imageData.original_mimetype;
+                delete this.imageData.mimetype_before_shape;
                 delete this.imageData.shape_flip;
                 delete this.imageData.shape_rotate;
                 delete this.imageData.hover_effect;

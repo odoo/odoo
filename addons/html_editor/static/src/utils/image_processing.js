@@ -584,7 +584,7 @@ export async function loadImageInfo(img, recordInfo, attachmentSrc = "") {
             // src.
             original_src: src,
             mimetype: imageMimetype,
-            mimetype_before_conversion: imageMimetype,
+            mimetype_before_format_conversion: imageMimetype,
         };
         updateImageDataRegistry(imgSrc, imageData);
     }).catch(() => {

@@ -14,8 +14,8 @@ class ImageData(models.Model):
     original_src = fields.Char(related='original_id.image_src', store=True)
     image_checksum = fields.Char("Checksum/SHA1", size=40, readonly=True)
     mimetype = fields.Char(help='Current mimetype of the image')
-    original_mimetype = fields.Char(help='Mimetype of the image before a shape has been applied')
-    mimetype_before_conversion = fields.Char(help='Mimetype of the image before the webp conversion')
+    mimetype_before_shape = fields.Char(help='Mimetype of the image before a shape has been applied')
+    mimetype_before_format_conversion = fields.Char(help='Mimetype of the image before the webp conversion')
     resize_width = fields.Char(help='The width of the image')
     gl_filter = fields.Char(help='The name of the filter applied on the image')
     quality = fields.Integer(default=75, help='The quality of the image')
@@ -69,7 +69,7 @@ class ImageData(models.Model):
 
         """
         return self._get_removable_option_names() + [
-            'original_src', 'mimetype', 'mimetype_before_conversion', 'filter_options',
+            'original_src', 'mimetype', 'mimetype_before_format_conversion', 'filter_options',
         ]
 
     def _get_removable_option_names(self):
@@ -85,7 +85,7 @@ class ImageData(models.Model):
                       removed from the image.
         """
         return [
-            'original_mimetype', 'resize_width', 'gl_filter', 'shape', 'shape_animation_speed',
+            'mimetype_before_shape', 'resize_width', 'gl_filter', 'shape', 'shape_animation_speed',
             'shape_colors', 'shape_flip', 'shape_rotate', 'file_name', 'is_cropped', 'x', 'y',
             'width', 'height', 'rotate', 'scale_x', 'scale_y', 'aspect_ratio', 'hover_effect',
             'hover_effect_color', 'hover_effect_stroke_width', 'hover_effect_intensity',

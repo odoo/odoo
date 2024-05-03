@@ -393,7 +393,7 @@ class HTML_Editor(http.Controller):
                 return {
                     'original_src': original_attachment_info['image_src'],
                     'mimetype': original_attachment_info['mimetype'],
-                    'mimetype_before_conversion': original_attachment_info['mimetype'],
+                    'mimetype_before_format_conversion': original_attachment_info['mimetype'],
                     'original_id': original_attachment_info['id'],
                 }
         return False
@@ -481,7 +481,7 @@ class HTML_Editor(http.Controller):
             else:
                 # Default image field or image field modified from the backend:
                 # create a "data" attachment.
-                mimetype_original = saved_image_data['mimetype_before_conversion']
+                mimetype_original = saved_image_data['mimetype_before_format_conversion']
                 name_original = '%s-%s%s' % (
                     datetime.now().strftime('%Y%m%d%H%M%S'),
                     str(uuid.uuid4())[:6],
