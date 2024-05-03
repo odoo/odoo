@@ -148,11 +148,22 @@ export class Product extends PosModel {
         const attributes = this.attribute_line_ids
             .map((id) => this.pos.attributes_by_ptal_id[id])
             .filter((attr) => attr !== undefined);
-        return await this.env.services.popup.add(ProductConfiguratorPopup, {
-            product: this,
-            attributes: attributes,
-            quantity: initQuantity,
-        });
+        if (attributes.some((attribute) => attribute.values.length > 1 || attribute.values[0].is_custom)) {
+            return await this.env.services.popup.add(ProductConfiguratorPopup, {
+                product: this,
+                attributes: attributes,
+                quantity: initQuantity,
+            });
+        }
+        return {
+            confirmed: true,
+            payload: {
+                attribute_value_ids: attributes.map((attr) => attr.values[0].id),
+                attribute_custom_values: [],
+                price_extra: attributes.reduce((acc, attr) => acc + attr.values[0].price_extra, 0),
+                quantity: 1,
+            }
+        };
     }
 
     isConfigurable() {
