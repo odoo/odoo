@@ -148,6 +148,43 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.line_ids.sale_line_ids and all(sale_line.is_downpayment for sale_line in self.line_ids.sale_line_ids) or False
 
+    def _get_sale_order_invoiced_amount(self, order):
+        """
+        Consider all lines on any invoice in self that stem from the sales order `order`. (All those invoices belong to order.company_id)
+        This function returns the sum of the totals of all those lines.
+        Note that this amount may be bigger than `order.amount_total`.
+        """
+        order_amount = 0
+        for invoice in self:
+            prices = sum(invoice.line_ids.filtered(lambda x: order in x.sale_line_ids.order_id).mapped('price_total'))
+            order_amount += invoice.currency_id._convert(
+                prices * -invoice.direction_sign,
+                order.currency_id,
+                invoice.company_id,
+                invoice.date,
+            )
+        return order_amount
+
+    def _get_partner_credit_warning_exclude_amount(self):
+        # EXTENDS module 'account'
+        # Consider the warning on a draft invoice created from a sales order.
+        # After confirming the invoice the (partial) amount (on the invoice)
+        # stemming from sales orders will be substracted from the credit_to_invoice.
+        # This will reduce the total credit of the partner.
+        # The computation should reflect the change of credit_to_invoice from 'res.partner'.
+        # (see _compute_credit_to_invoice and _compute_amount_to_invoice from 'sale.order' )
+        exclude_amount = super()._get_partner_credit_warning_exclude_amount()
+        for order in self.line_ids.sale_line_ids.order_id:
+            order_amount = min(self._get_sale_order_invoiced_amount(order), order.amount_to_invoice)
+            order_amount_company = order.currency_id._convert(
+                max(order_amount, 0),
+                self.company_id.currency_id,
+                self.company_id,
+                fields.Date.context_today(self)
+            )
+            exclude_amount += order_amount_company
+        return exclude_amount
+
     @api.depends('line_ids.sale_line_ids.order_id', 'currency_id', 'tax_totals', 'date')
     def _compute_partner_credit(self):
         super()._compute_partner_credit()
