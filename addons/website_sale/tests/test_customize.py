@@ -424,10 +424,23 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             ],
         })
         # set an extra price for free attribute values on the product (nothing is free)
+<<<<<<< HEAD
         self.env['product.template.attribute.value'].search([
             ('product_tmpl_id', '=', product_template.id),
             ('price_extra', '=', 0),
         ]).price_extra = 2
+||||||| parent of ede185add538 (temp)
+        self.env['product.template.attribute.value'].search(
+            [('product_tmpl_id', '=', product_template.id), ('price_extra', '=', 0)]
+        ).price_extra = 2
+=======
+        free_ptavs = product_template.attribute_line_ids.product_template_value_ids.filtered(
+            lambda ptav: ptav.price_extra == 0
+        )
+        self.assertEqual(len(free_ptavs), 2)
+        free_ptavs.price_extra = 2
+
+>>>>>>> ede185add538 (temp)
         # set an exclusion between option 1 and option 3
         self.env['product.template.attribute.value'].search([
             ('product_tmpl_id', '=', product_template.id),
