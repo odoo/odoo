@@ -403,10 +403,21 @@ export class PosStore extends Reactive {
         const attributeLines = product.attribute_line_ids.filter(
             (attr) => attr.attribute_id?.id in attrById
         );
-        return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
-            product: product,
-            attributeLines: attributeLines,
-        });
+        const attributeLinesValues = attributeLines.map(
+            (attr) => attr.product_template_value_ids
+        );
+        if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
+            return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
+                product: product,
+                attributeLines: attributeLines,
+            });
+        }
+        return {
+            attribute_value_ids: attributeLinesValues.map((values) => values[0].id),
+            attribute_custom_values: [],
+            price_extra: attributeLinesValues.reduce((acc, values) => acc + values[0].price_extra, 0),
+            quantity: 1,
+        };
     }
     getProductPrice(product, p = false) {
         const pricelist = this.getDefaultPricelist();
