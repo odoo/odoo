@@ -34,6 +34,7 @@ class AccountPaymentMethodLine(models.Model):
                 company
                 and line.payment_method_id
                 and manage_acquirers
+                and line.payment_method_id.id in method_information_mapping
                 and method_information_mapping[line.payment_method_id.id]['mode'] == 'electronic'
             ):
                 acquirer_ids = acquirers_per_code.get(company.id, {}).get(line.code, set())
@@ -43,7 +44,7 @@ class AccountPaymentMethodLine(models.Model):
                 for payment_type in ('inbound', 'outbound'):
                     lines = journal[f'{payment_type}_payment_method_line_ids']
                     for journal_line in lines:
-                        if journal_line.payment_method_id:
+                        if journal_line.payment_method_id and journal_line.payment_method_id.id in method_information_mapping:
                             if manage_acquirers and method_information_mapping[journal_line.payment_method_id.id]['mode'] == 'electronic':
                                 protected_acquirer_ids.add(journal_line.payment_acquirer_id.id)
 
