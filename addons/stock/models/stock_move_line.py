@@ -490,7 +490,7 @@ class StockMoveLine(models.Model):
         package_levels = self.package_level_id
         res = super(StockMoveLine, self).unlink()
         package_levels = package_levels.filtered(lambda pl: not (pl.move_line_ids or pl.move_ids))
-        if package_levels:
+        if package_levels and not self.env.context.get('preserve_package_level'):
             package_levels.unlink()
         if moves:
             # Add with_prefetch() to set the _prefecht_ids = _ids

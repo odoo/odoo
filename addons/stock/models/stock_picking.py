@@ -814,7 +814,7 @@ class Picking(models.Model):
         # If a package level is done when confirmed its location can be different than where it will be reserved.
         # So we remove the move lines created when confirmed to set quantity done to the new reserved ones.
         package_level_done = self.mapped('package_level_ids').filtered(lambda pl: pl.is_done and pl.state == 'confirmed')
-        package_level_done.write({'is_done': False})
+        package_level_done.with_context(preserve_package_level=True).write({'is_done': False})
         moves._action_assign()
         package_level_done.write({'is_done': True})
 
