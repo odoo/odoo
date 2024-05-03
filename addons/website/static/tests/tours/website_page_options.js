@@ -6,6 +6,7 @@ import {
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
+const breadcrumb = {id: "page_breadcrumb", name: "Breadcrumb"};
 
 registerWebsitePreviewTour('website_page_options', {
     url: '/',
@@ -83,5 +84,92 @@ registerWebsitePreviewTour('website_page_options', {
     {
         content: "Check that the footer is hidden and the header is visible",
         trigger: ':iframe #wrapwrap:has(.o_footer.d-none.o_snippet_invisible)',
+    },
+]);
+
+registerWebsitePreviewTour('website_page_breadcrumb', {
+    url: '/contactus',
+    edition: false,
+}, () => [
+    {
+        content: "Check Contact Us page is open",
+        trigger: ":iframe html[data-view-xmlid='website.contactus']",
+    },
+    {
+        content: "Click on Site Menu",
+        trigger: "button[data-menu-xmlid='website.menu_site']",
+        run: "click",
+    },
+    {
+        content: "Click on Properties",
+        trigger: "a[data-menu-xmlid='website.menu_page_properties']",
+        run: "click",
+    },
+    {
+        content: "Enable Parent Page Option",
+        trigger: "input[id='has_parent_page_0']",
+        run: "click",
+    },
+    {
+        content: "Save the changes",
+        trigger: "button[data-hotkey='c']",
+        run: "click",
+    },
+    {
+        content: "Check Breadcrumb is visible",
+        trigger: ":iframe div[data-name='Breadcrumb']",
+    },
+    ...clickOnEditAndWaitEditMode(),
+    ...clickOnSnippet(breadcrumb),
+    changeOption("WebsiteLevelColor", 'we-select.o_we_so_color_palette'),
+    {
+        content: "Change background color of breadcrumb",
+        trigger: "button[data-target='custom-colors']",
+        run: "click",
+    },
+    changeOption("WebsiteLevelColor", 'button[data-color="black-50"]', "background color", "bottom", true),
+    ...clickOnSave(),
+    {
+        content: "Check that the breadcrumb is in black-50",
+        trigger: ":iframe .page_breadcrumb:has(section)",
+        run: () => {
+            const iframeEl = document.querySelector("iframe");
+            const sectionEl = iframeEl.contentDocument.querySelector("main section");
+            const rgbString = getComputedStyle(sectionEl)['background-color'];
+            return rgbString === 'rgba(0, 0, 0, 0.5)';
+        },
+    },
+    ...clickOnEditAndWaitEditMode(),
+    ...clickOnSnippet(breadcrumb),
+    changeOption("BreadcrumbOptions", 'we-select:has([data-visibility]) we-toggler'),
+    changeOption("BreadcrumbOptions", 'we-button[data-visibility="transparent"]'),
+    ...clickOnSave(),
+    {
+        content: "Check that the breadcrumb is transparent",
+        trigger: ":iframe main.o_breadcrumb_overlay",
+    },
+    ...clickOnEditAndWaitEditMode(),
+    ...clickOnSnippet(breadcrumb),
+    changeOption("BreadcrumbColor", 'we-select.o_we_so_color_palette'),
+    changeOption("BreadcrumbColor", 'button[data-color="black-50"]', "background color", "bottom", true),
+    ...clickOnSave(),
+    {
+        content: "Check that the breadcrumb is in black-50",
+        trigger: ":iframe .page_breadcrumb.bg-black-50",
+    },
+    ...clickOnEditAndWaitEditMode(),
+    ...clickOnSnippet(breadcrumb),
+    changeOption("BreadcrumbOptions", 'we-select:has([data-visibility]) we-toggler'),
+    changeOption("BreadcrumbOptions", 'we-button[data-visibility="hidden"]'),
+    ...clickOnSave(),
+    {
+        content: "Check that the breadcrumb is hidden",
+        trigger: ":iframe main:has(div.page_breadcrumb.d-none.o_snippet_invisible)",
+    },
+    ...clickOnEditAndWaitEditMode(),
+    {
+        content: "Click on 'breacrumb' in the invisible elements list",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_entry",
+        run: "click",
     },
 ]);
