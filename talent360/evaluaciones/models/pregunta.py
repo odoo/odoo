@@ -32,6 +32,23 @@ class Pregunta(models.Model):
     respuesta_ids = fields.One2many("respuesta", "pregunta_id", string="Respuestas")
     competencia_ids = fields.Many2many("competencia", string="Competencias")
 
+    categoria = fields.Selection(
+        [
+            ("ambiente_de_trabajo", "Ambiente de Trabajo"),
+            ("factores_actividad", "Factores propios de la actividad"),
+        ],
+        default="ambiente_de_trabajo"
+    )
+
+    dominio = fields.Selection(
+        [
+            ("condiciones_ambiente", "Condiciones en el ambiente de trabajo"),
+            ("carga_trabajo", "Carga de trabajo"),
+            ("falta_control", "Falta de control sobre el trabajo"),
+        ],
+        default="condiciones_ambiente"
+    )
+
     def ver_respuestas(self):
         """
         Redirecciona a la vista gráfica de las respuestas filtradas por evaluación y pregunta.

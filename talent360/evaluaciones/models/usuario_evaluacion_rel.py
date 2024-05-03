@@ -13,5 +13,4 @@ class UsuarioEvaluacionRel(models.Model):
             ("contestada", "Contestada"),
         ],
         default="pendiente",
-        required=True,
     )

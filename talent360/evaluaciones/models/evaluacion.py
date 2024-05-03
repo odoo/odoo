@@ -1,4 +1,5 @@
 from odoo import api, models, fields
+from collections import defaultdict
 
 
 class Evaluacion(models.Model):
@@ -283,45 +284,30 @@ class Evaluacion(models.Model):
         Genera los datos necesarios para el reporte genérico de la evaluación.
 
         Esta función genera los parámetros requeridos para generar un reporte genérico de la evaluación actual,
-        incluyendo las preguntas y las respuestas tabuladas.
+        incluyendo las preguntas y las respuestas tabuladas, agrupadas por categoría y dominio.
 
         :return: Los parámetros necesarios para generar el reporte.
-
         """
         parametros = {
             "evaluacion": self,
-            "preguntas": [],
+            "resultados_por_categoria": defaultdict(lambda: {"Sí": 0, "No": 0}),
+            "resultados_por_dominio": defaultdict(lambda: {"Sí": 0, "No": 0}),
         }
 
-        respuesta_tabulada = {}
-
         for pregunta in self.pregunta_ids:
+            categoria = pregunta.categoria
+            dominio = pregunta.dominio
 
-            respuestas = []
-            respuestas_tabuladas = []
+            # Contar las respuestas afirmativas y negativas
+            respuestas = pregunta.respuesta_ids.mapped("respuesta_texto")
+            afirmativas = respuestas.count("Sí")
+            negativas = respuestas.count("No")
 
-            for respuesta in pregunta.respuesta_ids:
-                if respuesta.evaluacion_id.id != self.id:
-                    continue
+            # Actualizar los resultados agrupados por categoría y dominio
+            parametros["resultados_por_categoria"][categoria]["Sí"] += afirmativas
+            parametros["resultados_por_categoria"][categoria]["No"] += negativas
 
-                respuestas.append(respuesta.respuesta_texto)
-
-                for i, respuesta_tabulada in enumerate(respuestas_tabuladas):
-                    if respuesta_tabulada["texto"] == respuesta.respuesta_texto:
-                        respuestas_tabuladas[i]["conteo"] += 1
-                        break
-                else:
-                    respuestas_tabuladas.append(
-                        {"texto": respuesta.respuesta_texto, "conteo": 1}
-                    )
-
-            datos_pregunta = {
-                "pregunta": pregunta,
-                "respuestas": respuestas,
-                "respuestas_tabuladas": respuestas_tabuladas,
-                "datos_grafica": str(respuestas_tabuladas).replace("'", '"'),
-            }
-
-            parametros["preguntas"].append(datos_pregunta)
+            parametros["resultados_por_dominio"][dominio]["Sí"] += afirmativas
+            parametros["resultados_por_dominio"][dominio]["No"] += negativas
 
         return parametros
