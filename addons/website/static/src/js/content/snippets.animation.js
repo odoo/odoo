@@ -576,7 +576,7 @@ registry.Parallax = Animation.extend({
     start: function () {
         this._rebuild();
         window.addEventListener("resize.animation_parallax", debounce(this._rebuild.bind(this), 500));
-        this.modalEl = this.target.closest(".modal");
+        this.modalEl = this.$target[0].closest(".modal");
         if (this.modalEl) {
             this.modalEl.addEventListener("shown.bs.modal.animation_parallax", () => {
                 this._rebuild();
@@ -615,7 +615,7 @@ registry.Parallax = Animation.extend({
      */
     _rebuild: function () {
         // Add/find bg DOM element to hold the parallax bg (support old v10.0 parallax)
-        this.bg = this.el.querySelector(".s_parallax_bg")
+        this.bg = this.el.querySelector(".s_parallax_bg");
 
         // Get parallax speed
         this.speed = parseFloat(this.el.getAttribute("data-scroll-background-ratio") || 0);
@@ -629,7 +629,7 @@ registry.Parallax = Animation.extend({
         // Initialize parallax data according to snippet and viewport dimensions
         this.viewport = document.body.clientHeight - document.getElementById("wrapwrap").getBoundingClientRect().top;
         this.visibleArea = [this.el.getBoundingClientRect().top];
-        this.visibleArea.push(this.visibleArea[0] + this.el.style.innerHeight + this.viewport);
+        this.visibleArea.push(this.visibleArea[0] + this.el.getBoundingClientRect().height + this.viewport);
         this.ratio = this.speed * (this.viewport / 10);
 
         // Provide a "safe-area" to limit parallax
@@ -656,7 +656,10 @@ registry.Parallax = Animation.extend({
         if (this.options.wysiwyg) {
             this.options.wysiwyg.odooEditor.observerUnactive('_updateBgCss');
         }
-        Object.assign(this.bg.style, cssValues);
+        // for (const [key, value] of Object.entries(cssValues)) {
+        //     this.bg.style[key] = value;
+        // }
+        $(this.bg).css(cssValues);
         if (this.options.wysiwyg) {
             this.options.wysiwyg.odooEditor.observerActive('_updateBgCss');
         }
@@ -679,7 +682,7 @@ registry.Parallax = Animation.extend({
         }
 
         // Perform translation if the element is visible only
-        var vpEndOffset = scrollOffset + this.viewport;
+        var vpEndOffset = (scrollOffset, 0) + this.viewport;
         if (vpEndOffset >= this.visibleArea[0]
          && vpEndOffset <= this.visibleArea[1]) {
             this._updateBgCss({'transform': 'translateY(' + _getNormalizedPosition.call(this, vpEndOffset) + 'px)'});
@@ -1763,7 +1766,7 @@ registry.ImageShapeHoverEffet = publicWidget.Widget.extend({
      * @private
      */
     _onMouseEnter() {
-        if (!this.originalImgSrc || !this.target.dataset.hoverEffect) {
+        if (!this.originalImgSrc || !this.$target[0].dataset.hoverEffect) {
             return;
         }
         this.lastMouseEvent = this.lastMouseEvent.then(() => new Promise((resolve) => {
@@ -1799,7 +1802,7 @@ registry.ImageShapeHoverEffet = publicWidget.Widget.extend({
      */
     _onMouseLeave() {
         this.lastMouseEvent = this.lastMouseEvent.then(() => new Promise((resolve) => {
-            if (!this.originalImgSrc || !this.svgInEl || !this.target.dataset.hoverEffect) {
+            if (!this.originalImgSrc || !this.svgInEl || !this.$target[0].dataset.hoverEffect) {
                 resolve();
                 return;
             }

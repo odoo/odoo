@@ -78,7 +78,7 @@ function autocompleteWithPages(input, options= {}) {
  * @param {HTMLElement} [excluded]
  */
 function onceAllImagesLoaded(element, excluded) {
-    const defs = Array.from(element).concat(element.matches("img") ? [element] : []).map((img) => {
+    const defs = Array.from(element).concat(element?.matches("img") ? [element] : []).map((img) => {
         if (img.complete || excluded && (excluded === img || excluded.contains(img).length)) {
             return; // Already loaded
         }
