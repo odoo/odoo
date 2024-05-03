@@ -43,7 +43,7 @@ class TestLoyalty(TransactionCase):
 
     def test_loyalty_program_default_values_in_form(self):
         # Test that the default values are correctly set when creating a new program in a form
-        with Form(self.env['loyalty.program']) as program_form:
+        with Form(self.env['loyalty.program'], 'loyalty.loyalty_program_view_form') as program_form:
             program_form.name = 'Test'
             program = program_form.save()
         self._check_promotion_default_values(program)
@@ -140,7 +140,7 @@ class TestLoyalty(TransactionCase):
         self.assertTrue(all(r.reward_type == 'product' for r in self.program.reward_ids))
 
     def test_loyalty_program_preserve_reward_with_always_edit(self):
-        with Form(self.env['loyalty.program']) as program_form:
+        with Form(self.env['loyalty.program'], 'loyalty.loyalty_program_view_form') as program_form:
             program_form.name = 'Test'
             program_form.program_type = 'buy_x_get_y'
             program_form.reward_ids.remove(0)
