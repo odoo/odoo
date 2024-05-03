@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { registry } from "@web/core/registry";
 import { Reactive } from "@web/core/utils/reactive";
 import { browser } from "@web/core/browser/browser";

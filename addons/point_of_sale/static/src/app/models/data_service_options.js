@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 // This file is just a "static" class to store the options for the DataService class.
 // We are now able to override options from others modules
 export class DataServiceOptions {

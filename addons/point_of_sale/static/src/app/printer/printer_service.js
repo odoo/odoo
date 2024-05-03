@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { loadAllImages } from "@point_of_sale/utils";
 
 import { Reactive } from "@web/core/utils/reactive";

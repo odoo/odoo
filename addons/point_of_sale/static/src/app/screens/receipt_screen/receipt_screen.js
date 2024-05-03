@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { useErrorHandlers, useTrackedAsync } from "@point_of_sale/app/utils/hooks";
 import { registry } from "@web/core/registry";

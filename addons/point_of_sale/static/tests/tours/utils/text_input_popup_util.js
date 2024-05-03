@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 export function inputText(val) {
     return {
         content: `input text '${val}'`,

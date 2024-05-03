@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { Reactive } from "@web/core/utils/reactive";
 import { Line } from "./line";
 import { random5Chars } from "@point_of_sale/utils";

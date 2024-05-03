@@ -1,4 +1,3 @@
-/** @odoo-module **/
 /* global html2canvas */
 
 import { registry } from "@web/core/registry";

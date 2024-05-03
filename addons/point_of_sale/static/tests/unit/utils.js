@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { registry } from "@web/core/registry";
 
 registry.category("mock_server").add("pos.session/load_data", async function (route, args) {

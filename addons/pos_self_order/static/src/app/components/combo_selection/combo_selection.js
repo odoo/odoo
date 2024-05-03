@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";

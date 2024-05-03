@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { queryOne } from "@odoo/hoot-dom";
 
 export function table({ name, withClass = "", withoutClass, run = () => {}, numOfSeats }) {

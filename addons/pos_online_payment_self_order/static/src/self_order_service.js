@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { patch } from "@web/core/utils/patch";
 import { SelfOrder } from "@pos_self_order/app/self_order_service";
 import { session } from "@web/session";

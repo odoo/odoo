@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { reactive } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { withComputedProperties } from "@web/core/utils/reactive";

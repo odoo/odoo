@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Dialog } from "@web/core/dialog/dialog";
 import { SaleDetailsButton } from "@point_of_sale/app/navbar/sale_details_button/sale_details_button";
 import { Component } from "@odoo/owl";

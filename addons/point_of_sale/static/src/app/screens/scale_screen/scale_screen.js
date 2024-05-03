@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { roundPrecision as round_pr } from "@web/core/utils/numbers";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";

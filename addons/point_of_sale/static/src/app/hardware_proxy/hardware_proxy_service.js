@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { EventBus, reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";

@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { Reactive, effect } from "@web/core/utils/reactive";
 import { ConnectionLostError, RPCError, rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";

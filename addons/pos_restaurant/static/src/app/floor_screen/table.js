@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component, useRef } from "@odoo/owl";
 import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
 import { usePos } from "@point_of_sale/app/store/pos_hook";

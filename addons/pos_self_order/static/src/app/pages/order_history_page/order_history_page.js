@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { _t } from "@web/core/l10n/translation";

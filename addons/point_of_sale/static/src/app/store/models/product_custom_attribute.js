@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { Reactive } from "@web/core/utils/reactive";
 
 export class ProductCustomAttribute extends Reactive {

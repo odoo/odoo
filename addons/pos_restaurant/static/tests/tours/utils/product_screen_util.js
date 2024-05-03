@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 

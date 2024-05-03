@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 export function clickProduct(productName) {
     return {
         content: `Click on product '${productName}'`,
