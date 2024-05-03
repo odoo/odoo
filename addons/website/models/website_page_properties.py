@@ -144,7 +144,8 @@ class WebsitePageProperties(models.TransientModel):
     visibility_password_display = fields.Char(related='target_model_id.visibility_password_display', readonly=False)
     groups_id = fields.Many2many(related='target_model_id.groups_id', readonly=False)
     is_new_page_template = fields.Boolean(related='target_model_id.is_new_page_template', readonly=False)
-
+    has_parent_page = fields.Boolean(related='target_model_id.has_parent_page', readonly=False)
+    parent_page_id = fields.Many2one(related='target_model_id.parent_page_id', readonly=False)
     old_url = fields.Char()
     redirect_old_url = fields.Boolean(default=False, store=False)
     redirect_type = fields.Selection(
@@ -167,6 +168,18 @@ class WebsitePageProperties(models.TransientModel):
             url = record.url
             current_homepage_url = record.website_id.homepage_url or '/'
             record.is_homepage = url == current_homepage_url
+
+    @api.onchange('has_parent_page')
+    def _onchange_has_parent_page(self):
+        website = self.env['website'].get_current_website()
+        homepage = self.env['website.page'].search([('website_id', '=', website.id)]).filtered(lambda r: r.is_homepage)
+        for page in self:
+            page.parent_page_id = page.parent_page_id or homepage if page.has_parent_page else False
+
+    @api.onchange('parent_page_id')
+    def _onchange_parent_page_id(self):
+        for page in self:
+            page.has_parent_page = bool(page.parent_page_id)
 
     @api.model_create_multi
     def create(self, vals_list):
