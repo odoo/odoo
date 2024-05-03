@@ -11,18 +11,17 @@ class TestUTM(common.TestMassMailCommon):
     def test_utm_source_mixin_name(self):
         """ Test name management with source mixin, as name should be unique
         and automatically incremented """
-        with self.subTest(test="Automatic increment at create"):
-            sources = self.env["utm.test.source.mixin"].create([
-                {
-                    'name': 'Test',
-                    'title': 'Test',
-                }
-                for idx in range(5)]
-            )
-            self.assertListEqual(
-                sources.mapped('name'),
-                ["Test", "Test [2]", "Test [3]", "Test [4]", "Test [5]"]
-            )
+        sources = self.env["utm.test.source.mixin"].create([
+            {
+                'name': 'Test',
+                'title': 'Test',
+            }
+            for idx in range(5)]
+        )
+        self.assertListEqual(
+            sources.mapped('name'),
+            ["Test", "Test [2]", "Test [3]", "Test [4]", "Test [5]"]
+        )
 
     @users("employee")
     def test_utm_source_mixin_name_brackets(self):
