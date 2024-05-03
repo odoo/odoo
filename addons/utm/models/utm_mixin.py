@@ -89,13 +89,20 @@ class UtmMixin(models.AbstractModel):
         :param names: list of names, we will ensure that each name will be unique
         :return: a list of new values for each name, in the same order
         """
-
+        # Avoid conflicting with itself, otherwise each check at update automatically
+        # increments counters
+        skip_record_ids = self.env.context.get("utm_check_skip_record_ids") or []
         # Remove potential counter part in each names
         names_without_counter = {self._split_name_and_count(name)[0] for name in names}
 
         # Retrieve existing similar names
-        seach_domain = expression.OR([[('name', 'ilike', name)] for name in names_without_counter])
-        existing_names = {vals['name'] for vals in self.env[model_name].search_read(seach_domain, ['name'])}
+        search_domain = expression.OR([[('name', 'ilike', name)] for name in names_without_counter])
+        if skip_record_ids:
+            search_domain = expression.AND([
+                [('id', 'not in', skip_record_ids)],
+                search_domain
+            ])
+        existing_names = {vals['name'] for vals in self.env[model_name].search_read(search_domain, ['name'])}
 
         # Count for each names, based on the names list given in argument
         # and the record names in database
