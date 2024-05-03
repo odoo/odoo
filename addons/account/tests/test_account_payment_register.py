@@ -188,8 +188,13 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'amount': 800.0,
             'group_payment': True,
             'payment_difference_handling': 'reconcile',
-            'writeoff_account_id': self.company_data['default_account_revenue'].id,
-            'writeoff_label': 'writeoff',
+            'account_payment_register_dif_ids': [
+                Command.create({
+                    'writeoff_account_id': self.company_data['default_account_revenue'].id,
+                    'writeoff_label': 'Writeoff Label',
+                    'writeoff_amount': 2200.0,
+                })
+            ],
             'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
 
@@ -231,8 +236,13 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'amount': 3100.0,
             'group_payment': True,
             'payment_difference_handling': 'reconcile',
-            'writeoff_account_id': self.company_data['default_account_revenue'].id,
-            'writeoff_label': 'writeoff',
+            'account_payment_register_dif_ids': [
+                Command.create({
+                    'writeoff_account_id': self.company_data['default_account_revenue'].id,
+                    'writeoff_label': 'Writeoff Label',
+                    'writeoff_amount': -100.0,
+                })
+            ],
             'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
 
@@ -274,8 +284,13 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'amount': 800.0,
             'group_payment': True,
             'payment_difference_handling': 'reconcile',
-            'writeoff_account_id': self.company_data['default_account_revenue'].id,
-            'writeoff_label': 'writeoff',
+            'account_payment_register_dif_ids': [
+                Command.create({
+                    'writeoff_account_id': self.company_data['default_account_revenue'].id,
+                    'writeoff_label': 'Writeoff Label',
+                    'writeoff_amount': 2200.0,
+                })
+            ],
             'payment_method_line_id': self.outbound_payment_method_line.id,
         })._create_payments()
 
@@ -317,8 +332,13 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'amount': 3100.0,
             'group_payment': True,
             'payment_difference_handling': 'reconcile',
-            'writeoff_account_id': self.company_data['default_account_revenue'].id,
-            'writeoff_label': 'writeoff',
+            'account_payment_register_dif_ids': [
+                Command.create({
+                    'writeoff_account_id': self.company_data['default_account_revenue'].id,
+                    'writeoff_label': 'Writeoff Label',
+                    'writeoff_amount': -100.0,
+                })
+            ],
             'payment_method_line_id': self.outbound_payment_method_line.id,
         })._create_payments()
 
@@ -854,8 +874,13 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
                 'currency_id': self.other_currency_2.id,
                 'amount': 0.08,
                 'payment_difference_handling': 'reconcile',
-                'writeoff_account_id': self.company_data['default_account_revenue'].id,
-                'writeoff_label': 'writeoff',
+                'account_payment_register_dif_ids': [
+                    Command.create({
+                        'writeoff_account_id': self.company_data['default_account_revenue'].id,
+                        'writeoff_label': 'Writeoff Label',
+                        'writeoff_amount': 0.04,
+                    })
+                ],
             })\
             ._create_payments()
 
@@ -893,8 +918,13 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
                 'currency_id': self.other_currency_2.id,
                 'amount': 0.08,
                 'payment_difference_handling': 'reconcile',
-                'writeoff_account_id': self.company_data['default_account_revenue'].id,
-                'writeoff_label': 'writeoff',
+                'account_payment_register_dif_ids': [
+                    Command.create({
+                        'writeoff_account_id': self.company_data['default_account_revenue'].id,
+                        'writeoff_label': 'Writeoff Label',
+                        'writeoff_amount': 0.04,
+                    })
+                ],
             })\
             ._create_payments()
 
@@ -932,8 +962,13 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
                 'currency_id': self.other_currency_2.id,
                 'amount': 0.16,
                 'payment_difference_handling': 'reconcile',
-                'writeoff_account_id': self.company_data['default_account_revenue'].id,
-                'writeoff_label': 'writeoff',
+                'account_payment_register_dif_ids': [
+                    Command.create({
+                        'writeoff_account_id': self.company_data['default_account_revenue'].id,
+                        'writeoff_label': 'Writeoff Label',
+                        'writeoff_amount': -0.04,
+                    })
+                ],
             })\
             ._create_payments()
 
@@ -971,8 +1006,13 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
                 'currency_id': self.other_currency_2.id,
                 'amount': 0.16,
                 'payment_difference_handling': 'reconcile',
-                'writeoff_account_id': self.company_data['default_account_revenue'].id,
-                'writeoff_label': 'writeoff',
+                'account_payment_register_dif_ids': [
+                    Command.create({
+                        'writeoff_account_id': self.company_data['default_account_revenue'].id,
+                        'writeoff_label': 'Writeoff Label',
+                        'writeoff_amount': -0.04,
+                    })
+                ],
             })\
             ._create_payments()
 
@@ -1019,7 +1059,13 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
                 'currency_id': self.other_currency.id,
                 'amount': 1998,
                 'payment_difference_handling': 'reconcile',
-                'writeoff_account_id': self.env.company.expense_currency_exchange_account_id.id,
+                'account_payment_register_dif_ids': [
+                    Command.create({
+                        'writeoff_account_id': self.env.company.expense_currency_exchange_account_id.id,
+                        'writeoff_label': 'Writeoff Label',
+                        'writeoff_amount': 1.0,
+                    })
+                ],
             })\
             ._create_payments()
 
@@ -1082,7 +1128,13 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
                 'amount': 370.0,
                 'payment_date': '2016-01-01',
                 'payment_difference_handling': 'reconcile',
-                'writeoff_account_id': self.env.company.expense_currency_exchange_account_id.id,
+                'account_payment_register_dif_ids': [
+                    Command.create({
+                        'writeoff_account_id': self.env.company.expense_currency_exchange_account_id.id,
+                        'writeoff_label': 'Writeoff Label',
+                        'writeoff_amount': 1.0,
+                    })
+                ],
             })\
             ._create_payments()
 
