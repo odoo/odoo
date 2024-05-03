@@ -1,6 +1,7 @@
 from odoo import Command
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged, HttpCase
+from odoo.tools import mute_logger
 
 
 @tagged('-at_install', 'post_install')
@@ -75,3 +76,14 @@ class TestUi(TestExpenseCommon, HttpCase):
         })
         self.start_tour('/web', 'create_expense_no_employee_access_tour', login=self.expense_user_manager.login)
         self.assertEqual(expense.employee_id.id, employee_1.id, "Employee should have been changed by tour")
+
+    def test_not_create_zero_amount_expense_in_expense_sheet(self):
+        """
+            The test ensures that attempting to create an expense line with a zero amount fails as expected
+            and that a valid amount can be set subsequently.
+        """
+        expense_sheet = self.create_expense_report(values={'name': 'report_for_tour', 'expense_line_ids': []})
+        with mute_logger("odoo.http"):
+            self.start_tour('/web', 'do_not_create_zero_amount_expense_in_sheet', login=self.env.user.login)
+        self.assertEqual(len(expense_sheet.expense_line_ids), 1, "Expense sheet should have one expense")
+        self.assertEqual(expense_sheet.expense_line_ids[0].total_amount, 10.0, "Expense amount should have been set by tour")

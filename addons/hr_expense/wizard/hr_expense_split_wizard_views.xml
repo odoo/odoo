@@ -6,6 +6,10 @@
             <field name="model">hr.expense.split.wizard</field>
             <field name="arch" type="xml">
                 <form>
+                    <div class="alert alert-warning w-100 d-flex align-items-center gap-1" 
+                        invisible="split_possible"  role="alert">
+                        <span>The total amount doesn't match the original amount.</span>
+                    </div>
                     <field name="total_amount_currency_original" invisible="1"/>
                     <field name="expense_id" invisible="1"/>
                     <field name="expense_split_line_ids" widget="one2many" context="{'default_expense_id': expense_id}">
@@ -17,13 +21,13 @@
                             <field name="product_has_cost" column_invisible="True"/>
                             <field name="name"/>
                             <field name="product_id"/>
-                            <field name="total_amount_currency" force_save="1" readonly="product_has_cost"/>
+                            <field name="employee_id" widget="many2one_avatar_user"/>
                             <field name="tax_ids" widget="many2many_tags" readonly="not product_has_tax"/>
                             <field name="tax_amount_currency"/>
                             <field name="analytic_distribution" widget="analytic_distribution"
                                 optional="show"
                                 groups="analytic.group_analytic_accounting"/>
-                            <field name="employee_id" widget="many2one_avatar_user"/>
+                            <field name="total_amount_currency" force_save="1" readonly="product_has_cost"/>
                         </tree>
                     </field>
                     <field name="currency_id" invisible="1"/>
@@ -36,8 +40,7 @@
                     </group>
                     <field name="split_possible" invisible="1"/>
                     <footer>
-                        <button name="action_split_expense" invisible="split_possible" string="Split Expense" type="object" class="oe_highlight disabled"  data-hotkey="q"/>
-                        <button name="action_split_expense" string="Split Expense" invisible="not split_possible" type="object" class="oe_highlight"  data-hotkey="q"/>
+                        <button name="action_split_expense" string="Split Expense" type="object" class="oe_highlight"  data-hotkey="q"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
