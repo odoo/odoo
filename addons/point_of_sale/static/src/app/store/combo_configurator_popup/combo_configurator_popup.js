@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { Dialog } from "@web/core/dialog/dialog";
 import { Component, useState } from "@odoo/owl";
 import { usePos } from "../pos_hook";

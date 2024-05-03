@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component, useState, useRef, useEffect } from "@odoo/owl";
 
 export class EditListInput extends Component {

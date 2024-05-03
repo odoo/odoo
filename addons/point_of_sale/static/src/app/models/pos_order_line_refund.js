@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { uuidv4 } from "@point_of_sale/utils";
 
 // Little class to manage the refund of a line

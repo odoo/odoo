@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";

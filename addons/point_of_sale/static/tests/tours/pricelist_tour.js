@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { registry } from "@web/core/registry";
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";

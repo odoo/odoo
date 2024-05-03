@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { roundDecimals } from "@web/core/utils/numbers";
 
 export const computeComboLines = (

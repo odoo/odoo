@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { Dialog } from "@web/core/dialog/dialog";
 import { Component, onMounted, useRef, useState, useSubEnv } from "@odoo/owl";
 

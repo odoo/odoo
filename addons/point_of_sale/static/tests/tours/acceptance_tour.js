@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 import { registry } from "@web/core/registry";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";

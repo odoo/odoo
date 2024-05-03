@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";

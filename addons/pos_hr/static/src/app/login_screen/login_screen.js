@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { useCashierSelector } from "@pos_hr/app/select_cashier_mixin";
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/store/pos_hook";

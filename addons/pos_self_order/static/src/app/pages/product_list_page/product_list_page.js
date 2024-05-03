@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component, useEffect, useRef, useState, onWillStart } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { ProductCard } from "@pos_self_order/app/components/product_card/product_card";

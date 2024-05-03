@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
 import * as ReceiptScreenPos from "@point_of_sale/../tests/tours/utils/receipt_screen_util";

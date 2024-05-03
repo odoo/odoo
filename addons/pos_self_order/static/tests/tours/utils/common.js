@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 export function clickBtn(buttonName) {
     return {
         content: `Click on button '${buttonName}'`,

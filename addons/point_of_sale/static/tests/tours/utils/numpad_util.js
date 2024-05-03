@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { queryAll } from "@odoo/hoot-dom";
 
 const buttonTriger = (buttonValue) => `div.numpad.row button.col:contains("${buttonValue}")`;
