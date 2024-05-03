@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 
-import { formatDate } from "@web/core/l10n/dates";
 import { Component, useState, onWillStart } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
@@ -86,13 +85,37 @@ export class LeaveStatsComponent extends Component {
                 ["date_from", "<=", dateTo],
                 ["date_to", ">=", dateFrom],
             ],
-            ["employee_id", "date_from", "date_to", "number_of_days"]
+            [
+                "employee_id",
+                "date_from",
+                "date_to",
+                "number_of_days",
+                "number_of_hours",
+                "leave_type_request_unit",
+            ]
         );
 
         this.state.departmentLeaves = departmentLeaves.map((leave) => {
+            const dateFormat =
+                leave.leave_type_request_unit === "hour"
+                    ? {
+                          ...DateTime.TIME_24_SIMPLE,
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                      }
+                    : {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                      };
             return Object.assign({}, leave, {
-                dateFrom: formatDate(DateTime.fromSQL(leave.date_from, { zone: "utc" }).toLocal()),
-                dateTo: formatDate(DateTime.fromSQL(leave.date_to, { zone: "utc" }).toLocal()),
+                dateFrom: DateTime.fromSQL(leave.date_from, { zone: "utc" })
+                    .toLocal()
+                    .toLocaleString(dateFormat),
+                dateTo: DateTime.fromSQL(leave.date_to, { zone: "utc" })
+                    .toLocal()
+                    .toLocaleString(dateFormat),
                 sameEmployee: leave.employee_id[0] === employee[0],
             });
         });
@@ -106,6 +129,7 @@ export class LeaveStatsComponent extends Component {
 
         const dateFrom = date.startOf("year");
         const dateTo = date.endOf("year");
+
         this.state.leaves = await this.orm.readGroup(
             "hr.leave",
             [
@@ -114,7 +138,12 @@ export class LeaveStatsComponent extends Component {
                 ["date_from", "<=", dateTo],
                 ["date_to", ">=", dateFrom],
             ],
-            ["holiday_status_id", "number_of_days:sum"],
+            [
+                "holiday_status_id",
+                "number_of_days",
+                "number_of_hours",
+                "leave_type_request_unit:array_agg",
+            ],
             ["holiday_status_id"]
         );
     }
