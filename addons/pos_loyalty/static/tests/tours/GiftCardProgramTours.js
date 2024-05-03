@@ -91,3 +91,26 @@ registry.category("web_tour.tours").add("GiftCardWithRefundtTour", {
             PosLoyalty.orderTotalIs("0.0"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosLoyaltyPointsGiftcard", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickDisplayedProduct("Gift Card"),
+            TextInputPopup.isShown(),
+            TextInputPopup.inputText("044123456"),
+            TextInputPopup.clickConfirm(),
+            PosLoyalty.orderTotalIs("50.00"),
+            PosLoyalty.finalizeOrder("Cash", "50"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAA"),
+            ProductScreen.addOrderline("product_a", "1"),
+            PosLoyalty.enterCode("044123456"),
+            PosLoyalty.orderTotalIs("50.00"),
+            PosLoyalty.pointsAwardedAre("100"),
+            PosLoyalty.finalizeOrder("Cash", "50"),
+        ].flat(),
+});
