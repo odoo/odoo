@@ -2,21 +2,16 @@
 <templates xml:space="preserve">
 
 <t t-name="website.TopMenuVisibilityOption">
-    <BuilderRow label.translate="Header Position" tooltip.translate="Change the Header Position on this page" t-if="!this.isActiveItem('header_sidebar_opt')">
-        <BuilderSelect action="'setWebsiteHeaderVisibility'">
-            <BuilderSelectItem actionValue="'overTheContent'" id="'overTheContent'" t-if="doesPageOptionExist('header_overlay')">Over The Content</BuilderSelectItem>
-            <BuilderSelectItem actionValue="'regular'">Regular</BuilderSelectItem>
-            <BuilderSelectItem actionValue="'hidden'">Hidden</BuilderSelectItem>
-        </BuilderSelect>
-    </BuilderRow>
-    <t t-if="isActiveItem('overTheContent')">
-        <BuilderRow label.translate="Background" level="1" t-if="doesPageOptionExist('header_color')">
-            <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'background-color'" enabledTabs="['custom']"/>
-        </BuilderRow>
-        <BuilderRow label.translate="Text Color" level="1" t-if="doesPageOptionExist('header_text_color')">
-            <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'color'" enabledTabs="['solid', 'custom']"/>
-        </BuilderRow>
-    </t>
+    <BaseVisibilityOption
+        label.translate="Header Position"
+        tooltip.translate="Change the Header Position on this page"
+        visibilityAction="'setWebsiteHeaderVisibility'"
+        bgColor="'header_color'"
+        textColor="'header_text_color'"
+        level="1"
+        overlay="'header_overlay'"
+        visibilityOpt="'header_sidebar_opt'"
+    />
 </t>
 
 <t t-name="website.HideFooterOption">
