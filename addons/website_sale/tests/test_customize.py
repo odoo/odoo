@@ -448,59 +448,66 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.start_tour("/", 'test_09_pills_variant', login="portal")
 
     def test_10_multi_checkbox_attribute(self):
-        product_template = self.env['product.template'].create({
-            'name': 'Product Multi',
-            'is_published': True,
-            'list_price': 750,
-        })
         attribute = self.env['product.attribute'].create([
             {
                 'name': 'Options',
                 'create_variant': 'no_variant',
                 'display_type': 'multi',
+                'value_ids': [
+                    Command.create({
+                        'name': 'Option 1',
+                        'default_extra_price': 1,
+                        'sequence': 1,
+                    }),
+                    Command.create({
+                        'name': 'Option 2',
+                        'sequence': 2,
+                    }),
+                    Command.create({
+                        'name': 'Option 3',
+                        'default_extra_price': 3,
+                        'sequence': 3,
+                    }),
+                    Command.create({
+                        'name': 'Option 4',
+                        'sequence': 4,
+                    }),
+                ],
             },
         ])
-        attribute_values = self.env['product.attribute.value'].create([
-            {
-                'name': 'Option 1',
-                'attribute_id': attribute.id,
-                'default_extra_price': 1,
-                'sequence': 1,
-            },
-            {
-                'name': 'Option 2',
-                'attribute_id': attribute.id,
-                'sequence': 2,
-            },
-            {
-                'name': 'Option 3',
-                'attribute_id': attribute.id,
-                'default_extra_price': 3,
-                'sequence': 3,
-            },
-            {
-                'name': 'Option 4',
-                'attribute_id': attribute.id,
-                'sequence': 4,
-            },
-        ])
-        self.env['product.template.attribute.line'].create([{
-            'attribute_id': attribute.id,
-            'product_tmpl_id': product_template.id,
-            'value_ids': [(6, 0, attribute_values.ids)],
-        }])
+        product_template = self.env['product.template'].create({
+            'name': 'Product Multi',
+            'is_published': True,
+            'list_price': 750,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute.id,
+                    'value_ids': [Command.set(attribute.value_ids.ids)],
+                }),
+            ],
+        })
         # set an extra price for free attribute values on the product (nothing is free)
-        self.env['product.template.attribute.value'].search(
-            [('product_tmpl_id', '=', product_template.id), ('price_extra', '=', 0)]
-        ).price_extra = 2
+        free_ptavs = product_template.attribute_line_ids.product_template_value_ids.filtered(
+            lambda ptav: ptav.price_extra == 0
+        )
+        self.assertEqual(len(free_ptavs), 2)
+        free_ptavs.price_extra = 2
+
         # set an exclusion between option 1 and option 3
-        self.env['product.template.attribute.value'].search(
-            [('product_tmpl_id', '=', product_template.id), ('price_extra', '=', 1)]
-        ).exclude_for = [(0, 0, {
+        self.env['product.template.attribute.value'].search([
+            ('product_tmpl_id', '=', product_template.id),
+            ('price_extra', '=', 1),
+        ]).exclude_for = [
+            Command.create({
                 'product_tmpl_id': product_template.id,
-                'value_ids': [(6, 0, [self.env['product.template.attribute.value'].search(
-                    [('product_tmpl_id', '=', product_template.id), ('price_extra', '=', 3)]).id])]
-        })]
+                'value_ids': [Command.set(
+                    self.env['product.template.attribute.value'].search([
+                        ('product_tmpl_id', '=', product_template.id),
+                        ('price_extra', '=', 3)
+                    ]).ids
+                )],
+            }),
+        ]
 
         self.start_tour("/", 'tour_shop_multi_checkbox', login="portal")
 
