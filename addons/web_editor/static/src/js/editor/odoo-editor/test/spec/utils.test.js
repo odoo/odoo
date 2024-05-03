@@ -15,6 +15,7 @@ import {
     getAdjacentPreviousSiblings,
     getAdjacentNextSiblings,
     getAdjacents,
+    getDeepestPosition,
     getDeepRange,
     getNormalizedCursorPosition,
     getSelectedNodes,
@@ -1733,8 +1734,119 @@ describe('Utils', () => {
             });
         });
     });
+    describe('getDeepestPosition', () => {
+        it('should get deepest position for text within paragraph', () => {
+            const [p] = insertTestHtml(
+                `<p>abc</p>`,
+            );
+            const editable = p.parentElement;
+            const abc = p.firstChild;
+            let [node, offset] = getDeepestPosition(editable, 0);
+            window.chai
+                .expect([node, offset])
+                .to.eql([abc, 0]);
+            [node, offset] = getDeepestPosition(editable, 1);
+            window.chai
+                .expect([node, offset])
+                .to.eql([abc, 3]);
+        });
+        it('should get deepest position within nested formatting tags', () => {
+            const [p] = insertTestHtml(
+                `<p><span><b><i><u>abc</u></i></b></span></p>`,
+            );
+            const editable = p.parentElement;
+            const abc = p.firstChild.firstChild.firstChild.firstChild.firstChild;
+            let [node, offset] = getDeepestPosition(editable, 0);
+            window.chai
+                .expect([node, offset])
+                .to.eql([abc, 0]);
+            [node, offset] = getDeepestPosition(editable, 1);
+            window.chai
+                .expect([node, offset])
+                .to.eql([abc, 3]);
+        });
+        it('should get deepest position in multiple paragraph', () => {
+            const [p1, p2] = insertTestHtml(
+                `<p>abc</p><p>def</p>`,
+            );
+            const editable = p1.parentElement;
+            const abc = p1.firstChild;
+            const def = p2.firstChild;
+            let [node, offset] = getDeepestPosition(editable, 0);
+            window.chai
+                .expect([node, offset])
+                .to.eql([abc, 0]);
+            [node, offset] = getDeepestPosition(editable, 1);
+            window.chai
+                .expect([node, offset])
+                .to.eql([def, 0]);
+            [node, offset] = getDeepestPosition(editable, 2);
+            window.chai
+                .expect([node, offset])
+                .to.eql([def, 3]);
+        });
+        it('should get deepest position for node with invisible element', () => {
+            const [p1] = insertTestHtml(
+                `<p></p><p>def</p>`,
+            );
+            const editable = p1.parentElement;
+            const def = editable.lastChild.firstChild;
+            let [node, offset] = getDeepestPosition(editable, 0);
+            window.chai
+                .expect([node, offset])
+                .to.eql([def, 0]);
+            [node, offset] = getDeepestPosition(editable, 2);
+            window.chai
+                .expect([node, offset])
+                .to.eql([def, 3]);
+        });
+        it('should get deepest position for invisible block element', () => {
+            const [p1] = insertTestHtml(
+                `<p></p><p>def</p>`,
+            );
+            const [node, offset] = getDeepestPosition(p1, 0);
+            window.chai
+                .expect([node, offset])
+                .to.eql([p1, 0]);
+        });
+        it('should get deepest position for invisible block element(2)', () => {
+            const [p1] = insertTestHtml(
+                `<p>abc</p><p></p>`,
+            );
+            const p2 = p1.nextSibling;
+            const [node, offset] = getDeepestPosition(p2, 0);
+            window.chai
+                .expect([node, offset])
+                .to.eql([p2, 0]);
+        });
+        it('should get deepest position for elements containing invisible text nodes', () => {
+            const [p] = insertTestHtml(
+                `<p>
+                    <i>a</i>
+                </p>`,
+            );
+            const editable = p.parentElement;
+            const a = editable.firstChild.childNodes[1].firstChild;
+            let [node, offset] = getDeepestPosition(editable, 0);
+            window.chai
+                .expect([node, offset])
+                .to.eql([a, 0]);
+            [node, offset] = getDeepestPosition(editable, 1);
+            window.chai
+                .expect([node, offset])
+                .to.eql([a, 1]);
+        });
+        it('should not skip zwnbsp', () => {
+            const [a] = insertTestHtml(`\ufeff<a href="#">abc</a>`);
+            const editable = a.parentElement;
+            const zwnbsp = editable.firstChild;
+            let [node, offset] = getDeepestPosition(editable, 0);
+            window.chai
+                .expect([node, offset])
+                .to.eql([zwnbsp, 0]);
+        });
+    });
     // TODO:
-    // - getDeepestPosition
     // - getCursors
     // - preserveCursor
 
