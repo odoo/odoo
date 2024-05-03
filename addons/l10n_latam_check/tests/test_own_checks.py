@@ -20,13 +20,18 @@ class TestOwnChecks(L10nLatamCheckTest):
             with payment_form.l10n_latam_new_check_ids.new() as check:
                 check.name = '00000001'
                 check.payment_date = fields.Date.add(fields.Date.today(), months=1)
-                check.amount =  25
+                check.amount = 25
 
             with payment_form.l10n_latam_new_check_ids.new() as check2:
                 check2.name = '00000002'
                 check2.payment_date = fields.Date.add(fields.Date.today(), months=1)
-                check2.amount =  25
+                check2.amount = 25
 
         payment = payment_form.save()
         payment.action_post()
         self.assertEqual(payment.amount, 50)
+        # testear que exista split move
+        # que los cheques esten en estado "handed"
+
+    # otro test que cancele el pago y que verifique que no hay mas cheque?
+    # otro test que haga el void

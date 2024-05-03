@@ -5,10 +5,12 @@ from odoo.exceptions import ValidationError, UserError
 from odoo.tests.common import tagged
 from odoo import fields, Command
 
+
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestThirdChecks(L10nLatamCheckTest):
 
     def create_third_party_check(self, journal=False, check_number='00000001'):
+        ###### ajustamos este metodo para que genere un pago con dos cheques con dos nros
         if not journal:
             journal = self.third_party_check_journal
         vals = {
@@ -27,6 +29,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         """ This a generic test to check that we are able to pay with checks
         We pay directly with multiple checks instead of just one check, just to ensure the create multi
         is properly working. """
+        ############### llamamos a create_third_party_check y hacemos olo assert de que nos queden los cheques y current journal
         vals_list = [{
             'partner_id': self.partner_a.id,
             'l10n_latam_new_check_ids': [Command.create({'name': '00000001', 'payment_date': fields.Date.add(fields.Date.today(), months=1), 'amount': 1})],
@@ -47,6 +50,8 @@ class TestThirdChecks(L10nLatamCheckTest):
             'current_journal_id': self.third_party_check_journal.id,
         }]*2)
 
+    ############### llamamos a este create_third_party_check y luego hacemos:
+    # delivery (assert) dd un cheque tmb un return (assert) y un claim (assert)
     # def test_02_third_party_check_delivery(self):
     #     check = self.create_third_party_check()
 
@@ -168,14 +173,3 @@ class TestThirdChecks(L10nLatamCheckTest):
     #     check2 = self.create_third_party_check(journal=self.rejected_check_journal)
     #     self.env['l10n_latam.payment.mass.transfer'].with_context(
     #         active_model='account.payment', active_ids=[check.id, check2.id]).create({'destination_journal_id': self.third_party_check_journal.id})._create_payments()
-
-    # def test_check_number_is_number(self):
-    #     """
-    #     Ensure 'check_number' field only allows numbers
-    #     """
-    #     self.create_third_party_check(check_number='2147483647')
-
-    #     with self.assertRaises(ValidationError) as context:
-    #         self.create_third_party_check(check_number='absdfdf')
-
-    #     self.assertTrue("Check numbers can only consist of digits" in context.exception.args[0])
