@@ -16,10 +16,9 @@ const { astToFormula } = spreadsheet;
 export class ListUIPlugin extends OdooUIPlugin {
     static getters = /** @type {const} */ ([
         "getListComputedDomain",
-        "getListCurrency",
         "getListHeaderValue",
         "getListIdFromPosition",
-        "getListCellValue",
+        "getListCellValueAndFormat",
         "getListDataSource",
         "getAsyncListDataSource",
         "isListUnused",
@@ -258,6 +257,29 @@ export class ListUIPlugin extends OdooUIPlugin {
         return this.unusedLists;
     }
 
+    _getListFormat(listId, position, field) {
+        const locale = this.getters.getLocale();
+        switch (field?.type) {
+            case "integer":
+                return "0";
+            case "float":
+                return "#,##0.00";
+            case "monetary": {
+                const currency = this.getListCurrency(listId, position, field.currency_field);
+                if (!currency) {
+                    return "#,##0.00";
+                }
+                return this.getters.computeFormatFromCurrency(currency);
+            }
+            case "date":
+                return locale.dateFormat;
+            case "datetime":
+                return locale.dateFormat + " " + locale.timeFormat;
+            default:
+                return undefined;
+        }
+    }
+
     // -------------------------------------------------------------------------
     // Getters
     // -------------------------------------------------------------------------
@@ -311,8 +333,17 @@ export class ListUIPlugin extends OdooUIPlugin {
      *
      * @returns {string|undefined}
      */
-    getListCellValue(listId, position, fieldName) {
-        return this.getters.getListDataSource(listId).getListCellValue(position, fieldName);
+    getListCellValueAndFormat(listId, position, fieldName) {
+        const dataSource = this.getters.getListDataSource(listId);
+        dataSource.addFieldToFetch(fieldName);
+        const error = dataSource.assertIsValid({ throwOnError: false });
+        if (error) {
+            return error;
+        }
+        const value = dataSource.getListCellValue(position, fieldName);
+        const field = dataSource.getField(fieldName);
+        const format = this._getListFormat(listId, position, field);
+        return { value, format };
     }
 
     getListCurrency(listId, position, fieldName) {
