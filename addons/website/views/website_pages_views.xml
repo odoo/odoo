@@ -39,8 +39,8 @@
                     <field name="is_in_menu" widget="boolean_toggle" options="{'autosave': False}"/>
                     <button type="action" name="%(website.open_custom_menu)d" context="{'xmlid': 'website.menu_edit_menu'}" string="Edit Menu" class="btn-link" icon="oi-arrow-right"/>
                 </div>
-
-                <field name="is_homepage" string="Is Homepage" widget="boolean_toggle" options="{'autosave': False}"/>
+                <!-- is_homepage toggle auto-save is enabled to update the current homepage for assigning parent_id -->
+                <field name="is_homepage" string="Is Homepage" widget="boolean_toggle"/>
                 <field name="is_published" string="Published" widget="boolean_toggle" options="{'autosave': False}" invisible="not can_publish"/>
             </group>
         </form>
@@ -74,6 +74,14 @@
                 </div>
             </div>
         </xpath>
+        <field name="is_homepage" position="after">
+            <label for="has_parent_page" invisible="is_homepage"/>
+            <div class="d-flex" invisible="is_homepage">
+                <field name="has_parent_page" class="w-25" widget="boolean_toggle" options="{'autosave': False}"/>
+                <label for="parent_id" string="/" invisible="not has_parent_page"/>
+                <field name="parent_id" widget="many2one" invisible="not has_parent_page" required="has_parent_page and not is_homepage" domain="[('website_id','=',website_id),('id','!=',target_model_id)]"/>
+            </div>
+        </field>
         <xpath expr="//group/field[@name='is_published']" position="after">
             <field name="date_publish" widget="datetime"/>
         </xpath>
@@ -107,6 +115,7 @@
             <field name="is_in_menu" string="Is In Main Menu"/>
             <field name="is_seo_optimized"/>
             <field name="is_published"/>
+            <field name="parent_id" widget="many2one" optional="show"/>
 
             <field name="create_uid" column_invisible="True"/>
             <field name="write_uid" widget="many2one_avatar" optional="hide"/>
