@@ -96,7 +96,7 @@ class SaleOrder(models.Model):
             carrier = carrier.with_context(lang=self.partner_id.lang)
 
         # Apply fiscal position
-        taxes = carrier.product_id.taxes_id.filtered(lambda t: t.company_id.id == self.company_id.id)
+        taxes = carrier.product_id.taxes_id.filtered(lambda t: t.company_id in self.company_id.parent_ids)
         taxes_ids = taxes.ids
         if self.partner_id and self.fiscal_position_id:
             taxes_ids = self.fiscal_position_id.map_tax(taxes).ids

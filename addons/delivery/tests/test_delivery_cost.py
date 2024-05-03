@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests import common, Form
 from odoo.tools import float_compare
 
@@ -391,3 +392,38 @@ class TestDeliveryCost(common.TransactionCase):
             qty * list_price * weight * volume,
             "The shipping price is not correctly computed with variable weight*volume.",
         )
+
+    def test_delivery_tax_from_parent_company(self):
+        self.env.company.write({
+            "child_ids": [
+                Command.create({'name': 'Branch'}),
+            ]
+        })
+        branch = self.env.company.child_ids
+
+        delivery = self.env['delivery.carrier'].create({
+            'name': 'Delivery Charges',
+            'delivery_type': 'fixed',
+            'product_id': self.product_delivery_normal.id,
+            'company_id': branch.id,
+        })
+        sale_order = self.SaleOrder.create({
+            'partner_id': self.partner_4.id,
+            'company_id': branch.id,
+            'order_line': [Command.create({
+                'product_id': self.product_4.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_uom_unit.id,
+                'price_unit': 750.00,
+            })],
+        })
+
+        wizzard = self.env['choose.delivery.carrier'].create({
+            'order_id': sale_order.id,
+            'carrier_id': delivery.id,
+            'company_id': branch.id,
+        })
+        wizzard.button_confirm()
+
+        delivery_line = sale_order.order_line.filtered(lambda l: l.is_delivery)
+        self.assertEqual(delivery_line.tax_id, self.product_delivery_normal.taxes_id)
