@@ -471,7 +471,7 @@ class TestMassMailUTM(MassMailCommon):
         # take a (long) existing name -> should increment
         mailing_0.name = 'Second subject (Mass Mailing created on 2022-01-02)'
         self.assertEqual(mailing_0.name, 'Second subject (Mass Mailing created on 2022-01-02) [2]',
-            msg='The name must be unique')
+            msg='The name must be unique, it was already taken')
 
         # back to first subject: not linked to any record so should take it back
         mailing_0.subject = 'First subject'

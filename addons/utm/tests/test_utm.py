@@ -20,8 +20,7 @@ class TestUtm(TestUTMCommon):
 
         campaigns[0].title = "ForcedName"
         self.assertEqual(campaigns[0].name, "ForcedName [2]")
-        with self.subTest(reason="FIXME: same name should not trigger auto increment, received ForcedName [3]"):
-            self.assertEqual(campaigns[0].name, "ForcedName [2]")
+        self.assertEqual(campaigns[0].name, "ForcedName [2]")
 
     def test_find_or_create_record(self):
         """ Tests for '_find_or_create_record' """
