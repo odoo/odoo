@@ -47,8 +47,8 @@
                     <field name="is_in_menu" widget="boolean_toggle" options="{'autosave': False}"/>
                     <button type="action" name="%(website.open_custom_menu)d" context="{'xmlid': 'website.menu_edit_menu'}" string="Edit Menu" class="btn-link" icon="oi-arrow-right"/>
                 </div>
-
-                <field name="is_homepage" string="Is Homepage" widget="boolean_toggle" options="{'autosave': False}"/>
+                <!-- is_homepage toggle auto-save is enabled to update the current homepage for assigning parent_id -->
+                <field name="is_homepage" string="Is Homepage" widget="boolean_toggle"/>
                 <field invisible="not can_publish" string="Published" name="is_published" widget="boolean_toggle" readonly="publish_on" options="{'autosave': False}"/>
                 <label invisible="not can_publish or is_published" for="publish_on" string="Publish on"/>
                 <div invisible="not can_publish or is_published" class="o_row">
@@ -85,6 +85,14 @@
                 </div>
             </div>
         </xpath>
+        <field name="is_homepage" position="after">
+            <label for="has_parent_page" invisible="is_homepage"/>
+            <div class="d-flex" invisible="is_homepage">
+                <field name="has_parent_page" class="w-25" widget="boolean_toggle" options="{'autosave': False}"/>
+                <label for="parent_id" string="/" invisible="not has_parent_page"/>
+                <field name="parent_id" widget="many2one" invisible="not has_parent_page" required="has_parent_page and not is_homepage"/>
+            </div>
+        </field>
         <xpath expr="//group/*[last()]" position="after"> <!-- Bottom -->
             <label for="website_indexed" string="Indexed"/>
             <div class="o_row">
@@ -114,6 +122,7 @@
             <field name="is_in_menu" string="Is In Main Menu"/>
             <field name="is_seo_optimized"/>
             <field name="website_published" invisible="publish_on and website_published"/>
+            <field name="parent_id" widget="many2one" optional="show"/>
             <field name="publish_on" string="Scheduled" invisible="not publish_on"/>
 
             <field name="create_uid" widget="many2one_avatar" optional="hide"/>

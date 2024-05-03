@@ -110,3 +110,176 @@ registerWebsitePreviewTour(
         },
     ]
 );
+
+const breadcrumb = { id: "o_page_breadcrumb", name: "Breadcrumb" };
+let selectedGradient = null;
+
+function openColorPicker(type) {
+    return [
+        {
+            content: "Open the color picker for breadcrumb",
+            trigger: `div[data-label='${type}'] .o_we_color_preview`,
+            run: "click",
+        },
+    ];
+}
+
+function openBackgroundColorPicker(type, selector) {
+    return [
+        ...openColorPicker(type),
+        {
+            content: `Open ${selector} tab`,
+            trigger: `.o_font_color_selector button:contains(${selector})`,
+            run: "click",
+        },
+    ];
+}
+
+registerWebsitePreviewTour(
+    "website_page_breadcrumb",
+    {
+        url: "/contactus",
+        edition: false,
+    },
+    () => [
+        {
+            content: "Open the Site Menu",
+            trigger: "button[data-menu-xmlid='website.menu_site']",
+            run: "click",
+        },
+        {
+            content: "Select the Properties option from the menu",
+            trigger: "a[data-menu-xmlid='website.menu_page_properties']",
+            run: "click",
+        },
+        {
+            content: "Enable the Parent Page Option",
+            trigger: "div[name='has_parent_page'] input",
+            run: "click",
+        },
+        {
+            content: "Save the changes",
+            trigger: "button.o_form_button_save",
+            run: "click",
+        },
+        {
+            content: "Verify that the Breadcrumb is visible",
+            trigger: ":iframe div[data-name='Breadcrumb']",
+        },
+        {
+            content: "Verify that Home is displayed in the breadcrumb",
+            trigger:
+                ":iframe nav[aria-label='breadcrumb'] ol.breadcrumb li:first-child a:contains(Home)",
+        },
+        ...clickOnEditAndWaitEditMode(),
+        ...clickOnSnippet(breadcrumb),
+        ...openBackgroundColorPicker("Background Color", "Theme"),
+        {
+            content: "Apply Preset-4 background color to the breadcrumb",
+            trigger: ".o_cc_preview_wrapper button[data-color='o_cc4']",
+            run: "click",
+        },
+        ...clickOnSave(),
+        {
+            content: "Verify that the breadcrumb background color matches Preset 4",
+            trigger: ":iframe nav[aria-label='breadcrumb']",
+            run() {
+                const occBg = getComputedStyle(document.documentElement)
+                    .getPropertyValue("--o-cc4-bg")
+                    .trim();
+                const breadcrumbBgPreset = getComputedStyle(this.anchor)
+                    .getPropertyValue("--o-cc-bg")
+                    .trim();
+                if (occBg != breadcrumbBgPreset) {
+                    console.error(
+                        `Expected Preset 4 background but received "${breadcrumbBgPreset}"`
+                    );
+                }
+            },
+        },
+        ...clickOnEditAndWaitEditMode(),
+        ...clickOnSnippet(breadcrumb),
+        ...openBackgroundColorPicker("Background Color", "Custom"),
+        {
+            content: "Set the breadcrumb background color to black-600",
+            trigger: ".popover button[data-color='600']",
+            run: "click",
+        },
+        ...clickOnSave(),
+        {
+            content: "Verify that the breadcrumb background color is black-600",
+            trigger: ":iframe .o_page_breadcrumb nav",
+            run() {
+                const bgColor = getComputedStyle(this.anchor).backgroundColor;
+                if (bgColor !== "rgb(108, 117, 125)") {
+                    console.error(
+                        `Expected breadcrumb background rgb(108,117,125) but received ${bgColor}`
+                    );
+                }
+            },
+        },
+        ...clickOnEditAndWaitEditMode(),
+        ...clickOnSnippet(breadcrumb),
+        ...openBackgroundColorPicker("Background Color", "Gradient"),
+        {
+            content: "Apply the first gradient option to the breadcrumb background",
+            trigger: ".o_colorpicker_sections button.o_gradient_color_button",
+            run() {
+                selectedGradient = this.anchor.dataset.color;
+                this.anchor.click();
+            },
+        },
+        {
+            content: "Verify that the breadcrumb background gradient is applied correctly",
+            trigger: ":iframe nav[aria-label='breadcrumb']",
+            run() {
+                const breadcrumbBgGradient = getComputedStyle(this.anchor).backgroundImage.trim();
+                if (breadcrumbBgGradient !== selectedGradient) {
+                    console.error(
+                        `Expected breadcrumb background gradient "${selectedGradient}" but received "${breadcrumbBgGradient}"`
+                    );
+                }
+            },
+        },
+        ...changeOptionInPopover("Breadcrumb", "Breadcrumb Position", "Over the content"),
+        ...clickOnSave(),
+        {
+            content: "Verify that the breadcrumb is positioned over the content",
+            trigger: ":iframe main.o_breadcrumb_overlay",
+        },
+        ...clickOnEditAndWaitEditMode(),
+        ...clickOnSnippet(breadcrumb),
+        ...openColorPicker("Background"),
+        {
+            content: "Set the breadcrumb background color to black-600",
+            trigger: ".popover button[data-color='600']",
+            run: "click",
+        },
+        ...clickOnSave(),
+        {
+            content: "Verify that the breadcrumb background color is black-600",
+            trigger: ":iframe .o_page_breadcrumb.bg-600",
+        },
+        ...clickOnEditAndWaitEditMode(),
+        ...clickOnSnippet(breadcrumb),
+        ...openColorPicker("Text Color"),
+        {
+            content: "Set the breadcrumb text color to red",
+            trigger: ".popover button[data-color='#FF0000']",
+            run: "click",
+        },
+        ...clickOnSave(),
+        {
+            content: "Verify that the breadcrumb text color is red",
+            trigger: ':iframe .o_page_breadcrumb[style*="color: rgb(255, 0, 0)"]',
+        },
+        ...clickOnEditAndWaitEditMode(),
+        ...clickOnSnippet(breadcrumb),
+        ...changeOptionInPopover("Breadcrumb", "Breadcrumb Position", "Hidden"),
+        ...clickOnSave(),
+        {
+            content: "Verify that the breadcrumb is hidden",
+            trigger: ":iframe main:has(div.o_page_breadcrumb.d-none.o_snippet_invisible)",
+        },
+    ]
+);

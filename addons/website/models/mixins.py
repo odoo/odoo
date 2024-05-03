@@ -148,6 +148,7 @@ class WebsitePageVisibilityOptionsMixin(models.AbstractModel):
 
     header_visible = fields.Boolean(default=True)
     footer_visible = fields.Boolean(default=True)
+    breadcrumb_visible = fields.Boolean(default=True)
 
 
 class WebsitePageOptionsMixin(models.AbstractModel):
@@ -158,6 +159,9 @@ class WebsitePageOptionsMixin(models.AbstractModel):
     header_overlay = fields.Boolean()
     header_color = fields.Char()
     header_text_color = fields.Char()
+    breadcrumb_overlay = fields.Boolean()
+    breadcrumb_color = fields.Char()
+    breadcrumb_text_color = fields.Char()
 
 
 class WebsiteMultiMixin(models.AbstractModel):

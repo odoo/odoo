@@ -274,11 +274,54 @@
         </t>
     </xpath>
 
+    <!-- Breadcrumb -->
+    <xpath expr="//main/*[1]" position="before">
+        <t t-if="main_object.sudo()._name == 'website.page' and main_object.sudo()['parent_id']">
+            <div data-name="Breadcrumb"
+                t-attf-class="o_page_breadcrumb #{breadcrumb_bg_color_class} #{breadcrumb_text_color_class} #{'d-none o_snippet_invisible' if 'breadcrumb_visible' in main_object and not main_object.sudo().breadcrumb_visible else ''}"
+                t-attf-style="#{breadcrumb_bg_color_style and ('background-color: %s;' % breadcrumb_bg_color_style)} #{breadcrumb_text_color_style and ('color: %s;' % breadcrumb_text_color_style)}"
+                t-att-data-invisible="'1' if 'breadcrumb_visible' in main_object and not main_object.sudo().breadcrumb_visible else None"
+            >
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb container p-2 mb-0">
+                        <t t-set="ancestors" t-value="main_object.sudo().parent_ids"/>
+                        <!-- Grand Parent -->
+                        <li class="breadcrumb-item">
+                            <a t-att-href="ancestors[0].url" t-out="ancestors[0].name"/>
+                        </li>
+                        <t t-if="len(ancestors) &lt;= 2">
+                            <li t-foreach="ancestors[1:]" t-as="ancestor" class="breadcrumb-item">
+                                <a t-att-href="ancestor.url" t-out="ancestor.name"/>
+                            </li>
+                        </t>
+                        <t t-else="">
+                            <!-- Dropdown -->
+                            <li class="breadcrumb-item dropdown">
+                                <a role="button" data-bs-toggle="dropdown">...</a>
+                                <div role="menu" class="dropdown-menu">
+                                    <a t-foreach="ancestors[1:len(ancestors)-1]" t-as="ancestor" class="dropdown-item" t-att-href="ancestor.url" t-out="ancestor.name"/>
+                                </div>
+                            </li>
+                            <!-- Direct Parent -->
+                            <li class="breadcrumb-item">
+                                <a t-att-href="ancestors[len(ancestors)-1].url" t-out="ancestors[len(ancestors)-1].name"/>
+                            </li>
+                        </t>
+                        <!-- Current Page -->
+                        <li class="breadcrumb-item active" aria-current="page">
+                            <t t-out="main_object.sudo().name"/>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </t>
+    </xpath>
+
     <!-- Page options -->
     <xpath expr="//div[@id='wrapwrap']" position="before">
         <!-- Todo: Refactor this part. These inputs were initially used for multiple use cases but are now only used to determine if a given option is activated on the page. We should probably implement the feature using an RPC. -->
         <t groups="website.group_website_restricted_editor">
-            <t t-foreach="['header_overlay', 'header_color', 'header_text_color', 'header_visible', 'footer_visible']" t-as="optionName">
+            <t t-foreach="['header_overlay', 'header_color', 'header_text_color', 'header_visible', 'footer_visible', 'breadcrumb_overlay', 'breadcrumb_color', 'breadcrumb_text_color', 'breadcrumb_visible']" t-as="optionName">
                 <!-- Firefox autocomplete is too aggressive and works on hidden inputs,
                 so we need to disable it (https://bugzilla.mozilla.org/show_bug.cgi?id=520561) -->
                 <input t-if="optionName in main_object" type="hidden" class="o_page_option_data" autocomplete="off" t-att-name="optionName" t-att-value="main_object.sudo()[optionName]"/>
@@ -294,6 +337,16 @@
         <t t-set="header_text_color_is_class" t-value="'text-' in header_text_color"/>
         <t t-set="header_text_color_class" t-value="header_text_color_is_class and header_text_color or ''"/>
         <t t-set="header_text_color_style" t-value="(not header_text_color_is_class) and header_text_color or ''"/>
+
+        <t t-set="breadcrumb_bg_color" t-value="'breadcrumb_color' in main_object and main_object.sudo().breadcrumb_color or ''"/>
+        <t t-set="breadcrumb_bg_color_is_class" t-value="'bg-' in breadcrumb_bg_color"/>
+        <t t-set="breadcrumb_bg_color_class" t-value="breadcrumb_bg_color_is_class and breadcrumb_bg_color or ''"/>
+        <t t-set="breadcrumb_bg_color_style" t-value="(not breadcrumb_bg_color_is_class) and breadcrumb_bg_color or ''"/>
+
+        <t t-set="breadcrumb_text_color" t-value="'breadcrumb_text_color' in main_object and main_object.sudo().breadcrumb_text_color or ''"/>
+        <t t-set="breadcrumb_text_color_is_class" t-value="'text-' in breadcrumb_text_color"/>
+        <t t-set="breadcrumb_text_color_class" t-value="breadcrumb_text_color_is_class and breadcrumb_text_color or ''"/>
+        <t t-set="breadcrumb_text_color_style" t-value="(not breadcrumb_text_color_is_class) and breadcrumb_text_color or ''"/>
 
         <div groups="base.group_user" class="o_frontend_to_backend_nav position-fixed d-none">
             <svg class="o_frontend_to_backend_icon position-absolute" width="24px" height="24px"
@@ -329,6 +382,9 @@
     <xpath expr="//footer[@id='bottom']" position="attributes">
         <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'footer_visible' in main_object and not main_object.sudo().footer_visible else ''}" separator=" "/>
         <attribute name="t-att-data-invisible">'1' if 'footer_visible' in main_object and not main_object.sudo().footer_visible else None</attribute>
+    </xpath>
+    <xpath expr="//main" position="attributes">
+        <attribute name="t-attf-class" add="#{'o_breadcrumb_overlay' if 'breadcrumb_overlay' in main_object and main_object.sudo().breadcrumb_overlay else ''}" />
     </xpath>
 </template>
 

@@ -8,6 +8,7 @@ import { HEADER_TEMPLATE } from "./header/header_option_plugin";
 import { TopMenuVisibilityOption } from "./website_page_config_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BreadcrumbOption } from "./breadcrumb_option";
 
 /**
  * @typedef { Object } WebsitePageConfigOptionShared
@@ -38,6 +39,7 @@ class WebsitePageConfigOptionPlugin extends Plugin {
         "getVisibilityItem",
         "getFooterVisibility",
         "doesPageOptionExist",
+        "getTarget",
     ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -45,23 +47,55 @@ class WebsitePageConfigOptionPlugin extends Plugin {
             SetWebsiteHeaderVisibilityAction,
             SetWebsiteFooterVisibleAction,
             SetPageWebsiteDirtyAction,
+            SetWebsiteBreadcrumbVisibilityAction,
         },
         builder_options: [
             withSequence(TOP_MENU_VISIBILITY, TopMenuVisibilityOption),
             withSequence(HIDE_FOOTER, HideFooterOption),
+            BreadcrumbOption,
         ],
         target_show: this.onTargetVisibilityToggle.bind(this, true),
         target_hide: this.onTargetVisibilityToggle.bind(this, false),
         save_handlers: this.onSave.bind(this),
     };
 
-    getVisibilityItem() {
-        const isHidden = this.document
-            .querySelector("#wrapwrap > header")
-            .classList.contains("o_snippet_invisible");
-        const isOverlay = this.document
-            .getElementById("wrapwrap")
-            .classList.contains("o_header_overlay");
+    /**
+     * Returns the HTML element corresponding to the given type.
+     *
+     * @param {'header' | 'breadcrumb'} type The element type to retrieve.
+     * @returns {HTMLElement | null} The matching element or null if not found.
+     */
+    getTarget(type) {
+        if (type === "header") {
+            return this.document.querySelector("#wrapwrap > header");
+        } else if (type === "breadcrumb") {
+            return this.document.querySelector("#wrapwrap div.o_page_breadcrumb");
+        }
+        return null;
+    }
+
+    /**
+     * Get the current visibility state of the target element.
+     *
+     * @param {'header' | 'breadcrumb'} type The target element type.
+     * @returns {'regular' | 'overTheContent' | 'hidden'} The visibility state.
+     */
+    getVisibilityItem(type) {
+        const el = this.getTarget(type);
+        if (!el) {
+            return "regular";
+        }
+        const isHidden = el.classList.contains("o_snippet_invisible");
+        let isOverlay = null;
+        if (type === "header") {
+            isOverlay = this.document
+                .getElementById("wrapwrap")
+                .classList.contains("o_header_overlay");
+        } else if (type === "breadcrumb") {
+            isOverlay = this.document
+                .querySelector("main")
+                .classList.contains("o_breadcrumb_overlay");
+        }
         return isOverlay ? "overTheContent" : isHidden ? "hidden" : "regular";
     }
 
@@ -71,10 +105,21 @@ class WebsitePageConfigOptionPlugin extends Plugin {
             .classList.contains("o_snippet_invisible");
     }
 
-    getColorValue(attribute, classPrefix) {
-        const headerEl = this.document.querySelector("#wrapwrap > header");
-        const matchingClass = [...headerEl.classList].find((cls) => cls.startsWith(classPrefix));
-        return matchingClass || rgbaToHex(headerEl.style.getPropertyValue(attribute));
+    /**
+     * Get the color value (class or inline style) of the target element.
+     *
+     * @param {'header' | 'breadcrumb'} type The target element type.
+     * @param {String} attribute CSS property to check.
+     * @param {String} classPrefix Class prefix to match (e.g. "bg-" | "text-")
+     * @returns {String | null} Matching class name | hex color | null.
+     */
+    getColorValue(type, attribute, classPrefix) {
+        const el = this.getTarget(type);
+        if (!el) {
+            return null;
+        }
+        const matchingClass = [...el.classList].find((cls) => cls.startsWith(classPrefix));
+        return matchingClass || rgbaToHex(el.style.getPropertyValue(attribute));
     }
 
     setDirty(isPreviewing) {
@@ -88,13 +133,20 @@ class WebsitePageConfigOptionPlugin extends Plugin {
         if (!this.isDirty) {
             return;
         }
-        const item = this.getVisibilityItem();
+        const headerItem = this.getVisibilityItem("header");
+        const breadcrumbItem = this.getVisibilityItem("breadcrumb");
+
         const pageOptions = {
-            header_overlay: () => item === "overTheContent",
-            header_color: () => this.getColorValue("background-color", "bg-"),
-            header_text_color: () => this.getColorValue("color", "text-"),
-            header_visible: () => item !== "hidden",
+            header_overlay: () => headerItem === "overTheContent",
+            header_color: () => this.getColorValue("header", "background-color", "bg-"),
+            header_text_color: () => this.getColorValue("header", "color", "text-"),
+            header_visible: () => headerItem !== "hidden",
             footer_visible: () => !this.getFooterVisibility(),
+
+            breadcrumb_overlay: () => breadcrumbItem === "overTheContent",
+            breadcrumb_color: () => this.getColorValue("breadcrumb", "background-color", "bg-"),
+            breadcrumb_text_color: () => this.getColorValue("breadcrumb", "color", "text-"),
+            breadcrumb_visible: () => breadcrumbItem !== "hidden",
         };
 
         const args = {};
@@ -129,6 +181,13 @@ class WebsitePageConfigOptionPlugin extends Plugin {
                 isPreviewing: false,
             });
         }
+        if (show && target.matches(".o_page_breadcrumb")) {
+            this.dependencies.builderActions.applyAction("setWebsiteBreadcrumbVisibility", {
+                editingElement: target,
+                value: "regular",
+                isPreviewing: false,
+            });
+        }
         if (show && target.matches("#wrapwrap > footer")) {
             this.dependencies.builderActions.applyAction("setWebsiteFooterVisible", {
                 editingElement: target,
@@ -144,70 +203,114 @@ export class BaseWebsitePageConfigAction extends BuilderAction {
         this.websitePageConfig = this.dependencies.websitePageConfigOptionPlugin;
         this.visibility = this.dependencies.visibility;
         this.history = this.dependencies.history;
-        this.visibilityHandlers = {
+        this.headerVisibilityHandlers = this.getVisibilityHandlers("header");
+        this.breadcrumbVisibilityHandlers = this.getVisibilityHandlers("breadcrumb");
+    }
+
+    getVisibilityHandlers(type) {
+        return {
             overTheContent: () => {
-                this.setHeaderOverlay(true);
-                this.setHeaderVisible(false);
+                this.setOverlay(type, true);
+                this.setVisible(type, false);
             },
             regular: () => {
-                this.setHeaderOverlay(false);
-                this.setHeaderVisible(false);
-                this.resetHeaderColor();
-                this.resetTextColor();
+                this.setOverlay(type, false);
+                this.setVisible(type, false);
+                this.resetColor(type);
+                this.resetTextColor(type);
             },
             hidden: () => {
-                this.setHeaderOverlay(false);
-                this.setHeaderVisible(true);
-                this.resetHeaderColor();
-                this.resetTextColor();
+                this.setOverlay(type, false);
+                this.setVisible(type, true);
+                this.resetColor(type);
+                this.resetTextColor(type);
             },
         };
     }
 
-    setHeaderOverlay(shouldApply) {
-        this.document.getElementById("wrapwrap").classList.toggle("o_header_overlay", shouldApply);
+    /**
+     * Apply or remove "Over the Content" mode for the target element.
+     *
+     * @param {'header' | 'breadcrumb'} type The element type to update.
+     * @param {boolean} shouldApply true to enable, false to disable.
+     */
+    setOverlay(type, shouldApply) {
+        const selector = type === "header" ? "#wrapwrap" : type === "breadcrumb" ? "main" : null;
+        const el = this.document.querySelector(selector);
+        el.classList.toggle(`o_${type}_overlay`, shouldApply);
     }
 
-    setHeaderVisible(shouldApply) {
-        const headerEl = this.document.querySelector("#wrapwrap > header");
-        headerEl.classList.toggle("d-none", shouldApply);
-        headerEl.classList.toggle("o_snippet_invisible", shouldApply);
-        this.visibility.onOptionVisibilityUpdate(headerEl, !shouldApply);
+    /**
+     * Toggle the visibility of a target element and update the plugin's
+     * visibility state.
+     *
+     * @param {'header' | 'breadcrumb'} type The element type to toggle.
+     * @param {boolean} shouldHide true to hide, false to show.
+     */
+    setVisible(type, shouldHide) {
+        const el = this.websitePageConfig.getTarget(type);
+        el.classList.toggle("d-none", shouldHide);
+        el.classList.toggle("o_snippet_invisible", shouldHide);
+        this.visibility.onOptionVisibilityUpdate(el, !shouldHide);
     }
 
-    resetHeaderColor() {
-        const headerEl = this.document.querySelector("#wrapwrap > header");
-        headerEl.style.removeProperty("background-color");
-        headerEl.classList.forEach((cls) => {
-            if (cls.startsWith("bg-o-color-")) {
-                headerEl.classList.remove(cls);
-            }
-        });
+    /**
+     * Remove any background color class or inline style from the given
+     * target element.
+     *
+     * @param {'header' | 'breadcrumb'} type The element type to reset.
+     */
+    resetColor(type) {
+        const el = this.websitePageConfig.getTarget(type);
+        el.style.removeProperty("background-color");
+        const classes = [...el.classList].filter((cls) => cls.startsWith("bg-o-color-"));
+        if (classes.length) {
+            el.classList.remove(...classes);
+        }
     }
 
-    resetTextColor() {
-        const headerEl = this.document.querySelector("#wrapwrap > header");
-        headerEl.style.removeProperty("color");
-        headerEl.classList.forEach((cls) => {
-            if (cls.startsWith("text-o-color-")) {
-                headerEl.classList.remove(cls);
-            }
-        });
+    /**
+     * Remove any text color class or inline style from the given
+     * target element.
+     *
+     * @param {'header' | 'breadcrumb'} type The element type to reset.
+     */
+    resetTextColor(type) {
+        const el = this.websitePageConfig.getTarget(type);
+        el.style.removeProperty("color");
+        const classes = [...el.classList].filter((cls) => cls.startsWith("text-o-color-"));
+        if (classes.length) {
+            el.classList.remove(...classes);
+        }
     }
 }
 export class SetWebsiteHeaderVisibilityAction extends BaseWebsitePageConfigAction {
     static id = "setWebsiteHeaderVisibility";
     apply({ editingElement, value: headerPositionValue, isPreviewing }) {
-        const lastValue = this.websitePageConfig.getVisibilityItem();
+        const lastValue = this.websitePageConfig.getVisibilityItem("header");
         this.history.applyCustomMutation({
-            apply: () => this.visibilityHandlers[headerPositionValue](),
-            revert: () => this.visibilityHandlers[lastValue](),
+            apply: () => this.headerVisibilityHandlers[headerPositionValue](),
+            revert: () => this.headerVisibilityHandlers[lastValue](),
         });
 
         this.websitePageConfig.setDirty(isPreviewing);
     }
     isApplied({ editingElement, value }) {
-        return this.websitePageConfig.getVisibilityItem() === value;
+        return this.websitePageConfig.getVisibilityItem("header") === value;
+    }
+}
+export class SetWebsiteBreadcrumbVisibilityAction extends BaseWebsitePageConfigAction {
+    static id = "setWebsiteBreadcrumbVisibility";
+    isApplied({ value }) {
+        return this.websitePageConfig.getVisibilityItem("breadcrumb") === value;
+    }
+    apply({ value }) {
+        const lastValue = this.websitePageConfig.getVisibilityItem("breadcrumb");
+        this.history.applyCustomMutation({
+            apply: () => this.breadcrumbVisibilityHandlers[value](),
+            revert: () => this.breadcrumbVisibilityHandlers[lastValue](),
+        });
+        this.websitePageConfig.setDirty();
     }
 }
 export class SetWebsiteFooterVisibleAction extends BaseWebsitePageConfigAction {

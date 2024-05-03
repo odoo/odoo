@@ -11,6 +11,7 @@ from odoo import api, fields, models, tools, http
 from odoo.fields import Domain
 from odoo.tools import escape_psql, SQL
 from odoo.tools.translate import _
+from odoo.exceptions import UserError
 
 logger = logging.getLogger(__name__)
 
@@ -48,10 +49,24 @@ class WebsitePage(models.Model):
     is_homepage = fields.Boolean(compute='_compute_is_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
     is_new_page_template = fields.Boolean(string="New Page Template", help='Add this page to the "+New" page templates. It will be added to the "Custom" category.')
+    parent_id = fields.Many2one('website.page', string="Parent Page")
+    parent_ids = fields.Many2many('website.page', compute='_compute_parent_ids')
 
     # don't use mixin website_id but use website_id on ir.ui.view instead
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False, ondelete='cascade')
     arch = fields.Text(related='view_id.arch', readonly=False, depends_context=('website_id',))
+
+    @api.constrains('parent_id')
+    def _compute_parent_ids(self):
+        for page in self:
+            parent_ids = []
+            parent = page.parent_id
+            while parent:
+                if parent.id == page.id:
+                    raise UserError(self.env._("This would create a circular page hierarchy."))
+                parent_ids.append(parent.id)
+                parent = parent.parent_id
+            page.parent_ids = self.browse(reversed(parent_ids))
 
     def _compute_is_homepage(self):
         website = self.env['website'].get_current_website()
