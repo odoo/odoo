@@ -126,7 +126,7 @@ export class DiscussChannel extends models.ServerModel {
                 invited_by_user_id: this.env.uid,
             });
         }
-        const selfPartner = partners.find((partner) => partner.id === this.env.user.parter_id);
+        const selfPartner = partners.find((partner) => partner.id === this.env.user.partner_id);
         if (selfPartner) {
             // needs to be done after adding 'self' as a member
             const body = `<div class="o_mail_notification">${selfPartner.name} joined the channel</div>`;
