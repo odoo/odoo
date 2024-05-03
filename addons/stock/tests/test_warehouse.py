@@ -513,6 +513,110 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(warehouse_B.resupply_route_ids, resupply_route)
         self.assertTrue(resupply_route.active, 'Route should now be active')
 
+    def test_muti_step_resupply_warehouse(self):
+        """ Simulate the following situation:
+        - First warehouse has a 3-steps delivery
+        - Second warehouse has a 3-steps reception
+        - Second warehouse is resupplied by the first warehouse
+        - A product has some stock in the first warehouse
+        - A reordering rule is set on the product to fill the second warehouse
+        Ensure that the product can move all the way from the first to the second warehouse.
+        """
+        warehouse_A = self.env['stock.warehouse'].create({
+            'name': 'Warehouse A',
+            'code': 'WH_A',
+            'delivery_steps': 'pick_pack_ship',
+        })
+        warehouse_B = self.env['stock.warehouse'].create({
+            'name': 'Warehouse B',
+            'code': 'WH_B',
+            'reception_steps': 'three_steps',
+            'resupply_wh_ids': [Command.link(warehouse_A.id)],
+        })
+        self.product_3.write({
+            'type': 'consu',
+            'is_storable': True,
+            'route_ids': [Command.link(warehouse_B.resupply_route_ids.id)],
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_3, warehouse_A.lot_stock_id, 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_3, warehouse_A.lot_stock_id), 1)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_3, warehouse_B.lot_stock_id), 0)
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'location_id': warehouse_B.lot_stock_id.id,
+            'product_id': self.product_3.id,
+            'qty_to_order': 1.0,
+        })
+        orderpoint.action_replenish()
+        # Check that the orderpoint generated the source move from the furthest location.
+        move = self.env['stock.move'].search([('location_id', '=', warehouse_A.lot_stock_id.id), ('origin', '=', orderpoint.name)])
+        self.assertTrue(move, 'No move created from WH_A/Stock')
+
+        # Validate each intermediate transfers towards resupply of WH_B/Stock
+        inter_wh_loc = self.env.company.internal_transit_location_id
+        step_location_ids = [
+            (warehouse_A.lot_stock_id.id, warehouse_A.wh_pack_stock_loc_id.id),             # WH_A/Stock -> WH_A/Packing Zone
+            (warehouse_A.wh_pack_stock_loc_id.id, warehouse_A.wh_output_stock_loc_id.id),   # WH_A/Packing Zone -> WH_A/Output
+            (warehouse_A.wh_output_stock_loc_id.id, inter_wh_loc.id),                       # WH_A/Output -> Inter-warehouse transit
+            (inter_wh_loc.id, warehouse_B.wh_input_stock_loc_id.id),                        # Inter-warehouse transit -> WH_B/Input
+            (warehouse_B.wh_input_stock_loc_id.id, warehouse_B.wh_qc_stock_loc_id.id),      # WH_B/Input -> WH_B/Quality Control
+            (warehouse_B.wh_qc_stock_loc_id.id, warehouse_B.lot_stock_id.id),               # WH_B/Quality Control -> WH_B/Stock
+        ]
+        for loc_src_id, loc_dest_id in step_location_ids:
+            self.assertEqual(move.location_id.id, loc_src_id)
+            self.assertEqual(move.location_dest_id.id, loc_dest_id)
+            move.picked = True
+            move._action_done()
+            self.assertEqual(move.state, 'done')
+            move = move.move_dest_ids
+        # Verify that the quantity has been properly transfered from WH_A/Stock to WH_B/Stock
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_3, warehouse_A.lot_stock_id), 0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_3, warehouse_B.lot_stock_id), 1)
+
+    def test_change_delivery_step_resupply_warehouse(self):
+        """ Verifies that when changing the delivery steps of a warehouse, it correctly adds/removes the extra rule
+        that is required to resupply the Output location.
+        """
+        warehouse_A = self.env['stock.warehouse'].create({
+            'name': 'Warehouse X',
+            'code': 'WH_X',
+        })
+        warehouse_B = self.env['stock.warehouse'].create({
+            'name': 'Warehouse Y',
+            'code': 'WH_Y',
+            'resupply_wh_ids': [Command.link(warehouse_A.id)],
+        })
+        resupply_rules = warehouse_B.resupply_route_ids.rule_ids
+        self.assertEqual(len(resupply_rules), 2)
+        stock_A_to_transit = resupply_rules.filtered(lambda r: r.location_dest_id == self.env.company.internal_transit_location_id)
+        self.assertEqual(stock_A_to_transit.location_src_id, warehouse_A.lot_stock_id)
+
+        # Set Warehouse A to 3 steps, a new rule should be created to resupply Output.
+        warehouse_A.delivery_steps = 'pick_pack_ship'
+        new_resupply_rules = warehouse_B.resupply_route_ids.rule_ids
+        self.assertEqual(len(new_resupply_rules), 3)
+        self.assertEqual(stock_A_to_transit.location_src_id, warehouse_A.wh_output_stock_loc_id)
+        stock_to_output = new_resupply_rules - resupply_rules
+        self.assertEqual(stock_to_output.location_src_id, warehouse_A.lot_stock_id)
+        self.assertEqual(stock_to_output.location_dest_id, warehouse_A.wh_output_stock_loc_id)
+
+        # Set Warehouse A to 2 steps, no change should have been made.
+        warehouse_A.delivery_steps = 'pick_ship'
+        self.assertEqual(warehouse_B.resupply_route_ids.rule_ids, new_resupply_rules)
+        self.assertEqual(stock_A_to_transit.location_src_id, warehouse_A.wh_output_stock_loc_id)
+        self.assertEqual(stock_to_output.location_dest_id, warehouse_A.wh_output_stock_loc_id)
+
+        # Set Warehouse A to 1 step, the rule to resupply Output should be archived.
+        warehouse_A.delivery_steps = 'ship_only'
+        self.assertEqual(warehouse_B.resupply_route_ids.rule_ids, resupply_rules)
+        self.assertEqual(stock_A_to_transit.location_src_id, warehouse_A.lot_stock_id)
+        self.assertFalse(stock_to_output.active, "The intermediate rule should have been archived.")
+
+        # Set Warehouse A back to 2 steps, the rule to resupply Output should be unarchived.
+        warehouse_A.delivery_steps = 'pick_ship'
+        self.assertTrue(stock_to_output.active, "The intermediate rule should have been unarchived.")
+        self.assertEqual(warehouse_B.resupply_route_ids.rule_ids, new_resupply_rules, "No new rule should have been created.")
+
     def test_noleak(self):
         # non-regression test to avoid company_id leaking to other warehouses (see blame)
         partner = self.env['res.partner'].create({'name': 'Chicago partner'})
