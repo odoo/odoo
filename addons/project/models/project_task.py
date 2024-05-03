@@ -901,6 +901,10 @@ class Task(models.Model):
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
         fields_list = {term[0] for term in domain if isinstance(term, (tuple, list)) and term not in [expression.TRUE_LEAF, expression.FALSE_LEAF]}
         self._ensure_fields_are_accessible(fields_list)
+        for index, leaf in enumerate(domain):
+            if leaf[0] == 'personal_stage_type_ids' and leaf[1] == '=' and not leaf[2]:
+                types = self.env['project.task.type']._search([('user_id', '=', self.env.uid)])
+                domain[index] = ('personal_stage_type_ids', 'not in', types)
         return super()._search(domain, offset, limit, order, access_rights_uid)
 
     def mapped(self, func):
