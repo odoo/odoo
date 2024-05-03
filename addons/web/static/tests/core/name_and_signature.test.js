@@ -81,3 +81,18 @@ test("test name_and_signature widget with noInputName and without name", async f
     expect(".card-header .active").toHaveCount(1);
     expect(".card-header .active").toHaveText("Draw");
 });
+
+test("test name_and_signature widget update signmode with onSignatureChange prop", async function () {
+    let currentSignMode = "";
+    const props = {
+        signature: { name: "Test Owner" },
+        onSignatureChange: function (signMode) {
+            if (currentSignMode !== signMode) {
+                currentSignMode = signMode;
+            }
+        },
+    };
+    await mountWithCleanup(NameAndSignature, { props });
+    await contains(".o_web_sign_draw_button").click();
+    expect(currentSignMode).toEqual("draw");
+});
