@@ -142,3 +142,26 @@ registry
         }
     });
 //#endregion
+
+registry
+    .category('web_tour.tours')
+    .add("PosLoyaltyPointsEwallet", {
+        test: true,
+        url: "/pos/ui",
+        steps: () => {
+            const getEWalletText = (suffix) => "eWallet" + (suffix !== "" ? ` ${suffix}` : "");
+
+            startSteps();
+            ProductScreen.do.confirmOpeningPopup();
+            ProductScreen.do.clickHomeCategory();
+            ProductScreen.do.clickPartnerButton();
+            ProductScreen.do.clickCustomer("partner_a");
+            PosLoyalty.check.eWalletButtonState({ highlighted: false });
+            ProductScreen.exec.addOrderline("product_a", "1");
+            PosLoyalty.check.eWalletButtonState({ highlighted: true, text: getEWalletText("Pay") });
+            PosLoyalty.do.clickEWalletButton(getEWalletText("Pay"));
+            PosLoyalty.check.pointsAwardedAre("100");
+            PosLoyalty.exec.finalizeOrder("Cash", "90.00");
+            return getSteps();
+        }
+    });
