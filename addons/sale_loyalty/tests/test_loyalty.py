@@ -50,6 +50,24 @@ class TestLoyalty(TestSaleCouponCommon):
 
         cls.user_salemanager = new_test_user(cls.env, login='user_salemanager', groups='sales_team.group_sale_manager')
 
+        cls.promotion_code_10pc = cls.env['loyalty.program'].create({
+            'name': "Code for 10% on orders",
+            'trigger': 'with_code',
+            'program_type': 'promotion',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({
+                'mode': 'with_code',
+                'code': 'test_10pc',
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount_mode': 'percent',
+                'discount': 10,
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+
     def test_nominative_programs(self):
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Loyalty Program',
@@ -309,6 +327,256 @@ class TestLoyalty(TestSaleCouponCommon):
         reward_amount_tax_included = sum(l.price_total for l in order.order_line if l.reward_id)
         msg = "Reward amount should be the percentage one if under the max amount discount."
         self.assertEqual(reward_amount_tax_included, -6, msg)
+
+    def test_points_awarded_global_discount_code_no_domain_program(self):
+        """
+        Check the calculation for points awarded when there is a global discount applied and the
+        loyalty program applies on all products (no domain).
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
+
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': self.partner_a.id,
+            'points': 0,
+        })
+
+        order = self.env['sale.order'].with_user(self.user_salemanager).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'tax_id': False,
+                }),
+            ]
+        })
+
+        promotion_program = self.env['loyalty.program'].create([{
+            'name': "Coupon Program",
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({
+                    'reward_point_amount': 1,
+                    'reward_point_mode': 'order',
+                    'minimum_amount': 10,
+                })],
+            'reward_ids': [Command.create({
+                    'reward_type': 'discount',
+                    'discount': 10.0,
+                    'discount_applicability': 'order',
+                    'required_points': 1,
+                })],
+        }])
+
+        self.assertEqual(order.amount_total, 100)
+        self._auto_rewards(order, promotion_program)
+        self.assertEqual(order.amount_total, 90)
+        order.action_confirm()
+        self.assertEqual(loyalty_card.points, 90)
+
+    def test_points_awarded_discount_code_no_domain_program(self):
+        """
+        Check the calculation for points awarded when there is a discount coupon applied and the
+        loyalty program applies on all products (no domain).
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': self.partner_a.id,
+            'points': 0,
+        })
+
+        order = self.env['sale.order'].with_user(self.user_salemanager).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'tax_id': False,
+                }),
+            ]
+        })
+
+        self.assertEqual(order.amount_total, 100)
+        self._apply_promo_code(order, "test_10pc")
+        self.assertEqual(order.amount_total, 90)
+        order.action_confirm()
+        self.assertEqual(loyalty_card.points, 90)
+
+    def test_points_awarded_general_discount_code_specific_domain_program(self):
+        """
+        Check the calculation for points awarded when there is a discount coupon applied and the
+        loyalty program applies on a specific domain. The discount code has no domain. The product
+        related to that discount is not in the domain of the loyalty program.
+        Expected behavior: The discount is not included in the computation of points
+        """
+        product_category_base = self.env.ref('product.product_category_1')
+        product_category_food = self.env['product.category'].create({
+            'name': "Food",
+            'parent_id': product_category_base.id
+        })
+
+        self.product_A.categ_id = product_category_food
+        self.product_B.list_price = 50
+
+        LoyaltyProgram = self.env['loyalty.program']
+        loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
+        loyalty_program.rule_ids.product_category_id = product_category_food.id
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': self.partner_a.id,
+            'points': 0,
+        })
+
+        order = self.env['sale.order'].with_user(self.user_salemanager).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'tax_id': False,
+                }),
+                Command.create({
+                    'product_id': self.product_B.id,
+                    'tax_id': False,
+                }),
+            ]
+        })
+
+        self.assertEqual(order.amount_total, 150)
+        self._apply_promo_code(order, "test_10pc")
+        self.assertEqual(order.amount_total, 135)  # (product_A + product_B) * 0.9
+        order.action_confirm()
+        self.assertEqual(loyalty_card.points, 100)
+
+    def test_points_awarded_specific_discount_code_specific_domain_program(self):
+        """
+        Check the calculation for points awarded when there is a discount coupon applied and the
+        loyalty program applies on a specific domain. The discount code has the same domain as the
+        loyalty program. The product related to that discount code is set up to be included in the
+        domain of the loyalty program.
+        Expected behavior: The discount is included in the computation of points
+        """
+        product_category_base = self.env.ref('product.product_category_1')
+        product_category_food = self.env['product.category'].create({
+            'name': "Food",
+            'parent_id': product_category_base.id
+        })
+
+        self.product_A.categ_id = product_category_food
+        self.product_B.list_price = 50
+
+        LoyaltyProgram = self.env['loyalty.program']
+        loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
+        loyalty_program.rule_ids.product_category_id = product_category_food.id
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': self.partner_a.id,
+            'points': 0,
+        })
+
+        self.promotion_code_10pc.rule_ids.product_category_id = product_category_food.id
+        self.promotion_code_10pc.reward_ids.discount_applicability = 'specific'
+        self.promotion_code_10pc.reward_ids.discount_product_category_id = product_category_food.id
+
+        discount_product = self.env['product.product'].search([('id', '=', self.promotion_code_10pc.reward_ids.discount_line_product_id.id)])
+        discount_product.categ_id = product_category_food.id
+
+        order = self.env['sale.order'].with_user(self.user_salemanager).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'tax_id': False,
+                }),
+                Command.create({
+                    'product_id': self.product_B.id,
+                    'tax_id': False,
+                }),
+            ]
+        })
+
+        self.assertEqual(order.amount_total, 150)
+        self._apply_promo_code(order, "test_10pc")
+        self.assertEqual(order.amount_total, 140)  # (product_A * 0.9 ) + product_B
+        order.action_confirm()
+        self.assertEqual(loyalty_card.points, 90)
+
+    def test_points_awarded_ewallet(self):
+        """
+        Check the calculation for point awarded when using ewallet
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': self.partner_a.id,
+            'points': 0,
+        })
+        order = self.env['sale.order'].with_user(self.user_salemanager).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'tax_id': False,
+                }),
+            ]
+        })
+
+        self.assertEqual(order.amount_total, 100)
+        order._update_programs_and_rewards()
+        self._claim_reward(order, self.ewallet_program, coupon=self.ewallet)
+        self.assertEqual(order.amount_total, 90)
+        order.action_confirm()
+        self.assertEqual(loyalty_card.points, 100)
+
+    def test_points_awarded_giftcard(self):
+        """
+        Check the calculation for point awarded when using a gift card
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': self.partner_a.id,
+            'points': 0,
+        })
+
+        program_gift_card = self.env['loyalty.program'].create({
+            'name': "Gift Cards",
+            'applies_on': 'future',
+            'program_type': 'gift_card',
+            'trigger': 'auto',
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 1,
+                'discount_mode': 'per_point',
+                'discount_applicability': 'order',
+            })]
+        })
+
+        self.env['loyalty.generate.wizard'].with_context(active_id=program_gift_card.id).create({
+            'coupon_qty': 1,
+            'points_granted': 50,
+        }).generate_coupons()
+        gift_card = program_gift_card.coupon_ids[0]
+
+        order = self.env['sale.order'].with_user(self.user_salemanager).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'tax_id': False,
+                }),
+            ]
+        })
+
+        self.assertEqual(order.amount_total, 100)
+        self._apply_promo_code(order, gift_card.code)
+        self.assertEqual(order.amount_total, 50)
+        order.action_confirm()
+        self.assertEqual(loyalty_card.points, 100)
 
     def test_multiple_discount_specific(self):
         """

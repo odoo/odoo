@@ -122,3 +122,16 @@ ErrorPopup.do.clickConfirm();
 Tour.register('ExpiredEWalletProgramTour', { test: true, url: '/pos/web' }, getSteps());
 
 //#endregion
+
+startSteps();
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer("partner_a");
+PosLoyalty.check.eWalletButtonState({ highlighted: false });
+ProductScreen.exec.addOrderline("product_a", "1");
+PosLoyalty.check.eWalletButtonState({ highlighted: true, text: getEWalletText("Pay") });
+PosLoyalty.do.clickEWalletButton(getEWalletText("Pay"));
+PosLoyalty.check.pointsAwardedAre("100"),
+PosLoyalty.exec.finalizeOrder("Cash", "90.00");
+Tour.register("PosLoyaltyPointsEwallet", { test: true, url: "/pos/web" }, getSteps());

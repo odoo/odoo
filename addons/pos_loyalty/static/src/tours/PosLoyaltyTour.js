@@ -359,3 +359,43 @@ ProductScreen.check.selectedOrderlineHas('Product A', '2.00', '40.00');
 PosLoyalty.check.orderTotalIs('66.00');
 
 Tour.register('PosLoyaltyMinAmountAndSpecificProductTour', {test: true, url: '/pos/web'}, getSteps());
+
+function createOrderCoupon(totalAmount, couponName, couponAmount, loyaltyPoints) {
+    return [
+        ProductScreen.do.confirmOpeningPopup(),
+        ProductScreen.do.clickHomeCategory(),
+        ProductScreen.do.clickPartnerButton(),
+        ProductScreen.do.clickCustomer("partner_a"),
+        ProductScreen.exec.addOrderline("product_a", "1"),
+        ProductScreen.exec.addOrderline("product_b", "1"),
+        PosLoyalty.do.enterCode("promocode"),
+        PosLoyalty.check.hasRewardLine(`${couponName}`, `${couponAmount}`),
+        PosLoyalty.check.orderTotalIs(`${totalAmount}`),
+        PosLoyalty.check.pointsAwardedAre(`${loyaltyPoints}`),
+        PosLoyalty.exec.finalizeOrder("Cash", `${totalAmount}`),
+    ];
+}
+
+startSteps();
+createOrderCoupon("135.00", "10% on your order", "-15.00", "135");
+Tour.register("PosLoyaltyPointsDiscountNoDomainProgramNoDomain", { test: true, url: "/pos/web" }, getSteps());
+
+startSteps();
+createOrderCoupon("135.00", "10% on your order", "-15.00", "100");
+Tour.register("PosLoyaltyPointsDiscountNoDomainProgramDomain", { test: true, url: "/pos/web" }, getSteps());
+
+startSteps();
+createOrderCoupon("140.00", "10% on food", "-10.00", "90");
+Tour.register("PosLoyaltyPointsDiscountWithDomainProgramDomain", { test: true, url: "/pos/web" }, getSteps());
+
+startSteps();
+ProductScreen.do.confirmOpeningPopup(),
+ProductScreen.do.clickHomeCategory(),
+ProductScreen.do.clickPartnerButton(),
+ProductScreen.do.clickCustomer("partner_a"),
+ProductScreen.exec.addOrderline("product_a", "1"),
+PosLoyalty.check.hasRewardLine('10% on your order', '-10.00');
+PosLoyalty.check.orderTotalIs('90'),
+PosLoyalty.check.pointsAwardedAre("90"),
+PosLoyalty.exec.finalizeOrder("Cash", "90"),
+Tour.register("PosLoyaltyPointsGlobalDiscountProgramNoDomain", { test: true, url: "/pos/web" }, getSteps());
