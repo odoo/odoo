@@ -542,6 +542,48 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         });
     });
 
+    QUnit.test("fetch all and only required fields", async function (assert) {
+        const spreadsheetData = {
+            sheets: [
+                {
+                    id: "sheet1",
+                    cells: {
+                        A1: { content: '=ODOO.LIST(1, 1, "foo")' }, // in the definition
+                        A2: { content: '=ODOO.LIST(1, 1, "product_id")' }, // not in the definition
+                        A3: { content: '=ODOO.LIST(1, 1, "invalid_field")' },
+                    },
+                },
+            ],
+            lists: {
+                1: {
+                    id: 1,
+                    columns: ["foo", "contact_name"],
+                    domain: [],
+                    model: "partner",
+                    orderBy: [],
+                    context: {},
+                },
+            },
+        };
+        await createModelWithDataSource({
+            spreadsheetData,
+            mockRPC: async function (route, args, performRPC) {
+                if (args.method === "web_search_read" && args.model === "partner") {
+                    assert.step("data-fetched");
+                    assert.deepEqual(args.kwargs.specification, {
+                        foo: {},
+                        product_id: {
+                            fields: {
+                                display_name: {},
+                            },
+                        },
+                    });
+                }
+            },
+        });
+        assert.verifySteps(["data-fetched"]);
+    });
+
     QUnit.test(
         "list with both a monetary field and the related currency field",
         async function (assert) {
