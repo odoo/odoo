@@ -31,9 +31,8 @@ class l10nLatamCheckPaymentRegisterCheck(models.TransientModel):
 
     @api.onchange('name')
     def _onchange_name(self):
-        for rec in self.filtered(lambda x: x.payment_register_id.journal_id.company_id.country_id.code == "AR" and x.name
-                                 and x.name.isdecimal()):
-            rec.name = '%08d' % int(rec.name)
+        if self.name:
+            self.name = self.name.zfill(8)
 
     @api.depends('payment_register_id.payment_method_line_id.code', 'payment_register_id.partner_id')
     def _compute_bank_id(self):
