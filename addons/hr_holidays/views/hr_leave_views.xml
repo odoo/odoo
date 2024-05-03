@@ -299,6 +299,11 @@
                             <field name="number_of_days" invisible="1"/>
                             <field name="number_of_hours" invisible="1"/>
                             <field name="duration_display" readonly="1"/>
+                        </group>
+                        <div name="duration_warning" class="alert alert-warning my-2" invisible="not leave_type_increases_duration" role="alert">
+                            <span >You can only take this time off in whole days, so if your schedule has half days, it won't be used efficiently.</span>
+                        </div>
+                        <group>
                             <field name="name" readonly="state not in ('draft', 'confirm')" widget="text" placeholder="Add a description..." />
                             <field name="user_id" invisible="1" />
                             <field name="leave_type_support_document" invisible="1" />
@@ -306,9 +311,6 @@
                             <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" invisible="not leave_type_support_document or state not in ('draft', 'confirm', 'validate1')" />
                         </group>
                     </div>
-                </div>
-                <div name="duration_warning" invisible="not leave_type_increases_duration" class="alert alert-warning mb-0" role="alert">
-                    <span >You can only take this time off in whole days, so if your schedule has half days, it won't be used efficiently.</span>
                 </div>
             </sheet>
             <div class="o_attachment_preview"/>
