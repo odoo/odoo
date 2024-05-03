@@ -30,42 +30,10 @@ const ODOO_LIST = {
         const position = toNumber(index, this.locale) - 1;
         const _fieldName = toString(fieldName);
         assertListsExists(id, this.getters);
-        const dataSource = this.getters.getListDataSource(id);
-        const error = dataSource.assertIsValid({ throwOnError: false });
-        if (error) {
-            return error;
-        }
-        const value = this.getters.getListCellValue(id, position, _fieldName);
-        const field = dataSource.getField(_fieldName);
-        return {
-            value,
-            format: odooListFormat(id, position, field, this.getters, this.locale),
-        };
+        return this.getters.getListCellValueAndFormat(id, position, _fieldName);
     },
     returns: ["NUMBER", "STRING"],
 };
-
-function odooListFormat(id, position, field, getters, locale) {
-    switch (field?.type) {
-        case "integer":
-            return "0";
-        case "float":
-            return "#,##0.00";
-        case "monetary": {
-            const currency = getters.getListCurrency(id, position, field.currency_field);
-            if (!currency) {
-                return "#,##0.00";
-            }
-            return getters.computeFormatFromCurrency(currency);
-        }
-        case "date":
-            return locale.dateFormat;
-        case "datetime":
-            return locale.dateFormat + " " + locale.timeFormat;
-        default:
-            return undefined;
-    }
-}
 
 const ODOO_LIST_HEADER = {
     description: _t("Get the header of a list."),

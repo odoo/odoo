@@ -45,6 +45,7 @@ export class ListDataSource extends OdooViewsDataSource {
         this.maxPosition = params.limit;
         this.maxPositionFetched = 0;
         this.data = [];
+        this.fieldsToFetch = new Set();
     }
 
     /**
@@ -53,6 +54,16 @@ export class ListDataSource extends OdooViewsDataSource {
      */
     increaseMaxPosition(position) {
         this.maxPosition = Math.max(this.maxPosition, position);
+    }
+
+    /**
+     * @param {string} fieldName
+     */
+    addFieldToFetch(fieldName) {
+        if (this.data.length && fieldName in this.data[0]) {
+            return;
+        }
+        this.fieldsToFetch.add(fieldName);
     }
 
     async _load() {
@@ -78,7 +89,7 @@ export class ListDataSource extends OdooViewsDataSource {
      */
     _getReadSpec() {
         const spec = {};
-        const fields = this._metaData.columns.map((f) => this.getField(f)).filter(Boolean);
+        const fields = [...this.fieldsToFetch].map((f) => this.getField(f)).filter(Boolean);
         for (const field of fields) {
             switch (field.type) {
                 case "monetary":
@@ -104,7 +115,7 @@ export class ListDataSource extends OdooViewsDataSource {
                     };
                     break;
                 default:
-                    spec[field.name] = field;
+                    spec[field.name] = {};
                     break;
             }
         }
@@ -155,8 +166,7 @@ export class ListDataSource extends OdooViewsDataSource {
             );
         }
         if (!(fieldName in record)) {
-            this._metaData.columns.push(fieldName);
-            this._metaData.columns = [...new Set(this._metaData.columns)]; //Remove duplicates
+            this.addFieldToFetch(fieldName);
             this._triggerFetching();
             throw new LoadingDataError();
         }
