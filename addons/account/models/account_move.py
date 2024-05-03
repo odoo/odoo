@@ -1469,6 +1469,11 @@ class AccountMove(models.Model):
                     del context
                 move.narration = narration or False
 
+    def _get_partner_credit_warning_exclude_amount(self):
+        # to extend in module 'sale'; see there for details
+        self.ensure_one()
+        return 0
+
     @api.depends('company_id', 'partner_id', 'tax_totals', 'currency_id')
     def _compute_partner_credit_warning(self):
         for move in self:
@@ -1483,7 +1488,7 @@ class AccountMove(models.Model):
                 move.partner_credit_warning = self._build_credit_warning_message(
                     move,
                     current_amount=current_amount,
-                    exclude_current=True,
+                    exclude_amount=move._get_partner_credit_warning_exclude_amount(),
                 )
 
     @api.depends('partner_id')
@@ -1491,16 +1496,23 @@ class AccountMove(models.Model):
         for move in self:
             move.partner_credit = move.partner_id.commercial_partner_id.credit
 
-    def _build_credit_warning_message(self, record, current_amount=0.0, exclude_current=False):
+    def _build_credit_warning_message(self, record, current_amount=0.0, exclude_current=False, exclude_amount=0.0):
         """ Build the warning message that will be displayed in a yellow banner on top of the current record
             if the partner exceeds a credit limit (set on the company or the partner itself).
             :param record:                  The record where the warning will appear (Invoice, Sales Order...).
             :param current_amount (float):  The partner's outstanding credit amount from the current document.
-            :param exclude_current (bool):  Whether to exclude `current_amount` from the credit to invoice.
+            :param exclude_current (bool):  DEPRECATED in favor of parameter `exclude_amount`:
+                                            Whether to exclude `current_amount` from the credit to invoice.
+            :param exclude_amount (float):  The amount to subtract from the partner's `credit_to_invoice`.
+                                            Consider the warning on a draft invoice created from a sales order.
+                                            After confirming the invoice the (partial) amount (on the invoice)
+                                            stemming from sales orders will be substracted from the `credit_to_invoice`.
+                                            This will reduce the total credit of the partner.
+                                            This parameter is used to reflect this amount.
             :return (str):                  The warning message to be showed.
         """
         partner_id = record.partner_id.commercial_partner_id
-        credit_to_invoice = max(partner_id.credit_to_invoice - (current_amount if exclude_current else 0), 0)
+        credit_to_invoice = partner_id.credit_to_invoice - exclude_amount
         total_credit = partner_id.credit + credit_to_invoice + current_amount
         if not partner_id.credit_limit or total_credit <= partner_id.credit_limit:
             return ''
