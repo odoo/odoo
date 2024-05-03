@@ -1028,7 +1028,7 @@ export function getDeepestPosition(node, offset) {
     let direction = DIRECTIONS.RIGHT;
     let next = node;
     while (next) {
-        if ((isTangible(next) || isZWS(next)) && (!isBlock(next) || next.isContentEditable)) {
+        if (isTangible(next) || isZWS(next)) {
             // Valid node: update position then try to go deeper.
             if (next !== node) {
                 [node, offset] = [next, direction ? 0 : nodeSize(next)];
