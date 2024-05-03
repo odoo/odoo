@@ -74,7 +74,7 @@
                                     </th>
                                 </t>
                                 <t t-elif="groupby == 'parent_task_id'">
-                                    <th colspan="5">
+                                    <th colspan="6">
                                         <span t-if="timesheets[0].parent_task_id" t-field="timesheets[0].parent_task_id.name"/>
                                         <span t-else="">No Parent Task</span>
                                     </th>
