@@ -6,8 +6,8 @@ from odoo.exceptions import UserError
 from odoo.tests.common import tagged, users
 
 
-@tagged('post_install', '-at_install', 'utm_consistency')
-class TestUTMSecurity(TestUTMCommon):
+@tagged('post_install', '-at_install', 'utm', 'utm_consistency')
+class TestUTMConsistency(TestUTMCommon):
 
     @users('__system__')
     def test_utm_consistency(self):
