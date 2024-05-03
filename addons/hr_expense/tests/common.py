@@ -102,8 +102,9 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
         }
         return self.env['hr.expense.sheet'].create({**default_values, **values})
 
-    def create_expense(self, values=None):
+    def create_expense(self, values=None, ctx=None):
         values = values or {}
+        ctx = ctx or {}
         default_values = {
             'employee_id': self.expense_employee.id,
             'product_id': self.product_c.id,
@@ -113,7 +114,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             'company_id': self.company_data['company'].id,
             'currency_id': self.company_data['currency'].id,
         }
-        return self.env['hr.expense'].create({**default_values, **values})
+        return self.env['hr.expense'].with_context(**ctx).create({**default_values, **values})
 
     def get_new_payment(self, expense_sheet, amount):
         """ Helper to create payments """
