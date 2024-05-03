@@ -152,7 +152,7 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
             ProductScreen.totalAmountIs("51.00"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.changeIs("0.0"),
+            PaymentScreen.remainingIs("0.0"),
             PaymentScreen.clickValidate(),
             Chrome.clickMenuOption("Close Register"),
             ProductScreen.closeWithCashAmount("50.0"),

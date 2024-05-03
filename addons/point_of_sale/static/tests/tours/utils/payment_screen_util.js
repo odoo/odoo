@@ -308,14 +308,6 @@ export function totalIs(amount) {
         },
     ];
 }
-export function totalDueIs(amount) {
-    return [
-        {
-            content: `total due is ${amount}`,
-            trigger: `.payment-status-total-due:contains("${amount}")`,
-        },
-    ];
-}
 export function pay(method, amount) {
     const steps = [];
     steps.push(...clickPaymentMethod(method));

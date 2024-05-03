@@ -17,12 +17,10 @@ registry.category("web_tour.tours").add("pos_basic_order_01_multi_payment_and_ch
             PaymentScreen.enterPaymentLineAmount("Cash", "5", true, {
                 amount: "5.0",
                 remaining: "5.20",
-                change: "0.00",
             }),
             PaymentScreen.clickPaymentMethod("Bank", true, { amount: "5.2" }),
             PaymentScreen.enterPaymentLineAmount("Bank", "6", true, {
                 amount: "6.0",
-                remaining: "0.00",
                 change: "0.80",
             }),
             ProductScreen.finishOrder(),
