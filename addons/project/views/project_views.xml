@@ -1359,8 +1359,8 @@
             <field name="name">Assigned Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="context">{'search_default_user_ids': [active_id], 'default_user_ids': [(6, 0, [active_id])]}</field>
-            <field name="domain">[('display_project_id', '!=', False)]</field>
+            <field name="context">{'default_user_ids': [(6, 0, [active_id])]}</field>
+            <field name="domain">[('display_project_id', '!=', False), ('user_ids', 'in', [active_id])]</field>
             <field name="binding_model_id" ref="base.model_res_users"/>
             <field name="binding_view_types">form</field>
         </record>
