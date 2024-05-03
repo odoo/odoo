@@ -75,7 +75,7 @@ class UtmSourceMixin(models.AbstractModel):
         if values.get(self._rec_name) and not values.get('name'):
             values['name'] = self.env['utm.source']._generate_name(self, values[self._rec_name])
         if values.get('name'):
-            values['name'] = self.env['utm.mixin']._get_unique_names(self._name, [values['name']])[0]
+            values['name'] = self.env['utm.mixin']._get_unique_names("utm.source", [values['name']])[0]
 
         return super().write(values)
 
@@ -85,5 +85,5 @@ class UtmSourceMixin(models.AbstractModel):
         default_name = default.get('name')
         vals_list = super().copy_data(default=default)
         for source, vals in zip(self, vals_list):
-            vals['name'] = self.env['utm.mixin']._get_unique_names(self._name, [default_name or source.name])[0]
+            vals['name'] = self.env['utm.mixin']._get_unique_names("utm.source", [default_name or source.name])[0]
         return vals_list
