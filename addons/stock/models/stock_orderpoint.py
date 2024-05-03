@@ -248,6 +248,12 @@ class StockWarehouseOrderpoint(models.Model):
         self.trigger = 'auto'
         return self.action_replenish()
 
+    def action_replenish_confirm(self):
+        return self.action_replenish()
+
+    def action_replenish_auto_confirm(self):
+        return self.action_replenish_auto()
+
     @api.depends('product_id', 'location_id', 'product_id.stock_move_ids', 'product_id.stock_move_ids.state',
                  'product_id.stock_move_ids.date', 'product_id.stock_move_ids.product_uom_qty')
     def _compute_qty(self):

@@ -32,7 +32,20 @@
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_stock_replenishment_info']" position="before">
                     <field name="show_supplier" column_invisible="True"/>
+                    <field name="vendor_has_warning" column_invisible="True"/>
                     <field name="supplier_id" string="Vendor" optional="hidden" invisible="not show_supplier" options="{'no_create': True}"/>
+                </xpath>
+                <xpath expr="//button[@name='action_replenish']" position="attributes">
+                    <attribute name="invisible" add="vendor_has_warning" separator=" or "></attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_replenish_confirm']" position="attributes">
+                    <attribute name="invisible" add="not vendor_has_warning" separator=" or "></attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_replenish_auto']" position="attributes">
+                    <attribute name="invisible" add="vendor_has_warning" separator=" or "></attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_replenish_auto_confirm']" position="attributes">
+                    <attribute name="invisible" add="not vendor_has_warning" separator=" or "></attribute>
                 </xpath>
             </field>
         </record>
