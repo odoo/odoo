@@ -19,6 +19,12 @@ patch(PosOrder.prototype, {
             return this.table_id;
         }
     },
+    amountPerGuest(numCustomers = this.customerCount) {
+        if (numCustomers === 0) {
+            return 0;
+        }
+        return this.getTotalDue() / numCustomers;
+    },
     export_for_printing(baseUrl, headerData) {
         return {
             ...super.export_for_printing(...arguments),
