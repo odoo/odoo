@@ -1,4 +1,3 @@
-/** @odoo-module */
 export const changesToOrder = (
     order,
     skipped = false,

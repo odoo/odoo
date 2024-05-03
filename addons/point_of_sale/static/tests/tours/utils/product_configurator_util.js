@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 export function pickRadio(name) {
     return [
         {

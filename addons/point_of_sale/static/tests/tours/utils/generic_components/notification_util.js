@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 export function has(text, type) {
     let trigger = `.o_notification:contains("${text}")`;
     if (type) {

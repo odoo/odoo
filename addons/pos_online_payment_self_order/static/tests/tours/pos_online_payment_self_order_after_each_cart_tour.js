@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { PosSelf } from "@pos_self_order/../tests/tours/tour_utils";
 

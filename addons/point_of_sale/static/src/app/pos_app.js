@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Transition } from "@web/core/transition";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { Navbar } from "@point_of_sale/app/navbar/navbar";

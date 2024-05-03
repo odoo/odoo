@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { batched } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";

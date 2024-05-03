@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { useRef, useState } from "@odoo/owl";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";

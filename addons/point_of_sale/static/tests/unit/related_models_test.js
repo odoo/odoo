@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { createRelatedModels } from "@point_of_sale/app/models/related_models";
 
 QUnit.module("models with backlinks", () => {

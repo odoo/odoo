@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook";

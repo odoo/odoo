@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { negate } from "@point_of_sale/../tests/tours/utils/common";
 
 const productTrigger = (productName) =>

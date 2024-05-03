@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/utils/pos_loyalty_util";
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";

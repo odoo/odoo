@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
 import { Transition } from "@web/core/transition";

@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 export function clickNextOrder() {
     return [
         {

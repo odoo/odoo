@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { PaymentAdyen } from "@pos_adyen/app/payment_adyen";
 import { patch } from "@web/core/utils/patch";
 

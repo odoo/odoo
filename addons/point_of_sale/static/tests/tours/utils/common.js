@@ -1,4 +1,3 @@
-/** @odoo-module */
 export function inLeftSide(steps) {
     return [
         {

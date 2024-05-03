@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 export function selectLocation(locationName) {
     return {
         content: `Click on location '${locationName}'`,

@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 

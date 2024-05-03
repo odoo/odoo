@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { formatMonetary } from "@web/views/fields/formatters";
 import { roundDecimals } from "@web/core/utils/numbers";
 

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";

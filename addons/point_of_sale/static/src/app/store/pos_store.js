@@ -1,4 +1,3 @@
-/** @odoo-module */
 /* global waitForWebfonts */
 
 import { Mutex } from "@web/core/utils/concurrency";

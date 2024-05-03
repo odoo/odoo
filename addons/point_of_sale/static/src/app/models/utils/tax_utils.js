@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 export const getPriceUnitAfterFiscalPosition = (

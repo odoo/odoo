@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { useService } from "@web/core/utils/hooks";
 import { renderToElement } from "@web/core/utils/render";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";

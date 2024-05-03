@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 export function clickPartner(name = "") {
     return {
         content: `click partner '${name}' from partner list screen`,

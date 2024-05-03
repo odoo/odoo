@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { registry } from "@web/core/registry";
 import { odooExceptionTitleMap, ErrorDialog } from "@web/core/errors/error_dialogs";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";

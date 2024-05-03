@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 
 export function clickOrderline(productName) {

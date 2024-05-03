@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook";

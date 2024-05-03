@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { formatCurrency as webFormatCurrency } from "@web/core/currency";
 import {
     formatFloat,

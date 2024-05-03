@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Component, useExternalListener, useState } from "@odoo/owl";
 
 export class ProductInfoPopup extends Component {
