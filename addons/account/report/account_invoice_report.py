@@ -44,7 +44,8 @@ class AccountInvoiceReport(models.Model):
     product_categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
     invoice_date_due = fields.Date(string='Due Date', readonly=True)
     account_id = fields.Many2one('account.account', string='Revenue/Expense Account', readonly=True, domain=[('deprecated', '=', False)])
-    price_subtotal = fields.Float(string='Untaxed Total', readonly=True)
+    price_subtotal_currency = fields.Float(string='Untaxed Amount in Currency', readonly=True)
+    price_subtotal = fields.Float(string='Untaxed Amount', readonly=True)
     price_total = fields.Float(string='Total in Currency', readonly=True)
     price_average = fields.Float(string='Average Price', readonly=True, aggregator="avg")
     price_margin = fields.Float(string='Margin', readonly=True)
@@ -97,6 +98,8 @@ class AccountInvoiceReport(models.Model):
                 template.categ_id                                           AS product_categ_id,
                 line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                                                                             AS quantity,
+                line.price_subtotal * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
+                                                                            AS price_subtotal_currency,
                 -line.balance * currency_table.rate                         AS price_subtotal,
                 line.price_total * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                                                                             AS price_total,
