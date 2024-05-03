@@ -1845,6 +1845,39 @@ describe('Utils', () => {
                 .expect([node, offset])
                 .to.eql([zwnbsp, 0]);
         });
+        it('should get deepest position for banner element', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" data-oe-protected="true" contenteditable="false">
+                        <i class="fs-4 fa fa-info-circle mb-3" aria-label="Banner Info"></i>
+                        <div class="w-100 ms-3" data-oe-protected="false" contenteditable="true">
+                            <p>abc</p>
+                            <p>def</p>
+                        </div>
+                    </div>
+                `),
+                stepFunction: async editor => {
+                    const sel = editor.document.getSelection();
+                    const range = editor.document.createRange();
+                    range.setStart(editor.editable, 0);
+                    range.setEnd(editor.editable, 0);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                    await nextTickFrame();
+                },
+                // We end up in the fallback of _fixSelectionOnEditableRoot
+                // which is to remove the selection.
+                contentAfter: unformat(`
+                    <div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" data-oe-protected="true" contenteditable="false">
+                        <i class="fs-4 fa fa-info-circle mb-3" aria-label="Banner Info"></i>
+                        <div class="w-100 ms-3" data-oe-protected="false" contenteditable="true">
+                            <p>abc</p>
+                            <p>def</p>
+                        </div>
+                    </div>
+                `),
+            });
+        });
     });
     // TODO:
     // - getCursors
