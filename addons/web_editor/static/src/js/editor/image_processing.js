@@ -529,7 +529,7 @@ export async function loadImageInfo(img, recordInfo, attachmentSrc = "") {
             // src.
             originalSrc: src,
             mimetype: imageMimetype,
-            mimetypeBeforeConversion: imageMimetype,
+            mimetypeBeforeFormatConversion: imageMimetype,
         };
         weUtils.updateImageDataRegistry(imgSrc, imageData);
     }).catch(() => {

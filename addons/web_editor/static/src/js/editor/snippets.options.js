@@ -6270,8 +6270,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         const values = widgetValue.split(' ');
         this.imageData.resizeWidth = values[0];
         if (this.imageData.shape) {
-            // If the image has a shape, modify its originalMimetype attribute.
-            this.imageData.originalMimetype = values[1];
+            // If the image has a shape, modify its mimetypeBeforeShape
+            // attribute.
+            this.imageData.mimetypeBeforeShape = values[1];
         } else {
             // If the image does not have a shape, modify its mimetype
             // attribute.
@@ -6402,12 +6403,12 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     },
     /**
      * Returns a list of valid formats for a given image or an empty list if
-     * there is no mimetypeBeforeConversion data attribute on the image.
+     * there is no mimetypeBeforeFormatConversion data attribute on the image.
      *
      * @private
      */
     async _computeAvailableFormats() {
-        if (!this.mimetypeBeforeConversion) {
+        if (!this.mimetypeBeforeFormatConversion) {
             return [];
         }
         const img = this._getImg();
@@ -6424,9 +6425,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         };
         widths[img.naturalWidth] = [_t("%spx", img.naturalWidth), 'image/webp'];
         widths[optimizedWidth] = [_t("%spx (Suggested)", optimizedWidth), 'image/webp'];
-        const mimetypeBeforeConversion = this.imageData.mimetypeBeforeConversion;
-        widths[maxWidth] = [_t("%spx (Original)", maxWidth), mimetypeBeforeConversion];
-        if (mimetypeBeforeConversion !== "image/webp") {
+        const mimetypeBeforeFormatConversion = this.imageData.mimetypeBeforeFormatConversion;
+        widths[maxWidth] = [_t("%spx (Original)", maxWidth), mimetypeBeforeFormatConversion];
+        if (mimetypeBeforeFormatConversion !== "image/webp") {
             // Avoid a key collision by subtracting 0.1 - putting the webp
             // above the original format one of the same size.
             widths[maxWidth - 0.1] = [_t("%spx", maxWidth), 'image/webp'];
@@ -6501,7 +6502,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         this.imageData = weUtils.getImageData(img, Object.assign({}, this.imageShape, preImageData));
         this.originalId = this.imageData.originalId;
         this.originalSrc = this.imageData.originalSrc;
-        this.mimetypeBeforeConversion = this.imageData.mimetypeBeforeConversion;
+        this.mimetypeBeforeFormatConversion = this.imageData.mimetypeBeforeFormatConversion;
     },
     /**
      * Sets the image's width to its suggested size.
@@ -6515,8 +6516,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             // Convert to recommended format and width.
             this.imageData.mimetype = "image/webp";
             this.imageData.resizeWidth = this.optimizedWidth;
-        } else if (this.imageData.shape && this.imageData.originalMimetype !== "image/gif") {
-            this.imageData.originalMimetype = "image/webp";
+        } else if (this.imageData.shape && this.imageData.mimetypeBeforeShape !== "image/gif") {
+            this.imageData.mimetypeBeforeShape = "image/webp";
             this.imageData.resizeWidth = this.optimizedWidth;
         }
         await this._applyOptions();
@@ -6585,7 +6586,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @override
      */
     _computeWidgetVisibility(widgetName, params) {
-        if (widgetName === "format_select_opt" && !this.mimetypeBeforeConversion) {
+        if (widgetName === "format_select_opt" && !this.mimetypeBeforeFormatConversion) {
             return false;
         }
         if (this._isImageProcessingWidget(widgetName, params)) {
@@ -6690,7 +6691,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         await new Promise(resolve => {
             this.$target.one('image_cropper_destroyed', async () => {
                 if (isGif(this._getImageMimetype(img))) {
-                    this.imageData[this.imageData.shape ? 'originalMimetype' : 'mimetype'] = 'image/png';
+                    this.imageData[this.imageData.shape ? 'mimetypeBeforeShape' : 'mimetype'] = 'image/png';
                     weUtils.updateImageDataRegistry(img.getAttribute("src"), this.imageData);
                 }
                 await this._reapplyCurrentShape();
@@ -6800,7 +6801,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                 // If the preview mode === false we want to save the colors
                 // as the user chose their shape
                 if (saveData && this.imageData.mimetype !== "image/svg+xml") {
-                    this.imageData.originalMimetype = this.imageData.mimetype;
+                    this.imageData.mimetypeBeforeShape = this.imageData.mimetype;
                     this.imageData.mimetype = "image/svg+xml";
                 }
                 // When the user selects a shape, we remove the data attributes
@@ -6832,8 +6833,8 @@ registry.ImageTools = ImageHandlerOption.extend({
             delete this.imageData.shapeRotate;
             delete this.imageData.shapeAnimationSpeed;
             if (saveData) {
-                this.imageData.mimetype = this.imageData.originalMimetype;
-                delete this.imageData.originalMimetype;
+                this.imageData.mimetype = this.imageData.mimetypeBeforeShape;
+                delete this.imageData.mimetypeBeforeShape;
             }
             await this._applyOptions();
         }
@@ -7441,8 +7442,8 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @override
      */
     _getImageMimetype(img) {
-        if (this.imageData.shape && this.imageData.originalMimetype) {
-            return this.imageData.originalMimetype;
+        if (this.imageData.shape && this.imageData.mimetypeBeforeShape) {
+            return this.imageData.mimetypeBeforeShape;
         }
         return this._super(...arguments);
     },
@@ -7509,13 +7510,13 @@ registry.ImageTools = ImageHandlerOption.extend({
         const img = this._getImg();
         if (this.imageData.shape) {
             if (this.imageData.mimetype !== "image/svg+xml") {
-                this.imageData.originalMimetype = this.imageData.mimetype;
+                this.imageData.mimetypeBeforeShape = this.imageData.mimetype;
             }
             if (!this._isImageSupportedForProcessing(img)) {
                 delete this.imageData.shape;
                 delete this.imageData.shapeColors;
                 delete this.imageData.fileName;
-                delete this.imageData.originalMimetype;
+                delete this.imageData.mimetypeBeforeShape;
                 delete this.imageData.shapeFlip;
                 delete this.imageData.shapeRotate;
                 delete this.imageData.hoverEffect;

@@ -36,7 +36,7 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-last-history-steps', 'data-oe-protected', 'data-oe-transient-content',
      'data-publish', 'data-id', 'data-res_id', 'data-interval', 'data-member_id', 'data-scroll-background-ratio', 'data-view-id',
      'data-class', 'data-mimetype',
-     'data-shape', 'data-shape-colors', 'data-file-name', 'data-original-mimetype',
+     'data-shape', 'data-shape-colors', 'data-file-name', 'data-mimetype-before-shape',
      'data-behavior-props', 'data-prop-name',  # knowledge commands
      ])
 SANITIZE_TAGS = {
