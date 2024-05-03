@@ -7,3 +7,4 @@ class Opcion(models.Model):
 
     pregunta_id = fields.Many2one("pregunta", string="Pregunta")
     opcion_texto = fields.Char("Opción", required=True)
+    valor = fields.Integer("Valor", required=True, default=0)
