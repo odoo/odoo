@@ -3,6 +3,7 @@
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools.misc import clean_context
+from odoo.tools import format_date
 
 
 class HrExpenseSheet(models.Model):
@@ -441,6 +442,30 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             if sheet.expense_line_ids.company_id - sheet.company_id:
                 raise ValidationError(_('An expense report must contain only lines from the same company.'))
+
+    @api.onchange('expense_line_ids')
+    def _update_sheet_name(self):
+        """ Set the sheet name to the computed default sheet name when no name is specified. """
+        expense_lines = self.expense_line_ids
+        if not self.name and expense_lines:
+            self.name = self._get_default_sheet_name(expense_lines)
+
+    @api.model
+    def _get_default_sheet_name(self, expenses_to_report):
+        """ Computes the default name for a new expense sheet from the expenses name or dates """
+        if len(expenses_to_report) == 1:
+            sheet_name = expenses_to_report.name
+        else:
+            dates = expenses_to_report.mapped('date')
+            if False in dates:  # If at least one date isn't set, we don't set a default name
+                return False
+            min_date = format_date(self.env, min(dates))
+            max_date = format_date(self.env, max(dates))
+            if min_date == max_date:
+                sheet_name = min_date
+            else:
+                sheet_name = _("%(date_from)s - %(date_to)s", date_from=min_date, date_to=max_date)
+        return sheet_name
 
     @api.model
     def _search_product_ids(self, operator, value):

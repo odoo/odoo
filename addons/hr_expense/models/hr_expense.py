@@ -6,7 +6,6 @@ import werkzeug
 
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.misc import format_date
 from odoo.tools import email_split, float_repr, float_round, is_html_empty
 
 
@@ -612,15 +611,7 @@ class HrExpense(models.Model):
                 raise UserError(_('You are not authorized to edit this expense report.'))
 
         if enforced_non_zero_expenses:
-            error_msgs = []
-            if 'total_amount' in vals:
-                if any(expense.company_currency_id.is_zero(vals['total_amount']) for expense in enforced_non_zero_expenses):
-                    error_msgs.append(_("You cannot set the expense total to 0 if it's linked to a report."))
-            if 'total_amount_currency' in vals:
-                if any(expense.currency_id.is_zero(vals['total_amount_currency']) for expense in enforced_non_zero_expenses):
-                    error_msgs.append(_("You cannot set the expense total in currency to 0 if it's linked to a report."))
-            if error_msgs:
-                raise UserError("\n".join(error_msgs))
+            enforced_non_zero_expenses.check_amount_not_zero(vals)
 
         res = super().write(vals)
 
@@ -660,6 +651,14 @@ class HrExpense(models.Model):
             attachments_to_unlink.with_context(sync_attachment=False).unlink()
         return res
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        expenses = super().create(vals_list)
+        if self.env.context.get('check_total_amount_not_zero'):
+            for expense, vals in zip(expenses, vals_list):
+                expense.check_amount_not_zero(vals)
+        return expenses
+
     def unlink(self):
         attachments_to_unlink = self.env['ir.attachment']
         for sheet in self.sheet_id:
@@ -690,6 +689,17 @@ class HrExpense(models.Model):
 
     def get_expense_attachments(self):
         return self.attachment_ids.mapped('image_src')
+
+    def check_amount_not_zero(self, vals):
+        error_msgs = []
+        if 'total_amount' in vals:
+            if any(expense.company_currency_id.is_zero(vals['total_amount']) for expense in self):
+                error_msgs.append(_("You cannot set the expense total to 0 if it's linked to a report."))
+        if 'total_amount_currency' in vals:
+            if any(expense.currency_id.is_zero(vals['total_amount_currency']) for expense in self):
+                error_msgs.append(_("You cannot set the expense total in currency to 0 if it's linked to a report."))
+        if error_msgs:
+            raise UserError("\n".join(error_msgs))
 
     # ----------------------------------------
     # Actions
@@ -743,19 +753,9 @@ class HrExpense(models.Model):
         # else we use the form view required name to force the user to set a name
         for todo in sheets:
             paid_by = 'company' if todo[0].payment_mode == 'company_account' else 'employee'
-            sheet_name = _("New Expense Report, paid by %(paid_by)s", paid_by=paid_by) if len(sheets) > 1 else False
-            if len(todo) == 1:
-                sheet_name = todo.name
-            else:
-                dates = todo.mapped('date')
-                if False not in dates:  # If at least one date isn't set, we don't set a default name
-                    min_date = format_date(self.env, min(dates))
-                    max_date = format_date(self.env, max(dates))
-                    if min_date == max_date:
-                        sheet_name = min_date
-                    else:
-                        sheet_name = _("%(date_from)s - %(date_to)s", date_from=min_date, date_to=max_date)
-
+            sheet_name = self.env['hr.expense.sheet']._get_default_sheet_name(todo)
+            if not sheet_name and len(sheets) > 1:
+                sheet_name = _("New Expense Report, paid by %(paid_by)s", paid_by=paid_by)
             values.append({
                 'company_id': self.company_id.id,
                 'employee_id': self[0].employee_id.id,
@@ -991,19 +991,16 @@ class HrExpense(models.Model):
             'to_submit': {
                 'description': _('to submit'),
                 'amount': 0.0,
-                'tooltip': _("Expenses that need to be submitted to the approver."),
                 'currency': self.env.company.currency_id.id,
             },
             'submitted': {
                 'description': _('under validation'),
                 'amount': 0.0,
-                'tooltip': _("Expenses from which the report has been submitted to the approver and is waiting for approval."),
                 'currency': self.env.company.currency_id.id,
             },
             'approved': {
                 'description': _('to be reimbursed'),
                 'amount': 0.0,
-                'tooltip': _("Expenses paid by employee that are approved but not paid yet."),
                 'currency': self.env.company.currency_id.id,
             }
         }

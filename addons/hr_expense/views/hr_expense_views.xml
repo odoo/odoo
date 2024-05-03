@@ -232,7 +232,7 @@
                                        readonly="not is_editable"/>
                                 <field name="employee_id" groups="hr.group_hr_user"
                                        context="{'default_company_id': company_id}" widget="many2one_avatar_employee"
-                                       options="{'relation': 'hr.employee', 'no_create': True}"
+                                       options="{'relation': 'hr.employee'}"
                                    readonly="not is_editable"/>
                             </t>
                             <label id="lo" for="payment_mode"/>
@@ -241,7 +241,7 @@
                             </div>
                         </group>
                         <group>
-                            <field name="date" readonly="not is_editable"/>
+                            <field name="date" readonly="not is_editable" class="w-50"/>
                             <field name="vendor_id" invisible="payment_mode != 'company_account'"/>
                             <field name="accounting_date"
                                    invisible="not accounting_date or state not in ['approved', 'done']"
@@ -637,10 +637,11 @@
             <field name="arch" type="xml">
                 <tree class="o_expense_categories">
                     <field name="name" readonly="1"/>
-                    <field name="default_code" optional="show" readonly="1"/>
-                    <field name="description" widget="html" string="Internal Note" optional="show" readonly="1"/>
-                    <field name="lst_price" optional="show" string="Sales Price"/>
-                    <field name="standard_price" optional="show"/>
+                    <field name="currency_id" column_invisible="True"/>
+                    <field name="default_code" optional="show" string="Reference" readonly="1"/>
+                    <field name="description" string="Note" optional="show" readonly="1"/>
+                    <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" optional="show" string="Sales Price"/>
+                    <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" optional="show"/>
                     <field name="supplier_taxes_id" widget="many2many_tags" optional="show"/>
                 </tree>
             </field>
@@ -796,7 +797,7 @@
                     <div class="oe_button_box" name="button_box">
                         <button name="action_open_account_moves"
                             class="oe_stat_button"
-                            icon="fa-file-text-o"
+                            icon="fa-bars"
                             type="object"
                             invisible="state not in ['approve', 'post', 'done'] or nb_account_move == 0"
                             groups="account.group_account_invoice">
@@ -870,6 +871,7 @@
                                         'default_company_id': company_id,
                                         'default_employee_id': employee_id,
                                         'default_payment_mode': payment_mode or 'own_account',
+                                        'check_total_amount_not_zero': True,
                                     }"
                                     readonly="not is_editable"
                                     force_save="1">
@@ -1212,7 +1214,7 @@
                    groups="account.group_account_user,hr_expense.group_hr_expense_team_approver"/>
 
         <menuitem id="menu_hr_expense_reports" name="Reporting" sequence="4" parent="menu_hr_expense_root"
-                  groups="hr_expense.group_hr_expense_manager"/>
+                  groups="hr_expense.group_hr_expense_team_approver"/>
         <menuitem id="menu_hr_expense_all_expenses" name="Expenses Analysis" sequence="0"
                   parent="menu_hr_expense_reports" action="hr_expense_actions_all"/>
 
