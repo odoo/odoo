@@ -182,45 +182,82 @@ class AccountBalance(models.Model):
             'State': bill.payment_state,
         }
 
+    # @api.model
+    # def get_bill(self, bill_id):
+    #     """
+    #     Retrieve a bill and its details based on the bill ID.
+    #     :param bill_id: ID of the bill to retrieve.
+    #     :return: A dictionary containing the bill data or an error message.
+    #     """
+    #     # Define search criteria to filter bills
+    #     domain = [
+    #         ('id', '=', bill_id),
+    #         ('move_type', '=', 'in_invoice'),
+    #     ]
+    #
+    #     # Retrieve the bill based on the criteria
+    #     bill = self.env['account.move'].search(domain, order='invoice_date', limit=1)
+    #     if not bill:
+    #         return {'error': 'Bill not found'}
+    #
+    #     # Prepare data for invoice lines
+    #     bill_line_data = [{
+    #         'line_id': line.id,
+    #         'account_id': line.account_id.id,
+    #         'account_name': line.account_id.name,
+    #         'quantity': line.quantity,
+    #         'price_unit': line.price_unit,
+    #     } for line in bill.invoice_line_ids]
+    #
+    #     # Assemble bill data
+    #     bill_data = {
+    #         'id': bill.id,
+    #         'bill_number': bill.ref,
+    #         'bill_date': bill.invoice_date,
+    #         'supplier_id': bill.partner_id.name,
+    #         'amount': bill.amount_total,
+    #         'state': bill.payment_state,
+    #         'bill_lines': bill_line_data,
+    #     }
+    #
+    #     return {'bill_info': bill_data}
+
     @api.model
     def get_bill(self, bill_id):
-        """
-        Retrieve a bill and its details based on the bill ID.
-        :param bill_id: ID of the bill to retrieve.
-        :return: A dictionary containing the bill data or an error message.
-        """
         # Define search criteria to filter bills
         domain = [
             ('id', '=', bill_id),
             ('move_type', '=', 'in_invoice'),
         ]
 
-        # Retrieve the bill based on the criteria
-        bill = self.env['account.move'].search(domain, order='invoice_date', limit=1)
-        if not bill:
-            return {'error': 'Bill not found'}
+        # Retrieve bills based on the criteria
+        bill = self.env['account.move'].search(domain, order='invoice_date')
 
-        # Prepare data for invoice lines
-        invoice_line_data = [{
-            'line_id': line.id,
-            'account_id': line.account_id.id,
-            'account_name': line.account_id.name,
-            'quantity': line.quantity,
-            'price_unit': line.price_unit,
-        } for line in bill.invoice_line_ids]
+        # Prepare a list to store bill data
+        bill_data = []
+
+        # for bill in bills:
+        # Retrieve bill lines for each bill
+        bill_lines = bill.invoice_line_ids
+        selected_account_id = (
+                bill_lines and bill_lines[0].account_id.name or False
+        )
 
         # Assemble bill data
-        bill_data = {
-            'id': bill.id,
-            'bill_number': bill.ref,
+        bill_data.append({
+            'bill_number': bill.id,
             'bill_date': bill.invoice_date,
             'supplier_id': bill.partner_id.name,
             'amount': bill.amount_total,
             'state': bill.payment_state,
-            'invoice_lines': invoice_line_data,
-        }
+            'selected_account_id': selected_account_id,
+            # Add more bill details here as needed
+        })
 
-        return {'bill_info': bill_data}
+        # Create a dictionary with a "bill_info" key
+        response = {'bill_info': bill_data}
+
+        return response
 
 
 
