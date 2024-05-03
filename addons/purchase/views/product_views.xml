@@ -14,13 +14,17 @@
                 </xpath>
                 <xpath expr="//tree" position="inside">
                     <field name="company_id" column_invisible="True"/>
+                    <field name="is_vendor_blocked" column_invisible="True"/>
                 </xpath>
                 <xpath expr="//field[@name='company_id']" position="attributes">
                     <attribute name="readonly">0</attribute>
                     <attribute name="optional">hide</attribute>
+                    <attribute name="decoration-muted">(not is_vendor_blocked) and ((date_start and now &lt; date_start) or (date_end and now &gt; date_end))</attribute>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="readonly">0</attribute>
+                    <attribute name="decoration-danger">is_vendor_blocked</attribute>
+                    <attribute name="decoration-muted">(not is_vendor_blocked) and ((date_start and now &lt; date_start) or (date_end and now &gt; date_end))</attribute>
                 </xpath>
                 <xpath expr="//field[@name='product_id']" position="attributes">
                     <attribute name="readonly">0</attribute>
@@ -28,6 +32,34 @@
                 </xpath>
                 <xpath expr="//field[@name='delay']" position="attributes">
                     <attribute name="optional">show</attribute>
+                    <attribute name="decoration-muted">date_start and now &lt; date_start</attribute>
+                </xpath>
+                <xpath expr="//field[@name='product_name']" position="attributes">
+                    <attribute name="decoration-muted">date_start and now &lt; date_start</attribute>
+                </xpath>
+                <xpath expr="//field[@name='product_code']" position="attributes">
+                    <attribute name="decoration-muted">date_start and now &lt; date_start</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_start']" position="attributes">
+                    <attribute name="decoration-muted">date_start and now &lt; date_start</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_end']" position="attributes">
+                    <attribute name="decoration-muted">date_start and now &lt; date_start</attribute>
+                </xpath>
+                <xpath expr="//field[@name='min_qty']" position="attributes">
+                    <attribute name="decoration-muted">date_start and now &lt; date_start</attribute>
+                </xpath>
+                <xpath expr="//field[@name='product_uom']" position="attributes">
+                    <attribute name="decoration-muted">date_start and now &lt; date_start</attribute>
+                </xpath>
+                <xpath expr="//field[@name='price']" position="attributes">
+                    <attribute name="decoration-muted">date_start and now &lt; date_start</attribute>
+                </xpath>
+                <xpath expr="//field[@name='discount']" position="attributes">
+                    <attribute name="decoration-muted">date_start and now &lt; date_start</attribute>
+                </xpath>
+                <xpath expr="//field[@name='currency_id']" position="attributes">
+                    <attribute name="decoration-muted">date_start and now &lt; date_start</attribute>
                 </xpath>
             </field>
         </record>
