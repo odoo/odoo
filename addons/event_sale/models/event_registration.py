@@ -131,6 +131,8 @@ class EventRegistration(models.Model):
 
     def _get_registration_summary(self):
         res = super(EventRegistration, self)._get_registration_summary()
+        if not self.sale_status:
+            self._compute_registration_status()
         res.update({
             'sale_status': self.sale_status,
             'sale_status_value': dict(self._fields['sale_status']._description_selection(self.env))[self.sale_status],
