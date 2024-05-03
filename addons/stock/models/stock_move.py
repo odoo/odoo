@@ -563,7 +563,8 @@ Please change the quantity done or the rounding precision of your unit of measur
             move.show_lots_text = move.has_tracking != 'none'\
                 and move.picking_type_id.use_create_lots\
                 and move.state != 'done' \
-                and not move.origin_returned_move_id.id
+                and not move.origin_returned_move_id.id\
+                and move.picking_type_id.code == 'incoming'
 
     @api.constrains('product_uom')
     def _check_uom(self):

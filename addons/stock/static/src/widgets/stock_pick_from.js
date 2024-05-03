@@ -18,7 +18,7 @@ export class StockPickFrom extends Many2OneField {
         // if location group is activated
         const data = this.props.record.data;
         name_parts.push(data.location_id?.[1])
-        if (data.lot_id) {
+        if (data.lot_id || data.lot_name) {
             name_parts.push(data.lot_id?.[1] || data.lot_name)
         }
         if (data.package_id) {
