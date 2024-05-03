@@ -26,10 +26,10 @@
 
     <t t-name="hr_expense.ListView" t-inherit="web.ListView" t-inherit-mode="primary">
         <xpath expr="//button[hasclass('o_list_button_add')]" position="before">
-            <button type="button" class="d-none d-md-inline o_button_upload_expense btn btn-primary" t-on-click.prevent="uploadDocument">
+            <button t-if="!isExpenseSheet" type="button" class="d-none d-md-inline o_button_upload_expense btn btn-primary" t-on-click.prevent="uploadDocument">
                 Upload
             </button>
-            <button type="button" class="d-inline d-md-none o_button_upload_expense btn btn-primary me-1" t-on-click.prevent="uploadDocument">
+            <button t-if="!isExpenseSheet" type="button" class="d-inline d-md-none o_button_upload_expense btn btn-primary me-1" t-on-click.prevent="uploadDocument">
                 Scan
             </button>
         </xpath>
