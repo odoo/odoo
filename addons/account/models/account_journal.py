@@ -461,11 +461,101 @@ class AccountJournal(models.Model):
                 HAVING array_length(array_agg(journal.id), 1) > 1;
             ''', [unique_codes])
 
+<<<<<<< HEAD
         method_ids = [res[0] for res in self._cr.fetchall()]
         if method_ids:
             methods = self.env['account.payment.method'].browse(method_ids)
             raise ValidationError(_("Some payment methods supposed to be unique already exists somewhere else.\n"
                                     "(%s)", ', '.join([method.display_name for method in methods])))
+||||||| parent of b935c904daa0 (temp)
+                # Ensure you don't have the same payment_method/name combination twice on the same journal.
+                counter = {}
+                for line in lines:
+                    if method_information_mapping[line.payment_method_id.id]['mode'] not in ('electronic', 'unique'):
+                        continue
+
+                    key = line.payment_method_id.id, line.name
+                    counter.setdefault(key, 0)
+                    counter[key] += 1
+                    if counter[key] > 1:
+                        raise ValidationError(_(
+                            "You can't have two payment method lines of the same payment type (%s) "
+                            "and with the same name (%s) on a single journal.",
+                            payment_type,
+                            line.name,
+                        ))
+
+                for line in lines:
+                    if line.payment_method_id.id in method_information_mapping:
+                        protected_payment_method_ids.add(line.payment_method_id.id)
+                        if manage_acquirers and method_information_mapping[line.payment_method_id.id]['mode'] == 'electronic':
+                            protected_acquirer_ids.add(line.payment_acquirer_id.id)
+
+            for pay_method in pay_methods:
+                values = method_information_mapping[pay_method.id]
+
+                if values['mode'] == 'unique':
+                    # 'unique' are linked to a single journal per company.
+                    already_linked_journal_ids = values['company_journals'].get(company.id, set()) - {journal._origin.id}
+                    if len(already_linked_journal_ids) > 1:
+                        failing_unicity_payment_methods |= pay_method
+                elif manage_acquirers and values['mode'] == 'electronic':
+                    # 'electronic' are linked to a single journal per company per acquirer.
+                    for acquirer_id in acquirers_per_code.get(company.id, {}).get(pay_method.code, set()):
+                        already_linked_journal_ids = values['company_journals'].get(company.id, {}).get(acquirer_id, set()) - {journal._origin.id}
+                        if len(already_linked_journal_ids) > 1:
+                            failing_unicity_payment_methods |= pay_method
+
+        if failing_unicity_payment_methods:
+            raise ValidationError(_(
+                "Some payment methods supposed to be unique already exists somewhere else.\n(%s)",
+                ', '.join(failing_unicity_payment_methods.mapped('display_name')),
+            ))
+=======
+                # Ensure you don't have the same payment_method/name combination twice on the same journal.
+                counter = {}
+                for line in lines:
+                    if method_information_mapping.get(line.payment_method_id.id, {}).get('mode') not in ('electronic', 'unique'):
+                        continue
+
+                    key = line.payment_method_id.id, line.name
+                    counter.setdefault(key, 0)
+                    counter[key] += 1
+                    if counter[key] > 1:
+                        raise ValidationError(_(
+                            "You can't have two payment method lines of the same payment type (%s) "
+                            "and with the same name (%s) on a single journal.",
+                            payment_type,
+                            line.name,
+                        ))
+
+                for line in lines:
+                    if line.payment_method_id.id in method_information_mapping:
+                        protected_payment_method_ids.add(line.payment_method_id.id)
+                        if manage_acquirers and method_information_mapping[line.payment_method_id.id]['mode'] == 'electronic':
+                            protected_acquirer_ids.add(line.payment_acquirer_id.id)
+
+            for pay_method in pay_methods:
+                values = method_information_mapping[pay_method.id]
+
+                if values['mode'] == 'unique':
+                    # 'unique' are linked to a single journal per company.
+                    already_linked_journal_ids = values['company_journals'].get(company.id, set()) - {journal._origin.id}
+                    if len(already_linked_journal_ids) > 1:
+                        failing_unicity_payment_methods |= pay_method
+                elif manage_acquirers and values['mode'] == 'electronic':
+                    # 'electronic' are linked to a single journal per company per acquirer.
+                    for acquirer_id in acquirers_per_code.get(company.id, {}).get(pay_method.code, set()):
+                        already_linked_journal_ids = values['company_journals'].get(company.id, {}).get(acquirer_id, set()) - {journal._origin.id}
+                        if len(already_linked_journal_ids) > 1:
+                            failing_unicity_payment_methods |= pay_method
+
+        if failing_unicity_payment_methods:
+            raise ValidationError(_(
+                "Some payment methods supposed to be unique already exists somewhere else.\n(%s)",
+                ', '.join(failing_unicity_payment_methods.mapped('display_name')),
+            ))
+>>>>>>> b935c904daa0 (temp)
 
     @api.constrains('active')
     def _check_auto_post_draft_entries(self):
