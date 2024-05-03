@@ -78,12 +78,10 @@ class TestUTM(common.TestMassMailCommon):
         self.assertEqual(source_other_2.name, "New")
         self.assertEqual(source_other_2.title, "New")
 
-        with self.subTest(reason="FIXME: cross model uniqueness crashes, wrong model used"):
-            source_other_2.write({"name": "Test"})
-            self.assertEqual(source_other_2.name, "Test [3]")
-            self.assertEqual(source_other_2.title, "New")
+        source_other_2.write({"name": "Test"})
+        self.assertEqual(source_other_2.name, "Test [3]")
+        self.assertEqual(source_other_2.title, "New")
 
-        with self.subTest(reason="FIXME: cross model uniqueness crashes, wrong model used"):
-            source_2 = source_1.copy()
-            self.assertEqual(source_2.name, "Test [4]")
-            self.assertEqual(source_2.title, "Test")
+        source_2 = source_1.copy()
+        self.assertEqual(source_2.name, "Test [4]")
+        self.assertEqual(source_2.title, "Test")
