@@ -63,8 +63,10 @@ class ResPartner(models.Model):
             ('partner_id', 'in', self.ids),
             ('state', '=', 'sale')
         ]
-        group = self.env['sale.order']._read_group(domain, ['partner_id', 'currency_id'], ['amount_to_invoice:sum'])
-        for partner, currency, amount_to_invoice_sum in group:
+
+        group = self.env['sale.order']._read_group(domain, ['partner_id', 'currency_id'], ['amount_to_invoice:array_agg'])
+        for partner, currency, amount_to_invoice_agg in group:
+            amount_to_invoice_sum = sum(max(float(amount), 0) for amount in amount_to_invoice_agg)
             credit_company_currency = currency._convert(
                 amount_to_invoice_sum,
                 company.currency_id,
