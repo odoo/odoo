@@ -67,6 +67,15 @@ QUnit.module("leave stats", {
                         },
                         state: { string: "State", type: "char" },
                         number_of_days: { string: "State", type: "integer" },
+                        number_of_hours: { string: "Number of Hours", type: "float" },
+                        leave_type_request_unit: {
+                            string: "Leave Type Request Unit",
+                            type: "selection",
+                            selection: [
+                                ["day", "Day"],
+                                ["hour", "Hours"],
+                            ],
+                        },
                     },
                     records: [
                         {
@@ -78,6 +87,8 @@ QUnit.module("leave stats", {
                             holiday_status_id: 55,
                             state: "validate",
                             number_of_days: 5,
+                            number_of_hours: 40,
+                            leave_type_request_unit: "day",
                         },
                         {
                             id: 13,
@@ -88,6 +99,8 @@ QUnit.module("leave stats", {
                             holiday_status_id: 55,
                             state: "validate",
                             number_of_days: 1,
+                            number_of_hours: 8,
+                            leave_type_request_unit: "day",
                         },
                         {
                             id: 14,
@@ -98,6 +111,8 @@ QUnit.module("leave stats", {
                             holiday_status_id: 55,
                             state: "validate",
                             number_of_days: 8,
+                            number_of_hours: 64,
+                            leave_type_request_unit: "day",
                         },
                     ],
                 },
@@ -149,14 +164,22 @@ QUnit.test("leave stats reload when employee/department changes", async (assert)
                 <widget name="hr_leave_stats"/>
             </form>`,
         mockRPC(route, args) {
-            if (args.model === "hr.leave" && args.method === "search_read") {
+            if (
+                args.model === "hr.leave" &&
+                args.method === "search_read" &&
+                args.kwargs.domain[0][0] === "department_id"
+            ) {
                 assert.ok(
                     args.kwargs.domain.some(
                         (x) => JSON.stringify(x) === JSON.stringify(["department_id", "=", 11])
                     )
                 );
             }
-            if (args.model === "hr.leave" && args.method === "read_group") {
+            if (
+                args.model === "hr.leave" &&
+                args.method === "search_read" &&
+                args.kwargs.domain[0][0] === "employee_id"
+            ) {
                 assert.ok(
                     args.kwargs.domain.some(
                         (x) => JSON.stringify(x) === JSON.stringify(["employee_id", "=", 200])
