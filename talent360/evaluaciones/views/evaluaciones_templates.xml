@@ -46,7 +46,7 @@
                     </h2>
                 </div>
                 <button class="btn btn-primary d-none d-print-none d-md-inline-block o_survey_results_print" aria-label="Print" title="Print">
-                    <i class="fa fa-print"></i> Print
+                    <i class="fa fa-print"></i> Exportar
                 </button>
             </div>
         </template>
@@ -73,10 +73,10 @@
                     <!-- Question info -->
                     <div t-attf-class="d-flex flex-fill justify-content-end align-items-end mb-1 collapse show o_survey_results_question_#{pregunta.id}">
                         <!-- Inputs info -->
-                        <span class="badge ms-0 ms-sm-1 me-1 me-sm-0">
-                            <span t-out="len(datos_pregunta['respuestas'])" class="d-block mb-1 text-info text-start"/>
-                            <span class="d-block text-muted">Respuestas</span>
-                        </span>
+                        <h7 class="ms-0 ms-sm-1 me-1 me-sm-0">
+                            <span class="ml-1">Respuestas:</span>
+                            <span t-out="len(datos_pregunta['respuestas'])" class="mb-1 text-info text-start"/>
+                        </h7>
                     </div>
                 </div>
                 <div t-attf-class="collapse show o_survey_results_question_#{pregunta.id}">
@@ -130,19 +130,19 @@
             <t t-set="datos_grafica" t-value="datos_pregunta['datos_grafica']"/>
             <ul class="nav nav-tabs d-print-none" role="tablist">
                 <li t-if="pregunta_contestada" class="nav-item">
-                    <a t-att-href="'#grafica_barras_pregunta__%d' % pregunta.id" t-att-aria-controls="'grafica_barras_pregunta__%d' % pregunta.id" class="nav-link active default" data-bs-toggle="tab" role="tab">
+                    <a t-att-href="'#grafica_barras_pregunta__%d' % pregunta.id" t-att-aria-controls="'grafica_barras_pregunta__%d' % pregunta.id" class="nav-link active default" data-bs-toggle="tab" role="tab" data-chart="1">
                         <i class="fa fa-bar-chart-o"></i>
                         <span>Gráfico de barras</span>
                     </a>
                 </li>
                 <li t-if="pregunta_contestada" class="nav-item">
-                    <a t-att-href="'#grafica_columnas_pregunta__%d' % pregunta.id" t-att-aria-controls="'grafica_columnas_pregunta__%d' % pregunta.id" class="nav-link" data-bs-toggle="tab" role="tab">
+                    <a t-att-href="'#grafica_columnas_pregunta__%d' % pregunta.id" t-att-aria-controls="'grafica_columnas_pregunta__%d' % pregunta.id" class="nav-link" data-bs-toggle="tab" role="tab" data-chart="1">
                         <i class="fa fa-bar-chart-o"></i>
                         <span>Gráfico de columnas</span>
                     </a>
                 </li>
                 <li t-if="pregunta_contestada" class="nav-item">
-                    <a t-att-href="'#grafica_pastel_pregunta__%d' % pregunta.id" t-att-aria-controls="'grafica_pastel_pregunta__%d' % pregunta.id" class="nav-link" data-bs-toggle="tab" role="tab">
+                    <a t-att-href="'#grafica_pastel_pregunta__%d' % pregunta.id" t-att-aria-controls="'grafica_pastel_pregunta__%d' % pregunta.id" class="nav-link" data-bs-toggle="tab" role="tab" data-chart="1">
                         <i class="fa fa-bar-chart-o"></i>
                         <span>Gráfico de pastel</span>
                     </a>
@@ -157,15 +157,15 @@ Datos
             <div class="tab-content">
                 <div t-if="pregunta_contestada" role="tabpanel" class="tab-pane active survey_graph" t-att-id="'grafica_barras_pregunta__%d' % pregunta.id" t-att-data-graph-type="'bar'" t-att-data-graph-data="datos_grafica">
                     <!-- canvas element for drawing bar chart -->
-                    <canvas class="mx-auto"/>
+                    <canvas class="mx-auto" t-att-id="'canvas_barras_pregunta__%d' % pregunta.id"/>
                 </div>
-                <div t-if="pregunta_contestada" role="tabpanel" class="tab-pane active survey_graph" t-att-id="'grafica_columnas_pregunta__%d' % pregunta.id" t-att-data-graph-type="'col'" t-att-data-graph-data="datos_grafica">
+                <div t-if="pregunta_contestada" role="tabpanel" class="tab-pane survey_graph" t-att-id="'grafica_columnas_pregunta__%d' % pregunta.id" t-att-data-graph-type="'col'" t-att-data-graph-data="datos_grafica">
                     <!-- canvas element for drawing bar chart -->
-                    <canvas class="mx-auto"/>
+                    <canvas class="mx-auto" t-att-id="'canvas_columnas_pregunta__%d' % pregunta.id"/>
                 </div>
-                <div t-if="pregunta_contestada" role="tabpanel" class="tab-pane active survey_graph" t-att-id="'grafica_pastel_pregunta__%d' % pregunta.id" t-att-data-graph-type="'pie'" t-att-data-graph-data="datos_grafica">
+                <div t-if="pregunta_contestada" role="tabpanel" class="tab-pane survey_graph" t-att-id="'grafica_pastel_pregunta__%d' % pregunta.id" t-att-data-graph-type="'pie'" t-att-data-graph-data="datos_grafica">
                     <!-- canvas element for drawing bar chart -->
-                    <canvas class="mx-auto"/>
+                    <canvas class="mx-auto" t-att-id="'canvas_pastel_pregunta__%d' % pregunta.id"/>
                 </div>
                 <div role="tabpanel" t-att-id="'datos_pregunta__%d' % pregunta.id" t-attf-class="tab-pane always-print #{'active' if not pregunta_contestada else ''}">
                     <table class="table table-hover">
