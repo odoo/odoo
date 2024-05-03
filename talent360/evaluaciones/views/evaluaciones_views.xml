@@ -51,6 +51,7 @@
         <field name="name">Mis Evaluaciones</field>
         <field name="res_model">usuario.evaluacion.rel</field>
         <field name="view_mode">kanban</field>
+        <field name="domain">[('usuario_id', '=', uid)]</field>
     </record>
 
     <!-- EVALUACIONES ACTION TREE -->
