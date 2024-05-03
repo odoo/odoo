@@ -91,6 +91,15 @@ export function customerIs(name) {
         },
     ];
 }
+export function pointsAwardedAre(points_str) {
+    return [
+        {
+            content: "loyalty points awarded " + points_str,
+            trigger: '.loyalty-points-won .value:contains("' + points_str + '")',
+            run: function () {}, // it's a check
+        },
+    ];
+}
 export function finalizeOrder(paymentMethod, amount) {
     return [
         ...ProductScreen.clickPayButton(),
