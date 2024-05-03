@@ -289,6 +289,7 @@ export const editorCommands = {
                     }
                 }
             }
+            const isNodeToInsertContentEditable = nodeToInsert.isContentEditable;
             if (insertBefore) {
                 currentNode.before(nodeToInsert);
                 insertBefore = false;
@@ -297,6 +298,14 @@ export const editorCommands = {
             }
             if (currentNode.tagName !== 'BR' && isShrunkBlock(currentNode)) {
                 currentNode.remove();
+            }
+            if (
+                !isNodeToInsertContentEditable &&
+                editor.editable.firstChild === nodeToInsert &&
+                nodeToInsert.nodeName === 'DIV'
+            ) {
+                const zws = document.createTextNode('\u200B');
+                nodeToInsert.before(zws);
             }
             currentNode = nodeToInsert;
         }
