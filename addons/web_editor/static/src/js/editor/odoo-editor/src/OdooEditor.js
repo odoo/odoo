@@ -2237,6 +2237,11 @@ export class OdooEditor extends EventTarget {
         }
         // Ensure empty blocks be given a <br> child.
         if (start) {
+            if (start === this.editable && startBlock.textContent === '\u200B') {
+                const p = document.createElement('p');
+                start.appendChild(p);
+                start = p;
+            }
             fillEmpty(closestBlock(start));
         }
         fillEmpty(closestBlock(range.endContainer));

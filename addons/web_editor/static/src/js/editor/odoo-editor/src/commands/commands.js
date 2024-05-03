@@ -289,6 +289,9 @@ export const editorCommands = {
                     }
                 }
             }
+            // Contenteditable false property changes to true after the node is
+            // inserted into DOM.
+            const isNodeToInsertContentEditable = nodeToInsert.isContentEditable;
             if (insertBefore) {
                 currentNode.before(nodeToInsert);
                 insertBefore = false;
@@ -297,6 +300,17 @@ export const editorCommands = {
             }
             if (currentNode.tagName !== 'BR' && isShrunkBlock(currentNode)) {
                 currentNode.remove();
+            }
+            // If the first child of editable is contenteditable false element
+            // a chromium bug prevents selecting the container. Prepend a
+            // zero-width space so it's no longer the first child.
+            if (
+                !isNodeToInsertContentEditable &&
+                editor.editable.firstChild === nodeToInsert &&
+                nodeToInsert.nodeName === 'DIV'
+            ) {
+                const zws = document.createTextNode('\u200B');
+                nodeToInsert.before(zws);
             }
             currentNode = nodeToInsert;
         }
