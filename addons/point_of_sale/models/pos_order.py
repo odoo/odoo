@@ -1348,6 +1348,8 @@ class PosOrderLine(models.Model):
         self.check_access_rights('read')
         self.check_access_rule('read')
         existing_lots_sudo = self.sudo().env['stock.lot'].search([
+            '|',
+            ('company_id', '=', False),
             ('company_id', '=', company_id),
             ('product_id', '=', product_id),
         ])
