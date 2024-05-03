@@ -12,6 +12,11 @@
                     <field name="currency_id" invisible="1"/>
                     <field name="cost_currency_id" invisible="1"/>
                     <field name="name" placeholder="e.g. Cheese Burger" string="Product Name"/>
+                    <field name="barcode"/>
+                    <field name="image_1920" invisible="1"/>   <!-- Hide the image field for set data in product barcodelookup -->
+                    <field name="description" invisible="1"/>  <!-- Hide the description field for set data in product barcodelookup -->
+                    <field name="weight" invisible="1"/>       <!-- Hide the weight field for set data in product barcodelookup -->
+                    <field name="categ_id" invisible="1"/>     <!-- Hide the categ_id field set data in product barcodelookup -->
                     <label for="list_price" class="mt-1"/>
                     <div name="Sales Price">
                         <field name="list_price" class="oe_inline" widget="monetary"
