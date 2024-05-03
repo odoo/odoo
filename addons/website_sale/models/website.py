@@ -480,7 +480,7 @@ class Website(models.Model):
 
         # If the current user is the website public user, the fiscal position
         # is computed according to geolocation.
-        if request and request.website.partner_id.id == partner_sudo.id:
+        if request and hasattr(request, 'website') and request.website.partner_id.id == partner_sudo.id:
             if request.geoip.country_code:
                 country_id = self.env['res.country'].search([('code', '=', request.geoip.country_code)], limit=1).id
                 fpos = AccountFiscalPosition._get_fpos_by_region(country_id)
