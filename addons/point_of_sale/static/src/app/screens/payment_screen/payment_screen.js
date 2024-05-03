@@ -54,7 +54,19 @@ export class PaymentScreen extends Component {
     }
 
     getNumpadButtons() {
-        return enhancedButtons();
+        const colorClassMap = {
+            [this.env.services.localization.decimalPoint]: "o_colorlist_item_color_transparent_6",
+            Backspace: "o_colorlist_item_color_transparent_1",
+            "+10": "o_colorlist_item_color_transparent_10",
+            "+20": "o_colorlist_item_color_transparent_10",
+            "+50": "o_colorlist_item_color_transparent_10",
+            "-": "o_colorlist_item_color_transparent_3",
+        };
+
+        return enhancedButtons().map((button) => ({
+            ...button,
+            class: `fs-4 ${colorClassMap[button.value] || ""}`,
+        }));
     }
 
     showMaxValueError() {

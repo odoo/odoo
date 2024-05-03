@@ -68,7 +68,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             ProductScreen.isShown(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.enterPaymentLineAmount("Cash", "20", true, { remaining: "0.0" }),
+            PaymentScreen.enterPaymentLineAmount("Cash", "20", true, { change: "18.0" }),
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickValidate(),
             ReceiptScreen.totalAmountContains("2.0"),

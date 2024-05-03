@@ -13,7 +13,7 @@
             <t t-else="">$0</t>
         </xpath>
     </t>
-    <t t-name="pos_restaurant.PaymentScreenTop" t-inherit="point_of_sale.PaymentScreenTop" t-inherit-mode="extension">
+    <t t-name="pos_restaurant.PaymentScreenBack" t-inherit="point_of_sale.PaymentScreenBack" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('button') and hasclass('back')]/span[hasclass('back_text')]" position="replace">
             <t t-if="pos.config.set_tip_after_payment and currentOrder.is_paid()">
                 <span class="back_text">Keep Open</span>
@@ -21,6 +21,12 @@
             <t t-else="">$0</t>
         </xpath>
     </t>
-
+    <t t-name="pos_restaurant.PaymentScreenDue" t-inherit="point_of_sale.PaymentScreenDue" t-inherit-mode="extension">
+        <xpath expr="//section[hasclass('paymentlines-container')]" position="inside">
+            <div t-if="currentOrder.getCustomerCount()" class="message text-center fs-4">
+                <t t-esc="this.env.utils.formatCurrency(currentOrder.amountPerGuest())" /> / Guest
+            </div>
+        </xpath>
+    </t>
 
 </templates>

@@ -695,6 +695,10 @@ export class PosOrder extends Base {
         );
     }
 
+    getTotalDue() {
+        return this.get_total_with_tax() + this.get_rounding_applied();
+    }
+
     get_tax_details() {
         const taxDetails = {};
         for (const line of this.lines) {

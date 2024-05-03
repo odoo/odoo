@@ -25,6 +25,12 @@ patch(ControlButtons.prototype, {
         this.dialog.add(NumberPopup, {
             startingValue: this.currentOrder?.getCustomerCount() || 0,
             title: _t("Guests?"),
+            feedback: (buffer) => {
+                const value = this.env.utils.formatCurrency(
+                    this.currentOrder.amountPerGuest(parseInt(buffer, 10) || 0)
+                );
+                return value ? `${value} / ${_t("Guest")}` : "";
+            },
             getPayload: (inputNumber) => {
                 const guestCount = parseInt(inputNumber, 10) || 0;
                 if (guestCount == 0 && this.currentOrder.lines.length === 0) {
