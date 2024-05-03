@@ -725,6 +725,11 @@ class Warehouse(models.Model):
             pull_rules_list = supplier_wh._get_supply_pull_rules_values(
                 [self.Routing(output_location, transit_location, supplier_wh.out_type_id, 'pull')],
                 values={'route_id': inter_wh_route.id, 'location_dest_from_rule': True})
+            if supplier_wh.delivery_steps != 'ship_only':
+                # Replenish from Output location
+                pull_rules_list += supplier_wh._get_supply_pull_rules_values(
+                    [self.Routing(supplier_wh.lot_stock_id, output_location, supplier_wh.pick_type_id, 'pull')],
+                    values={'route_id': inter_wh_route.id})
             pull_rules_list += self._get_supply_pull_rules_values(
                 [self.Routing(transit_location, self.lot_stock_id, self.in_type_id, 'pull')],
                 values={'route_id': inter_wh_route.id, 'propagate_warehouse_id': supplier_wh.id})
@@ -876,6 +881,12 @@ class Warehouse(models.Model):
             'location_src_id': new_location.id,
             'procure_method': change_to_multiple and "make_to_order" or "make_to_stock"})
         if not change_to_multiple:
+            # Remove the extra rule to resupply Output from Stock
+            rules_to_archive = Rule.search([('route_id', 'in', routes.ids), ('action', '!=', 'push'),
+                                           ('location_dest_id', '=', self.wh_output_stock_loc_id.id),
+                                           ('picking_type_id', '=', self.pick_type_id.id)])
+            rules_to_archive.active = False
+
             # If single delivery we should create the necessary MTO rules for the resupply
             routings = [self.Routing(self.lot_stock_id, location, self.out_type_id, 'pull') for location in rules.location_dest_id]
             mto_vals = self._get_global_route_rules_values().get('mto_pull_id')
@@ -885,6 +896,21 @@ class Warehouse(models.Model):
             for mto_rule_val in mto_rule_vals:
                 Rule.create(mto_rule_val)
         else:
+            # Add the missing rules to resupply Output from Stock
+            rules_to_unarchive = Rule.with_context(active_test=False).search([
+                ('route_id', 'in', routes.ids), ('action', '!=', 'push'),
+                ('location_dest_id', '=', self.wh_output_stock_loc_id.id),
+                ('picking_type_id', '=', self.pick_type_id.id)])
+            rules_to_unarchive.active = True
+            found_routes = rules_to_unarchive.route_id
+
+            missing_rule_vals = []
+            for route in (routes - found_routes):
+                missing_rule_vals += self._get_supply_pull_rules_values(
+                    [self.Routing(self.lot_stock_id, new_location, self.pick_type_id, 'pull')],
+                    values={'route_id': route.id})
+            Rule.create(missing_rule_vals)
+
             # We need to delete all the MTO stock rules, otherwise they risk to be used in the system
             Rule.search([
                 '&', ('route_id', '=', self._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)')).id),
