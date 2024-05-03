@@ -294,7 +294,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         """
         self.ensure_one()
 
-        if self.advance_payment_method == 'percentage':
+        if self.advance_payment_method == 'percentage':  # test
             percentage = self.amount / 100
         else:
             percentage = self.fixed_amount / order.amount_total if order.amount_total else 1
