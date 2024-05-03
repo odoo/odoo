@@ -89,23 +89,9 @@ class UtmMixin(models.AbstractModel):
         :param names: list of names, we will ensure that each name will be unique
         :return: a list of new values for each name, in the same order
         """
-        def _split_name_and_count(name):
-            """
-            Return the name part and the counter based on the given name.
-
-            e.g.
-                "Medium" -> "Medium", 1
-                "Medium [1234]" -> "Medium", 1234
-            """
-            name = name or ''
-            name_counter_re = r'(.*)\s+\[([0-9]+)\]'
-            match = re.match(name_counter_re, name)
-            if match:
-                return match.group(1), int(match.group(2) or '1')
-            return name, 1
 
         # Remove potential counter part in each names
-        names_without_counter = {_split_name_and_count(name)[0] for name in names}
+        names_without_counter = {self._split_name_and_count(name)[0] for name in names}
 
         # Retrieve existing similar names
         seach_domain = expression.OR([[('name', 'ilike', name)] for name in names_without_counter])
@@ -116,7 +102,7 @@ class UtmMixin(models.AbstractModel):
         count_per_names = defaultdict(lambda: 0)
         count_per_names.update({
             name: max((
-                _split_name_and_count(existing_name)[1] + 1
+                self._split_name_and_count(existing_name)[1] + 1
                 for existing_name in existing_names
                 if existing_name == name or existing_name.startswith(f'{name} [')
             ), default=1)
@@ -129,9 +115,25 @@ class UtmMixin(models.AbstractModel):
                 result.append(False)
                 continue
 
-            name_without_counter = _split_name_and_count(name)[0]
+            name_without_counter = self._split_name_and_count(name)[0]
             counter = count_per_names[name_without_counter]
             result.append(f'{name_without_counter} [{counter}]' if counter > 1 else name)
             count_per_names[name_without_counter] += 1
 
         return result
+
+    @staticmethod
+    def _split_name_and_count(name):
+        """
+        Return the name part and the counter based on the given name.
+
+        e.g.
+            "Medium" -> "Medium", 1
+            "Medium [1234]" -> "Medium", 1234
+        """
+        name = name or ''
+        name_counter_re = r'(.*)\s+\[([0-9]+)\]'
+        match = re.match(name_counter_re, name)
+        if match:
+            return match.group(1), int(match.group(2) or '1')
+        return name, 1
