@@ -31,6 +31,6 @@ class Partner(models.Model):
             'name': _('Employee'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.employee',
-            'res_id': self.employee_ids.id,
+            'res_id': self.employee_ids.filtered(lambda e: e.company_id in self.env.companies).id,
             'view_mode': 'form',
         }
