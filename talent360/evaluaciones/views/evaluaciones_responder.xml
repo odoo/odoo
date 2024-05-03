@@ -172,6 +172,9 @@
                         <span t-esc="str(numero_pregunta) + '.- '" class="o_survey_question_number"/>
                         <span t-field="p.pregunta_texto"/>
                     </div>
+                    <t t-if="p.tipo == 'multiple_choice' and p.condicional" t-call="evaluaciones.conditional_question">
+                        <t t-set="question" t-value="p"/>
+                    </t>
                     <t t-if="p.tipo == 'open_question'" t-call="evaluaciones.question_text_box">
                         <t t-set="question" t-value="p"/>
                     </t>
@@ -269,6 +272,36 @@
                                     class="o_survey_form_choice_item"
                                     required="required"/>
                             </t>
+                        </td>
+                    </t>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+
+    <!-- conditional question -->
+    <template id="conditional_question" name="Pregunta: pregunta condicional">
+        <table class="table table-borderless o_survey_question_matrix text-white text-center mb-0"
+               t-att-data-name="question.id"
+               t-att-data-question-type="question.tipo"
+               t-att-data-sub-questions="question.pregunta_texto">
+            <thead>
+                <tr>
+                    <th class="fw-normal" t-foreach="question.opcion_ids" t-as="col_label"><span t-field="col_label.opcion_texto" /></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- For matrix, we have an extra check because we have rows * columns total options -->
+                <tr class="bg-white text-white" t-foreach="question" t-as="row_label" t-att-id="row_label">
+                    <t t-foreach="question.opcion_ids" t-as="col_label">
+                        <td t-att-class="'o_survey_matrix_btn text-primary position-relative %s'% ('o_survey_selected' if answer else '')">
+                            <input t-att-type="'radio'"
+                                t-att-name="'%s_%s' % (question.id, row_label.id)" 
+                                t-att-value="col_label.id"
+                                t-att-data-row-id="row_label.id"
+                                t-att-data-col-id="col_label"
+                                class="o_survey_form_choice_item"
+                                required="required"/>
                         </td>
                     </t>
                 </tr>

@@ -12,6 +12,9 @@ class Pregunta(models.Model):
     :param opcion_ids (fields.One2many): Relación uno a muchos con el modelo 'opcion' para las opciones de respuesta asociadas a la pregunta.
     :param respuesta_ids (fields.One2many): Relación uno a muchos con el modelo 'respuesta' para las respuestas asociadas a la pregunta.
     :param competencia_ids (fields.Many2many): Relación muchos a muchos con el modelo 'competencia' para las competencias asociadas a la pregunta.
+    :param condicional (fields.Boolean): Indica si la pregunta es condicional. Por defecto, es False.
+    :param respuesta_trigger (fields.Many2one): Relación muchos a uno con el modelo 'opcion' para la respuesta que desbloquea la pregunta.
+    :param preguntas_desbloquadas (fields.Many2many): Relación muchos a muchos con el modelo 'pregunta' para las preguntas desbloqueadas por la respuesta trigger.
     """
 
     _name = "pregunta"
@@ -31,6 +34,13 @@ class Pregunta(models.Model):
     opcion_ids = fields.One2many("opcion", "pregunta_id", string="Opciones")
     respuesta_ids = fields.One2many("respuesta", "pregunta_id", string="Respuestas")
     competencia_ids = fields.Many2many("competencia", string="Competencias")
+    condicional = fields.Boolean("Condicional", default=False)
+    respuesta_trigger = fields.Many2one("opcion", string="Respuesta trigger")
+    preguntas_desbloquadas = fields.Many2many("pregunta", 
+                                              "pregunta_rel", 
+                                              "pregunta_id", 
+                                              "desbloqueada_id", 
+                                              string="Preguntas desbloqueadas")
 
     def ver_respuestas(self):
         """
