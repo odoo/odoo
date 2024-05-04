@@ -1,0 +1,51 @@
+<odoo>
+    <record id="evaluacion_360_view_form" model="ir.ui.view">
+        <field name="name">evaluacion_360.form</field>
+        <field name="model">evaluacion</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet string="Evaluacion de personal">
+                    <h1>Evaluación 360</h1>
+                    <group>
+                        <group>
+                            <field name="nombre" field_id="nombre_0"/>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="tipo_competencia" field_id="tipo_de_evaluacion_0" />
+                            </group>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="descripcion" field_id="descripcion_0"/>
+                    </group>
+                    <group>
+                        <field name="competencia_ids">
+                            <tree editable="bottom">
+                                <field name="nombre"/>
+                                <field name="descripcion"/>
+                                <field name="company_id"/>
+                                <field name="pregunta_ids">
+                                    <tree>
+                                        <field name="pregunta_texto"/>
+                                        <field name="tipo"/>
+                                    </tree>
+                                </field>
+                            </tree>
+                        </field>
+                    </group>
+                    <group>
+                        <field name="preguntas_360_ids" readonly="true"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="evaluacion_competencias_action" model="ir.actions.act_window">
+        <field name="name">Evaluaciones</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="evaluacion_360_view_form"/>
+    </record>
+</odoo>

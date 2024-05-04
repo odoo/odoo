@@ -1,0 +1,311 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- PREGUNTA -->
+    <record id="pregunta_action" model="ir.actions.act_window">
+        <field name="name">pregunta.action</field>
+        <field name="res_model">pregunta</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="pregunta_view_tree" model="ir.ui.view">
+        <field name="name">pregunta.tree</field>
+        <field name="model">pregunta</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="pregunta_texto"/>
+                <field name="tipo"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- MIS EVALUACIONES KANBAN VIEW -->
+    <record id="usuario_evaluacion_rel_view_kanban" model="ir.ui.view">
+        <field name="name">usuario.evaluacion.rel.view.kanban</field>
+        <field name="model">usuario.evaluacion.rel</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" default_group_by="contestada" quick_create="false" create="false" records_draggable="false">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_card">
+                                <div class="oe_kanban_card_header">
+                                    <div class="oe_kanban_card_header_title">
+                                        <h3><field name="evaluacion_nombre"/></h3>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_card_content">
+                                    <div><strong>Tipo:</strong> <field name="evaluacion_tipo"/></div>
+                                    <div><strong>Estado:</strong> <field name="evaluacion_estado"/></div>   
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- MIS EVALUACIONES KANBAN ACTION -->
+    <record id="usuario_evaluacion_rel_kanban_action" model="ir.actions.act_window">
+        <field name="name">Mis Evaluaciones</field>
+        <field name="res_model">usuario.evaluacion.rel</field>
+        <field name="view_mode">kanban</field>
+        <field name="domain">[('usuario_id', '=', uid)]</field>
+    </record>
+
+    <!-- EVALUACIONES ACTION TREE -->
+    <record id="evaluacion_action" model="ir.actions.act_window">
+        <field name="name">Evaluaciones</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">tree</field>
+    </record>
+    
+    <!-- Vista de lista de todas las evaluaciones-->
+    <record id="evaluacion_view_tree" model="ir.ui.view">
+        <field name="name">evaluacion.tree</field>
+        <field name="model">evaluacion</field>
+
+        <field name="arch" type="xml">
+            <tree create="false">
+                <field class="text-primary font-weight-bold h5 align-middle" name="nombre" readonly="1"/>
+                <field name="descripcion" readonly="1"/>
+                <field name="estado" readonly="1"/>
+                <field name="tipo" readonly="1"/>
+                <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="abrir_evaluacion_form" string="Detalle" type="object" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="evaluacion_action" model="ir.actions.act_window">
+        <field name="name">Evaluaciones</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="evaluacion_view_tree"/>
+    </record>
+
+    <!-- Vista de lista de todas las preguntas de una evaluación-->
+    <record id="evaluacion_generica_view_form" model="ir.ui.view">
+        <field name="name">evaluacion.form</field>
+        <field name="model">evaluacion</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <!-- Generación de reporte de una evaluación-->
+                    <button class="btn btn-primary" name="action_reporte_generico" string="Reporte" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
+                </header>
+                <sheet string="Evaluacion de personal">
+                    <h1>
+                        <field class="text-primary font-weight-bold" name="nombre"/>
+                    </h1>
+                    <p>
+                        <field name="descripcion"/>
+                    </p>
+                    <group>
+                        <group>
+                            <field name="estado"/>
+                        </group>
+                        <notebook>
+                            <page string="Preguntas">
+                                <field class="lh-lg w-100" colspan="2" name="pregunta_ids" can_create="True" can_write="True" nolabel="1" field_id="pregunta_ids_0" context="{'current_evaluacion_id': active_id}">
+                                    <tree>
+                                        <field class="lh-m" name="pregunta_texto"/>
+                                        <field class="lh-m" name="tipo"/>
+                                        <!-- Métricas de una sola pregunta-->
+                                        <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="ver_respuestas" string="Detalle" type="object"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Asignados">
+                                <field name="usuario_ids"/>
+                            </page>
+                        </notebook>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="evaluacion_generica_action" model="ir.actions.act_window">
+        <field name="name">Evaluaciones</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="evaluacion_generica_view_form"/>
+    </record>
+
+    <!-- Reportes-->
+    <record id="reportes_view_tree" model="ir.ui.view">
+        <field name="name">reporte.form</field>
+        <field name="model">evaluacion</field>
+        <field name="arch" type="xml">
+            <tree create="false">
+                <field class="text-primary font-weight-bold h5 align-middle" name="nombre" readonly="1"/>
+                <field name="estado" readonly="1"/>
+                <field name="tipo" readonly="1"/>
+                <field name="conteo_asignados" readonly="1"/>
+                <button class="btn btn-primary" name="action_reporte_generico" string="Reporte" type="object"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="reportes_action" model="ir.actions.act_window">
+        <field name="name">Reportes</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="reportes_view_tree"/>
+        <field name="domain" eval="[('estado', '=', 'finalizado')]"/>
+    </record>
+
+
+
+    <!-- OPCION -->
+    <record id="opcion_action" model="ir.actions.act_window">
+        <field name="name">opcion.action</field>
+        <field name="res_model">opcion</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="opcion_view_tree" model="ir.ui.view">
+        <field name="name">opcion.tree</field>
+        <field name="model">opcion</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="opcion_texto"/>
+                <field name="pregunta_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- COMPETENCIA -->
+    <record id="competencia_action" model="ir.actions.act_window">
+        <field name="name">Competencias CR</field>
+        <field name="res_model">competencia</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="competencia_view_tree" model="ir.ui.view">
+        <field name="name">competencia.tree</field>
+        <field name="model">competencia</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="nombre"/>
+                <field name="descripcion"/>
+                <field name="company_id"/>
+                <field name="pregunta_ids"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="usuario_evaluacion_rel_view_form" model="ir.ui.view">
+        <field name="name">Asignación</field>
+        <field name="model">usuario.evaluacion.rel</field>
+        <field name="arch" type="xml">
+            <form string="Evaluation Assignment">
+                <!-- Your other fields here -->
+                <field name="evaluacion_id"/>
+                <field name="usuario_id"/>
+            </form>
+        </field>
+    </record>
+
+    <!-- CLIMA -->
+    <record id="evaluacion_clima_view_form" model="ir.ui.view">
+        <field name="name">evaluacion.clima.form</field>
+        <field name="model">evaluacion</field>
+        <field name="arch" type="xml">
+            <form string="Clima" create="false">
+                <sheet>
+                    <h1>Evaluación Clima</h1>
+                    <br></br>
+                    <group>
+                        <field name="nombre"/>
+                    </group>
+                    <group>
+                        <field name="descripcion"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="estado"/>
+                        </group>
+                        <notebook>
+                            <page string="Asignados">
+                                <field name="usuario_ids"/>
+                            </page>
+                        </notebook>
+                    </group>
+
+                    <div>
+                        <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary"/>
+                    </div>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+  
+    <!-- NOM035 -->
+    <record id="evaluacion_nom035_view_form" model="ir.ui.view">
+        <field name="name">evaluacion.nom035.form</field>
+        <field name="model">evaluacion</field>
+        <field name="arch" type="xml">
+            <form string="NOM035" create="false">
+                <sheet>
+                    <h1>Evaluación 035</h1>
+                    <br></br>
+                    <group>
+                        <field name="nombre"/>
+                    </group>
+                    <group>
+                        <field name="descripcion"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="estado"/>
+                        </group>
+                        <notebook>
+                            <page string="Asignados">
+                                <field name="usuario_ids"/>
+                            </page>
+                        </notebook>
+                    </group>
+                    <div>
+                        <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="evaluacion_clima_action_form" model="ir.actions.server">
+        <field name="name">Clima</field>
+        <field name="model_id" ref="model_evaluacion"/>
+        <field name="state">code</field>
+        <field name="code">action = model.evaluacion_clima_action_form()</field>
+        <field name="binding_model_id" ref="model_evaluacion"/>
+    </record>
+
+    <record id="evaluacion_nom035_action_form" model="ir.actions.server">
+        <field name="name">NOM 035</field>
+        <field name="model_id" ref="model_evaluacion"/>
+        <field name="state">code</field>
+        <field name="code">action = model.evaluacion_nom035_action_form()</field>
+        <field name="binding_model_id" ref="model_evaluacion"/>
+    </record>
+
+    <record id="evaluacion_360_action_form" model="ir.actions.server">
+        <field name="name">360</field>
+        <field name="model_id" ref="model_evaluacion"/>
+        <field name="state">code</field>
+        <field name="code">action = model.evaluacion_360_action_form()</field>
+        <field name="binding_model_id" ref="model_evaluacion"/>
+    </record>
+
+    <record id="evaluacion_action_tree" model="ir.actions.server">
+        <field name="name">Redirigir a Evaluación Tree</field>
+        <field name="model_id" ref="model_evaluacion"/>
+        <field name="state">code</field>
+        <field name="code">action = model.evaluacion_action_tree()</field>
+        <field name="binding_model_id" ref="model_evaluacion"/>
+    </record>
+
+</odoo>
