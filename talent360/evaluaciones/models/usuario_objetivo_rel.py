@@ -1,5 +1,6 @@
 from odoo import models, fields
 
+
 class UsuarioObjetivoRel(models.Model):
     """
     Modelo para representar la relación entre usuarios y objetivos
@@ -8,6 +9,7 @@ class UsuarioObjetivoRel(models.Model):
         evaluacion_id = Identificador de la evaluación
         objetivo_id = Identificador del objetivo
     """
+
     _name = "usuario.objetivo.rel"
     _description = "Relación entre objetivos y usuarios"
 

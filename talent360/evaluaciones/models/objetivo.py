@@ -1,6 +1,7 @@
-from odoo import _ ,api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from datetime import date
+
 
 class Objetivo(models.Model):
     """
@@ -23,12 +24,14 @@ class Objetivo(models.Model):
         usuario_ids(fields.Many2Many): Arreglo de usuarios asignado a un objetivo
         evaluador(fields.Char): Nombre del evaluador del objetivo
     """
-    
+
     _name = "objetivo"
     _description = "Objetivos de desempeño"
 
     titulo = fields.Char(required=True, string="Título")
-    descripcion = fields.Text(required=True, string="Descripción", help="Descripción del objetivo")
+    descripcion = fields.Text(
+        required=True, string="Descripción", help="Descripción del objetivo"
+    )
     metrica = fields.Selection(
         [
             ("porcentaje", "Porcentaje"),
@@ -61,16 +64,25 @@ class Objetivo(models.Model):
     )
 
     peso = fields.Integer(required=True, help="Peso del objetivo en la evaluación")
-    piso_minimo = fields.Integer(required=True, string="Piso Mínimo", help="¿Cuál es el mínimo aceptable?")
-    piso_maximo = fields.Integer(required=True, string="Piso Máximo", help="¿Cuál es el máximo aceptable?")
-    fecha_fin = fields.Date(required=True, string="Fecha final", default=fields.Datetime.today() ,help="Fecha en la que se debe cumplir el objetivo")
+    piso_minimo = fields.Integer(
+        required=True, string="Piso Mínimo", help="¿Cuál es el mínimo aceptable?"
+    )
+    piso_maximo = fields.Integer(
+        required=True, string="Piso Máximo", help="¿Cuál es el máximo aceptable?"
+    )
+    fecha_fin = fields.Date(
+        required=True,
+        string="Fecha final",
+        default=fields.Datetime.today(),
+        help="Fecha en la que se debe cumplir el objetivo",
+    )
     resultado = fields.Integer(store=True)
     estado = fields.Selection(
         [
             ("rojo", "No cumple con las expectativas"),
             ("amarillo", "Medianamente cumple con las expectativas"),
             ("verde", "Cumple con las expectativas"),
-            ("azul", "Supera las expectativas")
+            ("azul", "Supera las expectativas"),
         ],
         default="rojo",
         compute="_compute_estado",
@@ -84,7 +96,7 @@ class Objetivo(models.Model):
         "usuario_id",
         string="Asignados",
     )
-    
+
     evaluador = fields.Char()
 
     @api.constrains("piso_minimo", "piso_maximo")
@@ -98,7 +110,9 @@ class Objetivo(models.Model):
             if record.piso_minimo >= record.piso_maximo:
                 raise ValidationError(_("El piso mínimo debe ser menor al piso máximo"))
             if record.piso_minimo < 0 or record.piso_maximo < 0:
-                raise ValidationError(_("Los pisos minimos y maximos deben ser mayores a 0"))
+                raise ValidationError(
+                    _("Los pisos minimos y maximos deben ser mayores a 0")
+                )
 
     @api.constrains("peso")
     def _check_peso(self):
@@ -110,7 +124,7 @@ class Objetivo(models.Model):
         for record in self:
             if record.peso > 100 or record.peso <= 0:
                 raise ValidationError(_("El peso debe estar en el rango de 1 y 100"))
-            
+
     def write(self, vals):
         """
         Método funcional cuando se edita un objetivo.
@@ -127,14 +141,16 @@ class Objetivo(models.Model):
             if new_piso_minimo >= new_piso_maximo:
                 raise ValidationError(_("El piso mínimo debe ser menor al piso máximo"))
             if new_piso_minimo < 0 or new_piso_maximo < 0:
-                raise ValidationError(_("Los pisos mínimos y máximos deben ser mayores a 0"))
-            
+                raise ValidationError(
+                    _("Los pisos mínimos y máximos deben ser mayores a 0")
+                )
+
         if "peso" in vals:
             new_peso = vals.get("peso", self.peso)
             if new_peso > 100 or new_peso <= 0:
                 raise ValidationError(_("El peso debe estar en el rango de 1 y 100"))
         return super(Objetivo, self).write(vals)
-    
+
     @api.constrains("fecha_fin")
     def _check_fecha_fin(self):
         """
@@ -144,8 +160,10 @@ class Objetivo(models.Model):
         """
         for record in self:
             if record.fecha_fin and record.fecha_fin < date.today():
-                raise ValidationError(_("La fecha final debe ser mayor a la fecha de hoy"))
-            
+                raise ValidationError(
+                    _("La fecha final debe ser mayor a la fecha de hoy")
+                )
+
     @api.depends("resultado", "piso_maximo")
     def _compute_estado(self):
         """
@@ -162,7 +180,7 @@ class Objetivo(models.Model):
                     record.estado = "verde"
                 elif ratio > 1:
                     record.estado = "azul"
-            
+
     @api.constrains("usuario_ids")
     def _check_usuario_ids(self):
         """

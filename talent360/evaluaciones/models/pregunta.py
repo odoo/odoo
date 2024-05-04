@@ -9,7 +9,6 @@ class Pregunta(models.Model):
     :param _description (str): Descripción del modelo en Odoo.
     :param pregunta_texto (fields.Char): Texto de la pregunta. Es un campo obligatorio.
     :param tipo (fields.Selection): Tipo de pregunta con opciones 'multiple_choice', 'open_question' y 'escala'. Por defecto, es 'multiple_choice'.
-    :param company_id (fields.Many2one): Relación muchos a uno con el modelo 'res.company' para la compañía asociada a la pregunta.
     :param opcion_ids (fields.One2many): Relación uno a muchos con el modelo 'opcion' para las opciones de respuesta asociadas a la pregunta.
     :param respuesta_ids (fields.One2many): Relación uno a muchos con el modelo 'respuesta' para las respuestas asociadas a la pregunta.
     :param competencia_ids (fields.Many2many): Relación muchos a muchos con el modelo 'competencia' para las competencias asociadas a la pregunta.
@@ -29,7 +28,6 @@ class Pregunta(models.Model):
         required=True,
     )
 
-    company_id = fields.Many2one("res.company", string="Compañía")
     opcion_ids = fields.One2many("opcion", "pregunta_id", string="Opciones")
     respuesta_ids = fields.One2many("respuesta", "pregunta_id", string="Respuestas")
     competencia_ids = fields.Many2many("competencia", string="Competencias")

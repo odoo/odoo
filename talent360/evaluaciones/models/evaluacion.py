@@ -16,7 +16,6 @@ class Evaluacion(models.Model):
 
     _name = "evaluacion"
     _description = "Evaluacion de pesonal"
-    # _inherit = ["mail.thread"]
 
     nombre = fields.Char(required=True)
 
@@ -82,8 +81,8 @@ class Evaluacion(models.Model):
 
             new_evaluation = self.env["evaluacion"].create(
                 {
-                    "nombre": "Evaluacion Clima",
-                    "descripcion": "La valuacion Clima es una herramienta de medición de clima organizacional, cuyo objetivo es conocer la percepción que tienen las personas que laboran en los centros de trabajo, sobre aquellos aspectos sociales que conforman su entorno laboral y que facilitan o dificultan su desempeño.",
+                    "nombre": "",
+                    "descripcion": "La evaluación Clima es una herramienta de medición de clima organizacional, cuyo objetivo es conocer la percepción que tienen las personas que laboran en los centros de trabajo, sobre aquellos aspectos sociales que conforman su entorno laboral y que facilitan o dificultan su desempeño.",
                     "tipo": "CLIMA",
                 }
             )
@@ -91,10 +90,12 @@ class Evaluacion(models.Model):
 
         self.pregunta_ids = [(5,)]
 
-        template_id_hardcoded = 1
+        template_id = self.env["ir.model.data"]._xmlid_to_res_id(
+            "evaluaciones.template_clima"
+        )
 
-        if template_id_hardcoded:
-            template = self.env["template"].browse(template_id_hardcoded)
+        if template_id:
+            template = self.env["template"].browse(template_id)
             if template:
                 pregunta_ids = template.pregunta_ids.ids
                 print("IDs de preguntas:", pregunta_ids)
@@ -117,7 +118,7 @@ class Evaluacion(models.Model):
         if not self:
             new_evaluation = self.env["evaluacion"].create(
                 {
-                    "nombre": "NOM 035",
+                    "nombre": "",
                     "descripcion": "La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.",
                     "tipo": "NOM_035",
                 }
@@ -126,10 +127,12 @@ class Evaluacion(models.Model):
 
         self.pregunta_ids = [(5,)]
 
-        template_id_hardcoded = 2
+        template_id = self.env["ir.model.data"]._xmlid_to_res_id(
+            "evaluaciones.template_nom035"
+        )
 
-        if template_id_hardcoded:
-            template = self.env["template"].browse(template_id_hardcoded)
+        if template_id:
+            template = self.env["template"].browse(template_id)
             if template:
                 pregunta_ids = template.pregunta_ids.ids
                 self.pregunta_ids = [(6, 0, pregunta_ids)]
@@ -159,7 +162,7 @@ class Evaluacion(models.Model):
             "name": "Evaluación Clima",
             "res_model": "evaluacion",
             "view_mode": "form",
-            "view_id": self.env.ref("evaluaciones.evaluacion_clima_form").id,
+            "view_id": self.env.ref("evaluaciones.evaluacion_clima_view_form").id,
             "target": "current",
             "res_id": self.id,
         }
@@ -184,7 +187,7 @@ class Evaluacion(models.Model):
             "name": "NOM 035",
             "res_model": "evaluacion",
             "view_mode": "form",
-            "view_id": self.env.ref("evaluaciones.evaluacion_nom035_form").id,
+            "view_id": self.env.ref("evaluaciones.evaluacion_nom035_view_form").id,
             "target": "current",
             "res_id": self.id,
         }
@@ -205,7 +208,7 @@ class Evaluacion(models.Model):
             "name": "360",
             "res_model": "evaluacion",
             "view_mode": "form",
-            "view_id": self.env.ref("evaluaciones.evaluacion_360_form").id,
+            "view_id": self.env.ref("evaluaciones.evaluacion_360_view_form").id,
             "target": "current",
             "res_id": self.id,
         }
@@ -242,19 +245,17 @@ class Evaluacion(models.Model):
         """
 
         if self.tipo == "competencia":
-            view_id = self.env.ref("evaluaciones.evaluacion_360_form").id
+            action = self.env["ir.actions.act_window"]._for_xml_id(
+                "evaluaciones.evaluacion_competencias_action"
+            )
         else:
-            view_id = self.env.ref("evaluaciones.evaluacion_reporte_form").id
+            action = self.env["ir.actions.act_window"]._for_xml_id(
+                "evaluaciones.evaluacion_generica_action"
+            )
 
-        return {
-            "type": "ir.actions.act_window",
-            "name": "Evaluación",
-            "res_model": "evaluacion",
-            "view_mode": "form",
-            "view_id": view_id,
-            "target": "current",
-            "res_id": self.id,
-        }
+        action["res_id"] = self.id
+
+        return action
 
     def action_reporte_generico(self):
         """
@@ -295,6 +296,9 @@ class Evaluacion(models.Model):
             respuestas_tabuladas = []
 
             for respuesta in pregunta.respuesta_ids:
+                if respuesta.evaluacion_id.id != self.id:
+                    continue
+
                 respuestas.append(respuesta.respuesta_texto)
 
                 for i, respuesta_tabulada in enumerate(respuestas_tabuladas):

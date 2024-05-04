@@ -1,0 +1,2 @@
+python odoo-bin -r odoo -w odoo --addons-path=addons,talent360 -d rd-demo -u evaluaciones --test-enable
+# for mac users: python odoo-bin --addons-path=addons,talent360 -d rd-demo -u evaluaciones --test-enable
