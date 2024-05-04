@@ -3681,7 +3681,7 @@ msgid ""
 "tracking=True for the computation of duration."
 msgstr ""
 "El campo \"(field)r en el modelo %(model)r debe ser del tipo Many2one y "
-"tener tracking=Verdadero para el cálculo de la duración."
+"tener tracking=True para el cálculo de la duración."
 
 #. module: mail
 #. odoo-python
@@ -7030,7 +7030,7 @@ msgstr "Contacto"
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "Partner Profile"
-msgstr "Perfil de la empresa"
+msgstr "Perfil del contacto"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_readonly
@@ -7041,7 +7041,7 @@ msgstr "Contacto de sólo lectura "
 #. module: mail
 #: model:ir.model,name:mail.model_mail_partner_device
 msgid "Partner Web Push Device"
-msgstr "Dispositivo push del contacto para la web"
+msgstr "Dispositivo push del contacto web"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_partner
@@ -7057,7 +7057,7 @@ msgstr "Contactos"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notified_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__notified_partner_ids
 msgid "Partners with Need Action"
-msgstr "Asociados con acción requerida"
+msgstr "Contactos con acción requerida"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__password
@@ -7199,19 +7199,19 @@ msgstr "Iniciar"
 #: code:addons/mail/static/src/core/web/suggested_recipient.js:0
 #, python-format
 msgid "Please complete customer's information"
-msgstr "Por favor complete la información del cliente"
+msgstr "Complete la información del cliente"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Please contact us instead using"
-msgstr "Por favor contáctenos en su lugar usando"
+msgstr "Póngase en contacto con nosotros a través de"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 #, python-format
 msgid "Please wait while the file is uploading."
-msgstr "Espere mientras se carga el archivo."
+msgstr "Espere mientras se sube el archivo."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users__notification_type
@@ -7370,7 +7370,7 @@ msgid ""
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
 msgstr ""
-"Procesa cada correo entrante como parte de una conversación correspondiente "
+"Procese cada correo entrante como parte de una conversación correspondiente "
 "a este tipo de documento. Esto creará nuevos documentos para nuevas "
 "conversaciones, o adjuntará correos electrónicos de seguimiento a las "
 "conversaciones existentes (documentos)."
@@ -7668,7 +7668,7 @@ msgstr "Mensaje relacionado"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__partner_id
 msgid "Related Partner"
-msgstr "Contacto relacionada"
+msgstr "Contacto relacionado"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__relation_field
@@ -7706,8 +7706,8 @@ msgstr "Asistente para eliminar correo electrónico de la lista negra"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove the contextual action to use this template on related documents"
 msgstr ""
-"Borrar la acción conceptual para usar esta plantilla en documentos "
-"relacionados."
+"Elimine la acción contextual para utilizar esta plantilla en documentos "
+"relacionados"
 
 #. module: mail
 #. odoo-javascript
@@ -7878,7 +7878,7 @@ msgstr "Usuario responsable"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__restrict_template_rendering
 msgid "Restrict Template Rendering"
-msgstr "Limitar la creación de plantillas"
+msgstr "Restringir la creación de plantillas"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -9810,7 +9810,7 @@ msgstr "Desfijar"
 #: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories.xml:0
 #, python-format
 msgid "Unpin Conversation"
-msgstr "Desanclar conversación"
+msgstr "Desfijar conversación"
 
 #. module: mail
 #. odoo-javascript
@@ -10539,7 +10539,8 @@ msgstr "Solo puede chatear con usuarios existentes."
 #: code:addons/mail/static/src/core/common/thread_service.js:0
 #, python-format
 msgid "You can only chat with partners that have a dedicated user."
-msgstr "Solo puede chatear con socios que tengan un usuario dedicado."
+msgstr ""
+"Solo puede usar el chat con los contactos que tengan un usuario asignado."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
@@ -10554,8 +10555,8 @@ msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
 msgstr ""
-"No puede borrar estos grupos, ya que el grupo \"Toda la compañía\" es "
-"requerido por otros módulos."
+"No puede eliminar estos grupos, el grupo \"Toda la empresa\" es necesario "
+"para otros módulos."
 
 #. module: mail
 #. odoo-python
