@@ -117,7 +117,12 @@
                                 </field>
                             </page>
                             <page string="Asignados">
-                                <field name="usuario_ids"/>
+                                <field class="lh-lg w-100" colspan="2" name="usuario_ids" nolabel="1" context="{'current_evaluacion_id': active_id}" >
+                                    <tree>
+                                        <field class="lh-m" name="name"/>
+                                        <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="ver_respuestas_usuario" string="Detalle" type="object"/>
+                                    </tree>
+                                </field>
                             </page>
                         </notebook>
                     </group>
