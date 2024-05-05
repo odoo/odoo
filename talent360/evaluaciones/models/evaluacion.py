@@ -65,6 +65,9 @@ class Evaluacion(models.Model):
         string="Asigned",
     )
 
+    fecha_inicio = fields.Date()
+    fecha_final = fields.Date()
+
     
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):

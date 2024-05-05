@@ -61,7 +61,7 @@ class EvaluacionesController(http.Controller):
         
         
         if not user_eval_relation:
-            return request.redirect('/error/404')
+            return request.render("evaluaciones.evaluacion_responder_form_draft")
 
         # Obtén la evaluación basada en el ID
         parametros = evaluacion.action_get_evaluaciones(evaluacion_id)

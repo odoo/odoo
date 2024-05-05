@@ -26,7 +26,7 @@
         <t t-call="evaluaciones.diseño">
             <div class="wrap o_survey_wrap d-flex">
                 <div class="container o_survey_form d-flex flex-column mb-5">
-                    <t t-call="evaluaciones.evaluacion_header" />
+                    <!-- <t t-call="evaluaciones.evaluacion_header" /> -->
                     <t t-call="evaluaciones.evaluacion_responder_form" />
                 </div>
             </div>
@@ -39,13 +39,23 @@
                 <div class="row">
                     <div  class="col-lg-10">
                         <h1 class="o_survey_main_title pt-4">
-                            <span t-field="evaluacion.nombre" />
+                            ¡Hola!
                         </h1>
                     </div>
                 </div>
                 <div class="row">
                     <div  class="col-lg-10">
-                        <div t-field='evaluacion.descripcion' class="oe_no_empty pb-5 text-break"/>
+                        <p class="oe_no_empty pb-5 text-break">
+                            Por favor haz clic en el botón “Responder” para iniciar tu Evaluacion. Te recordamos que todas tus respuestas son confidenciales.
+                        </p>
+                    </div>
+                </div> 
+
+                <div class="wrap o_survey_start">
+                    <div class='mb32'>
+                        <button onclick="" class="btn btn-primary btn-lg">
+                            Responder
+                        </button>
                     </div>
                 </div>
             </div>
@@ -65,7 +75,7 @@
 
                 <t t-if="contestada == 'contestada'"  t-call="evaluaciones.evaluacion_responder_form_done"/>
                 <t t-elif="evaluacion.estado == 'finalizado'" t-call="evaluaciones.evaluacion_responder_form_closed"/>
-                <t t-elif="evaluacion.estado == 'publicado'" t-call="evaluaciones.preguntas_contenedor"/>
+                <t t-elif="evaluacion.estado == 'publicado'" t-call="evaluaciones.evaluacion_responder_form_start"/>
                 <t t-elif="evaluacion.estado == 'borrador'" t-call="evaluaciones.evaluacion_responder_form_draft"/>
 
             </div>
@@ -85,38 +95,60 @@
             </div>
         </div>
     </template>
-    
-    <!-- Start (not taken) survey page -->
-        <template id="evaluacion_responder_form_start" name="Evaluacion: comenzar">
-            <div class="wrap o_survey_start">
-                <div class='mb32'>
-                    <button onclick="handleResponseClima()" value="start" class="btn btn-primary btn-lg">
-                        Enviar
-                    </button>
 
-                    <!-- <script>
-                        function confirmacion() {
-                            if (confirm("¿Estas seguro de enviar tus respuestas?")) {
-                                handleResponseClima();
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        }
-                    </script> -->
+    <!-- Start (not taken) survey page -->  
+    <template id="evaluacion_responder_form_enviar" name="Evaluacion: enviar">
+        <div class="wrap o_survey_start">
+            <div class='mb32'>
+                <button onclick="handleResponseClima()" value="start" class="btn btn-primary btn-lg">
+                   Enviar
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <template id="evaluacion_responder_form_start" name="Evaluacion: Encabezado pagina principal">
+        <div class="o_survey_nav pt16 mb-2">
+            <div class="container m-0 p-0">
+                <div class="row">
+                    <div  class="col-lg-10">
+                        <h1 class="o_survey_main_title pt-4">
+                            ¡Hola!
+                        </h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div  class="col-lg-10">
+                        <p class="oe_no_empty pb-5 text-break">
+                            Por favor haz clic en el botón “Responder” para iniciar tu Evaluacion. <br /> 
+                            Te recordamos que todas tus respuestas son confidenciales. <br /><br />
+                            Disponible del <span t-field="evaluacion.fecha_inicio"/> al <span t-field="evaluacion.fecha_final" />
+                        </p>
+                    </div>
+                </div> 
+
+                <div class="wrap o_survey_start">
+                    <div class='mb32'>
+                        <button onclick="" class="btn btn-primary btn-lg">
+                            Responder
+                        </button>
+                    </div>
                 </div>
             </div>
-        </template>
+        </div>
+
+        <t t-call="evaluaciones.preguntas_contenedor"/>
+    </template>
 
     <!-- Finished (taken and finished) survey page -->
     <template id="evaluacion_responder_form_done" name="Evaluaciones: Terminada">
         <div class="wrap">
             <div class="o_survey_finished mt32 mb32">
-                <h1>Gracias!</h1>
+                <h1>Tus respuestas han sido registradas.</h1>
                 <div class="row">
                     <div class="col">
                         <div class="o_survey_review">
-                            Has completado la evaluacion. Puedes revisar tus respuestas.
+                            ¡Gracias por participar!
                         </div>
                     </div>
                 </div>
@@ -160,9 +192,18 @@
 
     <!-- Question widgets -->
     <template id="preguntas_contenedor" name="Evaluaciones: contenedor de  preguntas">
-        <t t-set="default_constr_error_msg">This question requires an answer.</t>
-        <t t-set="default_validation_error_msg">The answer you entered is not valid.</t>
-        <t t-set="default_comments_message">If other, please specify:</t>
+        <div class="row">
+            <div  class="col-lg-10">
+                <h1 class="o_survey_main_title pt-4">
+                    <span t-field="evaluacion.nombre" />
+                </h1>
+            </div>
+        </div>
+        <div class="row">
+            <div  class="col-lg-10">
+                <div t-field='evaluacion.descripcion' class="oe_no_empty pb-5 text-break"/>
+            </div>
+        </div> 
         <div t-attf-class="js_question-wrapper pb-4">
             <t t-set="numero_pregunta" t-value="0"/>
             <t t-foreach="pregunta" t-as="p">
@@ -183,7 +224,7 @@
                 </div>
             </t>
 
-            <t t-call="evaluaciones.evaluacion_responder_form_start"/>
+            <t t-call="evaluaciones.evaluacion_responder_form_enviar"/>
 
         </div>
     </template>
