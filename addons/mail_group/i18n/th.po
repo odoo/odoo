@@ -86,6 +86,12 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>เรียน <t t-out=\"object.partner_id.name or ''\"></t></p>\n"
+"                <p>โปรดดูหลักเกณฑ์ของ <t t-out=\"object.mail_group_id.name\"></t> รายชื่อผู้รับจดหมาย</p>ด้านล่าง\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer

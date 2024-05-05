@@ -793,7 +793,11 @@ msgid "Could not install module %s"
 msgstr "モジュール%sをインストールできませんでした"
 
 #. module: web_editor
+#. odoo-javascript
+#. module: web_editor
+#: code:addons/web_editor/static/src/components/upload_progress_toast/upload_service.js:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+#, python-format
 msgid "Cover"
 msgstr "カバー"
 
@@ -3215,6 +3219,15 @@ msgid ""
 "You can upload documents with the button located in the top left of the "
 "screen."
 msgstr "画面の左上にあるボタンで書類をアップロードすることができます。"
+
+#. module: web_editor
+#. odoo-python
+#: code:addons/web_editor/controllers/main.py:0
+#, python-format
+msgid ""
+"You have reached the maximum number of requests for this service. Try again "
+"later."
+msgstr "このサービスの最大リクエスト数に達しました。後でもう一度お試し下さい。"
 
 #. module: web_editor
 #. odoo-javascript
