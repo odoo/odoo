@@ -39,8 +39,6 @@ function handleResponseClima() {
         radioValuesScale: selectedValuesScale,
     };
 
-    console.log(data);
-
     // Envía los valores a la base de datos
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/evaluacion/responder', true);

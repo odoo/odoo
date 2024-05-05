@@ -26,7 +26,6 @@ document.querySelectorAll('.o_survey_form_choice_item').forEach(function(input) 
             } else {
                 preguntas_desbloqueadas.forEach(function(preguntaDesbloqueadaId) {
                     var preguntaDesbloqueadaElement = document.getElementById(preguntaDesbloqueadaId.trim());
-                    console.log(preguntaDesbloqueadaElement);
                     if (preguntaDesbloqueadaElement) {
                         preguntaDesbloqueadaElement.style.display = "none";
                         preguntaDesbloqueadaElement.querySelectorAll('input[required], textarea[required], select[required]').forEach(function(field) {
