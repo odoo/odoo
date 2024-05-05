@@ -10,6 +10,7 @@ import sys
 import threading
 import time
 import traceback
+import typing
 import warnings
 
 import werkzeug.serving
@@ -17,6 +18,8 @@ import werkzeug.serving
 from . import release
 from . import sql_db
 from . import tools
+from .tools.func import locked
+from .tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
 
@@ -26,6 +29,49 @@ def log(logger, level, prefix, msg, depth=None):
     for line in (prefix + pprint.pformat(msg, depth=depth)).split('\n'):
         logger.log(level, indent+line)
         indent=indent_after
+
+
+def init_file_logger(log_file_path: str) -> logging.Handler:
+    dirname = os.path.dirname(log_file_path)
+    if dirname and not os.path.isdir(dirname):
+        os.makedirs(dirname)
+    if os.name == 'posix':
+        handler = WatchedFileHandler(log_file_path)
+    else:
+        handler = logging.FileHandler(log_file_path)
+    return handler
+
+
+class StreamLRU(LRU):
+    """Variation of the LRU to handle closing the stream when popping extra items"""
+    @locked
+    def __setitem__(self, obj, val):
+        self.d[obj] = val
+        self.d.move_to_end(obj, last=False)
+        while len(self.d) > self.count:
+            stream = self.d.popitem(last=True)[1]
+            stream.close()
+
+NO_DATABASE_NAME = '__nodb__'
+class SplittedDatabaseFilesHandler(logging.Handler):
+    """Logging handler that will log to different files depending on the database name.
+    All "no database" logs will go to a dedicated `NO_DATABASE_NAME` log file."""
+
+    def __init__(self, log_file_path: str):
+        super().__init__()
+        self.log_file_path = log_file_path
+        self._db_handlers = StreamLRU(32)  # Avoid having too many open files at once & will eventually close handlers for deleted databases
+
+    def _get_database_handler(self, db_name: str) -> logging.Handler:
+        if db_name not in self._db_handlers:
+            log_file_name = self.log_file_path.replace('%db', db_name)
+            db_handler = init_file_logger(log_file_name)
+            db_handler.setFormatter(self.formatter)
+            self._db_handlers[db_name] = db_handler
+        return self._db_handlers[db_name]
+
+    def emit(self, record):
+        self._get_database_handler(getattr(threading.current_thread(), 'dbname', NO_DATABASE_NAME)).emit(record)
 
 
 class WatchedFileHandler(logging.handlers.WatchedFileHandler):
@@ -207,18 +253,11 @@ def init_logger():
                 + ':%(dbname)s:%(levelname)s:%(name)s:%(message)s'
 
     elif tools.config['logfile']:
+        logfile = tools.config['logfile']
         # LogFile Handler
-        logf = tools.config['logfile']
         try:
-            # We check we have the right location for the log files
-            dirname = os.path.dirname(logf)
-            if dirname and not os.path.isdir(dirname):
-                os.makedirs(dirname)
-            if os.name == 'posix':
-                handler = WatchedFileHandler(logf)
-            else:
-                handler = logging.FileHandler(logf)
-        except Exception:
+            handler = SplittedDatabaseFilesHandler(logfile) if '%db' in logfile else init_file_logger(logfile)
+        except OSError:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
 
     # Check that handler.stream has a fileno() method: when running OpenERP
