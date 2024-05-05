@@ -18,7 +18,7 @@
                                 <field name="l10n_sa_serial_number"/>
                             </group>
                         </group>
-                        <p>
+                        <p groups="base.group_system">
                             <b>
                                 In order to be able to submit Invoices to ZATCA, the following steps need to be completed:
                             </b>
@@ -30,7 +30,7 @@
                                 </li>
                                 <li>
                                     Request a Compliance Certificate (CCSID)
-                                    <i class="fa fa-check text-success ms-1"
+                                    <i class="fa fa-check text-success ms-1" groups="base.group_system"
                                        invisible="not l10n_sa_compliance_csid_json"/>
                                 </li>
                                 <li>
@@ -40,12 +40,12 @@
                                 </li>
                                 <li>
                                     Request a Production Certificate (PCSID)
-                                    <i class="fa fa-check text-success ms-1"
+                                    <i class="fa fa-check text-success ms-1" groups="base.group_system"
                                        invisible="not l10n_sa_production_csid_json"/>
                                 </li>
                             </ol>
                         </p>
-                        <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert"
+                        <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert" groups="base.group_system"
                              invisible="l10n_sa_csr_errors or l10n_sa_compliance_csid_json">
                             <p class="mb-0">
                                 Onboard the Journal by completing each step
@@ -55,7 +55,7 @@
                                 Onboard Journal
                             </button>
                         </div>
-                        <div class="alert alert-danger d-flex flex-column align-items-end" role="alert"
+                        <div class="alert alert-danger d-flex flex-column align-items-end" role="alert" groups="base.group_system"
                              invisible="not l10n_sa_csr_errors or l10n_sa_compliance_csid_json or l10n_sa_production_csid_json">
                             <div class="w-100">
                                 <h4 role="alert" class="alert-heading">Journal could not be onboarded. Please make sure the Company VAT/Identification Number are correct.</h4>
@@ -67,7 +67,7 @@
                                 Onboard Journal
                             </button>
                         </div>
-                        <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert"
+                        <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert" groups="base.group_system"
                              invisible="not l10n_sa_compliance_checks_passed or not l10n_sa_production_csid_json">
                             <p class="mb-0">
                                 The Production certificate is valid until
