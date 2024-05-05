@@ -3076,10 +3076,10 @@ msgid ""
 "No modified version is certified and supported by Odoo SA.\n"
 msgstr ""
 "\n"
-"Sistema belga de registro de pagos en efectivo\n"
+"Sistema belga de registro de cajas registradoras\n"
 "================================\n"
 "\n"
-"Este módulo convierte el módulo de Punto de Venta en un sistema belga de registro de pagos en efectivo calificado.\n"
+"Este módulo convierte el módulo de TPV en un sistema belga de registro de cajas registradoras calificado.\n"
 "\n"
 "Más información en:\n"
 " * http://www.systemedecaisseenregistreuse.be/\n"
@@ -3734,7 +3734,7 @@ msgid ""
 "Create Credit Notes from Helpdesk tickets\n"
 msgstr ""
 "\n"
-"Crear notas de crédito a partir de tickets del Servicio de asistencia\n"
+"Cree facturas rectificativas a partir de tickets del Servicio de asistencia\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides
@@ -4461,7 +4461,7 @@ msgstr ""
 "\n"
 "Informes contables electrónicos\n"
 "    - Plan contable\n"
-"    - Balance de prueba\n"
+"    - Balance de comprobación\n"
 "\n"
 "Informe DIOT\n"
 
@@ -4944,19 +4944,20 @@ msgstr ""
 "Funcional\n"
 "----------\n"
 "\n"
-"En algunos países de América Latina, incluyendo Argentina y Chile, algunas transacciones contables como facturas y facturas de proveedores se clasifican por tipos de documentos definidos por las autoridades fiscales gubernamentales (en el caso de Argentina AFIP y en Chile el SII).\n"
+"En algunos países de Latinoamérica, incluyendo Argentina y Chile, algunas transacciones contables como facturas y facturas de proveedores se clasifican por los tipos de documentos que definen las autoridades fiscales gubernamentales (en el caso de Argentina, lo hace la AFIP; en Chile, el SII).\n"
 "\n"
-"Este módulo está pensado para ser ampliado por las localizaciones con el fin de gestionar estos tipos de documentos y es una información esencial que necesita ser visualizada en los informes impresos y fácilmente identificada, dentro del conjunto de facturas así como de movimientos de cuenta.\n"
+"Esperamos que este módulo se amplíe con las localizaciones con el fin de gestionar estos tipos de documentos. Es muy importante que esta información aparezca en los informes impresos y se pueda identificar con facilidad tanto en un conjunto de facturas así como en los movimientos de cuenta.\n"
 "\n"
-"Cada tipo de documento tiene sus propias reglas y número de secuencia, este último se integra con el número de factura y la secuencia de diario para ser fácil para el usuario de localización. Para admitir o no estos tipos de documento un diario tiene una nueva opción que permite utilizar el documento o no.\n"
+"Para facilitar estos procesos al usuario de localización, cada tipo de documento tiene sus propias reglas y número de secuencia y este último se integra con el número de factura y la secuencia de diario. Para admitir o no estos tipos de documento un diario tiene una nueva opción que permite utilizar (o no) el documento.\n"
 "\n"
-"Técnicas\n"
+"Técnico\n"
 "---------\n"
 "\n"
-"Si su localización necesita esta lógica entonces necesitará agregar este módulo como dependencia y en su módulo de localización extender:\n"
+"Si su localización necesita esta lógica entonces deberá agregar este módulo como dependencia y en su módulo de localización deberá:\n"
 "\n"
 "* ampliar el método _localization_use_documents() de la empresa.\n"
-"* Crear los datos de los tipos de documento que existen para el país específico. La clase de documento tiene un campo de país\n"
+"* crear los datos de los tipos de documento que existen para el país específico. La clase de documento tiene un campo de país.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -22343,11 +22344,11 @@ msgid ""
 "of the field contains a lot of records; usually used on models with\n"
 "few records (e.g. Stages, Job Positions, Event Types, etc.)."
 msgstr ""
-"Si está seleccionado, todos los registros del modelo objetivo se incluirán\n"
-"en un resultado agrupado (e.j. los filtros de \"agrupar por\", columnas Kanban, etc.).\n"
-"Ten en cuenta que puede reducir mucho el rendimiento si el modelo objetivo\n"
+"Si está seleccionado todos los informes del modelo objetivo se incluirán\n"
+"en un resultado de grupo (p. ej. los filtros de \"agrupar por\", columnas Kanban, etc.).\n"
+"Tenga en cuenta que puede reducir mucho el rendimiento si el modelo objetivo\n"
 "del campo contiene muchos registros. Usualmente se usa en modelos con\n"
-"pocos registros (e.j. stagets, Puestos de trabajo, tipos de eventos, ec.)"
+"pocos informes (p. ej. etapas, puestos de trabajo, tipos de eventos, ec.)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_debug
@@ -22404,7 +22405,7 @@ msgstr "Si se establece, la acción enlazada sólo se aplica a este usuario."
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_default__condition
 msgid "If set, applies the default upon condition."
-msgstr "Si está configurado, se aplica el valor por defecto."
+msgstr "Si se establece, se aplica el valor por defecto."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -22662,7 +22663,7 @@ msgstr "Importe información de contabilidad desde archivos SIE"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_amazon
 msgid "Import Amazon orders and sync deliveries"
-msgstr "Importe pedidos de Amazon y sincroniza entregas"
+msgstr "Importe pedidos de Amazon y sincronice entregas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_camt
@@ -23142,7 +23143,7 @@ msgstr "Interacción entre reglas"
 #: model:ir.module.module,summary:base.module_account_inter_company_rules
 #: model:ir.module.module,summary:base.module_sale_purchase_inter_company_rules
 msgid "Intercompany SO/PO/INV rules"
-msgstr "Reglas SO/PO/INV inter-compañia"
+msgstr "Reglas para las órdenes de compra/venta y facturas entre empresas"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
@@ -23211,7 +23212,7 @@ msgid ""
 msgstr ""
 "Se especificó una orden \"no válida\" (%s). Una especificación de orden "
 "\"válida\" es una lista de campos de nombres válidos que están separados por"
-" una coma  (opcionalmente seguidos por asc/desc para la dirección)."
+" una coma (opcionalmente seguidos por asc/desc para la dirección)."
 
 #. module: base
 #. odoo-python
@@ -23281,8 +23282,8 @@ msgid ""
 "Invalid date/time format directive specified. Please refer to the list of "
 "allowed directives, displayed when you edit a language."
 msgstr ""
-"Se ha especificado una directiva de formato fecha/hora no válida. Consulte "
-"la lista de las directivas permitidas, mostradas cuando edita un idioma."
+"Especificó una directiva de formato fecha/hora no válida. Consulte la lista "
+"de las directivas permitidas, aparecen cuando edita un idioma."
 
 #. module: base
 #. odoo-python
@@ -24986,18 +24987,18 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_hr_payroll_planning
 msgid "Manage extra hours for your hourly paid employees using planning"
 msgstr ""
-"Gestiona las horas extras de sus empleados que tienen salarios por hora con "
-"la aplicación de Planificación"
+"Gestione las horas adicionales de sus empleados con sueldos por hora desde "
+"la aplicación Planificación"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant
 msgid "Manage financial and analytic accounting"
-msgstr "Gestionar la contabilidad financiera y analítica."
+msgstr "Gestione la contabilidad financiera y analítica"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_stock
 msgid "Manage product inventory & availability"
-msgstr "Administrar inventario y disponibilidad de productos."
+msgstr "Gestione su inventario y la disponibilidad de productos"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_renting
@@ -34346,7 +34347,7 @@ msgstr "Tanzania"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__target
 msgid "Target"
-msgstr "Objetivo"
+msgstr "Destino"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_name

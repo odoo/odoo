@@ -43,8 +43,9 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Konsta Aavaranta, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Martin Trigaux, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Jussi Lehto, 2024
 # 
 msgid ""
 msgstr ""
@@ -52,7 +53,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Jussi Lehto, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -104,12 +105,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr "# Täsmästettyä ostolaskua"
+msgstr "# Täsmäytettyä ostolaskua"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr "# Täsmästettyä myyntilaskua"
+msgstr "# Täsmäytettyä myyntilaskua"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
@@ -564,6 +565,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "<b>Early Payment Discount applied.</b>"
 msgstr "<b>Kassa-alennus käytetty.</b>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid ""
+"<br/>\n"
+"                            on this account:"
+msgstr ""
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -1107,6 +1115,8 @@ msgid ""
 "<span invisible=\"state != 'draft' or name != '/' or posted_before or "
 "quick_edit_mode\">Draft</span>"
 msgstr ""
+"<span invisible=\"state != 'draft' or name != '/' or posted_before or "
+"quick_edit_mode\">Luonnos</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2465,6 +2475,7 @@ msgstr ""
 #, python-format
 msgid "All selected moves for reversal must belong to the same company."
 msgstr ""
+"Kaikkien peruutettavaksi valittujen siirtojen on kuuluttava samaan yhtiöön."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -4001,7 +4012,7 @@ msgstr "Tilikartta on laadittu!"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Check Partner(s)"
-msgstr ""
+msgstr "Tarkista kumppanit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
@@ -4077,7 +4088,7 @@ msgstr "Aliverot"
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_sales_tax
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding_sale_tax
 msgid "Choose a default sales tax for your products."
-msgstr "Valitse tuotteiden oletus myyntivero."
+msgstr "Valitse tuotteiden oletusmyyntivero."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -4425,7 +4436,7 @@ msgstr "Maksettavia toimittajien laskuja ei odottamassa käsittelyä."
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Corrupted data on journal entry with id %s."
-msgstr "Korruptoitunut data päiväkirjavienillä, jonka id %s."
+msgstr "Korruptoitunut data päiväkirjaviennillä, jonka id %s."
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -4640,7 +4651,7 @@ msgstr "Luo uusi ostettava tuote"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid "Create a new reconciliation model"
-msgstr "Luo uusi sovittelumalli"
+msgstr "Luo uusi täsmäytysmalli"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_receipt_type
@@ -6260,6 +6271,7 @@ msgstr "Oletussähköposti"
 #: model:ir.model.fields,help:account.field_account_journal__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
 msgstr ""
+"Sähköpostin verkkotunnus esim. 'example.com' kohdassa 'odoo@example.com'"
 
 #. module: account
 #: model:account.account,name:account.1_employee_payroll_taxes
@@ -6413,7 +6425,7 @@ msgstr "Oma pääoma"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Error importing attachment '%s' as invoice (decoder=%s)"
-msgstr ""
+msgstr "Virhe liitetiedoston '%s' tuonnissa laskuna (dekooderi=%s)"
 
 #. module: account
 #. odoo-python
@@ -7141,7 +7153,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Gaps in the sequence"
-msgstr "Aukkoja sekvenssissä."
+msgstr "Aukkoja sekvenssissä"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_generate_entries
@@ -10897,7 +10909,7 @@ msgstr "Kumppanien kohdistus täsmäytysmalleilla"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Partner(s) should have an email address."
-msgstr ""
+msgstr "Kumppaneilla on oltava sähköpostiosoite."
 
 #. module: account
 #. odoo-python
@@ -14016,6 +14028,8 @@ msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
 msgstr ""
+"Syscohada-kaavion mallia ei pitäisi valita suoraan. Sen sijaan sinun pitäisi"
+" valita suoraan oman maasi kaavion malli."
 
 #. module: account
 #. odoo-python
@@ -16297,7 +16311,7 @@ msgstr "Näytä"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "View Partner(s)"
-msgstr ""
+msgstr "Näytä kumppanit"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__warning
@@ -16491,7 +16505,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
 msgid "Writeoff Is Exchange Account"
-msgstr ""
+msgstr "Poisto on vaihtotili"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
@@ -17055,6 +17069,9 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
+"Et voi tuoda \"openning_balance\" -siirtoa, jos avaussiirto (%s) on jo "
+"lähetetty.                 Jos olet aivan varma, että haluat muuttaa tilien "
+"alkusaldoa, palauta siirto luonnokseksi."
 
 #. module: account
 #. odoo-python
