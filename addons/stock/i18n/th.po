@@ -169,6 +169,8 @@ msgid ""
 "%s: Nothing to split, all demand is done. For split you need at least one "
 "line not fully fulfilled"
 msgstr ""
+"%s: ไม่มีอะไรจะแยก ความต้องการทั้งหมดเสร็จสิ้น สำหรับการแยก "
+"คุณต้องมีอย่างน้อยหนึ่งบรรทัดที่ไม่ครบถ้วน"
 
 #. module: stock
 #. odoo-python
@@ -177,6 +179,7 @@ msgid ""
 "%s: Nothing to split. Fill the quantities you want in a new transfer in the "
 "done quantities"
 msgstr ""
+"%s: ไม่มีอะไรจะแยก กรอกปริมาณที่คุณต้องการในการโอนใหม่ในปริมาณที่ทำเสร็จแล้ว"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
@@ -1262,7 +1265,7 @@ msgstr "สิงหาคม"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__auto
 msgid "Auto"
-msgstr "ออโต้"
+msgstr "Auto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_delivery_slip
@@ -7877,6 +7880,13 @@ msgid ""
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting).\n"
 "Least Packages: FIFO but with the least number of packages possible when there are several packages containing the same product."
 msgstr ""
+"กำหนดกลยุทธ์การลบเฉพาะที่จะใช้โดยไม่คำนึงถึงแหล่งที่มาของหมวดหมู่ผลิตภัณฑ์นี้\n"
+"\n"
+"FIFO: สินค้า/ล็อตที่สต็อกเข้าก่อนจะถูกย้ายออกก่อน\n"
+"LIFO: สินค้า/ล็อตที่สต็อกเข้าล่าสุดจะถูกย้ายออกก่อน\n"
+"ตำแหน่งที่ใกล้ที่สุด: สินค้า/ล็อตที่ใกล้กับตำแหน่งเป้าหมายมากที่สุดจะถูกย้ายออกก่อน\n"
+"FEFO: สินค้า/ล็อตที่มีวันที่นำออกใกล้เคียงที่สุดจะถูกย้ายออกก่อน (ความพร้อมใช้งานของวิธีนี้ขึ้นอยู่กับการตั้งค่า \"วันหมดอายุ\")\n"
+"แพ็คเกจน้อยที่สุด: FIFO แต่มีจำนวนแพ็คเกจน้อยที่สุดที่เป็นไปได้เมื่อมีแพ็คเกจหลายแพ็คเกจที่มีผลิตภัณฑ์เดียวกัน"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8538,6 +8548,8 @@ msgid ""
 "The %s location is required by the Inventory app and cannot be deleted, but "
 "you can archive it."
 msgstr ""
+"แอปสินค้าคงคลังกำหนดให้ระบุตำแหน่ง %s และไม่สามารถลบได้ "
+"แต่คุณสามารถเก็บถาวรได้"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__auto
@@ -8579,6 +8591,8 @@ msgid ""
 "The combination of serial number and product must be unique across a company and no company defined.\n"
 "Following combination contains duplicates:\n"
 msgstr ""
+"การผสมระหว่างหมายเลขซีเรียลและผลิตภัณฑ์ต้องไม่ซ้ำกันทั่วทั้งบริษัทและไม่มีการกำหนดบริษัทไว้\n"
+"ชุดค่าผสมต่อไปนี้ประกอบด้วยรายการที่ซ้ำกัน:\n"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
@@ -8655,6 +8669,8 @@ msgid ""
 "operation is part of a chain of operations targeting the destination "
 "location."
 msgstr ""
+"การดำเนินการนำผลิตภัณฑ์ไปยังตำแหน่งกลาง "
+"แต่การดำเนินการนี้เป็นส่วนหนึ่งของห่วงโซ่การดำเนินการที่กำหนดเป้าหมายไปยังตำแหน่งปลายทาง"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
@@ -8699,6 +8715,8 @@ msgid ""
 "The procurement quantity will be rounded up to a multiple of this field "
 "quantity. If it is 0, it is not rounded."
 msgstr ""
+"ปริมาณการจัดซื้อจะถูกปัดเศษขึ้นเป็นผลคูณของปริมาณฟิลด์นี้ หากเป็น 0 "
+"จะไม่ปัดเศษ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -8892,6 +8910,8 @@ msgid ""
 "with this operation type. It is possible however to change it or that the "
 "routes put another location."
 msgstr ""
+"นี่คือสถานที่ปลายทางเริ่มต้นเมื่อคุณสร้างการเบิกสินค้าด้วยตนเองด้วยชนิดการดำเนินงานนี้"
+" อย่างไรก็ตาม สามารถเปลี่ยนแปลงหรือเปลี่ยนเส้นทางเป็นตำแหน่งอื่นได้"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_return_id
@@ -8908,6 +8928,8 @@ msgid ""
 "this operation type. It is possible however to change it or that the routes "
 "put another location."
 msgstr ""
+"นี่คือตำแหน่งที่ตั้งต้นทางเริ่มต้นเมื่อคุณสร้างการเบิกสินค้าด้วยตนเองด้วยชนิดการดำเนินงานนี้"
+" อย่างไรก็ตาม สามารถเปลี่ยนแปลงหรือเปลี่ยนเส้นทางเป็นตำแหน่งอื่นได้"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -10048,6 +10070,8 @@ msgid ""
 "When set to True the destination location of the stock.move will be the "
 "rule.Otherwise, it takes it from the picking type."
 msgstr ""
+"เมื่อตั้งค่าเป็น True ตำแหน่งปลายทางของ stock.move จะเป็นกฎ ไม่เช่นนั้น "
+"จะใช้จากประเภทการเบิกสินค้า"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -10065,6 +10089,8 @@ msgid ""
 " Odoo generates a procurement to bring the forecasted quantity above of this"
 " Min Quantity."
 msgstr ""
+"เมื่อสต็อกต่ำกว่าปริมาณขั้นต่ำที่ระบุไว้สำหรับฟิลด์นี้ Odoo "
+"จะสร้างการจัดซื้อเพื่อนำปริมาณที่คาดการณ์ไว้สูงกว่าปริมาณขั้นต่ำนี้"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -10073,6 +10099,10 @@ msgid ""
 "procurement to bring the forecasted quantity up to (or near to) the Max "
 "Quantity specified for this field (or to Min Quantity, whichever is bigger)."
 msgstr ""
+"เมื่อสต็อกต่ำกว่าปริมาณขั้นต่ำ Odoo "
+"จะสร้างการจัดซื้อเพื่อนำปริมาณที่คาดการณ์ไว้จนถึง (หรือใกล้เคียง) "
+"ปริมาณสูงสุดที่ระบุไว้สำหรับฟิลด์นี้ (หรือปริมาณขั้นต่ำ "
+"แล้วแต่จำนวนใดจะมากกว่า)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
@@ -10360,6 +10390,7 @@ msgid ""
 "You cannot change the company of a lot/serial number currently in a location"
 " belonging to another company."
 msgstr ""
+"คุณไม่สามารถเปลี่ยนบริษัทของล็อต/หมายเลขซีเรียลที่อยู่ในตำแหน่งที่ตั้งของบริษัทอื่นได้"
 
 #. module: stock
 #. odoo-python
@@ -10421,6 +10452,7 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types."
 msgstr ""
+"คุณไม่สามารถบรรจุผลิตภัณฑ์ลงในบรรจุภัณฑ์เดียวกันได้เมื่อมาจากการโอนที่แตกต่างกันและมีประเภทการดำเนินการต่างกัน"
 
 #. module: stock
 #. odoo-python

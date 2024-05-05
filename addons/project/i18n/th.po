@@ -3,8 +3,8 @@
 # 	* project
 # 
 # Translators:
-# Rasareeyar Lappiam, 2024
 # Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -401,6 +401,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    เรียน <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t><br><br>\n"
+"    ขอบคุณที่ติดต่อเราและให้ความสนใจในผลิตภัณฑ์/บริการของเรา<br>\n"
+"    ทีมงานของเรากำลังตรวจสอบคำถามของคุณอยู่ในขณะนี้ และจะตอบกลับอีเมลของคุณโดยเร็วที่สุด<br>\n"
+"    หากคุณมีคำถามเพิ่มเติมในระหว่างนี้ โปรดแจ้งให้เราทราบ<br><br>\n"
+"    ขอขอบคุณที่อดทนรอ<br>\n"
+"    ขอแสดงความนับถือ\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>แอดมิน Mitchell</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -724,6 +737,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Progress Report\", \"Stand-up Meeting\", ...)"
 msgstr ""
+"แผนกิจกรรมใช้เพื่อกำหนดรายการกิจกรรมด้วยการคลิกเพียงไม่กี่ครั้ง\n"
+"                    (เช่น \"รายงานความคืบหน้า\", \"การประชุมแบบยืน\" ...)"
 
 #. module: project
 #. odoo-javascript
@@ -1105,6 +1120,7 @@ msgid ""
 "Automatically send an email to customers when a task reaches a specific "
 "stage in a project by setting this template on that stage"
 msgstr ""
+"ส่งอีเมลถึงลูกค้าโดยอัตโนมัติเมื่องานถึงขั้นตอนที่ระบุในโครงการโดยการตั้งค่าเทมเพลตนี้ในขั้นตอนนั้น"
 
 #. module: project
 #. odoo-javascript
@@ -2121,6 +2137,8 @@ msgid ""
 "project with them. Collaborators will have the ability to edit tasks, send "
 "messages, and access the Kanban view of tasks."
 msgstr ""
+"อำนวยความสะดวกในการทำงานร่วมกันอย่างมีประสิทธิภาพกับผู้มีส่วนได้ส่วนเสียหลักโดยการแชร์โครงการกับพวกเขา"
+" ผู้ทำงานร่วมกันจะสามารถแก้ไขงาน ส่งข้อความ และเข้าถึงมุมมองคัมบังของงานได้"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project
@@ -2253,6 +2271,9 @@ msgid ""
 "tasks of the project are not included). To grant access to tasks to a portal"
 " user, add them as followers for these tasks."
 msgstr ""
+"ให้สิทธิ์ผู้ใช้พอร์ทัลเข้าถึงโครงการของคุณโดยเพิ่มพวกเขาเป็นผู้ติดตาม "
+"(ไม่รวมงานของโครงการ) หากต้องการให้สิทธิ์การเข้าถึงงานแก่ผู้ใช้พอร์ทัล "
+"ให้เพิ่มพวกเขาเป็นผู้ติดตามสำหรับงานเหล่านี้"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
@@ -3494,6 +3515,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"ผู้ที่จะเห็นโครงการและงานของโครงการนี้\n"
+"\n"
+"- ผู้ใช้ภายในที่ถูกเชิญ: เมื่อติดตามโครงการ ผู้ใช้ภายในจะสามารถเข้าถึงงานทั้งหมดได้โดยไม่มีความแตกต่าง ไม่เช่นนั้นพวกเขาจะเข้าถึงเฉพาะงานเฉพาะที่พวกเขาติดตามเท่านั้น\n"
+" ผู้ใช้ที่มีระดับสิทธิ์การเข้าถึงโครงการ > ผู้ดูแลระบบยังคงสามารถเข้าถึงโครงการนี้และงานของโครงการได้ แม้ว่าพวกเขาจะไม่ได้เป็นส่วนหนึ่งของผู้ติดตามอย่างชัดเจนก็ตาม\n"
+"\n"
+"- ผู้ใช้ภายในทั้งหมด: ผู้ใช้ภายในทุกคนสามารถเข้าถึงโครงการและงานทั้งหมดโดยไม่มีความแตกต่าง\n"
+"\n"
+"- ผู้ใช้พอร์ทัลที่ถูกเชิญและผู้ใช้ภายในทั้งหมด: ผู้ใช้ภายในทั้งหมดสามารถเข้าถึงโครงการและงานทั้งหมดโดยไม่แตกต่าง\n"
+"เมื่อติดตามโครงการ ผู้ใช้พอร์ทัลจะสามารถเข้าถึงเฉพาะงานที่พวกเขาติดตามเท่านั้น\n"
+"\n"
+"เมื่อมีการแชร์โครงการแบบอ่านอย่างเดียว ผู้ใช้พอร์ทัลจะถูกเปลี่ยนเส้นทางไปยังพอร์ทัลของพวกเขา พวกเขาสามารถดูงานที่พวกเขากำลังติดตามได้ แต่ไม่สามารถแก้ไขได้\n"
+"เมื่อมีการแชร์โครงการในการแก้ไข ผู้ใช้พอร์ทัลจะถูกเปลี่ยนเส้นทางไปยังคัมบังและมุมมองรายการของงาน พวกเขาสามารถแก้ไขช่องจำนวนที่เลือกในงานได้\n"
+"\n"
+"ไม่ว่าในกรณีใด ผู้ใช้ภายในที่ไม่มีสิทธิ์การเข้าถึงโครงการยังคงสามารถเข้าถึงงานได้ โดยมีเงื่อนไขว่าพวกเขาจะได้รับ URL ที่เกี่ยวข้อง (และพวกเขาเป็นส่วนหนึ่งของผู้ติดตามหากโครงการเป็นแบบส่วนตัว)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -4429,6 +4464,10 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"จัดเรียงงานของคุณตามความเร็วโดยใช้ไมล์สโตน แท็ก หรือคุณสมบัติเฉพาะ "
+"เมื่อสิ้นสุดแต่ละ Sprint "
+"เพียงเลือกงานที่เหลืออยู่ในรายการของคุณและย้ายงานทั้งหมดไปยัง Sprint "
+"ถัดไปในคราวเดียวโดยแก้ไขไมล์สโตน แท็ก หรือคุณสมบัติ"
 
 #. module: project
 #. odoo-javascript
@@ -4709,7 +4748,7 @@ msgstr "งานอยู่ระหว่างดำเนินการ"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
 msgid "Task Logs"
-msgstr "Logs"
+msgstr "Task Logs"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_task_plan

@@ -158,7 +158,7 @@ msgstr "%sは、アーカイブされるウェアハウス%sのデフォルト�
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "%s: Can't split: quantities done can't be above demand"
-msgstr ""
+msgstr "%s: 分割できません。完了数量は需要を上回ることはできません"
 
 #. module: stock
 #. odoo-python
@@ -166,7 +166,7 @@ msgstr ""
 msgid ""
 "%s: Nothing to split, all demand is done. For split you need at least one "
 "line not fully fulfilled"
-msgstr ""
+msgstr "%s: :分割するものは何もありません。分割するためには、少なくとも1行が満たされていない必要があります。"
 
 #. module: stock
 #. odoo-python
@@ -174,7 +174,7 @@ msgstr ""
 msgid ""
 "%s: Nothing to split. Fill the quantities you want in a new transfer in the "
 "done quantities"
-msgstr ""
+msgstr "%s:  分割するものはありません。新しい転送に必要な数量を完了数量に記入して下さい。"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
@@ -431,6 +431,8 @@ msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
 msgstr ""
+"プロダクトは、次のように移動されます。 <b>%(destination)s</b>、 <br/> "
+"<b>%(operation)s</b>移動先から定義された通り。"
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -2635,7 +2637,7 @@ msgstr "配送オーダ用説明"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Internal Transfers"
-msgstr "内部運送用説明"
+msgstr "内部振替用説明"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -2745,7 +2747,7 @@ msgstr "目的地"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__location_dest_from_rule
 msgid "Destination location origin from rule"
-msgstr ""
+msgstr "規則からの移動先ロケーション元"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__route_ids
@@ -3005,7 +3007,7 @@ msgstr "注文が完了すると、顧客に電子メールが送信されます
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Empty Locations"
-msgstr ""
+msgstr "空のロケーション"
 
 #. module: stock
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
@@ -3125,18 +3127,18 @@ msgstr "先入先出(FIFO)"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Lot Number"
-msgstr ""
+msgstr "初めのロット番号"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial
 msgid "First SN/Lot"
-msgstr ""
+msgstr "初めのシリアル/ロット"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Serial Number"
-msgstr ""
+msgstr "初めのシリアル番号"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
@@ -3392,19 +3394,19 @@ msgstr "作成"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Lot numbers"
-msgstr ""
+msgstr "ロット番号を生成する"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Serial numbers"
-msgstr ""
+msgstr "シリアル番号を生成する"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Generate Serials/Lots"
-msgstr ""
+msgstr "シリアル/ロットを生成する"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3825,7 +3827,7 @@ msgstr "ロットをインポート"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Serials"
-msgstr ""
+msgstr "シリアルをインポートする"
 
 #. module: stock
 #. odoo-javascript
@@ -3923,7 +3925,7 @@ msgstr "倉庫間輸送"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_dest_id
 msgid "Intermediate Location"
-msgstr ""
+msgstr "中間ロケーション"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.int_picking
@@ -3952,7 +3954,7 @@ msgstr "内部参照"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__internal
 msgid "Internal Transfer"
-msgstr "内部移動"
+msgstr "内部振替"
 
 #. module: stock
 #. odoo-python
@@ -3960,7 +3962,7 @@ msgstr "内部移動"
 #: model:ir.actions.act_window,name:stock.action_picking_tree_internal
 #: model:stock.picking.type,name:stock.picking_type_internal
 msgid "Internal Transfers"
-msgstr "内部移動"
+msgstr "内部振替"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__internal_transit_location_id
@@ -3988,7 +3990,7 @@ msgstr "メーカーのロット/シリアル番号と異なる場合の内部�
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_internal
 msgid ""
 "Internal transfers allow you to move products from one location to another."
-msgstr "内部移動で、あるロケーションから別のロケーションへプロダクトを移動させることができます。"
+msgstr "内部振替で、あるロケーションから別のロケーションへプロダクトを移動させることができます。"
 
 #. module: stock
 #. odoo-python
@@ -4136,7 +4138,7 @@ msgstr "日時"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
 msgid "Is Empty"
-msgstr ""
+msgstr "空か"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_is_follower
@@ -4644,7 +4646,7 @@ msgstr "ロットプロパティ"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Lot numbers"
-msgstr ""
+msgstr "ロット番号"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
@@ -5191,7 +5193,7 @@ msgstr "配送が見つかりません。作成しましょう！"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_internal
 msgid "No internal transfer found. Let's create one!"
-msgstr "内部移動が見つかりません。作成しましょう！"
+msgstr "内部振替が見つかりません。作成しましょう！"
 
 #. module: stock
 #. odoo-python
@@ -5331,7 +5333,7 @@ msgstr "SNの数"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial_count
 msgid "Number of SN/Lots"
-msgstr ""
+msgstr "シリアル/ロット番号"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_has_error_counter
@@ -6672,7 +6674,7 @@ msgstr "手持数量"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Quantity Received"
-msgstr ""
+msgstr "入荷数量"
 
 #. module: stock
 #. odoo-python
@@ -6767,7 +6769,7 @@ msgstr "数量または引当数量を設定して下さい。"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Quantity per Lot"
-msgstr ""
+msgstr "ロット毎数量"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_positive_quantity
@@ -7728,7 +7730,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Serial numbers"
-msgstr ""
+msgstr "シリアル番号"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -7756,6 +7758,13 @@ msgid ""
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting).\n"
 "Least Packages: FIFO but with the least number of packages possible when there are several packages containing the same product."
 msgstr ""
+"このプロダクトカテゴリの移動元ロケーションに関係なく使用される特定の払出方針を設定します。\n"
+"\n"
+"FIFO:最初にストックされたプロダクト/ロットが最初に出庫されます。\n"
+"LIFO:最後にストックされたプロダクト/ロットが最初に出庫されます。\n"
+"最寄ロケーション:対象ロケーションに最も近いプロダクト/ロットが最初に搬出されます。\n"
+"FEFO:払出日が最も近いプロダクト/ロットが先に搬出されます(この方法が利用できるかどうかは有効期限日の設定に依存します)。\n"
+"最小パッケージ： FIFOですが、同じプロダクトを含むパッケージが複数ある場合、可能な限り最小のパッケージ数で移動します。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8410,7 +8419,7 @@ msgstr "テンプレート"
 msgid ""
 "The %s location is required by the Inventory app and cannot be deleted, but "
 "you can archive it."
-msgstr ""
+msgstr "この%s位置情報は在庫アプリで必要なもので、削除することはできませんが、アーカイブすることはできます。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__auto
@@ -8450,6 +8459,8 @@ msgid ""
 "The combination of serial number and product must be unique across a company and no company defined.\n"
 "Following combination contains duplicates:\n"
 msgstr ""
+"シリアル番号とプロダクトの組合わせは、企業間で一意でなければなりません。\n"
+"以下の組み合わせは重複を含みます:\n"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
@@ -8526,11 +8537,12 @@ msgid ""
 "operation is part of a chain of operations targeting the destination "
 "location."
 msgstr ""
+"このオペレーションは、中間ロケーションにプロダクトを運びます。しかし、このオペレーションは、移動先ロケーションをターゲットとしたオペレーションの連鎖の一部です。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 msgid "The operation takes and suggests products from this location."
-msgstr ""
+msgstr "このオペレーションでは、このロケーションからプロダクトを受け取り、提案します。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -8548,7 +8560,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "The operations brings product to this location"
-msgstr ""
+msgstr "オペレーションはこのロケーションにプロダクトを移動します"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__package_id
@@ -8567,7 +8579,7 @@ msgstr "この場所を含む親の場所。 例： 'ディスパッチゾーン
 msgid ""
 "The procurement quantity will be rounded up to a multiple of this field "
 "quantity. If it is 0, it is not rounded."
-msgstr ""
+msgstr "調達数量はこのフィールド数量の倍数に切り上げられます。0の場合、丸められません。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -8601,7 +8613,7 @@ msgstr "プロダクト「%s」に対して実施された数量は単位「%s�
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "The quantity per lot should always be a positive value."
-msgstr ""
+msgstr "ロットあたりの数量は常に正の値でなければなりません。"
 
 #. module: stock
 #. odoo-python
@@ -8617,7 +8629,7 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
 "The search does not support the %(operator)s operator or %(value)s value."
-msgstr ""
+msgstr "検索は%(operator)s演算子または%(value)s値をサポートしていません。"
 
 #. module: stock
 #. odoo-python
@@ -8743,6 +8755,7 @@ msgid ""
 "with this operation type. It is possible however to change it or that the "
 "routes put another location."
 msgstr ""
+"このオペレーションタイプで手動でピッキングを作成する場合、これがデフォルトの移動先です。しかし、これを変更したり、ルートが別のロケーションを指定することも可能です。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_return_id
@@ -8758,6 +8771,7 @@ msgid ""
 "this operation type. It is possible however to change it or that the routes "
 "put another location."
 msgstr ""
+"これは、このオペレーションタイプで手動でピッキングを作成するときのデフォルトの移動元ロケーションです。しかし、これを変更したり、ルートが別のロケーションを配置することも可能です。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -8827,7 +8841,7 @@ msgstr "このメモは配送オーダに追加されます。"
 msgid ""
 "This note is added to internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
-msgstr "このメモは内部運送オーダに追加されます（倉庫内のピッキング場所を指定する等）。"
+msgstr "このメモは内部振替オーダに追加されます(倉庫内のピッキング場所を指定する等)。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -9224,7 +9238,7 @@ msgstr "トリガー手動"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_scrap__should_replenish
 msgid "Trigger replenishment for scrapped products"
-msgstr ""
+msgstr "廃棄プロダクトの補充トリガー"
 
 #. module: stock
 #. odoo-javascript
@@ -9280,7 +9294,7 @@ msgstr "未割当"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "Unavailable Serial numbers. Please correct the serial numbers encoded:"
-msgstr ""
+msgstr "使用できないシリアル番号。シリアル番号を修正して下さい:"
 
 #. module: stock
 #. odoo-javascript
@@ -9854,7 +9868,7 @@ msgstr "製品が<b>%s</b>で到着すると、<br/> <b>%s</b>は、それらを
 msgid ""
 "When set to True the destination location of the stock.move will be the "
 "rule.Otherwise, it takes it from the picking type."
-msgstr ""
+msgstr "TRUEに設定すると、stock.moveの移動先が規則になります。そうでない場合は、ピッキングタイプから取得します。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -9869,7 +9883,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity specified for this field,"
 " Odoo generates a procurement to bring the forecasted quantity above of this"
 " Min Quantity."
-msgstr ""
+msgstr "仮想在庫がこのフィールドで指定された最小数量を下回ると、Odooは予測数量をこの最小数量を上回るように調達を行います。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -9878,6 +9892,7 @@ msgid ""
 "procurement to bring the forecasted quantity up to (or near to) the Max "
 "Quantity specified for this field (or to Min Quantity, whichever is bigger)."
 msgstr ""
+"仮想在庫が最小数量を下回ると、Odooは予測数量をこのフィールドで指定された最大数量(または最小数量のいずれか大きい方)まで(またはその近くまで)引き上げるための調達を生成します。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
@@ -10136,7 +10151,7 @@ msgstr "完了'に設定されている在庫移動の単位を変更するこ�
 msgid ""
 "You cannot change the company of a lot/serial number currently in a location"
 " belonging to another company."
-msgstr ""
+msgstr "現在、他の会社のロケーションにあるロット/シリアル番号の会社を変更することはできません。"
 
 #. module: stock
 #. odoo-python
@@ -10471,7 +10486,7 @@ msgstr "例: 中央倉庫(Central Warehouse)"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "e.g. LOT-PR-00012"
-msgstr ""
+msgstr "例: LOT-PR-00012"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form

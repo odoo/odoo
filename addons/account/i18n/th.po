@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Rasareeyar Lappiam, 2024
 # Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-29 11:36+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -515,6 +515,13 @@ msgid "<b>Early Payment Discount applied.</b>"
 msgstr "<b>ใช้ส่วนลดการชำระเงินก่อนกำหนดแล้ว</b>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid ""
+"<br/>\n"
+"                            on this account:"
+msgstr ""
+
+#. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
@@ -630,6 +637,51 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        เรียน\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"        นี่คือ\n"
+"        <t t-if=\"object.name\">\n"
+"            ใบแจ้งหนี้ของคุณ <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            ใบแจ้งหนี้\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (การอ้างอิง: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        มีมูลค่า <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        จาก <t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            ใบแจ้งหนี้นี้ได้รับการชำระแล้ว\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            กรุณาชำระเงินโดยเร็วที่สุด\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br><br>\n"
+"                โปรดใช้การสื่อสารต่อไปนี้สำหรับการชำระเงินของคุณ: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br><br>\n"
+"            PS: คุณสามารถตรวจสอบใบบันทึกเวลาของคุณ<a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">ได้จากพอร์ทัล</a>\n"
+"        </t>\n"
+"        <br><br>\n"
+"        โปรดติดต่อเราหากคุณมีคำถาม\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>แอดมิน Mitchell</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -7364,6 +7416,9 @@ msgid ""
 "If ticked, the hash chain will be computed from the last move hashed to the "
 "new move to be hashed. The hash is performed on demand."
 msgstr ""
+"หากทำเครื่องหมาย "
+"ห่วงโซ่แฮชจะถูกคำนวณจากการเคลื่อนไหวครั้งล่าสุดที่แฮชไปจนถึงการเคลื่อนไหวใหม่ที่จะแฮช"
+" แฮชจะดำเนินการตามความต้องการ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -7375,6 +7430,9 @@ msgid ""
 "the last move hashed to the new move to be hashed. The hash can also be "
 "performed on demand."
 msgstr ""
+"หากทำเครื่องหมาย เมื่อมีการส่งใบแจ้งหนี้ "
+"ห่วงโซ่แฮชจะถูกคำนวณจากการย้ายครั้งล่าสุดที่แฮชไปจนถึงการย้ายครั้งใหม่ที่จะแฮช"
+" แฮชยังสามารถทำได้ตามความต้องการ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8199,6 +8257,8 @@ msgid ""
 "Irregularities due to draft, cancelled or deleted bills with a sequence "
 "number since last lock date."
 msgstr ""
+"ความผิดปกติอันเนื่องมาจากร่าง ยกเลิก "
+"หรือลบบิลที่มีหมายเลขลำดับนับตั้งแต่วันที่ล็อคครั้งล่าสุด"
 
 #. module: account
 #. odoo-python
@@ -8207,6 +8267,8 @@ msgid ""
 "Irregularities due to draft, cancelled or deleted invoices with a sequence "
 "number since last lock date."
 msgstr ""
+"ความผิดปกติเนื่องจากร่าง ยกเลิก "
+"หรือลบใบแจ้งหนี้ที่มีหมายเลขลำดับนับตั้งแต่วันที่ล็อคครั้งล่าสุด"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_being_sent
@@ -12824,7 +12886,7 @@ msgstr "Snailmail"
 msgid ""
 "Some journal entries have not been hashed yet. You should hash them before "
 "locking the fiscal year."
-msgstr ""
+msgstr "รายการรายวันบางรายการยังไม่ได้ถูกแฮช คุณควรแฮชก่อนที่จะล็อคปีบัญชี"
 
 #. module: account
 #. odoo-python
@@ -13674,6 +13736,8 @@ msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
 msgstr ""
+"ไม่ควรเลือกเทมเพลตแผนภูมิ Syscohada โดยตรง "
+"คุณควรเลือกเทมเพลตแผนภูมิที่เกี่ยวข้องกับประเทศของคุณโดยตรงแทน"
 
 #. module: account
 #. odoo-python
@@ -13758,6 +13822,8 @@ msgid ""
 "The amount for %(partner_name)s appears unusual. Based on your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
+"จำนวนเงินสำหรับ %(partner_name)s ดูไม่ปกติ จากข้อมูลในอดีตของคุณ จำนวนที่คาดหวังคือ %(mean)s (± %(wiggle)s)\n"
+"โปรดตรวจสอบว่าจำนวนเงินนี้ถูกต้องหรือไม่"
 
 #. module: account
 #. odoo-python
@@ -14408,6 +14474,8 @@ msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
 msgstr ""
+"วิธีการชำระเงินที่เลือกไม่พร้อมใช้งานสำหรับการชำระเงินนี้ "
+"โปรดเลือกวิธีการชำระเงินอีกครั้ง"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -14874,6 +14942,9 @@ msgid ""
 "- some move with the same sequence prefix has a higher number. You may need to resequence it.\n"
 "- the move's date is anterior to the lock date"
 msgstr ""
+"การเคลื่อนไหวนี้ไม่สามารถล็อคได้เนื่องจาก:\n"
+"- การเคลื่อนไหวบางอย่างที่มีคำนำหน้าลำดับเดียวกันจะมีจำนวนที่สูงกว่า คุณอาจต้องเรียงลำดับใหม่\n"
+"- วันที่ย้ายอยู่ก่อนวันที่ล็อค"
 
 #. module: account
 #. odoo-python
@@ -16457,6 +16528,7 @@ msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
 "definition."
 msgstr ""
+"คุณไม่สามารถลบแท็กบัญชีนี้ (%s) ได้ แท็กนี้ใช้ในแผนภูมิคำจำกัดความบัญชี"
 
 #. module: account
 #. odoo-python
@@ -16556,6 +16628,9 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
+"คุณไม่สามารถนำเข้า \"openning_balance\" ได้หากมีการโพสต์การย้ายการเปิด (%s) "
+"แล้ว                 หากคุณแน่ใจจริงๆ ว่าต้องการแก้ไขยอดคงเหลือเปิดบัญชี "
+"ให้รีเซ็ตการย้ายเป็นร่าง"
 
 #. module: account
 #. odoo-python

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +43,7 @@ msgstr "(以下のみ:"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid ", at"
-msgstr ""
+msgstr "、以下で:"
 
 #. module: website_event
 #. odoo-javascript
@@ -58,7 +59,7 @@ msgstr "<b>終了</b>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>Sold Out</b>"
-msgstr ""
+msgstr "<b>完売</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -68,12 +69,12 @@ msgstr "<b>開始</b>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<em>Hidden for visitors</em>"
-msgstr ""
+msgstr "<em>訪問者用に非表示</em>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<em>Registrations <b>Closed</b></em>"
-msgstr ""
+msgstr "<em>登録 <b>締切済</b></em>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_quotes
@@ -95,7 +96,7 @@ msgstr "<i class=\"fa fa-ban me-2\"/>未公開"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<i class=\"fa fa-check me-2\" role=\"img\"/>Registered"
-msgstr ""
+msgstr "<i class=\"fa fa-check me-2\" role=\"img\"/>登録済"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -166,7 +167,7 @@ msgstr "<i class=\"fa fa-map-marker me-2\" title=\"Location\"/>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/> Online event"
-msgstr ""
+msgstr "<i class=\"fa fa-map-marker\" title=\"Location\"/> オンラインイベント"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -195,21 +196,23 @@ msgid ""
 "<i class=\"oi oi-chevron-left\"/>\n"
 "                <span>All Events</span>"
 msgstr ""
+"<i class=\"oi oi-chevron-left\"/>\n"
+"                <span>全てのイベント</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "<small class=\"fw-bold\">Ends</small>"
-msgstr ""
+msgstr "<small class=\"fw-bold\">終了</small>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "<small class=\"fw-bold\">Starts</small>"
-msgstr ""
+msgstr "<small class=\"fw-bold\">開始</small>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "<small class=\"text-muted\">Add to calendar:</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">カレンダに追加:</small>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
@@ -305,17 +308,17 @@ msgstr "会社概要"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "Add to Google"
-msgstr ""
+msgstr "Googleに追加"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "Add to Outlook"
-msgstr ""
+msgstr "Outlookに追加"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "Add to iCal"
-msgstr ""
+msgstr "iCalに追加"
 
 #. module: website_event
 #. odoo-python
@@ -404,12 +407,12 @@ msgstr "著作者"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.navbar
 msgid "Back to All Events"
-msgstr ""
+msgstr "全てのイベントに戻る"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.navbar
 msgid "Back to {{event.name}}"
-msgstr ""
+msgstr " {{event.name}}に戻る"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_1_question_0_answer_1
@@ -515,7 +518,7 @@ msgstr "国"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Cover Position"
-msgstr ""
+msgstr "カバー位置"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__cover_properties
@@ -561,6 +564,9 @@ msgid ""
 "\n"
 "            Note that the Event is however always available via its link."
 msgstr ""
+"ウェブサイトや検索におけるイベントの可視性を定義します。\n"
+"\n"
+"            なお、イベントはリンクからいつでもご覧頂けます。"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
@@ -625,7 +631,7 @@ msgstr "イベント コミュニティメニュー"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Event Cover Position"
-msgstr ""
+msgstr "イベントカバー位置"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
@@ -635,7 +641,7 @@ msgstr "イベント日"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Event Info"
-msgstr ""
+msgstr "イベント情報"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.template_location
@@ -685,7 +691,7 @@ msgstr "イベント登録回答"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__event_register_url
 msgid "Event Registration Link"
-msgstr ""
+msgstr "イベント登録リンク"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_ids
@@ -814,7 +820,7 @@ msgstr "一般的な質問"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Get directions"
-msgstr ""
+msgstr "アクセス"
 
 #. module: website_event
 #. odoo-python
@@ -830,7 +836,7 @@ msgstr "グリッド"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Hidden (visitor only)"
-msgstr ""
+msgstr "非表示(訪問者のみ)"
 
 #. module: website_event
 #. odoo-python
@@ -871,7 +877,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Inside content"
-msgstr ""
+msgstr "内部コンテンツ"
 
 #. module: website_event
 #. odoo-python
@@ -971,7 +977,7 @@ msgstr "ロケーションメニュー"
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_event__website_visibility__logged_users
 msgid "Logged Users"
-msgstr ""
+msgstr "ログイン済ユーザ"
 
 #. module: website_event
 #. odoo-javascript
@@ -1085,7 +1091,7 @@ msgstr "オンラインイベント"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "Online event"
-msgstr ""
+msgstr "オンラインイベント"
 
 #. module: website_event
 #. odoo-python
@@ -1263,7 +1269,7 @@ msgstr "登録をまだ受け付けていません"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registrations will open on"
-msgstr ""
+msgstr "登録開始日:"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__start_remaining
@@ -1534,7 +1540,7 @@ msgstr "今後のイベント予定"
 #. module: website_event
 #: model:website.snippet.filter,name:website_event.website_snippet_filter_event_list_unfinished
 msgid "Upcoming and Ongoing Events"
-msgstr ""
+msgstr "今後および開催中のイベント"
 
 #. module: website_event
 #. odoo-javascript
@@ -1557,7 +1563,7 @@ msgstr "URLベースのメニューでない場合に使用されます。"
 #: code:addons/website_event/models/event_event.py:0
 #: code:addons/website_event/models/event_event.py:0
 msgid "Value should be True or False (not %)"
-msgstr ""
+msgstr "値はTRUEまたはFALSEでなければなりません(%ではない)。"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_0_answer_1
@@ -1567,7 +1573,7 @@ msgstr "ベジタリアン"
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_event__website_visibility__link
 msgid "Via a Link"
-msgstr ""
+msgstr "リンク経由"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__view_id
@@ -1582,7 +1588,7 @@ msgstr "可視性"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_visible_on_website
 msgid "Visible On Website"
-msgstr ""
+msgstr "ウェブサイト上で表示"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_published
@@ -1664,7 +1670,7 @@ msgstr "サイトURL"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_visibility
 msgid "Website Visibility"
-msgstr ""
+msgstr "ウェブサイト可視性"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_website_visitor
@@ -1759,4 +1765,4 @@ msgstr "例. \"食事制限はありますか？\""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "time)"
-msgstr ""
+msgstr "時間)"

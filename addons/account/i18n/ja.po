@@ -509,6 +509,13 @@ msgid "<b>Early Payment Discount applied.</b>"
 msgstr "<b>早期支払割引が適用されます。</b>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid ""
+"<br/>\n"
+"                            on this account:"
+msgstr ""
+
+#. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
@@ -1855,7 +1862,7 @@ msgid ""
 "reconciled ; at reconciliation, this amount cancelled on this account and "
 "put on the regular tax account."
 msgstr ""
-"現金に基づく税の税額を処理するための勘定科目です。元の請求書が消込されていない限り、この口座には税額が格納されます。消込時には、この口座の金額がキャンセルされ、通常の税額口座に格納されます。"
+"現金に基づく税の税額を処理するための勘定科目です。元の請求書が消込されていない限り、この勘定科目には税額が含まれます。消込時には、この勘定科目の金額が取消され、通常の税額口座に格納されます。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -13478,6 +13485,7 @@ msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
 msgstr ""
+"Syscohada チャートテンプレートを直接選択すべきではありません。代わりに、あなたの国に関連するチャートテンプレートを直接選択して下さい。"
 
 #. module: account
 #. odoo-python
