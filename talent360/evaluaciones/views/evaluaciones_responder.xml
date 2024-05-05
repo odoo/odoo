@@ -296,12 +296,12 @@
 
     <!-- conditional question -->
     <template id="conditional_question" name="Pregunta: pregunta condicional">
-        <div t-att-id="question.id">
+        <div t-att-id="question.id" t-att-data-pregunta-id="question.id" t-att-data-respuesta-trigger="question.respuesta_trigger.id" t-att-data-preguntas-desbloqueadas="question.preguntas_desbloqueadas.ids">
             <div class="o_survey_question_title mb-3">
                 <span t-esc="str(numero_pregunta) + '.- '" class="o_survey_question_number"/>
                 <span t-field="question.pregunta_texto"/>
             </div>
-
+            
             <input type="hidden" name="respuesta_trigger" t-att-value="question.respuesta_trigger.id"/>
             <input type="hidden" name="preguntas_desbloqueadas" t-att-value="question.preguntas_desbloqueadas.ids"/>
             <table class="table table-borderless o_survey_question_matrix text-white text-center mb-0"
