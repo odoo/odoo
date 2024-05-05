@@ -6,6 +6,7 @@ from ..models.respuesta import Respuesta as respuesta
 from ..models.pregunta import Pregunta as pregunta
 import json
 from ..models.usuario_evaluacion_rel import UsuarioEvaluacionRel as usuario_evaluacion
+import werkzeug
 
 
 class EvaluacionesController(http.Controller):
@@ -46,7 +47,6 @@ class EvaluacionesController(http.Controller):
         evaluacion = request.env["evaluacion"].sudo().browse(evaluacion_id)
 
         if request.env.user != request.env.ref('base.public_user'):
-            print("auth" + token)
             user_eval_relation = usuario_eva_mod.sudo().search([
                 ("usuario_id", "=", request.env.user.id),
                 ("evaluacion_id", "=", evaluacion.id),
@@ -144,8 +144,7 @@ class EvaluacionesController(http.Controller):
         if request.env.user != request.env.ref('base.public_user'):
             usuario_eva_mod.sudo().action_update_estado(user_id, evaluacion_id, None)
         else:
-            print("noAuth token " + token)
             usuario_eva_mod.sudo().action_update_estado(None, evaluacion_id, token)
 
         # Redirige a la página de inicio
-        return request.redirect('/evaluacion/responder/' + str(evaluacion_id) + '/' + token)
+        return werkzeug.utils.redirect('/evaluacion/responder/' + str(evaluacion_id) + '/' + token, 303)

@@ -69,3 +69,11 @@ function handleResponseClima() {
 //         return false;
 //     }
 // }
+
+function iniciar_evaluacion() {
+    boton_responder = document.querySelector("#boton_responder");
+    contenedor_preguntas = document.querySelector("#contenedor_preguntas");
+
+    boton_responder.style.display = "none";
+    contenedor_preguntas.style.display = "block";
+}

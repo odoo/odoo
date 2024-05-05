@@ -108,7 +108,7 @@
     </template>
 
     <template id="evaluacion_responder_form_start" name="Evaluacion: Encabezado pagina principal">
-        <div class="o_survey_nav pt16 mb-2">
+        <div class="o_survey_nav pt16 mb-2" id="boton_responder">
             <div class="container m-0 p-0">
                 <div class="row">
                     <div  class="col-lg-10">
@@ -129,7 +129,7 @@
 
                 <div class="wrap o_survey_start">
                     <div class='mb32'>
-                        <button onclick="" class="btn btn-primary btn-lg">
+                        <button onclick="iniciar_evaluacion()" class="btn btn-primary btn-lg">
                             Responder
                         </button>
                     </div>
@@ -192,40 +192,42 @@
 
     <!-- Question widgets -->
     <template id="preguntas_contenedor" name="Evaluaciones: contenedor de  preguntas">
-        <div class="row">
-            <div  class="col-lg-10">
-                <h1 class="o_survey_main_title pt-4">
-                    <span t-field="evaluacion.nombre" />
-                </h1>
-            </div>
-        </div>
-        <div class="row">
-            <div  class="col-lg-10">
-                <div t-field='evaluacion.descripcion' class="oe_no_empty pb-5 text-break"/>
-            </div>
-        </div> 
-        <div t-attf-class="js_question-wrapper pb-4">
-            <t t-set="numero_pregunta" t-value="0"/>
-            <t t-foreach="pregunta" t-as="p">
-                <t t-set="numero_pregunta" t-value="numero_pregunta + 1"/>
-                <div class="col mb-5">
-                    <t t-if="p.tipo == 'multiple_choice' and p.condicional" t-call="evaluaciones.conditional_question">
-                        <t t-set="question" t-value="p"/>
-                    </t>
-                    <t t-elif="p.tipo == 'open_question'" t-call="evaluaciones.question_text_box">
-                        <t t-set="question" t-value="p"/>
-                    </t>
-                    <t t-elif="p.tipo == 'multiple_choice'" t-call="evaluaciones.question_matrix">
-                        <t t-set="question" t-value="p"/>
-                    </t>
-                    <t t-elif="p.tipo == 'escala'" t-call="evaluaciones.question_scale">
-                        <t t-set="question" t-value="p"/>
-                    </t>
+        <div id="contenedor_preguntas" style="display: none;">
+            <div class="row">
+                <div  class="col-lg-10">
+                    <h1 class="o_survey_main_title pt-4">
+                        <span t-field="evaluacion.nombre" />
+                    </h1>
                 </div>
-            </t>
+            </div>
+            <div class="row">
+                <div  class="col-lg-10">
+                    <div t-field='evaluacion.descripcion' class="oe_no_empty pb-5 text-break"/>
+                </div>
+            </div> 
+            <div t-attf-class="js_question-wrapper pb-4">
+                <t t-set="numero_pregunta" t-value="0"/>
+                <t t-foreach="pregunta" t-as="p">
+                    <t t-set="numero_pregunta" t-value="numero_pregunta + 1"/>
+                    <div class="col mb-5">
+                        <t t-if="p.tipo == 'multiple_choice' and p.condicional" t-call="evaluaciones.conditional_question">
+                            <t t-set="question" t-value="p"/>
+                        </t>
+                        <t t-elif="p.tipo == 'open_question'" t-call="evaluaciones.question_text_box">
+                            <t t-set="question" t-value="p"/>
+                        </t>
+                        <t t-elif="p.tipo == 'multiple_choice'" t-call="evaluaciones.question_matrix">
+                            <t t-set="question" t-value="p"/>
+                        </t>
+                        <t t-elif="p.tipo == 'escala'" t-call="evaluaciones.question_scale">
+                            <t t-set="question" t-value="p"/>
+                        </t>
+                    </div>
+                </t>
 
-            <t t-call="evaluaciones.evaluacion_responder_form_enviar"/>
+                <t t-call="evaluaciones.evaluacion_responder_form_enviar"/>
 
+            </div>
         </div>
     </template>
 
