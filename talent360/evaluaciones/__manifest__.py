@@ -12,6 +12,7 @@
         "views/evaluaciones_templates.xml",
         "views/crear_evaluacion_clima.xml",
         "data/pregunta.csv",
+        "data/categoria.csv",
         "data/competencia.csv",
         "data/opcion.csv",
         "data/template.csv",
