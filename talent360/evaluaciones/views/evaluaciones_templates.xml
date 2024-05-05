@@ -41,7 +41,7 @@
                             <span t-field="evaluacion.nombre"/>
                         </h1>
                     </div>
-                    <h2 t-if="not preguntas">
+                    <h2 t-if="not categorias">
                     No hay respuestas, intenta mas tarde.
                     </h2>
                 </div>
@@ -52,9 +52,8 @@
         </template>
 
         <template id="encuestas_reporte_inner" name="Reporte: contenido de reporte genérico">
-            <div t-foreach="preguntas" t-as='datos_pregunta'>
-                <t t-set="pregunta" t-value="datos_pregunta['pregunta']"/>
-                <div class="ms-4 mt-5 o_survey_results_question_wrapper" t-call="evaluaciones.encuestas_reporte_pregunta" />
+            <div t-foreach="categorias" t-as='datos_categoria'>
+                 <t t-set="categoria" t-value="datos_categoria['nombre_categoria']"/>
             </div>
         </template>
 

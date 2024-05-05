@@ -36,8 +36,9 @@ class Pregunta(models.Model):
         [
             ("ambiente_de_trabajo", "Ambiente de Trabajo"),
             ("factores_actividad", "Factores propios de la actividad"),
+            ("organizacion_tiempo", "Organización del tiempo de trabajo"),
+            ("liderazgo_relaciones", "Liderazgo y relaciones en el trabajo"),
         ],
-        default="ambiente_de_trabajo"
     )
 
     dominio = fields.Selection(
@@ -45,8 +46,12 @@ class Pregunta(models.Model):
             ("condiciones_ambiente", "Condiciones en el ambiente de trabajo"),
             ("carga_trabajo", "Carga de trabajo"),
             ("falta_control", "Falta de control sobre el trabajo"),
+            ("jornada_trabajo", "Jornada de trabajo"),
+            ("trabajo_familia", "Interferencia en la relación trabajo-familia"),
+            ("liderazgo", "Liderazgo"),
+            ("relaciones", "Relaciones en el trabajo"),
+            ("violencia", "Violencia"),
         ],
-        default="condiciones_ambiente"
     )
 
     def ver_respuestas(self):
@@ -69,3 +74,26 @@ class Pregunta(models.Model):
             ],
             "context": {"group_by": "respuesta_texto"},
         }
+    def evaluar_respuesta(self, respuesta_texto):
+        if self.ponderacion == "ascendente":
+            # Mapa de respuestas a valores ascendentes
+            mapa_respuestas = {
+                "Siempre": 4,
+                "Casi siempre": 3,
+                "Algunas veces": 2,
+                "Casi nunca": 1,
+                "Nunca": 0,
+            }
+        elif self.ponderacion == "descendente":
+            # Mapa de respuestas a valores descendentes
+            mapa_respuestas = {
+                "Siempre": 0,
+                "Casi siempre": 1,
+                "Algunas veces": 2,
+                "Casi nunca": 3,
+                "Nunca": 4,
+            }
+        else:
+            return 0  # Manejar caso de ponderación no definida
+
+        return mapa_respuestas.get(respuesta_texto, 0)

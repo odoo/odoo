@@ -23,6 +23,6 @@ class EvaluacionesController(http.Controller):
         ):
             raise AccessError("No tienes permitido acceder a este recurso.")
 
-        parametros = evaluacion.action_generar_datos_reporte_generico()
+        parametros = evaluacion.action_generar_datos_reporte_NOM_035()
 
         return request.render("evaluaciones.encuestas_reporte", parametros)

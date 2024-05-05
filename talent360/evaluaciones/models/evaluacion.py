@@ -279,7 +279,7 @@ class Evaluacion(models.Model):
             "target": "new",
         }
 
-    def action_generar_datos_reporte_generico(self):
+    def action_generar_datos_reporte_NOM_035(self):
         """
         Genera los datos necesarios para el reporte genérico de la evaluación.
 
@@ -290,24 +290,47 @@ class Evaluacion(models.Model):
         """
         parametros = {
             "evaluacion": self,
-            "resultados_por_categoria": defaultdict(lambda: {"Sí": 0, "No": 0}),
-            "resultados_por_dominio": defaultdict(lambda: {"Sí": 0, "No": 0}),
+            "categorias": [],
+            "dominios": [],
+            "final": 0,
         }
 
         for pregunta in self.pregunta_ids:
+            if not pregunta.categoria:
+                continue
             categoria = pregunta.categoria
             dominio = pregunta.dominio
 
-            # Contar las respuestas afirmativas y negativas
-            respuestas = pregunta.respuesta_ids.mapped("respuesta_texto")
-            afirmativas = respuestas.count("Sí")
-            negativas = respuestas.count("No")
+            valor_categoria = 0
+            valor_dominio = 0
 
-            # Actualizar los resultados agrupados por categoría y dominio
-            parametros["resultados_por_categoria"][categoria]["Sí"] += afirmativas
-            parametros["resultados_por_categoria"][categoria]["No"] += negativas
+            for respuesta in pregunta.respuesta_ids:
+                valor_respuesta = pregunta.evaluar_respuesta(respuesta.respuesta_texto)
+                if pregunta.ponderacion == "ascendente":
+                    valor_categoria += valor_respuesta
+                    valor_dominio += valor_respuesta
+                    parametros["final"] += valor_respuesta
+                elif pregunta.ponderacion == "descendente":
+                    valor_categoria+= (4 - valor_respuesta)
+                    valor_dominio += (4 - valor_respuesta)
+                    parametros["final"] += (4 - valor_respuesta)
+                    # Verificar si la categoría ya existe en el diccionario de categorías
+            for cat in parametros['categorias']:
+                if cat['nombre_categoria'] == categoria:
+                    cat['valor'] += valor_categoria
+                    break
+            else:
+                datos_categoria = {"nombre_categoria": categoria, "valor": valor_categoria}
+                parametros['categorias'].append(datos_categoria)
+            
+            # Verificar si el dominio ya existe en el diccionario de dominios
+            for dom in parametros['dominios']:
+                if dom['nombre_dominio'] == dominio:
+                    dom['valor'] += valor_dominio
+                    break
+            else:
+                datos_dominio = {"nombre_dominio": dominio, "valor": valor_dominio}
+                parametros['dominios'].append(datos_dominio)
 
-            parametros["resultados_por_dominio"][dominio]["Sí"] += afirmativas
-            parametros["resultados_por_dominio"][dominio]["No"] += negativas
-
+        print(parametros)
         return parametros
