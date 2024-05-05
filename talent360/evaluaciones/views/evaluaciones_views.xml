@@ -228,6 +228,15 @@
                             <field name="estado"/>
                         </group>
                         <notebook>
+                            <page string="Preguntas">
+                                <field name="pregunta_ids">
+                                    <tree string="Preguntas" editable="bottom">
+                                        <field name="categoria_id" widget="many2one" string ="Categorias"/>
+                                        <field name="pregunta_texto"/>
+                                    
+                        </tree>
+                    </field>
+                            </page>
                             <page string="Asignados">
                                 <field name="usuario_ids"/>
                             </page>
