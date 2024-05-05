@@ -75,7 +75,10 @@ class UsuarioEvaluacionRel(models.Model):
         for user in usuario_evaluacion:
             token = secrets.token_hex(length)
             if not user.token:
-                user.write({"token": token})
+                user.write({
+                    "token": token,
+                    "contestada": "pendiente"
+                })
 
                 print(f'{base_url}/{evaluacion_id}/{token}')
                 mail_values = {
