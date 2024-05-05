@@ -450,9 +450,9 @@ msgid ""
 "                Please modify the format of the template or update your settings\n"
 "                to automatically add a blank cover page to all letters."
 msgstr ""
-"Nuestro servicio no puede leer su carta debido al formato. <br/>\n"
-"Debe modificar el formato de la plantilla o actualizar sus preferencias\n"
-"para agregar una página de portada en blanco automáticamente a todas las cartas."
+"Nuestro servicio no puede leer la carta debido a su formato.<br/>\n"
+"                Modifique el formato de la plantilla o actualice sus ajustes\n"
+"                para agregar una portada vacía a todas las cartas en automático."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__partner_id
@@ -494,7 +494,7 @@ msgstr "Registro relacionado"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_actions_report
 msgid "Report Action"
-msgstr "Reportar la acción"
+msgstr "Reportar acción"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
@@ -736,9 +736,9 @@ msgid ""
 "If the letter is correctly sent, the status goes in 'Sent',\n"
 "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
 msgstr ""
-"Cuando se crea la carta el estado es \"pendiente\".\n"
-"Si la carta se envía como debe el estado pasa a \"enviado\".\n"
-"Si no, el estado será \"error\" y se mostrará un error de mensaje en el campo \"Error del mensaje\"."
+"Al crear una carta, su estado es \"Pendiente\".\n"
+"Si la carta se envía de forma correcta, el estado cambia a \"Enviado\".\n"
+"Si no, el estado será \"Error\" y aparecerá el mensaje de error en el campo \"Mensaje de error\"."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
@@ -752,8 +752,9 @@ msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
-"No tiene una cuenta IAP registrada para este servicio. <br> Vaya a <a "
-"href=%s target=\"new\">iap.odoo.com</a> para canjear sus créditos gratis."
+"No tiene una cuenta de compras dentro de la aplicación registrada para este "
+"servicio. <br>Vaya a <a href=%s target=\"new\">iap.odoo.com</a> para canjear"
+" sus créditos gratuitos."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -762,15 +763,17 @@ msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
-"No cuenta con los créditos suficientes para realizar esta acción.<br> Vaya a"
-" su <a href=%s target=\"new\">cuenta de IAP</a>."
+"No cuenta con suficientes créditos para realizar esta acción.<br>Vaya a su "
+"<a href=%s target=\"new\">cuenta de compras dentro de la aplicación</a>."
 
 #. module: snailmail
 #. openerp-web
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
 msgid "You need credits on your IAP account to send a letter."
-msgstr "Necesita créditos en su cuenta IAP para mandar la carta."
+msgstr ""
+"Necesita créditos en su cuenta de compras dentro de la aplicación para "
+"enviar una carta."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
