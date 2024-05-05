@@ -6,9 +6,10 @@
 # Hamid Darabi, 2022
 # Hamed Mohammadi <hamed@dehongi.com>, 2022
 # Martin Trigaux, 2022
-# Farid Hariri <fhari1234@gmail.com>, 2022
+# F Hariri <fhari1234@gmail.com>, 2022
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2022
 # Hanna Kheradroosta, 2022
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Hanna Kheradroosta, 2022\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,12 +28,12 @@ msgstr ""
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_account_edi_proxy_client_user
 msgid "Account EDI proxy user"
-msgstr ""
+msgstr "کاربر پروکسی EDI حساب"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_res_company__account_edi_proxy_client_ids
 msgid "Account Edi Proxy Client"
-msgstr ""
+msgstr "مشتری پروکسی EDI حساب"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__active
@@ -72,7 +73,7 @@ msgstr "نام نمایشی"
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_account_edi_format
 msgid "EDI format"
-msgstr ""
+msgstr "فرمت EDI"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_format_id
@@ -82,7 +83,7 @@ msgstr "فرمت Edi"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
 msgid "Edi Identification"
-msgstr ""
+msgstr "شناسایی EDI"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id
@@ -92,7 +93,7 @@ msgstr "شناسه"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id_client
 msgid "Id Client"
-msgstr ""
+msgstr "هویت مشتری"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user____last_update
@@ -117,12 +118,12 @@ msgstr "کلید خصوصی"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__refresh_token
 msgid "Refresh Token"
-msgstr ""
+msgstr "به روزرسانی پروکسی"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__private_key
 msgid "The key to encrypt all the user's data"
-msgstr ""
+msgstr "کلید رمزگذاری تمام داده‌های کاربر"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
@@ -138,6 +139,8 @@ msgid ""
 "The url that this service requested returned an error. The url it tried to "
 "contact was %s"
 msgstr ""
+"نشانی مورد درخواست این نشانی، خطا ایجاد می‌کند. نشانی که از آن برای تماس "
+"استفاده شد %s بود"
 
 #. module: account_edi_proxy_client
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
@@ -146,13 +149,15 @@ msgid ""
 "The url that this service requested returned an error. The url it tried to "
 "contact was %s. %s"
 msgstr ""
+"نشانی مورد درخواست این سرویس، خطا ایجاد می‌کند. نشانی مورد استفاده برای تماس"
+" %s بود.%s"
 
 #. module: account_edi_proxy_client
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
 #, python-format
 msgid ""
 "The url that this service tried to contact does not exist. The url was %r"
-msgstr ""
+msgstr "نشانی این سرویس برای تماس استفاده می‌کند وجود ندارد. این نشانی %r است"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_edi_identification_per_format
@@ -162,4 +167,4 @@ msgstr ""
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_id_client
 msgid "This id_client is already used on another user."
-msgstr ""
+msgstr "این شناسه‌ی مشتری قبلاً برای کاربر دیگری استفاده شده است."

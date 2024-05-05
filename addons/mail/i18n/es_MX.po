@@ -1581,7 +1581,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__child_ids
 msgid "Child Messages"
-msgstr "Mensajes hijos"
+msgstr "Mensajes secundarios"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -3269,7 +3269,7 @@ msgstr "Servidor ICE"
 #: model:ir.actions.act_window,name:mail.action_ice_servers
 #: model:ir.ui.menu,name:mail.mail_channel_ice_servers_menu
 msgid "ICE servers"
-msgstr "Servidor ICE"
+msgstr "Servidores ICE"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__id
@@ -7069,7 +7069,7 @@ msgstr "Se han aplicado correctamente las preferencias de su suscripción."
 #: model:ir.model.fields,help:mail.field_mail_template__model_id
 #: model:ir.model.fields,help:mail.field_mail_template_preview__model_id
 msgid "The type of document this template can be used with"
-msgstr "El tipo de documento con el que se puede utilizar esta plantilla"
+msgstr "Puede usar el tipo de plantilla de este documento con"
 
 #. module: mail
 #. openerp-web
@@ -8066,6 +8066,13 @@ msgid ""
 msgstr ""
 "Puede adjuntar archivos a esta plantilla para que se agreguen a todos los "
 "correos electrónicos creados desde la misma."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "You may not unlink attachments from other people's messages"
+msgstr ""
+"No puede desvincular los archivos adjuntos de los mensajes de otras personas"
 
 #. module: mail
 #. openerp-web
