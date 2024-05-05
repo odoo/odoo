@@ -366,6 +366,7 @@ class AccountBalance(models.Model):
                 'name': payment.name,
                 'amount': payment.amount,
                 'bill_date': bill_date,  # Retrieved from account.move
+                'payment_date': payment.date,  # Retrieved from account.move
                 'partner_id': payment.partner_id.id,
                 'partner_name': payment.partner_id.name,
                 'state': payment.state,
