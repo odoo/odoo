@@ -175,13 +175,13 @@
                     <t t-if="p.tipo == 'multiple_choice' and p.condicional" t-call="evaluaciones.conditional_question">
                         <t t-set="question" t-value="p"/>
                     </t>
-                    <t t-if="p.tipo == 'open_question'" t-call="evaluaciones.question_text_box">
+                    <t t-elif="p.tipo == 'open_question'" t-call="evaluaciones.question_text_box">
                         <t t-set="question" t-value="p"/>
                     </t>
-                    <t t-if="p.tipo == 'multiple_choice'" t-call="evaluaciones.question_matrix">
+                    <t t-elif="p.tipo == 'multiple_choice'" t-call="evaluaciones.question_matrix">
                         <t t-set="question" t-value="p"/>
                     </t>
-                    <t t-if="p.tipo == 'escala'" t-call="evaluaciones.question_scale">
+                    <t t-elif="p.tipo == 'escala'" t-call="evaluaciones.question_scale">
                         <t t-set="question" t-value="p"/>
                     </t>
                 </div>
@@ -194,7 +194,7 @@
 
     <!-- Open question -->
     <template id="question_text_box" name="Preguntas: pregunta abierta">
-        <div class="o_survey_comment_container p-0">
+        <div class="o_survey_comment_container p-0" t-att-id="question.id">
             <textarea class="form-control o_survey_question_text_box bg-transparent text-dark rounded-0 p-0" rows="3"
                     t-att-name="'question_' + str(question.id)" 
                     t-att-placeholder="'Responde aqui...'"
@@ -208,7 +208,8 @@
         <table class="table table-borderless o_survey_question_matrix text-white text-center mb-0"
                t-att-data-name="question.id"
                t-att-data-question-type="question.tipo"
-               t-att-data-sub-questions="question.pregunta_texto">
+               t-att-data-sub-questions="question.pregunta_texto"
+               t-att-id="question.id">
             <thead>
                 <tr>
                     <th class="fw-normal" t-foreach="question.opcion_ids" t-as="col_label"><span t-field="col_label.opcion_texto" /></th>
@@ -241,7 +242,8 @@
         <table class="table table-borderless o_survey_question_matrix text-white text-center mb-0"
                t-att-data-name="question.id"
                t-att-data-question-type="question.tipo"
-               t-att-data-sub-questions="question.pregunta_texto">
+               t-att-data-sub-questions="question.pregunta_texto"
+               t-att-id="question.id">
             <thead>
                 <tr>
                     <th class="fw-normal" t-foreach="opciones" t-as="col_label"><span t-esc="col_label" /></th>
@@ -281,10 +283,13 @@
 
     <!-- conditional question -->
     <template id="conditional_question" name="Pregunta: pregunta condicional">
+        <input type="hidden" name="respuesta_trigger" t-att-value="question.respuesta_trigger.id"/>
+        <input type="hidden" name="preguntas_desbloqueadas" t-att-value="question.preguntas_desbloqueadas.ids"/>
         <table class="table table-borderless o_survey_question_matrix text-white text-center mb-0"
                t-att-data-name="question.id"
                t-att-data-question-type="question.tipo"
-               t-att-data-sub-questions="question.pregunta_texto">
+               t-att-data-sub-questions="question.pregunta_texto"
+               t-att-id="question.id">
             <thead>
                 <tr>
                     <th class="fw-normal" t-foreach="question.opcion_ids" t-as="col_label"><span t-field="col_label.opcion_texto" /></th>

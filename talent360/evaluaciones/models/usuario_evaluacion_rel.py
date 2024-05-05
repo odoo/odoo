@@ -99,11 +99,11 @@ class UsuarioEvaluacionRel(models.Model):
                 else:
                     print(f"Correo en estado pendiente o desconocido: {mail.state}")
     
-        return {
-            "type": "ir.actions.act_window",
-            "name": "Evaluaciones",
-            "res_model": "evaluacion",
-            "view_mode": "tree",
-            "target": "current",
-        }        
+        # return {
+        #     "type": "ir.actions.act_window",
+        #     "name": "Evaluaciones",
+        #     "res_model": "evaluacion",
+        #     "view_mode": "tree",
+        #     "target": "current",
+        # }        
     
