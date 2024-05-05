@@ -285,9 +285,10 @@ class AccountBalance(models.Model):
                     for r_move_line in reconciled_move_lines:
                         payment_data = {
                             'id': r_move_line.payment_id.id,  # ID of the payment
-                            'bill.id': bill.id,  # ID of the bill move associated with the payment
-                            'amount': r_move_line.debit if r_move_line.debit else 0.0,  # Credit amount
-                            'date': r_move_line.date or '',  # Date of the move line
+                            'bill_id': bill.id,  # ID of the bill move associated with the payment
+                            'amount': r_move_line.debit if r_move_line.debit else r_move_line.credit, # Credit amount
+                            'bill_date': bill.date,  # Credit amount
+                            'payment_date': r_move_line.date or '',  # Date of the move line
                             'partner_id': r_move_line.partner_id.id if r_move_line.partner_id else 0,  # Partner ID
                             'journal_id': r_move_line.journal_id.id if r_move_line.journal_id else 0,  # Journal ID
                         }
