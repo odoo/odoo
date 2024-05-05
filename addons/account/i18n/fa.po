@@ -33,9 +33,9 @@
 # F Hariri <fhari1234@gmail.com>, 2024
 # fardin mardani <fmardani0@gmail.com>, 2024
 # Sajjad Pirahesh, 2024
-# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # Hamed Mohammadi <hamed@dehongi.com>, 2024
 # Hanna Kheradroosta, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -43,7 +43,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Hanna Kheradroosta, 2024\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -555,6 +555,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "<b>Early Payment Discount applied.</b>"
 msgstr "<b>تخفیف پرداخت زودهنگام اعمال شد.</b>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid ""
+"<br/>\n"
+"                            on this account:"
+msgstr ""
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -1089,6 +1096,8 @@ msgid ""
 "<span invisible=\"state != 'draft' or name != '/' or posted_before or "
 "quick_edit_mode\">Draft</span>"
 msgstr ""
+"<span invisible=\"state != 'پیشنویس' or name != '/' or posted_before or "
+"quick_edit_mode\">پیشنویس</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2443,7 +2452,7 @@ msgstr "تمام امور قرارداد منحصراً توسط ... اداره 
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "All selected moves for reversal must belong to the same company."
-msgstr ""
+msgstr "تمام اسناد انتخاب شده برای لغو باید متعلق به یک شرکت باشند."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -3981,7 +3990,7 @@ msgstr "تنظیم جدول حساب‌ها"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Check Partner(s)"
-msgstr ""
+msgstr "بررسی همکاران ()"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
@@ -6238,7 +6247,7 @@ msgstr "ایمیل پیشفرض"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "دامنه‌ی ایمیل مانند 'example.com' در 'odoo@example.com'"
 
 #. module: account
 #: model:account.account,name:account.1_employee_payroll_taxes
@@ -6392,7 +6401,7 @@ msgstr "حقوق صاحبان سهام"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Error importing attachment '%s' as invoice (decoder=%s)"
-msgstr ""
+msgstr "خطا در وارد کردن پیوست %s به عنوان فاکتور (%s=decoder)"
 
 #. module: account
 #. odoo-python
@@ -10857,7 +10866,7 @@ msgstr "نگاشت همکار برای مدل‌های تطبیق"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Partner(s) should have an email address."
-msgstr ""
+msgstr "همکاران باید یک نشانی ایمیل داشته باشند. ()"
 
 #. module: account
 #. odoo-python
@@ -13972,6 +13981,8 @@ msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
 msgstr ""
+"قالب نمودار Syscohada نباید به صورت مستقیم انتخاب شود. در عوض، شما باید "
+"مستقیماً قالب نمودار مربوط به کشور خود را انتخاب کنید."
 
 #. module: account
 #. odoo-python
@@ -16233,7 +16244,7 @@ msgstr "نما"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "View Partner(s)"
-msgstr ""
+msgstr "مشاهده‌ی همکاران ()"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__warning
@@ -16424,7 +16435,7 @@ msgstr "برای تست جریان <b>آدرس ایمیل خود</b> را این
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
 msgid "Writeoff Is Exchange Account"
-msgstr ""
+msgstr "کاهش ارزش حساب ارزی"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
@@ -16989,6 +17000,9 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
+"اگر سند اولیه (%s) ثبت شده باشد، نمی‌توانید «تراز اولیه» را وارد کنید. اگر  "
+"کاملاًَ اطمینان دارید که می‌خواهید تراز اولیه‌ی حساب‌های خود را تغییر دهید، "
+"سند را به حالت پیشنویس بازگردانید."
 
 #. module: account
 #. odoo-python

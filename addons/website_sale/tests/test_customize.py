@@ -336,42 +336,24 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
                 'name': 'Size',
                 'create_variant': 'always',
                 'value_ids': [
-                    Command.create({
-                        'name': 'Large',
-                        'sequence': 1,
-                    }),
-                    Command.create({
-                        'name': 'Small',
-                        'sequence': 2,
-                    }),
+                    Command.create({'name': 'Large'}),
+                    Command.create({'name': 'Small'}),
                 ],
             },
             {
                 'name': 'Color',
                 'create_variant': 'always',
                 'value_ids': [
-                    Command.create({
-                        'name': 'White',
-                        'sequence': 1,
-                    }),
-                    Command.create({
-                        'name': 'Black',
-                        'sequence': 2,
-                    }),
+                    Command.create({'name': 'White'}),
+                    Command.create({'name': 'Black'}),
                 ],
             },
             {
                 'name': 'Brand',
                 'create_variant': 'always',
                 'value_ids': [
-                    Command.create({
-                        'name': 'Brand A',
-                        'sequence': 1,
-                    }),
-                    Command.create({
-                        'name': 'Brand B',
-                        'sequence': 2,
-                    }),
+                    Command.create({'name': 'Brand A'}),
+                    Command.create({'name': 'Brand B'}),
                 ],
             },
         ])
@@ -396,11 +378,15 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         })
 
         # Archive (Small, Black, Brand B) variant
-        product_template._get_variant_for_combination(
-            product_template.attribute_line_ids.product_template_value_ids.filtered(
-                lambda ptav: ptav.product_attribute_value_id.sequence == 2
-            )
-        ).action_archive()
+        combination_to_archive = product_template.attribute_line_ids.product_template_value_ids.filtered(
+            lambda ptav: ptav.product_attribute_value_id.name in ('Small', 'Black', 'Brand B')
+        )
+        variant_to_archive = product_template._get_variant_for_combination(
+            combination_to_archive
+        )
+        self.assertTrue(variant_to_archive)
+        variant_to_archive.action_archive()
+        self.assertFalse(variant_to_archive.active)
 
         self.start_tour("/", 'tour_shop_archived_variant_multi', login="portal")
 
