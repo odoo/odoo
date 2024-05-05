@@ -12,7 +12,6 @@ class UsuarioEvaluacionRel(models.Model):
             ("contestada", "Contestada"),
         ],
         default="pendiente",
-        required=True,
     )
 
     # Campos relacionados para acceder a atributos de evaluacion
