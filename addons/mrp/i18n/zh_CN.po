@@ -5,7 +5,6 @@
 # Translators:
 # digitalliuzg8888, 2023
 # Tony Peng <umingpeng@gmail.com>, 2023
-# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # Raymond Yu <cl_yu@hotmail.com>, 2023
 # Emily Jia <eji@odoo.com>, 2023
 # Martin Trigaux, 2023
@@ -13,6 +12,7 @@
 # Ryan <ouyang.em@gmail.com>, 2023
 # Chloe Wang, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4300,6 +4300,12 @@ msgid "Route"
 msgstr "路线"
 
 #. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr "返回至盘点"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
 msgid "Routing Lines"
 msgstr "工艺路线行"
@@ -6328,6 +6334,14 @@ msgstr "生产的数量低于初始需求"
 #, python-format
 msgid "You should provide a lot number for the final product."
 msgstr "需提供最终产品批号。"
+
+#. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid ""
+"You should update the components quantity instead of directly updating the "
+"quantity of the kit product."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
