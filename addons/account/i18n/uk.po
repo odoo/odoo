@@ -453,6 +453,13 @@ msgid "<b>Early Payment Discount applied.</b>"
 msgstr "<b>Знижку раннього платежу застосовано.</b>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid ""
+"<br/>\n"
+"                            on this account:"
+msgstr ""
+
+#. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
@@ -2316,7 +2323,7 @@ msgstr "Усі наші договірні відносини будуть ре�
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "All selected moves for reversal must belong to the same company."
-msgstr ""
+msgstr "Усі обрані проводки для повернення мають належати одній компанії."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -16424,6 +16431,9 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
+"Ви не можете імпортувати \"openning_balance\" якщо проводка відкриття (%s) "
+"вже опублікована. Якщо ви абсолютно впевнені, що хочете змінити початковий "
+"баланс своїх рахунків, скиньте проводку до чернетки."
 
 #. module: account
 #. odoo-python
