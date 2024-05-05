@@ -25,7 +25,7 @@ document.querySelectorAll('.o_survey_form_choice_item').forEach(function(input) 
                 desbloquear_preguntas(preguntas_desbloqueadas);
             } else {
                 preguntas_desbloqueadas.forEach(function(preguntaDesbloqueadaId) {
-                    var preguntaDesbloqueadaElement = document.getElementById(preguntaDesbloqueadaId);
+                    var preguntaDesbloqueadaElement = document.getElementById(preguntaDesbloqueadaId.trim());
                     console.log(preguntaDesbloqueadaElement);
                     if (preguntaDesbloqueadaElement) {
                         preguntaDesbloqueadaElement.style.display = "none";

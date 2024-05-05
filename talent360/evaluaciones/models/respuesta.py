@@ -15,7 +15,7 @@ class Respuesta(models.Model):
 
     opcion_id = fields.Many2one("opcion", string="Opción")
 
-    def action_guardar_respuesta(self, radios, texto, evaluacion_id, user_id, pregunta_id, token):
+    def action_guardar_respuesta(self, radios, texto, evaluacion_id, user_id, pregunta_id, token, scale=False):
         """Método para guardar la respuesta de una pregunta.
         Este método se encarga de guardar la respuesta de una pregunta en la base de datos.
         """
@@ -23,7 +23,15 @@ class Respuesta(models.Model):
         resp = None
 
         if user_id:
-            if texto:
+            if scale:
+                resp = self.env["respuesta"].create({
+                    "evaluacion_id": evaluacion_id,
+                    "user_id": user_id,
+                    "pregunta_id": pregunta_id,
+                    "respuesta_texto": radios
+                })
+
+            elif texto:
                 resp = self.env["respuesta"].create({
                     "evaluacion_id": evaluacion_id,
                     "user_id": user_id,
@@ -31,7 +39,7 @@ class Respuesta(models.Model):
                     "respuesta_texto": texto
                 })
 
-            if radios:
+            elif radios:
                 resp = self.env["respuesta"].create({
                     "evaluacion_id": evaluacion_id,
                     "user_id": user_id,
@@ -40,7 +48,15 @@ class Respuesta(models.Model):
                 })
 
         else:
-            if texto:
+            if scale:
+                resp = self.env["respuesta"].create({
+                    "evaluacion_id": evaluacion_id,
+                    "token": token,
+                    "pregunta_id": pregunta_id,
+                    "respuesta_texto": radios
+                })
+
+            elif texto:
                 resp = self.env["respuesta"].create({
                     "evaluacion_id": evaluacion_id,
                     "token": token,
@@ -48,7 +64,7 @@ class Respuesta(models.Model):
                     "respuesta_texto": texto
                 })
 
-            if radios:
+            elif radios:
                 resp = self.env["respuesta"].create({
                     "evaluacion_id": evaluacion_id,
                     "token": token,

@@ -101,6 +101,7 @@ class EvaluacionesController(http.Controller):
         post_data = json.loads(request.httprequest.data)
 
         radio_values = post_data.get("radioValues")
+        radio_values_scale = post_data.get("radioValuesScale")
         textarea_values = post_data.get("textareaValues")
         evaluacion_id = post_data.get("evaluacion_id")
         user_id = user
@@ -111,20 +112,29 @@ class EvaluacionesController(http.Controller):
             if pregunta_id in radio_values:
                 radio_value = radio_values[pregunta_id]
                 if request.env.user != request.env.ref('base.public_user'):
-                    resp = respuesta_model.sudo().action_guardar_respuesta(radio_value, None, int(evaluacion_id), int(user_id), int(pregunta_id), None)
+                    resp = respuesta_model.sudo().action_guardar_respuesta(radio_value, None, int(evaluacion_id), int(user_id), int(pregunta_id), None, False)
                 else:
-                    resp = respuesta_model.sudo().action_guardar_respuesta(radio_value, None, int(evaluacion_id), None, int(pregunta_id), token)
+                    resp = respuesta_model.sudo().action_guardar_respuesta(radio_value, None, int(evaluacion_id), None, int(pregunta_id), token, False)
             else:
                 continue
-
             
         for pregunta_id, textarea_value in textarea_values.items():
             if pregunta_id in textarea_values:
                 textarea_value = textarea_values[pregunta_id]
                 if request.env.user != request.env.ref('base.public_user'):
-                    resp = respuesta_model.sudo().action_guardar_respuesta(None, textarea_value, int(evaluacion_id), int(user_id), int(pregunta_id), None)
+                    resp = respuesta_model.sudo().action_guardar_respuesta(None, textarea_value, int(evaluacion_id), int(user_id), int(pregunta_id), None, False)
                 else:
-                    resp = respuesta_model.sudo().action_guardar_respuesta(None, textarea_value, int(evaluacion_id), None, int(pregunta_id), token)
+                    resp = respuesta_model.sudo().action_guardar_respuesta(None, textarea_value, int(evaluacion_id), None, int(pregunta_id), token, False)
+            else:
+                continue
+
+        for pregunta_id, radio_value in radio_values_scale.items():
+            if pregunta_id in radio_values_scale:
+                radio_value = radio_values_scale[pregunta_id]
+                if request.env.user != request.env.ref('base.public_user'):
+                    resp = respuesta_model.sudo().action_guardar_respuesta(radio_value, None, int(evaluacion_id), int(user_id), int(pregunta_id), None, True)
+                else:
+                    resp = respuesta_model.sudo().action_guardar_respuesta(radio_value, None, int(evaluacion_id), None, int(pregunta_id), token, True)
             else:
                 continue
 
@@ -136,7 +146,6 @@ class EvaluacionesController(http.Controller):
         else:
             print("noAuth token " + token)
             usuario_eva_mod.sudo().action_update_estado(None, evaluacion_id, token)
-    
 
         # Redirige a la página de inicio
         return request.redirect('/evaluacion/responder/' + str(evaluacion_id) + '/' + token)

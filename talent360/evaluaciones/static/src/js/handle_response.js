@@ -3,10 +3,16 @@ function handleResponseClima() {
     // Recoge todos los inputs de tipo radio
     var radios = document.querySelectorAll('.o_survey_form_choice_item');
     var selectedValues = {};
+    var selectedValuesScale = {};
     radios.forEach(function(radio) {
         if (radio.checked) {
             var questionId = radio.name.split('_')[0];
-            selectedValues[questionId] = radio.value;
+
+            if (radio.value < 6 && radio.value > 0) {
+                selectedValuesScale[questionId] = radio.value;
+            } else {
+                selectedValues[questionId] = radio.value;
+            }
         }
     });
 
@@ -30,6 +36,7 @@ function handleResponseClima() {
         evaluacion_id: evaluacion_id,
         csrf_token: csrf_token,
         token: token,
+        radioValuesScale: selectedValuesScale,
     };
 
     console.log(data);
