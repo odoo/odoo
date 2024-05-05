@@ -83,11 +83,11 @@ class ProductTemplate(models.Model):
         Used to compute margins on sale orders.""")
 
     volume = fields.Float(
-        'Volume', compute='_compute_volume', inverse='_set_volume', digits='Volume', store=True)
+        'Volume', compute='_compute_volume', inverse='_set_volume', digits='Volume')
     volume_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_uom_name')
     weight = fields.Float(
         'Weight', compute='_compute_weight', digits='Stock Weight',
-        inverse='_set_weight', store=True)
+        inverse='_set_weight')
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name')
 
     sale_ok = fields.Boolean('Can be Sold', default=True)
@@ -264,16 +264,24 @@ class ProductTemplate(models.Model):
     def _search_standard_price(self, operator, value):
         return [('product_variant_ids.standard_price', operator, value)]
 
-    @api.depends('product_variant_ids.volume')
+    @api.depends('product_variant_ids.volume', 'uom_id')
     def _compute_volume(self):
-        self._compute_template_field_from_variant_field('volume')
+        if vol_prods := self.filtered(lambda p: not p.product_variant_ids and p.uom_id.category_id == self.env.ref('uom.product_uom_categ_vol')):
+            for product in vol_prods:
+                product.volume = self.env['product.product']._calc_vol_from_uom(product.uom_id)
+        else:
+            self._compute_template_field_from_variant_field('volume')
 
     def _set_volume(self):
         self._set_product_variant_field('volume')
 
-    @api.depends('product_variant_ids.weight')
+    @api.depends('product_variant_ids.weight', 'uom_id')
     def _compute_weight(self):
-        self._compute_template_field_from_variant_field('weight')
+        if weight_prods := self.filtered(lambda p: not p.product_variant_ids and p.uom_id.category_id == self.env.ref('uom.product_uom_categ_kgm')):
+            for product in weight_prods:
+                product.weight = self.env['product.product']._calc_weight_from_uom(product.uom_id)
+        else:
+            self._compute_template_field_from_variant_field('weight')
 
     def _set_weight(self):
         self._set_product_variant_field('weight')

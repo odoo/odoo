@@ -56,8 +56,10 @@ class ProductProduct(models.Model):
         help="""Value of the product (automatically computed in AVCO).
         Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
         Used to compute margins on sale orders.""")
-    volume = fields.Float('Volume', digits='Volume')
-    weight = fields.Float('Weight', digits='Stock Weight')
+    volume = fields.Float('Volume', digits='Volume',
+                          compute='_compute_volume', readonly=False, store=True)
+    weight = fields.Float('Weight', digits='Stock Weight',
+                          compute='_compute_weight', readonly=False, store=True)
 
     pricelist_item_count = fields.Integer("Number of price rules", compute="_compute_variant_item_count")
 
@@ -330,6 +332,37 @@ class ProductProduct(models.Model):
         if operator in expression.NEGATIVE_TERM_OPERATORS:
             return [('product_tag_ids', operator, operand), ('additional_product_tag_ids', operator, operand)]
         return ['|', ('product_tag_ids', operator, operand), ('additional_product_tag_ids', operator, operand)]
+
+    def _calc_weight_from_uom(self, uom):
+        pounds = self.env['ir.config_parameter'].sudo().get_param('product.weight_in_lbs') != '0'
+        if pounds:
+            factor_standard = self.env.ref('uom.product_uom_lb').factor_inv
+        else:
+            factor_standard = self.env.ref('uom.product_uom_kgm').factor_inv
+        return uom.factor_inv / factor_standard
+
+    @api.depends('uom_id')
+    def _compute_weight(self):
+        weight_prods = self.filtered(lambda p: p.uom_id.category_id == self.env.ref('uom.product_uom_categ_kgm'))
+        for product in weight_prods:
+            product.weight = self._calc_weight_from_uom(product.uom_id)
+        (self - weight_prods).weight = 0.0
+
+    def _calc_vol_from_uom(self, uom):
+        feet3 = self.env['ir.config_parameter'].sudo().get_param('product.volume_in_cubic_feet') != '0'
+        if feet3:
+            factor_standard = self.env.ref('uom.product_uom_cubic_foot').factor_inv
+        else:
+            factor_standard = self.env.ref('uom.product_uom_cubic_meter').factor_inv
+
+        return uom.factor_inv / factor_standard
+
+    @api.depends('uom_id')
+    def _compute_volume(self):
+        vol_prods = self.filtered(lambda p: p.uom_id.category_id == self.env.ref('uom.product_uom_categ_vol'))
+        for product in vol_prods:
+            product.volume = self._calc_vol_from_uom(product.uom_id)
+        (self - vol_prods).volume = 0.0
 
     @api.onchange('uom_id')
     def _onchange_uom_id(self):
