@@ -21,7 +21,7 @@ class Users(models.Model):
             "type": "ir.actions.act_window",
             "name": "respuesta_usuario",
             "res_model": "respuesta",
-            "view_mode": "tree",
+            "view_mode": "kanban,tree,form",
             "domain": [
                 ("evaluacion_id", "=", evaluacion_id),
                 ("usuario_id", "=", self.id),

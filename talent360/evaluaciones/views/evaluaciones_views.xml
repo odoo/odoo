@@ -131,16 +131,28 @@
         </field>
     </record>
 
-    <record id="respuestas_view_tree" model="ir.ui.view">
-        <field name="name">respuesta_usuario</field>
+    <record id="respuesta_view_kanban" model="ir.ui.view">
+        <field name="name">respuesta.view.kanban</field>
         <field name="model">respuesta</field>
         <field name="arch" type="xml">
-            <tree create="false">
-                <field class="text-primary font-weight-bold h5 align-middle" name="pregunta_id" readonly="1"/>
-                <field name="usuario_id" readonly="1"/>
-                <field name="evaluacion_id" readonly="1"/>
-                <field name="respuesta_texto" readonly="1"/>
-            </tree>
+            <kanban class="o_kanban_mobile" default_group_by="evaluacion_id" quick_create="false" create="false" records_draggable="false">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_card">
+                                <div class="oe_kanban_card_header">
+                                    <div class="oe_kanban_card_header_title">
+                                        <h3><field name="pregunta_id"/></h3>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_card_content">
+                                    <div><strong>Respuesta:</strong> <field name="respuesta_texto"/></div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 

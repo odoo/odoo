@@ -10,3 +10,5 @@ class Respuesta(models.Model):
     evaluacion_id = fields.Many2one("evaluacion", string="Evaluacion")
 
     respuesta_texto = fields.Char("Respuesta", required=True)
+
+    
