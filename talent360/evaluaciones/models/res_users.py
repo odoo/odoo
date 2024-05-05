@@ -17,22 +17,14 @@ class Users(models.Model):
 
         evaluacion_id = self._context.get("current_evaluacion_id")
 
-        # Obtener el modelo de la relación entre evaluacion y usuarios
-        usuario_evaluacion_rel_model = self.env["usuario.evaluacion.rel"]
-    
-        # Crear o actualizar un registro en la relación
-        usuario_evaluacion_rel = usuario_evaluacion_rel_model.create({
-            "evaluacion_id": evaluacion_id,
-            "contestada": "Contestada"  # Establecer el valor para el campo "Contestada" como una de las opciones disponibles
-        })
-
         return {
             "type": "ir.actions.act_window",
-            "name": "Respuesta usuario",
-            "res_model": "repuesta",
-            "view_mode": "kanban",
+            "name": "respuesta_usuario",
+            "res_model": "respuesta",
+            "view_mode": "tree",
             "domain": [
                 ("evaluacion_id", "=", evaluacion_id),
+                ("usuario_id", "=", self.id),
                 ],
             "context": {"group_by": "respuesta_texto"},
         }
