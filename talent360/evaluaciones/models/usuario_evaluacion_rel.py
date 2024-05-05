@@ -50,6 +50,8 @@ class UsuarioEvaluacionRel(models.Model):
                 [("evaluacion_id", "=", evaluacion_id), ("token", "=", token)]
             )
 
+        print(usuario_evaluacion)
+
         usuario_evaluacion.write({"contestada": "contestada"})
 
     def action_enviar_evaluacion(self, evaluacion_id):

@@ -32,9 +32,33 @@ function handleResponseClima() {
         token: token,
     };
 
+    console.log(data);
+
     // Envía los valores a la base de datos
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/evaluacion/responder', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(data));
 }
+
+// function confirmacion() {
+//     // Obtén todos los campos requeridos del formulario
+//     var requiredFields = document.querySelectorAll('input[required], textarea[required], select[required]');
+
+//     // Verifica si todos los campos requeridos están llenos
+//     var allFieldsFilled = Array.from(requiredFields).every(function(field) {
+//         return field.value !== '';
+//     });
+
+//     if (!allFieldsFilled) {
+//         alert('Por favor, llena todos los campos requeridos antes de enviar el formulario.');
+//         return false;
+//     }
+
+//     if (confirm("¿Estas seguro de enviar tus respuestas?")) {
+//         handleResponseClima();
+//         return true;
+//     } else {
+//         return false;
+//     }
+// }
