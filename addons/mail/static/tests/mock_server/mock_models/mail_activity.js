@@ -32,11 +32,12 @@ export class MailActivity extends models.ServerModel {
         const MailActivityType = this.env["mail.activity.type"];
 
         const activities = this._filter([["id", "in", ids]]);
-        const activityTypes = MailActivityType._filter([
-            ["id", "in", unique(activities.map((a) => a.activity_type_id))],
-        ]);
+        const activityTypes = MailActivityType._filter(
+            [["id", "in", unique(activities.map((a) => a.activity_type_id))]],
+            { active_test: false }
+        );
         const activityTypeById = Object.fromEntries(
-            activityTypes._records.map((actType) => [actType.id, actType])
+            activityTypes.map((actType) => [actType.id, actType])
         );
         this.write(
             activities
@@ -76,7 +77,7 @@ export class MailActivity extends models.ServerModel {
 
         return this.read(ids).map((record) => {
             const activityType = record.activity_type_id
-                ? MailActivityType._records.find((r) => r.id === record.activity_type_id[0])
+                ? MailActivityType.find((r) => r.id === record.activity_type_id[0])
                 : false;
             if (activityType) {
                 record.display_name = activityType.name;

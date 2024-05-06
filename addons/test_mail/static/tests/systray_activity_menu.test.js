@@ -1,20 +1,16 @@
-const test = QUnit.test; // QUnit.test()
-
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { start } from "@mail/../tests/helpers/test_utils";
-
+import { start, startServer } from "@mail/../tests/mail_test_helpers";
+import { assertSteps, click, contains, step } from "@mail/../tests/mail_test_helpers_contains";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { mockDate } from "@odoo/hoot-mock";
+import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
 import { user } from "@web/core/user";
-import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { assertSteps, click, contains, step } from "@web/../tests/utils";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-QUnit.module("activity menu", {
-    beforeEach() {
-        // Avoid problem around midnight (Ex.: tomorrow activities become today activities when reaching midnight)
-        patchDate(2023, 11, 13, 8, 0, 0);
-    },
-});
+describe.current.tags("desktop");
+defineTestMailModels();
+// Avoid problem around midnight (Ex.: tomorrow activities become today activities when reaching midnight)
+beforeEach(() => mockDate("2023-4-8 10:00:00", 0));
 
 test("menu with no records", async () => {
     await start();
@@ -43,15 +39,19 @@ test("do not show empty text when at least some future activities", async () => 
     });
 });
 
-test("activity menu widget: activity menu with 2 models", async (assert) => {
+test("activity menu widget: activity menu with 2 models", async () => {
     const tomorrow = today().plus({ days: 1 });
     const yesterday = today().plus({ days: -1 });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityIds = pyEnv["mail.test.activity"].create([{}, {}, {}, {}]);
     pyEnv["mail.activity"].create([
-        { res_id: partnerId, res_model: "res.partner" },
-        { res_id: activityIds[0], res_model: "mail.test.activity" },
+        { res_id: partnerId, res_model: "res.partner", date_deadline: serializeDate(today()) },
+        {
+            res_id: activityIds[0],
+            res_model: "mail.test.activity",
+            date_deadline: serializeDate(today()),
+        },
         {
             date_deadline: serializeDate(tomorrow),
             res_id: activityIds[1],
@@ -68,7 +68,7 @@ test("activity menu widget: activity menu with 2 models", async (assert) => {
             res_model: "mail.test.activity",
         },
     ]);
-    const { env } = await start();
+    const env = await start();
     await contains(".o_menu_systray i[aria-label='Activities']");
     await contains(".o-mail-ActivityMenu-counter");
     await contains(".o-mail-ActivityMenu-counter", { text: "5" });
@@ -79,7 +79,11 @@ test("activity menu widget: activity menu with 2 models", async (assert) => {
     patchWithCleanup(env.services.action, {
         doAction(action) {
             Object.entries(actionChecks).forEach(([key, value]) => {
-                assert.deepEqual(action[key], value);
+                if (Array.isArray(value) || typeof value === "object") {
+                    expect(action[key]).toEqual(value);
+                } else {
+                    expect(action[key]).toBe(value);
+                }
             });
             step("do_action:" + action.name);
         },
