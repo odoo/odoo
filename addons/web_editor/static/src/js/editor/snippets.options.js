@@ -1604,7 +1604,7 @@ class InputUserValue extends UnitUserValue {
         return isNumeric || !!params.fakeUnit || !!params.step;
     }
 }
-class WeInput extends UserValueComponent {
+export class WeInput extends UserValueComponent {
     static template = 'web_editor.WeInput';
     static props = { ...UserValueComponent.props,
         unit: { type: String, optional: true },

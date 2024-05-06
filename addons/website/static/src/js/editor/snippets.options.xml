@@ -44,4 +44,36 @@
         <t t-set="indent" t-value="true"/>
     </t>
 </t>
+
+<t t-name="website.TestSnippetOption" t-inherit="web_editor.TestSnippetOption" t-inherit-mode="extension">
+    <xpath expr="//WeRow" position="before">
+        <WeRow>
+            <t t-set-slot="title">URL</t>
+            <WeUrlPicker selectDataAttribute="''" attributeName="'url'"/>
+        </WeRow>
+    </xpath>
+</t>
+
+<t t-name="website.WeUrlPicker">
+    <!-- TODO There was no w-100 -->
+    <we-input class="o_we_user_value_widget o_we_large w-100">
+        <div>
+            <input t-ref="input" type="text" class="text-start"
+                autocomplete="chrome-off"
+                t-att-placeholder="this.props.placeholder"
+                t-on-input="this._onInputInput"
+                t-on-blur="this._onInputBlur"
+                t-on-change="this._onUserValueChange"
+                t-on-keydown="this._onInputKeydown"
+                t-att-value="this.state.value"
+            />
+        </div>
+        <we-button class="o_we_redirect_to o_we_link ms-1"
+            title="Preview this URL in a new tab"
+            t-on-click="() => { this._onRedirectTo(); }"
+        >
+            <i class="fa fa-fw fa-external-link"/>
+        </we-button>
+    </we-input>
+</t>
 </templates>
