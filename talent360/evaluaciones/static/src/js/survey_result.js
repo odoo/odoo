@@ -103,15 +103,27 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             self.graphData = self.$el.data("graphData");
+            self.label = self.$el.data("label") || 'Data';
+            
+            if (typeof self.graphData === 'string') {
+                self.graphData = JSON.parse(self.graphData.replace(/'/g, '"'));
+            }
 
-            self.labels = self.graphData.map(function (respuesta) {
-                return respuesta.texto;
+            // self.labels = self.graphData.map(function (respuesta) {
+            //     return respuesta.texto;
+            // });
+    
+            // self.counts = self.graphData.map(function (respuesta) {
+            //     return respuesta.conteo;
+            // });
+    
+            self.labels = self.graphData.map(function (categoria) {
+                return categoria.nombre;
             });
     
-            self.counts = self.graphData.map(function (respuesta) {
-                return respuesta.conteo;
+            self.counts = self.graphData.map(function (categoria) {
+                return categoria.valor;
             });
-    
 
             if (self.graphData && self.graphData.length !== 0) {
                 switch (self.$el.data("graphType")) {
@@ -123,6 +135,9 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                         break;
                     case 'pie':
                         self.chartConfig = self._getPieChartConfig();
+                        break;
+                    case 'radar':
+                        self.chartConfig = self._getRadarChartConfig();
                         break;
                 }
             }
@@ -148,7 +163,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
             data: {
                 labels: this.labels,
                 datasets:[{
-                    label: "Conteo",
+                    label: this.label,
                     data: this.counts,
                     backgroundColor: this.counts.map(function (val, index) {
                         return D3_COLORS[index % 20];
@@ -156,6 +171,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 }]
             },
             options: {
+                responsive: true,
                 plugins: {
                     legend: {
                         display: false,
@@ -255,6 +271,39 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
             },
             options: {
                 aspectRatio: 2,
+            },
+        };
+    },
+
+    /**
+     * Returns a standard radar chart configuration.
+     *
+     * @private
+     */
+    _getRadarChartConfig: function () {
+        return {
+            type: 'radar',
+            data: {
+                labels: this.labels,
+                datasets: [
+                {
+                    label: this.label,
+                    data: this.counts,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    pointBackgroundColor: 'rgb(255, 99, 132)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(255, 99, 132)'
+                }],
+            },
+            options: {
+                responsive: true,
+                elements: {
+                    line: {
+                        borderWidth: 3
+                    }
+                }
             },
         };
     },

@@ -26,9 +26,9 @@
         <template id="encuestas_reporte" name="Reporte: página de reporte genérico">
             <t t-call="evaluaciones.diseño">
                 <t t-set="limite_registros" t-value="10"/>
-                <div class="container o_survey_result">
+                <div class="o_survey_result">
                     <t t-call="evaluaciones.encuestas_reporte_header" />
-                    <t t-call="evaluaciones.encuestas_reporte_inner" />
+                    <t t-call="evaluaciones.encuestas_reporte_nom_035" />
                 </div>
             </t>
         </template>
@@ -41,9 +41,9 @@
                             <span t-field="evaluacion.nombre"/>
                         </h1>
                     </div>
-                    <h2 t-if="not categorias">
+                    <h4 t-if="not categorias">
                     No hay respuestas, intenta mas tarde.
-                    </h2>
+                    </h4>
                 </div>
                 <button class="btn btn-primary d-none d-print-none d-md-inline-block o_survey_results_print" aria-label="Print" title="Print">
                     <i class="fa fa-print"></i> Exportar
@@ -51,9 +51,41 @@
             </div>
         </template>
 
-        <template id="encuestas_reporte_inner" name="Reporte: contenido de reporte genérico">
-            <div t-foreach="categorias" t-as='datos_categoria'>
-                 <t t-set="categoria" t-value="datos_categoria['nombre_categoria']"/>
+        <template id="encuestas_reporte_nom_035" name="Reporte: NOM-035">
+            <div class="survey_page container-fluid d-flex flex-column">
+                <div class="survey_section">
+                    <h4>Resumen general por categorías</h4>
+                    <div class="survey_graph" t-att-id="'grafica_radar_categorias_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
+                        <canvas t-att-id="'canvas_barras_categorias_nom_035'"/>
+                    </div>
+                </div>
+
+            <div class="survey_section">
+                    <h4>Resumen general por dominios</h4>
+                    <div class="survey_graph" t-att-id="'grafica_radar_dominios_nom_035'" t-att-data-graph-type="'radar'" t-att-data-label="'Resultados por dominio'" t-att-data-graph-data="dominios">
+                        <canvas t-att-id="'canvas_barras_dominios_nom_035'"/>
+                    </div>
+                </div>
+            </div>
+
+            <h4>Resumen por categoría</h4>
+            <div t-foreach="categorias" t-as='datos_categoria' class="survey_page container-fluid d-flex flex-column">
+                <t t-set="categoria" t-value="datos_categoria['nombre']" />
+                <t t-set="valor_categoria" t-value="datos_categoria['valor']" />
+                <div class="survey_section">
+                    <h3> <t t-esc="categoria" /> </h3>
+                    <span> <t t-esc="valor_categoria" /> </span>
+
+                    <div t-foreach="dominios" t-as='datos_dominio'>
+                        <t t-set="dominio" t-value="datos_dominio['nombre']" />
+                        <t t-set="valor_dominio" t-value="datos_dominio['valor']" />
+                        <div>
+                            <span> <t t-esc="dominio" /> </span>
+                            : 
+                            <span> <t t-esc="valor_dominio" /> </span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </template>
 

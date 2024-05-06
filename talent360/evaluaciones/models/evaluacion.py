@@ -298,8 +298,8 @@ class Evaluacion(models.Model):
         for pregunta in self.pregunta_ids:
             if not pregunta.categoria:
                 continue
-            categoria = pregunta.categoria
-            dominio = pregunta.dominio
+            categoria = dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
+            dominio = dict(pregunta._fields["dominio"].selection).get(pregunta.dominio)
 
             valor_categoria = 0
             valor_dominio = 0
@@ -316,20 +316,20 @@ class Evaluacion(models.Model):
                     parametros["final"] += (4 - valor_respuesta)
                     # Verificar si la categoría ya existe en el diccionario de categorías
             for cat in parametros['categorias']:
-                if cat['nombre_categoria'] == categoria:
+                if cat['nombre'] == categoria:
                     cat['valor'] += valor_categoria
                     break
             else:
-                datos_categoria = {"nombre_categoria": categoria, "valor": valor_categoria}
+                datos_categoria = {"nombre": categoria, "valor": valor_categoria}
                 parametros['categorias'].append(datos_categoria)
             
             # Verificar si el dominio ya existe en el diccionario de dominios
             for dom in parametros['dominios']:
-                if dom['nombre_dominio'] == dominio:
+                if dom['nombre'] == dominio:
                     dom['valor'] += valor_dominio
                     break
             else:
-                datos_dominio = {"nombre_dominio": dominio, "valor": valor_dominio}
+                datos_dominio = {"nombre": dominio, "valor": valor_dominio}
                 parametros['dominios'].append(datos_dominio)
 
         print(parametros)
