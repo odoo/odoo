@@ -334,12 +334,12 @@
                 <small>(View all)</small>
             </a>
         </div>
-        <a t-foreach="forum.tag_most_used_ids" t-as="tag"
-            t-attf-href="#{ _forum_path }/tag/#{ slug(tag) }/questions?#{ keep_query( 'search', 'sorting', 'my', 'filters') }"
-            t-attf-class="nav-link my-1 py-1 text-reset">
+        <span t-foreach="forum.tag_most_used_ids" t-as="tag"
+             t-attf-data-post="#{ _forum_path }/tag/#{ slug(tag) }/questions?#{ keep_query( 'search', 'sorting', 'my', 'filters', prevent_redirect=True) }"
+             t-attf-class="post_link cursor-pointer nav-link my-1 py-1 text-reset">
             <i class="fa fa-tag fa-fw small opacity-50"/>
             <t t-out="tag.name"/>
-        </a>
+        </span>
     </div>
     <div t-if="my_other_forums" class="o_wforum_sidebar_section pt-3">
         <div class="px-3 pb-1 fw-bold">My forums</div>
