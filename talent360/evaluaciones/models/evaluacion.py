@@ -279,6 +279,54 @@ class Evaluacion(models.Model):
             "target": "new",
         }
 
+    def action_generar_datos_reporte_generico(self):
+        """
+        Genera los datos necesarios para el reporte genérico de la evaluación.
+
+        Esta función genera los parámetros requeridos para generar un reporte genérico de la evaluación actual,
+        incluyendo las preguntas y las respuestas tabuladas.
+
+        :return: Los parámetros necesarios para generar el reporte.
+
+        """
+        parametros = {
+            "evaluacion": self,
+            "preguntas": [],
+        }
+
+        respuesta_tabulada = {}
+
+        for pregunta in self.pregunta_ids:
+
+            respuestas = []
+            respuestas_tabuladas = []
+
+            for respuesta in pregunta.respuesta_ids:
+                if respuesta.evaluacion_id.id != self.id:
+                    continue
+
+                respuestas.append(respuesta.respuesta_texto)
+
+                for i, respuesta_tabulada in enumerate(respuestas_tabuladas):
+                    if respuesta_tabulada["texto"] == respuesta.respuesta_texto:
+                        respuestas_tabuladas[i]["conteo"] += 1
+                        break
+                else:
+                    respuestas_tabuladas.append(
+                        {"texto": respuesta.respuesta_texto, "conteo": 1}
+                    )
+
+            datos_pregunta = {
+                "pregunta": pregunta,
+                "respuestas": respuestas,
+                "respuestas_tabuladas": respuestas_tabuladas,
+                "datos_grafica": str(respuestas_tabuladas).replace("'", '"'),
+            }
+
+            parametros["preguntas"].append(datos_pregunta)
+
+        return parametros
+
     def action_generar_datos_reporte_NOM_035(self):
         """
         Genera los datos necesarios para el reporte genérico de la evaluación.
