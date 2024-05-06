@@ -40,6 +40,7 @@ class AccountPayment(models.Model):
         related='payment_transaction_id.source_transaction_id.payment_id',
         readonly=True,
         store=True,  # Stored for the group by in `_compute_refunds_count`
+        index='btree_not_null',
     )
     refunds_count = fields.Integer(string="Refunds Count", compute='_compute_refunds_count')
 
