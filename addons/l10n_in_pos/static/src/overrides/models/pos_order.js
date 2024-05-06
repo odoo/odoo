@@ -26,31 +26,32 @@ patch(PosOrder.prototype, {
     _prepareL10nInHsnSummary() {
         const fiscalPosition = this.fiscal_position_id;
         const baseLines = [];
-        this.orderlines.forEach((line) => {
+        this.get_orderlines().forEach((line) => {
             const hsnCode = line.get_product()?.l10n_in_hsn_code;
             if (!hsnCode) {
                 return;
             }
-
-            let taxes = line.tax_ids || line.product.taxes_id;
+            let taxes = line.tax_ids || line.product_id.taxes_id;
             if (fiscalPosition) {
                 taxes = getTaxesAfterFiscalPosition(taxes, this.fiscal_position_id, this.models);
             }
 
             const priceUnit = line.get_unit_price();
+            const taxesValues = getTaxesValues(
+                taxes,
+                priceUnit,
+                1,
+                line.product_id,
+                this.session._product_default_values,
+                this.company,
+                this.currency
+            );
             baseLines.push({
                 l10n_in_hsn_code: hsnCode,
                 price_unit: priceUnit,
                 quantity: line.get_quantity(),
                 uom: null,
-                taxes_data: getTaxesValues(
-                    taxes,
-                    priceUnit,
-                    1,
-                    line.product,
-                    this.company,
-                    this.currency
-                ),
+                taxes_data: taxesValues.taxes_data,
             });
         });
 
