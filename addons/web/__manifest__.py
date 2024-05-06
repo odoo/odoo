@@ -62,7 +62,9 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/ui.scss',
 
             'web/static/src/polyfills/clipboard.js',
-
+            'web/static/src/polyfills/object.js',
+            'web/static/src/polyfills/array.js',
+            
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/popper/popper.js',
             'web/static/lib/bootstrap/js/dist/dom/data.js',
