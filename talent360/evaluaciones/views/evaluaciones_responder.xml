@@ -32,36 +32,7 @@
             </div>
         </t>
     </template>
-
-    <!-- <template id="evaluacion_header" name="Evaluacion: Encabezado pagina principal">
-        <div class="o_survey_nav pt16 mb-2">
-            <div class="container m-0 p-0">
-                <div class="row">
-                    <div  class="col-lg-10">
-                        <h1 class="o_survey_main_title pt-4">
-                            ¡Hola!
-                        </h1>
-                    </div>
-                </div>
-                <div class="row">
-                    <div  class="col-lg-10">
-                        <p class="oe_no_empty pb-5 text-break">
-                            Por favor haz clic en el botón “Responder” para iniciar tu Evaluacion. Te recordamos que todas tus respuestas son confidenciales.
-                        </p>
-                    </div>
-                </div> 
-
-                <div class="wrap o_survey_start">
-                    <div class='mb32'>
-                        <button onclick="" class="btn btn-primary btn-lg">
-                            Responder
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </template> -->
-
+    
     <template id="evaluacion_responder_form" name="Evaluaciones: contenido principal">
         <form role="form" method="post" t-att-name="evaluacion.id" class="d-flex flex-grow-1 align-items-center">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
