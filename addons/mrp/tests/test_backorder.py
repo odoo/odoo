@@ -627,6 +627,27 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo.product_qty, 1)
         self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [0.5, 1])
 
+    def test_auto_generate_backorder(self):
+        mo = self.env['mrp.production'].create({
+            'product_qty': 10,
+            'bom_id': self.bom_1.id,
+        })
+        mo.picking_type_id.create_backorder = "always"
+        mo.action_confirm()
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 3.0
+        mo = mo_form.save()
+        mo.button_mark_done()
+        self.assertRecordValues(mo, [{'state': 'done', 'qty_produced': 3.0, 'mrp_production_backorder_count': 2}])
+        backorder = mo.procurement_group_id.mrp_production_ids - mo
+        self.assertEqual(backorder.product_qty, 7.0)
+
+        with Form(backorder) as backorder_form:
+            backorder_form.qty_producing = 7.0
+        backorder = backorder_form.save()
+        backorder.button_mark_done()
+        self.assertRecordValues(backorder, [{'state': 'done', 'qty_produced': 7.0, 'mrp_production_backorder_count': 2}])
+
 
 class TestMrpWorkorderBackorder(TransactionCase):
     @classmethod
