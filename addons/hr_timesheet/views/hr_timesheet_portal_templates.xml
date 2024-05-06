@@ -155,8 +155,8 @@
                             <div t-if="task.subtask_effective_hours">
                                 <td><strong>Time recorded on sub-tasks: </strong></td>
                                 <td class="text-end">
-                                    <span t-if="is_uom_day" t-esc="timesheets._convert_hours_to_days(timesheets_by_subtask_amount)" t-options='{"widget": "timesheet_uom"}'/>
-                                    <span t-else="" t-esc="timesheets_by_subtask_amount" t-options='{"widget": "float_time"}'/>
+                                    <span t-if="is_uom_day" t-esc="timesheets._convert_hours_to_days(task.subtask_effective_hours)" t-options='{"widget": "timesheet_uom"}'/>
+                                    <span t-else="" t-esc="task.subtask_effective_hours" t-options='{"widget": "float_time"}'/>
                                 </td>
                             </div>
                         </tr>
