@@ -88,16 +88,6 @@
                                     </t>
                                 </th>
                             </tr>
-                            <tr t-else="">
-                                <div style="text-align: right;" class="me-2 mb-1 text-muted">
-                                    <t t-if="is_uom_day">
-                                        Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
-                                    </t>
-                                    <t t-else="">
-                                        Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
-                                    </t>
-                                </div>
-                            </tr>
                         </tbody>
                         <tbody style="font-size: 0.8rem">
                             <t t-foreach="timesheets" t-as="timesheet">
