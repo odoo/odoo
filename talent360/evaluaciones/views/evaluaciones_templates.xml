@@ -91,7 +91,33 @@
             </div>
         </template>
 
+        <template id="encuestas_reporte_clima" name="Reporte: página de reporte de clima organizacional">
+            <t t-call="evaluaciones.diseño">
+                <div class="container o_survey_result">
+                    <t t-call="evaluaciones.encuestas_reporte_header" />
+                    <div class="survey_section">
+                        <h4>Puntuación Final</h4>
+                        <span>
+                            <t t-esc="total"/>
+                        </span>
+                    </div>
 
+                    <div class="survey_section">
+                        <h4>Resumen por Categoría</h4>
+                        <div class="survey_graph" t-att-data-graph-type="'bar'" t-att-data-graph-data="categorias">
+                            <canvas class="mx-auto"/>
+                        </div>
+
+                        <t t-foreach="categorias" t-as="datos_categoria">
+                            <div class="survey_page">
+                                <h3><t t-esc="datos_categoria['nombre']"/></h3>
+                                <span><t t-esc="datos_categoria['valor']"/></span>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </template>
 
         <template id="pregunta_resultados_texto" name="Question: text result (text_box, char_box)">
             <t t-set="respuestas" t-value="datos_pregunta['respuestas']"/>

@@ -323,59 +323,41 @@ class Evaluacion(models.Model):
         return parametros"""
 
 def action_generar_datos_reporte_clima(self):
-        """
-        Genera los datos necesarios para el reporte genérico de la evaluación.
+    """
+    Genera los datos necesarios para un reporte de evaluación de clima.
 
-        Esta función genera los parámetros requeridos para generar un reporte genérico de la evaluación actual,
-        incluyendo las preguntas y las respuestas tabuladas.
+    :return: Los parámetros necesarios para generar el reporte.
+    """
+    parametros = {
+        "evaluacion": self,
+        "categorias": [],
+        "total": 0,
+    }
 
-        :return: Los parámetros necesarios para generar el reporte.
-
-        """
-        parametros = {
-            "evaluacion": self,
-            "categorias": [],
-            "total": 0,
-        }
-
-        #respuesta_tabulada = {}
-
-        for pregunta in self.pregunta_ids:
-            if not pregunta.categoria:
-                continue
-            categoria = pregunta.categoria
-
-            valor_categoria = 0
-
-            for respuesta in pregunta.respuesta_ids:
-                valor_respuesta = pregunta.evaluar_respuesta(respuesta.respuesta_texto)
-                
-
-            respuestas = []
-            respuestas_tabuladas = []
-
-            for respuesta in pregunta.respuesta_ids:
-                if respuesta.evaluacion_id.id != self.id:
-                    continue
-
-                respuestas.append(respuesta.respuesta_texto)
-
-                for i, respuesta_tabulada in enumerate(respuestas_tabuladas):
-                    if respuesta_tabulada["texto"] == respuesta.respuesta_texto:
-                        respuestas_tabuladas[i]["conteo"] += 1
-                        break
-                else:
-                    respuestas_tabuladas.append(
-                        {"texto": respuesta.respuesta_texto, "conteo": 1}
-                    )
-
-            datos_pregunta = {
-                "pregunta": pregunta,
-                "respuestas": respuestas,
-                "respuestas_tabuladas": respuestas_tabuladas,
-                "datos_grafica": str(respuestas_tabuladas).replace("'", '"'),
-            }
-
-            parametros["preguntas"].append(datos_pregunta)
-
-        return parametros
+    # Agrupar las preguntas por categorías y calcular el subtotal por cada una
+    categorias_puntos = {}
+    for pregunta in self.pregunta_ids:
+        #Ignorar preguntas sin gategoría
+        if not pregunta.categoria_id:
+            continue
+        
+        categoria = pregunta.categoria_id.nombre
+        
+        #Inicializar la puntiación si no está ya en el diccionario
+        if categoria not in categorias_puntos:
+            categorias_puntos[categoria] = 0
+            
+        #Calcular el puntaje para cada respuesta basada en el método evaluar_respuesta
+        for respuesta in pregunta.respuesta.respuesta_ids:
+            valor = pregunta.evaluar_respuesta(respuesta.respuesta_texto)
+            categorias_puntos[categoria] += valor
+            parametros["total"] += valor
+        
+    #convertir el diccionario de categorias en una lista para los gráficos
+    for categoria, puntos in categorias_puntos.items():
+        parametros["categorias"].append({
+            "nombre": categoria,
+            "valor": puntos,
+        })
+        
+    return parametros
