@@ -5,7 +5,6 @@ from . import usuario_evaluacion_rel
 from . import competencia
 from . import evaluacion
 from . import pregunta
-from . import categoria
 from . import respuesta
 from . import template
 from . import res_users
