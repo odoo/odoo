@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="demo_certificate" model="certificate.certificate">
+        <field name="name">Demo Certificate</field>
+        <field name="content" type="base64" file="certificate/demo/cert.pfx"/>
+        <field name="pkcs12_password">example</field>
+        <field name="company_id" eval="ref('base.main_company')"/>
+    </record>
+</odoo>
