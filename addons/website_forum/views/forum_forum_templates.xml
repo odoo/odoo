@@ -234,10 +234,10 @@
                 <ul class="pagination overflow-auto mt0 mb0">
                     <t t-foreach="pager_tag_chars" t-as="tuple_char">
                         <li t-if="tuple_char_index &lt; 11" t-attf-class="page-item #{ 'active' if active_char_tag == tuple_char[1] else '' }">
-                            <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ quote_plus(tuple_char[1] )}?#{ keep_query('filters', 'search') }"
-                               class="page-link">
+                            <span t-attf-data-post="/forum/#{ slug(forum) }/tag/#{ quote_plus(tuple_char[1] )}?#{ keep_query('filters', 'search', prevent_redirect=True) }"
+                                 class="post_link cursor-pointer page-link">
                                 <t t-out="tuple_char[0]"/>
-                            </a>
+                            </span>
                         </li>
                     </t>
                 </ul>
@@ -266,11 +266,11 @@
                         <t t-set="btn_classes" t-value="'px-2'"/>
                         <t t-set="follow_btn_classes" t-value="'opacity-50'"/>
                     </t>
-                    <a t-attf-class="#{ 'disabled' if len(tag.post_ids) == 0  else '' } o_js_forum_tag_link btn-link #{ '' if tag.message_is_follower else 'text-muted' }"
-                       t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?#{ keep_query(filters='tag') }">
+                    <span t-attf-class="post_link cursor-pointer #{ 'disabled' if len(tag.post_ids) == 0  else '' } o_js_forum_tag_link btn-link #{ '' if tag.message_is_follower else 'text-muted' }"
+                         t-attf-data-post="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?#{ keep_query(filters='tag', prevent_redirect=True) }">
                         <t t-out="tag.name"/>&amp;nbsp;
                         <span class="small">(<t t-out="tag.posts_count"/>)</span>
-                    </a>
+                    </span>
                 </span>
             </div>
         </div>

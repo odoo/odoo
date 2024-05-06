@@ -15,6 +15,7 @@ import operator
 import pytz
 
 from odoo import exceptions, http, fields, tools, _
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import is_html_empty, plaintext2html
@@ -69,6 +70,14 @@ class EventTrackController(http.Controller):
           * 'search': search string;
           * 'tags': list of tag IDs for filtering;
         """
+
+        if searches.get('tags') and request.httprequest.method == 'GET' and not searches.get('prevent_redirect'):
+            # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)
+            # We replaced those with POST to avoid that, but it's not sufficient as bots "remember" crawled pages for a while
+            # This permanent redirect is placed to instruct the bots that this page is no longer valid
+            # TODO: remove in a few stable versions (v19?), including the "prevent_redirect" param in templates
+            return request.redirect(f'/event/{slug(event)}/track', code=301)
+
         return request.render(
             "website_event_track.tracks_session",
             self._event_tracks_get_values(event, tag=tag, **searches)
