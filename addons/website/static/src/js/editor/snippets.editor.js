@@ -82,7 +82,7 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
         useEffect(
             (currentTab) => {
                 if (currentTab === weSnippetEditor.SnippetsMenu.tabs.BLOCKS) {
-                    requestAnimationFrame(() => this.searchInput.el.focus());
+                    this.searchInput.el.focus();
                 } else {
                     // Clear the search input when switching to another tab.
                     this.state.search = "";
