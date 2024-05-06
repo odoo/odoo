@@ -339,9 +339,9 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_5', login='admin')
 
     def test_11_website_snippet_background_edition(self):
-        self.env['ir.attachment'].create({
+        self.env['web_editor.media'].create({
             'public': True,
-            'type': 'url',
+            'res_model': 'ir.ui.view',
             'url': '/web/image/123/test.png',
             'name': 'test.png',
             'mimetype': 'image/png',

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="website.ImageMediaRemoveDialog">
+        <Dialog title="props.title" size="'md'">
+            <p>Are you sure you want to delete this file?</p>
+            <div t-if="props.canHideMedia" class="text-wrap">
+                <input type="checkbox" name="delete_from_website" id="delete_from_website" t-ref="deleteFromWebsite"/>
+                <label for="delete_from_website" class="ms-2">Also remove this image from your website.</label>
+            </div>
+            <t t-set-slot="footer">
+                <button t-on-click="onClickConfirm" class="btn btn-primary">Ok</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

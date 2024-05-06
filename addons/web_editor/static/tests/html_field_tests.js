@@ -626,7 +626,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         });
 
         const mockRPC = async function (route, args) {
-            if (route === '/web_editor/attachment/add_data') {
+            if (route === '/web_editor/media/add_data') {
                 // Check that the correct record model and id were sent.
                 assert.equal(args.res_model, 'partner');
                 assert.equal(args.res_id, 1);
@@ -1164,7 +1164,9 @@ export const uploadTestModule = QUnit.module(
                     assert.equal(createVals.attachment_ids[0][1], 5); // on attachment id "5"
                     webSaveTriggered.resolve();
                 }
-                if (route === "/web_editor/attachment/add_data") {
+                if (route === "/web_editor/media/fetch") {
+                    return Promise.resolve([]);
+                } else if (route === "/web_editor/media/add_data") {
                     const attachment = {
                         id: 5,
                         name: "test.jpg",
