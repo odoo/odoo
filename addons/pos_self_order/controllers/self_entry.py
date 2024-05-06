@@ -45,6 +45,8 @@ class PosSelfKiosk(http.Controller):
         elif pos_config.self_ordering_mode == 'kiosk':
             if config_access_token:
                 config_access_token = pos_config.access_token
+        else:
+            config_access_token = ''
 
         table = table_sudo.sudo(False).with_company(company).with_user(user) if table_sudo else False
 
