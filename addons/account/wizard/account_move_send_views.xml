@@ -11,6 +11,7 @@
                 <field name="company_id" invisible="1"/>
                 <field name="move_ids" invisible="1"/>
                 <field name="mode" invisible="1"/>
+                <field name="show_pdf_template_menu" invisible="1"/>
                 <field name="enable_download" invisible="1"/>
                 <field name="enable_send_mail" invisible="1"/>
                 <field name="send_mail_readonly" invisible="1"/>
@@ -27,6 +28,14 @@
                          Sending these invoices will create a gap in the sequence.
                     </div>
                 </div>
+
+                <group>
+                    <field
+                        name="pdf_template_id"
+                        invisible="not show_pdf_template_menu"
+                        class="w-50"
+                        options="{'no_create': True, 'no_edit': True}"/>
+                </group>
 
                 <!-- Options -->
                 <div name="options" class="row">
