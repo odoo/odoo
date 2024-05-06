@@ -1044,6 +1044,7 @@ class Channel(models.Model):
         :param notify: whether to send a `discuss.channel.member/seen`
         notification.
         """
+        self.ensure_one()
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
         if not current_partner and not current_guest:
             return
@@ -1064,16 +1065,26 @@ class Channel(models.Model):
             'last_seen_dt': fields.Datetime.now(),
         })
         if notify:
-            data = {
-                'channel_id': self.id,
+            member_basic_info = {
                 'id': member.id,
-                'last_message_id': last_message.id,
+                'seen_message_id': {'id': last_message.id} if last_message else None,
             }
-            data['partner_id' if current_partner else 'guest_id'] = current_partner.id if current_partner else current_guest.id
-            target = current_partner or current_guest
+            member_self_info = {
+                **member_basic_info,
+                'thread': {
+                    'id': self.id,
+                    'message_unread_counter': member.message_unread_counter,
+                    # sudo: bus.bus: reading non-sensitive last id
+                    'message_unread_counter_bus_id': self.env['bus.bus'].sudo()._bus_last_id(),
+                    'model': 'discuss.channel',
+                },
+            }
+            notifications = [
+                [current_partner or current_guest, 'mail.record/insert', {'ChannelMember': member_self_info}],
+            ]
             if self.channel_type in self._types_allowing_seen_infos():
-                target = self
-            self.env['bus.bus']._sendone(target, 'discuss.channel.member/seen', data)
+                notifications.append([self, 'mail.record/insert', {'ChannelMember': member_basic_info}])
+            self.env['bus.bus']._sendmany(notifications)
 
     def _types_allowing_seen_infos(self):
         """ Return the channel types which allow sending seen infos notification
