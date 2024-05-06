@@ -745,8 +745,9 @@ class AccountBankStatementLine(models.Model):
 
                 if len(suspense_lines) > 1:
                     raise UserError(_(
-                        "%s reached an invalid state regarding its related statement line.\n"
-                        "To be consistent, the journal entry must always have exactly one suspense line.", st_line.move_id.display_name
+                        "%(move)s reached an invalid state regarding its related statement line.\n"
+                        "To be consistent, the journal entry must always have exactly one suspense line.",
+                        move=st_line.move_id.display_name,
                     ))
                 elif len(suspense_lines) == 1:
                     if journal_currency and suspense_lines.currency_id == journal_currency:

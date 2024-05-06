@@ -93,10 +93,10 @@ class ProductTemplate(models.Model):
         joined = []
         included = res['total_included']
         if currency.compare_amounts(included, price):
-            joined.append(_('%s Incl. Taxes', format_amount(self.env, included, currency)))
+            joined.append(_('%(amount)s Incl. Taxes', amount=format_amount(self.env, included, currency)))
         excluded = res['total_excluded']
         if currency.compare_amounts(excluded, price):
-            joined.append(_('%s Excl. Taxes', format_amount(self.env, excluded, currency)))
+            joined.append(_('%(amount)s Excl. Taxes', amount=format_amount(self.env, excluded, currency)))
         if joined:
             tax_string = f"(= {', '.join(joined)})"
         else:

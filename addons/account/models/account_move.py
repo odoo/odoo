@@ -2347,7 +2347,7 @@ class AccountMove(models.Model):
                     return
 
                 rounding_line_vals.update({
-                    'name': _('%s (rounding)', biggest_tax_line.name),
+                    'name': _("%(tax_name)s (rounding)", tax_name=biggest_tax_line.name),
                     'account_id': biggest_tax_line.account_id.id,
                     'tax_repartition_line_id': biggest_tax_line.tax_repartition_line_id.id,
                     'tax_tag_ids': [(6, 0, biggest_tax_line.tax_tag_ids.ids)],
@@ -4224,7 +4224,7 @@ class AccountMove(models.Model):
                 validation_msgs.add(_('You need to add a line before posting.'))
             if not soft and move.auto_post != 'no' and move.date > fields.Date.context_today(self):
                 date_msg = move.date.strftime(get_lang(self.env).date_format)
-                validation_msgs.add(_("This move is configured to be auto-posted on %s", date_msg))
+                validation_msgs.add(_("This move is configured to be auto-posted on %(date)s", date=date_msg))
             if not move.journal_id.active:
                 validation_msgs.add(_(
                     "You cannot post an entry in an archived journal (%(journal)s)",
