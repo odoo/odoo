@@ -168,7 +168,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _match(cls, path):
         if not hasattr(request, 'website_routing'):
-            website = request.env['website'].get_current_website()
+            website = request.env['website'].with_context(lang=None).get_current_website()
             request.website_routing = website.id
 
         return super()._match(path)
