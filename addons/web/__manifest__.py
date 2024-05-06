@@ -426,6 +426,7 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web.assets_backend'),
 
             'web/static/src/public/public_component_service.js',
+            'web/static/src/webclient/clickbot/clickbot.js',
         ],
         # Unit test files
         'web.assets_unit_tests': [
