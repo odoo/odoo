@@ -1,5 +1,28 @@
+
+function confirmacion() {
+    // Obtén todos los campos requeridos del formulario
+    var requiredFields = document.querySelectorAll('input[required], textarea[required], select[required], input[type="radio"][required]');
+
+    // Verifica si todos los campos requeridos están llenos
+    var allFieldsFilled = Array.from(requiredFields).every(function(field) {
+        if (field.type === "radio") {
+            // Para radio buttons, debemos verificar si alguno del grupo está seleccionado
+            var radioGroup = document.getElementsByName(field.name);
+            return Array.from(radioGroup).some(radio => radio.checked);
+        } else {
+            return field.value.trim() !== '';
+        }
+    });
+
+    if (!allFieldsFilled) {
+        alert('Por favor, llena todos los campos requeridos antes de enviar el formulario.');
+        return false;
+    }
+    return true;
+}
+
 // Función que se ejecuta al hacer click en el botón de enviar
-function handleResponseClima() {
+function handleResponse() {
     // Recoge todos los inputs de tipo radio
     var radios = document.querySelectorAll('.o_survey_form_choice_item');
     var selectedValues = {};
@@ -15,6 +38,8 @@ function handleResponseClima() {
             }
         }
     });
+
+
 
     // Recoge todos los elementos textarea
     var textareas = document.querySelectorAll('.o_survey_question_text_box');
@@ -39,34 +64,21 @@ function handleResponseClima() {
         radioValuesScale: selectedValuesScale,
     };
 
-    // Envía los valores a la base de datos
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/evaluacion/responder', true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify(data));
+    var conf = confirmacion();
+    
+    if (conf) {
+        //Envía los valores a la base de datos
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/evaluacion/responder', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(data));
+    }
+    else {
+        return false;
+    }
 }
 
-// function confirmacion() {
-//     // Obtén todos los campos requeridos del formulario
-//     var requiredFields = document.querySelectorAll('input[required], textarea[required], select[required]');
 
-//     // Verifica si todos los campos requeridos están llenos
-//     var allFieldsFilled = Array.from(requiredFields).every(function(field) {
-//         return field.value !== '';
-//     });
-
-//     if (!allFieldsFilled) {
-//         alert('Por favor, llena todos los campos requeridos antes de enviar el formulario.');
-//         return false;
-//     }
-
-//     if (confirm("¿Estas seguro de enviar tus respuestas?")) {
-//         handleResponseClima();
-//         return true;
-//     } else {
-//         return false;
-//     }
-// }
 
 function iniciar_evaluacion() {
     boton_responder = document.querySelector("#boton_responder");
