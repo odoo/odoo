@@ -571,7 +571,7 @@ export class Store extends BaseStore {
         return Object.values(this.Thread.records)
             .filter((thread) => thread.channel_type === "chat" && thread.correspondent)
             .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id)
-            .map((thread) => thread.correspondent.id);
+            .map((thread) => thread.correspondent.persona.id);
     }
 
     async joinChannel(id, name) {

@@ -10,7 +10,7 @@ threadActionsRegistry.add("open-hr-profile", {
         return (
             component.thread?.channel_type === "chat" &&
             component.props.chatWindow?.isOpen &&
-            component.thread.correspondent?.employeeId
+            component.thread.correspondent?.persona.employeeId
         );
     },
     icon: "fa fa-fw fa-id-card",
@@ -18,7 +18,7 @@ threadActionsRegistry.add("open-hr-profile", {
     async open(component) {
         component.actionService.doAction({
             type: "ir.actions.act_window",
-            res_id: component.thread.correspondent.employeeId,
+            res_id: component.thread.correspondent.persona.employeeId,
             res_model: "hr.employee.public",
             views: [[false, "form"]],
         });
@@ -27,15 +27,18 @@ threadActionsRegistry.add("open-hr-profile", {
         const component = useComponent();
         const orm = useService("orm");
         let employeeId;
-        if (!component.thread?.correspondent?.employeeId && component.thread?.correspondent) {
+        if (
+            !component.thread?.correspondent?.persona.employeeId &&
+            component.thread?.correspondent
+        ) {
             const employees = await orm.silent.searchRead(
                 "hr.employee",
-                [["user_partner_id", "=", component.thread.correspondent.id]],
+                [["user_partner_id", "=", component.thread.correspondent.persona.id]],
                 ["id"]
             );
             employeeId = employees[0]?.id;
             if (employeeId) {
-                component.thread.correspondent.employeeId = employeeId;
+                component.thread.correspondent.persona.employeeId = employeeId;
             }
         }
     },
