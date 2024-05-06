@@ -996,25 +996,52 @@ export class DiscussChannel extends models.ServerModel {
         const ResPartner = this.env["res.partner"];
 
         const memberOfCurrentUser = this._find_or_create_member_for_self(ids[0]);
+        const message_unread_counter = this.env["mail.message"]._filter([
+            ["res_id", "=", ids[0]],
+            ["model", "=", "discuss.channel"],
+            ["id", ">", message_id],
+        ]).length;
         if (memberOfCurrentUser) {
             DiscussChannelMember.write([memberOfCurrentUser.id], {
                 fetched_message_id: message_id,
                 seen_message_id: message_id,
+                message_unread_counter,
             });
         }
         if (notify) {
             const [channel] = this.search_read([["id", "in", ids]]);
             const [partner, guest] = ResPartner._get_current_persona();
-            let target = guest ?? partner;
-            if (this._types_allowing_seen_infos().includes(channel.channel_type)) {
-                target = channel;
-            }
-            BusBus._sendone(target, "discuss.channel.member/seen", {
-                channel_id: channel.id,
+            const memberBasicInfo = {
                 id: memberOfCurrentUser?.id,
-                last_message_id: message_id,
-                [guest ? "guest_id" : "partner_id"]: guest?.id ?? partner?.id,
-            });
+                seen_message_id: message_id ? { id: message_id } : null,
+            };
+            const memberSelfInfo = {
+                ...memberBasicInfo,
+                thread: {
+                    id: channel.id,
+                    model: "discuss.channel",
+                    message_unread_counter,
+                    message_unread_counter_bus_id: this.bus_last_id,
+                },
+            };
+            const notifications = [];
+            if (memberOfCurrentUser) {
+                notifications.push([
+                    guest ?? partner,
+                    "mail.record/insert",
+                    { ChannelMember: memberSelfInfo },
+                ]);
+            }
+            if (this._types_allowing_seen_infos().includes(channel.channel_type)) {
+                notifications.push([
+                    channel,
+                    "mail.record/insert",
+                    {
+                        ChannelMember: memberBasicInfo,
+                    },
+                ]);
+            }
+            BusBus._sendmany(notifications);
         }
     }
 

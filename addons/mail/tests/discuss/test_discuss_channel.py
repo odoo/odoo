@@ -206,19 +206,40 @@ class TestChannelInternals(MailCommon, HttpCase):
     def test_set_last_seen_message_should_send_notification_only_once(self):
         chat = self.env['discuss.channel'].with_user(self.user_admin).channel_get((self.partner_employee | self.user_admin.partner_id).ids)
         msg_1 = self._add_messages(chat, 'Body1', author=self.user_employee.partner_id)
+        member = chat.channel_member_ids.filtered(lambda m: m.partner_id == self.user_admin.partner_id)
 
         self.env['bus.bus'].sudo().search([]).unlink()
         with self.assertBus(
-            [(self.env.cr.dbname, "discuss.channel", chat.id)],
-            [{
-                "type": "discuss.channel.member/seen",
-                "payload": {
-                    'channel_id': chat.id,
-                    'id': chat.channel_member_ids.filtered(lambda m: m.partner_id == self.user_admin.partner_id).id,
-                    'last_message_id': msg_1.id,
-                    'partner_id': self.user_admin.partner_id.id,
+            [
+                (self.env.cr.dbname, "discuss.channel", chat.id),
+                (self.env.cr.dbname, "res.partner", self.user_admin.partner_id.id)
+            ],
+            [
+                   {
+                    "type": "mail.record/insert",
+                    "payload": {
+                        "ChannelMember": {
+                            "id": member.id,
+                            "seen_message_id": {"id": msg_1.id},
+                            "thread": {
+                                "id": chat.id,
+                                "message_unread_counter": 0,
+                                "message_unread_counter_bus_id": self.env['bus.bus'].sudo()._bus_last_id(),
+                                "model": "discuss.channel",
+                            }
+                        },
+                    },
                 },
-            }],
+                {
+                    "type": "mail.record/insert",
+                    "payload": {
+                        "ChannelMember": {
+                            "id": member.id,
+                            "seen_message_id": {"id": msg_1.id},
+                        },
+                    },
+                },
+            ],
         ):
             chat._channel_seen(msg_1.id)
         # There should be no channel member to be set as seen in the second time
