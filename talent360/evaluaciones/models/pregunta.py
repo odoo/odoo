@@ -55,3 +55,15 @@ class Pregunta(models.Model):
             ],
             "context": {"group_by": "respuesta_texto"},
         }
+    
+    def evaluar_respuesta(self, respuesta_texto):
+        """
+        Evalúa el valor de una respuesta en función de la opción seleccionada.
+
+        :param respuesta_texto: El texto de la respuesta seleccionada.
+        :return: El valor de la respuesta.
+        """
+        for opcion in self.opcion_ids:
+            if opcion.opcion_texto == respuesta_texto:
+                return opcion.valor
+        return 0
