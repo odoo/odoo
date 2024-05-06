@@ -77,8 +77,17 @@ class SaleOrderFetcher extends EventBus {
             ],
             { offset, limit }
         );
+        await this.loadMissingPartners(saleOrders);
 
         return saleOrders;
+    }
+
+    async loadMissingPartners(saleOrders) {
+        const missingPartners = [...new Set(saleOrders.map((order) => order.partner_id))]
+            .filter((partnerId) => !this.pos.models["res.partner"].get(partnerId));
+        if (missingPartners.length) {
+            await this.pos._loadPartners(missingPartners);
+        }
     }
 
     nextPage() {
