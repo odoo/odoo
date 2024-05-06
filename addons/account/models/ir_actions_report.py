@@ -6,13 +6,18 @@ try:
 except ImportError:
     from PyPDF2.utils import PdfStreamError, PdfReadError
 
-from odoo import api, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import pdf
 
 
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
+
+    is_invoice_report = fields.Boolean(
+        string="Invoice report",
+        copy=True,
+    )
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         # Custom behavior for 'account.report_original_vendor_bill'.
@@ -45,7 +50,7 @@ class IrActionsReport(models.Model):
         return collected_streams
 
     def _is_invoice_report(self, report_ref):
-        return self._get_report(report_ref).report_name in ('account.report_invoice_with_payments', 'account.report_invoice')
+        return self._get_report(report_ref).is_invoice_report
 
     def _pre_render_qweb_pdf(self, report_ref, res_ids=None, data=None):
         # Check for reports only available for invoices.

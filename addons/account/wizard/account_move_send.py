@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collections import defaultdict
 from markupsafe import Markup
 from werkzeug.urls import url_encode
 
@@ -10,6 +11,10 @@ from odoo.tools.misc import get_lang
 class AccountMoveSend(models.TransientModel):
     _name = 'account.move.send'
     _description = "Account Move Send"
+
+    @api.model
+    def _get_default_pdf_template_id(self):
+        return self.env.ref('account.account_invoices')
 
     company_id = fields.Many2one(comodel_name='res.company', compute='_compute_company_id', store=True)
     move_ids = fields.Many2many(comodel_name='account.move')
@@ -45,9 +50,16 @@ class AccountMoveSend(models.TransientModel):
     send_mail_readonly = fields.Boolean(compute='_compute_send_mail_extra_fields')
     mail_template_id = fields.Many2one(
         comodel_name='mail.template',
-        string="Use template",
+        string="Email template",
         domain="[('model', '=', 'account.move')]",
     )
+    pdf_template_id = fields.Many2one(
+        comodel_name='ir.actions.report',
+        string="Invoice template:",
+        domain="[('is_invoice_report', '=', True)]",
+        default=_get_default_pdf_template_id,
+    )
+    show_pdf_template_menu = fields.Boolean(compute='_compute_show_pdf_template_menu')
     mail_lang = fields.Char(
         string="Lang",
         compute='_compute_mail_lang',
@@ -147,6 +159,7 @@ class AccountMoveSend(models.TransientModel):
             'sp_user_id': self.env.user.id,
             'download': self.checkbox_download,
             'send_mail': self.checkbox_send_mail,
+            'pdf_report_id': self.pdf_template_id.id,
         }
 
     @api.model
@@ -226,6 +239,13 @@ class AccountMoveSend(models.TransientModel):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('move_ids')
+    def _compute_show_pdf_template_menu(self):
+        available_templates_count = self.env['ir.actions.report'].search_count([('is_invoice_report', '=', True)], limit=2)
+        for wizard in self:
+            # show pdf template menu if there are more than 1 template available and there is at least one move that needs a pdf
+            wizard.show_pdf_template_menu = available_templates_count > 1 and any(self._need_invoice_document(move) for move in wizard.move_ids)
 
     @api.depends('move_ids')
     def _compute_company_id(self):
@@ -383,18 +403,26 @@ class AccountMoveSend(models.TransientModel):
         :param invoice:         An account.move record.
         :param invoice_data:    The collected data for the invoice so far.
         """
-        ids = [inv.id for inv in invoices_data]
-        content, _report_type = self.env['ir.actions.report']._pre_render_qweb_pdf('account.account_invoices', res_ids=ids)
 
+        grouped_invoices_by_report = defaultdict(dict)
         for invoice, invoice_data in invoices_data.items():
-            invoice_data['pdf_attachment_values'] = {
-                'name': invoice._get_invoice_report_filename(),
-                'raw': content[invoice.id],
-                'mimetype': 'application/pdf',
-                'res_model': invoice._name,
-                'res_id': invoice.id,
-                'res_field': 'invoice_pdf_report_file',  # Binary field
-            }
+            grouped_invoices_by_report[invoice_data['pdf_report_id']][invoice] = invoice_data
+
+        for pdf_report_id, group_invoices_data in grouped_invoices_by_report.items():
+            ids = [inv.id for inv in group_invoices_data]
+
+            pdf_report = self.env['ir.actions.report'].browse(pdf_report_id)
+            content, _report_type = self.env['ir.actions.report']._pre_render_qweb_pdf(pdf_report.report_name, res_ids=ids)
+
+            for invoice, invoice_data in group_invoices_data.items():
+                invoice_data['pdf_attachment_values'] = {
+                    'name': invoice._get_invoice_report_filename(),
+                    'raw': content[invoice.id],
+                    'mimetype': 'application/pdf',
+                    'res_model': invoice._name,
+                    'res_id': invoice.id,
+                    'res_field': 'invoice_pdf_report_file',  # Binary field
+                }
 
     @api.model
     def _prepare_invoice_proforma_pdf_report(self, invoice, invoice_data):
@@ -402,7 +430,8 @@ class AccountMoveSend(models.TransientModel):
         :param invoice:         An account.move record.
         :param invoice_data:    The collected data for the invoice so far.
         """
-        content, _report_format = self.env['ir.actions.report']._render('account.account_invoices', invoice.ids, data={'proforma': True})
+        pdf_report = self.env['ir.actions.report'].browse(invoice_data['pdf_report_id'])
+        content, _report_format = self.env['ir.actions.report']._render(pdf_report.report_name, invoice.ids, data={'proforma': True})
 
         invoice_data['proforma_pdf_attachment_values'] = {
             'raw': content[invoice.id],
