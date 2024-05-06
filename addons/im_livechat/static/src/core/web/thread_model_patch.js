@@ -75,13 +75,10 @@ patch(Thread.prototype, {
      * @param {import("models").Persona} persona
      */
     getMemberName(persona) {
-        if (this.channel_type !== "livechat") {
-            return super.getMemberName(persona);
-        }
-        if (persona.user_livechat_username) {
+        if (this.channel_type === "livechat" && persona.user_livechat_username) {
             return persona.user_livechat_username;
         }
-        return super.getMemberName(persona);
+        return super.getMemberName(...arguments);
     },
     /**
      * @override
