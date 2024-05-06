@@ -7,7 +7,12 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, useState, reactive } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/generic_components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
-import { Numpad, getButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
+import {
+    BACKSPACE,
+    Numpad,
+    getButtons,
+    DEFAULT_LAST_ROW,
+} from "@point_of_sale/app/generic_components/numpad/numpad";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
@@ -110,7 +115,7 @@ export class ProductScreen extends Component {
     }
 
     getNumpadButtons() {
-        return getButtons([
+        return getButtons(DEFAULT_LAST_ROW, [
             { value: "quantity", text: _t("Qty") },
             { value: "discount", text: _t("% Disc"), disabled: !this.pos.config.manual_discount },
             {
@@ -118,7 +123,7 @@ export class ProductScreen extends Component {
                 text: _t("Price"),
                 disabled: !this.pos.cashierHasPriceControlRights(),
             },
-            { value: "-", text: "+/-" },
+            BACKSPACE,
         ]).map((button) => ({
             ...button,
             class: this.pos.numpadMode === button.value ? "active border-primary" : "",
