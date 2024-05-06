@@ -322,42 +322,44 @@ class Evaluacion(models.Model):
 
         return parametros"""
 
-def action_generar_datos_reporte_clima(self):
-    """
-    Genera los datos necesarios para un reporte de evaluación de clima.
+    def action_generar_datos_reporte_clima(self):
+        """
+        Genera los datos necesarios para un reporte de evaluación de clima.
 
-    :return: Los parámetros necesarios para generar el reporte.
-    """
-    parametros = {
-        "evaluacion": self,
-        "categorias": [],
-        "total": 0,
-    }
+        :return: Los parámetros necesarios para generar el reporte.
+        """
+        parametros = {
+            "evaluacion": self,
+            "categorias": [],
+            "total": 0,
+        }
 
-    # Agrupar las preguntas por categorías y calcular el subtotal por cada una
-    categorias_puntos = {}
-    for pregunta in self.pregunta_ids:
-        #Ignorar preguntas sin gategoría
-        if not pregunta.categoria_id:
-            continue
-        
-        categoria = pregunta.categoria_id.nombre
-        
-        #Inicializar la puntiación si no está ya en el diccionario
-        if categoria not in categorias_puntos:
-            categorias_puntos[categoria] = 0
+        # Agrupar las preguntas por categorías y calcular el subtotal por cada una
+        categorias_puntos = {}
+        for pregunta in self.pregunta_ids:
+            #Ignorar preguntas sin gategoría
+            if not pregunta.categoria_id:
+                continue
             
-        #Calcular el puntaje para cada respuesta basada en el método evaluar_respuesta
-        for respuesta in pregunta.respuesta.respuesta_ids:
-            valor = pregunta.evaluar_respuesta(respuesta.respuesta_texto)
-            categorias_puntos[categoria] += valor
-            parametros["total"] += valor
-        
-    #convertir el diccionario de categorias en una lista para los gráficos
-    for categoria, puntos in categorias_puntos.items():
-        parametros["categorias"].append({
-            "nombre": categoria,
-            "valor": puntos,
-        })
-        
-    return parametros
+            categoria = pregunta.categoria_id.nombre
+            
+            #Inicializar la puntiación si no está ya en el diccionario
+            if categoria not in categorias_puntos:
+                categorias_puntos[categoria] = 0
+                
+            #Calcular el puntaje para cada respuesta basada en el método evaluar_respuesta
+            for respuesta in pregunta.respuesta.respuesta_ids:
+                valor = pregunta.evaluar_respuesta(respuesta.respuesta_texto)
+                categorias_puntos[categoria] += valor
+                parametros["total"] += valor
+            
+        #convertir el diccionario de categorias en una lista para los gráficos
+        for categoria, puntos in categorias_puntos.items():
+            parametros["categorias"].append({
+                "nombre": categoria,
+                "valor": puntos,
+            })
+            
+        return parametros
+    
+    
