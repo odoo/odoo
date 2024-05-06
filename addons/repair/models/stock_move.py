@@ -189,3 +189,9 @@ class StockMove(models.Model):
         if self.repair_id:
             return []
         return super(StockMove, self)._split(qty, restrict_partner_id)
+
+    def action_show_details(self):
+        action = super().action_show_details()
+        if self.repair_line_type == 'recycle':
+            action['context'].update({'show_quant': False, 'show_destination_location': True})
+        return action
