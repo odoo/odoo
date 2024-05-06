@@ -180,6 +180,7 @@ class AccountMove(models.Model):
         string="Statement Line",
         copy=False,
         check_company=True,
+        index='btree_not_null',
     )
     statement_id = fields.Many2one(
         related="statement_line_id.statement_id"
@@ -233,6 +234,7 @@ class AccountMove(models.Model):
         comodel_name='account.move',
         string='First recurring entry',
         readonly=True, copy=False,
+        index='btree_not_null',
     )
     hide_post_button = fields.Boolean(compute='_compute_hide_post_button', readonly=True)
     to_check = fields.Boolean(
