@@ -10,12 +10,7 @@ import weUtils from "@web_editor/js/common/utils";
 import options from "@web_editor/js/editor/snippets.options.legacy";
 import { NavbarLinkPopoverWidget } from "@website/js/widgets/link_popover_widget";
 import wUtils from "@website/js/utils";
-import {
-    applyModifications,
-    isImageCorsProtected,
-    isImageSupportedForStyle,
-    loadImageInfo,
-} from "@web_editor/js/editor/image_processing";
+import {isImageCorsProtected, isImageSupportedForStyle} from "@web_editor/js/editor/image_processing";
 import "@website/snippets/s_popup/options";
 import { range } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
@@ -36,11 +31,6 @@ import {
 
 import { Component, markup, useRef, useState } from "@odoo/owl";
 
-import {
-    legacyRegistry,
-    owlRegistry,
-    UnitUserValue,
-} from '@web_editor/js/editor/snippets.options'; 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
 const Many2oneUserValueWidget = options.userValueWidgetsRegistry['we-many2one'];
@@ -654,11 +644,9 @@ const GPSPicker = InputUserValueWidget.extend({
         }
     },
 });
-/*
 options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-fontfamilypicker'] = FontFamilyPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-gpspicker'] = GPSPicker;
-*/
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -2955,31 +2943,10 @@ options.registry.CoverProperties = options.Class.extend({
      * @see this.selectClass for parameters
      */
     background: async function (previewMode, widgetValue, params) {
-        if (previewMode === false) {
-            this.$image[0].classList.remove("o_b64_image_to_save");
-        }
         if (widgetValue === '') {
             this.$image.css('background-image', '');
             this.$target.removeClass('o_record_has_cover');
         } else {
-            if (previewMode === false) {
-                const imgEl = document.createElement("img");
-                imgEl.src = widgetValue;
-                await loadImageInfo(imgEl);
-                if (imgEl.dataset.mimetype && ![
-                    "image/gif",
-                    "image/svg+xml",
-                    "image/webp",
-                ].includes(imgEl.dataset.mimetype)) {
-                    // Convert to webp but keep original width.
-                    imgEl.dataset.mimetype = "image/webp";
-                    const base64src = await applyModifications(imgEl, {
-                        mimetype: "image/webp",
-                    });
-                    widgetValue = base64src;
-                    this.$image[0].classList.add("o_b64_image_to_save");
-                }
-            }
             this.$image.css('background-image', `url('${widgetValue}')`);
             this.$target.addClass('o_record_has_cover');
             const $defaultSizeBtn = this.$el.find('.o_record_cover_opt_size_default');
@@ -4222,7 +4189,7 @@ options.registry.SnippetMove.include({
     },
 });
 
-const oldExport = {
-    // UrlPickerUserValueWidget: UrlPickerUserValueWidget,
-    // FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,
+export default {
+    UrlPickerUserValueWidget: UrlPickerUserValueWidget,
+    FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,
 };
