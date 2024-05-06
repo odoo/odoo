@@ -22,6 +22,9 @@ import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { patchRPCWithCleanup } from "@web/../tests/helpers/mock_services";
 import { Component, useState, xml } from "@odoo/owl";
 import { session } from "@web/session";
+import { dialogService } from "@web/core/dialog/dialog_service";
+import { Dialog } from "@web/core/dialog/dialog";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 
 let target, mock;
 
@@ -860,5 +863,46 @@ QUnit.module("Tour service", (hooks) => {
             "error: Tour tour3 failed at step .button1. Element has been found but is disabled. (Use step.isCheck if you just want to check if element is present in DOM)",
         ];
         assert.verifySteps(expectedError);
+    });
+
+    QUnit.test("pointer is added on top of overlay's stack", async (assert) => {
+        registry.category("services").add("dialog", dialogService);
+        registry.category("services").add("hotkey", hotkeyService);
+        registry.category("web_tour.tours").add("tour1", {
+            sequence: 10,
+            steps: () => [{ trigger: ".modal .a" }, { trigger: ".open" }],
+        });
+        const env = await makeTestEnv({});
+
+        const { Component: OverlayContainer, props: overlayContainerProps } = registry
+            .category("main_components")
+            .get("OverlayContainer");
+
+        class DummyDialog extends Component {
+            static props = ["*"];
+            static components = { Dialog };
+            static template = xml`
+                <Dialog>
+                    <button class="a">A</button>
+                    <button class="b">B</button>
+                </Dialog>
+            `;
+        }
+        class Root extends Component {
+            static props = ["*"];
+            static components = { OverlayContainer };
+            static template = xml`<OverlayContainer t-props="props.overlayContainerProps"/>`;
+        }
+
+        await mount(Root, target, { env, props: { overlayContainerProps } });
+
+        env.services.tour_service.startTour("tour1", { mode: "manual" });
+        env.services.dialog.add(DummyDialog, {});
+        await mock.advanceTime(100);
+        assert.containsN(target, `.o-overlay-item`, 2);
+        const overlays = target.querySelectorAll(`.o-overlay-item`);
+        // the pointer should be after the dialog
+        assert.containsOnce(overlays[0], `.modal`);
+        assert.containsOnce(overlays[1], `.o_tour_pointer`);
     });
 });
