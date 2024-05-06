@@ -83,3 +83,10 @@ class PurchaseOrderLine(models.Model):
         if bom and 'previous_product_qty' in self.env.context:
             return self.env.context['previous_product_qty'].get(self.id, 0.0)
         return super()._get_qty_procurement()
+
+    def _get_move_dests_initial_demand(self, move_dests):
+        kit_bom = self.env['mrp.bom']._bom_find(self.product_id, bom_type='phantom')[self.product_id]
+        if kit_bom:
+            filters = {'incoming_moves': lambda m: True, 'outgoing_moves': lambda m: False}
+            return move_dests._compute_kit_quantities(self.product_id, self.product_qty, kit_bom, filters)
+        return super()._get_move_dests_initial_demand(move_dests)
