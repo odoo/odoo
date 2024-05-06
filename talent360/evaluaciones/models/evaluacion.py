@@ -288,12 +288,28 @@ class Evaluacion(models.Model):
 
         :return: Los parámetros necesarios para generar el reporte.
         """
-        parametros = {
-            "evaluacion": self,
-            "categorias": [],
-            "dominios": [],
-            "final": 0,
-        }
+        # Definir estructura de categorías y dominios
+        categorias_orden = [
+            "Ambiente de Trabajo",
+            "Factores propios de la actividad",
+            "Organización del tiempo de trabajo",
+            "Liderazgo y relaciones en el trabajo",
+        ]
+        dominios_orden = [
+            "Condiciones en el ambiente de trabajo",
+            "Carga de trabajo",
+            "Falta de control sobre el trabajo",
+            "Jornada de trabajo",
+            "Interferencia en la relación trabajo-familia",
+            "Liderazgo",
+            "Relaciones en el trabajo",
+            "Violencia",
+        ]
+
+        categorias = {nombre: 0 for nombre in categorias_orden}
+        dominios = {nombre: 0 for nombre in dominios_orden}
+
+        final = 0
 
         for pregunta in self.pregunta_ids:
             if not pregunta.categoria:
@@ -301,36 +317,26 @@ class Evaluacion(models.Model):
             categoria = dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
             dominio = dict(pregunta._fields["dominio"].selection).get(pregunta.dominio)
 
-            valor_categoria = 0
-            valor_dominio = 0
+            valor_pregunta = 0
 
             for respuesta in pregunta.respuesta_ids:
-                valor_respuesta = pregunta.evaluar_respuesta(respuesta.respuesta_texto)
-                if pregunta.ponderacion == "ascendente":
-                    valor_categoria += valor_respuesta
-                    valor_dominio += valor_respuesta
-                    parametros["final"] += valor_respuesta
-                elif pregunta.ponderacion == "descendente":
-                    valor_categoria+= (4 - valor_respuesta)
-                    valor_dominio += (4 - valor_respuesta)
-                    parametros["final"] += (4 - valor_respuesta)
-                    # Verificar si la categoría ya existe en el diccionario de categorías
-            for cat in parametros['categorias']:
-                if cat['nombre'] == categoria:
-                    cat['valor'] += valor_categoria
-                    break
-            else:
-                datos_categoria = {"nombre": categoria, "valor": valor_categoria}
-                parametros['categorias'].append(datos_categoria)
-            
-            # Verificar si el dominio ya existe en el diccionario de dominios
-            for dom in parametros['dominios']:
-                if dom['nombre'] == dominio:
-                    dom['valor'] += valor_dominio
-                    break
-            else:
-                datos_dominio = {"nombre": dominio, "valor": valor_dominio}
-                parametros['dominios'].append(datos_dominio)
+                valor_respuesta = int(respuesta.respuesta_texto)
+                valor_pregunta += valor_respuesta
+                final += valor_respuesta
+
+            # Acumular el valor de la pregunta en la categoría y el dominio correspondientes
+            if categoria in categorias:
+                categorias[categoria] += valor_pregunta
+            if dominio in dominios:
+                dominios[dominio] += valor_pregunta
+
+        # Organizar los parámetros en el orden deseado
+        parametros = {
+            "evaluacion": self,
+            "categorias": [{"nombre": nombre, "valor": categorias[nombre]} for nombre in categorias_orden],
+            "dominios": [{"nombre": nombre, "valor": dominios[nombre]} for nombre in dominios_orden],
+            "final": final,
+        }
 
         print(parametros)
         return parametros
