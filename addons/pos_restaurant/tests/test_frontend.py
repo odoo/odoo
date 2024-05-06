@@ -252,6 +252,7 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
                 (4, cls.env.ref('base.group_user').id),
                 (4, cls.env.ref('point_of_sale.group_pos_manager').id),
             ],
+            'tz': 'Europe/Brussels',
         })
         cls.pos_admin.partner_id.email = 'pos_admin@test.com'
 
