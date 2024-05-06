@@ -6,7 +6,7 @@ from ..models.respuesta import Respuesta as respuesta
 from ..models.pregunta import Pregunta as pregunta
 import json
 from ..models.usuario_evaluacion_rel import UsuarioEvaluacionRel as usuario_evaluacion
-import werkzeug
+import time
 
 class EvaluacionesController(http.Controller):
     """Controlador para manejar las solicitudes relacionadas con las evaluaciones."""
@@ -157,5 +157,6 @@ class EvaluacionesController(http.Controller):
         else:
             usuario_eva_mod.sudo().action_update_estado(None, evaluacion_id, token)
 
-        # Redirige a la página de inicio
-        return request.redirect("/evaluacion/contestada")
+        timestamp = str(time.time())
+
+        return request.redirect("/evaluacion/responder/" + str(evaluacion_id) + "/" + token + "?t=" + timestamp)
