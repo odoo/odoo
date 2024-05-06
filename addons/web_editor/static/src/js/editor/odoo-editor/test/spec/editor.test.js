@@ -7424,5 +7424,17 @@ X[]
                 });
             });
         });
+
+        describe('After keydown event', () => {
+            it('should keep the selection at the start of the second text node after paragraph break', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab<br>[c]de</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'f');
+                    },
+                    contentAfter: '<p>ab<br>f[]de</p>',
+                });
+            });
+        });
     });
 });

@@ -827,7 +827,7 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
         sel.anchorNode &&
         (sel.anchorNode.nodeName === "BR" || (sel.anchorNode.nodeType === Node.TEXT_NODE && sel.anchorNode.textContent === ''))
     ) {
-        setCursorStart(sel.anchorNode.parentElement, false);
+        setSelection(sel.anchorNode.parentElement, childNodeIndex(sel.anchorNode));
     }
     range = range ? range.cloneRange() : sel && sel.rangeCount && sel.getRangeAt(0).cloneRange();
     if (!range) return;
