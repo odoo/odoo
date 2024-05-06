@@ -55,6 +55,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 (4, cls.env.ref('base.group_user').id),
                 (4, cls.env.ref('point_of_sale.group_pos_user').id),
             ],
+            'tz': 'Europe/Brussels',
         })
         cls.pos_admin = cls.env['res.users'].create({
             'name': 'A powerful PoS man!',
@@ -63,6 +64,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'groups_id': [
                 (4, cls.env.ref('point_of_sale.group_pos_manager').id),
             ],
+            'tz': 'Europe/Brussels',
         })
 
         cls.pos_user.partner_id.email = 'pos_user@test.com'
