@@ -24,6 +24,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
                 (4, cls.env.ref('base.group_user').id),
                 (4, cls.env.ref('point_of_sale.group_pos_user').id),
             ],
+            'tz': 'Europe/Brussels',
         })
         cls.pos_admin = cls.env['res.users'].create({
             'name': 'POS Admin',
@@ -33,6 +34,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
                 (4, cls.env.ref('base.group_user').id),
                 (4, cls.env.ref('point_of_sale.group_pos_manager').id),
             ],
+            'tz': 'Europe/Brussels',
         })
 
         pos_categ_misc = cls.env['pos.category'].create({

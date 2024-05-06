@@ -111,6 +111,7 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
                 (4, cls.env.ref('point_of_sale.group_pos_user').id),
                 (4, cls.env.ref('account.group_account_invoice').id),
             ],
+            'tz': 'Europe/Brussels',
         })
         cls.pos_user.partner_id.email = 'pos_op_user@test.com'
         # End of code from addons/point_of_sale/tests/test_frontend.py
