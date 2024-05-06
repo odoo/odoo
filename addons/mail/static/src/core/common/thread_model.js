@@ -843,13 +843,7 @@ export class Thread extends Record {
                 ["res_id", "=", this.id],
             ],
         ]);
-        if (this.selfMember) {
-            this.selfMember.seen_message_id = this.newestPersistentNotEmptyOfAllMessage;
-        }
-        Object.assign(this, {
-            message_unread_counter: 0,
-            message_needaction_counter: 0,
-        });
+        this.message_needaction_counter = 0;
     }
 
     async markAsFetched() {
@@ -874,17 +868,11 @@ export class Thread extends Record {
             rpc("/discuss/channel/set_last_seen_message", {
                 channel_id: this.id,
                 last_message_id: newestPersistentMessage.id,
-            })
-                .then(() => {
-                    this.updateSeen(newestPersistentMessage);
-                })
-                .catch((e) => {
-                    if (e.code !== 404) {
-                        throw e;
-                    }
-                });
-        } else if (newestPersistentMessage) {
-            this.updateSeen();
+            }).catch((e) => {
+                if (e.code !== 404) {
+                    throw e;
+                }
+            });
         }
         if (this.needactionMessages.length > 0) {
             this.markAllMessagesAsRead();
@@ -1128,27 +1116,6 @@ export class Thread extends Record {
                 { pinned: false }
             );
         }
-    }
-
-    updateSeen(lastSeen = this.newestPersistentOfAllMessage) {
-        const lastReadIndex = this.messages.findIndex((message) => message.eq(lastSeen));
-        let newNeedactionCounter = 0;
-        let newUnreadCounter = 0;
-        for (const message of this.messages.slice(lastReadIndex + 1)) {
-            if (message.isNeedaction) {
-                newNeedactionCounter++;
-            }
-            if (Number.isInteger(message.id)) {
-                newUnreadCounter++;
-            }
-        }
-        if (this.selfMember) {
-            this.selfMember.seen_message_id = lastSeen;
-        }
-        Object.assign(this, {
-            message_needaction_counter: newNeedactionCounter,
-            message_unread_counter: newUnreadCounter,
-        });
     }
 
     /**
