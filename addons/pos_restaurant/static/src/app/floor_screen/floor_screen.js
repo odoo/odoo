@@ -411,7 +411,7 @@ export class FloorScreen extends Component {
                     [
                         {
                             name: newName,
-                            background_color: "#ACADAD",
+                            background_color: "#FFFFFF",
                             pos_config_ids: [this.pos.config.id],
                         },
                     ],
