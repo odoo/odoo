@@ -166,9 +166,11 @@ export async function openListView(resModel, params) {
     });
 }
 
-export async function openView({ res_model, res_id, views, ...params }) {
+export async function openView({ context, res_model, res_id, views, domain, ...params }) {
     const [[viewId, type]] = views;
     const action = {
+        context,
+        domain,
         res_model,
         res_id,
         views: [[viewId, type]],

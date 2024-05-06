@@ -692,7 +692,7 @@ async function discuss_starred_messages(request) {
 
 registerRoute("/mail/thread/data", mail_thread_data);
 /** @type {RouteCallback} */
-async function mail_thread_data(request) {
+export async function mail_thread_data(request) {
     /** @type {import("mock_models").MailThread} */
     const MailThread = this.env["mail.thread"];
 

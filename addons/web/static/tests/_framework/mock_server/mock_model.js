@@ -507,7 +507,7 @@ const isValidFieldValue = (record, fieldDef) => {
             return value === false || DATE_REGEX.test(value);
         }
         case "datetime": {
-            return value === false || DATE_TIME_REGEX.test(value);
+            return value === false || DATE_REGEX.test(value);
         }
         case "float":
         case "monetary": {
@@ -1178,7 +1178,6 @@ const viewNotFoundError = (modelName, viewType, viewId, consequence) => {
 // Other constants
 const AGGREGATE_FUNCTION_REGEX = /(\w+)(?::(\w+)(?:\((\w+)\))?)?/;
 const DATE_REGEX = /\d{4}-\d{2}-\d{2}/;
-const DATE_TIME_REGEX = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/;
 /** @type {GroupOperator[]} */
 const VALID_AGGREGATE_FUNCTIONS = [
     "array_agg",
