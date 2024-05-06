@@ -3214,6 +3214,8 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # HASH
     # -------------------------------------------------------------------------
+    def _compute_string_to_hash(self):
+        self.string_to_hash = False  # To remove in master along with the field itself
 
     def _get_integrity_hash_fields(self):
         # Use the latest hash version by default, but keep the old one for backward compatibility when generating the integrity report.
