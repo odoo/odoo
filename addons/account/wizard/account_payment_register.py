@@ -1050,7 +1050,7 @@ class AccountPaymentRegister(models.TransientModel):
     def action_open_missing_account_partners(self):
         self.ensure_one()
         vals = {}
-        if len(self.missing_account_partner) > 1:
+        if len(self.missing_account_partners) > 1:
             listview_id = self.env.ref('account.partner_missing_account_list_view').id
             vals['views'] = [(listview_id, 'list'), (False, "form")]
-        return self.missing_account_partner._get_records_action(**vals)
+        return self.missing_account_partners._get_records_action(**vals)
