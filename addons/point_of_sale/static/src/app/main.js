@@ -30,6 +30,15 @@ whenReady(() => {
         name: "Odoo Point of Sale",
         props: { disableLoader: () => (loader.isShown = false) },
     });
+    window.addEventListener("beforeunload", function (event) {
+        if (!navigator.onLine) {
+            var confirmationMessage = _t(
+                "You are currently offline. Reloading the page may cause you to lose unsaved data."
+            );
+            event.returnValue = confirmationMessage;
+            return confirmationMessage;
+        }
+    });
     const classList = document.body.classList;
     if (localization.direction === "rtl") {
         classList.add("o_rtl");
