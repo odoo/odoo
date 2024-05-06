@@ -253,7 +253,7 @@
 
 <template id="event_report_template_badge_card">
     <t t-set="badge_image_url" t-value="image_data_uri(event.badge_image) if event.badge_image else ''"/>
-    <div class="o_event_badge_ticket_wrapper" t-attf-style="background-image: url({{badge_image_url}});">
+    <div class="o_event_badge_ticket_wrapper" t-att-style="'background-image: url(%s);' % badge_image_url if badge_image_url else ''">
         <div class="position-relative h-100">
             <h3 class="fw-bold text-center" t-field="event.name"/>
             <div class="text-center mt-5 py-2">
