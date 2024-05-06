@@ -43,12 +43,12 @@ class HrExpenseSplitWizard(models.TransientModel):
     def action_split_expense(self):
         self.ensure_one()
         expense_split = self.expense_split_line_ids[0]
+        copied_expenses = self.env["hr.expense"]
         if expense_split:
             self.expense_id.write(expense_split._get_values())
 
             self.expense_split_line_ids -= expense_split
             if self.expense_split_line_ids:
-                copied_expenses = self.env["hr.expense"]
                 for split in self.expense_split_line_ids:
                     copied_expenses |= self.expense_id.copy(split._get_values())
 
@@ -67,5 +67,5 @@ class HrExpenseSplitWizard(models.TransientModel):
             'name': _('Split Expenses'),
             'view_mode': 'tree,form',
             'target': 'current',
-            'context': {'search_default_my_expenses': 1, 'search_default_no_report': 1},
+            'domain': [('id', 'in', (copied_expenses | self.expense_split_line_ids.expense_id).ids)],
         }
