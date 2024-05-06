@@ -947,6 +947,7 @@ class SaleOrder(models.Model):
     def action_update_taxes(self):
         self.ensure_one()
 
+        self._recompute_prices()
         self._recompute_taxes()
 
         if self.partner_id:
