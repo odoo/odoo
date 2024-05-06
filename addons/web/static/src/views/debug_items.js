@@ -230,14 +230,17 @@ class SetDefaultDialog extends Component {
                 const valueDisplayed = this.display(fieldInfo, this.fieldsValues[fieldName]);
                 const value = valueDisplayed[0];
                 const displayed = valueDisplayed[1];
-                // ignore fields which are empty, invisible, readonly, o2m or m2m
+                const { context } = this.props.component.props;
+                // ignore fields which are empty, invisible, readonly, o2m, m2m
+                // or whose default value is set from the action's context
                 if (
-                    !value ||
+                    (fieldInfo.type !== "boolean" && !value) ||
                     invisibleOrReadOnly ||
                     fieldInfo.type === "one2many" ||
                     fieldInfo.type === "many2many" ||
                     fieldInfo.type === "binary" ||
-                    this.fieldsInfo[fieldName].options.isPassword
+                    this.fieldsInfo[fieldName].options.isPassword ||
+                    `default_${fieldInfo.name}` in context
                 ) {
                     return false;
                 }
