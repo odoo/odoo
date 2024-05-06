@@ -33,7 +33,7 @@ class ResPartner(models.Model):
                                 self.env.ref('l10n_cl.it_RUN').id]
         country = self.env["res.country"].browse(values.get('country_id'))
         identification_type = self.env['l10n_latam.identification.type'].browse(
-            values.get('l10n_latam_identification_type_id')
+            int(values.get('l10n_latam_identification_type_id', '0'))
         )
         partner_country_is_chile = country.code == "CL" or identification_type.country_id.code == "CL"
         if partner_country_is_chile and \
