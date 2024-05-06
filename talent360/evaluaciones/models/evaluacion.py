@@ -322,15 +322,11 @@ class Evaluacion(models.Model):
 
         return parametros"""
 
-def action_generar_datos_reporte_clima(self):
+    def action_generar_datos_reporte_clima(self):
         """
-        Genera los datos necesarios para el reporte genérico de la evaluación.
-
-        Esta función genera los parámetros requeridos para generar un reporte genérico de la evaluación actual,
-        incluyendo las preguntas y las respuestas tabuladas.
+        Genera los datos necesarios para un reporte de evaluación de clima.
 
         :return: Los parámetros necesarios para generar el reporte.
-
         """
         parametros = {
             "evaluacion": self,
@@ -338,44 +334,25 @@ def action_generar_datos_reporte_clima(self):
             "total": 0,
         }
 
-        #respuesta_tabulada = {}
-
+        # Agrupar las preguntas por categorías y calcular el subtotal por cada una
+        categorias_puntos = {}
         for pregunta in self.pregunta_ids:
-            if not pregunta.categoria:
-                continue
-            categoria = pregunta.categoria
+            categoria = pregunta.categoria_id.nombre
 
-            valor_categoria = 0
+            if categoria not in categorias_puntos:
+                categorias_puntos[categoria] = 0
 
+            # Calcular el puntaje de cada pregunta según sus opciones
             for respuesta in pregunta.respuesta_ids:
-                valor_respuesta = pregunta.evaluar_respuesta(respuesta.respuesta_texto)
-                
+                valor = pregunta.evaluar_respuesta(respuesta.respuesta_texto)
+                categorias_puntos[categoria] += valor
+                parametros["total"] += valor
 
-            respuestas = []
-            respuestas_tabuladas = []
-
-            for respuesta in pregunta.respuesta_ids:
-                if respuesta.evaluacion_id.id != self.id:
-                    continue
-
-                respuestas.append(respuesta.respuesta_texto)
-
-                for i, respuesta_tabulada in enumerate(respuestas_tabuladas):
-                    if respuesta_tabulada["texto"] == respuesta.respuesta_texto:
-                        respuestas_tabuladas[i]["conteo"] += 1
-                        break
-                else:
-                    respuestas_tabuladas.append(
-                        {"texto": respuesta.respuesta_texto, "conteo": 1}
-                    )
-
-            datos_pregunta = {
-                "pregunta": pregunta,
-                "respuestas": respuestas,
-                "respuestas_tabuladas": respuestas_tabuladas,
-                "datos_grafica": str(respuestas_tabuladas).replace("'", '"'),
-            }
-
-            parametros["preguntas"].append(datos_pregunta)
+        # Formatear las categorías y sus puntos
+        for categoria, puntos in categorias_puntos.items():
+            parametros["categorias"].append({
+                "nombre": categoria,
+                "valor": puntos,
+            })
 
         return parametros
