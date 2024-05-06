@@ -50,14 +50,14 @@ commandProviderRegistry.add("mail.partner", {
         if (!options.searchValue) {
             mentionedChannels.slice(0, 3).map((channel) => {
                 if (channel.channel_type === "chat") {
-                    displayedPartnerIds.add(channel.correspondent.id);
+                    displayedPartnerIds.add(channel.correspondent.persona.id);
                 }
                 commands.push({
                     Component: DiscussCommand,
                     async action() {
                         switch (channel.channel_type) {
                             case "chat":
-                                store.openChat({ partnerId: channel.correspondent.id });
+                                store.openChat({ partnerId: channel.correspondent.persona.id });
                                 break;
                             case "group":
                                 channel.open();
@@ -73,7 +73,9 @@ commandProviderRegistry.add("mail.partner", {
                     props: {
                         imgUrl: channel.avatarUrl,
                         persona:
-                            channel.channel_type === "chat" ? channel.correspondent : undefined,
+                            channel.channel_type === "chat"
+                                ? channel.correspondent.persona
+                                : undefined,
                         counter: channel.importantCounter,
                     },
                 });

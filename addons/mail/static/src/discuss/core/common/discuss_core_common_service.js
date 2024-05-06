@@ -212,7 +212,7 @@ export class DiscussCoreCommon {
         // to avoid flickering.
         this.store.Message.get(temporaryId)?.delete();
         if (
-            !channel.correspondent?.eq(this.store.odoobot) &&
+            !channel.isCorrespondentOdooBot &&
             channel.channel_type !== "channel" &&
             this.store.self.type === "partner"
         ) {
