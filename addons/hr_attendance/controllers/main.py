@@ -139,7 +139,7 @@ class HrAttendance(http.Controller):
         if company:
             employee = request.env['hr.employee'].sudo().browse(employee_id)
             if employee.company_id == company and ((not company.attendance_kiosk_use_pin) or (employee.pin == pin_code)):
-                employee.sudo()._attendance_action_change(self._get_geoip_response('kiosk'))
+                employee.with_company(company.id).sudo()._attendance_action_change(self._get_geoip_response('kiosk'))
                 return self._get_employee_info_response(employee)
         return {}
 
