@@ -2094,7 +2094,15 @@ var SnippetsMenu = Widget.extend({
                     $(this.options.wysiwyg.odooEditor.editable).trigger('content_changed');
                 });
             }
-
+            // Only on Chrome: sometimes, cached images dimensions are not
+            // correctly computed when their CSS `display` property is updated
+            // (and their size will be set to 0). They should be reloaded in
+            // edit mode to avoid this disappearing image behaviour.
+            if (navigator.userAgent.toLowerCase().includes("chrome")) {
+                this.options.wysiwyg.odooEditor.observerUnactive("chrome_reload_images");
+                gridUtils._reloadLazyImages(this.options.editable[0]);
+                this.options.wysiwyg.odooEditor.observerActive("chrome_reload_images");
+            }
             // Trigger a resize event once entering edit mode as the snippets
             // menu will take part of the screen width (delayed because of
             // animation). (TODO wait for real animation end)
