@@ -233,10 +233,10 @@
                                             readonly="state in ('sending', 'done')"/>
                                     </div>
                                     <div invisible="not mailing_on_mailing_list" class="o_mass_mailing_contact_list_ids col-md-auto pt-1">
-                                        <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only pe-3"/>
+                                        <label for="contact_list_ids" string="Mailing Lists:" class="oe_edit_only pe-3"/>
                                         <div class="d-inline-flex flex-row align-items-center">
                                             <field name="contact_list_ids" widget="many2many_tags"
-                                                placeholder="Select mailing lists..." class="oe_inline mb-0"
+                                                placeholder="Select recipients..." class="oe_inline mb-0"
                                                 context="{'form_view_ref': 'mass_mailing.mailing_list_view_form_simplified'}"
                                                 readonly="state in ('sending', 'done')"/>
                                             <button icon="fa-user-plus" type="object" class="btn btn-secondary py-0 px-1 ms-1"
