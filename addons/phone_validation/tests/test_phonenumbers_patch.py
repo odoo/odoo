@@ -85,6 +85,14 @@ class TestPhonenumbersPatch(BaseCase):
         )
         self._assert_parsing_phonenumbers(parse_test_lines_CI)
 
+    def test_region_CO_monkey_patch(self):
+        """Makes sure that patch for Colombian phone numbers work"""
+        parse_test_lines_CO = (
+            self.PhoneInputOutputLine("3241234567", "CO"),
+            self.PhoneInputOutputLine("+57 324 1234567"),
+        )
+        self._assert_parsing_phonenumbers(parse_test_lines_CO)
+
     def test_region_MA_monkey_patch(self):
         """Makes sure that patch for Morocco phone numbers work"""
         parse_test_lines_MA = (
