@@ -13,7 +13,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.other_currency = cls.setup_other_currency('EUR')
+        cls.other_currency = cls.setup_other_currency('HRK')
 
         cls.invoice = cls.init_invoice('out_refund', products=cls.product_a+cls.product_b)
 
