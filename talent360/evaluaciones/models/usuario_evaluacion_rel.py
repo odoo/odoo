@@ -14,7 +14,14 @@ class UsuarioEvaluacionRel(models.Model):
         ],
         default="pendiente",
     )
+    
+    # Campos relacionados para acceder a atributos de evaluacion
+    evaluacion_nombre = fields.Char(related="evaluacion_id.nombre", string="Nombre de Evaluación", readonly=True)
+    evaluacion_estado = fields.Selection(related="evaluacion_id.estado", string="Estado de Evaluación", readonly=True)
+    evaluacion_tipo = fields.Selection(related="evaluacion_id.tipo", string="Tipo de Evaluación", readonly=True)
+    evaluacion_usuario_ids = fields.Many2many(related="evaluacion_id.usuario_ids", string="Usuarios de Evaluación", readonly=True)
     token = fields.Char(string="Token")
+    
     
     def action_get_estado(self, user_id, evaluacion_id, token):
         """Método para obtener el estado de la evaluación para el usuario.
