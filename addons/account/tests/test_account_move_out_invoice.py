@@ -19,7 +19,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.other_currency = cls.setup_other_currency('GBP', rounding=0.001)
+        cls.other_currency = cls.setup_other_currency('HRK', rounding=0.001)
         cls.company_data_2 = cls.setup_other_company()
 
         cls.invoice = cls.init_invoice('out_invoice', products=cls.product_a+cls.product_b)

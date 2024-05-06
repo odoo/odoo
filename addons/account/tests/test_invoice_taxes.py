@@ -11,7 +11,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.other_currency = cls.setup_other_currency('GBP')
+        cls.other_currency = cls.setup_other_currency('HRK')
 
         cls.percent_tax_1 = cls.env['account.tax'].create({
             'name': '21%',
