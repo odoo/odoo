@@ -74,7 +74,13 @@ class ReSequenceWizard(models.TransientModel):
                  or (self.sequence_number_reset == 'year_range' and line['server-year-start-date'][0:4] != previous_line['server-year-start-date'][0:4])\
                  or (self.sequence_number_reset == 'month' and line['server-date'][0:7] != previous_line['server-date'][0:7]):
                     if in_elipsis:
-                        changeLines.append({'id': 'other_' + str(line['id']), 'current_name': _('... (%s other)', in_elipsis), 'new_by_name': '...', 'new_by_date': '...', 'date': '...'})
+                        changeLines.append({
+                            'id': 'other_' + str(line['id']),
+                            'current_name': _('... (%(nb_of_values)s other)', nb_of_values=in_elipsis),
+                            'new_by_name': '...',
+                            'new_by_date': '...',
+                            'date': '...',
+                        })
                         in_elipsis = 0
                     changeLines.append(line)
                 else:

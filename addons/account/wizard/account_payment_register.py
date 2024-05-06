@@ -946,7 +946,10 @@ class AccountPaymentRegister(models.TransientModel):
             batches.append(batch)
 
         if not batches:
-            raise UserError(_('To record payments with %s, the recipient bank account must be manually validated. You should go on the partner bank account in order to validate it.', self.payment_method_line_id.name))
+            raise UserError(_(
+                "To record payments with %(payment_method)s, the recipient bank account must be manually validated. You should go on the partner bank account in order to validate it.",
+                payment_method=self.payment_method_line_id.name,
+            ))
 
         first_batch_result = batches[0]
         edit_mode = self.can_edit_wizard and (len(first_batch_result['lines']) == 1 or self.group_payment)

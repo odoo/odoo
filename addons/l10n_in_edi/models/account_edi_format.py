@@ -159,7 +159,7 @@ class AccountEdiFormat(models.Model):
                     "blocking_level": "error",
                 }}
             elif error:
-                error_message = "<br/>".join(["[%s] %s" % (e.get("code"), html_escape(e.get("message"))) for e in error])
+                error_message = "<br/>".join([html_escape("[%s] %s" % (e.get("code"), e.get("message"))) for e in error])
                 return {invoice: {
                     "success": False,
                     "error": error_message,
@@ -215,7 +215,7 @@ class AccountEdiFormat(models.Model):
                     "blocking_level": "error",
                 }}
             if error:
-                error_message = "<br/>".join(["[%s] %s" % (e.get("code"), html_escape(e.get("message"))) for e in error])
+                error_message = "<br/>".join([html_escape("[%s] %s" % (e.get("code"), e.get("message"))) for e in error])
                 return {invoice: {
                     "success": False,
                     "error": error_message,

@@ -20,7 +20,7 @@ class ResConfigSettings(models.TransientModel):
         if response.get("error") or not self.company_id.sudo()._l10n_in_edi_ewaybill_token_is_valid():
             error_message = _("Incorrect username or password, or the GST number on company does not match.")
             if response.get("error"):
-                error_message = "\n".join(["[%s] %s" % (e.get("code"), html_escape(e.get("message"))) for e in response["error"]])
+                error_message = "\n".join([html_escape("[%s] %s" % (e.get("code"), e.get("message"))) for e in response["error"]])
             raise UserError(error_message)
         return {
               'type': 'ir.actions.client',
