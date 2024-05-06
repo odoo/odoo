@@ -180,7 +180,7 @@ class TestItEdiImport(TestItEdi):
               patch.object(sql_db.Cursor, "commit", mock_commit),
               tools.mute_logger("odoo.addons.l10n_it_edi.models.account_move")):
             for dummy in range(2):
-                self.env['account.move']._l10n_it_edi_process_downloads({
+                processed = self.env['account.move']._l10n_it_edi_process_downloads({
                     '999999999': {
                         'filename': filename,
                         'file': self.fake_test_content,
@@ -188,6 +188,8 @@ class TestItEdiImport(TestItEdi):
                     }},
                     proxy_user,
                 )
+                # The Proxy ACK must be sent in both cases of import success and failure.
+                self.assertEqual(processed['proxy_acks'], ['999999999'])
 
         # There should be one attachement with this filename
         attachments = self.env['ir.attachment'].search([
