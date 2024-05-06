@@ -28,7 +28,7 @@ patch(PosOrder.prototype, {
     _prepareL10nInHsnSummary() {
         const fiscalPosition = this.fiscal_position_id;
         const baseLines = [];
-        this.orderlines.forEach((line) => {
+        this.lines.forEach((line) => {
             const hsnCode = line.get_product()?.l10n_in_hsn_code;
             if (!hsnCode) {
                 return;
@@ -49,7 +49,8 @@ patch(PosOrder.prototype, {
                     taxes,
                     priceUnit,
                     1,
-                    line.product,
+                    line.product_id,
+                    this.session._product_default_values,
                     this.company,
                     this.currency
                 ),

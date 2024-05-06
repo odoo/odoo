@@ -10,5 +10,5 @@ class ProductProduct(models.Model):
     def _load_pos_data_fields(self, config_id):
         params = super()._load_pos_data_fields(config_id)
         if self.env.company.country_id.code == 'IN':
-            params['fields'] += ['l10n_in_hsn_code']
+            params += ['l10n_in_hsn_code']
         return params

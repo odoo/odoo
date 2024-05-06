@@ -33,7 +33,7 @@ patch(accountTaxHelpers, {
                 }
             );
             const taxes_computation = this.eval_taxes_computation(
-                this.prepare_taxes_computation(taxes_data, evaluation_context),
+                this.prepare_taxes_computation(taxes_data.taxes_data, evaluation_context),
                 evaluation_context
             );
 
