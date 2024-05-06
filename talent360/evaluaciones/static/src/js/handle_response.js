@@ -31,7 +31,7 @@ function handleResponse() {
         if (radio.checked) {
             var questionId = radio.name.split('_')[0];
 
-            if (radio.value < 6 && radio.value > 0) {
+            if (radio.value < 5 && radio.value >= 0) {
                 selectedValuesScale[questionId] = radio.value;
             } else {
                 selectedValues[questionId] = radio.value;

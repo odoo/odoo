@@ -288,8 +288,8 @@
     <template id="question_scale" name="Pregunta: escala">
         <div t-att-id="question.id">
             <t t-set="opciones" t-value="['Nunca', 'Casi nunca', 'A veces', 'Casi siempre', 'Siempre']"/>
-            <t t-set="desc" t-value="[4, 3, 2, 1, 0]"/>
-            <t t-set="asc" t-value="[0, 1, 2, 3, 4]"/>
+            <t t-set="desc" t-value="['4', '3', '2', '1', '0']"/>
+            <t t-set="asc" t-value="['0', '1', '2', '3', '4']"/>
 
             <div class="o_survey_question_title mb-3">
                 <span t-esc="str(numero_pregunta) + '.- '" class="o_survey_question_number"/>
@@ -330,6 +330,7 @@
                                         required="required"/>
                                 </t>
                             </td>
+                            <t t-set="iterador" t-value="iterador + 1"/>
                         </t>
                     </tr>
                 </tbody>
