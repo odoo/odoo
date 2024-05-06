@@ -142,3 +142,13 @@ class ProductTemplate(models.Model):
                     val['name'],
                     ','.join(field_descriptions[v] for v in incompatible_fields),
                 ))
+
+    def get_single_product_variant(self):
+        res = super().get_single_product_variant()
+        if self.sale_line_warn != 'no-message':
+            res['sale_warning'] = {
+                'type': self.sale_line_warn,
+                'title': _("Warning for %s", self.name),
+                'message': self.sale_line_warn_msg,
+            }
+        return res
