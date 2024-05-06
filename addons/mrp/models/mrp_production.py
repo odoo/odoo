@@ -2111,7 +2111,21 @@ class MrpProduction(models.Model):
 
         quantity_issues = self._get_quantity_produced_issues()
         if quantity_issues:
-            return self._action_generate_backorder_wizard(quantity_issues)
+            prods_auto_backorder = [prod for prod in quantity_issues if prod.picking_type_id.create_backorder == "always"]
+            if prods_auto_backorder:
+                auto_backorders = self.env['mrp.production.backorder'].create({
+                    "mrp_production_backorder_line_ids": [Command.create({
+                            'mrp_production_id': prod.id,
+                            'to_backorder': True,
+                        }) for prod in prods_auto_backorder
+                    ],
+                })
+                return auto_backorders.action_backorder()
+            ask_backorder = [prod for prod in quantity_issues if prod.picking_type_id.create_backorder == "ask"]
+            if ask_backorder:
+                return self._action_generate_backorder_wizard(ask_backorder)
+            else:
+                return True
         return True
 
     def _button_mark_done_sanity_checks(self):
