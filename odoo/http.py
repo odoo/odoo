@@ -142,7 +142,6 @@ import threading
 import time
 import traceback
 import warnings
-import zlib
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 from io import BytesIO
@@ -192,10 +191,9 @@ from .exceptions import UserError, AccessError, AccessDenied
 from .modules.module import get_manifest
 from .modules.registry import Registry
 from .service import security, model as service_model
-from .tools import (config, consteq, date_utils, file_path, parse_version,
-                    profiler, submap, unique, ustr,)
+from .tools import (config, consteq, date_utils, file_path, get_lang,
+                    parse_version, profiler, submap, unique, ustr)
 from .tools.func import filter_kwargs, lazy_property
-from .tools.mimetypes import guess_mimetype
 from .tools._vendor import sessions
 from .tools._vendor.useragents import UserAgent
 
@@ -1030,9 +1028,8 @@ class Session(collections.abc.MutableMapping):
                 self.finalize(env)
 
         if request and request.session is self and request.db == dbname:
-            # Like update_env(user=request.session.uid) but works when uid is None
             request.env = odoo.api.Environment(request.env.cr, self.uid, self.context)
-            request.update_context(**self.context)
+            request.update_context(lang=get_lang(request.env(user=pre_uid)).code)
             # request env needs to be able to access the latest changes from the auth layers
             request.env.cr.commit()
 
