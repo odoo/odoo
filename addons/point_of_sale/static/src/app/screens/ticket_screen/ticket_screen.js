@@ -86,7 +86,7 @@ export class TicketScreen extends Component {
         }
     }
     getNumpadButtons() {
-        return getButtons(this.env, [
+        return getButtons([
             { value: "quantity", text: _t("Qty"), class: "active border-primary" },
             { value: "discount", text: _t("% Disc"), disabled: true },
             { value: "price", text: _t("Price"), disabled: true },

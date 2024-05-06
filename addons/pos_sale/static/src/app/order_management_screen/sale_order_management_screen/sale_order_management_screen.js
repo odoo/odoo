@@ -287,7 +287,7 @@ export class SaleOrderManagementScreen extends Component {
                         popupSubtitle,
                         this.env.utils.formatCurrency(sale_order.amount_total)
                     ),
-                    buttons: enhancedButtons(this.env),
+                    buttons: enhancedButtons(),
                     formatDisplayedValue: (x) => `${popupInputSuffix} ${x}`,
                     feedback,
                 });

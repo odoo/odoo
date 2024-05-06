@@ -1,5 +1,6 @@
 import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
+import { localization } from "@web/core/l10n/localization";
 
 export const buttonsType = {
     type: Array,
@@ -17,7 +18,7 @@ export const buttonsType = {
         String,
     ],
 };
-export function getButtons(env, rightColumn) {
+export function getButtons(rightColumn) {
     return [
         { value: "1" },
         { value: "2" },
@@ -33,12 +34,12 @@ export function getButtons(env, rightColumn) {
         ...(rightColumn ? [rightColumn[2]] : []),
         ...(rightColumn ? [rightColumn[3]] : []),
         { value: "0" },
-        { value: env.services.localization.decimalPoint },
+        { value: localization.decimalPoint },
         { value: "Backspace", text: "⌫" },
     ];
 }
-export function enhancedButtons(env) {
-    return getButtons(env, [
+export function enhancedButtons() {
+    return getButtons([
         { value: "+10" },
         { value: "+20" },
         { value: "+50" },
@@ -57,7 +58,7 @@ export class Numpad extends Component {
         class: "",
     };
     get buttons() {
-        return this.props.buttons || getButtons(this.env);
+        return this.props.buttons || getButtons();
     }
     setup() {
         if (!this.props.onClick) {

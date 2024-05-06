@@ -52,7 +52,7 @@ export class PaymentScreen extends Component {
     }
 
     getNumpadButtons() {
-        return enhancedButtons(this.env);
+        return enhancedButtons();
     }
 
     showMaxValueError() {
