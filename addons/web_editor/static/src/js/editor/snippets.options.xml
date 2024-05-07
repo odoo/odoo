@@ -6,6 +6,7 @@
     </we-customizeblock-option>
 </t>
 <t t-name="web_editor.TestSnippetOption">
+    <WeMediapicker mediaType="'videos'"/>
     <WeButton selectClass="'test_class'">Test Class</WeButton>
     <WeSelect>
         <WeButton selectClass="'test_class_1'" name="'test_class_1'">Test Class 1</WeButton>
@@ -144,6 +145,19 @@
             />
         </div>
     </we-input>
+</t>
+<t t-name="web_editor.WeMediapicker">
+    <we-title t-if="props.title">
+        <t t-slot="title"/>
+    </we-title>
+    <we-button class="o_we_user_value_widget"
+               t-on-click="this._onEditMedia"
+               t-att-class="getAllClasses()">
+        <div>
+            <t t-if="props.buttonStyle"><i class="fa fa-fw fa-camera" alt="Add media"></i></t>
+            <t t-else="">Replace</t>
+        </div>
+    </we-button>
 </t>
 <t t-name="web_editor.WeColorpicker">
     <we-select class="o_we_user_value_widget o_we_so_color_palette" t-att-class="getAllClasses()" t-on-click="this._onClick">

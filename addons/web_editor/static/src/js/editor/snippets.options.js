@@ -2181,27 +2181,8 @@ export class WeColorpicker extends WeSelect {
 
 registry.category("snippet_widgets").add("WeColorpicker", WeColorpicker);
 
-const MediapickerUserValueWidget = UserValueWidget.extend({
-    tagName: 'we-button',
-    events: {
-        'click': '_onEditMedia',
-    },
-
-    /**
-     * @override
-     */
-    async start() {
-        await this._super(...arguments);
-        if (this.options.dataAttributes.buttonStyle) {
-            const iconEl = document.createElement('i');
-            iconEl.classList.add('fa', 'fa-fw', 'fa-camera');
-            $(this.containerEl).prepend(iconEl);
-        } else {
-            this.el.classList.add('o_we_no_toggle', 'o_we_bg_success');
-            this.containerEl.textContent = _t("Replace");
-        }
-    },
-
+const MediapickerUserValueWidget = UserValueWidget.extend({});
+class MediapickerUserValue extends UserValue {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -2217,9 +2198,10 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
      *   default: false
      */
     _openDialog(el, {images = false, videos = false, save}) {
-        el.src = this._value;
-        const $editable = this.$target.closest('.o_editable');
-        this.call("dialog", "add", MediaDialog, {
+        el.src = this.value || "";
+        // @TODO: @owl-options: review this line. Put it in the env maybe?
+        const editableEl = this.option.$target[0].closest('.o_editable');
+        this.env.services.dialog.add(MediaDialog, {
             noImages: !images,
             noVideos: !videos,
             noIcons: true,
@@ -2227,12 +2209,29 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
             isForBgVideo: true,
             vimeoPreviewIds: ['528686125', '430330731', '509869821', '397142251', '763851966', '486931161',
                 '499761556', '392935303', '728584384', '865314310', '511727912', '466830211'],
-            'res_model': $editable.data('oe-model'),
-            'res_id': $editable.data('oe-id'),
+            'res_model': editableEl.dataset.oeModel,
+            'res_id': editableEl.dataset.oeId,
             save,
             media: el,
         });
-    },
+    }
+    /**
+     * Opens a dialog to select a new image and sets the new src
+     */
+    _editMedia() {
+        // Need a dummy element for the media dialog to modify.
+        const tagName = this._data.mediaType === "images" ? "img" : "iframe";
+        const dummyEl = document.createElement(tagName);
+        console.log(this._data.mediaType);
+        this._openDialog(dummyEl, {
+            [this._data.mediaType]: true,
+            save: (media) => {
+                this.value = this._data.mediaType === "images"
+                    ? media.getAttribute('src')
+                    : media.querySelector(tagName).src;
+                this.notifyValueChange(false);
+        }});
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -2242,9 +2241,39 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
      * @override
      */
     async setValue() {
-        await this._super(...arguments);
-        this.el.classList.toggle('active', this.isActive());
-    },
+        await super.setValue(...arguments);
+        this._state.active = this.isActive();
+    }
+    /**
+     * @override
+     */
+    enable() {
+        this._editMedia();
+    }
+}
+
+class WeMediapicker extends UserValueComponent {
+    static template = "web_editor.WeMediapicker";
+    static StateModel = MediapickerUserValue;
+    static props = {
+        ...UserValueComponent.props,
+        mediaType: { type: String }, // One of "images", "videos"
+        buttonStyle: { type: Boolean, optional: true },
+    };
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    getAllClasses() {
+        return {
+            ...super.getAllClasses(),
+            "o_we_no_toggle o_we_bg_success": !this.props.buttonStyle,
+        };
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -2255,53 +2284,15 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
      *
      * @private
      * @param {Event} ev
-     */
-    _onEditMedia: function (ev) {},
-});
-
-const ImagepickerUserValueWidget = MediapickerUserValueWidget.extend({
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
+    */
     _onEditMedia(ev) {
-        // Need a dummy element for the media dialog to modify.
-        const dummyEl = document.createElement('img');
-        this._openDialog(dummyEl, {
-            images: true,
-            save: (media) => {
-                // Accessing the value directly through dummyEl.src converts the url to absolute,
-                // using getAttribute allows us to keep the url as it was inserted in the DOM
-                // which can be useful to compare it to values stored in db.
-                this._value = media.getAttribute('src');
-                this._onUserValueChange();
-            }
-        });
-    },
-});
+        this.state._editMedia();
+    }
+}
+registry.category("snippet_widgets").add("WeMediapicker", WeMediapicker);
 
-const VideopickerUserValueWidget = MediapickerUserValueWidget.extend({
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _onEditMedia(ev) {
-        // Need a dummy element for the media dialog to modify.
-        const dummyEl = document.createElement('iframe');
-        this._openDialog(dummyEl, {
-            videos: true,
-            save: (media) => {
-                this._value = media.querySelector('iframe').src;
-                this._onUserValueChange();
-        }});
-    },
-});
+const ImagepickerUserValueWidget = MediapickerUserValueWidget.extend({});
+const VideopickerUserValueWidget = MediapickerUserValueWidget.extend({});
 
 const DatetimePickerUserValueWidget = InputUserValueWidget.extend({});
 class WeDatetime extends WeInput {
