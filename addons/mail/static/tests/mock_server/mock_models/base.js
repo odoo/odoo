@@ -45,6 +45,9 @@ export class Base extends models.ServerModel {
         for (const fname in trackedFieldNamesToField) {
             const initialValue = initialTrackedFieldValues[fname];
             const newValue = record[fname];
+            if (!initialValue && !newValue) {
+                continue;
+            }
             if (initialValue !== newValue) {
                 const tracking = MailTrackingValue._create_tracking_values(
                     initialValue,

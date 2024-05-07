@@ -12,6 +12,7 @@ const { DateTime } = luxon;
 export class DiscussChannel extends models.ServerModel {
     _name = "discuss.channel";
     _inherit = ["mail.thread"];
+    _mail_post_access = "read";
 
     _views = {
         [`search,${DEFAULT_MAIL_SEARCH_ID}`]: `<search/>`,

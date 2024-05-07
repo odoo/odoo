@@ -119,6 +119,11 @@ class IrModel(models.Model):
     def _get_definitions(self, model_names):
         model_definitions = super()._get_definitions(model_names)
         for model_name, model_definition in model_definitions.items():
+            model = self.env[model_name]
+            tracked_field_names = model._track_get_fields() if 'mail.thread' in model._inherit else []
+            for fname in tracked_field_names:
+                if fname in model_definition["fields"]:
+                    model_definition["fields"][fname]["tracking"] = True
             if isinstance(self.env[model_name], self.env.registry['mail.activity.mixin']):
                 model_definition["has_activities"] = True
         return model_definitions

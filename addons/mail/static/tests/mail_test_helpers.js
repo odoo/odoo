@@ -70,10 +70,12 @@ useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.mocked; // 
 
 export function defineMailModels() {
     defineParams({ suite: "mail" }, "replace");
-    return defineModels({ ...webModels, ...busModels, ...mailModels });
+    return defineModels(mailModels);
 }
 
 export const mailModels = {
+    ...webModels,
+    ...busModels,
     Base,
     DiscussChannel,
     DiscussChannelMember,
@@ -166,9 +168,11 @@ export async function openListView(resModel, params) {
     });
 }
 
-export async function openView({ res_model, res_id, views, ...params }) {
+export async function openView({ context, res_model, res_id, views, domain, ...params }) {
     const [[viewId, type]] = views;
     const action = {
+        context,
+        domain,
         res_model,
         res_id,
         views: [[viewId, type]],

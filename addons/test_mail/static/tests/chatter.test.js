@@ -1,41 +1,46 @@
-const test = QUnit.test; // QUnit.test()
+import {
+    contains,
+    openFormView,
+    registerArchs,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
+import { describe, test } from "@odoo/hoot";
+import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
+import { MockServer, onRpc } from "@web/../tests/web_test_helpers";
+import { mail_thread_data } from "@mail/../tests/mock_server/mail_mock_server";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+describe.current.tags("desktop");
+defineTestMailModels();
 
-import { openFormView, start } from "@mail/../tests/helpers/test_utils";
-
-import { contains } from "@web/../tests/utils";
-
-QUnit.module("chatter");
-
-test("Send message button activation (access rights dependent)", async function (assert) {
+test("Send message button activation (access rights dependent)", async () => {
     const pyEnv = await startServer();
-    const view = `
-        <form string="Simple">
-            <sheet>
-                <field name="name"/>
-            </sheet>
-            <chatter/>
-        </form>`;
-    let userAccess = {};
-    await start({
-        serverData: {
-            views: {
-                "mail.test.multi.company,false,form": view,
-                "mail.test.multi.company.read,false,form": view,
-            },
-        },
-        async mockRPC(route, args, performRPC) {
-            const res = await performRPC(route, args);
-            if (route === "/mail/thread/data") {
-                // mimic user with custom access defined in userAccess variable
-                const { thread_model } = args;
-                Object.assign(res, userAccess);
-                res["canPostOnReadonly"] = thread_model === "mail.test.multi.company.read";
-            }
-            return res;
-        },
+    registerArchs({
+        "mail.test.multi.company,false,form": `
+            <form string="Simple">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <chatter/>
+            </form>
+        `,
+        "mail.test.multi.company.read,false,form": `
+            <form string="Simple">
+                    <sheet>
+                        <field name="name"/>
+                    </sheet>
+                    <chatter/>
+                </form>
+        `,
     });
+    let userAccess = {};
+    onRpc("/mail/thread/data", async (req) => {
+        const res = await mail_thread_data.bind(MockServer.current)(req);
+        res.hasWriteAccess = userAccess.hasWriteAccess;
+        res.hasReadAccess = userAccess.hasReadAccess;
+        return res;
+    });
+    await start();
     const simpleId = pyEnv["mail.test.multi.company"].create({ name: "Test MC Simple" });
     const simpleMcId = pyEnv["mail.test.multi.company.read"].create({
         name: "Test MC Readonly",
@@ -96,16 +101,17 @@ test("Send message button activation (access rights dependent)", async function 
 test("basic chatter rendering with a model without activities", async () => {
     const pyEnv = await startServer();
     const recordId = pyEnv["mail.test.simple"].create({ name: "new record" });
-    const views = {
+    registerArchs({
         "mail.test.simple,false,form": `
             <form string="Records">
                 <sheet>
                     <field name="name"/>
                 </sheet>
                 <chatter/>
-            </form>`,
-    };
-    await start({ serverData: { views } });
+            </form>
+        `,
+    });
+    await start();
     await openFormView("mail.test.simple", recordId);
     await contains(".o-mail-Chatter");
     await contains(".o-mail-Chatter-topbar");

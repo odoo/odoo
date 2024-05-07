@@ -1,14 +1,9 @@
 import { models } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { capitalize } from "@web/core/utils/strings";
 import { parseModelParams } from "../mail_mock_server";
 
-/**
- * @typedef {import("@web/../tests/web_test_helpers").ModelRecord} ModelRecord
- */
-
-export class MailTrackingValue extends models.ServerModel {
-    _name = "mail.tracking.value";
-
+patch(models.ServerModel.prototype, {
     /**
      * @override
      * @type {typeof models.Model["prototype"]["write"]}
@@ -23,7 +18,14 @@ export class MailTrackingValue extends models.ServerModel {
             MailThread._track_finalize.call(this, initialTrackedFieldValuesByRecordId);
         }
         return result;
-    }
+    },
+});
+/**
+ * @typedef {import("@web/../tests/web_test_helpers").ModelRecord} ModelRecord
+ */
+
+export class MailTrackingValue extends models.ServerModel {
+    _name = "mail.tracking.value";
 
     /**
      * @param {ModelRecord} initial_value
