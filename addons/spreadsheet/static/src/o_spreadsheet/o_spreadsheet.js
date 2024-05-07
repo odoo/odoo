@@ -37650,7 +37650,7 @@
                     ? getItemId(newFormat, data.formats)
                     : exportedCellData.format;
                 let content;
-                if (formulaCell instanceof FormulaCellWithDependencies) {
+                if (isExported && formulaCell instanceof FormulaCellWithDependencies) {
                     content = this.getters.buildFormulaContent(exportedSheetData.id, formulaCell, formulaCell.dependencies, true);
                 }
                 else {
@@ -52126,9 +52126,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.31';
-    __info__.date = '2024-04-26T07:58:17.550Z';
-    __info__.hash = '16d6656';
+    __info__.version = '16.4.32';
+    __info__.date = '2024-05-07T11:02:16.098Z';
+    __info__.hash = '314d75d';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
