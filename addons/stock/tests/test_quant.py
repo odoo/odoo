@@ -1116,6 +1116,27 @@ class StockQuant(TransactionCase):
         history = self.env['stock.move.line'].search(action['domain'])
         self.assertTrue(history)
 
+    def test_reserve_fractional_qty(self):
+        lot1 = self.env['stock.lot'].create({'name': 'lot1', 'product_id': self.product_serial.id})
+        lot2 = self.env['stock.lot'].create({'name': 'lot2', 'product_id': self.product_serial.id})
+        for lot in (lot1, lot2):
+            self.env['stock.quant']._update_available_quantity(
+                product_id=self.product_serial,
+                location_id=self.stock_location,
+                quantity=1,
+                lot_id=lot,
+            )
+        move = self.env['stock.move'].create({
+            'name': 'test_reserve_small_qty',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_subloc2.id,
+            'product_id': self.product_serial.id,
+            'product_uom_qty': 1.1,
+        })
+        move._action_confirm()
+        move._action_assign()
+        self.assertFalse(move.quantity)
+
 
 class StockQuantRemovalStrategy(TransactionCase):
     def setUp(self):
