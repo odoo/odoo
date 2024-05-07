@@ -33,12 +33,11 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
                 'tax_ids': [(6, 0, cls._get_tax_by_xml_id('s_iva21b').ids)],
             })],
         })
-        cls.edi_format = cls.env.ref('l10n_es_edi_tbai.edi_es_tbai')
 
     def test_xml_tree_post(self):
         """Test of Customer Invoice XML"""
         with freeze_time(self.frozen_today):
-            xml_doc = self.edi_format._get_l10n_es_tbai_invoice_xml(self.out_invoice, cancel=False)[self.out_invoice]['xml_file']
+            xml_doc = self.out_invoice._get_l10n_es_tbai_invoice_xml(cancel=False)['xml_file']
             xml_doc.remove(xml_doc.find("Signature", namespaces=NS_MAP))
             xml_expected = etree.fromstring(super().L10N_ES_TBAI_SAMPLE_XML_POST)
             self.assertXmlTreeEqual(xml_doc, xml_expected)
@@ -79,7 +78,7 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
         })
 
         with freeze_time(self.frozen_today):
-            xml_doc = self.edi_format._get_l10n_es_tbai_invoice_xml(invoice, cancel=False)[invoice]['xml_file']
+            xml_doc = invoice._get_l10n_es_tbai_invoice_xml(cancel=False)['xml_file']
             xml_doc.remove(xml_doc.find("Signature", namespaces=NS_MAP))
             xml_expected_base = etree.fromstring(super().L10N_ES_TBAI_SAMPLE_XML_POST)
             xpath = """
@@ -121,7 +120,7 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
     def test_xml_tree_post_retention(self):
         self.out_invoice.invoice_line_ids.tax_ids = [(4, self._get_tax_by_xml_id('s_irpf15').id)]
         with freeze_time(self.frozen_today):
-            xml_doc = self.edi_format._get_l10n_es_tbai_invoice_xml(self.out_invoice, cancel=False)[self.out_invoice]['xml_file']
+            xml_doc = self.out_invoice._get_l10n_es_tbai_invoice_xml(cancel=False)['xml_file']
             xml_doc.remove(xml_doc.find("Signature", namespaces=NS_MAP))
             xml_expected_base = etree.fromstring(super().L10N_ES_TBAI_SAMPLE_XML_POST)
             xpath = """
@@ -148,7 +147,9 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
                     'tax_ids': [(6, 0, self._get_tax_by_xml_id('p_iva21_bc').ids)],
                 })],
             })
-            xml_doc = etree.fromstring(self.edi_format._l10n_es_tbai_get_invoice_content_edi(self.in_invoice))
+            lroe_values = self.in_invoice._l10n_es_tbai_prepare_values_bi(False)
+            xml_doc = self.env['ir.qweb']._render('l10n_es_edi_tbai.template_LROE_240_main_recibidas', lroe_values).encode()
+            xml_doc = etree.fromstring(xml_doc)
             xml_expected = etree.fromstring(super().L10N_ES_TBAI_SAMPLE_XML_POST_IN)
             self.assertXmlTreeEqual(xml_doc, xml_expected)
 
@@ -174,16 +175,18 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
                     'tax_ids': [(6, 0, self._get_tax_by_xml_id('p_iva21_sp_in').ids)],
                 })],
             })
-            xml_doc = etree.fromstring(self.edi_format._l10n_es_tbai_get_invoice_content_edi(self.in_invoice))
+            lroe_values = self.in_invoice._l10n_es_tbai_prepare_values_bi(False)
+            xml_doc = self.env['ir.qweb']._render('l10n_es_edi_tbai.template_LROE_240_main_recibidas', lroe_values).encode()
+            xml_doc = etree.fromstring(xml_doc)
             xml_expected = etree.fromstring(super().L10N_ES_TBAI_SAMPLE_XML_POST_IN_IC)
             self.assertXmlTreeEqual(xml_doc, xml_expected)
 
     def test_xml_tree_cancel(self):
-        self.out_invoice.l10n_es_tbai_post_xml = b64encode(b"""<TicketBAI>
+        self.out_invoice.l10n_es_tbai_post_file = b64encode(b"""<TicketBAI>
 <CabeceraFactura><FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura></CabeceraFactura>
 <ds:SignatureValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">TEXT</ds:SignatureValue>
 </TicketBAI>""")  # hack to set out_invoice's registration date
-        xml_doc = self.edi_format._get_l10n_es_tbai_invoice_xml(self.out_invoice, cancel=True)[self.out_invoice]['xml_file']
+        xml_doc = self.out_invoice._get_l10n_es_tbai_invoice_xml(cancel=True)['xml_file']
         xml_doc.remove(xml_doc.find("Signature", namespaces=NS_MAP))
         xml_expected = etree.fromstring(super().L10N_ES_TBAI_SAMPLE_XML_CANCEL)
         self.assertXmlTreeEqual(xml_doc, xml_expected)

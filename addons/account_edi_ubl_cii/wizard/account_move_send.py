@@ -176,6 +176,9 @@ class AccountMoveSend(models.TransientModel):
         # EXTENDS 'account'
         super()._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
 
+        if not invoice_data.get('ubl_cii_xml') or not invoice._need_ubl_cii_xml():
+            return
+
         # Add PDF to XML
         if 'ubl_cii_xml_options' in invoice_data and invoice_data['ubl_cii_xml_options']['ubl_cii_format'] != 'facturx':
             self._postprocess_invoice_ubl_xml(invoice, invoice_data)

@@ -7,7 +7,7 @@
 {
     'name': "Spain - SII EDI Suministro de Libros",
     'countries': ['es'],
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Accounting/Localizations/EDI',
     'description': """
 This module sends the taxes information (mostly VAT) of the
@@ -26,20 +26,19 @@ that extra taxes need to be created for certain exempt/no sujeta reasons.
 You need to configure your certificate and the tax agency.
     """,
     'depends': [
-        'l10n_es',
+        'l10n_es_edi',
         'account_edi',
     ],
     'data': [
         'data/account_edi_data.xml',
 
-        'security/ir.model.access.csv',
-        'security/l10n_es_edi_certificate.xml',
-
-        'views/l10n_es_edi_certificate_views.xml',
         'views/res_config_settings_views.xml',
         'views/account_move_views.xml',
     ],
-    'demo': ['demo/demo_certificate.xml'],
+    'demo': [
+        'demo/demo_certificate.xml',
+        'demo/demo_company.xml',
+    ],
     'external_dependencies': {
         'python': ['pyOpenSSL'],
     },
