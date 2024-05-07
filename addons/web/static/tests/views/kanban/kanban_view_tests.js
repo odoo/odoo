@@ -5021,6 +5021,88 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["resequence"]);
     });
 
+    QUnit.test("user without permission cannot drag and drop a column thus sequence remains unchanged on drag and drop attempt", async (assert) => {
+        let hasPermission = false; // Simulate user without permission
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            async mockRPC(route) {
+                if (route === "/web/dataset/resequence") {
+                    if (!hasPermission) {
+                        return Promise.reject();    // Simulate no permission
+                    }
+                }
+            },
+        });
+
+        let groups = target.querySelectorAll(".o_column_title");
+        assert.strictEqual(groups[0].textContent, "hello", "Checking the initial state of the view");
+        assert.strictEqual(groups[1].textContent, "xmo", "Checking the initial state of the view");
+        await dragAndDrop(
+            groups[0],
+            groups[1]
+        ).then(() => {
+            groups = target.querySelectorAll(".o_column_title");
+            assert.strictEqual(groups[0].textContent, "hello", "Do not let the user arrange the columns without permission");
+            assert.strictEqual(groups[1].textContent, "xmo", "Do not let the user arrange the columns without permission");
+        });
+    });
+
+    QUnit.test("user without permission cannot drag and drop a record thus sequence remains unchanged on drag and drop attempt", async (assert) => {
+        let hasPermission = false; // Simulate user without permission
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            async mockRPC(route) {
+                if (route === "/web/dataset/call_kw/partner/web_save") {
+                    if (!hasPermission) {
+                        return Promise.reject();    // Simulate no permission
+                    }
+                }
+            },
+        });
+
+        assert.strictEqual(target.querySelector(".o_kanban_group:first-child .o_kanban_record").textContent, "yop", "Checking the initial state of the view");
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
+        assert.strictEqual(target.querySelector(".o_kanban_group:first-child .o_kanban_record").textContent, "yop", "Do not let the user d&d the record without permission");
+
+        let rec = target.querySelectorAll('.o_kanban_record')
+        await dragAndDrop(
+            rec[0],
+            rec[1]
+        );
+        assert.strictEqual(target.querySelector(".o_kanban_group:first-child .o_kanban_record").textContent, "gnap", "After a failed drag and drop the record should not become static");
+    });
+
     QUnit.test("drag and drop highlight on hover", async (assert) => {
         await makeView({
             type: "kanban",
