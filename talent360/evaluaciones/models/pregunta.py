@@ -31,9 +31,13 @@ class Pregunta(models.Model):
     opcion_ids = fields.One2many("opcion", "pregunta_id", string="Opciones")
     respuesta_ids = fields.One2many("respuesta", "pregunta_id", string="Respuestas")
     competencia_ids = fields.Many2many("competencia", string="Competencias")
-    
+
     categoria = fields.Selection(
         [
+            ("ambiente_de_trabajo", "Ambiente de Trabajo"),
+            ("factores_actividad", "Factores propios de la actividad"),
+            ("organizacion_tiempo", "Organización del tiempo de trabajo"),
+            ("liderazgo_relaciones", "Liderazgo y relaciones en el trabajo"),
             ("datos_generales", "Datos Generales"),
             ("reclutamiento_y_seleccion_de_personal", "Reclutamiento y Selección de Personal"),
             ("formacion_y_capacitacion", "Formación y Capacitación"),
@@ -46,8 +50,19 @@ class Pregunta(models.Model):
             ("condiciones_generales_de_trabajo", "Condiciones Generales de Trabajo"),
         ],
     )
-    
- 
+
+    dominio = fields.Selection(
+        [
+            ("condiciones_ambiente", "Condiciones en el ambiente de trabajo"),
+            ("carga_trabajo", "Carga de trabajo"),
+            ("falta_control", "Falta de control sobre el trabajo"),
+            ("jornada_trabajo", "Jornada de trabajo"),
+            ("trabajo_familia", "Interferencia en la relación trabajo-familia"),
+            ("liderazgo", "Liderazgo"),
+            ("relaciones", "Relaciones en el trabajo"),
+            ("violencia", "Violencia"),
+        ],
+    )
 
     def ver_respuestas(self):
         """
@@ -69,15 +84,3 @@ class Pregunta(models.Model):
             ],
             "context": {"group_by": "respuesta_texto"},
         }
-    
-    def evaluar_respuesta(self, respuesta_texto):
-        """
-        Evalúa el valor de una respuesta en función de la opción seleccionada.
-
-        :param respuesta_texto: El texto de la respuesta seleccionada.
-        :return: El valor de la respuesta.
-        """
-        for opcion in self.opcion_ids:
-            if opcion.opcion_texto == respuesta_texto:
-                return opcion.valor
-        return 0

@@ -26,9 +26,9 @@
         <template id="encuestas_reporte" name="Reporte: página de reporte genérico">
             <t t-call="evaluaciones.diseño">
                 <t t-set="limite_registros" t-value="10"/>
-                <div class="container o_survey_result">
+                <div class="o_survey_result">
                     <t t-call="evaluaciones.encuestas_reporte_header" />
-                    <t t-call="evaluaciones.encuestas_reporte_inner" />
+                    <t t-call="evaluaciones.encuestas_reporte_nom_035" />
                 </div>
             </t>
         </template>
@@ -41,9 +41,9 @@
                             <span t-field="evaluacion.nombre"/>
                         </h1>
                     </div>
-                    <h2 t-if="not preguntas">
+                    <h4 t-if="not categorias">
                     No hay respuestas, intenta mas tarde.
-                    </h2>
+                    </h4>
                 </div>
                 <button class="btn btn-primary d-none d-print-none d-md-inline-block o_survey_results_print" aria-label="Print" title="Print">
                     <i class="fa fa-print"></i> Exportar
@@ -51,11 +51,100 @@
             </div>
         </template>
 
-        <template id="encuestas_reporte_inner" name="Reporte: contenido de reporte genérico">
-            <div t-foreach="preguntas" t-as='datos_pregunta'>
-                <t t-set="pregunta" t-value="datos_pregunta['pregunta']"/>
-                <div class="ms-4 mt-5 o_survey_results_question_wrapper" t-call="evaluaciones.encuestas_reporte_pregunta" />
+        <template id="encuestas_reporte_nom_035" name="Reporte: NOM-035">
+            <div class="survey_section">
+                <h4>Calificación Final</h4>
+                <span>
+                    <t t-esc="final"/>
+                </span>
+                <span>
+                    <t t-if="final &lt; 20">Nulo</t>
+                    <t t-elif="20 &lt;= final &lt; 45">Bajo</t>
+                    <t t-elif="45 &lt;= final &lt; 70">Medio</t>
+                    <t t-elif="70 &lt;= final &lt; 90">Alto</t>
+                    <t t-else="true">Muy Alto</t>
+                </span>
             </div>
+
+
+            <div class="survey_section">
+                <h4>Semáforo de Riesgos</h4>
+                <span>Rojo: Riesgo muy alto</span>
+                <span>Naranja: Riesgo alto</span>
+                <span>Amarillo: Riesgo medio</span>
+                <span>Verde: Riesgo bajo</span>
+                <span>Azul cielo: Riesgo nulo o muy bajo</span>
+            </div>
+            <div class="survey_page container-fluid d-flex flex-column">
+                <div class="survey_section">
+                    <h4>Resumen general por categorías</h4>
+                    <div class="survey_graph" t-att-id="'grafica_radar_categorias_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
+                        <canvas t-att-id="'canvas_barras_categorias_nom_035'"/>
+                    </div>
+                    <span>
+                        Categoría con mayor puntaje: <t t-esc="max(categorias, key=lambda x: x['valor'])['nombre']"/> (<t t-esc="max(categorias, key=lambda x: x['valor'])['valor']"/>)
+                    </span>
+                    <span>
+                        Categoría con menor puntaje: <t t-esc="min(categorias, key=lambda x: x['valor'])['nombre']"/> (<t t-esc="min(categorias, key=lambda x: x['valor'])['valor']"/>)
+                    </span>
+                </div>
+                <div class="survey_section">
+                    <h4>Resumen general por dominios</h4>
+                    <div class="survey_graph" t-att-id="'grafica_radar_dominios_nom_035'" t-att-data-graph-type="'radar'" t-att-data-label="'Resultados por dominio'" t-att-data-graph-data="dominios">
+                        <canvas t-att-id="'canvas_barras_dominios_nom_035'"/>
+                    </div>
+                    <span>
+                        Dominio con mayor puntaje: <t t-esc="max(dominios, key=lambda x: x['valor'])['nombre']"/> (<t t-esc="max(dominios, key=lambda x: x['valor'])['valor']"/>)
+                    </span>
+                    <span>
+                        Dominio con menor puntaje: <t t-esc="min(dominios, key=lambda x: x['valor'])['nombre']"/> (<t t-esc="min(dominios, key=lambda x: x['valor'])['valor']"/>)
+                    </span>
+                </div>
+            </div>
+
+            <h4>Resumen por categoría</h4>
+                <div t-foreach="categorias" t-as='datos_categoria' class="survey_page container-fluid d-flex flex-column">
+                    <t t-set="categoria" t-value="datos_categoria['nombre']" />
+                    <t t-set="valor_categoria" t-value="datos_categoria['valor']" />
+                    <div class="survey_section">
+                        <h3> <t t-esc="categoria" /> </h3>
+                        <span> <t t-esc="valor_categoria" /> </span>
+
+                        <t t-if="categoria == 'Ambiente de Trabajo'">
+                            <div class="survey_graph" t-att-id="'grafica_ambiente_trabajo_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Ambiente de Trabajo'" t-att-data-graph-data="dominios[:1]">
+                                <canvas t-att-id="'canvas_barras_ambiente_trabajo_nom_035'"/>
+                            </div>
+                        </t>
+
+                        <t t-elif="categoria == 'Factores propios de la actividad'">
+                            <div class="survey_graph" t-att-id="'grafica_factores_actividad_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Factores propios de la actividad'" t-att-data-graph-data="dominios[1:3]">
+                                <canvas t-att-id="'canvas_barras_factores_actividad_nom_035'"/>
+                            </div>
+                        </t>
+
+                        <t t-elif="categoria == 'Organización del tiempo de trabajo'">
+                            <div class="survey_graph" t-att-id="'grafica_organizacion_tiempo_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Organización del tiempo de trabajo'" t-att-data-graph-data="dominios[3:5]">
+                                <canvas t-att-id="'canvas_barras_organizacion_tiempo_nom_035'"/>
+                            </div>
+                        </t>
+
+                         <t t-elif="categoria == 'Liderazgo y relaciones en el trabajo'">
+                            <div class="survey_graph" t-att-id="'liderazgo_relaciones'" t-att-data-graph-type="'bar'" t-att-data-label="'Liderazgo y relaciones en el trabajo'" t-att-data-graph-data="dominios[5:]">
+                                <canvas t-att-id="'canvas_barras_liderazgo_relaciones_nom_035'"/>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                <div class="survey_section">
+                    <h4>Necesidad de Acción</h4>
+                    <span>
+                        <t t-if="final &lt; 20">El riesgo resulta despreciable por lo que no se requiere medidas adicionales.</t>
+                        <t t-elif="20 &lt;= final &lt; 45">Es necesario una mayor difusión de la política de prevención de riesgos psicosociales y programas para: la prevención de los factores de riesgo psicosocial, la promoción de un entorno organizacional favorable y la prevención de la violencia laboral.</t>
+                        <t t-elif="45 &lt;= final &lt; 70">Se requiere revisar la política de prevención de riesgos psicosociales y programas para la prevención de los factores de riesgo psicosocial, la promoción de un entorno organizacional favorable y la prevención de la violencia laboral, así como reforzar su aplicación y difusión, mediante un Programa de intervención.</t>
+                        <t t-elif="70 &lt;= final &lt; 90">Se requiere realizar un análisis de cada categoría y dominio, de manera que se puedan determinar las acciones de intervención apropiadas a través de un Programa de intervención, que podrá incluir una evaluación específica y deberá incluir una campaña de sensibilización, revisar la política de prevención de riesgos psicosociales y programas para la prevención de los factores de riesgo psicosocial, la promoción de un entorno organizacional favorable y la prevención de la violencia laboral, así como reforzar su aplicación y difusión.</t>
+                        <t t-else="true">Se requiere realizar el análisis de cada categoría y dominio para establecer las acciones de intervención apropiadas, mediante un Programa de intervención que deberá incluir evaluaciones específicas, y contemplar campañas de sensibilización, revisar la política de prevención de riesgos psicosociales y programas para la prevención de los factores de riesgo psicosocial, la promoción de un entorno organizacional favorable y la prevención de la violencia laboral, así como reforzar su aplicación y difusión.</t>
+                    </span>
+                </div>
         </template>
 
         <template id="encuestas_reporte_pregunta" name="Question: result statistics">

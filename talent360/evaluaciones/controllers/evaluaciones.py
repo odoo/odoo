@@ -10,7 +10,7 @@ class EvaluacionesController(http.Controller):
     @http.route(
         "/evaluacion/reporte/<model('evaluacion'):evaluacion>", type="http", auth="user"
     )
-    def reporte_controler(self, evaluacion: Evaluacion):
+    def reporte_controller(self, evaluacion: Evaluacion):
         """Método para generar y mostrar un reporte de evaluación.
         Este método verifica que el usuario tenga los permisos necesario, obtiene los datos
         del modelo de evaluaciones y renderiza el reporte con esos datos.
@@ -23,7 +23,7 @@ class EvaluacionesController(http.Controller):
         ):
             raise AccessError("No tienes permitido acceder a este recurso.")
 
-        parametros = evaluacion.action_generar_datos_reporte_generico()
+        parametros = evaluacion.action_generar_datos_reporte_NOM_035()
 
         return request.render("evaluaciones.encuestas_reporte", parametros)
     

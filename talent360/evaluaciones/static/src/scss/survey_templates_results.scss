@@ -27,6 +27,14 @@
         border: none !important;
     }
     .o_survey_result {
+        display: flex;
+        flex-direction: column;
+        width: 100vw;
+        height: max-content;
+        gap: 3rem;
+        align-items: center;
+        justify-content: center;
+
         canvas {
             margin-bottom: 2rem;
         }
@@ -170,4 +178,50 @@
 
 .o_survey_user_responses_table_wrapper {
     overflow: auto;
+}
+
+.survey_section {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    height: max-content;
+    align-items: center;
+    justify-content: center;
+
+    h4 {
+        width: 100%;
+    }
+
+    .survey_graph{
+        min-width: 50%;
+    }
+}
+
+.o_survey_result {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: max-content;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2rem;
+    padding: 0 40px;
+}
+
+.o_survey_statistics_header{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.survey_page {
+    width: 100%;
+    min-height: 100vh;
+    gap: 2rem;
 }

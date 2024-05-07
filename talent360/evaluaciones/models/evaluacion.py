@@ -1,4 +1,5 @@
 from odoo import api, models, fields
+from collections import defaultdict
 
 
 class Evaluacion(models.Model):
@@ -322,6 +323,68 @@ class Evaluacion(models.Model):
 
         return parametros
 
+    def action_generar_datos_reporte_NOM_035(self):
+        """
+        Genera los datos necesarios para el reporte genérico de la evaluación.
+
+        Esta función genera los parámetros requeridos para generar un reporte genérico de la evaluación actual,
+        incluyendo las preguntas y las respuestas tabuladas, agrupadas por categoría y dominio.
+
+        :return: Los parámetros necesarios para generar el reporte.
+        """
+        # Definir estructura de categorías y dominios
+        categorias_orden = [
+            "Ambiente de Trabajo",
+            "Factores propios de la actividad",
+            "Organización del tiempo de trabajo",
+            "Liderazgo y relaciones en el trabajo",
+        ]
+        dominios_orden = [
+            "Condiciones en el ambiente de trabajo",
+            "Carga de trabajo",
+            "Falta de control sobre el trabajo",
+            "Jornada de trabajo",
+            "Interferencia en la relación trabajo-familia",
+            "Liderazgo",
+            "Relaciones en el trabajo",
+            "Violencia",
+        ]
+
+        categorias = {nombre: 0 for nombre in categorias_orden}
+        dominios = {nombre: 0 for nombre in dominios_orden}
+
+        final = 0
+
+        for pregunta in self.pregunta_ids:
+            if not pregunta.categoria:
+                continue
+            categoria = dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
+            dominio = dict(pregunta._fields["dominio"].selection).get(pregunta.dominio)
+
+            valor_pregunta = 0
+
+            for respuesta in pregunta.respuesta_ids:
+                valor_respuesta = int(respuesta.respuesta_texto)
+                valor_pregunta += valor_respuesta
+                final += valor_respuesta
+
+            # Acumular el valor de la pregunta en la categoría y el dominio correspondientes
+            if categoria in categorias:
+                categorias[categoria] += valor_pregunta
+            if dominio in dominios:
+                dominios[dominio] += valor_pregunta
+
+        # Organizar los parámetros en el orden deseado
+        parametros = {
+            "evaluacion": self,
+            "categorias": [{"nombre": nombre, "valor": categorias[nombre]} for nombre in categorias_orden],
+            "dominios": [{"nombre": nombre, "valor": dominios[nombre]} for nombre in dominios_orden],
+            "final": final,
+        }
+
+        print(parametros)
+        return parametros
+    
     def action_generar_datos_reporte_clima(self):
         """
         Genera los datos necesarios para un reporte de evaluación de clima.
