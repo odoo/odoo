@@ -23,14 +23,14 @@ class Users(models.Model):
         if respuesta_ids:
             return {
                 "type": "ir.actions.act_window",
-                "name": "respuesta_usuario",
+                "name": "Respuestas del usuario",
                 "res_model": "respuesta",
-                "view_mode": "kanban,tree,form",
+                "view_mode": "tree",
                 "domain": [
                     ("evaluacion_id", "=", evaluacion_id),
                     ("usuario_id", "=", self.id),
                 ],
-                "context": {"group_by": "respuesta_texto"},
+                # "context": {"group_by": "pregunta_id"},
             }
         else:
             raise ValidationError(

@@ -131,36 +131,17 @@
         </field>
     </record>
 
-    <record id="respuesta_view_kanban" model="ir.ui.view">
-        <field name="name">respuesta.view.kanban</field>
+    <record id="respuesta_tree_view" model="ir.ui.view">
+        <field name="name">respuesta.tree</field>
         <field name="model">respuesta</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" default_group_by="evaluacion_id" quick_create="false" create="false" records_draggable="false">
-                <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
-                            <div class="oe_kanban_card">
-                                <div class="oe_kanban_card_header">
-                                    <div class="oe_kanban_card_header_title">
-                                        <h3><field name="pregunta_texto"/></h3>
-                                    </div>
-                                </div>
-                                <div class="oe_kanban_card_content">
-                                    <div><strong>Respuesta:</strong> <field name="respuesta_texto"/></div>
-                                </div>
-                            </div>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
+            <tree create="false">
+                <field class="text-primary font-weight-bold" name="pregunta_texto" string="Pregunta"/>
+                <field name="respuesta_texto" string="Respuesta"/>
+            </tree>
         </field>
     </record>
 
-    <record id="respuesta_action" model="ir.actions.act_window">
-        <field name="name">respuesta_usuario</field>
-        <field name="res_model">respuesta</field>
-        <field name="view_mode">form</field>
-    </record>
 
     <record id="evaluacion_generica_action" model="ir.actions.act_window">
         <field name="name">Evaluaciones</field>
