@@ -731,3 +731,27 @@ class TestUBLBE(TestUBLCommon):
             list_line_discount=[0, 0, 0, 0, 0], list_line_taxes=[self.tax_6, tax_21, self.tax_0, self.tax_6, tax_21],
             move_type='out_invoice',
         )
+
+    def test_inverting_negative_price_unit(self):
+        """ We can not have negative unit prices, so we try to invert the unit price and quantity.
+        """
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100.0,
+                    'tax_ids': [(6, 0, self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': -25.0,
+                    'tax_ids': [(6, 0, self.tax_21.ids)],
+                }
+            ],
+        )
+        self._assert_invoice_attachment(invoice, None, 'from_odoo/bis3_out_invoice_negative_unit_price.xml')
