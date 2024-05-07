@@ -40,7 +40,7 @@ class ProductTemplate(models.Model):
             stock_notification_email = request and request.session.get('stock_notification_email', '')
             res.update({
                 'free_qty': free_qty,
-                'cart_qty': product._get_cart_qty(website),
+                'cart_qty': not product.allow_out_of_stock_order and product._get_cart_qty(website) or 0,
                 'uom_name': product.uom_id.name,
                 'uom_rounding': product.uom_id.rounding,
                 'show_availability': product_or_template.show_availability,
