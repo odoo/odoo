@@ -84,8 +84,6 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/tests/tours/**/*',
         ],
         'im_livechat.assets_embed_core': [
-            'web/static/lib/odoo_ui_icons/style.css',
-            'web/static/src/scss/ui.scss',
             ('remove', 'web/static/src/core/browser/title_service.js'),
             'mail/static/src/model/**/*',
             'mail/static/src/core/common/**/*',
@@ -98,7 +96,6 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/embed/common/**/*',
         ],
         'im_livechat.assets_embed_external': [
-            'web/static/src/libs/fontawesome/css/font-awesome.css',
             'im_livechat/static/src/embed/common/scss/bootstrap_overridden.scss',
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
@@ -108,6 +105,9 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/lib/bootstrap/scss/_maps.scss',
             ('include', 'web._assets_bootstrap_backend'),
             'web/static/src/scss/bootstrap_overridden.scss',
+            'web/static/src/scss/ui.scss',
+            'web/static/src/libs/fontawesome/css/font-awesome.css',
+            'web/static/lib/odoo_ui_icons/style.css',
             'web/static/src/webclient/webclient.scss',
             ('include', 'web._assets_core'),
             'web/static/src/libs/pdfjs.js',
