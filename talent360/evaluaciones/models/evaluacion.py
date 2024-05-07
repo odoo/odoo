@@ -364,7 +364,6 @@ class Evaluacion(models.Model):
                 continue
             categoria = dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
             dominio = dict(pregunta._fields["dominio"].selection).get(pregunta.dominio)
-
             valor_pregunta = 0
 
             for respuesta in pregunta.respuesta_ids:
@@ -378,11 +377,175 @@ class Evaluacion(models.Model):
             if dominio in dominios:
                 dominios[dominio] += valor_pregunta
 
+        # Función para asignar color
+        def asignar_color(valor, categoria=None, dominio=None):
+            if categoria:
+                if categoria == "Ambiente de Trabajo":
+                    if valor < 3:
+                        return "#2894a7"  # Azul clarito
+                    elif 3 <= valor < 5:
+                        return "#5aaf2b"  # Verde
+                    elif 5 <= valor < 7:
+                        return "#ebae14"  # Amarillo
+                    elif 7 <= valor < 9:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif categoria == "Factores propios de la actividad":
+                    if valor < 10:
+                        return "#2894a7"  # Azul clarito
+                    elif 10 <= valor < 20:
+                        return "#5aaf2b"  # Verde
+                    elif 20 <= valor < 30:
+                        return "#ebae14"  # Amarillo
+                    elif 30 <= valor < 40:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif categoria == "Organización del tiempo de trabajo":
+                    if valor < 4:
+                        return "#2894a7"  # Azul clarito
+                    elif 4 <= valor < 6:
+                        return "#5aaf2b"  # Verde
+                    elif 6 <= valor < 9:
+                        return "#ebae14"  # Amarillo
+                    elif 9 <= valor < 12:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif categoria == "Liderazgo y relaciones en el trabajo":
+                    if valor < 10:
+                        return "#2894a7"  # Azul clarito
+                    elif 10 <= valor < 18:
+                        return "#5aaf2b"  # Verde
+                    elif 18 <= valor < 28:
+                        return "#ebae14"  # Amarillo
+                    elif 28 <= valor < 38:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+            elif dominio:
+                if dominio == "Condiciones en el ambiente de trabajo":
+                    if valor < 3:
+                        return "#2894a7"  # Azul clarito
+                    elif 3 <= valor < 5:
+                        return "#5aaf2b"  # Verde
+                    elif 5 <= valor < 7:
+                        return "#ebae14"  # Amarillo
+                    elif 7 <= valor < 9:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif dominio == "Carga de trabajo":
+                    if valor < 12:
+                        return "#2894a7"  # Azul clarito
+                    elif 12 <= valor < 16:
+                        return "#5aaf2b"  # Verde
+                    elif 16 <= valor < 20:
+                        return "#ebae14"  # Amarillo
+                    elif 20 <= valor < 24:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif dominio == "Falta de control sobre el trabajo":
+                    if valor < 5:
+                        return "#2894a7"  # Azul clarito
+                    elif 5 <= valor < 8:
+                        return "#5aaf2b"  # Verde
+                    elif 8 <= valor < 11:
+                        return "#ebae14"  # Amarillo
+                    elif 11 <= valor < 14:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif dominio == "Jornada de trabajo":
+                    if valor < 1:
+                        return "#2894a7"  # Azul clarito
+                    elif 1 <= valor < 2:
+                        return "#5aaf2b"  # Verde
+                    elif 2 <= valor < 4:
+                        return "#ebae14"  # Amarillo
+                    elif 4 <= valor < 6:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif dominio == "Interferencia en la relación trabajo-familia":
+                    if valor < 1:
+                        return "#2894a7"  # Azul clarito
+                    elif 1 <= valor < 2:
+                        return "#5aaf2b"  # Verde
+                    elif 2 <= valor < 4:
+                        return "#ebae14"  # Amarillo
+                    elif 4 <= valor < 6:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif dominio == "Liderazgo":
+                    if valor < 3:
+                        return "#2894a7"  # Azul clarito
+                    elif 3 <= valor < 5:
+                        return "#5aaf2b"  # Verde
+                    elif 5 <= valor < 8:
+                        return "#ebae14"  # Amarillo
+                    elif 8 <= valor < 11:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif dominio == "Relaciones en el trabajo":
+                    if valor < 5:
+                        return "#2894a7"  # Azul clarito
+                    elif 5 <= valor < 8:
+                        return "#5aaf2b"  # Verde
+                    elif 8 <= valor < 11:
+                        return "#ebae14"  # Amarillo
+                    elif 11 <= valor < 14:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif dominio == "Violencia":
+                    if valor < 7:
+                        return "#2894a7"  # Azul clarito
+                    elif 7 <= valor < 10:
+                        return "#5aaf2b"  # Verde
+                    elif 10 <= valor < 13:
+                        return "#ebae14"  # Amarillo
+                    elif 13 <= valor < 16:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+            else:
+                if valor < 20:
+                    return "#2894a7"  # Azul clarito
+                elif 20 <= valor < 45:
+                    return "#5aaf2b"  # Verde
+                elif 45 <= valor < 70:
+                    return "#ebae14"  # Amarillo
+                elif 70 <= valor < 90:
+                    return "#ffa446"  # Naranja
+                else:
+                    return "#ff4747"  # Rojo
+
+
+        # Asignar color a las categorías y dominios
+        for categoria in categorias_orden:
+            categorias[categoria] = {
+                "nombre": categoria,
+                "valor": categorias[categoria],
+                "color": asignar_color(categorias[categoria], categoria=categoria),
+            }
+
+        for dominio in dominios_orden:
+            dominios[dominio] = {
+                "nombre": dominio,
+                "valor": dominios[dominio],
+                "color": asignar_color(dominios[dominio], dominio=dominio),
+            }
+
         # Organizar los parámetros en el orden deseado
         parametros = {
             "evaluacion": self,
-            "categorias": [{"nombre": nombre, "valor": categorias[nombre]} for nombre in categorias_orden],
-            "dominios": [{"nombre": nombre, "valor": dominios[nombre]} for nombre in dominios_orden],
+            "categorias": [categorias[nombre] for nombre in categorias_orden],
+            "dominios": [dominios[nombre] for nombre in dominios_orden],
             "final": final,
         }
 
