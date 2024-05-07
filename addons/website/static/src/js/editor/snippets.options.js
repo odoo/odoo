@@ -1370,10 +1370,10 @@ options.registry.ReplaceMedia.include({
      * @override
      */
     _computeWidgetTranslateVisibility(widgetName, params) {
-        if (widgetName === "replace_media_opt"
-            && this.$target[0].classList.contains("o_translatable_attribute")
-        ) {
-            return !!this.$target[0].getAttribute("src");
+        if (widgetName === "replace_media_opt") {
+            if (this.$target[0].classList.contains("o_translatable_attribute")) {
+                return !!this.$target[0].getAttribute("src") || !!this.$target[0].dataset.oeExpression;
+            }
         }
         return this._super(...arguments);
     },
