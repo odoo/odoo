@@ -43,7 +43,7 @@ class MrpWorkcenter(models.Model):
     has_routing_lines = fields.Boolean(compute='_compute_has_routing_lines', help='Technical field for workcenter views')
     order_ids = fields.One2many('mrp.workorder', 'workcenter_id', "Orders")
     workorder_count = fields.Integer('# Work Orders', compute='_compute_workorder_count')
-    workorder_ready_count = fields.Integer('# Read Work Orders', compute='_compute_workorder_count')
+    workorder_ready_count = fields.Integer('# Ready Work Orders', compute='_compute_workorder_count')
     workorder_progress_count = fields.Integer('Total Running Orders', compute='_compute_workorder_count')
     workorder_pending_count = fields.Integer('Total Pending Orders', compute='_compute_workorder_count')
     workorder_late_count = fields.Integer('Total Late Orders', compute='_compute_workorder_count')
