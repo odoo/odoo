@@ -77,9 +77,9 @@ class TestSyncGoogle(HttpCase):
         self.assertGoogleEventNotInserted()
         self.assertGoogleEventNotDeleted()
 
-    def assertGoogleEventSendUpdates(self, expected_value):
-        GoogleService._do_request.assert_called_once()
-        args, _ = GoogleService._do_request.call_args
+    def assertGoogleEventSendUpdates(self, mock_do_request, expected_value):
+        mock_do_request.assert_called_once()
+        args, _ = mock_do_request.call_args
         val = "sendUpdates=%s" % expected_value
         self.assertTrue(val in args[0], "The URL should contain %s" % val)
 
