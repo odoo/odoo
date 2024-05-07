@@ -46,26 +46,26 @@ class EvaluacionesController(http.Controller):
 
         evaluacion = request.env["evaluacion"].sudo().browse(evaluacion_id)
 
-        if request.env.user != request.env.ref('base.public_user'):
-            user_eval_relation = usuario_eva_mod.sudo().search([
+        if request.env.user != request.env.ref("base.public_user"):
+            user_eval_relacion = usuario_eva_mod.sudo().search([
                 ("usuario_id", "=", request.env.user.id),
                 ("evaluacion_id", "=", evaluacion.id),
                 ("token", "=", token)
             ])
 
         else:
-            user_eval_relation = usuario_eva_mod.sudo().search([
+            user_eval_relacion = usuario_eva_mod.sudo().search([
             # ("evaluacion_id", "=", evaluacion.id),
             ("token", "=", token)
         ])
         
-        if not user_eval_relation:
+        if not user_eval_relacion:
             return request.render("evaluaciones.evaluacion_responder_form_draft")
 
         # Obtén la evaluación basada en el ID
         parametros = evaluacion.action_get_evaluaciones(evaluacion_id)
         
-        if request.env.user != request.env.ref('base.public_user'):
+        if request.env.user != request.env.ref("base.public_user"):
             parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(request.env.user.id, evaluacion_id, None)
         
         else:
@@ -112,41 +112,41 @@ class EvaluacionesController(http.Controller):
         
         post_data = json.loads(request.httprequest.data)
 
-        radio_values = post_data.get("radioValues")
-        radio_values_scale = post_data.get("radioValuesScale")
-        textarea_values = post_data.get("textareaValues")
+        valores_radios = post_data.get("radioValues")
+        valores_radios_escala = post_data.get("radioValuesScale")
+        valores_textarea = post_data.get("textareaValues")
         evaluacion_id = post_data.get("evaluacion_id")
         user_id = user
-        respuesta_model = request.env["respuesta"]
+        respuesta_modelo = request.env["respuesta"]
         token = post_data.get("token")
 
-        for pregunta_id, radio_value in radio_values.items():
-            if pregunta_id in radio_values:
-                radio_value = radio_values[pregunta_id]
+        for pregunta_id, valor_radio in valores_radios.items():
+            if pregunta_id in valores_radios:
+                valor_radio = valores_radios[pregunta_id]
                 if request.env.user != request.env.ref("base.public_user"):
-                    resp = respuesta_model.sudo().action_guardar_respuesta(radio_value, None, int(evaluacion_id), int(user_id), int(pregunta_id), None, False)
+                    resp = respuesta_modelo.sudo().action_guardar_respuesta(valor_radio, None, int(evaluacion_id), int(user_id), int(pregunta_id), None, False)
                 else:
-                    resp = respuesta_model.sudo().action_guardar_respuesta(radio_value, None, int(evaluacion_id), None, int(pregunta_id), token, False)
+                    resp = respuesta_modelo.sudo().action_guardar_respuesta(valor_radio, None, int(evaluacion_id), None, int(pregunta_id), token, False)
             else:
                 continue
             
-        for pregunta_id, textarea_value in textarea_values.items():
-            if pregunta_id in textarea_values:
-                textarea_value = textarea_values[pregunta_id]
+        for pregunta_id, valor_textarea in valores_textarea.items():
+            if pregunta_id in valores_textarea:
+                valor_textarea = valores_textarea[pregunta_id]
                 if request.env.user != request.env.ref("base.public_user"):
-                    resp = respuesta_model.sudo().action_guardar_respuesta(None, textarea_value, int(evaluacion_id), int(user_id), int(pregunta_id), None, False)
+                    resp = respuesta_modelo.sudo().action_guardar_respuesta(None, valor_textarea, int(evaluacion_id), int(user_id), int(pregunta_id), None, False)
                 else:
-                    resp = respuesta_model.sudo().action_guardar_respuesta(None, textarea_value, int(evaluacion_id), None, int(pregunta_id), token, False)
+                    resp = respuesta_modelo.sudo().action_guardar_respuesta(None, valor_textarea, int(evaluacion_id), None, int(pregunta_id), token, False)
             else:
                 continue
 
-        for pregunta_id, radio_value in radio_values_scale.items():
-            if pregunta_id in radio_values_scale:
-                radio_value = radio_values_scale[pregunta_id]
+        for pregunta_id, valor_radio in valores_radios_escala.items():
+            if pregunta_id in valores_radios_escala:
+                valor_radio = valores_radios_escala[pregunta_id]
                 if request.env.user != request.env.ref("base.public_user"):
-                    resp = respuesta_model.sudo().action_guardar_respuesta(radio_value, None, int(evaluacion_id), int(user_id), int(pregunta_id), None, True)
+                    resp = respuesta_modelo.sudo().action_guardar_respuesta(valor_radio, None, int(evaluacion_id), int(user_id), int(pregunta_id), None, True)
                 else:
-                    resp = respuesta_model.sudo().action_guardar_respuesta(radio_value, None, int(evaluacion_id), None, int(pregunta_id), token, True)
+                    resp = respuesta_modelo.sudo().action_guardar_respuesta(valor_radio, None, int(evaluacion_id), None, int(pregunta_id), token, True)
             else:
                 continue
 
@@ -158,8 +158,5 @@ class EvaluacionesController(http.Controller):
         else:
             usuario_eva_mod.sudo().action_update_estado(None, evaluacion_id, token)
 
-        timestamp = str(time.time())
-
         return werkzeug.utils.redirect("/evaluacion/contestada")
-        #return request.redirect("/evaluacion/responder/" + str(evaluacion_id) + "/" + token + "?t=")
     

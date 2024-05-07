@@ -60,7 +60,7 @@ class Evaluacion(models.Model):
         "usuario_evaluacion_rel",
         "evaluacion_id",
         "usuario_id",
-        string="Asigned",
+        string="Asignados",
     )
 
     fecha_inicio = fields.Date()
