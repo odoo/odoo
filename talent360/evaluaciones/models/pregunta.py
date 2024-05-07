@@ -37,12 +37,11 @@ class Pregunta(models.Model):
     condicional = fields.Boolean("Condicional", default=False)
     respuesta_trigger = fields.Many2one("opcion", string="Respuesta trigger")
     preguntas_desbloqueadas = fields.Many2many(
-        "pregunta",
-        "pregunta_rel",
-        "pregunta_id",
-        "desbloqueada_id",
-        string="Preguntas desbloqueadas",
-    )
+        "pregunta", 
+        "pregunta_rel", 
+        "pregunta_id", 
+        "desbloqueada_id", 
+        string="Preguntas desbloqueadas")
 
     def ver_respuestas(self):
         """
@@ -64,7 +63,7 @@ class Pregunta(models.Model):
             ],
             "context": {"group_by": "respuesta_texto"},
         }
-
+    
     def handle_condition(self, respuesta):
         """
         Maneja la condición de la pregunta.
@@ -76,5 +75,6 @@ class Pregunta(models.Model):
             Preguntas desbloqueadas por la respuesta trigger.
         """
         if self.condicional and respuesta == self.respuesta_trigger:
+            print(self.preguntas_desbloquadas)
             return self.preguntas_desbloquadas
         return False

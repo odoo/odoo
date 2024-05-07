@@ -180,14 +180,14 @@ Datos
                             <tr t-foreach="respuestas_tabuladas" t-as="respuesta">
                                 <td>
                                     <p>
-                                        <span t-esc="respuesta['nombre']"/>
+                                        <span t-esc="respuesta['texto']"/>
                                     </p>
                                 </td>
                                 <td class="o_survey_answer">
-                                    <span t-esc="round(respuesta['valor'] * 100.0/ (len(respuestas) or 1), 2)"></span> % 
+                                    <span t-esc="round(respuesta['conteo'] * 100.0/ (len(respuestas) or 1), 2)"></span> % 
                                 </td>
                                 <td class="o_survey_answer">
-                                    <span t-esc="'%s Votos' % respuesta['valor']" class="badge text-bg-primary"/>
+                                    <span t-esc="'%s Votos' % respuesta['conteo']" class="badge text-bg-primary"/>
                                 </td>
                             </tr>
                         </tbody>
