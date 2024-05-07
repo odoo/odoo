@@ -97,7 +97,7 @@ class PaymentTransaction(models.Model):
             return
 
         if not notification_data:
-            self._set_canceled(_("The customer left the payment page."))
+            self._set_canceled(state_message=_("The customer left the payment page."))
             return
 
         amount = notification_data.get('amt') or notification_data.get('mc_gross')
