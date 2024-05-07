@@ -20,6 +20,8 @@ import { DateTimePickerPopover } from "./datetime_picker_popover";
  *  a "change" event or when the datetime picker popover has been closed.
  * @property {DateTimePickerProps} pickerProps
  * @property {string | ReturnType<typeof import("@odoo/owl").useRef>} [target]
+ * @property {(component, options) => import("../popover/popover_hook").PopoverHookReturnType} [createPopover]
+ * @property {() => boolean} [ensureVisibility=() => env.isSmall]
  *
  * @typedef {import("./datetime_picker").DateTimePickerProps} DateTimePickerProps
  */
@@ -52,11 +54,11 @@ export const datetimePickerService = {
             /**
              * @param {DateTimePickerHookParams} hookParams
              */
-            create: (
-                hookParams,
-                getInputs = () => [hookParams.target, null],
-                createPopover = (...args) => makePopover(popoverService, ...args)
-            ) => {
+            create: (hookParams, getInputs = () => [hookParams.target, null]) => {
+                const createPopover =
+                    hookParams.createPopover ??
+                    ((...args) => makePopover(popoverService.add, ...args));
+                const ensureVisibility = hookParams.ensureVisibility ?? (() => env.isSmall);
                 const popover = createPopover(DateTimePickerPopover, {
                     onClose: () => {
                         if (!allowOnClose) {
@@ -239,7 +241,7 @@ export const datetimePickerService = {
 
                     if (!popover.isOpen) {
                         const popoverTarget = getPopoverTarget();
-                        if (env.isSmall) {
+                        if (ensureVisibility()) {
                             const { marginBottom } = popoverTarget.style;
                             // Adds enough space for the popover to be displayed below the target
                             // even on small screens.
@@ -265,7 +267,10 @@ export const datetimePickerService = {
                     const { type } = pickerProps;
                     const convertFn = (operation === "format" ? formatters : parsers)[type];
                     try {
-                        return [convertFn(value, { format: hookParams.format, tz: pickerProps.tz }), null];
+                        return [
+                            convertFn(value, { format: hookParams.format, tz: pickerProps.tz }),
+                            null,
+                        ];
                     } catch (error) {
                         if (error?.name === "ConversionError") {
                             return [null, error];
