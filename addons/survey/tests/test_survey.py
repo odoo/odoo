@@ -17,8 +17,8 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
     def test_allowed_triggering_question_ids(self):
         # Create 2 surveys, each with 3 questions, each with 2 suggested answers
         survey_1, survey_2 = self.env['survey.survey'].create([
-            {'title': 'Test Survey 1', 'session_code': '10000'},
-            {'title': 'Test Survey 2', 'session_code': '10001'}
+            {'title': 'Test Survey 1'},
+            {'title': 'Test Survey 2'}
         ])
         self.env['survey.question'].create([
             {
@@ -265,6 +265,20 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
         # Check that scoring is correct and survey is passed
         self.assertEqual(user_input.scoring_percentage, 100)
         self.assertTrue(user_input.scoring_success)
+
+    def test_session_code_generation(self):
+        surveys = self.env['survey.survey'].create([{
+            'title': f'Survey {i}'
+        } for i in range(30)])
+        survey_codes = surveys.mapped('session_code')
+        self.assertEqual(len(survey_codes), 30)
+        for code in survey_codes:
+            self.assertTrue(bool(code))
+            self.assertEqual(
+                len(surveys.filtered(lambda survey: survey.session_code == code)),
+                1,
+                f"Each code should be unique, found multiple occurrences of: {code}"
+            )
 
     def test_simple_choice_question_answer_result(self):
         test_survey = self.env['survey.survey'].create({
