@@ -24,10 +24,12 @@ import { MailTestActivity } from "@test_mail/../tests/mock_server/models/mail_te
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
 import { Domain } from "@web/core/domain";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
+import { DynamicList } from "@web/model/relational_model/dynamic_list"
 import { deepEqual } from "@web/core/utils/objects";
 import { getOrigin } from "@web/core/utils/urls";
 import { serializeDate } from "@web/core/l10n/dates";
 import { onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { keyDown } from "@odoo/hoot-dom";
 
 const { DateTime } = luxon;
 
@@ -56,30 +58,38 @@ const archs = {
     `,
 };
 
+function patchActivityDomain(load, params) {
+    if (params.domain) {
+        // Remove domain term used to filter record having "done" activities (not understood by the getRecords mock)
+        const domain = new Domain(params.domain);
+        const newDomain = Domain.removeDomainLeaves(domain.toList(), [
+            "activity_ids.active",
+        ]);
+        if (!deepEqual(domain.toList(), newDomain.toList())) {
+            return load({
+                ...params,
+                domain: newDomain.toList(),
+                context: params.context
+                    ? { ...params.context, active_test: false }
+                    : { active_test: false },
+            });
+        }
+    }
+    return load(params);
+}
+
 describe.current.tags("desktop");
 defineTestMailModels();
 beforeEach(async () => {
     mockDate("2023-4-8 10:00:00", 0);
+    patchWithCleanup(DynamicList.prototype, {
+        async load(params) {
+            return patchActivityDomain(super.load.bind(this), params);
+        },
+    })
     patchWithCleanup(RelationalModel.prototype, {
         async load(params) {
-            if (params.domain) {
-                // Remove domain term used to filter record having "done" activities (not understood by the getRecords mock)
-                const domain = new Domain(params.domain);
-                const newDomain = Domain.removeDomainLeaves(domain.toList(), [
-                    "activity_ids.active",
-                ]);
-                if (!deepEqual(domain.toList(), newDomain.toList())) {
-                    return super.load({
-                        ...params,
-                        domain: newDomain.toList(),
-                        context: params.context
-                            ? { ...params.context, active_test: false }
-                            : { active_test: false },
-                    });
-                }
-                return super.load(params);
-            }
-            return super.load(params);
+            return patchActivityDomain(super.load.bind(this), params);
         },
     });
     pyEnv = await startServer();
@@ -474,9 +484,18 @@ test("activity view: activity_ids condition in domain", async () => {
         res_model: "mail.test.activity",
         views: [[false, "activity"]],
     });
+
+    await click(".o_pager_value");
+    await contains(".o_pager_value:focus");
+    keyDown("Enter");
+
     await assertSteps([
+        // load view requests
         JSON.stringify([["activity_ids.active", "in", [true, false]]]),
-        '[[1,"=",1]]', // Due to the patch above that removes it
+        '[[1,"=",1]]', // Due to the relational model patch above that removes it
+        // pager requests
+        JSON.stringify([["activity_ids.active", "in", [true, false]]]),
+        '[[1,"=",1]]', // Due to the dynamic list patch above that removes it
     ]);
 });
 
