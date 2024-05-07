@@ -627,7 +627,8 @@ class Evaluacion(models.Model):
         return parametros
     
     def action_generar_datos_reporte_clima(self):
-        categorias_orden_clima = [
+        # Categorías para el reporte de clima laboral
+        categorias_clima = [
             "Reclutamiento y Selección de Personal",
             "Formación y Capacitación",
             "Permanencia y Ascenso",
@@ -638,103 +639,70 @@ class Evaluacion(models.Model):
             "Respeto a la Diversidad",
             "Condiciones Generales de Trabajo",
         ]
-        
-        categorias = [{
-            "nombre": categoria, 
-            "valor": 0, 
-            "puntos": 0, 
-            "puntos_maximos": 0, 
+
+        # Estructura de datos para las categorías
+        detalles_categorias = [{
+            "nombre": cat,
+            "valor": 0,
+            "puntuacion": 0,
+            "puntuacion_maxima": 0,
             "departamentos": []
-        } for categoria in categorias_orden]
-        
-        total = 0
-        maximo_posible = 0
-    
+        } for cat in categorias_clima]
+
+        # Variables para acumular totales
+        total_puntuacion = 0
+        total_maximo_posible = 0
+
         for pregunta in self.pregunta_ids:
-            #Ignorar preguntas sin gategoría
-            if not pregunta.categoria:
+            if not pregunta.categoria or dict(pregunta._fields["categoria"].selection).get(pregunta.categoria) not in categorias_clima:
                 continue
 
-            categoria_texto = dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
-            if not categoria_texto in categorias_orden:
+            categoria_actual = next((cat for cat in detalles_categorias if cat["nombre"] == dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)), None)
+
+            if categoria_actual is None:
                 continue
 
             valor_pregunta = 0
             maximo_pregunta = 0
 
-            categoria = None
-
-            for cat in categorias:
-                if cat["nombre"] == categoria_texto:
-                    categoria = cat
-                    break
-
-            if pregunta.tipo == "escala":
+            for respuesta in pregunta.respuesta_ids:
+                valor_respuesta = int(respuesta.respuesta_texto)
+                valor_pregunta += valor_respuesta
                 maximo_pregunta += 4  # Suponiendo un máximo de 4 para cada respuesta en escala
-                valor_pregunta = sum(int(respuesta.respuesta_texto) for respuesta in pregunta.respuesta_ids) / len(pregunta.respuesta_ids)
 
-                for respuesta in pregunta.respuesta_ids:
-                    valor_respuesta = int(respuesta.respuesta_texto)
-                    valor_pregunta += valor_respuesta
-                    
-                    if not respuesta.user_id:
-                        continue
+                empleado = self.env['hr.employee'].search([('user_id', '=', respuesta.user_id.id)], limit=1)
+                if not empleado:
+                    continue
+                nombre_departamento = empleado.department_id.name
+                departamento = next((dept for dept in categoria_actual['departamentos'] if dept["nombre"] == nombre_departamento), None)
+                if departamento is None:
+                    departamento = {
+                        "nombre": nombre_departamento,
+                        "puntos": 0,
+                        "puntos_maximos": 0,
+                    }
+                    categoria_actual["departamentos"].append(departamento)
 
-                    employee = self.env['hr.employee'].search([('user_id', '=', respuesta.user_id.id)], limit=1)
-                    departamento_nombre = employee.department_id.name
+                departamento["puntos"] += valor_respuesta
+                departamento["puntos_maximos"] += 4
 
-                    departamento = list(filter(lambda cat: cat["nombre"] == departamento_nombre, categoria["departamentos"]))
-                    if not departamento:
-                        departamento = {
-                            "nombre": departamento_nombre,
-                            "puntos": 0,
-                            "puntos_maximos": 0,
-                        }
-                        categoria["departamentos"].append(departamento)
-                    else:
-                        departamento = departamento[0]
+            total_puntuacion += valor_pregunta
+            total_maximo_posible += maximo_pregunta
+            categoria_actual["puntuacion"] += valor_pregunta
+            categoria_actual["puntuacion_maxima"] += maximo_pregunta
 
+        for categoria in detalles_categorias:
+            if categoria["puntuacion_maxima"] > 0:
+                categoria["valor"] = (categoria["puntuacion"] / categoria["puntuacion_maxima"]) * 100
 
-                    departamento["puntos"] += valor_respuesta
-                    departamento["puntos_maximos"] += 4
-                
-                valor_pregunta = (valor_pregunta / len(pregunta.respuesta_ids))
-            
-            #TODO:vincular a cambio de opcionID
-            elif pregunta.tipo == "multiple_choice":
-                maximo_pregunta = max((opcion.valor for opcion in pregunta.opcion_ids), default=0)
-                valor_pregunta = sum(1 for respuesta in pregunta.respuesta_ids if respuesta.respuesta_texto == "Sí") / len(pregunta.respuesta_ids)
+        total_porcentaje = (total_puntuacion / total_maximo_posible) * 100 if total_maximo_posible > 0 else 0
 
-            total += valor_pregunta
-            maximo_posible += maximo_pregunta
-            
-             #Acumular el valor de cada pregunta en la categoría correspondiente
-            categoria["puntos"] += valor_pregunta
-            categoria["puntos_maximos"] += maximo_pregunta
-
-        for categoria in categorias:
-            if categoria["puntos_maximos"] > 0:
-                categoria["valor"] = (categoria["puntos"] / categoria["puntos_maximos"]) * 100
-            else:
-                categoria["valor"] = 0
-
-            for departamento in categoria["departamentos"]:
-                if departamento["puntos_maximos"] > 0:
-                    departamento["valor"] = (departamento["puntos"] / departamento["puntos_maximos"]) * 100
-                else:
-                    departamento["valor"] = 0
-
-        total_porcentaje = 0
-
-        if maximo_posible > 0:
-            total_porcentaje = (total / maximo_posible) * 100
-
-        # Ingresar los datos a parámetros
+        # Parámetros para el template
         parametros = {
-            "evalacion": self,
-            "categorias": [categorias],
-            "total": total,
-            "total_maximo": maximo_posible,
+            "evaluacion": self,
+            "categorias": detalles_categorias,
+            "total": total_puntuacion,
+            "total_maximo": total_maximo_posible,
             "total_porcentaje": total_porcentaje,
         }
         

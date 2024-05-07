@@ -29,7 +29,7 @@
                 <div class="o_survey_result">
                     <t t-call="evaluaciones.encuestas_reporte_header" />
                     <t t-call="evaluaciones.encuestas_reporte_nom_035" />
-                    <t t-call="evaluaciones.encuestas_reporte_clima" />
+                    <t t-call="evaluaciones.encuesta_reporte_clima" />
                 </div>
             </t>
         </template>
@@ -198,34 +198,22 @@
             </div>
         </template>
 
-     <template id="encuestas_reporte_clima" name="Reporte: Clima Laboral">
-        <div class="survey_section">
-            <h4>Semáforo de Riesgos</h4>
-            <span>Rojo: Riesgo muy alto</span>
-            <span>Naranja: Riesgo alto</span>
-            <span>Amarillo: Riesgo medio</span>
-            <span>Verde: Riesgo bajo</span>
-            <span>Azul cielo: Riesgo nulo o muy bajo</span>
-        </div>
-
-        <div class="survey_section">
-            <h4>Total de Puntaje del Clima Laboral</h4>
-            <span>
-                <t t-esc="total_clima"/>
-            </span>
-            <span>
-                <t t-esc="total_porcentaje_clima"/>%
-            </span>
-        </div>
-
-        <div class="survey_section">
-            <h4>Detalles por Categoría del Clima Laboral</h4>
-            <div t-foreach="categorias_clima" t-as="categoria">
-                <div>
-                    <span><t t-esc="categoria['nombre']"/>: </span>
-                    <span><t t-esc="categoria['valor']"/>%</span>
+     <template id="encuesta_reporte_clima" name="Reporte de Clima Laboral">
+        <div class="container">
+            <h3>Resumen del Clima Laboral</h3>
+            <t t-foreach="evaluacion.action_generar_datos_reporte_clima()['categorias'] as categoria">
+                <div class="categoria">
+                    <h4 t-esc="categoria['nombre']"/>
+                    <p>Valor: <span t-esc="categoria['valor']"/>%</p>
+                    <t t-foreach="categoria['departamentos'] as departamento">
+                        <div class="departamento">
+                            <p>Departamento: <span t-esc="departamento['nombre']"/></p>
+                            <p>Puntos: <span t-esc="departamento['puntos']"/></p>
+                            <p>Valor: <span t-esc="departamento['valor']"/>%</p>
+                        </div>
+                    </t>
                 </div>
-            </div>
+            </t>
         </div>
     </template>
 
