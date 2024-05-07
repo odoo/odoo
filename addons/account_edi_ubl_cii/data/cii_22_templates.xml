@@ -40,7 +40,7 @@
                             <!-- Discount. -->
                             <ram:AppliedTradeAllowanceCharge t-if="line.discount">
                                 <ram:ChargeIndicator>
-                                    <udt:Indicator>false</udt:Indicator>
+                                    <udt:Indicator t-translation="off">false</udt:Indicator>
                                 </ram:ChargeIndicator>
                                 <ram:ActualAmount t-out="format_monetary(line_vals['price_discount_unit'], 2)"/>
                             </ram:AppliedTradeAllowanceCharge>

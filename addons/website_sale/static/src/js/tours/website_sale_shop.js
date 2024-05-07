@@ -61,6 +61,9 @@
         trigger: "button[data-action=save]",
         content: markup(_t("Once you click on <b>Save</b>, your product is updated.")),
         position: "bottom",
+        // Wait until the drag and drop is resolved (causing a history step)
+        // before clicking save.
+        extra_trigger: ".o_we_external_history_buttons button[data-action=undo]:not([disabled])",
     }, {
         trigger: ".o_menu_systray_item .o_switch_danger_success",
         extra_trigger: "iframe body:not(.editor_enable)",

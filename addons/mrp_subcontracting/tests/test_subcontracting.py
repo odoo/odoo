@@ -718,7 +718,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         def process_picking_with_backorder(picking, qty):
             # Process the picking by putting the given quantity on the stock.move.line
-            picking.move_line_ids.ensure_one().qty_done = qty
+            picking.move_line_ids.ensure_one().quantity = qty
             action = picking.button_validate()
             if isinstance(action, dict):
                 wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()

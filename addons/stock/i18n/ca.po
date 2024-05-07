@@ -570,7 +570,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Putaway Rules</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Regles d'emmagatzematge</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -635,7 +635,7 @@ msgstr "<span>Products sense paquet assignat </span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<span>Remaining quantities not yet delivered:</span>"
-msgstr "<span>Remainant quantitats encara no es reparteixen: </span>"
+msgstr "<span>Quantitats pendents de servir: </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -1047,7 +1047,7 @@ msgstr "Permet un nou producte"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__mixed
 msgid "Allow mixed products"
-msgstr "Permet els productes mixts"
+msgstr "Permetre productes mixtos"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
@@ -2030,7 +2030,7 @@ msgid ""
 "their appropriate destination location upon receptions."
 msgstr ""
 "Creeu noves regles d'emmagatzematge per enviar automàticament productes "
-"específics a la seva ubicació de destinació adequada quan es rebin."
+"específics quan es rebin, a la una ubicació de destí adequada."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_stock_view
@@ -2947,7 +2947,7 @@ msgstr "Mostra el contingut del paquet"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_quant_package__package_use__disposable
 msgid "Disposable Box"
-msgstr "Caixa desposible"
+msgstr "Caixa d'un sol ús"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
@@ -3598,7 +3598,7 @@ msgstr "Té variants"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Having Category"
-msgstr "S' està tenint la categoria"
+msgstr "Tenint la categoria"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__height
@@ -5391,7 +5391,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_putaway_tree
 msgid "No putaway rule found. Let's create one!"
-msgstr "No s' ha trobat cap regla de fugida. Creem-ne un!"
+msgstr "No s' ha trobat cap regla d'emmagatzematge. Creem-ne una!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
@@ -6749,7 +6749,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_putaway_rule
 msgid "Putaway Rule"
-msgstr "Regla col· locació"
+msgstr "Regla d'emmagatzematge"
 
 #. module: stock
 #. odoo-python
@@ -6773,7 +6773,7 @@ msgstr "Regles d'emmagatzematge"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Putaway:"
-msgstr "Entrada d'existències"
+msgstr "Entrada d'emmagatzematge:"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_putaway_tree
@@ -7546,7 +7546,7 @@ msgstr "Tipus de retorn"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_quant_package__package_use__reusable
 msgid "Reusable Box"
-msgstr "Caixa duplicable"
+msgstr "Caixa reutilitzable"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package__package_use
@@ -7554,8 +7554,8 @@ msgid ""
 "Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.\n"
 "        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer."
 msgstr ""
-"S' usen caixes reutilitzades per a la recollida de lots i després es buidaran després per a ser reutilitzades. En l' aplicació de codi de barres, s' explora una caixa reutilitzable afegirà els productes en aquesta caixa.\n"
-"        Les caixes discrepables no es fan servir, quan s' explora una caixa d' ús en l' aplicació de codis de barres, els productes continguts s' afegeixen a la transferència."
+"Si es fan servir caixes reutilitzables per a la recollida de lots i després es buidaran per a ser reutilitzades. A l'aplicació de codi de barres, si s'escaneja una caixa reutilitzable s'afegiran els productes a aquesta caixa.\n"
+"Les caixes d'un sol ús no son reutilitzables, quan s'escaneja una caixa d'un sol ús a l'aplicació de codi de barres, els productes continguts s'afegeixen a la transferència."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
@@ -8598,7 +8598,7 @@ msgstr "Funcionalitats d' emmagatzematge"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_tree
 msgid "Storage Categories"
-msgstr "Categories d' emmagatzematge"
+msgstr "Categories d'emmagatzematge"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_storage_category
@@ -11104,7 +11104,7 @@ msgstr "S'hauria de tornar a publicar"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__filter_for_stock_putaway_rule
 msgid "stock.putaway.rule"
-msgstr ""
+msgstr "stock.putaway.rule"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__warehouse_id

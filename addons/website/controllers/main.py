@@ -11,6 +11,7 @@ import werkzeug.urls
 import werkzeug.utils
 import werkzeug.wrappers
 
+from hashlib import md5
 from itertools import islice
 from lxml import etree, html
 from textwrap import shorten
@@ -218,6 +219,9 @@ class Website(Home):
 
     @http.route(['/robots.txt'], type='http', auth="public", website=True, multilang=False, sitemap=False)
     def robots(self, **kwargs):
+        # Don't use `request.website.domain` here, the template is in charge of
+        # detecting if the current URL is the domain one and add a `Disallow: /`
+        # if it's not the case to prevent the crawler to continue.
         return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True, multilang=False, sitemap=False)
@@ -227,6 +231,10 @@ class Website(Home):
         View = request.env['ir.ui.view'].sudo()
         mimetype = 'application/xml;charset=utf-8'
         content = None
+        url_root = request.httprequest.url_root
+        # For a same website, each domain has its own sitemap (cache)
+        hashed_url_root = md5(url_root.encode()).hexdigest()[:8]
+        sitemap_base_url = '/sitemap-%d-%s' % (current_website.id, hashed_url_root)
 
         def create_sitemap(url, content):
             return Attachment.create({
@@ -236,7 +244,7 @@ class Website(Home):
                 'name': url,
                 'url': url,
             })
-        dom = [('url', '=', '/sitemap-%d.xml' % current_website.id), ('type', '=', 'binary')]
+        dom = [('url', '=', '%s.xml' % sitemap_base_url), ('type', '=', 'binary')]
         sitemap = Attachment.search(dom, limit=1)
         if sitemap:
             # Check if stored version is still valid
@@ -247,8 +255,8 @@ class Website(Home):
 
         if not content:
             # Remove all sitemaps in ir.attachments as we're going to regenerated them
-            dom = [('type', '=', 'binary'), '|', ('url', '=like', '/sitemap-%d-%%.xml' % current_website.id),
-                   ('url', '=', '/sitemap-%d.xml' % current_website.id)]
+            dom = [('type', '=', 'binary'), '|', ('url', '=like', '%s-%%.xml' % sitemap_base_url),
+                   ('url', '=', '%s.xml' % sitemap_base_url)]
             sitemaps = Attachment.search(dom)
             sitemaps.unlink()
 
@@ -257,13 +265,13 @@ class Website(Home):
             while True:
                 values = {
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
-                    'url_root': request.httprequest.url_root[:-1],
+                    'url_root': url_root[:-1],
                 }
                 urls = View._render_template('website.sitemap_locs', values)
                 if urls.strip():
                     content = View._render_template('website.sitemap_xml', {'content': urls})
                     pages += 1
-                    last_sitemap = create_sitemap('/sitemap-%d-%d.xml' % (current_website.id, pages), content)
+                    last_sitemap = create_sitemap('%s-%d.xml' % (sitemap_base_url, pages), content)
                 else:
                     break
 
@@ -272,19 +280,21 @@ class Website(Home):
             elif pages == 1:
                 # rename the -id-page.xml => -id.xml
                 last_sitemap.write({
-                    'url': "/sitemap-%d.xml" % current_website.id,
-                    'name': "/sitemap-%d.xml" % current_website.id,
+                    'url': "%s.xml" % sitemap_base_url,
+                    'name': "%s.xml" % sitemap_base_url,
                 })
             else:
                 # TODO: in master/saas-15, move current_website_id in template directly
-                pages_with_website = ["%d-%d" % (current_website.id, p) for p in range(1, pages + 1)]
+                pages_with_website = ["%d-%s-%d" % (current_website.id, hashed_url_root, p) for p in range(1, pages + 1)]
 
                 # Sitemaps must be split in several smaller files with a sitemap index
                 content = View._render_template('website.sitemap_index_xml', {
                     'pages': pages_with_website,
-                    'url_root': request.httprequest.url_root,
+                    # URLs inside the sitemap index have to be on the same
+                    # domain as the sitemap index itself
+                    'url_root': url_root,
                 })
-                create_sitemap('/sitemap-%d.xml' % current_website.id, content)
+                create_sitemap('%s.xml' % sitemap_base_url, content)
 
         return request.make_response(content, [('Content-Type', mimetype)])
 

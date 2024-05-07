@@ -1,6 +1,10 @@
 /** @odoo-module */
 
-import { URL_REGEX } from '../../src/OdooEditor.js';
+import {
+    URL_REGEX,
+    descendants,
+    setSelection,
+} from '../../src/OdooEditor.js';
 import {
     BasicEditor,
     click,
@@ -10,7 +14,8 @@ import {
     insertLineBreak,
     testEditor,
     createLink,
-    undo
+    undo,
+    nextTick
 } from '../utils.js';
 
 const convertToLink = createLink;
@@ -380,7 +385,7 @@ describe('Link', () => {
                         await insertLineBreak(editor);
                         await insertText(editor, 'odoo.com')
                     },
-                    contentAfter: '<p>a<a href="https://google.com">google.com<br>odoo.com[]</a></p>',
+                    contentAfter: '<p>a<a href="https://google.com">google.com</a><br>odoo.com[]</p>',
                 });
             });
         });
@@ -706,13 +711,7 @@ describe('Link', () => {
                     await clickOnLink(editor);
                     await deleteBackward(editor);
                 },
-                contentAfterEdit: '<p>a<a href="#/" data-oe-zws-empty-inline="" class="o_link_in_selection">' +
-                        '<span data-o-link-zws="start" contenteditable="false">\u200B</span>' + // start zws
-                        '[]\u200B' + // content: empty inline zws
-                        '<span data-o-link-zws="end">\u200B</span>' + // end zws
-                    '</a>' +
-                    '<span data-o-link-zws="after" contenteditable="false">\u200B</span>' + // after zws
-                    'c</p>',
+                contentAfterEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeff[]\ufeff</a>\ufeffc</p>',
                 contentAfter: '<p>a[]c</p>',
             });
         });
@@ -740,6 +739,102 @@ describe('Link', () => {
                     await deleteBackward(editor);
                 },
                 contentAfter: '<p><a href="#/">[]abc</a></p>',
+            });
+        });
+        it('should zwnbsp-pad simple text link', async () => {
+            const removeZwnbsp = editor => {
+                for (const descendant of descendants(editor.editable)) {
+                    if (descendant.nodeType === Node.TEXT_NODE && descendant.textContent === '\ufeff') {
+                        descendant.remove();
+                    }
+                }
+            }
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a[]<a href="#/">bc</a>d</p>',
+                contentBeforeEdit: '<p>a[]\ufeff<a href="#/">\ufeffbc\ufeff</a>\ufeffd</p>',
+                stepFunction: async editor => {
+                    removeZwnbsp(editor);
+                    const p = editor.editable.querySelector('p');
+                    setSelection(p, 1, p, 1, false); // set the selection via the parent
+                    editor.sanitize(); // insert the zwnbsp again
+                },
+                contentAfterEdit: '<p>a[]\ufeff<a href="#/">\ufeffbc\ufeff</a>\ufeffd</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">[]bc</a>d</p>',
+                contentBeforeEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeff[]bc\ufeff</a>\ufeffd</p>',
+                stepFunction: async editor => {
+                    removeZwnbsp(editor);
+                    const a = editor.editable.querySelector('a');
+                    setSelection(a, 0, a, 0, false); // set the selection via the parent
+                    await nextTick();
+                    editor.sanitize(); // insert the zwnbsp again
+                },
+                contentAfterEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">[]\ufeffbc\ufeff</a>\ufeffd</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">b[]</a>d</p>',
+                contentBeforeEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeffb[]\ufeff</a>\ufeffd</p>',
+                stepFunction: async editor => {
+                    const a = editor.editable.querySelector('a');
+                    // Insert an extra character as a text node so we can set
+                    // the selection between the characters while still
+                    // targetting their parent.
+                    a.appendChild(document.createTextNode('c'));
+                    removeZwnbsp(editor);
+                    setSelection(a, 1, a, 1, false); // set the selection via the parent
+                    await nextTick();
+                    editor.sanitize(); // insert the zwnbsp again
+                },
+                contentAfterEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeffb[]c\ufeff</a>\ufeffd</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">bc[]</a>d</p>',
+                contentBeforeEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeffbc[]\ufeff</a>\ufeffd</p>',
+                stepFunction: async editor => {
+                    removeZwnbsp(editor);
+                    const a = editor.editable.querySelector('a');
+                    setSelection(a, 1, a, 1, false); // set the selection via the parent
+                    await nextTick();
+                    editor.sanitize(); // insert the zwnbsp again
+                },
+                contentAfterEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeffbc\ufeff[]</a>\ufeffd</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">bc</a>[]d</p>',
+                contentBeforeEdit: '<p>a\ufeff<a href="#/">\ufeffbc\ufeff</a>\ufeff[]d</p>',
+                stepFunction: async editor => {
+                    descendants(editor.editable).forEach(c => c.nodeType === Node.TEXT_NODE && c.textContent === '\ufeff' && c.remove()); // remove the zwnbsp
+                    const p = editor.editable.querySelector('p');
+                    setSelection(p, 2, p, 2, false); // set the selection via the parent
+                    await nextTick();
+                    editor.sanitize(); // insert the zwnbsp again
+                },
+                contentAfterEdit: '<p>a\ufeff<a href="#/">\ufeffbc\ufeff</a>\ufeff[]d</p>',
+            });
+        });
+        it('should not zwnbsp-pad nav-link', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/" class="nav-link">[]b</a>c</p>',
+                contentBeforeEdit: '<p>a<a href="#/" class="nav-link">[]b</a>c</p>',
+            });
+        });
+        it('should not zwnbsp-pad in nav', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<nav>a<a href="#/">[]b</a>c</nav>',
+                contentBeforeEdit: '<nav>a<a href="#/">[]b</a>c</nav>',
+            });
+        });
+        it('should not zwnbsp-pad link with block fontawesome', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">[]<i style="display: flex;" class="fa fa-star"></i></a>b</p>',
+                contentBeforeEdit: '<p>a<a href="#/">[]<i style="display: flex;" class="fa fa-star" contenteditable="false">\u200b</i></a>b</p>',
+            });
+        });
+        it('should not zwnbsp-pad link with image', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">[]<img style="display: inline;"></a>b</p>',
+                contentBeforeEdit: '<p>a<a href="#/">[]<img style="display: inline;"></a>b</p>',
             });
         });
     });
@@ -844,6 +939,45 @@ describe('Link', () => {
                     await insertText(editor, 'c');
                 },
                 contentAfter: '<p>a<a href="exist">b</a></p><p>c[]d</p>',
+            });
+        });
+        it('should remove an empty link on save', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="exist">b[]</a>c</p>',
+                contentBeforeEdit: '<p>a\ufeff<a href="exist" class="o_link_in_selection">\ufeffb[]\ufeff</a>\ufeffc</p>',
+                stepFunction: deleteBackward,
+                contentAfterEdit: '<p>a\ufeff<a href="exist" class="o_link_in_selection">\ufeff[]\ufeff</a>\ufeffc</p>',
+                contentAfter: '<p>a[]c</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="exist"></a>b</p>',
+                contentBeforeEdit: '<p>a\ufeff<a href="exist">\ufeff</a>\ufeffb</p>',
+                contentAfterEdit: '<p>a\ufeff<a href="exist">\ufeff</a>\ufeffb</p>',
+                contentAfter: '<p>ab</p>',
+            });
+        });
+        it('should not remove a link containing an image on save', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="exist"><img></a>b</p>',
+                contentBeforeEdit: '<p>a<a href="exist"><img></a>b</p>',
+                contentAfterEdit: '<p>a<a href="exist"><img></a>b</p>',
+                contentAfter: '<p>a<a href="exist"><img></a>b</p>',
+            });
+        });
+        it('should not remove a document link on save', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="exist" class="o_image" title="file.js.map" data-mimetype="text/plain"></a>b</p>',
+                contentBeforeEdit: '<p>a<a href="exist" class="o_image" title="file.js.map" data-mimetype="text/plain" contenteditable="false"></a>b</p>',
+                contentAfterEdit: '<p>a<a href="exist" class="o_image" title="file.js.map" data-mimetype="text/plain" contenteditable="false"></a>b</p>',
+                contentAfter: '<p>a<a href="exist" class="o_image" title="file.js.map" data-mimetype="text/plain"></a>b</p>',
+            });
+        });
+        it('should not remove a link containing a pictogram on save', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="exist"><span class="fa fa-star"></span></a>b</p>',
+                contentBeforeEdit: '<p>a\ufeff<a href="exist">\ufeff<span class="fa fa-star" contenteditable="false">\u200b</span>\ufeff</a>\ufeffb</p>',
+                contentAfterEdit: '<p>a\ufeff<a href="exist">\ufeff<span class="fa fa-star" contenteditable="false">\u200b</span>\ufeff</a>\ufeffb</p>',
+                contentAfter: '<p>a<a href="exist"><span class="fa fa-star"></span></a>b</p>',
             });
         });
         // it('should select and replace all text and add the next char in bold', async () => {

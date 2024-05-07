@@ -429,7 +429,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__sequence_number
 msgid "A sequence number that is incremented with each order"
-msgstr "Un número de secuencia que se incrementa con cada pedido"
+msgstr "Un número de secuencia que se incrementa con cada orden"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -960,7 +960,7 @@ msgstr "Validar automáticamente el pago por terminal"
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__rescue
 msgid "Auto-generated session for orphan orders, ignored in constraints"
 msgstr ""
-"Sesión auto-generada para pedidos huérfanos, ignorados en las restricciones"
+"Sesión autogenerada para órdenes abandonadas, se ignora en las restricciones"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_auto
@@ -1121,7 +1121,7 @@ msgstr "Importe base"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
 msgid "Before Closing Difference"
-msgstr "Antes de cerrar la diferencia"
+msgstr "Antes de la diferencia de cierre"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -1163,7 +1163,7 @@ msgstr "Buffer:"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
 msgid "Bypass browser printing and prints via the hardware proxy."
 msgstr ""
-"Derivar la impresión del navegador e imprimir a través del proxy del "
+"Omita la impresión del navegador y las impresiones a través del proxy del "
 "hardware."
 
 #. module: point_of_sale
@@ -1237,7 +1237,7 @@ msgstr "No puede modificar una propina"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Cannot return change without a cash payment method"
-msgstr "No puede devolver cambio sin un método de pago de caja"
+msgstr "No puede devolver cambio sin un método de pago de efectivo"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1475,7 +1475,7 @@ msgstr "Indique si quiere que este producto aparezca en el punto de venta."
 msgid ""
 "Check if you want to group products of this category in point of sale orders"
 msgstr ""
-"Indique si desea agrupar los productos de esta categoría en los pedidos del "
+"Indique si desea agrupar los productos de esta categoría en las órdenes del "
 "punto de venta"
 
 #. module: point_of_sale
@@ -1507,7 +1507,7 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
-"Elegir una posición fiscal específica en el pedido en función del tipo de "
+"Elija una posición fiscal específica en la orden en función del tipo de "
 "cliente (exento de impuestos, \"en el lugar\" vs. \"para llevar\", etc.)."
 
 #. module: point_of_sale
@@ -2513,7 +2513,7 @@ msgstr "¿Desea imprimir con la impresora web?"
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 #, python-format
 msgid "Download Paid Orders"
-msgstr "Descargar pedidos pagados"
+msgstr "Descargar órdenes pagadas"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2597,7 +2597,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Empty Order"
-msgstr "Pedido vacío"
+msgstr "Orden vacía"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_scan_via_proxy
@@ -3390,7 +3390,7 @@ msgstr "Lámpara LED"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
 msgid "Label"
-msgstr "Descripción"
+msgstr "Etiqueta"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4693,7 +4693,7 @@ msgstr "Nombre del pago para la demostración"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__ticket
 msgid "Payment Receipt Info"
-msgstr "Información de Pagos recibidos"
+msgstr "Información del recibo de pago"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_name
@@ -4711,7 +4711,7 @@ msgstr "Estado de pago"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 #, python-format
 msgid "Payment Successful"
-msgstr "Pago satisfactorio"
+msgstr "Pago exitoso"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4854,7 +4854,7 @@ msgstr "Recolecciones"
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.xml:0
 #, python-format
 msgid "Picture"
-msgstr "Foto"
+msgstr "Imagen"
 
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.fabric_attribute_plastic
@@ -4866,7 +4866,7 @@ msgstr "Plástico"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Please Confirm Large Amount"
-msgstr "Confirme por favor el gran importe"
+msgstr "Confirme el importe grande"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5874,12 +5874,12 @@ msgstr "Reembolsado"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__refunded_order_ids
 msgid "Refunded Order"
-msgstr "Pedido Reembolsado"
+msgstr "Orden reembolsada"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refunded_orderline_id
 msgid "Refunded Order Line"
-msgstr "Línea de pedido reembolsada"
+msgstr "Línea de orden reembolsada"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5887,12 +5887,12 @@ msgstr "Línea de pedido reembolsada"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Refunded Orders"
-msgstr "Pedidos Reembolsados"
+msgstr "Órdenes reembolsadas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__refunded_orders_count
 msgid "Refunded Orders Count"
-msgstr "Número de pedidos reembolsados"
+msgstr "Número de órdenes reembolsadas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refunded_qty
