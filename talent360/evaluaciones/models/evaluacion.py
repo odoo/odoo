@@ -63,6 +63,10 @@ class Evaluacion(models.Model):
         string="Asignados",
     )
 
+    fecha_inicio = fields.Date()
+    fecha_final = fields.Date()
+
+    
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
         """
@@ -320,3 +324,37 @@ class Evaluacion(models.Model):
             parametros["preguntas"].append(datos_pregunta)
 
         return parametros
+
+    def action_get_evaluaciones(self, evaluacion_id):
+        """
+        Obtiene las preguntas asociadas a la evaluación.
+
+        Este método obtiene las preguntas asociadas a la evaluación actual y las devuelve en un diccionario.
+
+        :return: Un diccionario con las preguntas asociadas a la evaluación.
+
+        """
+
+        return {
+            "evaluacion": self,
+            "pregunta": self.pregunta_ids,
+        }
+    
+    def action_enviar_evaluacion(self):
+        usuarios = []
+
+        for usuario in self.usuario_ids:
+            usuarios.append(usuario.partner_id.name)
+        self.env['usuario.evaluacion.rel'].action_enviar_evaluacion(evaluacion_id=self.id)
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": f"Evaluación {self.nombre} fue enviada!",
+                "type": "success",
+                "message": f"La evaluación ha sido enviada a {', '.join(usuarios)}.",
+                "sticky": False,
+            },
+        }
+        
+
