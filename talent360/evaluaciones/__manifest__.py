@@ -28,6 +28,7 @@
             "web/static/lib/bootstrap/scss/_variables.scss",
             "evaluaciones/static/src/scss/survey_templates_form.scss",
             "evaluaciones/static/src/scss/survey_templates_results.scss",
+            "evaluaciones/static/src/scss/survey_survey_views.scss",
         ],
     },
 }
