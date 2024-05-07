@@ -28,7 +28,6 @@ class TestReportes(TransactionCase):
             }
         )
 
-
         pregunta2 = self.env["pregunta"].create(
             {
                 "pregunta_texto": "Pregunta 2",
@@ -37,7 +36,7 @@ class TestReportes(TransactionCase):
         )
 
         opciones_texto = ["Respuesta 1", "Respuesta 2", "Respuesta 3"]
-        
+
         opciones = {}
         for opcion in opciones_texto:
             opcion_db = self.env["opcion"].create(
@@ -48,7 +47,6 @@ class TestReportes(TransactionCase):
                 }
             )
             opciones[opcion] = opcion_db
-    
 
         pregunta3 = self.env["pregunta"].create(
             {
@@ -147,7 +145,6 @@ class TestReportes(TransactionCase):
         # Verificar que la evaluación y el número de preguntas sean correctos
         self.assertEqual(params["evaluacion"], self.evaluacion)
         self.assertEqual(len(params["preguntas"]), 3)
-
 
         # Verificar que los datos de las preguntas sean correctos
         for pregunta in params["preguntas"]:
