@@ -49,28 +49,48 @@
         </template>
 
         <template id="encuestas_reporte_nom_035" name="Reporte: NOM-035">
-            <div class="survey_section">
-                <h4>Calificación Final</h4>
-                <span>
-                    <t t-esc="final"/>
-                </span>
-                <span>
-                    <t t-if="final &lt; 20">Nulo</t>
-                    <t t-elif="20 &lt;= final &lt; 45">Bajo</t>
-                    <t t-elif="45 &lt;= final &lt; 70">Medio</t>
-                    <t t-elif="70 &lt;= final &lt; 90">Alto</t>
-                    <t t-else="true">Muy Alto</t>
-                </span>
-            </div>
+            <div class="container-fluid row gap-5 justify-content-between g-2">
+                    <div class="col survey_section">
+                        <h4>Calificación Final</h4>
+                        <span t-att-class="'color_nulo' if final &lt; 20 else 'color_bajo' if 20 &lt;= final &lt; 45 else 'color_medio' if 45 &lt;= final &lt; 70 else 'color_alto' if 70 &lt;= final &lt; 90 else 'color_muy-alto'">
+                            <t t-esc="final"/>
+                        </span>
+                        <span class="fs-5 pill">
+                            <t t-if="final &lt; 20">Nulo</t>
+                            <t t-elif="20 &lt;= final &lt; 45">Bajo</t>
+                            <t t-elif="45 &lt;= final &lt; 70">Medio</t>
+                            <t t-elif="70 &lt;= final &lt; 90">Alto</t>
+                            <t t-else="true">Muy Alto</t>
+                        </span>
+                    </div>
 
+                    <div class="col survey_section w-100">
+                        <h4>Semáforo de Riesgos</h4>
+                        <div class="container-fluid row gap-2 align-items-center">
+                            <span class="color_circle" style="background-color: #ff4747;"/>
+                            <span class="col">Riesgo muy alto</span>
+                        </div>
 
-            <div class="survey_section">
-                <h4>Semáforo de Riesgos</h4>
-                <span>Rojo: Riesgo muy alto</span>
-                <span>Naranja: Riesgo alto</span>
-                <span>Amarillo: Riesgo medio</span>
-                <span>Verde: Riesgo bajo</span>
-                <span>Azul cielo: Riesgo nulo o muy bajo</span>
+                        <div class="container-fluid row gap-2 align-items-center">
+                            <span class="color_circle" style="background-color: #ffa446;"/>
+                            <span class="col">Riesgo alto</span>
+                        </div>
+
+                        <div class="container-fluid row gap-2 align-items-center">
+                            <span class="color_circle" style="background-color: #ebae14;"/>
+                            <span class="col">Riesgo medio</span>
+                        </div>
+
+                        <div class="container-fluid row gap-2 align-items-center">
+                            <span class="color_circle" style="background-color: #5aaf2b;"/>
+                            <span class="col">Riesgo bajo</span>
+                        </div>
+
+                        <div class="container-fluid row gap-2 align-items-center">
+                            <span class="color_circle" style="background-color: #2894a7;"/>
+                            <span class="col">Riesgo nulo</span>
+                        </div>
+                    </div>
             </div>
             <div class="survey_page container-fluid d-flex flex-column">
                 <div class="survey_section">
@@ -78,7 +98,7 @@
                     <div class="survey_graph" t-att-id="'grafica_radar_categorias_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
                         <canvas t-att-id="'canvas_barras_categorias_nom_035'"/>
                     </div>
-                    <span>
+                    <span class="mt-5">
                         Categoría con mayor puntaje: <t t-esc="max(categorias, key=lambda x: x['valor'])['nombre']"/> (<t t-esc="max(categorias, key=lambda x: x['valor'])['valor']"/>)
                     </span>
                     <span>
@@ -105,7 +125,7 @@
                     <t t-set="valor_categoria" t-value="datos_categoria['valor']" />
                     <div class="survey_section">
                         <h3> <t t-esc="categoria" /> </h3>
-                        <span> <t t-esc="valor_categoria" /> </span>
+                        <span color="category_number"> <t t-esc="valor_categoria" /> </span>
 
                         <t t-if="categoria == 'Ambiente de Trabajo'">
                             <div class="survey_graph" t-att-id="'grafica_ambiente_trabajo_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Ambiente de Trabajo'" t-att-data-graph-data="dominios[:1]">
@@ -132,9 +152,9 @@
                         </t>
                     </div>
                 </div>
-                <div class="survey_section">
+                <div class="survey_section mb-5">
                     <h4>Necesidad de Acción</h4>
-                    <span>
+                    <span class="container-fluid">
                         <t t-if="final &lt; 20">El riesgo resulta despreciable por lo que no se requiere medidas adicionales.</t>
                         <t t-elif="20 &lt;= final &lt; 45">Es necesario una mayor difusión de la política de prevención de riesgos psicosociales y programas para: la prevención de los factores de riesgo psicosocial, la promoción de un entorno organizacional favorable y la prevención de la violencia laboral.</t>
                         <t t-elif="45 &lt;= final &lt; 70">Se requiere revisar la política de prevención de riesgos psicosociales y programas para la prevención de los factores de riesgo psicosocial, la promoción de un entorno organizacional favorable y la prevención de la violencia laboral, así como reforzar su aplicación y difusión, mediante un Programa de intervención.</t>
