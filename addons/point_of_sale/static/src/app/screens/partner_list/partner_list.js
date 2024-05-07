@@ -108,10 +108,10 @@ export class PartnerList extends Component {
             res = this.get_partners_searched();
         } else {
             res = this.get_partners_sorted(1000);
+            res.sort(function (a, b) {
+                return (a.name || "").localeCompare(b.name || "");
+            });
         }
-        res.sort(function (a, b) {
-            return (a.name || "").localeCompare(b.name || "");
-        });
         // the selected partner (if any) is displayed at the top of the list
         if (this.props.partner) {
             const indexOfSelectedPartner = res.findIndex(
