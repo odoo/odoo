@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_move_send_form" model="ir.ui.view">
+        <field name="name">account.move.send.form</field>
+        <field name="model">account.move.send</field>
+        <field name="inherit_id" ref="account.account_move_send_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='advanced_options']" position="inside">
+                <field name="l10n_es_tbai_show_checkbox" invisible="1"/>
+                <div name="option_tbai_send" invisible="not l10n_es_tbai_show_checkbox">
+                    <field name="l10n_es_tbai_checkbox_send"/>
+                    <b><label for="l10n_es_tbai_checkbox_send"></label></b>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

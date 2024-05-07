@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="l10n_es_tbai_digital_certificate" model="ir.rule">
+        <field name="name">Spanish TBAI Digital Certificate</field>
+        <field name="model_id" ref="model_l10n_es_edi_tbai_certificate"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="tbai_document_comp_rule" model="ir.rule">
+        <field name="name">TicketBAI Document multi-company</field>
+        <field name="model_id" ref="model_l10n_es_edi_tbai_document"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

@@ -22,7 +22,7 @@ class TestEsEdiCommon(AccountEdiTestCommon):
 
         # ==== Config ====
 
-        cls.certificate = cls.env['l10n_es_edi.certificate'].create({
+        cls.certificate = cls.env['l10n_es_edi_sii.certificate'].create({
             'content': base64.encodebytes(
                 misc.file_open("l10n_es_edi_sii/demo/certificates/sello_entidad_act.p12", 'rb').read()),
             'password': 'IZDesa2021',
@@ -30,10 +30,10 @@ class TestEsEdiCommon(AccountEdiTestCommon):
 
         cls.company_data['company'].write({
             'state_id': cls.env.ref('base.state_es_z').id,
-            'l10n_es_edi_certificate_id': cls.certificate.id,
+            'l10n_es_sii_certificate_id': cls.certificate.id,
             'vat': 'ES59962470K',
-            'l10n_es_edi_test_env': True,
-            'l10n_es_edi_tax_agency': 'bizkaia',
+            'l10n_es_sii_test_env': True,
+            'l10n_es_sii_tax_agency': 'bizkaia',
         })
 
         # To be sure it is put by default on purchase journals as well (tbai module)

@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from base64 import b64decode
 from pytz import timezone
 from datetime import datetime
@@ -13,13 +10,13 @@ from odoo.addons.account.tools.certificate import load_key_and_certificates
 
 
 class Certificate(models.Model):
-    _name = 'l10n_es_edi.certificate'
+    _name = 'l10n_es_edi_sii.certificate'
     _description = 'Personal Digital Certificate'
     _order = 'date_start desc, id desc'
     _rec_name = 'date_start'
 
     content = fields.Binary(string="File", required=True, help="PFX Certificate")
-    password = fields.Char(help="Passphrase for the PFX certificate", groups="base.group_system")
+    password = fields.Char(help="Passphrase for the PFX certificate")
     date_start = fields.Datetime(readonly=True, help="The date on which the certificate starts to be valid")
     date_end = fields.Datetime(readonly=True, help="The date on which the certificate expires")
     company_id = fields.Many2one(comodel_name='res.company', required=True, default=lambda self: self.env.company)
@@ -71,7 +68,7 @@ class Certificate(models.Model):
                 _pem_certificate, _pem_private_key, certif = certificate._decode_certificate()
                 cert_date_start = spain_tz.localize(certif.not_valid_before)
                 cert_date_end = spain_tz.localize(certif.not_valid_after)
-            except Exception:
+            except ValueError:
                 raise ValidationError(_(
                     "There has been a problem with the certificate, some usual problems can be:\n"
                     "- The password given or the certificate are not valid.\n"
