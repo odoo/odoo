@@ -15,8 +15,8 @@ class EventRegistration(models.Model):
             ('to_pay', 'Not Sold'),
             ('sold', 'Sold'),
             ('free', 'Free'),
-        ], compute="_compute_registration_status", compute_sudo=True, store=True)
-    state = fields.Selection(default=None, compute="_compute_registration_status", store=True, readonly=False)
+        ], compute="_compute_registration_status", compute_sudo=True, store=True, precompute=True)
+    state = fields.Selection(default=None, compute="_compute_registration_status", store=True, readonly=False, precompute=True)
     utm_campaign_id = fields.Many2one(compute='_compute_utm_campaign_id', readonly=False,
         store=True, ondelete="set null")
     utm_source_id = fields.Many2one(compute='_compute_utm_source_id', readonly=False,
@@ -133,7 +133,7 @@ class EventRegistration(models.Model):
         res = super(EventRegistration, self)._get_registration_summary()
         res.update({
             'sale_status': self.sale_status,
-            'sale_status_value': dict(self._fields['sale_status']._description_selection(self.env))[self.sale_status],
+            'sale_status_value': self.sale_status and dict(self._fields['sale_status']._description_selection(self.env))[self.sale_status],
             'has_to_pay': self.sale_status == 'to_pay',
         })
         return res

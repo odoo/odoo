@@ -266,6 +266,13 @@ class TestEventSale(TestEventSaleCommon):
         self.assertEqual(len(self.event_0.registration_ids), TICKET_COUNT)
         self.assertTrue(all(reg.state == "open" for reg in self.event_0.registration_ids))
 
+    def test_event_sale_free_no_saleorder(self):
+        registration = self.env['event.registration'].create({
+            'event_id': self.event_0.id,
+            'partner_id': self.event_customer2.id,
+        })
+        self.assertEqual(registration.sale_status, 'free')
+
     @users('user_sales_salesman')
     def test_event_sale_free_full_event_no_confirm(self):
         """Check that even free registrations are not confirmed if there are not
