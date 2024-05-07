@@ -283,9 +283,9 @@ class StockMove(models.Model):
     @api.depends('byproduct_id')
     def _compute_show_info(self):
         super()._compute_show_info()
-        byproduct_moves = self.filtered(lambda m: m.byproduct_id or m in self.production_id.move_finished_ids)
-        byproduct_moves.show_quant = False
-        byproduct_moves.show_lots_text = True
+        self.filtered(lambda m: m.byproduct_id or m in self.production_id.move_finished_ids).show_quant = False
+        for move in self.filtered(lambda m: m.picking_type_id.code == 'mrp_operation'):
+            move.show_lots_text &= move.picking_type_id.use_create_components_lots
 
     @api.depends('picking_type_id.use_create_components_lots')
     def _compute_display_assign_serial(self):
