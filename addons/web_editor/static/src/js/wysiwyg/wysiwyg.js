@@ -1749,6 +1749,10 @@ export class Wysiwyg extends Component {
                 }
             } else {
                 if (this.options.enableTranslation) {
+                    if (params.node.classList.contains("media_iframe_video")) {
+                        params.node.querySelector(".o_translatable_attribute").setAttribute("src",
+                            element.querySelector("iframe").getAttribute("src"));
+                    }
                     const attributesToKeep = ["data-resize-width", "title", "alt", "data-oe-translation-state"];
                     // We don't replace the node with the element because there
                     // are mutation observers needed for the translation system.

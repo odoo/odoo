@@ -2719,6 +2719,8 @@ class SnippetsMenu extends Component {
             && $snippet[0]
             && !$snippet[0].matches(".o_translatable_attribute")
             && !$snippet[0].querySelector(".o_translatable_attribute")
+            && !$snippet[0].classList.contains("css_editable_mode_display")
+            && !$snippet[0].parentElement.querySelector(".o_translatable_attribute")
         ) {
             return this._activateSnippet(false);
         }
