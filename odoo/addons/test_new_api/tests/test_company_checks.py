@@ -201,6 +201,16 @@ class TestCompanyCheck(common.TransactionCase):
             [self.company_a.id, self.company_c.id],
         )
 
+        # Special case: _flush() can create a context with allowed_company_ids
+        # being None; it should be interpreted as [].
+        none_user = user.with_context(allowed_company_ids=None)
+        self.assertEqual(none_user.env.company, user.company_id)
+        self.assertEqual(none_user.env.companies, user.company_ids)
+
+        comp_user = none_user.with_company(user.company_id)
+        self.assertEqual(comp_user.env.company, user.company_id)
+        self.assertEqual(comp_user.env.companies, user.company_id)
+
     def test_company_sticky_with_context(self):
         context = frozendict({'nothing_to_see_here': True})
         companies_1 = frozendict({'allowed_company_ids': [1]})
