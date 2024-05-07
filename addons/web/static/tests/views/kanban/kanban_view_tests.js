@@ -14714,4 +14714,65 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(target, ".o_kanban_group", 3);
         }
     );
+
+    QUnit.test("Statusbar reflects changes when stages are added or edited", async (assert) => {
+        serverData.views = {
+            "product,false,form": `<form string="Product"><field name="display_name"/></form>`,
+            "partner,false,kanban": `
+                <kanban default_group_by="product_id">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            "partner,false,search": "<search/>",
+            "partner,false,form": `
+                <form>
+                    <header>
+                        <field name="product_id" widget="statusbar"/>
+                    </header>
+                    <field name="foo"/>
+                </form>`,
+        };
+
+        // Create web client and perform action
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, {
+            name: "Partners",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "kanban"],
+                [false, "form"],
+            ],
+        });
+
+        // Test editing a stage
+        const clickColumnAction = await toggleColumnActions(target, 0);
+        await clickColumnAction("Edit");
+        await editInput(target, ".o_field_widget[name=display_name] input", "Stage 1");
+        await click(target, ".modal .o_form_button_save");
+        await click(target.querySelector(".oe_kanban_global_click"));
+        assert.deepEqual(
+            [...target.querySelectorAll("[role='radio']")].map((el) => el.textContent),
+            ["xmo", "Stage 1"],
+            "Editing stage reflects correctly in the status bar"
+        );
+        await click(target, ".o_back_button");
+
+        // Test creating a stage
+        await createColumn(target);
+        await editColumnName(target, "Stage 2");
+        await click(target, ".o_kanban_add");
+        await click(target.querySelector(".oe_kanban_global_click"));
+        assert.deepEqual(
+            [...target.querySelectorAll("[role='radio']")].map((el) => el.textContent),
+            ["Stage 2", "xmo", "Stage 1"],
+            "Creating stage reflects correctly in the status bar"
+        );
+    });
+
 });

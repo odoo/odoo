@@ -622,7 +622,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
-        "For the same record, a single rpc is done to recover the specialData",
+        "For the same record, multiple RPCs are made to retrieve the specialData",
         async function (assert) {
             serverData.views = {
                 "partner,3,list": '<tree><field name="display_name"/></tree>',
@@ -661,7 +661,7 @@ QUnit.module("Fields", (hooks) => {
 
             await click(target, ".o_back_button");
             await click(target.querySelector(".o_data_row .o_data_cell"));
-            assert.verifySteps([]);
+            assert.verifySteps(["search_read"]);
         }
     );
 
@@ -891,6 +891,6 @@ QUnit.module("Fields", (hooks) => {
             getNodesTextContent(target.querySelectorAll(".o_statusbar_status button:not(.d-none)")),
             ["Stage Project 2"]
         );
-        assert.verifySteps([]);
+        assert.verifySteps(["[\"|\",[\"id\",\"=\",2],[\"project_ids\",\"in\",2]]"]);
     });
 });
