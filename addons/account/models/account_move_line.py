@@ -2628,7 +2628,7 @@ class AccountMoveLine(models.Model):
         journal = company.currency_exchange_journal_id
         expense_exchange_account = company.expense_currency_exchange_account_id
         income_exchange_account = company.income_currency_exchange_account_id
-        accounting_exchange_date = journal.with_context(move_date=exchange_date).accounting_date
+        accounting_exchange_date = journal.with_context(move_date=exchange_date).accounting_date if journal else date.min
 
         move_vals = {
             'move_type': 'entry',
