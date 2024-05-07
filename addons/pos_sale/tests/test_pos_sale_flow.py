@@ -278,6 +278,8 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'type': 'product',
             'lst_price': 10.0,
         })
+        self.env['stock.quant']._update_available_quantity(product_a, warehouse.lot_stock_id, 1)
+
         #create a sale order with 2 lines
         sale_order = self.env['sale.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
