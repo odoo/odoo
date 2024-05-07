@@ -205,6 +205,16 @@ export function clickCloseSession() {
         },
     ];
 }
+export function clickBackend() {
+    return [
+        {
+            trigger: ".menu-button",
+        },
+        {
+            trigger: ".backend-button",
+        },
+    ];
+}
 export function goBackToMainScreen() {
     return [
         {

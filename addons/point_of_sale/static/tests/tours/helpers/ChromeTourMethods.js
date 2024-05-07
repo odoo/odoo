@@ -27,6 +27,14 @@ export function clickMenuButton() {
         },
     ];
 }
+export function openSession() {
+    return [
+        {
+            content: "Open POS session from backend",
+            trigger: "button[name='open_ui']",
+        },
+    ];
+}
 export function closeSession() {
     return [
         ...clickMenuButton(),
