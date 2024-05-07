@@ -3431,6 +3431,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         delivery.partner_id = shipping_partner
         move_line_vals = delivery.move_ids._prepare_move_line_vals()
         move_line = self.env['stock.move.line'].create(move_line_vals)
-        move_line.qty_done = 2.
+        move_line.quantity = 2
         delivery.button_validate()
         self.assertEqual(delivery.state, 'done')
