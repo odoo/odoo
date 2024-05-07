@@ -688,7 +688,7 @@ class AccountMove(models.Model):
             ):
                 self.env.cr.commit()
                 moves |= move
-                proxy_acks.append(id_transaction)
+            proxy_acks.append(id_transaction)
 
         # Extend created moves with the related attachments and commit
         for move in moves:

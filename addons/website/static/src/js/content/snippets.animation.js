@@ -1790,9 +1790,14 @@ registry.ImageShapeHoverEffet = publicWidget.Widget.extend({
      */
     destroy() {
         this._super(...arguments);
-        if (this.originalImgSrc && (this.lastImgSrc === this.el.getAttribute('src'))) {
+        if (this.el.dataset.originalSrcBeforeHover && !this.el.classList.contains("o_modified_image_to_save")) {
+            // Replace the image source by its original one if it has not been
+            // modified in edit mode.
+            this.el.src = this.el.dataset.originalSrcBeforeHover;
+        } else if (this.originalImgSrc && (this.lastImgSrc === this.el.getAttribute("src"))) {
             this.el.src = this.originalImgSrc;
         }
+        delete this.el.dataset.originalSrcBeforeHover;
     },
 
     //--------------------------------------------------------------------------
@@ -1889,6 +1894,9 @@ registry.ImageShapeHoverEffet = publicWidget.Widget.extend({
                 return;
             }
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive("setImgHoverEffectSrc");
+            if (this.editableMode && !this.el.dataset.originalSrcBeforeHover) {
+                this.el.dataset.originalSrcBeforeHover = this.originalImgSrc;
+            }
             this.el.src = preloadedImg.getAttribute('src');
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive("setImgHoverEffectSrc");
             this.lastImgSrc = preloadedImg.getAttribute('src');

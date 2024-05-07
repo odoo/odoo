@@ -895,7 +895,7 @@ class AccountMoveLine(models.Model):
             tax_ids = False if self.env.context.get('skip_computed_taxes') else self.account_id.tax_ids
 
         if self.company_id and tax_ids:
-            tax_ids = tax_ids.filtered_domain(company_domain)
+            tax_ids = tax_ids._filter_taxes_by_company(self.company_id)
 
         if tax_ids and self.move_id.fiscal_position_id:
             tax_ids = self.move_id.fiscal_position_id.map_tax(tax_ids)
@@ -2622,14 +2622,9 @@ class AccountMoveLine(models.Model):
             return
 
         journal = company.currency_exchange_journal_id
-        if not journal:
-            raise UserError(_(
-                    "You have to configure the 'Exchange Gain or Loss Journal' in your company settings, to manage"
-                    " automatically the booking of accounting entries related to differences between exchange rates."
-                ))
         expense_exchange_account = company.expense_currency_exchange_account_id
         income_exchange_account = company.income_currency_exchange_account_id
-        accounting_exchange_date = journal.with_context(move_date=exchange_date).accounting_date
+        accounting_exchange_date = journal.with_context(move_date=exchange_date).accounting_date if journal else date.min
 
         move_vals = {
             'move_type': 'entry',
@@ -2712,6 +2707,13 @@ class AccountMoveLine(models.Model):
         for exchange_diff_values in exchange_diff_values_list:
             move_vals = exchange_diff_values['move_values']
             exchange_move_values_list.append(move_vals)
+
+            if not move_vals['journal_id']:
+                raise UserError(_(
+                    "You have to configure the 'Exchange Gain or Loss Journal' in your company settings, to manage"
+                    " automatically the booking of accounting entries related to differences between exchange rates."
+                ))
+
             journal_ids.add(move_vals['journal_id'])
 
         if not exchange_move_values_list:
