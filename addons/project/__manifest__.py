@@ -80,9 +80,13 @@
             'project/static/src/scss/project_sharing_frontend.scss',
             'project/static/src/js/portal_rating.js',
         ],
+        'web.assets_unit_tests': [
+            'project/static/tests/mock_server/**/*',
+        ],
         'web.qunit_suite_tests': [
             'project/static/src/project_sharing/components/portal_file_input/portal_file_input.js',
             'project/static/tests/**/*.js',
+            ('remove', 'project/static/tests/mock_server/**/*'),
         ],
         'web.assets_tests': [
             'project/static/tests/tours/**/*',
