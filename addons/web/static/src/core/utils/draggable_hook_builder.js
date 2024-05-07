@@ -483,7 +483,7 @@ export function makeDraggableHook(hookParams) {
                 return (
                     !ctx.tolerance ||
                     Math.hypot(pointer.x - initialPosition.x, pointer.y - initialPosition.y) >=
-                    ctx.tolerance
+                        ctx.tolerance
                 );
             };
 
@@ -985,7 +985,7 @@ export function makeDraggableHook(hookParams) {
                             // be fired. Note that we DO NOT want to prevent touchstart
                             // events since they're responsible of the native swipe
                             // scrolling.
-                            addListener(el, "touchstart", () => { }, {
+                            addListener(el, "touchstart", () => {}, {
                                 passive: false,
                                 noAddedStyle: true,
                             });
@@ -1003,9 +1003,11 @@ export function makeDraggableHook(hookParams) {
             };
             // Other global event listeners.
             const throttledOnPointerMove = setupHooks.throttle(onPointerMove);
-            addWindowListener(useMouseEvents ? "mousemove" : "pointermove", throttledOnPointerMove, {
-                passive: false,
-            });
+            addWindowListener(
+                useMouseEvents ? "mousemove" : "pointermove",
+                throttledOnPointerMove,
+                { passive: false }
+            );
             addWindowListener(useMouseEvents ? "mouseup" : "pointerup", onPointerUp);
             addWindowListener("pointercancel", onPointerCancel);
             addWindowListener("keydown", onKeyDown, { capture: true });
