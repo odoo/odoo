@@ -1167,3 +1167,70 @@ class TestAccountMove(AccountTestInvoicingCommon):
             move.line_ids.mapped(lambda x: (x.debit, x.credit)),
             "Quantities should have been rounded according to the currency."
         )
+
+    def test_journal_entry_clear_taxes(self):
+        """
+        This test checks that tax tags on journal entries lines are updated according to the taxes on each line
+        In other words, removing a tax from a line should remove its tags from that line
+        """
+        def _create_tax_tag(tag_name):
+            return self.env['account.account.tag'].create({
+                'name': tag_name,
+                'applicability': 'taxes',
+                'country_id': self.env.company.country_id.id,
+            })
+
+        def _create_tax(tax_percent):
+            return self.env['account.tax'].create({
+                'name': f'VAT {tax_percent}%',
+                'type_tax_use': 'sale',
+                'amount': tax_percent,
+                'invoice_repartition_line_ids': [
+                    Command.create({
+                        'repartition_type': 'base',
+                        'tag_ids': _create_tax_tag(f'invoice_base_{tax_percent}').ids,
+                    }),
+                    Command.create({
+                        'repartition_type': 'tax',
+                        'tag_ids': _create_tax_tag(f'invoice_tax_{tax_percent}').ids,
+                    }),
+                ],
+                'refund_repartition_line_ids': [
+                    Command.create({
+                        'repartition_type': 'base',
+                        'tag_ids': _create_tax_tag(f'refund_base_{tax_percent}').ids,
+                    }),
+                    Command.create({
+                        'repartition_type': 'tax',
+                        'tag_ids': _create_tax_tag(f'refund_tax_{tax_percent}').ids,
+                    }),
+                ],
+            })
+
+        tax_1 = _create_tax(10)
+        tax_2 = _create_tax(15)
+
+        move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': '2019-01-01',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'line_ids': [
+                Command.create({
+                    'debit': 0.0,
+                    'credit': 0.0,
+                    'account_id': self.company_data['default_account_payable'].id,
+                    'tax_ids': [Command.set([tax_1.id, tax_2.id])],
+                })
+            ],
+        })
+        line = move.line_ids[0]
+        self.assertEqual(len(line.tax_ids), 2)
+        self.assertEqual(len(line.tax_tag_ids), 2)
+
+        line.tax_ids = [Command.set(tax_1.ids)]
+        self.assertEqual(len(line.tax_ids), 1)
+        self.assertEqual(len(line.tax_tag_ids), 1)
+
+        line.tax_ids = [Command.clear()]
+        self.assertEqual(len(line.tax_ids), 0)
+        self.assertEqual(len(line.tax_tag_ids), 0)
