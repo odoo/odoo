@@ -116,7 +116,7 @@ class EvaluacionesController(http.Controller):
         valores_radios_escala = post_data.get("radioValuesScale")
         valores_textarea = post_data.get("textareaValues")
         evaluacion_id = post_data.get("evaluacion_id")
-        user_id = user
+        usuario_id = user
         respuesta_modelo = request.env["respuesta"]
         token = post_data.get("token")
 
@@ -124,7 +124,7 @@ class EvaluacionesController(http.Controller):
             if pregunta_id in valores_radios:
                 valor_radio = valores_radios[pregunta_id]
                 if request.env.user != request.env.ref("base.public_user"):
-                    resp = respuesta_modelo.sudo().action_guardar_respuesta(valor_radio, None, int(evaluacion_id), int(user_id), int(pregunta_id), None, False)
+                    resp = respuesta_modelo.sudo().action_guardar_respuesta(valor_radio, None, int(evaluacion_id), int(usuario_id), int(pregunta_id), None, False)
                 else:
                     resp = respuesta_modelo.sudo().action_guardar_respuesta(valor_radio, None, int(evaluacion_id), None, int(pregunta_id), token, False)
             else:
@@ -134,7 +134,7 @@ class EvaluacionesController(http.Controller):
             if pregunta_id in valores_textarea:
                 valor_textarea = valores_textarea[pregunta_id]
                 if request.env.user != request.env.ref("base.public_user"):
-                    resp = respuesta_modelo.sudo().action_guardar_respuesta(None, valor_textarea, int(evaluacion_id), int(user_id), int(pregunta_id), None, False)
+                    resp = respuesta_modelo.sudo().action_guardar_respuesta(None, valor_textarea, int(evaluacion_id), int(usuario_id), int(pregunta_id), None, False)
                 else:
                     resp = respuesta_modelo.sudo().action_guardar_respuesta(None, valor_textarea, int(evaluacion_id), None, int(pregunta_id), token, False)
             else:
@@ -144,7 +144,7 @@ class EvaluacionesController(http.Controller):
             if pregunta_id in valores_radios_escala:
                 valor_radio = valores_radios_escala[pregunta_id]
                 if request.env.user != request.env.ref("base.public_user"):
-                    resp = respuesta_modelo.sudo().action_guardar_respuesta(valor_radio, None, int(evaluacion_id), int(user_id), int(pregunta_id), None, True)
+                    resp = respuesta_modelo.sudo().action_guardar_respuesta(valor_radio, None, int(evaluacion_id), int(usuario_id), int(pregunta_id), None, True)
                 else:
                     resp = respuesta_modelo.sudo().action_guardar_respuesta(valor_radio, None, int(evaluacion_id), None, int(pregunta_id), token, True)
             else:
@@ -154,7 +154,7 @@ class EvaluacionesController(http.Controller):
         usuario_eva_mod = request.env["usuario.evaluacion.rel"]
 
         if request.env.user != request.env.ref("base.public_user"):
-            usuario_eva_mod.sudo().action_update_estado(user_id, evaluacion_id, None)
+            usuario_eva_mod.sudo().action_update_estado(usuario_id, evaluacion_id, None)
         else:
             usuario_eva_mod.sudo().action_update_estado(None, evaluacion_id, token)
 

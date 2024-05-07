@@ -23,16 +23,16 @@ class UsuarioEvaluacionRel(models.Model):
     token = fields.Char(string="Token")
     
     
-    def action_get_estado(self, user_id, evaluacion_id, token):
+    def action_get_estado(self, usuario_id, evaluacion_id, token):
         """Método para obtener el estado de la evaluación para el usuario.
         
-        :param user_id: ID del usuario
+        :param usuario_id: ID del usuario
         :param evaluacion_id: ID de la evaluación
         :return: estado de la evaluación
         """
-        if user_id:
+        if usuario_id:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("usuario_id", "=", user_id), ("evaluacion_id", "=", evaluacion_id)]
+                [("usuario_id", "=", usuario_id), ("evaluacion_id", "=", evaluacion_id)]
             )
         else:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
@@ -41,16 +41,16 @@ class UsuarioEvaluacionRel(models.Model):
 
         return usuario_evaluacion.contestada
 
-    def action_update_estado(self, user_id, evaluacion_id, token):
+    def action_update_estado(self, usuario_id, evaluacion_id, token):
         """Método para actualizar el estado de la evaluación para el usuario.
         
-        :param user_id: ID del usuario
+        :param usuario_id: ID del usuario
         :param evaluacion_id: ID de la evaluación
         """
         
-        if user_id:
+        if usuario_id:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("usuario_id", "=", user_id), ("evaluacion_id", "=", evaluacion_id)]
+                [("usuario_id", "=", usuario_id), ("evaluacion_id", "=", evaluacion_id)]
             )
         else:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
