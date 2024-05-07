@@ -606,7 +606,7 @@ export function makeDraggableHook(hookParams) {
                 }
 
                 const diffToScroll = ([delta, sign]) =>
-                    (1 - clamp(delta, 0, threshold) / threshold) * correctedSpeed * sign;
+                    (1 - Math.max(delta, 0) / threshold) * correctedSpeed * sign;
                 if ((!direction || direction === "vertical") && diff.y) {
                     ctx.current.scrollParentY.scrollBy({ top: diffToScroll(diff.y) });
                 }
