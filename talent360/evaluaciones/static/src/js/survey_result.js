@@ -109,12 +109,24 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 self.graphData = JSON.parse(self.graphData.replace(/'/g, '"'));
             }
 
+            // self.labels = self.graphData.map(function (respuesta) {
+            //     return respuesta.texto;
+            // });
+    
+            // self.counts = self.graphData.map(function (respuesta) {
+            //     return respuesta.conteo;
+            // });
+    
             self.labels = self.graphData.map(function (categoria) {
                 return categoria.nombre;
             });
     
             self.counts = self.graphData.map(function (categoria) {
                 return categoria.valor;
+            });
+
+            self.color = self.graphData.map(function (categoria) {
+                return categoria.color;
             });
 
             if (self.graphData && self.graphData.length !== 0) {
@@ -157,7 +169,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 datasets:[{
                     label: this.label,
                     data: this.counts,
-                    backgroundColor: this.counts.map(function (val, index) {
+                    backgroundColor: this.color || this.counts.map(function (val, index) {
                         return D3_COLORS[index % 20];
                     }),
                 }]

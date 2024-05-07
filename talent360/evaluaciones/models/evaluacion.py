@@ -62,8 +62,11 @@ class Evaluacion(models.Model):
         "usuario_id",
         string="Asignados",
     )
-    
 
+    fecha_inicio = fields.Date()
+    fecha_final = fields.Date()
+
+    
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
         """
@@ -329,6 +332,73 @@ class Evaluacion(models.Model):
 
         return parametros
 
+    def action_get_evaluaciones(self, evaluacion_id):
+        """
+        Obtiene las preguntas asociadas a la evaluación.
+
+        Este método obtiene las preguntas asociadas a la evaluación actual y las devuelve en un diccionario.
+
+        :return: Un diccionario con las preguntas asociadas a la evaluación.
+
+        """
+
+        return {
+            "evaluacion": self,
+            "pregunta": self.pregunta_ids,
+        }
+    
+    def action_enviar_evaluacion(self):
+        usuarios = []
+
+        for usuario in self.usuario_ids:
+            usuarios.append(usuario.partner_id.name)
+        self.env['usuario.evaluacion.rel'].action_enviar_evaluacion(evaluacion_id=self.id)
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": f"Evaluación {self.nombre} fue enviada!",
+                "type": "success",
+                "message": f"La evaluación ha sido enviada a {', '.join(usuarios)}.",
+                "sticky": False,
+            },
+        }
+        
+
+    def action_get_evaluaciones(self, evaluacion_id):
+        """
+        Obtiene las preguntas asociadas a la evaluación.
+
+        Este método obtiene las preguntas asociadas a la evaluación actual y las devuelve en un diccionario.
+
+        :return: Un diccionario con las preguntas asociadas a la evaluación.
+
+        """
+
+        return {
+            "evaluacion": self,
+            "pregunta": self.pregunta_ids,
+        }
+    
+    def action_enviar_evaluacion(self):
+        usuarios = []
+
+        for usuario in self.usuario_ids:
+            usuarios.append(usuario.partner_id.name)
+        self.env['usuario.evaluacion.rel'].action_enviar_evaluacion(evaluacion_id=self.id)
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": f"Evaluación {self.nombre} fue enviada!",
+                "type": "success",
+                "message": f"La evaluación ha sido enviada a {', '.join(usuarios)}.",
+                "sticky": False,
+            },
+        }
+        
+
+
     def action_generar_datos_reporte_NOM_035(self):
         """
         Genera los datos necesarios para el reporte genérico de la evaluación.
@@ -366,10 +436,11 @@ class Evaluacion(models.Model):
                 continue
             categoria = dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
             dominio = dict(pregunta._fields["dominio"].selection).get(pregunta.dominio)
-
             valor_pregunta = 0
 
             for respuesta in pregunta.respuesta_ids:
+                if respuesta.evaluacion_id.id != self.id:
+                    continue
                 valor_respuesta = int(respuesta.respuesta_texto)
                 valor_pregunta += valor_respuesta
                 final += valor_respuesta
@@ -380,11 +451,175 @@ class Evaluacion(models.Model):
             if dominio in dominios:
                 dominios[dominio] += valor_pregunta
 
+        # Función para asignar color
+        def asignar_color(valor, categoria=None, dominio=None):
+            if categoria:
+                if categoria == "Ambiente de Trabajo":
+                    if valor < 3:
+                        return "#2894a7"  # Azul clarito
+                    elif 3 <= valor < 5:
+                        return "#5aaf2b"  # Verde
+                    elif 5 <= valor < 7:
+                        return "#ebae14"  # Amarillo
+                    elif 7 <= valor < 9:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif categoria == "Factores propios de la actividad":
+                    if valor < 10:
+                        return "#2894a7"  # Azul clarito
+                    elif 10 <= valor < 20:
+                        return "#5aaf2b"  # Verde
+                    elif 20 <= valor < 30:
+                        return "#ebae14"  # Amarillo
+                    elif 30 <= valor < 40:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif categoria == "Organización del tiempo de trabajo":
+                    if valor < 4:
+                        return "#2894a7"  # Azul clarito
+                    elif 4 <= valor < 6:
+                        return "#5aaf2b"  # Verde
+                    elif 6 <= valor < 9:
+                        return "#ebae14"  # Amarillo
+                    elif 9 <= valor < 12:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif categoria == "Liderazgo y relaciones en el trabajo":
+                    if valor < 10:
+                        return "#2894a7"  # Azul clarito
+                    elif 10 <= valor < 18:
+                        return "#5aaf2b"  # Verde
+                    elif 18 <= valor < 28:
+                        return "#ebae14"  # Amarillo
+                    elif 28 <= valor < 38:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+            elif dominio:
+                if dominio == "Condiciones en el ambiente de trabajo":
+                    if valor < 3:
+                        return "#2894a7"  # Azul clarito
+                    elif 3 <= valor < 5:
+                        return "#5aaf2b"  # Verde
+                    elif 5 <= valor < 7:
+                        return "#ebae14"  # Amarillo
+                    elif 7 <= valor < 9:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif dominio == "Carga de trabajo":
+                    if valor < 12:
+                        return "#2894a7"  # Azul clarito
+                    elif 12 <= valor < 16:
+                        return "#5aaf2b"  # Verde
+                    elif 16 <= valor < 20:
+                        return "#ebae14"  # Amarillo
+                    elif 20 <= valor < 24:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif dominio == "Falta de control sobre el trabajo":
+                    if valor < 5:
+                        return "#2894a7"  # Azul clarito
+                    elif 5 <= valor < 8:
+                        return "#5aaf2b"  # Verde
+                    elif 8 <= valor < 11:
+                        return "#ebae14"  # Amarillo
+                    elif 11 <= valor < 14:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif dominio == "Jornada de trabajo":
+                    if valor < 1:
+                        return "#2894a7"  # Azul clarito
+                    elif 1 <= valor < 2:
+                        return "#5aaf2b"  # Verde
+                    elif 2 <= valor < 4:
+                        return "#ebae14"  # Amarillo
+                    elif 4 <= valor < 6:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif dominio == "Interferencia en la relación trabajo-familia":
+                    if valor < 1:
+                        return "#2894a7"  # Azul clarito
+                    elif 1 <= valor < 2:
+                        return "#5aaf2b"  # Verde
+                    elif 2 <= valor < 4:
+                        return "#ebae14"  # Amarillo
+                    elif 4 <= valor < 6:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif dominio == "Liderazgo":
+                    if valor < 3:
+                        return "#2894a7"  # Azul clarito
+                    elif 3 <= valor < 5:
+                        return "#5aaf2b"  # Verde
+                    elif 5 <= valor < 8:
+                        return "#ebae14"  # Amarillo
+                    elif 8 <= valor < 11:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif dominio == "Relaciones en el trabajo":
+                    if valor < 5:
+                        return "#2894a7"  # Azul clarito
+                    elif 5 <= valor < 8:
+                        return "#5aaf2b"  # Verde
+                    elif 8 <= valor < 11:
+                        return "#ebae14"  # Amarillo
+                    elif 11 <= valor < 14:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+                elif dominio == "Violencia":
+                    if valor < 7:
+                        return "#2894a7"  # Azul clarito
+                    elif 7 <= valor < 10:
+                        return "#5aaf2b"  # Verde
+                    elif 10 <= valor < 13:
+                        return "#ebae14"  # Amarillo
+                    elif 13 <= valor < 16:
+                        return "#ffa446"  # Naranja
+                    else:
+                        return "#ff4747"  # Rojo
+            else:
+                if valor < 20:
+                    return "#2894a7"  # Azul clarito
+                elif 20 <= valor < 45:
+                    return "#5aaf2b"  # Verde
+                elif 45 <= valor < 70:
+                    return "#ebae14"  # Amarillo
+                elif 70 <= valor < 90:
+                    return "#ffa446"  # Naranja
+                else:
+                    return "#ff4747"  # Rojo
+
+
+        # Asignar color a las categorías y dominios
+        for categoria in categorias_orden:
+            categorias[categoria] = {
+                "nombre": categoria,
+                "valor": categorias[categoria],
+                "color": asignar_color(categorias[categoria], categoria=categoria),
+            }
+
+        for dominio in dominios_orden:
+            dominios[dominio] = {
+                "nombre": dominio,
+                "valor": dominios[dominio],
+                "color": asignar_color(dominios[dominio], dominio=dominio),
+            }
+
         # Organizar los parámetros en el orden deseado
         parametros = {
             "evaluacion": self,
-            "categorias": [{"nombre": nombre, "valor": categorias[nombre]} for nombre in categorias_orden],
-            "dominios": [{"nombre": nombre, "valor": dominios[nombre]} for nombre in dominios_orden],
+            "categorias": [categorias[nombre] for nombre in categorias_orden],
+            "dominios": [dominios[nombre] for nombre in dominios_orden],
             "final": final,
         }
 
@@ -403,6 +638,7 @@ class Evaluacion(models.Model):
             "Respeto a la Diversidad",
             "Condiciones Generales de Trabajo",
         ]
+<<<<<<< HEAD
 
         categorias_clima = [{"nombre": categoria, "valor": 0, "puntos": 0, "puntos_maximos": 0} for categoria in categorias_orden_clima]
         total_clima = 0
@@ -410,19 +646,79 @@ class Evaluacion(models.Model):
 
         for pregunta in self.pregunta_ids:
             if not pregunta.categoria or not dict(pregunta._fields["categoria"].selection).get(pregunta.categoria) in categorias_orden_clima:
+=======
+        
+        categorias = [{
+            "nombre": categoria, 
+            "valor": 0, 
+            "puntos": 0, 
+            "puntos_maximos": 0, 
+            "departamentos": []
+        } for categoria in categorias_orden]
+        
+        total = 0
+        maximo_posible = 0
+    
+        for pregunta in self.pregunta_ids:
+            #Ignorar preguntas sin gategoría
+            if not pregunta.categoria:
+                continue
+
+            categoria_texto = dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
+            if not categoria_texto in categorias_orden:
+>>>>>>> abe6cc975302fa0334bca7b714ce71543c3b7c49
                 continue
 
             valor_pregunta = 0
             maximo_pregunta = 0
 
+            categoria = None
+
+            for cat in categorias:
+                if cat["nombre"] == categoria_texto:
+                    categoria = cat
+                    break
+
             if pregunta.tipo == "escala":
                 maximo_pregunta += 4  # Suponiendo un máximo de 4 para cada respuesta en escala
                 valor_pregunta = sum(int(respuesta.respuesta_texto) for respuesta in pregunta.respuesta_ids) / len(pregunta.respuesta_ids)
 
+<<<<<<< HEAD
+=======
+                for respuesta in pregunta.respuesta_ids:
+                    valor_respuesta = int(respuesta.respuesta_texto)
+                    valor_pregunta += valor_respuesta
+                    
+                    if not respuesta.user_id:
+                        continue
+
+                    employee = self.env['hr.employee'].search([('user_id', '=', respuesta.user_id.id)], limit=1)
+                    departamento_nombre = employee.department_id.name
+
+                    departamento = list(filter(lambda cat: cat["nombre"] == departamento_nombre, categoria["departamentos"]))
+                    if not departamento:
+                        departamento = {
+                            "nombre": departamento_nombre,
+                            "puntos": 0,
+                            "puntos_maximos": 0,
+                        }
+                        categoria["departamentos"].append(departamento)
+                    else:
+                        departamento = departamento[0]
+
+
+                    departamento["puntos"] += valor_respuesta
+                    departamento["puntos_maximos"] += 4
+                
+                valor_pregunta = (valor_pregunta / len(pregunta.respuesta_ids))
+            
+            #TODO:vincular a cambio de opcionID
+>>>>>>> abe6cc975302fa0334bca7b714ce71543c3b7c49
             elif pregunta.tipo == "multiple_choice":
                 maximo_pregunta = max((opcion.valor for opcion in pregunta.opcion_ids), default=0)
                 valor_pregunta = sum(1 for respuesta in pregunta.respuesta_ids if respuesta.respuesta_texto == "Sí") / len(pregunta.respuesta_ids)
 
+<<<<<<< HEAD
             total_clima += valor_pregunta
             maximo_posible_clima += maximo_pregunta
 
@@ -441,6 +737,39 @@ class Evaluacion(models.Model):
             "total_clima": total_clima,
             "total_maximo_clima": maximo_posible_clima,
             "total_porcentaje_clima": (total_clima / maximo_posible_clima) * 100 if maximo_posible_clima > 0 else 0,
+=======
+            total += valor_pregunta
+            maximo_posible += maximo_pregunta
+            
+             #Acumular el valor de cada pregunta en la categoría correspondiente
+            categoria["puntos"] += valor_pregunta
+            categoria["puntos_maximos"] += maximo_pregunta
+
+        for categoria in categorias:
+            if categoria["puntos_maximos"] > 0:
+                categoria["valor"] = (categoria["puntos"] / categoria["puntos_maximos"]) * 100
+            else:
+                categoria["valor"] = 0
+
+            for departamento in categoria["departamentos"]:
+                if departamento["puntos_maximos"] > 0:
+                    departamento["valor"] = (departamento["puntos"] / departamento["puntos_maximos"]) * 100
+                else:
+                    departamento["valor"] = 0
+
+        total_porcentaje = 0
+
+        if maximo_posible > 0:
+            total_porcentaje = (total / maximo_posible) * 100
+
+        # Ingresar los datos a parámetros
+        parametros = {
+            "evalacion": self,
+            "categorias": [categorias],
+            "total": total,
+            "total_maximo": maximo_posible,
+            "total_porcentaje": total_porcentaje,
+>>>>>>> abe6cc975302fa0334bca7b714ce71543c3b7c49
         }
         
         print(parametros)

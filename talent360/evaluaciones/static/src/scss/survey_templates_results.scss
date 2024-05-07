@@ -188,9 +188,7 @@
     flex-direction: column;
     gap: 0.5rem;
     width: 100%;
-    height: max-content;
     align-items: center;
-    justify-content: center;
 
     h4 {
         width: 100%;
@@ -222,6 +220,58 @@
 
 .survey_page {
     width: 100%;
-    min-height: 100vh;
     gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.big_number {
+    font-size: 5rem;
+}
+
+.category_number {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.color_nulo {
+    @extend .big_number;
+    color: #2894a7;
+}
+
+.color_bajo {
+    @extend .big_number;
+    color: #5aaf2b;
+}
+
+.color_medio {
+    @extend .big_number;
+    color: #ebae14;
+}
+
+.color_alto {
+    @extend .big_number;
+    color: #ffa446;
+}
+
+.color_muy-alto {
+    @extend .big_number;
+    color: #ff4747;
+}
+
+.pill {
+    padding: 0.5rem 1rem;
+    border-radius: 2em;
+    font-size: 1rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: #dbdbdb;
+}
+
+.color_circle {
+    aspect-ratio: 1;
+    width: 22px;
+    border-radius: 100%;
 }
