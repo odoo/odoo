@@ -5897,6 +5897,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         if (img.dataset.shape) {
             await this._loadShape(img.dataset.shape);
             await this._applyShapeAndColors(true, (img.dataset.shapeColors && img.dataset.shapeColors.split(';')));
+            img.classList.add("o_modified_image_to_save");
         }
     },
 
