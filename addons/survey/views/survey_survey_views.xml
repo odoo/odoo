@@ -175,6 +175,7 @@
                                     </div>
                                 </group>
                                 <group string="Live Session" name="live_session" invisible="not session_available">
+                                    <field name="access_token" invisible="1"/>  <!-- dependency of 'session_code' -->
                                     <field name="session_code" />
                                     <field name="session_link" widget="CopyClipboardChar" />
                                     <field name="session_speed_rating" invisible="scoring_type == 'no_scoring'" />
