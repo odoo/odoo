@@ -265,6 +265,14 @@ class GoogleSync(models.AbstractModel):
                 if values:
                     self.exists().with_context(dont_notify=True).need_sync = False
 
+    def _get_post_sync_values(self, request_values, google_values):
+        """ Return the values to be written in the event right after its insertion in Google side. """
+        writeable_values = {
+            'google_id': request_values['id'],
+            'need_sync': False,
+        }
+        return writeable_values
+
     @after_commit
     def _google_insert(self, google_service: GoogleCalendarService, values, timeout=TIMEOUT):
         if not values:
@@ -274,12 +282,8 @@ class GoogleSync(models.AbstractModel):
                 try:
                     send_updates = self._context.get('send_updates', True)
                     google_service.google_service = google_service.google_service.with_context(send_updates=send_updates)
-                    google_id = google_service.insert(values, token=token, timeout=timeout)
-                    # Everything went smoothly
-                    self.with_context(dont_notify=True).write({
-                        'google_id': google_id,
-                        'need_sync': False,
-                    })
+                    google_values = google_service.insert(values, token=token, timeout=timeout)
+                    self.with_context(dont_notify=True).write(self._get_post_sync_values(values, google_values))
                 except HTTPError as e:
                     if e.response.status_code in (400, 403):
                         self._google_error_handling(e)

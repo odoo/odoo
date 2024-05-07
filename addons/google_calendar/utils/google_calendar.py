@@ -78,8 +78,8 @@ class GoogleCalendarService():
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
         if not values.get('id'):
             values['id'] = uuid4().hex
-        self.google_service._do_request(url, json.dumps(values), headers, method='POST', timeout=timeout)
-        return values['id']
+        _dummy, google_values, _dummy = self.google_service._do_request(url, json.dumps(values), headers, method='POST', timeout=timeout)
+        return google_values
 
     @requires_auth_token
     def patch(self, event_id, values, token=None, timeout=TIMEOUT):
