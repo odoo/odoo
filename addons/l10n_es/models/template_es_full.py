@@ -10,7 +10,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_es_full_template_data(self):
         return {
             'name': _('Complete (2008)'),
-            'parent': 'es_common',
+            'parent': 'es_common_mainland',
         }
 
     @template('es_full', 'res.company')
