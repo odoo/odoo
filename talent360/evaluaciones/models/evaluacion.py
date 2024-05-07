@@ -341,6 +341,20 @@ class Evaluacion(models.Model):
         }
     
     def action_enviar_evaluacion(self):
+        usuarios = []
+
+        for usuario in self.usuario_ids:
+            usuarios.append(usuario.partner_id.name)
         self.env['usuario.evaluacion.rel'].action_enviar_evaluacion(evaluacion_id=self.id)
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": f"Evaluación {self.nombre} fue enviada!",
+                "type": "success",
+                "message": f"La evaluación ha sido enviada a {', '.join(usuarios)}.",
+                "sticky": False,
+            },
+        }
         
 
