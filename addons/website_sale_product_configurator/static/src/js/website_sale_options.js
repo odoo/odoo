@@ -43,7 +43,7 @@ publicWidget.registry.WebsiteSale.include({
      * @override
      */
     _submitForm() {
-        var ret = this._super(...arguments);
+        const ret = Promise.resolve(this._super(...arguments));
         if (this.optionalProductsModal && this.stayOnPageOption) {
             ret.then(()=>{
                 this.optionalProductsModal._openedResolver()
