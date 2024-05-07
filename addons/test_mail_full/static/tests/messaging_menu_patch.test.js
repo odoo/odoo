@@ -1,19 +1,20 @@
-/* @odoo-module */
+import { click, contains, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { test } from "@odoo/hoot";
+import { defineTestMailFullModels } from "@test_mail_full/../tests/test_mail_full_test_helpers";
+import { serverState } from "@web/../tests/web_test_helpers";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
+defineTestMailFullModels();
 
-import { start } from "@mail/../tests/helpers/test_utils";
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.module("messaging menu (patch)");
-
-QUnit.test("rating value displayed on the preview", async () => {
+test("rating value displayed on the preview", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const channelId = pyEnv["discuss.channel"].create({});
-    const messageId = pyEnv["mail.message"].create([
-        { author_id: partnerId, body: "non-empty", model: "discuss.channel", res_id: channelId },
-    ]);
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "non-empty",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
     pyEnv["rating.rating"].create({
         consumed: true,
         message_id: messageId,
@@ -28,7 +29,7 @@ QUnit.test("rating value displayed on the preview", async () => {
     await contains(".o-rating-preview-image[data-src='/rating/static/src/img/rating_5.png']");
 });
 
-QUnit.test("rating value displayed on the needaction preview", async () => {
+test("rating value displayed on the needaction preview", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const ratingId = pyEnv["mail.test.rating"].create({ name: "Test rating" });
