@@ -6,7 +6,8 @@ from odoo.tools import split_every
 
 
 class AccountTax(models.Model):
-    _inherit = 'account.tax'
+    _name = 'account.tax'
+    _inherit = ['account.tax', 'pos.load.mixin']
 
     def write(self, vals):
         forbidden_fields = {
@@ -69,10 +70,9 @@ class AccountTax(models.Model):
         for tax in tax_ids:
             taxes_list.append(tax._prepare_dict_for_taxes_computation())
 
-        if data['pos.config']['data'][0]['current_session_id']:
+        if data.get('pos.config') and len(data['pos.config']['data']) > 0:
             product_fields = self.env['account.tax']._eval_taxes_computation_prepare_product_fields(taxes_list)
-            session_data = next(x for x in data['pos.session']['data'] if x['id'] == data['pos.config']['data'][0]['current_session_id'])
-            session_data['_product_default_values'] = self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(
+            data['pos.config']['data'][0]['_product_default_values'] = self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(
                 product_fields,
             )
 

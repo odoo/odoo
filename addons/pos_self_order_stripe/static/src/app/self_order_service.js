@@ -7,7 +7,7 @@ patch(SelfOrder.prototype, {
         await super.setup(...arguments);
         this.stripeState = "not_connected";
 
-        const stripePaymentMethod = this.pos_payment_methods.find(
+        const stripePaymentMethod = this.models["pos.payment.method"].find(
             (p) => p.use_payment_terminal === "stripe"
         );
 

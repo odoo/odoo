@@ -11,19 +11,18 @@ export class ComboSelection extends Component {
         this.selfOrder = useSelfOrder();
     }
 
-    productClicked(lineId) {
+    productClicked(line) {
         // Keep track of the current combo line id.
         // It servers as additional info for each line so that when calculating prices,
         // no need to look for the specific combo line the product belongs to.
-        this.env.currentComboLineId.value = lineId;
-
-        const comboLine = this.props.combo.combo_line_ids.find((line) => line.id == lineId);
-        const productSelected = this.selfOrder.productByIds[comboLine.product_id[0]];
+        this.env.currentComboLineId.value = line.id;
+        const productSelected = line.product_id;
         if (!productSelected.self_order_available) {
             return;
         }
+
         this.props.comboState.selectedProduct = productSelected;
-        if (productSelected.attributes.length === 0) {
+        if (productSelected.attribute_line_ids.length === 0) {
             this.props.next();
             return;
         }

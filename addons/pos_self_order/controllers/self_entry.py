@@ -8,6 +8,30 @@ from odoo.http import request
 class PosSelfKiosk(http.Controller):
     @http.route(["/pos-self/<config_id>", "/pos-self/<config_id>/<path:subpath>"], auth="public", website=True, sitemap=True)
     def start_self_ordering(self, config_id=None, access_token=None, table_identifier=None):
+        pos_config, _, config_access_token = self._verify_entry_access(config_id, access_token, table_identifier)
+        return request.render(
+                'pos_self_order.index',
+                {
+                    'session_info': {
+                        **request.env["ir.http"].get_frontend_session_info(),
+                        'currencies': request.env["ir.http"].get_currencies(),
+                        'data': {
+                            'config_id': pos_config.id,
+                            'access_token': config_access_token,
+                            'self_ordering_mode': pos_config.self_ordering_mode,
+                        },
+                        "base_url": request.env['pos.session'].get_base_url(),
+                    }
+                }
+            )
+
+    @http.route("/pos-self/data/<config_id>", type='json', auth='public')
+    def get_self_ordering_data(self, config_id=None, access_token=None, table_identifier=None):
+        pos_config, _, _ = self._verify_entry_access(config_id, access_token, table_identifier)
+        data = pos_config.load_self_data()
+        return data
+
+    def _verify_entry_access(self, config_id=None, access_token=None, table_identifier=None):
         table_sudo = False
 
         if not config_id or not config_id.isnumeric():
@@ -47,28 +71,4 @@ class PosSelfKiosk(http.Controller):
                 config_access_token = pos_config.access_token
 
         table = table_sudo.sudo(False).with_company(company).with_user(user) if table_sudo else False
-
-        return request.render(
-                'pos_self_order.index',
-                {
-                    'session_info': {
-                        **request.env["ir.http"].get_frontend_session_info(),
-                        'currencies': request.env["ir.http"].get_currencies(),
-                        'pos_self_order_data': {
-                            'table': table._get_self_order_data() if table else False,
-                            'access_token': config_access_token,
-                            **pos_config._get_self_ordering_data(),
-                        },
-                        "base_url": request.env['pos.session'].get_base_url(),
-                    }
-                }
-            )
-
-    def get_any_pos_config_sudo(self):
-        pos_config_sudo = request.env["pos.config"].sudo().search([
-            ("self_ordering_mode", "not in", ['nothing'])], limit=1)
-
-        if not pos_config_sudo:
-            raise werkzeug.exceptions.NotFound()
-
-        return pos_config_sudo
+        return pos_config, table, config_access_token

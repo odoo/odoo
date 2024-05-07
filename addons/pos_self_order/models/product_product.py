@@ -1,13 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from __future__ import annotations
-
-from typing import List, Dict, Optional
-
+from typing import List, Dict
 from odoo import api, models, fields
-from copy import deepcopy
-
-from odoo.addons.point_of_sale.models.pos_config import PosConfig
 
 
 class ProductTemplate(models.Model):
@@ -72,43 +66,6 @@ class ProductProduct(models.Model):
             if attributes_by_ptal_id.get(id) is not None
         ]
 
-    def _get_attributes(self, pos_config_sudo: PosConfig) -> List[Dict]:
-        self.ensure_one()
-
-        attributes = self.env.context.get("cached_attributes_by_ptal_id")
-
-        if attributes is None:
-            attributes = self.env["pos.session"]._get_attributes_by_ptal_id()
-            attributes = self._filter_applicable_attributes(attributes)
-        else:
-            # Performance trick to avoid unnecessary calls to _get_attributes_by_ptal_id()
-            # Needs to be deep-copied because attributes is potentially mutated
-            attributes = deepcopy(self._filter_applicable_attributes(attributes))
-
-        return self._add_price_info_to_attributes(
-            attributes,
-            pos_config_sudo,
-        )
-
-    def _add_price_info_to_attributes(
-        self, attributes: List[Dict], pos_config_sudo: PosConfig
-    ) -> List[Dict]:
-        """
-        Here we replace the price_extra of each attribute value with a price_extra
-        dictionary that includes the price with taxes included and the price with taxes excluded
-        """
-        self.ensure_one()
-        for attribute in attributes:
-            for value in attribute["values"]:
-                value.update(
-                    {
-                        "price_extra": self._get_price_info(
-                            pos_config_sudo, value.get("price_extra")
-                        )
-                    }
-                )
-        return attributes
-
     def _get_price_unit_after_fp(self, lst_price, currency, fiscal_position):
         self.ensure_one()
 
@@ -148,81 +105,6 @@ class ProductProduct(models.Model):
         else:
             return lst_price
 
-    # FIXME: this method should be verified about price computation (pricelist taxes....)
-    def _get_price_info(
-        self, pos_config: PosConfig, price: Optional[float] = None, qty: int = 1
-    ) -> Dict[str, float]:
-        self.ensure_one()
-        # if price == None it means that a price was not passed as a parameter, so we use the product's list price
-        # it could happen that a price was passed, but it was 0; in that case we want to use this 0 as the argument,
-        # and not the product's list price
-        if price is None:
-            price = pos_config.pricelist_id._get_product_price(
-                self, qty, currency=pos_config.currency_id
-            )
-
-        # Declare variables, will be the return values.
-        display_price_default = price
-        display_price_alternative = price
-
-        taxes_default = pos_config.default_fiscal_position_id.map_tax(self.taxes_id)
-        taxes_alternative = pos_config.takeaway_fp_id.map_tax(self.taxes_id)
-
-        price_unit_default = self._get_price_unit_after_fp(
-            price, pos_config.currency_id, pos_config.default_fiscal_position_id
-        )
-        price_unit_alternative = self._get_price_unit_after_fp(
-            price, pos_config.currency_id, pos_config.takeaway_fp_id
-        )
-
-        all_prices_default = taxes_default.compute_all(
-            price_unit_default, pos_config.currency_id, qty, product=self
-        )
-        all_prices_alternative = taxes_alternative.compute_all(
-            price_unit_alternative, pos_config.currency_id, qty, product=self
-        )
-
-        if self.combo_ids:
-            display_price_default = self.lst_price
-            display_price_alternative = self.lst_price
-        else:
-            if pos_config.iface_tax_included == 'total':
-                display_price_default = all_prices_default["total_included"]
-                display_price_alternative = all_prices_alternative["total_included"]
-            else:
-                display_price_default = all_prices_default["total_excluded"]
-                display_price_alternative = all_prices_alternative["total_excluded"]
-
-        return {
-            'display_price_default': display_price_default,
-            'display_price_alternative': display_price_alternative,
-        }
-
-    def _get_product_for_ui(self, pos_config):
-        self.ensure_one()
-        return {
-                "price_info": self._get_price_info(pos_config),
-                "has_image": bool(self.product_tmpl_id.image_128 or self.image_variant_128),
-                "attributes": self._get_attributes(pos_config),
-                "name": self._get_name(),
-                "id": self.id,
-                "description_self_order": self.description_self_order,
-                "pos_categ_ids": self.pos_categ_ids.read(["id", "name", "parent_id"]) or [{"id": 0, "name": "Uncategorised"}],
-                "pos_combo_ids": self.combo_ids.mapped("id") or False,
-                "is_pos_groupable": self.uom_id.is_pos_groupable,
-                "write_date": self.write_date.timestamp(),
-                "self_order_available": self.self_order_available,
-                "barcode": self.barcode,
-            }
-
-    def _get_self_order_data(self, pos_config: PosConfig) -> List[Dict]:
-        attributes_by_ptal_id = self.env["pos.session"]._get_attributes_by_ptal_id()
-        self = self.with_context(cached_attributes_by_ptal_id=attributes_by_ptal_id)
-        return [
-            product._get_product_for_ui(pos_config)
-            for product in self
-        ]
-
     def write(self, vals_list):
         res = super().write(vals_list)
         if 'self_order_available' in vals_list:
@@ -235,5 +117,5 @@ class ProductProduct(models.Model):
         for config in config_self:
             if config.current_session_id and config.access_token:
                 config._notify('PRODUCT_CHANGED', {
-                    'product': self._get_product_for_ui(config)
+                    'product.product': self.read(self._load_pos_self_data_fields(config.id), load=False)
                 })

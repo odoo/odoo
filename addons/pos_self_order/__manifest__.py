@@ -60,6 +60,15 @@
             "point_of_sale/static/src/app/printer/hw_printer.js",
             "web/static/src/core/utils/render.js",
             "pos_self_order/static/src/app/store/order_change_receipt_template.xml",
+            "account/static/src/helpers/*.js",
+            "web/static/src/views/fields/parsers.js",
+
+            # Related models from point_of_sale
+            "point_of_sale/static/src/app/models/data_service_options.js",
+            "point_of_sale/static/src/app/models/utils/indexed_db.js",
+            "point_of_sale/static/src/app/models/related_models.js",
+            "point_of_sale/static/src/app/models/data_service.js",
+            "point_of_sale/static/src/app/models/**/*",
         ],
         # Assets tests
         "pos_self_order.assets_tests": [

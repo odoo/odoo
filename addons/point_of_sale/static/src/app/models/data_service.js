@@ -51,13 +51,16 @@ export class PosData extends Reactive {
         await this.indexedDB.reset();
     }
 
+    get databaseName() {
+        return `config-id_${odoo.pos_config_id}_${odoo.access_token}`;
+    }
+
     initIndexedDB() {
         // In web tests info is not defined
-        const dbName = `config-id_${odoo.pos_config_id}_${odoo.access_token}`;
         const models = this.opts.databaseTable.map((m) => {
             return [m.key, m.name];
         });
-        this.indexedDB = new IndexedDB(dbName, INDEXED_DB_VERSION, models);
+        this.indexedDB = new IndexedDB(this.databaseName, INDEXED_DB_VERSION, models);
     }
 
     deleteDataIndexedDB(model, uuid) {
@@ -142,11 +145,11 @@ export class PosData extends Reactive {
         const results = this.models.loadData(data, [], true);
         for (const [model, data] of Object.entries(results)) {
             for (const record of data) {
-                if (record.JSONuiState) {
+                if (record.raw.JSONuiState) {
                     const loadedRecords = this.models[model].find((r) => r.uuid === record.uuid);
 
                     if (loadedRecords) {
-                        loadedRecords.uiState = JSON.parse(record.JSONuiState);
+                        loadedRecords.uiState = JSON.parse(record.raw.JSONuiState);
                     }
                 }
             }
@@ -175,15 +178,18 @@ export class PosData extends Reactive {
         this.setOnline();
     }
 
+    async loadInitialData() {
+        return await this.orm.call("pos.session", "load_data", [
+            odoo.pos_session_id,
+            PosData.modelToLoad,
+        ]);
+    }
     async initData() {
         const modelClasses = {};
         const relations = {};
         const fields = {};
         const data = {};
-        const response = await this.orm.call("pos.session", "load_data", [
-            odoo.pos_session_id,
-            PosData.modelToLoad,
-        ]);
+        const response = await this.loadInitialData();
 
         for (const [model, values] of Object.entries(response)) {
             relations[model] = values.relations;

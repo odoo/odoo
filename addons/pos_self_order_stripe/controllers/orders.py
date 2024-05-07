@@ -46,10 +46,16 @@ class PosSelfOrderControllerStripe(PosSelfOrderController):
             if order.config_id.self_ordering_mode == 'kiosk':
                 request.env['bus.bus']._sendone(f'pos_config-{order.config_id.access_token}', 'PAYMENT_STATUS', {
                     'payment_result': 'Success',
-                    'order': order._export_for_self_order(),
+                    'data': {
+                        'pos.order': order.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
+                        'pos.order.line': order.lines.read(order._load_pos_self_data_fields(order.config_id.id), load=False)
+                    }
                 })
         else:
             request.env['bus.bus']._sendone(f'pos_config-{order.config_id.access_token}', 'PAYMENT_STATUS', {
                 'payment_result': 'fail',
-                'order': order._export_for_self_order(),
+                'data': {
+                    'pos.order': order.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
+                    'pos.order.line': order.lines.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
+                }
             })

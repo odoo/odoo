@@ -8,6 +8,7 @@ from markupsafe import escape
 
 class PosSelfOrderCustomLink(models.Model):
     _name = "pos_self_order.custom_link"
+    _inherit = "pos.load.mixin"
     _description = (
         "Custom links that the restaurant can configure to be displayed on the self order screen"
     )
@@ -36,6 +37,14 @@ class PosSelfOrderCustomLink(models.Model):
     )
     link_html = fields.Html("Preview", compute="_compute_link_html", store=True, readonly=True)
     sequence = fields.Integer("Sequence", default=1)
+
+    @api.model
+    def _load_pos_self_data_domain(self, data):
+        return [('pos_config_ids', 'in', data['pos.config']['data'][0]['id'])]
+
+    @api.model
+    def _load_pos_self_data_fields(self, config_id):
+        return ['name', 'url', 'style', 'link_html', 'sequence']
 
     @api.depends("name", "style")
     def _compute_link_html(self):

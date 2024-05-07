@@ -3,7 +3,7 @@
     <t t-name="pos_self_order.PaymentPage">
         <div t-if="state.selection" class="h-100 d-flex flex-wrap p-5 gap-5 align-items-center justify-content-center">
             <div
-                t-foreach="selfOrder.pos_payment_methods"
+                t-foreach="selfOrder.models['pos.payment.method'].getAll()"
                 t-as="payment_method"
                 t-key="payment_method.id"
                 class="o_kiosk-card border rounded d-flex flex-column align-items-center p-5 justify-content-center bg-white"
