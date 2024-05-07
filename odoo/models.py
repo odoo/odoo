@@ -6318,21 +6318,13 @@ class BaseModel(metaclass=MetaModel):
 
     def _flush(self, fnames=None):
 
-        def get_value(record, field):
-            try:
-                value = next(self.env.cache.get_values(record, field))
-                if not field.translate:
-                    value = field.convert_to_write(value, record)
-                    value = field.convert_to_column(value, record)
-                else:
-                    value = field._convert_from_cache_to_column(value)
-                return value
-            except StopIteration:
-                raise AssertionError(
-                    f"Could not find the cache value of {field} for {record} to flush it\n"
-                    f"    Context: {self.env.context}\n"
-                    f"    Cache: {self.env.cache!r}"
-                )
+        def convert_value(record, field, value):
+            if field.translate:
+                return field._convert_from_cache_to_column(value)
+            return field.convert_to_column(
+                field.convert_to_write(value, record),
+                record,
+            )
 
         # DLE P76: test_onchange_one2many_with_domain_on_related_field
         # ```
@@ -6368,27 +6360,42 @@ class BaseModel(metaclass=MetaModel):
             model = self.env(context=context_none)[model_name]
 
             # pop dirty fields and their corresponding record ids from cache
-            dirty_field_ids = {}
-            dirty_record_ids = set()
-            for field in model._fields.values():
-                if (ids := self.env.cache.clear_dirty_field(field)):
-                    dirty_field_ids[field] = set(ids)
-                    dirty_record_ids.update(ids)
+            dirty_field_ids = {
+                field: set(ids)
+                for field in model._fields.values()
+                if (ids := self.env.cache.clear_dirty_field(field))
+            }
+            # get a reference to each dirty field's cache (containing the values)
+            dirty_field_cache = {
+                field: self.env.cache._get_field_cache(model, field)
+                for field in dirty_field_ids
+            }
 
             # build a mapping {vals: ids} of field updates and their record ids
+            seen_ids = []
             vals_ids = defaultdict(list)
-            for id_ in sorted(dirty_record_ids):
-                record = model.browse(id_)
-                vals = {
-                    field.name: get_value(record, field)
-                    for field, ids in dirty_field_ids.items()
-                    if id_ in ids
-                }
-                vals_ids[frozendict(vals)].append(id_)
+            for field in dirty_field_ids:
+                for id_ in sorted(dirty_field_ids[field]):
+                    if any(id_ in s for s in seen_ids):
+                        continue
+                    try:
+                        vals = {
+                            f.name: convert_value(model.browse(id_), f, dirty_field_cache[f][id_])
+                            for f, ids in dirty_field_ids.items()
+                            if id_ in ids
+                        }
+                        vals_ids[frozendict(vals)].append(id_)
+                    except KeyError:
+                        raise AssertionError(
+                            f"Could not find all values for id {id_} of model {model} to flush it\n"
+                            f"    Context: {self.env.context}\n"
+                            f"    Cache: {self.env.cache!r}"
+                        )
+                seen_ids.append(dirty_field_ids[field])
 
             # apply the field updates to their corresponding records
             for vals, ids in vals_ids.items():
-                model.browse(ids)._write(vals)
+                model.browse(sorted(ids))._write(vals)
 
         # flush the inverse of one2many fields, too
         for field in fields:
