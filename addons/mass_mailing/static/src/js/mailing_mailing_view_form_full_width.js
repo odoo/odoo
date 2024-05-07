@@ -51,6 +51,7 @@ export class MassMailingFullWidthViewController extends formView.Controller {
         this._resizeMailingEditorIframe();
 
         const $iframeDoc = $iframe.contents();
+        $iframeDoc.get(0).querySelector('html').classList.add('o_mass_mailing_iframe_full_width');
         const iframeTarget = $iframeDoc.find('#iframe_target');
         if (hasIframeChanged) {
             $iframeDoc.find('body').on('click', '.o_fullscreen_btn', this._onToggleFullscreen.bind(this));
