@@ -44,7 +44,7 @@ export class MailThread extends models.ServerModel {
 
     /** @param {number[]} ids */
     message_post(ids) {
-        const kwargs = parseModelParams(arguments, "ids");
+        const kwargs = parseModelParams(arguments, "ids", "subtype_id", "tracking_value_ids");
         ids = kwargs.ids;
         delete kwargs.ids;
 
@@ -438,7 +438,7 @@ export class MailThread extends models.ServerModel {
                         notifications.push([
                             partner,
                             "mail.message/inbox",
-                            MailMessage._message_format_personalize([message_id])[0]
+                            MailMessage._message_format_personalize([message_id])[0],
                         ]);
                     }
                 }
@@ -483,10 +483,7 @@ export class MailThread extends models.ServerModel {
                 changedFieldsInitialValues[fname] = initialFieldValues[fname];
             }
             const subtype = MailThread._track_subtype.call(this, changedFieldsInitialValues);
-            MailThread.message_post.call(this, [record.id], {
-                subtype_id: subtype.id,
-                tracking_value_ids: trackingValueIds,
-            });
+            MailThread.message_post.call(this, [record.id], subtype.id, trackingValueIds);
         }
         return tracking;
     }
@@ -565,7 +562,7 @@ export class MailThread extends models.ServerModel {
             res["hasReadAccess"] = false;
             return res;
         }
-        res["canPostOnReadonly"] = this._name === "discuss.channel"; // model that have attr _mail_post_access='read'
+        res["canPostOnReadonly"] = this._mail_post_access === "read";
         if (this.has_activities) {
             const activities = MailActivity.search_read([["id", "in", thread.activity_ids || []]]);
             res["activities"] = MailActivity.activity_format(

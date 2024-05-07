@@ -21,14 +21,8 @@ tests independently to functional aspects of other models. """,
         'data/subtype_data.xml',
     ],
     'assets': {
-        'web.qunit_suite_tests': [
-            'test_mail/static/tests/*',
-        ],
-        'web.qunit_mobile_suite_tests': [
-            'test_mail/static/tests/mobile/activity_tests.js',
-        ],
-        'web.tests_assets': [
-            'test_mail/static/tests/helpers/*',
+        'web.assets_unit_tests': [
+            'test_mail/static/tests/**/*',
         ],
     },
     'installable': True,
