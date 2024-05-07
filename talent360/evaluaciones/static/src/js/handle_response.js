@@ -74,12 +74,9 @@ function handleResponse() {
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(JSON.stringify(data));
 
-            xhr.onload = function() {
-                if (xhr.status == 200) {
-                    // Redirige a la página de agradecimiento
-                    window.location.href = "/evaluacion/contestada";
-                }
-            }
+            // Muestra un mensaje de confirmación
+            alert('¡Sus respuestas han sido enviadas!');
+            location.reload();
             return true;
         } else {
             return false;
