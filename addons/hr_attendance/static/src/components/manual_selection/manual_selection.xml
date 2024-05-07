@@ -4,7 +4,7 @@
         <div class="d-flex position-relative py-2 overflow-visible o_treeEntry">
     <div class="o_media_left position-relative">
         <div class="o_media_object d-block rounded border border-info">
-            <img t-attf-src="data:image/png;base64,{{avatar}}" height="80" width="80"/>
+            <img t-attf-src="{{avatar}}" height="80" width="80"/>
         </div>
     </div>
     <div class="d-flex flex-grow-1 align-items-center justify-content-between position-relative px-3">
@@ -67,7 +67,7 @@
                 <div t-on-click="() => this.props.onSelectEmployee(employee.id)" role="article" class="o_kanban_record d-flex oe_kanban_global_click flex-md-shrink-1 flex-shrink-0">
                     <div class="oe_kanban_global_click">
                         <div class="o_kanban_image">
-                            <img alt="Employee" loading="lazy" t-attf-src="data:image/png;base64,{{employee.avatar}}"/>
+                            <img alt="Employee" loading="lazy" t-attf-src="{{employee.avatar}}"/>
                         </div>
                         <div class="oe_kanban_details">
                             <div id="textbox">
