@@ -170,7 +170,7 @@ export class Many2OneField extends Component {
         return this.props.string || this.props.record.fields[this.props.name].string || "";
     }
     get hasExternalButton() {
-        return this.props.canOpen && !!this.value && !this.state.isFloating;
+        return !!this.value && !this.state.isFloating;
     }
     get context() {
         return this.props.context;

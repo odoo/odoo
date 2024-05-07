@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="event.mail_template_reference_field" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('event_template_reference_mail')]" position="after">
+            <div t-if="relation === 'sms.template'">
+                <span class="event_template_reference_sms fa fa-lg fa-solid fa-mobile" style="margin-right: 0.1rem;"/>
+                <span style="font-size: x-small;">SMS</span>
+            </div>
+        </xpath>
+    </t>
+</templates>
