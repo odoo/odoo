@@ -41,9 +41,6 @@
                             <span t-field="evaluacion.nombre"/>
                         </h1>
                     </div>
-                    <h4 t-if="not categorias">
-                    No hay respuestas, intenta mas tarde.
-                    </h4>
                 </div>
                 <button class="btn btn-primary d-none d-print-none d-md-inline-block o_survey_results_print" aria-label="Print" title="Print">
                     <i class="fa fa-print"></i> Exportar
@@ -184,7 +181,7 @@
             <t t-call="evaluaciones.diseño">
                 <div class="container o_survey_result">
                     <t t-call="evaluaciones.encuestas_reporte_header" />
-                    <div class="survey_section">
+                    <div t-if=""  class="survey_section">
                         <h4>Puntuación Final</h4>
                         <span>
                             <t t-esc="total"/>
@@ -199,8 +196,12 @@
 
                         <t t-foreach="categorias" t-as="datos_categoria">
                             <div class="survey_page">
-                                <h3><t t-esc="datos_categoria['nombre']"/></h3>
-                                <span><t t-esc="datos_categoria['valor']"/></span>
+                                <h3>
+                                    <t t-esc="datos_categoria['nombre']"/>
+                                </h3>
+                                <span>
+                                    <t t-esc="datos_categoria['valor']"/>
+                                </span>
                             </div>
                         </t>
                     </div>
@@ -265,7 +266,6 @@
                 <li class="nav-item">
                     <a t-att-href="'#datos_pregunta__%d' % pregunta.id" t-att-aria-controls="'datos_pregunta__%d' % pregunta.id" t-attf-class="nav-link #{'active' if not pregunta_contestada else ''}" data-bs-toggle="tab" role="tab">
                         <i class="fa fa-list-alt me-1"/>
-Datos
                     </a>
                 </li>
             </ul>

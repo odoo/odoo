@@ -27,6 +27,10 @@ class EvaluacionesController(http.Controller):
 
         return request.render("evaluaciones.encuestas_reporte", parametros)
     
+
+    @http.route(
+        "/evaluacion/reporte-clima/<model('evaluacion'):evaluacion>", type="http", auth="user"
+    )
     def reporte_clima_controller(self, evaluacion: Evaluacion):
         """Método para generar y mostrar el reporte de clima laboral.
         :return: HTML renderizado del template con los datos del reporte.

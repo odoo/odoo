@@ -109,14 +109,6 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 self.graphData = JSON.parse(self.graphData.replace(/'/g, '"'));
             }
 
-            // self.labels = self.graphData.map(function (respuesta) {
-            //     return respuesta.texto;
-            // });
-    
-            // self.counts = self.graphData.map(function (respuesta) {
-            //     return respuesta.conteo;
-            // });
-    
             self.labels = self.graphData.map(function (categoria) {
                 return categoria.nombre;
             });

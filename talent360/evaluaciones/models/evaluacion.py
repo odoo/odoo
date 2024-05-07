@@ -1,5 +1,4 @@
 from odoo import api, models, fields
-from collections import defaultdict
 
 
 class Evaluacion(models.Model):
@@ -269,9 +268,16 @@ class Evaluacion(models.Model):
         :return: una acción de redirección al reporte de la evaluación
 
         """
+
+        url_base = "/evaluacion/reporte/"
+        if self.tipo == "CLIMA":
+            url_base = "/evaluacion/reporte-clima/"
+        else:
+            url_base = "/evaluacion/reporte/"
+
         return {
             "type": "ir.actions.act_url",
-            "url": "/evaluacion/reporte/%s" % (self.id),
+            "url": f"{url_base}{self.id}",
             "target": "new",
         }
 
@@ -304,12 +310,12 @@ class Evaluacion(models.Model):
                 respuestas.append(respuesta.respuesta_texto)
 
                 for i, respuesta_tabulada in enumerate(respuestas_tabuladas):
-                    if respuesta_tabulada["texto"] == respuesta.respuesta_texto:
-                        respuestas_tabuladas[i]["conteo"] += 1
+                    if respuesta_tabulada["nombre"] == respuesta.respuesta_texto:
+                        respuestas_tabuladas[i]["valor"] += 1
                         break
                 else:
                     respuestas_tabuladas.append(
-                        {"texto": respuesta.respuesta_texto, "conteo": 1}
+                        {"nombre": respuesta.respuesta_texto, "valor": 1}
                     )
 
             datos_pregunta = {
@@ -394,7 +400,6 @@ class Evaluacion(models.Model):
         
         # Definir estructura de categorías
         categorias_orden = [
-            "Datos Generales",
             "Reclutamiento y Selección de Personal",
             "Formación y Capacitación",
             "Permanencia y Ascenso",
@@ -406,30 +411,65 @@ class Evaluacion(models.Model):
             "Condiciones Generales de Trabajo",
         ]
         
-        categorias = {nombre: 0 for nombre in categorias_orden}
+        categorias = [{"nombre": categoria, "valor": 0, "puntos": 0, "puntos_maximos": 0}  for categoria in categorias_orden]
         total = 0
+        maximo_posible = 0
         
         for pregunta in self.pregunta_ids:
+            #Ignorar preguntas sin gategoría
             if not pregunta.categoria:
                 continue
-            categoria = dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
+
+            categoria_texto = dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
             
+            if not categoria_texto in categorias_orden:
+                continue
+
             valor_pregunta = 0
-            
-            for respuesta in pregunta.respuesta_ids:
-                valor_respuesta = int(respuesta.respuesta_texto)
-                valor_pregunta += valor_respuesta
-                total += valor_respuesta
-            
-            #Acumular el valor de cada pregunta en la categoría correspondiente
-            if categoria in categorias:
-                categorias[categoria] += valor_pregunta
+            maximo_pregunta = 0
+
+            if pregunta.tipo == "escala":
+                maximo_pregunta += 4
+
+                for respuesta in pregunta.respuesta_ids:
+                    valor_respuesta = int(respuesta.respuesta_texto)
+                    valor_pregunta += valor_respuesta
                 
+                valor_pregunta = (valor_pregunta / len(pregunta.respuesta_ids))
+            
+            #TODO:vincular a cambio de opcionID
+            elif pregunta.tipo == "multiple_choice":
+                maximo_pregunta = max([opcion.valor for opcion in pregunta.opcion_ids])
+                for respuesta in pregunta.respuesta_ids:
+                    if respuesta.respuesta_texto == "Sí":
+                        valor_pregunta += 1
+                
+                valor_pregunta = valor_pregunta / len(pregunta.respuesta_ids)
+
+            total += valor_pregunta
+            maximo_posible += maximo_pregunta
+            
+                            #Acumular el valor de cada pregunta en la categoría correspondiente
+            for categoria in categorias:
+                if categoria["nombre"] == categoria_texto:
+                    categoria["puntos"] += valor_pregunta
+                    categoria["puntos_maximos"] += maximo_pregunta
+                    break
+
+        for categoria in categorias:
+            if categoria["puntos_maximos"] > 0:
+                categoria["valor"] = (categoria["puntos"] / categoria["puntos_maximos"]) * 100
+            
+            else:
+                categoria["valor"] = 0
+
         # Ingresar los datos a parámetros
         parametros = {
             "evalacion": self,
-            "categorias": [],
+            "categorias": [categorias],
             "total": total,
+            "total_maximo": maximo_posible,
+            "total_porcentaje": (total / maximo_posible) * 100,
         }
         
         print(parametros)
