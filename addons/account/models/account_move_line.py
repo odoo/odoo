@@ -2622,7 +2622,7 @@ class AccountMoveLine(models.Model):
             return
 
         journal = company.currency_exchange_journal_id
-        if not journal:
+        if not journal and amounts_list:
             raise UserError(_(
                     "You have to configure the 'Exchange Gain or Loss Journal' in your company settings, to manage"
                     " automatically the booking of accounting entries related to differences between exchange rates."
