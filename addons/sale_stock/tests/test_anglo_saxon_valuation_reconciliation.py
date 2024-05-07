@@ -162,7 +162,14 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             'type': 'product'
         } for i in range(1, 3)]))
         product_1.categ_id.property_valuation = 'real_time'
-        product_1.categ_id.property_cost_method = 'fifo'
+        product_1.categ_id.property_cost_method = 'average'
+        uom_dozen = self.env['uom.uom'].create({
+            'name': 'Test-DozenA',
+            'category_id': self.env.ref('uom.product_uom_categ_unit').id,
+            'factor_inv': 12,
+            'uom_type': 'bigger',
+            'rounding': 0.008})
+        product_1.uom_id = uom_dozen
         # give another output account to product_2
         categ_2 = product_1.categ_id.copy()
         account_2 = categ_2.property_stock_account_output_categ_id.copy()
@@ -225,7 +232,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             move.quantity_done = move.product_uom_qty
         in_moves._action_done()
 
-        self.assertEqual(product_1.value_svl, -20)
+        self.assertAlmostEqual(product_1.value_svl, -38.30)
         self.assertEqual(product_2.value_svl, 0)
         # Check that the correct number of amls have been created and posted
         input_aml = self.env['account.move.line'].search([
