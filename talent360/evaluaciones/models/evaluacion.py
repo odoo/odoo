@@ -670,7 +670,7 @@ class Evaluacion(models.Model):
                 valor_pregunta += valor_respuesta
                 maximo_pregunta += 4  # Suponiendo un máximo de 4 para cada respuesta en escala
 
-                empleado = self.env['hr.employee'].search([('user_id', '=', respuesta.user_id.id)], limit=1)
+                empleado = self.env['hr.employee'].search([('user_id', '=', respuesta.usuario_id.id)], limit=1)
                 if not empleado:
                     continue
                 nombre_departamento = empleado.department_id.name

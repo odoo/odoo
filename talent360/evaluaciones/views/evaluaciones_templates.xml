@@ -23,12 +23,21 @@
         </template>
 
 
-        <template id="encuestas_reporte" name="Reporte: página de reporte genérico">
-            <t t-call="evaluaciones.diseño">
+       <template id="encuestas_reporte" name="Reporte: página de reporte genérico">
+             <t t-call="evaluaciones.diseño">
                 <t t-set="limite_registros" t-value="10"/>
                 <div class="o_survey_result">
                     <t t-call="evaluaciones.encuestas_reporte_header" />
                     <t t-call="evaluaciones.encuestas_reporte_nom_035" />
+                </div>
+            </t>
+        </template>
+
+         <template id="encuestas_reporte_clima" name="Reporte: página de reporte genérico">
+             <t t-call="evaluaciones.diseño">
+                <t t-set="limite_registros" t-value="10"/>
+                <div class="o_survey_result">
+                    <t t-call="evaluaciones.encuestas_reporte_header" />
                     <t t-call="evaluaciones.encuesta_reporte_clima" />
                 </div>
             </t>
@@ -201,15 +210,15 @@
      <template id="encuesta_reporte_clima" name="Reporte de Clima Laboral">
         <div class="container">
             <h3>Resumen del Clima Laboral</h3>
-            <t t-foreach="evaluacion.action_generar_datos_reporte_clima()['categorias'] as categoria">
+            <t t-foreach="evaluacion.action_generar_datos_reporte_clima()['categorias']" t-as="categoria">
                 <div class="categoria">
                     <h4 t-esc="categoria['nombre']"/>
                     <p>Valor: <span t-esc="categoria['valor']"/>%</p>
-                    <t t-foreach="categoria['departamentos'] as departamento">
+                    <t t-foreach="categoria['departamentos']" t-as="departamento">
                         <div class="departamento">
                             <p>Departamento: <span t-esc="departamento['nombre']"/></p>
                             <p>Puntos: <span t-esc="departamento['puntos']"/></p>
-                            <p>Valor: <span t-esc="departamento['valor']"/>%</p>
+                            <!-- <p>Valor: <span t-esc="departamento['valor']"/>%</p> -->
                         </div>
                     </t>
                 </div>

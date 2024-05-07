@@ -176,4 +176,4 @@ class EvaluacionesController(http.Controller):
         #Generar parámetros para el reporte
         parametros = evaluacion.action_generar_datos_reporte_clima() 
         
-        return request.render("evaluaciones.encuesta_reporte_clima", parametros)
+        return request.render("evaluaciones.encuestas_reporte_clima", parametros)
