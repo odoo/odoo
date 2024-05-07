@@ -15,7 +15,7 @@ from odoo import fields, exceptions, tests
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
 from odoo.tools import mute_logger
-from odoo.tests.common import Form, users
+from odoo.tests.common import Form, users, HttpCase, tagged
 
 
 class TestActivityCommon(MailCommon):
@@ -1001,3 +1001,64 @@ class TestORM(TestActivityCommon):
         self.assertEqual(groups[0][groupby], pg_groups["overdue"])
         self.assertEqual(groups[1][groupby], pg_groups["today"])
         self.assertEqual(groups[2][groupby], pg_groups["planned"])
+
+
+@tagged('post_install', '-at_install')
+class TestTours(HttpCase):
+    def test_activity_view_data_with_offset(self):
+        self.patch(MailTestActivity, '_order', 'date desc, id desc')
+        MailTestActivityModel = self.env['mail.test.activity']
+        MailTestActivityCtx = MailTestActivityModel.with_context({"lang": "en_US"})
+        MailTestActivityModel.create({
+            'date': '2021-05-02',
+            'name': "Task 1",
+        }).activity_schedule(
+            'test_mail.mail_act_test_todo',
+            summary="Activity 1",
+            date_deadline=fields.Date.context_today(MailTestActivityCtx) - timedelta(days=7),
+        )
+        MailTestActivityModel.create({
+            'date': '2021-05-16',
+            'name': "Task 1 without activity",
+        })
+        MailTestActivityModel.create({
+            'date': '2021-05-09',
+            'name': "Task 2",
+        }).activity_schedule(
+            'test_mail.mail_act_test_todo',
+            summary="Activity 2",
+            date_deadline=fields.Date.context_today(MailTestActivityCtx),
+        )
+        MailTestActivityModel.create({
+            'date': '2021-05-16',
+            'name': "Task 3",
+        }).activity_schedule(
+            'test_mail.mail_act_test_todo',
+            summary="Activity 3",
+            date_deadline=fields.Date.context_today(MailTestActivityCtx) + timedelta(days=7),
+        )
+        MailTestActivityModel.create({
+            'date': '2021-05-16',
+            'name': "Task 2 without activity",
+        })
+
+        self.env["ir.ui.view"].create({
+            "name": "Test Activity View",
+            "model": "mail.test.activity",
+            "type": 'activity',
+            "arch": """
+                <activity string="OrderedMailTestActivity">
+                    <templates>
+                        <div t-name="activity-box">
+                            <field name="name"/>
+                        </div>
+                    </templates>
+                </activity>
+            """,
+        })
+        self.start_tour(
+            "/web?debug=1",
+            "mail_activity_view",
+            login="admin",
+            timeout=600000
+        )
