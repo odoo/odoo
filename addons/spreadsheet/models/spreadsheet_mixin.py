@@ -19,7 +19,6 @@ class SpreadsheetMixin(models.AbstractModel):
     _auto = False
 
     spreadsheet_binary_data = fields.Binary(
-        required=True,
         string="Spreadsheet file",
         default=lambda self: self._empty_spreadsheet_data_base64(),
     )
