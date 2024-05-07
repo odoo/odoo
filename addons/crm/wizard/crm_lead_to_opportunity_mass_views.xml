@@ -13,22 +13,22 @@
                 </group>
                 <group string="Assign these opportunities to">
                     <field name="team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
-                    <field name="user_ids" widget="many2many_tags" domain="[('share', '=', False)]"/>
+                    <field name="user_ids" widget="many2many_avatar_user" domain="[('share', '=', False)]"/>
                     <field name="force_assignment"/>
                 </group>
                 <label for="duplicated_lead_ids" string="Leads with existing duplicates (for information)" help="Leads that you selected that have duplicates. If the list is empty, it means that no duplicates were found" invisible="not deduplicate"/>
                 <group invisible="not deduplicate">
-                    <field name="duplicated_lead_ids" colspan="4" nolabel="1" readonly="1">
+                    <field name="duplicated_lead_ids" colspan="2" nolabel="1" readonly="1">
                         <tree create="false" delete="false">
                             <field name="create_date"/>
                             <field name="name"/>
-                            <field name="type"/>
-                            <field name="contact_name"/>
+                            <field name="type" optional="hide"/>
+                            <field name="contact_name" optional="show"/>
                             <field name="country_id" column_invisible="context.get('invisible_country', True)" options="{'no_open': True, 'no_create': True}"/>
-                            <field name="email_from"/>
+                            <field name="email_from" optional="show"/>
                             <field name="stage_id"/>
-                            <field name="user_id"/>
-                            <field name="team_id"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="team_id" optional="hide"/>
                         </tree>
                     </field>
                 </group>
