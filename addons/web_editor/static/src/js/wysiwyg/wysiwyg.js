@@ -1785,6 +1785,17 @@ export class Wysiwyg extends Component {
                     if (params.node.dataset.oeTranslatableLink) {
                         params.node.dataset.oeTranslatableLink = element.getAttribute("src");
                     }
+                    if (params.node.classList.contains("media_iframe_video")) {
+                        const newSrc = element.querySelector("iframe").getAttribute("src");
+                        params.node.setAttribute("data-oe-expression", newSrc);
+                        const iframeEl = params.node.querySelector("iframe");
+                        iframeEl.setAttribute("src", newSrc);
+                        // We force the replacement of the iframe because of a
+                        // content caching problem with Chrome: after save, the
+                        // src is correct, but the iframe's document still shows
+                        // the previous src.
+                        iframeEl.replaceWith(iframeEl.cloneNode());
+                    }
                     const attributesToKeep = ["data-resize-width", "title", "alt", "data-oe-translation-state", "data-oe-translatable-link"];
                     // We don't replace the node with the element because there
                     // are mutation observers needed for the translation system.
@@ -1807,7 +1818,7 @@ export class Wysiwyg extends Component {
                 }
             }
             this.odooEditor.unbreakableStepUnactive();
-            this.odooEditor.historyStep();
+            this.odooEditor.historyStep(true);
             // Refocus again to save updates when calling `_onWysiwygBlur`
             this.odooEditor.editable.focus();
         } else {

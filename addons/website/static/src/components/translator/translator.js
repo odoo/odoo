@@ -68,6 +68,7 @@ const savableSelector = '[data-oe-translation-source-sha], ' +
     '[value*="data-oe-translation-source-sha="], ' +
     'textarea:contains(data-oe-translation-source-sha), ' +
     '[data-oe-translatable-link*="data-oe-translation-source-sha="], ' +
+    '[data-oe-expression*="data-oe-translation-source-sha="], ' +
     '[alt*="data-oe-translation-source-sha="]';
 
 export class WebsiteTranslator extends WebsiteEditorComponent {
@@ -132,8 +133,8 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         const self = this;
         const $editable = this.getEditableArea();
         const translationRegex = /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>(.*)<\/span>/;
-        for (const attr of ["placeholder", "title", "alt", "value", "data-oe-translatable-link"]) {
-            const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-source-sha="]').filter(':empty, input, select, textarea, img');
+        for (const attr of ["placeholder", "title", "alt", "value", "data-oe-translatable-link", "data-oe-expression"]) {
+            const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-source-sha="]').filter(':empty, input, select, textarea, img, div');
             attrEdit.each(function () {
                 var $node = $(this);
                 var translation = $node.data('translation') || {};
@@ -240,9 +241,9 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         styleEl.sheet.insertRule(`[data-oe-translation-state="translated"]:not(img) {background: ${translatedColor} !important;}`);
         styleEl.sheet.insertRule(`[data-oe-translation-state]:not(img) {background: ${toTranslateColor} !important;}`);
 
-        styleEl.sheet.insertRule(`img[data-oe-translation-state].o_dirty {border: 5px solid ${translatedColor} !important;}`);
-        styleEl.sheet.insertRule(`img[data-oe-translation-state="translated"] {border: 5px solid ${translatedColor} !important;}`);
-        styleEl.sheet.insertRule(`img[data-oe-translation-state] {border: 5px solid ${toTranslateColor} !important;}`);
+        styleEl.sheet.insertRule(`[data-oe-translation-state].o_dirty:where(img, .media_iframe_video) {border: 5px solid ${translatedColor} !important;}`);
+        styleEl.sheet.insertRule(`[data-oe-translation-state="translated"]:where(img, .media_iframe_video) {border: 5px solid ${translatedColor} !important;}`);
+        styleEl.sheet.insertRule(`[data-oe-translation-state]:where(img, .media_iframe_video) {border: 5px solid ${toTranslateColor} !important;}`);
 
         const showNotification = ev => {
             let message = _t('This translation is not editable.');

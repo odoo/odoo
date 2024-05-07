@@ -169,7 +169,7 @@ TRANSLATED_ATTRS = dict.fromkeys({
 # These attributes must not be exported to .po(t) files and `t-attf-` attributes
 # should not be translated.
 NO_EXPORT_TRANSLATED_ATTRS = dict.fromkeys({
-    'src',
+    'src', 'data-oe-expression',
 }, lambda e: True)
 
 def translate_attrib_value(node):
