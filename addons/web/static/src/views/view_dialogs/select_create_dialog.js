@@ -110,12 +110,16 @@ export class SelectCreateDialog extends Component {
         return this.env.isSmall && !!this.props.onUnselect;
     }
 
+    get formViewDialog() {
+        return FormViewDialog;
+    }
+
     async createEditRecord() {
         if (this.props.onCreateEdit) {
             await this.props.onCreateEdit();
             this.props.close();
         } else {
-            this.dialogService.add(FormViewDialog, {
+            this.dialogService.add(this.formViewDialog, {
                 context: this.props.context,
                 resModel: this.props.resModel,
                 onRecordSaved: (record) => {
