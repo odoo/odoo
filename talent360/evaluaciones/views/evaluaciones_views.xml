@@ -131,6 +131,8 @@
         </field>
     </record>
 
+    <!-- Vista de lista de todas las respuestas de un usuario a determinada evaluación -->
+
     <record id="respuesta_tree_view" model="ir.ui.view">
         <field name="name">respuesta.tree</field>
         <field name="model">respuesta</field>
@@ -252,7 +254,9 @@
                     </group>
 
                     <div>
-                        <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary"/>
+                        <button name="action_enviar_evaluacion" string="Enviar Correo" type="object" class="btn-primary mx-3" confirm="¿Estás seguro de enviar la encuesta?"/>
+                        <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary mx-3"/>
+                    
                     </div>
 
                 </sheet>
@@ -286,6 +290,7 @@
                         </notebook>
                     </group>
                     <div>
+                        <button name="action_enviar_evaluacion" string="Enviar Correo" type="object" class="btn-primary mx-3" confirm="¿Estás seguro de enviar la encuesta?"/>
                         <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary"/>
                     </div>
                 </sheet>
@@ -322,6 +327,14 @@
         <field name="model_id" ref="model_evaluacion"/>
         <field name="state">code</field>
         <field name="code">action = model.evaluacion_action_tree()</field>
+        <field name="binding_model_id" ref="model_evaluacion"/>
+    </record>
+
+    <record id="action_enviar_evaluacion" model="ir.actions.server">
+        <field name="name">Enviar evaluacion</field>
+        <field name="model_id" ref="model_evaluacion"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_enviar_evaluacion()</field>
         <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
 
