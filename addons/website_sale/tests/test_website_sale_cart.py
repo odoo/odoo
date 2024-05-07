@@ -117,3 +117,31 @@ class WebsiteSaleCart(TransactionCase):
             self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
             sale_order = website.sale_get_order()
             self.assertEqual(len(sale_order._cart_accessories()), 0)
+
+    def test_description_for_product_one_variant(self):
+        ''' A product with one variant should have the name of the product as the description. '''
+        attribute = self.env['product.attribute'].create({
+            'name': 'Test Attribute',
+            'create_variant': 'no_variant',
+        })
+        value = self.env['product.attribute.value'].create({
+            'name': 'Test Value 1',
+            'attribute_id': attribute.id,
+        })
+        product = self.env['product.template'].create({
+            'name': 'Test Product',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute.id,
+                'value_ids': [(6, 0, value.ids)],
+            })],
+        })
+
+        variant = product.attribute_line_ids[0].product_template_value_ids
+        product = product._get_variant_for_combination(variant)
+        product.is_published = True
+
+        website = self.website.with_user(self.public_user)
+        with MockRequest(product.with_user(self.public_user).env, website=self.website.with_user(self.public_user)):
+            self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
+            sale_order = website.sale_get_order()
+            self.assertEqual(sale_order.order_line.name, 'Test Product')

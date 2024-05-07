@@ -58,10 +58,6 @@ odoo.define('website_sale.tour_variants_modal_window', function (require) {
             trigger: 'td.td-product_name:contains(M dynamic)',
         },
         {
-            content: "Check never variant",
-            trigger: 'td.td-product_name:contains(Never attribute size: M never)',
-        },
-        {
             content: "Check never custom variant",
             trigger: 'td.td-product_name:contains(Never attribute size custom: Yes never custom: TEST)',
         }

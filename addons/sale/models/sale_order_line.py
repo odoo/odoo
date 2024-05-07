@@ -860,13 +860,13 @@ class SaleOrderLine(models.Model):
         :return: the description related to special variant attributes/values
         :rtype: string
         """
-        if not self.product_custom_attribute_value_ids and not self.product_no_variant_attribute_value_ids:
-            return ""
-
-        name = "\n"
-
         custom_ptavs = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
         no_variant_ptavs = self.product_no_variant_attribute_value_ids._origin
+        if not self.product_custom_attribute_value_ids and len(no_variant_ptavs - custom_ptavs) <= 1:
+            return ""
+        no_variant_ptavs = no_variant_ptavs[:0] if len(no_variant_ptavs - custom_ptavs) <= 1 else no_variant_ptavs
+
+        name = "\n"
 
         # display the no_variant attributes, except those that are also
         # displayed by a custom (avoid duplicate description)

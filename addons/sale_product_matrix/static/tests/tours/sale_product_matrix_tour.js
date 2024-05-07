@@ -51,7 +51,7 @@ tour.register('sale_matrix_tour', {
     // wait for qty to be 1 => check the total to be sure all qties are set to 1
     extra_trigger: '.oe_subtotal_footer_separator:contains("248.40")',
 }, {
-    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
+    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)")',
     extra_trigger: '.o_form_editable',
 }, {
     trigger: '.o_edit_product_configuration',  // edit the matrix
@@ -80,7 +80,7 @@ tour.register('sale_matrix_tour', {
     // wait for qty to be changed => check the total to be sure all qties are set to 3
     extra_trigger: '.oe_subtotal_footer_separator:contains("745.20")',
 }, {
-    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
+    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)")',
     extra_trigger: '.o_form_editable',
 }, {
     trigger: '.o_edit_product_configuration',
@@ -103,7 +103,7 @@ tour.register('sale_matrix_tour', {
 {
     trigger: '.o_form_button_edit:contains("Edit")',   // Edit Sales Order.
 }, {
-    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
+    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)")',
     extra_trigger: '.o_form_editable',
 }, {
     trigger: '.o_edit_product_configuration',  // edit the matrix
