@@ -15,14 +15,11 @@ class ProductProduct(models.Model):
         return partner in self.stock_notification_partner_ids
 
     def _get_cart_qty(self, website=None):
-        if not self.allow_out_of_stock_order:
-            website = website or self.env['website'].get_current_website()
-            # When the cron is run manually, request has no attribute website, and that would cause a crash
-            # so we check for it
-            cart = website and request and hasattr(request, 'website') and website.sale_get_order() or None
-            if cart:
-                return sum(cart._get_common_product_lines(product=self).mapped('product_uom_qty'))
-        return 0
+        website = website or self.env['website'].get_current_website()
+        # When the cron is run manually, request has no attribute website, and that would cause a crash
+        # so we check for it
+        cart = website and request and hasattr(request, 'website') and website.sale_get_order() or None
+        return cart and sum(cart._get_common_product_lines(product=self).mapped('product_uom_qty')) or 0
 
     def _is_sold_out(self):
         self.ensure_one()
