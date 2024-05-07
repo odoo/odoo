@@ -646,7 +646,14 @@ class Evaluacion(models.Model):
             "Condiciones Generales de Trabajo",
         ]
         
-        categorias = [{"nombre": categoria, "valor": 0, "puntos": 0, "puntos_maximos": 0, "departamentos": []} for categoria in categorias_orden]
+        categorias = [{
+            "nombre": categoria, 
+            "valor": 0, 
+            "puntos": 0, 
+            "puntos_maximos": 0, 
+            "departamentos": []
+        } for categoria in categorias_orden]
+        
         total = 0
         maximo_posible = 0
     
@@ -668,7 +675,6 @@ class Evaluacion(models.Model):
                 if cat["nombre"] == categoria_texto:
                     categoria = cat
                     break
-
 
             if pregunta.tipo == "escala":
                 maximo_pregunta += 4
@@ -712,8 +718,7 @@ class Evaluacion(models.Model):
             total += valor_pregunta
             maximo_posible += maximo_pregunta
             
-                            #Acumular el valor de cada pregunta en la categoría correspondiente
-
+             #Acumular el valor de cada pregunta en la categoría correspondiente
             categoria["puntos"] += valor_pregunta
             categoria["puntos_maximos"] += maximo_pregunta
 
