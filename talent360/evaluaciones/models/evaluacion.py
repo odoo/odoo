@@ -411,22 +411,29 @@ class Evaluacion(models.Model):
             "Condiciones Generales de Trabajo",
         ]
         
-        categorias = [{"nombre": categoria, "valor": 0, "puntos": 0, "puntos_maximos": 0}  for categoria in categorias_orden]
+        categorias = [{"nombre": categoria, "valor": 0, "puntos": 0, "puntos_maximos": 0, "departamentos": []} for categoria in categorias_orden]
         total = 0
         maximo_posible = 0
-        
+    
         for pregunta in self.pregunta_ids:
             #Ignorar preguntas sin gategoría
             if not pregunta.categoria:
                 continue
 
             categoria_texto = dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
-            
             if not categoria_texto in categorias_orden:
                 continue
 
             valor_pregunta = 0
             maximo_pregunta = 0
+
+            categoria = None
+
+            for cat in categorias:
+                if cat["nombre"] == categoria_texto:
+                    categoria = cat
+                    break
+
 
             if pregunta.tipo == "escala":
                 maximo_pregunta += 4
@@ -434,6 +441,27 @@ class Evaluacion(models.Model):
                 for respuesta in pregunta.respuesta_ids:
                     valor_respuesta = int(respuesta.respuesta_texto)
                     valor_pregunta += valor_respuesta
+                    
+                    if not respuesta.user_id:
+                        continue
+
+                    employee = self.env['hr.employee'].search([('user_id', '=', respuesta.user_id.id)], limit=1)
+                    departamento_nombre = employee.department_id.name
+
+                    departamento = list(filter(lambda cat: cat["nombre"] == departamento_nombre, categoria["departamentos"]))
+                    if not departamento:
+                        departamento = {
+                            "nombre": departamento_nombre,
+                            "puntos": 0,
+                            "puntos_maximos": 0,
+                        }
+                        categoria["departamentos"].append(departamento)
+                    else:
+                        departamento = departamento[0]
+
+
+                    departamento["puntos"] += valor_respuesta
+                    departamento["puntos_maximos"] += 4
                 
                 valor_pregunta = (valor_pregunta / len(pregunta.respuesta_ids))
             
@@ -450,18 +478,26 @@ class Evaluacion(models.Model):
             maximo_posible += maximo_pregunta
             
                             #Acumular el valor de cada pregunta en la categoría correspondiente
-            for categoria in categorias:
-                if categoria["nombre"] == categoria_texto:
-                    categoria["puntos"] += valor_pregunta
-                    categoria["puntos_maximos"] += maximo_pregunta
-                    break
+
+            categoria["puntos"] += valor_pregunta
+            categoria["puntos_maximos"] += maximo_pregunta
 
         for categoria in categorias:
             if categoria["puntos_maximos"] > 0:
                 categoria["valor"] = (categoria["puntos"] / categoria["puntos_maximos"]) * 100
-            
             else:
                 categoria["valor"] = 0
+
+            for departamento in categoria["departamentos"]:
+                if departamento["puntos_maximos"] > 0:
+                    departamento["valor"] = (departamento["puntos"] / departamento["puntos_maximos"]) * 100
+                else:
+                    departamento["valor"] = 0
+
+        total_porcentaje = 0
+
+        if maximo_posible > 0:
+            total_porcentaje = (total / maximo_posible) * 100
 
         # Ingresar los datos a parámetros
         parametros = {
@@ -469,7 +505,7 @@ class Evaluacion(models.Model):
             "categorias": [categorias],
             "total": total,
             "total_maximo": maximo_posible,
-            "total_porcentaje": (total / maximo_posible) * 100,
+            "total_porcentaje": total_porcentaje,
         }
         
         print(parametros)

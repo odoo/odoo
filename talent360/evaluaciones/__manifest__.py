@@ -16,7 +16,7 @@
         "data/opcion.csv",
         "data/template.csv",
     ],
-    "depends": ["base", "mail"],
+    "depends": ["base", "mail", "hr"],
     "assets": {
         "evaluaciones.evaluaciones_assets": [
             ("include", "web.chartjs_lib"),
