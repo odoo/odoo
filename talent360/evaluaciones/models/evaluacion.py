@@ -367,6 +367,8 @@ class Evaluacion(models.Model):
             valor_pregunta = 0
 
             for respuesta in pregunta.respuesta_ids:
+                if respuesta.evaluacion_id.id != self.id:
+                    continue
                 valor_respuesta = int(respuesta.respuesta_texto)
                 valor_pregunta += valor_respuesta
                 final += valor_respuesta
