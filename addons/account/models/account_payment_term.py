@@ -12,6 +12,7 @@ class AccountPaymentTerm(models.Model):
     _name = "account.payment.term"
     _description = "Payment Terms"
     _order = "sequence, id"
+    _check_company_domain = models.check_company_domain_parent_of
 
     def _default_line_ids(self):
         return [Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 0})]
