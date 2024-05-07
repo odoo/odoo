@@ -231,7 +231,7 @@ class Company(models.Model):
         arch, view = super()._get_view(view_id, view_type, **options)
         for f in arch.iter("field"):
             if f.get('name') in delegated_fnames:
-                f.set('attrs', "{'readonly': [('parent_id', '!=', False)]}")
+                f.set('readonly', "parent_id != False")
         return arch, view
 
     @api.model
