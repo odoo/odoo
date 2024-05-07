@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_es_coop_pymes_template_data(self):
         return {
             'name': _('Cooperatives - SMEs (2008)'),
-            'parent': 'es_common',
+            'parent': 'es_common_mainland',
         }
 
     @template('es_coop_pymes', 'res.company')
