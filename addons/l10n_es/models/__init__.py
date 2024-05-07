@@ -5,7 +5,12 @@ from . import res_company
 from . import res_config_settings
 from . import res_partner
 from . import template_es_assec
+from . import template_es_canary_assoc
+from . import template_es_canary_common
+from . import template_es_canary_full
+from . import template_es_canary_pymes
 from . import template_es_common
+from . import template_es_common_mainland
 from . import template_es_coop_full
 from . import template_es_coop_pymes
 from . import template_es_full
