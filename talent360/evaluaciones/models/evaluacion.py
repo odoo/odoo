@@ -392,14 +392,7 @@ class Evaluacion(models.Model):
         return parametros
     
     def action_generar_datos_reporte_clima(self):
-        """
-        Genera los datos necesarios para un reporte de evaluación de clima.
-
-        :return: Los parámetros necesarios para generar el reporte.
-        """
-        
-        # Definir estructura de categorías
-        categorias_orden = [
+        categorias_orden_clima = [
             "Reclutamiento y Selección de Personal",
             "Formación y Capacitación",
             "Permanencia y Ascenso",
@@ -410,66 +403,44 @@ class Evaluacion(models.Model):
             "Respeto a la Diversidad",
             "Condiciones Generales de Trabajo",
         ]
-        
-        categorias = [{"nombre": categoria, "valor": 0, "puntos": 0, "puntos_maximos": 0}  for categoria in categorias_orden]
-        total = 0
-        maximo_posible = 0
-        
-        for pregunta in self.pregunta_ids:
-            #Ignorar preguntas sin gategoría
-            if not pregunta.categoria:
-                continue
 
-            categoria_texto = dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
-            
-            if not categoria_texto in categorias_orden:
+        categorias_clima = [{"nombre": categoria, "valor": 0, "puntos": 0, "puntos_maximos": 0} for categoria in categorias_orden_clima]
+        total_clima = 0
+        maximo_posible_clima = 0
+
+        for pregunta in self.pregunta_ids:
+            if not pregunta.categoria or not dict(pregunta._fields["categoria"].selection).get(pregunta.categoria) in categorias_orden_clima:
                 continue
 
             valor_pregunta = 0
             maximo_pregunta = 0
 
             if pregunta.tipo == "escala":
-                maximo_pregunta += 4
+                maximo_pregunta += 4  # Suponiendo un máximo de 4 para cada respuesta en escala
+                valor_pregunta = sum(int(respuesta.respuesta_texto) for respuesta in pregunta.respuesta_ids) / len(pregunta.respuesta_ids)
 
-                for respuesta in pregunta.respuesta_ids:
-                    valor_respuesta = int(respuesta.respuesta_texto)
-                    valor_pregunta += valor_respuesta
-                
-                valor_pregunta = (valor_pregunta / len(pregunta.respuesta_ids))
-            
-            #TODO:vincular a cambio de opcionID
             elif pregunta.tipo == "multiple_choice":
-                maximo_pregunta = max([opcion.valor for opcion in pregunta.opcion_ids])
-                for respuesta in pregunta.respuesta_ids:
-                    if respuesta.respuesta_texto == "Sí":
-                        valor_pregunta += 1
-                
-                valor_pregunta = valor_pregunta / len(pregunta.respuesta_ids)
+                maximo_pregunta = max((opcion.valor for opcion in pregunta.opcion_ids), default=0)
+                valor_pregunta = sum(1 for respuesta in pregunta.respuesta_ids if respuesta.respuesta_texto == "Sí") / len(pregunta.respuesta_ids)
 
-            total += valor_pregunta
-            maximo_posible += maximo_pregunta
-            
-                            #Acumular el valor de cada pregunta en la categoría correspondiente
-            for categoria in categorias:
-                if categoria["nombre"] == categoria_texto:
+            total_clima += valor_pregunta
+            maximo_posible_clima += maximo_pregunta
+
+            for categoria in categorias_clima:
+                if categoria["nombre"] == dict(pregunta._fields["categoria"].selection).get(pregunta.categoria):
                     categoria["puntos"] += valor_pregunta
                     categoria["puntos_maximos"] += maximo_pregunta
                     break
 
-        for categoria in categorias:
-            if categoria["puntos_maximos"] > 0:
-                categoria["valor"] = (categoria["puntos"] / categoria["puntos_maximos"]) * 100
-            
-            else:
-                categoria["valor"] = 0
+        for categoria in categorias_clima:
+            categoria["valor"] = (categoria["puntos"] / categoria["puntos_maximos"]) * 100 if categoria["puntos_maximos"] > 0 else 0
 
-        # Ingresar los datos a parámetros
         parametros = {
-            "evalacion": self,
-            "categorias": [categorias],
-            "total": total,
-            "total_maximo": maximo_posible,
-            "total_porcentaje": (total / maximo_posible) * 100,
+            "evaluacion_clima": self,
+            "categorias_clima": categorias_clima,
+            "total_clima": total_clima,
+            "total_maximo_clima": maximo_posible_clima,
+            "total_porcentaje_clima": (total_clima / maximo_posible_clima) * 100 if maximo_posible_clima > 0 else 0,
         }
         
         print(parametros)
