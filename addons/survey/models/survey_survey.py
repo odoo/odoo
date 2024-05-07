@@ -26,27 +26,6 @@ class Survey(models.Model):
     def _get_default_access_token(self):
         return str(uuid.uuid4())
 
-    def _get_default_session_code(self):
-        """ Attempt to generate a session code for our survey.
-        The method will first try to generate 20 codes with 4 digits each and check if any are colliding.
-        If we have at least one non-colliding code, we use it.
-        If all 20 generated codes are colliding, we try with 20 codes of 5 digits,
-        then 6, ... up to 10 digits. """
-
-        for digits_count in range(4, 10):
-            range_lower_bound = 1 * (10 ** (digits_count - 1))
-            range_upper_bound = (range_lower_bound * 10) - 1
-            code_candidates = set(str(random.randint(range_lower_bound, range_upper_bound)) for __ in range(20))
-            colliding_codes = self.sudo().search_read(
-                [('session_code', 'in', list(code_candidates))],
-                ['session_code']
-            )
-            code_candidates -= set([colliding_code['session_code'] for colliding_code in colliding_codes])
-            if code_candidates:
-                return list(code_candidates)[0]
-
-        return False  # could not generate a code
-
     @api.model
     def default_get(self, fields_list):
         result = super().default_get(fields_list)
@@ -163,7 +142,8 @@ class Survey(models.Model):
         ('ready', 'Ready'),
         ('in_progress', 'In Progress'),
         ], string="Session State", copy=False)
-    session_code = fields.Char('Session Code', default=lambda self: self._get_default_session_code(), copy=False,
+    session_code = fields.Char('Session Code', copy=False, compute="_compute_session_code",
+                               precompute=True, store=True, readonly=False,
         help="This code will be used by your attendees to reach your session. Feel free to customize it however you like!")
     session_link = fields.Char('Session Link', compute='_compute_session_link')
     # live sessions - current question fields
@@ -316,6 +296,16 @@ class Survey(models.Model):
                 aggregates=['user_input_id:count_distinct'],
             )[0]
             survey.session_question_answer_count = answer_count
+
+    @api.depends('access_token')
+    def _compute_session_code(self):
+        survey_without_session_code = self.filtered(lambda survey: not survey.session_code)
+        session_codes = self._generate_session_codes(
+            code_count=len(survey_without_session_code),
+            excluded_codes=set((self - survey_without_session_code).mapped('session_code'))
+        )
+        for survey, session_code in zip(survey_without_session_code, session_codes):
+            survey.session_code = session_code
 
     @api.depends('session_code')
     def _compute_session_link(self):
@@ -1270,3 +1260,34 @@ class Survey(models.Model):
             # delete all challenges and goals because not needed anymore (challenge lines are deleted in cascade)
             challenges_to_delete.unlink()
             goals_to_delete.unlink()
+
+    # ------------------------------------------------------------
+    # TOOLING / MISC
+    # ------------------------------------------------------------
+
+    def _generate_session_codes(self, code_count=1, excluded_codes=False):
+        """ Generate {code_count} session codes for surveys.
+
+        We try to generate 4 digits code first and see if we have {code_count} unique ones.
+        Then we raise up to 5 digits if we need more, etc until up to 10 digits.
+        (We generate an extra 20 codes per loop to try to mitigate back luck collisions). """
+
+        self.flush_model(['session_code'])
+
+        session_codes = set()
+        excluded_codes = excluded_codes or set()
+        existing_codes = self.sudo().search_read(
+            [('session_code', '!=', False)],
+            ['session_code']
+        )
+        unavailable_codes = excluded_codes | {existing_code['session_code'] for existing_code in existing_codes}
+        for digits_count in range(4, 10):
+            range_lower_bound = 10 ** (digits_count - 1)
+            range_upper_bound = (range_lower_bound * 10) - 1
+            code_candidates = {str(random.randint(range_lower_bound, range_upper_bound)) for _ in range(code_count + 20)}
+            session_codes |= code_candidates - unavailable_codes
+            if len(session_codes) >= code_count:
+                return list(session_codes)[:code_count]
+
+        # could not generate enough codes, fill with False for remainder
+        return session_codes + [False] * (code_count - len(session_codes))
