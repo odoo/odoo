@@ -274,7 +274,7 @@ class Evaluacion(models.Model):
             "target": "new",
         }
 
-    #def action_generar_datos_reporte_generico(self):
+    def action_generar_datos_reporte_generico(self):
         """
         Genera los datos necesarios para el reporte genérico de la evaluación.
 
@@ -284,7 +284,7 @@ class Evaluacion(models.Model):
         :return: Los parámetros necesarios para generar el reporte.
 
         """
-        """parametros = {
+        parametros = {
             "evaluacion": self,
             "preguntas": [],
         }
@@ -320,7 +320,7 @@ class Evaluacion(models.Model):
 
             parametros["preguntas"].append(datos_pregunta)
 
-        return parametros"""
+        return parametros
 
     def action_generar_datos_reporte_clima(self):
         """
@@ -328,38 +328,46 @@ class Evaluacion(models.Model):
 
         :return: Los parámetros necesarios para generar el reporte.
         """
-        parametros = {
-            "evaluacion": self,
-            "categorias": [],
-            "total": 0,
-        }
-
-        # Agrupar las preguntas por categorías y calcular el subtotal por cada una
-        categorias_puntos = {}
+        
+        # Definir estructura de categorías
+        categorias_orden = [
+            "Datos Generales",
+            "Reclutamiento y Selección de Personal",
+            "Formación y Capacitación",
+            "Permanencia y Ascenso",
+            "Corresponsabilidad en la Vida Laboral, Familiar y Personal",
+            "Clima Laboral Libre de Violencia",
+            "Acoso y Hostigamiento",
+            "Accesibilidad",
+            "Respeto a la Diversidad",
+            "Condiciones Generales de Trabajo",
+        ]
+        
+        categorias = {nombre: 0 for nombre in categorias_orden}
+        total = 0
+        
         for pregunta in self.pregunta_ids:
-            #Ignorar preguntas sin gategoría
-            if not pregunta.categoria_id:
+            if not pregunta.categoria:
                 continue
+            categoria = dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
             
-            categoria = pregunta.categoria_id.nombre
+            valor_pregunta = 0
             
-            #Inicializar la puntiación si no está ya en el diccionario
-            if categoria not in categorias_puntos:
-                categorias_puntos[categoria] = 0
+            for respuesta in pregunta.respuesta_ids:
+                valor_respuesta = int(respuesta.respuesta_texto)
+                valor_pregunta += valor_respuesta
+                total += valor_respuesta
+            
+            #Acumular el valor de cada pregunta en la categoría correspondiente
+            if categoria in categorias:
+                categorias[categoria] += valor_pregunta
                 
-            #Calcular el puntaje para cada respuesta basada en el método evaluar_respuesta
-            for respuesta in pregunta.respuesta.respuesta_ids:
-                valor = pregunta.evaluar_respuesta(respuesta.respuesta_texto)
-                categorias_puntos[categoria] += valor
-                parametros["total"] += valor
-            
-        #convertir el diccionario de categorias en una lista para los gráficos
-        for categoria, puntos in categorias_puntos.items():
-            parametros["categorias"].append({
-                "nombre": categoria,
-                "valor": puntos,
-            })
-            
+        # Ingresar los datos a parámetros
+        parametros = {
+            "evalacion": self,
+            "categorias": [],
+            "total": total,
+        }
+        
+        print(parametros)
         return parametros
-    
-    
