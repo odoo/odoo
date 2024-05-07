@@ -5,6 +5,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
+from odoo.addons.google_calendar.utils.google_event import GoogleEvent
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
 from odoo.addons.google_account.models.google_service import GoogleService
 from odoo.addons.google_calendar.models.res_users import User
@@ -610,10 +611,10 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'stop': datetime(2020, 1, 15),
             'need_sync': False,
         })
-
+        mock_do_request.return_value = (200, GoogleEvent([event._google_values()]), datetime.now())
         event.with_context(send_updates=True)._sync_odoo2google(self.google_service)
         self.call_post_commit_hooks()
-        self.assertGoogleEventSendUpdates('all')
+        self.assertGoogleEventSendUpdates(mock_do_request, 'all')
 
     @patch.object(GoogleService, '_do_request')
     def test_not_send_update_do_request(self, mock_do_request):
@@ -624,10 +625,10 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'stop': datetime(2020, 1, 15),
             'need_sync': False,
         })
-
+        mock_do_request.return_value = (200, GoogleEvent([event._google_values()]), datetime.now())
         event.with_context(send_updates=False)._sync_odoo2google(self.google_service)
         self.call_post_commit_hooks()
-        self.assertGoogleEventSendUpdates('none')
+        self.assertGoogleEventSendUpdates(mock_do_request, 'none')
 
     @patch_api
     def test_recurrence_delete_single_events(self):
