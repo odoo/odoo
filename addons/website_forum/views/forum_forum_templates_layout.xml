@@ -13,6 +13,9 @@
     <xpath expr="//div[@id='wrapwrap']" position="attributes">
         <attribute name="t-att-data-forum_id">forum and forum.id</attribute>
     </xpath>
+    <xpath expr="//body" position="inside">
+        <script t-if="seo_microdata" type="application/ld+json" t-out="seo_microdata"></script>
+    </xpath>
 </template>
 
 <!-- PAGE INDEX -->
