@@ -4495,6 +4495,83 @@ test.tags("desktop")("can drag and drop a record from one column to the next", a
     expect.verifySteps(["resequence"]);
 });
 
+test.tags("desktop")(
+    "user without permission cannot drag and drop a column thus sequence remains unchanged on drag and drop attempt",
+    async () => {
+        expect.errors(1);
+
+        onRpc("/web/dataset/resequence", () => {
+            throw makeServerError({ message: "No Permission" }); // Simulate user without permission
+        });
+
+        await mountView({
+            type: "kanban",
+            resModel: "partner",
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+        });
+
+        expect(queryAllTexts(".o_column_title")).toEqual(["hello", "xmo"]);
+
+        const groups = queryAll(".o_column_title");
+        await contains(groups[0]).dragAndDrop(groups[1]);
+
+        expect(queryAllTexts(".o_column_title")).toEqual(["hello", "xmo"]);
+    }
+);
+
+test.tags("desktop")(
+    "user without permission cannot drag and drop a record thus sequence remains unchanged on drag and drop attempt",
+    async () => {
+        expect.errors(1);
+
+        onRpc("partner", "web_save", () => {
+            throw makeServerError({ message: "No Permission" }); // Simulate user without permission
+        });
+
+        await mountView({
+            type: "kanban",
+            resModel: "partner",
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+        });
+
+        expect(".o_kanban_record:first").toHaveText("yop", {
+            message: "Checking the initial state of the view",
+        });
+
+        await contains(".o_kanban_record").dragAndDrop(".o_kanban_group:nth-child(2)");
+
+        expect(".o_kanban_record:first").toHaveText("yop", {
+            message: "Do not let the user d&d the record without permission",
+        });
+
+        await contains(".o_kanban_record").dragAndDrop(".o_kanban_record:nth-child(3)");
+
+        expect(".o_kanban_record:first").toHaveText("gnap", {
+            message: "Check that the record does not become static after d&d",
+        });
+    }
+);
+
 test.tags("desktop")("drag and drop highlight on hover", async () => {
     await mountView({
         type: "kanban",

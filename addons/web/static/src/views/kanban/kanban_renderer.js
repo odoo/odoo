@@ -454,11 +454,12 @@ export class KanbanRenderer extends Component {
      */
     async sortGroupDrop(dataGroupId, { previous }) {
         this.toggleProcessing(dataGroupId, true);
-
         const refId = previous ? previous.dataset.id : null;
-        await this.props.list.resequence(dataGroupId, refId);
-
-        this.toggleProcessing(dataGroupId, false);
+        try {
+            await this.props.list.resequence(dataGroupId, refId);
+        } finally {
+            this.toggleProcessing(dataGroupId, false);
+        }
     }
 
     /**
