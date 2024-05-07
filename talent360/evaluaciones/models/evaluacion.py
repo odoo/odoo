@@ -66,7 +66,6 @@ class Evaluacion(models.Model):
     fecha_inicio = fields.Date()
     fecha_final = fields.Date()
 
-    
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
         """
@@ -102,7 +101,6 @@ class Evaluacion(models.Model):
             template = self.env["template"].browse(template_id)
             if template:
                 pregunta_ids = template.pregunta_ids.ids
-                print("IDs de preguntas:", pregunta_ids)
                 self.pregunta_ids = [(6, 0, pregunta_ids)]
 
         return self
@@ -277,6 +275,14 @@ class Evaluacion(models.Model):
             "target": "new",
         }
 
+    dict_valor_texto = {
+        0: "Nunca",
+        1: "Casi nunca",
+        2: "A veces",
+        3: "Casi siempre",
+        4: "Siempre",
+    }
+
     def action_generar_datos_reporte_generico(self):
         """
         Genera los datos necesarios para el reporte genérico de la evaluación.
@@ -303,16 +309,24 @@ class Evaluacion(models.Model):
                 if respuesta.evaluacion_id.id != self.id:
                     continue
 
-                respuestas.append(respuesta.respuesta_texto)
+                if pregunta.tipo == "multiple_choice":
+                    respuesta_texto = respuesta.opcion_id.opcion_texto
+                elif pregunta.tipo == "escala":
+                    valor = int(respuesta.respuesta_texto)
+                    if pregunta.ponderacion == "descendente":
+                        valor = 4 - valor
+                    respuesta_texto = self.dict_valor_texto.get(valor, "N/A")
+                else:
+                    respuesta_texto = respuesta.respuesta_texto
+
+                respuestas.append(respuesta_texto)
 
                 for i, respuesta_tabulada in enumerate(respuestas_tabuladas):
-                    if respuesta_tabulada["texto"] == respuesta.respuesta_texto:
-                        respuestas_tabuladas[i]["conteo"] += 1
+                    if respuesta_tabulada["nombre"] == respuesta_texto:
+                        respuestas_tabuladas[i]["valor"] += 1
                         break
                 else:
-                    respuestas_tabuladas.append(
-                        {"texto": respuesta.respuesta_texto, "conteo": 1}
-                    )
+                    respuestas_tabuladas.append({"nombre": respuesta_texto, "valor": 1})
 
             datos_pregunta = {
                 "pregunta": pregunta,
@@ -339,13 +353,15 @@ class Evaluacion(models.Model):
             "evaluacion": self,
             "pregunta": self.pregunta_ids,
         }
-    
+
     def action_enviar_evaluacion(self):
         usuarios = []
 
         for usuario in self.usuario_ids:
             usuarios.append(usuario.partner_id.name)
-        self.env['usuario.evaluacion.rel'].action_enviar_evaluacion(evaluacion_id=self.id)
+        self.env["usuario.evaluacion.rel"].action_enviar_evaluacion(
+            evaluacion_id=self.id
+        )
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
@@ -356,5 +372,3 @@ class Evaluacion(models.Model):
                 "sticky": False,
             },
         }
-        
-
