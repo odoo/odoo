@@ -2,9 +2,9 @@
 <odoo>
     <data>
 
-        <record id="l10n_es_edi_certificate_form" model="ir.ui.view">
-            <field name="name">l10n_es_edi.certificate.form</field>
-            <field name="model">l10n_es_edi.certificate</field>
+        <record id="l10n_es_edi_sii_certificate_form" model="ir.ui.view">
+            <field name="name">l10n_es_edi_sii.certificate.form</field>
+            <field name="model">l10n_es_edi_sii.certificate</field>
             <field name="arch" type="xml">
                 <form>
                     <sheet>
@@ -23,9 +23,9 @@
             </field>
         </record>
 
-        <record id="l10n_es_edi_certificate_tree" model="ir.ui.view">
-            <field name="name">l10n_es_edi.certificate.tree</field>
-            <field name="model">l10n_es_edi.certificate</field>
+        <record id="l10n_es_edi_sii_certificate_tree" model="ir.ui.view">
+            <field name="name">l10n_es_edi_sii.certificate.tree</field>
+            <field name="model">l10n_es_edi_sii.certificate</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="date_start"/>
@@ -35,23 +35,23 @@
             </field>
         </record>
 
-        <record id="l10n_es_edi_certificate_action" model="ir.actions.act_window">
-            <field name="name">Certificates for EDI invoices on Spain</field>
-            <field name="res_model">l10n_es_edi.certificate</field>
+        <record id="l10n_es_edi_sii_certificate_action" model="ir.actions.act_window">
+            <field name="name">Certificates for EDI SII invoices on Spain</field>
+            <field name="res_model">l10n_es_edi_sii.certificate</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">Create the first certificate</p>
             </field>
         </record>
 
-        <menuitem id="menu_l10n_es_edi_root"
-                  name="Spain"
+        <menuitem id="menu_l10n_es_edi_sii_root"
+                  name="Spain SII"
                   sequence="110"
                   groups="account.group_account_manager"
                   parent="account.menu_finance_configuration">
-            <menuitem id="menu_l10n_es_edi_certificates"
-                      name="Certificates (ES)"
-                      action="l10n_es_edi_certificate_action"
+            <menuitem id="menu_l10n_es_edi_sii_certificates"
+                      name="Certificates"
+                      action="l10n_es_edi_sii_certificate_action"
                       sequence="100"
                       groups="account.group_account_manager"/>
         </menuitem>
