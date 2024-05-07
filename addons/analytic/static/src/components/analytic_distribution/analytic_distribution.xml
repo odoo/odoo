@@ -13,7 +13,7 @@
     </t>
 
     <t t-name="analytic.AnalyticDistributionPopup">
-        <div class="analytic_distribution_popup dropdown-menu o-dropdown--menu show rounded py-0 overflow-x-hidden" t-if="state.showDropdown" t-ref="analyticDropdown">
+        <div class="popover analytic_distribution_popup dropdown-menu o-dropdown--menu show rounded py-0 overflow-x-hidden" t-if="state.showDropdown" t-ref="analyticDropdown">
             <div class="popover-header sticky-top">
                 <div class="d-flex">
                     <div class="h5 mt-2 me-auto">
@@ -25,7 +25,7 @@
                     </div>
                 </div>
             </div>
-            <div class="p-2 table-responsive">
+            <div class="popover-body p-2 table-responsive">
                 <span t-if="!allPlans.length">No analytic plans found</span>
                 <table t-else="" class="o_list_table table table-sm table-hover o_analytic_table mb-2 table-striped">
                     <t t-set="totals" t-value="planTotals()"/>
