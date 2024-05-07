@@ -27,12 +27,29 @@ class TestReportes(TransactionCase):
                 "tipo": "open_question",
             }
         )
+
+
         pregunta2 = self.env["pregunta"].create(
             {
                 "pregunta_texto": "Pregunta 2",
                 "tipo": "multiple_choice",
             }
         )
+
+        opciones_texto = ["Respuesta 1", "Respuesta 2", "Respuesta 3"]
+        
+        opciones = {}
+        for opcion in opciones_texto:
+            opcion_db = self.env["opcion"].create(
+                {
+                    "opcion_texto": opcion,
+                    "pregunta_id": pregunta2.id,
+                    "valor": int(opcion.split(" ")[-1]),
+                }
+            )
+            opciones[opcion] = opcion_db
+    
+
         pregunta3 = self.env["pregunta"].create(
             {
                 "pregunta_texto": "Pregunta 3",
@@ -74,32 +91,44 @@ class TestReportes(TransactionCase):
                 "Respuesta 3",
             ],
             pregunta3.id: [
-                "5",
-                "5",
-                "5",
+                "4",
                 "4",
                 "4",
                 "3",
                 "3",
-                "3",
-                "3",
-                "3",
-                "3",
-                "3",
-                "3",
+                "2",
+                "2",
+                "2",
+                "2",
+                "2",
+                "2",
+                "2",
+                "2",
             ],
         }
 
         # Crear respuestas para las preguntas
         for pregunta, respuestas in preguntas_respuestas.items():
-            for respuesta in respuestas:
-                self.env["respuesta"].create(
-                    {
-                        "pregunta_id": pregunta,
-                        "evaluacion_id": self.evaluacion.id,
-                        "respuesta_texto": respuesta,
-                    }
-                )
+            tipo = self.env["pregunta"].browse(pregunta).tipo
+
+            if tipo == "multiple_choice":
+                for respuesta in respuestas:
+                    self.env["respuesta"].create(
+                        {
+                            "pregunta_id": pregunta,
+                            "evaluacion_id": self.evaluacion.id,
+                            "opcion_id": opciones[respuesta].id,
+                        }
+                    )
+            else:
+                for respuesta in respuestas:
+                    self.env["respuesta"].create(
+                        {
+                            "pregunta_id": pregunta,
+                            "evaluacion_id": self.evaluacion.id,
+                            "respuesta_texto": respuesta,
+                        }
+                    )
 
     def tearDown(self):
         """
@@ -119,6 +148,7 @@ class TestReportes(TransactionCase):
         self.assertEqual(params["evaluacion"], self.evaluacion)
         self.assertEqual(len(params["preguntas"]), 3)
 
+
         # Verificar que los datos de las preguntas sean correctos
         for pregunta in params["preguntas"]:
             if pregunta["pregunta"].tipo == "open_question":
@@ -127,9 +157,9 @@ class TestReportes(TransactionCase):
                 self.assertEqual(
                     pregunta["respuestas_tabuladas"],
                     [
-                        {"texto": "Respuesta 1", "conteo": 3},
-                        {"texto": "Respuesta 2", "conteo": 2},
-                        {"texto": "Respuesta 3", "conteo": 5},
+                        {"nombre": "Respuesta 1", "valor": 3},
+                        {"nombre": "Respuesta 2", "valor": 2},
+                        {"nombre": "Respuesta 3", "valor": 5},
                     ],
                 )
             elif pregunta["pregunta"].tipo == "multiple_choice":
@@ -139,9 +169,9 @@ class TestReportes(TransactionCase):
                 self.assertEqual(
                     pregunta["respuestas_tabuladas"],
                     [
-                        {"texto": "Respuesta 1", "conteo": 3},
-                        {"texto": "Respuesta 2", "conteo": 3},
-                        {"texto": "Respuesta 3", "conteo": 6},
+                        {"nombre": "Respuesta 1", "valor": 3},
+                        {"nombre": "Respuesta 2", "valor": 3},
+                        {"nombre": "Respuesta 3", "valor": 6},
                     ],
                 )
             elif pregunta["pregunta"].tipo == "escala":
@@ -151,9 +181,9 @@ class TestReportes(TransactionCase):
                 self.assertEqual(
                     pregunta["respuestas_tabuladas"],
                     [
-                        {"texto": "5", "conteo": 3},
-                        {"texto": "4", "conteo": 2},
-                        {"texto": "3", "conteo": 8},
+                        {"nombre": "Siempre", "valor": 3},
+                        {"nombre": "Casi siempre", "valor": 2},
+                        {"nombre": "A veces", "valor": 8},
                     ],
                 )
             else:

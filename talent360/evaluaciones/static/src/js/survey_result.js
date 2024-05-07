@@ -105,11 +105,11 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
             self.graphData = self.$el.data("graphData");
 
             self.labels = self.graphData.map(function (respuesta) {
-                return respuesta.texto;
+                return respuesta.nombre;
             });
     
             self.counts = self.graphData.map(function (respuesta) {
-                return respuesta.conteo;
+                return respuesta.valor;
             });
     
 
