@@ -7,6 +7,7 @@
         "security/ir.model.access.csv",
         "views/evaluaciones_views.xml",
         "views/crear_evaluaciones_360.xml",
+        "views/crear_evaluacion_clima.xml",
         "views/objetivos_views.xml",
         "views/evaluaciones_menus.xml",
         "views/evaluaciones_templates.xml",
@@ -31,7 +32,6 @@
             "web/static/lib/bootstrap/scss/_variables.scss",
             "evaluaciones/static/src/scss/survey_templates_form.scss",
             "evaluaciones/static/src/scss/survey_templates_results.scss",
-            "evaluaciones/static/src/scss/survey_survey_views.scss",
         ],
     },
 }

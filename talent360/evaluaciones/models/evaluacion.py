@@ -638,15 +638,6 @@ class Evaluacion(models.Model):
             "Respeto a la Diversidad",
             "Condiciones Generales de Trabajo",
         ]
-<<<<<<< HEAD
-
-        categorias_clima = [{"nombre": categoria, "valor": 0, "puntos": 0, "puntos_maximos": 0} for categoria in categorias_orden_clima]
-        total_clima = 0
-        maximo_posible_clima = 0
-
-        for pregunta in self.pregunta_ids:
-            if not pregunta.categoria or not dict(pregunta._fields["categoria"].selection).get(pregunta.categoria) in categorias_orden_clima:
-=======
         
         categorias = [{
             "nombre": categoria, 
@@ -666,7 +657,6 @@ class Evaluacion(models.Model):
 
             categoria_texto = dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
             if not categoria_texto in categorias_orden:
->>>>>>> abe6cc975302fa0334bca7b714ce71543c3b7c49
                 continue
 
             valor_pregunta = 0
@@ -683,8 +673,6 @@ class Evaluacion(models.Model):
                 maximo_pregunta += 4  # Suponiendo un máximo de 4 para cada respuesta en escala
                 valor_pregunta = sum(int(respuesta.respuesta_texto) for respuesta in pregunta.respuesta_ids) / len(pregunta.respuesta_ids)
 
-<<<<<<< HEAD
-=======
                 for respuesta in pregunta.respuesta_ids:
                     valor_respuesta = int(respuesta.respuesta_texto)
                     valor_pregunta += valor_respuesta
@@ -713,31 +701,10 @@ class Evaluacion(models.Model):
                 valor_pregunta = (valor_pregunta / len(pregunta.respuesta_ids))
             
             #TODO:vincular a cambio de opcionID
->>>>>>> abe6cc975302fa0334bca7b714ce71543c3b7c49
             elif pregunta.tipo == "multiple_choice":
                 maximo_pregunta = max((opcion.valor for opcion in pregunta.opcion_ids), default=0)
                 valor_pregunta = sum(1 for respuesta in pregunta.respuesta_ids if respuesta.respuesta_texto == "Sí") / len(pregunta.respuesta_ids)
 
-<<<<<<< HEAD
-            total_clima += valor_pregunta
-            maximo_posible_clima += maximo_pregunta
-
-            for categoria in categorias_clima:
-                if categoria["nombre"] == dict(pregunta._fields["categoria"].selection).get(pregunta.categoria):
-                    categoria["puntos"] += valor_pregunta
-                    categoria["puntos_maximos"] += maximo_pregunta
-                    break
-
-        for categoria in categorias_clima:
-            categoria["valor"] = (categoria["puntos"] / categoria["puntos_maximos"]) * 100 if categoria["puntos_maximos"] > 0 else 0
-
-        parametros = {
-            "evaluacion_clima": self,
-            "categorias_clima": categorias_clima,
-            "total_clima": total_clima,
-            "total_maximo_clima": maximo_posible_clima,
-            "total_porcentaje_clima": (total_clima / maximo_posible_clima) * 100 if maximo_posible_clima > 0 else 0,
-=======
             total += valor_pregunta
             maximo_posible += maximo_pregunta
             
@@ -769,7 +736,6 @@ class Evaluacion(models.Model):
             "total": total,
             "total_maximo": maximo_posible,
             "total_porcentaje": total_porcentaje,
->>>>>>> abe6cc975302fa0334bca7b714ce71543c3b7c49
         }
         
         print(parametros)

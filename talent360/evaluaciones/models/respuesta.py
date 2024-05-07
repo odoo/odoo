@@ -9,7 +9,7 @@ class Respuesta(models.Model):
     usuario_id = fields.Many2one("res.users", string="Usuario")
     evaluacion_id = fields.Many2one("evaluacion", string="Evaluacion")
     pregunta_texto = fields.Char(related="pregunta_id.pregunta_texto")
-    respuesta_texto = fields.Char("Respuesta", required=True)
+    respuesta_texto = fields.Char("Respuesta")
     token = fields.Char(string="Token")
     opcion_id = fields.Many2one("opcion", string="Opción")
 
