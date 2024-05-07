@@ -75,10 +75,13 @@ export class PartnerList extends Component {
                   this.pos.models["res.partner"].getAll(),
                   (partner) => unaccent(partner.searchString, false)
               )
-            : this.pos.models["res.partner"].getAll().slice(0, 1000);
-        return partners.toSorted((a, b) =>
-            this.props.partner?.id === a.id ? -1 : a.name.localeCompare(b.name)
-        );
+            : this.pos.models["res.partner"]
+                  .getAll()
+                  .slice(0, 1000)
+                  .toSorted((a, b) =>
+                      this.props.partner?.id === a.id ? -1 : a.name.localeCompare(b.name)
+                  );
+        return partners;
     }
     get isBalanceDisplayed() {
         return false;
