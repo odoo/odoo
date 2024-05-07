@@ -78,8 +78,18 @@ class TestL10nBrPix(AccountTestInvoicingCommon):
 
     def test_get_qr_vals_for_pos_default_qr(self):
         self.partner_bank.include_reference = False
-        self.invoice.invoice_line_ids.write({"price_unit": 0})
+        self.invoice.invoice_line_ids.price_unit = 0
+        qr_code_str = (
+            "00020101021226580014br.gov.bcb.pix013671d6c6e1-64ea-4a11-9560-"
+            "a10870c40ca25204000053039865802BR5914COMPANY_1_DATA62070503***63044FC8"
+        )
         self.assertEqual(
             self._get_qr_code_string(),
-            "00020101021226580014br.gov.bcb.pix013671d6c6e1-64ea-4a11-9560-a10870c40ca25204000053039865802BR5914COMPANY_1_DATA62070503***63044FC8"
+            qr_code_str,
+        )
+        self.invoice.invoice_line_ids.price_unit = 0.01
+        self.assertNotEqual(
+            self._get_qr_code_string(),
+            qr_code_str,
+            "An invoice line of $0.01 shouldn't return the same code as $0.00",
         )
