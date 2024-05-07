@@ -7,7 +7,9 @@ patch(OrderWidget.prototype, {
         const buttonName = this.router.activeSlot === "product_list" ? _t("Order") : _t("Pay");
         const type = this.selfOrder.config.self_ordering_mode;
         const mode = this.selfOrder.config.self_ordering_pay_after;
-        const isOnlinePayment = this.selfOrder.pos_payment_methods.find((p) => p.is_online_payment);
+        const isOnlinePayment = this.selfOrder.models["pos.payment.method"].find(
+            (p) => p.is_online_payment
+        );
         const order = this.selfOrder.currentOrder;
         const takeAway = order.takeaway;
         const service = this.selfOrder.config.self_ordering_service_mode;
@@ -30,7 +32,7 @@ patch(OrderWidget.prototype, {
                 return { label: "", disabled: true };
             }
 
-            if (!order.isSavedOnServer) {
+            if (Object.keys(order.changes).length > 0) {
                 return { label: _t("Order"), disabled: false };
             } else {
                 if (isOnlinePayment) {

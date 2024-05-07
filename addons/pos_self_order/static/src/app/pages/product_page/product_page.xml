@@ -6,7 +6,7 @@
                 <button class="btn btn-secondary btn-lg px-3 text-nowrap" t-on-click="() => router.back()">
                     <i class="oi oi-chevron-left" aria-hidden="true"/><span class="ms-2 d-none d-md-inline">Discard</span>
                 </button>
-                <h1 class="mb-0 text-nowrap"><strong t-esc="product.name"/> options</h1>
+                <h1 class="mb-0 text-nowrap"><strong t-esc="product.display_name"/> options</h1>
                 <span class="d-none d-md-inline px-5"/> <!-- Spacer -->
             </div>
 
@@ -24,7 +24,7 @@
                             onerror="this.remove()"/>
                     </div>
                     <div class="o-so-product-details-description">
-                        <h2 t-esc="product.name"/>
+                        <h2 t-esc="product.display_name"/>
                         <small t-if="product.description_self_order"
                             class="o_self_order_main_desc d-block mb-3 text-muted"
                             t-out="product.description_self_order"
@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <AttributeSelection
-                    t-if="this.product.attributes.length"
+                    t-if="this.product.attribute_line_ids.length"
                     product="product"/>
             </div>
 

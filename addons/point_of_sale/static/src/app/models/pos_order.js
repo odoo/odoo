@@ -30,7 +30,7 @@ export class PosOrder extends Base {
         this.tracking_number =
             vals.tracking_number && !isNaN(parseInt(vals.tracking_number))
                 ? vals.tracking_number
-                : ((this.session.id % 10) * 100 + (this.sequence_number % 100)).toString();
+                : ((this.session?.id % 10) * 100 + (this.sequence_number % 100)).toString();
 
         if (!vals.lines) {
             this.lines = [];
@@ -209,6 +209,9 @@ export class PosOrder extends Base {
         };
     }
 
+    get hasChange() {
+        return this.lines.some((l) => l.uiState.hasChange);
+    }
     /**
      * This function is called after the order has been successfully sent to the preparation tool(s).
      * In the future, this status should be separated between the different preparation tools,
@@ -219,21 +222,20 @@ export class PosOrder extends Base {
         const orderlineIdx = [];
         this.lines.forEach((line) => {
             if (!line.skip_change) {
-                const note = line.getNote();
-                const lineKey = `${line.uuid} - ${note}`;
-                orderlineIdx.push(lineKey);
+                orderlineIdx.push(line.preparationKey);
 
-                if (this.last_order_preparation_change[lineKey]) {
-                    this.last_order_preparation_change[lineKey]["quantity"] = line.get_quantity();
+                if (this.last_order_preparation_change[line.preparationKey]) {
+                    this.last_order_preparation_change[line.preparationKey]["quantity"] =
+                        line.get_quantity();
                 } else {
-                    this.last_order_preparation_change[lineKey] = {
+                    this.last_order_preparation_change[line.preparationKey] = {
                         attribute_value_ids: line.attribute_value_ids.map((a) =>
                             a.serialize({ orm: true })
                         ),
-                        line_uuid: line.uuid,
+                        uuid: line.uuid,
                         product_id: line.get_product().id,
                         name: line.get_full_product_name(),
-                        note: note,
+                        note: line.getNote(),
                         quantity: line.get_quantity(),
                     };
                 }
@@ -243,19 +245,11 @@ export class PosOrder extends Base {
 
         // Checks whether an orderline has been deleted from the order since it
         // was last sent to the preparation tools. If so we delete it to the changes.
-        for (const lineKey in this.last_order_preparation_change) {
-            if (!this.getOrderedLine(lineKey)) {
-                delete this.last_order_preparation_change[lineKey];
+        for (const [key, change] of Object.entries(this.last_order_preparation_change)) {
+            if (!this.models["pos.order.line"].getBy("uuid", change.uuid)) {
+                delete this.last_order_preparation_change[key];
             }
         }
-    }
-
-    getOrderedLine(lineKey) {
-        return this.lines.find(
-            (line) =>
-                line.uuid === this.last_order_preparation_change[lineKey]["line_uuid"] &&
-                line.note === this.last_order_preparation_change[lineKey]["note"]
-        );
     }
 
     hasSkippedChanges() {

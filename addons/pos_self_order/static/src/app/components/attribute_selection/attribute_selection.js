@@ -1,5 +1,4 @@
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
-import { ProductCustomAttribute } from "@point_of_sale/app/store/models/product_custom_attribute";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { attributeFlatter, attributeFormatter } from "@pos_self_order/app/utils";
 import { floatIsZero } from "@web/core/utils/numbers";
@@ -10,15 +9,15 @@ export class AttributeSelection extends Component {
 
     setup() {
         this.selfOrder = useSelfOrder();
-        this.numberOfAttributes = this.props.product.attributes.length;
+        this.numberOfAttributes = this.props.product.attribute_line_ids.length;
         this.currentAttribute = 0;
 
         this.gridsRef = {};
         this.valuesRef = {};
-        for (const attr of this.props.product.attributes) {
+        for (const attr of this.props.product.attribute_line_ids) {
             this.gridsRef[attr.id] = useRef(`attribute_grid_${attr.id}`);
             this.valuesRef[attr.id] = {};
-            for (const value of attr.values) {
+            for (const value of attr.attribute_id.template_value_ids) {
                 this.valuesRef[attr.id][value.id] = useRef(`value_${attr.id}_${value.id}`);
             }
         }
@@ -76,28 +75,31 @@ export class AttributeSelection extends Component {
     get attributeSelected() {
         const flatAttribute = attributeFlatter(this.selectedValues);
         const customAttribute = this.env.customValues;
-        return attributeFormatter(this.selfOrder.attributeById, flatAttribute, customAttribute);
+        return attributeFormatter(
+            this.selfOrder.models["product.attribute"].getAllBy("id"),
+            flatAttribute,
+            customAttribute
+        );
     }
 
     availableAttributeValue(attribute) {
         return this.selfOrder.config.self_ordering_mode === "kiosk"
-            ? attribute.values.filter((a) => !a.is_custom)
-            : attribute.values;
+            ? attribute.attribute_id.template_value_ids.filter((a) => !a.is_custom)
+            : attribute.attribute_id.template_value_ids;
     }
 
     initAttribute() {
         const initCustomValue = (value) => {
-            let selectedValue = this.selfOrder.editedLine?.custom_attribute_value_ids.find(
+            const selectedValue = this.selfOrder.editedLine?.custom_attribute_value_ids.find(
                 (v) => v.custom_product_template_attribute_value_id === value.id
             );
 
-            if (!selectedValue) {
-                selectedValue = new ProductCustomAttribute({
-                    custom_product_template_attribute_value_id: value.id,
-                });
-            }
-
-            return selectedValue;
+            return {
+                custom_product_template_attribute_value_id: this.selfOrder.models[
+                    "product.template.attribute.value"
+                ].get(value.id),
+                custom_value: selectedValue || "",
+            };
         };
 
         const initValue = (value) => {
@@ -107,10 +109,10 @@ export class AttributeSelection extends Component {
             return false;
         };
 
-        for (const attr of this.props.product.attributes) {
+        for (const attr of this.props.product.attribute_line_ids) {
             this.selectedValues[attr.id] = {};
 
-            for (const value of attr.values) {
+            for (const value of attr.attribute_id.template_value_ids) {
                 if (attr.display_type === "multi") {
                     this.selectedValues[attr.id][value.id] = initValue(value);
                 } else if (typeof this.selectedValues[attr.id] !== "number") {
@@ -130,21 +132,13 @@ export class AttributeSelection extends Component {
             : parseInt(this.selectedValues[attribute.id]) === value.id;
     }
 
-    _getPriceExtra(value) {
-        const isTakeAway = this.selfOrder.takeaway;
-        const priceExtra = isTakeAway
-            ? value.price_extra.display_price_default
-            : value.price_extra.display_price_alternative;
-        return priceExtra;
-    }
-
     shouldShowPriceExtra(value) {
-        const priceExtra = this._getPriceExtra(value);
+        const priceExtra = value.price_extra;
         return !floatIsZero(priceExtra, this.selfOrder.config.currency_decimals);
     }
 
     getfPriceExtra(value) {
-        const priceExtra = this._getPriceExtra(value);
+        const priceExtra = value.price_extra;
         const sign = priceExtra < 0 ? "- " : "+ ";
         return sign + this.selfOrder.formatMonetary(Math.abs(priceExtra));
     }

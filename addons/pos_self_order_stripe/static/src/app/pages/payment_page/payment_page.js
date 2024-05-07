@@ -4,7 +4,7 @@ import { PaymentPage } from "@pos_self_order/app/pages/payment_page/payment_page
 patch(PaymentPage.prototype, {
     async startPayment() {
         this.selfOrder.paymentError = false;
-        const paymentMethod = this.selfOrder.pos_payment_methods.find(
+        const paymentMethod = this.selfOrder.models["pos.payment.method"].find(
             (p) => p.id === this.state.paymentMethodId
         );
 

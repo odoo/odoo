@@ -17,14 +17,6 @@ class RestaurantTable(models.Model):
         default=lambda self: self._get_identifier(),
     )
 
-    def _get_self_order_data(self) -> Dict:
-        self.ensure_one()
-        return {
-            'name': self.name,
-            'identifier': self.identifier,
-            'floor_name': self.floor_id.name
-        }
-
     @staticmethod
     def _get_identifier():
         return uuid.uuid4().hex[:8]
@@ -34,3 +26,23 @@ class RestaurantTable(models.Model):
         tables = self.env["restaurant.table"].search([])
         for table in tables:
             table.identifier = self._get_identifier()
+
+    @api.model
+    def _load_pos_self_data_fields(self, config_id):
+        return ['name', 'identifier', 'floor_id']
+
+    @api.model
+    def _load_pos_self_data_domain(self, data):
+        return [('floor_id', 'in', [floor['id'] for floor in data['restaurant.floor']['data']])]
+
+
+class RestaurantFloor(models.Model):
+    _inherit = "restaurant.floor"
+
+    @api.model
+    def _load_pos_self_data_fields(self, config_id):
+        return ['name', 'table_ids']
+
+    @api.model
+    def _load_pos_self_data_domain(self, data):
+        return [('id', 'in', data['pos.config']['data'][0]['floor_ids'])]

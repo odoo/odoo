@@ -17,6 +17,13 @@ export class EatingLocationPage extends Component {
 
     selectLocation(loc) {
         this.selfOrder.currentOrder.takeaway = loc === "out";
+        this.selfOrder.orderTakeAwayState[this.selfOrder.currentOrder.uuid] = true;
+
+        if (loc === "out") {
+            this.selfOrder.currentOrder.update({
+                fiscal_position_id: this.selfOrder.config.takeaway_fp_id,
+            });
+        }
         this.router.navigate("product_list");
     }
 }

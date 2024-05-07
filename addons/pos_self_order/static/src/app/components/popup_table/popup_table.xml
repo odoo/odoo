@@ -11,11 +11,11 @@
                 <button class="btn btn-close" t-on-click="close"/>
             </div>
             <select class="form-select form-select-lg mb-5" t-model="state.selectedTable">
-                <t t-foreach="availableFloor" t-as="floor" t-key="floor.id">
+                <t t-foreach="selfOrder.models['restaurant.floor'].getAll()" t-as="floor" t-key="floor.id">
                     <option value="floor" disabled="true">
                         <t t-esc="floor.name" />
                     </option>
-                    <option t-foreach="floor.tables" t-as="table" t-key="table.id" t-att-value="table.id">
+                    <option t-foreach="floor.table_ids" t-as="table" t-key="table.id" t-att-value="table.id">
                         <t t-esc="table.name" />
                     </option>
                 </t>

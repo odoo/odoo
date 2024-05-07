@@ -7,19 +7,17 @@
             </div>
             <div class="order-content flex-grow-1 overflow-auto pb-4">
                 <t t-foreach="linesToDisplay" t-as="line" t-key="line.uuid">
-                    <div t-if="!line.combo_parent_uuid" class="product-card-item py-2 py-lg-4 px-3 bg-view border-bottom">
-                        <t t-set="childLines" t-value="getChildLines(line)"/>
-                        <t t-set="product" t-value="this.selfOrder.productByIds[line.product_id]"/>
-
+                    <div t-if="!line.combo_parent_id" class="product-card-item py-2 py-lg-4 px-3 bg-view border-bottom">
+                        <t t-set="product" t-value="line.product_id"/>
                         <div class="product-wrapper d-flex align-items-start gap-2 gap-lg-3">
                             <div class="product-info d-flex flex-column gap-2 flex-grow-1">
                                 <div>
-                                    <span t-if="selfOrder.currentOrder.isSavedOnServer"><t t-esc="line.qty" />x </span>
-                                    <strong t-esc="selfOrder.productByIds[line.product_id].name"/>
+                                    <span t-if="Object.keys(selfOrder.currentOrder.changes).length === 0"><t t-esc="line.qty" />x </span>
+                                    <strong t-esc="line.product_id.display_name"/>
                                 </div>
-                                <div t-if="this.selfOrder.productByIds[line.product_id]?.attributes.length > 0 || childLines.length > 0" class="d-flex align-items-start gap-2 gap-md-3 my-2">
+                                <div t-if="line.product_id?.attribute_line_ids.length > 0 || line.combo_line_ids.length > 0" class="d-flex align-items-start gap-2 gap-md-3 my-2">
                                     <button
-                                        t-if="!selfOrder.currentOrder.isSavedOnServer"
+                                        t-if="Object.keys(selfOrder.currentOrder.changes).length === 0"
                                         type="button"
                                         t-on-click="() => this.clickOnLine(line)"
                                         class="btn btn-secondary"> <i class="fa fa-pencil"></i></button>
@@ -27,36 +25,34 @@
                                     <div class="vr"/>
 
                                     <div class="small">
-                                        <div t-if="childLines.length === 0" class="product-info d-flex flex-column flex-grow-1 text-muted">
-                                            <div t-foreach="selfOrder.getSelectedAttributes(line)" t-as="attribute" t-key="attribute.name">
-                                                - <span t-esc="attribute.name" /> : <span t-esc="attribute.value" />
+                                        <div t-if="line.combo_line_ids.length === 0" class="product-info d-flex flex-column flex-grow-1 text-muted">
+                                            <div t-foreach="line.attribute_value_ids" t-as="attrVal" t-key="attrVal.id">
+                                                - <span t-esc="attrVal.attribute_id.name" /> : <span t-esc="attrVal.name" />
                                             </div>
                                         </div>
-                                        <div t-foreach="childLines" t-as="cline" t-key="cline.uuid" class="text-muted">
-                                            - <span t-esc="selfOrder.productByIds[cline.product_id].name" /> <span t-if="cline.price_subtotal_incl">(<t t-esc="selfOrder.formatMonetary(cline.price_subtotal_incl)"/>)</span>
+                                        <div t-foreach="line.combo_line_ids" t-as="cline" t-key="cline.uuid" class="text-muted">
+                                            - <span t-esc="cline.product_id.display_name" /> <span t-if="cline.price_subtotal_incl">(<t t-esc="selfOrder.formatMonetary(cline.price_subtotal_incl)"/>)</span>
                                             <div class="product-info d-flex flex-column flex-grow-1 ms-3">
-                                                <div t-foreach="selfOrder.getSelectedAttributes(cline)" t-as="attribute" t-key="attribute.name">
-                                                    - <span t-esc="attribute.name" /> : <span t-esc="attribute.value" />
+                                                <div t-foreach="cline.attribute_value_ids" t-as="attrVal" t-key="attrVal.id">
+                                                    - <span t-esc="attrVal.attribute_id.name" /> : <span t-esc="attrVal.name" />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                             <div class="o_self_order_item_card_image_wrapper flex-shrink-0 ratio ratio-1x1">
                                 <img
                                     class="o_self_order_item_card_image w-100 w-100 rounded bg-view"
-                                    t-attf-src="/web/image/product.product/{{ line.product_id}}/image_512"
+                                    t-attf-src="/web/image/product.product/{{ line.product_id.id}}/image_512"
                                     alt="Product image"
                                     loading="lazy"
                                     onerror="this.remove()"/>
                             </div>
                         </div>
-
                         <div class="product-controllers d-flex flex-wrap flex-grow-1 align-items-center justify-content-between mt-2">
                             <div>
-                                <div t-if="!selfOrder.currentOrder.isSavedOnServer" class="btn-group">
+                                <div t-if="Object.keys(selfOrder.currentOrder.changes).length > 0" class="btn-group">
                                     <button
                                         t-if="canDeleteLine(line) &amp;&amp; getLineChangeQty(line) > 1"
                                         type="button"
@@ -76,15 +72,14 @@
                             </div>
                             <div class="line-price o-so-tabular-nums" t-esc="selfOrder.formatMonetary(getPrice(line))"/>
                         </div>
-
                     </div>
                 </t>
             </div>
         </div>
         <div class="order-price d-flex-column flex-grow-0">
             <div class="absolute-content-price d-flex flex-column flex-grow-0 justify-content-center py-2 py-lg-3 px-3 border-bottom border-top bg-view text-end lh-sm">
-                <p class="o-so-tabular-nums mb-0 fw-bolder">Total: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.amount_total)" /></p>
-                <p class="o-so-tabular-nums mb-0 text-muted">Taxes: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.amount_tax)" /></p>
+                <p class="o-so-tabular-nums mb-0 fw-bolder">Total: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.get_total_with_tax())" /></p>
+                <p class="o-so-tabular-nums mb-0 text-muted">Taxes: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.get_total_tax())" /></p>
             </div>
             <OrderWidget t-if="this.selfOrder.ordering" action.bind="pay" removeTopClasses="true"/>
         </div>
