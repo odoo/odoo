@@ -54,43 +54,44 @@
         <template id="encuestas_reporte_nom_035" name="Reporte: NOM-035">
             <div class="container-fluid row gap-5 justify-content-between g-2">
                     <div class="col survey_section">
-                        <h4>Calificación Final</h4>
+                        <h4>Calificación final</h4>
                         <span t-att-class="'color_nulo' if final &lt; 20 else 'color_bajo' if 20 &lt;= final &lt; 45 else 'color_medio' if 45 &lt;= final &lt; 70 else 'color_alto' if 70 &lt;= final &lt; 90 else 'color_muy-alto'">
                             <t t-esc="final"/>
                         </span>
                         <span class="fs-5 pill">
-                            <t t-if="final &lt; 20">Nulo</t>
-                            <t t-elif="20 &lt;= final &lt; 45">Bajo</t>
-                            <t t-elif="45 &lt;= final &lt; 70">Medio</t>
-                            <t t-elif="70 &lt;= final &lt; 90">Alto</t>
-                            <t t-else="true">Muy Alto</t>
+                            Riesgo
+                            <t t-if="final &lt; 20"> nulo</t>
+                            <t t-elif="20 &lt;= final &lt; 45"> bajo</t>
+                            <t t-elif="45 &lt;= final &lt; 70"> medio</t>
+                            <t t-elif="70 &lt;= final &lt; 90"> alto</t>
+                            <t t-else="true"> muy alto</t>
                         </span>
                     </div>
 
                     <div class="col survey_section w-100">
-                        <h4>Semáforo de Riesgos</h4>
+                        <h4>Semáforo de riesgos</h4>
                         <div class="container-fluid row gap-2 align-items-center">
-                            <span class="color_circle" style="background-color: #ff4747;"/>
+                            <div class="color_circle" style="background-color: #ff4747;"/>
                             <span class="col">Riesgo muy alto</span>
                         </div>
 
                         <div class="container-fluid row gap-2 align-items-center">
-                            <span class="color_circle" style="background-color: #ffa446;"/>
+                            <div class="color_circle" style="background-color: #ffa446;"/>
                             <span class="col">Riesgo alto</span>
                         </div>
 
                         <div class="container-fluid row gap-2 align-items-center">
-                            <span class="color_circle" style="background-color: #ebae14;"/>
+                            <div class="color_circle" style="background-color: #ebae14;"/>
                             <span class="col">Riesgo medio</span>
                         </div>
 
                         <div class="container-fluid row gap-2 align-items-center">
-                            <span class="color_circle" style="background-color: #5aaf2b;"/>
+                            <div class="color_circle" style="background-color: #5aaf2b;"/>
                             <span class="col">Riesgo bajo</span>
                         </div>
 
                         <div class="container-fluid row gap-2 align-items-center">
-                            <span class="color_circle" style="background-color: #2894a7;"/>
+                            <div class="color_circle" style="background-color: #2894a7;"/>
                             <span class="col">Riesgo nulo</span>
                         </div>
                     </div>
@@ -101,24 +102,77 @@
                     <div class="survey_graph" t-att-id="'grafica_radar_categorias_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
                         <canvas t-att-id="'canvas_barras_categorias_nom_035'"/>
                     </div>
-                    <span class="mt-5">
-                        Categoría con mayor puntaje: <t t-esc="max(categorias, key=lambda x: x['valor'])['nombre']"/> (<t t-esc="max(categorias, key=lambda x: x['valor'])['valor']"/>)
-                    </span>
-                    <span>
-                        Categoría con menor puntaje: <t t-esc="min(categorias, key=lambda x: x['valor'])['nombre']"/> (<t t-esc="min(categorias, key=lambda x: x['valor'])['valor']"/>)
-                    </span>
                 </div>
+
+                <div class="container-fluid">
+                    <div class="row gap-5">
+                        <div class="col survey_section align-items-start">
+                            <h4>
+                                Categoría con mayor puntaje
+                            </h4>
+                            <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
+                                <span class="fs-1">
+                                    <t t-esc="max(categorias, key=lambda x: x['valor'])['valor']"/>
+                                </span>
+                                <span class="fs-5">
+                                    <t t-esc="max(categorias, key=lambda x: x['valor'])['nombre']"/>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col survey_section align-items-start">
+                            <h4>
+                                Categoría con menor puntaje
+                            </h4>
+                            <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
+                                <span class="fs-1">
+                                    <t t-esc="min(categorias, key=lambda x: x['valor'])['valor']"/>
+                                </span>
+                                <span class="fs-5">
+                                    <t t-esc="min(categorias, key=lambda x: x['valor'])['nombre']"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="survey_section">
                     <h4>Resumen general por dominios</h4>
                     <div class="survey_graph" t-att-id="'grafica_radar_dominios_nom_035'" t-att-data-graph-type="'radar'" t-att-data-label="'Resultados por dominio'" t-att-data-graph-data="dominios">
                         <canvas t-att-id="'canvas_barras_dominios_nom_035'"/>
                     </div>
-                    <span>
-                        Dominio con mayor puntaje: <t t-esc="max(dominios, key=lambda x: x['valor'])['nombre']"/> (<t t-esc="max(dominios, key=lambda x: x['valor'])['valor']"/>)
-                    </span>
-                    <span>
-                        Dominio con menor puntaje: <t t-esc="min(dominios, key=lambda x: x['valor'])['nombre']"/> (<t t-esc="min(dominios, key=lambda x: x['valor'])['valor']"/>)
-                    </span>
+                </div>
+
+                <div class="container-fluid">
+                    <div class="row gap-5">
+                        <div class="col survey_section align-items-start">
+                            <h4>
+                                Dominio con mayor puntaje
+                            </h4>
+                            <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
+                                <span class="fs-1">
+                                    <t t-esc="max(dominios, key=lambda x: x['valor'])['valor']"/>
+                                </span>
+                                <span class="fs-5">
+                                    <t t-esc="max(dominios, key=lambda x: x['valor'])['nombre']"/>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col survey_section align-items-start">
+                            <h4>
+                                Dominio con menor puntaje:
+                            </h4>
+                            <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
+                                <span class="fs-1">
+                                    <t t-esc="min(dominios, key=lambda x: x['valor'])['valor']"/>
+                                </span>
+                                <span class="fs-5">
+                                    <t t-esc="min(dominios, key=lambda x: x['valor'])['nombre']"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -127,8 +181,8 @@
                     <t t-set="categoria" t-value="datos_categoria['nombre']" />
                     <t t-set="valor_categoria" t-value="datos_categoria['valor']" />
                     <div class="survey_section">
-                        <h3> <t t-esc="categoria" /> </h3>
-                        <span color="category_number"> <t t-esc="valor_categoria" /> </span>
+                        <h5> <t t-esc="categoria" /> </h5>
+                        <h3 color="category_number"> <t t-esc="valor_categoria" /> </h3>
 
                         <t t-if="categoria == 'Ambiente de Trabajo'">
                             <div class="survey_graph" t-att-id="'grafica_ambiente_trabajo_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Ambiente de Trabajo'" t-att-data-graph-data="dominios[:1]">
@@ -156,7 +210,7 @@
                     </div>
                 </div>
                 <div class="survey_section mb-5">
-                    <h4>Necesidad de Acción</h4>
+                    <h4>Necesidad de acción</h4>
                     <span class="container-fluid">
                         <t t-if="final &lt; 20">El riesgo resulta despreciable por lo que no se requiere medidas adicionales.</t>
                         <t t-elif="20 &lt;= final &lt; 45">Es necesario una mayor difusión de la política de prevención de riesgos psicosociales y programas para: la prevención de los factores de riesgo psicosocial, la promoción de un entorno organizacional favorable y la prevención de la violencia laboral.</t>
