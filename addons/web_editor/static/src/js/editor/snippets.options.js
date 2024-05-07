@@ -6793,6 +6793,9 @@ registry.ImageTools = ImageHandlerOption.extend({
             }
         }
         await this._reapplyCurrentShape();
+        // TODO in master, adapt the '_reapplyCurrentShape()' method to add the
+        // 'o_modified_image_to_save' class on the image.
+        imgEl.classList.add("o_modified_image_to_save");
         // When the hover effects are first activated from the "animationMode"
         // function of the "WebsiteAnimate" class, the history was paused to
         // avoid recording intermediate steps. That's why we unpause it here.
@@ -6808,6 +6811,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         await this._super(...arguments);
         if (["hoverEffectIntensity", "hoverEffectStrokeWidth"].includes(params.attributeName)) {
             await this._reapplyCurrentShape();
+            this._getImg().classList.add("o_modified_image_to_save");
         }
     },
     /**
@@ -6824,6 +6828,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             defaultColor = "primary";
         }
         img.dataset.hoverEffectColor = this._getCSSColorValue(widgetValue || defaultColor);
+        img.classList.add("o_modified_image_to_save");
         await this._reapplyCurrentShape();
     },
 

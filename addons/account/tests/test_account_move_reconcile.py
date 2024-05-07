@@ -3,6 +3,7 @@
 from contextlib import contextmanager
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tests.common import Form
 from odoo import fields, Command
@@ -4850,3 +4851,47 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         lines_to_reconcile.reconcile()
 
         self.assertTrue(all(lines_to_reconcile.mapped('reconciled')), "All lines should be fully reconciled")
+
+    def test_reconcile_payment_with_no_exchange_diff_journal(self):
+        """
+        Test that the currency exchange journal is only required when creating exchange difference entries.
+        """
+
+        # Make sure the currency exchange journal is unset.
+        self.env.company.currency_exchange_journal_id = False
+
+        move_vals = {
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_line_ids': [
+                Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': []}),
+            ],
+        }
+
+        payment_vals = {
+            'currency_id': self.currency_data['currency'].id,
+            'payment_difference_handling': 'reconcile',
+            'writeoff_account_id': self.env.company.expense_currency_exchange_account_id.id,
+        }
+
+        # Check that a payment can be created if no exchange difference entry is generated.
+        invoice_no_diff = self.env['account.move'].create(
+            {**move_vals, 'date': '2017-01-01', 'invoice_date': '2017-01-01'}
+        )
+        invoice_no_diff.action_post()
+        wizard_no_diff = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice_no_diff.ids)\
+            .create({**payment_vals, 'payment_date': '2017-01-01', 'amount': 3000})  # 3000 GOL = 1000 USD.
+        wizard_no_diff._create_payments()
+
+        # Then check that an error is raised when trying to create a payment with an exchange difference.
+        invoice_diff = self.env['account.move'].create(
+            {**move_vals, 'date': '2016-01-01', 'invoice_date': '2016-01-01'}
+        )
+        invoice_diff.action_post()
+        wizard_diff = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice_diff.ids)\
+            .create({**payment_vals, 'payment_date': '2018-01-01', 'amount': 2000})  # 2000 GOL = 1000 USD.
+        with self.assertRaises(UserError):
+            wizard_diff._create_payments()

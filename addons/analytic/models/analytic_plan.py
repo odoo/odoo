@@ -274,6 +274,7 @@ class AccountAnalyticPlan(models.Model):
                     'model_id': self.env['ir.model']._get_id('account.analytic.line'),
                     'ttype': 'many2one',
                     'relation': 'account.analytic.account',
+                    'store': True,
                 })
                 tablename = self.env['account.analytic.line']._table
                 indexname = make_index_name(tablename, column)

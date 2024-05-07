@@ -12,7 +12,7 @@ class SaleOrderTemplate(models.Model):
     active = fields.Boolean(
         default=True,
         help="If unchecked, it will allow you to hide the quotation template without removing it.")
-    company_id = fields.Many2one(comodel_name='res.company')
+    company_id = fields.Many2one(comodel_name='res.company', default=lambda self: self.env.company)
 
     name = fields.Char(string="Quotation Template", required=True)
     note = fields.Html(string="Terms and conditions", translate=True)

@@ -287,3 +287,17 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         moves[6].button_draft()
         moves[6].button_cancel()
         self.assertTrue(journal._query_has_sequence_holes())  # gap due to canceled move using a sequence, gap warning
+
+    def test_bank_journal_misc_operations_with_payments(self):
+        """Test that payments are excluded from the miscellaneaous operations"""
+        bank_journal = self.company_data['default_journal_bank'].copy({'currency_id': self.currency_data['currency'].id})
+        bank_journal.outbound_payment_method_line_ids[0].payment_account_id = bank_journal.default_account_id
+        bank_journal.inbound_payment_method_line_ids[0].payment_account_id = bank_journal.default_account_id
+        self.env['account.payment'].create({
+            'amount': 100,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'journal_id': bank_journal.id,
+        }).action_post()
+        dashboard_data = bank_journal._get_journal_dashboard_data_batched()[bank_journal.id]
+        self.assertEqual(0, dashboard_data['nb_misc_operations'])

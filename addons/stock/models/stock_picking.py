@@ -1179,12 +1179,12 @@ class Picking(models.Model):
             has_quantity = False
             has_pick = False
             for move in picking.move_ids:
+                if move.quantity:
+                    has_quantity = True
                 if move.scrapped:
                     continue
                 if move.picked:
                     has_pick = True
-                if move.quantity:
-                    has_quantity = True
                 if has_quantity and has_pick:
                     break
             if has_quantity and not has_pick:
