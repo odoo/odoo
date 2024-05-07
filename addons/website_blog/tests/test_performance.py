@@ -8,16 +8,6 @@ import random
 class TestBlogPerformance(UtilPerf):
     def setUp(self):
         super().setUp()
-        # if website_livechat is installed, disable it
-        if 'channel_id' in self.env['website']:
-            self.env['website'].search([]).channel_id = False
-
-        # remove menu containing a slug url (only website_helpdesk normally), to
-        # avoid the menu cache being disabled, which would increase sql queries
-        self.env['website.menu'].search([
-            ('url', '=like', '/%/%-%'),
-        ]).unlink()
-
         self.env['blog.blog'].search([]).active = False
         blogs = self.env['blog.blog'].create([{
             "name": 'aaa Blog Test',
