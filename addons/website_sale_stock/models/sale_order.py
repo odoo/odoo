@@ -69,8 +69,16 @@ class SaleOrder(models.Model):
         self.ensure_one()
         if not line and not product:
             return 0, 0
+<<<<<<< HEAD
         cart_qty = sum(self._get_common_product_lines(line, product).mapped('product_uom_qty'))
         free_qty = (product or line.product_id).with_context(warehouse_id=self.warehouse_id.id).free_qty
+||||||| parent of e1a7a3f53d9d (temp)
+        cart_qty = sum(self._get_common_product_lines(line, product).mapped('product_uom_qty'))
+        free_qty = (product or line.product_id).with_context(warehouse=self.warehouse_id.id).free_qty
+=======
+        cart_qty = (product or line.product_id)._get_cart_qty()
+        free_qty = (product or line.product_id).with_context(warehouse=self.warehouse_id.id).free_qty
+>>>>>>> e1a7a3f53d9d (temp)
         return cart_qty, free_qty
 
     def _get_common_product_lines(self, line=None, product=None):
