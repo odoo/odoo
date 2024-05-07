@@ -122,7 +122,8 @@ class StockReplenishmentOption(models.TransientModel):
                 'route_ids': record.route_id,
                 'warehouse_id': record.warehouse_id,
             })
-            record.lead_time = str(rule._get_lead_days(record.product_id)[0]['total_delay'] if rule else 0) + " days"
+            delay = rule._get_lead_days(record.product_id)[0]['total_delay'] if rule else 0
+            record.lead_time = _("%s days", delay)
 
     @api.depends('warehouse_id', 'free_qty', 'uom', 'qty_to_order')
     def _compute_warning_message(self):
