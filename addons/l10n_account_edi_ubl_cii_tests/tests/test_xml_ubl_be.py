@@ -314,6 +314,30 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         )
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, None, 'from_odoo/bis3_out_invoice_rounding.xml')
 
+    def test_inverting_negative_price_unit(self):
+        """ We can not have negative unit prices, so we try to invert the unit price and quantity.
+        """
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100.0,
+                    'tax_ids': [(6, 0, self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': -25.0,
+                    'tax_ids': [(6, 0, self.tax_21.ids)],
+                }
+            ],
+        )
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, None, 'from_odoo/bis3_out_invoice_negative_unit_price.xml')
+
     def test_export_with_fixed_taxes_case1(self):
         # CASE 1: simple invoice with a recupel tax
         invoice = self._generate_move(
