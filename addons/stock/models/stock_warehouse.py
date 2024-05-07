@@ -264,17 +264,30 @@ class Warehouse(models.Model):
         if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
             for warehouse in warehouses:
                 to_add = new_resupply_whs - old_resupply_whs[warehouse.id]
-                to_remove = old_resupply_whs[warehouse.id] - new_resupply_whs
                 if to_add:
                     existing_route = Route.search([
                         ('supplied_wh_id', '=', warehouse.id),
-                        ('supplier_wh_id', 'in', to_remove.ids),
+                        ('supplier_wh_id', 'in', to_add.ids),
                         ('active', '=', False)
                     ])
                     if existing_route:
                         existing_route.toggle_active()
                     else:
                         warehouse.create_resupply_routes(to_add)
+
+                def get_unlink_ids(value):
+                    match value:
+                        case 3, id, *_:
+                            return id
+                        case _:
+                            return False
+
+                if any(get_unlink_ids(op) for op in vals.get('resupply_wh_ids')):
+                    ids_to_unlink = {wh_id for wh_id in map(get_unlink_ids, vals.get('resupply_wh_ids')) if wh_id}
+                    to_remove = old_resupply_whs[warehouse.id].filtered(lambda wh: wh.id in ids_to_unlink) - new_resupply_whs
+                else:
+                    to_remove = old_resupply_whs[warehouse.id] - new_resupply_whs
+
                 if to_remove:
                     to_disable_route_ids = Route.search([
                         ('supplied_wh_id', '=', warehouse.id),

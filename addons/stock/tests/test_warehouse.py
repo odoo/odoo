@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from odoo import Command
 from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo.tests import Form
 from odoo.exceptions import UserError
@@ -661,3 +662,53 @@ class TestWarehouse(TestStockCommon):
         test_warehouse.sequence = 100
         location._compute_warehouse_id()
         self.assertEqual(location.warehouse_id, test_warehouse)
+
+    def test_onchange_warehouse_routes_from_suppliers(self):
+        """
+        Checks that the routes linked to a warehouse are correctly updated when
+        the supplier warehouses are changed.
+        """
+        warehouse = self.warehouse_1
+        supplier_warehouses = self.env['stock.warehouse'].create([
+            {
+            'name': 'Supplier warehouse 1',
+            'code': 'SWH1',
+            },
+            {
+            'name': 'Supplier warehouse 2',
+            'code': 'SWH2',
+            },
+            {
+            'name': 'Supplier warehouse 3',
+            'code': 'SWH3',
+            },
+        ])
+        warehouse.write({'resupply_wh_ids': [Command.set(supplier_warehouses[0].ids)]})
+        self.assertRecordValues(warehouse.resupply_route_ids, [{"supplied_wh_id": warehouse.id, "supplier_wh_id": supplier_warehouses[0].id}])
+        warehouse.write({'resupply_wh_ids': [Command.set(supplier_warehouses[1:].ids)]})
+        self.assertRecordValues(warehouse.resupply_route_ids, [
+            {"supplied_wh_id": warehouse.id, "supplier_wh_id": supplier_warehouses[1].id},
+            {"supplied_wh_id": warehouse.id, "supplier_wh_id": supplier_warehouses[2].id},
+        ])
+        warehouse.write({'resupply_wh_ids': [Command.clear()]})
+        self.assertFalse(warehouse.resupply_route_ids)
+        warehouse.write({'resupply_wh_ids': [Command.link(supplier_warehouses[0].id), Command.link(supplier_warehouses[1].id)]})
+        self.assertRecordValues(warehouse.resupply_route_ids, [
+            {"supplied_wh_id": warehouse.id, "supplier_wh_id": supplier_warehouses[0].id},
+            {"supplied_wh_id": warehouse.id, "supplier_wh_id": supplier_warehouses[1].id},
+        ])
+        warehouse.write({'resupply_wh_ids': [Command.unlink(supplier_warehouses[0].id), Command.link(supplier_warehouses[2].id)]})
+        self.assertRecordValues(warehouse.resupply_route_ids, [
+            {"supplied_wh_id": warehouse.id, "supplier_wh_id": supplier_warehouses[1].id},
+            {"supplied_wh_id": warehouse.id, "supplier_wh_id": supplier_warehouses[2].id},
+        ])
+        warehouse.write({'resupply_wh_ids': [
+            Command.unlink(supplier_warehouses[1].id),
+            Command.link(supplier_warehouses[1].id),
+            Command.link(supplier_warehouses[0].id),
+            Command.unlink(supplier_warehouses[2].id),
+        ]})
+        self.assertRecordValues(warehouse.resupply_route_ids, [
+            {"supplied_wh_id": warehouse.id, "supplier_wh_id": supplier_warehouses[0].id},
+            {"supplied_wh_id": warehouse.id, "supplier_wh_id": supplier_warehouses[1].id},
+        ])
