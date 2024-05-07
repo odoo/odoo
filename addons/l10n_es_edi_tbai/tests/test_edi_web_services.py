@@ -55,7 +55,14 @@ class TestEdiTbaiWebServices(TestEsEdiTbaiCommon):
 
     def test_edi_gipuzkoa(self):
         self._set_tax_agency('gipuzkoa')
-        self.moves.action_process_edi_web_services(with_commit=False)
-        generated_files = self._process_documents_web_services(self.moves, {'es_tbai'})
-        self.assertTrue(generated_files)
-        self.assertRecordValues(self.out_invoice, [{'edi_state': 'sent'}])
+
+        self.env['account.move.send']\
+            .with_context(active_model='account.move', active_ids=self.out_invoice.ids)\
+            .create()\
+            .action_send_and_print()
+        self.assertEqual(self.out_invoice.l10n_es_tbai_state, 'sent')
+        self.assertTrue(self.out_invoice.l10n_es_tbai_post_attachment_id)
+
+        self.in_invoice.l10n_es_tbai_send_bill()
+        self.assertEqual(self.in_invoice.l10n_es_tbai_state, 'sent')
+        self.assertTrue(self.in_invoice.l10n_es_tbai_post_attachment_id)

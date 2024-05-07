@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="l10n_es_edi_tbai_certificate_form" model="ir.ui.view">
+            <field name="name">l10n_es_edi_tbai.certificate.form</field>
+            <field name="model">l10n_es_edi_tbai.certificate</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="content"/>
+                            <field name="password" password="True"/>
+                            <label for="date_start" string="Validity"/>
+                            <div>
+                                <field name="date_start"/> -
+                                <field name="date_end"/>
+                            </div>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="l10n_es_edi_tbai_certificate_tree" model="ir.ui.view">
+            <field name="name">l10n_es_edi_tbai.certificate.tree</field>
+            <field name="model">l10n_es_edi_tbai.certificate</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="l10n_es_edi_tbai_certificate_action" model="ir.actions.act_window">
+            <field name="name">Certificates for EDI TicketBAI invoices on Spain</field>
+            <field name="res_model">l10n_es_edi_tbai.certificate</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create the first certificate</p>
+            </field>
+        </record>
+
+        <menuitem id="menu_l10n_es_edi_tbai_root"
+                  name="Spain TicketBAI"
+                  sequence="110"
+                  groups="account.group_account_manager"
+                  parent="account.menu_finance_configuration">
+            <menuitem id="menu_l10n_es_edi_tbai_certificates"
+                      name="Certificates"
+                      action="l10n_es_edi_tbai_certificate_action"
+                      sequence="100"
+                      groups="account.group_account_manager"/>
+        </menuitem>
+
+    </data>
+</odoo>

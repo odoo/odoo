@@ -63,10 +63,10 @@
                 <FacturaRecibida>
                     <t t-if="not is_emission"> <!-- cancel case -->
                         <IDRecibida>
-                            <t t-set="seq_and_num" t-value="invoice._get_l10n_es_tbai_sequence_and_number()"/>
+                            <t t-set="seq_and_num" t-value="doc._get_tbai_sequence_and_number()"/>
                             <SerieFactura t-out="seq_and_num[0]"/>
                             <NumFactura t-out="seq_and_num[1]"/>
-                            <FechaExpedicionFactura t-out="format_date(invoice.invoice_date)"/>
+                            <FechaExpedicionFactura t-out="format_date(invoice_date)"/>
                             <EmisorFacturaRecibida>
                                 <NIF t-if="recipient.get('nif')" t-out="recipient['nif']"/>
                                 <IDOtro t-else="">
@@ -89,11 +89,11 @@
                             <ApellidosNombreRazonSocial t-out="partner.name"/>
                         </EmisorFacturaRecibida>
                         <CabeceraFactura>
-                            <t t-set="seq_and_num" t-value="invoice._get_l10n_es_tbai_sequence_and_number()"/>
+                            <t t-set="seq_and_num" t-value="doc._get_tbai_sequence_and_number()"/>
                             <SerieFactura t-out="seq_and_num[0]"/>
                             <NumFactura t-out="seq_and_num[1]"/>
-                            <FechaExpedicionFactura t-out="format_date(invoice.invoice_date)"/>
-                            <FechaRecepcion t-out="format_date(invoice.date)"/>
+                            <FechaExpedicionFactura t-out="format_date(invoice_date)"/>
+                            <FechaRecepcion t-out="format_date(doc.date)"/>
                             <TipoFactura t-out="tipofactura"/>
                             <t t-if="is_refund">
                                 <FacturaRectificativa>
@@ -101,17 +101,17 @@
                                     <Tipo>I</Tipo>
                                 </FacturaRectificativa>
                                 <FacturasRectificadasSustituidas t-if="credit_note_invoices">
-                                    <IDFacturaRectificadaSustituida t-foreach="credit_note_invoices" t-as="credit_note_invoice">
-                                        <t t-set="seq_and_num" t-value="credit_note_invoice._get_l10n_es_tbai_sequence_and_number()"/>
+                                    <IDFacturaRectificadaSustituida t-foreach="credit_note_doc" t-as="credit_note_docs">
+                                        <t t-set="seq_and_num" t-value="credit_note_doc._get_tbai_sequence_and_number()"/>
                                         <SerieFactura t-out="seq_and_num[0]"/>
                                         <NumFactura t-out="seq_and_num[1]"/>
-                                        <FechaExpedicionFactura t-out="format_date(credit_note_invoice.invoice_date)"/>
+                                        <FechaExpedicionFactura t-out="format_date(credit_note_doc.move_id.invoice_date)"/>
                                     </IDFacturaRectificadaSustituida>
                                 </FacturasRectificadasSustituidas>
                             </t>
                         </CabeceraFactura>
                         <DatosFactura>
-                            <DescripcionOperacion t-out="invoice.ref"/>
+                            <DescripcionOperacion t-out="ref"/>
 
                             <Claves>
                                 <IDClave t-foreach="regime_key" t-as="key">

@@ -28,11 +28,11 @@
                 <t t-call="l10n_es_edi_tbai.template_invoice_factura"/>
             </IDFactura>
             <HuellaTBAI>
-                <EncadenamientoFacturaAnterior t-if="chain_prev_invoice">
-                    <t t-set="seq_and_num" t-value="chain_prev_invoice._get_l10n_es_tbai_sequence_and_number()"/>
+                <EncadenamientoFacturaAnterior t-if="chain_prev_document">
+                    <t t-set="seq_and_num" t-value="chain_prev_document._get_tbai_sequence_and_number()"/>
                     <SerieFacturaAnterior t-out="seq_and_num[0]"/>
                     <NumFacturaAnterior t-out="seq_and_num[1]"/>
-                    <t t-set="sig_and_date" t-value="chain_prev_invoice._get_l10n_es_tbai_signature_and_date()"/>
+                    <t t-set="sig_and_date" t-value="chain_prev_document._get_tbai_signature_and_date()"/>
                     <FechaExpedicionFacturaAnterior t-out="format_date(sig_and_date[1])"/>
                     <SignatureValueFirmaFacturaAnterior t-out="sig_and_date[0][:100]"/>
                 </EncadenamientoFacturaAnterior>
@@ -72,9 +72,9 @@
         </template>
 
         <template id="template_invoice_factura">
-            <t t-set="is_simplified" t-value="invoice.l10n_es_is_simplified"/>
+            <t t-set="is_simplified" t-value="is_simplified"/>
             <CabeceraFactura>
-                <t t-set="seq_and_num" t-value="invoice._get_l10n_es_tbai_sequence_and_number()"/>
+                <t t-set="seq_and_num" t-value="doc._get_tbai_sequence_and_number()"/>
                 <SerieFactura t-out="seq_and_num[0]"/>
                 <NumFactura t-out="seq_and_num[1]"/>
                 <t t-if="is_emission">
@@ -82,8 +82,8 @@
                     <HoraExpedicionFactura t-out="format_time(datetime_now)"/>
                     <FacturaSimplificada t-out="'S' if is_simplified else 'N'"/>
                 </t>
-                <FechaExpedicionFactura t-else="" t-out="format_date(invoice._get_l10n_es_tbai_signature_and_date()[1])"/>
-                <t t-if="is_refund">
+                <FechaExpedicionFactura t-else="" t-out="format_date(post_doc._get_tbai_signature_and_date()[1])"/>
+                <t t-if="is_refund and is_emission">
                     <FacturaEmitidaSustitucionSimplificada t-out="'S' if (is_simplified and recipient) else 'N'"/>
                     <FacturaRectificativa>
                         <Codigo t-out="credit_note_code"/>
@@ -97,22 +97,21 @@
                     <FacturasRectificadasSustituidas>
                         <IDFacturaRectificadaSustituida>
                             <!-- NOTE: could support issuing a single credit note for multiple invoices (optional) -->
-                            <t t-set="seq_and_num" t-value="credit_note_invoice._get_l10n_es_tbai_sequence_and_number()"/>
+                            <t t-set="seq_and_num" t-value="credit_note_doc._get_tbai_sequence_and_number()"/>
                             <SerieFactura t-out="seq_and_num[0]"/>
                             <NumFactura t-out="seq_and_num[1]"/>
-                            <FechaExpedicionFactura t-out="format_date(credit_note_invoice.l10n_es_tbai_post_xml and credit_note_invoice._get_l10n_es_tbai_signature_and_date()[1] or credit_note_invoice.invoice_date)"/>
+                            <FechaExpedicionFactura t-out="format_date(credit_note_doc.xml_attachment_id and credit_note_doc._get_tbai_signature_and_date()[1] or credit_note_invoice_date)"/>
                         </IDFacturaRectificadaSustituida>
                     </FacturasRectificadasSustituidas>
                 </t>
             </CabeceraFactura>
             <DatosFactura t-if="is_emission">
-                <FechaOperacion t-out="format_date(invoice.invoice_date) if format_date(datetime_now) != format_date(invoice.invoice_date) else None"/>
-                <DescripcionFactura t-out="invoice.invoice_origin or 'manual'"/>
+                <FechaOperacion t-out="format_date(invoice_date) if format_date(datetime_now) != format_date(invoice_date) else None"/>
+                <DescripcionFactura t-out="invoice_origin or 'manual'"/>
                 <DetallesFactura>
                     <IDDetalleFactura t-foreach="invoice_lines" t-as="line_values">
-                        <t t-set="line" t-value="line_values['line']"/>
                         <DescripcionDetalle t-out="line_values['description']"/>
-                        <Cantidad t-out="format_float(line.quantity, precision_digits=8)"/>
+                        <Cantidad t-out="format_float(line_values['quantity'], precision_digits=8)"/>
                         <ImporteUnitario t-out="format_float(line_values['unit_price'], precision_digits=8)"/>
                         <Descuento t-out="format_float(line_values['discount'], precision_digits=8)"/>
                         <ImporteTotal t-out="format_float(line_values['total'], precision_digits=8)"/>
