@@ -24,6 +24,9 @@ tests independently to functional aspects of other models. """,
         'web.assets_unit_tests': [
             'test_mail/static/tests/**/*',
         ],
+        'web.assets_tests': [
+            'test_mail/static/tests/tours/*',
+        ],
     },
     'installable': True,
     'license': 'LGPL-3',
