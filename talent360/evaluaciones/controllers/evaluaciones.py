@@ -7,6 +7,7 @@ from ..models.pregunta import Pregunta as pregunta
 import json
 from ..models.usuario_evaluacion_rel import UsuarioEvaluacionRel as usuario_evaluacion
 import time
+import werkzeug
 
 class EvaluacionesController(http.Controller):
     """Controlador para manejar las solicitudes relacionadas con las evaluaciones."""
@@ -159,4 +160,6 @@ class EvaluacionesController(http.Controller):
 
         timestamp = str(time.time())
 
-        return request.redirect("/evaluacion/responder/" + str(evaluacion_id) + "/" + token + "?t=" + timestamp)
+        return werkzeug.utils.redirect("/evaluacion/contestada")
+        #return request.redirect("/evaluacion/responder/" + str(evaluacion_id) + "/" + token + "?t=")
+    

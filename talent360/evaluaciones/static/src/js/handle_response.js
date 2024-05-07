@@ -67,18 +67,27 @@ function handleResponse() {
     var conf = confirmacion();
     
     if (conf) {
-        //Envía los valores a la base de datos
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/evaluacion/responder', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify(data));
-    }
-    else {
+        if (confirm("¿Estas seguro de enviar tus respuestas?")) {
+            // Envía los valores a la base de datos
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/evaluacion/responder', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(data));
+
+            xhr.onload = function() {
+                if (xhr.status == 200) {
+                    // Redirige a la página de agradecimiento
+                    window.location.href = "/evaluacion/contestada";
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    } else {
         return false;
     }
 }
-
-
 
 function iniciar_evaluacion() {
     boton_responder = document.querySelector("#boton_responder");
