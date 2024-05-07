@@ -1,15 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import io
 import uuid
 import base64
 from os.path import join as opj
-from PIL import Image
 from typing import Optional, List, Dict
 from werkzeug.urls import url_quote
-from odoo.exceptions import UserError, ValidationError
-from odoo.tools import image_to_base64
+from odoo.exceptions import UserError, ValidationError, AccessError
 
 from odoo import api, fields, models, _, service
 from odoo.tools import file_open, split_every
@@ -18,16 +13,13 @@ from odoo.tools import file_open, split_every
 class PosConfig(models.Model):
     _inherit = "pos.config"
 
-    _ALLOWED_PAYMENT_METHODS = ['adyen', 'stripe']
-
     def _self_order_kiosk_default_languages(self):
         return self.env["res.lang"].get_installed()
 
     def _self_order_default_user(self):
         users = self.env["res.users"].search(['|', ('company_id', '=', self.env.company.id), ('company_id', '=', False)])
         for user in users:
-            if (user.sudo().has_group("point_of_sale.group_pos_user")
-                    or user.sudo().has_group("point_of_sale.group_pos_manager")):
+            if user.sudo().has_group("point_of_sale.group_pos_manager"):
                 return user
 
     status = fields.Selection(
@@ -126,11 +118,6 @@ class PosConfig(models.Model):
                 pos_config_id.self_ordering_mode = 'mobile'
 
         return pos_config_ids
-
-    def _get_allowed_payment_methods(self):
-        if self.self_ordering_mode == 'kiosk':
-            return self.payment_method_ids.filtered(lambda p: p.use_payment_terminal in self._ALLOWED_PAYMENT_METHODS)
-        return []
 
     def write(self, vals):
         for record in self:
@@ -240,138 +227,38 @@ class PosConfig(models.Model):
             "target": "new",
         }
 
-    def _get_self_order_custom_links(self):
-        """
-        On the landing page of the app we can have a number of custom links
-        that are defined by the restaurant employee in the backend.
-        This function returns a list of dictionaries with the attributes of each link
-        that is available for the POS with id pos_config_id.
-        """
-        self.ensure_one()
-        return (
-            self.env["pos_self_order.custom_link"]
-            .search_read(
-                [
-                    "|",
-                    ("pos_config_ids", "in", [self.id]),
-                    ("pos_config_ids", "=", False),
-                ],
-                fields=["name", "url", "style"],
-                order="sequence",
-            )
-        )
+    def _load_self_data_models(self):
+        return ['pos.session', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.currency', 'pos.category', 'product.product', 'pos.combo', 'pos.combo.line',
+            'res.company', 'account.tax', 'pos.printer', 'res.country', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position', 'account.fiscal.position.tax',
+            'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value',
+            'decimal.precision', 'uom.uom', 'pos.printer', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table']
 
-    def _get_available_products(self):
-        self.ensure_one()
-        combo_product_ids = self.env["product.product"].search([
-            ("detailed_type", "=", 'combo'),
-            *(
-                self.limit_categories
-                and self.iface_available_categ_ids
-                and [("pos_categ_ids", "in", self.iface_available_categ_ids.ids)]
-                or []
-            ),
-        ])
-        product_ids = combo_product_ids.combo_ids.combo_line_ids.product_id
-
-        available_product_ids = (
-            self.env["product.product"]
-            .search(
-                [
-                    ("id", "not in", product_ids.ids),
-                    ("available_in_pos", "=", True),
-                    ("self_order_available", "=", True),
-                    *(
-                        self.limit_categories
-                        and self.iface_available_categ_ids
-                        and [("pos_categ_ids", "in", self.iface_available_categ_ids.ids)]
-                        or []
-                    ),
-                ],
-            )
-        )
-
-        return product_ids + available_product_ids
-
-    def _get_kitchen_printer(self):
-        self.ensure_one()
-        printerData = {}
-        for printer in self.printer_ids:
-            printerData[printer.id] = {
-                "printer_type": printer.printer_type,
-                "proxy_ip": printer.proxy_ip,
-                "product_categories_ids": printer.product_categories_ids.ids,
+    def load_self_data(self):
+        # Init our first record, in case of self_order is pos_config
+        config_fields = self._load_pos_self_data_fields(self.id)
+        response = {
+            'pos.config': {
+                'data': self.env['pos.config'].search_read([('id', '=', self.id)], config_fields, load=False),
+                'fields': config_fields,
             }
-        return printerData
-
-    def _get_self_ordering_payment_methods_data(self, payment_methods):
-        excluded_fields = ['image']
-        payment_search_fields = self.env['pos.payment']._load_pos_data_fields(self.id)
-        filtered_fields = [field for field in payment_search_fields if field not in excluded_fields]
-        return payment_methods.read(filtered_fields)
-
-    def _get_self_ordering_data(self):
-        self.ensure_one()
-        payment_methods = self._get_self_ordering_payment_methods_data(self._get_allowed_payment_methods())
-        default_language = self.self_ordering_default_language_id.read(["code", "name", "iso_code", "flag_image_url"])
-
-        return {
-            "pos_config_id": self.id,
-            "pos_session": self.current_session_id.read(["id", "access_token"])[0] if self.current_session_id and self.current_session_id.state == 'opened' else False,
-            "has_paper": self.has_paper,
-            "company": {
-                **self.company_id.read(["name", "email", "website", "vat", "name", "phone", "point_of_sale_use_ticket_qr_code", "point_of_sale_ticket_unique_code"])[0],
-                "partner_id": [None, self.company_id.partner_id.contact_address],
-                "country": self.company_id.country_id.read(["vat_label"])[0],
-            },
-            "base_url": self.get_base_url(),
-            "custom_links": self._get_self_order_custom_links(),
-            "currency_id": self.currency_id.id,
-            "pos_payment_methods": payment_methods if self.self_ordering_mode == "kiosk" else [],
-            "currency_decimals": self.currency_id.decimal_places,
-            "pos_category": self._get_available_categories().read(["name", "sequence", "has_image", "hour_until", "hour_after", "parent_id"]),
-            "products": self._get_available_products()._get_self_order_data(self),
-            "combos": self._get_combos_data(),
-            "config": {
-                "iface_start_categ_id": self.iface_start_categ_id.id,
-                "iface_tax_included": self.iface_tax_included == "total",
-                "self_ordering_mode": self.self_ordering_mode,
-                "self_ordering_takeaway": self.self_ordering_takeaway,
-                "self_ordering_service_mode": self.self_ordering_service_mode,
-                "self_ordering_default_language_id": default_language[0] if default_language else [],
-                "self_ordering_available_language_ids":  self.self_ordering_available_language_ids.read(["code", "display_name", "iso_code", "flag_image_url"]),
-                "self_ordering_image_home_ids": self._get_self_ordering_attachment(self.self_ordering_image_home_ids),
-                "self_ordering_image_brand": self._get_self_ordering_image(self.self_ordering_image_brand),
-                "self_ordering_pay_after": self.self_ordering_pay_after,
-                "receipt_header": self.receipt_header,
-                "receipt_footer": self.receipt_footer,
-            },
-            "kitchen_printers": self._get_kitchen_printer(),
         }
+        self.env['pos.session']._load_pos_data_relations('pos.config', response)
 
-    def _get_combos_data(self):
-        self.ensure_one()
-        combos = self.env["pos.combo"].search([])
+        # Classic data loading
+        for model in self._load_self_data_models():
+            try:
+                response[model] = self.env[model]._load_pos_self_data(response)
+                self.env['pos.session']._load_pos_data_relations(model, response)
+            except AccessError as e:
+                response[model] = {
+                    'data': [],
+                    'fields': self.env[model]._load_pos_self_data_fields(self.id),
+                    'error': e.args[0]
+                }
 
-        return[{
-            'id': combo.id,
-            'name': combo.name,
-            'combo_line_ids': combo.combo_line_ids.read(['product_id', 'combo_price', 'lst_price', 'combo_id'])
-        } for combo in combos]
+                self.env['pos.session']._load_pos_data_relations(model, response)
 
-
-    def _get_self_ordering_image(self, image):
-        image = Image.open(io.BytesIO(base64.b64decode(image))) if image else False
-        return image_to_base64(image, 'PNG').decode('utf-8') if image else False
-
-    def _get_self_ordering_attachment(self, images):
-        encoded_images = []
-        for image in images:
-            encoded_images.append({
-                'id': image.id,
-                'data': image.sudo().datas.decode('utf-8'),
-            })
-        return encoded_images
+        return response
 
     def _split_qr_codes_list(self, floors: List[Dict], cols: int) -> List[Dict]:
         """
@@ -389,7 +276,7 @@ class PosConfig(models.Model):
 
     def _compute_self_ordering_url(self):
         for record in self:
-            record.self_ordering_url = self.get_base_url() + self._get_self_order_route()
+            record.self_ordering_url = record.get_base_url() + record._get_self_order_route()
 
     def action_close_kiosk_session(self):
         if self.current_session_id and self.current_session_id.order_ids:

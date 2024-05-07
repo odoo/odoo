@@ -1100,7 +1100,7 @@ export class PosStore extends Reactive {
                 taxes,
                 price,
                 product,
-                this.session._product_default_values,
+                this.config._product_default_values,
                 order.fiscal_position_id,
                 this.models
             );
@@ -1113,7 +1113,7 @@ export class PosStore extends Reactive {
             price,
             1,
             product,
-            this.session._product_default_values,
+            this.config._product_default_values,
             this.company,
             this.currency
         );

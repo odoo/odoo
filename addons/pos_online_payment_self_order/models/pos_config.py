@@ -21,9 +21,3 @@ class PosConfig(models.Model):
         payment_methods = self._get_self_ordering_payment_methods_data(self.self_order_online_payment_method_id)
         res['pos_payment_methods'] += payment_methods
         return res
-
-    def _get_allowed_payment_methods(self):
-        if self.self_ordering_mode == 'kiosk':
-            return self.payment_method_ids.filtered(lambda p: p.use_payment_terminal in self._ALLOWED_PAYMENT_METHODS or p.is_online_payment)
-        else:
-            return self.payment_method_ids.filtered(lambda p: p.is_online_payment)

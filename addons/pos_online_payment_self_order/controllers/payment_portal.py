@@ -27,7 +27,9 @@ class PaymentPortalSelfOrder(PaymentPortal):
         pos_order = request.env['pos.order'].sudo().browse(pos_order_id)
 
         if pos_order.config_id.self_ordering_mode == 'kiosk':
-            request.env['bus.bus']._sendone(f'pos_config-{pos_order.config_id.access_token}', 'ONLINE_PAYMENT_STATUS', {
+            pos_order.config_id._notify("ONLINE_PAYMENT_STATUS", {
                 'status': status, # progress, success, fail
-                'order': pos_order._export_for_self_order(),
+                'data': {
+                    'pos.order': pos_order.read(pos_order._load_pos_self_data_fields(pos_order.config_id.id), load=False)
+                }
             })

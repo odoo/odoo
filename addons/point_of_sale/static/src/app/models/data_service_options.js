@@ -42,6 +42,7 @@ export class DataServiceOptions {
     get databaseIndex() {
         return {
             "pos.order": ["uuid"],
+            "pos.order.line": ["uuid"],
             "product.product": ["barcode", "pos_categ_ids", "write_date"],
             "account.fiscal.position": ["tax_ids"],
             "product.packaging": ["barcode"],

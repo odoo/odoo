@@ -26,7 +26,9 @@ export class OrdersHistoryPage extends Component {
     }
 
     get orders() {
-        return this.selfOrder.orders.filter((o) => o.access_token).sort((a, b) => b.id - a.id);
+        return this.selfOrder.models["pos.order"]
+            .filter((o) => o.access_token)
+            .sort((a, b) => b.id - a.id);
     }
 
     get lines() {
@@ -59,7 +61,7 @@ export class OrdersHistoryPage extends Component {
 
     editOrder(order) {
         if (order.state === "draft") {
-            this.selfOrder.editedOrder = order;
+            this.selfOrder.selectedOrderUuid = order.uuid;
             this.router.navigate("cart");
         }
     }

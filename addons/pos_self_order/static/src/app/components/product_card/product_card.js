@@ -1,13 +1,11 @@
 import { Component, useRef } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { useService, useForwardRefToParent } from "@web/core/utils/hooks";
-import { Line } from "@pos_self_order/app/models/line";
 import { ProductInfoPopup } from "@pos_self_order/app/components/product_info_popup/product_info_popup";
-import { constructFullProductName } from "@point_of_sale/utils";
 
 export class ProductCard extends Component {
     static template = "pos_self_order.ProductCard";
-    static props = ["product", "currentProductCard?", "isAvailable?"];
+    static props = ["product", "currentProductCard?"];
 
     selfRef = useRef("selfProductCard");
     currentProductCardRef = useRef("currentProductCard");
@@ -69,6 +67,16 @@ export class ProductCard extends Component {
         });
     }
 
+    get isAvailable() {
+        if (this.props.product.pos_categ_ids.length === 0) {
+            return true;
+        }
+
+        return this.props.product.pos_categ_ids.some((categ) =>
+            this.selfOrder.isCategoryAvailable(categ.id)
+        );
+    }
+
     scaleUpPrice() {
         const priceElement = document.querySelector(".total-price");
 
@@ -86,17 +94,18 @@ export class ProductCard extends Component {
     async selectProduct(qty = 1) {
         const product = this.props.product;
 
-        if (!this.selfOrder.ordering || !product.self_order_available || !this.props.isAvailable) {
+        if (!this.selfOrder.ordering || !product.self_order_available || !this.isAvailable) {
             return;
         }
 
-        if (product.isCombo) {
+        if (product.isCombo()) {
             this.router.navigate("combo_selection", { id: product.id });
-        } else if (product.attributes.length > 0) {
+        } else if (product.isConfigurable()) {
             this.router.navigate("product", { id: product.id });
         } else {
             this.flyToCart();
             this.scaleUpPrice();
+
             const isProductInCart = this.selfOrder.currentOrder.lines.find(
                 (line) => line.product_id === product.id
             );
@@ -104,24 +113,15 @@ export class ProductCard extends Component {
             if (isProductInCart) {
                 isProductInCart.qty += qty;
             } else {
-                const lines = this.selfOrder.currentOrder.lines;
-                const line = new Line({
-                    id: null,
-                    uuid: null,
-                    qty: qty,
-                    product_id: product.id,
-                });
-                line.full_product_name = constructFullProductName(line);
-                lines.push(line);
+                this.selfOrder.addToCart(product, 1);
             }
-            await this.selfOrder.getPricesFromServer();
         }
     }
 
     showProductInfo() {
         this.dialog.add(ProductInfoPopup, {
             product: this.props.product,
-            title: this.props.product.name,
+            title: this.props.product.display_name,
             addToCart: (qty) => {
                 this.selectProduct(qty);
             },

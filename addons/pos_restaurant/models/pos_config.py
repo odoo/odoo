@@ -44,7 +44,7 @@ class PosConfig(models.Model):
             last_order_preparation_change = json.loads(line.order_id.last_order_preparation_change)
             prep_change = {}
             for line_uuid in last_order_preparation_change:
-                prep_change[last_order_preparation_change[line_uuid]['line_uuid']] = last_order_preparation_change[line_uuid]
+                prep_change[last_order_preparation_change[line_uuid]['uuid']] = last_order_preparation_change[line_uuid]
             quantity_changed = 0
             if line.uuid in prep_change:
                 quantity_changed = line.qty - prep_change[line.uuid]['quantity']

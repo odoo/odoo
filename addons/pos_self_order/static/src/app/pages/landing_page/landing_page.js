@@ -19,8 +19,11 @@ export class LandingPage extends Component {
 
         onWillStart(() => {
             if (this.selfOrder.config.self_ordering_mode === "kiosk") {
-                this.selfOrder.orders = [];
-                this.selfOrder.editedOrder = null;
+                const orders = this.selfOrder.models["pos.order"].getAll();
+                for (const order of orders) {
+                    order.delete();
+                }
+                this.selfOrder.selectedOrderUuid = null;
             }
             this.selfOrder.rpcLoading = false;
         });
@@ -59,7 +62,9 @@ export class LandingPage extends Component {
     }
 
     get draftOrder() {
-        return this.selfOrder.orders.filter((o) => o.access_token && o.state === "draft");
+        return this.selfOrder.models["pos.order"].filter(
+            (o) => o.access_token && o.state === "draft"
+        );
     }
 
     hideBtn(link) {
@@ -98,10 +103,9 @@ export class LandingPage extends Component {
         ) {
             return;
         }
-
         if (
             this.selfOrder.config.self_ordering_takeaway &&
-            this.selfOrder.currentOrder.takeaway === null &&
+            !this.selfOrder.orderTakeAwayState[this.selfOrder.currentOrder.uuid] &&
             this.selfOrder.ordering
         ) {
             this.router.navigate("location");
@@ -115,7 +119,7 @@ export class LandingPage extends Component {
     }
 
     showMyOrderBtn() {
-        const ordersNotDraft = this.selfOrder.orders.find((o) => o.access_token);
+        const ordersNotDraft = this.selfOrder.models["pos.order"].find((o) => o.access_token);
         return this.selfOrder.ordering && ordersNotDraft;
     }
 }

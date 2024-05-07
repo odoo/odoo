@@ -53,6 +53,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
 
             if (quantityDiff && orderline.skip_change === skipped) {
                 changes[lineKey] = {
+                    uuid: orderline.uuid,
                     name: orderline.get_full_product_name(),
                     product_id: product.id,
                     attribute_value_ids: orderline.attribute_value_ids,
@@ -77,10 +78,10 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     // Checks whether an orderline has been deleted from the order since it
     // was last sent to the preparation tools. If so we add this to the changes.
     for (const [lineKey, lineResume] of Object.entries(order.last_order_preparation_change)) {
-        if (!order.getOrderedLine(lineKey)) {
-            const lineKey = `${lineResume["line_uuid"]} - ${lineResume["note"]}`;
+        if (!order.models["pos.order.line"].getBy("uuid", lineResume["uuid"])) {
             if (!changes[lineKey]) {
                 changes[lineKey] = {
+                    uuid: lineResume["uuid"],
                     product_id: lineResume["product_id"],
                     name: lineResume["name"],
                     note: lineResume["note"],

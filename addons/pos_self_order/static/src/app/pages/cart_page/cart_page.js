@@ -28,8 +28,11 @@ export class CartPage extends Component {
         const selfOrder = this.selfOrder;
         const order = selfOrder.currentOrder;
 
-        if (selfOrder.config.self_ordering_pay_after === "meal" && !order.isSavedOnServer) {
-            return order.hasNotAllLinesSent();
+        if (
+            selfOrder.config.self_ordering_pay_after === "meal" &&
+            Object.keys(order.changes).length > 0
+        ) {
+            return order.unsentLines;
         } else {
             return this.lines;
         }
@@ -37,7 +40,7 @@ export class CartPage extends Component {
 
     getLineChangeQty(line) {
         const currentQty = line.qty;
-        const lastChange = this.selfOrder.currentOrder.lastChangesSent[line.uuid];
+        const lastChange = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
         return !lastChange ? currentQty : currentQty - lastChange.qty;
     }
 
@@ -50,7 +53,12 @@ export class CartPage extends Component {
             return;
         }
 
-        if (type === "mobile" && orderingMode === "table" && !takeAway && !this.selfOrder.table) {
+        if (
+            type === "mobile" &&
+            orderingMode === "table" &&
+            !takeAway &&
+            !this.selfOrder.currentOrder.table_id
+        ) {
             this.state.selectTable = true;
             return;
         }
@@ -63,6 +71,9 @@ export class CartPage extends Component {
     selectTable(table) {
         if (table) {
             this.selfOrder.table = table;
+            this.selfOrder.currentOrder.update({
+                table_id: table,
+            });
             this.router.addTableIdentifier(table);
             this.pay();
         }
@@ -70,18 +81,14 @@ export class CartPage extends Component {
         this.state.selectTable = false;
     }
 
-    getChildLines(line) {
-        return this.lines.filter((l) => l.combo_parent_uuid === line.uuid);
-    }
-
     getPrice(line) {
-        const childLines = this.getChildLines(line);
+        const childLines = line.combo_line_ids;
         if (childLines.length == 0) {
-            return line.price_subtotal_incl;
+            return line.get_display_price();
         } else {
             let price = 0;
             for (const child of childLines) {
-                price += child.price_subtotal_incl;
+                price += child.get_display_price();
             }
             return price;
         }
@@ -89,7 +96,7 @@ export class CartPage extends Component {
 
     canChangeQuantity(line) {
         const order = this.selfOrder.currentOrder;
-        const lastChange = order.lastChangesSent[line.uuid];
+        const lastChange = order.lineChanges[line.uuid];
 
         if (!lastChange) {
             return true;
@@ -99,12 +106,12 @@ export class CartPage extends Component {
     }
 
     canDeleteLine(line) {
-        const lastChange = this.selfOrder.currentOrder.lastChangesSent[line.uuid];
+        const lastChange = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
         return !lastChange ? true : lastChange.qty !== line.qty;
     }
 
     async removeLine(line) {
-        const lastChange = this.selfOrder.currentOrder.lastChangesSent[line.uuid];
+        const lastChange = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
 
         if (!this.canDeleteLine(line)) {
             return;
@@ -113,10 +120,8 @@ export class CartPage extends Component {
         if (lastChange) {
             line.qty = lastChange.qty;
         } else {
-            this.selfOrder.currentOrder.removeLine(line.uuid);
+            this.selfOrder.removeLine(line);
         }
-
-        await this.selfOrder.getPricesFromServer();
     }
 
     async _changeQuantity(line, increase) {
@@ -138,7 +143,6 @@ export class CartPage extends Component {
 
     async changeQuantity(line, increase) {
         await this._changeQuantity(line, increase);
-        await this.selfOrder.getPricesFromServer();
     }
 
     clickOnLine(line) {
@@ -146,9 +150,9 @@ export class CartPage extends Component {
         this.selfOrder.editedLine = line;
 
         if (order.state === "draft" && !order.lastChangesSent[line.uuid]) {
-            this.selfOrder.editedOrder = order;
+            this.selfOrder.selectedOrderUuid = order.uuid;
 
-            if (line.child_lines.length > 0) {
+            if (line.combo_line_ids.length > 0) {
                 this.router.navigate("combo_selection", { id: line.product_id });
             } else {
                 this.router.navigate("product", { id: line.product_id });

@@ -23,7 +23,7 @@ export class PosOrderline extends Base {
         // Data that are not saved in the backend
         this.uiState = {
             price_type: "original",
-            hasChange: false,
+            hasChange: true,
         };
 
         // this.set_unit_price(this.price_unit);
@@ -57,6 +57,11 @@ export class PosOrderline extends Base {
         }
 
         this.set_unit_price(this.price_unit);
+    }
+
+    get preparationKey() {
+        const note = this.getNote();
+        return `${this.uuid} - ${note}`;
     }
 
     get quantityStr() {
@@ -408,7 +413,7 @@ export class PosOrderline extends Base {
             priceUnit,
             1,
             product,
-            this.session._product_default_values,
+            this.config._product_default_values,
             this.company,
             this.currency
         );
@@ -484,7 +489,7 @@ export class PosOrderline extends Base {
             priceUnitAfterDiscount,
             qty,
             product,
-            this.session._product_default_values,
+            this.config._product_default_values,
             this.company,
             this.currency
         );
@@ -493,7 +498,7 @@ export class PosOrderline extends Base {
             priceUnit,
             qty,
             product,
-            this.session._product_default_values,
+            this.config._product_default_values,
             this.company,
             this.currency
         );
@@ -529,7 +534,7 @@ export class PosOrderline extends Base {
                 taxes,
                 price,
                 product,
-                this.session._product_default_values,
+                this.config._product_default_values,
                 order.fiscal_position_id,
                 this.models
             );

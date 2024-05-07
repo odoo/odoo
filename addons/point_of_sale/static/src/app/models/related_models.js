@@ -747,6 +747,31 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
 
     const models = mapObj(processedModelDefs, (model, fields) => createCRUD(model, fields));
 
+    function replaceDataByKey(key, rawData) {
+        for (const model in rawData) {
+            const uiState = {};
+            const rawDataIdx = rawData[model].map((r) => r[key]);
+            const rec = records[model];
+
+            for (const data of Object.values(rec)) {
+                if (rawDataIdx.includes(data[key])) {
+                    if (data.uiState) {
+                        uiState[data[key]] = { ...data.uiState };
+                    }
+                    data.delete();
+                }
+            }
+
+            const data = rawData[model];
+            const newRec = this.loadData({ [model]: data });
+            for (const record of newRec[model]) {
+                if (uiState[record[key]]) {
+                    record.uiState = uiState[record[key]];
+                }
+            }
+        }
+    }
+
     /**
      * Load the data without the relations then link the related records.
      * @param {*} rawData
@@ -923,6 +948,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
     }
 
     models.loadData = loadData;
+    models.replaceDataByKey = replaceDataByKey;
 
     return { models, records, indexedRecords, orderedRecords };
 }
