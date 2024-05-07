@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- CLIMA -->
-    <record id="evaluacion_clima_form" model="ir.ui.view">
+    <record id="evaluacion_clima_view_form" model="ir.ui.view">
         <field name="name">evaluacion_clima.form</field>
         <field name="model">evaluacion</field>
         <field name="arch" type="xml">
             <form string="Clima" create="false">
                 <sheet>
-                    <h1>
+                    <h1>Evaluación de Clima Laboral</h1>
+                    <br></br>
+                    <group>
                         <field name="nombre"/>
-                    </h1>
-                    <p>
+                    </group>
+                    <group>
                         <field name="descripcion"/>
-                    </p>
+                    </group>
+                    <group>
+                        <field name="fecha_inicio">
+                            <widget name="date"/>
+                        </field>
+                        <field name="fecha_final">
+                            <widget name="date"/>
+                        </field>
+                    </group>
                     <group>
                         <group>
                             <field name="estado"/>
@@ -156,7 +166,8 @@
                         </notebook>
                     </group>
                     <div>
-                        <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary"/>
+                        <button name="action_enviar_evaluacion" string="Enviar Correo" type="object" class="btn-primary mx-3" confirm="¿Estás seguro de enviar la encuesta?"/>
+                        <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary mx-3"/>
                     </div>
                 </sheet>
             </form>
