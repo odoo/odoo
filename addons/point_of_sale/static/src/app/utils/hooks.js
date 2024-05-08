@@ -1,7 +1,18 @@
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
-import { useEnv, onMounted, onPatched, useComponent, useRef, useState } from "@odoo/owl";
+import {
+    useEnv,
+    onMounted,
+    onPatched,
+    useComponent,
+    useRef,
+    useState,
+    useEffect,
+    onWillUnmount,
+} from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 /**
  * Introduce error handlers in the component.
@@ -139,4 +150,68 @@ export function useTrackedAsync(asyncFn) {
         },
         call: lockedCall,
     };
+}
+
+export function useIsChildLarger(childRefName) {
+    const child = useRef(childRefName);
+    const state = useState({
+        isLarger: false,
+    });
+    useEffect(
+        (child) => {
+            const updateDimensions = () => {
+                state.isLarger = child.el.scrollWidth > child.el.parentElement.clientWidth;
+            };
+            updateDimensions();
+            window.addEventListener("resize", updateDimensions);
+            return () => {
+                window.removeEventListener("resize", updateDimensions);
+            };
+        },
+        () => [child]
+    );
+    return () => state.isLarger;
+}
+
+/**
+ * Manages a component to be used as a popover.
+ *
+ * @param {typeof import("@odoo/owl").Component} component
+ * @param {import("@web/core/popover/popover_service").PopoverServiceAddOptions} [options]
+ * @returns {import("@web/core/popover/popover_hook").PopoverHookReturnType}
+ */
+export function useReactivePopover(component, options = {}) {
+    const popoverService = useService("popover");
+    const owner = useComponent();
+    const newOptions = Object.create(options);
+    newOptions.onClose = () => {
+        if (status(owner) !== "destroyed") {
+            options.onClose?.();
+        }
+    };
+    let removeFn = null;
+    const state = useDropdownState();
+    function close() {
+        state.close();
+        removeFn?.();
+    }
+    const popover = {
+        open(target, props) {
+            close();
+            state.open();
+            const newOptions = Object.create(options);
+            newOptions.onClose = () => {
+                removeFn = null;
+                state.close();
+                options.onClose?.();
+            };
+            removeFn = popoverService.add(target, component, props, newOptions);
+        },
+        close,
+        get isOpen() {
+            return state.isOpen;
+        },
+    };
+    onWillUnmount(popover.close);
+    return popover;
 }

@@ -1,7 +1,7 @@
 export function back() {
     return {
         content: "go back to the products",
-        trigger: ".pos-rightheader .back-button",
+        trigger: ".pos-topheader .back-button",
     };
 }
 export function inLeftSide(steps) {

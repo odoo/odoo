@@ -255,7 +255,10 @@
         ],
         'point_of_sale.customer_display_assets': [
             ('include', 'point_of_sale.base_app'),
-            "point_of_sale/static/src/app/generic_components/**/*",
+            "point_of_sale/static/src/app/generic_components/odoo_logo/*",
+            "point_of_sale/static/src/app/generic_components/order_widget/*",
+            "point_of_sale/static/src/app/generic_components/orderline/*",
+            "point_of_sale/static/src/app/generic_components/centered_icon/*",
             "point_of_sale/static/src/utils.js",
             "point_of_sale/static/src/customer_display/**/*",
         ],
