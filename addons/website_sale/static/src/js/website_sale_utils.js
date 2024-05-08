@@ -13,7 +13,7 @@ export const cartHandlerMixin = {
     getCartHandlerOptions(ev) {
         this.isBuyNow = ev.currentTarget.classList.contains('o_we_buy_now');
         const targetSelector = ev.currentTarget.dataset.animationSelector || 'img';
-        this.$itemImgContainer = this.$(ev.currentTarget).closest(`:has(${targetSelector})`);
+        this.itemImgContainer = ev.currentTarget.closest(`${targetSelector}`);
     },
     /**
      * Used to add product depending on stayOnPageOption value.
@@ -35,14 +35,17 @@ export const cartHandlerMixin = {
             display: false,
             force_create: true,
         });
-        if (data.cart_quantity && (data.cart_quantity !== parseInt($(".my_cart_quantity").text()))) {
+        if (
+            data.cart_quantity &&
+            data.cart_quantity !== parseInt(document.querySelector(".my_cart_quantity").textContent)
+        ) {
             updateCartNavBar(data);
         };
         showCartNotification(this.call.bind(this), data.notification_info);
         return data;
     },
 };
-
+// TODO-visp: remove animate
 function animateClone($cart, $elem, offsetTop, offsetLeft) {
     if (!$cart.length) {
         return Promise.resolve();
@@ -94,22 +97,30 @@ function animateClone($cart, $elem, offsetTop, offsetLeft) {
  * @param {Object} data
  */
 function updateCartNavBar(data) {
-    sessionStorage.setItem('website_sale_cart_quantity', data.cart_quantity);
-    $(".my_cart_quantity")
-        .parents('li.o_wsale_my_cart').removeClass('d-none').end()
-        .toggleClass('d-none', data.cart_quantity === 0)
-        .addClass('o_mycart_zoom_animation').delay(300)
-        .queue(function () {
-            $(this)
-                .toggleClass('fa fa-warning', !data.cart_quantity)
-                .attr('title', data.warning)
-                .text(data.cart_quantity || '')
-                .removeClass('o_mycart_zoom_animation')
-                .dequeue();
-        });
+    const myCartQuantityEl = document.querySelector(".my_cart_quantity");
+    const parentLi = myCartQuantityEl.closest("li.o_wsale_my_cart");
+    parentLi.classList.remove("d-none");
+    myCartQuantityEl.classList.toggle("d-none", data.cart_quantity === 0);
+    myCartQuantityEl.classList.add("o_mycart_zoom_animation");
 
-    $(".js_cart_lines").first().before(data['website_sale.cart_lines']).end().remove();
-    $("#cart_total").replaceWith(data['website_sale.total']);
+    setTimeout(() => {
+        if (!data.cart_quantity) {
+            myCartQuantityEl.classList.add("fa", "fa-warning");
+        } else {
+            myCartQuantityEl.classList.remove("fa", "fa-warning");
+        }
+        myCartQuantityEl.setAttribute("title", data.warning);
+        myCartQuantityEl.textContent = data.cart_quantity || "";
+        myCartQuantityEl.classList.remove("o_mycart_zoom_animation");
+    }, 300);
+    const jsCartLinesEl = document.querySelector(".js_cart_lines");
+    if (jsCartLinesEl) {
+        jsCartLinesEl.insertAdjacentHTML("beforebegin", data["website_sale.cart_lines"]);
+        jsCartLinesEl?.remove();
+    }
+    if (document.querySelector("#cart_total")) {
+        document.querySelector("#cart_total").outerHTML = data["website_sale.total"];
+    }
     if (data.cart_ready) {
         document.querySelector("a[name='website_sale_main_button']")?.classList.remove('disabled');
     } else {
@@ -144,16 +155,27 @@ function showWarning(message) {
     if (!message) {
         return;
     }
-    var $page = $('.oe_website_sale');
-    var cart_alert = $page.children('#data_warning');
-    if (!cart_alert.length) {
-        cart_alert = $(
-            '<div class="alert alert-danger alert-dismissible" role="alert" id="data_warning">' +
-                '<button type="button" class="btn-close" data-bs-dismiss="alert"></button> ' +
-                '<span></span>' +
-            '</div>').prependTo($page);
+    const page = this.el.querySelector(".oe_website_sale");
+    const cartAlertEl = page.querySelector("#data_warning");
+    if (!cartAlertEl) {
+        const cartAlertDivEl = document.createElement("div");
+        cartAlertDivEl.className = "alert alert-danger alert-dismissible";
+        cartAlertDivEl.setAttribute("role", "alert");
+        cartAlertDivEl.id = "data_warning";
+
+        const buttonEl = document.createElement("button");
+        buttonEl.type = "button";
+        buttonEl.className = "btn-close";
+        buttonEl.setAttribute("data-bs-dismiss", "alert");
+
+        const spanEl = document.createElement("span");
+
+        cartAlertDivEl.appendChild(buttonEl);
+        cartAlertDivEl.appendChild(spanEl);
+
+        page.prepend(cartAlertDivEl);
     }
-    cart_alert.children('span:last-child').text(message);
+    cartAlertEl.querySelector("span:last-child").textContent = message;
 }
 
 export default {

@@ -26,7 +26,8 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
     start() {
         const def = this._super(...arguments);
 
-        this.$('select[name="country_id"]').change();
+        const selectElement = this.el.querySelector("select[name='country_id']");
+        selectElement.dispatchEvent(new Event("change", { bubbles: true }));
 
         return def;
     },
@@ -40,7 +41,7 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onChangeCountry: function (ev) {
-        if (!this.$('.checkout_autoformat').length) {
+        if (!this.el.querySelector(".checkout_autoformat")) {
             return;
         }
         return this._changeCountry();
@@ -50,56 +51,70 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
      * @private
      */
     _changeCountry: function () {
-        if (!$("#country_id").val()) {
+        if (!this.el.querySelector("#country_id").value) {
             return;
         }
-        return rpc("/shop/country_infos/" + $("#country_id").val(), {
-            mode: $("#country_id").attr('mode'),
+        return rpc("/shop/country_infos/" + this.el.querySelector("#country_id").value, {
+            mode: this.el.querySelector("#country_id").getAttribute("mode"),
         }).then(function (data) {
             // placeholder phone_code
-            $("input[name='phone']").attr('placeholder', data.phone_code !== 0 ? '+'+ data.phone_code : '');
+            document
+                .querySelector("input[name='phone']")
+                .setAttribute("placeholder", data.phone_code !== 0 ? "+" + data.phone_code : "");
 
             // populate states and display
-            var selectStates = $("select[name='state_id']");
+            const selectStateEl = document.querySelector("select[name='state_id']");
             // dont reload state at first loading (done in qweb)
-            if (selectStates.data('init')===0 || selectStates.find('option').length===1) {
+            if (
+                parseInt(selectStateEl.dataset.init) === 0 ||
+                selectStateEl.querySelectorAll("option").length === 1
+            ) {
                 if (data.states.length || data.state_required) {
-                    selectStates.html('');
+                    selectStateEl.innerHTML = "";
                     data.states.forEach((x) => {
-                        var opt = $('<option>').text(x[1])
-                            .attr('value', x[0])
-                            .attr('data-code', x[2]);
-                        selectStates.append(opt);
+                        const opt = document.createElement("option");
+                        opt.textContent = x[1];
+                        opt.value = x[0];
+                        opt.dataset.code = x[2];
+                        selectStateEl.append(opt);
                     });
-                    selectStates.parent('div').show();
+                    selectStateEl.closest("div").style.display = "";
                 } else {
-                    selectStates.val('').parent('div').hide();
+                    selectStateEl.value = "";
+                    selectStateEl.parentNode.style.display = "none";
                 }
-                selectStates.data('init', 0);
+                selectStateEl.dataset.init = 0;
             } else {
-                selectStates.data('init', 0);
+                selectStateEl.dataset.init = 0;
             }
 
             // manage fields order / visibility
             if (data.fields) {
-                if ($.inArray('zip', data.fields) > $.inArray('city', data.fields)){
-                    $(".div_zip").before($(".div_city"));
+                const divZipEL = document.querySelector(".div_zip");
+                const divCityEl = document.querySelector(".div_city");
+                if (data.fields.indexOf("zip") > data.fields.indexOf("city")) {
+                    divZipEL.parentNode.insertBefore(divCityEl, divZipEL);
                 } else {
-                    $(".div_zip").after($(".div_city"));
+                    divZipEL.parentNode.insertBefore(divCityEl, divZipEL.nextSibling);
                 }
                 var all_fields = ["street", "zip", "city", "country_name"]; // "state_code"];
                 all_fields.forEach((field) => {
-                    $(".checkout_autoformat .div_" + field.split('_')[0]).toggle($.inArray(field, data.fields)>=0);
+                    const fieldEl = document.querySelector(
+                        ".checkout_autoformat .div_" + field.split("_")[0]
+                    );
+                    fieldEl.style.display = data.fields.includes(field) ? "" : "none";
                 });
             }
 
-            if ($("label[for='zip']").length) {
-                $("label[for='zip']").toggleClass('label-optional', !data.zip_required);
-                $("label[for='zip']").get(0).toggleAttribute('required', !!data.zip_required);
+            const lableZipEl = document.querySelector("label[for='zip']");
+            if (lableZipEl) {
+                lableZipEl.classList.toggle("label-optional", !data.zip_required);
+                lableZipEl.setAttribute("required", !!data.zip_required);
             }
-            if ($("label[for='zip']").length) {
-                $("label[for='state_id']").toggleClass('label-optional', !data.state_required);
-                $("label[for='state_id']").get(0).toggleAttribute('required', !!data.state_required);
+            if (lableZipEl) {
+                const lableStateIdEl = document.querySelector("label[for='state_id']");
+                lableStateIdEl.classList.toggle("label-optional", !data.state_required);
+                lableStateIdEl.setAttribute("required", !!data.state_required);
             }
         });
     },
@@ -109,7 +124,11 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onChangeShippingUseSame: function (ev) {
-        $('.ship_to_other').toggle(!$(ev.currentTarget).prop('checked'));
+        if (document.querySelector(".ship_to_other")) {
+            document.querySelector(".ship_to_other").style.display = ev.currentTarget.checked
+                ? "none"
+                : "";
+        }
     },
 
 });
