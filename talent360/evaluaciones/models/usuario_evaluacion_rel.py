@@ -42,11 +42,11 @@ class UsuarioEvaluacionRel(models.Model):
         """
         if usuario_id:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("usuario_id", "=", usuario_id), ("evaluacion_id", "=", evaluacion_id)]
+                [("usuario_id.id", "=", usuario_id), ("evaluacion_id.id", "=", evaluacion_id)]
             )
         else:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("evaluacion_id", "=", evaluacion_id), ("token", "=", token)]
+                [("evaluacion_id.id", "=", evaluacion_id), ("token", "=", token)]
             )
 
         return usuario_evaluacion.contestada
@@ -60,11 +60,11 @@ class UsuarioEvaluacionRel(models.Model):
 
         if usuario_id:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("usuario_id", "=", usuario_id), ("evaluacion_id", "=", evaluacion_id)]
+                [("usuario_id.id", "=", usuario_id), ("evaluacion_id.id", "=", evaluacion_id)]
             )
         else:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("evaluacion_id", "=", evaluacion_id), ("token", "=", token)]
+                [("evaluacion_id.id", "=", evaluacion_id), ("token", "=", token)]
             )
 
         usuario_evaluacion.write({"contestada": "contestada"})
@@ -84,7 +84,7 @@ class UsuarioEvaluacionRel(models.Model):
         base_url = "http://localhost:8069/evaluacion/responder"
 
         usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-            [("evaluacion_id", "=", evaluacion_id)]
+            [("evaluacion_id.id", "=", evaluacion_id)]
         )
 
         for user in usuario_evaluacion:
