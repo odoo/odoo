@@ -260,22 +260,96 @@
                 </div>
             </div>
         </template>
+        
+        <template id="encuesta_reporte_clima" name="Reporte de Clima Laboral">
+            <div class="container-fluid row gap-5 justify-content-between g-2">
+                <div class="col survey_section">
+                    <h4>Calificación final</h4>
+                     <span t-att-class="'color_nulo' if total_porcentaje &lt; 20 else 'color_bajo' if 20 &lt;= total_porcentaje &lt; 45 else 'color_medio' if 45 &lt;= total_porcentaje &lt; 70 else 'color_alto' if 70 &lt;= total_porcentaje &lt; 90 else 'color_muy-alto'">
+                        <t t-esc="total_porcentaje"/>
+                    </span>
+                    <span class="fs-5 pill">
+                        Riesgo
+                        <t t-if="total_porcentaje &lt; 20"> nulo</t>
+                        <t t-elif="20 &lt;= total_porcentaje &lt; 45"> bajo</t>
+                        <t t-elif="45 &lt;= total_porcentaje &lt; 70"> medio</t>
+                        <t t-elif="70 &lt;= total_porcentaje &lt; 90"> alto</t>
+                        <t t-else="true"> muy alto</t>
+                    </span>
+                </div>
 
-    <template id="encuesta_reporte_clima" name="Reporte de Clima Laboral">
-        <div class="container">
-            <h3>Resumen del Clima Laboral</h3>
-            <div class="survey_graph" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'radar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
-                <canvas t-att-id="'canvas_barras_categorias_clima'"/>
+                <div class="col survey_section w-100">
+                    <h4>Semáforo de riesgos</h4>
+                    <div class="container-fluid row gap-2 align-items-center">
+                        <div class="color_circle" style="background-color: #ff4747;"></div>
+                        <span class="col">Riesgo muy alto</span>
+                    </div>
+                    <div class="container-fluid row gap-2 align-items-center">
+                        <div class="color_circle" style="background-color: #ffa446;"></div>
+                        <span class="col">Riesgo alto</span>
+                    </div>
+                    <div class="container-fluid row gap-2 align-items-center">
+                        <div class="color_circle" style="background-color: #ebae14;"></div>
+                        <span class="col">Riesgo medio</span>
+                    </div>
+                    <div class="container-fluid row gap-2 align-items-center">
+                        <div class="color_circle" style="background-color: #5aaf2b;"></div>
+                        <span class="col">Riesgo bajo</span>
+                    </div>
+                    <div class="container-fluid row gap-2 align-items-center">
+                        <div class="color_circle" style="background-color: #2894a7;"></div>
+                        <span class="col">Riesgo nulo</span>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="container">
-            <t t-foreach="evaluacion.action_generar_datos_reporte_clima()['categorias']" t-as="categoria">
-            </t>
-            <div class="survey_graph" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'col'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
-                    <canvas t-att-id="'canvas_barras_categorias_clima'"/>
+
+            <div class="container">
+                <div class="survey_section">
+                    <h4>Resumen del Clima Laboral</h4>
+                    <div class="survey_graph" style="width: 700px; height: 500px; padding-left: 110px" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'radar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
+                        <canvas t-att-id="'canvas_barras_categorias_clima'"></canvas>
+                    </div>
+                </div>
+
+                <br></br>
+
+                <div class="container-fluid">
+                    <div class="row gap-5">
+                        <div class="col survey_section align-items-start">
+                            <h4>Categoría con mayor puntaje</h4>
+                            <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
+                                <span class="fs-1">
+                                    <t t-esc="max(categorias, key=lambda x: x['valor'])['valor']"/>
+                                </span>
+                                <span class="fs-5">
+                                    <t t-esc="max(categorias, key=lambda x: x['valor'])['nombre']"/>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col survey_section align-items-start">
+                            <h4>Categorías con menor puntaje:</h4>
+                            <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
+                                <span class="fs-1">
+                                    <t t-esc="min(categorias, key=lambda x: x['valor'])['valor']"/>
+                                </span>
+                                <span class="fs-5">
+                                    <t t-esc="min(categorias, key=lambda x: x['valor'])['nombre']"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </template>
+
+            <div class="container">
+                <t t-foreach="evaluacion.action_generar_datos_reporte_clima()['categorias']" t-as="categoria"></t>
+                <div class="survey_graph" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'col'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
+                    <canvas t-att-id="'canvas_barras_categorias_clima'"></canvas>
+                </div>
+            </div>
+        </template>
+
 
 
         <template id="pregunta_resultados_texto" name="Question: text result (text_box, char_box)">

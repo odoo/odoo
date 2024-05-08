@@ -558,7 +558,7 @@ class Evaluacion(models.Model):
                     4  # Suponiendo un máximo de 4 para cada respuesta en escala
                 )
 
-                nombre_departamento = respuesta.usuario_id.department_id.name
+                nombre_departamento = respuesta.usuario_id.department_id.name if respuesta.usuario_id.department_id else "Sin departamento"
                 departamento = next(
                     (
                         dept
@@ -596,18 +596,18 @@ class Evaluacion(models.Model):
         )
 
         # Datos demograficos
-        datos_demograficos = []
+        # datos_demograficos = []
 
-        for usuario in self.usuario_ids:
-            usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
-                [("usuario_id", "=", usuario.id), ("evaluacion_id", "=", self.id)]
-            )
+        # for usuario in self.usuario_ids:
+        #     usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
+        #         [("usuario_id", "=", usuario.id), ("evaluacion_id", "=", self.id)]
+        #     )
 
-            if (
-                usuario_evaluacion_rel
-                and usuario_evaluacion_rel[0].contestada == "contestada"
-            ):
-                datos_demograficos.append(self.obtener_datos_demograficos(usuario))
+        #     if (
+        #         usuario_evaluacion_rel
+        #         and usuario_evaluacion_rel[0].contestada == "contestada"
+        #     ):
+        #         datos_demograficos.append(self.obtener_datos_demograficos(usuario))
 
         # Parámetros para el template
         parametros = {
@@ -616,7 +616,7 @@ class Evaluacion(models.Model):
             "total": total_puntuacion,
             "total_maximo": total_maximo_posible,
             "total_porcentaje": total_porcentaje,
-            "datos_demograficos": datos_demograficos,
+            #"datos_demograficos": datos_demograficos,
         }
 
         print(parametros)
