@@ -442,6 +442,18 @@ class Evaluacion(models.Model):
         return parametros
 
     def asignar_color(self, valor, categoria=None, dominio=None):
+        """
+        Asigna un color a un valor numérico.
+        
+        Este método asigna un color a un valor numérico basado en una escala predefinida.
+        
+        :param valor: El valor numérico al que se le asignará un color.
+        :param categoria: La categoría de la pregunta.
+        :param dominio: El dominio de la pregunta.
+        
+        :return: El color asignado al valor.
+        """
+        
         if categoria:
             if categoria == "Ambiente de Trabajo":
                 if valor < 3:
@@ -589,12 +601,31 @@ class Evaluacion(models.Model):
                 return "#ff4747"  # Rojo
 
     def obtener_dato(self, dato):
+        """
+        Obtiene un dato y devuelve 'N/A' si es nulo.
+        
+        Este método recibe un dato y verifica si es nulo. Si es nulo, devuelve 'N/A'.
+        
+        :param dato: El dato a verificar.
+        
+        :return: El dato si no es nulo, 'N/A' si es nulo.
+        """
         if not dato:
             return "N/A"
 
         return dato
 
     def obtener_datos_demograficos(self, usuario):
+        """
+        Obtiene los datos demográficos de un usuario.
+        
+        Este método recibe un usuario y obtiene sus datos demográficos, como nombre, género, puesto, año de nacimiento, generación, departamento, nivel jerárquico, gerencia, jefatura, fecha de ingreso y ubicación/región.
+        
+        :param usuario: El usuario del que se obtendrán los datos demográficos.
+        
+        :return: Un diccionario con los datos demográficos del usuario.
+        """
+        
         datos = {}
         
         def obtener_generacion(anio_nacimiento):
