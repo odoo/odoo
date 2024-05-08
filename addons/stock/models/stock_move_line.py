@@ -265,12 +265,17 @@ class StockMoveLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('move_id'):
-                move = self.env['stock.move'].browse(vals['move_id'])
+            move = self.env['stock.move'].browse(vals['move_id'])
+            picking = self.env['stock.picking'].browse(vals['picking_id'])
+            if move and picking:
+                if move.picking_id != picking:
+                    del vals['move_id']
+                vals['company_id'] = picking.company_id.id
+            elif move:
                 vals['picking_id'] = move.picking_id.id
                 vals['company_id'] = move.company_id.id
-            elif vals.get('picking_id'):
-                vals['company_id'] = self.env['stock.picking'].browse(vals['picking_id']).company_id.id
+            elif picking:
+                vals['company_id'] = picking.company_id.id
 
         mls = super().create(vals_list)
 
