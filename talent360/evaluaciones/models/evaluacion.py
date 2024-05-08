@@ -17,7 +17,7 @@ class Evaluacion(models.Model):
 
     _name = "evaluacion"
     _description = "Evaluacion de pesonal"
-
+    _rec_name = "nombre"
     nombre = fields.Char(required=True)
 
     tipo = fields.Selection(
@@ -401,7 +401,7 @@ class Evaluacion(models.Model):
 
         for usuario in self.usuario_ids:
             usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
-                [("usuario_id", "=", usuario.id), ("evaluacion_id", "=", self.id)]
+                [("usuario_id.id", "=", usuario.id), ("evaluacion_id.id", "=", self.id)]
             )
 
             if (
@@ -689,3 +689,16 @@ class Evaluacion(models.Model):
                 "sticky": False,
             },
         }
+    
+    def write(self, vals):
+        """ 
+        Sobrescribe el método write para incluir el envío de enlaces al guardar de forma automática
+        o manual la evaluación.
+
+        :return: Sobreescribe la asignación de usuarios si hubo cambio en ellos.
+        """
+        resultado = super(Evaluacion, self).write(vals)
+        if 'usuario_ids' in vals or self.usuario_ids:
+            self.action_enviar_evaluacion()
+        return resultado
+

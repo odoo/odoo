@@ -53,8 +53,8 @@ class EvaluacionesController(http.Controller):
         if request.env.user != request.env.ref("base.public_user"):
             usuario_eval_relacion = usuario_eva_mod.sudo().search(
                 [
-                    ("usuario_id", "=", request.env.user.id),
-                    ("evaluacion_id", "=", evaluacion.id),
+                    ("usuario_id.id", "=", request.env.user.id),
+                    ("evaluacion_id.id", "=", evaluacion.id),
                     ("token", "=", token),
                 ]
             )
