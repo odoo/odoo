@@ -689,3 +689,16 @@ class Evaluacion(models.Model):
                 "sticky": False,
             },
         }
+    
+    def write(self, vals):
+        """ 
+        Sobrescribe el método write para incluir el envío de enlaces al guardar de forma automática
+        o manual la evaluación.
+
+        :return: Sobreescribe la asignación de usuarios si hubo cambio en ellos.
+        """
+        resultado = super(Evaluacion, self).write(vals)
+        if 'usuario_ids' in vals or self.usuario_ids:
+            self.action_enviar_evaluacion()
+        return resultado
+
