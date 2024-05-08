@@ -9,6 +9,7 @@ from ..models.usuario_evaluacion_rel import UsuarioEvaluacionRel as usuario_eval
 import time
 import werkzeug
 
+
 class EvaluacionesController(http.Controller):
     """Controlador para manejar las solicitudes relacionadas con las evaluaciones."""
 
@@ -30,10 +31,13 @@ class EvaluacionesController(http.Controller):
 
         parametros = evaluacion.action_generar_datos_reporte_NOM_035()
 
-        return request.render("evaluaciones.encuestas_reporte", parametros)    
+        return request.render("evaluaciones.encuestas_reporte", parametros)
 
     @http.route(
-        "/evaluacion/responder/<int:evaluacion_id>/<string:token>", type="http", auth="public", website=True
+        "/evaluacion/responder/<int:evaluacion_id>/<string:token>",
+        type="http",
+        auth="public",
+        website=True,
     )
     def responder_evaluacion_controller(self, evaluacion_id, token):
         """Método para desplegar el formulario de permitir al usuario responder una evaluación.
@@ -47,38 +51,44 @@ class EvaluacionesController(http.Controller):
         evaluacion = request.env["evaluacion"].sudo().browse(evaluacion_id)
 
         if request.env.user != request.env.ref("base.public_user"):
-            user_eval_relacion = usuario_eva_mod.sudo().search([
-                ("usuario_id", "=", request.env.user.id),
-                ("evaluacion_id", "=", evaluacion.id),
-                ("token", "=", token)
-            ])
+            user_eval_relacion = usuario_eva_mod.sudo().search(
+                [
+                    ("usuario_id", "=", request.env.user.id),
+                    ("evaluacion_id", "=", evaluacion.id),
+                    ("token", "=", token),
+                ]
+            )
 
         else:
-            user_eval_relacion = usuario_eva_mod.sudo().search([
-            # ("evaluacion_id", "=", evaluacion.id),
-            ("token", "=", token)
-        ])
-        
+            user_eval_relacion = usuario_eva_mod.sudo().search(
+                [
+                    # ("evaluacion_id", "=", evaluacion.id),
+                    ("token", "=", token)
+                ]
+            )
+
         if not user_eval_relacion:
             return request.render("evaluaciones.evaluacion_responder_form_draft")
 
         # Obtén la evaluación basada en el ID
         parametros = evaluacion.action_get_evaluaciones(evaluacion_id)
-        
+
         if request.env.user != request.env.ref("base.public_user"):
-            parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(request.env.user.id, evaluacion_id, None)
-        
+            parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(
+                request.env.user.id, evaluacion_id, None
+            )
+
         else:
-            parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(None, evaluacion_id, token)
-        
+            parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(
+                None, evaluacion_id, token
+            )
+
         parametros["token"] = token
 
         # Renderiza la plantilla con la evaluación
         return request.render("evaluaciones.evaluaciones_responder", parametros)
-    
-    @http.route(
-        "/evaluacion/contestada", type = "http", auth = "public", website = True 
-    )
+
+    @http.route("/evaluacion/contestada", type="http", auth="public", website=True)
     def evaluacion_contestada_controller(self, **post):
         """Método para desplegar un mensaje de que la evaluación ya fue contestada.
         Este método renderiza un mensaje indicando que la evaluación ya fue contestada.
@@ -87,11 +97,15 @@ class EvaluacionesController(http.Controller):
         """
 
         return request.render("evaluaciones.evaluacion_responder_form_done")
-    
-    @http.route(
-        "/evaluacion/responder", type="http", auth="public", website=True, methods=["POST"], csrf=False
-    )
 
+    @http.route(
+        "/evaluacion/responder",
+        type="http",
+        auth="public",
+        website=True,
+        methods=["POST"],
+        csrf=False,
+    )
     def responder_evaluacion_controller_post(self, **post):
         """Método para procesar la respuesta del formulario de evaluación.
         Este método verifica que el usuario tenga los permisos necesario, obtiene los datos
@@ -102,14 +116,14 @@ class EvaluacionesController(http.Controller):
 
         user = None
 
-        if request.env.user != request.env.ref('base.public_user'):
+        if request.env.user != request.env.ref("base.public_user"):
             if not request.env.user.has_group(
                 "evaluaciones.evaluaciones_cliente_cr_group_user"
             ):
                 raise AccessError("No tienes permitido acceder a este recurso.")
-            
+
             user = request.env.user.id
-        
+
         post_data = json.loads(request.httprequest.data)
 
         valores_radios = post_data.get("radioValues")
@@ -124,19 +138,51 @@ class EvaluacionesController(http.Controller):
             if pregunta_id in valores_radios:
                 valor_radio = valores_radios[pregunta_id]
                 if request.env.user != request.env.ref("base.public_user"):
-                    resp = respuesta_modelo.sudo().action_guardar_respuesta(valor_radio, None, int(evaluacion_id), int(usuario_id), int(pregunta_id), None, False)
+                    resp = respuesta_modelo.sudo().action_guardar_respuesta(
+                        valor_radio,
+                        None,
+                        int(evaluacion_id),
+                        int(usuario_id),
+                        int(pregunta_id),
+                        None,
+                        False,
+                    )
                 else:
-                    resp = respuesta_modelo.sudo().action_guardar_respuesta(valor_radio, None, int(evaluacion_id), None, int(pregunta_id), token, False)
+                    resp = respuesta_modelo.sudo().action_guardar_respuesta(
+                        valor_radio,
+                        None,
+                        int(evaluacion_id),
+                        None,
+                        int(pregunta_id),
+                        token,
+                        False,
+                    )
             else:
                 continue
-            
+
         for pregunta_id, valor_textarea in valores_textarea.items():
             if pregunta_id in valores_textarea:
                 valor_textarea = valores_textarea[pregunta_id]
                 if request.env.user != request.env.ref("base.public_user"):
-                    resp = respuesta_modelo.sudo().action_guardar_respuesta(None, valor_textarea, int(evaluacion_id), int(usuario_id), int(pregunta_id), None, False)
+                    resp = respuesta_modelo.sudo().action_guardar_respuesta(
+                        None,
+                        valor_textarea,
+                        int(evaluacion_id),
+                        int(usuario_id),
+                        int(pregunta_id),
+                        None,
+                        False,
+                    )
                 else:
-                    resp = respuesta_modelo.sudo().action_guardar_respuesta(None, valor_textarea, int(evaluacion_id), None, int(pregunta_id), token, False)
+                    resp = respuesta_modelo.sudo().action_guardar_respuesta(
+                        None,
+                        valor_textarea,
+                        int(evaluacion_id),
+                        None,
+                        int(pregunta_id),
+                        token,
+                        False,
+                    )
             else:
                 continue
 
@@ -144,9 +190,25 @@ class EvaluacionesController(http.Controller):
             if pregunta_id in valores_radios_escala:
                 valor_radio = valores_radios_escala[pregunta_id]
                 if request.env.user != request.env.ref("base.public_user"):
-                    resp = respuesta_modelo.sudo().action_guardar_respuesta(valor_radio, None, int(evaluacion_id), int(usuario_id), int(pregunta_id), None, True)
+                    resp = respuesta_modelo.sudo().action_guardar_respuesta(
+                        valor_radio,
+                        None,
+                        int(evaluacion_id),
+                        int(usuario_id),
+                        int(pregunta_id),
+                        None,
+                        True,
+                    )
                 else:
-                    resp = respuesta_modelo.sudo().action_guardar_respuesta(valor_radio, None, int(evaluacion_id), None, int(pregunta_id), token, True)
+                    resp = respuesta_modelo.sudo().action_guardar_respuesta(
+                        valor_radio,
+                        None,
+                        int(evaluacion_id),
+                        None,
+                        int(pregunta_id),
+                        token,
+                        True,
+                    )
             else:
                 continue
 
@@ -159,21 +221,24 @@ class EvaluacionesController(http.Controller):
             usuario_eva_mod.sudo().action_update_estado(None, evaluacion_id, token)
 
         return werkzeug.utils.redirect("/evaluacion/contestada")
-        
 
     @http.route(
-        "/evaluacion/reporte-clima/<model('evaluacion'):evaluacion>", type="http", auth="user"
+        "/evaluacion/reporte-clima/<model('evaluacion'):evaluacion>",
+        type="http",
+        auth="user",
     )
     def reporte_clima_controller(self, evaluacion: Evaluacion):
         """Método para generar y mostrar el reporte de clima laboral.
         :return: HTML renderizado del template con los datos del reporte.
         """
-        
-        #Verificar permisos de usuario
-        if not request.env.user.has_group("evaluaciones.evaluaciones_cliente_cr_group_user"):
+
+        # Verificar permisos de usuario
+        if not request.env.user.has_group(
+            "evaluaciones.evaluaciones_cliente_cr_group_user"
+        ):
             raise AccessError("No tienes permitido acceder a este recurso.")
-        
-        #Generar parámetros para el reporte
-        parametros = evaluacion.action_generar_datos_reporte_clima() 
-        
+
+        # Generar parámetros para el reporte
+        parametros = evaluacion.action_generar_datos_reporte_clima()
+
         return request.render("evaluaciones.encuestas_reporte_clima", parametros)

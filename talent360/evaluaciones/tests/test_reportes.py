@@ -25,21 +25,21 @@ class TestReportes(TransactionCase):
             {
                 "pregunta_texto": "Pregunta 1",
                 "tipo": "escala",
-                "categoria": "reclutamiento_y_seleccion_de_personal"
+                "categoria": "reclutamiento_y_seleccion_de_personal",
             }
         )
         pregunta2 = self.env["pregunta"].create(
             {
                 "pregunta_texto": "Pregunta 2",
                 "tipo": "escala",
-                "categoria": "reclutamiento_y_seleccion_de_personal"
+                "categoria": "reclutamiento_y_seleccion_de_personal",
             }
         )
         pregunta3 = self.env["pregunta"].create(
             {
                 "pregunta_texto": "Pregunta 3",
                 "tipo": "escala",
-                "categoria": "formacion_y_capacitacion"
+                "categoria": "formacion_y_capacitacion",
             }
         )
 
@@ -94,24 +94,29 @@ class TestReportes(TransactionCase):
         }
 
         # Create a department
-        department = self.env['hr.department'].create({
-            'name': 'Test Department',
-        })
+        department = self.env["hr.department"].create(
+            {
+                "name": "Test Department",
+            }
+        )
 
         # Create a user
-        user = self.env['res.users'].create({
-            'name': 'Test User',
-            'login': 'testuser',
-            'password': 'testuser',
-        })
+        user = self.env["res.users"].create(
+            {
+                "name": "Test User",
+                "login": "testuser",
+                "password": "testuser",
+            }
+        )
 
         # Create an employee linked to the user and department
-        employee = self.env['hr.employee'].create({
-            'name': 'Test Employee',
-            'user_id': user.id,
-            'department_id': department.id,
-        })
-
+        employee = self.env["hr.employee"].create(
+            {
+                "name": "Test Employee",
+                "user_id": user.id,
+                "department_id": department.id,
+            }
+        )
 
         # Crear respuestas para las preguntas
         for pregunta, respuestas in preguntas_respuestas.items():
@@ -182,7 +187,6 @@ class TestReportes(TransactionCase):
                 )
             else:
                 self.fail("Tipo de pregunta no soportado")
-
 
     def test_generar_reporte_clima(self):
 
