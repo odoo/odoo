@@ -33,11 +33,11 @@ var VariantMixin = {
      * @param {MouseEvent} ev
      */
     onChangeVariant: function (ev) {
-        var $parent = $(ev.target).closest('.js_product');
-        if (!$parent.data('uniqueId')) {
-            $parent.data('uniqueId', uniqueId());
+        const parentEl = ev.target.closest(".js_product");
+        if (!parentEl.dataset.uniqueId) {
+            parentEl.dataset.uniqueId = uniqueId();
         }
-        this._throttledGetCombinationInfo(this, $parent.data('uniqueId'))(ev);
+        this._throttledGetCombinationInfo(this, parseInt(parentEl.dataset.uniqueId))(ev);
     },
     /**
      * @see onChangeVariant
@@ -47,38 +47,38 @@ var VariantMixin = {
      * @returns {Deferred}
      */
     _getCombinationInfo: function (ev) {
-        if ($(ev.target).hasClass('variant_custom_value')) {
+        if (ev.target?.classList.contains("variant_custom_value")) {
             return Promise.resolve();
         }
 
-        const $parent = $(ev.target).closest('.js_product');
-        if(!$parent.length){
+        const parentEl = ev.target?.closest(".js_product");
+        if (!parentEl) {
             return Promise.resolve();
         }
-        const combination = this.getSelectedVariantValues($parent);
+        const combination = this.getSelectedVariantValues(parentEl);
 
         return rpc('/website_sale/get_combination_info', {
-            'product_template_id': parseInt($parent.find('.product_template_id').val()),
-            'product_id': this._getProductId($parent),
+            'product_template_id': parseInt(parentEl.querySelector(".product_template_id").value),
+            'product_id': this._getProductId(parentEl),
             'combination': combination,
-            'add_qty': parseInt($parent.find('input[name="add_qty"]').val()),
+            'add_qty': parseInt(parentEl.querySelector('input[name="add_qty"]').value),
             'context': this.context,
-            ...this._getOptionalCombinationInfoParam($parent),
+            ...this._getOptionalCombinationInfoParam(parentEl),
         }).then((combinationData) => {
             if (this._shouldIgnoreRpcResult()) {
                 return;
             }
-            this._onChangeCombination(ev, $parent, combinationData);
-            this._checkExclusions($parent, combination);
+            this._onChangeCombination(ev, parentEl, combinationData);
+            this._checkExclusions(parentEl, combination);
         });
     },
 
     /**
      * Hook to add optional info to the combination info call.
      *
-     * @param {$.Element} $product
+     * @param {Element} product
      */
-    _getOptionalCombinationInfoParam($product) {
+    _getOptionalCombinationInfoParam(product) {
         return {};
     },
 
@@ -87,48 +87,52 @@ var VariantMixin = {
      * the attribute value is configured as "custom" (see product_attribute_value.is_custom)
      *
      * @private
-     * @param {MouseEvent} ev
+     * @param {HTMLElement} target
      */
-    handleCustomValues: function ($target) {
-        var $variantContainer;
-        var $customInput = false;
-        if ($target.is('input[type=radio]') && $target.is(':checked')) {
-            $variantContainer = $target.closest('ul').closest('li');
-            $customInput = $target;
-        } else if ($target.is('select')) {
-            $variantContainer = $target.closest('li');
-            $customInput = $target
-                .find('option[value="' + $target.val() + '"]');
+    handleCustomValues(target) {
+        let variantContainerEl;
+        let customInput = false;
+
+        if (target.matches("input[type=radio]") && target.checked) {
+            variantContainerEl = target.closest("ul")?.closest("li");
+            customInput = target;
+        } else if (target.tagName === "SELECT") {
+            variantContainerEl = target.closest("li");
+            customInput = target.querySelector('option[value="' + target.value + '"]');
         }
 
-        if ($variantContainer) {
-            if ($customInput && $customInput.data('is_custom') === 'True') {
-                var attributeValueId = $customInput.data('value_id');
-                var attributeValueName = $customInput.data('value_name');
+        if (variantContainerEl) {
+            if (customInput && customInput.dataset.is_custom === "True") {
+                const attributeValueId = customInput.dataset.value_id;
+                const attributeValueName = customInput.dataset.value_name;
 
-                if ($variantContainer.find('.variant_custom_value').length === 0
-                        || $variantContainer
-                              .find('.variant_custom_value')
-                              .data('custom_product_template_attribute_value_id') !== parseInt(attributeValueId)) {
-                    $variantContainer.find('.variant_custom_value').remove();
+                if (
+                    variantContainerEl.querySelector(".variant_custom_value") ||
+                    variantContainerEl.querySelector(".variant_custom_value")?.dataset
+                        .customProductTemplateAttributeValueId !== parseInt(attributeValueId)
+                ) {
+                    variantContainerEl
+                        .querySelectorAll(".variant_custom_value")
+                        .forEach((el) => el.remove());
 
-                    const previousCustomValue = $customInput.attr("previous_custom_value");
-                    var $input = $('<input>', {
-                        type: 'text',
-                        'data-custom_product_template_attribute_value_id': attributeValueId,
-                        'data-attribute_value_name': attributeValueName,
-                        class: 'variant_custom_value form-control mt-2'
-                    });
+                    const previousCustomValue = customInput.getAttribute("previous_custom_value");
+                    const inputEl = document.createElement("input");
+                    inputEl.type = "text";
+                    inputEl.dataset.customProductTemplateAttributeValueId = attributeValueId;
+                    inputEl.dataset.attributeValueName = attributeValueName;
+                    inputEl.classList.add("variant_custom_value", "form-control", "mt-2");
 
-                    $input.attr('placeholder', attributeValueName);
-                    $input.addClass('custom_value_radio');
-                    $variantContainer.append($input);
+                    inputEl.setAttribute("placeholder", attributeValueName);
+                    inputEl.classList.add("custom_value_radio");
+                    variantContainerEl.append(inputEl);
                     if (previousCustomValue) {
-                        $input.val(previousCustomValue);
+                        inputEl.value = previousCustomValue;
                     }
                 }
             } else {
-                $variantContainer.find('.variant_custom_value').remove();
+                variantContainerEl
+                    .querySelectorAll(".variant_custom_value")
+                    .forEach((el) => el.remove());
             }
         }
     },
@@ -140,16 +144,17 @@ var VariantMixin = {
      */
     onClickAddCartJSON: function (ev) {
         ev.preventDefault();
-        var $link = $(ev.currentTarget);
-        var $input = $link.closest('.input-group').find("input");
-        var min = parseFloat($input.data("min") || 0);
-        var max = parseFloat($input.data("max") || Infinity);
-        var previousQty = parseFloat($input.val() || 0, 10);
-        var quantity = ($link.has(".fa-minus").length ? -1 : 1) + previousQty;
-        var newQty = quantity > min ? (quantity < max ? quantity : max) : min;
+        const link = ev.currentTarget;
+        const inputEl = link.closest(".input-group").querySelector("input");
+        const min = parseFloat(inputEl.dataset.min || 0);
+        const max = parseFloat(inputEl.dataset.max || Infinity);
+        const previousQty = parseFloat(inputEl.value || 0, 10);
+        const quantity = (link.querySelector("i.fa-minus") ? -1 : 1) + previousQty;
+        const newQty = quantity > min ? (quantity < max ? quantity : max) : min;
 
         if (newQty !== previousQty) {
-            $input.val(newQty).trigger('change');
+            inputEl.value = newQty;
+            inputEl.dispatchEvent(new Event("change", { bubbles: true }));
         }
         return false;
     },
@@ -161,43 +166,53 @@ var VariantMixin = {
      * @param {MouseEvent} ev
      */
     onChangeAddQuantity: function (ev) {
-        const $parent = $(ev.currentTarget).closest('form');
-        if ($parent.length > 0) {
-            this.triggerVariantChange($parent);
+        const parentEl = ev.currentTarget.closest("form");
+        if (parentEl) {
+            this.triggerVariantChange(parentEl);
         }
     },
 
     /**
      * Triggers the price computation and other variant specific changes
      *
-     * @param {$.Element} $container
+     * @param {Element} container
      */
-    triggerVariantChange: function ($container) {
-        $container.find('ul[data-attribute_exclusions]').trigger('change');
-        $container.find('input.js_variant_change:checked, select.js_variant_change').each(function () {
-            VariantMixin.handleCustomValues($(this));
-        });
+    triggerVariantChange(container) {
+        container
+            .querySelector("ul[data-attribute_exclusions]")
+            ?.dispatchEvent(new Event("change", { bubbles: true }));
+        container
+            .querySelectorAll("input.js_variant_change:checked, select.js_variant_change")
+            .forEach((el) => {
+                VariantMixin.handleCustomValues(el);
+            });
     },
 
     /**
      * Will look for user custom attribute values
      * in the provided container
      *
-     * @param {$.Element} $container
+     * @param {Element} container
      * @returns {Array} array of custom values with the following format
      *   {integer} custom_product_template_attribute_value_id
      *   {string} attribute_value_name
      *   {string} custom_value
      */
-    getCustomVariantValues: function ($container) {
-        var variantCustomValues = [];
-        $container.find('.variant_custom_value').each(function (){
-            var $variantCustomValueInput = $(this);
-            if ($variantCustomValueInput.length !== 0){
+    getCustomVariantValues(container) {
+        const variantCustomValues = [];
+
+        if (!container) {
+            return variantCustomValues;
+        }
+
+        container.querySelectorAll(".variant_custom_value").forEach((variantCustomValueInput) => {
+            if (variantCustomValueInput) {
                 variantCustomValues.push({
-                    'custom_product_template_attribute_value_id': $variantCustomValueInput.data('custom_product_template_attribute_value_id'),
-                    'attribute_value_name': $variantCustomValueInput.data('attribute_value_name'),
-                    'custom_value': $variantCustomValueInput.val(),
+                    'custom_product_template_attribute_value_id': parseInt(
+                        variantCustomValueInput.dataset.customProductTemplateAttributeValueId
+                    ),
+                    'attribute_value_name': variantCustomValueInput.dataset.attributeValueName,
+                    'custom_value': variantCustomValueInput.value,
                 });
             }
         });
@@ -209,7 +224,7 @@ var VariantMixin = {
      * Will look for attribute values that do not create product variant
      * (see product_attribute.create_variant "dynamic")
      *
-     * @param {$.Element} $container
+     * @param {Element} container
      * @returns {Array} array of attribute values with the following format
      *   {integer} custom_product_template_attribute_value_id
      *   {string} attribute_value_name
@@ -217,28 +232,33 @@ var VariantMixin = {
      *   {string} attribute_name
      *   {boolean} is_custom
      */
-    getNoVariantAttributeValues: function ($container) {
+    getNoVariantAttributeValues(container) {
         var noVariantAttributeValues = [];
         var variantsValuesSelectors = [
             'input.no_variant.js_variant_change:checked',
             'select.no_variant.js_variant_change'
         ];
 
-        $container.find(variantsValuesSelectors.join(',')).each(function (){
-            var $variantValueInput = $(this);
-            var singleNoCustom = $variantValueInput.data('is_single') && !$variantValueInput.data('is_custom');
+        if (!container) {
+            return noVariantAttributeValues;
+        }
 
-            if ($variantValueInput.is('select')){
-                $variantValueInput = $variantValueInput.find('option[value=' + $variantValueInput.val() + ']');
+        container.querySelectorAll(variantsValuesSelectors.join(",")).forEach((variantValueInput) => {
+            const singleNoCustom = variantValueInput.dataset.isSingle && !variantValueInput.dataset.isCustom;
+
+            if (variantValueInput.tagname === "SELECT") {
+                variantValueInput = variantValueInput.querySelector(
+                    "option[value=" + variantValueInput.value + "]"
+                );
             }
 
-            if ($variantValueInput.length !== 0 && !singleNoCustom){
+            if (variantValueInput && !singleNoCustom) {
                 noVariantAttributeValues.push({
-                    'custom_product_template_attribute_value_id': $variantValueInput.data('value_id'),
-                    'attribute_value_name': $variantValueInput.data('value_name'),
-                    'value': $variantValueInput.val(),
-                    'attribute_name': $variantValueInput.data('attribute_name'),
-                    'is_custom': $variantValueInput.data('is_custom')
+                    'custom_product_template_attribute_value_id': parseInt(variantValueInput.dataset.valueId),
+                    'attribute_value_name': variantValueInput.dataset.valueName,
+                    'value': variantValueInput.value,
+                    'attribute_name': variantValueInput.dataset.attributeName,
+                    'is_custom': variantValueInput.dataset.isCustom,
                 });
             }
         });
@@ -249,17 +269,17 @@ var VariantMixin = {
     /**
      * Will return the list of selected product.template.attribute.value ids
      *
-     * @param {$.Element} $container the container to look into
+     * @param {Element} containerEl the container to look into
      */
-    getSelectedVariantValues: function ($container) {
-        var values = [];
+    getSelectedVariantValues(containerEl) {
+        const values = [];
 
-        var variantsValuesSelectors = [
-            'input.js_variant_change:checked',
-            'select.js_variant_change'
+        const variantsValuesSelectors = [
+            "input.js_variant_change:checked",
+            "select.js_variant_change",
         ];
-        $container.find(variantsValuesSelectors.join(', ')).toArray().forEach((el) => {
-            values.push(+$(el).val());
+        containerEl?.querySelectorAll(variantsValuesSelectors.join(", ")).forEach((el) => {
+            values.push(+el.value);
         });
 
         return values;
@@ -272,12 +292,12 @@ var VariantMixin = {
      * - If the product does not exist yet ("dynamic" variant creation), this method will
      *   create the product first and then resolve the promise with the created product's id
      *
-     * @param {$.Element} $container the container to look into
+     * @param {Element} container the container to look into
      * @param {integer} productId the product id
      * @param {integer} productTemplateId the corresponding product template id
      * @returns {Promise} the promise that will be resolved with a {integer} productId
      */
-    selectOrCreateProduct: function ($container, productId, productTemplateId) {
+    selectOrCreateProduct(containerEl, productId, productTemplateId) {
         productId = parseInt(productId);
         productTemplateId = parseInt(productTemplateId);
         var productReady = Promise.resolve();
@@ -287,7 +307,7 @@ var VariantMixin = {
             var params = {
                 product_template_id: productTemplateId,
                 product_template_attribute_value_ids:
-                    JSON.stringify(VariantMixin.getSelectedVariantValues($container)),
+                    JSON.stringify(VariantMixin.getSelectedVariantValues(containerEl)),
             };
 
             var route = '/sale/create_product_variant';
@@ -314,20 +334,21 @@ var VariantMixin = {
      * match a manually archived product
      *
      * @private
-     * @param {$.Element} $parent the parent container to apply exclusions
+     * @param {Element} parentEl the parent container to apply exclusions
      * @param {Array} combination the selected combination of product attribute values
      */
-    _checkExclusions: function ($parent, combination) {
+    _checkExclusions(parentEl, combination) {
         var self = this;
-        var combinationData = $parent
-            .find('ul[data-attribute_exclusions]')
-            .data('attribute_exclusions');
+        const combinationData = JSON.parse(
+            parentEl.querySelector("ul[data-attribute_exclusions]").dataset.attribute_exclusions
+        );
 
-        $parent
-            .find('option, input, label, .o_variant_pills')
-            .removeClass('css_not_available')
-            .attr('title', function () { return $(this).data('value_name') || ''; })
-            .data('excluded-by', '');
+        const elements = parentEl.querySelectorAll("option, input, label, .o_variant_pills");
+        elements.forEach((el) => {
+            el.classList.remove("css_not_available");
+            el.title = el.dataset.value_name || "";
+            el.dataset.excludedBy = "";
+        });
 
         // exclusion rules: array of ptav
         // for each of them, contains array with the other ptav they exclude
@@ -340,7 +361,7 @@ var VariantMixin = {
                         // disable the excluded input (even when not already selected)
                         // to give a visual feedback before click
                         self._disableInput(
-                            $parent,
+                            parentEl,
                             excluded_ptav,
                             current_ptav,
                             combinationData.mapped_attribute_names
@@ -367,7 +388,7 @@ var VariantMixin = {
                                 return;
                             }
                             self._disableInput(
-                                $parent,
+                                parentEl,
                                 ptav,
                                 ptavOther,
                                 combinationData.mapped_attribute_names,
@@ -386,7 +407,7 @@ var VariantMixin = {
                             return;
                         }
                         self._disableInput(
-                            $parent,
+                            parentEl,
                             disabledPtav,
                             ptav,
                             combinationData.mapped_attribute_names,
@@ -399,10 +420,10 @@ var VariantMixin = {
     /**
      * Extracted to a method to be extendable by other modules
      *
-     * @param {$.Element} $parent
+     * @param {Element} parentEl
      */
-    _getProductId: function ($parent) {
-        return parseInt($parent.find('.product_id').val());
+    _getProductId(parentEl) {
+        return parseInt(parentEl.querySelector(".product_id").value);
     },
     /**
      * Will disable the input/option that refers to the passed attributeValueId.
@@ -413,7 +434,7 @@ var VariantMixin = {
      * e.g: Not available with Color: Black
      *
      * @private
-     * @param {$.Element} $parent
+     * @param {Element} parentEl
      * @param {integer} attributeValueId
      * @param {integer} excludedBy The attribute value that excludes this input
      * @param {Object} attributeNames A dict containing all the names of the attribute values
@@ -422,18 +443,24 @@ var VariantMixin = {
      *   the name of the attribute value that excludes this input
      *   e.g: Not available with Customizable Desk (Color: Black)
      */
-    _disableInput: function ($parent, attributeValueId, excludedBy, attributeNames, productName) {
-        var $input = $parent
-            .find('option[value=' + attributeValueId + '], input[value=' + attributeValueId + ']');
-        $input.addClass('css_not_available');
-        $input.closest('label').addClass('css_not_available');
-        $input.closest('.o_variant_pills').addClass('css_not_available');
+    _disableInput(parentEl, attributeValueId, excludedBy, attributeNames, productName) {
+        const inputEl = parentEl.querySelector(
+            `option[value='${attributeValueId}'], input[value='${attributeValueId}']`
+        );
+        const labelEl = inputEl.closest("label");
+        inputEl.classList.add("css_not_available");
+        labelEl.classList.add("css_not_available");
+        inputEl.closest(".o_variant_pills")?.classList.add("css_not_available");
 
         if (excludedBy && attributeNames) {
-            var $target = $input.is('option') ? $input : $input.closest('label').add($input);
+            const targetEl = inputEl.tagName === "OPTION" ? inputEl : labelEl;
+            if (targetEl === labelEl) {
+                labelEl.querySelector("div")?.prepend(inputEl);
+            }
+
             var excludedByData = [];
-            if ($target.data('excluded-by')) {
-                excludedByData = JSON.parse($target.data('excluded-by'));
+            if (targetEl.dataset.excludedBy) {
+                excludedByData = JSON.parse(targetEl.dataset.excludedBy);
             }
 
             var excludedByName = attributeNames[excludedBy];
@@ -442,8 +469,8 @@ var VariantMixin = {
             }
             excludedByData.push(excludedByName);
 
-            $target.attr('title', _t('Not available with %s', excludedByData.join(', ')));
-            $target.data('excluded-by', JSON.stringify(excludedByData));
+            targetEl.setAttribute("title", _t("Not available with %s", excludedByData.join(", ")));
+            targetEl.dataset.excludedBy = JSON.stringify(excludedByData);
         }
     },
     /**
@@ -451,19 +478,20 @@ var VariantMixin = {
      *
      * @private
      * @param {MouseEvent} ev
-     * @param {$.Element} $parent
+     * @param {Element} parentEl
      * @param {Array} combination
      */
-    _onChangeCombination: function (ev, $parent, combination) {
+    _onChangeCombination(ev, parentEl, combination) {
         const isCombinationPossible = !!combination.is_combination_possible;
-        const $pricePerUom = $parent.find(".o_base_unit_price:first .oe_currency_value");
-        if ($pricePerUom.length) {
+        const pricePerUomEl = parentEl.querySelector(".o_base_unit_price .oe_currency_value");
+        if (pricePerUomEl) {
             if (isCombinationPossible && combination.base_unit_price != 0) {
-                $pricePerUom.parents(".o_base_unit_price_wrapper").removeClass("d-none");
-                $pricePerUom.text(this._priceToStr(combination.base_unit_price));
-                $parent.find(".oe_custom_base_unit:first").text(combination.base_unit_name);
+                pricePerUomEl.closest(".o_base_unit_price_wrapper").classList.remove("d-none");
+                pricePerUomEl.textContent = this._priceToStr(combination.base_unit_price);
+                parentEl.querySelector(".oe_custom_base_unit").textContent =
+                    combination.base_unit_name;
             } else {
-                $pricePerUom.parents(".o_base_unit_price_wrapper").addClass("d-none");
+                pricePerUomEl.closest(".o_base_unit_price_wrapper").classList.add("d-none");
             }
         }
 
@@ -472,50 +500,70 @@ var VariantMixin = {
         // Indeed, every time another variant is selected, a new view_item event
         // needs to be tracked by google analytics.
         if ('product_tracking_info' in combination) {
-            const $product = $('#product_detail');
-            $product.data('product-tracking-info', combination['product_tracking_info']);
-            $product.trigger('view_item_event', combination['product_tracking_info']);
+            const productEl = document.getElementById("product_detail");
+            productEl.dataset.productTrackingInfo = JSON.stringify(
+                combination["product_tracking_info"]
+            );
+            productEl.dispatchEvent(
+                new CustomEvent("view_item_event", { detail: combination["product_tracking_info"] })
+            );
         }
-        const addToCart = $parent.find('#add_to_cart_wrap');
-        const contactUsButton = $parent.find('#contact_us_wrapper');
-        const productPrice = $parent.find('.product_price');
-        const quantity = $parent.find('.css_quantity');
-        const product_unavailable = $parent.find('#product_unavailable');
+        const addToCartEl = parentEl.querySelector("#add_to_cart_wrap");
+        const contactUsButtonEl = parentEl.querySelector("#contact_us_wrapper");
+        const productPriceEl = parentEl.querySelector(".product_price");
+        const quantityEl = parentEl.querySelector(".css_quantity");
+        const product_unavailable = parentEl.querySelector("#product_unavailable");
         if (combination.prevent_zero_price_sale) {
-            productPrice.removeClass('d-inline-block').addClass('d-none');
-            quantity.removeClass('d-inline-flex').addClass('d-none');
-            addToCart.removeClass('d-inline-flex').addClass('d-none');
-            contactUsButton.removeClass('d-none').addClass('d-flex');
-            product_unavailable.removeClass('d-none').addClass('d-flex');
+            productPriceEl.classList.remove("d-inline-block");
+            productPriceEl.classList.add("d-none");
+
+            quantityEl.classList.remove("d-inline-flex");
+            quantityEl.classList.add("d-none");
+
+            addToCartEl.classList.remove("d-inline-flex");
+            addToCartEl.classList.add("d-none");
+
+            contactUsButtonEl?.classList.remove("d-none");
+            contactUsButtonEl?.classList.add("d-flex");
+
+            product_unavailable.classList.remove("d-none");
+            product_unavailable.classList.add("d-flex");
         } else {
-            productPrice.removeClass('d-none').addClass('d-inline-block');
-            quantity.removeClass('d-none').addClass('d-inline-flex');
-            addToCart.removeClass('d-none').addClass('d-inline-flex');
-            contactUsButton.removeClass('d-flex').addClass('d-none');
-            product_unavailable.removeClass('d-flex').addClass('d-none');
+            productPriceEl.classList.remove("d-none");
+            productPriceEl.classList.add("d-inline-block");
+
+            quantityEl.classList.remove("d-none");
+            quantityEl.classList.add("d-inline-flex");
+
+            addToCartEl.classList.remove("d-none");
+            addToCartEl.classList.add("d-inline-flex");
+
+            contactUsButtonEl?.classList.remove("d-flex");
+            contactUsButtonEl?.classList.add("d-none");
+
+            product_unavailable.classList.remove("d-flex");
+            product_unavailable.classList.add("d-none");
         }
 
-        const self = this;
-        const $price = $parent.find(".oe_price:first .oe_currency_value");
-        const $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
-        const $compare_price = $parent.find(".oe_compare_list_price")
-        $price.text(self._priceToStr(combination.price));
-        $default_price.text(self._priceToStr(combination.list_price));
+        var self = this;
+        const price = parentEl.querySelector(".oe_price .oe_currency_value");
+        const default_price = parentEl.querySelector(".oe_default_price .oe_currency_value");
+        const compare_price = parentEl.querySelector(".oe_compare_list_price");
+        price.textContent = self._priceToStr(combination.price);
+        if (default_price) {
+            default_price.textContent = self._priceToStr(combination.list_price);
+        }
 
-        this._toggleDisable($parent, isCombinationPossible);
+        this._toggleDisable(parentEl, isCombinationPossible);
 
-        if (combination.has_discounted_price) {
-            $default_price
-                .closest('.oe_website_sale')
-                .addClass("discount");
-            $default_price.parent().removeClass('d-none');
-            $compare_price.addClass("d-none");
+        if (combination.has_discounted_price && !combination.compare_list_price) {
+            default_price?.closest(".oe_website_sale").classList.add("discount");
+            default_price?.parentElement.classList.remove("d-none");
+            compare_price?.classList.add("d-none");
         } else {
-            $default_price
-                .closest('.oe_website_sale')
-                .removeClass("discount");
-            $default_price.parent().addClass('d-none');
-            $compare_price.removeClass("d-none");
+            default_price?.closest(".oe_website_sale").classList.remove("discount");
+            default_price?.parentElement.classList.add("d-none");
+            compare_price?.classList.remove("d-none");
         }
 
         // update images & tags only when changing product
@@ -525,7 +573,7 @@ var VariantMixin = {
         if (!combination.no_product_change) {
             const rootComponentSelectors = ['tr.js_product', '.oe_website_sale'];
             self._updateProductImage(
-                $parent.closest(rootComponentSelectors.join(', ')),
+                parentEl.closest(rootComponentSelectors.join(", ")),
                 combination.display_image,
                 combination.product_id,
                 combination.product_template_id,
@@ -538,13 +586,13 @@ var VariantMixin = {
                 .html(combination.product_tags);
         }
 
-        $parent
-            .find('.product_id')
-            .first()
-            .val(combination.product_id || 0)
-            .trigger('change');
+        const productIdElement = parentEl.querySelector(".product_id");
+        if (productIdElement) {
+            productIdElement.value = combination.product_id || 0;
+            productIdElement.dispatchEvent(new Event("change", { bubbles: true }));
+        }
 
-        this.handleCustomValues($(ev.target));
+        this.handleCustomValues(ev.target);
     },
 
     /**
@@ -556,23 +604,16 @@ var VariantMixin = {
     _priceToStr: function (price) {
         var precision = 2;
 
-        if ($('.decimal_precision').length) {
-            precision = parseInt($('.decimal_precision').last().data('precision'));
+        const precisionEls = this.el.querySelectorAll(".decimal_precision");
+        const lastElement = precisionEls[precisionEls.length - 1];
+        if (precisionEls.length) {
+            precision = parseInt(lastElement.dataset.precision);
         }
         var formatted = price.toFixed(precision).split(".");
         const { thousandsSep, decimalPoint, grouping } = localization;
         formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
         return formatted.join(decimalPoint);
-    },
     /**
-     * Returns a throttled `_getCombinationInfo` with a leading and a trailing
-     * call, which is memoized per `uniqueId`, and for which previous results
-     * are dropped.
-     *
-     * The uniqueId is needed because on the configurator modal there might be
-     * multiple elements triggering the rpc at the same time, and we need each
-     * individual product rpc to be executed, but only once per individual
-     * product.
      *
      * The leading execution is to keep good reactivity on the first call, for
      * a better user experience. The trailing is because ultimately only the
@@ -592,46 +633,47 @@ var VariantMixin = {
         return (ev, params) => keepLast.add(_getCombinationInfo(ev, params));
     }),
     /**
-     * Toggles the disabled class depending on the $parent element
+     * Toggles the disabled class depending on the parent element
      * and the possibility of the current combination.
      *
      * @private
-     * @param {$.Element} $parent
+     * @param {Element} parentEl
      * @param {boolean} isCombinationPossible
      */
-    _toggleDisable: function ($parent, isCombinationPossible) {
-        $parent.toggleClass('css_not_available', !isCombinationPossible);
+    _toggleDisable(parentEl, isCombinationPossible) {
+        parentEl?.classList.toggle("css_not_available", !isCombinationPossible);
     },
     /**
      * Updates the product image.
      * This will use the productId if available or will fallback to the productTemplateId.
      *
      * @private
-     * @param {$.Element} $productContainer
+     * @param {Element} productContainer
      * @param {boolean} displayImage will hide the image if true. It will use the 'invisible' class
      *   instead of d-none to prevent layout change
      * @param {integer} product_id
      * @param {integer} productTemplateId
      */
-    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId) {
-        var model = productId ? 'product.product' : 'product.template';
-        var modelId = productId || productTemplateId;
-        var imageUrl = '/web/image/{0}/{1}/' + (this._productImageField ? this._productImageField : 'image_1024');
-        var imageSrc = imageUrl
-            .replace("{0}", model)
-            .replace("{1}", modelId);
+    _updateProductImage(productContainerEl, displayImage, productId, productTemplateId) {
+        const model = productId ? "product.product" : "product.template";
+        const modelId = productId || productTemplateId;
+        const imageUrl =
+            "/web/image/{0}/{1}/" +
+            (this._productImageField ? this._productImageField : "image_1024");
+        const imageSrc = imageUrl.replace("{0}", model).replace("{1}", modelId);
 
         var imagesSelectors = [
-            'span[data-oe-model^="product."][data-oe-type="image"] img:first',
+            'span[data-oe-model^="product."][data-oe-type="image"] img:first-child',
             'img.product_detail_img',
         ];
 
-        var $img = $productContainer.find(imagesSelectors.join(', '));
+        const imgEl = productContainerEl.querySelector(imagesSelectors.join(", "));
 
         if (displayImage) {
-            $img.removeClass('invisible').attr('src', imageSrc);
+            imgEl.classList.remove("invisible");
+            imgEl.setAttribute("src", imageSrc);
         } else {
-            $img.addClass('invisible');
+            imgEl.classList.add("invisible");
         }
     },
 
@@ -642,21 +684,27 @@ var VariantMixin = {
      * @param {MouseEvent} ev
      */
     _onChangeColorAttribute: function (ev) {
-        var $parent = $(ev.target).closest('.js_product');
-        $parent.find('.css_attribute_color')
-            .removeClass("active")
-            .filter(':has(input:checked)')
-            .addClass("active");
+        const parentEl = ev.target.closest(".js_product");
+        const colorElements = parentEl.querySelectorAll(".css_attribute_color");
+        colorElements.forEach((el) => {
+            el.classList.remove("active");
+            if (el.querySelector("input:checked")) {
+                el.classList.add("active");
+            }
+        });
     },
 
     _onChangePillsAttribute: function (ev) {
-        const radio = ev.target.closest('.o_variant_pills').querySelector("input");
-        radio.click();  // Trigger onChangeVariant.
-        var $parent = $(ev.target).closest('.js_product');
-        $parent.find('.o_variant_pills')
-            .removeClass("active")
-            .filter(':has(input:checked)')
-            .addClass("active");
+        const radio = ev.target.closest(".o_variant_pills").querySelector("input");
+        radio.click(); // Trigger onChangeVariant.
+        const parentEl = ev.target.closest(".js_product");
+        const variantPillEls = parentEl.querySelectorAll(".o_variant_pills");
+        variantPillEls.forEach((el) => {
+            el.classList.remove("active");
+            if (el.querySelector("input:checked")) {
+                el.classList.add("active");
+            }
+        });
     },
 
     /**

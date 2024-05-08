@@ -57,7 +57,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         });
         // We trigger a resize to launch the event that checks if this element hides
         // a button when the page is loaded.
-        $(window).trigger('resize');
+        window.dispatchEvent(new Event("resize"));
 
         $(document.body).on('click.product_comparaison_widget', '.comparator-popover .o_comparelist_products .o_remove', function (ev) {
             ev.preventDefault();

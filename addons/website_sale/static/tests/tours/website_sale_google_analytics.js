@@ -6,10 +6,12 @@ odoo.loader.bus.addEventListener("module-started", (e) => {
         //import websiteSaleTracking from "@website_sale/js/website_sale_tracking";
         e.detail.module[Symbol.for("default")].include({
             // Purposely don't call super to avoid call to third party (GA) during tests
-            _onViewItem(event, data) {
+            _onViewItem(event) {
+                const data = event.detail;
                 document.body.setAttribute("view-event-id", data.item_id);
             },
-            _onAddToCart(event, data) {
+            _onAddToCart(event) {
+                const data = event.detail;
                 document.body.setAttribute("cart-event-id", data.item_id);
             },
         });

@@ -129,7 +129,10 @@ WebsiteSale.include({
         }
         // Reload the product page after adding items to the cart. This is needed, for
         // example, to update the available stock.
-        this._getCombinationInfo($.Event('click', { target: $('#add_to_cart') }));
+        const event = new Event("click");
+        const targetEl = document.querySelector("#add_to_cart");
+        targetEl?.dispatchEvent(event);
+        this._getCombinationInfo(event);
     },
 
     /**
@@ -204,7 +207,9 @@ WebsiteSale.include({
             });
         }
         if (productsTrackingInfo.length) {
-            this.$el.trigger('add_to_cart_event', productsTrackingInfo);
+            this.el.dispatchEvent(
+                new CustomEvent("add_to_cart_event", { detail: productsTrackingInfo })
+            );
         }
     },
 });
