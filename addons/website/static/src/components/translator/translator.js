@@ -237,9 +237,9 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         const toTranslateColor = window.getComputedStyle(document.documentElement).getPropertyValue('--o-we-content-to-translate-color');
         const translatedColor = window.getComputedStyle(document.documentElement).getPropertyValue('--o-we-translated-content-color');
 
-        styleEl.sheet.insertRule(`[data-oe-translation-state].o_dirty:not(img) {background: ${translatedColor} !important;}`);
-        styleEl.sheet.insertRule(`[data-oe-translation-state="translated"]:not(img) {background: ${translatedColor} !important;}`);
-        styleEl.sheet.insertRule(`[data-oe-translation-state]:not(img) {background: ${toTranslateColor} !important;}`);
+        styleEl.sheet.insertRule(`[data-oe-translation-state].o_dirty:not(img) {background-color: ${translatedColor} !important;}`);
+        styleEl.sheet.insertRule(`[data-oe-translation-state="translated"]:not(img) {background-color: ${translatedColor} !important;}`);
+        styleEl.sheet.insertRule(`[data-oe-translation-state]:not(img) {background-color: ${toTranslateColor} !important;}`);
 
         styleEl.sheet.insertRule(`[data-oe-translation-state].o_dirty:where(img, .media_iframe_video) {border: 5px solid ${translatedColor} !important;}`);
         styleEl.sheet.insertRule(`[data-oe-translation-state="translated"]:where(img, .media_iframe_video) {border: 5px solid ${translatedColor} !important;}`);
