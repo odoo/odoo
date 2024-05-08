@@ -780,8 +780,8 @@ class Evaluacion(models.Model):
 
         datos["nombre"] = self.obtener_dato(usuario.name)
         datos["genero"] = self.obtener_dato(usuario.gender)
-        datos["anio_nacimiento"] = self.obtener_dato(usuario.birthday.year)
         datos["puesto"] = self.obtener_dato(usuario.job_id.name)
+        datos["anio_nacimiento"] = usuario.birthday.year if usuario.birthday else "N/A"
         datos["departamento"] = self.obtener_dato(usuario.department_id.name)
 
         # Falta
