@@ -364,9 +364,8 @@ class Evaluacion(models.Model):
 
         :return: Sobreescribe la asignación de usuarios si hubo cambio en ellos.
         """
-        result = super(Evaluacion, self).write(vals)
+        resultado = super(Evaluacion, self).write(vals)
         if 'usuario_ids' in vals or self.usuario_ids:
             self.action_enviar_evaluacion()
-        return result
+        return resultado
         
-
