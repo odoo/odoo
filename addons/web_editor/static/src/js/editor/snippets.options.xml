@@ -14,6 +14,12 @@
         <WeButton selectClass="'test_class_4'">Test Class 4</WeButton>
         <WeButton selectClass="'test_class_5'">Test Class 5</WeButton>
     </WeSelect>
+    <WeButtonGroup>
+        <t t-set-slot="title">Test Button Group</t>
+        <WeButton selectClass="'test_class_6'">6</WeButton>
+        <WeButton selectClass="'test_class_7'">7</WeButton>
+        <WeButton selectClass="'test_class_8'">8</WeButton>
+    </WeButtonGroup>
 </t>
 
 <t t-name="web_editor.WeButton">
@@ -47,5 +53,17 @@
             <span class="o_we_dropdown_caret"/>
         </div>
     </we-select>
+</t>
+<t t-name="web_editor.WeButtonGroup">
+        <we-button-group class="o_we_user_value_widget" t-att-class="getAllClasses()">
+        <we-title t-if="props.slots.title">
+            <t t-slot="title"/>
+        </we-title>
+        <div>
+            <we-selection-items>
+                <t t-slot="default"/>
+            </we-selection-items>
+        </div>
+    </we-button-group>
 </t>
 </templates>
