@@ -472,14 +472,12 @@ class Contains {
                 el.dispatchEvent(new window.KeyboardEvent("keydown", { key: "Backspace" }));
                 el.dispatchEvent(new window.KeyboardEvent("keyup", { key: "Backspace" }));
                 el.dispatchEvent(new window.InputEvent("input"));
-                el.dispatchEvent(new window.InputEvent("change"));
             }
             for (const char of this.options.insertText.content) {
                 el.value += char;
                 el.dispatchEvent(new window.KeyboardEvent("keydown", { key: char }));
                 el.dispatchEvent(new window.KeyboardEvent("keyup", { key: char }));
                 el.dispatchEvent(new window.InputEvent("input"));
-                el.dispatchEvent(new window.InputEvent("change"));
             }
         }
         if (this.options.pasteFiles) {
