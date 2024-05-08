@@ -428,7 +428,7 @@ class MailActivity(models.Model):
     def action_done(self):
         """ Wrapper without feedback because web button add context as
         parameter, therefore setting context to feedback """
-        return self.action_feedback()
+        return self.filtered(lambda r: r.active).action_feedback()
 
     def action_done_redirect_to_other(self):
         """ Mark activity as done and return action mail.mail_activity_without_access_action.
@@ -581,7 +581,13 @@ class MailActivity(models.Model):
     def action_snooze(self):
         today = date.today()
         for activity in self:
-            activity.date_deadline = max(activity.date_deadline, today) + timedelta(days=7)
+            if activity.active:
+                activity.date_deadline = max(activity.date_deadline, today) + timedelta(days=7)
+
+    def action_cancel(self):
+        for activity in self:
+            if activity.active:
+                activity.unlink()
 
     def activity_format(self):
         return Store(self).get_result()
