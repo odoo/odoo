@@ -230,7 +230,7 @@ class PosSession(models.Model):
                 'fields': ['id', 'name', 'display_name', 'discount_policy', 'item_ids']
             },
             'product.pricelist.item' : {
-                'domain': [('pricelist_id', 'in', config_id.available_pricelist_ids.ids)] if config_id.use_pricelist else [('pricelist_id', '=', config_id.pricelist_id.id)],
+                'domain': [("id", "=", False)],  # load pricelist items after loading the products
                 'fields': ['product_tmpl_id', 'product_id', 'pricelist_id', 'price_surcharge', 'price_discount', 'price_round',
                     'price_min_margin', 'price_max_margin', 'company_id', 'currency_id', 'date_start', 'date_end', 'compute_price',
                     'fixed_price', 'percent_price', 'base_pricelist_id', 'base', 'categ_id', 'min_quantity']
@@ -268,7 +268,7 @@ class PosSession(models.Model):
         return params
 
     def load_data(self, models_to_load, only_data=False):
-        params = self._load_data_params(self.config_id)
+        load_params = self._load_data_params(self.config_id)
         response = {}
         response['data'] = {}
         response['relations'] = {}
@@ -287,7 +287,7 @@ class PosSession(models.Model):
             }
 
             # Taxes.
-            taxes = self.env['account.tax'].search(params['account.tax']['domain'])
+            taxes = self.env['account.tax'].search(load_params['account.tax']['domain'])
             self._load_account_tax(response, taxes)
 
             product_fields = taxes._eval_taxes_computation_prepare_product_fields(
@@ -296,18 +296,18 @@ class PosSession(models.Model):
             response['custom']['product_default_values'] = taxes._eval_taxes_computation_prepare_product_default_values(
                 product_fields,
             )
-            session_product_fields = set(params['product.product']['fields'])
+            session_product_fields = set(load_params['product.product']['fields'])
             session_product_fields.update(product_fields)
-            params['product.product']['fields'] = list(session_product_fields)
+            load_params['product.product']['fields'] = list(session_product_fields)
 
             # Fiscal positions.
-            fiscal_positions = self.env['account.fiscal.position'].search(params['account.fiscal.position']['domain'])
+            fiscal_positions = self.env['account.fiscal.position'].search(load_params['account.fiscal.position']['domain'])
             self._load_account_fiscal_position(response, fiscal_positions)
 
         if len(models_to_load) > 0:
-            fields_to_load = [(name, params[name]) for name in models_to_load]
+            fields_to_load = [(name, load_params[name]) for name in models_to_load]
         else:
-            fields_to_load = [(name, data) for name, data in params.items()]
+            fields_to_load = list(load_params.items())
 
         # Custom loading.
         for key, value in fields_to_load:
@@ -324,8 +324,8 @@ class PosSession(models.Model):
         response['fields'] = {name: data['fields'] for name, data in fields_to_load}
 
         # Load data from search_read
-        if len(params) > 0:
-            for key, value in params.items():
+        if len(load_params) > 0:
+            for key, value in load_params.items():
 
                 if not key in models_to_load and len(models_to_load) > 0:
                     continue
@@ -390,6 +390,9 @@ class PosSession(models.Model):
                     response['data']['account.tax']
                 )
 
+            if len(models_to_load) == 0 or 'product.pricelist.item' in models_to_load:
+                self._load_product_pricelist_item_data(response['data'], load_params['product.pricelist.item']['fields'])
+
         return response
 
     def _load_account_fiscal_position(self, response, fiscal_positions):
@@ -409,15 +412,18 @@ class PosSession(models.Model):
     def _load_account_tax(self, response, taxes):
         response['custom']['account.tax'] = {values['id']: values for values in taxes._convert_to_dict_for_taxes_computation()}
 
-    def _prepare_pricelist_domain(self, data):
+    def _load_product_pricelist_item_data(self, data, fields):
         product_tmpl_ids = [p['product_tmpl_id'] for p in data['product.product']]
         product_ids = [p['id'] for p in data['product.product']]
+        pricelist_ids = [p['id'] for p in data['product.pricelist']]
 
-        return [
-            ('pricelist_id', 'in', [p['id'] for p in data['product.pricelist']]),
+        domain = [
+            ('pricelist_id', 'in', pricelist_ids),
             '|', ('product_tmpl_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
             '|', ('product_id', '=', False), ('product_id', 'in', product_ids),
         ]
+
+        data['product.pricelist.item'] = self.env['product.pricelist.item'].search_read(domain, fields, load=False)
 
     @api.depends('currency_id', 'company_id.currency_id')
     def _compute_is_in_company_currency(self):
