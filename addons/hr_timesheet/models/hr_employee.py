@@ -65,6 +65,5 @@ class HrEmployee(models.Model):
         action = self.env["ir.actions.act_window"]._for_xml_id("hr_timesheet.timesheet_action_from_employee")
         context = literal_eval(action['context'].replace('active_id', str(self.id)))
         context['create'] = context.get('create', True) and self.active
-        context['grid_range'] = "week"
         action['context'] = context
         return action

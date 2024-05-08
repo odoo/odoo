@@ -172,7 +172,6 @@
         <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
         <field name="domain">[('project_id', '!=', False), ('so_line', '=', active_id)]</field>
         <field name="context">{
-            'grid_range': 'week',
             'search_default_billable_timesheet': True,
             'search_default_week': 1,
             'default_so_line': active_id,
