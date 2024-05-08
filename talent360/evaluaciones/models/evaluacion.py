@@ -345,13 +345,15 @@ class Evaluacion(models.Model):
             "evaluacion": self,
             "pregunta": self.pregunta_ids,
         }
-    
+
     def action_enviar_evaluacion(self):
         usuarios = []
 
         for usuario in self.usuario_ids:
             usuarios.append(usuario.partner_id.name)
-        self.env['usuario.evaluacion.rel'].action_enviar_evaluacion(evaluacion_id=self.id)
+        self.env["usuario.evaluacion.rel"].action_enviar_evaluacion(
+            evaluacion_id=self.id
+        )
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
@@ -362,7 +364,6 @@ class Evaluacion(models.Model):
                 "sticky": False,
             },
         }
-        
 
     def action_get_evaluaciones(self, evaluacion_id):
         """
@@ -378,13 +379,15 @@ class Evaluacion(models.Model):
             "evaluacion": self,
             "pregunta": self.pregunta_ids,
         }
-    
+
     def action_enviar_evaluacion(self):
         usuarios = []
 
         for usuario in self.usuario_ids:
             usuarios.append(usuario.partner_id.name)
-        self.env['usuario.evaluacion.rel'].action_enviar_evaluacion(evaluacion_id=self.id)
+        self.env["usuario.evaluacion.rel"].action_enviar_evaluacion(
+            evaluacion_id=self.id
+        )
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
@@ -395,8 +398,6 @@ class Evaluacion(models.Model):
                 "sticky": False,
             },
         }
-        
-
 
     def action_generar_datos_reporte_NOM_035(self):
         """
@@ -493,7 +494,7 @@ class Evaluacion(models.Model):
         }
 
         return parametros
-    
+
     def action_generar_datos_reporte_clima(self):
         # Categorías para el reporte de clima laboral
         categorias_clima = [
@@ -509,23 +510,40 @@ class Evaluacion(models.Model):
         ]
 
         # Estructura de datos para las categorías
-        detalles_categorias = [{
-            "nombre": cat,
-            "valor": 0,
-            "puntuacion": 0,
-            "puntuacion_maxima": 0,
-            "departamentos": []
-        } for cat in categorias_clima]
+        detalles_categorias = [
+            {
+                "nombre": cat,
+                "valor": 0,
+                "puntuacion": 0,
+                "puntuacion_maxima": 0,
+                "departamentos": [],
+            }
+            for cat in categorias_clima
+        ]
 
         # Variables para acumular totales
         total_puntuacion = 0
         total_maximo_posible = 0
 
         for pregunta in self.pregunta_ids:
-            if not pregunta.categoria or dict(pregunta._fields["categoria"].selection).get(pregunta.categoria) not in categorias_clima:
+            if (
+                not pregunta.categoria
+                or dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
+                not in categorias_clima
+            ):
                 continue
 
-            categoria_actual = next((cat for cat in detalles_categorias if cat["nombre"] == dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)), None)
+            categoria_actual = next(
+                (
+                    cat
+                    for cat in detalles_categorias
+                    if cat["nombre"]
+                    == dict(pregunta._fields["categoria"].selection).get(
+                        pregunta.categoria
+                    )
+                ),
+                None,
+            )
 
             if categoria_actual is None:
                 continue
@@ -536,10 +554,19 @@ class Evaluacion(models.Model):
             for respuesta in pregunta.respuesta_ids:
                 valor_respuesta = int(respuesta.respuesta_texto)
                 valor_pregunta += valor_respuesta
-                maximo_pregunta += 4  # Suponiendo un máximo de 4 para cada respuesta en escala
+                maximo_pregunta += (
+                    4  # Suponiendo un máximo de 4 para cada respuesta en escala
+                )
 
                 nombre_departamento = respuesta.usuario_id.department_id.name
-                departamento = next((dept for dept in categoria_actual['departamentos'] if dept["nombre"] == nombre_departamento), None)
+                departamento = next(
+                    (
+                        dept
+                        for dept in categoria_actual["departamentos"]
+                        if dept["nombre"] == nombre_departamento
+                    ),
+                    None,
+                )
                 if departamento is None:
                     departamento = {
                         "nombre": nombre_departamento,
@@ -558,9 +585,29 @@ class Evaluacion(models.Model):
 
         for categoria in detalles_categorias:
             if categoria["puntuacion_maxima"] > 0:
-                categoria["valor"] = (categoria["puntuacion"] / categoria["puntuacion_maxima"]) * 100
+                categoria["valor"] = (
+                    categoria["puntuacion"] / categoria["puntuacion_maxima"]
+                ) * 100
 
-        total_porcentaje = (total_puntuacion / total_maximo_posible) * 100 if total_maximo_posible > 0 else 0
+        total_porcentaje = (
+            (total_puntuacion / total_maximo_posible) * 100
+            if total_maximo_posible > 0
+            else 0
+        )
+
+        # Datos demograficos
+        datos_demograficos = []
+
+        for usuario in self.usuario_ids:
+            usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
+                [("usuario_id", "=", usuario.id), ("evaluacion_id", "=", self.id)]
+            )
+
+            if (
+                usuario_evaluacion_rel
+                and usuario_evaluacion_rel[0].contestada == "contestada"
+            ):
+                datos_demograficos.append(self.obtener_datos_demograficos(usuario))
 
         # Parámetros para el template
         parametros = {
@@ -569,8 +616,9 @@ class Evaluacion(models.Model):
             "total": total_puntuacion,
             "total_maximo": total_maximo_posible,
             "total_porcentaje": total_porcentaje,
+            "datos_demograficos": datos_demograficos,
         }
-        
+
         print(parametros)
         return parametros
 
