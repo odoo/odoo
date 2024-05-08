@@ -385,6 +385,10 @@
                     @include o-position-absolute(8px, 6px, auto, auto);
                 }
 
+                &.o_disabled {
+                    pointer-events: initial;
+                }
+
                 &.o_snippet_install {
                     .btn.o_install_btn {
                         @include o-position-absolute($top: 10px);
@@ -396,6 +400,7 @@
                 }
 
                 &.o_disabled, &.o_snippet_install {
+                    cursor: default;
                     background-color: rgba($o-we-sidebar-blocks-content-snippet-bg, .2);
 
                     .oe_snippet_thumbnail_img {
