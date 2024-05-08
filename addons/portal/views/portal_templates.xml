@@ -825,24 +825,26 @@
                 </div>
             </div>
             <div class="o_portal_my_details">
-                <span>Hello world !!!!</span>
                 <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address"]}'/>
             </div>
-                <span>.......................</span>
             <a role="button" href="/my/account" class="btn btn-link p-0 mt-3"><i class="fa fa-pencil"/> Edit information</a>
-                <span>.......................</span>
             <hr t-if="sales_user"/>
             <div class="o_my_contact" t-if="sales_user">
-                <span>.......................</span>
                 <t t-call="portal.portal_contact"/>
             </div>
             <div>
-            <span>reward_test_ids</span>
-            <t t-out="reward_test_ids"/>
-            <t t-esc="reward_test_ids"/>
-            <t t-foreach="reward_ids" t-as="data">
-                <span>E-Wallet</span>
-                <t t-out="data.description"/>
+            <t t-foreach="reward_ids" t-as="reward">
+                <br/>
+                <t t-foreach="reward.program_id.coupon_ids" t-as="coupon">
+                    <span>Name:</span>
+                    <t t-out="reward.description"/>
+                    <span>| coupon Name:</span>
+                    <t t-out="coupon.description"/>
+                    <span>points:</span>
+                    <t t-out="coupon.points"/>
+                    <t t-out="coupon.point_name"/>
+                <!-- <t t-out="reward.program_id.coupon_ids[0].name"/> -->
+                </t>
             </t>
             </div>
         </div>
