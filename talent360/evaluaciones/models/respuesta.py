@@ -13,7 +13,9 @@ class Respuesta(models.Model):
     token = fields.Char(string="Token")
     opcion_id = fields.Many2one("opcion", string="Opción")
 
-    def action_guardar_respuesta(self, radios, texto, evaluacion_id, usuario_id, pregunta_id, token, scale=False):
+    def action_guardar_respuesta(
+        self, radios, texto, evaluacion_id, usuario_id, pregunta_id, token, scale=False
+    ):
         """Método para guardar la respuesta de una pregunta.
         Este método se encarga de guardar la respuesta de una pregunta en la base de datos.
         """
@@ -22,52 +24,64 @@ class Respuesta(models.Model):
 
         if usuario_id:
             if scale:
-                resp = self.env["respuesta"].create({
-                    "evaluacion_id": evaluacion_id,
-                    "usuario_id": usuario_id,
-                    "pregunta_id": pregunta_id,
-                    "respuesta_texto": radios
-                })
+                resp = self.env["respuesta"].create(
+                    {
+                        "evaluacion_id": evaluacion_id,
+                        "usuario_id": usuario_id,
+                        "pregunta_id": pregunta_id,
+                        "respuesta_texto": radios,
+                    }
+                )
 
             elif texto:
-                resp = self.env["respuesta"].create({
-                    "evaluacion_id": evaluacion_id,
-                    "usuario_id": usuario_id,
-                    "pregunta_id": pregunta_id,
-                    "respuesta_texto": texto
-                })
+                resp = self.env["respuesta"].create(
+                    {
+                        "evaluacion_id": evaluacion_id,
+                        "usuario_id": usuario_id,
+                        "pregunta_id": pregunta_id,
+                        "respuesta_texto": texto,
+                    }
+                )
 
             elif radios:
-                resp = self.env["respuesta"].create({
-                    "evaluacion_id": evaluacion_id,
-                    "usuario_id": usuario_id,
-                    "pregunta_id": pregunta_id,
-                    "opcion_id": radios
-                })
+                resp = self.env["respuesta"].create(
+                    {
+                        "evaluacion_id": evaluacion_id,
+                        "usuario_id": usuario_id,
+                        "pregunta_id": pregunta_id,
+                        "opcion_id": radios,
+                    }
+                )
 
         else:
             if scale:
-                resp = self.env["respuesta"].create({
-                    "evaluacion_id": evaluacion_id,
-                    "token": token,
-                    "pregunta_id": pregunta_id,
-                    "respuesta_texto": radios
-                })
+                resp = self.env["respuesta"].create(
+                    {
+                        "evaluacion_id": evaluacion_id,
+                        "token": token,
+                        "pregunta_id": pregunta_id,
+                        "respuesta_texto": radios,
+                    }
+                )
 
             elif texto:
-                resp = self.env["respuesta"].create({
-                    "evaluacion_id": evaluacion_id,
-                    "token": token,
-                    "pregunta_id": pregunta_id,
-                    "respuesta_texto": texto
-                })
+                resp = self.env["respuesta"].create(
+                    {
+                        "evaluacion_id": evaluacion_id,
+                        "token": token,
+                        "pregunta_id": pregunta_id,
+                        "respuesta_texto": texto,
+                    }
+                )
 
             elif radios:
-                resp = self.env["respuesta"].create({
-                    "evaluacion_id": evaluacion_id,
-                    "token": token,
-                    "pregunta_id": pregunta_id,
-                    "opcion_id": radios
-                })
-            
+                resp = self.env["respuesta"].create(
+                    {
+                        "evaluacion_id": evaluacion_id,
+                        "token": token,
+                        "pregunta_id": pregunta_id,
+                        "opcion_id": radios,
+                    }
+                )
+
         return resp

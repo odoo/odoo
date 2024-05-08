@@ -2,7 +2,6 @@ from odoo import api, models, fields
 from collections import defaultdict
 
 
-
 class Evaluacion(models.Model):
     """
     Modelo para representar una evaluación de personal en Odoo.
@@ -68,7 +67,6 @@ class Evaluacion(models.Model):
     fecha_inicio = fields.Date()
     fecha_final = fields.Date()
 
-    
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
         """
@@ -362,7 +360,9 @@ class Evaluacion(models.Model):
         for pregunta in self.pregunta_ids:
             if not pregunta.categoria:
                 continue
-            categoria = dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
+            categoria = dict(pregunta._fields["categoria"].selection).get(
+                pregunta.categoria
+            )
             dominio = dict(pregunta._fields["dominio"].selection).get(pregunta.dominio)
             valor_pregunta = 0
 
@@ -380,7 +380,7 @@ class Evaluacion(models.Model):
                 dominios[dominio] += valor_pregunta
 
         # Función para asignar color
- 
+
         # Asignar color a las categorías y dominios
         for categoria in categorias_orden:
             categorias[categoria] = {
@@ -404,7 +404,10 @@ class Evaluacion(models.Model):
                 [("usuario_id", "=", usuario.id), ("evaluacion_id", "=", self.id)]
             )
 
-            if usuario_evaluacion_rel and usuario_evaluacion_rel[0].contestada == "contestada":
+            if (
+                usuario_evaluacion_rel
+                and usuario_evaluacion_rel[0].contestada == "contestada"
+            ):
                 participantes.append(usuario)
 
         datos_demograficos = []
@@ -421,9 +424,7 @@ class Evaluacion(models.Model):
             "final": final,
         }
 
-
         return parametros
-
 
     def asignar_color(self, valor, categoria=None, dominio=None):
         if categoria:
@@ -572,8 +573,6 @@ class Evaluacion(models.Model):
             else:
                 return "#ff4747"  # Rojo
 
-
-
     def obtener_dato(self, dato):
         if not dato:
             return "N/A"
@@ -595,7 +594,7 @@ class Evaluacion(models.Model):
         # Jefatura
         # Fecha de ingreso
         # Ubicación/Region
-        
+
         return datos
 
     def action_get_evaluaciones(self, evaluacion_id):
@@ -612,13 +611,15 @@ class Evaluacion(models.Model):
             "evaluacion": self,
             "pregunta": self.pregunta_ids,
         }
-    
+
     def action_enviar_evaluacion(self):
         usuarios = []
 
         for usuario in self.usuario_ids:
             usuarios.append(usuario.partner_id.name)
-        self.env['usuario.evaluacion.rel'].action_enviar_evaluacion(evaluacion_id=self.id)
+        self.env["usuario.evaluacion.rel"].action_enviar_evaluacion(
+            evaluacion_id=self.id
+        )
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
@@ -629,6 +630,3 @@ class Evaluacion(models.Model):
                 "sticky": False,
             },
         }
-        
-
-       
