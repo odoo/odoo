@@ -1,4 +1,5 @@
 from odoo import api, models, fields
+from collections import defaultdict
 
 
 class Evaluacion(models.Model):
@@ -66,7 +67,6 @@ class Evaluacion(models.Model):
     fecha_inicio = fields.Date()
     fecha_final = fields.Date()
 
-    
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
         """
@@ -325,6 +325,339 @@ class Evaluacion(models.Model):
 
         return parametros
 
+    def generar_datos_reporte_NOM_035_action(self):
+        """
+        Genera los datos necesarios para el reporte genérico de la evaluación.
+
+        Esta función genera los parámetros requeridos para generar un reporte genérico de la evaluación actual,
+        incluyendo las preguntas y las respuestas tabuladas, agrupadas por categoría y dominio.
+
+        :return: Los parámetros necesarios para generar el reporte.
+        """
+        # Definir estructura de categorías y dominios
+        categorias_orden = [
+            "Ambiente de Trabajo",
+            "Factores propios de la actividad",
+            "Organización del tiempo de trabajo",
+            "Liderazgo y relaciones en el trabajo",
+        ]
+        dominios_orden = [
+            "Condiciones en el ambiente de trabajo",
+            "Carga de trabajo",
+            "Falta de control sobre el trabajo",
+            "Jornada de trabajo",
+            "Interferencia en la relación trabajo-familia",
+            "Liderazgo",
+            "Relaciones en el trabajo",
+            "Violencia",
+        ]
+
+        categorias = {nombre: 0 for nombre in categorias_orden}
+        dominios = {nombre: 0 for nombre in dominios_orden}
+
+        final = 0
+
+        for pregunta in self.pregunta_ids:
+            if not pregunta.categoria:
+                continue
+            categoria = dict(pregunta._fields["categoria"].selection).get(
+                pregunta.categoria
+            )
+            dominio = dict(pregunta._fields["dominio"].selection).get(pregunta.dominio)
+            valor_pregunta = 0
+
+            for respuesta in pregunta.respuesta_ids:
+                if respuesta.evaluacion_id.id != self.id:
+                    continue
+                valor_respuesta = int(respuesta.respuesta_texto)
+                valor_pregunta += valor_respuesta
+                final += valor_respuesta
+
+            # Acumular el valor de la pregunta en la categoría y el dominio correspondientes
+            if categoria in categorias:
+                categorias[categoria] += valor_pregunta
+            if dominio in dominios:
+                dominios[dominio] += valor_pregunta
+
+        # Función para asignar color
+
+        # Asignar color a las categorías y dominios
+        for categoria in categorias_orden:
+            categorias[categoria] = {
+                "nombre": categoria,
+                "valor": categorias[categoria],
+                "color": self.asignar_color(categorias[categoria], categoria=categoria),
+            }
+
+        for dominio in dominios_orden:
+            dominios[dominio] = {
+                "nombre": dominio,
+                "valor": dominios[dominio],
+                "color": self.asignar_color(dominios[dominio], dominio=dominio),
+            }
+
+        # Datos demograficos
+        datos_demograficos = []
+
+        for usuario in self.usuario_ids:
+            usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
+                [("usuario_id", "=", usuario.id), ("evaluacion_id", "=", self.id)]
+            )
+
+            if (
+                usuario_evaluacion_rel
+                and usuario_evaluacion_rel[0].contestada == "contestada"
+            ):
+                datos_demograficos.append(self.obtener_datos_demograficos(usuario))
+                
+        departamentos = defaultdict(int)
+        for dato in datos_demograficos:
+            departamentos[dato["departamento"]] += 1
+
+        generaciones = defaultdict(int)
+        for dato in datos_demograficos:
+            generaciones[dato["generacion"]] += 1
+            
+        puestos = defaultdict(int)
+        for dato in datos_demograficos:
+            puestos[dato["puesto"]] += 1
+
+        generos = defaultdict(int)
+        for dato in datos_demograficos:
+            dato["genero"] = dato["genero"].capitalize()
+            generos[dato["genero"]] += 1
+
+        # Organizar los parámetros en el orden deseado
+        parametros = {
+            "evaluacion": self,
+            "categorias": [categorias[nombre] for nombre in categorias_orden],
+            "dominios": [dominios[nombre] for nombre in dominios_orden],
+            "departamentos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in departamentos.items()],
+            "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
+            "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
+            "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],
+            "final": final,
+        }
+
+        return parametros
+
+    def asignar_color(self, valor, categoria=None, dominio=None):
+        """
+        Asigna un color a un valor numérico.
+        
+        Este método asigna un color a un valor numérico basado en una escala predefinida.
+        
+        :param valor: El valor numérico al que se le asignará un color.
+        :param categoria: La categoría de la pregunta.
+        :param dominio: El dominio de la pregunta.
+        
+        :return: El color asignado al valor.
+        """
+        
+        if categoria:
+            if categoria == "Ambiente de Trabajo":
+                if valor < 3:
+                    return "#2894a7"  # Azul clarito
+                elif 3 <= valor < 5:
+                    return "#5aaf2b"  # Verde
+                elif 5 <= valor < 7:
+                    return "#ebae14"  # Amarillo
+                elif 7 <= valor < 9:
+                    return "#ffa446"  # Naranja
+                else:
+                    return "#ff4747"  # Rojo
+            elif categoria == "Factores propios de la actividad":
+                if valor < 10:
+                    return "#2894a7"  # Azul clarito
+                elif 10 <= valor < 20:
+                    return "#5aaf2b"  # Verde
+                elif 20 <= valor < 30:
+                    return "#ebae14"  # Amarillo
+                elif 30 <= valor < 40:
+                    return "#ffa446"  # Naranja
+                else:
+                    return "#ff4747"  # Rojo
+            elif categoria == "Organización del tiempo de trabajo":
+                if valor < 4:
+                    return "#2894a7"  # Azul clarito
+                elif 4 <= valor < 6:
+                    return "#5aaf2b"  # Verde
+                elif 6 <= valor < 9:
+                    return "#ebae14"  # Amarillo
+                elif 9 <= valor < 12:
+                    return "#ffa446"  # Naranja
+                else:
+                    return "#ff4747"  # Rojo
+            elif categoria == "Liderazgo y relaciones en el trabajo":
+                if valor < 10:
+                    return "#2894a7"  # Azul clarito
+                elif 10 <= valor < 18:
+                    return "#5aaf2b"  # Verde
+                elif 18 <= valor < 28:
+                    return "#ebae14"  # Amarillo
+                elif 28 <= valor < 38:
+                    return "#ffa446"  # Naranja
+                else:
+                    return "#ff4747"  # Rojo
+        elif dominio:
+            if dominio == "Condiciones en el ambiente de trabajo":
+                if valor < 3:
+                    return "#2894a7"  # Azul clarito
+                elif 3 <= valor < 5:
+                    return "#5aaf2b"  # Verde
+                elif 5 <= valor < 7:
+                    return "#ebae14"  # Amarillo
+                elif 7 <= valor < 9:
+                    return "#ffa446"  # Naranja
+                else:
+                    return "#ff4747"  # Rojo
+            elif dominio == "Carga de trabajo":
+                if valor < 12:
+                    return "#2894a7"  # Azul clarito
+                elif 12 <= valor < 16:
+                    return "#5aaf2b"  # Verde
+                elif 16 <= valor < 20:
+                    return "#ebae14"  # Amarillo
+                elif 20 <= valor < 24:
+                    return "#ffa446"  # Naranja
+                else:
+                    return "#ff4747"  # Rojo
+            elif dominio == "Falta de control sobre el trabajo":
+                if valor < 5:
+                    return "#2894a7"  # Azul clarito
+                elif 5 <= valor < 8:
+                    return "#5aaf2b"  # Verde
+                elif 8 <= valor < 11:
+                    return "#ebae14"  # Amarillo
+                elif 11 <= valor < 14:
+                    return "#ffa446"  # Naranja
+                else:
+                    return "#ff4747"  # Rojo
+            elif dominio == "Jornada de trabajo":
+                if valor < 1:
+                    return "#2894a7"  # Azul clarito
+                elif 1 <= valor < 2:
+                    return "#5aaf2b"  # Verde
+                elif 2 <= valor < 4:
+                    return "#ebae14"  # Amarillo
+                elif 4 <= valor < 6:
+                    return "#ffa446"  # Naranja
+                else:
+                    return "#ff4747"  # Rojo
+            elif dominio == "Interferencia en la relación trabajo-familia":
+                if valor < 1:
+                    return "#2894a7"  # Azul clarito
+                elif 1 <= valor < 2:
+                    return "#5aaf2b"  # Verde
+                elif 2 <= valor < 4:
+                    return "#ebae14"  # Amarillo
+                elif 4 <= valor < 6:
+                    return "#ffa446"  # Naranja
+                else:
+                    return "#ff4747"  # Rojo
+            elif dominio == "Liderazgo":
+                if valor < 3:
+                    return "#2894a7"  # Azul clarito
+                elif 3 <= valor < 5:
+                    return "#5aaf2b"  # Verde
+                elif 5 <= valor < 8:
+                    return "#ebae14"  # Amarillo
+                elif 8 <= valor < 11:
+                    return "#ffa446"  # Naranja
+                else:
+                    return "#ff4747"  # Rojo
+            elif dominio == "Relaciones en el trabajo":
+                if valor < 5:
+                    return "#2894a7"  # Azul clarito
+                elif 5 <= valor < 8:
+                    return "#5aaf2b"  # Verde
+                elif 8 <= valor < 11:
+                    return "#ebae14"  # Amarillo
+                elif 11 <= valor < 14:
+                    return "#ffa446"  # Naranja
+                else:
+                    return "#ff4747"  # Rojo
+            elif dominio == "Violencia":
+                if valor < 7:
+                    return "#2894a7"  # Azul clarito
+                elif 7 <= valor < 10:
+                    return "#5aaf2b"  # Verde
+                elif 10 <= valor < 13:
+                    return "#ebae14"  # Amarillo
+                elif 13 <= valor < 16:
+                    return "#ffa446"  # Naranja
+                else:
+                    return "#ff4747"  # Rojo
+        else:
+            if valor < 20:
+                return "#2894a7"  # Azul clarito
+            elif 20 <= valor < 45:
+                return "#5aaf2b"  # Verde
+            elif 45 <= valor < 70:
+                return "#ebae14"  # Amarillo
+            elif 70 <= valor < 90:
+                return "#ffa446"  # Naranja
+            else:
+                return "#ff4747"  # Rojo
+
+    def obtener_dato(self, dato):
+        """
+        Obtiene un dato y devuelve 'N/A' si es nulo.
+        
+        Este método recibe un dato y verifica si es nulo. Si es nulo, devuelve 'N/A'.
+        
+        :param dato: El dato a verificar.
+        
+        :return: El dato si no es nulo, 'N/A' si es nulo.
+        """
+        if not dato:
+            return "N/A"
+
+        return dato
+
+    def obtener_datos_demograficos(self, usuario):
+        """
+        Obtiene los datos demográficos de un usuario.
+        
+        Este método recibe un usuario y obtiene sus datos demográficos, como nombre, género, puesto, año de nacimiento, generación, departamento, nivel jerárquico, gerencia, jefatura, fecha de ingreso y ubicación/región.
+        
+        :param usuario: El usuario del que se obtendrán los datos demográficos.
+        
+        :return: Un diccionario con los datos demográficos del usuario.
+        """
+        
+        datos = {}
+        
+        def obtener_generacion(anio_nacimiento):
+            if 1946 <= anio_nacimiento <= 1964:
+                return "Baby Boomers"
+            elif 1965 <= anio_nacimiento <= 1980:
+                return "Generación X"
+            elif 1981 <= anio_nacimiento <= 1999:
+                return "Millenials"
+            elif 2000 <= anio_nacimiento <= 2015:
+                return "Generacion Z"
+            else:
+                return "N/A"
+
+
+        datos["nombre"] = self.obtener_dato(usuario.name)
+        datos["genero"] = self.obtener_dato(usuario.gender)
+        datos["puesto"] = self.obtener_dato(usuario.job_title)
+        datos["anio_nacimiento"] = usuario.birthday.year if usuario.birthday else "N/A"
+        datos["generacion"] = obtener_generacion(datos["anio_nacimiento"]) if datos["anio_nacimiento"] != "N/A" else "N/A"
+        datos["departamento"] = self.obtener_dato(usuario.department_id.name)
+        
+        # Falta
+        # Nivel Jerarquico
+        # Gerencia
+        # Jefatura
+        # Fecha de ingreso
+        # Ubicación/Region
+        
+        return datos
+    
+
     def action_get_evaluaciones(self, evaluacion_id):
         """
         Obtiene las preguntas asociadas a la evaluación.
@@ -356,5 +689,3 @@ class Evaluacion(models.Model):
                 "sticky": False,
             },
         }
-        
-

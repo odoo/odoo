@@ -1,6 +1,7 @@
 from odoo import models, fields
 from odoo.exceptions import ValidationError
 
+
 class Users(models.Model):
     _name = "res.users"
     _inherit = ["res.users"]
@@ -22,10 +23,12 @@ class Users(models.Model):
         """
 
         evaluacion_id = self._context.get("current_evaluacion_id")
-        respuesta_ids = self.env["respuesta"].search([
-            ("evaluacion_id", "=", evaluacion_id),
-            ("usuario_id", "=", self.id),
-        ])
+        respuesta_ids = self.env["respuesta"].search(
+            [
+                ("evaluacion_id", "=", evaluacion_id),
+                ("usuario_id", "=", self.id),
+            ]
+        )
 
         if respuesta_ids:
             return {

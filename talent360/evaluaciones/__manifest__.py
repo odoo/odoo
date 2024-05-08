@@ -12,13 +12,12 @@
         "views/evaluaciones_menus.xml",
         "views/evaluaciones_templates.xml",
         "views/evaluaciones_responder.xml",
-        
         "data/pregunta.csv",
         "data/competencia.csv",
         "data/opcion.csv",
         "data/template.csv",
     ],
-    "depends": ["base", "mail"],
+    "depends": ["base", "mail", "hr"],
     "assets": {
         "evaluaciones.evaluaciones_assets": [
             ("include", "web.chartjs_lib"),
