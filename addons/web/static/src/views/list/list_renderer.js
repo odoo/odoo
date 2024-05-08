@@ -937,7 +937,7 @@ export class ListRenderer extends Component {
         // - text fields, because they are always displayed in their entirety in a list view
         if (
             !(fieldType in FIXED_FIELD_COLUMN_WIDTHS) &&
-            !["json", "text", "one2many", "many2many"].includes(fieldType)
+            !["json", "html", "text", "one2many", "many2many"].includes(fieldType)
         ) {
             return this.getFormattedValue(column, record);
         }
@@ -1050,7 +1050,7 @@ export class ListRenderer extends Component {
         if (this.props.onOpenFormView) {
             colspan++;
         }
-        return colspan
+        return colspan;
     }
 
     getGroupPagerProps(group) {
