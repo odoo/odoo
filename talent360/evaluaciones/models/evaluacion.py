@@ -1,5 +1,6 @@
 from odoo import api, models, fields
 from collections import defaultdict
+from odoo import exceptions
 
 
 class Evaluacion(models.Model):
@@ -64,8 +65,14 @@ class Evaluacion(models.Model):
         string="Asignados",
     )
 
-    fecha_inicio = fields.Date()
-    fecha_final = fields.Date()
+    fecha_inicio = fields.Date(required=True)
+    fecha_final = fields.Date(required=True)
+
+    @api.constrains('fecha_inicio', 'fecha_final')
+    def check_fechas(self):
+        for record in self:
+            if record.fecha_inicio and record.fecha_final and record.fecha_inicio > record.fecha_final:
+                raise exceptions.ValidationError("La fecha de inicio debe ser anterior a la fecha final")
 
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
@@ -699,6 +706,6 @@ class Evaluacion(models.Model):
         """
         resultado = super(Evaluacion, self).write(vals)
         if 'usuario_ids' in vals or self.usuario_ids:
-            self.action_enviar_evaluacion()
+            self.enviar_evaluacion_action()
         return resultado
 
