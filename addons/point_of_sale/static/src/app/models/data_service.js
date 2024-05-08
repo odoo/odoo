@@ -227,8 +227,8 @@ export class PosData extends Reactive {
 
         this.models.loadData(data, this.modelToLoad);
         this.models.loadData({ "pos.order": order, "pos.order.line": orderlines });
-        await this.loadIndexedDBData();
-
+        const dbData = await this.loadIndexedDBData();
+        this.loadedIndexedDBProducts = dbData ? dbData["product.product"] : [];
         this.network.loading = false;
     }
 
