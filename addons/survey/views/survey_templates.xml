@@ -289,28 +289,30 @@
     <template id="survey_fill_form_done" name="Survey: finished">
         <div class="wrap">
             <div class="o_survey_finished mt32 mb32">
-                <h1 class="fs-2">Thank you!</h1>
+                <h1 class="fs-2">
+                    <t t-if="survey.scoring_type != 'no_scoring'">
+                        You scored <t t-out="answer.scoring_percentage"/>%
+                    </t>
+                    <t t-else="">Thank you!</t>
+                </h1>
                 <div t-field="survey.description_done" class="oe_no_empty" />
                 <div class="row">
                     <div class="col">
-                        <t t-if="survey.scoring_type != 'no_scoring'">
-                            <div>You scored <t t-esc="answer.scoring_percentage" />%</div>
-                            <t t-if="survey.scoring_success_min">
-                                <t t-if="answer.scoring_success">
-                                    <div>Congratulations, you have passed the test!</div>
+                        <t t-if="survey.scoring_type != 'no_scoring' and survey.scoring_success_min">
+                            <t t-if="answer.scoring_success">
+                                <div>Congratulations, you have passed the test!</div>
 
-                                    <div t-if="survey.certification" class="mt16 mb16">
-                                        <a role="button"
-                                            class="btn btn-primary btn-lg"
-                                            t-att-href="'/survey/%s/get_certification' % survey.id">
-                                            <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/>
-                                            Download certification
-                                        </a>
-                                    </div>
-                                </t>
-                                <t t-else="">
-                                    <div>Unfortunately, you have failed the test.</div>
-                                </t>
+                                <div t-if="survey.certification" class="mt16 mb16">
+                                    <a role="button"
+                                        class="btn btn-primary btn-lg"
+                                        t-att-href="'/survey/%s/get_certification' % survey.id">
+                                        <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/>
+                                        Download certification
+                                    </a>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div>Unfortunately, you have failed the test.</div>
                             </t>
                         </t>
                         <div class="d-flex gap-3 mt-3">

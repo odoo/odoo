@@ -109,9 +109,8 @@ registry.category("web_tour.tours").add('test_certification_success', {
         trigger: 'button[type="submit"]',
         run: "click",
     }, {
-        content: "Thank you",
-        trigger: 'h1:contains("Thank you!")',
-        run: "click",
+        content: "You scored",
+        trigger: 'h1:contains("You scored")',
     }, {
         content: "test passed",
         trigger: 'div:contains("Congratulations, you have passed the test!")',
