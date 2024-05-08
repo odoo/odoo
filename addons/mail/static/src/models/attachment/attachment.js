@@ -4,6 +4,8 @@ import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
 import { clear, insert } from '@mail/model/model_field_command';
 
+import { session } from '@web/session';
+
 function factory(dependencies) {
 
     class Attachment extends dependencies['mail.model'] {
@@ -197,7 +199,9 @@ function factory(dependencies) {
             if (!this.messaging) {
                 return;
             }
-
+            if (session.is_admin) {
+                return true;
+            }
             if (this.messages.length) {
                 return this.messages.some(message => (
                     message.canBeDeleted ||
