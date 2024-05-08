@@ -12,6 +12,8 @@ import {
 } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import { session } from '@web/session';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -703,6 +705,11 @@ QUnit.test('allow attachment delete on authored message', async function (assert
 
 QUnit.test('prevent attachment delete on non-authored message in channels', async function (assert) {
     assert.expect(2);
+
+    // mock a regular user
+    const sessionAdminState = session.is_admin;
+    session.is_admin = false;
+    registerCleanup(() => session.is_admin = sessionAdminState);
 
     const { createMessageComponent } = await this.start();
     const message = this.messaging.models['mail.message'].create({
