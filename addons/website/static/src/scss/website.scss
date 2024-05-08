@@ -524,7 +524,17 @@ p {
 
 font[style*='background']:not(.text-gradient),
 font[class*='bg-'] {
-    padding: 2px 6px 4px;
+    // Not adding any horizontal padding is important as it ensures that several
+    // features work:
+    // - Highlighting part of a word -> you don't want the word to be split
+    // - Coloring a word inside a highlighted sentence -> in this case, the DOM
+    //   is a succession of 3 <font> elements, the word one with both the
+    //   background-color and the color.
+    // - Even in the good cases, you might just not want the padding, to align
+    //   the highlighted element with the general layout.
+    // => The user can still add surrounding spaces if needed anyway which is
+    //    actually both technically and functionally intuitive.
+    padding: 2px 0 4px;
 }
 
 // Icons
