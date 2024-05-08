@@ -526,6 +526,82 @@
         </div>
     </template>
 
+    <template id="external_layout_folder">
+        <t t-set="header_shape_height" t-value="'174'"/>
+
+        <div t-attf-class="header o_company_#{company.id}_layout {{report_type != 'pdf' and 'h-0'}}">
+            <div class="o_folder_header_container position-absolute start-0 top-0 z-n1 w-100">
+                <svg width="100%" t-att-height="header_shape_height" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="100%" t-att-height="header_shape_height"/>
+                </svg>
+                <div class="o_folder_adaptative_shape d-flex flex-start position-relative">
+                    <svg class="d-block flex-grow-1" fill="none" height="100%" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100%" height="100%"/>
+                    </svg>
+                    <svg class="o_folder_angle_shape" width="80" height="100%" viewBox="0 0 80 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5.70364 48H0V0.00100806H73.5404L80 0C74.2028 0.665869 68.7417 3.06684 64.332 6.88852L25.3513 40.6709C19.8969 45.3979 12.9212 48 5.70364 48Z"/>
+                    </svg>
+                    <h2 t-attf-class="{{layout_document_title and 'o_folder_title mt-2 text-nowrap' or 'w-25'}}">
+                        <t t-out="layout_document_title"/>
+                    </h2>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <div>
+                    <img t-if="company.logo" class="o_company_logo_big mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                    <div t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold">Company tagline</div>
+                </div>
+                <div name="company_address" class="text-end">
+                    <ul class="list-unstyled" name="company_address_list">
+                        <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
+                            <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
+                                <strong>Company address block</strong>
+                                <div>Contains the company address.</div>
+                            </div>
+                        </span></li>
+                        <li t-else="">
+                            <span t-field="company.company_details">
+                                <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
+                                    <strong>Company details block</strong>
+                                    <div>Contains the company details.</div>
+                                </div>
+                            </span>
+                        </li>
+                        <li t-if="not forced_vat"/>
+                        <li t-else="">
+                            <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                            <span t-esc="forced_vat">US12345671</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- BODY -->
+        <div t-attf-class="article o_report_layout_folder o_table_striped o_company_#{company.id}_layout {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}"
+             t-attf-style="{{report_type != 'pdf' and 'margin-top:' + header_shape_height + 'px;'}} background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});"
+             t-att-data-oe-model="o and o._name"
+             t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <div class="pt-2" t-attf-style="{{report_type != 'pdf' and 'margin-top:' + str(env['ir.actions.report'].get_paperformat().margin_top) + 'pt;'}}">
+                <t t-set="custom_layout_address" t-value="true"/>
+                <t t-call="web.address_layout"/>
+            </div>
+            <t t-out="0"/>
+        </div>
+
+        <!-- Footer -->
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
+            <div class="o_footer_content d-flex border-top pt-2">
+                <div class="flex-grow-1 me-2 text-start" t-field="company.report_footer"/>
+                <div class="text-end text-muted">
+                    <div t-if="report_type == 'pdf' and display_name_in_footer" t-out="o.name">(document name)</div>
+                    <div t-if="report_type == 'pdf'">Page <span class="page"/> / <span class="topage"/></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
     <template id="external_layout_wave">
         <!-- HEADER -->
         <t t-set="header_shape_height" t-value="'230'"/>
@@ -814,6 +890,17 @@
                             border-bottom: 3px solid <t t-esc='secondary'/>;
                         }
                     }
+                }
+            </t>
+            <t t-elif="layout == 'web.external_layout_folder'">
+                &amp; .o_folder_header_container {
+                    rect, path {
+                        fill: mix(white, <t t-esc='primary'/>, 92%);
+                    }
+                }
+
+                &amp;.o_report_layout_folder_footer {
+                    border-top: 1px solid <t t-esc='secondary'/>;
                 }
             </t>
             <t t-elif="layout == 'web.external_layout_wave'">

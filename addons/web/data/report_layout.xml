@@ -38,6 +38,12 @@
             <field name="view_id" ref="web.external_layout_wave"/>
         </record>
 
+        <record id="report_layout_folder" model="report.layout">
+            <field name="name">Folder</field>
+            <field name="sequence">8</field>
+            <field name="view_id" ref="web.external_layout_folder"/>
+        </record>
+
         <record id="asset_styles_company_report" model="ir.attachment">
             <field name="datas" model="res.company" eval="obj()._get_asset_style_b64()"/>
             <field name="mimetype">text/scss</field>
