@@ -53,6 +53,10 @@ export class RemainingDaysField extends Component {
             ? formatDateTime(record.data[name], { format: localization.dateFormat })
             : formatDate(record.data[name]);
     }
+
+    get isActive() {
+        return this.props.record.isActive;
+    }
 }
 
 export const remainingDaysField = {
