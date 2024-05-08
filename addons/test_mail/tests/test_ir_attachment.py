@@ -59,7 +59,7 @@ class TestAttachment(TestMailCommon):
         for user, attachment in forbidden_list:
             with self.subTest(user=user.name, attachment=attachment.name, method='write'):
                 with self.assertRaises(AccessError):
-                    attachment.with_user(user).write({'name': 'failed test name'})
+                    attachment.with_user(user).write({'datas': '0123'})
             with self.subTest(user=user.name, attachment=attachment.name, method='unlink'):
                 with self.assertRaises(AccessError):
                     attachment.with_user(user).unlink()
@@ -74,8 +74,11 @@ class TestAttachment(TestMailCommon):
         ]
         for user, attachment, sudo in allowed_list:
             with self.subTest(user=user.name, attachment=attachment.name, sudo=sudo, method='write'):
-                attachment.with_user(user).sudo(sudo).write({'name': 'successful test name'})
-                self.assertEqual(attachment.name, 'successful test name')
+                attachment.with_user(user).sudo(sudo).write({'datas': '1234'})
+                self.assertEqual(attachment.datas, b'1234')
             with self.subTest(user=user.name, attachment=attachment.name, sudo=sudo, method='unlink'):
                 attachment.with_user(user).sudo(sudo).unlink()
                 self.assertFalse(attachment.exists())
+
+        shared_attachment_employee.with_user(user_second_employee).write({'name': 'Successful write to shared attachment'})
+        self.assertEqual(shared_attachment_employee.name, 'Successful write to shared attachment', 'Only data fields should be protected')
