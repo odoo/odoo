@@ -212,11 +212,11 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         this.guard.exec(this._removeFromComparelistImpl.bind(this, e));
     },
     _removeFromComparelistImpl: function (e) {
-        var target = $(e.target.closest('.o_comparelist_remove, .o_remove'));
+        const target = e.target.closest(".o_comparelist_remove, .o_remove");
         this.comparelist_product_ids = this.comparelist_product_ids.filter(
             (comp) => comp !== target.data("product_product_id")
         );
-        target.parents('.o_product_row').remove();
+        target.closest(".o_product_row")?.remove();
         this._updateCookie();
         $('.o_comparelist_limit_warning').hide();
         this._updateContent('show');
