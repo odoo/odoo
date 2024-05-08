@@ -8,7 +8,7 @@ from odoo.tools import SQL
 from odoo.tools.float_utils import float_round
 _logger = logging.getLogger('precompute_setter')
 
-from odoo import models, fields, api, _, Command
+from odoo import models, fields, api, _, Command, tools
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tools.translate import html_translate
 
@@ -2122,3 +2122,47 @@ class SharedComputeMethod(models.Model):
                 record.start = 0
             if not record.end:
                 record.end = 10
+
+class UniqueTranslatedTag(models.Model):
+    _name = 'test_new_api.unique.translated.tags'
+    _description = 'Unique tags'
+
+    # current unique implementation
+    name1 = fields.Char(translate=True)
+    _sql_constraints = [
+        ('name_uniq', 'unique(name1)', 'Tag name must be unique')
+    ]
+
+    # python constraint
+    name2 = fields.Char(translate=True, index='trigram')
+
+    @api.constrains('name2')
+    def _check_name2(self):
+        self = self.filtered(lambda r: r.name2 is not False)
+        if self._fields['name2'].index == 'trigram' and len(self) < 3:
+            # use '=' to take advantage of the trigram index optimization
+            record_num = self.search_count(['|'] * (len(self) - 1) + [('name2', '=', name) for name in self.mapped('name2')], limit=len(self) + 1)
+        else:
+            record_num = self.search_count([('name2', 'in', self.mapped('name2'))], limit=len(self) + 1)
+        if record_num != len(self):
+            raise ValidationError('Tag name must be unique')
+
+    # python constraint + unique index ->>'en_US'
+    name3 = fields.Char(translate=True, index='trigram')
+
+    def _auto_init(self):
+        result = super()._auto_init()
+        tools.create_unique_index(self._cr, 'test_new_api_unique_translated_tag_name3_index',
+                                  self._table, ["(name3->>'en_US')"])
+        return result
+
+    @api.constrains('name3')
+    def _check_name3(self):
+        self = self.filtered(lambda r: r.name3 is not False)
+        if self._fields['name3'].index == 'trigram' and len(self) < 3:
+            # use '=' to take advantage of the trigram index optimization
+            record_num = self.search_count(['|'] * (len(self) - 1) + [('name3', '=', name) for name in self.mapped('name3')], limit=len(self) + 1)
+        else:
+            record_num = self.search_count([('name3', 'in', self.mapped('name3'))], limit=len(self) + 1)
+        if record_num != len(self):
+            raise ValidationError('Tag name must be unique')
