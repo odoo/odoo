@@ -716,11 +716,33 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         })
 
     def _prepare_taxes_computation_test(self, taxes, price_unit, expected_values, evaluation_context_kwargs=None, compute_kwargs=None):
+        """ Prepare the values to test a taxes computation.
+
+        :param taxes:                       A recordset of account.tax.
+        :param price_unit:                  The price unit on which apply the computation of taxes.
+        :param expected_values:             The expected result of '_eval_taxes_computation'.
+        :param evaluation_context_kwargs:   Some extra values about the computation:
+            * quantity:                 1 by default.
+            * product:                  An optional product record if you are using taxes that depend on the product.
+            * rounding_method:          The taxes rounding method that is 'round_per_line' by default.
+            * excluded_special_modes:   By default, when using the 'round_globally' method, both special modes are tested as well
+                                        ('total_excluded' & 'total_included') to ensure the computations are symmetrical.
+                                        The taxes computation is called first with 'special_mode=False'.
+                                        Then, we call it again with "special_mode='total_excluded'" using the 'total_excluded' found during
+                                        the previous evaluation as price_unit.
+                                        Then, we call it again but this time using 'total_included'.
+                                        The all 3 computations should give exactly the same expected results. In rare cases, you would want
+                                        to use a configuration that is not symmetrical. In that case, 'excluded_special_modes' could be
+                                        used to excluded 'total_excluded', 'total_included' or both.
+        :param compute_kwargs:  Extra parameters to be passed to the '_prepare_taxes_computation' method.
+        :return: A dictionary representing a test that will be used py-side & js-side to assert the taxes computation.
+        """
         evaluation_context_kwargs = evaluation_context_kwargs or {}
         quantity = evaluation_context_kwargs.pop('quantity', 1)
         product = evaluation_context_kwargs.pop('product', None)
         compute_kwargs = compute_kwargs or {}
         is_round_globally = evaluation_context_kwargs.get('rounding_method') == 'round_globally'
+        excluded_special_modes = evaluation_context_kwargs.pop('excluded_special_modes', [])
 
         taxes_data = taxes._convert_to_dict_for_taxes_computation()
         product_values = taxes._eval_taxes_computation_turn_to_product_values(taxes_data, product=product)
@@ -735,6 +757,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
                 'evaluation_context_kwargs': evaluation_context_kwargs,
                 'compute_kwargs': compute_kwargs,
                 'is_round_globally': is_round_globally,
+                'excluded_special_modes': excluded_special_modes,
             },
         }
 
@@ -757,28 +780,45 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         }
 
     def _add_test_py_results(self, test):
+        AccountTax = self.env['account.tax']
         params = test['params']
         if params['test'] == 'taxes_computation':
-            evaluation_context = self.env['account.tax']._eval_taxes_computation_prepare_context(
+            evaluation_context = AccountTax._eval_taxes_computation_prepare_context(
                 params['price_unit'],
                 params['quantity'],
                 params['product_values'],
                 **params['evaluation_context_kwargs'],
             )
-            taxes_computation = self.env['account.tax']._prepare_taxes_computation(params['taxes_data'], **params['compute_kwargs'])
+            taxes_computation = AccountTax._prepare_taxes_computation(params['taxes_data'], **params['compute_kwargs'])
             test['py_results'] = {
-                'results': self.env['account.tax']._eval_taxes_computation(taxes_computation, evaluation_context),
+                'results': AccountTax._eval_taxes_computation(taxes_computation, evaluation_context),
             }
 
             if params['is_round_globally']:
-                evaluation_context = self.env['account.tax']._eval_taxes_computation_prepare_context(
+                taxes_computation = AccountTax._prepare_taxes_computation(
+                    params['taxes_data'],
+                    **params['compute_kwargs'],
+                    special_mode='total_excluded',
+                )
+                evaluation_context = AccountTax._eval_taxes_computation_prepare_context(
                     test['py_results']['results']['total_excluded'] / params['quantity'],
                     params['quantity'],
                     params['product_values'],
                     **params['evaluation_context_kwargs'],
-                    reverse=True,
                 )
-                test['py_results']['reverse_results'] = self.env['account.tax']._eval_taxes_computation(taxes_computation, evaluation_context)
+                test['py_results']['total_excluded_results'] = AccountTax._eval_taxes_computation(taxes_computation, evaluation_context)
+                taxes_computation = AccountTax._prepare_taxes_computation(
+                    params['taxes_data'],
+                    **params['compute_kwargs'],
+                    special_mode='total_included',
+                )
+                evaluation_context = AccountTax._eval_taxes_computation_prepare_context(
+                    test['py_results']['results']['total_included'] / params['quantity'],
+                    params['quantity'],
+                    params['product_values'],
+                    **params['evaluation_context_kwargs'],
+                )
+                test['py_results']['total_included_results'] = AccountTax._eval_taxes_computation(taxes_computation, evaluation_context)
         elif params['test'] == 'adapt_price_unit_to_another_taxes':
             test['py_results'] = self.env['account.tax']._adapt_price_unit_to_another_taxes(
                 params['price_unit'],
@@ -830,18 +870,37 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
 
         params = test['params']
         is_round_globally = params['is_round_globally']
+        excluded_special_modes = params['excluded_special_modes']
         rounding = 0.000001 if is_round_globally else 0.01
         compare_taxes_computation_values(results['results'], test['expected_values'], rounding)
 
-        # Check the reverse in case of round_globally.
+        # Check the special modes in case of round_globally.
         if is_round_globally:
-            compare_taxes_computation_values(results['reverse_results'], test['expected_values'], rounding)
-            delta = sum(x['tax_amount_factorized'] for x in results['reverse_results']['taxes_data'] if x['price_include'])
+            # special_mode == 'total_excluded'.
+            if 'total_excluded' not in excluded_special_modes:
+                compare_taxes_computation_values(results['total_excluded_results'], test['expected_values'], rounding)
+                delta = sum(x['tax_amount_factorized'] for x in results['total_excluded_results']['taxes_data'] if x['_original_price_include'])
 
-            self.assertEqual(
-                float_round(results['reverse_results']['total_excluded'] + delta, precision_rounding=rounding),
-                float_round(params['price_unit'], precision_rounding=rounding),
-            )
+                self.assertEqual(
+                    float_round(
+                        (results['total_excluded_results']['total_excluded'] + delta) / params['quantity'],
+                        precision_rounding=rounding,
+                    ),
+                    float_round(params['price_unit'], precision_rounding=rounding),
+                )
+
+            # special_mode == 'total_included'.
+            if 'total_included' not in excluded_special_modes:
+                compare_taxes_computation_values(results['total_included_results'], test['expected_values'], rounding)
+                delta = sum(x['tax_amount_factorized'] for x in results['total_included_results']['taxes_data'] if not x['_original_price_include'])
+
+                self.assertEqual(
+                    float_round(
+                        (results['total_included_results']['total_included'] - delta) / params['quantity'],
+                        precision_rounding=rounding,
+                    ),
+                    float_round(params['price_unit'], precision_rounding=rounding),
+                )
 
     def _assert_sub_test(self, test, results):
         params = test['params']
