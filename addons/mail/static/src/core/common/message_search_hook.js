@@ -3,6 +3,7 @@
 import { useSequential } from "@mail/utils/common/hooks";
 import { useState, onWillUnmount, markup } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { escapeRegExp } from "@web/core/utils/strings";
 
 export const HIGHLIGHT_CLASS = "o-mail-Message-searchHighlight";
 
@@ -16,7 +17,7 @@ export function searchHighlight(searchTerm, target) {
     }
     const htmlDoc = new DOMParser().parseFromString(target, "text/html");
     for (const term of searchTerm.split(" ")) {
-        const regexp = new RegExp(`(${term})`, "gi");
+        const regexp = new RegExp(`(${escapeRegExp(term)})`, "gi");
         // Special handling for '
         // Note: browsers use XPath 1.0, so uses concat() rather than ||
         const split = term.toLowerCase().split("'");
