@@ -92,7 +92,6 @@ class UsuarioEvaluacionRel(models.Model):
             if not user.token:
                 user.write({"token": token, "contestada": "pendiente"})
 
-                print(f"{base_url}/{evaluacion_id}/{token}")
                 mail_values = {
                     "subject": "Invitación para completar la evaluación",
                     "email_from": self.env.user.email_formatted,
