@@ -1058,8 +1058,8 @@ class TestSaleToInvoice(TestSaleCommon):
 
         sale_order_1.invoice_ids.action_post()
 
-        self.assertEqual(sale_order_1.amount_to_invoice, 0.0)
-        self.assertEqual(sale_order_2.amount_to_invoice, 0.0)
+        self.assertEqual(sale_order_1.uninvoiced_balance, 0.0)
+        self.assertEqual(sale_order_2.uninvoiced_balance, 0.0)
 
     def test_amount_to_invoice_one_line_multiple_so(self):
         """ Testing creating two SOs linked to the same invoice line. Drawback: the substracted
@@ -1099,5 +1099,54 @@ class TestSaleToInvoice(TestSaleCommon):
 
         sale_order_1.invoice_ids.action_post()
 
-        self.assertEqual(sale_order_1.amount_to_invoice, -700.0)
-        self.assertEqual(sale_order_2.amount_to_invoice, 0.0)
+        self.assertEqual(sale_order_1.uninvoiced_balance, -700.0)
+        self.assertEqual(sale_order_2.uninvoiced_balance, 0.0)
+
+    def test_amount_to_invoice_price_unit_change(self):
+        """
+        We check that the 'amount_to_invoice' relies only on the posted invoice quantity,
+        and is not affected by price changes that occurred during invoice creation.
+        """
+        so = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+        })
+
+        sol_prod_deliver = self.env['sale.order.line'].with_context(tracking_disable=True).create({
+            'product_id': self.company_data['product_order_no'].id,
+            'product_uom_qty': 5,
+            'order_id': so.id,
+            'tax_id': False,
+        })
+
+        so.action_confirm()
+        sol_prod_deliver.write({'qty_delivered': 5.0})
+
+        ctx = {
+            'active_model': 'sale.order',
+            'active_ids': [so.id],
+            'active_id': so.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+
+        invoice_vals = self.env['sale.advance.payment.inv'].with_context(ctx).create({
+            'advance_payment_method': 'delivered',
+        }).create_invoices()
+
+        # Invoice is created in draft, which should impact 'qty_invoiced', but not 'amount_to_invoice'.
+        self.assertEqual(sol_prod_deliver.qty_invoiced, 5.0)
+        self.assertEqual(sol_prod_deliver.amount_to_invoice, sol_prod_deliver.price_total)
+        self.assertEqual(sol_prod_deliver.amount_invoiced, 0.0)
+
+        # Then we change the 'price_unit' on the invoice (keeping the quantity untouched).
+        invoice = self.env[invoice_vals['res_model']].browse(invoice_vals['res_id'])
+        invoice.invoice_line_ids.price_unit /= 2
+        invoice.action_post()
+
+        # In the end, the 'amount_to_invoice' should be 0.0, since all quantities have been invoiced,
+        # even if the price was changed manually on the invoice.
+        self.assertEqual(sol_prod_deliver.qty_invoiced, 5.0)
+        self.assertEqual(sol_prod_deliver.amount_to_invoice, 0.0)
+        self.assertEqual(sol_prod_deliver.amount_invoiced, sol_prod_deliver.price_total / 2)

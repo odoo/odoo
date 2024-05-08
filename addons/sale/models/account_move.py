@@ -175,7 +175,7 @@ class AccountMove(models.Model):
         # (see _compute_credit_to_invoice and _compute_amount_to_invoice from 'sale.order' )
         exclude_amount = super()._get_partner_credit_warning_exclude_amount()
         for order in self.line_ids.sale_line_ids.order_id:
-            order_amount = min(self._get_sale_order_invoiced_amount(order), order.amount_to_invoice)
+            order_amount = min(self._get_sale_order_invoiced_amount(order), order.uninvoiced_balance)
             order_amount_company = order.currency_id._convert(
                 max(order_amount, 0),
                 self.company_id.currency_id,
@@ -198,7 +198,7 @@ class AccountMove(models.Model):
             )
             amount_to_invoice_currency = sum(
                 sale_order.currency_id._convert(
-                    sale_order.amount_to_invoice,
+                    sale_order.uninvoiced_balance,
                     move.company_currency_id,
                     move.company_id,
                     move.date
