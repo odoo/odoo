@@ -11,7 +11,7 @@ class SurveyUserInput(models.Model):
         help="The related course slide when there is no membership information")
     slide_partner_id = fields.Many2one('slide.slide.partner', 'Subscriber information',
         help="Slide membership information for the logged in user",
-        index='btree_not_null') # index useful for deletions in comodel
+        index='btree_not_null')  # index useful for deletions in comodel
 
     @api.depends('survey_id.certification')
     def _compute_can_access_survey_user_input(self):
@@ -30,12 +30,12 @@ class SurveyUserInput(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        records = super(SurveyUserInput, self).create(vals_list)
+        records = super().create(vals_list)
         records._check_for_failed_attempt()
         return records
 
     def write(self, vals):
-        res = super(SurveyUserInput, self).write(vals)
+        res = super().write(vals)
         if 'state' in vals:
             self._check_for_failed_attempt()
         return res
