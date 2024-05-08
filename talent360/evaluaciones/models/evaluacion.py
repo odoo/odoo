@@ -17,7 +17,7 @@ class Evaluacion(models.Model):
 
     _name = "evaluacion"
     _description = "Evaluacion de pesonal"
-
+    _rec_name = "nombre"
     nombre = fields.Char(required=True)
 
     tipo = fields.Selection(
@@ -401,7 +401,7 @@ class Evaluacion(models.Model):
 
         for usuario in self.usuario_ids:
             usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
-                [("usuario_id", "=", usuario.id), ("evaluacion_id", "=", self.id)]
+                [("usuario_id.id", "=", usuario.id), ("evaluacion_id.id", "=", self.id)]
             )
 
             if (
