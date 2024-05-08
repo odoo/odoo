@@ -23,8 +23,8 @@
         </template>
 
 
-       <template id="encuestas_reporte" name="Reporte: página de reporte genérico">
-             <t t-call="evaluaciones.diseño">
+        <template id="encuestas_reporte" name="Reporte: página de reporte genérico">
+            <t t-call="evaluaciones.diseño">
                 <t t-set="limite_registros" t-value="10"/>
                 <div class="o_survey_result">
                     <t t-call="evaluaciones.encuestas_reporte_header" />
@@ -33,8 +33,8 @@
             </t>
         </template>
 
-         <template id="encuestas_reporte_clima" name="Reporte: página de reporte genérico">
-             <t t-call="evaluaciones.diseño">
+        <template id="encuestas_reporte_clima" name="Reporte: página de reporte genérico">
+            <t t-call="evaluaciones.diseño">
                 <t t-set="limite_registros" t-value="10"/>
                 <div class="o_survey_result">
                     <t t-call="evaluaciones.encuestas_reporte_header" />
@@ -58,6 +58,7 @@
             </div>
         </template>
 
+        <!--AQUÍ COMIENZA NOM 035-->
         <template id="encuestas_reporte_nom_035" name="Reporte: NOM-035">
             <div class="container-fluid row gap-5 justify-content-between g-2">
                     <div class="col survey_section">
@@ -209,7 +210,7 @@
                             </div>
                         </t>
 
-                         <t t-elif="categoria == 'Liderazgo y relaciones en el trabajo'">
+                        <t t-elif="categoria == 'Liderazgo y relaciones en el trabajo'">
                             <div class="survey_graph" t-att-id="'liderazgo_relaciones'" t-att-data-graph-type="'bar'" t-att-data-label="'Liderazgo y relaciones en el trabajo'" t-att-data-graph-data="dominios[5:]">
                                 <canvas t-att-id="'canvas_barras_liderazgo_relaciones_nom_035'"/>
                             </div>
@@ -261,11 +262,12 @@
             </div>
         </template>
         
+        <!--AQUÍ COMIENZA CLIMA-->
         <template id="encuesta_reporte_clima" name="Reporte de Clima Laboral">
             <div class="container-fluid row gap-5 justify-content-between g-2">
                 <div class="col survey_section">
                     <h4>Calificación final</h4>
-                     <span t-att-class="'color_nulo' if total_porcentaje &lt; 20 else 'color_bajo' if 20 &lt;= total_porcentaje &lt; 45 else 'color_medio' if 45 &lt;= total_porcentaje &lt; 70 else 'color_alto' if 70 &lt;= total_porcentaje &lt; 90 else 'color_muy-alto'">
+                    <span t-att-class="'color_nulo' if total_porcentaje &lt; 20 else 'color_bajo' if 20 &lt;= total_porcentaje &lt; 45 else 'color_medio' if 45 &lt;= total_porcentaje &lt; 70 else 'color_alto' if 70 &lt;= total_porcentaje &lt; 90 else 'color_muy-alto'">
                         <t t-esc="total_porcentaje"/>
                     </span>
                     <span class="fs-5 pill">
@@ -303,10 +305,10 @@
                 </div>
             </div>
 
-            <div class="container">
+            <div class="survey_page container-fluid d-flex flex-column">
                 <div class="survey_section">
                     <h4>Resumen del Clima Laboral</h4>
-                    <div class="survey_graph" style="width: 700px; height: 500px; padding-left: 110px" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'radar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
+                    <div class="survey_graph" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'radar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
                         <canvas t-att-id="'canvas_barras_categorias_clima'"></canvas>
                     </div>
                 </div>
@@ -342,7 +344,7 @@
                 </div>
             </div>
 
-            <div class="container">
+            <div class="survey_section">
                 <t t-foreach="evaluacion.action_generar_datos_reporte_clima()['categorias']" t-as="categoria"></t>
                 <div class="survey_graph" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'col'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
                     <canvas t-att-id="'canvas_barras_categorias_clima'"></canvas>
