@@ -216,7 +216,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 datasets:[{
                     label: "Conteo",
                     data: this.counts,
-                    backgroundColor: this.counts.map(function (val, index) {
+                    backgroundColor: this.color || this.counts.map(function (val, index) {
                         return D3_COLORS[index % 20];
                     }),
                 }]
@@ -268,7 +268,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 datasets: [{
                     label: '',
                     data: this.counts,
-                    backgroundColor: this.counts.map(function (val, index) {
+                    backgroundColor: this.color || this.counts.map(function (val, index) {
                         return D3_COLORS[index % 20];
                     }),
                 }]

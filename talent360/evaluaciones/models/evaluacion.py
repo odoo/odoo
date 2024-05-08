@@ -554,9 +554,7 @@ class Evaluacion(models.Model):
             for respuesta in pregunta.respuesta_ids:
                 valor_respuesta = int(respuesta.respuesta_texto)
                 valor_pregunta += valor_respuesta
-                maximo_pregunta += (
-                    4  # Suponiendo un máximo de 4 para cada respuesta en escala
-                )
+                maximo_pregunta += 4  # Suponiendo un máximo de 4 para cada respuesta en escala
 
                 nombre_departamento = respuesta.usuario_id.department_id.name if respuesta.usuario_id.department_id else "Sin departamento"
                 departamento = next(
@@ -589,11 +587,11 @@ class Evaluacion(models.Model):
                     categoria["puntuacion"] / categoria["puntuacion_maxima"]
                 ) * 100
 
-        total_porcentaje = (
+        total_porcentaje = round((
             (total_puntuacion / total_maximo_posible) * 100
             if total_maximo_posible > 0
             else 0
-        )
+        ),2)
 
         # Datos demograficos
         # datos_demograficos = []
