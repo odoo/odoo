@@ -7,6 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 from psycopg2 import IntegrityError
 
 import odoo
+from odoo.modules.registry import Registry, DummyRLock
 from odoo.tests.common import get_db_name, tagged, BaseCase
 from odoo.tools import mute_logger
 
@@ -38,6 +39,10 @@ class TestOnboardingConcurrency(BaseCase):
             env['onboarding.progress'].search([
                 ('onboarding_id', '=', cls.onboarding_id)
             ]).unlink()
+
+    def setUp(self):
+        super().setUp()
+        self.patch(Registry, "_lock", DummyRLock())  # prevent deadlock (see #161438)
 
     @mute_logger('odoo.sql_db')
     def test_concurrent_create_progress(self):

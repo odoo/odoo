@@ -12,6 +12,7 @@ from freezegun import freeze_time
 
 import odoo
 from odoo import api, fields
+from odoo.modules.registry import Registry, DummyRLock
 from odoo.tests.common import BaseCase, TransactionCase, RecordCapturer, get_db_name, tagged
 from odoo.tools import mute_logger
 
@@ -279,6 +280,7 @@ class TestIrCronConcurrent(BaseCase, CronMixinCase):
 
     def setUp(self):
         super().setUp()
+        self.patch(Registry, "_lock", DummyRLock())  # prevent deadlock (see #161438)
 
         with self.registry.cursor() as cr:
             env = api.Environment(cr, odoo.SUPERUSER_ID, {})
