@@ -10,6 +10,9 @@
     'demo': [
         'data/project_mrp_demo.xml',
     ],
+    'data': [
+        'views/project_task_views.xml',
+    ],
     'auto_install': True,
     'license': 'LGPL-3',
 }
