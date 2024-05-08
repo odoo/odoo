@@ -163,6 +163,8 @@ export function useInputField(params) {
                 lastSetValue = inputRef.el.value;
                 await component.props.record.update({ [component.props.name]: val });
                 component.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
+            } else {
+                inputRef.el.value = params.getValue();
             }
         }
     }
