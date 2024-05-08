@@ -156,7 +156,6 @@
                     decoration-warning="invoice_status == 'upselling'"
                     widget="badge"
                     optional="show"/>
-                <field name="amount_to_invoice" optional="hide"/>
                 <field name="client_order_ref" optional="hide"/>
                 <field name="validity_date" optional="hide"/>
             </list>
@@ -195,9 +194,6 @@
             </field>
             <field name="invoice_status" position="attributes">
                 <attribute name="optional">hide</attribute>
-            </field>
-            <field name="amount_to_invoice" position="attributes">
-                <attribute name="column_invisible">1</attribute>
             </field>
         </field>
     </record>
