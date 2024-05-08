@@ -4,7 +4,7 @@
         <field name="name">resource.calendar.attendance.tree</field>
         <field name="model">resource.calendar.attendance</field>
         <field name="arch" type="xml">
-            <tree string="Working Time" editable="top" default_order="sequence, week_type, dayofweek, hour_from">
+            <tree string="Working Time" editable="bottom" default_order="sequence, week_type, dayofweek, hour_from">
                 <field name="sequence" widget="handle"/>
                 <field name="display_type" column_invisible="True"/>
                 <field name="display_name" width="1" string=" " invisible="display_type != 'line_section'"/>
@@ -16,7 +16,7 @@
                 <field name="duration_days" optional="show"/>
                 <field name="date_from" optional="hide"/>
                 <field name="date_to" optional="hide"/>
-                <field name="week_type" readonly="1" force_save="1" groups="base.group_no_one"/>
+                <field name="week_type" readonly="1" force_save="1" optional="hide"/>
             </tree>
         </field>
     </record>
