@@ -6,6 +6,9 @@ from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import request
 from odoo.tools import consteq
 
+class AttachmentLinkedToMessageError(AccessError):
+    """Specific error when an attachment may not be accessed because it is linked to a message."""
+    pass
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
@@ -14,15 +17,16 @@ class IrAttachment(models.Model):
     def check(self, mode, values=None):
         super().check(mode, values=values)
         if mode not in ('unlink', 'write') or not self or self.env.is_admin():
-            return
+            return True
         if self.create_uid == self.env.user:
-            return
-        linked_messages = self.env['mail.message'].sudo().search([('attachment_ids', 'in', self.ids)])
+            return True
+        message_restricted_attachments = self._mail_filter_message_restricted_attachments()
+        linked_messages = self.env['mail.message'].sudo().search([('attachment_ids', 'in', message_restricted_attachments.ids)])
         if not linked_messages:
-            return
+            return True
         authors = linked_messages.author_id
         if len(authors) > 1 or authors != self.env.user.partner_id:
-            raise AccessError(_("You may not unlink attachments from other people's messages"))
+            raise AccessError(_("You may not unlink or modify attachments from other people's messages")) from AttachmentLinkedToMessageError('')
 
     def _check_attachments_access(self, attachment_tokens):
         """This method relies on access rules/rights and therefore it should not be called from a sudo env."""
@@ -44,6 +48,11 @@ class IrAttachment(models.Model):
                             raise
             except (AccessError, MissingError):
                 raise UserError(_("The attachment %s does not exist or you do not have the rights to access it.", attachment.id))
+
+    @api.model
+    def _mail_filter_message_restricted_attachments(self):
+        """Return filtered records from self where restrictions on access rights based on messages apply."""
+        return self
 
     def _post_add_create(self):
         """ Overrides behaviour when the attachment is created through the controller
