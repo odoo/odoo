@@ -618,7 +618,7 @@ class PurchaseOrder(models.Model):
             return moves
         return self.action_view_invoice(moves)
 
-    def _prepare_invoice(self):
+    def _prepare_account_move_values(self):
         """Prepare the dict of values to create the new invoice for a purchase order.
         """
         self.ensure_one()
@@ -627,7 +627,7 @@ class PurchaseOrder(models.Model):
         partner_invoice = self.env['res.partner'].browse(self.partner_id.address_get(['invoice'])['invoice'])
         partner_bank_id = self.partner_id.commercial_partner_id.bank_ids.filtered_domain(['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])[:1]
 
-        invoice_vals = super()._prepare_invoice()
+        invoice_vals = super()._prepare_account_move_values()
         invoice_vals.update({
             'ref': self.partner_ref or '',
             'move_type': move_type,
