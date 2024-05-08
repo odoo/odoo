@@ -439,7 +439,6 @@ class Evaluacion(models.Model):
             "final": final,
         }
 
-        print(parametros)
         return parametros
 
     def asignar_color(self, valor, categoria=None, dominio=None):
