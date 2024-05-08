@@ -207,22 +207,19 @@
             </div>
         </template>
 
-     <template id="encuesta_reporte_clima" name="Reporte de Clima Laboral">
+    <template id="encuesta_reporte_clima" name="Reporte de Clima Laboral">
         <div class="container">
             <h3>Resumen del Clima Laboral</h3>
+            <div class="survey_graph" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'radar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
+                <canvas t-att-id="'canvas_barras_categorias_clima'"/>
+            </div>
+        </div>
+        <div class="container">
             <t t-foreach="evaluacion.action_generar_datos_reporte_clima()['categorias']" t-as="categoria">
-                <div class="categoria">
-                    <h4 t-esc="categoria['nombre']"/>
-                    <p>Valor: <span t-esc="categoria['valor']"/>%</p>
-                    <t t-foreach="categoria['departamentos']" t-as="departamento">
-                        <div class="departamento">
-                            <p>Departamento: <span t-esc="departamento['nombre']"/></p>
-                            <p>Puntos: <span t-esc="departamento['puntos']"/></p>
-                            <!-- <p>Valor: <span t-esc="departamento['valor']"/>%</p> -->
-                        </div>
-                    </t>
-                </div>
             </t>
+            <div class="survey_graph" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'col'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
+                    <canvas t-att-id="'canvas_barras_categorias_clima'"/>
+            </div>
         </div>
     </template>
 
