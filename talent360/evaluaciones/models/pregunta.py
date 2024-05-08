@@ -51,10 +51,16 @@ class Pregunta(models.Model):
             ("organizacion_tiempo", "Organización del tiempo de trabajo"),
             ("liderazgo_relaciones", "Liderazgo y relaciones en el trabajo"),
             ("datos_generales", "Datos Generales"),
-            ("reclutamiento_y_seleccion_de_personal", "Reclutamiento y Selección de Personal"),
+            (
+                "reclutamiento_y_seleccion_de_personal",
+                "Reclutamiento y Selección de Personal",
+            ),
             ("formacion_y_capacitacion", "Formación y Capacitación"),
             ("permanencia_y_ascenso", "Permanencia y Ascenso"),
-            ("corresponsabilidad_en_la_vida_laboral_familiar_y_personal", "Corresponsabilidad en la Vida Laboral, Familiar y Personal"),
+            (
+                "corresponsabilidad_en_la_vida_laboral_familiar_y_personal",
+                "Corresponsabilidad en la Vida Laboral, Familiar y Personal",
+            ),
             ("clima_laboral_libre_de_violencia", "Clima Laboral Libre de Violencia"),
             ("acoso_y_hostigamiento", "Acoso y Hostigamiento"),
             ("accesibilidad", "Accesibilidad"),
@@ -96,7 +102,7 @@ class Pregunta(models.Model):
             ],
             "context": {"group_by": "respuesta_texto"},
         }
-    
+
     def handle_condition(self, respuesta):
         """
         Maneja la condición de la pregunta.
