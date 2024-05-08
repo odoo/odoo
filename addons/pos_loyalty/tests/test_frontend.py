@@ -1094,7 +1094,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'discount': 50,
                 'discount_mode': 'percent',
                 'discount_applicability': 'specific',
-                'discount_product_domain': '[("categ_id", "ilike", "office")]',
+                'discount_product_domain': '["&", ("categ_id", "ilike", "office"), ("name", "ilike", "Product B")]',
             })],
             'pos_config_ids': [Command.link(self.main_pos_config.id)],
         })
