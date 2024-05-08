@@ -534,7 +534,9 @@ font[class*='bg-'] {
     //   the highlighted element with the general layout.
     // => The user can still add surrounding spaces if needed anyway which is
     //    actually both technically and functionally intuitive.
-    padding: 2px 0 4px;
+    $-base-padding: 0.05em;
+    $-bottom-factor: 2;
+    padding: MAX($-base-padding, 1px) 0 MAX(($-bottom-factor * $-base-padding), ($-bottom-factor * 1px));
 }
 
 // Icons
