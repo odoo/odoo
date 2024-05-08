@@ -103,7 +103,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
                 rec.issue_state = False
             elif rec.amount and not rec.split_move_line_id.amount_residual:
                 reconciled_line = rec.split_move_line_id.full_reconcile_id.reconciled_line_ids - rec.split_move_line_id
-                voides_types = ['liability_payable', 'assets_receivable']
+                voides_types = ['liability_payable', 'asset_receivable']
                 if (reconciled_line.move_id.line_ids - reconciled_line).mapped('account_id.account_type')[0] in voides_types:
                     rec.issue_state = 'voided'
                 else:
