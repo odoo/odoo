@@ -214,6 +214,7 @@ export class ProductScreen extends Component {
             if (records && records["product.product"].length > 0) {
                 product = records["product.product"][0];
             }
+            await this.pos._loadMissingPricelistItems([product]);
         }
 
         return product;

@@ -288,6 +288,11 @@ export class PosStore extends Reactive {
 
             if (data[0].model.modelName === "product.pricelist.item") {
                 pricelistItems = data;
+                // it needs only to compute for the products that are affected by the pricelist items 
+                const productTmplIds = new Set(data.map((item) => item.raw.product_tmpl_id));
+                const productIds = new Set(data.map((item) => item.raw.product_id));
+                products = products
+                    .filter((product) => productTmplIds.has(product.raw.product_tmpl_id) || productIds.has(product.id));
             }
         }
 
@@ -314,8 +319,19 @@ export class PosStore extends Reactive {
                     applicableRules[item.pricelist_id.id].push(item);
                 }
             }
-
-            product.cachedPricelistRules = applicableRules;
+            for (const pricelistId in applicableRules) {
+                if (product.cachedPricelistRules[pricelistId]) {
+                    const existingRuleIds = product.cachedPricelistRules[pricelistId].map((rule) => rule.id);
+                    const newRules = applicableRules[pricelistId]
+                        .filter((rule) => !existingRuleIds.includes(rule.id));
+                    product.cachedPricelistRules[pricelistId] = [...newRules, ...product.cachedPricelistRules[pricelistId]];
+                } else {
+                    product.cachedPricelistRules[pricelistId] = applicableRules[pricelistId];
+                }
+            }
+            if (data && data.length > 0 && data[0].model.modelName === "product.product") {
+                this._loadMissingPricelistItems(products);
+            }
         }
     }
 
@@ -339,8 +355,7 @@ export class PosStore extends Reactive {
             return [];
         }
         const pIds = Array.from(new Set(productIds));
-        const product = await this.data.read("product.product", pIds);
-        await this._loadMissingPricelistItems(product);
+        await this.data.read("product.product", pIds);
     }
 
     async afterProcessServerData() {
