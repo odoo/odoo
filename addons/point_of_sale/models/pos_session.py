@@ -183,15 +183,22 @@ class PosSession(models.Model):
 
         return response
 
-    def _prepare_pricelist_domain(self, data):
-        product_tmpl_ids = [p['product_tmpl_id'] for p in data['product.product']]
-        product_ids = [p['id'] for p in data['product.product']]
+    def get_pos_ui_product_pricelist_item_by_product(self, product_tmpl_ids, product_ids, config_id):
+        pricelist_fields = self.env['product.pricelist']._load_pos_data_fields(config_id)
+        pricelist_item_fields = self.env['product.pricelist.item']._load_pos_data_fields(config_id)
 
-        return [
-            ('pricelist_id', 'in', [p['id'] for p in data['product.pricelist']]),
-            '|', ('product_tmpl_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
-            '|', ('product_id', '=', False), ('product_id', 'in', product_ids),
-        ]
+        pricelist_item_domain = [
+            '|',
+            '&', ('product_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
+            ('product_id', 'in', product_ids)]
+
+        pricelist_item = self.env['product.pricelist.item'].search(pricelist_item_domain)
+        pricelist = pricelist_item.pricelist_id
+
+        return {
+            'product.pricelist.item': pricelist_item.read(pricelist_item_fields, load=False),
+            'product.pricelist': pricelist.read(pricelist_fields, load=False)
+        }
 
     @api.depends('currency_id', 'company_id.currency_id')
     def _compute_is_in_company_currency(self):
