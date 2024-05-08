@@ -13,7 +13,7 @@ class Respuesta(models.Model):
     token = fields.Char(string="Token")
     opcion_id = fields.Many2one("opcion", string="Opción")
 
-    def action_guardar_respuesta(
+    def guardar_respuesta_action(
         self, radios, texto, evaluacion_id, usuario_id, pregunta_id, token, scale=False
     ):
         """Método para guardar la respuesta de una pregunta.

@@ -42,11 +42,11 @@ class UsuarioEvaluacionRel(models.Model):
         """
         if usuario_id:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("usuario_id", "=", usuario_id), ("evaluacion_id", "=", evaluacion_id)]
+                [("usuario_id.id", "=", usuario_id), ("evaluacion_id.id", "=", evaluacion_id)]
             )
         else:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("evaluacion_id", "=", evaluacion_id), ("token", "=", token)]
+                [("evaluacion_id.id", "=", evaluacion_id), ("token", "=", token)]
             )
 
         return usuario_evaluacion.contestada
@@ -60,16 +60,16 @@ class UsuarioEvaluacionRel(models.Model):
 
         if usuario_id:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("usuario_id", "=", usuario_id), ("evaluacion_id", "=", evaluacion_id)]
+                [("usuario_id.id", "=", usuario_id), ("evaluacion_id.id", "=", evaluacion_id)]
             )
         else:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("evaluacion_id", "=", evaluacion_id), ("token", "=", token)]
+                [("evaluacion_id.id", "=", evaluacion_id), ("token", "=", token)]
             )
 
         usuario_evaluacion.write({"contestada": "contestada"})
 
-    def action_enviar_evaluacion(self, evaluacion_id):
+    def enviar_evaluacion_action(self, evaluacion_id):
         """
         Ejecuta la acción de redireccionar a la lista de evaluaciones y devuelve un diccionario
 
@@ -84,7 +84,7 @@ class UsuarioEvaluacionRel(models.Model):
         base_url = "http://localhost:8069/evaluacion/responder"
 
         usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-            [("evaluacion_id", "=", evaluacion_id)]
+            [("evaluacion_id.id", "=", evaluacion_id)]
         )
 
         for user in usuario_evaluacion:
@@ -92,7 +92,6 @@ class UsuarioEvaluacionRel(models.Model):
             if not user.token:
                 user.write({"token": token, "contestada": "pendiente"})
 
-                print(f"{base_url}/{evaluacion_id}/{token}")
                 mail_values = {
                     "subject": "Invitación para completar la evaluación",
                     "email_from": self.env.user.email_formatted,

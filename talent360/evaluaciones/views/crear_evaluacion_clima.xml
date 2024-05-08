@@ -33,6 +33,9 @@
                             </page>
                             <page string="Asignados">
                                 <field name="usuario_ids"/>
+                                <div>
+                                    <button name="enviar_evaluacion_action" string="Enviar Correo" type="object" class="btn-primary mx-3" confirm="¿Estás seguro de enviar la encuesta?"/>
+                                </div>
                             </page>
                             <page string="Semaforización">
                                 <style>
@@ -162,13 +165,12 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <div>
+                                    <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary mx-3 my-3"/>
+                                </div>
                             </page>
                         </notebook>
                     </group>
-                    <div>
-                        <button name="action_enviar_evaluacion" string="Enviar Correo" type="object" class="btn-primary mx-3" confirm="¿Estás seguro de enviar la encuesta?"/>
-                        <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary mx-3"/>
-                    </div>
                 </sheet>
             </form>
         </field>
