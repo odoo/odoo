@@ -191,7 +191,7 @@ class Task(models.Model):
 
         action.update({
             'display_name': _('Timesheets'),
-            'context': {'default_project_id': self.project_id.id, 'grid_range': 'week'},
+            'context': {'default_project_id': self.project_id.id},
             'domain': [('project_id', '!=', False), ('task_id', 'in', task_ids)],
             'views': new_views,
         })

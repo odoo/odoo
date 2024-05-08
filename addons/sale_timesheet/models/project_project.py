@@ -242,7 +242,6 @@ class ProjectProject(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("sale_timesheet.timesheet_action_from_sales_order_item")
         action.update({
             'context': {
-                'grid_range': 'week',
                 'search_default_groupby_timesheet_invoice_type': True,
                 'default_project_id': self.id,
             },
