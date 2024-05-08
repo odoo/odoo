@@ -168,6 +168,7 @@ export class PosOrder extends Base {
                         hours,
                         minutes,
                     },
+                    tracking_number: this.tracking_number,
                 };
                 const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
                     changes: printingChanges,
