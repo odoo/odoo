@@ -29,7 +29,7 @@ class EvaluacionesController(http.Controller):
         ):
             raise AccessError("No tienes permitido acceder a este recurso.")
 
-        parametros = evaluacion.action_generar_datos_reporte_NOM_035()
+        parametros = evaluacion.generar_datos_reporte_NOM_035_action()
 
         return request.render("evaluaciones.encuestas_reporte", parametros)
 
@@ -51,7 +51,7 @@ class EvaluacionesController(http.Controller):
         evaluacion = request.env["evaluacion"].sudo().browse(evaluacion_id)
 
         if request.env.user != request.env.ref("base.public_user"):
-            user_eval_relacion = usuario_eva_mod.sudo().search(
+            usuario_eval_relacion = usuario_eva_mod.sudo().search(
                 [
                     ("usuario_id", "=", request.env.user.id),
                     ("evaluacion_id", "=", evaluacion.id),
@@ -60,14 +60,14 @@ class EvaluacionesController(http.Controller):
             )
 
         else:
-            user_eval_relacion = usuario_eva_mod.sudo().search(
+            usuario_eval_relacion = usuario_eva_mod.sudo().search(
                 [
                     # ("evaluacion_id", "=", evaluacion.id),
                     ("token", "=", token)
                 ]
             )
 
-        if not user_eval_relacion:
+        if not usuario_eval_relacion:
             return request.render("evaluaciones.evaluacion_responder_form_draft")
 
         # Obtén la evaluación basada en el ID
@@ -138,7 +138,7 @@ class EvaluacionesController(http.Controller):
             if pregunta_id in valores_radios:
                 valor_radio = valores_radios[pregunta_id]
                 if request.env.user != request.env.ref("base.public_user"):
-                    resp = respuesta_modelo.sudo().action_guardar_respuesta(
+                    resp = respuesta_modelo.sudo().guardar_respuesta_action(
                         valor_radio,
                         None,
                         int(evaluacion_id),
@@ -148,7 +148,7 @@ class EvaluacionesController(http.Controller):
                         False,
                     )
                 else:
-                    resp = respuesta_modelo.sudo().action_guardar_respuesta(
+                    resp = respuesta_modelo.sudo().guardar_respuesta_action(
                         valor_radio,
                         None,
                         int(evaluacion_id),
@@ -164,7 +164,7 @@ class EvaluacionesController(http.Controller):
             if pregunta_id in valores_textarea:
                 valor_textarea = valores_textarea[pregunta_id]
                 if request.env.user != request.env.ref("base.public_user"):
-                    resp = respuesta_modelo.sudo().action_guardar_respuesta(
+                    resp = respuesta_modelo.sudo().guardar_respuesta_action(
                         None,
                         valor_textarea,
                         int(evaluacion_id),
@@ -174,7 +174,7 @@ class EvaluacionesController(http.Controller):
                         False,
                     )
                 else:
-                    resp = respuesta_modelo.sudo().action_guardar_respuesta(
+                    resp = respuesta_modelo.sudo().guardar_respuesta_action(
                         None,
                         valor_textarea,
                         int(evaluacion_id),
@@ -190,7 +190,7 @@ class EvaluacionesController(http.Controller):
             if pregunta_id in valores_radios_escala:
                 valor_radio = valores_radios_escala[pregunta_id]
                 if request.env.user != request.env.ref("base.public_user"):
-                    resp = respuesta_modelo.sudo().action_guardar_respuesta(
+                    resp = respuesta_modelo.sudo().guardar_respuesta_action(
                         valor_radio,
                         None,
                         int(evaluacion_id),
@@ -200,7 +200,7 @@ class EvaluacionesController(http.Controller):
                         True,
                     )
                 else:
-                    resp = respuesta_modelo.sudo().action_guardar_respuesta(
+                    resp = respuesta_modelo.sudo().guardar_respuesta_action(
                         valor_radio,
                         None,
                         int(evaluacion_id),

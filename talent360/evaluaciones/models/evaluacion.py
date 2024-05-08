@@ -325,7 +325,7 @@ class Evaluacion(models.Model):
 
         return parametros
 
-    def action_generar_datos_reporte_NOM_035(self):
+    def generar_datos_reporte_NOM_035_action(self):
         """
         Genera los datos necesarios para el reporte genérico de la evaluación.
 
