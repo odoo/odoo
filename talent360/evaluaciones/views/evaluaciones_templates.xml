@@ -261,8 +261,7 @@
                 </div>
             </div>
         </template>
-        
-        <!--AQUÍ COMIENZA CLIMA-->
+        <!-- AQUÍ COMIENZA CLIMA -->
         <template id="encuesta_reporte_clima" name="Reporte de Clima Laboral">
             <div class="container-fluid row gap-5 justify-content-between g-2">
                 <div class="col survey_section">
@@ -313,8 +312,6 @@
                     </div>
                 </div>
 
-                <br></br>
-
                 <div class="container-fluid">
                     <div class="row gap-5">
                         <div class="col survey_section align-items-start">
@@ -330,7 +327,7 @@
                         </div>
 
                         <div class="col survey_section align-items-start">
-                            <h4>Categorías con menor puntaje:</h4>
+                            <h4>Categoría con menor puntaje:</h4>
                             <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
                                 <span class="fs-1">
                                     <t t-esc="min(categorias, key=lambda x: x['valor'])['valor']"/>
@@ -344,26 +341,58 @@
                 </div>
             </div>
 
-            <div class="survey_section">
+            <div t-foreach="evaluacion.action_generar_datos_reporte_clima()['categorias']" t-as="categoria">
                 <div class="survey_section">
-                    <t t-foreach="evaluacion.action_generar_datos_reporte_clima()['categorias']" t-as="categoria">
-                        <div class="category_section">
-                            <h4><t t-esc="categoria['nombre']"/></h4>
-                            <div t-foreach="categoria['departamentos']" t-as="departamento">
-                                <div class="department_section">
-                                    <h5><t t-esc="departamento['nombre']"/></h5>
-                                    <p>Calificación: <t t-esc="departamento['puntos']"/> / <t t-esc="departamento['puntos_maximos']"/></p>
-            
-                                    <div class="survey_graph" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'col'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
-                                        <canvas t-att-id="'canvas_barras_categorias_clima'"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </t>
+                    <div class="category_section">
+                        <h4><t t-esc="categoria['nombre']"/></h4>
+                    </div>
+                    <div class="survey_graph" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'pie'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
+                        <canvas t-att-id="'canvas_barras_categorias_clima'"></canvas>
+                    </div>  
                 </div>
             </div>
+
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script type="text/javascript">
+                document.addEventListener('DOMContentLoaded', function () {
+                    var graphs = document.querySelectorAll('.survey_graph');
+                    graphs.forEach(function (graph) {
+                        var canvas = graph.querySelector('canvas');
+                        var ctx = canvas.getContext('2d');
+                        var data = graph.dataset.graphData;
+                        
+                        if (data) {
+                            data = JSON.parse(data);
+                            var chartData = {
+                                labels: data.labels,  // Actualiza esto según tu estructura de datos
+                                datasets: [{
+                                    label: data.label,  // Actualiza esto según tu estructura de datos
+                                    data: data.values,  // Actualiza esto según tu estructura de datos
+                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                    borderWidth: 1
+                                }]
+                            };
+                            new Chart(ctx, {
+                                type: graph.dataset.graphType,  // Utiliza el tipo de gráfico especificado
+                                data: chartData,
+                                options: {
+                                    responsive: true,
+                                    scale: {
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                });
+            </script>
         </template>
+
+
+
 
 
 
