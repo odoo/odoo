@@ -439,3 +439,53 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
 
         # delivery line should have taxes from the parent company as there is no tax from the branch company
         self.assertRecordValues(delivery_line, [{'product_id': delivery_product.id, 'tax_id': tax_a.ids}])
+
+    def test_update_weight_in_shipping_when_change_quantity(self):
+        product_test = self.env['product.product'].create({
+            'name': 'Test product',
+            'weight': 1,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product_test.id,
+                    'product_uom_qty': 10,
+                    'product_uom': self.uom_unit.id,
+                }),
+            ],
+        })
+        delivery = self.env['delivery.carrier'].create({
+            'name': 'Delivery Charges',
+            'delivery_type': 'base_on_rule',
+            'product_id': product_test.id,
+            'price_rule_ids': [
+                Command.create({
+                    'variable': 'weight',
+                    'operator': '<=',
+                    'max_value': 30,
+                    'list_base_price': 5,
+                    'variable_factor': 'weight',
+                }),
+                Command.create({
+                    'variable': 'weight',
+                    'operator': '>=',
+                    'max_value': 60,
+                    'list_base_price': 10,
+                    'variable_factor': 'weight',
+                })
+            ]
+        })
+
+        del_form = sale_order.action_open_delivery_wizard()
+        choose_delivery_carrier = self.env[del_form['res_model']].with_context(del_form['context']).create({
+            'carrier_id': delivery.id,
+            'order_id': sale_order.id
+        })
+        choose_delivery_carrier.button_confirm()
+        self.assertEqual(choose_delivery_carrier.total_weight, 10)
+        sale_order.order_line.write({
+            'product_uom_qty': 100,
+        })
+        updated_del_form = sale_order.action_open_delivery_wizard()
+        self.assertEqual(updated_del_form['context']['default_total_weight'], 100)
