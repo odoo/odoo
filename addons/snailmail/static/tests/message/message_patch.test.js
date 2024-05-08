@@ -1,15 +1,22 @@
-/* @odoo-module */
+import { describe, expect, test } from "@odoo/hoot";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import {
+    assertSteps,
+    click,
+    contains,
+    openFormView,
+    start,
+    startServer,
+    step,
+} from "@mail/../tests/mail_test_helpers";
+import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { Deferred } from "@odoo/hoot-mock";
+import { defineSnailmailModels } from "../snailmail_test_helpers";
 
-import { openFormView, start } from "@mail/../tests/helpers/test_utils";
+describe.current.tags("desktop");
+defineSnailmailModels();
 
-import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.module("message (patch)");
-
-QUnit.test("Sent", async () => {
+test("Sent", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
@@ -34,7 +41,7 @@ QUnit.test("Sent", async () => {
     await contains(".o-snailmail-SnailmailNotificationPopover", { text: "Sent" });
 });
 
-QUnit.test("Cancelled", async () => {
+test("Cancelled", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
@@ -59,7 +66,7 @@ QUnit.test("Cancelled", async () => {
     await contains(".o-snailmail-SnailmailNotificationPopover", { text: "Cancelled" });
 });
 
-QUnit.test("Pending", async () => {
+test("Pending", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
@@ -84,7 +91,7 @@ QUnit.test("Pending", async () => {
     await contains(".o-snailmail-SnailmailNotificationPopover", { text: "Awaiting Dispatch" });
 });
 
-QUnit.test("No Price Available", async (assert) => {
+test("No Price Available", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
@@ -103,19 +110,15 @@ QUnit.test("No Price Available", async (assert) => {
         notification_type: "snail",
         res_partner_id: partnerId,
     });
-    const def = makeDeferred();
-    await start({
-        async mockRPC(route, args) {
-            if (
-                args.method === "cancel_letter" &&
-                args.model === "mail.message" &&
-                args.args[0][0] === messageId
-            ) {
-                assert.step(args.method);
-                def.resolve();
-            }
-        },
+    const def = new Deferred();
+    onRpc("mail.message", "cancel_letter", (args) => {
+        if (args.args[0][0] === messageId) {
+            step(args.method);
+            def.resolve();
+        }
+        return true;
     });
+    await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await contains(".o-snailmail-SnailmailError .modal-body", {
@@ -124,10 +127,10 @@ QUnit.test("No Price Available", async (assert) => {
     await click("button", { text: "Cancel letter" });
     await contains(".o-snailmail-SnailmailError", { count: 0 });
     await def;
-    assert.verifySteps(["cancel_letter"]);
+    assertSteps(["cancel_letter"]);
 });
 
-QUnit.test("Credit Error", async (assert) => {
+test("Credit Error", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
@@ -146,19 +149,15 @@ QUnit.test("Credit Error", async (assert) => {
         notification_type: "snail",
         res_partner_id: partnerId,
     });
-    const def = makeDeferred();
-    await start({
-        async mockRPC(route, args) {
-            if (
-                args.method === "send_letter" &&
-                args.model === "mail.message" &&
-                args.args[0][0] === messageId
-            ) {
-                assert.step(args.method);
-                def.resolve();
-            }
-        },
+    const def = new Deferred();
+    onRpc("mail.message", "send_letter", (args) => {
+        if (args.args[0][0] === messageId) {
+            step(args.method);
+            def.resolve();
+        }
+        return true;
     });
+    await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await contains(".o-snailmail-SnailmailError p", {
@@ -168,10 +167,10 @@ QUnit.test("Credit Error", async (assert) => {
     await click("button", { text: "Re-send letter" });
     await contains(".o-snailmail-SnailmailError", { count: 0 });
     await def;
-    assert.verifySteps(["send_letter"]);
+    assertSteps(["send_letter"]);
 });
 
-QUnit.test("Trial Error", async (assert) => {
+test("Trial Error", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
@@ -190,19 +189,15 @@ QUnit.test("Trial Error", async (assert) => {
         notification_type: "snail",
         res_partner_id: partnerId,
     });
-    const def = makeDeferred();
-    await start({
-        async mockRPC(route, args) {
-            if (
-                args.method === "send_letter" &&
-                args.model === "mail.message" &&
-                args.args[0][0] === messageId
-            ) {
-                assert.step(args.method);
-                def.resolve();
-            }
-        },
+    const def = new Deferred();
+    onRpc("mail.message", "send_letter", (args) => {
+        if (args.args[0][0] === messageId) {
+            step(args.method);
+            def.resolve();
+        }
+        return true;
     });
+    await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await contains(".o-snailmail-SnailmailError p", {
@@ -212,10 +207,10 @@ QUnit.test("Trial Error", async (assert) => {
     await click("button", { text: "Re-send letter" });
     await contains(".o-snailmail-SnailmailError", { count: 0 });
     await def;
-    assert.verifySteps(["send_letter"]);
+    assertSteps(["send_letter"]);
 });
 
-QUnit.test("Format Error", async (assert) => {
+test("Format Error", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
@@ -234,23 +229,23 @@ QUnit.test("Format Error", async (assert) => {
         notification_type: "snail",
         res_partner_id: partnerId,
     });
-    const { env } = await start();
+    const env = await start();
     await openFormView("res.partner", partnerId);
-    const def = makeDeferred();
+    const def = new Deferred();
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
-            assert.step("do_action");
-            assert.strictEqual(action, "snailmail.snailmail_letter_format_error_action");
-            assert.strictEqual(options.additionalContext.message_id, messageId);
+            step("do_action");
+            expect(action).toBe("snailmail.snailmail_letter_format_error_action");
+            expect(options.additionalContext.message_id).toBe(messageId);
             def.resolve();
         },
     });
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await def;
-    assert.verifySteps(["do_action"]);
+    assertSteps(["do_action"]);
 });
 
-QUnit.test("Missing Required Fields", async (assert) => {
+test("Missing Required Fields", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const messageId = pyEnv["mail.message"].create({
@@ -268,18 +263,18 @@ QUnit.test("Missing Required Fields", async (assert) => {
     const snailMailLetterId1 = pyEnv["snailmail.letter"].create({
         message_id: messageId,
     });
-    const { env } = await start();
+    const env = await start();
     await openFormView("res.partner", partnerId);
-    const def = makeDeferred();
+    const def = new Deferred();
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
-            assert.step("do_action");
-            assert.strictEqual(action, "snailmail.snailmail_letter_missing_required_fields_action");
-            assert.strictEqual(options.additionalContext.default_letter_id, snailMailLetterId1);
+            step("do_action");
+            expect(action).toBe("snailmail.snailmail_letter_missing_required_fields_action");
+            expect(options.additionalContext.default_letter_id).toBe(snailMailLetterId1);
             def.resolve();
         },
     });
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await def;
-    assert.verifySteps(["do_action"]);
+    assertSteps(["do_action"]);
 });
