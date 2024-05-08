@@ -10,6 +10,9 @@
                     <t t-esc="changes.floor_name" /> / <t t-esc="changes.table_name"/>
                 </div>
             </t>
+            <div class="pos-receipt-title">
+                <t t-esc="changes.tracking_number"/>
+            </div>
             <br />
             <br />
             <t t-if="changes.cancelled.length > 0">
