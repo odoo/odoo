@@ -9355,13 +9355,13 @@ legacyRegistry.ColoredLevelBackground = legacyRegistry.BackgroundToggler.extend(
     },
 });
 
-legacyRegistry.ContainerWidth = SnippetOptionWidget.extend({
+class ContainerWidth extends SnippetOption {
     /**
      * @override
      */
-    cleanForSave: function () {
+    cleanForSave() {
         this.$target.removeClass('o_container_preview');
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -9370,18 +9370,27 @@ legacyRegistry.ContainerWidth = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    selectClass: async function (previewMode, widgetValue, params) {
-        await this._super(...arguments);
+    async selectClass(previewMode, widgetValue, params) {
+        await super.selectClass(...arguments);
         if (previewMode === 'reset') {
             this.$target.removeClass('o_container_preview');
         } else if (previewMode) {
             this.$target.addClass('o_container_preview');
         }
-        this.trigger_up('option_update', {
-            optionName: 'StepsConnector',
-            name: 'change_container_width',
-        });
-    },
+        // TODO: @owl-options implement option_update
+        // this.trigger_up('option_update', {
+        //     optionName: 'StepsConnector',
+        //     name: 'change_container_width',
+        // });
+    }
+}
+
+owlRegistry.add("container_width", {
+    Class: ContainerWidth,
+    template: "web_editor.container_width",
+    selector: "section, .s_carousel .carousel-item, s_quotes_carousel .carousel-item",
+    exclude: "[data-snippet] :not(.oe_structure) > [data-snippet]",
+    target: "> .container, > .container-fluid, > .o_container_small",
 });
 
 /**
