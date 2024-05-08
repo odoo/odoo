@@ -59,7 +59,7 @@ class UsuarioEvaluacionRel(models.Model):
 
         usuario_evaluacion.write({"contestada": "contestada"})
 
-    def action_enviar_evaluacion(self, evaluacion_id):
+    def enviar_evaluacion_action(self, evaluacion_id):
         """
         Ejecuta la acción de redireccionar a la lista de evaluaciones y devuelve un diccionario
 

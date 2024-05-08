@@ -147,7 +147,7 @@
                                     </tree>
                                 </field>
                                 <div>
-                                    <button name="action_enviar_evaluacion" string="Enviar Correo" type="object" class="btn-primary mx-3" confirm="¿Estás seguro de enviar la encuesta?"/>
+                                    <button name="enviar_evaluacion_action" string="Enviar Correo" type="object" class="btn-primary mx-3" confirm="¿Estás seguro de enviar la encuesta?"/>
                                     <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary mx-3 my-3" invisible="tipo != 'NOM_035'"/>
                                 </div>
                             </page>
@@ -420,7 +420,7 @@
                         </notebook>
                     </group>
                     <div>
-                        <button name="action_enviar_evaluacion" string="Enviar Correo" type="object" class="btn-primary mx-3" confirm="¿Estás seguro de enviar la encuesta?"/>
+                        <button name="enviar_evaluacion_action" string="Enviar Correo" type="object" class="btn-primary mx-3" confirm="¿Estás seguro de enviar la encuesta?"/>
                         <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary"/>
                     </div>
                 </sheet>
@@ -460,11 +460,11 @@
         <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
 
-    <record id="action_enviar_evaluacion" model="ir.actions.server">
+    <record id="enviar_evaluacion_action" model="ir.actions.server">
         <field name="name">Enviar evaluacion</field>
         <field name="model_id" ref="model_evaluacion"/>
         <field name="state">code</field>
-        <field name="code">action = model.action_enviar_evaluacion()</field>
+        <field name="code">action = model.enviar_evaluacion_action()</field>
         <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
 
