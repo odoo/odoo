@@ -35,28 +35,11 @@ class AccountTaxPython(models.Model):
             ":param partner: res.partner recordset singleton or None")
 
     @api.model
-    def _ascending_process_fixed_taxes_batch(self, batch):
+    def _process_as_fixed_tax_amount_batch(self, batch):
         # EXTENDS 'account'
-        super()._ascending_process_fixed_taxes_batch(batch)
-
         if batch['amount_type'] == 'code':
-            batch['is_tax_computed'] = True
-
-    @api.model
-    def _descending_process_price_included_taxes_batch(self, batch):
-        # EXTENDS 'account'
-        super()._descending_process_price_included_taxes_batch(batch)
-
-        if batch['price_include'] and batch['amount_type'] == 'code':
-            batch['is_base_computed'] = True
-
-    @api.model
-    def _ascending_process_taxes_batch(self, batch):
-        # EXTENDS 'account'
-        super()._ascending_process_taxes_batch(batch)
-
-        if not batch['price_include'] and batch['amount_type'] == 'code':
-            batch['is_base_computed'] = True
+            return True
+        return super()._process_as_fixed_tax_amount_batch(batch)
 
     @api.model
     def _eval_taxes_computation_prepare_product_fields(self, taxes_data):
