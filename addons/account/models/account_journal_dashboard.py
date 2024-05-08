@@ -396,10 +396,10 @@ class account_journal(models.Model):
       ] + expression.OR(misc_domain)
 
         misc_totals = {
-            account: (balance, count)
-            for account, balance, count in self.env['account.move.line']._read_group(
+            account: (balance, amount_currency, count)
+            for account, balance, amount_currency, count in self.env['account.move.line']._read_group(
                 domain=misc_domain,
-                aggregates=['balance:sum', 'id:count'],
+                aggregates=['balance:sum', 'amount_currency:sum', 'id:count'],
                 groupby=['account_id'])
         }
 
@@ -420,10 +420,13 @@ class account_journal(models.Model):
 
         for journal in bank_cash_journals:
             # User may have read access on the journal but not on the company
-            currency = journal.currency_id or self.env['res.currency'].browse(journal.company_id.sudo().currency_id.id)
+            company_currency = self.env['res.currency'].browse(journal.company_id.sudo().currency_id.id)
+            currency = journal.currency_id or company_currency
             has_outstanding, outstanding_pay_account_balance = outstanding_pay_account_balances[journal.id]
             to_check_balance, number_to_check = to_check.get(journal, (0, 0))
-            misc_balance, number_misc = misc_totals.get(journal.default_account_id, (0, 0))
+            misc_balance, misc_amount_curr, number_misc = misc_totals.get(journal.default_account_id, (0, 0, 0))
+            if currency != company_currency:
+                misc_balance = misc_amount_curr
             currency_consistent = not journal.currency_id or journal.currency_id == journal.default_account_id.currency_id
             accessible = journal.company_id.id in journal.company_id._accessible_branches().ids
 

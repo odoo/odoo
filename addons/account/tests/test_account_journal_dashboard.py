@@ -301,3 +301,27 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         }).action_post()
         dashboard_data = bank_journal._get_journal_dashboard_data_batched()[bank_journal.id]
         self.assertEqual(0, dashboard_data['nb_misc_operations'])
+
+    def test_bank_journal_different_currency(self):
+        """Test that the misc operations amount on the dashboard is correct
+        for a bank account in another currency."""
+        bank_journal = self.company_data['default_journal_bank'].copy({'currency_id': self.currency_data['currency'].id})
+        move = self.env['account.move'].create({
+            'journal_id': self.company_data['default_journal_misc'].id,
+            'line_ids': [
+                Command.create({
+                    'account_id': bank_journal.default_account_id.id,
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': 100,
+                }),
+                Command.create({
+                    'account_id': self.company_data['default_account_assets'].id,
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -100,
+                })
+            ]
+        })
+        move.action_post()
+
+        dashboard_data = bank_journal._get_journal_dashboard_data_batched()[bank_journal.id]
+        self.assertIn('100', dashboard_data['misc_operations_balance'])  # amount displayed in other currency
