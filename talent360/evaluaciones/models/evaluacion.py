@@ -397,7 +397,7 @@ class Evaluacion(models.Model):
             }
 
         # Datos demograficos
-        participantes = []
+        datos_demograficos = []
 
         for usuario in self.usuario_ids:
             usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
@@ -408,12 +408,7 @@ class Evaluacion(models.Model):
                 usuario_evaluacion_rel
                 and usuario_evaluacion_rel[0].contestada == "contestada"
             ):
-                participantes.append(usuario)
-
-        datos_demograficos = []
-
-        for usuario in participantes:
-            datos_demograficos.append(self.obtener_datos_demograficos(usuario))
+                datos_demograficos.append(self.obtener_datos_demograficos(usuario))
 
         # Organizar los parámetros en el orden deseado
         parametros = {
