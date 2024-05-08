@@ -410,4 +410,43 @@ QUnit.module("Fields", (hooks) => {
             "Integer value must be not formatted if input type is number."
         );
     });
+
+    QUnit.test("value is formatted on Enter", async function (assert) {
+        patchWithCleanup(localization, { ...defaultLocalization, grouping: [3, 0] });
+
+        await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            arch: '<form><field name="int_field"/></form>',
+        });
+
+        target.querySelector(".o_field_widget input").value = 1000;
+        await triggerEvent(target, ".o_field_widget input", "input");
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "1000");
+
+        await triggerEvent(target, ".o_field_widget input", "keydown", { key: "Enter" });
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "1,000");
+    });
+
+    QUnit.test("value is formatted on Enter (even if same value)", async function (assert) {
+        patchWithCleanup(localization, { ...defaultLocalization, grouping: [3, 0] });
+
+        await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 3,
+            arch: '<form><field name="int_field"/></form>',
+        });
+
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "8,069");
+
+        target.querySelector(".o_field_widget input").value = 8069;
+        await triggerEvent(target, ".o_field_widget input", "input");
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "8069");
+
+        await triggerEvent(target, ".o_field_widget input", "keydown", { key: "Enter" });
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "8,069");
+    });
 });
