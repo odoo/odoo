@@ -35,12 +35,8 @@ Allows users to send documents by post
             'snailmail/static/src/scss/**/*',
             'snailmail/static/src/js/**/*',
         ],
-        'web.tests_assets': [
-            'snailmail/static/tests/helpers/**/*',
-        ],
-        'web.qunit_suite_tests': [
+        'web.assets_unit_tests': [
             'snailmail/static/tests/**/*',
-            ('remove', 'snailmail/static/tests/helpers/**/*'),
         ],
     },
     'license': 'LGPL-3',
