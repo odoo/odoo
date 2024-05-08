@@ -1426,7 +1426,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             #in order to not override shippig address, it's checked separately from shipping option
             self._include_country_and_state_in_address(shipping_address)
 
-            if order_sudo.partner_shipping_id.name.endswith(order_sudo.name):
+            shipping_name = order_sudo.partner_shipping_id.name
+            if shipping_name and shipping_name.endswith(order_sudo.name):
                 # The existing partner was created by `process_express_checkout_delivery_choice`, it
                 # means that the partner is missing information, so we update it.
                 order_sudo.partner_shipping_id = self._create_or_edit_partner(
