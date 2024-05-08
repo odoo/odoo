@@ -409,16 +409,37 @@ class Evaluacion(models.Model):
                 and usuario_evaluacion_rel[0].contestada == "contestada"
             ):
                 datos_demograficos.append(self.obtener_datos_demograficos(usuario))
+                
+        departamentos = defaultdict(int)
+        for dato in datos_demograficos:
+            departamentos[dato["departamento"]] += 1
+
+        generaciones = defaultdict(int)
+        for dato in datos_demograficos:
+            generaciones[dato["generacion"]] += 1
+            
+        puestos = defaultdict(int)
+        for dato in datos_demograficos:
+            puestos[dato["puesto"]] += 1
+
+        generos = defaultdict(int)
+        for dato in datos_demograficos:
+            dato["genero"] = dato["genero"].capitalize()
+            generos[dato["genero"]] += 1
 
         # Organizar los parámetros en el orden deseado
         parametros = {
             "evaluacion": self,
             "categorias": [categorias[nombre] for nombre in categorias_orden],
             "dominios": [dominios[nombre] for nombre in dominios_orden],
-            "datos_demograficos": datos_demograficos,
+            "departamentos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in departamentos.items()],
+            "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
+            "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
+            "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],
             "final": final,
         }
 
+        print(parametros)
         return parametros
 
     def asignar_color(self, valor, categoria=None, dominio=None):
@@ -576,21 +597,36 @@ class Evaluacion(models.Model):
 
     def obtener_datos_demograficos(self, usuario):
         datos = {}
+        
+        def obtener_generacion(anio_nacimiento):
+            if 1946 <= anio_nacimiento <= 1964:
+                return "Baby Boomers"
+            elif 1965 <= anio_nacimiento <= 1980:
+                return "Generación X"
+            elif 1981 <= anio_nacimiento <= 1999:
+                return "Millenials"
+            elif 2000 <= anio_nacimiento <= 2015:
+                return "Generacion Z"
+            else:
+                return "N/A"
+
 
         datos["nombre"] = self.obtener_dato(usuario.name)
         datos["genero"] = self.obtener_dato(usuario.gender)
-        datos["puesto"] = self.obtener_dato(usuario.job_id.name)
+        datos["puesto"] = self.obtener_dato(usuario.job_title)
         datos["anio_nacimiento"] = usuario.birthday.year if usuario.birthday else "N/A"
+        datos["generacion"] = obtener_generacion(datos["anio_nacimiento"]) if datos["anio_nacimiento"] != "N/A" else "N/A"
         datos["departamento"] = self.obtener_dato(usuario.department_id.name)
-
+        
         # Falta
         # Nivel Jerarquico
         # Gerencia
         # Jefatura
         # Fecha de ingreso
         # Ubicación/Region
-
+        
         return datos
+    
 
     def action_get_evaluaciones(self, evaluacion_id):
         """
