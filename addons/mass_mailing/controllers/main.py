@@ -322,6 +322,11 @@ class MassMailController(http.Controller):
         """Dummy route so placeholder is not prefixed by language, MUST have multilang=False"""
         return request.redirect('/mailing/my', code=301, local=True)
 
+    @http.route('/view', type='http', auth='user', website=True, sitemap=False)
+    def mailing_view_in_browser_placeholder_link(self):
+        """Route used to give an example of what would be when the user follows the placeholder links in the mailing editor."""
+        return request.render('mass_mailing.mailing_view_generic')
+
     # ------------------------------------------------------------
     # TRACKING
     # ------------------------------------------------------------
