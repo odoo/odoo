@@ -17,8 +17,17 @@ export function searchHighlight(searchTerm, target) {
     const htmlDoc = new DOMParser().parseFromString(target, "text/html");
     for (const term of searchTerm.split(" ")) {
         const regexp = new RegExp(`(${term})`, "gi");
+        // Special handling for '
+        // Note: browsers use XPath 1.0, so uses concat() rather than ||
+        const split = term.toLowerCase().split("'");
+        let lowercase = split.map(s => `'${s}'`).join(', "\'", ');
+        let uppercase = lowercase.toUpperCase();
+        if (split.length > 1) {
+            lowercase = `concat(${lowercase})`;
+            uppercase = `concat(${uppercase})`;
+        }
         const matchs = htmlDoc.evaluate(
-            `//*[text()[contains(translate(., '${term.toUpperCase()}', '${term.toLowerCase()}'), '${term.toLowerCase()}')]]`,
+            `//*[text()[contains(translate(., ${uppercase}, ${lowercase}), ${lowercase})]]`, // Equivalent to `.toLowerCase()` on all searched chars
             htmlDoc,
             null,
             XPathResult.ORDERED_NODE_SNAPSHOT_TYPE
