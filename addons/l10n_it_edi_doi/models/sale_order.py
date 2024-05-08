@@ -118,13 +118,13 @@ class SaleOrder(models.Model):
             if declaration_fiscal_position and order.l10n_it_edi_doi_id:
                 order.fiscal_position_id = declaration_fiscal_position
 
-    def _prepare_invoice(self):
+    def _prepare_account_move_values(self):
         """
         Prepare the dict of values to create the new invoice for a sales order. This method may be
         overridden to implement custom invoice generation (making sure to call super() to establish
         a clean extension chain).
         """
-        vals = super()._prepare_invoice()
+        vals = super()._prepare_account_move_values()
         declaration = self.l10n_it_edi_doi_id
         if declaration:
             date = fields.Date.context_today(self)

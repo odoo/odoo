@@ -318,7 +318,7 @@ class AdvancePaymentWizard(models.AbstractModel):
     def _prepare_down_payment_invoice_values(self, order, dp_lines, accounts):
         self.ensure_one()
         return {
-            **order._prepare_invoice(),
+            **order._prepare_account_move_values(),
             'invoice_line_ids': [Command.create(
                 line._prepare_invoice_line(
                     name=self._get_down_payment_description(order),
