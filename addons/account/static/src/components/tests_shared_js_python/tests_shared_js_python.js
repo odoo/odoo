@@ -28,7 +28,7 @@ export class TestsSharedJsPython extends Component {
                 params.product_values,
                 params.evaluation_context_kwargs
             );
-            const taxesComputation = accountTaxHelpers.prepare_taxes_computation(
+            let taxesComputation = accountTaxHelpers.prepare_taxes_computation(
                 params.taxes_data,
                 params.compute_kwargs
             );
@@ -38,13 +38,31 @@ export class TestsSharedJsPython extends Component {
             );
 
             if (params.is_round_globally) {
+                let taxesComputation = accountTaxHelpers.prepare_taxes_computation(
+                    params.taxes_data,
+                    { ...params.compute_kwargs, special_mode: "total_excluded" }
+                );
                 evaluationContext = accountTaxHelpers.eval_taxes_computation_prepare_context(
                     jsResults.results.total_excluded / params.quantity,
                     params.quantity,
                     params.product_values,
-                    { ...params.evaluation_context_kwargs, reverse: true }
+                    params.evaluation_context_kwargs
                 );
-                jsResults.reverse_results = accountTaxHelpers.eval_taxes_computation(
+                jsResults.total_excluded_results = accountTaxHelpers.eval_taxes_computation(
+                    taxesComputation,
+                    evaluationContext
+                );
+                taxesComputation = accountTaxHelpers.prepare_taxes_computation(
+                    params.taxes_data,
+                    { ...params.compute_kwargs, special_mode: "total_included" }
+                );
+                evaluationContext = accountTaxHelpers.eval_taxes_computation_prepare_context(
+                    jsResults.results.total_included / params.quantity,
+                    params.quantity,
+                    params.product_values,
+                    params.evaluation_context_kwargs
+                );
+                jsResults.total_included_results = accountTaxHelpers.eval_taxes_computation(
                     taxesComputation,
                     evaluationContext
                 );
