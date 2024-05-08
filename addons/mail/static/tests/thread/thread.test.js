@@ -18,14 +18,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
-import {
-    Command,
-    onRpc,
-    patchWithCleanup,
-    serverState,
-    withUser,
-} from "@web/../tests/web_test_helpers";
-import { config as transitionConfig } from "@web/core/transition";
+import { Command, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpcWithEnv } from "@mail/utils/common/misc";
 /** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
@@ -475,103 +468,6 @@ test("message list with a full page of empty messages should load more messages 
     // initial load: +30 empty ; (auto) load more: +20 empty +10 non-empty
     await contains(".o-mail-Message", { count: 10 });
     await contains("button", { text: "Load More" }); // still 40 non-empty
-});
-
-test("no new messages separator on posting message (some message history)", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_member_ids: [
-            Command.create({ message_unread_counter: 0, partner_id: serverState.partnerId }),
-        ],
-        channel_type: "channel",
-        name: "General",
-    });
-    const messageId = pyEnv["mail.message"].create({
-        body: "first message",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    const [memberId] = pyEnv["discuss.channel.member"].search([
-        ["channel_id", "=", channelId],
-        ["partner_id", "=", serverState.partnerId],
-    ]);
-    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: messageId + 1 });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Message");
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
-    await insertText(".o-mail-Composer-input", "hey!");
-    await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message", { count: 2 });
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
-});
-
-test("new messages separator on receiving new message [REQUIRE FOCUS]", async () => {
-    patchWithCleanup(transitionConfig, { disabled: true });
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
-    const userId = pyEnv["res.users"].create({
-        name: "Foreigner user",
-        partner_id: partnerId,
-    });
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_member_ids: [
-            Command.create({ message_unread_counter: 0, partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-        channel_type: "channel",
-        name: "General",
-    });
-    const messageId = pyEnv["mail.message"].create({
-        body: "blah",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    const [memberId] = pyEnv["discuss.channel.member"].search([
-        ["channel_id", "=", channelId],
-        ["partner_id", "=", serverState.partnerId],
-    ]);
-    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: messageId + 1 });
-    const env = await start();
-    rpc = rpcWithEnv(env);
-    await openDiscuss(channelId);
-    await contains(".o-mail-Message");
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
-    $(".o-mail-Composer-input")[0].blur();
-    // simulate receiving a message
-    withUser(userId, () =>
-        rpc("/mail/message/post", {
-            post_data: { body: "hu", message_type: "comment" },
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-        })
-    );
-    await contains(".o-mail-Message", { count: 2 });
-    await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
-    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "hu" });
-    await focus(".o-mail-Composer-input");
-    await tick();
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
-});
-
-test("no new messages separator on posting message (no message history)", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_member_ids: [
-            Command.create({ message_unread_counter: 0, partner_id: serverState.partnerId }),
-        ],
-        channel_type: "channel",
-        name: "General",
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Composer-input");
-    await contains(".o-mail-Message", { count: 0 });
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
-    await insertText(".o-mail-Composer-input", "hey!");
-    await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message");
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
 });
 
 test("Mention a partner with special character (e.g. apostrophe ')", async () => {
