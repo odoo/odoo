@@ -115,7 +115,12 @@ class HrEmployeePrivate(models.Model):
     study_school = fields.Char("School", groups="hr.group_hr_user", tracking=True)
     emergency_contact = fields.Char("Contact Name", groups="hr.group_hr_user", tracking=True)
     emergency_phone = fields.Char("Contact Phone", groups="hr.group_hr_user", tracking=True)
-    km_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=True)
+    distance_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=True)
+    km_home_work = fields.Integer(string="Home-Work Distance in Km", groups="hr.group_hr_user", compute="_compute_km_home_work", store=True)
+    distance_home_work_unit = fields.Selection([
+        ('kilometers', 'km'),
+        ('miles', 'mi'),
+    ], 'Home-Work Distance unit', tracking=True, groups="hr.group_hr_user", default='kilometers', required=True)
     employee_type = fields.Selection([
             ('employee', 'Employee'),
             ('student', 'Student'),
@@ -229,6 +234,11 @@ class HrEmployeePrivate(models.Model):
             name = employee.name.replace(' ', '_') + '_' if employee.name else ''
             permit_no = '_' + employee.permit_no if employee.permit_no else ''
             employee.work_permit_name = "%swork_permit%s" % (name, permit_no)
+
+    @api.depends('distance_home_work', 'distance_home_work_unit')
+    def _compute_km_home_work(self):
+        for employee in self:
+            employee.km_home_work = employee.distance_home_work * 1.609 if employee.distance_home_work_unit == "miles" else employee.distance_home_work
 
     def _get_partner_count_depends(self):
         return ['user_id']
