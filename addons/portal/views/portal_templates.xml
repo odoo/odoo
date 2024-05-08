@@ -403,16 +403,6 @@
         </nav>
     </template>
 
-    <template id="portal_record_layout" name="Portal single record layout">
-        <div t-attf-class="card mt-0 rounded #{classes if classes else ''}">
-            <div t-if="card_header" t-attf-class="card-header #{header_classes if header_classes else ''}">
-                <t t-out="card_header"/>
-            </div>
-            <div t-if="card_body" t-attf-class="card-body #{body_classes if body_classes else ''}">
-                <t t-out="card_body"/>
-            </div>
-        </div>
-    </template>
     <template id="portal_contact" name="Contact">
         <div class="o_portal_contact_details mb-5">
             <h5>Your contact</h5>

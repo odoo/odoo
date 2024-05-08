@@ -605,300 +605,293 @@
 
     <template id="portal_my_opportunity" name="My Opportunity">
         <t t-call="portal.portal_layout">
-            <t t-call="portal.portal_record_layout">
-                <t t-set="card_header">
-                    <div class="d-flex justify-content-between flex-wrap">
-                        <h4 class="mb-2 mb-md-0">
-                            Opportunity -
-                            <span t-field="opportunity.name"/>
-                        </h4>
-                        <!-- todo: replace by design system wizard -->
-                        <div class="d-flex justify-content-between align-items-center gap-2">
-                            <p class="mb-0 fw-bold">Stage:</p>
-                            <div t-foreach="stages[::-1]" t-as="stage" class="d-flex justify-content-between align-items-center gap-2">
-                                <i t-if="not stage_first" class="oi oi-chevron-right small" style="opacity: 0.5"/>
-                                <button type="button" t-att-data="stage.id" t-att-opp="opportunity.id" t-attf-class="btn btn-sm px-2 opp-stage-button #{'btn-secondary' if opportunity.stage_id.name != stage.name else 'btn-primary disabled'}">
-                                    <span t-field="stage.name"/>
-                                </button>
-                            </div>
+            <div class="d-flex justify-content-between flex-wrap mb-3">
+                <h4 class="mb-2 mb-md-0">
+                    Opportunity -
+                    <span t-field="opportunity.name"/>
+                </h4>
+                <!-- todo: replace by design system wizard -->
+                <div class="d-flex justify-content-between align-items-center gap-2">
+                    <p class="mb-0 fw-bold">Stage:</p>
+                    <div t-foreach="stages[::-1]" t-as="stage" class="d-flex justify-content-between align-items-center gap-2">
+                        <i t-if="not stage_first" class="oi oi-chevron-right small" style="opacity: 0.5"/>
+                        <button type="button" t-att-data="stage.id" t-att-opp="opportunity.id" t-attf-class="btn btn-sm px-2 opp-stage-button #{'btn-light' if opportunity.stage_id.name != stage.name else 'btn-primary disabled'}">
+                            <span t-field="stage.name"/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5 mb-4 mb-lg-0">
+                    <div class="border-bottom d-flex justify-content-between py-2 mb-3 align-items-center">
+                        <h5 class="d-flex align-items-center justify-content-between gap-2 mb-0 ">
+                            <span>
+                                <t t-if="opportunity.company_currency" t-out="opportunity.expected_revenue"
+                                    t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/>
+                                <t t-else="" t-out="opportunity.expected_revenue"/> at  </span>
+                            <span class="badge text-bg-info rounded-pill"><span t-field="opportunity.probability"/>%</span>
+                        </h5>
+                        <button type="button" data-bs-toggle="modal" data-bs-target=".modal_edit_opp" class="btn btn-link btn-sm"><i class="fa fa-pencil me-1"/>Edit</button>
+                    </div>
+                    <div class="row mb-2">
+                        <strong class="col-12 col-sm-4">Expected Closing</strong>
+                        <div class="col">
+                            <span t-if="opportunity.date_deadline" t-field="opportunity.date_deadline"/>
+                            <span t-else="" class="text-muted"> - </span>
                         </div>
                     </div>
-                </t>
-
-                <t t-set="card_body">
+                    <div class="row mb-2">
+                        <strong class="col-12 col-sm-4">Priority</strong>
+                        <div class="col">
+                            <span class="" title="Rating" role="img" t-attf-aria-label="Rating: #{opportunity.priority} on 4">
+                                <t t-foreach="range(1, 4)" t-as="i">
+                                    <span t-attf-class="fa text-warning fa-lg fa-star#{'' if i &lt;= int(opportunity.priority) else '-o'}" role="img" t-att-aria-label="'Star %d of 3' % i"/>
+                                </t>
+                            </span>
+                        </div>
+                    </div>
                     <div class="row">
-                        <div class="col-lg-5 mb-4 mb-lg-0">
-                            <div class="border-bottom d-flex justify-content-between py-2 mb-3 align-items-center">
-                                <h5 class="d-flex align-items-center justify-content-between gap-2 mb-0 ">
-                                    <span>
-                                        <t t-if="opportunity.company_currency" t-out="opportunity.expected_revenue"
-                                           t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/>
-                                        <t t-else="" t-out="opportunity.expected_revenue"/> at  </span>
-                                    <span class="badge text-bg-info rounded-pill"><span t-field="opportunity.probability"/>%</span>
-                                </h5>
-                                <button type="button" data-bs-toggle="modal" data-bs-target=".modal_edit_opp" class="btn btn-link btn-sm"><i class="fa fa-pencil me-1"/>Edit</button>
-                            </div>
-                            <div class="row mb-2">
-                                <strong class="col-12 col-sm-4">Expected Closing</strong>
-                                <div class="col">
-                                    <span t-if="opportunity.date_deadline" t-field="opportunity.date_deadline"/>
-                                    <span t-else="" class="text-muted"> - </span>
-                                </div>
-                            </div>
-                            <div class="row mb-2">
-                                <strong class="col-12 col-sm-4">Priority</strong>
-                                <div class="col">
-                                    <span class="" title="Rating" role="img" t-attf-aria-label="Rating: #{opportunity.priority} on 4">
-                                        <t t-foreach="range(1, 4)" t-as="i">
-                                            <span t-attf-class="fa text-warning fa-lg fa-star#{'' if i &lt;= int(opportunity.priority) else '-o'}" role="img" t-att-aria-label="'Star %d of 3' % i"/>
-                                        </t>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <strong class="col-12 col-sm-4">Next Activity</strong>
-                                <div class="col" t-if="user_activity">
-                                    <span t-field="user_activity.activity_type_id"/>
-                                    <span t-if="user_activity.date_deadline">&#160;on&#160;</span>
-                                    <span t-field="user_activity.date_deadline"/>
-                                    <em class="d-block" t-field="user_activity.summary"/>
-                                </div>
-                                <div class="col" t-else="">
-                                    <span class="text-muted"> - </span>
-                                </div>
-                            </div>
+                        <strong class="col-12 col-sm-4">Next Activity</strong>
+                        <div class="col" t-if="user_activity">
+                            <span t-field="user_activity.activity_type_id"/>
+                            <span t-if="user_activity.date_deadline">&#160;on&#160;</span>
+                            <span t-field="user_activity.date_deadline"/>
+                            <em class="d-block" t-field="user_activity.summary"/>
                         </div>
+                        <div class="col" t-else="">
+                            <span class="text-muted"> - </span>
+                        </div>
+                    </div>
+                </div>
 
-                        <div class="col-lg-6 offset-lg-1 col-xl-5 offset-xl-2">
-                            <div class="d-flex justify-content-between py-2 mb-3 border-bottom align-items-center">
-                                <h5 class="card-title mb-0">Contact</h5>
-                                <button type="button" data-bs-toggle="modal" data-bs-target=".modal_edit_contact" class="btn btn-link btn-sm"><i class="fa fa-pencil me-1"/>Edit</button>
+                <div class="col-lg-6 offset-lg-1 col-xl-5 offset-xl-2">
+                    <div class="d-flex justify-content-between py-2 mb-3 border-bottom align-items-center">
+                        <h5 class="card-title mb-0">Contact</h5>
+                        <button type="button" data-bs-toggle="modal" data-bs-target=".modal_edit_contact" class="btn btn-link btn-sm"><i class="fa fa-pencil me-1"/>Edit</button>
+                    </div>
+                    <div class="row mb-3" t-if="opportunity.partner_name or opportunity.email_from or opportunity.contact_name">
+                        <strong class="col-12 col-sm-3">Customer</strong>
+                        <div class="col">
+                            <div class="d-flex justify-content-start align-items-center gap-2 mb-2" t-if="opportunity.partner_name or opportunity.contact_name">
+                                <img t-if="opportunity.partner_id.sudo().avatar_1024" class="o_avatar o_portal_contact_img rounded"
+                                        t-att-src="image_data_uri(opportunity.partner_id.sudo().avatar_512)"
+                                alt="Contact" width="50"/>
+                                <div class="d-flex flex-column justify-content-center">
+                                    <h5 class="mb-0" t-if="opportunity.partner_name" t-out="opportunity.partner_name"/>
+                                    <p class="mb-0 text-muted" t-else="" t-out="opportunity.contact_name"/>
+                                </div>
                             </div>
-                            <div class="row mb-3" t-if="opportunity.partner_name or opportunity.email_from or opportunity.contact_name">
-                                <strong class="col-12 col-sm-3">Customer</strong>
-                                <div class="col">
-                                    <div class="d-flex justify-content-start align-items-center gap-2 mb-2" t-if="opportunity.partner_name or opportunity.contact_name">
-                                        <img t-if="opportunity.partner_id.sudo().avatar_1024" class="o_avatar o_portal_contact_img rounded"
-                                             t-att-src="image_data_uri(opportunity.partner_id.sudo().avatar_512)"
-                                        alt="Contact" width="50"/>
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <h5 class="mb-0" t-if="opportunity.partner_name" t-out="opportunity.partner_name"/>
-                                            <p class="mb-0 text-muted" t-else="" t-out="opportunity.contact_name"/>
-                                        </div>
-                                    </div>
+                            <div>
+                                <div t-field="opportunity.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "mobile"]}'/>
+                            </div>
+                            <address t-if="opportunity.street or opportunity.street2 or opportunity.city or opportunity.zip or opportunity.state_id or opportunity.country_id"
+                            class="col d-flex align-items-baseline mb-0 mt-2">
+                                <div class="d-flex flex-nowrap gap-3">
+                                    <div class="fa fa-map-marker fa-fw text-muted"></div>
                                     <div>
-                                        <div t-field="opportunity.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "mobile"]}'/>
+                                        <div t-if="opportunity.street"><span t-field="opportunity.street"/></div>
+                                        <span t-else="" class="text-muted"> - </span>
+                                        <div t-if="opportunity.street2"><span t-field="opportunity.street2"/></div>
+                                        <div t-if="opportunity.city or opportunity.zip">
+                                            <span t-field="opportunity.city"/> <span t-field="opportunity.zip"/>
+                                        </div>
+                                        <div t-if="opportunity.state_id or opportunity.country_id">
+                                            <span t-field="opportunity.state_id"/> <span t-field="opportunity.country_id"/>
+                                        </div>
                                     </div>
-                                 <address t-if="opportunity.street or opportunity.street2 or opportunity.city or opportunity.zip or opportunity.state_id or opportunity.country_id"
-                                    class="col d-flex align-items-baseline mb-0 mt-2">
-                                        <div class="d-flex flex-nowrap gap-3">
-                                            <div class="fa fa-map-marker fa-fw text-muted"></div>
-                                            <div>
-                                                <div t-if="opportunity.street"><span t-field="opportunity.street"/></div>
-                                                <span t-else="" class="text-muted"> - </span>
-                                                <div t-if="opportunity.street2"><span t-field="opportunity.street2"/></div>
-                                                <div t-if="opportunity.city or opportunity.zip">
-                                                    <span t-field="opportunity.city"/> <span t-field="opportunity.zip"/>
+                                </div>
+                            </address>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==== MODALS ==== -->
+                <div>
+                    <div role="dialog" class="modal fade modal_edit_opp">
+                        <div class="modal-dialog">
+                            <form method="POST" class="js_accept_json modal-content js_website_submit_form edit_opp_form">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <input type="hidden" name="opportunity_id" class="opportunity_id" t-att-value="opportunity.id"/>
+                                <header class="modal-header">
+                                    <h4 class="modal-title">Edit Opportunity</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </header>
+                                <main class="modal-body" id="sign-dialog">
+                                    <div class="mb-3">
+                                        <div class="row align-items-center">
+                                            <div class="col-auto flex-grow-1">
+                                                <div class="input-group">
+                                                    <div class="input-group-text"><span class="text-nowrap" t-esc="opportunity.company_currency.symbol"/></div>
+                                                    <input type="text" name="expected_revenue" class="form-control expected_revenue" t-att-value="opportunity.expected_revenue" placeholder="Planned Revenue"/>
                                                 </div>
-                                                <div t-if="opportunity.state_id or opportunity.country_id">
-                                                    <span t-field="opportunity.state_id"/> <span t-field="opportunity.country_id"/>
+                                            </div>
+                                            <div class="col-auto">at</div>
+                                            <div class="col-auto">
+                                                <div class="input-group">
+                                                    <input type="text" name="probability" class="form-control probability" t-att-value="opportunity.probability" placeholder="Probability"/>
+                                                    <div class="input-group-text">%</div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </address>
-                                </div>
-                            </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="row">
+                                            <div class="col-md-5 pe-0">
+                                                <label>Priority:</label>
+                                                <div class="input-group">
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="PriorityRadioOptions" value="0" t-att-checked="opportunity.priority not in ['1','2','3']" aria-label="Rating: 0 on 3" title="Rating: 0 on 3"/>
+                                                        <i class="ms-1 fa fa-star-o"></i>
+                                                    </label>
+                                                    <label class="radio-inline ms-2">
+                                                        <input type="radio" name="PriorityRadioOptions" value="1" t-att-checked="opportunity.priority == '1'" aria-label="Rating: 1 on 3" title="Rating: 1 on 3"/>
+                                                        <i class="ms-1 fa text-warning fa-star"></i>
+                                                    </label>
+                                                    <label class="radio-inline ms-2">
+                                                        <input type="radio" name="PriorityRadioOptions" value="2" t-att-checked="opportunity.priority == '2'" aria-label="Rating: 2 on 3" title="Rating: 2 on 3"/>
+                                                        <i class="ms-1 fa text-warning fa-star"></i>
+                                                        <i class="ms-1 fa text-warning fa-star"></i>
+                                                    </label>
+                                                    <label class="radio-inline ms-2">
+                                                        <input type="radio" name="PriorityRadioOptions" value="3" t-att-checked="opportunity.priority == '3'" aria-label="Rating: 3 on 3" title="Rating: 3 on 3"/>
+                                                        <i class="ms-1 fa text-warning fa-star"></i>
+                                                        <i class="ms-1 fa text-warning fa-star"></i>
+                                                        <i class="ms-1 fa text-warning fa-star"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <label>Expected Closing:</label>
+                                                <div class="input-group date" id="exp_closing_div">
+                                                    <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="opportunity.date_deadline"/></t>
+                                                    <input type="text" data-widget="datetime-picker" data-widget-type="date" name="date_deadline" t-att-value="date_formatted" class="datetimepicker-input form-control date_deadline" t-att-name="prefix"/>
+                                                    <span class="input-group-text">
+                                                        <span class="fa fa-calendar" role="img" aria-label="Calendar"></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <label class="col-form-label" for="next_activity">Next Activity</label>
+                                                <select class="form-select next_activity" name="next_activity">
+                                                    <t t-foreach="activity_types" t-as="activity_type">
+                                                        <option t-att-data="activity_type.id" t-att-selected="activity_type.id == user_activity.activity_type_id.id"
+                                                            t-att-name="activity_type.name" t-att-delay_count="activity_type.delay_count"
+                                                            t-att-delay_unit="activity_type.delay_unit" t-att-summary="activity_type.summary">
+                                                        <t t-esc="activity_type.name"/></option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <label class="col-form-label" for="activity_date_deadline">Next Activity Date</label>
+                                                <div class="input-group date" id="next_activity_div" >
+                                                    <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="user_activity.date_deadline"/></t>
+                                                    <input type="text" data-widget="datetime-picker" data-widget-type="date" name="activity_date_deadline" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" t-att-name="prefix"/>
+                                                    <span class="input-group-text">
+                                                        <span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="activity_summary">Details Next Activity</label>
+                                        <textarea rows="6" name="activity_summary" class="form-control activity_summary"><t t-esc="user_activity.summary"/></textarea>
+                                    </div>
+                                </main>
+                                <footer class="modal-footer">
+                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                                    <button t-attf-class="btn btn-primary edit_opp_confirm">Confirm</button>
+                                </footer>
+                            </form>
                         </div>
+                    </div>
 
-                        <!-- ==== MODALS ==== -->
-                        <div>
-                            <div role="dialog" class="modal fade modal_edit_opp">
-                                <div class="modal-dialog">
-                                    <form method="POST" class="js_accept_json modal-content js_website_submit_form edit_opp_form">
-                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                        <input type="hidden" name="opportunity_id" class="opportunity_id" t-att-value="opportunity.id"/>
-                                        <header class="modal-header">
-                                            <h4 class="modal-title">Edit Opportunity</h4>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </header>
-                                        <main class="modal-body" id="sign-dialog">
-                                            <div class="mb-3">
-                                                <div class="row align-items-center">
-                                                    <div class="col-auto flex-grow-1">
-                                                        <div class="input-group">
-                                                            <div class="input-group-text"><span class="text-nowrap" t-esc="opportunity.company_currency.symbol"/></div>
-                                                            <input type="text" name="expected_revenue" class="form-control expected_revenue" t-att-value="opportunity.expected_revenue" placeholder="Planned Revenue"/>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-auto">at</div>
-                                                    <div class="col-auto">
-                                                        <div class="input-group">
-                                                            <input type="text" name="probability" class="form-control probability" t-att-value="opportunity.probability" placeholder="Probability"/>
-                                                            <div class="input-group-text">%</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                    <div role="dialog" class="modal fade modal_edit_contact">
+                        <div class="modal-dialog">
+                            <form method="POST" class="js_accept_json modal-content js_website_submit_form edit_contact_form">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <input type="hidden" name="opportunity_id" class="opportunity_id" t-att-value="opportunity.id"/>
+                                <header class="modal-header">
+                                    <h4 class="modal-title">Edit Contact</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </header>
+                                <main class="modal-body" id="sign-dialog">
+                                    <t t-if="opportunity.partner_name">
+                                        <div class="mb-3">
+                                            <label class="col-form-label" for="partner_name">Customer Name</label>
+                                            <input type="text" name="partner_name" class="form-control partner_name" t-att-value="opportunity.partner_name"/>
+                                        </div>
+                                    </t>
+                                    <t t-if="not opportunity.partner_name">
+                                        <div class="mb-3">
+                                            <label class="col-form-label" for="partner_name">Customer Name</label>
+                                            <input type="text" name="partner_name" class="form-control partner_name" t-att-value="opportunity.contact_name"/>
+                                        </div>
+                                    </t>
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="phone">Phone</label>
+                                        <input type="text" name="phone" class="form-control phone" t-att-value="opportunity.phone"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="mobile">Mobile</label>
+                                        <input type="text" name="mobile" class="form-control mobile" t-att-value="opportunity.mobile"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="email_from">Email</label>
+                                        <input type="text" name="email_from" class="form-control email_from" t-att-value="opportunity.email_from"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="street">Address</label>
+                                        <input type="text" name="street" class="form-control street" t-att-value="opportunity.street" placeholder="Street"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <input type="text" name="street2" class="form-control street2" t-att-value="opportunity.street2" placeholder="Street2"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <input type="text" name="city" class="form-control city" t-att-value="opportunity.city" placeholder="City"/>
                                             </div>
-                                            <div class="mb-3">
-                                                <div class="row">
-                                                    <div class="col-md-5 pe-0">
-                                                        <label>Priority:</label>
-                                                        <div class="input-group">
-                                                            <label class="radio-inline">
-                                                                <input type="radio" name="PriorityRadioOptions" value="0" t-att-checked="opportunity.priority not in ['1','2','3']" aria-label="Rating: 0 on 3" title="Rating: 0 on 3"/>
-                                                                <i class="ms-1 fa fa-star-o"></i>
-                                                            </label>
-                                                            <label class="radio-inline ms-2">
-                                                                <input type="radio" name="PriorityRadioOptions" value="1" t-att-checked="opportunity.priority == '1'" aria-label="Rating: 1 on 3" title="Rating: 1 on 3"/>
-                                                                <i class="ms-1 fa text-warning fa-star"></i>
-                                                            </label>
-                                                            <label class="radio-inline ms-2">
-                                                                <input type="radio" name="PriorityRadioOptions" value="2" t-att-checked="opportunity.priority == '2'" aria-label="Rating: 2 on 3" title="Rating: 2 on 3"/>
-                                                                <i class="ms-1 fa text-warning fa-star"></i>
-                                                                <i class="ms-1 fa text-warning fa-star"></i>
-                                                            </label>
-                                                            <label class="radio-inline ms-2">
-                                                                <input type="radio" name="PriorityRadioOptions" value="3" t-att-checked="opportunity.priority == '3'" aria-label="Rating: 3 on 3" title="Rating: 3 on 3"/>
-                                                                <i class="ms-1 fa text-warning fa-star"></i>
-                                                                <i class="ms-1 fa text-warning fa-star"></i>
-                                                                <i class="ms-1 fa text-warning fa-star"></i>
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-7">
-                                                        <label>Expected Closing:</label>
-                                                        <div class="input-group date" id="exp_closing_div">
-                                                            <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="opportunity.date_deadline"/></t>
-                                                            <input type="text" data-widget="datetime-picker" data-widget-type="date" name="date_deadline" t-att-value="date_formatted" class="datetimepicker-input form-control date_deadline" t-att-name="prefix"/>
-                                                            <span class="input-group-text">
-                                                                <span class="fa fa-calendar" role="img" aria-label="Calendar"></span>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <div class="row">
-                                                    <div class="col-md-5">
-                                                        <label class="col-form-label" for="next_activity">Next Activity</label>
-                                                        <select class="form-select next_activity" name="next_activity">
-                                                            <t t-foreach="activity_types" t-as="activity_type">
-                                                                <option t-att-data="activity_type.id" t-att-selected="activity_type.id == user_activity.activity_type_id.id"
-                                                                    t-att-name="activity_type.name" t-att-delay_count="activity_type.delay_count"
-                                                                    t-att-delay_unit="activity_type.delay_unit" t-att-summary="activity_type.summary">
-                                                                <t t-esc="activity_type.name"/></option>
-                                                            </t>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-7">
-                                                        <label class="col-form-label" for="activity_date_deadline">Next Activity Date</label>
-                                                        <div class="input-group date" id="next_activity_div" >
-                                                            <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="user_activity.date_deadline"/></t>
-                                                            <input type="text" data-widget="datetime-picker" data-widget-type="date" name="activity_date_deadline" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" t-att-name="prefix"/>
-                                                            <span class="input-group-text">
-                                                                <span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="col-form-label" for="activity_summary">Details Next Activity</label>
-                                                <textarea rows="6" name="activity_summary" class="form-control activity_summary"><t t-esc="user_activity.summary"/></textarea>
-                                            </div>
-                                        </main>
-                                        <footer class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                            <button t-attf-class="btn btn-primary edit_opp_confirm">Confirm</button>
-                                        </footer>
-                                    </form>
-                                </div>
-                            </div>
-
-                            <div role="dialog" class="modal fade modal_edit_contact">
-                                <div class="modal-dialog">
-                                    <form method="POST" class="js_accept_json modal-content js_website_submit_form edit_contact_form">
-                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                        <input type="hidden" name="opportunity_id" class="opportunity_id" t-att-value="opportunity.id"/>
-                                        <header class="modal-header">
-                                            <h4 class="modal-title">Edit Contact</h4>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </header>
-                                        <main class="modal-body" id="sign-dialog">
-                                            <t t-if="opportunity.partner_name">
-                                                <div class="mb-3">
-                                                    <label class="col-form-label" for="partner_name">Customer Name</label>
-                                                    <input type="text" name="partner_name" class="form-control partner_name" t-att-value="opportunity.partner_name"/>
-                                                </div>
-                                            </t>
-                                            <t t-if="not opportunity.partner_name">
-                                                <div class="mb-3">
-                                                    <label class="col-form-label" for="partner_name">Customer Name</label>
-                                                    <input type="text" name="partner_name" class="form-control partner_name" t-att-value="opportunity.contact_name"/>
-                                                </div>
-                                            </t>
-                                            <div class="mb-3">
-                                                <label class="col-form-label" for="phone">Phone</label>
-                                                <input type="text" name="phone" class="form-control phone" t-att-value="opportunity.phone"/>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="col-form-label" for="mobile">Mobile</label>
-                                                <input type="text" name="mobile" class="form-control mobile" t-att-value="opportunity.mobile"/>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="col-form-label" for="email_from">Email</label>
-                                                <input type="text" name="email_from" class="form-control email_from" t-att-value="opportunity.email_from"/>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="col-form-label" for="street">Address</label>
-                                                <input type="text" name="street" class="form-control street" t-att-value="opportunity.street" placeholder="Street"/>
-                                            </div>
-                                            <div class="mb-3">
-                                                <input type="text" name="street2" class="form-control street2" t-att-value="opportunity.street2" placeholder="Street2"/>
-                                            </div>
-                                            <div class="mb-3">
-                                                <div class="row">
-                                                    <div class="col-md-5">
-                                                        <input type="text" name="city" class="form-control city" t-att-value="opportunity.city" placeholder="City"/>
-                                                    </div>
-                                                    <div class="col-md-5">
-                                                        <select name="state_id" class="form-select state_id">
-                                                            <option>States...</option>
-                                                            <t t-foreach="states or []" t-as="state">
-                                                                <option class="state" t-att-value="state.id" t-att-country="state.country_id.id" t-att-selected="state.id == opportunity.state_id.id">
-                                                                    <t t-esc="state.name"/>
-                                                                </option>
-                                                            </t>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <input type="text" name="zip" class="form-control zip" t-att-value="opportunity.zip" placeholder="ZIP"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <select name="country_id" class="form-select country_id">
-                                                    <option>Countries...</option>
-                                                    <t t-foreach="countries or []" t-as="country">
-                                                        <option t-att-value="country.id" t-att-selected="country.id == opportunity.country_id.id">
-                                                            <t t-esc="country.name"/>
+                                            <div class="col-md-5">
+                                                <select name="state_id" class="form-select state_id">
+                                                    <option>States...</option>
+                                                    <t t-foreach="states or []" t-as="state">
+                                                        <option class="state" t-att-value="state.id" t-att-country="state.country_id.id" t-att-selected="state.id == opportunity.state_id.id">
+                                                            <t t-esc="state.name"/>
                                                         </option>
                                                     </t>
                                                 </select>
                                             </div>
-                                        </main>
-                                        <footer class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                            <button t-attf-class="btn btn-primary edit_contact_confirm">Confirm</button>
-                                        </footer>
-                                    </form>
-                                </div>
-                            </div>
+                                            <div class="col-md-2">
+                                                <input type="text" name="zip" class="form-control zip" t-att-value="opportunity.zip" placeholder="ZIP"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <select name="country_id" class="form-select country_id">
+                                            <option>Countries...</option>
+                                            <t t-foreach="countries or []" t-as="country">
+                                                <option t-att-value="country.id" t-att-selected="country.id == opportunity.country_id.id">
+                                                    <t t-esc="country.name"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                </main>
+                                <footer class="modal-footer">
+                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                                    <button t-attf-class="btn btn-primary edit_contact_confirm">Confirm</button>
+                                </footer>
+                            </form>
                         </div>
-                        <!-- === / MODALS === -->
                     </div>
-                </t>
-            </t>
+                </div>
+                <!-- === / MODALS === -->
+            </div>
 
             <hr/>
 
