@@ -40,7 +40,23 @@ class PosSession(models.Model):
             },
         })
 
+        # add missing product fields used in the reward_product_domain
+        missing_fields = self._get_reward_product_domain_fields(params) - set(params['product.product']['fields'])
+
+        if missing_fields:
+            params['product.product']['fields'].extend([field for field in missing_fields if field in self.env['product.product']._fields])
+
         return params
+
+    def _get_reward_product_domain_fields(self, params):
+        fields = set()
+        domains = self.env['loyalty.reward'].search_read(params['loyalty.reward']['domain'], fields=['reward_product_domain'], load=False)
+        for domain in filter(lambda d: d['reward_product_domain'] != "null", domains):
+            domain = ast.literal_eval(domain['reward_product_domain'])
+            for condition in self._parse_domain(domain).values():
+                field_name, _, _ = condition
+                fields.add(field_name)
+        return fields
 
     def _replace_ilike_with_in(self, domain_str):
         if domain_str == "null":
@@ -48,19 +64,26 @@ class PosSession(models.Model):
 
         domain = ast.literal_eval(domain_str)
 
-        for index, condition in enumerate(domain):
-            if isinstance(condition, (list, tuple)) and len(condition) == 3:
-                field_name, operator, value = condition
-                field = self.env['product.product']._fields.get(field_name)
+        for index, condition in self._parse_domain(domain).items():
+            field_name, operator, value = condition
+            field = self.env['product.product']._fields.get(field_name)
 
-                if field and field.type == 'many2one' and operator in ('ilike', 'not ilike'):
-                    comodel = self.env[field.comodel_name]
-                    matching_ids = list(comodel._name_search(value, [], operator, limit=None))
+            if field and field.type == 'many2one' and operator in ('ilike', 'not ilike'):
+                comodel = self.env[field.comodel_name]
+                matching_ids = list(comodel._name_search(value, [], operator, limit=None))
 
-                    new_operator = 'in' if operator == 'ilike' else 'not in'
-                    domain[index] = [field_name, new_operator, matching_ids]
+                new_operator = 'in' if operator == 'ilike' else 'not in'
+                domain[index] = [field_name, new_operator, matching_ids]
 
         return json.dumps(domain)
+
+    def _parse_domain(self, domain):
+        parsed_domain = {}
+
+        for index, condition in enumerate(domain):
+            if isinstance(condition, (list, tuple)) and len(condition) == 3:
+                parsed_domain[index] = condition
+        return parsed_domain
 
     def load_data(self, models_to_load, only_data=False):
         result = super().load_data(models_to_load, only_data)
