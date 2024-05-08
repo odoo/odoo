@@ -147,16 +147,16 @@
                         <page name="page_details" string="Information">
                             <group>
                                 <group>
-                                    <field name="location" />
+                                    <field name="location" attrs="{'readonly': [('user_can_edit', '=', False)]}"/>
                                     <label for="videocall_location" class="opacity-100"/>
                                     <div col="2">
-                                        <field name="videocall_location" string="Videocall URL" widget="CopyClipboardChar" force_save="1" attrs="{'readonly':[('videocall_source','=', 'discuss')]}"/>
+                                        <field name="videocall_location" string="Videocall URL" widget="CopyClipboardChar" force_save="1" attrs="{'readonly':['|', ('videocall_source','=', 'discuss'), ('user_can_edit', '=', False)]}"/>
                                         <button name="clear_videocall_location" type="object" class="btn btn-link"
-                                            attrs="{'invisible': [('videocall_location', '=', False)]}" context="{'recurrence_update': recurrence_update}">
+                                            attrs="{'invisible': ['|', ('videocall_location', '=', False), ('user_can_edit', '=', False)]}" context="{'recurrence_update': recurrence_update}">
                                             <span class="fa fa-times"></span><span> Clear meeting</span>
                                         </button>
                                         <button name="set_discuss_videocall_location" type="object" class="btn btn-link"
-                                            attrs="{'invisible':  [('videocall_location', '!=', False)]}" context="{'recurrence_update': recurrence_update}">
+                                            attrs="{'invisible':  ['|', ('videocall_location', '!=', False), ('user_can_edit', '=', False)]}" context="{'recurrence_update': recurrence_update}">
                                             <span class="fa fa-plus"></span><span> Add Odoo meeting</span>
                                         </button>
                                         <button name="action_join_video_call" class="btn btn-link" help="Join Video Call" type="object" attrs="{'invisible': [('videocall_location', '=', False)]}">
@@ -171,7 +171,7 @@
                                         <field name="privacy" attrs="{'readonly': [('user_can_edit', '=', False)]}" nolabel="1"/>
                                     </div>
                                     <field name="user_id" widget="many2one_avatar_user" attrs="{'readonly': [('user_can_edit', '=', False)]}"/>
-                                    <field name="description"/>
+                                    <field name="description" attrs="{'readonly': [('user_can_edit', '=', False)]}"/>
                                 </group>
                                 <group>
                                     <div class="o_row" colspan="2">
