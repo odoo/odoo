@@ -23,10 +23,15 @@
 </t>
 
 <t t-name="web_editor.WeButton">
+    <!-- 
+         TODO: @owl-options tooltips are not automatically translated. To Check
+        How we can solve that issue.
+    -->
     <we-button t-ref="text-content"
                t-on-mouseenter="this._onUserValuePreview"
-               t-on-mouseleave="this._onUserValueReset" 
-               t-on-click="this._onButtonClick" class="o_we_user_value_widget" 
+               t-on-mouseleave="this._onUserValueReset"
+               t-on-click="this._onButtonClick" class="o_we_user_value_widget"
+               t-att-data-tooltip="props.title"
                t-att-class="getAllClasses()">
             <div>
                 <t t-if="this.img">
