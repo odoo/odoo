@@ -35,11 +35,10 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         # multi-company setup
         company2 = self.company_data_2['company']
 
-        # Activate the Credit Limit feature and set a value for partner_a.
-        self.env.company.account_use_credit_limit = True
-        self.partner_a.credit_limit = 1000.0
+        # Activate the Credit Limit feature
+        company2.account_use_credit_limit = True
 
-        # Create and confirm a SO for another company
+        # Create and confirm a SO for that company
         sale_order = company2.env['sale.order'].create({
             'company_id': company2.id,
             'partner_id': self.partner_a.id,
@@ -56,6 +55,7 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         sale_order.action_confirm()
 
         self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
+        self.assertEqual(self.partner_a.credit_to_invoice, 0.0)
         self.assertEqual(self.partner_a.with_company(company2).credit_to_invoice, 1000.0)
         partner_a_multi_company = self.partner_a.with_context(allowed_company_ids=[self.env.company.id, company2.id])
         self.assertEqual(partner_a_multi_company.credit_to_invoice, 0.0)

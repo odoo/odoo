@@ -220,7 +220,7 @@ class SaleOrder(models.Model):
     amount_untaxed = fields.Monetary(string="Untaxed Amount", store=True, compute='_compute_amounts', tracking=5)
     amount_tax = fields.Monetary(string="Taxes", store=True, compute='_compute_amounts')
     amount_total = fields.Monetary(string="Total", store=True, compute='_compute_amounts', tracking=4)
-    amount_to_invoice = fields.Monetary(string="Amount to invoice", store=True, compute='_compute_amount_to_invoice')
+    amount_to_invoice = fields.Monetary(string="Un-invoiced Balance", compute='_compute_amount_to_invoice')
     amount_invoiced = fields.Monetary(string="Already invoiced", compute='_compute_amount_invoiced')
 
     invoice_count = fields.Integer(string="Invoice Count", compute='_get_invoiced')
@@ -650,24 +650,18 @@ class SaleOrder(models.Model):
             else:
                 record.tax_country_id = record.company_id.account_fiscal_country_id
 
-    @api.depends('invoice_ids.state', 'currency_id', 'amount_total')
+    @api.depends('order_line.amount_to_invoice')
     def _compute_amount_to_invoice(self):
-        for order in self:
-            # If the invoice status is 'Fully Invoiced' force the amount to invoice to equal zero and return early.
-            if order.invoice_status == 'invoiced':
-                order.amount_to_invoice = 0.0
-                continue
+        if not self.env.company.account_use_credit_limit:
+            self.amount_to_invoice = 0.0
+        else:
+            for order in self:
+                order.amount_to_invoice = sum(order.order_line.mapped('amount_to_invoice'))
 
-            invoices = order.invoice_ids.filtered(lambda x: x.state == 'posted')
-            # Note: A negative amount can happen, since we can invoice more than the sales order amount.
-            # Care has to be taken when summing amount_to_invoice of multiple orders.
-            # E.g. consider one invoiced order with -100 and one uninvoiced order of 100: 100 + -100 = 0
-            order.amount_to_invoice = order.amount_total - invoices._get_sale_order_invoiced_amount(order)
-
-    @api.depends('amount_total', 'amount_to_invoice')
+    @api.depends('order_line.amount_invoiced')
     def _compute_amount_invoiced(self):
         for order in self:
-            order.amount_invoiced = order.amount_total - order.amount_to_invoice
+            order.amount_invoiced = sum(order.order_line.mapped('amount_invoiced'))
 
     @api.depends('company_id', 'partner_id', 'amount_total')
     def _compute_partner_credit_warning(self):
@@ -675,7 +669,7 @@ class SaleOrder(models.Model):
             order.with_company(order.company_id)
             order.partner_credit_warning = ''
             show_warning = order.state in ('draft', 'sent') and \
-                           order.company_id.account_use_credit_limit
+                           self.env.company.account_use_credit_limit
             if show_warning:
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
                     order,
