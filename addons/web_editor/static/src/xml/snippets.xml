@@ -161,6 +161,7 @@
             </div>
 
             <div id="o_scroll" t-ref="snippets-area" t-att-class="{ 'd-none': state.currentTab !== constructor.tabs.BLOCKS }">
+                <t t-set="disabledTooltip">This block cannot be dropped anywhere on this page.</t>
                 <t t-foreach="getSnippetsByCategories()" t-as="category" t-key="category.id">
                     <div t-att-id="category.id" t-if="category_value.length > 0" class="o_panel">
                         <div class="o_panel_header">
@@ -175,7 +176,8 @@
                                     t-att-data-oe-snippet-id="snippet.id"
                                     t-att-data-module-id="snippet.moduleId"
                                     t-on-click="_onSnippetClick"
-                                    data-tooltip="This block cannot be dropped anywhere on this page.">
+                                    data-tooltip="This block cannot be dropped anywhere on this page."
+                                    t-att-data-tooltip="snippet.disabled ? disabledTooltip : false">
                                     <t t-if="snippet.disabled">
                                         <img src="/web_editor/static/src/img/snippet_disabled.svg" class="o_snippet_undroppable"/>
                                     </t>
