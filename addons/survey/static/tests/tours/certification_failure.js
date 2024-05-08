@@ -118,10 +118,10 @@ var retrySteps = [{
 }];
 
 var lastSteps = [{
-    trigger: 'h1:contains("Thank you!")',
+    trigger: 'h1:contains("You scored")',
     run: function () {
         if (queryAll('a:contains("Retry")').length === 0) {
-            queryOne('h1:contains("Thank you!")').classList.add("tour_success");
+            queryOne('h1:contains("You scored")').classList.add("tour_success");
         }
     }
 }, {
