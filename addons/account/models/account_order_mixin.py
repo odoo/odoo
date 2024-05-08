@@ -111,7 +111,7 @@ class AccountOrderMixin(models.AbstractModel):
         """
         raise NotImplementedError  # To override
 
-    def _prepare_invoice(self):
+    def _prepare_account_move_values(self):
         """
         Prepare the dict of values to create the new invoice for this order.
         Used when generating the invoice from this account order.
@@ -217,7 +217,7 @@ class AccountOrderMixin(models.AbstractModel):
             if not any(not line.display_type for line in invoiceable_lines):
                 continue
 
-            invoice_vals = order._prepare_invoice()
+            invoice_vals = order._prepare_account_move_values()
             invoice_line_vals = []
             down_payment_section_added = False
             for line in invoiceable_lines:
