@@ -417,7 +417,7 @@ default db to serve on localhost:8069
 .. _docker: https://www.docker.com
 .. _EPEL: https://fedoraproject.org/wiki/EPEL
 .. _PostgreSQL: http://www.postgresql.org
-.. _the official installer:
+.. _the official installer:        
 .. _install pip:
     https://pip.pypa.io/en/latest/installing.html#install-pip
 .. _PostgreSQL for windows:
