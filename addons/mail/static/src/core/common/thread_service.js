@@ -10,7 +10,6 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { escape } from "@web/core/utils/strings";
 
 const FETCH_LIMIT = 30;
 
@@ -831,7 +830,7 @@ export class ThreadService {
     async search(searchTerm, thread, before = false) {
         const { messages, count } = await rpc(this.getFetchRoute(thread), {
             ...this.getFetchParams(thread),
-            search_term: escape(searchTerm),
+            search_term: await prettifyMessageContent(searchTerm), // formatted like message_post
             before,
         });
         return {
