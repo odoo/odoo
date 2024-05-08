@@ -139,3 +139,35 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
             {'account_id': self.account_expense.id, 'debit': 12000.0, 'credit': 0.0, 'analytic_distribution': {str(self.analytic_account_a.id): 66.67, str(self.analytic_account_b.id): 33.33, str(self.analytic_account_c.id): 100.0}},
 
         ])
+
+    def test_product_name_in_accrued_revenue_entry(self):
+        self.sale_order.order_line.qty_delivered = 5
+
+        so_context = {
+            'active_model': 'sale.order',
+            'active_ids': self.sale_order.ids,
+            'active_id': self.sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        payment_params = {
+            'advance_payment_method': 'percentage',
+            'amount': 50.0,
+        }
+        downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
+        invoice = downpayment._create_invoices({
+            'sale_orders': so_context,
+        })
+        invoice.invoice_date = self.wizard.date
+        invoice.action_post()
+        self.wizard.create_entries()
+        self.assertFalse(self.wizard.display_amount)
+        self.assertRecordValues(self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids, [
+            # reverse move lines
+            {'account_id': self.account_revenue.id, 'debit': 5000, 'credit': 0},
+            {'account_id': self.alt_inc_account.id, 'debit': 1000, 'credit': 0},
+            {'account_id': self.wizard.account_id.id, 'debit': 0, 'credit': 6000},
+            # move lines
+            {'account_id': self.account_revenue.id, 'debit': 0, 'credit': 5000},
+            {'account_id': self.alt_inc_account.id, 'debit': 0, 'credit': 1000},
+            {'account_id': self.wizard.account_id.id, 'debit': 6000, 'credit': 0},
+        ])
