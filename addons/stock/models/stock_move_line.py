@@ -415,10 +415,15 @@ class StockMoveLine(models.Model):
             for ml in mls:
                 # undo the original move line
                 qty_done_orig = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
-                in_date = Quant._update_available_quantity(ml.product_id, ml.location_dest_id, -qty_done_orig, lot_id=ml.lot_id,
-                                                      package_id=ml.result_package_id, owner_id=ml.owner_id)[1]
+                available_qty, in_date = Quant._update_available_quantity(ml.product_id, ml.location_dest_id, -qty_done_orig, lot_id=ml.lot_id,
+                                                      package_id=ml.result_package_id, owner_id=ml.owner_id)
                 Quant._update_available_quantity(ml.product_id, ml.location_id, qty_done_orig, lot_id=ml.lot_id,
                                                       package_id=ml.package_id, owner_id=ml.owner_id, in_date=in_date)
+                if available_qty < 0:
+                    move_to_reassign = ml._free_reservation(
+                        ml.product_id, ml.location_dest_id, qty_done_orig, lot_id=ml.lot_id,
+                        package_id=ml.result_package_id, owner_id=ml.owner_id)
+                    moves_ids_to_reassign.add(move_to_reassign.id)
 
                 # move what's been actually done
                 product_id = ml.product_id

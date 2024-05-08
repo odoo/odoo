@@ -4035,10 +4035,11 @@ class StockMove(TransactionCase):
 
         move1.move_line_ids.location_id = shelf2_location.id
 
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 1.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, shelf1_location), 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, shelf1_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, shelf2_location), 0.0)
-        self.assertEqual(move2.state, 'confirmed')
+        self.assertEqual(move2.state, 'assigned')
+        self.assertEqual(move2.move_line_ids.location_id, shelf1_location)
 
     def test_edit_done_move_line_8(self):
         """ Test that editing a done stock move line linked to an untracked product correctly and
