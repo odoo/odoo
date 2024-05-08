@@ -103,6 +103,8 @@
         <field name="model">evaluacion</field>
         <field name="arch" type="xml">
             <form>
+                <field name="tipo"/>
+
                 <header>
                     <!-- Generación de reporte de una evaluación-->
                     <button class="btn btn-primary" name="action_reporte_generico" string="Reporte" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
@@ -114,6 +116,14 @@
                     <p>
                         <field name="descripcion"/>
                     </p>
+                    <group>
+                        <field name="fecha_inicio">
+                            <widget name="date"/>
+                        </field>
+                        <field name="fecha_final">
+                            <widget name="date"/>
+                        </field>
+                    </group>
                     <group>
                         <group>
                             <field name="estado"/>
@@ -136,8 +146,12 @@
                                         <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="ver_respuestas_usuario" string="Detalle" type="object"/>
                                     </tree>
                                 </field>
+                                <div>
+                                    <button name="enviar_evaluacion_action" string="Enviar Correo" type="object" class="btn-primary mx-3" confirm="¿Estás seguro de enviar la encuesta?"/>
+                                    <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary mx-3 my-3" invisible="tipo != 'NOM_035'"/>
+                                </div>
                             </page>
-                            <page string="Semaforización">
+                            <page string="Semaforización" invisible="tipo != 'CLIMA'">
                                 <style>
                                     .my_table th {
                                         text-align: left;
@@ -265,6 +279,9 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <div>
+                                    <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary mx-3 my-3"/>
+                                </div>
                             </page>
                         </notebook>
                     </group>
@@ -309,7 +326,7 @@
         </field>
     </record>
 
-    <record id="reportes_action" model="ir.actions.act_window">
+    <record id="reporte_action" model="ir.actions.act_window">
         <field name="name">Reportes</field>
         <field name="res_model">evaluacion</field>
         <field name="view_mode">tree</field>
@@ -403,7 +420,7 @@
                         </notebook>
                     </group>
                     <div>
-                        <button name="action_enviar_evaluacion" string="Enviar Correo" type="object" class="btn-primary mx-3" confirm="¿Estás seguro de enviar la encuesta?"/>
+                        <button name="enviar_evaluacion_action" string="Enviar Correo" type="object" class="btn-primary mx-3" confirm="¿Estás seguro de enviar la encuesta?"/>
                         <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary"/>
                     </div>
                 </sheet>
@@ -443,11 +460,11 @@
         <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
 
-    <record id="action_enviar_evaluacion" model="ir.actions.server">
+    <record id="enviar_evaluacion_action" model="ir.actions.server">
         <field name="name">Enviar evaluacion</field>
         <field name="model_id" ref="model_evaluacion"/>
         <field name="state">code</field>
-        <field name="code">action = model.action_enviar_evaluacion()</field>
+        <field name="code">action = model.enviar_evaluacion_action()</field>
         <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
 

@@ -641,15 +641,13 @@ class Evaluacion(models.Model):
             "evaluacion": self,
             "pregunta": self.pregunta_ids,
         }
-
-    def action_enviar_evaluacion(self):
+    
+    def enviar_evaluacion_action(self):
         usuarios = []
 
         for usuario in self.usuario_ids:
             usuarios.append(usuario.partner_id.name)
-        self.env["usuario.evaluacion.rel"].action_enviar_evaluacion(
-            evaluacion_id=self.id
-        )
+        self.env['usuario.evaluacion.rel'].enviar_evaluacion_action(evaluacion_id=self.id)
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
