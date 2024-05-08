@@ -147,10 +147,10 @@
                                         <field name="private_phone" string="Phone"/>
                                         <field name="bank_account_id" context="{'default_partner_id': work_contact_id}" options="{'no_quick_create': True}" readonly="not id"/>
                                         <field name="lang" string="Language"/>
-                                        <label for="km_home_work"/>
+                                        <label for="distance_home_work"/>
                                         <div class="o_row" name="div_km_home_work">
-                                            <field name="km_home_work" class="o_hr_narrow_field"/>
-                                            <span>Km</span>
+                                            <field name="distance_home_work" class="o_hr_narrow_field"/>
+                                            <span><field name="distance_home_work_unit"/></span>
                                         </div>
                                         <field name="private_car_plate" />
                                     </group>

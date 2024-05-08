@@ -146,7 +146,11 @@
                                 <field name="private_phone" string="Phone" class="o_force_ltr" readonly="not can_edit"/>
                                 <field name="private_lang" string="Language" readonly="not can_edit"/>
                                 <field name="employee_bank_account_id" readonly="not can_edit"/>
-                                <field name="km_home_work" readonly="not can_edit"/>
+                                <label for="distance_home_work"/>
+                                <div class="o_row">
+                                    <field name="distance_home_work" readonly="not can_edit" class="o_hr_narrow_field"/>
+                                    <span><field name="distance_home_work_unit" readonly="not can_edit"/></span>
+                                </div>
                             </group>
                             <group string="Citizenship">
                                 <field name="employee_country_id" options='{"no_open": True, "no_create": True}' readonly="not can_edit"/>
