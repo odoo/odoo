@@ -939,6 +939,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
             indexRecord(model, values);
             if (orderedRecords[model].length === 0) {
                 orderedRecords[model] = values;
+                valuesToAdd.push(...values);
             } else {
                 for (const value of values) {
                     const index = orderedRecords[model].findIndex((or) => or.id === value.id);

@@ -193,7 +193,10 @@ export class PosStore extends Reactive {
             "create",
             this.computeProductPricelistCache.bind(this)
         );
-
+        if (this.data.loadedIndexedDBProducts && this.data.loadedIndexedDBProducts.length > 0) {
+            await this._loadMissingPricelistItems(this.data.loadedIndexedDBProducts);
+            delete this.data.loadedIndexedDBProducts;
+        }
         this.computeProductPricelistCache();
     }
 
@@ -212,6 +215,14 @@ export class PosStore extends Reactive {
 
             if (data[0].model.modelName === "product.pricelist.item") {
                 pricelistItems = data;
+                // it needs only to compute for the products that are affected by the pricelist items
+                const productTmplIds = new Set(data.map((item) => item.raw.product_tmpl_id));
+                const productIds = new Set(data.map((item) => item.raw.product_id));
+                products = products.filter(
+                    (product) =>
+                        productTmplIds.has(product.raw.product_tmpl_id) ||
+                        productIds.has(product.id)
+                );
             }
         }
 
@@ -239,9 +250,41 @@ export class PosStore extends Reactive {
                     applicableRules[item.pricelist_id.id].push(item);
                 }
             }
-
-            product.cachedPricelistRules = applicableRules;
+            for (const pricelistId in applicableRules) {
+                if (product.cachedPricelistRules[pricelistId]) {
+                    const existingRuleIds = product.cachedPricelistRules[pricelistId].map(
+                        (rule) => rule.id
+                    );
+                    const newRules = applicableRules[pricelistId].filter(
+                        (rule) => !existingRuleIds.includes(rule.id)
+                    );
+                    product.cachedPricelistRules[pricelistId] = [
+                        ...newRules,
+                        ...product.cachedPricelistRules[pricelistId],
+                    ];
+                } else {
+                    product.cachedPricelistRules[pricelistId] = applicableRules[pricelistId];
+                }
+            }
         }
+        if (data && data.length > 0 && data[0].model.modelName === "product.product") {
+            this._loadMissingPricelistItems(products);
+        }
+    }
+
+    async _loadMissingPricelistItems(products) {
+        if (!products.length) {
+            return;
+        }
+
+        const product_tmpl_ids = products.map((product) => product.raw.product_tmpl_id);
+        const product_ids = products.map((product) => product.id);
+        await this.data.callRelated("pos.session", "get_pos_ui_product_pricelist_item_by_product", [
+            odoo.pos_session_id,
+            product_tmpl_ids,
+            product_ids,
+            this.config.id,
+        ]);
     }
 
     async afterProcessServerData() {
