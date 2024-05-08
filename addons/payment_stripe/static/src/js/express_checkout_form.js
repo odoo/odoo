@@ -12,11 +12,13 @@ paymentExpressCheckoutForm.include({
      *
      * @private
      * @param {number} deliveryAmount - The delivery costs.
+     * @param {number} amountFreeShipping - The free shipping discount amount, <= 0.
      * @returns {Object} The information to be displayed on the payment form.
      */
-    _getOrderDetails(deliveryAmount) {
+    _getOrderDetails(deliveryAmount, amountFreeShipping) {
         const pending = this.txContext.shippingInfoRequired && deliveryAmount === undefined;
-        const amount = deliveryAmount ? this.txContext.minorAmount + deliveryAmount
+        const amount = deliveryAmount
+            ? this.txContext.minorAmount + deliveryAmount + amountFreeShipping
             : this.txContext.minorAmount;
         const displayItems = [
             {
@@ -28,6 +30,12 @@ paymentExpressCheckoutForm.include({
             displayItems.push({
                 label: _t("Delivery"),
                 amount: deliveryAmount,
+            });
+        }
+        if (amountFreeShipping) {
+            displayItems.push({
+                label: _t("Free Shipping"),
+                amount: amountFreeShipping,
             });
         }
         return {
@@ -185,9 +193,18 @@ paymentExpressCheckoutForm.include({
 
             // When the customer selects a different shipping option, update the displayed total.
             paymentRequest.on('shippingoptionchange', async (ev) => {
+                const result = await this._rpc({
+                    route: '/shop/update_carrier',
+                    params: {
+                        carrier_id: parseInt(ev.shippingOption.id),
+                    },
+                });
                 ev.updateWith({
                     status: 'success',
-                    ...this._getOrderDetails(ev.shippingOption.amount),
+                    ...this._getOrderDetails(
+                        ev.shippingOption.amount,
+                        result.delivery_discount_minor_amount || 0,
+                    ),
                 });
             });
         }

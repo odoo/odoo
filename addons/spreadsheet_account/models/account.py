@@ -113,7 +113,7 @@ class AccountMove(models.Model):
             company_id = args["company_id"] or self.env.company.id
             domain = self._build_spreadsheet_formula_domain(args)
             # remove this when _search always returns a Query object
-            if domain == expression.FALSE_DOMAIN:
+            if expression.is_false(self.env["account.move.line"], domain):
                 results.append({"credit": 0, "debit": 0})
                 continue
             MoveLines = self.env["account.move.line"].with_company(company_id)

@@ -10,7 +10,7 @@
 
 {
     'name': 'Colombia - Accounting',
-    'version': '0.8',
+    'version': '0.9',
     'category': 'Accounting/Localizations/Account Charts',
     'description': 'Colombian Accounting and Tax Preconfiguration',
     'author': 'David Arnold (XOE Solutions)',

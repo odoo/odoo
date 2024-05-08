@@ -13,7 +13,7 @@ class TestReportPoSOrder(TestPoSCommon):
 
     def test_report_pos_order(self):
 
-        product1 = self.create_product('Product 1', self.categ_basic, 150)
+        product1 = self.create_product('Product 1', self.categ_basic, 150, self.taxes['tax10'].id)
 
         self.open_new_session()
         session = self.pos_session
@@ -27,10 +27,10 @@ class TestReportPoSOrder(TestPoSCommon):
                 'discount': 0,
                 'qty': 1.0,
                 'price_subtotal': 150,
-                'price_subtotal_incl': 150,
+                'price_subtotal_incl': 165,
             }),],
-            'amount_total': 150.0,
-            'amount_tax': 0.0,
+            'amount_total': 165.0,
+            'amount_tax': 15.0,
             'amount_paid': 0.0,
             'amount_return': 0.0,
         })
@@ -39,3 +39,4 @@ class TestReportPoSOrder(TestPoSCommon):
         reports = self.env['report.pos.order'].sudo().search([('product_id', '=', product1.id)], order='id')
 
         self.assertEqual(reports[0].margin, 150)
+        self.assertEqual(reports[0].price_total, 165)

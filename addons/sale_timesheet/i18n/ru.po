@@ -18,6 +18,7 @@
 # Wil Odoo, 2024
 # Collex100, 2024
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
+# Смородин Даниил, 2024
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2024\n"
+"Last-Translator: Смородин Даниил, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +51,7 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-"<p class=\"o_view_nocontent_smiling_face\"> Запишите табели </p><p> Вы можете зарегистрировать и отслеживать ваши рабочие часы по проекту каждый день. Каждый час, потраченный на проект, будет переведен в стоимость и может быть выставлен в акте клиентам, если нужно. </p>"
+"<p class=\"o_view_nocontent_smiling_face\"> Запишите табели </p><p> Вы можете зарегистрировать и отслеживать ваши рабочие часы по проекту каждый день. Каждый час, потраченный на проект, будет переведен в стоимость и может быть выставлен в счете клиентам, если нужно. </p>"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice___candidate_orders
@@ -151,7 +152,7 @@ msgid ""
 msgstr ""
 "Согласно настройкам для товаров, отгруженное количество может автоматически вычисляться с помощью следующих механизмов:\n"
 "- Вручную: количество устанавливается вручную\n"
-"- Аналитика по расходам: количество рассчитывается на основе актов\n"
+"- Аналитика по расходам: количество рассчитывается на основе счетов\n"
 "- Табель: количество рассчитывается как сумма часов, затраченных на все задачи по этой позиции\n"
 "- Складские перемещения: количество заполняют на складе при отгрузке\n"
 
@@ -169,7 +170,7 @@ msgstr "Выделенные часы"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
 msgid "Amount to invoice"
-msgstr "Сумма к выставлению в акте"
+msgstr "Сумма к выставлению в счете"
 
 #. module: sale_timesheet
 #: model:ir.model.constraint,message:sale_timesheet.constraint_project_create_sale_order_line_unique_employee_per_wizard
@@ -299,7 +300,7 @@ msgstr "Отмена"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__sale_order_id
 msgid "Choose the Sales Order to invoice"
-msgstr "Выберите заказ на продажу для выставления акта"
+msgstr "Выберите заказ на продажу для выставления счета"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__commercial_partner_id
@@ -455,7 +456,7 @@ msgstr "Отображаемое имя"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "Draft Invoice"
-msgstr "Черновик акта"
+msgstr "Черновик счета"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -726,7 +727,7 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
 "Задавайте количество в заказе вручную: акт на основе количества, введенного вручную, без создания аналитического счета.\n"
-"Табели учета рабочего времени в контракте: акт на основе записанных часов в соответствующем табеле.\n"
+"Табели учета рабочего времени в контракте: счет на основе записанных часов в соответствующем табеле.\n"
 "Создавайте задачи и вносите часы: Создайте задачу при подтверждении заказа и вносите в нее рабочие часы."
 
 #. module: sale_timesheet
@@ -897,7 +898,7 @@ msgstr "Цена"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__pricing_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__pricing_type
 msgid "Pricing"
-msgstr "Установление цены"
+msgstr "Стоимость"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
@@ -915,8 +916,8 @@ msgid ""
 "Product of the sales order item. Must be a service invoiced based on "
 "timesheets on tasks."
 msgstr ""
-"Товар элемента заказа на продажу. Должен быть актирован на основе табелей "
-"задач."
+"Товар позиции заказа на продажу. Должен быть выставлен счет на основе "
+"табелей задач."
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -1139,7 +1140,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Sell services and invoice time spent"
-msgstr "Продавайте услуги и выставляйте акты за трудочасы"
+msgstr "Продавайте услуги и выставляйте счета за трудочасы"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template

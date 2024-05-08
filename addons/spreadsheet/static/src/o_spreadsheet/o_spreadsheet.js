@@ -7241,7 +7241,7 @@
     /**
      * Get a default chart js configuration
      */
-    function getDefaultChartJsRuntime(chart, labels, fontColor) {
+    function getDefaultChartJsRuntime(chart, labels, fontColor, truncateLabels = true) {
         return {
             type: chart.type,
             options: {
@@ -7280,7 +7280,7 @@
                 },
             },
             data: {
-                labels: labels.map(truncateLabel),
+                labels: truncateLabels ? labels.map(truncateLabel) : labels,
                 datasets: [],
             },
         };
@@ -8140,10 +8140,10 @@
         }
         return true;
     }
-    function getLineConfiguration(chart, labels) {
+    function getLineConfiguration(chart, labels, truncateLabels) {
         var _a;
         const fontColor = chartFontColor(chart.background);
-        const config = getDefaultChartJsRuntime(chart, labels, fontColor);
+        const config = getDefaultChartJsRuntime(chart, labels, fontColor, truncateLabels);
         const legend = {
             labels: {
                 fontColor,
@@ -8205,7 +8205,8 @@
         if (axisType === "time") {
             ({ labels, dataSetsValues } = fixEmptyLabelsForDateCharts(labels, dataSetsValues));
         }
-        const config = getLineConfiguration(chart, labels);
+        const truncateLabels = axisType === "category";
+        const config = getLineConfiguration(chart, labels, truncateLabels);
         const labelFormat = getLabelFormat(getters, chart.labelRange);
         if (axisType === "time") {
             config.options.scales.xAxes[0].type = "time";
@@ -27387,7 +27388,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.clearBorders(cmd.sheetId, cmd.target);
                     break;
                 case "REMOVE_COLUMNS_ROWS":
-                    for (let el of cmd.elements) {
+                    for (let el of [...cmd.elements].sort((a, b) => b - a)) {
                         if (cmd.dimension === "COL") {
                             this.shiftBordersHorizontally(cmd.sheetId, el + 1, -1);
                         }
@@ -43321,9 +43322,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.39';
-    __info__.date = '2024-04-18T16:53:40.591Z';
-    __info__.hash = 'ea5a526';
+    __info__.version = '16.0.40';
+    __info__.date = '2024-04-26T07:56:37.850Z';
+    __info__.hash = '70a6783';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);

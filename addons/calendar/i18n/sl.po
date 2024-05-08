@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Katja Deržič, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
@@ -56,14 +56,14 @@ msgstr ""
 #: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "%s has accepted the invitation"
-msgstr ""
+msgstr "%sje povabilo sprejela."
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "%s has declined the invitation"
-msgstr ""
+msgstr "%sje povabilo zavrnilo."
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
@@ -114,7 +114,7 @@ msgid ""
 "                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"EEEE\", lang_code=object.env.lang) or \"\"'>Tuesday</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
-"                <t t-out=\"str(object.event_id.start.day) or ''\">4</t>\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
 "                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"MMMM y\", lang_code=object.env.lang) or \"\"'>May 2021</t>\n"
@@ -313,7 +313,7 @@ msgid ""
 "                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''\">Tuesday</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
-"                <t t-out=\"str(object.event_id.start.day) or ''\">4</t>\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
 "                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''\">May 2021</t>\n"
@@ -411,7 +411,7 @@ msgid ""
 "                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"EEEE\", lang_code=object.env.lang) or \"\"'>Tuesday</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
-"                <t t-out=\"str(object.event_id.start.day) or ''\">4</t>\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
 "                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"MMMM y\", lang_code=object.env.lang) or \"\"'>May 2021</t>\n"
@@ -493,7 +493,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span class=\"fa fa-plus\"/><span> Add Odoo meeting</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-plus\"/><span>Dodaj Odoo sestanek</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -521,6 +521,8 @@ msgid ""
 "<strong>The following attendees have invalid email addresses and won't "
 "receive any email notifications:</strong>"
 msgstr ""
+"<strong>Naslednji udeleženci imajo neveljavne e-poštne naslove in ne bodo "
+"prejemali e-poštnih obvestil</strong>"
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
@@ -608,7 +610,7 @@ msgstr "Cel dan"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "All Day, %(day)s"
-msgstr ""
+msgstr "Cel dan,%(day)s"
 
 #. module: calendar
 #. odoo-javascript
@@ -616,7 +618,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__all_events
 #, python-format
 msgid "All events"
-msgstr ""
+msgstr "Vsi dogodki"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -745,7 +747,7 @@ msgstr "Koledar: opomnik za dogodke"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_update
 msgid "Calendar: Event Update"
-msgstr ""
+msgstr "Koledar: Posodobitev dogodkov"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_invitation
@@ -755,7 +757,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_reminder
 msgid "Calendar: Reminder"
-msgstr ""
+msgstr "Koledar: Opomnik"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -772,7 +774,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_checked
 msgid "Checked"
-msgstr ""
+msgstr "Preverjeno"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__external_calendar_provider
@@ -811,14 +813,14 @@ msgstr "Potrdi"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Connect"
-msgstr ""
+msgstr "Povežite"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.js:0
 #, python-format
 msgid "Connect your Calendar"
-msgstr ""
+msgstr "Povežite svoj koledar"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
@@ -1004,7 +1006,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Edit recurring event"
-msgstr ""
+msgstr "Urejanje ponavljajočega se dogodka"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
@@ -1089,49 +1091,49 @@ msgstr "Čas dogodka"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Days"
-msgstr ""
+msgstr "Vsakih%(interval)sdni"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Days for %(count)s events"
-msgstr ""
+msgstr "Vsakih%(interval)sdni za%(count)sdogodke"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Days until %(until)s"
-msgstr ""
+msgstr "Vsakih%(interval)sdni do%(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Months day %(day)s"
-msgstr ""
+msgstr "Vsak%(interval)sdan v mesecu%(day)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Months day %(day)s for %(count)s events"
-msgstr ""
+msgstr "Vsak %(interval)sdan v mesecu%(day)s za %(count)sdogodke"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Months day %(day)s until %(until)s"
-msgstr ""
+msgstr "Vsak%(interval)sdan v mesecu%(day)sdo%(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Months on the %(position)s %(weekday)s"
-msgstr ""
+msgstr "Vsak%(interval)smesec na%(position)s%(weekday)s"
 
 #. module: calendar
 #. odoo-python
@@ -1140,7 +1142,7 @@ msgstr ""
 msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s "
 "events"
-msgstr ""
+msgstr "Vsak%(interval)smesec na%(position)s%(weekday)sza%(count)sdogodke"
 
 #. module: calendar
 #. odoo-python
@@ -1148,56 +1150,56 @@ msgstr ""
 #, python-format
 msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s"
-msgstr ""
+msgstr "Vsak%(interval)smesec na%(position)s%(weekday)sdo%(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Weeks on %(days)s"
-msgstr ""
+msgstr "Vsak %(interval)steden na%(days)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Weeks on %(days)s for %(count)s events"
-msgstr ""
+msgstr "Vsak %(interval)steden na%(days)sza%(count)sdogodke"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Weeks on %(days)s until %(until)s"
-msgstr ""
+msgstr "Vsak%(interval)steden na%(days)sdo%(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Years"
-msgstr ""
+msgstr "Vsakih%(interval)slet"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Years for %(count)s events"
-msgstr ""
+msgstr "Vsakih%(interval)slet za%(count)sdogodke"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Years until %(until)s"
-msgstr ""
+msgstr "Vsakih%(interval)slet do%(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/mail_activity.py:0
 #, python-format
 msgid "Feedback: %(feedback)s"
-msgstr ""
+msgstr "Povratne informacije:%(feedback)s"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
@@ -1283,13 +1285,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Group By"
 msgstr "Združi po"
-
-#. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_event.py:0
-#, python-format
-msgid "Grouping by %s is not allowed on private events."
-msgstr ""
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -1408,7 +1403,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Join Video Call"
-msgstr ""
+msgstr "Pridruži se video klicu"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1
@@ -1637,12 +1632,12 @@ msgstr "Obvestilo"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_5
 msgid "Notification - 1 Days"
-msgstr ""
+msgstr "Obvestilo - 1 dan"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_3
 msgid "Notification - 1 Hours"
-msgstr ""
+msgstr "Obvestilo - 1 uro"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_1
@@ -1652,7 +1647,7 @@ msgstr "Obvestilo - 15 minut"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_4
 msgid "Notification - 2 Hours"
-msgstr ""
+msgstr "Obvestilo - 2 ure"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_2
@@ -1710,7 +1705,7 @@ msgstr "Samo notranji uporabniki"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
 msgid "Open Calendar"
-msgstr ""
+msgstr "Odpri koledar"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
@@ -1775,14 +1770,7 @@ msgstr "Zasebnost"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__private
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Private"
-msgstr ""
-
-#. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_event.py:0
-#, python-format
-msgid "Private Event Excluded"
-msgstr ""
+msgstr "Zasebno"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
@@ -1793,7 +1781,7 @@ msgstr "Javno"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Read More"
-msgstr ""
+msgstr "Preberi več"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type
@@ -1926,7 +1914,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Invitations"
-msgstr ""
+msgstr "Pošlji vabila"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -2022,7 +2010,7 @@ msgstr "Nedelja"
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 #, python-format
 msgid "Synchronize with:"
-msgstr ""
+msgstr "Sinhronizirajte z:"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -2032,7 +2020,7 @@ msgstr "Sinhroniziraj svoj koledar z Google koledarjem"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Synchronize your calendar with Outlook"
-msgstr ""
+msgstr "Sinhronizirajte koledar z Outlookom"
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
@@ -2079,7 +2067,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
 msgid "The day must be between 1 and 31"
-msgstr ""
+msgstr "Dan mora biti med 1 in 31."
 
 #. module: calendar
 #. odoo-python
@@ -2137,7 +2125,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
 #, python-format
 msgid "This event"
-msgstr ""
+msgstr "Ta in naslednji dogodki"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
@@ -2267,7 +2255,7 @@ msgstr "Da, pridem."
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "You can't update a recurrence without base event."
-msgstr ""
+msgstr "Ponovitve ni mogoče posodobiti brez osnovnega dogodka."
 
 #. module: calendar
 #. odoo-python
@@ -2281,7 +2269,7 @@ msgstr "Ne morete podvojiti prisotnega v koledarju"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "You have to choose at least one day in the week"
-msgstr ""
+msgstr "Izbrati morate vsaj en dan v tednu."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form

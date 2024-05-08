@@ -7,7 +7,6 @@
 # Ekaterina <nawsikaya@bk.ru>, 2022
 # Василий Коробатов <boxat@mail.ru>, 2022
 # Максим Дронь <dronmax@gmail.com>, 2022
-# Дмитрий Ефременко <shiza867@gmail.com>, 2022
 # Viktor Pogrebniak <vp@aifil.ru>, 2022
 # sorin Rusu <to.rusu.sorin@gmail.com>, 2022
 # Ye Ye <vrio.ua@gmail.com>, 2022
@@ -29,8 +28,8 @@
 # Алексей Хомяков <alexey.homyakov@gmail.com>, 2023
 # alenafairy, 2023
 # Wil Odoo, 2024
-# Смородин Даниил, 2024
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
+# Смородин Даниил, 2024
 # 
 msgid ""
 msgstr ""
@@ -38,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2024\n"
+"Last-Translator: Смородин Даниил, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -403,12 +402,12 @@ msgstr "<i class=\"fa fa-comment\"/> Обратная связь"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Send message"
-msgstr "<i class=\"fa fa-comment\"/>Отправить сообщение</i>"
+msgstr "<i class=\"fa fa-comment\"/> Отправить сообщение</i>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-download\"/> Download"
-msgstr "<i class=\"fa fa-download\"/>Скачать"
+msgstr "<i class=\"fa fa-download\"/> Скачать"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -420,12 +419,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Authorized</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Авторизовано</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
-msgstr "<i class=\"fa fa-fw fa-check\"/><b>оплатить</b></i>"
+msgstr "<i class=\"fa fa-fw fa-check\"/><b>Оплачено</b></i>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -435,17 +434,17 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>ожидания платежа</b></i>"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>Ожидания платежа</b></i>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/>прошло</i>"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Просрочено</i>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-remove\"/> Cancelled"
-msgstr "<i class=\"fa fa-fw fa-remove\"/>отменено</i>"
+msgstr "<i class=\"fa fa-fw fa-remove\"/> Отменено</i>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_lead_partner_kanban_view
@@ -469,7 +468,7 @@ msgstr "<i class=\"fa fa-times\"/> Отказаться"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">This offer expires on</b></small>"
-msgstr ""
+msgstr "<small><b class=\"text-muted\">Срок предложения истекает</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -528,12 +527,14 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                            <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Отображение</span>\n"
+"                            <span class=\"o_stat_text\">Клиенту</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "<span class=\"o_stat_text\">Sold</span>"
-msgstr "<span class=\"o_stat_text\">продано</span>"
+msgstr "<span class=\"o_stat_text\">Продано</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -568,7 +569,7 @@ msgid ""
 msgstr ""
 "<span>Вы уверены, что хотите отменить этот заказ? <br/></span>\n"
 "                        <span id=\"display_invoice_alert\" attrs=\"{'invisible': [('display_invoice_alert', '=', False)]}\">\n"
-"                            Черновики актов по этому заказу будут аннулированы. <br/>\n"
+"                            Черновики счетов по этому заказу будут аннулированы. <br/>\n"
 "                        </span>"
 
 #. module: sale
@@ -791,7 +792,7 @@ msgid ""
 msgstr ""
 "Согласно настройкам для товаров, отгруженное количество может автоматически вычисляться с помощью следующих механизмов:\n"
 "- Вручную: количество устанавливается вручную\n"
-"- Аналитика по расходам: количество рассчитывается на основе актов\n"
+"- Аналитика по расходам: количество рассчитывается на основе счетов\n"
 "- Табель: количество рассчитывается как сумма часов, затраченных на все задачи по этой позиции\n"
 "- Складские перемещения: количество заполняют на складе при отгрузке\n"
 
@@ -884,7 +885,7 @@ msgstr "Сумма без скидки"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr "Сумма предложения для актирования"
+msgstr "Сумма предложений для выставления счета"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -998,7 +999,7 @@ msgstr "авторизованные операции"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__automatic_invoice
 msgid "Automatic Invoice"
-msgstr "Автоматическое актирование"
+msgstr "Автоматическое выставление счета"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__journal_name
@@ -1260,7 +1261,7 @@ msgstr "Добавить счет"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
 msgid "Create a customer invoice"
-msgstr "Создайте акт покупателю"
+msgstr "Создайте счет покупателю"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -1292,7 +1293,8 @@ msgstr "Добавить счета"
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
-msgstr "Создавайте акты, заносите платежи и переписывайтесь с клиентами."
+msgstr ""
+"Выставляйте счета, регистрируйте платежи и переписывайтесь с клиентами."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -1680,7 +1682,7 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
-"Авансовые платежи создаются при выставлении акта из продажи. Они не "
+"Авансовые платежи создаются при выставлении счета из продажи. Они не "
 "копируются при дублировании заказа."
 
 #. module: sale
@@ -1734,7 +1736,7 @@ msgstr "Ожидаемая дата"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Expected:"
-msgstr "Ожидаемое:"
+msgstr "Ожидается:"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__expense_policy
@@ -1744,8 +1746,8 @@ msgid ""
 " a validated expense can be re-invoice to a customer at its cost or sales "
 "price."
 msgstr ""
-"Расходы и акты от поставщиков могут быть перевыставлены в акт покупателю. "
-"При таком варианте утвержденный расход может быть перевыставлен в акте "
+"Расходы и счета от поставщиков могут быть перевыставлены в адрес покупателя."
+" При таком варианте подтвержденный расход может быть перевыставлен в счета "
 "покупателю по себестоимости или по цене продажи."
 
 #. module: sale
@@ -1829,9 +1831,9 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"Из этого отчета вы можете получить обзор суммы, выставленной в акте вашему "
+"Из этого отчета вы можете получить обзор суммы, выставленной в счете вашему "
 "клиенту. Можно также использовать инструмент поиска, чтобы персонализировать"
-" ваши отчеты по выставленным актам и таким образом сопоставить этот анализ "
+" ваши отчеты по выставленным счетам и таким образом сопоставить этот анализ "
 "согласно вашим потребностям."
 
 #. module: sale
@@ -1859,7 +1861,7 @@ msgstr "Создать ссылку для оплаты"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
-msgstr "Создавать акт автоматически при получении онлайн-платежа"
+msgstr "Создавать счет автоматически при получении онлайн-платежа"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1953,7 +1955,7 @@ msgid ""
 "still be able to invoice or deliver."
 msgstr ""
 "Если продажа закрыта, вы не можете ее изменить. Однако, вы по-прежнему "
-"можете выставить акт или произвести доставку."
+"можете выставить счет или произвести доставку."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_packaging__sales
@@ -2027,7 +2029,7 @@ msgstr "Акт подтвержден"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_count
 msgid "Invoice Count"
-msgstr "Количество актов"
+msgstr "Количество счетов"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
@@ -2037,7 +2039,7 @@ msgstr "Акт создан"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Invoice Email Template"
-msgstr "Шаблон электронного письма акта"
+msgstr "Шаблон электронного письма счета"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_lines
@@ -2047,7 +2049,7 @@ msgstr "Позиции счета"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
-msgstr "Создайте акт"
+msgstr "Создайте счет"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_status
@@ -2091,7 +2093,7 @@ msgstr "Выставлен счет"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced
 msgid "Invoiced Quantity"
-msgstr "Количество со счетом"
+msgstr "Количество по счету"
 
 #. module: sale
 #. odoo-python
@@ -2103,7 +2105,7 @@ msgstr "Количество со счетом: %s"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
 msgid "Invoiced This Month"
-msgstr "Выставлено счетов в этом месяце"
+msgstr "Выставлен счет этом месяце"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
@@ -2116,7 +2118,7 @@ msgstr "Акты"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
 msgid "Invoices Analysis"
-msgstr "Анализ актов"
+msgstr "Анализ счетов"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
@@ -2142,7 +2144,7 @@ msgstr "Выставление счетов"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing Address:"
-msgstr "Адрес для выставления счета:"
+msgstr "Выставить счет в адрес"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
@@ -2159,7 +2161,7 @@ msgstr "Цель по счетам"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing and Payments"
-msgstr "Выставление актов и платежи"
+msgstr "Выставление счетов и платежи"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2370,8 +2372,8 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"Задавайте количество в заказе вручную: акт на основе количества, введенного вручную, без создания аналитического счета.\n"
-"Табели учета рабочего времени в контракте: акт на основе записанных часов в соответствующем табеле.\n"
+"Задавайте количество в заказе вручную: счет на основе количества, введенного вручную, без создания аналитического счета.\n"
+"Табели учета рабочего времени в контракте: счет на основе записанных часов в соответствующем табеле.\n"
 "Создавайте задачи и вносите часы: Создайте задачу при подтверждении заказа и вносите в нее рабочие часы."
 
 #. module: sale
@@ -2552,7 +2554,7 @@ msgstr "Заметка"
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__no
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__invoice_status__no
 msgid "Nothing to Invoice"
-msgstr "Нет позиций для выставления акта"
+msgstr "Нет позиций для выставления счета"
 
 #. module: sale
 #. odoo-javascript
@@ -2598,12 +2600,12 @@ msgstr "Количество сообщений с ошибкой отправк
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_count
 msgid "Number of quotations to invoice"
-msgstr "Количество компредов для актирования"
+msgstr "Количество компредов для выставления счета"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sales_to_invoice_count
 msgid "Number of sales to invoice"
-msgstr "Количество продаж для актирования"
+msgstr "Количество продаж для выставления счета"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2616,7 +2618,7 @@ msgid ""
 "order.<br> You will be able to create an invoice and collect the payment."
 msgstr ""
 "Как только коммерческое предложение подтверждено клиентом, оно становится "
-"продажей. <br> Вы сможете выставить акт и получить платеж."
+"продажей. <br> Вы сможете выставить счет и получить платеж."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -2625,7 +2627,7 @@ msgid ""
 "able to create an invoice and collect the payment."
 msgstr ""
 "Как только коммерческое предложение подтверждено клиентом, оно становится "
-"продажей. <br> Вы сможете выставить акт и получить платеж."
+"продажей. <br> Вы сможете выставить счет и получить платеж."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -2799,7 +2801,7 @@ msgstr "Заказы"
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 msgid "Orders to Invoice"
-msgstr "Заказы для выставления акта"
+msgstr "Заказы для выставления счета"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
@@ -2944,7 +2946,7 @@ msgstr "Прайс-листы"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Pricing"
-msgstr "Установление цены"
+msgstr "Стоимость"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3071,7 +3073,7 @@ msgstr "Доставленное кол-во"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_invoiced
 msgid "Qty Invoiced"
-msgstr "Количество со счетом"
+msgstr "Выставлен счет по кол-ву"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_qty
@@ -3228,7 +3230,7 @@ msgstr "Коммерческие предложения и продажи"
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
 msgid "Re-Invoice Expenses"
-msgstr "Перерасчет расходов по акту"
+msgstr "Перерасчет расходов по счету"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
@@ -3271,7 +3273,7 @@ msgstr "Регистрация Платежа"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
 msgid "Regular invoice"
-msgstr "Обычный акт"
+msgstr "Обычный счет"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4133,7 +4135,7 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
-"Продукт, используемый для актирования авансового платежа, должен быть типа "
+"Продукт, используемый для выставления счета на аванс, должен быть типа "
 "'Услуга'. Пожалуйста, используйте другой продукт или обновите этот продукт."
 
 #. module: sale
@@ -4263,8 +4265,9 @@ msgstr ""
 "Этот отчёт нужен для анализа ваших коммерческих предложений и продаж. Он "
 "показывает доходы от продаж и группирует их по разным признакам "
 "(ответственный, клиент, продукт и т.д.). Используйте этот отчет для анализа "
-"заказов, по которым ещё не выставлены акты. Если вы хотите проанализировать "
-"оборот, то используйте отчет \"Анализ актов\" в приложении \"Бухгалтерия\"."
+"заказов, по которым ещё не выставлены счета. Если вы хотите проанализировать"
+" оборот, то используйте отчет \"Анализ счетов\" в приложении "
+"\"Бухгалтерия\"."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -4278,8 +4281,8 @@ msgstr ""
 "Этот отчёт нужен для анализа ваших коммерческих предложений. Он показывает "
 "доходы от продаж и группирует их по разным признакам (продавец, клиент, "
 "продукт и т. п.). Используйте этот отчет для анализа заказов, по которым ещё"
-" не выставлены акты. Если вы хотите проанализировать оборот, то используйте "
-"отчет \"Анализ актов\" в приложении \"Бухгалтерия\"."
+" не выставлены счета. Если вы хотите проанализировать оборот, то используйте"
+" отчет \"Анализ счетов\" в приложении \"Бухгалтерия\"."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -4293,8 +4296,8 @@ msgstr ""
 "Этот отчёт проводит анализ ваших заказов на продажу. Анализ учитывает ваши "
 "доходы от продаж и сортирует их по различным критериям группы (продавец, "
 "партнёр, продукт и т. п.). Используйте этот отчёт для проведения анализа "
-"продаж, на которые не были выставлены акты. Если вы хотите анализировать "
-"свой оборот, вы должны использовать отчёт «Анализ актов» в приложении "
+"продаж, на которые не были выставлены счета. Если вы хотите анализировать "
+"свой оборот, вы должны использовать отчёт «Анализ счетов» в приложении "
 "«Бухгалтерия»."
 
 #. module: sale
@@ -4479,7 +4482,7 @@ msgstr "Сумма без налога"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr "Облагаемая налогом сумма, выставленная в акте"
+msgstr "Облагаемая налогом сумма, выставленная в счете"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
@@ -4490,7 +4493,7 @@ msgstr "Облагаемая налогом сумма к оплате"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced
 msgid "Untaxed Invoiced Amount"
-msgstr "Облагаемая налогом сумма, выставленная в акте"
+msgstr "Облагаемая налогом сумма, выставленная в счете"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
@@ -4626,7 +4629,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "You can invoice them before they are delivered."
-msgstr "Вы можете выставлять акт до поставки товара."
+msgstr "Вы можете выставлять счет до поставки товара."
 
 #. module: sale
 #. odoo-python

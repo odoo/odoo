@@ -2,11 +2,14 @@ import zeep
 
 from decimal import Decimal
 from datetime import date, datetime, timedelta
+from requests import Response
 from types import SimpleNamespace, FunctionType
 
 
 TIMEOUT = 30
-SERIALIZABLE_TYPES = (type(None), bool, int, float, str, bytes, tuple, list, dict, Decimal, date, datetime, timedelta)
+SERIALIZABLE_TYPES = (
+    type(None), bool, int, float, str, bytes, tuple, list, dict, Decimal, date, datetime, timedelta, Response
+)
 
 
 class Client:
@@ -17,18 +20,15 @@ class Client:
     * serializing the returned values of its methods.
     """
     def __init__(self, *args, **kwargs):
-        load_timeout = kwargs.pop('timeout', None)
-        operation_timeout = kwargs.pop('operation_timeout', None)
-        session = kwargs.pop('session', None)
+        transport = kwargs.setdefault('transport', zeep.Transport())
+        # The timeout for loading wsdl and xsd documents.
+        transport.load_timeout = kwargs.pop('timeout', None) or transport.load_timeout or TIMEOUT
+        # The timeout for operations (POST/GET)
+        transport.operation_timeout = kwargs.pop('operation_timeout', None) or transport.operation_timeout or TIMEOUT
+        # The `requests.session` used for HTTP requests
+        transport.session = kwargs.pop('session', None) or transport.session
 
         client = zeep.Client(*args, **kwargs)
-
-        # The timeout for loading wsdl and xsd documents.
-        client.transport.load_timeout = load_timeout or client.transport.load_timeout or TIMEOUT
-        # The timeout for operations (POST/GET)
-        client.transport.operation_timeout = operation_timeout or client.transport.operation_timeout or TIMEOUT
-        if session:
-            client.transport.session = session
 
         self.__obj = client
         self.__service = None
@@ -80,6 +80,15 @@ class Client:
             for key, operation in service._operations.items()
         })
 
+    def bind(self, service_name, port_name):
+        service = self.__obj.bind(service_name, port_name)
+        operations = {
+            key: self.__serialize_object_wrapper(operation)
+            for key, operation in service._operations.items()
+        }
+        operations['_binding_options'] = service._binding_options
+        return ReadOnlyMethodNamespace(**operations)
+
 
 class ReadOnlyMethodNamespace(SimpleNamespace):
     """A read-only attribute-based namespace not prefixed by `_` and restricted to functions.
@@ -88,7 +97,12 @@ class ReadOnlyMethodNamespace(SimpleNamespace):
     no need to implement them to ensure the read-only property of this class.
     """
     def __init__(self, **kwargs):
-        assert all(not key.startswith('_') and isinstance(value, FunctionType) for key, value in kwargs.items())
+        assert all(
+            (not key.startswith('_') and isinstance(value, FunctionType))
+            or
+            (key == '_binding_options' and isinstance(value, dict))
+            for key, value in kwargs.items()
+        )
         super().__init__(**kwargs)
 
     def __getitem__(self, key):

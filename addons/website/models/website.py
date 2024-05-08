@@ -993,7 +993,7 @@ class Website(models.Model):
             or hasattr(threading.current_thread(), 'url') and threading.current_thread().url
             or ''
         )
-        website_id = self._get_current_website_id(domain_name, fallback=fallback)
+        website_id = self.sudo()._get_current_website_id(domain_name, fallback=fallback)
         return self.browse(website_id)
 
     @tools.ormcache('domain_name', 'fallback')

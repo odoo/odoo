@@ -227,7 +227,7 @@ class TestAPI(SavepointCaseWithUserDemo):
 
     def test_56_environment_uid_origin(self):
         """Check the expected behavior of `env.uid_origin`"""
-        user_demo = self.env.ref('base.user_demo')
+        user_demo = self.user_demo
         user_admin = self.env.ref('base.user_admin')
         self.assertEqual(self.env.uid_origin, None)
         self.assertEqual(self.env['base'].with_user(user_demo).env.uid_origin, user_demo.id)

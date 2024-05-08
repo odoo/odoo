@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from collections import defaultdict
 
 from odoo import models, fields, api, _
 from odoo.tools.misc import frozendict
@@ -63,20 +60,30 @@ class AccountMove(models.Model):
                 }
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
-        if self.expense_sheet_id:
-            self.expense_sheet_id.state = 'approve'
-            self.expense_sheet_id = False
-            self.ref = False # else, when restarting the expense flow we get duplicate issue on vendor.bill
+        # Extends account
+        # Reversing vendor bills that represent employee reimbursements should clear them from the expense sheet such that another
+        # can be generated in place.
+        own_account_moves = self.filtered(lambda move: move.expense_sheet_id.payment_mode == 'own_account')
+        own_account_moves.expense_sheet_id.write({
+            'state': 'approve',
+            'account_move_id': False,
+        })
+        own_account_moves.ref = False  # else, when restarting the expense flow we get duplicate issue on vendor.bill
+
         return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
 
     def unlink(self):
         if self.expense_sheet_id:
-            self.expense_sheet_id.state = 'approve'
-            self.expense_sheet_id.account_move_id = False # cannot change to delete='set null' in stable
+            self.expense_sheet_id.write({
+                'state': 'approve',
+                'account_move_id': False,  # cannot change to delete='set null' in stable
+            })
         return super().unlink()
 
     def button_draft(self):
-        for line in self.line_ids:
-            if line.expense_id:
-                line.expense_id.sheet_id.write({'state': 'post'})
+        # EXTENDS account
+        employee_expense_sheets = self.expense_sheet_id.filtered(
+            lambda expense_sheet: expense_sheet.payment_mode == 'own_account'
+        )
+        employee_expense_sheets.state = 'post'
         return super().button_draft()

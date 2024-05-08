@@ -12,8 +12,8 @@
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # alenafairy, 2023
 # Wil Odoo, 2024
-# Смородин Даниил, 2024
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
+# Смородин Даниил, 2024
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2024\n"
+"Last-Translator: Смородин Даниил, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +32,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "% On-Time Delivery"
-msgstr "% своевременной доставки"
+msgstr "% своевременной поставки"
 
 #. module: purchase_stock
 #. odoo-python
@@ -49,6 +49,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">No On-time "
 "Delivery Data</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">Нет данных о "
+"своевременной поставке</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -70,7 +72,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "<span class=\"o_stat_text\">On-time Rate</span>"
-msgstr "<span class=\"o_stat_text\">Показатель своевременности</span>"
+msgstr "<span class=\"o_stat_text\">Уровень своевременности</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
@@ -270,7 +272,7 @@ msgstr "Фактическая дата"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
 msgid "Effective Date Last Year"
-msgstr "Дата вступления в силу Последний год"
+msgstr "Фактическая дата в прошлом году"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -453,7 +455,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
 msgid "On-Time Delivery"
-msgstr "Своевременная доставка"
+msgstr "Своевременная поставка"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__on_time_rate
@@ -461,12 +463,12 @@ msgstr "Своевременная доставка"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__on_time_rate
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__on_time_rate
 msgid "On-Time Delivery Rate"
-msgstr "Коэффициент своевременной доставки"
+msgstr "Уровень своевременности поставки"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_on_time
 msgid "On-Time Quantity"
-msgstr "Своевременное количество"
+msgstr "Количество в срок"
 
 #. module: purchase_stock
 #: model:ir.actions.act_window,name:purchase_stock.action_purchase_vendor_delay_report
@@ -477,7 +479,7 @@ msgstr "Своевременная доставка"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "On-time Rate"
-msgstr "Показатель своевременности"
+msgstr "Уровень своевременности"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__orderpoint_id
@@ -518,7 +520,7 @@ msgstr "Обработайте все количества чеков."
 #: model:ir.model,name:purchase_stock.model_procurement_group
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
 msgid "Procurement Group"
-msgstr "Группа поставки"
+msgstr "В рамках закупки"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_template
@@ -849,7 +851,7 @@ msgstr "Срок исполнения поставщика"
 #. module: purchase_stock
 #: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report
 msgid "Vendor On-time Delivery analysis"
-msgstr "Анализ своевременной поставки поставщиком"
+msgstr "Анализ своевременности поставки"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.view_stock_replenishment_info_stock_purchase_inherit

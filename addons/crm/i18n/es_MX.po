@@ -4,9 +4,11 @@
 # 
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2022
-# Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Iran Villalobos López, 2023
+# Martin Trigaux, 2024
+# Lucia Pacheco, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -125,7 +127,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "<b>Predictive Lead Scoring</b>"
-msgstr "<b>Puntaje predictivo de leads</b>"
+msgstr "<b>Puntuación predictiva de leads</b>"
 
 #. module: crm
 #. odoo-javascript
@@ -1465,17 +1467,17 @@ msgstr "Correo electrónico: demostración de bienvenida"
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__auto
 msgid "Enrich all leads automatically"
-msgstr "Enriquecer todos los leads automáticamente"
+msgstr "Enriquecer todos los leads en automático"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_enrich_auto
 msgid "Enrich lead automatically"
-msgstr "Enriquecer el lead automáticamente"
+msgstr "Enriquecer el lead en automático"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__manual
 msgid "Enrich leads on demand only"
-msgstr "Enriquecer leads bajo demanda solamente"
+msgstr "Enriquecer leads solo bajo demanda"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_enrich
@@ -1522,7 +1524,7 @@ msgstr "Cierre esperado"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Expected Closing:"
-msgstr "Fecha de cierre prevista:"
+msgstr "Cierre esperado:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly
@@ -1576,13 +1578,14 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
-"Campo que se utiliza para almacenar el número de teléfono depurado. Ayuda a "
-"acelerar las búsquedas y las comparaciones."
+"Campo donde se almacena el número de teléfono válido. Ayuda a acelerar "
+"búsquedas y comparaciones."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency_field
 msgid "Fields that can be used for predictive lead scoring computation"
-msgstr "Campos que se pueden utilizar para predecir el puntaje de leads"
+msgstr ""
+"Campos que se pueden utilizar para predecir la puntuación de los leads"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
@@ -1744,7 +1747,7 @@ msgstr "Icono"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icono para indicar una actividad de excepción."
+msgstr "Icono que indica una actividad de excepción."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1841,9 +1844,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Indica si el número de teléfono depurado de la lista negra es un número "
-"celular. Sirve para distinguir qué número está en la lista negra cuando hay "
-"un campo de celular y otro de teléfono fijo en un modelo."
+"Indica si el número de teléfono válido de la lista de exclusión es un "
+"celular. Sirve para distinguir qué número está en la lista de exclusión "
+"cuando hay un campo de celular y otro de teléfono fijo en un modelo."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_blacklisted
@@ -2056,27 +2059,27 @@ msgstr "Propiedades del lead"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency
 msgid "Lead Scoring Frequency"
-msgstr "Frecuencia de puntaje de leads"
+msgstr "Frecuencia de puntuación de leads"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields
 msgid "Lead Scoring Frequency Fields"
-msgstr "Campos de frecuencia de puntaje de leads"
+msgstr "Campos de frecuencia de puntuación de leads"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields_str
 msgid "Lead Scoring Frequency Fields in String"
-msgstr "Frecuencia de puntaje de leads en cadena"
+msgstr "Campos de frecuencia de puntuación de leads en cadena"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date
 msgid "Lead Scoring Starting Date"
-msgstr "Fecha de inicio del puntaje de leads"
+msgstr "Fecha de inicio de la puntuación de leads"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date_str
 msgid "Lead Scoring Starting Date in String"
-msgstr "Fecha de inicio del puntaje de leads en cadena"
+msgstr "Fecha de inicio de la puntuación de leads en cadena"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
@@ -2640,7 +2643,7 @@ msgstr "¡No se encontró información!"
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
 msgid "No data yet!"
-msgstr "¡No hay datos aún!"
+msgstr "Todavía no hay información"
 
 #. module: crm
 #. odoo-python
@@ -3099,7 +3102,9 @@ msgstr "Etiquetas de campo de puntuación predictiva de leads"
 #: model:ir.actions.server,name:crm.website_crm_score_cron_ir_actions_server
 #: model:ir.cron,cron_name:crm.website_crm_score_cron
 msgid "Predictive Lead Scoring: Recompute Automated Probabilities"
-msgstr "Puntaje predictivo de leads: recalcula probabilidades automatizadas"
+msgstr ""
+"Puntuación predictiva de leads: volver a calcular las probabilidades "
+"automatizadas"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -3267,7 +3272,7 @@ msgstr "En ejecución"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Error de entrega de SMS"
+msgstr "Error en el envío del SMS"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_sales
@@ -3649,9 +3654,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"El nombre de este seudónimo de correo electrónico. Por ejemplo, "
-"\"trabajos\",  si lo que quiere es obtener los correos para "
-"<jobs@example.odoo.com>"
+"El nombre del seudónimo de correo electrónico. Por ejemplo, \"trabajos\" si "
+"desea recibir correos electrónicos en <trabajos@ejemplo.odoo.com>."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_name
@@ -3783,8 +3787,8 @@ msgstr ""
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
-"Este número de teléfono está en la lista negra para el marketing por SMS. "
-"Haga clic para retirarlo de la lista negra."
+"Este número de teléfono está en la lista de exclusión de Marketing por SMS. "
+"Haga clic para quitarlo de la lista de exclusión."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__fold
@@ -3895,7 +3899,7 @@ msgstr "El tipo se utiliza para separar leads y oportunidades"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo de actividad de excepción registrada."
+msgstr "Tipo de la actividad de excepción registrada."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary

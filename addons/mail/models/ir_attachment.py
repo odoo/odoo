@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models, SUPERUSER_ID
+from odoo import _, api, models, SUPERUSER_ID
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import request
 from odoo.tools import consteq
@@ -9,6 +9,20 @@ from odoo.tools import consteq
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
+
+    @api.model
+    def check(self, mode, values=None):
+        super().check(mode, values=values)
+        if mode not in ('unlink', 'write') or not self or self.env.is_admin():
+            return
+        if self.create_uid == self.env.user:
+            return
+        linked_messages = self.env['mail.message'].sudo().search([('attachment_ids', 'in', self.ids)])
+        if not linked_messages:
+            return
+        authors = linked_messages.author_id
+        if len(authors) > 1 or authors != self.env.user.partner_id:
+            raise AccessError(_("You may not unlink attachments from other people's messages"))
 
     def _check_attachments_access(self, attachment_tokens):
         """This method relies on access rules/rights and therefore it should not be called from a sudo env."""

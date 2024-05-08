@@ -875,6 +875,27 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             ],
         )
 
+    def test_code_no_account(self):
+        """code that doesn't match any account"""
+        self.assertEqual(
+            self.env["account.account"].spreadsheet_fetch_debit_credit(
+                [
+                    {
+                        "date_range": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "codes": ["10000000000"],
+                        "company_id": None,
+                        "include_unposted": False,
+                    }
+                ]
+            ),
+            [
+                {"credit": 0, "debit": 0},
+            ],
+        )
+
     def test_no_code(self):
         self.assertEqual(
             self.env["account.account"].spreadsheet_fetch_debit_credit(

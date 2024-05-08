@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
@@ -10,17 +9,20 @@ class AccountPayment(models.Model):
     def action_cancel(self):
         # EXTENDS account
         for payment in self:
-            if payment.expense_sheet_id:
-                payment = payment.with_context(skip_account_move_synchronization=True)
-                paid_by_employee = payment.expense_sheet_id.payment_mode == 'own_account'
-                payment.expense_sheet_id.state = 'post' if paid_by_employee else 'approve'
-                payment.expense_sheet_id = False
+            if payment.expense_sheet_id.payment_mode != 'own_account':
+                continue
+            payment.with_context(skip_account_move_synchronization=True).expense_sheet_id.write({
+                'state': 'approve',
+                'account_move_id': False,
+            })
 
         return super().action_cancel()
 
     def action_draft(self):
-        if self.reconciled_bill_ids.expense_sheet_id:
-            self.reconciled_bill_ids.expense_sheet_id.write({'state': 'post'})
+        employee_expense_sheets = self.reconciled_bill_ids.expense_sheet_id.filtered(
+            lambda expense_sheet: expense_sheet.payment_mode == 'own_account'
+        )
+        employee_expense_sheets.state = 'post'
         return super().action_draft()
 
     def action_open_expense_report(self):

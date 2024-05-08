@@ -34,9 +34,9 @@
 # alenafairy, 2023
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2024
 # Martin Trigaux, 2024
-# Смородин Даниил, 2024
 # Collex100, 2024
 # Wil Odoo, 2024
+# Смородин Даниил, 2024
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
 # 
 msgid ""
@@ -417,6 +417,13 @@ msgid "<b>Early Payment Discount applied.</b>"
 msgstr "<b>Применяется скидка за раннюю оплату.</b>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid ""
+"<br/>\n"
+"                            on this account:"
+msgstr ""
+
+#. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
@@ -597,7 +604,7 @@ msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Дата\" title=\"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-download\"/> Download"
-msgstr "<i class=\"fa fa-download\"/>Скачать"
+msgstr "<i class=\"fa fa-download\"/> Скачать"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1119,7 +1126,7 @@ msgstr "<span>Отчетность</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Running Balance</span>"
-msgstr ""
+msgstr "<span>Текущий баланс</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1216,7 +1223,7 @@ msgstr "<strong>Дата документа продажи:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Receipt Date:</strong>"
-msgstr "<strong>Дата получения:</strong>"
+msgstr "<strong>Дата поставки:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4228,7 +4235,7 @@ msgstr "Конфигурационные настройки"
 #: model:ir.ui.menu,name:account.menu_finance_configuration
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Configuration"
-msgstr "Настройки"
+msgstr "Конфигурация"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -6985,7 +6992,7 @@ msgstr "Получите результат целостности хэша в �
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Get warnings when invoicing specific customers"
-msgstr "Получайте уведомления при выставлении актов определенным клиентам"
+msgstr "Получайте уведомления при выставлении счетов определенным клиентам"
 
 #. module: account
 #. odoo-python
@@ -8119,7 +8126,7 @@ msgstr "Документы продажи"
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "Invoices &amp; Bills"
-msgstr "Закрывающие документы"
+msgstr "Платежные документы"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
@@ -10480,7 +10487,7 @@ msgstr "Непогашенный счет"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Outstanding Payments"
-msgstr "Просроченные платежи"
+msgstr "Исходящие платежи"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
@@ -11477,7 +11484,7 @@ msgstr "Создан товарный чек"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Purchase Representative"
-msgstr "Торговый представитель"
+msgstr "Ответственный за закупку"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12163,7 +12170,7 @@ msgstr "Правила для модели примирения"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__running_balance
 msgid "Running Balance"
-msgstr "Бегущий баланс"
+msgstr "Текущий баланс"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa

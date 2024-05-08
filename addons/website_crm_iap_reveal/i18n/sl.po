@@ -11,14 +11,15 @@
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2022
 # Martin Trigaux, 2022
 # Jasmina Macur <jasmina@hbs.si>, 2022
+# Katja Deržič, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2022\n"
+"Last-Translator: Katja Deržič, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,6 +138,7 @@ msgid "Display Name"
 msgstr "Prikazani naziv"
 
 #. module: website_crm_iap_reveal
+#. odoo-python
 #: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Enter Valid Regex."
@@ -155,7 +157,7 @@ msgstr ""
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__filter_on_size
 msgid "Filter on Size"
-msgstr ""
+msgstr "Filtriranje po velikosti"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
@@ -165,7 +167,7 @@ msgstr "Od"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__lead_ids
 msgid "Generated Lead / Opportunity"
-msgstr ""
+msgstr "Ustvarjeni Indici / Priložnosti"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model,name:website_crm_iap_reveal.model_ir_http
@@ -245,17 +247,8 @@ msgid "Lead Generation Views"
 msgstr ""
 
 #. module: website_crm_iap_reveal
-#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
-#, python-format
-msgid ""
-"Lead Generation requires a GeoIP resolver which could not be found on your "
-"system. Please consult https://pypi.org/project/GeoIP/."
-msgstr ""
-
-#. module: website_crm_iap_reveal
 #: model:ir.actions.server,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead_ir_actions_server
 #: model:ir.cron,cron_name:website_crm_iap_reveal.ir_cron_crm_reveal_lead
-#: model:ir.cron,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead
 msgid "Lead Generation: Leads/Opportunities Generation"
 msgstr ""
 
@@ -292,12 +285,6 @@ msgid "Medium"
 msgstr "Medij"
 
 #. module: website_crm_iap_reveal
-#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
-#, python-format
-msgid "Missing Library"
-msgstr ""
-
-#. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_view__reveal_state__not_found
 msgid "Not Found"
 msgstr ""
@@ -310,7 +297,7 @@ msgstr "Število stikov"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__lead_count
 msgid "Number of Generated Leads"
-msgstr ""
+msgstr "Število ustvarjenih Indici"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__opportunity_count
@@ -347,6 +334,7 @@ msgid "Opportunity Generation Conditions"
 msgstr ""
 
 #. module: website_crm_iap_reveal
+#. odoo-python
 #: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Opportunity created by Odoo Lead Generation"
@@ -355,7 +343,7 @@ msgstr ""
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__other_role_ids
 msgid "Other Roles"
-msgstr ""
+msgstr "Ostale vloge"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__preferred_role_id
@@ -414,7 +402,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__seniority_id
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__contact_filter_type__seniority
 msgid "Seniority"
-msgstr ""
+msgstr "Delovna doba"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__sequence
@@ -522,7 +510,7 @@ msgstr ""
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "employees"
-msgstr ""
+msgstr "zaposleni"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form

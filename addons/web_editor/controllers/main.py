@@ -783,17 +783,21 @@ class Web_Editor(http.Controller):
         for id, url in response.json().items():
             req = requests.get(url)
             name = '_'.join([media[id]['query'], url.split('/')[-1]])
-            # Need to bypass security check to write image with mimetype image/svg+xml
-            # ok because svgs come from whitelisted origin
-            context = {'binary_field_real_user': request.env['res.users'].sudo().browse([SUPERUSER_ID])}
-            attachment = request.env['ir.attachment'].sudo().with_context(context).create({
+            IrAttachment = request.env['ir.attachment']
+            attachment_data = {
                 'name': name,
                 'mimetype': req.headers['content-type'],
                 'datas': b64encode(req.content),
                 'public': True,
                 'res_model': 'ir.ui.view',
                 'res_id': 0,
-            })
+            }
+            attachment = get_existing_attachment(IrAttachment, attachment_data)
+            # Need to bypass security check to write image with mimetype image/svg+xml
+            # ok because svgs come from whitelisted origin
+            if not attachment:
+                context = {'binary_field_real_user': request.env['res.users'].sudo().browse([SUPERUSER_ID])}
+                attachment = IrAttachment.sudo().with_context(context).create(attachment_data)
             if media[id]['is_dynamic_svg']:
                 colorParams = werkzeug.urls.url_encode(media[id]['dynamic_colors'])
                 attachment['url'] = '/web_editor/shape/illustration/%s?%s' % (slug(attachment), colorParams)

@@ -967,6 +967,8 @@ class Session(collections.abc.MutableMapping):
             # Like update_env(user=request.session.uid) but works when uid is None
             request.env = odoo.api.Environment(request.env.cr, self.uid, self.context)
             request.update_context(**self.context)
+            # request env needs to be able to access the latest changes from the auth layers
+            request.env.cr.commit()
 
         return pre_uid
 

@@ -12,8 +12,8 @@
 # Martin Trigaux, 2022
 # Tadej Lupšina <tadej@hbs.si>, 2022
 # Tomaž Jug <tomaz@editor.si>, 2023
-# Katja Deržič, 2024
 # Grega Vavtar <grega@hbs.si>, 2024
+# Katja Deržič, 2024
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:50+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Grega Vavtar <grega@hbs.si>, 2024\n"
+"Last-Translator: Katja Deržič, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,12 +34,12 @@ msgstr ""
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid " (Estimated Cost: %s )"
-msgstr ""
+msgstr "(Predvideni stroški:%s )"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
 msgid "(computed:"
-msgstr ""
+msgstr "(izračunano:"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -87,7 +87,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight (estimated): </span>"
-msgstr ""
+msgstr "<span>-Teža (predvidena):</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_stock_report_delivery_no_package_section_line
@@ -140,12 +140,12 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number:</strong>"
-msgstr ""
+msgstr "<strong>Sledilna številka:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 msgid "<strong>Weight: </strong>"
-msgstr ""
+msgstr "<strong>Teža:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
@@ -269,12 +269,12 @@ msgstr "Opis prevoznika"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_line__carrier_name
 msgid "Carrier Name"
-msgstr ""
+msgstr "Ime prevoznika"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
-msgstr ""
+msgstr "Ime prevoznika"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -340,12 +340,12 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
 #: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "Default delivery method used in sales orders."
-msgstr ""
+msgstr "Privzeti način dostave, ki se uporablja v prodajnih naročilih."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
-msgstr ""
+msgstr "Opredelitev novega načina dostave"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -389,7 +389,7 @@ msgstr "Vrsta paketa za dostavo"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
 msgid "Delivery Price"
-msgstr ""
+msgstr "Cena dostave"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
@@ -1231,6 +1231,23 @@ msgid ""
 "\n"
 "The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
 "\n"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they have different "
+"carriers (i.e. check that all of their transfers have a carrier assigned and"
+" are using the same carrier)."
 msgstr ""
 
 #. module: delivery

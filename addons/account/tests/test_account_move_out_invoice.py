@@ -3978,3 +3978,28 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             other_income_account,
             "Removing a product from an invoice line should no change the account."
         )
+
+    def test_update_lines_date_when_invoice_date_changes(self):
+        move = self.init_invoice(
+            move_type='in_invoice',
+            partner=self.partner_a,
+            amounts=[1000.0],
+        )
+
+        move.invoice_date = fields.Date.from_string('2024-01-01')
+        self.env.flush_all()
+
+        for line in move.line_ids:
+            self.assertEqual(line.date, move.date)
+
+    def test_on_quick_encoding_non_accounting_lines(self):
+        """ Ensure that quick encoding values are only applied to accounting lines) """
+
+        self.env.company.quick_edit_mode = "out_and_in_invoices"
+        move_form = Form(
+            self.env['account.move'].with_context(default_move_type='out_invoice')
+        )
+        move_form.quick_edit_total_amount = 100.0
+        with move_form.invoice_line_ids.new() as invoice_line_form:
+            invoice_line_form.display_type = 'line_section'
+        move_form.save()

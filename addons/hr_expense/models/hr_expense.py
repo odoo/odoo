@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -163,7 +162,7 @@ class HrExpense(models.Model):
                 expense.state = "refused"
             elif expense.sheet_id.state == "approve" or expense.sheet_id.state == "post":
                 expense.state = "approved"
-            elif not expense.sheet_id.account_move_id:
+            elif not expense.sheet_id.account_move_id and expense.sheet_id.state != 'done':
                 expense.state = "reported"
             else:
                 expense.state = "done"
@@ -762,14 +761,9 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
     @api.model
     def message_new(self, msg_dict, custom_values=None):
         email_address = email_split(msg_dict.get('email_from', False))[0]
+        employee = self._get_employee_from_email(email_address)
 
-        employee = self.env['hr.employee'].search([
-            '|',
-            ('work_email', 'ilike', email_address),
-            ('user_id.email', 'ilike', email_address)
-        ]).filtered(lambda e: e.company_id == e.user_id.company_id)
-
-        if len(employee) != 1:
+        if not employee:
             return super().message_new(msg_dict, custom_values=custom_values)
 
         expense_description = msg_dict.get('subject', '')
@@ -808,6 +802,29 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
         expense = super(HrExpense, self).message_new(msg_dict, dict(custom_values or {}, **vals))
         self._send_expense_success_mail(msg_dict, expense)
         return expense
+
+    @api.model
+    def _get_employee_from_email(self, email_address):
+        employee = self.env['hr.employee'].search([
+            ('user_id', '!=', False),
+            '|',
+            ('work_email', 'ilike', email_address),
+            ('user_id.email', 'ilike', email_address),
+        ])
+
+        if len(employee) > 1:
+            # Several employees can be linked to the same user.
+            # In that case, we only keep the employee that matched the user's company.
+            return employee.filtered(lambda e: e.company_id == e.user_id.company_id)
+
+        if not employee:
+            # An employee does not always have a user.
+            return self.env['hr.employee'].search([
+                ('user_id', '=', False),
+                ('work_email', 'ilike', email_address),
+            ], limit=1)
+
+        return employee
 
     @api.model
     def _parse_product(self, expense_description):
@@ -1016,7 +1033,13 @@ class HrExpenseSheet(models.Model):
     @api.depends('account_move_id.payment_state')
     def _compute_payment_state(self):
         for sheet in self:
-            sheet.payment_state = sheet.account_move_id.payment_state or 'not_paid'
+            sheet_move = sheet.account_move_id
+            if not sheet_move:
+                sheet.payment_state = 'not_paid'
+            elif sheet_move.currency_id.compare_amounts(sheet_move.reversal_move_id.amount_total, sheet_move.amount_total) == 0:
+                sheet.payment_state = 'reversed'
+            else:
+                sheet.payment_state = sheet_move.payment_state
 
     def _compute_attachment_number(self):
         for sheet in self:

@@ -460,7 +460,19 @@ class View(models.Model):
                 ('website_id', '=', current_website.id)
             ], limit=1)
             if website_specific_view:
-                self = website_specific_view
+                if (
+                    website_specific_view.first_page_id
+                    and website_specific_view.first_page_id.url != self.first_page_id.url
+                ):
+                    # The case here is when a generic page is edited after its
+                    # specific page has a different URL. In this case, the
+                    # generic page can still be accessed since the specific one
+                    # does not shadow it anymore. In such a case, we need the
+                    # write to be done on the edited generic page and not target
+                    # the specific one.
+                    self = self.with_context(no_cow=True)
+                else:
+                    self = website_specific_view
         super(View, self).save(value, xpath=xpath)
 
     @api.model

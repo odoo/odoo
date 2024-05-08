@@ -39,6 +39,7 @@
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Janusz Harkot <jh@trilab.pl>, 2023
 # Larissa Manderfeld, 2024
+# Damian Ratus, 2024
 # 
 msgid ""
 msgstr ""
@@ -46,7 +47,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Damian Ratus, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -587,6 +588,24 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"object.type_name\"></t>\n"
+"       Drogi <t t-out=\"object.partner_id.name or ''\">użytkowniku</t>,\n"
+"        <br><br>\n"
+"       Uprzejmie informujemy, że\n"
+"        <t t-out=\"doc_name or ''\">oferta</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (z odniesieniem : <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"        </t>\n"
+"        została anulowana. W związku z tym nie powinieneś być obciążany dalszymi opłatami za to zamówienie.\n"
+"        Jeśli konieczny będzie zwrot pieniędzy, zostanie on dokonany w dogodnym terminie.\n"
+"        <br><br>\n"
+"        W razie jakichkolwiek pytań prosimy o kontakt.\n"
+"        <br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4980,6 +4999,9 @@ msgid ""
 "== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
 " }})"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') i \"Zamówienie oczekujące\" lub \"Zamówienie\" }} (Ref {{ "
+"object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -4998,3 +5020,5 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.type_name }} Anulowane (Ref {{ "
+"object.name or 'n/a' }})"

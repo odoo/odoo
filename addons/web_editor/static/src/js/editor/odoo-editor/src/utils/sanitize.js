@@ -26,6 +26,12 @@ import {
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
+
+function hasPseudoElementContent (node, pseudoSelector) {
+    const content = getComputedStyle(node, pseudoSelector).getPropertyValue('content');
+    return content && content !== 'none';
+}
+
 export function areSimilarElements(node, node2) {
     if (
         !node ||
@@ -331,7 +337,12 @@ class Sanitize {
 
             let firstChild = node.firstChild;
             // Unwrap the contents of SPAN and FONT elements without attributes.
-            if (['SPAN', 'FONT'].includes(node.nodeName) && !node.hasAttributes()) {
+            if (
+                ['SPAN', 'FONT'].includes(node.nodeName)
+                && !node.hasAttributes()
+                && !hasPseudoElementContent(node, "::before")
+                && !hasPseudoElementContent(node, "::after")
+            ) {
                 getDeepRange(this.root, { select: true });
                 const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
                 firstChild = unwrapContents(node)[0];

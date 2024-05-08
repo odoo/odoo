@@ -58,6 +58,25 @@ class TestExpensesMailImport(TestExpenseCommon):
             'employee_id': company_2_employee.id,
         }])
 
+    def test_import_expense_from_email_employee_without_user(self):
+        """When an employee is not linked to a user, he has to be able to create expenses from email"""
+        employee = self.expense_employee
+        employee.user_id = False
+
+        message_parsed = {
+            'message_id': "the-world-is-a-ghetto",
+            'subject': 'New expense',
+            'email_from': employee.work_email,
+            'to': 'catchall@yourcompany.com',
+            'body': "Don't you know, that for me, and for you",
+            'attachments': [],
+        }
+
+        expense = self.env['hr.expense'].message_new(message_parsed)
+        self.assertRecordValues(expense, [{
+            'employee_id': employee.id,
+        }])
+
     def test_import_expense_from_email_no_product(self):
         message_parsed = {
             'message_id': "the-world-is-a-ghetto",

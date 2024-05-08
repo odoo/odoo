@@ -22,7 +22,7 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     l10n_id_tax_number = fields.Char(string="Tax Number", copy=False)
-    l10n_id_replace_invoice_id = fields.Many2one('account.move', string="Replace Invoice",  domain="['|', '&', '&', ('state', '=', 'posted'), ('partner_id', '=', partner_id), ('reversal_move_id', '!=', False), ('state', '=', 'cancel')]", copy=False)
+    l10n_id_replace_invoice_id = fields.Many2one('account.move', string="Replace Invoice", domain="['|', '&', '&', ('state', '=', 'posted'), ('partner_id', '=', partner_id), ('reversal_move_id', '!=', False), ('state', '=', 'cancel')]", copy=False, index='btree_not_null')
     l10n_id_attachment_id = fields.Many2one('ir.attachment', readonly=True, copy=False)
     l10n_id_csv_created = fields.Boolean('CSV Created', compute='_compute_csv_created', copy=False)
     l10n_id_kode_transaksi = fields.Selection([

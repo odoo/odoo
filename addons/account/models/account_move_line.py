@@ -566,7 +566,7 @@ class AccountMoveLine(models.Model):
                     or accounts.get(('res.company', move.company_id.id, account_type))
                 )
                 if line.move_id.fiscal_position_id:
-                    account_id = self.move_id.fiscal_position_id.map_account(self.env['account.account'].browse(account_id))
+                    account_id = line.move_id.fiscal_position_id.map_account(self.env['account.account'].browse(account_id))
                 line.account_id = account_id
 
         product_lines = self.filtered(lambda line: line.display_type == 'product' and line.move_id.is_invoice(True))
@@ -1369,6 +1369,10 @@ class AccountMoveLine(models.Model):
                 res_vals.pop('balance', 0)
                 res_vals.pop('debit', 0)
                 res_vals.pop('credit', 0)
+
+            if res_vals['display_type'] in ('line_section', 'line_note'):
+                res_vals.pop('account_id')
+
         return result_vals_list
 
     @contextmanager

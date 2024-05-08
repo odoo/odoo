@@ -96,7 +96,7 @@ class AccountMove(models.Model):
 
     @api.model
     def _compute_isr_number(self, invoice_ref):
-        """Generates the ISR or QRR reference
+        r"""Generates the ISR or QRR reference
 
         An ISR references are 27 characters long.
         QRR is a recycling of ISR for QR-bills. Thus works the same.
@@ -191,7 +191,7 @@ class AccountMove(models.Model):
         'partner_bank_id.l10n_ch_isr_subscription_eur',
         'partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_optical_line(self):
-        """ Compute the optical line to print on the bottom of the ISR.
+        r""" Compute the optical line to print on the bottom of the ISR.
 
         This line is read by an OCR.
         It's format is:

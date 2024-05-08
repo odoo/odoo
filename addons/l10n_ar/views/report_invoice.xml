@@ -171,7 +171,7 @@
             <attribute name="t-if">not o._l10n_ar_include_vat()</attribute>
         </xpath>
         <span id="line_tax_ids" position="attributes">
-            <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), line.tax_ids.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)))</attribute>
+            <attribute name="t-out">', '.join(map(lambda x: (x.description or x.name), line.tax_ids.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)))</attribute>
         </span>
 
         <!-- remove payment reference that is not used in Argentina -->

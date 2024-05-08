@@ -2,6 +2,7 @@ odoo.define('mass_mailing.snippets.options', function (require) {
 "use strict";
 
 const options = require('web_editor.snippets.options');
+const {loadImage} = require('web_editor.image_processing');
 const {ColorpickerWidget} = require('web.Colorpicker');
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
 const weUtils = require('web_editor.utils');
@@ -128,6 +129,22 @@ options.registry.MassMailingImageTools = options.registry.ImageTools.extend({
         tempEl.parentNode.removeChild(tempEl);
         return ColorpickerWidget.normalizeCSSColor(colorValue).replace(/"/g, "'");
     },
+
+    /**
+     * @override
+     */
+    async computeShape(svgText, img) {
+        const dataURL = await this._super(...arguments);
+        const image = await loadImage(dataURL);
+        const canvas = document.createElement("canvas");
+        const imgFilename = (img.dataset.originalSrc.split("/").pop()).split(".")[0];
+        img.dataset.fileName = `${imgFilename}.png`;
+        img.dataset.mimetype = "image/png";
+        canvas.width = image.width;
+        canvas.height = image.height;
+        canvas.getContext("2d").drawImage(image, 0, 0, image.width, image.height);
+        return canvas.toDataURL(`image/png`, 1.0);
+    }
 });
 
 options.userValueWidgetsRegistry['we-fontfamilypicker'] = SelectUserValueWidget.extend({
