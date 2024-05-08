@@ -225,3 +225,34 @@ test("with enable_formatting option as false", async () => {
     await fieldInput("price").edit("1234567890");
     expect(".o_field_widget input").toHaveValue("1234567890");
 });
+
+test("value is formatted on Enter", async () => {
+    // `localization > grouping` required for this test is [3, 0], which is the default in mock server
+    await mountView({
+        type: "form",
+        resModel: "product",
+        arch: '<form><field name="price"/></form>',
+    });
+
+    expect(".o_field_widget input").toHaveValue("0");
+
+    await fieldInput("price").edit("1000", { confirm: "Enter" });
+    expect(".o_field_widget input").toHaveValue("1,000");
+});
+
+test("value is formatted on Enter (even if same value)", async () => {
+    // `localization > grouping` required for this test is [3, 0], which is the default in mock server
+    Product._records = [{ id: 1, price: 8069 }];
+
+    await mountView({
+        type: "form",
+        resModel: "product",
+        resId: 1,
+        arch: '<form><field name="price"/></form>',
+    });
+
+    expect(".o_field_widget input").toHaveValue("8,069");
+
+    await fieldInput("price").edit("8069", { confirm: "Enter" });
+    expect(".o_field_widget input").toHaveValue("8,069");
+});
