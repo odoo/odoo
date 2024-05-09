@@ -368,7 +368,6 @@
             <tree>
                 <field name="nombre"/>
                 <field name="descripcion"/>
-                <field name="company_id"/>
                 <field name="pregunta_ids"/>
             </tree>
         </field>
@@ -378,8 +377,7 @@
         <field name="name">Asignación</field>
         <field name="model">usuario.evaluacion.rel</field>
         <field name="arch" type="xml">
-            <form string="Evaluation Assignment">
-                <!-- Your other fields here -->
+            <form string="Asignar Evaluacion">
                 <field name="evaluacion_id"/>
                 <field name="usuario_id"/>
             </form>
@@ -393,7 +391,7 @@
         <field name="arch" type="xml">
             <form string="NOM035" create="false">
                 <sheet>
-                    <h1>Evaluación 035</h1>
+                    <h1>Evaluación NOM 035</h1>
                     <br></br>
                     <group>
                         <field name="nombre"/>

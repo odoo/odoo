@@ -93,32 +93,21 @@ class UsuarioEvaluacionRel(models.Model):
                 user.write({"token": token, "contestada": "pendiente"})
 
                 mail_values = {
-                    "subject": "Invitación para completar la evaluación",
-                    "email_from": self.env.user.email_formatted,
-                    "email_to": user.usuario_id.email,
-                    "body_html": f"<p>Hola, <strong>{user.usuario_id.name}</strong></p>"
-                    f"<p>En <strong>{self.env.user.company_id.name}</strong> estamos muy interesados"
-                    f"<p>en conocer tu opinión, a fin de identificar áreas de mejora que nos permitan mejorar</p>"
-                    f"<p>tu experiencia con nosotros. Por ello, te invitamos a responder la Encuesta de Clima</p>"
-                    f"<p>Laboral: <strong>(Nombre de evaluación)</strong></p>"
-                    f"<p>Disponible del <strong>(Fecha Inicio)</strong> al <strong>(Fecha Fin)</strong></p>"
-                    f'<a href="{base_url}/{evaluacion_id}/{token}">',
+                    'subject': 'Invitación para completar la evaluación',
+                    'email_from': self.env.user.email_formatted,
+                    'email_to': user.usuario_id.email,
+                    'body_html': f'<p>Hola, <strong>{user.usuario_id.name}</strong></p>'
+                                f'<p>en conocer tu opinión, a fin de identificar áreas de mejora que nos permitan mejorar</p>'
+                                f'<p>tu experiencia con nosotros. Por ello, te invitamos a responder la Encuesta de Clima</p>'
+                                f'<p>Laboral: <strong>(Nombre de evaluación)</strong></p>'
+                                f'<p>Disponible del <strong>(Fecha Inicio)</strong> al <strong>(Fecha Fin)</strong></p>'
+                                f'<a href="{base_url}/{evaluacion_id}/{token}">',
                 }
 
                 mail = self.env["mail.mail"].create(mail_values)
-                # mail.send()
-
                 if mail.state == "sent":
                     print(f"Correo enviado exitosamente a {user.usuario_id.email}")
                 elif mail.state == "exception":
                     print(f"Fallo al enviar correo a {user.usuario_id.email}")
                 else:
                     print(f"Correo en estado pendiente o desconocido: {mail.state}")
-
-        # return {
-        #     "type": "ir.actions.act_window",
-        #     "name": "Evaluaciones",
-        #     "res_model": "evaluacion",
-        #     "view_mode": "tree",
-        #     "target": "current",
-        # }
