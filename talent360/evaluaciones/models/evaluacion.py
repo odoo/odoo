@@ -1,4 +1,5 @@
 from odoo import api, models, fields
+from collections import defaultdict
 from odoo import exceptions
 
 
@@ -491,7 +492,7 @@ class Evaluacion(models.Model):
             {
                 "nombre": cat,
                 "valor": 0,
-                "color": "#000000",
+                "color": "#2894a7",
                 "puntuacion": 0,
                 "puntuacion_maxima": 0,
                 "departamentos": [],
@@ -546,7 +547,7 @@ class Evaluacion(models.Model):
                 if departamento is None:
                     departamento = {
                         "nombre": nombre_departamento,
-                        "color": "#000000",  
+                        "color": "#2894a7",  
                         "puntos": 0,
                         "puntos_maximos": 0,
                     }
@@ -559,14 +560,14 @@ class Evaluacion(models.Model):
             total_maximo_posible += maximo_pregunta
             categoria_actual["puntuacion"] += valor_pregunta
             categoria_actual["puntuacion_maxima"] += maximo_pregunta
-            categoria_actual["color"] = self.asignar_color_clima(total_puntuacion)
-    
+            
 
         for categoria in detalles_categorias:
             if categoria["puntuacion_maxima"] > 0:
                 categoria["valor"] = (
                     categoria["puntuacion"] / categoria["puntuacion_maxima"]
                 ) * 100
+                categoria["color"] = self.asignar_color_clima(categoria["valor"])
 
             for dept in categoria["departamentos"]:
                 if dept["puntos_maximos"] > 0:
@@ -579,169 +580,63 @@ class Evaluacion(models.Model):
             else 0
         ),2)
 
+      # Datos demograficos
+        if self.incluir_demograficos:
+            datos_demograficos = []
 
-        # Datos demograficos
-        # datos_demograficos = []
-
-        # for usuario in self.usuario_ids:
-        #     usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
-        #         [("usuario_id", "=", usuario.id), ("evaluacion_id", "=", self.id)]
-        #     )
-
-        #     if (
-        #         usuario_evaluacion_rel
-        #         and usuario_evaluacion_rel[0].contestada == "contestada"
-        #     ):
-        #         datos_demograficos.append(self.obtener_datos_demograficos(usuario))
-
-        # Parámetros para el template
-        parametros = {
-            "evaluacion": self,
-            "categorias": detalles_categorias,
-            "total": total_puntuacion,
-            "total_maximo": total_maximo_posible,
-            "total_porcentaje": total_porcentaje,
-            #"datos_demograficos": datos_demograficos,
-        }
-
-        print("Parametros para el reporte de clima:", parametros)
-        print (categoria["valor"])
-        return parametros
-
-    def action_generar_datos_reporte_clima(self):
-        # Categorías para el reporte de clima laboral
-        categorias_clima = [
-            "Reclutamiento y Selección de Personal",
-            "Formación y Capacitación",
-            "Permanencia y Ascenso",
-            "Corresponsabilidad en la Vida Laboral, Familiar y Personal",
-            "Clima Laboral Libre de Violencia",
-            "Acoso y Hostigamiento",
-            "Accesibilidad",
-            "Respeto a la Diversidad",
-            "Condiciones Generales de Trabajo",
-        ]
-
-        # Estructura de datos para las categorías
-        detalles_categorias = [
-            {
-                "nombre": cat,
-                "valor": 0,
-                "color": "#000000",
-                "puntuacion": 0,
-                "puntuacion_maxima": 0,
-                "departamentos": [],
-            }
-            for cat in categorias_clima
-        ]
-
-        # Variables para acumular totales
-        total_puntuacion = 0
-        total_maximo_posible = 0
-
-        for pregunta in self.pregunta_ids:
-            if (
-                not pregunta.categoria
-                or dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
-                not in categorias_clima
-            ):
-                continue
-
-            categoria_actual = next(
-                (
-                    cat
-                    for cat in detalles_categorias
-                    if cat["nombre"]
-                    == dict(pregunta._fields["categoria"].selection).get(
-                        pregunta.categoria
-                    )
-                ),
-                None,
-            )
-
-            if categoria_actual is None:
-                continue
-
-            valor_pregunta = 0
-            maximo_pregunta = 0
-
-            for respuesta in pregunta.respuesta_ids:
-                valor_respuesta = int(respuesta.respuesta_texto)
-                valor_pregunta += valor_respuesta
-                maximo_pregunta += 4  # Suponiendo un máximo de 4 para cada respuesta en escala
-
-                nombre_departamento = respuesta.usuario_id.department_id.name if respuesta.usuario_id.department_id else "Sin departamento"
-                departamento = next(
-                    (
-                        dept
-                        for dept in categoria_actual["departamentos"]
-                        if dept["nombre"] == nombre_departamento
-                    ),
-                    None,
+            for usuario in self.usuario_ids:
+                usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
+                    [("usuario_id.id", "=", usuario.id), ("evaluacion_id.id", "=", self.id)]
                 )
-                if departamento is None:
-                    departamento = {
-                        "nombre": nombre_departamento,
-                        "color": "#000000",  
-                        "puntos": 0,
-                        "puntos_maximos": 0,
-                    }
-                    categoria_actual["departamentos"].append(departamento)
 
-                departamento["puntos"] += valor_respuesta
-                departamento["puntos_maximos"] += 4
+                if (
+                    usuario_evaluacion_rel
+                    and usuario_evaluacion_rel[0].contestada == "contestada"
+                ):
+                    datos_demograficos.append(self.obtener_datos_demograficos(usuario))
 
-            total_puntuacion += valor_pregunta
-            total_maximo_posible += maximo_pregunta
-            categoria_actual["puntuacion"] += valor_pregunta
-            categoria_actual["puntuacion_maxima"] += maximo_pregunta
-            categoria_actual["color"] = self.asignar_color_clima(total_puntuacion)
-    
+            departamentos = defaultdict(int)
+            for dato in datos_demograficos:
+                departamentos[dato["departamento"]] += 1
 
-        for categoria in detalles_categorias:
-            if categoria["puntuacion_maxima"] > 0:
-                categoria["valor"] = (
-                    categoria["puntuacion"] / categoria["puntuacion_maxima"]
-                ) * 100
+            generaciones = defaultdict(int)
+            for dato in datos_demograficos:
+                generaciones[dato["generacion"]] += 1
+                
+            puestos = defaultdict(int)
+            for dato in datos_demograficos:
+                puestos[dato["puesto"]] += 1
 
-            for dept in categoria["departamentos"]:
-                if dept["puntos_maximos"] > 0:
-                    dept["valor"] = (dept["puntos"] / dept["puntos_maximos"]) * 100
-                    dept["color"] = self.asignar_color_clima(dept["valor"])
+            generos = defaultdict(int)
+            for dato in datos_demograficos:
+                dato["genero"] = dato["genero"].capitalize()
+                generos[dato["genero"]] += 1
 
-        total_porcentaje = round((
-            (total_puntuacion / total_maximo_posible) * 100
-            if total_maximo_posible > 0
-            else 0
-        ),2)
+            # Organizar los parámetros en el orden deseado
+            parametros = {
+                "evaluacion": self,
+                "categorias": detalles_categorias,
+                "total": total_puntuacion,
+                "total_maximo": total_maximo_posible,
+                "total_porcentaje": total_porcentaje,
+                "departamentos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in departamentos.items()],
+                "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
+                "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
+                "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],  
+            }
 
-
-        # Datos demograficos
-        # datos_demograficos = []
-
-        # for usuario in self.usuario_ids:
-        #     usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
-        #         [("usuario_id", "=", usuario.id), ("evaluacion_id", "=", self.id)]
-        #     )
-
-        #     if (
-        #         usuario_evaluacion_rel
-        #         and usuario_evaluacion_rel[0].contestada == "contestada"
-        #     ):
-        #         datos_demograficos.append(self.obtener_datos_demograficos(usuario))
+        else:
+            # Organizar los parámetros en el orden deseado
+            parametros = {
+                "evaluacion": self,
+                "categorias": detalles_categorias,
+                "total": total_puntuacion,
+                "total_maximo": total_maximo_posible,
+                "total_porcentaje": total_porcentaje,
+            }
 
         # Parámetros para el template
-        parametros = {
-            "evaluacion": self,
-            "categorias": detalles_categorias,
-            "total": total_puntuacion,
-            "total_maximo": total_maximo_posible,
-            "total_porcentaje": total_porcentaje,
-            #"datos_demograficos": datos_demograficos,
-        }
-
-        print("Parametros para el reporte de clima:", parametros)
-        print (categoria["valor"])
+        print(parametros)
         return parametros
 
     def asignar_color(self, valor, categoria=None, dominio=None):
@@ -913,13 +808,14 @@ class Evaluacion(models.Model):
         
         :return: El color asignado al valor.
         """
-        
-        if 83.04 <= valor <= 100:
+        if self.techo_verde <= valor <= self.techo_azul:
             return "#2894a7"  # Azul clarito
-        elif 72.70 <= valor <= 83.03:
+        elif self.techo_amarillo <= valor <= self.techo_verde:
             return "#5aaf2b"  # Verde
-        elif 62.37 <= valor <= 72.69:
+        elif self.techo_naranja <= valor <= self.techo_amarillo:
             return "#ebae14"  # Amarillo
+        elif self.techo_rojo <= valor <= self.techo_naranja:
+            return "#ffa446"  # Naranja
         else:
             return "#ff4747"  # Rojo
 
