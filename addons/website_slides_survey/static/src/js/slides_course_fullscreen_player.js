@@ -13,9 +13,12 @@ Fullscreen.include({
      */
     _renderSlide: function (){
         var def = this._super.apply(this, arguments);
-        var $content = this.$('.o_wslides_fs_content');
+        const contentEl = this.el.querySelector(".o_wslides_fs_content");
         if (this.get('slide').category === "certification"){
-            $content.empty().append(renderToElement('website.slides.fullscreen.certification',{widget: this}));
+            contentEl.innerHTML = "";
+            contentEl.append(
+                renderToElement("website.slides.fullscreen.certification", { widget: this })
+            );
         }
         return Promise.all([def]);
     },
