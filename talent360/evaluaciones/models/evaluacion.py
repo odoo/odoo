@@ -325,15 +325,15 @@ class Evaluacion(models.Model):
                 if respuesta.evaluacion_id.id != self.id:
                     continue
 
-                respuestas.append(respuesta.respuesta_texto)
+                respuestas.append(respuesta.respuesta_mostrar)
 
                 for i, respuesta_tabulada in enumerate(respuestas_tabuladas):
-                    if respuesta_tabulada["nombre"] == respuesta.respuesta_texto:
+                    if respuesta_tabulada["nombre"] == respuesta.respuesta_mostrar:
                         respuestas_tabuladas[i]["valor"] += 1
                         break
                 else:
                     respuestas_tabuladas.append(
-                        {"nombre": respuesta.respuesta_texto, "valor": 1}
+                        {"nombre": respuesta.respuesta_mostrar, "valor": 1}
                     )
 
             datos_pregunta = {
@@ -459,6 +459,7 @@ class Evaluacion(models.Model):
                 "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
                 "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
                 "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],
+                "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
                 "final": final,
             }
 
@@ -468,6 +469,7 @@ class Evaluacion(models.Model):
                 "evaluacion": self,
                 "categorias": [categorias[nombre] for nombre in categorias_orden],
                 "dominios": [dominios[nombre] for nombre in dominios_orden],
+                "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
                 "final": final,
             }
 

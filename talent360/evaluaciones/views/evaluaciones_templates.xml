@@ -26,9 +26,10 @@
         <template id="encuestas_reporte" name="Reporte: página de reporte genérico">
             <t t-call="evaluaciones.diseño">
                 <t t-set="limite_registros" t-value="10"/>
-                <div class="o_survey_result">
+                <div class="o_survey_result mb-5">
                     <t t-call="evaluaciones.encuestas_reporte_header" />
                     <t t-call="evaluaciones.encuestas_reporte_nom_035" />
+                    <t t-call="evaluaciones.encuestas_reporte_inner" />
                 </div>
             </t>
         </template>
@@ -55,6 +56,16 @@
                 <button class="btn btn-primary d-none d-print-none d-md-inline-block o_survey_results_print" aria-label="Print" title="Print">
                     <i class="fa fa-print"></i> Exportar
                 </button>
+            </div>
+        </template>
+
+        <template id="encuestas_reporte_inner" name="Reporte: contenido de reporte genérico">
+            <h4><button class="btn btn-link ps-0 pt-2 d-print-none" type="button" data-bs-toggle="collapse" t-attf-data-bs-target=".question_detail">
+                <i class="fa fa-eye" aria-hidden="true"/>
+            </button>Ver detalles de preguntas</h4>
+            <div class="question_detail survey_section container-fluid collapse show" t-foreach="preguntas" t-as='datos_pregunta'>
+                <t t-set="pregunta" t-value="datos_pregunta['pregunta']"/>
+                <div class="o_survey_results_question_wrapper container-fluid p-5" t-call="evaluaciones.encuestas_reporte_pregunta" />
             </div>
         </template>
 
@@ -268,7 +279,7 @@
                     </t>
                 </div>
             </div>
-            <div class="survey_section mb-5">
+            <div class="survey_section">
                 <h4>Necesidad de acción</h4>
                 <span class="container-fluid">
                     <t t-if="final &lt; 20">El riesgo resulta despreciable por lo que no se requiere medidas adicionales.</t>
@@ -511,21 +522,10 @@
                         <span>Gráfico de barras</span>
                     </a>
                 </li>
-                <li t-if="pregunta_contestada" class="nav-item">
-                    <a t-att-href="'#grafica_columnas_pregunta__%d' % pregunta.id" t-att-aria-controls="'grafica_columnas_pregunta__%d' % pregunta.id" class="nav-link" data-bs-toggle="tab" role="tab" data-chart="1">
-                        <i class="fa fa-bar-chart-o"></i>
-                        <span>Gráfico de columnas</span>
-                    </a>
-                </li>
-                <li t-if="pregunta_contestada" class="nav-item">
-                    <a t-att-href="'#grafica_pastel_pregunta__%d' % pregunta.id" t-att-aria-controls="'grafica_pastel_pregunta__%d' % pregunta.id" class="nav-link" data-bs-toggle="tab" role="tab" data-chart="1">
-                        <i class="fa fa-bar-chart-o"></i>
-                        <span>Gráfico de pastel</span>
-                    </a>
-                </li>
                 <li class="nav-item">
                     <a t-att-href="'#datos_pregunta__%d' % pregunta.id" t-att-aria-controls="'datos_pregunta__%d' % pregunta.id" t-attf-class="nav-link #{'active' if not pregunta_contestada else ''}" data-bs-toggle="tab" role="tab">
                         <i class="fa fa-list-alt me-1"/>
+                        <span>Tabla de datos</span>
                     </a>
                 </li>
             </ul>
@@ -552,14 +552,14 @@
                             <tr t-foreach="respuestas_tabuladas" t-as="respuesta">
                                 <td>
                                     <p>
-                                        <span t-esc="respuesta['texto']"/>
+                                        <span t-esc="respuesta['nombre']"/>
                                     </p>
                                 </td>
                                 <td class="o_survey_answer">
-                                    <span t-esc="round(respuesta['conteo'] * 100.0/ (len(respuestas) or 1), 2)"></span> % 
+                                    <span t-esc="round(respuesta['valor'] * 100.0/ (len(respuestas) or 1), 2)"></span> % 
                                 </td>
                                 <td class="o_survey_answer">
-                                    <span t-esc="'%s Votos' % respuesta['conteo']" class="badge text-bg-primary"/>
+                                    <span t-esc="'%s Votos' % respuesta['valor']" class="badge text-bg-primary"/>
                                 </td>
                             </tr>
                         </tbody>
