@@ -323,10 +323,10 @@
                         </group>
                         <group name="order_details">
                             <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
-                            <div class="o_td_label" groups="base.group_no_one" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}">
+                            <div class="o_td_label" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}">
                                 <label for="date_order" string="Quotation Date"/>
                             </div>
-                            <field name="date_order" nolabel="1" groups="base.group_no_one" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
+                            <field name="date_order" nolabel="1" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
                             <div class="o_td_label" attrs="{'invisible': [('state', 'in', ['draft', 'sent'])]}">
                                 <label for="date_order" string="Order Date"/>
                             </div>
