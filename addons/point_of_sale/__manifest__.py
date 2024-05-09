@@ -15,6 +15,7 @@
         'data/default_barcode_patterns.xml',
         'data/digest_data.xml',
         'data/pos_note_data.xml',
+        'data/mail_template_data.xml',
         'wizard/pos_details.xml',
         'wizard/pos_payment.xml',
         'wizard/pos_close_session_wizard.xml',
