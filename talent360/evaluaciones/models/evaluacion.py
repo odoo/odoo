@@ -466,6 +466,7 @@ class Evaluacion(models.Model):
             {
                 "nombre": cat,
                 "valor": 0,
+                "color": "#000000",
                 "puntuacion": 0,
                 "puntuacion_maxima": 0,
                 "departamentos": [],
@@ -520,6 +521,7 @@ class Evaluacion(models.Model):
                 if departamento is None:
                     departamento = {
                         "nombre": nombre_departamento,
+                        "color": "#000000",  
                         "puntos": 0,
                         "puntos_maximos": 0,
                     }
@@ -532,6 +534,7 @@ class Evaluacion(models.Model):
             total_maximo_posible += maximo_pregunta
             categoria_actual["puntuacion"] += valor_pregunta
             categoria_actual["puntuacion_maxima"] += maximo_pregunta
+            categoria_actual["color"] = self.asignar_color_clima(total_puntuacion)
 
         for categoria in detalles_categorias:
             if categoria["puntuacion_maxima"] > 0:
@@ -544,6 +547,23 @@ class Evaluacion(models.Model):
             if total_maximo_posible > 0
             else 0
         ),2)
+
+          # Calcular la puntuación total de cada departamento
+          
+    # Calcular la puntuación total de cada departamento
+        departamentos_totales = {}
+        for categoria in detalles_categorias:
+            for dept in categoria["departamentos"]:
+                if dept["nombre"] not in departamentos_totales:
+                    departamentos_totales[dept["nombre"]] = {
+                        "puntos": 0,
+                        "puntos_maximos": 0,
+                        "color": "#000000"
+                    }
+                departamentos_totales[dept["nombre"]]["puntos"] += dept["puntos"]
+                departamentos_totales[dept["nombre"]]["puntos_maximos"] += dept["puntos_maximos"]
+                departamentos_totales[dept["nombre"]]["color"]= self.asignar_color_clima(departamentos_totales[dept["nombre"]]["puntos"])
+
 
         # Datos demograficos
         # datos_demograficos = []
@@ -566,6 +586,7 @@ class Evaluacion(models.Model):
             "total": total_puntuacion,
             "total_maximo": total_maximo_posible,
             "total_porcentaje": total_porcentaje,
+            "departamentos_totales": departamentos_totales,
             #"datos_demograficos": datos_demograficos,
         }
 
@@ -730,6 +751,26 @@ class Evaluacion(models.Model):
                 return "#ffa446"  # Naranja
             else:
                 return "#ff4747"  # Rojo
+            
+    def asignar_color_clima(self, valor):
+        """
+        Asigna un color a un valor numérico.
+        
+        Este método asigna un color a un valor numérico basado en una escala predefinida.
+        
+        :param valor: El valor numérico al que se le asignará un color.
+        
+        :return: El color asignado al valor.
+        """
+        
+        if 83.04 <= valor <= 100:
+            return "#2894a7"  # Azul clarito
+        elif 72.70 <= valor <= 83.03:
+            return "#5aaf2b"  # Verde
+        elif 62.37 <= valor <= 72.69:
+            return "#ebae14"  # Amarillo
+        else:
+            return "#ff4747"  # Rojo
 
     def obtener_dato(self, dato):
         """

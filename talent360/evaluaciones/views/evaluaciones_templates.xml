@@ -312,40 +312,34 @@
             <div class="container-fluid row gap-5 justify-content-between g-2">
                 <div class="col survey_section">
                     <h4>Calificación final</h4>
-                    <span t-att-class="'color_nulo' if total_porcentaje &lt; 20 else 'color_bajo' if 20 &lt;= total_porcentaje &lt; 45 else 'color_medio' if 45 &lt;= total_porcentaje &lt; 70 else 'color_alto' if 70 &lt;= total_porcentaje &lt; 90 else 'color_muy-alto'">
-                        <t t-esc="total_porcentaje"/>
-                    </span>
+                    <span t-att-class="'color_muy-alto' if total_porcentaje &lt; 62 else 'color_medio' if 62 &lt;= total_porcentaje &lt; 73 else 'color_bajo' if 73 &lt;= total_porcentaje &lt; 84 else 'color_nulo' if 84 &lt;= total_porcentaje &lt;= 100 else ''">
+                    <t t-esc="total_porcentaje"/>
+                </span>
                     <span class="fs-5 pill">
-                        Riesgo
-                        <t t-if="total_porcentaje &lt; 20"> nulo</t>
-                        <t t-elif="20 &lt;= total_porcentaje &lt; 45"> bajo</t>
-                        <t t-elif="45 &lt;= total_porcentaje &lt; 70"> medio</t>
-                        <t t-elif="70 &lt;= total_porcentaje &lt; 90"> alto</t>
-                        <t t-else="true"> muy alto</t>
+                        <t t-if="total_porcentaje &lt; 62"> Deficiente</t>
+                        <t t-elif="62 &lt;= total_porcentaje &lt; 73"> Marginal</t>
+                        <t t-elif="73 &lt;= total_porcentaje &lt; 84"> Suficiente</t>
+                        <t t-elif="84 &lt;= total_porcentaje &lt; 100"> Superior</t>
                     </span>
                 </div>
 
                 <div class="col survey_section w-100">
                     <h4>Semáforo de riesgos</h4>
                     <div class="container-fluid row gap-2 align-items-center">
-                        <div class="color_circle" style="background-color: #ff4747;"></div>
-                        <span class="col">Riesgo muy alto</span>
-                    </div>
-                    <div class="container-fluid row gap-2 align-items-center">
-                        <div class="color_circle" style="background-color: #ffa446;"></div>
-                        <span class="col">Riesgo alto</span>
-                    </div>
-                    <div class="container-fluid row gap-2 align-items-center">
-                        <div class="color_circle" style="background-color: #ebae14;"></div>
-                        <span class="col">Riesgo medio</span>
+                        <div class="color_circle" style="background-color: #2894a7;"></div>
+                        <span class="col">Superior</span>
                     </div>
                     <div class="container-fluid row gap-2 align-items-center">
                         <div class="color_circle" style="background-color: #5aaf2b;"></div>
-                        <span class="col">Riesgo bajo</span>
+                        <span class="col">Suficiente</span>
                     </div>
                     <div class="container-fluid row gap-2 align-items-center">
-                        <div class="color_circle" style="background-color: #2894a7;"></div>
-                        <span class="col">Riesgo nulo</span>
+                        <div class="color_circle" style="background-color: #ebae14;"></div>
+                        <span class="col">Marginal</span>
+                    </div>
+                    <div class="container-fluid row gap-2 align-items-center">
+                        <div class="color_circle" style="background-color: #ff4747;"></div>
+                        <span class="col">Deficiente</span>
                     </div>
                 </div>
             </div>
@@ -388,79 +382,26 @@
             </div>
 
             <div t-foreach="evaluacion.action_generar_datos_reporte_clima()['categorias']" t-as="categoria">
-                <div class="survey_section">
+                <div class="survey_section container-fluid">
                     <t t-if="'puntuacion' in categoria">
                         <div class="survey_page container-fluid d-flex flex-column">
                             <div class="survey_section">
                                 <h4><t t-esc="categoria['nombre']"/></h4>
-                                <div class="survey_graph" t-att-id="'grafica_pie_' + categoria['nombre']" t-att-data-graph-type="'pie'" t-att-data-graph-data="[categoria, {'nombre':'', 'valor': 100 - categoria['valor'], 'color': '#9c9c9c'}]">
+                                <div class="survey_graph" t-att-id="'grafica_pie_' + categoria['nombre']" t-att-data-graph-type="'pie'" t-att-data-graph-data="[categoria]">
                                     <canvas t-att-id="'canvas_pie_' + categoria['nombre']"></canvas>
                                 </div>
                                 <h4>Resumen por departamentos</h4>
                             </div>
                             <div class="survey_section">
-                                <div class="survey_graph" t-att-id="'grafica_radar_departamentos_' + categoria['nombre']" t-att-data-graph-type="'col'" t-att-data-label="'Resultados por departamento'" t-att-data-graph-data="categoria['departamentos']">
+                                <div class="survey_graph" t-att-id="'grafica_radar_departamentos_' + categoria['nombre']" t-att-data-graph-type="'col'" t-att-data-label="'Resultados por departamento'" t-att-data-graph-data="categoria['valor']">
                                     <canvas t-att-id="'canvas_radar_departamentos_' + categoria['nombre']"></canvas>
                                 </div>
+                                <t t-esc="categoria['valor']"/>
                             </div> 
                         </div>
                     </t>
                 </div>
             </div>
-
-
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <script type="text/javascript">
-                document.addEventListener('DOMContentLoaded', function () {
-                    var graphs = document.querySelectorAll('.survey_graph');
-                    graphs.forEach(function (graph) {
-                        var canvas = graph.querySelector('canvas');
-                        var ctx = canvas.getContext('2d');
-                        var data = graph.getAttribute('data-graph-data');
-                        
-                        if (data) {
-                            data = JSON.parse(data);
-                            var chartData = {
-                                labels: data.labels,  // Asegúrate de que 'labels' es parte de la estructura de datos
-                                datasets: [{
-                                    label: data.label,  // Asegúrate de que 'label' es parte de la estructura de datos
-                                    data: data.values,  // Asegúrate de que 'values' es parte de la estructura de datos
-                                    backgroundColor: [
-                                        'rgba(255, 99, 132, 0.2)',
-                                        'rgba(54, 162, 235, 0.2)',
-                                        'rgba(255, 206, 86, 0.2)',
-                                        'rgba(75, 192, 192, 0.2)',
-                                        'rgba(153, 102, 255, 0.2)',
-                                        'rgba(255, 159, 64, 0.2)'
-                                    ],
-                                    borderColor: [
-                                        'rgba(255, 99, 132, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(255, 206, 86, 1)',
-                                        'rgba(75, 192, 192, 1)',
-                                        'rgba(153, 102, 255, 1)',
-                                        'rgba(255, 159, 64, 1)'
-                                    ],
-                                    borderWidth: 1
-                                }]
-                            };
-                            new Chart(ctx, {
-                                type: graph.getAttribute('data-graph-type'),  // Utiliza el tipo de gráfico especificado
-                                data: chartData,
-                                options: {
-                                    responsive: true,
-                                    plugins: {
-                                        legend: {
-                                            display: true,
-                                            position: 'top'
-                                        }
-                                    }
-                                }
-                            });
-                        }
-                    });
-                });
-            </script>
         </template>
 
 
