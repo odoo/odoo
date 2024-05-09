@@ -22,6 +22,10 @@
                         <field name="fecha_final">
                             <widget name="date"/>
                         </field>
+                        <field name="incluir_demograficos"/>
+                    </group>
+                    <group>
+                        <field name="mensaje"/>
                     </group>
                     <group>
                         <group>
@@ -162,13 +166,12 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <div>
+                                    <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary mx-3 my-3"/>
+                                </div>
                             </page>
                         </notebook>
                     </group>
-                    <div>
-                        <button name="action_enviar_evaluacion" string="Enviar Correo" type="object" class="btn-primary mx-3" confirm="¿Estás seguro de enviar la encuesta?"/>
-                        <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary mx-3"/>
-                    </div>
                 </sheet>
             </form>
         </field>

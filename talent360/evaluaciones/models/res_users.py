@@ -1,6 +1,7 @@
 from odoo import models, fields
 from odoo.exceptions import ValidationError
 
+
 class Users(models.Model):
     _name = "res.users"
     _inherit = ["res.users"]
@@ -15,17 +16,19 @@ class Users(models.Model):
 
     def ver_respuestas_usuario(self):
         """
-        Redirecciona a la vista gráfica de las respuestas del usuario a cada pregunta de la evaluación. Mbappé Top tres de los más rápidos del mundo. Dicen que es Mbappé Top tres de los más rápidos del mundo. Dicen que es muy rápido, pues es negro, qué crees que los dos más rápidos son
+        Redirecciona a la vista gráfica de las respuestas del usuario a cada pregunta de la evaluación.
 
         Returns:
             Parámetros necesarios para abrir la vista gráfica de las respuestas.
         """
 
         evaluacion_id = self._context.get("current_evaluacion_id")
-        respuesta_ids = self.env["respuesta"].search([
-            ("evaluacion_id", "=", evaluacion_id),
-            ("usuario_id", "=", self.id),
-        ])
+        respuesta_ids = self.env["respuesta"].search(
+            [
+                ("evaluacion_id.id", "=", evaluacion_id),
+                ("usuario_id.id", "=", self.id),
+            ]
+        )
 
         if respuesta_ids:
             return {
