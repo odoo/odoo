@@ -43,7 +43,7 @@ The service is provided by the In App Purchase Odoo platform.
         'web.assets_backend': [
             'sms/static/src/**/*',
         ],
-        'web.qunit_suite_tests': [
+        'web.assets_unit_tests': [
             'sms/static/tests/**/*',
         ],
     },
