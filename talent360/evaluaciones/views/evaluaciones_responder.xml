@@ -212,7 +212,7 @@
     <!-- Open question -->
     <template id="question_text_box" name="Preguntas: pregunta abierta">
         <div t-att-id="question.id">
-            <div class="o_survey_question_title mb-3">
+            <div class="o_survey_question_title mb-3" style="font-size: 20px;">
                 <span t-esc="str(numero_pregunta) + '.- '" class="o_survey_question_number"/>
                 <span t-field="question.pregunta_texto"/>
             </div>
@@ -230,7 +230,7 @@
 <!-- Matrix question -->
 <template id="question_matrix" name="Pregunta: Opcion multiple">
     <div t-att-id="question.id">
-        <div class="o_survey_question_title mb-3">
+        <div class="o_survey_question_title mb-3"  style="font-size: 20px;">
             <span t-esc="str(numero_pregunta) + '.- '" class="o_survey_question_number"/>
             <span t-field="question.pregunta_texto"/>
         </div>
@@ -273,7 +273,7 @@
             <t t-set="desc" t-value="['4', '3', '2', '1', '0']"/>
             <t t-set="asc" t-value="['0', '1', '2', '3', '4']"/>
 
-            <div class="o_survey_question_title mb-3">
+            <div class="o_survey_question_title mb-3"  style="font-size: 20px;">
                 <span t-esc="str(numero_pregunta) + '.- '" class="o_survey_question_number"/>
                 <span t-field="question.pregunta_texto"/>
             </div>
