@@ -83,9 +83,10 @@
         <field name="arch" type="xml">
             <tree create="false">
                 <field class="text-primary font-weight-bold h5 align-middle" name="nombre" readonly="1"/>
-                <field name="descripcion" readonly="1"/>
+                <field name="descripcion" class="text-nowrap" readonly="1"/>
                 <field name="estado" readonly="1"/>
                 <field name="tipo" readonly="1"/>
+                <field name="porcentaje_respuestas" widget="percentage" readonly="1"/>
                 <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="abrir_evaluacion_form" string="Detalle" type="object" readonly="1"/>
             </tree>
         </field>
@@ -319,6 +320,7 @@
                 <field name="estado" readonly="1"/>
                 <field name="tipo" readonly="1"/>
                 <field name="conteo_asignados" readonly="1"/>
+                <field name="porcentaje_respuestas" widget="percentage" readonly="1"/>
                 <button class="btn btn-primary" name="action_reporte_generico" string="Reporte" type="object"/>
             </tree>
         </field>
@@ -406,9 +408,9 @@
                                 <field name="pregunta_ids">
                                     <tree string="Preguntas" editable="bottom">
                                         <field name="pregunta_texto"/>
-                                    
-                        </tree>
-                    </field>
+
+                                    </tree>
+                                </field>
                             </page>
                             <page string="Asignados">
                                 <field name="usuario_ids"/>
@@ -419,14 +421,14 @@
                     <div>
                         <button name="enviar_evaluacion_action" string="Enviar Correo" type="object" class="btn-primary mx-3" confirm="¿Estás seguro de enviar la encuesta?"/>
                         <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary mx-3"/>
-                    
+
                     </div>
 
                 </sheet>
             </form>
         </field>
     </record>
-  
+
     <!-- NOM035 -->
     <record id="evaluacion_nom035_view_form" model="ir.ui.view">
         <field name="name">evaluacion.nom035.form</field>
