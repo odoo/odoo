@@ -34,8 +34,16 @@ class Certificate(models.Model):
         """
         self.ensure_one()
         content, password = b64decode(self.with_context(bin_size=False).content), self.password.encode() if self.password else None
-        private_key, certificate, *_dummy = pkcs12.load_key_and_certificates(content, password, backend=default_backend())
-        return private_key, certificate
+        private_key, certificate, certificates = pkcs12.load_key_and_certificates(content, password, backend=default_backend())
+        if certificate is None:
+            if len(certificates) != 0:
+                return private_key, certificates[0]
+            else:
+                raise UserError(_('There has been a problem with the certificate, some usual problems can be:\n'
+                                  '\t- The password given or the certificate are not valid.\n'
+                                  '\t- The certificate content is invalid.'))
+        else:
+            return private_key, certificate
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
