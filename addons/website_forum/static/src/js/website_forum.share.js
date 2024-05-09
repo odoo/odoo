@@ -23,20 +23,21 @@ const ForumShare = publicWidget.Widget.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        var $question = this.$('article.question');
+        const questionEl = this.el.querySelector(".o_wforum_question");
         if (!this.targetType) {
             this._super.apply(this, arguments);
         } else {
             const el = renderToElement('website.social_modal', {
                 target_type: this.targetType,
-                state: $question.data('state'),
+                state: questionEl.dataset["state"],
             });
-            $('body').append(el);
+            document.body.append(el);
             this.trigger_up('widgets_start_request', {
                 editableMode: false,
                 $target: $(el.querySelector(".s_share")),
             });
-            $('#oe_social_share_modal').modal('show');
+            const modalEl = document.getElementById("oe_social_share_modal");
+            Modal.getOrCreateInstance(modalEl).show();
         }
         return def;
     },
@@ -52,7 +53,7 @@ publicWidget.registry.websiteForumShare = publicWidget.Widget.extend({
         // Retrieve stored social data
         if (sessionStorage.getItem('social_share')) {
             var socialData = JSON.parse(sessionStorage.getItem('social_share'));
-            (new ForumShare(this, false, socialData.targetType)).attachTo($(document.body));
+            new ForumShare(this, false, socialData.targetType).attachTo(document.body);
             sessionStorage.removeItem('social_share');
         }
 
