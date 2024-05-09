@@ -82,6 +82,17 @@ class Pregunta(models.Model):
         ],
     )
 
+    valor_maximo = fields.Float("Valor máximo", calculate="_calculate_valor_maximo", store=False)
+
+    def _calculate_valor_maximo(self):
+        for record in self:
+            if record.tipo == "escala":
+                record.valor_maximo = 4
+            elif record.tipo == "multiple_choice":
+                record.valor_maximo = max(record.opcion_ids.mapped("valor"))
+            else:
+                record.valor_maximo = 0
+
     def ver_respuestas(self):
         """
         Redirecciona a la vista gráfica de las respuestas filtradas por evaluación y pregunta.
