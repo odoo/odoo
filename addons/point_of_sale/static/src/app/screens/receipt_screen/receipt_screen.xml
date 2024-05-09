@@ -22,7 +22,7 @@
                             </div>
                             <div class="d-flex gap-1" t-att-class="{'flex-column-reverse': this.ui.isSmall}">
                                 <div class="flex-grow-1 p-0 border-0 position-relative send-receipt-input">
-                                    <input type="text" class="border p-3 bg-view w-100 pe-5" t-attf-placeholder="eg.: john.doe@mail.com" t-model="state.input" />
+                                    <input type="text" class="border p-3 bg-view w-100 pe-5" t-attf-placeholder="{{ state.mode === 'email' ? 'e.g. john.doe@mail.com' : 'e.g. 0123456789' }}" t-model="state.input" />
                                     <div t-att-class="{'opacity-25': !isValidInput}"  t-on-click="() => this.actionSendReceipt()" class="position-absolute end-0 top-0 h-100 d-flex align-items-center text-primary cursor-pointer">
                                         <i class="fa fa-arrow-circle-right fs-1 pe-3" aria-hidden="true" />
                                     </div>

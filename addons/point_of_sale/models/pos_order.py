@@ -21,7 +21,7 @@ _logger = logging.getLogger(__name__)
 
 class PosOrder(models.Model):
     _name = "pos.order"
-    _inherit = ["portal.mixin", "pos.bus.mixin", "pos.load.mixin"]
+    _inherit = ["portal.mixin", "pos.bus.mixin", "pos.load.mixin", "mail.thread"]
     _description = "Point of Sale Orders"
     _order = "date_order desc, name desc, id desc"
 
@@ -317,6 +317,8 @@ class PosOrder(models.Model):
     ticket_code = fields.Char(help='5 digits alphanumeric code to be used by portal user to request an invoice')
     tracking_number = fields.Char(string="Order Number", compute='_compute_tracking_number', search='_search_tracking_number')
     uuid = fields.Char(string='Uuid', readonly=True, copy=False)
+    email = fields.Char(string='Email', compute="_compute_contact_details", readonly=False, store=True)
+    mobile = fields.Char(string='Mobile', compute="_compute_contact_details", readonly=False, store=True)
 
     def _search_tracking_number(self, operator, value):
         #search is made over the pos_reference field
@@ -362,6 +364,13 @@ class PosOrder(models.Model):
     def _compute_is_total_cost_computed(self):
         for order in self:
             order.is_total_cost_computed = not False in order.lines.mapped('is_total_cost_computed')
+
+    @api.depends('partner_id')
+    def _compute_contact_details(self):
+        for order in self:
+            order.email = order.partner_id.email or ""
+            order.mobile = order._phone_format(number=order.partner_id.mobile or order.partner_id.phone or "",
+                        country=order.partner_id.country_id)
 
     def _compute_total_cost_in_real_time(self):
         """
@@ -462,6 +471,9 @@ class PosOrder(models.Model):
         for order in self:
             if vals.get('state') and vals['state'] == 'paid' and order.name == '/':
                 vals['name'] = self._compute_order_name()
+            if vals.get('mobile'):
+                vals['mobile'] = order._phone_format(number=vals.get('mobile'),
+                        country=order.partner_id.country_id or self.env.company.country_id)
         return super(PosOrder, self).write(vals)
 
     def _compute_order_name(self):
@@ -1064,6 +1076,17 @@ class PosOrder(models.Model):
             'target': 'current',
         }
 
+    def action_send_mail(self):
+        template_id = self.env['ir.model.data']._xmlid_to_res_id('point_of_sale.pos_email_marketing_template', raise_if_not_found=False)
+        return {
+            'name': _('Send Email'),
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'type': 'ir.actions.act_window',
+            'context': {'default_composition_mode': 'mass_mail', 'default_template_id': template_id},
+            'target': 'new'
+        }
+
     def _add_mail_attachment(self, name, ticket):
         filename = 'Receipt-' + name + '.jpg'
         receipt = self.env['ir.attachment'].create({
@@ -1093,6 +1116,7 @@ class PosOrder(models.Model):
 
     def action_send_receipt(self, email, ticket_image):
         self.env['mail.mail'].sudo().create(self._prepare_mail_values(email, ticket_image)).send()
+        self.email = email
 
     @api.model
     def remove_from_ui(self, server_ids):
