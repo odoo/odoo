@@ -19,7 +19,7 @@ class Evaluacion(models.Model):
     _name = "evaluacion"
     _description = "Evaluacion de pesonal"
     _rec_name = "nombre"
-    nombre = fields.Char(required=True)
+    nombre = fields.Char(string="Título de la evaluación", required=True)
 
     tipo = fields.Selection(
         [
