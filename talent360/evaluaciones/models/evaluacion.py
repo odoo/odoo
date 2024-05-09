@@ -65,10 +65,10 @@ class Evaluacion(models.Model):
         string="Asignados",
     )
 
-    fecha_inicio = fields.Date(string="Ficha de inicio", required=True)
+    fecha_inicio = fields.Date(string="Fecha de inicio", required=True)
     fecha_final = fields.Date(string="Fecha de finalización", required=True)
 
-    mensaje = fields.Text(string="Mensaje")
+    mensaje = fields.Text(string="Mensaje de bienvenida")
 
     @api.constrains('fecha_inicio', 'fecha_final')
     def check_fechas(self):
