@@ -387,7 +387,7 @@
                         <div class="survey_page container-fluid d-flex flex-column">
                             <div class="survey_section">
                                 <h4><t t-esc="categoria['nombre']"/></h4>
-                                <div class="survey_graph" t-att-id="'grafica_pie_' + categoria['nombre']" t-att-data-graph-type="'doughnut'" t-att-data-graph-data="[categoria]">
+                                <div class="survey_graph" t-att-id="'grafica_pie_' + categoria['nombre']" t-att-data-graph-type="'doughnut'" t-att-data-graph-data="[categoria,{'valor':100-categoria['valor'],'color':'#9c9c9c'}]">
                                     <canvas t-att-id="'canvas_pie_' + categoria['nombre']"></canvas>
                                 </div>
                                 <h4>Resumen por departamentos</h4>
