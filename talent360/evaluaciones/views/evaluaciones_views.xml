@@ -81,7 +81,7 @@
         <field name="model">evaluacion</field>
 
         <field name="arch" type="xml">
-            <tree create="false">
+            <tree create="false" duplicate="0">
                 <field class="text-primary font-weight-bold h5 align-middle" name="nombre" readonly="1"/>
                 <field name="descripcion" class="text-nowrap" readonly="1"/>
                 <field name="estado" readonly="1"/>
@@ -104,8 +104,7 @@
         <field name="name">evaluacion.form</field>
         <field name="model">evaluacion</field>
         <field name="arch" type="xml">
-            <form>
-                <field name="tipo"/>
+            <form create="false" duplicate="0">
                 <header>
                     <!-- Generación de reporte de una evaluación-->
                     <button name="evaluacion_action_tree" string="Guardar" type="object" class="btn-primary my-3"/>
@@ -315,7 +314,7 @@
         <field name="name">reporte.form</field>
         <field name="model">evaluacion</field>
         <field name="arch" type="xml">
-            <tree create="false">
+            <tree create="false" delete="false" duplicate="0">
                 <field class="text-primary font-weight-bold h5 align-middle" name="nombre" readonly="1"/>
                 <field name="estado" readonly="1"/>
                 <field name="tipo" readonly="1"/>
@@ -389,7 +388,7 @@
         <field name="name">evaluacion.clima.form</field>
         <field name="model">evaluacion</field>
         <field name="arch" type="xml">
-            <form string="Clima" create="false">
+            <form string="Clima" create="false" duplicate="0">
                 <sheet>
                     <h1>Evaluación Clima</h1>
                     <br></br>
@@ -434,7 +433,7 @@
         <field name="name">evaluacion.nom035.form</field>
         <field name="model">evaluacion</field>
         <field name="arch" type="xml">
-            <form string="NOM035" create="false">
+            <form string="NOM035" create="false" duplicate="0">
                 <header>
                     <button name="evaluacion_action_tree" string="Guardar" type="object" class="btn-primary my-3"/>
                 </header>
@@ -479,7 +478,6 @@
         <field name="model_id" ref="model_evaluacion"/>
         <field name="state">code</field>
         <field name="code">action = model.evaluacion_clima_action_form()</field>
-        <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
 
     <record id="evaluacion_nom035_action_form" model="ir.actions.server">
@@ -487,7 +485,6 @@
         <field name="model_id" ref="model_evaluacion"/>
         <field name="state">code</field>
         <field name="code">action = model.evaluacion_nom035_action_form()</field>
-        <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
 
     <record id="evaluacion_360_action_form" model="ir.actions.server">
@@ -495,7 +492,6 @@
         <field name="model_id" ref="model_evaluacion"/>
         <field name="state">code</field>
         <field name="code">action = model.evaluacion_360_action_form()</field>
-        <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
 
     <record id="evaluacion_action_tree" model="ir.actions.server">
@@ -503,7 +499,6 @@
         <field name="model_id" ref="model_evaluacion"/>
         <field name="state">code</field>
         <field name="code">action = model.evaluacion_action_tree()</field>
-        <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
 
     <record id="enviar_evaluacion_action" model="ir.actions.server">
@@ -511,7 +506,6 @@
         <field name="model_id" ref="model_evaluacion"/>
         <field name="state">code</field>
         <field name="code">action = model.enviar_evaluacion_action()</field>
-        <field name="binding_model_id" ref="model_evaluacion"/>
     </record>
 
 </odoo>
