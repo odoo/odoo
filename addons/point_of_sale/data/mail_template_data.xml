@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data noupdate="1">
+        <!-- POS Marketing template -->
+        <record id="pos_email_marketing_template" model="mail.template">
+            <field name="name">Point of Sale: Marketing</field>
+            <field name="model_id" ref="point_of_sale.model_pos_order"/>
+            <field name="subject">PoS Marketing</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ ( object.email or '') }}</field>
+            <field name="description">Send Marketing Emails from Point of Sale</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <h4>
+        Dear <t t-out="object.partner_id.name or 'Valuable Customer'">Azure Interior</t>,
+    </h4>
+    <p style="font-size: 13px;">
+We have a limited-time offer only for you, enjoy a flat 20% off on your next purchase with us.
+We can't wait to continue serving you.
+    </p>
+</div>
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+    </data>
+</odoo>
