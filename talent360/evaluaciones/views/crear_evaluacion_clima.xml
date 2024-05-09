@@ -6,6 +6,9 @@
         <field name="model">evaluacion</field>
         <field name="arch" type="xml">
             <form string="Clima" create="false">
+                <header>
+                    <button name="evaluacion_action_tree" string="Guardar" type="object" class="btn-primary my-3"/>
+                </header>
                 <sheet>
                     <h1>Evaluación de Clima Laboral</h1>
                     <br></br>
@@ -166,9 +169,6 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div>
-                                    <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary mx-3 my-3"/>
-                                </div>
                             </page>
                         </notebook>
                     </group>

@@ -104,9 +104,9 @@
         <field name="arch" type="xml">
             <form>
                 <field name="tipo"/>
-
                 <header>
                     <!-- Generación de reporte de una evaluación-->
+                    <button name="evaluacion_action_tree" string="Guardar" type="object" class="btn-primary my-3"/>
                     <button class="btn btn-primary" name="action_reporte_generico" string="Reporte" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
                 </header>
                 <sheet string="Evaluacion de personal">
@@ -150,9 +150,6 @@
                                         <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="ver_respuestas_usuario" string="Detalle" type="object"/>
                                     </tree>
                                 </field>
-                                <div>
-                                    <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary mx-3 my-3" invisible="tipo != 'NOM_035'"/>
-                                </div>
                             </page>
                             <page string="Semaforización" invisible="tipo != 'CLIMA'">
                                 <style>
@@ -282,9 +279,6 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div>
-                                    <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary mx-3 my-3"/>
-                                </div>
                             </page>
                         </notebook>
                     </group>
@@ -393,6 +387,9 @@
         <field name="model">evaluacion</field>
         <field name="arch" type="xml">
             <form string="NOM035" create="false">
+                <header>
+                    <button name="evaluacion_action_tree" string="Guardar" type="object" class="btn-primary my-3"/>
+                </header>
                 <sheet>
                     <h1>Evaluación NOM 035</h1>
                     <br></br>
@@ -424,9 +421,6 @@
                             </page>
                         </notebook>
                     </group>
-                    <div>
-                        <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary"/>
-                    </div>
                 </sheet>
             </form>
         </field>
