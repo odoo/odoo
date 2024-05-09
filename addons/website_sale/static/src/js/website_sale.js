@@ -434,8 +434,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         var aSubmitEl = ev.currentTarget;
         if (!ev.isDefaultPrevented() && !aSubmitEl.classList.contains("disabled")) {
             ev.preventDefault();
-            const event = new Event("submit");
-            aSubmitEl.closest("form").dispatchEvent(event);
+            aSubmitEl.closest("form").submit();
         }
         if (aSubmitEl.classList.contains("a-submit-disable")) {
             aSubmitEl.classList.add("disabled");
