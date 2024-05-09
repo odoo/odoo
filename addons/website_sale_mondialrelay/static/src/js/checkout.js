@@ -50,13 +50,13 @@ WebsiteSaleCheckout.include({
             // Fetch delivery method data.
             const result = await this._setDeliveryMethod(checkedRadio.dataset.dmId);
             // Show mondialrelay modal.
-            if (!$('#modal_mondialrelay').length) {
+            if (!this.modalMondialRelayEl) {
                 this._loadMondialRelayModal(result);
             } else {
-                this.$modal_mondialrelay.find('#btn_confirm_relay').toggleClass(
-                    'disabled', !result.mondial_relay.current
-                );
-                this.$modal_mondialrelay.modal('show');
+                this.modalMondialRelayEl
+                    .querySelector("#btn_confirm_relay")
+                    .classList.toggle("disabled", !result.mondial_relay.current);
+                this.modalMondialRelayBS.show();
             }
         }
         this._adaptUseDeliveryAsBillingToggle();
@@ -94,9 +94,12 @@ WebsiteSaleCheckout.include({
                 || selectedDeliveryAddress?.dataset.isMondialrelay
             );
             this.use_delivery_as_billing_toggle.disabled = requireSeparateBillingAddress;
-            this.$('#use_delivery_as_billing_label').tooltip(
-                requireSeparateBillingAddress ? 'enable' : 'disable'
-            );
+            const tooltip = Tooltip.getOrCreateInstance(document.querySelector("#use_delivery_as_billing_label"));
+            if (requireSeparateBillingAddress) {
+                tooltip.enable();
+            } else {
+                tooltip.disable();
+            }
         }
     },
 
@@ -110,14 +113,24 @@ WebsiteSaleCheckout.include({
      */
     _loadMondialRelayModal: function (result) {
         // add modal to body and bind 'save' button
-        $(renderToElement('website_sale_mondialrelay', {})).appendTo('body');
-        this.$modal_mondialrelay = $('#modal_mondialrelay');
-        this.$modal_mondialrelay.find('#btn_confirm_relay').on('click', this._onClickBtnConfirmRelay.bind(this));
+        document.body.append(renderToElement("website_sale_mondialrelay", {}));
+        this.modalMondialRelayEl = document.querySelector("#modal_mondialrelay");
+        this.modalMondialRelayEl
+            .querySelector("#btn_confirm_relay")
+            .addEventListener("click", this._onClickBtnConfirmRelay.bind(this));
 
         // load mondial relay script
-        const script = document.createElement('script');
-        script.src = "https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js";
-        script.onload = () => {
+        const iframeEL = document.createElement("iframe");
+
+        iframeEL.onload = () => {
+            const scriptJqueryEl = document.createElement("script");
+            scriptJqueryEl.src =
+                "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js";
+            const divEl = document.createElement("div");
+            divEl.setAttribute("id", "o_iframe_zone_widget");
+            iframeEL.contentDocument.body.append(divEl);
+            iframeEL.contentDocument.head.append(scriptJqueryEl);
+
             // instanciate MondialRelay widget
             const params = {
                 Target: "", // required but handled by OnParcelShopSelected
@@ -131,7 +144,9 @@ WebsiteSaleCheckout.include({
                 AutoSelect: result.mondial_relay.current,
                 OnParcelShopSelected: (RelaySelected) => {
                     this.lastRelaySelected = RelaySelected;
-                    this.$modal_mondialrelay.find('#btn_confirm_relay').removeClass('disabled');
+                    this.modalMondialRelayEl
+                        .querySelector("#btn_confirm_relay")
+                        .classList.remove("disabled");
                 },
                 OnNoResultReturned: () => {
                     // HACK while Mondial Relay fix his bug
@@ -145,12 +160,25 @@ WebsiteSaleCheckout.include({
                     }, 10000);
                 },
             };
-            this.$modal_mondialrelay.find('#o_zone_widget').MR_ParcelShopPicker(params);
-            this.$modal_mondialrelay.modal('show');
-            this.$modal_mondialrelay.find('#o_zone_widget').trigger("MR_RebindMap");
-        };
-        document.body.appendChild(script);
 
+            scriptJqueryEl.onload = () => {
+                const scriptMondialRelayEl = document.createElement("script");
+                scriptMondialRelayEl.src =
+                    "https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js";
+                iframeEL.contentDocument.head.append(scriptMondialRelayEl);
+                scriptMondialRelayEl.onload = () => {
+                    const zoneWidgetEl =
+                        iframeEL.contentDocument.querySelector("#o_iframe_zone_widget");
+                    const $ = iframeEL.contentWindow.$;
+                    $(zoneWidgetEl).MR_ParcelShopPicker(params);
+                    this.modalMondialRelayBS = new Modal(this.modalMondialRelayEl);
+                    this.modalMondialRelayBS.show();
+                    $(zoneWidgetEl).trigger("MR_RebindMap");
+                };
+            };
+        };
+
+        this.modalMondialRelayEl.querySelector("#o_zone_widget").append(iframeEL);
     },
 
     /**
