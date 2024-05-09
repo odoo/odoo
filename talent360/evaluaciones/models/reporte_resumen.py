@@ -11,6 +11,14 @@ class ReporteResumen(models.Model):
         string="Asignados", compute="_compute_conteo_asignados", store="False"
     )
 
+    porcentaje_respuestas = fields.Float(
+        string="Avance",
+        compute="_compute_porcentaje_respuestas",
+        store="False",
+    )
+
+
+
     @api.depends("usuario_ids")
     def _compute_conteo_asignados(self):
         for record in self:
@@ -21,3 +29,15 @@ class ReporteResumen(models.Model):
                 record.conteo_asignados = "1 asignado"
             else:
                 record.conteo_asignados = f"{conteo} asignados"
+
+    @api.depends("usuario_ids")
+    def _compute_porcentaje_respuestas(self):
+        for record in self:
+            conteo = len(record.usuario_ids)
+            if conteo == 0:
+                record.porcentaje_respuestas = 0
+            else:
+                respondidas = self.env["usuario.evaluacion.rel"].search(
+                    [("evaluacion_id", "=", record.id), ("contestada", "=", "contestada")]
+                )
+                record.porcentaje_respuestas = (len(respondidas) / conteo)

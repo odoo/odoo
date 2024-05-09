@@ -17,6 +17,12 @@ class Respuesta(models.Model):
         string="Respuesta", compute="_compute_respuesta_mostrar"
     )
 
+    valor_respuesta = fields.Float(
+        string="Valor de la respuesta",
+        compute="_compute_valor_respuesta",
+        store=False,
+    )
+
     def guardar_respuesta_action(
         self, radios, texto, evaluacion_id, usuario_id, pregunta_id, token, scale=False
     ):
@@ -102,3 +108,12 @@ class Respuesta(models.Model):
                 respuesta_texto = record.respuesta_texto
 
             record.respuesta_mostrar = respuesta_texto
+
+    def _compute_valor_respuesta(self):
+        for record in self:
+            if record.pregunta_id.tipo == "escala":
+                record.valor_respuesta = int(record.respuesta_texto)
+            elif record.pregunta_id.tipo == "multiple_choice":
+                record.valor_respuesta = record.opcion_id.valor
+            else:
+                record.valor_respuesta = 0
