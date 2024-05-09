@@ -65,8 +65,10 @@ class Evaluacion(models.Model):
         string="Asignados",
     )
 
-    fecha_inicio = fields.Date(required=True)
-    fecha_final = fields.Date(required=True)
+    fecha_inicio = fields.Date(string="Ficha de inicio", required=True)
+    fecha_final = fields.Date(string="Fecha de finalización", required=True)
+
+    mensaje = fields.Text(string="Mensaje")
 
     @api.constrains('fecha_inicio', 'fecha_final')
     def check_fechas(self):
@@ -95,6 +97,8 @@ class Evaluacion(models.Model):
                     "nombre": "",
                     "descripcion": "La evaluación Clima es una herramienta de medición de clima organizacional, cuyo objetivo es conocer la percepción que tienen las personas que laboran en los centros de trabajo, sobre aquellos aspectos sociales que conforman su entorno laboral y que facilitan o dificultan su desempeño.",
                     "tipo": "CLIMA",
+                    "fecha_inicio": fields.Date.today(),
+                    "fecha_final": fields.Date.today(),
                 }
             )
             self = new_evaluation
@@ -132,6 +136,8 @@ class Evaluacion(models.Model):
                     "nombre": "",
                     "descripcion": "La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.",
                     "tipo": "NOM_035",
+                    "fecha_inicio": fields.Date.today(),
+                    "fecha_final": fields.Date.today(),
                 }
             )
             self = new_evaluation
