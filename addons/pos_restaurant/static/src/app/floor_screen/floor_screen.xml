@@ -71,7 +71,7 @@
                             <span>Oops! No tables available.<br/>Add a new table to get started.</span>
                         </div>
                         <div t-else="" t-ref="map" t-att-class="{'d-flex align-items-center justify-content-center flex-wrap': pos.floorPlanStyle == 'kanban'}">
-                            <Table t-foreach="activeTables.toSorted((a,b)=>a.id-b.id)" t-as="table" t-key="table_index"
+                            <Table t-foreach="activeTables.slice().sort((a,b)=>a.id-b.id)" t-as="table" t-key="table_index"
                                 onClick.bind="onClickTable" table="table"
                                 selectedTables="selectedTables" limit="floorMapRef"
                                 class="pos.floorPlanStyle == 'kanban' ? 'm-2 position-relative' : 'position-absolute'"
