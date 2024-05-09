@@ -362,7 +362,7 @@
                             <h4>Categoría con mayor puntaje</h4>
                             <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
                                 <span class="fs-1">
-                                    <t t-esc="max(categorias, key=lambda x: x['valor'])['valor']"/>
+                                    <t t-esc="'{:.2f}'.format(max(categorias, key=lambda x: x['valor'])['valor'])"/>
                                 </span>
                                 <span class="fs-5">
                                     <t t-esc="max(categorias, key=lambda x: x['valor'])['nombre']"/>
@@ -374,7 +374,7 @@
                             <h4>Categoría con menor puntaje:</h4>
                             <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
                                 <span class="fs-1">
-                                    <t t-esc="min(categorias, key=lambda x: x['valor'])['valor']"/>
+                                    <t t-esc="'{:.2f}'.format(min(categorias, key=lambda x: x['valor'])['valor'])"/>
                                 </span>
                                 <span class="fs-5">
                                     <t t-esc="min(categorias, key=lambda x: x['valor'])['nombre']"/>
