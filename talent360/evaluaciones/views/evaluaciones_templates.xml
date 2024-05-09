@@ -327,19 +327,19 @@
                     <h4>Semáforo de riesgos</h4>
                     <div class="container-fluid row gap-2 align-items-center">
                         <div class="color_circle" style="background-color: #2894a7;"></div>
-                        <span class="col">Superior</span>
+                        <span class="col">83.04% - 100% Superior</span>
                     </div>
                     <div class="container-fluid row gap-2 align-items-center">
                         <div class="color_circle" style="background-color: #5aaf2b;"></div>
-                        <span class="col">Suficiente</span>
+                        <span class="col">72.70% - 83.03% Suficiente</span>
                     </div>
                     <div class="container-fluid row gap-2 align-items-center">
                         <div class="color_circle" style="background-color: #ebae14;"></div>
-                        <span class="col">Marginal</span>
+                        <span class="col">62.37% - 72.69% Marginal</span>
                     </div>
                     <div class="container-fluid row gap-2 align-items-center">
                         <div class="color_circle" style="background-color: #ff4747;"></div>
-                        <span class="col">Deficiente</span>
+                        <span class="col">0% - 62.36% Deficiente</span>
                     </div>
                 </div>
             </div>
@@ -387,7 +387,7 @@
                         <div class="survey_page container-fluid d-flex flex-column">
                             <div class="survey_section">
                                 <h4><t t-esc="categoria['nombre']"/></h4>
-                                <div class="survey_graph" t-att-id="'grafica_pie_' + categoria['nombre']" t-att-data-graph-type="'doughnut'" t-att-data-graph-data="[categoria,{'valor':100-categoria['valor'],'color':'#9c9c9c'}]">
+                                <div class="survey_graph" t-att-id="'grafica_pie_' + categoria['nombre']" t-att-data-graph-type="'doughnut'" t-att-data-graph-data="[categoria,{'valor': 100 - categoria['valor'],'color':'#9c9c9c'}]">
                                     <canvas t-att-id="'canvas_pie_' + categoria['nombre']"></canvas>
                                 </div>
                                 <h4>Resumen por departamentos</h4>

@@ -535,6 +535,7 @@ class Evaluacion(models.Model):
             categoria_actual["puntuacion"] += valor_pregunta
             categoria_actual["puntuacion_maxima"] += maximo_pregunta
             categoria_actual["color"] = self.asignar_color_clima(total_puntuacion)
+    
 
         for categoria in detalles_categorias:
             if categoria["puntuacion_maxima"] > 0:
@@ -545,6 +546,7 @@ class Evaluacion(models.Model):
             for dept in categoria["departamentos"]:
                 if dept["puntos_maximos"] > 0:
                     dept["valor"] = (dept["puntos"] / dept["puntos_maximos"]) * 100
+                    dept["color"] = self.asignar_color_clima(dept["valor"])
 
         total_porcentaje = round((
             (total_puntuacion / total_maximo_posible) * 100

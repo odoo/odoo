@@ -258,7 +258,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
             },
         };
     },
-
+    
     /**
      * Returns a standard pie chart configuration.
      *
