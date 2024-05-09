@@ -3173,3 +3173,264 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'debit': 4348,     'credit': 0,        'reconciled': True},
             {'debit': 0,        'credit': 12.9,     'reconciled': True},
         ])
+
+    def test_bill_with_zero_qty(self):
+        """
+        FIFO standard
+        Receive two different product
+        Bill them, but:
+            Set the quantity of the first AML to zero
+        Bill again the PO (for the "canceled" line in the first bill)
+        """
+        product1 = self.product1
+        product2 = self.product1_copy
+
+        self.cat.property_valuation = 'real_time'
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product1
+            po_line.product_qty = 1
+            po_line.price_unit = 10.0
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product2
+            po_line.product_qty = 1
+            po_line.price_unit = 20.0
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids.move_line_ids.quantity = 1
+        receipt.button_validate()
+
+        action = po.action_create_invoice()
+        bill01 = self.env["account.move"].browse(action["res_id"])
+        bill01.invoice_date = fields.Date.today()
+        bill01.invoice_line_ids.filtered(lambda l: l.product_id == product2).quantity = 0
+        bill01.action_post()
+
+        self.assertEqual(bill01.state, 'posted')
+        self.assertRecordValues(po.order_line, [
+            {'product_id': product1.id, 'qty_invoiced': 1.0},
+            {'product_id': product2.id, 'qty_invoiced': 0.0},
+        ])
+
+        bill02 = self._bill(po)
+        self.assertEqual(bill02.state, 'posted')
+        self.assertRecordValues(po.order_line, [
+            {'product_id': product1.id, 'qty_invoiced': 1.0},
+            {'product_id': product2.id, 'qty_invoiced': 1.0},
+        ])
+
+        stock_in_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id), ('balance', '!=', 0)], order='id')
+        self.assertRecordValues(stock_in_amls, [
+            {'product_id': product1.id, 'debit': 10.0, 'credit': 0.0},
+            {'product_id': product1.id, 'debit': 0.0, 'credit': 10.0},
+            {'product_id': product2.id, 'debit': 20.0, 'credit': 0.0},
+            {'product_id': product2.id, 'debit': 0.0, 'credit': 20.0},
+        ])
+        self.assertTrue(all(aml.full_reconcile_id for aml in stock_in_amls))
+
+    def _test_fifo_and_returns_common(self):
+        """
+        FIFO auto
+        Receive & Bill 1 @ 10
+        """
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 1
+            po_line.price_unit = 10.0
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids.move_line_ids.quantity = 1
+        receipt.button_validate()
+
+        self._bill(po)
+
+    def test_fifo_return_and_receive_all_on_backorder(self):
+        """
+        FIFO auto
+        Receive & Bill 1 @ 10
+        PO 4 @ 25
+        Receive one with backorder
+        Return it
+        Receive 4 thanks to the backorder
+        Bill them
+        """
+        self._test_fifo_and_returns_common()
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 4
+            po_line.price_unit = 25.0
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt01 = po.picking_ids
+        receipt01.move_ids.quantity = 1
+        action = receipt01.button_validate()
+        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(action['context'])).save()
+        backorder_wizard.process()
+
+        self._return(receipt01)
+
+        receipt02 = receipt01.backorder_ids
+        receipt02.move_ids.quantity = 4
+        receipt02.button_validate()
+
+        self._bill(po)
+
+        in_stock_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)], order='id')
+        self.assertRecordValues(in_stock_amls, [
+            # Receive and bill 1 @ 10
+            {'debit': 0.0, 'credit': 10.0, 'reconciled': True},
+            {'debit': 10.0, 'credit': 0.0, 'reconciled': True},
+            # Receive 1 @ 25
+            {'debit': 0.0, 'credit': 25.0, 'reconciled': True},
+            # Return it (10 with valo, 15 with expense)
+            {'debit': 10.0, 'credit': 0.0, 'reconciled': True},
+            {'debit': 15.0, 'credit': 0.0, 'reconciled': True},
+            # Receive all on the backorder (-> all based on PO price, we will not get the value of the returned one)
+            {'debit': 0.0, 'credit': 100.0, 'reconciled': True},
+            # Bill it
+            {'debit': 100.0, 'credit': 0.0, 'reconciled': True},
+        ])
+        self.assertTrue(all(aml.full_reconcile_id for aml in in_stock_amls))
+
+    def test_fifo_return_twice_and_bill(self):
+        """
+        FIFO auto
+        Receive & Bill 1 @ 10
+        Receive 1 @ 25
+        Return
+        Receive it again
+        Bill
+        """
+        self._test_fifo_and_returns_common()
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 1
+            po_line.price_unit = 25.0
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt01 = po.picking_ids
+        receipt01.move_ids.quantity = 1
+        receipt01.button_validate()
+
+        receipt01_return = self._return(receipt01)
+        self._return(receipt01_return)
+        self._bill(po)
+
+        in_stock_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)], order='id')
+        self.assertRecordValues(in_stock_amls, [
+            # Receive and bill 1 @ 10
+            {'debit': 0.0, 'credit': 10.0, 'reconciled': True},
+            {'debit': 10.0, 'credit': 0.0, 'reconciled': True},
+            # Receive 1 @ 25
+            {'debit': 0.0, 'credit': 25.0, 'reconciled': True},
+            # Return it (10 with valo, 15 with expense)
+            {'debit': 10.0, 'credit': 0.0, 'reconciled': True},
+            {'debit': 15.0, 'credit': 0.0, 'reconciled': True},
+            # Receive it again
+            # The "return of a return" ignores the POL price and uses the value of the returned product
+            # So, same: 10 with valo, 15 with expense
+            {'debit': 0.0, 'credit': 10.0, 'reconciled': True},
+            {'debit': 0.0, 'credit': 15.0, 'reconciled': True},
+            # Bill it
+            {'debit': 25.0, 'credit': 0.0, 'reconciled': True},
+        ])
+        self.assertTrue(all(aml.full_reconcile_id for aml in in_stock_amls))
+
+    def test_fifo_bill_return_refund(self):
+        """
+        FIFO auto
+        Receive & Bill 1 @ 10
+        Receive 1 @ 25
+        Bill
+        Return
+        Refund
+        """
+        self._test_fifo_and_returns_common()
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 1
+            po_line.price_unit = 25.0
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt01 = po.picking_ids
+        receipt01.move_ids.quantity = 1
+        receipt01.button_validate()
+
+        self._bill(po)
+        self._return(receipt01)
+        self._bill(po)  # Refund
+
+        in_stock_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)], order='id')
+        self.assertRecordValues(in_stock_amls, [
+            # Receive and bill 1 @ 10
+            {'debit': 0.0, 'credit': 10.0, 'reconciled': True},
+            {'debit': 10.0, 'credit': 0.0, 'reconciled': True},
+            # Receive 1 @ 25
+            {'debit': 0.0, 'credit': 25.0, 'reconciled': True},
+            # Bill
+            {'debit': 25.0, 'credit': 0.0, 'reconciled': True},
+            # Return (10 with valo, 15 with expense)
+            {'debit': 10.0, 'credit': 0.0, 'reconciled': True},
+            {'debit': 15.0, 'credit': 0.0, 'reconciled': True},
+            # Refund
+            {'debit': 0.0, 'credit': 25.0, 'reconciled': True},
+        ])
+        self.assertTrue(all(aml.full_reconcile_id for aml in in_stock_amls))
+
+    def test_incoming_with_negative_qty(self):
+        """
+                FIFO/AVCO Auto
+                Purchase one Product with negative qty
+                Conform PO,
+                It will create outgoing shipment
+                        this transfer is neither returned nor received but it will be a delivery(outgoing).
+                """
+        product1 = self.product1
+        self.cat.property_valuation = 'real_time'
+        shipping_partner = self.env["res.partner"].create({
+            'name': "Shipping Partner",
+            'street': "234 W 18th Ave",
+            'city': "Columbus",
+            'state_id': self.env.ref("base.state_us_30").id,  # Ohio
+            'country_id': self.env.ref("base.us").id,
+            'zip': "43210",
+        })
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product1
+            po_line.product_qty = -2
+            po_line.price_unit = 10.0
+        po = po_form.save()
+        po.button_confirm()
+        delivery = po.picking_ids
+        # it is negative qty transfer so Odoo will create delivery instead of receipt.
+        delivery.partner_id = shipping_partner
+        move_line_vals = delivery.move_ids._prepare_move_line_vals()
+        move_line = self.env['stock.move.line'].create(move_line_vals)
+        move_line.quantity = 2
+        delivery.button_validate()
+        self.assertEqual(delivery.state, 'done')

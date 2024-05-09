@@ -28,6 +28,7 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
             'partner_id': cls.partner_vendor_service.id,
             'price': 100,
             'delay': 1,
+            'discount': 30,
         })
         cls.supplierinfo2 = cls.env['product.supplierinfo'].create({
             'partner_id': cls.partner_vendor_service.id,

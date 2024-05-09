@@ -373,11 +373,14 @@ class SaleOrder(models.Model):
             if not order.partner_id:
                 order.fiscal_position_id = False
                 continue
+            fpos_id_before = order.fiscal_position_id.id
             key = (order.company_id.id, order.partner_id.id, order.partner_shipping_id.id)
             if key not in cache:
                 cache[key] = self.env['account.fiscal.position'].with_company(
                     order.company_id
-                )._get_fiscal_position(order.partner_id, order.partner_shipping_id)
+                )._get_fiscal_position(order.partner_id, order.partner_shipping_id).id
+            if fpos_id_before != cache[key] and order.order_line:
+                order.show_update_fpos = True
             order.fiscal_position_id = cache[key]
 
     @api.depends('partner_id')
@@ -1098,6 +1101,7 @@ class SaleOrder(models.Model):
     def action_update_taxes(self):
         self.ensure_one()
 
+        self._recompute_prices()
         self._recompute_taxes()
 
         if self.partner_id:

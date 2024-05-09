@@ -155,6 +155,9 @@ class GoogleSync(models.AbstractModel):
         existing = google_events.exists(self.env)
         new = google_events - existing - google_events.cancelled()
         write_dates = self._context.get('write_dates', {})
+        # Pop 'write_dates' from the context (frozendict) after using it for resetting the old value in the call stack.
+        context = dict(self.env.context, dont_notify=True)
+        context.pop('write_dates', None)
 
         odoo_values = [
             dict(self._odoo_values(e, default_reminders), need_sync=False)
@@ -187,7 +190,7 @@ class GoogleSync(models.AbstractModel):
             # Migration from 13.4 does not fill write_date. Therefore, we force the update from Google.
             if not odoo_record_write_date or updated >= pytz.utc.localize(odoo_record_write_date):
                 vals = dict(self._odoo_values(gevent, default_reminders), need_sync=False)
-                odoo_record.with_context(dont_notify=True)._write_from_google(gevent, vals)
+                odoo_record.with_context(context)._write_from_google(gevent, vals)
                 synced_records |= odoo_record
 
         return synced_records
@@ -264,6 +267,16 @@ class GoogleSync(models.AbstractModel):
                 if values:
                     self.exists().with_context(dont_notify=True).need_sync = False
 
+    def _get_post_sync_values(self, request_values, google_values):
+        """ Method to be override: select the information that will be written in the event after insertion. """
+        self.ensure_one()
+        return {'google_id': google_values['id'], 'need_sync': False}
+
+    def write_insertion_values(self, request_values, google_values):
+        """ Callback method: get post synchronization values and write them in the event. """
+        writeable_values = self._get_post_sync_values(request_values, google_values)
+        self.with_context(dont_notify=True).write(writeable_values)
+
     @after_commit
     def _google_insert(self, google_service: GoogleCalendarService, values, timeout=TIMEOUT):
         if not values:
@@ -273,12 +286,14 @@ class GoogleSync(models.AbstractModel):
                 try:
                     send_updates = self._context.get('send_updates', True)
                     google_service.google_service = google_service.google_service.with_context(send_updates=send_updates)
-                    google_id = google_service.insert(values, token=token, timeout=timeout)
-                    # Everything went smoothly
-                    self.with_context(dont_notify=True).write({
-                        'google_id': google_id,
-                        'need_sync': False,
-                    })
+                    # Use callback method in stable branches to be called after insertion, updating the event right after insertion.
+                    # This approach was needed because the insert function returns only the id information and discards event info from Google.
+                    google_id = google_service.insert(values, token=token, timeout=timeout, callback_method=self.write_insertion_values)
+                    if not self.google_id:
+                        self.with_context(dont_notify=True).write({
+                            'google_id': google_id,
+                            'need_sync': False,
+                        })
                 except HTTPError as e:
                     if e.response.status_code in (400, 403):
                         self._google_error_handling(e)

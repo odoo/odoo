@@ -187,7 +187,7 @@ class Company(models.Model):
         def make_delegated_fields_readonly(node):
             for child in node.iterchildren():
                 if child.tag == 'field' and child.get('name') in delegated_fnames:
-                    child.set('attrs', "{'readonly': [('parent_id', '!=', False)]}")
+                    child.set('readonly', "parent_id != False")
                 else:
                     make_delegated_fields_readonly(child)
             return node

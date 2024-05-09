@@ -33,7 +33,8 @@ export const userService = {
 
         const context = {
             ...session.user_context,
-            uid: session.uid,
+            // the user id is in uid in backend session_info and in user_id in frontend session_info
+            uid: session.uid || session.user_id,
         };
         let settings = session.user_settings;
         delete session.user_settings;

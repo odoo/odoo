@@ -593,7 +593,7 @@ class Meeting(models.Model):
         return super()._compute_field_value(field)
 
     def _fetch_query(self, query, fields):
-        if self.env.is_system():
+        if self.env.su:
             return super()._fetch_query(query, fields)
 
         public_fnames = self._get_public_fields()
@@ -605,12 +605,7 @@ class Meeting(models.Model):
         events = super()._fetch_query(query, fields_to_fetch)
 
         # determine private events to which the user does not participate
-        current_partner_id = self.env.user.partner_id
-        others_private_events = events.filtered(
-            lambda e: e.privacy == 'private' \
-                  and e.user_id != self.env.user \
-                  and current_partner_id not in e.partner_ids
-        )
+        others_private_events = events.filtered(lambda ev: ev._check_private_event_conditions())
         if not others_private_events:
             return events
 
@@ -719,16 +714,21 @@ class Meeting(models.Model):
 
         return True
 
+    def _check_private_event_conditions(self):
+        """
+        Checks if the event is private, returning True if the conditions match and False otherwise.
+        The event is private if it is explicetely defined and the user is neither the organizer or a partner of it.
+        """
+        self.ensure_one()
+        event_is_private = self.privacy == 'private'
+        user_is_not_partner = self.user_id.id != self.env.uid and self.env.user.partner_id not in self.partner_ids
+        return event_is_private and user_is_not_partner
+
     @api.depends('privacy', 'user_id')
     def _compute_display_name(self):
         """ Hide private events' name for events which don't belong to the current user
         """
-        hidden = self.filtered(
-            lambda evt:
-                evt.privacy == 'private' and
-                evt.user_id.id != self.env.uid and
-                self.env.user.partner_id not in evt.partner_ids
-        )
+        hidden = self.filtered(lambda event: event._check_private_event_conditions())
         hidden.display_name = _('Busy')
         super(Meeting, self - hidden)._compute_display_name()
 

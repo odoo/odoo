@@ -5,7 +5,6 @@
 # Translators:
 # Albert Parera, 2023
 # jabiri7, 2023
-# Óscar Fonseca <tecnico@pyming.com>, 2023
 # Martin Trigaux, 2023
 # Quim - eccit <quim@eccit.com>, 2023
 # Josep Anton Belchi, 2023
@@ -13,6 +12,7 @@
 # Ivan Espinola, 2023
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
 # marcescu, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: marcescu, 2023\n"
+"Last-Translator: Óscar Fonseca <tecnico@pyming.com>, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +36,7 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-"                {{ (object.company_id.name + ': Ens complau informar-vos que la vostra comanda n° ' + object.origin + ' ha estat enviada.' if object.origin else object.company_id.name + ': Ens complau informar-lo que la seva comanda ha estat enviada.') + (' La vostra referència de seguiment és ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') i object.carrier_tracking_ref else '') }}\n"
+"                {{ (object.company_id.name + ': Ens complau informar-vos que la vostra comanda n° ' + object.origin + ' ha estat enviada.' if object.origin else object.company_id.name + ': Ens complau informar-lo que la seva comanda ha estat enviada.') + (' La vostra referència de seguiment és ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 
 #. module: stock_sms

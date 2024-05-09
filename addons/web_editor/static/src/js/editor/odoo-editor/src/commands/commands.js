@@ -51,6 +51,8 @@ import {
     resetOuids,
     FONT_SIZE_CLASSES,
     TEXT_STYLE_CLASSES,
+    padLinkWithZws,
+    isLinkEligibleForZwnbsp,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
@@ -302,8 +304,15 @@ export const editorCommands = {
         currentNode = lastChildNode || currentNode;
         selection.removeAllRanges();
         const newRange = new Range();
-        let lastPosition = rightPos(currentNode);
-        if (lastPosition[0] === editor.editable) {
+        let lastPosition;
+        if (currentNode.nodeName === 'A' && isLinkEligibleForZwnbsp(editor.editable, currentNode)) {
+            padLinkWithZws(editor.editable, currentNode);
+            currentNode = currentNode.nextSibling;
+            lastPosition = getDeepestPosition(...rightPos(currentNode));
+        } else {
+            lastPosition = rightPos(currentNode);
+        }
+        if (!editor.options.allowInlineAtRoot && lastPosition[0] === editor.editable) {
             // Correct the position if it happens to be in the editable root.
             lastPosition = getDeepestPosition(...lastPosition);
         }
@@ -635,7 +644,7 @@ export const editorCommands = {
                     } else {
                         font = [];
                     }
-                } else if ((node.nodeType === Node.TEXT_NODE && !isWhitespace(node))
+                } else if ((node.nodeType === Node.TEXT_NODE && !isWhitespace(node) && node.textContent !== '\ufeff')
                         || (node.nodeName === 'BR' && isEmptyBlock(node.parentNode))
                         || (node.nodeType === Node.ELEMENT_NODE &&
                             node.nodeName !== 'FIGURE' &&

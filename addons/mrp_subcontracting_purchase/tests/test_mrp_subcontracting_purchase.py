@@ -337,26 +337,27 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         po_form.partner_id = self.subcontractor_partner1
         with po_form.order_line.new() as po_line:
             po_line.product_id = self.finished
-            po_line.product_qty = 1
+            po_line.product_qty = 2
             po_line.price_unit = 50   # should be 70
         po = po_form.save()
         po.button_confirm()
 
         action = po.action_view_subcontracting_resupply()
         resupply_picking = self.env[action['res_model']].browse(action['res_id'])
-        resupply_picking.move_ids.quantity = 1
+        resupply_picking.move_ids.quantity = 2
         resupply_picking.move_ids.picked = True
         resupply_picking.button_validate()
 
         action = po.action_view_picking()
         final_picking = self.env[action['res_model']].browse(action['res_id'])
-        final_picking.move_ids.quantity = 1
+        final_picking.move_ids.quantity = 2
         final_picking.move_ids.picked = True
         final_picking.button_validate()
 
         action = po.action_create_invoice()
         invoice = self.env['account.move'].browse(action['res_id'])
         invoice.invoice_date = Date.today()
+        invoice.invoice_line_ids.quantity = 1
         invoice.action_post()
 
         # price diff line should be 100 - 50 - 10 - 20

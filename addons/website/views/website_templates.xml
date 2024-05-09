@@ -2892,7 +2892,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     <xpath expr="." position="inside">
         <li t-attf-class="#{_item_class}">
             <t t-if="_layout == 'modal'">
-                <div class="modal fade" id="o_search_modal" aria-hidden="true" tabindex="-1">
+                <div class="modal fade css_editable_mode_hidden" id="o_search_modal" aria-hidden="true" tabindex="-1">
                     <div class="modal-dialog modal-lg pt-5">
                         <div class="modal-content mt-5">
                             <t t-call="website.header_search_box_input">

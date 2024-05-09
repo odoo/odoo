@@ -505,15 +505,17 @@ class HrEmployee(models.Model):
                 for leave in leaves_per_employee_type[employee][leave_type].sorted('date_from'):
                     leave_duration = leave[leave_duration_field]
                     skip_excess = False
+
+                    if sorted_leave_allocations.filtered(lambda alloc: alloc.allocation_type == 'accrual') and leave.date_from.date() > target_date:
+                        to_recheck_leaves_per_leave_type[employee][leave_type]['to_recheck_leaves'] |= leave
+                        skip_excess = True
+                        continue
+
                     if leave_type.requires_allocation == 'yes':
                         for allocation in sorted_leave_allocations:
                             # We don't want to include future leaves linked to accruals into the total count of available leaves.
                             # However, we'll need to check if those leaves take more than what will be accrued in total of those days
                             # to give a warning if the total exceeds what will be accrued.
-                            if allocation.allocation_type == 'accrual' and leave.date_from.date() > target_date:
-                                to_recheck_leaves_per_leave_type[employee][leave_type]['to_recheck_leaves'] |= leave
-                                skip_excess = True
-                                continue
                             if allocation.date_from > leave.date_to.date() or (allocation.date_to and allocation.date_to < leave.date_from.date()):
                                 continue
                             interval_start = max(

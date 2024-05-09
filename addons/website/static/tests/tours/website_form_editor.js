@@ -27,6 +27,7 @@
         });
     }
 
+    // TODO: in master only keep the conversion of the double quotes character.
     // Replace all `"` character by `&quot;`, all `'` character by `&apos;` and
     // all "`" character by `&lsquo;`.
     const getQuotesEncodedName = function (name) {
@@ -805,5 +806,101 @@
             run: 'text_blur **',
         },
     ]));
+
+    // Check that the editable form content is actually editable.
+    wTourUtils.registerWebsitePreviewTour("website_form_editable_content", {
+        test: true,
+        url: "/",
+        edition: true,
+    }, () => [
+        {
+            ...wTourUtils.dragNDrop({id: "s_website_form", name: "Form"}),
+            run: "drag_and_drop_native iframe #wrap",
+        },
+        {
+            content: "Check that a form field is not editable",
+            extra_trigger: "iframe .s_website_form_field",
+            trigger: "iframe section.s_website_form input",
+            run: function () {
+                if (this.$anchor[0].isContentEditable) {
+                    console.error("A form field should not be editable.");
+                }
+            },
+        },
+        {
+            content: "Go back to blocks",
+            trigger: ".o_we_add_snippet_btn",
+        },
+        wTourUtils.dragNDrop({id: "s_three_columns", name: "Columns"}),
+        {
+            content: "Select the first column",
+            trigger: "iframe .s_three_columns .row > :nth-child(1)",
+        },
+        {
+            content: "Drag and drop the selected column inside the form",
+            trigger: "iframe .o_overlay_move_options .o_move_handle",
+            run: "drag_and_drop_native iframe section.s_website_form",
+        },
+        {
+            content: "Click on the text inside the dropped form column",
+            trigger: "iframe section.s_website_form h3.card-title",
+            run: "dblclick",
+        },
+        {   // Simulate a user interaction with the editable content.
+            content: "Update the text inside the form column",
+            trigger: "iframe section.s_website_form h3.card-title",
+            run: "keydown 65 66 67",
+        },
+        {
+            content: "Check that the new text value was correctly set",
+            trigger: "iframe section.s_website_form h3:containsExact(ABC)",
+            run: () => null, // it's a check
+        },
+        {   content: "Remove the dropped column",
+            trigger: "iframe .oe_overlay.oe_active .oe_snippet_remove",
+            run: "click",
+        },
+        ...wTourUtils.clickOnSave(),
+    ]);
+
+    wTourUtils.registerWebsitePreviewTour("website_form_special_characters", {
+        test: true,
+        url: "/",
+        edition: true,
+    }, () => [
+        {
+            ...wTourUtils.dragNDrop({id: "s_website_form", name: "Form"}),
+            run: "drag_and_drop_native iframe #wrap",
+        },
+        {
+            content: "Select form by clicking on an input field",
+            extra_trigger: "iframe .s_website_form_field",
+            trigger: "iframe section.s_website_form input",
+        },
+        ...addCustomField("char", "text", `Test1"'`, false),
+        ...addCustomField("char", "text", 'Test2`\\', false),
+        ...wTourUtils.clickOnSave(),
+        ...essentialFieldsForDefaultFormFillInSteps,
+        {
+            content: "Complete 'Your Question' field",
+            trigger: "iframe textarea[name='description']",
+            run: "text test",
+        }, {
+            content: "Complete the first added field",
+            trigger: "iframe input[name='Test1&quot;&apos;']",
+            run: "text test1",
+        }, {
+            content: "Complete the second added field",
+            trigger: "iframe input[name='Test2&lsquo;&bsol;']",
+            run: "text test2",
+        }, {
+            content: "Click on 'Submit'",
+            trigger: "iframe a.s_website_form_send",
+        }, {
+            content: "Check the form was again sent (success page without form)",
+            trigger: "iframe body:not(:has([data-snippet='s_website_form'])) .fa-check-circle",
+            isCheck: true,
+        },
+    ]);
 
     export default {};

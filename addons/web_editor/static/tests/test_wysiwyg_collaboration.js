@@ -98,7 +98,7 @@ class PeerTest {
     }
     async getValue() {
         this.wysiwyg.odooEditor.observerUnactive('PeerTest.getValue');
-        renderTextualSelection(this.document);
+        renderTextualSelection(this.wysiwyg.odooEditor);
 
         const html = this.wysiwyg.$editable[0].innerHTML;
 

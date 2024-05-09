@@ -6,13 +6,52 @@ from freezegun import freeze_time
 
 from odoo.addons.mail.tests.common import MockEmail
 from odoo.addons.sms.tests.common import MockSMS
-from odoo.addons.test_event_full.tests.common import TestWEventCommon
+from odoo.addons.test_event_full.tests.common import TestWEventCommon, TestEventFullCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
 
 @tagged('event_mail')
 class TestTemplateRefModel(TestWEventCommon):
+
+    def test_template_ref_delete_lines(self):
+        """ When deleting a template, related lines should be deleted too """
+        event_type = self.env['event.type'].create({
+            'name': 'Event Type',
+            'default_timezone': 'Europe/Brussels',
+            'event_type_mail_ids': [
+                (0, 0, {
+                    'interval_unit': 'now',
+                    'interval_type': 'after_sub',
+                    'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')}),
+                (0, 0, {
+                    'interval_unit': 'now',
+                    'interval_type': 'after_sub',
+                    'notification_type': 'sms',
+                    'template_ref': 'sms.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event_sms.sms_template_data_event_registration')}),
+            ],
+        })
+
+        template_mail = event_type.event_type_mail_ids[0].template_ref
+        template_sms = event_type.event_type_mail_ids[1].template_ref
+
+        event = self.env['event.event'].create({
+            'name': 'event mail template removed',
+            'event_type_id': event_type.id,
+            'date_begin': datetime(2020, 2, 1, 8, 30, 0),
+            'date_end': datetime(2020, 2, 4, 18, 45, 0),
+            'date_tz': 'Europe/Brussels',
+        })
+        self.assertEqual(len(event_type.event_type_mail_ids), 2)
+        self.assertEqual(len(event.event_mail_ids), 2)
+
+        template_mail.unlink()
+        self.assertEqual(len(event_type.event_type_mail_ids.exists()), 1)
+        self.assertEqual(len(event.event_mail_ids.exists()), 1)
+
+        template_sms.unlink()
+        self.assertEqual(len(event_type.event_type_mail_ids.exists()), 0)
+        self.assertEqual(len(event.event_mail_ids.exists()), 0)
 
     def test_template_ref_model_constraint(self):
         test_cases = [
@@ -125,3 +164,42 @@ class TestEventSmsMailSchedule(TestWEventCommon, MockEmail, MockSMS):
             'Wrong Emails Sent Count! Probably emails sent to unconfirmed attendees were not included into the Sent Count')
         self.assertEqual(mail_scheduler.filtered(lambda r: r.notification_type == 'sms').mail_count_done, 2,
             'Wrong SMS Sent Count! Probably SMS sent to unconfirmed attendees were not included into the Sent Count')
+
+
+@tagged('event_mail')
+class TestEventSaleMailSchedule(TestEventFullCommon):
+
+    def test_event_mail_on_sale_confirmation(self):
+        """Test that a mail is sent to the customer when a sale order is confirmed."""
+        ticket = self.test_event.event_ticket_ids[0]
+        order_line_vals = {
+            "event_id": self.test_event.id,
+            "event_ticket_id": ticket.id,
+            "product_id": ticket.product_id.id,
+            "product_uom_qty": 1,
+        }
+        self.customer_so.write({"order_line": [(0, 0, order_line_vals)]})
+
+        registration = self.env["event.registration"].create(
+            {
+                **self.website_customer_data[0],
+                "partner_id": self.event_customer.id,
+                "sale_order_line_id": self.customer_so.order_line[0].id,
+            }
+        )
+        self.assertEqual(self.test_event.registration_ids, registration)
+        self.assertEqual(self.customer_so.state, "draft")
+        self.assertEqual(registration.state, "draft")
+
+        with self.mock_mail_gateway():
+            self.customer_so.action_confirm()
+        self.assertEqual(self.customer_so.state, "sale")
+        self.assertEqual(registration.state, "open")
+
+        # Ensure mails are sent to customers right after subscription
+        self.assertMailMailWRecord(
+            registration,
+            [self.event_customer.id],
+            "outgoing",
+            author=self.env.user.company_id.partner_id,
+        )
