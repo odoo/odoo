@@ -27,6 +27,7 @@
             <kanban class="o_kanban_mobile" default_group_by="contestada" quick_create="false" create="false" records_draggable="false">
                 <field name="evaluacion_id"/>
                 <field name="token"/>
+                <field name="contestada"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
@@ -40,16 +41,16 @@
                                 </div>
                                 <div class="oe_kanban_card_content">
                                     <div>
-                                        <strong>Tipo:</strong>
+                                        <strong>Tipo: </strong>
                                         <field name="evaluacion_tipo"/>
                                     </div>
                                     <div>
-                                        <strong>Estado:</strong>
+                                        <strong>Estado: </strong>
                                         <field name="evaluacion_estado"/>
                                     </div>
                                 </div>
-                                <div class="oe_kanban_card_footer">
-                                    <a t-att-href="'http://localhost:8069/evaluacion/responder/' + record.evaluacion_id.raw_value + '/' + record.token.raw_value" class="btn btn-primary" role="button" target="_blank">Responder</a>
+                                <div t-if="record.contestada.raw_value == 'pendiente'" class="oe_kanban_card_footer">
+                                    <a t-att-href="'evaluacion/responder/' + record.evaluacion_id.raw_value + '/' + record.token.raw_value" class="btn btn-primary" role="button" target="_blank">Responder</a>
                                 </div>
                             </div>
                         </div>
@@ -64,7 +65,7 @@
         <field name="name">Mis Evaluaciones</field>
         <field name="res_model">usuario.evaluacion.rel</field>
         <field name="view_mode">kanban</field>
-        <field name="domain">[('usuario_id', '=', uid)]</field>
+        <field name="domain">[('usuario_id', '=', uid), ('evaluacion_id.estado', '=', 'publicado'), ('contestada', '!=', False)]</field>
     </record>
 
     <!-- EVALUACIONES ACTION TREE -->
@@ -301,7 +302,7 @@
         <field name="arch" type="xml">
             <tree create="false">
                 <field class="text-primary font-weight-bold" name="pregunta_texto" string="Pregunta"/>
-                <field name="respuesta_texto" string="Respuesta"/>
+                <field name="respuesta_mostrar" string="Respuesta"/>
             </tree>
         </field>
     </record>
