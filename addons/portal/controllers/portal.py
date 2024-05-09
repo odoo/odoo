@@ -134,7 +134,7 @@ def _build_url_w_params(url_string, query_params, remove_duplicates=True):
 class CustomerPortal(Controller):
 
     MANDATORY_BILLING_FIELDS = ["name", "phone", "email", "street", "city", "country_id"]
-    OPTIONAL_BILLING_FIELDS = ["street2", "zipcode", "state_id", "vat", "company_name"]
+    OPTIONAL_BILLING_FIELDS = ["street2", "zipcode", "state_id", "vat", "company_name", "type"]
 
     _items_per_page = 80
 
@@ -181,10 +181,49 @@ class CustomerPortal(Controller):
         values = self._prepare_portal_layout_values()
         return request.render("portal.portal_my_home", values)
 
+    @route(['/my/addresses'], type='http', auth='user', website=True)
+    def addresses(self):
+        values = {
+            **self._prepare_portal_layout_values(),
+            'partner': request.env.user.partner_id,
+            'page_name': 'my_addresses'
+        }
+        return request.render("portal.portal_my_addresses", values)
+
+    @route(['/my/addresses/new'], type='http', auth='user', website=True)
+    def addresses_new(self):
+        address_type = request.params.get('type')
+        if address_type not in ['invoice', 'delivery']:
+            address_type = 'other'
+
+        new_partner = request.env.user.partner_id.sudo().copy({
+            'name': request.env.user.partner_id.name,
+            'type': address_type,
+            'parent_id': request.env.user.partner_id.id
+        })
+        return request.redirect(f"/my/account?address={new_partner.id}")
+
+    @route(['/archive/address'], type='http', methods=['GET', 'POST'], auth="public", website=True, sitemap=False)
+    def address_archive(self, **kw):
+        partner_id = int(kw.get('partner_id', 0))
+        if partner_id:
+            partner = request.env['res.partner'].sudo().browse(partner_id)
+            if partner.exists():
+                partner.sudo().write({'active': False})
+        return request.redirect('/my/addresses')
+
     @route(['/my/account'], type='http', auth='user', website=True)
     def account(self, redirect=None, **post):
         values = self._prepare_portal_layout_values()
-        partner = request.env.user.partner_id
+        user_partner = request.env.user.partner_id
+        partner_id = int(post.pop('address', user_partner.id))
+
+        if partner_id == user_partner.id:
+            partner = user_partner
+        elif partner_id in user_partner.child_ids.ids:
+            partner = user_partner.browse(partner_id)
+        else:
+            raise request.not_found()
         values.update({
             'error': {},
             'error_message': [],
@@ -210,7 +249,7 @@ class CustomerPortal(Controller):
                 partner.sudo().write(values)
                 if redirect:
                     return request.redirect(redirect)
-                return request.redirect('/my/home')
+                return request.redirect('/my/addresses')
 
         countries = request.env['res.country'].sudo().search([])
         states = request.env['res.country.state'].sudo().search([])
@@ -221,6 +260,7 @@ class CustomerPortal(Controller):
             'states': states,
             'has_check_vat': hasattr(request.env['res.partner'], 'check_vat'),
             'partner_can_edit_vat': partner.can_edit_vat(),
+            'partner_can_edit_company': partner.can_edit_company(),
             'redirect': redirect,
             'page_name': 'my_details',
         })

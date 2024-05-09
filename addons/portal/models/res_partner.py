@@ -18,3 +18,8 @@ class ResPartner(models.Model):
         edit it (as in backend)."""
         self.ensure_one()
         return not self.parent_id
+
+    def can_edit_company(self):
+        """ `company_name` can be edited if the vat number is not set and set partner company."""
+        self.ensure_one()
+        return self.vat or self.company_type == "company"
