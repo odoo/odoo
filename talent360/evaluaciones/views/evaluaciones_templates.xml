@@ -104,10 +104,55 @@
                         </div>
                     </div>
             </div>
+            <h4>Datos demográficos</h4>
+                <div class="container-fluid">
+                <div class="row gap-5">
+                    <div class="col survey_section">
+                        <h4>
+                            Por generación
+                        </h4>
+                        <div class="survey_graph" t-att-id="'grafica_pastel_generacion_nom_035'" t-att-data-graph-type="'pie'" t-att-data-label="'Generación'" t-att-data-graph-data="generaciones">
+                            <canvas t-att-id="'canvas_pastel_generacion_nom_035'"/>
+                        </div>
+                    </div>
+
+                    <div class="col survey_section">
+                        <h4>
+                            Por género
+                        </h4>
+                        <div class="survey_graph" t-att-id="'grafica_pastel_genero_nom_035'" t-att-data-graph-type="'pie'" t-att-data-label="'Género'" t-att-data-graph-data="generos">
+                            <canvas t-att-id="'canvas_pastel_genero_nom_035'"/>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+                <div class="container-fluid">
+                <div class="row gap-5">
+                    <div class="col survey_section">
+                        <h4>
+                            Por departamento
+                        </h4>
+                        <div class="survey_graph" t-att-id="'grafica_pastel_departamento_nom_035'" t-att-data-graph-type="'pie'" t-att-data-label="'Generación'" t-att-data-graph-data="departamentos">
+                            <canvas t-att-id="'canvas_pastel_departamento_nom_035'"/>
+                        </div>
+                    </div>
+
+                    <div class="col survey_section">
+                        <h4>
+                            Por puesto
+                        </h4>
+                        <div class="survey_graph" t-att-id="'grafica_pastel_puesto_nom_035'" t-att-data-graph-type="'pie'" t-att-data-label="'Generación'" t-att-data-graph-data="puestos">
+                            <canvas t-att-id="'canvas_pastel_puesto_nom_035'"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="survey_page container-fluid d-flex flex-column">
                 <div class="survey_section">
                     <h4>Resumen general por categorías</h4>
-                    <div class="survey_graph" t-att-id="'grafica_radar_categorias_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
+                    <div class="survey_graph" t-att-id="'grafica_barras_categorias_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
                         <canvas t-att-id="'canvas_barras_categorias_nom_035'"/>
                     </div>
                 </div>
@@ -193,19 +238,19 @@
                         <h3 color="category_number"> <t t-esc="valor_categoria" /> </h3>
 
                         <t t-if="categoria == 'Ambiente de Trabajo'">
-                            <div class="survey_graph" t-att-id="'grafica_ambiente_trabajo_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Ambiente de Trabajo'" t-att-data-graph-data="dominios[:1]">
+                            <div class="survey_graph" t-att-id="'grafica_barras_ambiente_trabajo_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Ambiente de Trabajo'" t-att-data-graph-data="dominios[:1]">
                                 <canvas t-att-id="'canvas_barras_ambiente_trabajo_nom_035'"/>
                             </div>
                         </t>
 
                         <t t-elif="categoria == 'Factores propios de la actividad'">
-                            <div class="survey_graph" t-att-id="'grafica_factores_actividad_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Factores propios de la actividad'" t-att-data-graph-data="dominios[1:3]">
+                            <div class="survey_graph" t-att-id="'grafica_barras_factores_actividad_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Factores propios de la actividad'" t-att-data-graph-data="dominios[1:3]">
                                 <canvas t-att-id="'canvas_barras_factores_actividad_nom_035'"/>
                             </div>
                         </t>
 
                         <t t-elif="categoria == 'Organización del tiempo de trabajo'">
-                            <div class="survey_graph" t-att-id="'grafica_organizacion_tiempo_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Organización del tiempo de trabajo'" t-att-data-graph-data="dominios[3:5]">
+                            <div class="survey_graph" t-att-id="'grafica_barras_organizacion_tiempo_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Organización del tiempo de trabajo'" t-att-data-graph-data="dominios[3:5]">
                                 <canvas t-att-id="'canvas_barras_organizacion_tiempo_nom_035'"/>
                             </div>
                         </t>
@@ -261,6 +306,7 @@
                 </div>
             </div>
         </template>
+        <!-- AQUÍ COMIENZA CLIMA -->
         <!-- AQUÍ COMIENZA CLIMA -->
         <template id="encuesta_reporte_clima" name="Reporte de Clima Laboral">
             <div class="container-fluid row gap-5 justify-content-between g-2">
@@ -343,15 +389,25 @@
 
             <div t-foreach="evaluacion.action_generar_datos_reporte_clima()['categorias']" t-as="categoria">
                 <div class="survey_section">
-                    <div class="category_section">
-                        <h4><t t-esc="categoria['nombre']"/></h4>
-                        <h3><t t-esc="categoria['valor']"/></h3>
-                    </div>
-                    <div class="survey_graph" t-att-id="'grafica_doughnut_categorias_clima'" t-att-data-graph-type="'bar'" t-att-data-graph-data="categoria">
-                        <canvas t-att-id="'canvas_doughnut_categorias_clima'"></canvas>
-                    </div>
+                    <t t-if="'puntuacion' in categoria">
+                        <div class="survey_page container-fluid d-flex flex-column">
+                            <div class="survey_section">
+                                <h4><t t-esc="categoria['nombre']"/></h4>
+                                <div class="survey_graph" t-att-id="'grafica_pie_' + categoria['nombre']" t-att-data-graph-type="'pie'" t-att-data-graph-data="[categoria, {'nombre':'', 'valor': 100 - categoria['valor'], 'color': '#9c9c9c'}]">
+                                    <canvas t-att-id="'canvas_pie_' + categoria['nombre']"></canvas>
+                                </div>
+                                <h4>Resumen por departamentos</h4>
+                            </div>
+                            <div class="survey_section">
+                                <div class="survey_graph" t-att-id="'grafica_radar_departamentos_' + categoria['nombre']" t-att-data-graph-type="'col'" t-att-data-label="'Resultados por departamento'" t-att-data-graph-data="categoria['departamentos']">
+                                    <canvas t-att-id="'canvas_radar_departamentos_' + categoria['nombre']"></canvas>
+                                </div>
+                            </div> 
+                        </div>
+                    </t>
                 </div>
-            </div>     
+            </div>
+
 
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script type="text/javascript">
@@ -360,55 +416,43 @@
                     graphs.forEach(function (graph) {
                         var canvas = graph.querySelector('canvas');
                         var ctx = canvas.getContext('2d');
-                        var data = graph.dataset.graphData;
+                        var data = graph.getAttribute('data-graph-data');
                         
                         if (data) {
                             data = JSON.parse(data.replace(/'/g, '"'));
                             var chartData = {
-                                labels: [data.nombre],
+                                labels: data.labels,  // Asegúrate de que 'labels' es parte de la estructura de datos
                                 datasets: [{
-                                    data: [data.valor],
-                                    backgroundColor: ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56', '#32a852'],
+                                    label: data.label,  // Asegúrate de que 'label' es parte de la estructura de datos
+                                    data: data.values,  // Asegúrate de que 'values' es parte de la estructura de datos
+                                    backgroundColor: [
+                                        'rgba(255, 99, 132, 0.2)',
+                                        'rgba(54, 162, 235, 0.2)',
+                                        'rgba(255, 206, 86, 0.2)',
+                                        'rgba(75, 192, 192, 0.2)',
+                                        'rgba(153, 102, 255, 0.2)',
+                                        'rgba(255, 159, 64, 0.2)'
+                                    ],
+                                    borderColor: [
+                                        'rgba(255, 99, 132, 1)',
+                                        'rgba(54, 162, 235, 1)',
+                                        'rgba(255, 206, 86, 1)',
+                                        'rgba(75, 192, 192, 1)',
+                                        'rgba(153, 102, 255, 1)',
+                                        'rgba(255, 159, 64, 1)'
+                                    ],
+                                    borderWidth: 1
                                 }]
                             };
                             new Chart(ctx, {
-                                type: graph.dataset.graphType,  // Utiliza el tipo de gráfico especificado
+                                type: graph.getAttribute('data-graph-type'),  // Utiliza el tipo de gráfico especificado
                                 data: chartData,
                                 options: {
                                     responsive: true,
-                                    aspectRatio: 2,
-                                    cutout: '50%',
                                     plugins: {
                                         legend: {
-                                            display: false,
-                                        },
-                                        tooltip: {
-                                            enabled: false,
-                                        },
-                                        centerText: {
                                             display: true,
-                                            text: data.valor.toFixed(2) + '%',
-                                            font: {
-                                                size: '20'
-                                            }
-                                        },
-                                    }
-                                },
-                                plugins: [{
-                                    beforeDraw: function(chart) {
-                                        if (chart.config.options.plugins.centerText) {
-                                            const width = chart.width,
-                                                height = chart.height,
-                                                ctx = chart.ctx;
-                                            ctx.restore();
-                                            const fontSize = (height / 114).toFixed(2);
-                                            ctx.font = fontSize + "em sans-serif";
-                                            ctx.textBaseline = "middle";
-                                            const text = chart.config.options.plugins.centerText.text,
-                                                textX = Math.round((width - ctx.measureText(text).width) / 2),
-                                                textY = height / 2;
-                                            ctx.fillText(text, textX, textY);
-                                            ctx.save();
+                                            position: 'top'
                                         }
                                     }
                                 }]
@@ -418,6 +462,11 @@
                 });
             </script>
         </template>
+
+
+
+
+
 
 
         <template id="pregunta_resultados_texto" name="Question: text result (text_box, char_box)">

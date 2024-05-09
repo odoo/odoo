@@ -16,7 +16,7 @@ class Evaluacion(models.Model):
 
     _name = "evaluacion"
     _description = "Evaluacion de pesonal"
-
+    _rec_name = "nombre"
     nombre = fields.Char(required=True)
 
     tipo = fields.Selection(
@@ -331,75 +331,7 @@ class Evaluacion(models.Model):
 
         return parametros
 
-    def action_get_evaluaciones(self, evaluacion_id):
-        """
-        Obtiene las preguntas asociadas a la evaluación.
-
-        Este método obtiene las preguntas asociadas a la evaluación actual y las devuelve en un diccionario.
-
-        :return: Un diccionario con las preguntas asociadas a la evaluación.
-
-        """
-
-        return {
-            "evaluacion": self,
-            "pregunta": self.pregunta_ids,
-        }
-
-    def action_enviar_evaluacion(self):
-        usuarios = []
-
-        for usuario in self.usuario_ids:
-            usuarios.append(usuario.partner_id.name)
-        self.env["usuario.evaluacion.rel"].action_enviar_evaluacion(
-            evaluacion_id=self.id
-        )
-        return {
-            "type": "ir.actions.client",
-            "tag": "display_notification",
-            "params": {
-                "title": f"Evaluación {self.nombre} fue enviada!",
-                "type": "success",
-                "message": f"La evaluación ha sido enviada a {', '.join(usuarios)}.",
-                "sticky": False,
-            },
-        }
-
-    def action_get_evaluaciones(self, evaluacion_id):
-        """
-        Obtiene las preguntas asociadas a la evaluación.
-
-        Este método obtiene las preguntas asociadas a la evaluación actual y las devuelve en un diccionario.
-
-        :return: Un diccionario con las preguntas asociadas a la evaluación.
-
-        """
-
-        return {
-            "evaluacion": self,
-            "pregunta": self.pregunta_ids,
-        }
-
-    def action_enviar_evaluacion(self):
-        usuarios = []
-
-        for usuario in self.usuario_ids:
-            usuarios.append(usuario.partner_id.name)
-        self.env["usuario.evaluacion.rel"].action_enviar_evaluacion(
-            evaluacion_id=self.id
-        )
-        return {
-            "type": "ir.actions.client",
-            "tag": "display_notification",
-            "params": {
-                "title": f"Evaluación {self.nombre} fue enviada!",
-                "type": "success",
-                "message": f"La evaluación ha sido enviada a {', '.join(usuarios)}.",
-                "sticky": False,
-            },
-        }
-
-    def action_generar_datos_reporte_NOM_035(self):
+    def generar_datos_reporte_NOM_035_action(self):
         """
         Genera los datos necesarios para el reporte genérico de la evaluación.
 
@@ -475,7 +407,7 @@ class Evaluacion(models.Model):
 
         for usuario in self.usuario_ids:
             usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
-                [("usuario_id", "=", usuario.id), ("evaluacion_id", "=", self.id)]
+                [("usuario_id.id", "=", usuario.id), ("evaluacion_id.id", "=", self.id)]
             )
 
             if (
@@ -483,13 +415,33 @@ class Evaluacion(models.Model):
                 and usuario_evaluacion_rel[0].contestada == "contestada"
             ):
                 datos_demograficos.append(self.obtener_datos_demograficos(usuario))
+                
+        departamentos = defaultdict(int)
+        for dato in datos_demograficos:
+            departamentos[dato["departamento"]] += 1
+
+        generaciones = defaultdict(int)
+        for dato in datos_demograficos:
+            generaciones[dato["generacion"]] += 1
+            
+        puestos = defaultdict(int)
+        for dato in datos_demograficos:
+            puestos[dato["puesto"]] += 1
+
+        generos = defaultdict(int)
+        for dato in datos_demograficos:
+            dato["genero"] = dato["genero"].capitalize()
+            generos[dato["genero"]] += 1
 
         # Organizar los parámetros en el orden deseado
         parametros = {
             "evaluacion": self,
             "categorias": [categorias[nombre] for nombre in categorias_orden],
             "dominios": [dominios[nombre] for nombre in dominios_orden],
-            "datos_demograficos": datos_demograficos,
+            "departamentos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in departamentos.items()],
+            "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
+            "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
+            "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],
             "final": final,
         }
 
@@ -554,9 +506,7 @@ class Evaluacion(models.Model):
             for respuesta in pregunta.respuesta_ids:
                 valor_respuesta = int(respuesta.respuesta_texto)
                 valor_pregunta += valor_respuesta
-                maximo_pregunta += (
-                    4  # Suponiendo un máximo de 4 para cada respuesta en escala
-                )
+                maximo_pregunta += 4  # Suponiendo un máximo de 4 para cada respuesta en escala
 
                 nombre_departamento = respuesta.usuario_id.department_id.name if respuesta.usuario_id.department_id else "Sin departamento"
                 departamento = next(
@@ -589,11 +539,11 @@ class Evaluacion(models.Model):
                     categoria["puntuacion"] / categoria["puntuacion_maxima"]
                 ) * 100
 
-        total_porcentaje = (
+        total_porcentaje = round((
             (total_puntuacion / total_maximo_posible) * 100
             if total_maximo_posible > 0
             else 0
-        )
+        ),2)
 
         # Datos demograficos
         # datos_demograficos = []
@@ -624,6 +574,18 @@ class Evaluacion(models.Model):
         return parametros
 
     def asignar_color(self, valor, categoria=None, dominio=None):
+        """
+        Asigna un color a un valor numérico.
+        
+        Este método asigna un color a un valor numérico basado en una escala predefinida.
+        
+        :param valor: El valor numérico al que se le asignará un color.
+        :param categoria: La categoría de la pregunta.
+        :param dominio: El dominio de la pregunta.
+        
+        :return: El color asignado al valor.
+        """
+        
         if categoria:
             if categoria == "Ambiente de Trabajo":
                 if valor < 3:
@@ -771,28 +733,62 @@ class Evaluacion(models.Model):
                 return "#ff4747"  # Rojo
 
     def obtener_dato(self, dato):
+        """
+        Obtiene un dato y devuelve 'N/A' si es nulo.
+        
+        Este método recibe un dato y verifica si es nulo. Si es nulo, devuelve 'N/A'.
+        
+        :param dato: El dato a verificar.
+        
+        :return: El dato si no es nulo, 'N/A' si es nulo.
+        """
         if not dato:
             return "N/A"
 
         return dato
 
     def obtener_datos_demograficos(self, usuario):
+        """
+        Obtiene los datos demográficos de un usuario.
+        
+        Este método recibe un usuario y obtiene sus datos demográficos, como nombre, género, puesto, año de nacimiento, generación, departamento, nivel jerárquico, gerencia, jefatura, fecha de ingreso y ubicación/región.
+        
+        :param usuario: El usuario del que se obtendrán los datos demográficos.
+        
+        :return: Un diccionario con los datos demográficos del usuario.
+        """
+        
         datos = {}
+        
+        def obtener_generacion(anio_nacimiento):
+            if 1946 <= anio_nacimiento <= 1964:
+                return "Baby Boomers"
+            elif 1965 <= anio_nacimiento <= 1980:
+                return "Generación X"
+            elif 1981 <= anio_nacimiento <= 1999:
+                return "Millenials"
+            elif 2000 <= anio_nacimiento <= 2015:
+                return "Generacion Z"
+            else:
+                return "N/A"
+
 
         datos["nombre"] = self.obtener_dato(usuario.name)
         datos["genero"] = self.obtener_dato(usuario.gender)
-        datos["puesto"] = self.obtener_dato(usuario.job_id.name)
+        datos["puesto"] = self.obtener_dato(usuario.job_title)
         datos["anio_nacimiento"] = usuario.birthday.year if usuario.birthday else "N/A"
+        datos["generacion"] = obtener_generacion(datos["anio_nacimiento"]) if datos["anio_nacimiento"] != "N/A" else "N/A"
         datos["departamento"] = self.obtener_dato(usuario.department_id.name)
-
+        
         # Falta
         # Nivel Jerarquico
         # Gerencia
         # Jefatura
         # Fecha de ingreso
         # Ubicación/Region
-
+        
         return datos
+    
 
     def action_get_evaluaciones(self, evaluacion_id):
         """
@@ -808,15 +804,13 @@ class Evaluacion(models.Model):
             "evaluacion": self,
             "pregunta": self.pregunta_ids,
         }
-
-    def action_enviar_evaluacion(self):
+    
+    def enviar_evaluacion_action(self):
         usuarios = []
 
         for usuario in self.usuario_ids:
             usuarios.append(usuario.partner_id.name)
-        self.env["usuario.evaluacion.rel"].action_enviar_evaluacion(
-            evaluacion_id=self.id
-        )
+        self.env['usuario.evaluacion.rel'].enviar_evaluacion_action(evaluacion_id=self.id)
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",

@@ -86,8 +86,14 @@ class EvaluacionClima(models.Model):
 
         for techo in techos:
             if techo[1] <= 0:
-                raise ValidationError((f"El nivel {techo[0]} debe ser mayor a 0"))
+                raise ValidationError(
+                    (f"El nivel {techo[0]} debe ser mayor a 0"))
+            elif techo[1] > 100:
+                raise ValidationError(
+                    (f"El nivel {techo[0]} no puede ser mayor a 100"))
 
         for i in range(len(techos) - 1):
-            if techos[i][1] >= techos[i + 1][1]:
-                raise ValidationError(("Los niveles deben ser en orden ascendente"))
+            for j in range(i + 1, len(techos)):
+                if techos[i][1] >= techos[j][1]:
+                    raise ValidationError(
+                        (f"Los niveles de techo deben estar en orden ascendente"))
