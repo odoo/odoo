@@ -20,3 +20,20 @@ class Pregunta(models.Model):
         string="Ponderación",
         required=False,
     )
+
+    mapeo_valores_escala = {
+        "ascendente": {
+            "0": "Nunca",
+            "1": "Casi nunca",
+            "2": "A veces",
+            "3": "Casi siempre",
+            "4": "Siempre",
+        },
+        "descendente": {
+            "0": "Siempre",
+            "1": "Casi siempre",
+            "2": "A veces",
+            "3": "Casi nunca",
+            "4": "Nunca",
+        },
+    }
