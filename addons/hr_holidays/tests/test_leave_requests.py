@@ -1088,6 +1088,50 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(sick_leave.duration_display, '2 days', msg)
         self.assertEqual(comp_leave.duration_display, '0 hours', msg)
 
+    def test_duration_display_public_leave_include(self):
+        """
+            The purpose is to test whether the duration_display
+            computation considers public holidays when the
+            `include_public_holidays_in_duration` is set to True.
+        """
+        employee = self.employee_emp
+        calendar = employee.resource_calendar_id
+        sick_leave_type = self.env['hr.leave.type'].create({
+            'name': 'Sick Leave (days)',
+            'request_unit': 'day',
+            'leave_validation_type': 'hr',
+        })
+        sick_leave = self.env['hr.leave'].create({
+            'name': 'Sick 3 days',
+            'employee_id': employee.id,
+            'holiday_status_id': sick_leave_type.id,
+            'request_date_from': '2021-11-15',
+            'request_date_to': '2021-11-17',
+        })
+
+        self.assertEqual(sick_leave.duration_display, '3 days')
+
+        calendar.global_leave_ids = [(0, 0, {
+            'name': 'Autumn Holidays',
+            'date_from': '2021-11-16 00:00:00',
+            'date_to': '2021-11-16 23:59:59',
+            'time_type': 'leave',
+        })]
+
+        self.assertEqual(sick_leave.duration_display, '2 days', "hr_holidays: duration_display should not count public holiday")
+
+        sick_leave_type.include_public_holidays_in_duration = True
+        sick_leave.unlink()
+        sick_leave = self.env['hr.leave'].create({
+            'name': 'Sick 3 days',
+            'employee_id': employee.id,
+            'holiday_status_id': sick_leave_type.id,
+            'request_date_from': '2021-11-15',
+            'request_date_to': '2021-11-17',
+        })
+
+        self.assertEqual(sick_leave.duration_display, '3 days', "hr_holidays: duration_display should not update after adding an overlapping holiday")
+
     @freeze_time('2024-01-18')
     def test_undefined_working_hours(self):
         """ Ensure time-off can also be allocated without ResourceCalendar. """

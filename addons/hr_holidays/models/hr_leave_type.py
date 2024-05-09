@@ -9,6 +9,7 @@ from collections import defaultdict
 from datetime import time, datetime
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools import format_date, frozendict
 from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
@@ -92,6 +93,7 @@ class HolidaysType(models.Model):
         ('half_day', 'Half Day'),
         ('hour', 'Hours')], default='day', string='Take Time Off in', required=True)
     unpaid = fields.Boolean('Is Unpaid', default=False)
+    include_public_holidays_in_duration = fields.Boolean('Public Holiday Included', default=False, help="Public holidays should be counted in the leave duration when applying for leaves")
     leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
     allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave_allocation', raise_if_not_found=False))
     support_document = fields.Boolean(string='Supporting Document')
@@ -140,6 +142,37 @@ class HolidaysType(models.Model):
         ]).holiday_status_id
 
         return [('id', new_operator, leave_types.ids)]
+
+    @api.constrains('include_public_holidays_in_duration')
+    def _check_overlapping_public_holidays(self):
+        public_holidays = self.env['resource.calendar.leaves'].search([
+            ('resource_id', '=', False),
+            '|', ('company_id', 'in', self.company_id.ids),
+                 ('company_id', '=', self.env.company.id),
+        ])
+
+        # Define the date range for the current year
+        min_datetime = fields.Datetime.to_string(datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))
+        max_datetime = fields.Datetime.to_string(datetime.now().replace(month=12, day=31, hour=23, minute=59, second=59))
+
+        leaves = self.env['hr.leave'].search([
+            ('holiday_status_id', 'in', self.ids),
+            ('date_from', '>=', min_datetime),
+            ('date_from', '<=', max_datetime),
+            ('state', 'in', ('validate', 'validate1', 'confirm')),
+        ])
+
+        for leave in leaves:
+            leave_from_date = leave.date_from.date()
+            leave_to_date = leave.date_to.date()
+
+            for public_holiday in public_holidays:
+                public_holiday_from_date = public_holiday.date_from.date()
+                public_holiday_to_date = public_holiday.date_to.date()
+
+                if leave_from_date <= public_holiday_to_date and leave_to_date >= public_holiday_from_date:
+                    raise ValidationError(_("You cannot modify the 'Public Holiday Included' setting since one or more leaves for that \
+                        time off type are overlapping with public holidays, meaning that the balance of those employees would be affected by this change."))
 
     @api.depends('requires_allocation', 'max_leaves', 'virtual_remaining_leaves')
     def _compute_valid(self):
