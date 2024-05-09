@@ -110,13 +110,6 @@ class UsuarioEvaluacionRel(models.Model):
 
                 mail = self.env['mail.mail'].create(mail_values)
                 mail.send()
-
-                if mail.state == 'sent':
-                    print(f"Correo enviado exitosamente a {user.usuario_id.email}")
-                elif mail.state == 'exception':
-                    print(f"Fallo al enviar correo a {user.usuario_id.email}")
-                else:
-                    print(f"Correo en estado pendiente o desconocido: {mail.state}")
     
         return {
             "type": "ir.actions.act_window",
