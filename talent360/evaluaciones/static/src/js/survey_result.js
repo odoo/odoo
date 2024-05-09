@@ -5,9 +5,11 @@ import { loadBundle } from "@web/core/assets";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
 // The given colors are the same as those used by D3
-var D3_COLORS = ["#1f77b4","#ff7f0e","#aec7e8","#ffbb78","#2ca02c","#98df8a","#d62728",
-                    "#ff9896","#9467bd","#c5b0d5","#8c564b","#c49c94","#e377c2","#f7b6d2",
-                    "#7f7f7f","#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"];
+var D3_COLORS = [
+    "#1f77b4","#ff7f0e","#aec7e8","#ffbb78","#2ca02c","#98df8a","#d62728",
+    "#ff9896","#9467bd","#c5b0d5","#8c564b","#c49c94","#e377c2","#f7b6d2",
+    "#7f7f7f","#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"
+];
 
 // TODO awa: this widget loads all records and only hides some based on page
 // -> this is ugly / not efficient, needs to be refactored
@@ -104,39 +106,49 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         return this._super.apply(this, arguments).then(function () {
             self.graphData = self.$el.data("graphData");
             self.label = self.$el.data("label") || 'Data';
-            
+
+            // Asegurarse de que graphData es un array de objetos
             if (typeof self.graphData === 'string') {
                 self.graphData = JSON.parse(self.graphData.replace(/'/g, '"'));
             }
-    
-            self.labels = self.graphData.map(function (categoria) {
-                return categoria.nombre;
-            });
-    
-            self.counts = self.graphData.map(function (categoria) {
-                return categoria.valor;
-            });
 
-            self.color = self.graphData.map(function (categoria) {
-                return categoria.color;
-            });
+            // Verifica que graphData es un array
+            if (Array.isArray(self.graphData)) {
+                self.labels = self.graphData.map(function (categoria) {
+                    return categoria.nombre;
+                });
 
-            if (self.graphData && self.graphData.length !== 0) {
-                switch (self.$el.data("graphType")) {
-                    case 'bar':
-                        self.chartConfig = self._getBarChartConfig();
-                        break;
-                    case 'col':
-                        self.chartConfig = self._getColChartConfig();
-                        break;
-                    case 'pie':
-                        self.chartConfig = self._getPieChartConfig();
-                        break;
-                    case 'radar':
-                        self.chartConfig = self._getRadarChartConfig();
-                        break;
+                self.counts = self.graphData.map(function (categoria) {
+                    return categoria.valor;
+                });
+
+                self.color = self.graphData.map(function (categoria) {
+                    return categoria.color;
+                });
+
+                if (self.graphData && self.graphData.length !== 0) {
+                    switch (self.$el.data("graphType")) {
+                        case 'bar':
+                            self.chartConfig = self._getBarChartConfig();
+                            break;
+                        case 'col':
+                            self.chartConfig = self._getColChartConfig();
+                            break;
+                        case 'pie':
+                            self.chartConfig = self._getPieChartConfig();
+                            break;
+                        case 'radar':
+                            self.chartConfig = self._getRadarChartConfig();
+                            break;
+                        case 'doughnut': 
+                            self.chartConfig = self._getDoughnutChartConfig();
+                            break;
+                    }
                 }
+            } else {
+                console.error("graphData is not an array:", self.graphData);
             }
+            self._loadChart();
         });
     },
 
@@ -154,6 +166,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
      * @private
      */
     _getBarChartConfig: function () {
+        self = this;
         return {
             type: 'bar',
             data: {
@@ -161,8 +174,8 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 datasets:[{
                     label: this.label,
                     data: this.counts,
-                    backgroundColor: this.color || this.counts.map(function (val, index) {
-                        return D3_COLORS[index % 20];
+                    backgroundColor: this.counts.map(function (val, index) {
+                        return self.color[index] || D3_COLORS[index % 20];
                     }),
                 }]
             },
@@ -201,6 +214,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
     },
 
     _getColChartConfig: function () {
+        self = this;
         return {
             type: 'bar',
             data: {
@@ -209,7 +223,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                     label: "Conteo",
                     data: this.counts,
                     backgroundColor: this.counts.map(function (val, index) {
-                        return D3_COLORS[index % 20];
+                        return self.color[index] || D3_COLORS[index % 20];
                     }),
                 }]
             },
@@ -246,13 +260,14 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
             },
         };
     },
-
+    
     /**
      * Returns a standard pie chart configuration.
      *
      * @private
      */
     _getPieChartConfig: function () {
+        self = this;
         return {
             type: 'pie',
             data: {
@@ -261,7 +276,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                     label: '',
                     data: this.counts,
                     backgroundColor: this.counts.map(function (val, index) {
-                        return D3_COLORS[index % 20];
+                        return self.color[index] || D3_COLORS[index % 20];
                     }),
                 }]
             },
@@ -304,6 +319,66 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         };
     },
 
+    /**
+     * Returns a standard doughnut chart configuration.
+     *
+     * @private
+     */
+    _getDoughnutChartConfig: function () {
+        self = this;
+        return {
+            type: 'doughnut',
+            data: {
+                labels: this.labels,
+                datasets: [{
+                    label: '',
+                    data: this.counts,
+                    backgroundColor: this.counts.map(function (val, index) {
+                        return self.color[index] || D3_COLORS[index % 20];
+                    }),
+                }]
+            },
+            options: {
+                responsive: true,
+                aspectRatio: 2,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        enabled: false,
+                    },
+                    centerText: {
+                        display: true,
+                        text: this.counts[0].toFixed(2) + '%',
+                        font: {
+                            size: '20'
+                        }
+                    },
+                }
+            },
+            plugins: [{
+                beforeDraw: function(chart) {
+                    if (chart.config.options.plugins.centerText) {
+                        const width = chart.width,
+                            height = chart.height,
+                            ctx = chart.ctx;
+                        ctx.restore();
+                        const fontSize = (height / 114).toFixed(2);
+                        ctx.font = fontSize + "em sans-serif";
+                        ctx.textBaseline = "middle";
+                        const text = chart.config.options.plugins.centerText.text,
+                            textX = Math.round((width - ctx.measureText(text).width) / 2),
+                            textY = height / 2;
+                        ctx.fillText(text, textX, textY);
+                        ctx.save();
+                    }
+                }
+            }]
+        };
+    },
+    
     /**
      * Loads the chart using the provided Chart library.
      *
@@ -371,7 +446,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
         window.print();
     },
     
-     _attach_listener: function (self){
+    _attach_listener: function (self){
         console.log("attatching listeners")
 
         for (let chart of self.charts) {
@@ -380,17 +455,13 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
 
         const tabEls = document.querySelectorAll('a[data-bs-toggle="tab"][data-chart="1"]');
         tabEls.forEach(function (tabEl) {
-          tabEl.addEventListener("shown.bs.tab", function (event) {
-            const index = Array.from(tabEls).indexOf(event.target);
-            self.charts[index]._reloadChart();
-          });
+            tabEl.addEventListener("shown.bs.tab", function (event) {
+                const index = Array.from(tabEls).indexOf(event.target);
+                self.charts[index]._reloadChart();
+            });
         });
     }
 });
-
-
-
-
 
 export default {
     resultWidget: publicWidget.registry.SurveyResultWidget,

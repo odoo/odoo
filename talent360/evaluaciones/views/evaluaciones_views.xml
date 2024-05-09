@@ -381,6 +381,51 @@
         </field>
     </record>
 
+    <!-- CLIMA -->
+    <record id="evaluacion_clima_view_form" model="ir.ui.view">
+        <field name="name">evaluacion.clima.form</field>
+        <field name="model">evaluacion</field>
+        <field name="arch" type="xml">
+            <form string="Clima" create="false">
+                <sheet>
+                    <h1>Evaluación Clima</h1>
+                    <br></br>
+                    <group>
+                        <field name="nombre"/>
+                    </group>
+                    <group>
+                        <field name="descripcion"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="estado"/>
+                        </group>
+                        <notebook>
+                            <page string="Preguntas">
+                                <field name="pregunta_ids">
+                                    <tree string="Preguntas" editable="bottom">
+                                        <field name="pregunta_texto"/>
+                                    
+                        </tree>
+                    </field>
+                            </page>
+                            <page string="Asignados">
+                                <field name="usuario_ids"/>
+                            </page>
+                        </notebook>
+                    </group>
+
+                    <div>
+                        <button name="enviar_evaluacion_action" string="Enviar Correo" type="object" class="btn-primary mx-3" confirm="¿Estás seguro de enviar la encuesta?"/>
+                        <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary mx-3"/>
+                    
+                    </div>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+  
     <!-- NOM035 -->
     <record id="evaluacion_nom035_view_form" model="ir.ui.view">
         <field name="name">evaluacion.nom035.form</field>

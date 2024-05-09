@@ -286,9 +286,16 @@ class Evaluacion(models.Model):
         :return: una acción de redirección al reporte de la evaluación
 
         """
+
+        url_base = "/evaluacion/reporte/"
+        if self.tipo == "CLIMA":
+            url_base = "/evaluacion/reporte-clima/"
+        else:
+            url_base = "/evaluacion/reporte/"
+
         return {
             "type": "ir.actions.act_url",
-            "url": "/evaluacion/reporte/%s" % (self.id),
+            "url": f"{url_base}{self.id}",
             "target": "new",
         }
 
@@ -321,12 +328,12 @@ class Evaluacion(models.Model):
                 respuestas.append(respuesta.respuesta_texto)
 
                 for i, respuesta_tabulada in enumerate(respuestas_tabuladas):
-                    if respuesta_tabulada["texto"] == respuesta.respuesta_texto:
-                        respuestas_tabuladas[i]["conteo"] += 1
+                    if respuesta_tabulada["nombre"] == respuesta.respuesta_texto:
+                        respuestas_tabuladas[i]["valor"] += 1
                         break
                 else:
                     respuestas_tabuladas.append(
-                        {"texto": respuesta.respuesta_texto, "conteo": 1}
+                        {"nombre": respuesta.respuesta_texto, "valor": 1}
                     )
 
             datos_pregunta = {
@@ -464,6 +471,172 @@ class Evaluacion(models.Model):
                 "final": final,
             }
 
+        return parametros
+
+    def action_generar_datos_reporte_clima(self):
+        # Categorías para el reporte de clima laboral
+        categorias_clima = [
+            "Reclutamiento y Selección de Personal",
+            "Formación y Capacitación",
+            "Permanencia y Ascenso",
+            "Corresponsabilidad en la Vida Laboral, Familiar y Personal",
+            "Clima Laboral Libre de Violencia",
+            "Acoso y Hostigamiento",
+            "Accesibilidad",
+            "Respeto a la Diversidad",
+            "Condiciones Generales de Trabajo",
+        ]
+
+        # Estructura de datos para las categorías
+        detalles_categorias = [
+            {
+                "nombre": cat,
+                "valor": 0,
+                "color": "#2894a7",
+                "puntuacion": 0,
+                "puntuacion_maxima": 0,
+                "departamentos": [],
+            }
+            for cat in categorias_clima
+        ]
+
+        # Variables para acumular totales
+        total_puntuacion = 0
+        total_maximo_posible = 0
+
+        for pregunta in self.pregunta_ids:
+            if (
+                not pregunta.categoria
+                or dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
+                not in categorias_clima
+            ):
+                continue
+
+            categoria_actual = next(
+                (
+                    cat
+                    for cat in detalles_categorias
+                    if cat["nombre"]
+                    == dict(pregunta._fields["categoria"].selection).get(
+                        pregunta.categoria
+                    )
+                ),
+                None,
+            )
+
+            if categoria_actual is None:
+                continue
+
+            valor_pregunta = 0
+            maximo_pregunta = 0
+
+            for respuesta in pregunta.respuesta_ids:
+                valor_respuesta = int(respuesta.respuesta_texto)
+                valor_pregunta += valor_respuesta
+                maximo_pregunta += 4  # Suponiendo un máximo de 4 para cada respuesta en escala
+
+                nombre_departamento = respuesta.usuario_id.department_id.name if respuesta.usuario_id.department_id else "Sin departamento"
+                departamento = next(
+                    (
+                        dept
+                        for dept in categoria_actual["departamentos"]
+                        if dept["nombre"] == nombre_departamento
+                    ),
+                    None,
+                )
+                if departamento is None:
+                    departamento = {
+                        "nombre": nombre_departamento,
+                        "color": "#2894a7",  
+                        "puntos": 0,
+                        "puntos_maximos": 0,
+                    }
+                    categoria_actual["departamentos"].append(departamento)
+
+                departamento["puntos"] += valor_respuesta
+                departamento["puntos_maximos"] += 4
+
+            total_puntuacion += valor_pregunta
+            total_maximo_posible += maximo_pregunta
+            categoria_actual["puntuacion"] += valor_pregunta
+            categoria_actual["puntuacion_maxima"] += maximo_pregunta
+            
+
+        for categoria in detalles_categorias:
+            if categoria["puntuacion_maxima"] > 0:
+                categoria["valor"] = (
+                    categoria["puntuacion"] / categoria["puntuacion_maxima"]
+                ) * 100
+                categoria["color"] = self.asignar_color_clima(categoria["valor"])
+
+            for dept in categoria["departamentos"]:
+                if dept["puntos_maximos"] > 0:
+                    dept["valor"] = (dept["puntos"] / dept["puntos_maximos"]) * 100
+                    dept["color"] = self.asignar_color_clima(dept["valor"])
+
+        total_porcentaje = round((
+            (total_puntuacion / total_maximo_posible) * 100
+            if total_maximo_posible > 0
+            else 0
+        ),2)
+
+      # Datos demograficos
+        if self.incluir_demograficos:
+            datos_demograficos = []
+
+            for usuario in self.usuario_ids:
+                usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
+                    [("usuario_id.id", "=", usuario.id), ("evaluacion_id.id", "=", self.id)]
+                )
+
+                if (
+                    usuario_evaluacion_rel
+                    and usuario_evaluacion_rel[0].contestada == "contestada"
+                ):
+                    datos_demograficos.append(self.obtener_datos_demograficos(usuario))
+
+            departamentos = defaultdict(int)
+            for dato in datos_demograficos:
+                departamentos[dato["departamento"]] += 1
+
+            generaciones = defaultdict(int)
+            for dato in datos_demograficos:
+                generaciones[dato["generacion"]] += 1
+                
+            puestos = defaultdict(int)
+            for dato in datos_demograficos:
+                puestos[dato["puesto"]] += 1
+
+            generos = defaultdict(int)
+            for dato in datos_demograficos:
+                dato["genero"] = dato["genero"].capitalize()
+                generos[dato["genero"]] += 1
+
+            # Organizar los parámetros en el orden deseado
+            parametros = {
+                "evaluacion": self,
+                "categorias": detalles_categorias,
+                "total": total_puntuacion,
+                "total_maximo": total_maximo_posible,
+                "total_porcentaje": total_porcentaje,
+                "departamentos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in departamentos.items()],
+                "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
+                "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
+                "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],  
+            }
+
+        else:
+            # Organizar los parámetros en el orden deseado
+            parametros = {
+                "evaluacion": self,
+                "categorias": detalles_categorias,
+                "total": total_puntuacion,
+                "total_maximo": total_maximo_posible,
+                "total_porcentaje": total_porcentaje,
+            }
+
+        # Parámetros para el template
+        print(parametros)
         return parametros
 
     def asignar_color(self, valor, categoria=None, dominio=None):
@@ -624,6 +797,27 @@ class Evaluacion(models.Model):
                 return "#ffa446"  # Naranja
             else:
                 return "#ff4747"  # Rojo
+            
+    def asignar_color_clima(self, valor):
+        """
+        Asigna un color a un valor numérico.
+        
+        Este método asigna un color a un valor numérico basado en una escala predefinida.
+        
+        :param valor: El valor numérico al que se le asignará un color.
+        
+        :return: El color asignado al valor.
+        """
+        if self.techo_verde <= valor <= self.techo_azul:
+            return "#2894a7"  # Azul clarito
+        elif self.techo_amarillo <= valor <= self.techo_verde:
+            return "#5aaf2b"  # Verde
+        elif self.techo_naranja <= valor <= self.techo_amarillo:
+            return "#ebae14"  # Amarillo
+        elif self.techo_rojo <= valor <= self.techo_naranja:
+            return "#ffa446"  # Naranja
+        else:
+            return "#ff4747"  # Rojo
 
     def obtener_dato(self, dato):
         """
