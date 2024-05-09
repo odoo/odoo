@@ -166,6 +166,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
      * @private
      */
     _getBarChartConfig: function () {
+        self = this;
         return {
             type: 'bar',
             data: {
@@ -173,8 +174,8 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 datasets:[{
                     label: this.label,
                     data: this.counts,
-                    backgroundColor: this.color || this.counts.map(function (val, index) {
-                        return D3_COLORS[index % 20];
+                    backgroundColor: this.counts.map(function (val, index) {
+                        return self.color[index] || D3_COLORS[index % 20];
                     }),
                 }]
             },
@@ -213,6 +214,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
     },
 
     _getColChartConfig: function () {
+        self = this;
         return {
             type: 'bar',
             data: {
@@ -220,8 +222,8 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 datasets:[{
                     label: "Conteo",
                     data: this.counts,
-                    backgroundColor: this.color || this.counts.map(function (val, index) {
-                        return D3_COLORS[index % 20];
+                    backgroundColor: this.counts.map(function (val, index) {
+                        return self.color[index] || D3_COLORS[index % 20];
                     }),
                 }]
             },
@@ -265,6 +267,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
      * @private
      */
     _getPieChartConfig: function () {
+        self = this;
         return {
             type: 'pie',
             data: {
@@ -272,8 +275,8 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 datasets: [{
                     label: '',
                     data: this.counts,
-                    backgroundColor: this.color || this.counts.map(function (val, index) {
-                        return D3_COLORS[index % 20];
+                    backgroundColor: this.counts.map(function (val, index) {
+                        return self.color[index] || D3_COLORS[index % 20];
                     }),
                 }]
             },
@@ -322,6 +325,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
      * @private
      */
     _getDoughnutChartConfig: function () {
+        self = this;
         return {
             type: 'doughnut',
             data: {
@@ -329,8 +333,8 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 datasets: [{
                     label: '',
                     data: this.counts,
-                    backgroundColor: this.color || this.counts.map(function (val, index) {
-                        return D3_COLORS[index % 20];
+                    backgroundColor: this.counts.map(function (val, index) {
+                        return self.color[index] || D3_COLORS[index % 20];
                     }),
                 }]
             },
