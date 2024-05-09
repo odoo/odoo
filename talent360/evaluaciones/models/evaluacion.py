@@ -76,6 +76,8 @@ class Evaluacion(models.Model):
             if record.fecha_inicio and record.fecha_final and record.fecha_inicio > record.fecha_final:
                 raise exceptions.ValidationError("La fecha de inicio debe ser anterior a la fecha final")
 
+    incluir_demograficos = fields.Boolean(string="Incluir datos demográficos", default = True)
+
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
         """
@@ -410,47 +412,57 @@ class Evaluacion(models.Model):
             }
 
         # Datos demograficos
-        datos_demograficos = []
+        if self.incluir_demograficos:
+            datos_demograficos = []
 
-        for usuario in self.usuario_ids:
-            usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
-                [("usuario_id.id", "=", usuario.id), ("evaluacion_id.id", "=", self.id)]
-            )
+            for usuario in self.usuario_ids:
+                usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
+                    [("usuario_id.id", "=", usuario.id), ("evaluacion_id.id", "=", self.id)]
+                )
 
-            if (
-                usuario_evaluacion_rel
-                and usuario_evaluacion_rel[0].contestada == "contestada"
-            ):
-                datos_demograficos.append(self.obtener_datos_demograficos(usuario))
+                if (
+                    usuario_evaluacion_rel
+                    and usuario_evaluacion_rel[0].contestada == "contestada"
+                ):
+                    datos_demograficos.append(self.obtener_datos_demograficos(usuario))
+
+            departamentos = defaultdict(int)
+            for dato in datos_demograficos:
+                departamentos[dato["departamento"]] += 1
+
+            generaciones = defaultdict(int)
+            for dato in datos_demograficos:
+                generaciones[dato["generacion"]] += 1
                 
-        departamentos = defaultdict(int)
-        for dato in datos_demograficos:
-            departamentos[dato["departamento"]] += 1
+            puestos = defaultdict(int)
+            for dato in datos_demograficos:
+                puestos[dato["puesto"]] += 1
 
-        generaciones = defaultdict(int)
-        for dato in datos_demograficos:
-            generaciones[dato["generacion"]] += 1
-            
-        puestos = defaultdict(int)
-        for dato in datos_demograficos:
-            puestos[dato["puesto"]] += 1
+            generos = defaultdict(int)
+            for dato in datos_demograficos:
+                dato["genero"] = dato["genero"].capitalize()
+                generos[dato["genero"]] += 1
 
-        generos = defaultdict(int)
-        for dato in datos_demograficos:
-            dato["genero"] = dato["genero"].capitalize()
-            generos[dato["genero"]] += 1
+            # Organizar los parámetros en el orden deseado
+            parametros = {
+                "evaluacion": self,
+                "categorias": [categorias[nombre] for nombre in categorias_orden],
+                "dominios": [dominios[nombre] for nombre in dominios_orden],
+                "departamentos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in departamentos.items()],
+                "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
+                "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
+                "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],
+                "final": final,
+            }
 
-        # Organizar los parámetros en el orden deseado
-        parametros = {
-            "evaluacion": self,
-            "categorias": [categorias[nombre] for nombre in categorias_orden],
-            "dominios": [dominios[nombre] for nombre in dominios_orden],
-            "departamentos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in departamentos.items()],
-            "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
-            "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
-            "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],
-            "final": final,
-        }
+        else:
+            # Organizar los parámetros en el orden deseado
+            parametros = {
+                "evaluacion": self,
+                "categorias": [categorias[nombre] for nombre in categorias_orden],
+                "dominios": [dominios[nombre] for nombre in dominios_orden],
+                "final": final,
+            }
 
         return parametros
 
@@ -670,7 +682,6 @@ class Evaluacion(models.Model):
         
         return datos
     
-
     def action_get_evaluaciones(self, evaluacion_id):
         """
         Obtiene las preguntas asociadas a la evaluación.
