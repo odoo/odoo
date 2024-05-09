@@ -12,10 +12,10 @@
     <field name="model">objetivo</field>
     <field name="arch" type="xml">
       <tree string="Objetivos">
-        <field name="titulo" />
-        <field name="estado" />
+        <field name="titulo" string="Nombre"/>
         <field name="fecha_fin" />
         <field name="tipo" />
+        <field name="estado" />
         <field name="peso" />
         <field name="piso_minimo" />
         <field name="piso_maximo" />
@@ -35,7 +35,7 @@
         <sheet>
           <div style="width: 100%;">
             <h1>
-              <field name="titulo" placeholder="Título del objetivo" style="width: 100%;" />
+              <field name="titulo" placeholder="Nombre del objetivo" style="width: 100%;" />
             </h1>
 
             <br />
@@ -47,29 +47,29 @@
               <div style="display: flex; flex-direction: column;">
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="fecha_fin" string="Fecha final" />
-                        <field name="fecha_fin" />
-                        <br />
-                        <label for="tipo" string="Tipo" />
-                        <field name="tipo" />
-                        <br />
-                        <label for="peso" string="Peso" />
-                        <field name="peso" />
-                    </div>
-                    <div class="col-md-6">
                         <label for="metrica" string="Métrica" />
                         <field name="metrica" />
                         <br />
                         <label for="orden" string="Orden" />
                         <field name="orden" />
+                        <br />
+                        <label for="peso" string="Peso" />
+                        <field name="peso" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="fecha_fin" string="Fecha final" />
+                        <field name="fecha_fin" />
+                        <br />
+                        <label for="tipo" string="Tipo" />
+                        <field name="tipo" />
                     </div>
                 </div>
                 <group col="2" style="margin-top: 20px;">
                   <group>
-                    <field name="piso_minimo" />
+                    <field name="piso_minimo" string="Valor inicial"/>
                   </group>
                   <group>
-                    <field name="piso_maximo" />
+                    <field name="piso_maximo" string="Valor deseado"/>
                   </group>
                 </group>
               </div>
