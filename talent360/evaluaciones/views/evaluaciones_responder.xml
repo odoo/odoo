@@ -90,10 +90,17 @@
                 </div>
                 <div class="row">
                     <div  class="col-lg-10">
-                        <p class="oe_no_empty pb-5 text-break">
-                            Por favor haz clic en el botón “Responder” para iniciar tu Evaluacion. <br /> 
-                            Te recordamos que todas tus respuestas son confidenciales. <br /><br />
-                            Disponible del <span t-field="evaluacion.fecha_inicio"/> al <span t-field="evaluacion.fecha_final" />
+                        <t t-if="evaluacion.mensaje">
+                            <div t-field='evaluacion.mensaje' class="oe_no_empty pb-5 text-break"/>
+                        </t>
+                        <t t-else="">
+                            <p class="oe_no_empty pb-5 text-break">
+                                Por favor haz clic en el botón “Responder” para iniciar tu Evaluacion. <br /> 
+                                Te recordamos que todas tus respuestas son confidenciales.
+                            </p>
+                        </t>
+                        <p>
+                            Disponible del <span t-field="evaluacion.fecha_inicio"/> al <span t-field="evaluacion.fecha_final"/>
                         </p>
                     </div>
                 </div> 
@@ -205,7 +212,7 @@
     <!-- Open question -->
     <template id="question_text_box" name="Preguntas: pregunta abierta">
         <div t-att-id="question.id">
-            <div class="o_survey_question_title mb-3">
+            <div class="o_survey_question_title mb-3" style="font-size: 20px;">
                 <span t-esc="str(numero_pregunta) + '.- '" class="o_survey_question_number"/>
                 <span t-field="question.pregunta_texto"/>
             </div>
@@ -219,41 +226,45 @@
         </div>
     </template>
 
-    <!-- Matrix question -->
-    <template id="question_matrix" name="Pregunta: Opcion multiple">
-        <div t-att-id="question.id">
-            <div class="o_survey_question_title mb-3">
-                <span t-esc="str(numero_pregunta) + '.- '" class="o_survey_question_number"/>
-                <span t-field="question.pregunta_texto"/>
-            </div>
-            <table class="table table-borderless o_survey_question_matrix text-white text-center mb-0"
-                t-att-data-name="question.id"
-                t-att-data-question-type="question.tipo"
-                t-att-data-sub-questions="question.pregunta_texto">
-                <thead>
-                    <tr>
-                        <th class="fw-normal" t-foreach="question.opcion_ids" t-as="col_label"><span t-field="col_label.opcion_texto" /></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- For matrix, we have an extra check because we have rows * columns total options -->
-                    <tr class="bg-white text-white" t-foreach="question" t-as="row_label" t-att-id="row_label">
-                        <t t-foreach="question.opcion_ids" t-as="col_label">
-                            <td t-att-class="'o_survey_matrix_btn text-primary position-relative %s'% ('o_survey_selected' if answer else '')">
+    
+<!-- Matrix question -->
+<template id="question_matrix" name="Pregunta: Opcion multiple">
+    <div t-att-id="question.id">
+        <div class="o_survey_question_title mb-3"  style="font-size: 20px;">
+            <span t-esc="str(numero_pregunta) + '.- '" class="o_survey_question_number"/>
+            <span t-field="question.pregunta_texto"/>
+        </div>
+        <table class="table table-borderless o_survey_question_matrix text-white text-center mb-0"
+            t-att-data-name="question.id"
+            t-att-data-question-type="question.tipo"
+            t-att-data-sub-questions="question.pregunta_texto">
+            <thead>
+                <tr>
+                    <th class="fw-normal" t-foreach="question.opcion_ids" t-as="col_label"><span t-field="col_label.opcion_texto" /></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- For matrix, we have an extra check because we have rows * columns total options -->
+                <tr class="bg-white text-white" t-foreach="question" t-as="row_label" t-att-id="row_label">
+                    <t t-foreach="question.opcion_ids" t-as="col_label">
+                        <td style="padding:0px; cursor:pointer;" t-att-class="'o_survey_matrix_btn text-primary position-relative %s'% ('o_survey_selected' if answer else '')">
+                            <label style="display: block; width: 100%; height: 100%; padding:8px; cursor:pointer;">
                                 <input t-att-type="'radio'"
                                     t-att-name="'%s_%s' % (question.id, row_label.id)" 
                                     t-att-value="col_label.id"
                                     t-att-data-row-id="row_label.id"
                                     t-att-data-col-id="col_label"
-                                    class="o_survey_form_choice_item"
-                                    required="required"/>
-                            </td>
-                        </t>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </template>
+                                    class="o_survey_form_choice_item "
+                                    required="required"
+                                    style=" width: 100%; height: 100%; cursor:pointer;"/>
+                            </label>
+                        </td>
+                    </t>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</template>
 
     <!-- Scale question -->
     <template id="question_scale" name="Pregunta: escala">
@@ -262,7 +273,7 @@
             <t t-set="desc" t-value="['4', '3', '2', '1', '0']"/>
             <t t-set="asc" t-value="['0', '1', '2', '3', '4']"/>
 
-            <div class="o_survey_question_title mb-3">
+            <div class="o_survey_question_title mb-3"  style="font-size: 20px;">
                 <span t-esc="str(numero_pregunta) + '.- '" class="o_survey_question_number"/>
                 <span t-field="question.pregunta_texto"/>
             </div>
@@ -281,24 +292,32 @@
                         <!-- iterador -->
                         <t t-set="iterador" t-value="0"/>
                         <t t-foreach="opciones" t-as="col_label">
-                            <td t-att-class="'o_survey_matrix_btn text-primary position-relative %s'% ('o_survey_selected' if answer else '')">
+                            <td style="padding:0px; cursor:pointer;" t-att-class="'o_survey_matrix_btn text-primary position-relative %s'% ('o_survey_selected' if answer else '')">
                                 <t t-if="row_label.ponderacion == 'descendente'">
+                                    <label  style="display: block; width: 100%; height: 100%; padding:8px; cursor:pointer;">
                                     <input t-att-type="'radio'"
                                         t-att-name="'%s_%s' % (question.id, row_label.id)" 
                                         t-att-value="desc[iterador]"
                                         t-att-data-row-id="row_label.id"
                                         t-att-data-col-id="col_label"
                                         class="o_survey_form_choice_item"
-                                        required="required"/>
+                                        required="required"
+                                        style=" width: 100%; height: 100%; cursor:pointer;"
+                                        />
+                                    </label>
                                 </t>
                                 <t t-else="">
+                                <label  style="display: block; width: 100%; height: 100%; padding:8px; cursor:pointer;">
                                     <input t-att-type="'radio'"
                                         t-att-name="'%s_%s' % (question.id, row_label.id)" 
                                         t-att-value="asc[iterador]"
                                         t-att-data-row-id="row_label.id"
                                         t-att-data-col-id="col_label"
                                         class="o_survey_form_choice_item"
-                                        required="required"/>
+                                        required="required"
+                                        style=" width: 100%; height: 100%; cursor:pointer;"
+                                        />
+                                </label>
                                 </t>
                             </td>
                             <t t-set="iterador" t-value="iterador + 1"/>
@@ -332,14 +351,19 @@
                     <!-- For matrix, we have an extra check because we have rows * columns total options -->
                     <tr class="bg-white text-white" t-foreach="question" t-as="row_label" t-att-id="row_label">
                         <t t-foreach="question.opcion_ids" t-as="col_label">
-                            <td t-att-class="'o_survey_matrix_btn text-primary position-relative %s'% ('o_survey_selected' if answer else '')">
+                            <td style="padding:0px;" t-att-class="'o_survey_matrix_btn text-primary position-relative %s'% ('o_survey_selected' if answer else '')">
+                            <label style="display: block; width: 100%; height: 100%; padding:8px; cursor:pointer;">
+
                                 <input t-att-type="'radio'"
                                     t-att-name="'%s_%s' % (question.id, row_label.id)" 
                                     t-att-value="col_label.id"
                                     t-att-data-row-id="row_label.id"
                                     t-att-data-col-id="col_label"
                                     class="o_survey_form_choice_item"
-                                    required="required"/>
+                                    required="required"
+                                    style=" width: 100%; height: 100%; cursor:pointer;"
+                                    />
+                            </label>
                             </td>
                         </t>
                     </tr>

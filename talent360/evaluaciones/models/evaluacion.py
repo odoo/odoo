@@ -1,4 +1,5 @@
 from odoo import api, models, fields
+from odoo import exceptions
 
 
 class Evaluacion(models.Model):
@@ -63,8 +64,18 @@ class Evaluacion(models.Model):
         string="Asignados",
     )
 
-    fecha_inicio = fields.Date()
-    fecha_final = fields.Date()
+    fecha_inicio = fields.Date(string="Ficha de inicio", required=True)
+    fecha_final = fields.Date(string="Fecha de finalización", required=True)
+
+    mensaje = fields.Text(string="Mensaje")
+
+    @api.constrains('fecha_inicio', 'fecha_final')
+    def check_fechas(self):
+        for record in self:
+            if record.fecha_inicio and record.fecha_final and record.fecha_inicio > record.fecha_final:
+                raise exceptions.ValidationError("La fecha de inicio debe ser anterior a la fecha final")
+
+    incluir_demograficos = fields.Boolean(string="Incluir datos demográficos", default = True)
 
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
@@ -87,6 +98,8 @@ class Evaluacion(models.Model):
                     "nombre": "",
                     "descripcion": "La evaluación Clima es una herramienta de medición de clima organizacional, cuyo objetivo es conocer la percepción que tienen las personas que laboran en los centros de trabajo, sobre aquellos aspectos sociales que conforman su entorno laboral y que facilitan o dificultan su desempeño.",
                     "tipo": "CLIMA",
+                    "fecha_inicio": fields.Date.today(),
+                    "fecha_final": fields.Date.today(),
                 }
             )
             self = new_evaluation
@@ -124,6 +137,8 @@ class Evaluacion(models.Model):
                     "nombre": "",
                     "descripcion": "La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.",
                     "tipo": "NOM_035",
+                    "fecha_inicio": fields.Date.today(),
+                    "fecha_final": fields.Date.today(),
                 }
             )
             self = new_evaluation
@@ -403,48 +418,194 @@ class Evaluacion(models.Model):
             }
 
         # Datos demograficos
-        datos_demograficos = []
+        if self.incluir_demograficos:
+            datos_demograficos = []
 
-        for usuario in self.usuario_ids:
-            usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
-                [("usuario_id.id", "=", usuario.id), ("evaluacion_id.id", "=", self.id)]
+            for usuario in self.usuario_ids:
+                usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
+                    [("usuario_id.id", "=", usuario.id), ("evaluacion_id.id", "=", self.id)]
+                )
+
+                if (
+                    usuario_evaluacion_rel
+                    and usuario_evaluacion_rel[0].contestada == "contestada"
+                ):
+                    datos_demograficos.append(self.obtener_datos_demograficos(usuario))
+
+            departamentos = defaultdict(int)
+            for dato in datos_demograficos:
+                departamentos[dato["departamento"]] += 1
+
+            generaciones = defaultdict(int)
+            for dato in datos_demograficos:
+                generaciones[dato["generacion"]] += 1
+                
+            puestos = defaultdict(int)
+            for dato in datos_demograficos:
+                puestos[dato["puesto"]] += 1
+
+            generos = defaultdict(int)
+            for dato in datos_demograficos:
+                dato["genero"] = dato["genero"].capitalize()
+                generos[dato["genero"]] += 1
+
+            # Organizar los parámetros en el orden deseado
+            parametros = {
+                "evaluacion": self,
+                "categorias": [categorias[nombre] for nombre in categorias_orden],
+                "dominios": [dominios[nombre] for nombre in dominios_orden],
+                "departamentos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in departamentos.items()],
+                "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
+                "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
+                "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],
+                "final": final,
+            }
+
+        else:
+            # Organizar los parámetros en el orden deseado
+            parametros = {
+                "evaluacion": self,
+                "categorias": [categorias[nombre] for nombre in categorias_orden],
+                "dominios": [dominios[nombre] for nombre in dominios_orden],
+                "final": final,
+            }
+
+        return parametros
+
+    def action_generar_datos_reporte_clima(self):
+        # Categorías para el reporte de clima laboral
+        categorias_clima = [
+            "Reclutamiento y Selección de Personal",
+            "Formación y Capacitación",
+            "Permanencia y Ascenso",
+            "Corresponsabilidad en la Vida Laboral, Familiar y Personal",
+            "Clima Laboral Libre de Violencia",
+            "Acoso y Hostigamiento",
+            "Accesibilidad",
+            "Respeto a la Diversidad",
+            "Condiciones Generales de Trabajo",
+        ]
+
+        # Estructura de datos para las categorías
+        detalles_categorias = [
+            {
+                "nombre": cat,
+                "valor": 0,
+                "color": "#000000",
+                "puntuacion": 0,
+                "puntuacion_maxima": 0,
+                "departamentos": [],
+            }
+            for cat in categorias_clima
+        ]
+
+        # Variables para acumular totales
+        total_puntuacion = 0
+        total_maximo_posible = 0
+
+        for pregunta in self.pregunta_ids:
+            if (
+                not pregunta.categoria
+                or dict(pregunta._fields["categoria"].selection).get(pregunta.categoria)
+                not in categorias_clima
+            ):
+                continue
+
+            categoria_actual = next(
+                (
+                    cat
+                    for cat in detalles_categorias
+                    if cat["nombre"]
+                    == dict(pregunta._fields["categoria"].selection).get(
+                        pregunta.categoria
+                    )
+                ),
+                None,
             )
 
-            if (
-                usuario_evaluacion_rel
-                and usuario_evaluacion_rel[0].contestada == "contestada"
-            ):
-                datos_demograficos.append(self.obtener_datos_demograficos(usuario))
-                
-        departamentos = defaultdict(int)
-        for dato in datos_demograficos:
-            departamentos[dato["departamento"]] += 1
+            if categoria_actual is None:
+                continue
 
-        generaciones = defaultdict(int)
-        for dato in datos_demograficos:
-            generaciones[dato["generacion"]] += 1
-            
-        puestos = defaultdict(int)
-        for dato in datos_demograficos:
-            puestos[dato["puesto"]] += 1
+            valor_pregunta = 0
+            maximo_pregunta = 0
 
-        generos = defaultdict(int)
-        for dato in datos_demograficos:
-            dato["genero"] = dato["genero"].capitalize()
-            generos[dato["genero"]] += 1
+            for respuesta in pregunta.respuesta_ids:
+                valor_respuesta = int(respuesta.respuesta_texto)
+                valor_pregunta += valor_respuesta
+                maximo_pregunta += 4  # Suponiendo un máximo de 4 para cada respuesta en escala
 
-        # Organizar los parámetros en el orden deseado
+                nombre_departamento = respuesta.usuario_id.department_id.name if respuesta.usuario_id.department_id else "Sin departamento"
+                departamento = next(
+                    (
+                        dept
+                        for dept in categoria_actual["departamentos"]
+                        if dept["nombre"] == nombre_departamento
+                    ),
+                    None,
+                )
+                if departamento is None:
+                    departamento = {
+                        "nombre": nombre_departamento,
+                        "color": "#000000",  
+                        "puntos": 0,
+                        "puntos_maximos": 0,
+                    }
+                    categoria_actual["departamentos"].append(departamento)
+
+                departamento["puntos"] += valor_respuesta
+                departamento["puntos_maximos"] += 4
+
+            total_puntuacion += valor_pregunta
+            total_maximo_posible += maximo_pregunta
+            categoria_actual["puntuacion"] += valor_pregunta
+            categoria_actual["puntuacion_maxima"] += maximo_pregunta
+            categoria_actual["color"] = self.asignar_color_clima(total_puntuacion)
+    
+
+        for categoria in detalles_categorias:
+            if categoria["puntuacion_maxima"] > 0:
+                categoria["valor"] = (
+                    categoria["puntuacion"] / categoria["puntuacion_maxima"]
+                ) * 100
+
+            for dept in categoria["departamentos"]:
+                if dept["puntos_maximos"] > 0:
+                    dept["valor"] = (dept["puntos"] / dept["puntos_maximos"]) * 100
+                    dept["color"] = self.asignar_color_clima(dept["valor"])
+
+        total_porcentaje = round((
+            (total_puntuacion / total_maximo_posible) * 100
+            if total_maximo_posible > 0
+            else 0
+        ),2)
+
+
+        # Datos demograficos
+        # datos_demograficos = []
+
+        # for usuario in self.usuario_ids:
+        #     usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
+        #         [("usuario_id", "=", usuario.id), ("evaluacion_id", "=", self.id)]
+        #     )
+
+        #     if (
+        #         usuario_evaluacion_rel
+        #         and usuario_evaluacion_rel[0].contestada == "contestada"
+        #     ):
+        #         datos_demograficos.append(self.obtener_datos_demograficos(usuario))
+
+        # Parámetros para el template
         parametros = {
             "evaluacion": self,
-            "categorias": [categorias[nombre] for nombre in categorias_orden],
-            "dominios": [dominios[nombre] for nombre in dominios_orden],
-            "departamentos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in departamentos.items()],
-            "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
-            "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
-            "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],
-            "final": final,
+            "categorias": detalles_categorias,
+            "total": total_puntuacion,
+            "total_maximo": total_maximo_posible,
+            "total_porcentaje": total_porcentaje,
+            #"datos_demograficos": datos_demograficos,
         }
 
+        print("Parametros para el reporte de clima:", parametros)
+        print (categoria["valor"])
         return parametros
 
     def action_generar_datos_reporte_clima(self):
@@ -819,7 +980,6 @@ class Evaluacion(models.Model):
         
         return datos
     
-
     def action_get_evaluaciones(self, evaluacion_id):
         """
         Obtiene las preguntas asociadas a la evaluación.
@@ -851,3 +1011,16 @@ class Evaluacion(models.Model):
                 "sticky": False,
             },
         }
+    
+    def write(self, vals):
+        """ 
+        Sobrescribe el método write para incluir el envío de enlaces al guardar de forma automática
+        o manual la evaluación.
+
+        :return: Sobreescribe la asignación de usuarios si hubo cambio en ellos.
+        """
+        resultado = super(Evaluacion, self).write(vals)
+        if 'usuario_ids' in vals or self.usuario_ids:
+            self.enviar_evaluacion_action()
+        return resultado
+

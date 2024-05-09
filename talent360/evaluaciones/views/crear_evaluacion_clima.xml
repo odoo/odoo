@@ -6,6 +6,9 @@
         <field name="model">evaluacion</field>
         <field name="arch" type="xml">
             <form string="Clima" create="false">
+                <header>
+                    <button name="evaluacion_action_tree" string="Guardar" type="object" class="btn-primary my-3"/>
+                </header>
                 <sheet>
                     <h1>Evaluación de Clima Laboral</h1>
                     <br></br>
@@ -22,6 +25,10 @@
                         <field name="fecha_final">
                             <widget name="date"/>
                         </field>
+                        <field name="incluir_demograficos"/>
+                    </group>
+                    <group>
+                        <field name="mensaje"/>
                     </group>
                     <group>
                         <group>
@@ -33,9 +40,6 @@
                             </page>
                             <page string="Asignados">
                                 <field name="usuario_ids"/>
-                                <div>
-                                    <button name="enviar_evaluacion_action" string="Enviar Correo" type="object" class="btn-primary mx-3" confirm="¿Estás seguro de enviar la encuesta?"/>
-                                </div>
                             </page>
                             <page string="Semaforización">
                                 <style>
@@ -165,9 +169,6 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div>
-                                    <button name="evaluacion_action_tree" string="Finalizar" type="object" class="btn-primary mx-3 my-3"/>
-                                </div>
                             </page>
                         </notebook>
                     </group>
