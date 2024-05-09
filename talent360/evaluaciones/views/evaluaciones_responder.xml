@@ -90,10 +90,17 @@
                 </div>
                 <div class="row">
                     <div  class="col-lg-10">
-                        <p class="oe_no_empty pb-5 text-break">
-                            Por favor haz clic en el botón “Responder” para iniciar tu Evaluacion. <br /> 
-                            Te recordamos que todas tus respuestas son confidenciales. <br /><br />
-                            Disponible del <span t-field="evaluacion.fecha_inicio"/> al <span t-field="evaluacion.fecha_final" />
+                        <t t-if="evaluacion.mensaje">
+                            <div t-field='evaluacion.mensaje' class="oe_no_empty pb-5 text-break"/>
+                        </t>
+                        <t t-else="">
+                            <p class="oe_no_empty pb-5 text-break">
+                                Por favor haz clic en el botón “Responder” para iniciar tu Evaluacion. <br /> 
+                                Te recordamos que todas tus respuestas son confidenciales.
+                            </p>
+                        </t>
+                        <p>
+                            Disponible del <span t-field="evaluacion.fecha_inicio"/> al <span t-field="evaluacion.fecha_final"/>
                         </p>
                     </div>
                 </div> 
