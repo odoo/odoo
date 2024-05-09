@@ -542,27 +542,15 @@ class Evaluacion(models.Model):
                     categoria["puntuacion"] / categoria["puntuacion_maxima"]
                 ) * 100
 
+            for dept in categoria["departamentos"]:
+                if dept["puntos_maximos"] > 0:
+                    dept["valor"] = (dept["puntos"] / dept["puntos_maximos"]) * 100
+
         total_porcentaje = round((
             (total_puntuacion / total_maximo_posible) * 100
             if total_maximo_posible > 0
             else 0
         ),2)
-
-          # Calcular la puntuación total de cada departamento
-          
-    # Calcular la puntuación total de cada departamento
-        departamentos_totales = {}
-        for categoria in detalles_categorias:
-            for dept in categoria["departamentos"]:
-                if dept["nombre"] not in departamentos_totales:
-                    departamentos_totales[dept["nombre"]] = {
-                        "puntos": 0,
-                        "puntos_maximos": 0,
-                        "color": "#000000"
-                    }
-                departamentos_totales[dept["nombre"]]["puntos"] += dept["puntos"]
-                departamentos_totales[dept["nombre"]]["puntos_maximos"] += dept["puntos_maximos"]
-                departamentos_totales[dept["nombre"]]["color"]= self.asignar_color_clima(departamentos_totales[dept["nombre"]]["puntos"])
 
 
         # Datos demograficos
@@ -586,7 +574,6 @@ class Evaluacion(models.Model):
             "total": total_puntuacion,
             "total_maximo": total_maximo_posible,
             "total_porcentaje": total_porcentaje,
-            "departamentos_totales": departamentos_totales,
             #"datos_demograficos": datos_demograficos,
         }
 
