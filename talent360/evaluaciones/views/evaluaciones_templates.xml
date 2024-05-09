@@ -393,7 +393,7 @@
                         <div class="survey_page container-fluid d-flex flex-column">
                             <div class="survey_section">
                                 <h4><t t-esc="categoria['nombre']"/></h4>
-                                <div class="survey_graph" t-att-id="'grafica_pie_' + categoria['nombre']" t-att-data-graph-type="'pie'" t-att-data-graph-data="[categoria, {'nombre':'', 'valor': 100 - categoria['valor'], 'color': '#9c9c9c'}]">
+                                <div class="survey_graph" t-att-id="'grafica_pie_' + categoria['nombre']" t-att-data-graph-type="'doughnut'" t-att-data-graph-data="[categoria, {'nombre':'', 'valor': 100 - categoria['valor'], 'color': '#9c9c9c'}]">
                                     <canvas t-att-id="'canvas_pie_' + categoria['nombre']"></canvas>
                                 </div>
                                 <h4>Resumen por departamentos</h4>
@@ -407,68 +407,7 @@
                     </t>
                 </div>
             </div>
-
-
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <script type="text/javascript">
-                document.addEventListener('DOMContentLoaded', function () {
-                    var graphs = document.querySelectorAll('.survey_graph');
-                    graphs.forEach(function (graph) {
-                        var canvas = graph.querySelector('canvas');
-                        var ctx = canvas.getContext('2d');
-                        var data = graph.getAttribute('data-graph-data');
-                        
-                        if (data) {
-                            data = JSON.parse(data.replace(/'/g, '"'));
-                            var chartData = {
-                                labels: data.labels,  // Asegúrate de que 'labels' es parte de la estructura de datos
-                                datasets: [{
-                                    label: data.label,  // Asegúrate de que 'label' es parte de la estructura de datos
-                                    data: data.values,  // Asegúrate de que 'values' es parte de la estructura de datos
-                                    backgroundColor: [
-                                        'rgba(255, 99, 132, 0.2)',
-                                        'rgba(54, 162, 235, 0.2)',
-                                        'rgba(255, 206, 86, 0.2)',
-                                        'rgba(75, 192, 192, 0.2)',
-                                        'rgba(153, 102, 255, 0.2)',
-                                        'rgba(255, 159, 64, 0.2)'
-                                    ],
-                                    borderColor: [
-                                        'rgba(255, 99, 132, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(255, 206, 86, 1)',
-                                        'rgba(75, 192, 192, 1)',
-                                        'rgba(153, 102, 255, 1)',
-                                        'rgba(255, 159, 64, 1)'
-                                    ],
-                                    borderWidth: 1
-                                }]
-                            };
-                            new Chart(ctx, {
-                                type: graph.getAttribute('data-graph-type'),  // Utiliza el tipo de gráfico especificado
-                                data: chartData,
-                                options: {
-                                    responsive: true,
-                                    plugins: {
-                                        legend: {
-                                            display: true,
-                                            position: 'top'
-                                        }
-                                    }
-                                }]
-                            });
-                        }
-                    });
-                });
-            </script>
         </template>
-
-
-
-
-
-
-
         <template id="pregunta_resultados_texto" name="Question: text result (text_box, char_box)">
             <t t-set="respuestas" t-value="datos_pregunta['respuestas']"/>
             <t t-set="first_page_records_count" t-value="len(respuestas) if len(respuestas) &lt; limite_registros else limite_registros"/>
