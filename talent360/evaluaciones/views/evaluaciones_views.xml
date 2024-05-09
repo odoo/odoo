@@ -105,6 +105,7 @@
         <field name="model">evaluacion</field>
         <field name="arch" type="xml">
             <form create="false" duplicate="0">
+                <field name="tipo" invisible="1" readonly="1"/>
                 <header>
                     <!-- Generación de reporte de una evaluación-->
                     <button name="evaluacion_action_tree" string="Guardar" type="object" class="btn-primary my-3"/>
