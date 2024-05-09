@@ -337,7 +337,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
             options: {
                 responsive: true,
                 aspectRatio: 2,
-                cutout: '50%',
+                cutout: '70%',
                 plugins: {
                     legend: {
                         display: false,
@@ -347,7 +347,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                     },
                     centerText: {
                         display: true,
-                        text: 'Total: ' + this.counts.reduce((a, b) => a + b, 0),
+                        text: this.counts[0].toFixed(2) + '%',
                         font: {
                             size: '20'
                         }
