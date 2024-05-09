@@ -1,5 +1,6 @@
 from odoo import api, models, fields
 from collections import defaultdict
+from odoo import exceptions
 
 
 class Evaluacion(models.Model):
@@ -17,7 +18,7 @@ class Evaluacion(models.Model):
 
     _name = "evaluacion"
     _description = "Evaluacion de pesonal"
-
+    _rec_name = "nombre"
     nombre = fields.Char(required=True)
 
     tipo = fields.Selection(
@@ -64,8 +65,16 @@ class Evaluacion(models.Model):
         string="Asignados",
     )
 
-    fecha_inicio = fields.Date()
-    fecha_final = fields.Date()
+    fecha_inicio = fields.Date(string="Ficha de inicio", required=True)
+    fecha_final = fields.Date(string="Fecha de finalización", required=True)
+
+    mensaje = fields.Text(string="Mensaje")
+
+    @api.constrains('fecha_inicio', 'fecha_final')
+    def check_fechas(self):
+        for record in self:
+            if record.fecha_inicio and record.fecha_final and record.fecha_inicio > record.fecha_final:
+                raise exceptions.ValidationError("La fecha de inicio debe ser anterior a la fecha final")
 
     incluir_demograficos = fields.Boolean(string="Incluir datos demográficos", default = True)
 
@@ -90,6 +99,8 @@ class Evaluacion(models.Model):
                     "nombre": "",
                     "descripcion": "La evaluación Clima es una herramienta de medición de clima organizacional, cuyo objetivo es conocer la percepción que tienen las personas que laboran en los centros de trabajo, sobre aquellos aspectos sociales que conforman su entorno laboral y que facilitan o dificultan su desempeño.",
                     "tipo": "CLIMA",
+                    "fecha_inicio": fields.Date.today(),
+                    "fecha_final": fields.Date.today(),
                 }
             )
             self = new_evaluation
@@ -127,6 +138,8 @@ class Evaluacion(models.Model):
                     "nombre": "",
                     "descripcion": "La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.",
                     "tipo": "NOM_035",
+                    "fecha_inicio": fields.Date.today(),
+                    "fecha_final": fields.Date.today(),
                 }
             )
             self = new_evaluation
@@ -404,7 +417,7 @@ class Evaluacion(models.Model):
 
             for usuario in self.usuario_ids:
                 usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
-                    [("usuario_id", "=", usuario.id), ("evaluacion_id", "=", self.id)]
+                    [("usuario_id.id", "=", usuario.id), ("evaluacion_id.id", "=", self.id)]
                 )
 
                 if (
@@ -412,7 +425,7 @@ class Evaluacion(models.Model):
                     and usuario_evaluacion_rel[0].contestada == "contestada"
                 ):
                     datos_demograficos.append(self.obtener_datos_demograficos(usuario))
-                    
+
             departamentos = defaultdict(int)
             for dato in datos_demograficos:
                 departamentos[dato["departamento"]] += 1
@@ -700,3 +713,16 @@ class Evaluacion(models.Model):
                 "sticky": False,
             },
         }
+    
+    def write(self, vals):
+        """ 
+        Sobrescribe el método write para incluir el envío de enlaces al guardar de forma automática
+        o manual la evaluación.
+
+        :return: Sobreescribe la asignación de usuarios si hubo cambio en ellos.
+        """
+        resultado = super(Evaluacion, self).write(vals)
+        if 'usuario_ids' in vals or self.usuario_ids:
+            self.enviar_evaluacion_action()
+        return resultado
+
