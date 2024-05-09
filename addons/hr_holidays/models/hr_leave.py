@@ -447,7 +447,7 @@ class HolidaysRequest(models.Model):
         for leave in employee_leaves:
             if not leave.date_from or not leave.date_to:
                 continue
-            employees_by_dates_calendar[(leave.date_from, leave.date_to, resource_calendar or leave.resource_calendar_id)] += leave.employee_id
+            employees_by_dates_calendar[(leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, resource_calendar or leave.resource_calendar_id)] += leave.employee_id
         # We force the company in the domain as we are more than likely in a compute_sudo
         domain = [('time_type', '=', 'leave'),
                   ('company_id', 'in', self.env.companies.ids + self.env.context.get('allowed_company_ids', [])),
@@ -456,12 +456,13 @@ class HolidaysRequest(models.Model):
                   '|', ('holiday_id', '=', False), ('holiday_id', 'not in', employee_leaves.ids)]
         # Precompute values in batch for performance purposes
         work_time_per_day_mapped = {
-            (date_from, date_to, calendar): employees._list_work_time_per_day(date_from, date_to, domain=domain, calendar=calendar)
-            for (date_from, date_to, calendar), employees in employees_by_dates_calendar.items()
+            (date_from, date_to, calendar): employees.with_context(
+                    compute_leaves=not include_public_holidays_in_duration)._list_work_time_per_day(date_from, date_to, domain=domain, calendar=calendar)
+            for (date_from, date_to, include_public_holidays_in_duration, calendar), employees in employees_by_dates_calendar.items()
         }
         work_days_data_mapped = {
-            (date_from, date_to, calendar): employees._get_work_days_data_batch(date_from, date_to, domain=domain, calendar=calendar)
-            for (date_from, date_to, calendar), employees in employees_by_dates_calendar.items()
+            (date_from, date_to, calendar): employees._get_work_days_data_batch(date_from, date_to, compute_leaves=not include_public_holidays_in_duration, domain=domain, calendar=calendar)
+            for (date_from, date_to, include_public_holidays_in_duration, calendar), employees in employees_by_dates_calendar.items()
         }
         for leave in self:
             calendar = resource_calendar or leave.resource_calendar_id
@@ -483,7 +484,7 @@ class HolidaysRequest(models.Model):
                     datetime.combine(leave.date_from.date(), time.min),
                     datetime.combine(leave.date_from.date(), time.max),
                     False)
-                hours = calendar.get_work_hours_count(leave.date_from, leave.date_to)
+                hours = calendar.get_work_hours_count(leave.date_from, leave.date_to, compute_leaves=not leave.holiday_status_id.include_public_holidays_in_duration)
                 days = hours / (today_hours or HOURS_PER_DAY)
             if leave.leave_type_request_unit == 'day' and check_leave_type:
                 days = ceil(days)
