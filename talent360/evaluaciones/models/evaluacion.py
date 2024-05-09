@@ -115,7 +115,6 @@ class Evaluacion(models.Model):
             template = self.env["template"].browse(template_id)
             if template:
                 pregunta_ids = template.pregunta_ids.ids
-                print("IDs de preguntas:", pregunta_ids)
                 self.pregunta_ids = [(6, 0, pregunta_ids)]
 
         return self
@@ -391,7 +390,7 @@ class Evaluacion(models.Model):
             for respuesta in pregunta.respuesta_ids:
                 if respuesta.evaluacion_id.id != self.id:
                     continue
-                valor_respuesta = int(respuesta.respuesta_texto)
+                valor_respuesta = respuesta.valor_respuesta
                 valor_pregunta += valor_respuesta
                 final += valor_respuesta
 
@@ -530,10 +529,11 @@ class Evaluacion(models.Model):
             valor_pregunta = 0
             maximo_pregunta = 0
 
+
             for respuesta in pregunta.respuesta_ids:
-                valor_respuesta = int(respuesta.respuesta_texto)
+                valor_respuesta = respuesta.valor_respuesta
                 valor_pregunta += valor_respuesta
-                maximo_pregunta += 4  # Suponiendo un máximo de 4 para cada respuesta en escala
+                maximo_pregunta += pregunta.valor_maximo  # Suponiendo un máximo de 4 para cada respuesta en escala
 
                 nombre_departamento = respuesta.usuario_id.department_id.name if respuesta.usuario_id.department_id else "Sin departamento"
                 departamento = next(
@@ -635,8 +635,6 @@ class Evaluacion(models.Model):
                 "total_porcentaje": total_porcentaje,
             }
 
-        # Parámetros para el template
-        print(parametros)
         return parametros
 
     def asignar_color(self, valor, categoria=None, dominio=None):
