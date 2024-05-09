@@ -11,24 +11,24 @@ const CouponToasterWidget = publicWidget.Widget.extend({
 
     start() {
         let options = {};
-        const $content = this.$('.coupon-message-content');
-        const $title = this.$('.coupon-message-title');
+        const contentEl = this.el.querySelector('.coupon-message-content');
+        const titleEl = this.el.querySelector('.coupon-message-title');
         let message = null;
 
-        if ($content.length) {
-            message = $content[0].innerHTML;
-            if ($title.length) {
-                Object.assign(options, {title: $title[0].innerHTML});
+        if (contentEl) {
+            message = contentEl.innerHTML;
+            if (titleEl) {
+                Object.assign(options, { title: titleEl.innerHTML });
             }
-        } else if ($title.length) {
-            message = $title[0].innerHTML;
+        } else if (titleEl) {
+            message = titleEl.innerHTML;
         }
 
-        if (this.$el.hasClass('coupon-info-message')) {
+        if (this.el.classList.contains('coupon-info-message')) {
             this.notification.add(message, Object.assign({type: 'success'}, options));
-        } else if (this.$el.hasClass('coupon-error-message')) {
+        } else if (this.el.classList.contains('coupon-error-message')) {
             this.notification.add(message, Object.assign({type: 'danger'}, options));
-        } else if (this.$el.hasClass('coupon-warning-message')) {
+        } else if (this.el.classList.contains('coupon-warning-message')) {
             this.notification.add(message, Object.assign({type: 'warning'}, options));
         }
 
