@@ -619,7 +619,8 @@ class Evaluacion(models.Model):
             #"datos_demograficos": datos_demograficos,
         }
 
-        print(parametros)
+        print("Parametros para el reporte de clima:", parametros)
+        print (categoria["valor"])
         return parametros
 
     def asignar_color(self, valor, categoria=None, dominio=None):

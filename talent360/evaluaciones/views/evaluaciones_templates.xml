@@ -345,12 +345,13 @@
                 <div class="survey_section">
                     <div class="category_section">
                         <h4><t t-esc="categoria['nombre']"/></h4>
+                        <h3><t t-esc="categoria['valor']"/></h3>
                     </div>
-                    <div class="survey_graph" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'pie'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
-                        <canvas t-att-id="'canvas_barras_categorias_clima'"></canvas>
-                    </div>  
+                    <div class="survey_graph" t-att-id="'grafica_doughnut_categorias_clima'" t-att-data-graph-type="'bar'" t-att-data-graph-data="categoria">
+                        <canvas t-att-id="'canvas_doughnut_categorias_clima'"></canvas>
+                    </div>
                 </div>
-            </div>
+            </div>     
 
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script type="text/javascript">
@@ -362,15 +363,12 @@
                         var data = graph.dataset.graphData;
                         
                         if (data) {
-                            data = JSON.parse(data);
+                            data = JSON.parse(data.replace(/'/g, '"'));
                             var chartData = {
-                                labels: data.labels,  // Actualiza esto según tu estructura de datos
+                                labels: [data.nombre],
                                 datasets: [{
-                                    label: data.label,  // Actualiza esto según tu estructura de datos
-                                    data: data.values,  // Actualiza esto según tu estructura de datos
-                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                                    borderColor: 'rgba(255, 99, 132, 1)',
-                                    borderWidth: 1
+                                    data: [data.valor],
+                                    backgroundColor: ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56', '#32a852'],
                                 }]
                             };
                             new Chart(ctx, {
@@ -378,22 +376,48 @@
                                 data: chartData,
                                 options: {
                                     responsive: true,
-                                    scale: {
-                                        ticks: {
-                                            beginAtZero: true
+                                    aspectRatio: 2,
+                                    cutout: '50%',
+                                    plugins: {
+                                        legend: {
+                                            display: false,
+                                        },
+                                        tooltip: {
+                                            enabled: false,
+                                        },
+                                        centerText: {
+                                            display: true,
+                                            text: data.valor.toFixed(2) + '%',
+                                            font: {
+                                                size: '20'
+                                            }
+                                        },
+                                    }
+                                },
+                                plugins: [{
+                                    beforeDraw: function(chart) {
+                                        if (chart.config.options.plugins.centerText) {
+                                            const width = chart.width,
+                                                height = chart.height,
+                                                ctx = chart.ctx;
+                                            ctx.restore();
+                                            const fontSize = (height / 114).toFixed(2);
+                                            ctx.font = fontSize + "em sans-serif";
+                                            ctx.textBaseline = "middle";
+                                            const text = chart.config.options.plugins.centerText.text,
+                                                textX = Math.round((width - ctx.measureText(text).width) / 2),
+                                                textY = height / 2;
+                                            ctx.fillText(text, textX, textY);
+                                            ctx.save();
                                         }
                                     }
-                                }
+                                }]
                             });
                         }
                     });
                 });
             </script>
         </template>
-
-
-
-
 
 
         <template id="pregunta_resultados_texto" name="Question: text result (text_box, char_box)">
