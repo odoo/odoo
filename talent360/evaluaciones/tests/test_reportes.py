@@ -24,19 +24,22 @@ class TestReportes(TransactionCase):
         pregunta1 = self.env["pregunta"].create(
             {
                 "pregunta_texto": "Pregunta 1",
-                "tipo": "open_question",
+                "tipo": "escala",
+                "categoria": "reclutamiento_y_seleccion_de_personal",
             }
         )
         pregunta2 = self.env["pregunta"].create(
             {
                 "pregunta_texto": "Pregunta 2",
-                "tipo": "multiple_choice",
+                "tipo": "escala",
+                "categoria": "reclutamiento_y_seleccion_de_personal",
             }
         )
         pregunta3 = self.env["pregunta"].create(
             {
                 "pregunta_texto": "Pregunta 3",
                 "tipo": "escala",
+                "categoria": "formacion_y_capacitacion",
             }
         )
 
@@ -48,30 +51,30 @@ class TestReportes(TransactionCase):
         # Crear respuestas para las preguntas
         preguntas_respuestas = {
             pregunta1.id: [
-                "Respuesta 1",
-                "Respuesta 1",
-                "Respuesta 1",
-                "Respuesta 2",
-                "Respuesta 2",
-                "Respuesta 3",
-                "Respuesta 3",
-                "Respuesta 3",
-                "Respuesta 3",
-                "Respuesta 3",
+                "1",
+                "1",
+                "1",
+                "2",
+                "2",
+                "3",
+                "3",
+                "3",
+                "3",
+                "3",
             ],
             pregunta2.id: [
-                "Respuesta 1",
-                "Respuesta 1",
-                "Respuesta 1",
-                "Respuesta 2",
-                "Respuesta 2",
-                "Respuesta 3",
-                "Respuesta 3",
-                "Respuesta 3",
-                "Respuesta 3",
-                "Respuesta 3",
-                "Respuesta 2",
-                "Respuesta 3",
+                "1",
+                "1",
+                "1",
+                "2",
+                "2",
+                "3",
+                "3",
+                "3",
+                "3",
+                "3",
+                "2",
+                "3",
             ],
             pregunta3.id: [
                 "5",
@@ -90,6 +93,31 @@ class TestReportes(TransactionCase):
             ],
         }
 
+        # Create a department
+        department = self.env["hr.department"].create(
+            {
+                "name": "Test Department",
+            }
+        )
+
+        # Create a user
+        user = self.env["res.users"].create(
+            {
+                "name": "Test User",
+                "login": "testuser",
+                "password": "testuser",
+            }
+        )
+
+        # Create an employee linked to the user and department
+        employee = self.env["hr.employee"].create(
+            {
+                "name": "Test Employee",
+                "user_id": user.id,
+                "department_id": department.id,
+            }
+        )
+
         # Crear respuestas para las preguntas
         for pregunta, respuestas in preguntas_respuestas.items():
             for respuesta in respuestas:
@@ -98,6 +126,7 @@ class TestReportes(TransactionCase):
                         "pregunta_id": pregunta,
                         "evaluacion_id": self.evaluacion.id,
                         "respuesta_texto": respuesta,
+                        "usuario_id": user.id,
                     }
                 )
 
@@ -127,9 +156,9 @@ class TestReportes(TransactionCase):
                 self.assertEqual(
                     pregunta["respuestas_tabuladas"],
                     [
-                        {"texto": "Respuesta 1", "conteo": 3},
-                        {"texto": "Respuesta 2", "conteo": 2},
-                        {"texto": "Respuesta 3", "conteo": 5},
+                        {"nombre": "1", "valor": 3},
+                        {"nombre": "2", "valor": 2},
+                        {"nombre": "3", "valor": 5},
                     ],
                 )
             elif pregunta["pregunta"].tipo == "multiple_choice":
@@ -139,9 +168,9 @@ class TestReportes(TransactionCase):
                 self.assertEqual(
                     pregunta["respuestas_tabuladas"],
                     [
-                        {"texto": "Respuesta 1", "conteo": 3},
-                        {"texto": "Respuesta 2", "conteo": 3},
-                        {"texto": "Respuesta 3", "conteo": 6},
+                        {"texto": "1", "conteo": 3},
+                        {"texto": "2", "conteo": 3},
+                        {"texto": "3", "conteo": 6},
                     ],
                 )
             elif pregunta["pregunta"].tipo == "escala":
@@ -158,3 +187,11 @@ class TestReportes(TransactionCase):
                 )
             else:
                 self.fail("Tipo de pregunta no soportado")
+
+    def test_generar_reporte_clima(self):
+
+        print(f"Evaluacion: {self.evaluacion.pregunta_ids}")
+        params = self.evaluacion.action_generar_datos_reporte_clima()
+
+        print("PARAMSSSSSSS")
+        print(params)

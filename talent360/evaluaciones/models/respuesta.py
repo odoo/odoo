@@ -13,6 +13,16 @@ class Respuesta(models.Model):
     token = fields.Char(string="Token")
     opcion_id = fields.Many2one("opcion", string="Opción")
 
+    respuesta_mostrar = fields.Char(
+        string="Respuesta", compute="_compute_respuesta_mostrar"
+    )
+
+    valor_respuesta = fields.Float(
+        string="Valor de la respuesta",
+        compute="_compute_valor_respuesta",
+        store=False,
+    )
+
     def guardar_respuesta_action(
         self, radios, texto, evaluacion_id, usuario_id, pregunta_id, token, scale=False
     ):
@@ -85,3 +95,25 @@ class Respuesta(models.Model):
                 )
 
         return resp
+
+    def _compute_respuesta_mostrar(self):
+        for record in self:
+            respuesta_texto = "N/A"
+
+            if record.pregunta_id.tipo == "escala":
+                respuesta_texto = record.pregunta_id.mapeo_valores_escala[record.pregunta_id.ponderacion][record.respuesta_texto]
+            elif record.pregunta_id.tipo == "multiple_choice":
+                respuesta_texto = record.opcion_id.opcion_texto
+            else:
+                respuesta_texto = record.respuesta_texto
+
+            record.respuesta_mostrar = respuesta_texto
+
+    def _compute_valor_respuesta(self):
+        for record in self:
+            if record.pregunta_id.tipo == "escala":
+                record.valor_respuesta = int(record.respuesta_texto)
+            elif record.pregunta_id.tipo == "multiple_choice":
+                record.valor_respuesta = record.opcion_id.valor
+            else:
+                record.valor_respuesta = 0

@@ -33,6 +33,14 @@ class UsuarioEvaluacionRel(models.Model):
     )
     token = fields.Char(string="Token")
 
+    def write(self, vals):
+        """Sobreescribir el método write para enviar la evaluación al usuario."""
+        res = super(UsuarioEvaluacionRel, self).write(vals)
+        if "contestada" in vals:
+            self.evaluacion_id._compute_porcentaje_respuestas()
+
+        return res
+
     def action_get_estado(self, usuario_id, evaluacion_id, token):
         """Método para obtener el estado de la evaluación para el usuario.
 
@@ -42,7 +50,10 @@ class UsuarioEvaluacionRel(models.Model):
         """
         if usuario_id:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("usuario_id.id", "=", usuario_id), ("evaluacion_id.id", "=", evaluacion_id)]
+                [
+                    ("usuario_id.id", "=", usuario_id),
+                    ("evaluacion_id.id", "=", evaluacion_id),
+                ]
             )
         else:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
@@ -60,7 +71,10 @@ class UsuarioEvaluacionRel(models.Model):
 
         if usuario_id:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("usuario_id.id", "=", usuario_id), ("evaluacion_id.id", "=", evaluacion_id)]
+                [
+                    ("usuario_id.id", "=", usuario_id),
+                    ("evaluacion_id.id", "=", evaluacion_id),
+                ]
             )
         else:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
@@ -93,15 +107,15 @@ class UsuarioEvaluacionRel(models.Model):
                 user.write({"token": token, "contestada": "pendiente"})
 
                 mail_values = {
-                    'subject': 'Invitación para completar la evaluación',
-                    'email_from': self.env.user.email_formatted,
-                    'email_to': user.usuario_id.email,
-                    'body_html': f'<p>Hola, <strong>{user.usuario_id.name}</strong></p>'
-                                f'<p>en conocer tu opinión, a fin de identificar áreas de mejora que nos permitan mejorar</p>'
-                                f'<p>tu experiencia con nosotros. Por ello, te invitamos a responder la Encuesta de Clima</p>'
-                                f'<p>Laboral: <strong>(Nombre de evaluación)</strong></p>'
-                                f'<p>Disponible del <strong>(Fecha Inicio)</strong> al <strong>(Fecha Fin)</strong></p>'
-                                f'<a href="{base_url}/{evaluacion_id}/{token}">',
+                    "subject": "Invitación para completar la evaluación",
+                    "email_from": self.env.user.email_formatted,
+                    "email_to": user.usuario_id.email,
+                    "body_html": f"<p>Hola, <strong>{user.usuario_id.name}</strong></p>"
+                    f"<p>en conocer tu opinión, a fin de identificar áreas de mejora que nos permitan mejorar</p>"
+                    f"<p>tu experiencia con nosotros. Por ello, te invitamos a responder la Encuesta de Clima</p>"
+                    f"<p>Laboral: <strong>(Nombre de evaluación)</strong></p>"
+                    f"<p>Disponible del <strong>(Fecha Inicio)</strong> al <strong>(Fecha Fin)</strong></p>"
+                    f'<a href="{base_url}/{evaluacion_id}/{token}">',
                 }
 
                 mail = self.env["mail.mail"].create(mail_values)
