@@ -13,6 +13,19 @@ import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { deduceUrl } from "@point_of_sale/utils";
 
+export class DeleteConfirmationDialog extends AlertDialog {
+    static template = "point_of_sale.DeleteConfirmationDialog";
+    setup() {
+        this.pos = usePos();
+    }
+    deleteOrder() {
+        const orders = this.pos.models["pos.order"].getAll().filter((x) => x.state === "draft");
+        orders.forEach((order) => {
+            this.pos.removeOrder(order, true);
+        });
+        this.props.close();
+    }
+}
 export class ClosePosPopup extends Component {
     static components = { SaleDetailsButton, Input, Dialog };
     static template = "point_of_sale.ClosePosPopup";
@@ -229,15 +242,34 @@ export class ClosePosPopup extends Component {
         }
     }
     async handleClosingError(response) {
-        this.dialog.add(AlertDialog, {
-            title: response.title || "Error",
-            body: response.message,
-            confirmLabel: _t("Review Orders"),
-            confirm: () => {
-                this.props.close();
-                this.pos.onTicketButtonClick();
-            },
-        });
+        if (this.pos.config.module_pos_restaurant) {
+            this.dialog.add(ConfirmationDialog, {
+                title: response.title || "Error",
+                body: response.message,
+                confirm: async () => {
+                    const orders = this.pos.models["pos.order"]
+                        .getAll()
+                        .filter((x) => x.state === "draft");
+                    orders.forEach((order) => {
+                        this.pos.removeOrder(order, true);
+                    });
+                    this.props.close();
+                },
+                confirmLabel: _t("Delete Draft Orders"),
+                cancel: () => {},
+                cancelLabel: _t("Ok"),
+            });
+        } else {
+            this.dialog.add(AlertDialog, {
+                title: response.title || "Error",
+                body: response.message,
+                confirmLabel: _t("Review Orders"),
+                confirm: () => {
+                    this.props.close();
+                    this.pos.onTicketButtonClick();
+                },
+            });
+        }
         if (response.redirect) {
             window.location = "/web#action=point_of_sale.action_client_pos_menu";
         }
