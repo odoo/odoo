@@ -126,7 +126,7 @@ class TestReportes(TransactionCase):
                         "pregunta_id": pregunta,
                         "evaluacion_id": self.evaluacion.id,
                         "respuesta_texto": respuesta,
-                        "user_id": user.id,
+                        "usuario_id": user.id,
                     }
                 )
 
