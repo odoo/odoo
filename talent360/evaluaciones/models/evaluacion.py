@@ -625,6 +625,7 @@ class Evaluacion(models.Model):
                 "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
                 "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
                 "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],  
+                "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
             }
 
         else:
@@ -635,6 +636,7 @@ class Evaluacion(models.Model):
                 "total": total_puntuacion,
                 "total_maximo": total_maximo_posible,
                 "total_porcentaje": total_porcentaje,
+                "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
             }
 
         # Parámetros para el template
