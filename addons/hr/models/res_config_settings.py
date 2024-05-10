@@ -21,6 +21,7 @@ class ResConfigSettings(models.TransientModel):
     hr_presence_control_email_amount = fields.Integer(related="company_id.hr_presence_control_email_amount", readonly=False)
     hr_presence_control_ip_list = fields.Char(related="company_id.hr_presence_control_ip_list", readonly=False)
     hr_employee_self_edit = fields.Boolean(string="Employee Editing", config_parameter='hr.hr_employee_self_edit')
+    hr_notify_user_ids = fields.Many2many(related='company_id.hr_notify_user_ids', readonly=False)
 
     @api.constrains('module_hr_presence', 'hr_presence_control_email', 'hr_presence_control_ip')
     def _check_advanced_presence(self):
