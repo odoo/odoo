@@ -189,18 +189,20 @@ var RecentLinks = publicWidget.Widget.extend({
             self._updateNotification();
             self._updateFilters(filter);
         }, function () {
-            var message = _t("Unable to get recent links");
-            self.$el.append('<div class="alert alert-danger">' + message + '</div>');
+                const message = _t("Unable to get recent links");
+                self.el.append(`<div class="alert alert-danger">${message}</div>`);
         });
     },
     /**
      * @private
      */
     _addLink: function (link) {
-        var nbLinks = this.getChildren().length;
-        var recentLinkBox = new RecentLinkBox(this, link);
-        recentLinkBox.prependTo(this.$el);
-        $('.link-tooltip').tooltip();
+        const nbLinks = this.getChildren().length;
+        const recentLinkBox = new RecentLinkBox(this, link);
+        recentLinkBox.prependTo(this.el);
+        document.querySelectorAll("[data-bs-toggle='tooltip']").forEach((tooltip) => {
+            Tooltip.getOrCreateInstance(tooltip);
+        });
 
         if (nbLinks === 0) {
             this._updateNotification();
@@ -234,10 +236,12 @@ var RecentLinks = publicWidget.Widget.extend({
      */
     _updateNotification: function () {
         if (this.getChildren().length === 0) {
-            var message = _t("You don't have any recent links.");
-            $('.o_website_links_recent_links_notification').html('<div class="alert alert-info">' + message + '</div>');
+            const message = _t("You don't have any recent links.");
+            document.querySelector(
+                ".o_website_links_recent_links_notification"
+            ).innerHTML = `<div class="alert alert-info">${message}</div>`;
         } else {
-            $('.o_website_links_recent_links_notification').empty();
+            document.querySelector(".o_website_links_recent_links_notification").innerHTML = "";
         }
     },
 });
@@ -254,7 +258,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
      * @override
      */
     start: async function () {
-        var defs = [this._super.apply(this, arguments)];
+        const defs = [this._super.apply(this, arguments)];
 
         async function attachSelectComponent(model, placeholderText, el) {
             const props = {
@@ -284,11 +288,15 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
         );
 
         // Recent Links Widgets
-        this.recentLinks = new RecentLinks(this);
-        defs.push(this.recentLinks.appendTo($('#o_website_links_recent_links')));
-        this.recentLinks.getRecentLinks('newest');
+        this.recentLinks = new RecentLinks(this.el);
+        defs.push(this.recentLinks.attachTo(this.el.querySelector("#o_website_links_recent_links")));
+        this.recentLinks.getRecentLinks("newest");
 
-        $('[data-bs-toggle="tooltip"]').tooltip();
+        this.url_copy_animating = false;
+
+        Array.from(document.querySelectorAll("[data-bs-toggle='tooltip']")).forEach(function(node) {
+            Tooltip.getOrCreateInstance(node);
+        });
 
         return Promise.all(defs);
     },
@@ -326,7 +334,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onFormSubmit: function (ev) {
-        var self = this;
+        const self = this;
         ev.preventDefault();
         const generateLinkTrackerBtn = document.querySelector("#btn_shorten_url");
         if (generateLinkTrackerBtn.classList.contains("d-none")) {
@@ -359,11 +367,14 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
             if ('error' in result) {
                 // Handle errors
                 if (result.error === 'empty_url') {
-                    $('.notification').html('<div class="alert alert-danger">The URL is empty.</div>');
-                } else if (result.error === 'url_not_found') {
-                    $('.notification').html('<div class="alert alert-danger">URL not found (404)</div>');
+                    notificationElement.innerHTML =
+                        "<div class='alert alert-danger'>The URL is empty.</div>";
+                } else if (result.error === "url_not_found") {
+                    notificationElement.innerHTML =
+                        "<div class='alert alert-danger'>URL not found (404)</div>";
                 } else {
-                    $('.notification').html('<div class="alert alert-danger">An error occur while trying to generate your link. Try again later.</div>');
+                    notificationElement.innerHTML =
+                        "<div class='alert alert-danger'>An error occur while trying to generate your link. Try again later.</div>";
                 }
             } else {
                 // Link generated, clean the form and show the link
