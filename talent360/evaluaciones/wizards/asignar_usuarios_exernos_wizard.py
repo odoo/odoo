@@ -13,6 +13,21 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
 
     filename = fields.Char()
 
+
+    cambos_obligatorios = [
+            "Nombre Completo",
+            "Correo",
+            "Puesto",
+            "Nivel Jerárquico",
+            "Dirección",
+            "Gerencia",
+            "Jefatura",
+            "Género",
+            "Fecha de ingreso",
+            "Fecha de nacimiento",
+            "Ubicación/Región",
+        ]
+
     @api.constrains("filename")
     def _check_filename(self):
         if self.filename and not self.filename.lower().endswith(".csv"):
@@ -49,6 +64,8 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
                     "El formato de las fechas debe ser dd/mm/yyyy. Verifica las fechas de nacimiento e ingreso."
                 )
 
+            self.validar_fila(row)    
+
             users.append(
                 {
                     "nombre": row["Nombre Completo"],
@@ -84,26 +101,16 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
 
             evaluacion.write({"usuario_externo_ids": [(4, usuario_externo.id)]})
             
+
+
     def validar_columnas(self, columnas: list[str]):
         # Valida que las columnas del archivo CSV sean las correctas
-        required_columns = [
-            "Nombre Completo",
-            "Correo",
-            "Puesto",
-            "Nivel Jerárquico",
-            "Dirección",
-            "Gerencia",
-            "Jefatura",
-            "Género",
-            "Fecha de ingreso",
-            "Fecha de nacimiento",
-            "Ubicación/Región",
-        ]
+
 
         columnas_faltantes = []
         columnas_duplicadas = []
 
-        for column in required_columns:
+        for column in self.cambos_obligatorios:
             if column not in columnas:
                 columnas_faltantes.append(column)
 
@@ -120,6 +127,15 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
 
         if mensaje:
             raise exceptions.ValidationError(mensaje)
+
+    def validar_fila(self, row: dict):
+        campos = []
+        for campo in self.campos_obligatorios:
+            if not row.get(campo):
+                campos.append(campo)
+        
+        if campos:
+            raise exceptions.ValidationError(f"Los siguientes campos son requeridos: {', '.join(campos)}")     
 
     def descargar_template_usuarios(self):
         # Descarga el archivo /evaluaciones/static/csv/template_usuarios_externos.csv
