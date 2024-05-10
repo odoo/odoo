@@ -401,3 +401,24 @@ class TestInherits(TransactionCase):
         user.write({'image_1920': 'R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='})
         write_date_after = user.write_date
         self.assertNotEqual(write_date_before, write_date_after)
+
+    @mute_logger('odoo.models')
+    def test_flush_mem_use(self):
+        """ profile and memory use of Model._flush() """
+        partners = self.env['res.partner'].create([{'name': f'partner{i}'} for i in range(80000)])
+        partners.flush_model()
+        # shall result in 8 updates a 10k records
+        for i, p in enumerate(partners):
+            p.function = 'function1' if i < 40000 else 'function2'
+            p.street = 'street2' if 20000 <= i < 60000 else 'street1'
+            p.commercial_company_name = 'commercial_company_name1' if int(i / 10000) % 2 == 0 else 'commercial_company_name2'
+        #import cProfile
+        import memray
+        #pr = cProfile.Profile()
+        #pr.enable()
+        #self.env['res.partner']._flush()
+        with memray.Tracker("flush.memray.bin", trace_python_allocators=True):
+            self.env['res.partner']._flush()
+        #pr.disable()
+        #pr.dump_stats("flush.cprofile")
+        self.assertTrue(True)
