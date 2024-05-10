@@ -101,22 +101,22 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
         ]
 
         columnas_faltantes = []
-        columnas_dumplicadas = []
+        columnas_duplicadas = []
 
         for column in required_columns:
             if column not in columnas:
                 columnas_faltantes.append(column)
 
                 if columnas.count(column) > 1:
-                    columnas_dumplicadas.append(column)
+                    columnas_duplicadas.append(column)
 
         mensaje = ""
 
         if columnas_faltantes:
             mensaje += f"Las siguientes columnas son requeridas: {', '.join(columnas_faltantes)}\n"
 
-        if columnas_dumplicadas:
-            mensaje += f"Las siguientes columnas están duplicadas: {', '.join(columnas_dumplicadas)}\n"
+        if columnas_duplicadas:
+            mensaje += f"Las siguientes columnas están duplicadas: {', '.join(columnas_duplicadas)}\n"
 
         if mensaje:
             raise exceptions.ValidationError(mensaje)
