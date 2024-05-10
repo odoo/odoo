@@ -10,11 +10,13 @@ export class ActionpadWidget extends Component {
         partner: { type: [Object, { value: null }], optional: true },
         actionName: Object,
         actionType: String,
+        isActionButtonHighlighted: { type: Boolean, optional: true },
         onClickMore: { type: Function, optional: true },
         actionToTrigger: { type: Function, optional: true },
     };
     static defaultProps = {
         actionToTrigger: null,
+        isActionButtonHighlighted: true,
     };
 
     setup() {
