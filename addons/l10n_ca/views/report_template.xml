@@ -25,8 +25,8 @@
     </template>
 
     <template id="l10n_ca_external_layout_striped" inherit_id="web.external_layout_striped">
-        <xpath expr="//div[hasclass('float-start') and hasclass('company_address')]" position="after">
-            <t t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst" class="mt16">
+        <xpath expr="//div[@name='company_address']/ul/li[last()]" position="after">
+            <t t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst">
                 <div>PST: <span t-field="company.l10n_ca_pst"/></div>
             </t>
         </xpath>

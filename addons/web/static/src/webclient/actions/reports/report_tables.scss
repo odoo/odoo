@@ -40,6 +40,43 @@ div#total {
     }
 }
 
+.o_table_striped {
+    table {
+        tr:not(:first-child) {
+            // Using border-top not bottom, to manage a different border on line sections
+            border-top: $border-width solid $gray-200;
+        }
+
+        tbody tr {
+            &:first-child, &.o_line_section {
+                border-top: $border-width solid $gray-400;
+            }
+
+            &:last-child {
+                border-bottom: $border-width solid $gray-200;
+            }
+
+            &:nth-child(odd) td {
+                background-color: rgba($gray-200, .5);
+            }
+
+            &.is-subtotal {
+                border-bottom: $border-width solid $gray-400;
+            }
+        }
+    }
+
+    .o_total_table {
+        tr:first-child {
+            border-top: none;
+        }
+
+        tr:nth-child(odd) td {
+            background-color: rgba($gray-200, .5);
+        }
+    }
+}
+
 .o_table_boxed {
     table {
         position: relative;
