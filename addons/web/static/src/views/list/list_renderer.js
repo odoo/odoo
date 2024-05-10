@@ -672,7 +672,7 @@ export class ListRenderer extends Component {
         } else if (this.props.list.isGrouped) {
             values = this.props.list.groups.map((g) => g.aggregates);
         } else {
-            values = this.props.list.records.map((r) => r.data);
+            values = this.props.list.records.map((r) => r.data).filter((v) => !['line_section', 'line_note'].includes(v.display_type));
         }
         const aggregates = {};
         for (const column of this.allColumns) {
