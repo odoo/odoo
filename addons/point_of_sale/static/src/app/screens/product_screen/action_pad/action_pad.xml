@@ -11,7 +11,7 @@
             </t>
             <button class="pay validation pay-order-button btn-primary"
                 t-attf-class="{{getMainButtonClasses()}}"
-                t-att-class="{ 'with-more-button': props.onClickMore and ui.isSmall }"
+                t-att-class="{'btn-secondary': !props.isActionButtonHighlighted, 'with-more-button': props.onClickMore and ui.isSmall}"
                 t-on-click="props.actionToTrigger ? this.props.actionToTrigger : () => pos.pay()">
                 <div class="pay-circle d-flex align-items-center justify-content-center py-2 mb-2">
                     <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
