@@ -9,7 +9,7 @@ export class ActionpadWidget extends Component {
     static template = "point_of_sale.ActionpadWidget";
     static components = { SelectPartnerButton };
     static defaultProps = {
-        isActionButtonHighlighted: false,
+        isActionButtonHighlighted: true,
     };
 
     setup() {
