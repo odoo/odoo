@@ -47,12 +47,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     position: 'bottom',
     run: "click .modal:visible .btn.btn-primary",
 }, {
-    trigger: ".oe_kanban_action_button",
-    extra_trigger: '.o_hr_recruitment_kanban',
-    content: _t("Let\'s have a look at the applications pipeline."),
-    position: "bottom",
-    run: "click",
-}, {
     trigger: ".o_copy_paste_email",
     content: _t("Copy this email address, to paste it in your email composer, to apply."),
     position: "bottom",
