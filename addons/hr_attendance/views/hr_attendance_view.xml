@@ -289,7 +289,9 @@
 
     <menuitem id="menu_hr_attendance_kiosk_no_user_mode" name="Kiosk Mode" parent="menu_hr_attendance_root" sequence="10" groups="hr_attendance.group_hr_attendance_manager" action="open_kiosk_url"/>
 
-    <menuitem id="menu_hr_attendance_reporting" name="Reporting" parent="menu_hr_attendance_root" sequence="15" groups="hr_attendance.group_hr_attendance_officer" action="hr_attendance_reporting"/>
+    <menuitem id="menu_hr_attendance_reporting" name="Reporting" parent="menu_hr_attendance_root" sequence="15" groups="hr_attendance.group_hr_attendance_officer"/>
+
+    <menuitem id="menu_hr_attendance_attendance_reporting" name="Worked Hours" parent="menu_hr_attendance_reporting" sequence="15" groups="hr_attendance.group_hr_attendance_officer" action="hr_attendance_reporting"/>
 
     <menuitem id="menu_hr_attendance_view_attendances" name="Overview" parent="menu_hr_attendance_root" sequence="5" groups="hr_attendance.group_hr_attendance_officer" action="hr_attendance_action"/>
 </odoo>
