@@ -531,7 +531,6 @@ class Evaluacion(models.Model):
             valor_pregunta = 0
             maximo_pregunta = 0
 
-
             for respuesta in pregunta.respuesta_ids:
                 valor_respuesta = respuesta.valor_respuesta
                 valor_pregunta += valor_respuesta
@@ -582,7 +581,7 @@ class Evaluacion(models.Model):
             else 0
         ),2)
 
-      # Datos demograficos
+        # Datos demograficos
         if self.incluir_demograficos:
             datos_demograficos = []
 
@@ -624,8 +623,9 @@ class Evaluacion(models.Model):
                 "departamentos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in departamentos.items()],
                 "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
                 "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
-                "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],  
+                "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()], 
                 "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
+
             }
 
         else:
@@ -637,8 +637,11 @@ class Evaluacion(models.Model):
                 "total_maximo": total_maximo_posible,
                 "total_porcentaje": total_porcentaje,
                 "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
+
             }
 
+        # Parámetros para el template
+        #print(parametros)
         return parametros
 
     def asignar_color(self, valor, categoria=None, dominio=None):
