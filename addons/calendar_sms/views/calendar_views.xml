@@ -34,7 +34,7 @@
         <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='send_buttons']" position="inside">
-                <button name="action_send_sms" help="Send SMS to attendees" type="object" string="SMS" icon="fa-mobile"/>
+                <button name="action_send_sms" help="Send SMS to attendees" type="object" string="SMS" icon="fa-mobile" invisible="not user_can_edit"/>
             </xpath>
             <xpath expr="//field[@name='phone']" position="attributes">
                 <attribute name="options">{'enable_sms': false}</attribute>
