@@ -139,7 +139,7 @@ var SelectBox = publicWidget.Widget.extend({
             args.is_auto_campaign = true;
         }
         return this.orm.create(this.obj, [args]).then(record => {
-            this.$el.attr('value', record);
+            this.el.attr('value', record);
         });
     },
 
@@ -194,56 +194,66 @@ var RecentLinkBox = publicWidget.Widget.extend({
             return;
         }
 
-        var self = this;
         this.animating_copy = true;
-        var top = this.$('.o_website_links_short_url').position().top;
-        this.$('.o_website_links_short_url').clone()
-            .css('position', 'absolute')
-            .css('left', 15)
-            .css('top', top - 2)
-            .css('z-index', 2)
-            .removeClass('o_website_links_short_url')
-            .addClass('animated-link')
-            .insertAfter(this.$('.o_website_links_short_url'))
-            .animate({
-                opacity: 0,
-                top: '-=20',
-            }, 500, function () {
-                self.$('.animated-link').remove();
-                self.animating_copy = false;
-            });
+        const self = this;
+        const originalElement = this.el.querySelector(".o_website_links_short_url");
+        const top = originalElement.getBoundingClientRect().top + window.scrollY;
+        const clonedElement = originalElement.cloneNode(true);
+        Object.assign(clonedElement.style, {
+            position: "absolute",
+            left: "15px",
+            top: `${top - 2}px`,
+            zIndex: "2"
+        });
+        clonedElement.classList.replace("o_website_links_short_url", "animated-link");
+        originalElement.parentNode.insertBefore(clonedElement, originalElement.nextSibling);
+        clonedElement.animate([
+            { opacity: 1, top: (top - 2) + "px" },
+            { opacity: 0, top: (top - 22) + "px" }
+        ], {
+            duration: 500,
+            fill: "forwards"
+        }).onfinish = function() {
+            clonedElement.remove();
+            self.animating_copy = false;
+        };
     },
     /**
      * @private
      * @param {String} message
      */
     _notification: function (message) {
-        this.$('.notification').append('<strong>' + message + '</strong>');
+        this.el.querySelector(".notification").append(`<strong>${message}</strong>`);
     },
     /**
      * @private
      */
     _editCode: function () {
-        var initCode = this.$('#o_website_links_code').html();
-        this.$('#o_website_links_code').html('<form style="display:inline;" id="o_website_links_edit_code_form"><input type="hidden" id="init_code" value="' + initCode + '"/><input type="text" id="new_code" value="' + initCode + '"/></form>');
-        this.$('.o_website_links_edit_code').hide();
-        this.$('.copy-to-clipboard').hide();
-        this.$('.o_website_links_edit_tools').show();
+        const initCode = this.el.querySelector("#o_website_links_code").innerHTML;
+        this.el.querySelector(
+            "#o_website_links_code"
+        ).innerHTML = `<form style="display:inline;" id="o_website_links_edit_code_form">
+                <input type="hidden" id="init_code" value="${initCode}"/>
+                <input type="text" id="new_code" value="${initCode}"/>
+            </form>`;
+        this.el.querySelector(".o_website_links_edit_code").classList.toggle("d-none");
+        this.el.querySelector(".copy-to-clipboard")?.classList.add("d-none");
+        this.el.querySelector(".o_website_links_edit_tools").classList.toggle("d-none");
     },
     /**
      * @private
      */
     _cancelEdit: function () {
-        this.$('.o_website_links_edit_code').show();
-        this.$('.copy-to-clipboard').show();
-        this.$('.o_website_links_edit_tools').hide();
-        this.$('.o_website_links_code_error').hide();
+        this.el.querySelector(".o_website_links_edit_code").classList.toggle("d-none");
+        this.el.querySelector(".copy-to-clipboard")?.classList.remove("d-none");
+        this.el.querySelector(".o_website_links_edit_tools").classList.toggle("d-none");
+        this.el.querySelector(".o_website_links_code_error").classList.toggle("d-none");
 
-        var oldCode = this.$('#o_website_links_edit_code_form #init_code').val();
-        this.$('#o_website_links_code').html(oldCode);
+        const oldCode = this.el.querySelector("#o_website_links_edit_code_form #init_code").value;
+        this.el.querySelector("#o_website_links_code").innerHTML = oldCode;
 
-        this.$('#code-error').remove();
-        this.$('#o_website_links_code form').remove();
+        this.el.querySelector("#code-error")?.remove();
+        this.el.querySelector("#o_website_links_code form")?.remove();
     },
     /**
      * @private
@@ -251,32 +261,35 @@ var RecentLinkBox = publicWidget.Widget.extend({
     _submitCode: function () {
         var self = this;
 
-        var initCode = this.$('#o_website_links_edit_code_form #init_code').val();
-        var newCode = this.$('#o_website_links_edit_code_form #new_code').val();
+        const initCode = this.el.querySelector("#o_website_links_edit_code_form #init_code").value;
+        const newCode = this.el.querySelector("#o_website_links_edit_code_form #new_code").value;
 
         if (newCode === '') {
-            self.$('.o_website_links_code_error').html(_t("The code cannot be left empty"));
-            self.$('.o_website_links_code_error').show();
+            self.el.querySelector(".o_website_links_code_error").innerHTML = _t(
+                "The code cannot be left empty"
+            );
+            self.el.querySelector(".o_website_links_code_error").style.display = "block";
             return;
         }
 
         function showNewCode(newCode) {
-            self.$('.o_website_links_code_error').html('');
-            self.$('.o_website_links_code_error').hide();
+            self.el.querySelector(".o_website_links_code_error").innerHTML = "";
+            self.el.querySelector(".o_website_links_code_error").classList.toggle("d-none");
 
-            self.$('#o_website_links_code form').remove();
+            self.el.querySelector("#o_website_links_code form").remove();
 
             // Show new code
-            var host = self.$('#o_website_links_host').html();
-            self.$('#o_website_links_code').html(newCode);
+            const host = self.el.querySelector("#o_website_links_host").innerHTML;
+            self.el.querySelector("#o_website_links_code").innerHTML = newCode;
 
             // Update button copy to clipboard
-            self.$('.btn_shorten_url_clipboard').attr('data-clipboard-text', host + newCode);
+            self.el.querySelector(".btn_shorten_url_clipboard")
+                .setAttribute("data-clipboard-text", host + newCode);
 
             // Show action again
-            self.$('.o_website_links_edit_code').show();
-            self.$('.copy-to-clipboard').show();
-            self.$('.o_website_links_edit_tools').hide();
+            self.el.querySelector(".o_website_links_edit_code").classList.toggle("d-none");
+            self.el.querySelector(".copy-to-clipboard")?.classList.remove("d-none");
+            self.el.querySelector(".o_website_links_edit_tools").classList.toggle("d-none");
         }
 
         if (initCode === newCode) {
@@ -288,8 +301,10 @@ var RecentLinkBox = publicWidget.Widget.extend({
             }).then(function (result) {
                 showNewCode(result[0].code);
             }, function () {
-                self.$('.o_website_links_code_error').show();
-                self.$('.o_website_links_code_error').html(_t("This code is already taken"));
+                    self.el.querySelector(".o_website_links_code_error").classList.toggle("d-none");
+                    self.el.querySelector(".o_website_links_code_error").innerHTML = _t(
+                        "This code is already taken"
+                    );
             });
         }
     },
@@ -343,18 +358,22 @@ var RecentLinks = publicWidget.Widget.extend({
             });
             self._updateNotification();
         }, function () {
-            var message = _t("Unable to get recent links");
-            self.$el.append('<div class="alert alert-danger">' + message + '</div>');
+                const message = _t("Unable to get recent links");
+                self.el.append(
+                    `<div class="alert alert-danger">${message}</div>`
+                );
         });
     },
     /**
      * @private
      */
     _addLink: function (link) {
-        var nbLinks = this.getChildren().length;
-        var recentLinkBox = new RecentLinkBox(this, link);
-        recentLinkBox.prependTo(this.$el);
-        $('.link-tooltip').tooltip();
+        const nbLinks = this.getChildren().length;
+        const recentLinkBox = new RecentLinkBox(this, link);
+        recentLinkBox.prependTo(this.el);
+        document.querySelectorAll("[data-bs-toggle='tooltip']").forEach((tooltip) => {
+            Tooltip.getOrCreateInstance(tooltip);
+        });
 
         if (nbLinks === 0) {
             this._updateNotification();
@@ -373,10 +392,12 @@ var RecentLinks = publicWidget.Widget.extend({
      */
     _updateNotification: function () {
         if (this.getChildren().length === 0) {
-            var message = _t("You don't have any recent links.");
-            $('.o_website_links_recent_links_notification').html('<div class="alert alert-info">' + message + '</div>');
+            const message = _t("You don't have any recent links.");
+            document.querySelector(
+                ".o_website_links_recent_links_notification"
+            ).innerHTML = `<div class="alert alert-info">${message}</div>`;
         } else {
-            $('.o_website_links_recent_links_notification').empty();
+            document.querySelector(".o_website_links_recent_links_notification").innerHTML = "";
         }
     },
 });
@@ -397,26 +418,28 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
      * @override
      */
     start: async function () {
-        var defs = [this._super.apply(this, arguments)];
+        const defs = [this._super.apply(this, arguments)];
 
         // UTMS selects widgets
         const campaignSelect = new SelectBox(this, "utm.campaign", _t("e.g. June Sale, Paris Roadshow, ..."));
-        defs.push(campaignSelect.attachTo($('#campaign-select')));
+        defs.push(campaignSelect.attachTo(document.querySelector("#campaign-select")));
 
         const mediumSelect = new SelectBox(this, "utm.medium", _t("e.g. InMails, Ads, Social, ..."));
-        defs.push(mediumSelect.attachTo($('#channel-select')));
+        defs.push(mediumSelect.attachTo(document.querySelector("#channel-select")));
 
         const sourceSelect = new SelectBox(this, "utm.source", _t("e.g. LinkedIn, Facebook, Leads, ..."));
-        defs.push(sourceSelect.attachTo($('#source-select')));
+        defs.push(sourceSelect.attachTo(document.querySelector("#source-select")));
 
         // Recent Links Widgets
-        this.recentLinks = new RecentLinks(this);
-        defs.push(this.recentLinks.appendTo($('#o_website_links_recent_links')));
-        this.recentLinks.getRecentLinks('newest');
+        this.recentLinks = new RecentLinks(this.el);
+        defs.push(this.recentLinks.attachTo(this.el.querySelector("#o_website_links_recent_links")));
+        this.recentLinks.getRecentLinks("newest");
 
         this.url_copy_animating = false;
 
-        $('[data-bs-toggle="tooltip"]').tooltip();
+        Array.from(document.querySelectorAll("[data-bs-toggle='tooltip']")).forEach(function(node) {
+            Tooltip.getOrCreateInstance(node);
+        });
 
         return Promise.all(defs);
     },
@@ -450,9 +473,14 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
      * @private
      */
     _onGeneratedTrackedLinkClick: function () {
-        $('#generated_tracked_link a').text(_t("Copied")).removeClass('btn-primary').addClass('btn-success');
+        const trackedLink = document.querySelector("#generated_tracked_link");
+        trackedLink.textContent = _t("Copied");
+        trackedLink.classList.remove("btn-primary");
+        trackedLink.classList.add("btn-success");
         setTimeout(function () {
-            $('#generated_tracked_link a').text(_t("Copy")).removeClass('btn-success').addClass('btn-primary');
+            trackedLink.textContent = _t("Copy");
+            trackedLink.classList.remove("btn-success");
+            trackedLink.classList.add("btn-primary");
         }, 5000);
     },
     /**
@@ -460,42 +488,55 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onUrlKeyUp: function (ev) {
-        if (!$('#btn_shorten_url').hasClass('btn-copy') || ev.key === "Enter") {
+        const shortenUrlButton = document.querySelector("#btn_shorten_url");
+        if (!shortenUrlButton.classList.contains("btn-copy") || ev.key === "Enter") {
             return;
         }
 
-        $('#btn_shorten_url').removeClass('btn-success btn-copy').addClass('btn-primary').html('Get tracked link');
-        $('#generated_tracked_link').css('display', 'none');
-        $('.o_website_links_utm_forms').show();
+        shortenUrlButton.classList.remove("btn-success", "btn-copy");
+        shortenUrlButton.classList.add("btn-primary");
+        shortenUrlButton.innerHTML = "Get tracked link";
+        document.querySelector("#generated_tracked_link").style.display = "none";
+        document.querySelector(".o_website_links_utm_forms").style.display = "block";
     },
     /**
      * @private
      */
     _onShortenUrlButtonClick: async function (ev) {
         const textValue = ev.target.dataset.clipboardText;
-        await browser.navigator.clipboard.writeText(textValue);
+        await window.navigator.clipboard.writeText(textValue);
 
-        if (!$('#btn_shorten_url').hasClass('btn-copy') || this.url_copy_animating) {
+        const shortenUrlButton = document.querySelector("#btn_shorten_url");
+        if (!shortenUrlButton.classList.contains("btn-copy") || this.url_copy_animating) {
             return;
         }
 
-        var self = this;
+        const self = this;
         this.url_copy_animating = true;
-        $('#generated_tracked_link').clone()
-            .css('position', 'absolute')
-            .css('left', '78px')
-            .css('bottom', '8px')
-            .css('z-index', 2)
-            .removeClass('#generated_tracked_link')
-            .addClass('url-animated-link')
-            .appendTo($('#generated_tracked_link'))
-            .animate({
-                opacity: 0,
-                bottom: '+=20',
-            }, 500, function () {
-                $('.url-animated-link').remove();
-                self.url_copy_animating = false;
-            });
+        const originalElement = document.querySelector("#generated_tracked_link");
+        const clonedElement = originalElement.cloneNode(true);
+        Object.assign(clonedElement.style, {
+            position: "absolute",
+            left: "78px",
+            zIndex: "2",
+            transition: "opacity 0.8s, bottom 0.8s"
+        });
+        clonedElement.classList.remove("#generated_tracked_link");
+        clonedElement.classList.add("url-animated-link");
+        originalElement.appendChild(clonedElement);
+        clonedElement.animate(
+            [
+                { opacity: 1, bottom: "8px" },
+                { opacity: 0, bottom: "48px"}
+            ],
+            {
+                duration: 500,
+                fill: "forwards",
+            }
+        ).onfinish = function() {
+            clonedElement.remove();
+            self.url_copy_animating = false;
+        };
     },
     /**
      * Add the RecentLinkBox widget and send the form when the user generate the link
@@ -504,10 +545,10 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onFormSubmit: function (ev) {
-        var self = this;
+        const self = this;
         ev.preventDefault();
 
-        if ($('#btn_shorten_url').hasClass('btn-copy')) {
+        if (document.querySelector("#btn_shorten_url").classList.contains("btn-copy")) {
             return;
         }
 
@@ -520,7 +561,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
 
         const label = document.querySelector('#label');
         const params = { label: label.value || undefined };
-        params.url = $('#url').val();
+        params.url = document.querySelector("#url").value;
         if (campaignID !== '') {
             params.campaign_id = parseInt(campaignID);
         }
@@ -531,37 +572,42 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
             params.source_id = parseInt(sourceID);
         }
 
-        $('#btn_shorten_url').text(_t("Generating link..."));
+        document.querySelector("#btn_shorten_url").textContent = _t("Generating link...");
 
         rpc('/website_links/new', params).then(function (result) {
+            const notificationElement = document.querySelector(".notification");
             if ('error' in result) {
                 // Handle errors
                 if (result.error === 'empty_url') {
-                    $('.notification').html('<div class="alert alert-danger">The URL is empty.</div>');
-                } else if (result.error === 'url_not_found') {
-                    $('.notification').html('<div class="alert alert-danger">URL not found (404)</div>');
+                    notificationElement.innerHTML = "<div class='alert alert-danger'>The URL is empty.</div>";
+                } else if (result.error === "url_not_found") {
+                    notificationElement.innerHTML = "<div class='alert alert-danger'>URL not found (404)</div>";
                 } else {
-                    $('.notification').html('<div class="alert alert-danger">An error occur while trying to generate your link. Try again later.</div>');
+                    notificationElement.innerHTML = "<div class='alert alert-danger'>An error occur while trying to generate your link. Try again later.</div>";
                 }
             } else {
                 // Link generated, clean the form and show the link
                 var link = result[0];
 
-                $('#btn_shorten_url').removeClass('btn-primary').addClass('btn-success btn-copy').html('Copy');
-                $('#btn_shorten_url').attr('data-clipboard-text', link.short_url);
+                const btnShortenUrlElement = document.querySelector("#btn_shorten_url");
+                btnShortenUrlElement.classList.remove("btn-primary");
+                btnShortenUrlElement.classList.add("btn-success", "btn-copy");
+                btnShortenUrlElement.innerHTML = "Copy";
+                btnShortenUrlElement.setAttribute("data-clipboard-text", link.short_url);
 
-                $('.notification').html('');
-                $('#generated_tracked_link').html(link.short_url);
-                $('#generated_tracked_link').css('display', 'inline');
+                notificationElement.innerHTML = "";
+                const generatedTrackedLinkEl = document.querySelector("#generated_tracked_link");
+                generatedTrackedLinkEl.innerHTML = link.short_url;
+                generatedTrackedLinkEl.style.display = "inline";
 
                 self.recentLinks._addLink(link);
 
                 // Clean URL and UTM selects
-                $('#campaign-select').select2('val', '');
-                $('#channel-select').select2('val', '');
-                $('#source-select').select2('val', '');
-                label.value = '';
-                $('.o_website_links_utm_forms').hide();
+                document.querySelector("#campaign-select").value = "";
+                document.querySelector("#channel-select").value = "";
+                document.querySelector("#source-select").value = "";
+                label.value = "";
+                document.querySelector(".o_website_links_utm_forms").style.display = "none";
             }
         });
     },
