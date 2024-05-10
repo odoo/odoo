@@ -30,7 +30,7 @@ class Evaluacion(models.Model):
         required=True,
         default="competencia",
     )
-    descripcion = fields.Text()
+    descripcion = fields.Text(string="Descripción")
     estado = fields.Selection(
         [
             ("borrador", "Borrador"),
