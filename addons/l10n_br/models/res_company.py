@@ -16,3 +16,9 @@ class ResCompany(models.Model):
     def _localization_use_documents(self):
         self.ensure_one()
         return self.account_fiscal_country_id.code == "BR" or super()._localization_use_documents()
+
+    def _compute_show_invoice_tax(self):
+        super()._compute_show_invoice_tax()
+        for record in self:
+            if record.account_fiscal_country_id.code == 'BR':
+                record.show_invoice_tax = False
