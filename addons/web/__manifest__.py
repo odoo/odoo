@@ -319,8 +319,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/webclient/actions/reports/bootstrap_review_report.scss',
             'web/static/src/webclient/actions/reports/report.scss',
             'web/static/src/webclient/actions/reports/report_tables.scss',
-            'web/static/src/webclient/actions/reports/layout_assets/layout_background.scss',
-            'web/static/src/webclient/actions/reports/layout_assets/layout_clean.scss',
+            'web/static/src/webclient/actions/reports/layout_assets/layout_*.scss',
             'web/static/asset_styles_company_report.scss',
         ],
         'web.report_assets_pdf': [
