@@ -593,7 +593,7 @@ class Meeting(models.Model):
         return super()._compute_field_value(field)
 
     def _fetch_query(self, query, fields):
-        if self.env.is_system():
+        if self.env.su:
             return super()._fetch_query(query, fields)
 
         public_fnames = self._get_public_fields()
@@ -605,12 +605,7 @@ class Meeting(models.Model):
         events = super()._fetch_query(query, fields_to_fetch)
 
         # determine private events to which the user does not participate
-        current_partner_id = self.env.user.partner_id
-        others_private_events = events.filtered(
-            lambda e: (e.privacy == 'private' or (not e.privacy and e.user_id and e.user_id.calendar_default_privacy == 'private')) \
-                  and e.user_id != self.env.user \
-                  and current_partner_id not in e.partner_ids
-        )
+        others_private_events = events.filtered(lambda ev: ev._check_private_event_conditions())
         if not others_private_events:
             return events
 
