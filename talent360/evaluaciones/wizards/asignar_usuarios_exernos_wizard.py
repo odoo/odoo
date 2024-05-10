@@ -147,7 +147,9 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
                 [("name", "=", nombre_archivo), ("res_model", "=", self._name)], limit=1
             )
 
-            if not attachment:
+            if attachment:
+                attachment.write({"datas": base64.b64encode(datos.encode("utf-8"))})
+            else:
                 attachment = self.env["ir.attachment"].create(
                     {
                         "name": nombre_archivo,
