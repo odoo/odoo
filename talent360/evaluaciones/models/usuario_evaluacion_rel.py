@@ -33,6 +33,8 @@ class UsuarioEvaluacionRel(models.Model):
     )
     token = fields.Char(string="Token")
 
+    usuario_externo_id = fields.Many2one("usuario.externo", string="Usuario Externo")
+
     def write(self, vals):
         """Sobreescribir el método write para enviar la evaluación al usuario."""
         res = super(UsuarioEvaluacionRel, self).write(vals)
@@ -105,12 +107,21 @@ class UsuarioEvaluacionRel(models.Model):
             token = secrets.token_hex(length)
             if not user.token:
                 user.write({"token": token, "contestada": "pendiente"})
-
+                if user.usuario_id:
+                    correo = user.usuario_id.email
+                    nombre = user.usuario_id.name
+                elif user.usuario_externo_id:
+                    correo = user.usuario_externo_id.email
+                    nombre = user.usuario_externo_id.nombre
+                else:
+                    print("No se encontró un usuario asociado")
+                    raise ValueError("No se encontró un usuario asociado")
+                    
                 mail_values = {
                     "subject": "Invitación para completar la evaluación",
                     "email_from": self.env.user.email_formatted,
-                    "email_to": user.usuario_id.email,
-                    "body_html": f"<p>Hola, <strong>{user.usuario_id.name}</strong></p>"
+                    "email_to": correo,
+                    "body_html": f"<p>Hola, <strong>{nombre}</strong></p>"
                     f"<p>en conocer tu opinión, a fin de identificar áreas de mejora que nos permitan mejorar</p>"
                     f"<p>tu experiencia con nosotros. Por ello, te invitamos a responder la Encuesta de Clima</p>"
                     f"<p>Laboral: <strong>(Nombre de evaluación)</strong></p>"
@@ -118,10 +129,15 @@ class UsuarioEvaluacionRel(models.Model):
                     f'<a href="{base_url}/{evaluacion_id}/{token}">',
                 }
 
+                print(f"Nombre:{nombre}\nCorreo:{correo}\nURL: {base_url}/{evaluacion_id}/{token}")
+
                 mail = self.env["mail.mail"].create(mail_values)
                 if mail.state == "sent":
-                    print(f"Correo enviado exitosamente a {user.usuario_id.email}")
+                    print(f"Correo enviado exitosamente a {correo}")
                 elif mail.state == "exception":
-                    print(f"Fallo al enviar correo a {user.usuario_id.email}")
+                    print(f"Fallo al enviar correo a {correo}")
                 else:
                     print(f"Correo en estado pendiente o desconocido: {mail.state}")
+
+
+        

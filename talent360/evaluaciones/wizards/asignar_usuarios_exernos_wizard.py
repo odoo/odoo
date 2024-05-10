@@ -66,7 +66,7 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
             )
 
         for user in users:
-            self.env["usuario.externo"].create(
+            usuario_externo = self.env["usuario.externo"].create(
                 {
                     "nombre": user["nombre"],
                     "email": user["email"],
@@ -79,11 +79,11 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
                     "fecha_ingreso": fecha_ingreso,
                     "fecha_nacimiento": fecha_nacimiento,
                     "region": user["region"],
-                    "evaluacion_id": evaluacion.id,
                 }
             )
-            
 
+            evaluacion.write({"usuario_externo_ids": [(4, usuario_externo.id)]})
+            
     def validar_columnas(self, columnas: list[str]):
         # Valida que las columnas del archivo CSV sean las correctas
         required_columns = [

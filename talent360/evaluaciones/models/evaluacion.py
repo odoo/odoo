@@ -65,6 +65,14 @@ class Evaluacion(models.Model):
         string="Asignados",
     )
 
+    usuario_externo_ids = fields.Many2many(
+        "usuario.externo",
+        "usuario_evaluacion_rel",
+        "evaluacion_id",
+        "usuario_externo_id",
+        string="Asignados Externos",
+    )
+
     fecha_inicio = fields.Date(string="Fecha de inicio", required=True)
     fecha_final = fields.Date(string="Fecha de finalización", required=True)
 
@@ -72,7 +80,7 @@ class Evaluacion(models.Model):
 
     incluir_demograficos = fields.Boolean(string="Incluir datos demográficos", default = True)
     
-    usuario_externo_ids = fields.One2many("usuario.externo", "evaluacion_id", string="Usuarios externos")
+    # usuario_externo_ids = fields.One2many("usuario.externo", "evaluacion_id", string="Usuarios externos")
     
     @api.constrains('fecha_inicio', 'fecha_final')
     def check_fechas(self):
@@ -897,6 +905,10 @@ class Evaluacion(models.Model):
 
         for usuario in self.usuario_ids:
             usuarios.append(usuario.partner_id.name)
+        
+        for usuario_externo in self.usuario_externo_ids:
+            usuarios.append(usuario_externo.nombre)
+
         self.env['usuario.evaluacion.rel'].enviar_evaluacion_action(evaluacion_id=self.id)
         return {
             "type": "ir.actions.client",
@@ -917,8 +929,9 @@ class Evaluacion(models.Model):
         :return: Sobreescribe la asignación de usuarios si hubo cambio en ellos.
         """
         resultado = super(Evaluacion, self).write(vals)
-        if 'usuario_ids' in vals or self.usuario_ids:
+        if 'usuario_ids' in vals or self.usuario_ids or 'usuario_externo_ids' in vals or self.usuario_externo_ids:
             self.enviar_evaluacion_action()
+
         return resultado
 
     def action_asignar_usuarios_externos(self):
