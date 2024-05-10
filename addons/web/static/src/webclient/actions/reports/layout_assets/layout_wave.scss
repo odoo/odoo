@@ -1,0 +1,16 @@
+.o_report_layout_wave {
+    #informations {
+        margin: 0;
+        border-radius: $border-radius-lg;
+        padding: map-get($spacers, 2) $table-cell-padding-y;
+
+        // In pdf it overlaps with existing margin, set to 0 to replicate in HTML
+        div:first-child {
+            padding-left: 0;
+        }
+
+        div:last-child {
+            padding-right: 0;
+        }
+    }
+}
