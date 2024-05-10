@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 
@@ -629,7 +629,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         self.sale_order._create_invoices()
 
         # Check that the resulting invoice line and the project have the same analytic account
-        invoice_line = self.sale_order.invoice_ids.line_ids.filtered(lambda line: line.product_id == product_add)
+        invoice_line = self.sale_order.account_move_ids.line_ids.filtered(lambda line: line.product_id == product_add)
         self.assertEqual(invoice_line.analytic_distribution, {str(self.project_global.analytic_account_id.id): 100},
              "SOL's analytic distribution should contain the project analytic account")
 

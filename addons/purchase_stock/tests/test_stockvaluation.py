@@ -829,7 +829,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         receipt.move_ids.picked = True
         receipt.button_validate()
 
-        product_aml = po.invoice_ids.line_ids.filtered('product_id')
+        product_aml = po.account_move_ids.line_ids.filtered('product_id')
         self.assertEqual(receipt.move_ids.stock_valuation_layer_ids.value, 100)
         self.assertTrue(product_aml.reconciled)
         self.assertTrue(product_aml.full_reconcile_id)
@@ -2225,7 +2225,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values, 'Err while invoicing %s @ %s' % (qty, price))
             self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values, 'Err while invoicing %s @ %s' % (qty, price))
 
-        bill01, bill02, _bill03, bill04, bill05 = po.invoice_ids.sorted('id')
+        bill01, bill02, _bill03, bill04, bill05 = po.account_move_ids.sorted('id')
 
         self._refund(bill01, 1.0)
         expected_svl_values += [-2.0]
@@ -3044,7 +3044,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         delivery.button_validate()
 
         po.action_create_invoice()
-        bill = po.invoice_ids
+        bill = po.account_move_ids
         bill.invoice_date = bill_date
         bill.action_post()
 
@@ -3140,9 +3140,9 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         # Make sure the Vendor Bill has been created,
         # and confirm it at an earlier date (to generate the exchange difference).
-        self.assertEqual(len(purchase_order.invoice_ids), 1)
+        self.assertEqual(len(purchase_order.account_move_ids), 1)
 
-        vendor_bill = purchase_order.invoice_ids
+        vendor_bill = purchase_order.account_move_ids
         vendor_bill.invoice_date = fields.Date.from_string('2023-11-01')
         vendor_bill.action_post()
 

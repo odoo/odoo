@@ -126,7 +126,7 @@ class AdvancePaymentWizard(models.AbstractModel):
     @api.depends('order_ids')
     def _compute_display_draft_invoice_warning(self):
         for wizard in self:
-            wizard.display_draft_invoice_warning = any(invoice.state == 'draft' for invoice in wizard.order_ids.invoice_ids)
+            wizard.display_draft_invoice_warning = any(invoice.state == 'draft' for invoice in wizard.order_ids.account_move_ids)
 
     @api.depends('order_ids')
     def _compute_invoice_amounts(self):

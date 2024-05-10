@@ -204,8 +204,7 @@ class SaleOrder(models.Model):
     amount_to_invoice = fields.Monetary(store=True)
 
     invoice_count = fields.Integer(string="Invoice Count", compute='_get_invoiced')
-    invoice_ids = fields.Many2many(
-        comodel_name='account.move',
+    account_move_ids = fields.Many2many(
         string="Invoices",
         compute='_get_invoiced',
         search='_search_invoice_ids',
@@ -456,13 +455,13 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line.account_move_line_ids')
     def _get_invoiced(self):
-        # The invoice_ids are obtained thanks to the invoice lines of the SO
+        # The account_move_ids are obtained thanks to the invoice lines of the SO
         # lines, and we also search for possible refunds created directly from
         # existing invoices. This is necessary since such a refund is not
         # directly linked to the SO.
         for order in self:
             invoices = order.order_line.account_move_line_ids.move_id.filtered(lambda r: r.move_type in ('out_invoice', 'out_refund'))
-            order.invoice_ids = invoices
+            order.account_move_ids = invoices
             order.invoice_count = len(invoices)
 
     def _search_invoice_ids(self, operator, value):
@@ -481,7 +480,7 @@ class SaleOrder(models.Model):
             so_ids = self.env.cr.fetchone()[0] or []
             return [('id', 'in', so_ids)]
         elif operator == '=' and not value:
-            # special case for [('invoice_ids', '=', False)], i.e. "Invoices is not set"
+            # special case for [('account_move_ids', '=', False)], i.e. "Invoices is not set"
             #
             # We cannot just search [('order_line.account_move_line_ids', '=', False)]
             # because it returns orders with uninvoiced lines, which is not
@@ -1070,7 +1069,7 @@ class SaleOrder(models.Model):
             return self._action_cancel()
 
     def _action_cancel(self):
-        inv = self.invoice_ids.filtered(lambda inv: inv.state == 'draft')
+        inv = self.account_move_ids.filtered(lambda inv: inv.state == 'draft')
         inv.button_cancel()
         return self.write({'state': 'cancel'})
 
@@ -1184,7 +1183,7 @@ class SaleOrder(models.Model):
 
     def action_view_invoice(self, invoices=False):
         if not invoices:
-            invoices = self.mapped('invoice_ids')
+            invoices = self.mapped('account_move_ids')
         action = self.env['ir.actions.actions']._for_xml_id('account.action_move_out_invoice_type')
         if len(invoices) > 1:
             action['domain'] = [('id', 'in', invoices.ids)]
