@@ -3,6 +3,7 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { rpc } from "@web/core/network/rpc";
 import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
+import { redirect } from "@web/core/utils/urls";
 
 publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     selector: '.o_wprofile_email_validation_container',
@@ -20,12 +21,12 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
      */
     _onSendValidationEmailClick: function (ev) {
         ev.preventDefault();
-        var $element = $(ev.currentTarget);
+        const element = ev.currentTarget;
         rpc('/profile/send_validation_email', {
-            'redirect_url': $element.data('redirect_url'),
+            redirect_url: element.dataset["redirect_url"],
         }).then(function (data) {
             if (data) {
-                window.location = $element.data('redirect_url');
+                redirect(element.dataset["redirect_url"]);
             }
         });
     },
@@ -57,23 +58,23 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
             return def;
         }
 
-        const $textarea = this.$("textarea.o_wysiwyg_loader");
+        const textareaEl = this.el.querySelector("textarea.o_wysiwyg_loader");
 
         const options = {
             recordInfo: {
                 context: this._getContext(),
                 res_model: "res.users",
-                res_id: parseInt(this.$("input[name=user_id]").val()),
+                res_id: parseInt(this.el.querySelector("input[name=user_id]").value),
             },
             resizable: true,
             userGeneratedContent: true,
         };
 
-        if ($textarea[0].attributes.placeholder) {
-            options.placeholder = $textarea[0].attributes.placeholder.value;
+        if (textareaEl.attributes.placeholder) {
+            options.placeholder = textareaEl.attributes.placeholder.value;
         }
 
-        this._wysiwyg = await loadWysiwygFromTextarea(this, $textarea[0], options);
+        this._wysiwyg = await loadWysiwygFromTextarea(this, textareaEl, options);
 
         return Promise.all([def]);
     },
@@ -88,7 +89,7 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
      */
     _onEditProfilePicClick: function (ev) {
         ev.preventDefault();
-        $(ev.currentTarget).closest('form').find('.o_forum_file_upload').trigger('click');
+        ev.currentTarget.closest("form").querySelector(".o_forum_file_upload").click();
     },
     /**
      * @private
@@ -98,26 +99,26 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
         if (!ev.currentTarget.files.length) {
             return;
         }
-        var $form = $(ev.currentTarget).closest('form');
+        const formEl = ev.currentTarget.closest("form");
         var reader = new window.FileReader();
         reader.readAsDataURL(ev.currentTarget.files[0]);
         reader.onload = function (ev) {
-            $form.find('.o_wforum_avatar_img').attr('src', ev.target.result);
+            formEl.querySelector(".o_wforum_avatar_img").src = ev.target.result;
         };
-        $form.find('#forum_clear_image').remove();
+        formEl.querySelector("#forum_clear_image")?.remove();
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onProfilePicClearClick: function (ev) {
-        var $form = $(ev.currentTarget).closest('form');
-        $form.find('.o_wforum_avatar_img').attr('src', '/web/static/img/placeholder.png');
-        $form.append($('<input/>', {
-            name: 'clear_image',
-            id: 'forum_clear_image',
-            type: 'hidden',
-        }));
+        const formEl = ev.currentTarget.closest("form");
+        formEl.querySelector(".o_wforum_avatar_img").src = "/web/static/img/placeholder.png";
+        const inputElement = document.createElement("input");
+        inputElement.setAttribute("name", "clear_image");
+        inputElement.setAttribute("id", "forum_clear_image");
+        inputElement.setAttribute("type", "hidden");
+        formEl.append(inputElement);
     },
 
     /**
@@ -152,7 +153,7 @@ publicWidget.registry.websiteProfileNextRankCard = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        this.$('g[data-bs-toggle="tooltip"]').tooltip();
+        new Tooltip(this.el.querySelector('g[data-bs-toggle="tooltip"]'));
         return this._super.apply(this, arguments);
     },
 
