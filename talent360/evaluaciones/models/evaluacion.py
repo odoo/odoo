@@ -889,6 +889,10 @@ class Evaluacion(models.Model):
         }
     
     def enviar_evaluacion_action(self):
+
+        if self.estado != "publicado":
+            return
+
         usuarios = []
 
         for usuario in self.usuario_ids:
@@ -917,8 +921,7 @@ class Evaluacion(models.Model):
         :return: Sobreescribe la asignación de usuarios si hubo cambio en ellos.
         """
         resultado = super(Evaluacion, self).write(vals)
-        if 'usuario_ids' in vals or self.usuario_ids or 'usuario_externo_ids' in vals or self.usuario_externo_ids:
-            self.enviar_evaluacion_action()
+        self.enviar_evaluacion_action()
 
         return resultado
 
