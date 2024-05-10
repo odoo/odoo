@@ -340,7 +340,7 @@
         <field name="res_model">evaluacion</field>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="reportes_view_tree"/>
-        <field name="domain" eval="[('estado', '=', 'finalizado')]"/>
+        <field name="domain" eval="[('porcentaje_respuestas', '>', '0')]"/>
     </record>
 
 

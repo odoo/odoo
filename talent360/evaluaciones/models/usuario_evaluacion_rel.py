@@ -118,20 +118,20 @@ class UsuarioEvaluacionRel(models.Model):
             [("evaluacion_id.id", "=", evaluacion_id)]
         )
 
-        for user in usuario_evaluacion:
+        for usuario in usuario_evaluacion:
             token = secrets.token_hex(length)
-            if not user.token:
-                if user.usuario_id:
-                    correo = user.usuario_id.email
-                    nombre = user.usuario_id.name
-                elif user.usuario_externo_id:
-                    correo = user.usuario_externo_id.email
-                    nombre = user.usuario_externo_id.nombre
+            if not usuario.token:
+                if usuario.usuario_id:
+                    correo = usuario.usuario_id.email
+                    nombre = usuario.usuario_id.name
+                elif usuario.usuario_externo_id:
+                    correo = usuario.usuario_externo_id.email
+                    nombre = usuario.usuario_externo_id.nombre
                 else:
                     print("No se encontró un usuario asociado")
                     raise ValueError("No se encontró un usuario asociado")
                     
-                user.write({
+                usuario.write({
                     "token": token,
                     "contestada": "pendiente"
                 })

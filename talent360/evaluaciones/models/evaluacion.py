@@ -80,8 +80,6 @@ class Evaluacion(models.Model):
 
     incluir_demograficos = fields.Boolean(string="Incluir datos demográficos", default = True)
     
-    # usuario_externo_ids = fields.One2many("usuario.externo", "evaluacion_id", string="Usuarios externos")
-    
     @api.constrains('fecha_inicio', 'fecha_final')
     def check_fechas(self):
         for record in self:
@@ -926,7 +924,7 @@ class Evaluacion(models.Model):
 
     def action_asignar_usuarios_externos(self):
         return {
-            'name': 'Upload File',
+            'name': 'Asignar usuarios externos',
             'type': 'ir.actions.act_window',
             'res_model': 'asignar.usuario.externo.wizard',
             'view_mode': 'form',
