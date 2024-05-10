@@ -115,6 +115,9 @@
                     <h1>
                         <field class="text-primary font-weight-bold" name="nombre"/>
                     </h1>
+                    <group>
+                        <field name="estado"/>
+                    </group>
                     <p>
                         <field name="descripcion"/>
                     </p>
@@ -128,12 +131,9 @@
                         <field name="incluir_demograficos"/>
                     </group>
                     <group>
+                     <group>
                         <field name="mensaje"/>
                     </group>
-                    <group>
-                        <group>
-                            <field name="estado"/>
-                        </group>
                         <notebook>
                             <page string="Preguntas">
                                 <field class="lh-lg w-100" colspan="2" name="pregunta_ids" can_create="True" can_write="True" nolabel="1" field_id="pregunta_ids_0" context="{'current_evaluacion_id': active_id}">
@@ -445,6 +445,9 @@
                         <field name="nombre"/>
                     </group>
                     <group>
+                        <field name="estado"/>
+                    </group>
+                    <group>
                         <field name="descripcion"/>
                     </group>
                     <group>
@@ -457,12 +460,9 @@
                         <field name="incluir_demograficos"/>
                     </group>
                     <group>
+                    <group>
                         <field name="mensaje"/>
                     </group>
-                    <group>
-                        <group>
-                            <field name="estado"/>
-                        </group>
                         <notebook>
                             <page string="Asignados">
                                 <field name="usuario_ids"/>
