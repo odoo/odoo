@@ -17,9 +17,9 @@ class Evaluacion(models.Model):
     """
 
     _name = "evaluacion"
-    _description = "Evaluacion de pesonal"
+    _description = "Evaluacion de personal"
     _rec_name = "nombre"
-    nombre = fields.Char(required=True)
+    nombre = fields.Char(string="Título de la evaluación", required=True)
 
     tipo = fields.Selection(
         [
@@ -30,7 +30,7 @@ class Evaluacion(models.Model):
         required=True,
         default="competencia",
     )
-    descripcion = fields.Text()
+    descripcion = fields.Text(string="Descripción")
     estado = fields.Selection(
         [
             ("borrador", "Borrador"),
@@ -335,15 +335,15 @@ class Evaluacion(models.Model):
                 if respuesta.evaluacion_id.id != self.id:
                     continue
 
-                respuestas.append(respuesta.respuesta_texto)
+                respuestas.append(respuesta.respuesta_mostrar)
 
                 for i, respuesta_tabulada in enumerate(respuestas_tabuladas):
-                    if respuesta_tabulada["nombre"] == respuesta.respuesta_texto:
+                    if respuesta_tabulada["nombre"] == respuesta.respuesta_mostrar:
                         respuestas_tabuladas[i]["valor"] += 1
                         break
                 else:
                     respuestas_tabuladas.append(
-                        {"nombre": respuesta.respuesta_texto, "valor": 1}
+                        {"nombre": respuesta.respuesta_mostrar, "valor": 1}
                     )
 
             datos_pregunta = {

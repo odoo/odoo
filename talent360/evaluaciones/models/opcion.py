@@ -2,6 +2,16 @@ from odoo import models, fields
 
 
 class Opcion(models.Model):
+    """
+    Modelo para representar una opción para una pregunta.
+    
+    :param _name (str): Nombre del modelo en Odoo
+    :param _description (str): Descripción del modelo en Odoo
+    :param pregunta_id (int): Identificador de la pregunta
+    :param opcion_texto (str): Texto de la opción
+    :param valor (int): Valor de la opción
+    """
+    
     _name = "opcion"
     _description = "Opcion para una pregunta"
 

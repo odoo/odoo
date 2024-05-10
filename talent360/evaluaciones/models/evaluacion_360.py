@@ -5,6 +5,11 @@ class Evaluacion360(models.Model):
     """
     Modelo para representar Evaluaciones 360.
     Hereda de "evaluacion".
+    
+    :param _name (str): Nombre del modelo en Odoo
+    :param _description (str): Descripción del modelo en Odoo
+    :param preguntas_360_ids (list): Lista de preguntas 360 asociadas a la evaluación
+    :param tipo_competencia (str): Tipo de competencia a evaluar
     """
 
     _name = "evaluacion"

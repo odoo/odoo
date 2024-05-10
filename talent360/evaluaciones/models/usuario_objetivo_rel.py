@@ -4,10 +4,11 @@ from odoo import models, fields
 class UsuarioObjetivoRel(models.Model):
     """
     Modelo para representar la relación entre usuarios y objetivos
-        _name(str): Nombre del modelo en Odoo
-        _description (str): Descripción del modelo en Odoo
-        evaluacion_id = Identificador de la evaluación
-        objetivo_id = Identificador del objetivo
+        
+    :param _name(str): Nombre del modelo en Odoo
+    :param _description (str): Descripción del modelo en Odoo
+    :param evaluacion_id = Identificador de la evaluación
+    :param objetivo_id = Identificador del objetivo
     """
 
     _name = "usuario.objetivo.rel"

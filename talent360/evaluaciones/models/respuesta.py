@@ -2,6 +2,21 @@ from odoo import models, fields
 
 
 class Respuesta(models.Model):
+    """
+    Modelo para representar las respuestas a las preguntas
+    
+    :param _name (str): Nombre del modelo en Odoo
+    :param _description (str): Descripción del modelo en Odoo
+    :param pregunta_id (int): Identificador de la pregunta
+    :param usuario_id (int): Identificador del usuario
+    :param evaluacion_id (int): Identificador de la evaluación
+    :param pregunta_texto (str): Texto de la pregunta
+    :param respuesta_texto (str): Texto de la respuesta
+    :param token (str): Token de la respuesta
+    :param opcion_id (int): Identificador de la opción
+    :param respuesta_mostrar (str): Respuesta a mostrar
+    """
+    
     _name = "respuesta"
     _description = "Respuesta a una pregunta"
 

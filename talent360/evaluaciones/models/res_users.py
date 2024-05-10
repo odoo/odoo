@@ -3,6 +3,13 @@ from odoo.exceptions import ValidationError
 
 
 class Users(models.Model):
+    """
+    Modelo para representar los usuarios de Odoo.
+    
+    :param _name (str): Nombre del modelo en Odoo
+    :param evaluacion_ids (list): Lista de evaluaciones asociadas al usuario
+    """
+    
     _name = "res.users"
     _inherit = ["res.users"]
 
