@@ -569,7 +569,6 @@ class Evaluacion(models.Model):
                     categoria["puntuacion"] / categoria["puntuacion_maxima"]
                 ) * 100
                 categoria["color"] = self.asignar_color_clima(categoria["valor"])
-                print(categoria["valor"])
 
             for dept in categoria["departamentos"]:
                 if dept["puntos_maximos"] > 0:
