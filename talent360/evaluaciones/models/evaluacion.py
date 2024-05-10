@@ -473,7 +473,6 @@ class Evaluacion(models.Model):
             }
 
         return parametros
-
     def action_generar_datos_reporte_clima(self):
         # Categorías para el reporte de clima laboral
         categorias_clima = [
@@ -532,9 +531,9 @@ class Evaluacion(models.Model):
             maximo_pregunta = 0
 
             for respuesta in pregunta.respuesta_ids:
-                valor_respuesta = respuesta.valor_respuesta
+                valor_respuesta = int(respuesta.respuesta_texto)
                 valor_pregunta += valor_respuesta
-                maximo_pregunta += pregunta.valor_maximo  # Suponiendo un máximo de 4 para cada respuesta en escala
+                maximo_pregunta += 4  # Suponiendo un máximo de 4 para cada respuesta en escala
 
                 nombre_departamento = respuesta.usuario_id.department_id.name if respuesta.usuario_id.department_id else "Sin departamento"
                 departamento = next(
@@ -569,6 +568,7 @@ class Evaluacion(models.Model):
                     categoria["puntuacion"] / categoria["puntuacion_maxima"]
                 ) * 100
                 categoria["color"] = self.asignar_color_clima(categoria["valor"])
+                print(categoria["valor"])
 
             for dept in categoria["departamentos"]:
                 if dept["puntos_maximos"] > 0:
@@ -581,7 +581,7 @@ class Evaluacion(models.Model):
             else 0
         ),2)
 
-        # Datos demograficos
+      # Datos demograficos
         if self.incluir_demograficos:
             datos_demograficos = []
 
@@ -623,9 +623,8 @@ class Evaluacion(models.Model):
                 "departamentos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in departamentos.items()],
                 "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
                 "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
-                "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()], 
+                "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],
                 "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
-
             }
 
         else:
@@ -637,7 +636,6 @@ class Evaluacion(models.Model):
                 "total_maximo": total_maximo_posible,
                 "total_porcentaje": total_porcentaje,
                 "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
-
             }
 
         # Parámetros para el template

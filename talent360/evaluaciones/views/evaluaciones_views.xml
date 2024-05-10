@@ -149,7 +149,7 @@
                                 <field class="lh-lg w-100" colspan="2" name="usuario_ids" nolabel="1" context="{'current_evaluacion_id': active_id}">
                                     <tree>
                                         <field class="lh-m" name="name"/>
-                                        <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="ver_respuestas_usuario" string="Ver respuestas" type="object"/>
+                                        <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="ver_respuestas_usuario" string="Detalle" type="object"/>
                                     </tree>
                                 </field>
                             </page>
@@ -331,7 +331,7 @@
         <field name="res_model">evaluacion</field>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="reportes_view_tree"/>
-        <field name="domain" eval="[('porcentaje_respuestas', '>', '0')]"/>
+        <field name="domain" eval="[('estado', '=', 'finalizado')]"/>
     </record>
 
 
