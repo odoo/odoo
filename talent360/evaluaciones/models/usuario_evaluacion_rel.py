@@ -47,7 +47,7 @@ class UsuarioEvaluacionRel(models.Model):
         string="Usuarios de Evaluación",
         readonly=True,
     )
-    token = fields.Char(string="Token")
+    token = fields.Char()
 
     usuario_externo_id = fields.Many2one("usuario.externo", string="Usuario Externo")
 

@@ -1,4 +1,4 @@
-from odoo import api, models, fields
+from odoo import api, models, fields, _
 from collections import defaultdict
 from odoo import exceptions
 
@@ -84,7 +84,7 @@ class Evaluacion(models.Model):
     def check_fechas(self):
         for record in self:
             if record.fecha_inicio and record.fecha_final and record.fecha_inicio > record.fecha_final:
-                raise exceptions.ValidationError("La fecha de inicio debe ser anterior a la fecha final")
+                raise exceptions.ValidationError(_("La fecha de inicio debe ser anterior a la fecha final"))
 
 
     # Método para copiar preguntas de la plantilla a la evaluación
@@ -438,6 +438,7 @@ class Evaluacion(models.Model):
             "categorias": [categorias[nombre] for nombre in categorias_orden],
             "dominios": [dominios[nombre] for nombre in dominios_orden],
             "final": final,
+            "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
         }
 
         parametros.update(datos_demograficos)
@@ -501,7 +502,6 @@ class Evaluacion(models.Model):
             valor_pregunta = 0
             maximo_pregunta = 0
 
-
             for respuesta in pregunta.respuesta_ids:
                 valor_respuesta = respuesta.valor_respuesta
                 valor_pregunta += valor_respuesta
@@ -552,7 +552,7 @@ class Evaluacion(models.Model):
             else 0
         ),2)
 
-      # Datos demograficos
+        # Datos demograficos
         if self.incluir_demograficos:
             datos_demograficos = self.generar_datos_demograficos()
 
@@ -565,6 +565,7 @@ class Evaluacion(models.Model):
             "total": total_puntuacion,
             "total_maximo": total_maximo_posible,
             "total_porcentaje": total_porcentaje,
+            "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
         }
 
         parametros.update(datos_demograficos)
@@ -621,9 +622,8 @@ class Evaluacion(models.Model):
                 "departamentos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in departamentos.items()],
                 "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
                 "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
-                "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],
+                "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()], 
             }
-
 
     def asignar_color(self, valor, categoria=None, dominio=None):
         """
