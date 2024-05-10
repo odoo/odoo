@@ -1,4 +1,4 @@
-from odoo import http
+from odoo import http, _
 from odoo.http import request
 from odoo.exceptions import AccessError
 from ..models.evaluacion import Evaluacion
@@ -27,7 +27,7 @@ class EvaluacionesController(http.Controller):
         if not request.env.user.has_group(
             "evaluaciones.evaluaciones_cliente_cr_group_user"
         ):
-            raise AccessError("No tienes permitido acceder a este recurso.")
+            raise AccessError(_("No tienes permitido acceder a este recurso."))
 
         parametros = evaluacion.generar_datos_reporte_NOM_035_action()
 
@@ -120,7 +120,7 @@ class EvaluacionesController(http.Controller):
             if not request.env.user.has_group(
                 "evaluaciones.evaluaciones_cliente_cr_group_user"
             ):
-                raise AccessError("No tienes permitido acceder a este recurso.")
+                raise AccessError(_("No tienes permitido acceder a este recurso."))
 
             user = request.env.user.id
 
@@ -236,7 +236,7 @@ class EvaluacionesController(http.Controller):
         if not request.env.user.has_group(
             "evaluaciones.evaluaciones_cliente_cr_group_user"
         ):
-            raise AccessError("No tienes permitido acceder a este recurso.")
+            raise AccessError(_("No tienes permitido acceder a este recurso."))
 
         # Generar parámetros para el reporte
         parametros = evaluacion.action_generar_datos_reporte_clima()

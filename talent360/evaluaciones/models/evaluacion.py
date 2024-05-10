@@ -1,4 +1,4 @@
-from odoo import api, models, fields
+from odoo import api, models, fields, _
 from collections import defaultdict
 from odoo import exceptions
 
@@ -74,7 +74,7 @@ class Evaluacion(models.Model):
     def check_fechas(self):
         for record in self:
             if record.fecha_inicio and record.fecha_final and record.fecha_inicio > record.fecha_final:
-                raise exceptions.ValidationError("La fecha de inicio debe ser anterior a la fecha final")
+                raise exceptions.ValidationError(_("La fecha de inicio debe ser anterior a la fecha final"))
 
     incluir_demograficos = fields.Boolean(string="Incluir datos demográficos", default = True)
 
