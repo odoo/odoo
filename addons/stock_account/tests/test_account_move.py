@@ -152,3 +152,61 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
             product_accounts = basic_product.product_tmpl_id.with_company(company.id).get_product_accounts()
             self.assertEqual(bill.invoice_line_ids.account_id, product_accounts['expense'])
+
+    def test_product_valuation_method_change_to_automated_negative_on_hand_qty(self):
+        categ = self.env['product.category'].create({'name': 'categ'})
+        product = self.product_a
+        product.write({
+            'type': 'product',
+            'categ_id': categ.id,
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        so.action_confirm()
+        so_picking = so.picking_ids
+        self.env['stock.move.line'].create({
+            'picking_id': so_picking.id,
+            'product_id': product.id,
+            'product_uom_id': product.uom_id.id,
+            'location_id': so_picking.location_id.id,
+            'location_dest_id': so_picking.location_dest_id.id,
+            'qty_done': 1,
+        })
+        so_picking.sudo().button_validate()
+        so._create_invoices()
+
+        categ_form = Form(categ)
+        categ_form.property_valuation = 'real_time'
+        categ_form.property_stock_account_input_categ_id = self.stock_input_account
+        categ_form.property_stock_account_output_categ_id = self.stock_output_account
+        categ_form.property_stock_valuation_account_id = self.stock_valuation_account
+        categ_form.property_stock_journal = self.stock_journal
+        categ_form.save()
+
+        # we expect a credit to stock valuation and debit to output/delivered (?) [or input/received ?]
+        stock_valuation_line = self.env['account.move.line'].search([
+            ('journal_id', '=', self.stock_journal.id),
+            ('account_id', '=', self.stock_valuation_account.id),
+            ('product_id', '=', product.id),
+        ])
+        output_line = self.env['account.move.line'].search([
+            ('journal_id', '=', self.stock_journal.id),
+            ('account_id', '=', self.stock_output_account.id),
+            ('product_id', '=', product.id),
+        ])
+
+        self.assertEqual(
+            [
+                (stock_valuation_line.credit, stock_valuation_line.debit),
+                (output_line.credit, output_line.debit),
+            ],
+            [
+                (product.standard_price, 0),
+                (0, product.standard_price)
+            ]
+        )
