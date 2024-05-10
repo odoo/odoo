@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from odoo import Command
 from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo.tests import Form
 from odoo.exceptions import UserError
@@ -444,6 +445,29 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(self.env['stock.quant']._gather(product, customer_location).quantity, 2)
         # Ensure there still no quants in distribution warehouse
         self.assertEqual(sum(self.env['stock.quant']._gather(product, warehouse_distribution_wavre.lot_stock_id).mapped('quantity')), 0)
+
+    def test_toggle_resupply_warehouse(self):
+        """ Checks that selecting then unselecting a warehouse as resupply correctly archives/unarchives the related route.
+        """
+        warehouse_A = self.env['stock.warehouse'].create({
+            'name': 'Warehouse A',
+            'code': 'WH_A',
+        })
+        warehouse_B = self.env['stock.warehouse'].create({
+            'name': 'Warehouse B',
+            'code': 'WH_B',
+            'resupply_wh_ids': [Command.set(warehouse_A.ids)],
+        })
+        resupply_route = warehouse_B.resupply_route_ids
+        self.assertTrue(resupply_route.active, 'Route should be active')
+        # Un-select Warehouse A as a resupply warehouse
+        warehouse_B.resupply_wh_ids = [Command.set([])]
+        self.assertFalse(warehouse_B.resupply_route_ids)
+        self.assertFalse(resupply_route.active, 'Route should now be inactive')
+        # Re-select Warehouse A as a resupply warehouse
+        warehouse_B.resupply_wh_ids = [Command.set(warehouse_A.ids)]
+        self.assertEqual(warehouse_B.resupply_route_ids, resupply_route)
+        self.assertTrue(resupply_route.active, 'Route should now be active')
 
     def test_noleak(self):
         # non-regression test to avoid company_id leaking to other warehouses (see blame)
