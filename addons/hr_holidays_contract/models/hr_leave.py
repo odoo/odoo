@@ -79,6 +79,6 @@ Contracts:
                           "Contract %s from %s to %s, status: %s",
                           contract.name,
                           format_date(self.env, contract.date_start),
-                          format_date(self.env, contract.date_start) if contract.date_end else _("undefined"),
+                          format_date(self.env, contract.date_end) if contract.date_end else _("undefined"),
                           state_labels[contract.state]
                       ) for contract in contracts)))
