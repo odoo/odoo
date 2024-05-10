@@ -2,7 +2,7 @@ from odoo import models, fields
 from odoo.exceptions import ValidationError
 
 
-class UsuariosExternos(models.Model):
+class UsuarioExterno(models.Model):
 
     _name = "usuario.externo"
     _description = "Usuarios externos a la plataforma. Se utiliza para que puedan responer encuestas sin tener un usuario"

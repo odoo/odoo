@@ -430,56 +430,19 @@ class Evaluacion(models.Model):
 
         # Datos demograficos
         if self.incluir_demograficos:
-            datos_demograficos = []
-
-            for usuario in self.usuario_ids:
-                usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
-                    [("usuario_id.id", "=", usuario.id), ("evaluacion_id.id", "=", self.id)]
-                )
-
-                if (
-                    usuario_evaluacion_rel
-                    and usuario_evaluacion_rel[0].contestada == "contestada"
-                ):
-                    datos_demograficos.append(self.obtener_datos_demograficos(usuario))
-
-            departamentos = defaultdict(int)
-            for dato in datos_demograficos:
-                departamentos[dato["departamento"]] += 1
-
-            generaciones = defaultdict(int)
-            for dato in datos_demograficos:
-                generaciones[dato["generacion"]] += 1
-                
-            puestos = defaultdict(int)
-            for dato in datos_demograficos:
-                puestos[dato["puesto"]] += 1
-
-            generos = defaultdict(int)
-            for dato in datos_demograficos:
-                dato["genero"] = dato["genero"].capitalize()
-                generos[dato["genero"]] += 1
-
-            # Organizar los parámetros en el orden deseado
-            parametros = {
-                "evaluacion": self,
-                "categorias": [categorias[nombre] for nombre in categorias_orden],
-                "dominios": [dominios[nombre] for nombre in dominios_orden],
-                "departamentos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in departamentos.items()],
-                "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
-                "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
-                "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],
-                "final": final,
-            }
+            datos_demograficos = self.generar_datos_demograficos()
 
         else:
+            datos_demograficos = {}
             # Organizar los parámetros en el orden deseado
-            parametros = {
-                "evaluacion": self,
-                "categorias": [categorias[nombre] for nombre in categorias_orden],
-                "dominios": [dominios[nombre] for nombre in dominios_orden],
-                "final": final,
-            }
+        parametros = {
+            "evaluacion": self,
+            "categorias": [categorias[nombre] for nombre in categorias_orden],
+            "dominios": [dominios[nombre] for nombre in dominios_orden],
+            "final": final,
+        }
+
+        parametros.update(datos_demograficos)
 
         return parametros
 
@@ -593,60 +556,76 @@ class Evaluacion(models.Model):
 
       # Datos demograficos
         if self.incluir_demograficos:
-            datos_demograficos = []
+            datos_demograficos = self.generar_datos_demograficos()
 
-            for usuario in self.usuario_ids:
-                usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
-                    [("usuario_id.id", "=", usuario.id), ("evaluacion_id.id", "=", self.id)]
+        else:
+            datos_demograficos = {}
+            # Organizar los parámetros en el orden deseado
+        parametros = {
+            "evaluacion": self,
+            "categorias": detalles_categorias,
+            "total": total_puntuacion,
+            "total_maximo": total_maximo_posible,
+            "total_porcentaje": total_porcentaje,
+        }
+
+        parametros.update(datos_demograficos)
+
+        return parametros
+
+    def generar_datos_demograficos(self):
+        datos_demograficos = []
+        for usuario in self.usuario_ids:
+            usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
+                [("usuario_id.id", "=", usuario.id), ("evaluacion_id.id", "=", self.id)]
+            )
+
+            if (
+                usuario_evaluacion_rel
+                and usuario_evaluacion_rel[0].contestada == "contestada"
+            ):
+                datos_demograficos.append(self.obtener_datos_demograficos(usuario))
+
+        for usuario_externo in self.usuario_externo_ids:
+            usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
+                [
+                    ("usuario_externo_id.id", "=", usuario_externo.id),
+                    ("evaluacion_id.id", "=", self.id),
+                ]
+            )
+
+            if (
+                usuario_evaluacion_rel
+                and usuario_evaluacion_rel[0].contestada == "contestada"
+            ):
+                datos_demograficos.append(
+                    self.obtener_datos_demograficos_externos(usuario_externo)
                 )
 
-                if (
-                    usuario_evaluacion_rel
-                    and usuario_evaluacion_rel[0].contestada == "contestada"
-                ):
-                    datos_demograficos.append(self.obtener_datos_demograficos(usuario))
+        departamentos = defaultdict(int)
+        for dato in datos_demograficos:
+            departamentos[dato["departamento"]] += 1
 
-            departamentos = defaultdict(int)
-            for dato in datos_demograficos:
-                departamentos[dato["departamento"]] += 1
+        generaciones = defaultdict(int)
+        for dato in datos_demograficos:
+            generaciones[dato["generacion"]] += 1
+            
+        puestos = defaultdict(int)
+        for dato in datos_demograficos:
+            puestos[dato["puesto"]] += 1
 
-            generaciones = defaultdict(int)
-            for dato in datos_demograficos:
-                generaciones[dato["generacion"]] += 1
-                
-            puestos = defaultdict(int)
-            for dato in datos_demograficos:
-                puestos[dato["puesto"]] += 1
+        generos = defaultdict(int)
+        for dato in datos_demograficos:
+            dato["genero"] = dato["genero"].capitalize()
+            generos[dato["genero"]] += 1
 
-            generos = defaultdict(int)
-            for dato in datos_demograficos:
-                dato["genero"] = dato["genero"].capitalize()
-                generos[dato["genero"]] += 1
-
-            # Organizar los parámetros en el orden deseado
-            parametros = {
-                "evaluacion": self,
-                "categorias": detalles_categorias,
-                "total": total_puntuacion,
-                "total_maximo": total_maximo_posible,
-                "total_porcentaje": total_porcentaje,
+        return {
                 "departamentos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in departamentos.items()],
                 "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
                 "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
-                "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],  
+                "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],
             }
 
-        else:
-            # Organizar los parámetros en el orden deseado
-            parametros = {
-                "evaluacion": self,
-                "categorias": detalles_categorias,
-                "total": total_puntuacion,
-                "total_maximo": total_maximo_posible,
-                "total_porcentaje": total_porcentaje,
-            }
-
-        return parametros
 
     def asignar_color(self, valor, categoria=None, dominio=None):
         """
@@ -843,6 +822,18 @@ class Evaluacion(models.Model):
 
         return dato
 
+    def obtener_generacion(self, anio_nacimiento):
+        if 1946 <= anio_nacimiento <= 1964:
+            return "Baby Boomers"
+        elif 1965 <= anio_nacimiento <= 1980:
+            return "Generación X"
+        elif 1981 <= anio_nacimiento <= 1999:
+            return "Millenials"
+        elif 2000 <= anio_nacimiento <= 2015:
+            return "Generacion Z"
+        else:
+            return "N/A"
+
     def obtener_datos_demograficos(self, usuario):
         """
         Obtiene los datos demográficos de un usuario.
@@ -856,24 +847,11 @@ class Evaluacion(models.Model):
         
         datos = {}
         
-        def obtener_generacion(anio_nacimiento):
-            if 1946 <= anio_nacimiento <= 1964:
-                return "Baby Boomers"
-            elif 1965 <= anio_nacimiento <= 1980:
-                return "Generación X"
-            elif 1981 <= anio_nacimiento <= 1999:
-                return "Millenials"
-            elif 2000 <= anio_nacimiento <= 2015:
-                return "Generacion Z"
-            else:
-                return "N/A"
-
-
         datos["nombre"] = self.obtener_dato(usuario.name)
         datos["genero"] = self.obtener_dato(usuario.gender)
         datos["puesto"] = self.obtener_dato(usuario.job_title)
         datos["anio_nacimiento"] = usuario.birthday.year if usuario.birthday else "N/A"
-        datos["generacion"] = obtener_generacion(datos["anio_nacimiento"]) if datos["anio_nacimiento"] != "N/A" else "N/A"
+        datos["generacion"] = self.obtener_generacion(datos["anio_nacimiento"]) if datos["anio_nacimiento"] != "N/A" else "N/A"
         datos["departamento"] = self.obtener_dato(usuario.department_id.name)
         
         # Falta
@@ -883,6 +861,18 @@ class Evaluacion(models.Model):
         # Fecha de ingreso
         # Ubicación/Region
         
+        return datos
+
+    def obtener_datos_demograficos_externos(self, usuario):
+        datos = {}
+
+        datos["nombre"] = self.obtener_dato(usuario.nombre)
+        datos["genero"] = self.obtener_dato(usuario.genero)
+        datos["puesto"] = self.obtener_dato(usuario.puesto)
+        datos["anio_nacimiento"] = usuario.fecha_nacimiento.year if usuario.fecha_nacimiento else "N/A"
+        datos["generacion"] = self.obtener_generacion(datos["anio_nacimiento"]) if datos["anio_nacimiento"] != "N/A" else "N/A"
+        datos["departamento"] = self.obtener_dato(usuario.direccion)
+
         return datos
     
     def action_get_evaluaciones(self, evaluacion_id):
