@@ -15,28 +15,29 @@ publicWidget.registry.hrRecruitment = publicWidget.Widget.extend({
     },
 
     _onClickApplyButton (ev) {
-        const $linkedin_profile = $('#recruitment4');
-        const $resume = $('#recruitment6');
+        const linkedinProfileEl = document.querySelector("#recruitment4");
+        const resumeEl = document.querySelector("#recruitment6");
 
-        const is_linkedin_empty = !$linkedin_profile.length || $linkedin_profile.val().trim() === '';
-        const is_resume_empty = !$resume.length || !$resume[0].files.length;
-        if (is_linkedin_empty && is_resume_empty) {
-            $linkedin_profile.attr('required', true);
-            $resume.attr('required', true);
+        const isLinkedinEmpty = !linkedinProfileEl || linkedinProfileEl.value.trim() === "";
+        const isResumeEmpty = !resumeEl || !resumeEl.files.length;
+        if (isLinkedinEmpty && isResumeEmpty) {
+            linkedinProfileEl?.setAttribute("required", true);
+            resumeEl?.setAttribute("required", true);
         } else {
-            $linkedin_profile.attr('required', false);
-            $resume.attr('required', false);
+            linkedinProfileEl?.removeAttribute("required");
+            resumeEl?.removeAttribute("required");
         }
     },
 
-    hideWarningMessage(target, messageContainerId) {
-        $(target).removeClass("border-warning");
-        $(messageContainerId).hide();
+    hideWarningMessage(targetEl, messageContainerId) {
+        targetEl.classList.remove("border-warning");
+        document.querySelector(messageContainerId).classList.add("d-none");
     },
 
-    ShowWarningMessage(target, messageContainerId, message) {
-        $(target).addClass("border-warning");
-        $(messageContainerId).text(message).show();
+    showWarningMessage(targetEl, messageContainerId, message) {
+        targetEl.classList.add("border-warning");
+        document.querySelector(messageContainerId).textContent = message;
+        document.querySelector(messageContainerId).classList.remove("d-none");
     },
 
     async _onFocusOutName(ev) {
@@ -58,29 +59,29 @@ publicWidget.registry.hrRecruitment = publicWidget.Widget.extend({
     },
 
     async _onFocusOutLinkedin (ev) {
-        const target = $(ev.currentTarget);
-        const linkedin = target.val();
+        const targetEl = ev.currentTarget;
+        const linkedin = targetEl.value;
         const field = "linkedin";
         const messageContainerId = "#linkedin-message";
         const linkedin_regex = /^(https?:\/\/)?([\w\.]*)linkedin\.com\/in\/(.*?)(\/.*)?$/;
         let hasWarningMessage = false;
         if (!linkedin_regex.test(linkedin) && linkedin !== "") {
             const message = _t("The profile that you gave us doesn't seems like a linkedin profile")
-            this.ShowWarningMessage(target, '#linkedin-message', message)
+            this.showWarningMessage(targetEl, "#linkedin-message", message);
             hasWarningMessage = true;
         } else {
-            this.hideWarningMessage(target, '#linkedin-message');
+            this.hideWarningMessage(targetEl, "#linkedin-message");
         }
-        await this.checkRedundant(target, field, messageContainerId, hasWarningMessage);
+        await this.checkRedundant(targetEl, field, messageContainerId, hasWarningMessage);
     },
 
-    async checkRedundant(target, field, messageContainerId, keepPreviousWarningMessage = false) {
-        const value = $(target).val();
+    async checkRedundant(targetEl, field, messageContainerId, keepPreviousWarningMessage = false) {
+        const value = targetEl.value;
         if (!value) {
-            this.hideWarningMessage(target, messageContainerId);
+            this.hideWarningMessage(targetEl, messageContainerId);
             return;
         }
-        const job_id = $('#recruitment7').val();
+        const job_id = document.querySelector("#recruitment7").value;
         const data = await rpc("/website_hr_recruitment/check_recent_application", {
             field: field,
             value: value,
@@ -88,10 +89,9 @@ publicWidget.registry.hrRecruitment = publicWidget.Widget.extend({
         });
 
         if (data.message) {
-            this.ShowWarningMessage(target, messageContainerId, data.message);
-        }
-        else if (!keepPreviousWarningMessage) {
-            this.hideWarningMessage(target, messageContainerId);
+            this.showWarningMessage(targetEl, messageContainerId, data.message);
+        } else if (!keepPreviousWarningMessage) {
+            this.hideWarningMessage(targetEl, messageContainerId);
         }
     },
 });
