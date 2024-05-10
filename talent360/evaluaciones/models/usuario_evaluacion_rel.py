@@ -20,6 +20,7 @@ class UsuarioEvaluacionRel(models.Model):
     
     _name = "usuario.evaluacion.rel"
     _description = "Relación entre evaluacion y usuarios"
+    _rec_name = "evaluacion_nombre"
 
     evaluacion_id = fields.Many2one("evaluacion", string="Evaluacion")
     usuario_id = fields.Many2one("res.users", string="Usuario")

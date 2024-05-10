@@ -14,7 +14,7 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
     nombre_archivo = fields.Char()
 
 
-    cambos_obligatorios = [
+    campos_obligatorios = [
             "Nombre Completo",
             "Correo",
             "Puesto",
@@ -110,7 +110,7 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
         columnas_faltantes = []
         columnas_duplicadas = []
 
-        for columna in self.cambos_obligatorios:
+        for columna in self.campos_obligatorios:
             if columna not in columnas:
                 columnas_faltantes.append(columna)
 

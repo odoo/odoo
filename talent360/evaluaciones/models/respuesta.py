@@ -19,6 +19,7 @@ class Respuesta(models.Model):
     
     _name = "respuesta"
     _description = "Respuesta a una pregunta"
+    _rec_name = "respuesta_mostrar"
 
     pregunta_id = fields.Many2one("pregunta", string="Preguntas")
     usuario_id = fields.Many2one("res.users", string="Usuario")
