@@ -125,7 +125,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         # create second invoice
         invoice2 = sale_order._create_invoices()[0]
 
-        self.assertEqual(len(sale_order.invoice_ids), 2, "A second invoice should have been created from the SO")
+        self.assertEqual(len(sale_order.account_move_ids), 2, "A second invoice should have been created from the SO")
         self.assertTrue(float_is_zero(invoice2.amount_total - so_line_ordered_task_in_project.price_unit * 3, precision_digits=2), 'Sale: invoice generation on timesheets product is wrong')
 
         self.assertFalse(timesheet1.timesheet_invoice_id, "The timesheet1 should not be linked to the invoice, since we are in ordered quantity")
@@ -224,7 +224,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
         # create a second invoice
         invoice2 = sale_order._create_invoices()[0]
-        self.assertEqual(len(sale_order.invoice_ids), 2, "A second invoice should have been created from the SO")
+        self.assertEqual(len(sale_order.account_move_ids), 2, "A second invoice should have been created from the SO")
         self.assertEqual(so_line_deliver_global_project.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on delivery" timesheets should set the so line in "to invoice" status when logged')
         self.assertEqual(sale_order.invoice_status, 'no', 'Sale Timesheet: "invoice on delivery" timesheets should be invoiced completely by now')
         self.assertEqual(timesheet2.timesheet_invoice_id, invoice2, "The timesheet2 should not be linked to the invoice 2")
@@ -446,7 +446,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         with self.assertRaises(UserError):
             wizard.create_invoices()
 
-        self.assertFalse(sale_order.invoice_ids, 'Normally, no invoice will be created because the timesheet logged is after the period defined in date_start_invoice_timesheet and date_end_invoice_timesheet field')
+        self.assertFalse(sale_order.account_move_ids, 'Normally, no invoice will be created because the timesheet logged is after the period defined in date_start_invoice_timesheet and date_end_invoice_timesheet field')
 
         wizard.write({
             'date_start_invoice_timesheet': today - timedelta(days=10),
@@ -454,11 +454,11 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         })
         wizard.create_invoices()
 
-        self.assertTrue(sale_order.invoice_ids, 'One invoice should be created because the timesheet logged is between the period defined in wizard')
+        self.assertTrue(sale_order.account_move_ids, 'One invoice should be created because the timesheet logged is between the period defined in wizard')
         self.assertTrue(all(line.invoice_status == "to invoice" for line in sale_order.order_line if line.qty_delivered != line.qty_invoiced),
                         "All lines that still have some quantity to be invoiced should have an invoice status of 'to invoice', regardless if they were considered for previous invoicing, but didn't belong to the timesheet domain")
 
-        invoice = sale_order.invoice_ids[0]
+        invoice = sale_order.account_move_ids[0]
         self.assertEqual(so_line_deliver_global_project.qty_invoiced, timesheet1.unit_amount)
 
         # validate invoice
@@ -470,8 +470,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         })
         wizard.create_invoices()
 
-        self.assertEqual(len(sale_order.invoice_ids), 2)
-        invoice2 = sale_order.invoice_ids[-1]
+        self.assertEqual(len(sale_order.account_move_ids), 2)
 
         self.assertEqual(so_line_deliver_global_project.qty_invoiced, timesheet1.unit_amount + timesheet3.unit_amount, "The last invoice done should have the quantity of the timesheet 3, because the date this timesheet is the only one before the 'date_end_invoice_timesheet' field in the wizard.")
 
@@ -482,8 +481,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
         wizard.create_invoices()
 
-        self.assertEqual(len(sale_order.invoice_ids), 3)
-        invoice3 = sale_order.invoice_ids[-1]
+        self.assertEqual(len(sale_order.account_move_ids), 3)
 
         # Check if all timesheets have been invoiced
         self.assertEqual(so_line_deliver_global_project.qty_invoiced, timesheet1.unit_amount + timesheet2.unit_amount + timesheet3.unit_amount)

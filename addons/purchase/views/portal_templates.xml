@@ -263,7 +263,7 @@
                   </div>
               </div>
 
-              <t t-set="invoices" t-value="[i for i in order.invoice_ids if i.state not in ['draft', 'cancel']]"/>
+              <t t-set="invoices" t-value="[i for i in order.account_move_ids if i.state not in ['draft', 'cancel']]"/>
               <div t-if="invoices" class="row">
                   <div class="col">
                       <strong class="d-block mb-1">Invoices</strong>
