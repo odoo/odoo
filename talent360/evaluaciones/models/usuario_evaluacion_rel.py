@@ -3,6 +3,21 @@ import secrets
 
 
 class UsuarioEvaluacionRel(models.Model):
+    """
+    Modelo para representar la relación entre evaluaciones y usuarios
+    
+    :param _name (str): Nombre del modelo en Odoo
+    :param _description (str): Descripción del modelo en Odoo
+    :param evaluacion_id (int): Identificador de la evaluación
+    :param usuario_id (int): Identificador del usuario
+    :param contestada (str): Estado de la evaluación
+    :param evaluacion_nombre (str): Nombre de la evaluación
+    :param evaluacion_estado (str): Estado de la evaluación
+    :param evaluacion_tipo (str): Tipo de la evaluación
+    :param evaluacion_usuario_ids (list): Lista de usuarios de la evaluación
+    :param token (str): Token para la evaluación
+    """
+    
     _name = "usuario.evaluacion.rel"
     _description = "Relación entre evaluacion y usuarios"
 

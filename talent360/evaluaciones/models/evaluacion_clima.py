@@ -6,6 +6,20 @@ class EvaluacionClima(models.Model):
     """
     Modelo para representar Evaluaciones de Clima Laboral.
     Hereda de "evaluacion".
+    
+    :param _name (str): Nombre del modelo en Odoo
+    :param _description (str): Descripción del modelo en Odoo
+    :param piso_rojo (float): Piso del nivel rojo
+    :param techo_rojo (float): Techo del nivel rojo
+    :param techo_naranja (float): Techo del nivel naranja
+    :param techo_amarillo (float): Techo del nivel amarillo
+    :param techo_verde (float): Techo del nivel verd
+    :param techo_azul (float): Techo del nivel azul
+    :param descripcion_rojo (str): Descripción del nivel rojo
+    :param descripcion_naranja (str): Descripción del nivel naranja
+    :param descripcion_amarillo (str): Descripción del nivel amarillo
+    :param descripcion_verde (str): Descripción del nivel verde
+    :param descripcion_azul (str): Descripción del nivel azul
     """
 
     _name = "evaluacion"

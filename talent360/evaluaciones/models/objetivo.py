@@ -7,26 +7,26 @@ class Objetivo(models.Model):
     """
     Modelo para representar un objetivo de desempeño en Odoo
 
-    Atributos:
-        _name(str): Nombre del modelo en Odoo
-        _description (str): Descripción del modelo en Odoo
-        titulo (fields.Char): Título del objetivo
-        descripcion (fields.Text): Descrpición del objetivo
-        metrica(fields.Selection): Seleccionar la forma en la que se va a medir el objetivo
-        tipo(fields.Selection): Seleccionar el tipo del objetivo
-        orden(fields.Selection): Seleccionar si el objetivo es para incrementar o decrementar un comportamiento
-        peso(fields.Integer): Peso del objetivo de la evaluación
-        piso_minimo(fields.Integer): El resultado mínimo que se espera
-        piso_maximo(fields.Integer): El resultado máximo que se espera
-        fecha_fin(fields.Date): Fecha final del objetivo
-        resultado(fields.Integer): Resultado del objetivo
-        estado(fields.Selection): Seleccionar el estado actual del objetivo
-        usuario_ids(fields.Many2Many): Arreglo de usuarios asignado a un objetivo
-        evaluador(fields.Char): Nombre del evaluador del objetivo
+    :param _name(str): Nombre del modelo en Odoo
+    :param _description (str): Descripción del modelo en Odoo
+    :param titulo (fields.Char): Título del objetivo
+    :param descripcion (fields.Text): Descrpición del objetivo
+    :param metrica(fields.Selection): Seleccionar la forma en la que se va a medir el objetivo
+    :param tipo(fields.Selection): Seleccionar el tipo del objetivo
+    :param orden(fields.Selection): Seleccionar si el objetivo es para incrementar o decrementar un comportamiento
+    :param peso(fields.Integer): Peso del objetivo de la evaluación
+    :param piso_minimo(fields.Integer): El resultado mínimo que se espera
+    :param piso_maximo(fields.Integer): El resultado máximo que se espera
+    :param fecha_fin(fields.Date): Fecha final del objetivo
+    :param resultado(fields.Integer): Resultado del objetivo
+    :param estado(fields.Selection): Seleccionar el estado actual del objetivo
+    :param usuario_ids(fields.Many2Many): Arreglo de usuarios asignado a un objetivo
+    :param evaluador(fields.Char): Nombre del evaluador del objetivo
     """
 
     _name = "objetivo"
     _description = "Objetivos de desempeño"
+    _rec_name = "titulo"
 
     titulo = fields.Char(required=True, string="Título")
     descripcion = fields.Text(
