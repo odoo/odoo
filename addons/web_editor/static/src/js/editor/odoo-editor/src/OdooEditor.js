@@ -2292,6 +2292,7 @@ export class OdooEditor extends EventTarget {
             fillEmpty(closestBlock(start));
         }
         fillEmpty(closestBlock(range.endContainer));
+        range = getDeepRange(this.editable, { sel });
         let joinWith = range.endContainer;
         const rightLeaf = rightLeafOnlyNotBlockPath(joinWith).next().value;
         if (rightLeaf && rightLeaf.nodeValue === ' ') {
