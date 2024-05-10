@@ -44,4 +44,4 @@ class TestWebsiteSaleAutoInvoice(WebsiteSaleCommon):
 
         with MockRequest(self.env, sale_order_id=self.cart.id, website=self.website):
             self.Controller.shop_payment_validate()
-        self.assertTrue(self.cart.invoice_ids, "No invoices were created for orders with zero total amount.")
+        self.assertTrue(self.cart.account_move_ids, "No invoices were created for orders with zero total amount.")

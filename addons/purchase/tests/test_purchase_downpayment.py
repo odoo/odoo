@@ -106,10 +106,10 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
             Check if DP PO line is created and the total amount of the final invoice is equal to the POs total amount.
         """
         self.purchase_order.button_confirm()
-        self.assertEqual(len(self.purchase_order.invoice_ids), 0, "No invoices should have been made yet")
+        self.assertEqual(len(self.purchase_order.account_move_ids), 0, "No invoices should have been made yet")
         self.make_downpayment(self.purchase_order, method='fixed')
         self.make_downpayment(self.purchase_order, method='fixed')
-        self.assertEqual(len(self.purchase_order.invoice_ids), 2, 'Invoice should be created for the PO')
+        self.assertEqual(len(self.purchase_order.account_move_ids), 2, 'Invoice should be created for the PO')
         downpayment_line = self.purchase_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
         self.assertEqual(len(downpayment_line), 2, '2 PO lines for downpayments should be created in PO')
 
@@ -120,8 +120,8 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         # Final invoice
         self.make_downpayment(self.purchase_order, method='delivered')
 
-        self.assertEqual(len(self.purchase_order.invoice_ids), 3, 'Invoice should be created for the PO')
-        invoice = max(self.purchase_order.invoice_ids)
+        self.assertEqual(len(self.purchase_order.account_move_ids), 3, 'Invoice should be created for the PO')
+        invoice = max(self.purchase_order.account_move_ids)
         self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))),
                          len(self.purchase_order.order_line.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))), 'All lines should be invoiced')
         self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda l: l.display_type == 'line_section' and l.name == "Down Payments")), 1, 'A single section for downpayments should be present')
@@ -133,16 +133,16 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         """
         self.env.company.po_lock = 'lock'
         self.purchase_order.button_confirm()
-        self.assertEqual(len(self.purchase_order.invoice_ids), 0, "No invoices should have been made yet")
+        self.assertEqual(len(self.purchase_order.account_move_ids), 0, "No invoices should have been made yet")
         self.make_downpayment(self.purchase_order, amount=10)
-        self.assertEqual(len(self.purchase_order.invoice_ids), 1, 'Invoice should be created for the PO')
+        self.assertEqual(len(self.purchase_order.account_move_ids), 1, 'Invoice should be created for the PO')
 
         # Update delivered quantity of PO lines
         self.pol_serv_deliver.qty_received = 2
         self.pol_product_deliver.qty_received = 2
 
-        self.purchase_order.invoice_ids.invoice_date = datetime.datetime.today()
-        self.purchase_order.invoice_ids.action_post()
+        self.purchase_order.account_move_ids.invoice_date = datetime.datetime.today()
+        self.purchase_order.account_move_ids.action_post()
 
     def test_downpayment_line_remains_on_PO(self):
         """
@@ -164,8 +164,8 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
 
         downpayment_line = self.purchase_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
         self.assertEqual(downpayment_line[0].price_unit, 50, 'The down payment unit price should not change on PO')
-        self.purchase_order.invoice_ids.invoice_date = datetime.datetime.today()
-        self.purchase_order.invoice_ids.action_post()
+        self.purchase_order.account_move_ids.invoice_date = datetime.datetime.today()
+        self.purchase_order.account_move_ids.action_post()
         self.assertEqual(downpayment_line[0].price_unit, 50, 'The down payment unit price should not change on PO')
 
     def test_downpayment_fixed_amount_with_zero_total_amount(self):
@@ -192,17 +192,17 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         self.purchase_order.button_confirm()
         self.make_downpayment(self.purchase_order)
 
-        self.assertEqual(len(self.purchase_order.invoice_ids), 1, 'Invoice should be created for the PO')
+        self.assertEqual(len(self.purchase_order.account_move_ids), 1, 'Invoice should be created for the PO')
         downpayment_line = self.purchase_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
         self.assertEqual(len(downpayment_line), 1, 'PO line downpayment should be created on PO')
         self.assertEqual(downpayment_line.price_unit, self.purchase_order.amount_total / 2, 'Downpayment line on the PO should have the correct amount')
 
-        invoice = self.purchase_order.invoice_ids[0]
+        invoice = self.purchase_order.account_move_ids[0]
         downpayment_aml = invoice.line_ids.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))[0]
         self.assertEqual(downpayment_aml.price_total, self.purchase_order.amount_total / 2, 'Downpayment should have the correct tax included amount on the downpayment invoice')
         self.assertEqual(downpayment_aml.price_unit, self.purchase_order.amount_total / 2, 'Downpayment should have the correct unit price on the downpayment invoice')
-        self.purchase_order.invoice_ids.invoice_date = datetime.datetime.today()
-        self.purchase_order.invoice_ids.action_post()
+        self.purchase_order.account_move_ids.invoice_date = datetime.datetime.today()
+        self.purchase_order.account_move_ids.action_post()
         self.assertEqual(downpayment_line.price_unit, self.purchase_order.amount_total / 2, 'Downpayment line on the PO should have the correct amount after posting the downpayment invoice')
 
     def test_downpayment_invoice_and_partial_credit_note(self):
@@ -221,12 +221,12 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         self.assertEqual(downpayment_line.price_unit, 100)
 
         # post the downpayment invoice and ensure the downpayment_line amount is still 100
-        self.purchase_order.invoice_ids.invoice_date = datetime.datetime.today()
-        self.purchase_order.invoice_ids.action_post()
+        self.purchase_order.account_move_ids.invoice_date = datetime.datetime.today()
+        self.purchase_order.account_move_ids.action_post()
         self.assertEqual(downpayment_line.price_unit, 100)
 
         # Create a credit note for a part of the downpayment invoice and post it
-        po_invoice = max(self.purchase_order.invoice_ids)
+        po_invoice = max(self.purchase_order.account_move_ids)
         credit_note_wizard = self.env['account.move.reversal'].with_context(
             {'active_ids': [po_invoice.id], 'active_id': po_invoice.id, 'active_model': 'account.move'}).create({
             'reason': 'no reason',
@@ -274,7 +274,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
             'amount': 50,
         })
         payment.create_invoices()
-        self.assertEqual(self.purchase_order.invoice_ids[0].company_id.id, po_company_id, "The company of the invoice should be the same as the one from the PO")
+        self.assertEqual(self.purchase_order.account_move_ids[0].company_id.id, po_company_id, "The company of the invoice should be the same as the one from the PO")
 
         po_for_downpayment.with_context(context_for_downpayment).button_confirm()
         downpayment = self.env['purchase.advance.payment.wizard'].with_context(context_for_downpayment).create({
@@ -282,7 +282,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
             'fixed_amount': 50,
         })
         downpayment.create_invoices()
-        self.assertEqual(po_for_downpayment.invoice_ids[0].company_id.id, po_company_id, "The company of the downpayment invoice should be the same as the one from the PO")
+        self.assertEqual(po_for_downpayment.account_move_ids[0].company_id.id, po_company_id, "The company of the downpayment invoice should be the same as the one from the PO")
 
     def test_refund_invoice_with_downpayment(self):
         """
@@ -312,10 +312,10 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         self.make_downpayment(self.purchase_order)
         # order_line[1] is the down payment section
         pol_downpayment = self.purchase_order.order_line[2]
-        dp_invoice = self.purchase_order.invoice_ids[0]
+        dp_invoice = self.purchase_order.account_move_ids[0]
         dp_invoice.invoice_date = datetime.datetime.today()
-        self.purchase_order.invoice_ids.invoice_date = datetime.datetime.today()
-        self.purchase_order.invoice_ids.action_post()
+        self.purchase_order.account_move_ids.invoice_date = datetime.datetime.today()
+        self.purchase_order.account_move_ids.action_post()
 
         self.assertRecordValues(pol_downpayment, [{
             'price_unit': 587.5,
@@ -328,7 +328,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
 
         self.make_downpayment(self.purchase_order, method='delivered')
 
-        po_invoice = max(self.purchase_order.invoice_ids)
+        po_invoice = max(self.purchase_order.account_move_ids)
         self.assertEqual(len(po_invoice.invoice_line_ids.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))),
                          len(self.purchase_order.order_line.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))), 'All lines should be invoiced')
         self.assertEqual(len(po_invoice.invoice_line_ids.filtered(lambda l: l.display_type == 'line_section' and l.name == "Down Payments")), 1, 'A single section for downpayments should be present')
@@ -341,7 +341,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
             'journal_id': po_invoice.journal_id.id,
         })
         credit_note_wizard.refund_moves()
-        invoice_refund = self.purchase_order.invoice_ids.sorted(key=lambda inv: inv.id, reverse=False)[-1]
+        invoice_refund = self.purchase_order.account_move_ids.sorted(key=lambda inv: inv.id, reverse=False)[-1]
         invoice_refund.invoice_date = datetime.datetime.today()
         invoice_refund.action_post()
 
@@ -363,7 +363,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         self.purchase_order.order_line[1].tax_ids = self.tax_10
         self.purchase_order.order_line[2].tax_ids = self.tax_10
         self.make_downpayment(self.purchase_order)
-        invoice = self.purchase_order.invoice_ids
+        invoice = self.purchase_order.account_move_ids
         down_pay_amt = -self.purchase_order.amount_total / 2
         # pylint: disable=C0326
         expected = [
@@ -388,7 +388,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         self.purchase_order.order_line[1].tax_ids = self.tax_10
         self.purchase_order.order_line[2].tax_ids = self.tax_10
         self.make_downpayment(self.purchase_order)
-        invoice = self.purchase_order.invoice_ids
+        invoice = self.purchase_order.account_move_ids
         down_pay_amt = -self.purchase_order.amount_total / 2
         # pylint: disable=C0326
         expected = [
@@ -411,7 +411,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         self.purchase_order.order_line[1].tax_ids = self.tax_10
         self.purchase_order.order_line[2].tax_ids = self.tax_10
         self.make_downpayment(self.purchase_order, method='fixed', amount=222.5)
-        invoice = self.purchase_order.invoice_ids
+        invoice = self.purchase_order.account_move_ids
         down_pay_amt = -222.5
         # pylint: disable=C0326
         expected = [
@@ -435,7 +435,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         self.purchase_order.order_line[2].tax_ids = self.tax_10
         self.purchase_order.order_line[3].tax_ids = self.tax_10
         self.make_downpayment(self.purchase_order, method='fixed', amount=222.5)
-        invoice = self.purchase_order.invoice_ids
+        invoice = self.purchase_order.account_move_ids
         down_pay_amt = -222.5
         # pylint: disable=C0326
         expected = [
@@ -458,7 +458,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         self.purchase_order.order_line[1].tax_ids = self.tax_10
         self.purchase_order.order_line[2].tax_ids = self.tax_10
         self.make_downpayment(self.purchase_order)
-        invoice = self.purchase_order.invoice_ids
+        invoice = self.purchase_order.account_move_ids
         down_pay_amt = -self.purchase_order.amount_total / 2
         # pylint: disable=C0326
         expected = [
@@ -483,7 +483,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         self.purchase_order.order_line[1].tax_ids = self.tax_10
         self.purchase_order.order_line[2].tax_ids = self.tax_10
         self.make_downpayment(self.purchase_order)
-        invoice = self.purchase_order.invoice_ids
+        invoice = self.purchase_order.account_move_ids
         down_pay_amt = -self.purchase_order.amount_total / 2
         # pylint: disable=C0326
         expected = [
@@ -507,7 +507,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         self.purchase_order.order_line[1].discount = 25.0
         self.purchase_order.order_line[2].tax_ids = self.tax_15
         self.make_downpayment(self.purchase_order)
-        invoice = self.purchase_order.invoice_ids
+        invoice = self.purchase_order.account_move_ids
         down_pay_amt = -self.purchase_order.amount_total / 2
         # pylint: disable=C0326
         expected = [
@@ -533,7 +533,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         self.purchase_order.order_line[1].tax_ids = self.tax_10
         self.purchase_order.order_line[2].tax_ids = self.tax_10
         self.make_downpayment(self.purchase_order)
-        invoice = self.purchase_order.invoice_ids
+        invoice = self.purchase_order.account_move_ids
         down_pay_amt = -self.purchase_order.amount_total / 2
         # pylint: disable=C0326
         expected = [
@@ -580,7 +580,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         # Line 4: 200
         # Total: 944
 
-        invoice = self.purchase_order.invoice_ids
+        invoice = self.purchase_order.account_move_ids
         # pylint: disable=C0326
         expected = [
             # keys
@@ -609,7 +609,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         self.purchase_order.order_line[2].tax_ids = self.tax_10
         self.purchase_order.order_line[2].analytic_distribution = {an_acc_01: 100}
         self.make_downpayment(self.purchase_order)
-        invoice = self.purchase_order.invoice_ids
+        invoice = self.purchase_order.account_move_ids
         down_pay_amt = -self.purchase_order.amount_total / 2
         # pylint: disable=C0326
         expected = [
@@ -662,7 +662,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         # Line 4: 200
         # Total: 944
 
-        invoice = self.purchase_order.invoice_ids
+        invoice = self.purchase_order.account_move_ids
         # pylint: disable=C0326
         expected = [
             # keys
@@ -687,8 +687,8 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
             lambda pol: pol.is_downpayment and not pol.display_type
         )
         dp_line.name = 'whatever'
-        self.purchase_order.invoice_ids.invoice_date = datetime.datetime.today()
-        self.purchase_order.invoice_ids.action_post()
+        self.purchase_order.account_move_ids.invoice_date = datetime.datetime.today()
+        self.purchase_order.account_move_ids.action_post()
 
         self.assertNotEqual(
             dp_line.name, 'whatever',

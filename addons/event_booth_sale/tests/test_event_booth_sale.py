@@ -186,7 +186,7 @@ class TestEventBoothSaleInvoice(AccountTestInvoicingCommon, TestEventBoothSaleWD
 
         # Create and check that the invoice was created
         invoice = sale_order._create_invoices()
-        self.assertEqual(len(sale_order.invoice_ids), 1, "Invoice not created.")
+        self.assertEqual(len(sale_order.account_move_ids), 1, "Invoice not created.")
 
         # Confirm the invoice and check SO invoice status
         invoice.action_post()

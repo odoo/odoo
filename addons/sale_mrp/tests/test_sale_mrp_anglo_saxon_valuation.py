@@ -192,7 +192,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
             pick.button_validate()
             # Create the invoice
             so._create_invoices()
-            invoice = so.invoice_ids
+            invoice = so.account_move_ids
             invoice.action_post()
             return invoice
 
@@ -404,7 +404,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
         create_invoice_wizard = self.env['sale.advance.payment.inv'].with_context(ctx).create(
             {'advance_payment_method': 'delivered'})
         create_invoice_wizard.create_invoices()
-        reverse_invoice = so.invoice_ids[-1]
+        reverse_invoice = so.account_move_ids[-1]
         with Form(reverse_invoice) as reverse_invoice_form:
             with reverse_invoice_form.invoice_line_ids.edit(0) as line:
                 line.quantity = 1

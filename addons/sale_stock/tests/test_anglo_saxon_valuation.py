@@ -1536,7 +1536,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         ctx = {'active_model': 'sale.order', 'active_ids': so.ids}
         create_invoice_wizard = self.env['sale.advance.payment.inv'].with_context(ctx).create({'advance_payment_method': 'delivered'})
         create_invoice_wizard.create_invoices()
-        reverse_invoice = so.invoice_ids[-1]
+        reverse_invoice = so.account_move_ids[-1]
         with Form(reverse_invoice) as reverse_invoice_form:
             with reverse_invoice_form.invoice_line_ids.edit(0) as line:
                 line.quantity = 1
@@ -1762,7 +1762,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         })
         down_payment.create_invoices()
         # Invoice the delivered part from the down payment
-        down_payment_invoices = so.invoice_ids
+        down_payment_invoices = so.account_move_ids
         down_payment_invoices.action_post()
 
         # Deliver a part of it with a backorder
@@ -1774,7 +1774,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         invoice_wizard = self.env['sale.advance.payment.inv'].with_context(active_ids=so.ids, open_invoices=True).create({})
         invoice_wizard.create_invoices()
-        credit_note = so.invoice_ids.filtered(lambda i: i.state != 'posted')
+        credit_note = so.account_move_ids.filtered(lambda i: i.state != 'posted')
         self.assertEqual(len(credit_note), 1)
         self.assertEqual(len(credit_note.invoice_line_ids.filtered(lambda line: line.display_type == 'product')), 2)
         down_payment_line = credit_note.invoice_line_ids.filtered(lambda line: line.sale_line_ids.is_downpayment)
@@ -1789,7 +1789,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         invoice_wizard = self.env['sale.advance.payment.inv'].with_context(active_ids=so.ids, open_invoices=True).create({})
         invoice_wizard.create_invoices()
 
-        invoice = so.invoice_ids.filtered(lambda i: i.state != 'posted')
+        invoice = so.account_move_ids.filtered(lambda i: i.state != 'posted')
         invoice.action_post()
 
         # Check the resulting accounting entries
