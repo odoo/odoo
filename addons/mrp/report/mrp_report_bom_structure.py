@@ -12,8 +12,8 @@ class ReportBomStructure(models.AbstractModel):
     _description = 'BOM Overview Report'
 
     @api.model
-    def get_html(self, bom_id=False, searchQty=1, searchVariant=False):
-        res = self._get_report_data(bom_id=bom_id, searchQty=searchQty, searchVariant=searchVariant)
+    def get_html(self, bom_id=False, searchQty=1, searchVariant=False, max_depth=1):
+        res = self.get_report_data(bom_id=bom_id, searchQty=searchQty, searchVariant=searchVariant, max_depth=max_depth)
         res['has_attachments'] = self._has_attachments(res['lines'])
         return res
 
@@ -91,7 +91,7 @@ class ReportBomStructure(models.AbstractModel):
         return doc
 
     @api.model
-    def _get_report_data(self, bom_id, searchQty=0, searchVariant=False):
+    def get_report_data(self, bom_id, searchQty=0, searchVariant=False, level=0, index=0, max_depth=1):
         lines = {}
         bom = self.env['mrp.bom'].browse(bom_id)
         bom_quantity = searchQty or bom.product_qty or 1
@@ -116,7 +116,7 @@ class ReportBomStructure(models.AbstractModel):
         else:
             warehouse = self.env['stock.warehouse'].browse(self.get_warehouses()[0]['id'])
 
-        lines = self._get_bom_data(bom, warehouse, product=product, line_qty=bom_quantity, level=0)
+        lines = self._get_bom_data(bom, warehouse, product=product, line_qty=bom_quantity, level=level, index=index, max_depth=max_depth)
         production_capacities = self._compute_production_capacities(bom_quantity, lines)
         lines.update(production_capacities)
         return {
@@ -190,7 +190,7 @@ class ReportBomStructure(models.AbstractModel):
         return closest_forecasted
 
     @api.model
-    def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, bom_line=False, level=0, parent_bom=False, parent_product=False, index=0, product_info=False, ignore_stock=False):
+    def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, bom_line=False, level=0, parent_bom=False, parent_product=False, index=0, product_info=False, ignore_stock=False, depth=1, max_depth=1):
         """ Gets recursively the BoM and all its subassemblies and computes availibility estimations for each component and their disponibility in stock.
             Accepts specific keys in context that will affect the data computed :
             - 'minimized': Will cut all data not required to compute availability estimations.
@@ -238,6 +238,7 @@ class ReportBomStructure(models.AbstractModel):
             'bom': bom,
             'bom_id': bom and bom.id or False,
             'bom_code': bom and bom.code or False,
+            'fetched': not max_depth,
             'type': 'bom',
             'quantity': current_quantity,
             'quantity_available': quantities_info.get('free_qty', 0),
@@ -287,17 +288,17 @@ class ReportBomStructure(models.AbstractModel):
                 self._update_product_info(line.product_id, bom.id, product_info, warehouse, line_quantity, bom=False, parent_bom=bom, parent_product=product)
         components_closest_forecasted = self._get_components_closest_forecasted(no_bom_lines, line_quantities, bom, product_info, product, ignore_stock)
         for component_index, line in enumerate(bom.bom_line_ids):
-            new_index = f"{index}{component_index}"
+            new_index = f"{index}/{component_index}"
             if product and line._skip_bom_line(product):
                 continue
             line_quantity = line_quantities.get(line.id, 0.0)
-            if line.child_bom_id:
+            if line.child_bom_id and (max_depth is False or depth < max_depth):
                 component = self._get_bom_data(line.child_bom_id, warehouse, line.product_id, line_quantity, bom_line=line, level=level + 1, parent_bom=bom,
-                                               parent_product=product, index=new_index, product_info=product_info, ignore_stock=ignore_stock)
+                                               parent_product=product, index=new_index, product_info=product_info, ignore_stock=ignore_stock, depth=depth + 1, max_depth=max_depth)
             else:
                 component = self.with_context(
                     components_closest_forecasted=components_closest_forecasted,
-                )._get_component_data(bom, product, warehouse, line, line_quantity, level + 1, new_index, product_info, ignore_stock)
+                )._get_component_data(bom, product, warehouse, line, line_quantity, level + 1, new_index, product_info, bom_id=self._get_component_bom(line.product_id, line.child_bom_id), ignore_stock=ignore_stock)
             for component_bom in components:
                 if component['product_id'] == component_bom['product_id'] and component['uom'].id == component_bom['uom'].id:
                     self._merge_components(component_bom, component)
@@ -328,10 +329,14 @@ class ReportBomStructure(models.AbstractModel):
         return bom_report_line
 
     @api.model
-    def _get_component_data(self, parent_bom, parent_product, warehouse, bom_line, line_quantity, level, index, product_info, ignore_stock=False):
+    def _get_component_bom(self, product, bom):
+        # here we need to make sure that the bom is really suited for the product.
+        # In the case where the bom targets a template, and there is no lines in the bom targetting the variant, we need to return False
+        return any(not line._skip_bom_line(product) for line in bom.bom_line_ids) and bom
+
+    @api.model
+    def _get_component_data(self, parent_bom, parent_product, warehouse, bom_line, line_quantity, level, index, product_info, bom_id=False, ignore_stock=False):
         company = parent_bom.company_id or self.env.company
-        price = bom_line.product_id.uom_id._compute_price(bom_line.product_id.with_company(company).standard_price, bom_line.product_uom_id) * line_quantity
-        rounded_price = company.currency_id.round(price)
 
         key = bom_line.product_id.id
         bom_key = parent_bom.id
@@ -349,10 +354,13 @@ class ReportBomStructure(models.AbstractModel):
             has_attachments = self.env['product.document'].search_count(['&', ('attached_on_mrp', '=', 'bom'), '|', '&', ('res_model', '=', 'product.product'), ('res_id', '=', bom_line.product_id.id),
                                                               '&', ('res_model', '=', 'product.template'), ('res_id', '=', bom_line.product_id.product_tmpl_id.id)]) > 0
 
+        operation_price, component_price = self._get_recursive_bom_cost(parent_bom, bom_id, bom_line, line_quantity)
+        rounded_price = company.currency_id.round(operation_price + component_price)
+
         return {
             'type': 'component',
             'index': index,
-            'bom_id': False,
+            'bom_id': bom_id and bom_id.id or False,
             'product': bom_line.product_id,
             'product_id': bom_line.product_id.id,
             'product_template_id': bom_line.product_tmpl_id.id,
@@ -369,7 +377,7 @@ class ReportBomStructure(models.AbstractModel):
             'base_bom_line_qty': bom_line.product_qty,
             'uom': bom_line.product_uom_id,
             'uom_name': bom_line.product_uom_id.name,
-            'prod_cost': rounded_price,
+            'prod_cost': bom_line.product_id.uom_id._compute_price(bom_line.product_id.with_company(company).standard_price, bom_id.product_uom_id) * line_quantity if bom_id else rounded_price,
             'bom_cost': rounded_price,
             'route_type': route_info.get('route_type', ''),
             'route_name': route_info.get('route_name', ''),
@@ -385,6 +393,32 @@ class ReportBomStructure(models.AbstractModel):
             'level': level or 0,
             'has_attachments': has_attachments,
         }
+
+    @api.model
+    def _get_recursive_bom_cost(self, parent_bom, bom_id, bom_line, line_quantity):
+        company = parent_bom.company_id or self.env.company
+        operation_price = 0
+        component_price = 0
+        product = bom_line.product_id
+        if bom_id:
+            for operation in bom_id.operation_ids:
+                if not product or operation._skip_operation_line(product):
+                    continue
+                capacity = operation.workcenter_id._get_capacity(product)
+                operation_cycle = float_round(line_quantity / capacity, precision_rounding=1, rounding_method='UP')
+                duration_expected = (operation_cycle * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency) + \
+                                    operation.workcenter_id._get_expected_duration(product)
+                operation_price += self.env.company.currency_id.round(self._get_operation_cost(duration_expected, operation))
+            for bom_l in bom_id.bom_line_ids:
+                if bom_l._skip_bom_line(product):
+                    continue
+                op, cp = self._get_recursive_bom_cost(bom_id, bom_l.child_bom_id, bom_l, line_quantity * bom_l.product_qty / bom_id.product_qty)
+                operation_price += op
+                component_price += cp
+        else:
+            component_price += self.env.company.currency_id.round(bom_line.product_id.uom_id._compute_price(bom_line.product_id.with_company(company).standard_price, bom_line.product_uom_id) * line_quantity)
+
+        return operation_price, component_price
 
     @api.model
     def _get_quantities_info(self, product, bom_uom, product_info, parent_bom=False, parent_product=False):
@@ -489,7 +523,7 @@ class ReportBomStructure(models.AbstractModel):
             warehouse = self.env['stock.warehouse'].browse(self.get_warehouses()[0]['id'])
 
         level = 1
-        data = self._get_bom_data(bom, warehouse, product=product, line_qty=qty, level=0)
+        data = self._get_bom_data(bom, warehouse, product=product, line_qty=qty, level=0, max_depth=False)
         pdf_lines = self._get_bom_array_lines(data, level, unfolded_ids, unfolded, True)
 
         data['lines'] = pdf_lines

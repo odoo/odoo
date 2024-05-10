@@ -877,7 +877,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
         po_today.button_confirm()
         po_5days.button_confirm()
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=bom.id)
         line_values = report_values['lines']['components'][0]
         self.assertEqual(line_values['availability_state'], 'estimated', 'The merged components should be estimated.')
 
@@ -918,7 +918,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             line.price_unit = 10
         po_today = f.save()
         po_today.button_confirm()
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=bom.id)
         line_values = report_values['lines']['components'][0]
         self.assertEqual(line_values['availability_state'], 'expected', 'The first component should be expected as there is an incoming PO.')
 

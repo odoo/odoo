@@ -5,7 +5,7 @@ import { BomOverviewDisplayFilter } from "../bom_overview_display_filter/mrp_bom
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class BomOverviewControlPanel extends Component {
@@ -33,6 +33,7 @@ export class BomOverviewControlPanel extends Component {
         changeBomQuantity: Function,
         changeDisplay: Function,
         precision: Number,
+        unfoldFetchData: Function,
     };
     static defaultProps = {
         variants: {},
@@ -42,6 +43,9 @@ export class BomOverviewControlPanel extends Component {
     setup() {
         this.action = useService("action");
         this.controlPanelDisplay = {};
+        this.state = useState({
+            isLoading: false,
+        });
     }
 
     //---- Handlers ----
@@ -58,7 +62,10 @@ export class BomOverviewControlPanel extends Component {
         }
     }
 
-    clickUnfold() {
+    async clickUnfold() {
+        this.state.isLoading = true;
+        await this.props.unfoldFetchData();
+        this.state.isLoading = false;
         this.env.overviewBus.trigger("unfold-all");
     }
 

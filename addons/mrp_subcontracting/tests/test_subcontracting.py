@@ -645,7 +645,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         })
         self.assertTrue(supplier.is_subcontractor)
         self.comp1.standard_price = 5
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, searchQty=1, searchVariant=False)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(self.bom.id, searchQty=1, searchVariant=False, max_depth=False)
         subcontracting_values = report_values['lines']['subcontracting']
         self.assertEqual(subcontracting_values['name'], self.subcontractor_partner1.display_name)
         self.assertEqual(report_values['lines']['bom_cost'], 20)  # 10 For subcontracting + 5 for comp1 + 5 for subcontracting of comp2_bom
@@ -653,14 +653,14 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(subcontracting_values['prod_cost'], 10)
         self.assertEqual(report_values['lines']['components'][0]['bom_cost'], 5)
         self.assertEqual(report_values['lines']['components'][1]['bom_cost'], 5)
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, searchQty=3, searchVariant=False)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(self.bom.id, searchQty=3, searchVariant=False, max_depth=False)
         subcontracting_values = report_values['lines']['subcontracting']
         self.assertEqual(report_values['lines']['bom_cost'], 60)  # 30 for subcontracting + 15 for comp1 + 15 for subcontracting of comp2_bom
         self.assertEqual(subcontracting_values['bom_cost'], 30)
         self.assertEqual(subcontracting_values['prod_cost'], 30)
         self.assertEqual(report_values['lines']['components'][0]['bom_cost'], 15)
         self.assertEqual(report_values['lines']['components'][1]['bom_cost'], 15)
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, searchQty=5, searchVariant=False)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(self.bom.id, searchQty=5, searchVariant=False, max_depth=False)
         subcontracting_values = report_values['lines']['subcontracting']
         self.assertEqual(report_values['lines']['bom_cost'], 80)  # 50 for subcontracting + 25 for comp1 + 5 for subcontracting of comp2_bom
         self.assertEqual(subcontracting_values['bom_cost'], 50)
@@ -1045,7 +1045,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.env['stock.quant']._update_available_quantity(self.comp2, subcontractor_location, 4)
 
         # Generate a report for 3 products: all products should be ready for production
-        bom_data = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, 3)
+        bom_data = self.env['report.mrp.report_bom_structure'].get_report_data(self.bom.id, 3)
 
         self.assertTrue(bom_data['lines']['components_available'])
         for component in bom_data['lines']['components']:
@@ -1057,7 +1057,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertTrue('leftover_date' not in bom_data['lines']['earliest_date'])
 
         # Generate a report for 5 products: only 4 products should be ready for production
-        bom_data = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, 5)
+        bom_data = self.env['report.mrp.report_bom_structure'].get_report_data(self.bom.id, 5)
 
         self.assertFalse(bom_data['lines']['components_available'])
         for component in bom_data['lines']['components']:
@@ -1742,5 +1742,5 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
             'type': 'subcontract',
             'subcontractor_ids': [Command.set([self.subcontractor.id])],
         })
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id, searchVariant=False)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=bom.id, searchVariant=False)
         self.assertTrue(report_values)

@@ -296,7 +296,7 @@ class MrpBom(models.Model):
         company_id = self.env.context.get('default_company_id', self.env.company.id)
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1)
         for bom in self:
-            bom_data = self.env['report.mrp.report_bom_structure'].with_context(minimized=True)._get_bom_data(bom, warehouse, bom.product_id, ignore_stock=True)
+            bom_data = self.env['report.mrp.report_bom_structure'].with_context(minimized=True)._get_bom_data(bom, warehouse, bom.product_id, ignore_stock=True, max_depth=False)
             bom.days_to_prepare_mo = self.env['report.mrp.report_bom_structure']._get_max_component_delay(bom_data['components'])
 
     @api.constrains('product_tmpl_id', 'product_id', 'type')

@@ -19,6 +19,7 @@ export class BomOverviewComponentsBlock extends Component {
         data: Object,
         precision: Number,
         changeFolded: Function,
+        getChildBomData: Function,
     };
     static defaultProps = {
         unfoldAll: false,
@@ -29,6 +30,7 @@ export class BomOverviewComponentsBlock extends Component {
         this.state = useState({
             ...childFoldstate,
             unfoldAll: this.props.unfoldAll || false,
+            isLoading: [],
         });
         if (this.props.unfoldAll) {
             this.props.changeFolded({ ids: this.childIds, isFolded: false });
@@ -55,8 +57,29 @@ export class BomOverviewComponentsBlock extends Component {
     }
     //---- Handlers ----
 
-    onToggleFolded(foldId) {
+    async onToggleFolded(foldId) {
         const newState = !this.state[foldId];
+        if (!newState) {
+            const cleanedFoldId =
+                foldId.search("component_") >= 0 ? foldId.substring(10) : foldId.substring(4);
+            const element = this.props.data.components.find(
+                (component) => component.index == cleanedFoldId
+            );
+            if (element && !element["fetched"]) {
+                this.state.isLoading.push(cleanedFoldId);
+                await this.props.getChildBomData(
+                    cleanedFoldId,
+                    element.bom_id,
+                    element.quantity,
+                    element.product_id,
+                    cleanedFoldId.split("/").length - 1
+                );
+                this.state.isLoading = this.state.isLoading.filter(function (e) {
+                    return e !== cleanedFoldId;
+                });
+            }
+        }
+
         this.state[foldId] = newState;
         this.state.unfoldAll = false;
         this.props.changeFolded({ ids: [foldId], isFolded: newState });

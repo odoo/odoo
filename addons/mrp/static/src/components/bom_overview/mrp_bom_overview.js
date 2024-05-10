@@ -73,11 +73,12 @@ export class BomOverviewComponent extends Component {
         this.state.precision = bomData["precision"];
     }
 
-    async getBomData() {
+    async getBomData(maxDepth = 1) {
         const args = [
             this.activeId,
             this.state.bomQuantity,
             this.state.currentVariantId,
+            maxDepth
         ];
         const context = this.state.currentWarehouse ? { warehouse_id: this.state.currentWarehouse.id } : {};
         const bomData = await this.orm.call(
@@ -86,6 +87,9 @@ export class BomOverviewComponent extends Component {
             args,
             { context }
         );
+        if (!maxDepth) {
+            this.state.bomData["fetched"] = true;
+        }
         this.state.bomData = bomData["lines"];
         this.state.showOptions.attachments = bomData["has_attachments"];
         return bomData;
@@ -165,6 +169,47 @@ export class BomOverviewComponent extends Component {
             reportName += "&variant=" + this.state.currentVariantId;
         }
         return reportName;
+    }
+
+    async getChildBomData(foldId, bom_id, quantity, variant, level) {
+        const args = [bom_id, quantity, variant, level, foldId, 1];
+        const context = this.state.currentWarehouse
+            ? { warehouse: this.state.currentWarehouse.id }
+            : {};
+        const bomData = await this.orm.call(
+            "report.mrp.report_bom_structure",
+            "get_report_data",
+            args,
+            { context }
+        );
+        this.state.bomData = this._replaceByIndex(foldId, this.state.bomData, bomData.lines);
+    }
+
+    _replaceByIndex(index, data, newData) {
+        newData["fetched"] = true;
+        function recursiveReplacement(previousIndex, indexes, subData) {
+            if (indexes.length == 0) {
+                return newData;
+            }
+            const componentIndex = subData.components.findIndex(
+                (component) => component.index == previousIndex + "/" + indexes[0]
+            );
+            subData.components[componentIndex] = recursiveReplacement(
+                previousIndex + "/" + indexes[0],
+                indexes.slice(1),
+                subData.components[componentIndex]
+            );
+            return subData;
+        }
+        const indexes = index.toString().split("/").slice(1); // remove the initial "0/"
+        return recursiveReplacement("0", indexes, data, newData);
+    }
+
+    async unfold() {
+        if (this.state.bomData["fetched"]) {
+            return;
+        }
+        await this.getBomData(false);
     }
 }
 

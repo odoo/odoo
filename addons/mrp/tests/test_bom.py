@@ -639,7 +639,7 @@ class TestBoM(TestMrpCommon):
                 operation.time_cycle_manual = 5
 
         # TEST BOM STRUCTURE VALUE WITH BOM QUANTITY
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=11, searchVariant=False)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=bom_crumble.id, searchQty=11, searchVariant=False)
         # 5 min 'Prepare biscuits' + 3 min 'Prepare butter' + 5 min 'Mix manually' = 13 minutes for 1 biscuits so 13 * 11 = 143 minutes
         self.assertEqual(report_values['lines']['operations_time'], 143.0, 'Operation time should be the same for 1 unit or for the batch')
         # Operation cost is the sum of operation line.
@@ -658,7 +658,7 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(float_compare(report_values['lines']['bom_cost'] / 11.0, 6.17, precision_digits=2), 0, 'Product Unit Bom Price is not correct')
 
         # TEST BOM STRUCTURE VALUE BY UNIT
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=1, searchVariant=False)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=bom_crumble.id, searchQty=1, searchVariant=False)
         # 5 min 'Prepare biscuits' + 3 min 'Prepare butter' + 5 min 'Mix manually' = 13 minutes
         self.assertEqual(report_values['lines']['operations_time'], 13.0, 'Operation time should be the same for 1 unit or for the batch')
         # Operation cost is the sum of operation line.
@@ -677,8 +677,7 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(float_compare(report_values['lines']['bom_cost'], 6.17, precision_digits=2), 0, 'Product Unit Bom Price is not correct')
 
         # TEST OPERATION COST WHEN PRODUCED QTY > BOM QUANTITY
-        report_values_12 = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=12, searchVariant=False)
-        report_values_22 = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=22, searchVariant=False)
+        report_values_22 = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=bom_crumble.id, searchQty=22, searchVariant=False)
 
         #Operation cost = 47.66 € = 256 (min) * 10€/h
         self.assertEqual(float_compare(report_values_22['lines']['operations_cost'], 47.66, precision_digits=2), 0, 'Operation cost is not correct')
@@ -734,7 +733,7 @@ class TestBoM(TestMrpCommon):
                 operation.time_cycle_manual = 5
 
         # TEST CHEESE BOM STRUCTURE VALUE WITH BOM QUANTITY
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_cheese_cake.id, searchQty=60, searchVariant=False)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=bom_cheese_cake.id, searchQty=60, searchVariant=False)
         # Operation time = 15 min * 60 + capacity_time_start + capacity_time_stop = 928
         self.assertEqual(report_values['lines']['operations_time'], 928.0, 'Operation time should be the same for 1 unit or for the batch')
         # Operation cost is the sum of operation line : (60 * 10)/60 * 10€ + (10 + 15 + 60 * 5)/60 * 20€ + (1 + 2)/60 * 20€ = 209,33€
@@ -747,7 +746,7 @@ class TestBoM(TestMrpCommon):
                 self.assertEqual(float_compare(component_line['bom_cost'], (3 * 5.17), precision_digits=2), 0)
             if component_line['product'].id == crumble.id:
                 # 5.4 kg of crumble at the cost of a batch.
-                crumble_cost = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=5.4, searchVariant=False)['lines']['bom_cost']
+                crumble_cost = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=bom_crumble.id, searchQty=5.4, searchVariant=False)['lines']['bom_cost']
                 self.assertEqual(float_compare(component_line['bom_cost'], crumble_cost, precision_digits=2), 0)
         # total price = Cream (15.51€) + crumble_cost (34.63 €) + operation_cost(209,33) = 259.47€
         self.assertEqual(float_compare(report_values['lines']['bom_cost'], 259.47, precision_digits=2), 0, 'Product Bom Price is not correct')
@@ -795,7 +794,7 @@ class TestBoM(TestMrpCommon):
                 operation.time_cycle_manual = 5
 
         # TEST BOM STRUCTURE VALUE WITH BOM QUANTITY
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_drawer.id, searchQty=11, searchVariant=False)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=bom_drawer.id, searchQty=11, searchVariant=False)
         # 5 min 'Prepare biscuits' + 3 min 'Prepare butter' + 5 min 'Mix manually' = 13 minutes
         self.assertEqual(report_values['lines']['operations_time'], 660.0, 'Operation time should be the same for 1 unit or for the batch')
 
@@ -969,7 +968,7 @@ class TestBoM(TestMrpCommon):
 
         blue_car_with_gps = self.car._get_variant_for_combination(self.car_color_blue + self.car_gps_yes)
 
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_car.id, searchQty=1, searchVariant=blue_car_with_gps.id)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=bom_car.id, searchQty=1, searchVariant=blue_car_with_gps.id, max_depth=False)
         # Two lines. blue dashboard with gps and blue paint.
         self.assertEqual(len(report_values['lines']['components']), 2)
 
@@ -1002,7 +1001,7 @@ class TestBoM(TestMrpCommon):
 
         red_car_without_gps = self.car._get_variant_for_combination(self.car_color_red + self.car_gps_no)
 
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_car.id, searchQty=1, searchVariant=red_car_without_gps.id)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=bom_car.id, searchQty=1, searchVariant=red_car_without_gps.id)
         # Same math than before but without GPS
         self.assertEqual(report_values['lines']['bom_cost'], 210)
 
@@ -1023,7 +1022,7 @@ class TestBoM(TestMrpCommon):
         quantity = 5 dozens
         - Raw Material 4 litres (product.product 5$/litre)
 
-        Check the Price for 80 units of Finished -> 2.92$:
+        Check the Price for 80 units of Finished -> 2.91$:
         """
         # Create a products templates
         uom_unit = self.env.ref('uom.product_uom_unit')
@@ -1088,9 +1087,9 @@ class TestBoM(TestMrpCommon):
             line.product_qty = 4
         bom_assembly = bom_assembly.save()
 
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_finished.id, searchQty=80)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=bom_finished.id, searchQty=80)
 
-        self.assertAlmostEqual(report_values['lines']['bom_cost'], 2.92)
+        self.assertAlmostEqual(report_values['lines']['bom_cost'], 2.91)
 
     def test_bom_report_capacity_with_quantity_of_0(self):
         uom_unit = self.env.ref('uom.product_uom_unit')
@@ -1132,7 +1131,7 @@ class TestBoM(TestMrpCommon):
             ]
         })
 
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=bom.id)
 
         # The first product shouldn't affect the producible quantity because the target needs none of it
         # So with 4 of the second product available, we can produce 40 items
@@ -1156,7 +1155,7 @@ class TestBoM(TestMrpCommon):
             ]
         })
 
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=bom.id)
         # Total quantity of components is 4, so shouldn't be able to produce a single one.
         self.assertEqual(report_values['lines']['producible_qty'], 0)
 
@@ -1189,7 +1188,7 @@ class TestBoM(TestMrpCommon):
             ]
         })
 
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=bom.id)
         line_values = report_values['lines']['components'][0]
         self.assertEqual(line_values['availability_state'], 'unavailable', 'The merged components should be unavailable')
 
@@ -1202,7 +1201,7 @@ class TestBoM(TestMrpCommon):
             'product_qty': 1.0,
         })]
         self.bom_4.bom_line_ids.product_qty = 0
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=self.bom_4.id, searchQty=1, searchVariant=False)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=self.bom_4.id, searchQty=1, searchVariant=False)
 
         self.assertEqual(sum([value['quantity'] for value in report_values['lines']['components'][:2]]), 0, 'The quantity should be set to 0 for all components of the bom.')
 
@@ -2195,7 +2194,7 @@ class TestBoM(TestMrpCommon):
                 }),
             ]
         })
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_normal.id)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=bom_normal.id)
         line_values = report_values['lines']
         self.assertEqual(line_values['availability_state'], 'unavailable')
 
@@ -2211,7 +2210,7 @@ class TestBoM(TestMrpCommon):
                 }),
             ]
         })
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_kit.id)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom_id=bom_kit.id)
         line_values = report_values['lines']
         self.assertEqual(line_values['availability_state'], 'available')
 

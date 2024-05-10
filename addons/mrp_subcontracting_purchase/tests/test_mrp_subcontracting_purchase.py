@@ -764,7 +764,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         quantity_after_move = self.env['stock.quant']._get_available_quantity(component, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
         self.assertEqual(quantity_after_move, quantity_before_move + moved_quantity_to_subcontractor)
 
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=search_qty_less_than_or_equal_moved, searchVariant=False)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom.id, searchQty=search_qty_less_than_or_equal_moved, searchVariant=False)
         self.assertEqual(report_values['lines']['components'][0]['quantity_available'], total_component_quantity)
         self.assertEqual(report_values['lines']['components'][0]['quantity_on_hand'], total_component_quantity)
         self.assertEqual(report_values['lines']['quantity_available'], 0)
@@ -774,10 +774,10 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
         self.assertEqual(report_values['lines']['components'][0]['stock_avail_state'], 'available')
 
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=search_qty_less_than_or_equal_total, searchVariant=False)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom.id, searchQty=search_qty_less_than_or_equal_total, searchVariant=False)
         self.assertEqual(report_values['lines']['components'][0]['stock_avail_state'], 'available')
 
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=search_qty_more_than_total, searchVariant=False)
+        report_values = self.env['report.mrp.report_bom_structure'].get_report_data(bom.id, searchQty=search_qty_more_than_total, searchVariant=False)
         self.assertEqual(report_values['lines']['components'][0]['stock_avail_state'], 'unavailable')
 
     @freeze_time('2024-01-01')
@@ -810,7 +810,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.env['stock.quant']._update_available_quantity(self.comp2, subcontractor_location, 4)
 
         # Generate a report for 3 products: all products should be ready for production
-        bom_data = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, 3)
+        bom_data = self.env['report.mrp.report_bom_structure'].get_report_data(self.bom.id, 3)
 
         self.assertTrue(bom_data['lines']['components_available'])
         for component in bom_data['lines']['components']:
@@ -823,7 +823,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertTrue('leftover_date' not in bom_data['lines']['earliest_date'])
 
         # Generate a report for 5 products: only 4 products should be ready for production
-        bom_data = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, 5)
+        bom_data = self.env['report.mrp.report_bom_structure'].get_report_data(self.bom.id, 5)
 
         self.assertFalse(bom_data['lines']['components_available'])
         for component in bom_data['lines']['components']:

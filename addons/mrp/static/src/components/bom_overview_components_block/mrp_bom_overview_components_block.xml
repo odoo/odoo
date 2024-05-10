@@ -5,7 +5,7 @@
         <t name="components" t-if="hasComponents">
             <t t-foreach="data.components" t-as="line" t-key="line.index">
                 <BomOverviewLine
-                    isFolded="state[getIdentifier(line)]"
+                    state="state"
                     showOptions="props.showOptions"
                     data="line"
                     precision="props.precision"
@@ -18,7 +18,9 @@
                         currentWarehouseId="props.currentWarehouseId"
                         data="line"
                         precision="props.precision"
-                        changeFolded.bind="props.changeFolded"/>
+                        changeFolded.bind="props.changeFolded"
+                        getChildBomData="props.getChildBomData"
+                    />
                 </t>
             </t>
         </t>

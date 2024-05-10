@@ -17,6 +17,7 @@
             changeBomQuantity.bind="onChangeBomQuantity"
             changeDisplay.bind="onChangeDisplay"
             precision="state.precision"
+            unfoldFetchData.bind="unfold"
             />
 
         <BomOverviewTable
@@ -25,7 +26,9 @@
             currentWarehouseId="state.currentWarehouse.id"
             data="state.bomData"
             precision="state.precision"
-            changeFolded.bind="onChangeFolded"/>
+            changeFolded.bind="onChangeFolded"
+            getChildBomData.bind="getChildBomData"
+            />
     </div>
 
 </templates>

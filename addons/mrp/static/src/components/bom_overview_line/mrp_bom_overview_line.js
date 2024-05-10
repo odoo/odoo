@@ -8,7 +8,7 @@ import { Component } from "@odoo/owl";
 export class BomOverviewLine extends Component {
     static template = "mrp.BomOverviewLine";
     static props = {
-        isFolded: { type: Boolean, optional: true },
+        state: { type: Object, optional: true },
         showOptions: {
             type: Object,
             shape: {
@@ -100,6 +100,14 @@ export class BomOverviewLine extends Component {
         return this.props.data;
     }
 
+    get isLoading() {
+        return this.props.state.isLoading.find((e) => e === this.data.index);
+    }
+
+    get isFolded() {
+        return this.props.state[this.identifier];
+    }
+
     get precision() {
         return this.props.precision;
     }
@@ -108,8 +116,8 @@ export class BomOverviewLine extends Component {
         return `${this.data.type}_${this.data.index}`;
     }
 
-    get hasComponents() {
-        return this.data.components && this.data.components.length > 0;
+    get bomId() {
+        return this.data.bom_id ? true : false;
     }
 
     get hasQuantity() {
@@ -121,7 +129,7 @@ export class BomOverviewLine extends Component {
     }
 
     get hasFoldButton() {
-        return this.data.level > 0 && this.hasComponents;
+        return this.data.level > 0 && this.bomId;
     }
 
     get marginMultiplicator() {

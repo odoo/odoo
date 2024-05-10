@@ -51,7 +51,9 @@
                             currentWarehouseId="props.currentWarehouseId"
                             data="data"
                             precision="props.precision"
-                            changeFolded.bind="props.changeFolded"/>
+                            changeFolded.bind="props.changeFolded"
+                            getChildBomData.bind="props.getChildBomData"
+                            />
                     </tbody>
                     <tfoot t-if="showCosts">
                         <tr>
