@@ -14,3 +14,4 @@ from . import evaluacion_clima
 from . import objetivo
 from . import pregunta_escala
 from . import reporte_resumen
+from . import usuarios_externos

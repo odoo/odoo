@@ -70,13 +70,16 @@ class Evaluacion(models.Model):
 
     mensaje = fields.Text(string="Mensaje de bienvenida")
 
+    incluir_demograficos = fields.Boolean(string="Incluir datos demográficos", default = True)
+    
+    usuario_externo_ids = fields.One2many("usuario.externo", "evaluacion_id", string="Usuarios externos")
+    
     @api.constrains('fecha_inicio', 'fecha_final')
     def check_fechas(self):
         for record in self:
             if record.fecha_inicio and record.fecha_final and record.fecha_inicio > record.fecha_final:
                 raise exceptions.ValidationError("La fecha de inicio debe ser anterior a la fecha final")
 
-    incluir_demograficos = fields.Boolean(string="Incluir datos demográficos", default = True)
 
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
@@ -918,3 +921,11 @@ class Evaluacion(models.Model):
             self.enviar_evaluacion_action()
         return resultado
 
+    def action_asignar_usuarios_externos(self):
+        return {
+            'name': 'Upload File',
+            'type': 'ir.actions.act_window',
+            'res_model': 'asignar.usuario.externo.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+        }

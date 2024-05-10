@@ -12,6 +12,7 @@
         "views/evaluaciones_menus.xml",
         "views/evaluaciones_templates.xml",
         "views/evaluaciones_responder.xml",
+        "views/asignar_usuarios_externos_template.xml",
         "data/pregunta.csv",
         "data/competencia.csv",
         "data/opcion.csv",
