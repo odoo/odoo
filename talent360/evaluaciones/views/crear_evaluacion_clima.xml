@@ -8,6 +8,7 @@
             <form string="Clima" create="false" duplicate="0">
                 <header>
                     <button name="evaluacion_action_tree" string="Guardar" type="object" class="btn-primary my-3"/>
+                    <button class="btn btn-primary" name="action_asignar_usuarios_externos" string="Asignar usuarios externos" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
                 </header>
                 <sheet>
                     <h1>Evaluación de Clima Laboral</h1>
@@ -36,10 +37,26 @@
                         </group>
                         <notebook>
                             <page string="Preguntas">
-                                <field name="pregunta_ids" readonly="1"/>
+                                <field class="lh-lg w-100" readonly="1" colspan="2" name="pregunta_ids">
+                                    <tree create="false" editable="bottom">
+                                        <field class="lh-m" name="pregunta_texto" readonly="1"/>
+                                        <field class="lh-m" name="tipo" readonly="1"/>
+                                    </tree>
+                                </field>
                             </page>
                             <page string="Asignados">
-                                <field name="usuario_ids"/>
+                                <field class="lh-lg w-100" colspan="2" name="usuario_ids" nolabel="1" context="{'current_evaluacion_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field class="lh-m" name="name" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Asignados Externos">
+                                <field class="lh-lg w-100" colspan="2" readonly="1" name="usuario_externo_ids" nolabel="1" context="{'current_evaluacion_id': active_id}">
+                                    <tree create="false" editable="bottom">
+                                        <field class="lh-m" name="nombre" readonly="1"/>
+                                    </tree>
+                                </field>
                             </page>
                             <page string="Semaforización">
                                 <style>

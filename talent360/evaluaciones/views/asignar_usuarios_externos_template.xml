@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_asignar_usuario_externo_wizard" model="ir.ui.view">
+        <field name="name">asignar.usuario.externo.wizard.form</field>
+        <field name="model">asignar.usuario.externo.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Upload File">
+                <group>
+                    <div>Para asignar usuarios externos, por favor subir un archvo CSV con los datos de los participantes con la siguiente plantilla.</div>
+                    <group class="py-3">
+                        <button name="descargar_template_usuarios" string="Plantilla" type="object" class="btn-primary"/>
+                    </group>
+                    <group>
+                        <field name="nombre_archivo" invisible="1"/>
+                        <field name="archivo" filename="nombre_archivo"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Asignar" class="btn-primary" name="procesar_csv" type="object"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -424,10 +424,17 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
             });
 
             self.charts = [];
+            self.other_charts = [];
             self.$('.survey_graph').each(function () {
                 var chartWidget = new publicWidget.registry.SurveyResultChart(self);
                 allPromises.push(chartWidget.attachTo($(this)));
-                self.charts.push(chartWidget);
+                // atriibuto role is tabpane
+                if ($(this).attr("role") === "tabpanel") {
+                    self.charts.push(chartWidget);
+                }
+                else {
+                    self.other_charts.push(chartWidget);
+                }
             }); 
 
             if (allPromises.length !== 0) {
@@ -450,6 +457,10 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
         console.log("attatching listeners")
 
         for (let chart of self.charts) {
+            chart._reloadChart();
+        }
+
+        for (let chart of self.other_charts) {
             chart._reloadChart();
         }
 
