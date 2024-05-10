@@ -188,6 +188,7 @@ export class DiscussCoreCommon {
             }
             if (message.isSelfAuthored) {
                 channel.selfMember.seen_message_id = message;
+                channel.selfMember.new_message_separator = message.id + 1;
             } else {
                 if (notifId > channel.message_unread_counter_bus_id) {
                     channel.incrementUnreadCounter();

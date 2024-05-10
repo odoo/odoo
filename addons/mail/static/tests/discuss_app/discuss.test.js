@@ -1527,7 +1527,7 @@ test("new messages separator [REQUIRE FOCUS]", async () => {
         ["channel_id", "=", channelId],
         ["partner_id", "=", serverState.partnerId],
     ]);
-    pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: lastMessageId });
+    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: lastMessageId + 1 });
     const env = await start();
     rpc = rpcWithEnv(env);
     await openDiscuss(channelId);

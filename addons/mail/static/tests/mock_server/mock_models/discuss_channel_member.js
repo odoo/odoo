@@ -48,6 +48,15 @@ export class DiscussChannelMember extends models.ServerModel {
         }
     }
 
+    _compute_message_unread_counter([memberId]) {
+        const [member] = this._filter([["id", "=", memberId]]);
+        return this.env["mail.message"].search_count([
+            ["res_id", "=", member.channel_id],
+            ["model", "=", "discuss.channel"],
+            ["id", ">=", member.new_message_separator],
+        ]);
+    }
+
     /**
      * @param {number} id
      * @param {string} [state]
@@ -112,6 +121,7 @@ export class DiscussChannelMember extends models.ServerModel {
                 thread: { id: member.channel_id, model: "discuss.channel" },
                 id: member.id,
                 last_interest_dt: member.last_interest_dt,
+                new_message_separator: member.new_message_separator,
                 persona,
                 seen_message_id: member.seen_message_id ? { id: member.seen_message_id } : false,
                 fetched_message_id: member.fetched_message_id
@@ -134,5 +144,37 @@ export class DiscussChannelMember extends models.ServerModel {
 
         const [member] = this._filter([["id", "in", ids]]);
         return ResPartner.mail_partner_format([member.partner_id])[member.partner_id];
+    }
+
+    /**
+     * @param {number[]} ids
+     * @param {number} message_id
+     */
+    _set_new_message_separator(ids, message_id) {
+        const kwargs = parseModelParams(arguments, "ids", "message_id");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        message_id = kwargs.message_id;
+        const [member] = this._filter([["id", "in", ids]]);
+        if (!member) {
+            return;
+        }
+        this.env["discuss.channel.member"].write([member.id], {
+            new_message_separator: message_id,
+        });
+        const [partner, guest] = this.env["res.partner"]._get_current_persona();
+        const target = guest ?? partner;
+        this.env["bus.bus"]._sendone(target, "mail.record/insert", {
+            ChannelMember: {
+                id: member.id,
+                new_message_separator: message_id,
+                thread: {
+                    id: member.channel_id,
+                    message_unread_counter: this._compute_message_unread_counter([member.id]),
+                    message_unread_counter_bus_id: this.env["discuss.channel"].bus_last_id,
+                    model: "discuss.channel",
+                },
+            },
+        });
     }
 }

@@ -792,9 +792,6 @@ export class DiscussChannel extends models.ServerModel {
             last_interest_dt: serializeDateTime(today()),
         });
         const messageData = MailThread.message_post.call(this, [id], kwargs);
-        if (kwargs.author_id === this.env.user?.partner_id) {
-            this._set_last_seen_message([channel.id], messageData.id, false);
-        }
         // simulate compute of message_unread_counter
         const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
         const otherMembers = DiscussChannelMember._filter([
@@ -997,52 +994,32 @@ export class DiscussChannel extends models.ServerModel {
         const ResPartner = this.env["res.partner"];
 
         const memberOfCurrentUser = this._find_or_create_member_for_self(ids[0]);
-        const message_unread_counter = this.env["mail.message"]._filter([
-            ["res_id", "=", ids[0]],
-            ["model", "=", "discuss.channel"],
-            ["id", ">", message_id],
-        ]).length;
         if (memberOfCurrentUser) {
+            DiscussChannelMember._set_new_message_separator(
+                [memberOfCurrentUser.id],
+                message_id + 1
+            );
             DiscussChannelMember.write([memberOfCurrentUser.id], {
                 fetched_message_id: message_id,
                 seen_message_id: message_id,
-                message_unread_counter,
+                message_unread_counter: DiscussChannelMember._compute_message_unread_counter([
+                    memberOfCurrentUser.id,
+                ]),
             });
         }
         if (notify) {
             const [channel] = this.search_read([["id", "in", ids]]);
             const [partner, guest] = ResPartner._get_current_persona();
-            const memberBasicInfo = {
-                id: memberOfCurrentUser?.id,
-                seen_message_id: message_id ? { id: message_id } : null,
-            };
-            const memberSelfInfo = {
-                ...memberBasicInfo,
-                thread: {
-                    id: channel.id,
-                    model: "discuss.channel",
-                    message_unread_counter,
-                    message_unread_counter_bus_id: this.bus_last_id,
-                },
-            };
-            const notifications = [];
-            if (memberOfCurrentUser) {
-                notifications.push([
-                    guest ?? partner,
-                    "mail.record/insert",
-                    { ChannelMember: memberSelfInfo },
-                ]);
-            }
+            let target = guest ?? partner;
             if (this._types_allowing_seen_infos().includes(channel.channel_type)) {
-                notifications.push([
-                    channel,
-                    "mail.record/insert",
-                    {
-                        ChannelMember: memberBasicInfo,
-                    },
-                ]);
+                target = channel;
             }
-            BusBus._sendmany(notifications);
+            BusBus._sendone(target, "mail.record/insert", {
+                ChannelMember: {
+                    id: memberOfCurrentUser?.id,
+                    seen_message_id: message_id ? { id: message_id } : null,
+                },
+            });
         }
     }
 

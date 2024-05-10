@@ -351,6 +351,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     },
                                     "fetched_message_id": False,
                                     "seen_message_id": False,
+                                    "new_message_separator": 0,
                                 }
                             ],
                             key=lambda member_data: member_data["id"],
@@ -417,6 +418,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     },
                                     "fetched_message_id": {"id": last_message.id},
                                     "seen_message_id": {"id": last_message.id},
+                                    "new_message_separator": last_message.id + 1,
                                 }
                             ],
                             key=lambda member_data: member_data["id"],
@@ -483,6 +485,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     },
                                     "fetched_message_id": {"id": last_message.id},
                                     "seen_message_id": {"id": last_message.id},
+                                    "new_message_separator": last_message.id + 1,
                                 }
                             ],
                             key=lambda member_data: member_data["id"],
@@ -549,6 +552,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     },
                                     "fetched_message_id": {"id": last_message.id},
                                     "seen_message_id": {"id": last_message.id},
+                                    "new_message_separator": last_message.id + 1,
                                 }
                             ],
                             key=lambda member_data: member_data["id"],
@@ -676,6 +680,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     },
                                     "fetched_message_id": {"id": last_message.id},
                                     "seen_message_id": {"id": last_message.id},
+                                    "new_message_separator": last_message.id + 1,
                                 }
                             ],
                             key=lambda member_data: member_data["id"],
@@ -717,57 +722,55 @@ class TestDiscussFullPerformance(HttpCase):
                 "channelMembers": [
                     [
                         "ADD",
-                        sorted(
-                            [
-                                {
-                                    "create_date": member_0_create_date,
-                                    "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
-                                    },
-                                    "id": member_0.id,
-                                    "persona": {
-                                        "active": True,
-                                        "email": "e.e@example.com",
-                                        "id": self.users[0].partner_id.id,
-                                        "im_status": "online",
-                                        "is_company": False,
-                                        "name": "Ernest Employee",
-                                        "out_of_office_date_end": False,
-                                        "type": "partner",
-                                        "userId": self.users[0].id,
-                                        "isInternalUser": True,
-                                        "write_date": write_date_0,
-                                    },
-                                    "fetched_message_id": False,
-                                    "seen_message_id": False,
+                        [
+                            {
+                                "create_date": member_0_create_date,
+                                "thread": {
+                                    "id": channel.id,
+                                    "model": "discuss.channel",
                                 },
-                                {
-                                    "create_date": fields.Datetime.to_string(member_12.create_date),
-                                    "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
-                                    },
-                                    "id": member_12.id,
-                                    "persona": {
-                                        "active": True,
-                                        "email": False,
-                                        "id": self.users[12].partner_id.id,
-                                        "im_status": "offline",
-                                        "is_company": False,
-                                        "name": "test12",
-                                        "out_of_office_date_end": False,
-                                        "type": "partner",
-                                        "userId": self.users[12].id,
-                                        "isInternalUser": True,
-                                        "write_date": write_date_0,
-                                    },
-                                    "fetched_message_id": False,
-                                    "seen_message_id": False,
+                                "id": member_0.id,
+                                "new_message_separator": 0,
+                                "persona": {
+                                    "active": True,
+                                    "email": "e.e@example.com",
+                                    "id": self.users[0].partner_id.id,
+                                    "im_status": "online",
+                                    "is_company": False,
+                                    "name": "Ernest Employee",
+                                    "out_of_office_date_end": False,
+                                    "type": "partner",
+                                    "userId": self.users[0].id,
+                                    "isInternalUser": True,
+                                    "write_date": write_date_0,
                                 },
-                            ],
-                            key=lambda member_data: member_data["id"],
-                        ),
+                                "fetched_message_id": False,
+                                "seen_message_id": False,
+                            },
+                            {
+                                "create_date": fields.Datetime.to_string(member_12.create_date),
+                                "thread": {
+                                    "id": channel.id,
+                                    "model": "discuss.channel",
+                                },
+                                "id": member_12.id,
+                                "persona": {
+                                    "active": True,
+                                    "email": False,
+                                    "id": self.users[12].partner_id.id,
+                                    "im_status": "offline",
+                                    "is_company": False,
+                                    "name": "test12",
+                                    "out_of_office_date_end": False,
+                                    "type": "partner",
+                                    "userId": self.users[12].id,
+                                    "isInternalUser": True,
+                                    "write_date": write_date_0,
+                                },
+                                "fetched_message_id": False,
+                                "seen_message_id": False,
+                            },
+                        ],
                     ]
                 ],
                 "custom_channel_name": False,
@@ -814,6 +817,7 @@ class TestDiscussFullPerformance(HttpCase):
                                         "model": "discuss.channel",
                                     },
                                     "id": member_0.id,
+                                    "new_message_separator": 0,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
@@ -902,6 +906,7 @@ class TestDiscussFullPerformance(HttpCase):
                                         "model": "discuss.channel",
                                     },
                                     "id": member_0.id,
+                                    "new_message_separator": 0,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
@@ -990,6 +995,7 @@ class TestDiscussFullPerformance(HttpCase):
                                         "model": "discuss.channel",
                                     },
                                     "id": member_0.id,
+                                    "new_message_separator": 0,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
@@ -1078,6 +1084,7 @@ class TestDiscussFullPerformance(HttpCase):
                                         "model": "discuss.channel",
                                     },
                                     "id": member_0.id,
+                                    "new_message_separator": 0,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
@@ -1172,6 +1179,7 @@ class TestDiscussFullPerformance(HttpCase):
                                         "model": "discuss.channel",
                                     },
                                     "id": member_0.id,
+                                    "new_message_separator": 0,
                                     "persona": {
                                         "active": True,
                                         "country": False,
@@ -1266,6 +1274,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     "model": "discuss.channel",
                                 },
                                 "id": member_0.id,
+                                "new_message_separator": 0,
                                 "persona": {
                                     "active": True,
                                     "country": False,

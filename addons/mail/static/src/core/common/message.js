@@ -397,18 +397,12 @@ export class Message extends Component {
     onClickMarkAsUnread() {
         const message = toRaw(this.message);
         const thread = toRaw(this.props.thread);
-        const previousMessage = message.thread.getPreviousMessage(message);
-        if (
-            !thread.selfMember ||
-            (!thread.selfMember.seen_message_id && !previousMessage) ||
-            thread.selfMember.seen_message_id?.eq(previousMessage)
-        ) {
+        if (!thread.selfMember || thread.selfMember?.new_message_separator === message.id) {
             return;
         }
-        return rpc("/discuss/channel/set_last_seen_message", {
+        return rpc("/discuss/channel/set_new_message_separator", {
             channel_id: message.thread.id,
-            last_message_id: previousMessage ? previousMessage.id : false,
-            allow_older: true,
+            message_id: message.id,
         });
     }
 

@@ -220,7 +220,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                     "payload": {
                         "ChannelMember": {
                             "id": member.id,
-                            "seen_message_id": {"id": msg_1.id},
+                            "new_message_separator": msg_1.id + 1,
                             "thread": {
                                 "id": chat.id,
                                 "message_unread_counter": 0,

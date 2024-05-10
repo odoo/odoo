@@ -34,6 +34,7 @@ export class ChannelMember extends Record {
     });
     fetched_message_id = Record.one("Message");
     seen_message_id = Record.one("Message");
+    new_message_separator = null;
     threadAsTyping = Record.one("Thread", {
         onAdd() {
             browser.clearTimeout(this.typingTimeoutId);

@@ -424,9 +424,7 @@ export class MailThread extends models.ServerModel {
                         message: Object.assign(messageFormat, { temporary_id }),
                     },
                 ]);
-                if (message.author_id === this.env.user?.partner_id) {
-                    DiscussChannel._channel_seen(ids, message.id);
-                }
+                DiscussChannel._set_last_seen_message(ids, message.id, false);
             }
         }
         if (message.partner_ids) {
