@@ -203,7 +203,7 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             po.order_line[1].qty_received = 1
 
             po.action_create_invoice()
-            bill = po.invoice_ids
+            bill = po.account_move_ids
             bill.invoice_date = fields.Date.today()
 
             self.env['account.move.line'].create({

@@ -235,7 +235,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             'advance_payment_method': 'delivered',
         })
         adv_wiz.with_context(open_invoices=True).create_invoices()
-        self.inv_2 = self.so.invoice_ids.filtered(lambda r: r.state == 'draft')
+        self.inv_2 = self.so.account_move_ids.filtered(lambda r: r.state == 'draft')
         self.assertAlmostEqual(self.inv_2.invoice_line_ids.sorted()[0].quantity, 2.0, msg='Sale Stock: refund quantity on the invoice should be 2.0 instead of "%s".' % self.inv_2.invoice_line_ids.sorted()[0].quantity)
         self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "no" instead of "%s" after invoicing the return' % self.so.invoice_status)
 

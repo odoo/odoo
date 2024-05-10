@@ -361,7 +361,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
                    'amount': 50,
                }).create_invoices()
 
-        invoice = order.invoice_ids[0]
+        invoice = order.account_move_ids[0]
 
         # The invoice just moves amount from `not_invoiced_yet` to `invoiced`.
         # It does not lower the remaining ammount.
@@ -385,7 +385,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
             'remaining': -3000.0,
         }])
 
-        invoice2 = order.invoice_ids[1]
+        invoice2 = order.account_move_ids[1]
         invoice2.action_post()
         self.assertEqual(
             invoice2.l10n_it_edi_doi_warning,

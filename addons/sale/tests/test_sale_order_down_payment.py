@@ -114,7 +114,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self.sale_order.order_line[1].tax_ids = self.tax_10
         self.sale_order.order_line[2].tax_ids = self.tax_10
         self.make_downpayment()
-        invoice = self.sale_order.invoice_ids
+        invoice = self.sale_order.account_move_ids
         down_pay_amt = self.sale_order.amount_total / 2
         # pylint: disable=C0326
         expected = [
@@ -138,11 +138,11 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self.sale_order.order_line[0].tax_ids = self.tax_15
         (self.sale_order.order_line - self.sale_order.order_line[0]).unlink()
         self.make_downpayment(amount=25)
-        first_invoice = self.sale_order.invoice_ids
+        first_invoice = self.sale_order.account_move_ids
         first_invoice.invoice_line_ids.tax_ids = None
         first_invoice.action_post()
         self.make_downpayment(amount=25)
-        invoice = self.sale_order.invoice_ids - first_invoice
+        invoice = self.sale_order.account_move_ids - first_invoice
         down_pay_amt = self.sale_order.amount_total / 4
         # ruff: noqa: E202
         expected = [
@@ -163,7 +163,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self.sale_order.order_line[1].tax_ids = self.tax_10
         self.sale_order.order_line[2].tax_ids = self.tax_10
         self.make_downpayment()
-        invoice = self.sale_order.invoice_ids
+        invoice = self.sale_order.account_move_ids
         down_pay_amt = self.sale_order.amount_total / 2
         # pylint: disable=C0326
         expected = [
@@ -186,7 +186,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self.sale_order.order_line[1].tax_ids = self.tax_10
         self.sale_order.order_line[2].tax_ids = self.tax_10
         self.make_downpayment(advance_payment_method='fixed', fixed_amount=222.5, amount=0)
-        invoice = self.sale_order.invoice_ids
+        invoice = self.sale_order.account_move_ids
         down_pay_amt = 222.5
         # pylint: disable=C0326
         expected = [
@@ -210,7 +210,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self.sale_order.order_line[2].tax_ids = self.tax_10
         self.sale_order.order_line[3].tax_ids = self.tax_10
         self.make_downpayment(advance_payment_method='fixed', fixed_amount=222.5, amount=0)
-        invoice = self.sale_order.invoice_ids
+        invoice = self.sale_order.account_move_ids
         down_pay_amt = 222.5
         # pylint: disable=C0326
         expected = [
@@ -233,7 +233,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self.sale_order.order_line[1].tax_ids = self.tax_10
         self.sale_order.order_line[2].tax_ids = self.tax_10
         self.make_downpayment()
-        invoice = self.sale_order.invoice_ids
+        invoice = self.sale_order.account_move_ids
         down_pay_amt = self.sale_order.amount_total / 2
         # pylint: disable=C0326
         expected = [
@@ -258,7 +258,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self.sale_order.order_line[1].tax_ids = self.tax_10
         self.sale_order.order_line[2].tax_ids = self.tax_10
         self.make_downpayment()
-        invoice = self.sale_order.invoice_ids
+        invoice = self.sale_order.account_move_ids
         down_pay_amt = self.sale_order.amount_total / 2
         # pylint: disable=C0326
         expected = [
@@ -282,7 +282,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self.sale_order.order_line[1].discount = 25.0
         self.sale_order.order_line[2].tax_ids = self.tax_15
         self.make_downpayment()
-        invoice = self.sale_order.invoice_ids
+        invoice = self.sale_order.account_move_ids
         down_pay_amt = self.sale_order.amount_total / 2
         # pylint: disable=C0326
         expected = [
@@ -308,7 +308,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self.sale_order.order_line[1].tax_ids = self.tax_10
         self.sale_order.order_line[2].tax_ids = self.tax_10
         self.make_downpayment()
-        invoice = self.sale_order.invoice_ids
+        invoice = self.sale_order.account_move_ids
         down_pay_amt = self.sale_order.amount_total / 2
         # pylint: disable=C0326
         expected = [
@@ -355,7 +355,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         # Line 4: 200
         # Total: 944
 
-        invoice = self.sale_order.invoice_ids
+        invoice = self.sale_order.account_move_ids
         # pylint: disable=C0326
         expected = [
             # keys
@@ -399,7 +399,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             })
         downpayment.create_invoices()
         sale_order.action_confirm()
-        invoice = sale_order.invoice_ids
+        invoice = sale_order.account_move_ids
 
         self.assertRecordValues(invoice.invoice_line_ids, [{'price_unit': 200.0, 'tax_ids': tax_percentage.ids}])
         self.assertRecordValues(invoice.line_ids, [
@@ -419,7 +419,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self.sale_order.order_line[2].tax_ids = self.tax_10
         self.sale_order.order_line[2].analytic_distribution = {an_acc_01: 100}
         self.make_downpayment()
-        invoice = self.sale_order.invoice_ids
+        invoice = self.sale_order.account_move_ids
         down_pay_amt = self.sale_order.amount_total / 2
         # pylint: disable=C0326
         expected = [
@@ -472,7 +472,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         # Total: 944
 
         self.make_downpayment()
-        invoice = self.sale_order.invoice_ids
+        invoice = self.sale_order.account_move_ids
         # pylint: disable=C0326
         expected = [
             # keys
@@ -522,7 +522,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         }
         downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
         downpayment.create_invoices()
-        invoice = self.sale_order.invoice_ids
+        invoice = self.sale_order.account_move_ids
         # pylint: disable=C0326
         expected = [
             # keys
