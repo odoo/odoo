@@ -925,6 +925,8 @@ class Task(models.Model):
                 vals["company_id"] = self.env["project.project"].browse(
                     project_id
                 ).company_id.id
+            if not project_id:
+                project_id = self._context.get('default_project_id')
             if not project_id and ("stage_id" in vals or self.env.context.get('default_stage_id')):
                 vals["stage_id"] = False
 
