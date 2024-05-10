@@ -167,6 +167,8 @@ export function useInputField(params) {
                 if (component.props.setDirty) {
                     component.props.setDirty(isDirty);
                 }
+            } else {
+                inputRef.el.value = params.getValue();
             }
         }
     }
