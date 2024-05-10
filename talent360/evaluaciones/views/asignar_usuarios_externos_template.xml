@@ -6,9 +6,14 @@
         <field name="arch" type="xml">
             <form string="Upload File">
                 <group>
-                    <field name="nombre_archivo" invisible="1"/>
-                    <field name="archivo" filename="nombre_archivo"/>
-                    <button name="descargar_template_usuarios" string="Template" type="object" class="btn-primary"/>
+                    <div>Para asignar usuarios externos, por favor subir un archvo CSV con los datos de los participantes con la siguiente plantilla.</div>
+                    <group class="py-3">
+                        <button name="descargar_template_usuarios" string="Plantilla" type="object" class="btn-primary"/>
+                    </group>
+                    <group>
+                        <field name="nombre_archivo" invisible="1"/>
+                        <field name="archivo" filename="nombre_archivo"/>
+                    </group>
                 </group>
                 <footer>
                     <button string="Asignar" class="btn-primary" name="procesar_csv" type="object"/>

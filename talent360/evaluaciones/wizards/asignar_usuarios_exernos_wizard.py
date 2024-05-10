@@ -13,7 +13,6 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
 
     nombre_archivo = fields.Char()
 
-
     campos_obligatorios = [
             "Nombre Completo",
             "Correo",
