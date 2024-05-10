@@ -19,7 +19,7 @@ class Evaluacion(models.Model):
     _name = "evaluacion"
     _description = "Evaluacion de pesonal"
     _rec_name = "nombre"
-    nombre = fields.Char(required=True)
+    nombre = fields.Char(string="Título de la evaluación", required=True)
 
     tipo = fields.Selection(
         [
@@ -68,7 +68,7 @@ class Evaluacion(models.Model):
     fecha_inicio = fields.Date(string="Fecha de inicio", required=True)
     fecha_final = fields.Date(string="Fecha de finalización", required=True)
 
-    mensaje = fields.Text(string="Mensaje")
+    mensaje = fields.Text(string="Mensaje de bienvenida")
 
     @api.constrains('fecha_inicio', 'fecha_final')
     def check_fechas(self):
@@ -115,7 +115,6 @@ class Evaluacion(models.Model):
             template = self.env["template"].browse(template_id)
             if template:
                 pregunta_ids = template.pregunta_ids.ids
-                print("IDs de preguntas:", pregunta_ids)
                 self.pregunta_ids = [(6, 0, pregunta_ids)]
 
         return self
@@ -325,15 +324,15 @@ class Evaluacion(models.Model):
                 if respuesta.evaluacion_id.id != self.id:
                     continue
 
-                respuestas.append(respuesta.respuesta_texto)
+                respuestas.append(respuesta.respuesta_mostrar)
 
                 for i, respuesta_tabulada in enumerate(respuestas_tabuladas):
-                    if respuesta_tabulada["nombre"] == respuesta.respuesta_texto:
+                    if respuesta_tabulada["nombre"] == respuesta.respuesta_mostrar:
                         respuestas_tabuladas[i]["valor"] += 1
                         break
                 else:
                     respuestas_tabuladas.append(
-                        {"nombre": respuesta.respuesta_texto, "valor": 1}
+                        {"nombre": respuesta.respuesta_mostrar, "valor": 1}
                     )
 
             datos_pregunta = {
@@ -391,7 +390,7 @@ class Evaluacion(models.Model):
             for respuesta in pregunta.respuesta_ids:
                 if respuesta.evaluacion_id.id != self.id:
                     continue
-                valor_respuesta = int(respuesta.respuesta_texto)
+                valor_respuesta = respuesta.valor_respuesta
                 valor_pregunta += valor_respuesta
                 final += valor_respuesta
 
@@ -459,6 +458,7 @@ class Evaluacion(models.Model):
                 "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
                 "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
                 "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],
+                "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
                 "final": final,
             }
 
@@ -468,6 +468,7 @@ class Evaluacion(models.Model):
                 "evaluacion": self,
                 "categorias": [categorias[nombre] for nombre in categorias_orden],
                 "dominios": [dominios[nombre] for nombre in dominios_orden],
+                "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
                 "final": final,
             }
 
@@ -530,10 +531,11 @@ class Evaluacion(models.Model):
             valor_pregunta = 0
             maximo_pregunta = 0
 
+
             for respuesta in pregunta.respuesta_ids:
-                valor_respuesta = int(respuesta.respuesta_texto)
+                valor_respuesta = respuesta.valor_respuesta
                 valor_pregunta += valor_respuesta
-                maximo_pregunta += 4  # Suponiendo un máximo de 4 para cada respuesta en escala
+                maximo_pregunta += pregunta.valor_maximo  # Suponiendo un máximo de 4 para cada respuesta en escala
 
                 nombre_departamento = respuesta.usuario_id.department_id.name if respuesta.usuario_id.department_id else "Sin departamento"
                 departamento = next(
@@ -623,6 +625,7 @@ class Evaluacion(models.Model):
                 "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
                 "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
                 "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],  
+                "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
             }
 
         else:
@@ -633,10 +636,9 @@ class Evaluacion(models.Model):
                 "total": total_puntuacion,
                 "total_maximo": total_maximo_posible,
                 "total_porcentaje": total_porcentaje,
+                "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
             }
 
-        # Parámetros para el template
-        print(parametros)
         return parametros
 
     def asignar_color(self, valor, categoria=None, dominio=None):

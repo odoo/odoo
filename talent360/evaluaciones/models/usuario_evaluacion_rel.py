@@ -33,6 +33,14 @@ class UsuarioEvaluacionRel(models.Model):
     )
     token = fields.Char(string="Token")
 
+    def write(self, vals):
+        """Sobreescribir el método write para enviar la evaluación al usuario."""
+        res = super(UsuarioEvaluacionRel, self).write(vals)
+        if "contestada" in vals:
+            self.evaluacion_id._compute_porcentaje_respuestas()
+
+        return res
+
     def action_get_estado(self, usuario_id, evaluacion_id, token):
         """Método para obtener el estado de la evaluación para el usuario.
 
@@ -42,7 +50,10 @@ class UsuarioEvaluacionRel(models.Model):
         """
         if usuario_id:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("usuario_id.id", "=", usuario_id), ("evaluacion_id.id", "=", evaluacion_id)]
+                [
+                    ("usuario_id.id", "=", usuario_id),
+                    ("evaluacion_id.id", "=", evaluacion_id),
+                ]
             )
         else:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
@@ -60,7 +71,10 @@ class UsuarioEvaluacionRel(models.Model):
 
         if usuario_id:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("usuario_id.id", "=", usuario_id), ("evaluacion_id.id", "=", evaluacion_id)]
+                [
+                    ("usuario_id.id", "=", usuario_id),
+                    ("evaluacion_id.id", "=", evaluacion_id),
+                ]
             )
         else:
             usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
