@@ -39,7 +39,8 @@ export class KanbanController extends Component {
         forceGlobalClick: { type: Boolean, optional: true },
         onSelectionChanged: { type: Function, optional: true },
         showButtons: { type: Boolean, optional: true },
-        Compiler: { type: Function, optional: true }, // optional in stable for backward compatibility
+        Compiler: { type: Function, optional: true },
+        Record: { type: Function, optional: true },
         Model: Function,
         Renderer: Function,
         buttonTemplate: String,
@@ -182,9 +183,9 @@ export class KanbanController extends Component {
         const { activeFields, fields } = extractFieldsFromArchInfo(archInfo, this.props.fields);
 
         // Remove fields aggregator unused to avoid asking them for no reason
-        const aggregateFieldNames = this.progressBarAggregateFields.map((field) => field.name)
+        const aggregateFieldNames = this.progressBarAggregateFields.map((field) => field.name);
         for (const [key, value] of Object.entries(activeFields)) {
-            if (!aggregateFieldNames.includes(key)){
+            if (!aggregateFieldNames.includes(key)) {
                 value.aggregator = null;
             }
         }

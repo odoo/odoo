@@ -218,15 +218,9 @@ export class DashboardKanbanRecord extends KanbanRecord {
     }
 }
 
-export class DashboardKanbanRenderer extends KanbanRenderer {
-    get kanbanRecordComponent() {
-        return DashboardKanbanRecord;
-    }
-}
-
 export const DashboardKanbanView = {
     ...kanbanView,
-    Renderer: DashboardKanbanRenderer,
+    RecordLegacy: DashboardKanbanRecord,
 };
 
 registry.category("views").add("account_tree", AccountMoveUploadListView);

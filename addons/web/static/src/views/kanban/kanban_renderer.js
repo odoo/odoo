@@ -10,6 +10,8 @@ import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { useBounceButton } from "@web/views/view_hook";
 import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanHeader } from "./kanban_header";
+import { KanbanCompiler } from "./kanban_compiler";
+import { KanbanCompiler as KanbanCompilerLegacy } from "./kanban_compiler_legacy";
 import { KanbanRecord } from "./kanban_record";
 import { KanbanRecord as KanbanRecordLegacy } from "./kanban_record_legacy";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
@@ -48,7 +50,8 @@ export class KanbanRenderer extends Component {
     };
     static props = [
         "archInfo",
-        "Compiler?", // optional in stable for backward compatibility
+        "Compiler?",
+        "Record?",
         "list",
         "deleteRecord",
         "openRecord",
@@ -265,8 +268,17 @@ export class KanbanRenderer extends Component {
     }
 
     get kanbanRecordComponent() {
-        const { KanbanRecord, KanbanRecordLegacy } = this.constructor.components;
-        return this.props.archInfo.isLegacyKanban ? KanbanRecordLegacy : KanbanRecord;
+        if (!this.props.Record) {
+            return this.props.archInfo.isLegacyKanban ? KanbanRecordLegacy : KanbanRecord;
+        }
+        return this.props.Record;
+    }
+
+    get kanbanRecordCompiler() {
+        if (!this.props.Compiler) {
+            return this.props.archInfo.isLegacyKanban ? KanbanCompilerLegacy : KanbanCompiler;
+        }
+        return this.props.Compiler;
     }
 
     get showNoContentHelper() {

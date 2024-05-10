@@ -65,6 +65,7 @@ export class KanbanRecord extends Component {
         "colors?", // legacy
         "templates?", // legacy
     ];
+
     static Compiler = KanbanCompiler;
 
     setup() {
@@ -73,8 +74,8 @@ export class KanbanRecord extends Component {
         this.dialog = useService("dialog");
         this.notification = useService("notification");
 
-        const ViewCompiler = this.props.Compiler || this.constructor.Compiler;
-        const templates = useViewCompiler(ViewCompiler, { kanban: this.props.archInfo.xmlDoc });
+        const Compiler = this.props.Compiler || this.constructor.Compiler;
+        const templates = useViewCompiler(Compiler, { kanban: this.props.archInfo.xmlDoc });
         this.template = templates.kanban;
     }
 

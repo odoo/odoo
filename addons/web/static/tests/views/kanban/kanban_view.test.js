@@ -12369,18 +12369,10 @@ test("kanbans with basic and custom compiler, same arch", async () => {
             return compiledNode;
         }
     }
-    class MyKanbanRecord extends KanbanRecord {}
-    MyKanbanRecord.Compiler = MyKanbanCompiler;
-    class MyKanbanRenderer extends KanbanRenderer {
-        get kanbanRecordComponent() {
-            return MyKanbanRecord;
-        }
-    }
     viewRegistry.add("my_kanban", {
         ...kanbanView,
-        Renderer: MyKanbanRenderer,
+        Compiler: MyKanbanCompiler,
     });
-    after(() => viewRegistry.remove("my_kanban"));
 
     Partner._fields.one2many = fields.One2many({ relation: "partner" });
     Partner._records[0].one2many = [1];
