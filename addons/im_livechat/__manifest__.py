@@ -140,6 +140,7 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/tests/livechat_test_helpers.js',
             'bus/static/tests/mock_server/**/*',
             'mail/static/tests/mock_server/**/*',
+            'rating/static/tests/mock_server/**/*',
             'im_livechat/static/tests/mock_server/**/*',
             'bus/static/tests/mock_websocket.js',
         ],

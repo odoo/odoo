@@ -1,4 +1,5 @@
 import { mailModels, startServer } from "@mail/../tests/mail_test_helpers";
+import { RatingRating } from "@rating/../tests/mock_server/models/rating_rating";
 import {
     defineModels,
     serverState,
@@ -8,7 +9,6 @@ import {
 import { DiscussChannel } from "./mock_server/mock_models/discuss_channel";
 import { DiscussChannelMember } from "./mock_server/mock_models/discuss_channel_member";
 import { LivechatChannel } from "./mock_server/mock_models/im_livechat_channel";
-import { RatingRating } from "./mock_server/mock_models/rating_rating";
 import { ResGroups } from "./mock_server/mock_models/res_groups";
 import { ResLang } from "./mock_server/mock_models/res_lang";
 import { ResPartner } from "./mock_server/mock_models/res_partner";

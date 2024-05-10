@@ -26,8 +26,12 @@ This module allows a customer to give rating.
         'web.assets_frontend': [
             'rating/static/src/scss/rating_templates.scss',
         ],
-        'web.tests_assets': [
+        'web.assets_unit_tests': [
             'rating/static/tests/**/*',
+            ('remove', 'rating/static/tests/helpers/**/*'),
+        ],
+        'web.tests_assets': [
+            'rating/static/tests/helpers/**/*',
         ],
     },
     'license': 'LGPL-3',
