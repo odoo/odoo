@@ -1655,6 +1655,13 @@ X[]
                         <p>before[]after</p>`),
                 });
             });
+            it('should keep empty line and delete prefix of second line', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab</p><p>[<br></p><p>d]ef</p>',
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>ab</p><p>[]<br></p><p>ef</p>',
+                });
+            });
         });
     });
 
@@ -3386,6 +3393,13 @@ X[]
                         contentAfter: unformat(`
                             <p>before[]after</p>`),
                     });
+                });
+            });
+            it('should keep empty line and delete prefix of second line', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab</p><p>[<br></p><p>d]ef</p>',
+                    stepFunction: deleteBackward,
+                    contentAfter: '<p>ab</p><p>[]<br></p><p>ef</p>',
                 });
             });
         });
