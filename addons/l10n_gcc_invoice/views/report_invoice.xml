@@ -152,7 +152,7 @@
                 </div>
 
                 <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
-                <table class="table table-borderless o_main_table" name="invoice_line_table">
+                <table class="o_has_total_table table table-borderless o_main_table" name="invoice_line_table">
                     <thead>
                         <tr>
                             <t t-set="colspan" t-value="6"/>
