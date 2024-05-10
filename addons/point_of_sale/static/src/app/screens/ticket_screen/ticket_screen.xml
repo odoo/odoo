@@ -127,7 +127,7 @@
                     <t t-set="_selectedSyncedOrder" t-value="getSelectedOrder()" />
                     <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />
                     <t t-if="_selectedSyncedOrder?.get_orderlines()?.length" > 
-                        <div t-if="isOrderSynced" t-att-class="{ 'highlight text-danger': _state.ui.highlightHeaderNote }" class="text-bg-view py-2 px-3 border-bottom" >
+                        <div t-if="isOrderSynced" t-att-class="{ 'highlight text-danger': !getHasItemsToRefund() }" class="py-2 px-3 border-bottom" >
                             Select the product(s) to refund and set the quantity
                         </div>
                         <OrderWidget lines="_selectedSyncedOrder.orderlines" t-slot-scope="scope"
@@ -171,7 +171,8 @@
                                         partner="getSelectedOrder()?.get_partner()"
                                         actionName="constructor.numpadActionName"
                                         actionType="'refund'"
-                                        actionToTrigger.bind="onDoRefund" />
+                                        actionToTrigger.bind="onDoRefund"
+                                        isActionButtonHighlighted="getHasItemsToRefund()" />
                                     <Numpad buttons="getNumpadButtons()" class="'max-width-325px'"/>
                                 </div>
                             </t>

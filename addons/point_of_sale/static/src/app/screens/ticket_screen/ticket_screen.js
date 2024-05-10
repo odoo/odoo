@@ -251,19 +251,12 @@ export class TicketScreen extends Component {
             }
         }
 
-        if (!order) {
-            this._state.ui.highlightHeaderNote = !this._state.ui.highlightHeaderNote;
+        if (!order || !this.getHasItemsToRefund()) {
             return;
         }
 
         const partner = order.get_partner();
 
-        const allToRefundDetails = this._getRefundableDetails(partner, order);
-
-        if (!allToRefundDetails) {
-            this._state.ui.highlightHeaderNote = !this._state.ui.highlightHeaderNote;
-            return;
-        }
         // The order that will contain the refund orderlines.
         // Use the destinationOrder from props if the order to refund has the same
         // partner as the destinationOrder.
@@ -281,7 +274,7 @@ export class TicketScreen extends Component {
 
         destinationOrder.takeaway = order.takeaway;
         // Add orderline for each toRefundDetail to the destinationOrder.
-        for (const refundDetail of allToRefundDetails) {
+        for (const refundDetail of this._getRefundableDetails(partner, order)) {
             const product = this.pos.models["product.product"].get(
                 refundDetail.orderline.productId
             );
