@@ -2075,13 +2075,11 @@ export class OdooEditor extends EventTarget {
     bindExecCommand(element) {
         for (const buttonEl of element.querySelectorAll('[data-call]')) {
             buttonEl.addEventListener('click', ev => {
-                if (!this.isSelectionInEditable()) {
-                    this.historyResetLatestComputedSelection(true);
-                }
                 const arg1 = buttonEl.dataset.arg1;
                 const args = arg1 && arg1.split(",") || [];
                 this.execCommand(buttonEl.dataset.call, ...args);
 
+                this.historyResetLatestComputedSelection(true);
                 ev.preventDefault();
                 this._updateToolbar();
             });
@@ -4198,21 +4196,25 @@ export class OdooEditor extends EventTarget {
             ev.preventDefault();
             ev.stopPropagation();
             this.execCommand('bold');
+            this.historyResetLatestComputedSelection(true);
         } else if (IS_KEYBOARD_EVENT_ITALIC(ev)) {
             // Ctrl-I
             ev.preventDefault();
             ev.stopPropagation();
             this.execCommand('italic');
+            this.historyResetLatestComputedSelection(true);
         } else if (IS_KEYBOARD_EVENT_UNDERLINE(ev)) {
             // Ctrl-U
             ev.preventDefault();
             ev.stopPropagation();
             this.execCommand('underline');
+            this.historyResetLatestComputedSelection(true);
         } else if (IS_KEYBOARD_EVENT_STRIKETHROUGH(ev)) {
             // Ctrl-5 / Ctrl-shift-(
             ev.preventDefault();
             ev.stopPropagation();
             this.execCommand('strikeThrough');
+            this.historyResetLatestComputedSelection(true);
         } else if (IS_KEYBOARD_EVENT_LEFT_ARROW(ev) || IS_KEYBOARD_EVENT_RIGHT_ARROW(ev)) {
             const side = ev.key === 'ArrowLeft' ? 'previous' : 'next';
             const selection = this.document.getSelection();
