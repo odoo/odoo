@@ -169,7 +169,6 @@ export class PosStore extends Reactive {
                 filter: null,
                 // maps the order's backendId to it's selected orderline
                 selectedOrderlineIds: {},
-                highlightHeaderNote: false,
             },
         };
 
