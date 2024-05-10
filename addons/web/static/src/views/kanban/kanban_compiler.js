@@ -1,4 +1,4 @@
-import { append, createElement, getTag } from "@web/core/utils/xml";
+import { append, combineAttributes, createElement, getTag } from "@web/core/utils/xml";
 import { ViewCompiler } from "@web/views/view_compiler";
 
 const SPECIAL_TYPES = ["edit", "delete", "archive", "unarchive", "set_cover"];
@@ -58,9 +58,19 @@ export class KanbanCompiler extends ViewCompiler {
             compiled.setAttribute(name, value);
         }
         if (type === "delete") {
-            compiled.setAttribute("t-if", "__comp__.canDelete");
+            combineAttributes(
+                compiled,
+                "t-attf-class",
+                "{{__comp__.canDelete ? '' : 'pe-none opacity-50'}}",
+                " "
+            );
         } else {
-            compiled.setAttribute("t-if", "__comp__.canEdit");
+            combineAttributes(
+                compiled,
+                "t-attf-class",
+                "{{__comp__.canEdit ? '' : 'pe-none opacity-50'}}",
+                " "
+            );
         }
         compiled.setAttribute("t-on-click", `(ev) => __comp__.triggerAction("${type}", ev)`);
         if (getTag(el, true) === "a" && !compiled.hasAttribute("href")) {

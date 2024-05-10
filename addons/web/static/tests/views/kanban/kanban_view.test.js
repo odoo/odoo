@@ -319,59 +319,6 @@ test("kanban card with menu", async () => {
     expect(".o-dropdown--kanban-record-menu a.dropdown-item").toHaveCount(2);
 });
 
-test("kanban card with kanban special actions, but edit='0'", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban edit="0">
-                <card>
-                    <div>
-                        <a type="edit" class="dropdown-item">Edit</a>
-                        <a type="archive" class="dropdown-item">Archive</a>
-                        <a type="unarchive" class="dropdown-item">Unarchive</a>
-                        <a type="set_cover" class="dropdown-item">Set Cover</a>
-                        <a type="delete" class="dropdown-item">Delete</a>
-                    </div>
-                </card>
-            </kanban>`,
-    });
-
-    expect(queryFirst(".o_kanban_record")).toHaveInnerHTML(`
-        <div>
-            <a type="delete" class="dropdown-item" href="#"> Delete </a>
-        </div>
-    `);
-});
-
-test("kanban card with kanban special actions, but delete='0'", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban delete="0">
-                <card>
-                    <div>
-                        <a type="edit" class="dropdown-item">Edit</a>
-                        <a type="archive" class="dropdown-item">Archive</a>
-                        <a type="unarchive" class="dropdown-item">Unarchive</a>
-                        <a type="set_cover" class="dropdown-item">Set Cover</a>
-                        <a type="delete" class="dropdown-item">Delete</a>
-                    </div>
-                </card>
-            </kanban>`,
-    });
-
-    expect(queryFirst(".o_kanban_record")).toHaveInnerHTML(`
-        <div>
-            <a type="edit" class="dropdown-item" href="#"> Edit </a>
-            <a type="archive" class="dropdown-item" href="#"> Archive </a>
-            <a type="unarchive" class="dropdown-item" href="#"> Unarchive </a>
-            <a type="set_cover" class="dropdown-item" href="#"> Set Cover </a>
-        </div>
-    `);
-});
-
 test("kanban arch with progressbar", async () => {
     await mountView({
         type: "kanban",
@@ -10353,12 +10300,15 @@ test("special button types in ungrouped kanban", async () => {
             </kanban>`,
     });
 
-    expect(getKanbanRecordTexts()).toEqual([
-        "EditArchiveUnarchiveSet CoverDelete",
-        "EditArchiveUnarchiveSet CoverDelete",
-        "EditArchiveUnarchiveSet CoverDelete",
-        "EditArchiveUnarchiveSet CoverDelete",
-    ]);
+    expect(queryFirst(".o_kanban_record")).toHaveInnerHTML(`
+        <div>
+            <a type="edit" href="#"> Edit </a>
+            <a type="archive" href="#"> Archive </a>
+            <a type="unarchive" href="#"> Unarchive </a>
+            <a type="set_cover" href="#"> Set Cover </a>
+            <a type="delete" href="#"> Delete </a>
+        </div>
+    `);
 });
 
 test("special button types in ungrouped kanban (edit='0')", async () => {
@@ -10366,7 +10316,7 @@ test("special button types in ungrouped kanban (edit='0')", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban on_create="quick_create" edit="0">
+            <kanban edit="0">
                 <card>
                     <div>
                         <a type="edit">Edit</a>
@@ -10379,7 +10329,15 @@ test("special button types in ungrouped kanban (edit='0')", async () => {
             </kanban>`,
     });
 
-    expect(getKanbanRecordTexts()).toEqual(["Delete", "Delete", "Delete", "Delete"]);
+    expect(queryFirst(".o_kanban_record")).toHaveInnerHTML(`
+        <div>
+            <a type="edit" href="#" class="pe-none opacity-50"> Edit </a>
+            <a type="archive" href="#" class="pe-none opacity-50"> Archive </a>
+            <a type="unarchive" href="#" class="pe-none opacity-50"> Unarchive </a>
+            <a type="set_cover" href="#" class="pe-none opacity-50"> Set Cover </a>
+            <a type="delete" href="#"> Delete </a>
+        </div>
+    `);
 });
 
 test("special button types in ungrouped kanban (delete='0')", async () => {
@@ -10387,7 +10345,7 @@ test("special button types in ungrouped kanban (delete='0')", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban on_create="quick_create" delete="0">
+            <kanban delete="0">
                 <card>
                     <div>
                         <a type="edit">Edit</a>
@@ -10400,12 +10358,15 @@ test("special button types in ungrouped kanban (delete='0')", async () => {
             </kanban>`,
     });
 
-    expect(getKanbanRecordTexts()).toEqual([
-        "EditArchiveUnarchiveSet Cover",
-        "EditArchiveUnarchiveSet Cover",
-        "EditArchiveUnarchiveSet Cover",
-        "EditArchiveUnarchiveSet Cover",
-    ]);
+    expect(queryFirst(".o_kanban_record")).toHaveInnerHTML(`
+        <div>
+            <a type="edit" href="#"> Edit </a>
+            <a type="archive" href="#"> Archive </a>
+            <a type="unarchive" href="#"> Unarchive </a>
+            <a type="set_cover" href="#"> Set Cover </a>
+            <a type="delete" href="#" class="pe-none opacity-50"> Delete </a>
+        </div>
+    `);
 });
 
 test("special button types in ungrouped kanban (delete='0' and edit='0')", async () => {
@@ -10413,7 +10374,7 @@ test("special button types in ungrouped kanban (delete='0' and edit='0')", async
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban on_create="quick_create" delete="0" edit="0">
+            <kanban delete="0" edit="0">
                 <card>
                     <div>
                         <a type="edit">Edit</a>
@@ -10426,7 +10387,15 @@ test("special button types in ungrouped kanban (delete='0' and edit='0')", async
             </kanban>`,
     });
 
-    expect(getKanbanRecordTexts()).toEqual(["", "", "", ""]);
+    expect(queryFirst(".o_kanban_record")).toHaveInnerHTML(`
+        <div>
+            <a type="edit" href="#" class="pe-none opacity-50"> Edit </a>
+            <a type="archive" href="#" class="pe-none opacity-50"> Archive </a>
+            <a type="unarchive" href="#" class="pe-none opacity-50"> Unarchive </a>
+            <a type="set_cover" href="#" class="pe-none opacity-50"> Set Cover </a>
+            <a type="delete" href="#" class="pe-none opacity-50"> Delete </a>
+        </div>
+    `);
 });
 
 test("prevent deletion when grouped by many2many field", async () => {
@@ -10453,13 +10422,13 @@ test("prevent deletion when grouped by many2many field", async () => {
     });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
-    expect("a.delete").toHaveCount(0);
+    expect(".o_kanban_record:first a.delete").toHaveClass("pe-none opacity-50");
 
     await toggleSearchBarMenu();
     await toggleMenuItem("GroupBy Foo");
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
-    expect("a.delete").toHaveCount(4);
+    expect(".o_kanban_record:first a.delete").not.toHaveClass("pe-none opacity-50");
 });
 
 test.tags("desktop")("folded groups kept when leaving/coming back", async () => {

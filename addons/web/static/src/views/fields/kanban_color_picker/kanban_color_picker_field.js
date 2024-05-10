@@ -6,7 +6,9 @@ import { Component } from "@odoo/owl";
 
 class KanbanColorPickerField extends Component {
     static template = "web.KanbanColorPickerField";
-    static props = standardFieldProps;
+    static props = {
+        ...standardFieldProps,
+    };
 
     get colors() {
         return ColorList.COLORS;
@@ -19,6 +21,11 @@ class KanbanColorPickerField extends Component {
 
 export const kanbanColorPickerField = {
     component: KanbanColorPickerField,
+    extractProps(_, dynamicInfo) {
+        return {
+            readonly: dynamicInfo.readonly,
+        };
+    },
 };
 
 registry.category("fields").add("kanban_colorpicker", kanbanColorPickerField);
