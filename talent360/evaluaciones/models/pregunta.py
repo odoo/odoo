@@ -14,7 +14,7 @@ class Pregunta(models.Model):
     :param competencia_ids (fields.Many2many): Relación muchos a muchos con el modelo 'competencia' para las competencias asociadas a la pregunta.
     :param condicional (fields.Boolean): Indica si la pregunta es condicional. Por defecto, es False.
     :param respuesta_trigger (fields.Many2one): Relación muchos a uno con el modelo 'opcion' para la respuesta que desbloquea la pregunta.
-    :param preguntas_desbloquadas (fields.Many2many): Relación muchos a muchos con el modelo 'pregunta' para las preguntas desbloqueadas por la respuesta trigger.
+    :param preguntas_desbloqueadas (fields.Many2many): Relación muchos a muchos con el modelo 'pregunta' para las preguntas desbloqueadas por la respuesta trigger.
     :param categoria (fields.Selection): Categoría de la pregunta con opciones 'ambiente_de_trabajo', 'factores_actividad', 'organizacion_tiempo', 'liderazgo_relaciones', 'datos_generales', 'reclutamiento_y_seleccion_de_personal', 'formacion_y_capacitacion', 'permanencia_y_ascenso', 'corresponsabilidad_en_la_vida_laboral_familiar_y_personal', 'clima_laboral_libre_de_violencia', 'acoso_y_hostigamiento', 'accesibilidad', 'respeto_a_la_diversidad' y 'condiciones_generales_de_trabajo'.
     :param dominio (fields.Selection): Dominio de la pregunta con opciones 'condiciones_ambiente', 'carga_trabajo', 'falta_control', 'jornada_trabajo', 'trabajo_familia', 'liderazgo', 'relaciones' y 'violencia'.
     :param valor_maximo (fields.Float): Valor máximo de la pregunta. Calculado en función del tipo de pregunta.
@@ -36,9 +36,10 @@ class Pregunta(models.Model):
     )
 
     opcion_ids = fields.One2many("opcion", "pregunta_id", string="Opciones")
-    respuesta_ids = fields.One2many("respuesta", "pregunta_id", string="Respuestas")
+    respuesta_ids = fields.One2many(
+        "respuesta", "pregunta_id", string="Respuestas")
     competencia_ids = fields.Many2many("competencia", string="Competencias")
-    condicional = fields.Boolean("Condicional", default=False)
+    condicional = fields.Boolean(default=False)
     respuesta_trigger = fields.Many2one("opcion", string="Respuesta trigger")
     preguntas_desbloqueadas = fields.Many2many(
         "pregunta",
@@ -65,11 +66,13 @@ class Pregunta(models.Model):
                 "corresponsabilidad_en_la_vida_laboral_familiar_y_personal",
                 "Corresponsabilidad en la Vida Laboral, Familiar y Personal",
             ),
-            ("clima_laboral_libre_de_violencia", "Clima Laboral Libre de Violencia"),
+            ("clima_laboral_libre_de_violencia",
+             "Clima Laboral Libre de Violencia"),
             ("acoso_y_hostigamiento", "Acoso y Hostigamiento"),
             ("accesibilidad", "Accesibilidad"),
             ("respeto_a_la_diversidad", "Respeto a la Diversidad"),
-            ("condiciones_generales_de_trabajo", "Condiciones Generales de Trabajo"),
+            ("condiciones_generales_de_trabajo",
+             "Condiciones Generales de Trabajo"),
         ],
     )
 
@@ -86,7 +89,8 @@ class Pregunta(models.Model):
         ],
     )
 
-    valor_maximo = fields.Float("Valor máximo", calculate="_calculate_valor_maximo", store=False)
+    valor_maximo = fields.Float(
+        "Valor máximo", calculate="_calculate_valor_maximo", store=False)
 
     def _calculate_valor_maximo(self):
         for record in self:
@@ -129,6 +133,5 @@ class Pregunta(models.Model):
             Preguntas desbloqueadas por la respuesta trigger.
         """
         if self.condicional and respuesta == self.respuesta_trigger:
-            print(self.preguntas_desbloquadas)
-            return self.preguntas_desbloquadas
+            return self.preguntas_desbloqueadas
         return False

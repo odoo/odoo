@@ -46,7 +46,7 @@ class UsuarioEvaluacionRel(models.Model):
         string="Usuarios de Evaluación",
         readonly=True,
     )
-    token = fields.Char(string="Token")
+    token = fields.Char()
 
     def write(self, vals):
         """Sobreescribir el método write para enviar la evaluación al usuario."""

@@ -25,7 +25,7 @@ class Respuesta(models.Model):
     evaluacion_id = fields.Many2one("evaluacion", string="Evaluacion")
     pregunta_texto = fields.Char(related="pregunta_id.pregunta_texto")
     respuesta_texto = fields.Char("Respuesta")
-    token = fields.Char(string="Token")
+    token = fields.Char()
     opcion_id = fields.Many2one("opcion", string="Opción")
 
     respuesta_mostrar = fields.Char(

@@ -187,11 +187,3 @@ class TestReportes(TransactionCase):
                 )
             else:
                 self.fail("Tipo de pregunta no soportado")
-
-    def test_generar_reporte_clima(self):
-
-        print(f"Evaluacion: {self.evaluacion.pregunta_ids}")
-        params = self.evaluacion.action_generar_datos_reporte_clima()
-
-        print("PARAMSSSSSSS")
-        print(params)
