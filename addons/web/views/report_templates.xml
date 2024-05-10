@@ -58,34 +58,15 @@
                         complicated to have an almost exact replica of the pdf report.
                         This changes down here are hacks to make the preview look as good as possible.
                     **/
-
-                    /** The footers are not at the bottom of the page, so we push them down. **/
-                    .o_background_footer, .o_standard_footer, .o_boxed_footer, .o_clean_footer {
-                        position: absolute;
-                        bottom: 0;
-                        left:50px;
-                        right:50px;
-                        font-size: larger;
+                    .article {
+                        z-index: -2;
                     }
 
-                    /** This rule is overridden in web/report.scss to hack around whtml2pdf
-                        Simply set it to its default value so it works properly in preview **/
-                    .col-auto{
-                        -webkit-box-flex: 0 !important;
-                        -webkit-flex: 0 0 auto !important;
-                        flex: 0 0 auto !important;
-                        width: auto !important;
-                        max-width: 100% !important;
-                    }
-
-                    .container {
-                        font-size: larger;
-                    }
                 </style>
             </head>
-            <body t-att-class="'container' if not full_width else 'container-fluid'" style="overflow:hidden" t-att-dir="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'">
-                <div id="wrapwrap">
-                        <t t-out="0"/>
+            <body class="o_body_html container-fluid" style="overflow:hidden" t-att-dir="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'">
+                <div id="wrapwrap" class="d-flex flex-column h-100">
+                    <t t-out="0"/>
                 </div>
             </body>
         </html>
@@ -99,7 +80,6 @@
     </template>
 
     <template id="html_preview_container">
-        <t t-set="body_classname" t-value="'container'"/>
         <t t-call="web.report_preview_layout">
             <t t-out="0"/>
         </t>
@@ -124,7 +104,7 @@
                            </div>
                        </address>
                    </t>
-                   <div class="page mt-5">
+                   <div class="page">
                        <t t-set="layout_document_title">
                            <span>Invoice</span>
                            <span>INV/2023/00003</span>
@@ -139,13 +119,13 @@
                                <div>08/07/2020</div>
                            </div>
                        </div>
-                       <table class="o_has_total_table table table-sm o_main_table table-borderless" name="invoice_line_table">
+                       <table class="o_has_total_table table o_main_table table-borderless" name="invoice_line_table">
                            <thead>
                                <tr>
                                    <th name="th_description" class="text-start"><span>Description</span></th>
                                    <th name="th_quantity" class="text-end"><span>Quantity</span></th>
                                    <th name="th_priceunit" class="text-end d-md-table-cell"><span>Unit Price</span></th>
-                                   <th name="th_taxes" class="text-start d-md-table-cell"><span>Taxes</span></th>
+                                   <th name="th_taxes" class="text-end d-md-table-cell"><span>Taxes</span></th>
                                    <th name="th_subtotal" class="text-end">
                                        <span>Amount</span>
                                    </th>
@@ -161,8 +141,8 @@
                                    <td class="text-end d-md-table-cell">
                                        <span class="text-nowrap">1,500.00</span>
                                    </td>
-                                   <td class="text-start d-md-table-cell">
-                                       <span id="line_tax_ids">Tax 15%</span>
+                                   <td class="text-end d-md-table-cell">
+                                       <span id="line_tax_ids">15%</span>
                                    </td>
                                    <td class="text-end o_price_total">
                                        <span class="text-nowrap">$ <span class="oe_currency_value">7,500.00</span></span>
@@ -177,8 +157,8 @@
                                    <td class="text-end d-md-table-cell">
                                        <span class="text-nowrap">2,350.00</span>
                                    </td>
-                                   <td class="text-start d-md-table-cell">
-                                       <span id="line_tax_ids">Tax 15%</span>
+                                   <td class="text-end d-md-table-cell">
+                                       <span id="line_tax_ids">15%</span>
                                    </td>
                                    <td class="text-end o_price_total">
                                        <span class="text-nowrap">$ <span class="oe_currency_value">11,750.00</span></span>
@@ -189,7 +169,7 @@
                        <div id="right-elements" t-attf-class="#{'col-5' if report_type != 'html' else 'col-12 col-md-5'} ms-5 d-inline-block float-end">
                            <div id="total" class="clearfix row mt-n3">
                                <div class="ms-auto">
-                                   <table class="o_total_table table table-sm table-borderless" style="page-break-inside: avoid; position:relative;">
+                                   <table class="o_total_table table table-borderless">
                                        <tbody><tr class="o_subtotal">
                                            <td><strong>Untaxed Amount</strong></td>
                                            <td class="text-end">
@@ -205,15 +185,15 @@
                                            <tr class="o_total">
                                                <td><strong>Total</strong></td>
                                                <td class="text-end">
-                                                   <span class="text-nowrap">$ <span class="oe_currency_value">
-                                                       22,137.50</span></span>
+                                                   <strong class="text-nowrap">$ <span class="oe_currency_value">
+                                                       22,137.50</span></strong>
                                                </td>
                                            </tr>
                                        </tbody></table>
                                </div>
                            </div>
                        </div>
-                       <div id="payment_term">
+                       <div id="payment_term" class="mt-4">
                             <div class="mb-3">
                                 <p name="payment_term">
                                     <span>Payment terms: 30 Days</span>
