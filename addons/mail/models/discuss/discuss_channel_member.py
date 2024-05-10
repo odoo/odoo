@@ -29,6 +29,7 @@ class ChannelMember(models.Model):
     custom_channel_name = fields.Char('Custom channel name')
     fetched_message_id = fields.Many2one('mail.message', string='Last Fetched', index="btree_not_null")
     seen_message_id = fields.Many2one('mail.message', string='Last Seen', index="btree_not_null")
+    new_message_separator = fields.Integer(help="Message id before which the separator should be displayed", default=0)
     message_unread_counter = fields.Integer('Unread Messages Counter', compute='_compute_message_unread', compute_sudo=True)
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='closed')
     custom_notifications = fields.Selection(
@@ -92,11 +93,11 @@ class ChannelMember(models.Model):
                 ("channel_id.last_interest_dt", "<", self._field_to_sql(self._table, "unpin_dt")),
             ]
 
-    @api.depends("channel_id.message_ids", "seen_message_id")
+    @api.depends("channel_id.message_ids", "new_message_separator")
     def _compute_message_unread(self):
         if self.ids:
             self.env['mail.message'].flush_model()
-            self.flush_recordset(['channel_id', 'seen_message_id'])
+            self.flush_recordset(['channel_id', 'new_message_separator'])
             self.env.cr.execute("""
                      SELECT count(mail_message.id) AS count,
                             discuss_channel_member.id
@@ -105,10 +106,7 @@ class ChannelMember(models.Model):
                          ON discuss_channel_member.channel_id = mail_message.res_id
                       WHERE mail_message.model = 'discuss.channel'
                         AND mail_message.message_type NOT IN ('notification', 'user_notification')
-                        AND (
-                            mail_message.id > discuss_channel_member.seen_message_id
-                         OR discuss_channel_member.seen_message_id IS NULL
-                        )
+                        AND mail_message.id >= discuss_channel_member.new_message_separator
                         AND discuss_channel_member.id IN %(ids)s
                    GROUP BY discuss_channel_member.id
             """, {'ids': tuple(self.ids)})
@@ -249,6 +247,8 @@ class ChannelMember(models.Model):
                 data['fetched_message_id'] = {'id': member.fetched_message_id.id} if member.fetched_message_id else False
             if 'seen_message_id' in fields:
                 data['seen_message_id'] = {'id': member.seen_message_id.id} if member.seen_message_id else False
+            if 'new_message_separator' in fields:
+                data['new_message_separator'] = member.new_message_separator
             if fields.get("last_interest_dt"):
                 data['last_interest_dt'] = odoo.fields.Datetime.to_string(member.last_interest_dt)
             members_formatted_data[member] = data
@@ -415,3 +415,27 @@ class ChannelMember(models.Model):
             channel_data['invitedMembers'] = [('ADD', list(members._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id': True, 'name': True, 'im_status': True}, 'guest': {'id': True, 'name': True, 'im_status': True}}}).values()))]
             self.env['bus.bus']._sendone(self.channel_id, 'mail.record/insert', {'Thread': channel_data})
         return members
+
+    def _set_new_message_separator(self, message_id):
+        """
+        :param message_id: id of the message above which the new message
+            separator should be displayed.
+        """
+        self.ensure_one()
+        if message_id == self.new_message_separator:
+            return
+        self.new_message_separator = message_id
+        target = self.partner_id or self.guest_id
+        self.env["bus.bus"]._sendone(target, "mail.record/insert", {
+            "ChannelMember": {
+                "id": self.id,
+                "new_message_separator": self.new_message_separator,
+                "thread": {
+                    "id": self.channel_id.id,
+                    "message_unread_counter": self.message_unread_counter,
+                    # sudo: bus.bus: reading non-sensitive last id
+                    "message_unread_counter_bus_id": self.env["bus.bus"].sudo()._bus_last_id(),
+                    "model": "discuss.channel",
+                },
+            }
+        })

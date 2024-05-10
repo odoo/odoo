@@ -421,6 +421,21 @@ async function discuss_channel_mark_as_seen(request) {
     return DiscussChannel._channel_seen([channel_id], last_message_id);
 }
 
+registerRoute(
+    "/discuss/channel/set_new_message_separator",
+    discuss_channel_set_new_message_separator
+);
+/** @type {RouteCallback} */
+async function discuss_channel_set_new_message_separator(request) {
+    const { channel_id, message_id } = await parseRequestParams(request);
+    const [partner, guest] = this.env["res.partner"]._get_current_persona();
+    const [memberId] = this.env["discuss.channel.member"].search([
+        ["channel_id", "=", channel_id],
+        partner ? ["partner_id", "=", partner.id] : ["guest_id", "=", guest.id],
+    ]);
+    return this.env["discuss.channel.member"]._set_new_message_separator([memberId], message_id);
+}
+
 registerRoute("/discuss/gif/favorites", get_favorites);
 /** @type {RouteCallback} */
 async function get_favorites(request) {

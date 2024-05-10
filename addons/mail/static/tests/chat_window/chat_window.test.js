@@ -655,7 +655,7 @@ test("new message separator is shown in a chat window of a chat on receiving new
         ["channel_id", "=", channelId],
         ["partner_id", "=", serverState.partnerId],
     ]);
-    pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
+    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: messageId + 1 });
     const env = await start();
     rpc = rpcWithEnv(env);
     // simulate receiving a message

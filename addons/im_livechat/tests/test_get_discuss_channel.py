@@ -83,24 +83,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.assertEqual(channel_info['channelMembers'], [['ADD', [
             {
                 'thread': {'id': channel_info['id'], 'model': "discuss.channel"},
-                'create_date': fields.Datetime.to_string(operator_member.create_date),
-                'id': operator_member.id,
-                'persona': {
-                    'active': True,
-                    'country': False,
-                    'id': operator.partner_id.id,
-                    'is_bot': False,
-                    'is_public': False,
-                    'type': "partner",
-                    'user_livechat_username': 'Michel Operator',
-                },
-                'fetched_message_id': False,
-                'seen_message_id': False,
-            },
-            {
-                'thread': {'id': channel_info['id'], 'model': "discuss.channel"},
                 'create_date': fields.Datetime.to_string(visitor_member.create_date),
                 'id': visitor_member.id,
+                'new_message_separator': 0,
                 'persona': {
                     'active': True,
                     'country': {
@@ -113,6 +98,22 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     'is_public': False,
                     'name': 'Roger',
                     'type': "partner",
+                },
+                'fetched_message_id': False,
+                'seen_message_id': False,
+            },
+            {
+                'thread': {'id': channel_info['id'], 'model': "discuss.channel"},
+                'create_date': fields.Datetime.to_string(operator_member.create_date),
+                'id': operator_member.id,
+                'persona': {
+                    'active': True,
+                    'country': False,
+                    'id': operator.partner_id.id,
+                    'is_bot': False,
+                    'is_public': False,
+                    'type': "partner",
+                    'user_livechat_username': 'Michel Operator',
                 },
                 'fetched_message_id': False,
                 'seen_message_id': False,
@@ -146,6 +147,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 'thread': {'id': channel_info['id'], 'model': "discuss.channel"},
                 'create_date': fields.Datetime.to_string(operator_member.create_date),
                 'id': operator_member.id,
+                'new_message_separator': 0,
                 'persona': {
                     'active': True,
                     'country': False,

@@ -6,6 +6,8 @@ from werkzeug.exceptions import NotFound
 
 from odoo import fields, http
 from odoo.http import request
+from odoo.exceptions import UserError
+from odoo.tools import replace_exceptions
 from odoo.addons.mail.controllers.webclient import WebclientController
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
@@ -115,11 +117,25 @@ class ChannelController(http.Controller):
 
     @http.route("/discuss/channel/set_last_seen_message", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
-    def discuss_channel_mark_as_seen(self, channel_id, last_message_id, allow_older=False):
+    def discuss_channel_mark_as_seen(self, channel_id, last_message_id):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
-        return channel._channel_seen(last_message_id, allow_older=allow_older)
+        return channel._channel_seen(last_message_id)
+
+    @http.route("/discuss/channel/set_new_message_separator", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
+    def discuss_channel_set_new_message_separator(self, channel_id, message_id):
+        with replace_exceptions(ValueError, by=UserError("Invalid `message_id` argument")):
+            message_id = int(message_id)
+        partner, guest = request.env["res.partner"]._get_current_persona()
+        member = request.env["discuss.channel.member"].search([
+            ("partner_id", "=", partner.id) if partner else ("guest_id", "=", guest.id),
+            ("channel_id", "=", channel_id)
+        ])
+        if not member:
+            raise NotFound()
+        return member._set_new_message_separator(message_id)
 
     @http.route("/discuss/channel/notify_typing", methods=["POST"], type="json", auth="public")
     @add_guest_to_context

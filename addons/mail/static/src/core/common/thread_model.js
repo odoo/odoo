@@ -776,14 +776,6 @@ export class Thread extends Record {
         return "/mail/thread/messages";
     }
 
-    getPreviousMessage(message) {
-        const previousMessages = this.nonEmptyMessages.filter(({ id }) => id < message.id);
-        if (previousMessages.length === 0) {
-            return false;
-        }
-        return this.store.Message.get(Math.max(...previousMessages.map((m) => m.id)));
-    }
-
     async leave() {
         await this.store.env.services.orm.call("discuss.channel", "action_unfollow", [this.id]);
         this.delete();
@@ -1054,6 +1046,7 @@ export class Thread extends Record {
         this.messages.add(message);
         if (this.selfMember?.seen_message_id?.id < message.id) {
             this.selfMember.seen_message_id = message;
+            this.selfMember.new_message_separator = message.id + 1;
         }
         // Only delete the temporary message now that seen_message_id is updated
         // to avoid flickering.
