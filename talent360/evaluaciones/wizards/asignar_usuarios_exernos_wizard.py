@@ -17,14 +17,14 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
             "Nombre Completo",
             "Correo",
             "Puesto",
-            "Nivel Jerárquico",
-            "Dirección",
+            "Nivel Jerarquico",
+            "Direccion",
             "Gerencia",
             "Jefatura",
-            "Género",
+            "Genero",
             "Fecha de ingreso",
             "Fecha de nacimiento",
-            "Ubicación/Región",
+            "Ubicacion/Region",
         ]
 
     @api.constrains("nombre_archivo")
@@ -70,14 +70,14 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
                     "nombre": fila["Nombre Completo"],
                     "email": fila["Correo"],
                     "puesto": fila["Puesto"],
-                    "nivel_jerarquico": fila["Nivel Jerárquico"],
-                    "direccion": fila["Dirección"],
+                    "nivel_jerarquico": fila["Nivel Jerarquico"],
+                    "direccion": fila["Direccion"],
                     "gerencia": fila["Gerencia"],
                     "jefatura": fila["Jefatura"],
-                    "genero": fila["Género"],
+                    "genero": fila["Genero"],
                     "fecha_ingreso": fila["Fecha de ingreso"],
                     "fecha_nacimiento": fila["Fecha de nacimiento"],
-                    "region": fila["Ubicación/Región"],
+                    "region": fila["Ubicacion/Region"],
                 }
             )
 
