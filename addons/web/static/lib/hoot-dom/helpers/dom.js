@@ -219,7 +219,7 @@ const generateStringFromLayers = (layers, tabSize) => {
             continue;
         }
         const nextLayer = layers[nextLayerIndex];
-        if (nextLayer.level > layers[nextLayerIndex - 1].level) {
+        if (nextLayerIndex === 0 || nextLayer.level > layers[nextLayerIndex - 1].level) {
             layerIndex = nextLayerIndex;
         } else {
             layerIndex = nextLayerIndex - 1;
