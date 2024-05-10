@@ -139,7 +139,7 @@
                                <div>08/07/2020</div>
                            </div>
                        </div>
-                       <table class="table table-sm o_main_table table-borderless" name="invoice_line_table">
+                       <table class="o_has_total_table table table-sm o_main_table table-borderless" name="invoice_line_table">
                            <thead>
                                <tr>
                                    <th name="th_description" class="text-start"><span>Description</span></th>
@@ -292,7 +292,7 @@
                 </div>
             </t>
 
-            <div name="address" t-att-class="colclass">
+            <div name="address" t-att-class="not custom_layout_address and colclass or information_block and colclass">
                 <t t-esc="address or None">
                     <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 opacity-75 text-muted text-center">
                         <strong>Address block</strong>
@@ -526,6 +526,71 @@
         </div>
     </template>
 
+    <template id="external_layout_bubble">
+        <!-- HEADER -->
+        <div t-attf-class="header o_company_#{company.id}_layout {{report_type == 'pdf' and 'pt-5'}}">
+            <svg t-attf-class="o_shape_bubble_1 z-n1 {{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}}" width="1100" height="1100" xmlns="http://www.w3.org/2000/svg">
+               <circle cx="550" cy="550" r="550" t-att-fill="company.primary_color" fill-opacity=".1"/>
+            </svg>
+            <div class="d-flex justify-content-between">
+                <div>
+                    <img t-if="company.logo" class="o_company_logo mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                    <div t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold">Company tagline</div>
+                </div>
+                <div name="company_address" class="text-end">
+                    <ul class="list-unstyled" name="company_address_list">
+                        <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
+                            <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
+                                <strong>Company address block</strong>
+                                <div>Contains the company address.</div>
+                            </div>
+                        </span></li>
+                        <li t-else="">
+                            <span t-field="company.company_details">
+                                <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
+                                    <strong>Company details block</strong>
+                                    <div>Contains the company details.</div>
+                                </div>
+                            </span>
+                        </li>
+                        <li t-if="not forced_vat"/>
+                        <li t-else="">
+                            <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                            <span t-esc="forced_vat">US12345671</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- BODY -->
+        <div t-attf-class="article o_report_layout_bubble o_table_boxed-rounded o_company_#{company.id}_layout {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}"
+             t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});"
+             t-att-data-oe-model="o and o._name"
+             t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <div t-att-class="not information_block and 'd-flex justify-content-between align-items-end'">
+                <t t-call="web.address_layout">
+                    <t t-set="custom_layout_address" t-value="true"/>
+                </t>
+                <h2 t-attf-class="{{not information_block and 'mb-4'}} text-end" t-out="layout_document_title"/>
+            </div>
+            <t t-out="0"/>
+        </div>
+
+        <!-- Footer -->
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
+            <svg t-attf-class="{{report_type == 'pdf' and 'position-fixed top-0 start-0'}}" width="500" height="228" viewBox="0 0 500 228" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M500 228H0V6.52743C26.3323 2.23278 53.3561 0 80.9008 0C256.522 0 410.969 90.7656 500 228Z" t-att-fill="company.secondary_color" fill-opacity=".1"/>
+            </svg>
+            <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-4 text-center">
+                <div class="border-top pt-2" t-field="company.report_footer"/>
+                <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
+                <span t-if="report_type == 'pdf'" class="text-muted">Page <span class="page"/> / <span class="topage"/></span>
+            </div>
+        </div>
+    </template>
+
     <!-- Public api: layout to t-call from reports -->
 
     <template id="external_layout">
@@ -683,6 +748,23 @@
 
                         tbody tr:last-child td {
                             border-bottom: 3px solid <t t-esc='secondary'/>;
+                        }
+                    }
+                }
+            </t>
+            <t t-elif="layout == 'web.external_layout_bubble'">
+                &amp;.o_report_layout_bubble {
+                    #informations {
+                        border-color: <t t-esc='secondary'/>;
+                        background-color: mix(white, <t t-esc='secondary'/>, 92%);
+                    }
+
+                    thead th, #total .o_total td {
+                        background-color: <t t-esc='primary'/>;
+                        color: preview-color-contrast(<t t-esc='primary'/>);
+
+                        strong {
+                            color: preview-color-contrast(<t t-esc='primary'/>);
                         }
                     }
                 }

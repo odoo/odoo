@@ -102,7 +102,7 @@ div#total {
     }
 }
 
-.o_table_boxed {
+.o_table_boxed, .o_table_boxed-rounded {
     table {
         position: relative;
 
@@ -158,6 +158,46 @@ div#total {
 
         &::before {
             border-top: none;
+        }
+    }
+}
+
+.o_table_boxed-rounded {
+    table {
+        &::before {
+            border-radius: $border-radius-lg;
+        }
+
+        &.o_has_total_table::before {
+            border-radius: $border-radius-lg $border-radius-lg 0 $border-radius-lg ;
+        }
+
+        th:first-child {
+            border-radius: $border-radius-lg 0 0 0;
+        }
+
+        th:last-child {
+            border-radius: 0 $border-radius-lg 0 0;
+        }
+
+        th {
+            border-color: $gray-300 !important;
+        }
+    }
+
+    .o_total_table {
+        &::before {
+            border-radius: 0 0 $border-radius-lg $border-radius-lg;
+        }
+
+        tr:last-child {
+            td:first-child {
+                border-radius: 0 0 0 $border-radius-lg;
+            }
+
+            td:last-child {
+                border-radius: 0 0 $border-radius-lg 0;
+            }
         }
     }
 }
