@@ -104,24 +104,32 @@ class UsuarioEvaluacionRel(models.Model):
         for user in usuario_evaluacion:
             token = secrets.token_hex(length)
             if not user.token:
-                user.write({"token": token, "contestada": "pendiente"})
+                user.write({
+                    "token": token,
+                    "contestada": "pendiente"
+                })
 
+                evaluacion_url = f"{base_url}/{evaluacion_id}/{token}"
                 mail_values = {
-                    "subject": "Invitación para completar la evaluación",
-                    "email_from": self.env.user.email_formatted,
-                    "email_to": user.usuario_id.email,
-                    "body_html": f"<p>Hola, <strong>{user.usuario_id.name}</strong></p>"
-                    f"<p>en conocer tu opinión, a fin de identificar áreas de mejora que nos permitan mejorar</p>"
-                    f"<p>tu experiencia con nosotros. Por ello, te invitamos a responder la Encuesta de Clima</p>"
-                    f"<p>Laboral: <strong>(Nombre de evaluación)</strong></p>"
-                    f"<p>Disponible del <strong>(Fecha Inicio)</strong> al <strong>(Fecha Fin)</strong></p>"
-                    f'<a href="{base_url}/{evaluacion_id}/{token}">',
+                    'subject': 'Invitación para completar la evaluación',
+                    'email_from': "talent360@cr-organizacional.com",
+                    'email_to': user.usuario_id.email,
+                    'body_html': 
+                        f'''<p>Hola, <strong>{user.usuario_id.name}</strong>,</p>
+                        <p>En <strong>{self.env.user.company_id.name}</strong> estamos interesados en tu opinión para mejorar.</p>
+                        <p>Por favor, participa en la evaluación de clima laboral disponible del <strong>(Fecha Inicio)</strong> al <strong>(Fecha Fin)</strong>.</p>
+                        <p>Puedes comenzar la evaluación haciendo clic en el siguiente enlace:</p>
+                        <p><a href="{evaluacion_url}">Comenzar Evaluación</a></p>''',
                 }
 
-                mail = self.env["mail.mail"].create(mail_values)
-                if mail.state == "sent":
-                    print(f"Correo enviado exitosamente a {user.usuario_id.email}")
-                elif mail.state == "exception":
-                    print(f"Fallo al enviar correo a {user.usuario_id.email}")
-                else:
-                    print(f"Correo en estado pendiente o desconocido: {mail.state}")
+                mail = self.env['mail.mail'].create(mail_values)
+                mail.send()
+    
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Evaluaciones",
+            "res_model": "evaluacion.evaluacion",
+            "view_mode": "tree,form",
+            "target": "current",
+        }    
+    

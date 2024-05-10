@@ -17,7 +17,7 @@ class Evaluacion(models.Model):
     """
 
     _name = "evaluacion"
-    _description = "Evaluacion de pesonal"
+    _description = "Evaluacion de personal"
     _rec_name = "nombre"
     nombre = fields.Char(string="Título de la evaluación", required=True)
 
@@ -30,7 +30,7 @@ class Evaluacion(models.Model):
         required=True,
         default="competencia",
     )
-    descripcion = fields.Text()
+    descripcion = fields.Text(string="Descripción")
     estado = fields.Selection(
         [
             ("borrador", "Borrador"),
