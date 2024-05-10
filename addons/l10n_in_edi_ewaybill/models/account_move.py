@@ -26,7 +26,7 @@ class AccountMove(models.Model):
     l10n_in_vehicle_no = fields.Char("Vehicle Number", copy=False, tracking=True)
     l10n_in_vehicle_type = fields.Selection([
         ("R", "Regular"),
-        ("O", "ODC")],
+        ("O", "Over Dimensional Cargo")],
         string="Vehicle Type", copy=False, tracking=True)
 
     # Document number and date required in case of transportation mode is Rail, Air or Ship.
