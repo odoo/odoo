@@ -18,8 +18,6 @@
     .o_horizontal {
         display: inline-flex;
         flex-wrap: wrap;
-        .o_radio_item {
-            margin-right: $o-form-spacing-unit * 2;
-        }
+        gap: map-get($spacers, 2);
     }
 }
