@@ -259,6 +259,7 @@
                 <separator/>
                 <filter string="Ready" name="ready" domain="[('state', 'in', ('confirmed', 'under_repair')),('is_parts_available', '=', True)]" invisible="True"/>
                 <filter string="Late" name="filter_late" domain="[('state', 'in', ('confirmed', 'under_repair')), '|', ('schedule_date', '&lt;', context_today().strftime('%Y-%m-%d')), ('is_parts_late', '=', True)]"/>
+                <filter string="Components Available" name="available" domain="[('is_parts_available', '=', True)]"/>
                 <filter name="filter_create_date" date="create_date"/>
                 <separator/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"

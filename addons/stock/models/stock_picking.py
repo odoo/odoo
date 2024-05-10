@@ -438,6 +438,9 @@ class PickingType(models.Model):
                     'default_company_id': allowed_company_ids[0],
                 })
 
+        if self.code == 'incoming':
+            context.update({'is_receipt': True})
+
         action_context = literal_eval(action['context'])
         context = {**action_context, **context}
         action['context'] = context
