@@ -13,7 +13,7 @@ class PaymentMethod(models.Model):
     _description = "Payment Method"
     _order = 'active desc, sequence, name'
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(string="Name", required=True, translate=True)
     code = fields.Char(
         string="Code", help="The technical code of this payment method.", required=True
     )
