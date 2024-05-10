@@ -6317,12 +6317,8 @@ class BaseModel(metaclass=MetaModel):
             self._flush(fnames)
 
     def _flush(self, fnames=None):
-        def process(model, updates):
-            for vals, ids in updates.items():
-                model.browse(ids)._write(vals)
 
-        def get_cache_value(field, record):
-            record.ensure_one()
+        def get_value(record, field):
             try:
                 value = next(self.env.cache.get_values(record, field))
                 if not field.translate:
@@ -6359,43 +6355,40 @@ class BaseModel(metaclass=MetaModel):
 
         for model_name, fields_ in model_fields.items():
             dirty_fields = self.env.cache.get_dirty_fields()
-            if any(field in dirty_fields for field in fields_):
-                # if any field is context-dependent, the values to flush should
-                # be found with a context where the context keys are all None
-                context_none = dict.fromkeys(
-                    key
-                    for field in fields_
-                    for key in self.pool.field_depends_context[field]
-                )
-                model = self.env(context=context_none)[model_name]
-                # consume all record ids from all dirty fields of the model
-                fields_recs = dict()
-                for field in model._fields.values():
-                    if (ids := self.env.cache.clear_dirty_field(field)):
-                        # set.pop() used in a loop is in O(1) while OrderedSet.pop() is in O(n),
-                        # the ids are subject to `sorted()` later in _write() anyway.
-                        fields_recs[field] = set(ids)
-                if not fields_recs:
-                    continue
-                # re-arrange cache data into record updates batched by same fields and values,
-                # while consuming it to keep space complexity low
-                updates = defaultdict(list)
-                while (field := next(iter(fields_recs), None)):
-                    ids = fields_recs.pop(field)
-                    while ids:
-                        id = ids.pop()
-                        record = model.browse(id)
-                        vals = {field.name: get_cache_value(field, record)}
-                        for other_field in fields_recs:
-                            try:
-                                fields_recs[other_field].remove(id)
-                            except KeyError:
-                                continue
-                            vals[other_field.name] = get_cache_value(other_field, record)
-                        updates[frozendict(vals)].append(id)
-                    # prune drained id sets
-                    fields_recs = {f: fields_recs[f] for f in fields_recs if not fields_recs[f]}
-                process(model, updates)
+            if not any(field in dirty_fields for field in fields_):
+                continue
+
+            # if any field is context-dependent, the values to flush should
+            # be found with a context where the context keys are all None
+            context_none = dict.fromkeys(
+                key
+                for field in fields_
+                for key in self.pool.field_depends_context[field]
+            )
+            model = self.env(context=context_none)[model_name]
+
+            # pop dirty fields and their corresponding record ids from cache
+            dirty_field_ids = {}
+            dirty_record_ids = set()
+            for field in model._fields.values():
+                if (ids := self.env.cache.clear_dirty_field(field)):
+                    dirty_field_ids[field] = set(ids)
+                    dirty_record_ids.update(ids)
+
+            # build a mapping {vals: ids} of field updates and their record ids
+            vals_ids = defaultdict(list)
+            for id_ in sorted(dirty_record_ids):
+                record = model.browse(id_)
+                vals = {
+                    field.name: get_value(record, field)
+                    for field, ids in dirty_field_ids.items()
+                    if id_ in ids
+                }
+                vals_ids[frozendict(vals)].append(id_)
+
+            # apply the field updates to their corresponding records
+            for vals, ids in vals_ids.items():
+                model.browse(ids)._write(vals)
 
         # flush the inverse of one2many fields, too
         for field in fields:
