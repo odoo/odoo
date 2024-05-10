@@ -104,7 +104,7 @@
 
                         <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
                         <div class="oe_structure"></div>
-                        <table class="table o_main_table table-borderless" name="invoice_line_table">
+                        <table class="o_has_total_table table o_main_table table-borderless" name="invoice_line_table">
                             <thead>
                                 <tr>
                                     <th name="th_description" class="text-start"><span>Description</span></th>
