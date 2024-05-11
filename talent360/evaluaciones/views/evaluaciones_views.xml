@@ -151,8 +151,8 @@
                                 </field>
                             </page>
                             <page string="Asignados Externos">
-                                <field class="lh-lg w-100" colspan="2" readonly="1" name="usuario_externo_ids" nolabel="1" context="{'current_evaluacion_id': active_id}">
-                                    <tree create="false" editable="bottom">
+                                <field class="lh-lg w-100" colspan="2" name="usuario_externo_ids" nolabel="1" context="{'current_evaluacion_id': active_id}" options="{'link':false}">
+                                    <tree editable="top">
                                         <field class="lh-m" name="nombre" readonly="1"/>
                                         <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="ver_respuestas_usuario_externo" string="Respuestas" type="object"/>
                                     </tree>
@@ -433,7 +433,7 @@
                                 </field>
                             </page>
                             <page string="Asignados Externos">
-                                <field class="lh-lg w-100" colspan="2" readonly="1" name="usuario_externo_ids" nolabel="1" context="{'current_evaluacion_id': active_id}">
+                                <field class="lh-lg w-100" colspan="2" name="usuario_externo_ids" nolabel="1" context="{'current_evaluacion_id': active_id}" options="{'link':false}">
                                     <tree create="false" editable="bottom">
                                         <field class="lh-m" name="nombre" readonly="1"/>
                                     </tree>
@@ -473,12 +473,4 @@
         <field name="state">code</field>
         <field name="code">action = model.evaluacion_action_tree()</field>
     </record>
-
-    <record id="enviar_evaluacion_action" model="ir.actions.server">
-        <field name="name">Enviar evaluacion</field>
-        <field name="model_id" ref="model_evaluacion"/>
-        <field name="state">code</field>
-        <field name="code">action = model.enviar_evaluacion_action()</field>
-    </record>
-
 </odoo>

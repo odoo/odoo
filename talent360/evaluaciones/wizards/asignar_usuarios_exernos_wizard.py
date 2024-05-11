@@ -54,7 +54,9 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
 
         self.validar_columnas(csv_lector.fieldnames)
 
-        for fila in csv_lector:
+        print("Columnas validadas")
+
+        for i, fila in enumerate(csv_lector):
             try:
                 fecha_ingreso = datetime.strptime(fila["Fecha de ingreso"], "%d/%m/%Y").date()
                 fecha_nacimiento = datetime.strptime(fila["Fecha de nacimiento"], "%d/%m/%Y").date()
@@ -64,6 +66,8 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
                 )
 
             self.validar_fila(fila)    
+
+            print(f"Fila {i} validada {fila['Nombre Completo']}")
 
             usuarios.append(
                 {
@@ -75,32 +79,18 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
                     "gerencia": fila["Gerencia"],
                     "jefatura": fila["Jefatura"],
                     "genero": fila["Genero"],
-                    "fecha_ingreso": fila["Fecha de ingreso"],
-                    "fecha_nacimiento": fila["Fecha de nacimiento"],
+                    "fecha_ingreso": fecha_ingreso,
+                    "fecha_nacimiento": fecha_nacimiento,
                     "region": fila["Ubicacion/Region"],
                 }
             )
 
-        for usuario in usuarios:
-            usuario_externo = self.env["usuario.externo"].create(
-                {
-                    "nombre": usuario["nombre"],
-                    "email": usuario["email"],
-                    "puesto": usuario["puesto"],
-                    "nivel_jerarquico": usuario["nivel_jerarquico"],
-                    "direccion": usuario["direccion"],
-                    "gerencia": usuario["gerencia"],
-                    "jefatura": usuario["jefatura"],
-                    "genero": usuario["genero"],
-                    "fecha_ingreso": fecha_ingreso,
-                    "fecha_nacimiento": fecha_nacimiento,
-                    "region": usuario["region"],
-                }
-            )
-
-            evaluacion.write({"usuario_externo_ids": [(4, usuario_externo.id)]})
-            
-
+        
+        usuarios_db = self.env["usuario.externo"].create(usuarios)
+        
+        usuario_ids = [(4, usuario.id) for usuario in usuarios_db]
+        evaluacion.write({"usuario_externo_ids": usuario_ids})
+        
 
     def validar_columnas(self, columnas: list[str]):
         # Valida que las columnas del archivo CSV sean las correctas
