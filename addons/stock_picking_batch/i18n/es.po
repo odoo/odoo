@@ -76,8 +76,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"Un traslado no se añadirá automáticamente a los lotes que superen este número de líneas si el traslado se añade al mismo.\n"
-"Deje este valor como '0' si no hay límite de líneas."
+"Si el lote excede el número de líneas, no se agregará el traslado automáticamente\n"
+"Deje este valor como \"0\" si no hay límite de líneas."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
@@ -85,8 +85,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"Un traslado no se añadirá automáticamente a los lotes que superen este número de traslados.\n"
-"Deje este valor como '0' si no hay límite de traslados."
+"Si el lote excede el número de traslados, no se hará el traslado automáticamente.\n"
+"Deje este valor como \"0\" si no hay un límite de peso."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -563,7 +563,7 @@ msgstr "Modo"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree
 msgid "Move Lines"
-msgstr "Movimientos"
+msgstr "Líneas de movimiento"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__my_activity_date_deadline
@@ -727,7 +727,7 @@ msgstr "Error de envío del SMS"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__scheduled_date
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Scheduled Date"
-msgstr "Fecha prevista"
+msgstr "Fecha programada"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
@@ -737,10 +737,10 @@ msgid ""
 "              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
 "                but this scheduled date will not be set for all transfers in batch."
 msgstr ""
-"Scheduled date for the transfers to be processed.\n"
-"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
-"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
-"                but this scheduled date will not be set for all transfers in batch."
+"Fecha programada para procesar las transferencias.\n"
+"              -Si se establece manualmente, la fecha programada para todas las agrupaciones de albaranes se actualizará automáticamente a esta fecha.\n"
+"              - Si no se modifica manualmente y se añaden/eliminan/actualizan transferencias, ésta será la fecha programada más temprana.\n"
+"                 pero esta fecha programada no se fijará para todas las agrupaciones de albaranes."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -880,10 +880,10 @@ msgid ""
 "                    It may also be useful to assign jobs (one person = one batch) or\n"
 "                    help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"El objetivo de la transferencia por olas es agrupar operaciones de diferentes albaranes\n"
-"                   para aumentar su eficacia.\n"
-"                   También puede ser útil asignar trabajos (una persona = un lote) o\n"
-"                     ayudar a la gestión del calendario de operaciones (tareas que deben realizarse a las 13.00 horas)."
+"El objetivo del traslado por olas es agrupar operaciones de distintos traslados\n"
+"                    para aumentar su eficiencia.\n"
+"                    También puede ser útil para asignar trabajos (una persona = un lote) o\n"
+"                    mejorar la gestión de tiempo de las operaciones (tareas que se deben realizar antes de la 1 p.m.)."
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -991,12 +991,12 @@ msgstr "Almacén"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__wave_id
 msgid "Wave Transfer"
-msgstr "Transferencia de ondas"
+msgstr "Traslado por olas"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_add_to_wave
 msgid "Wave Transfer Lines"
-msgstr "Líneas de transferencia de ondas"
+msgstr "Líneas de traslados por olas"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.action_picking_tree_wave
@@ -1036,7 +1036,7 @@ msgstr "No se pueden eliminar las transferencias por lotes realizadas."
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You have to set some pickings to batch."
-msgstr "Tienes que configurar algunas selecciones a los lotes."
+msgstr "Tiene que establecer algunas recolecciones para agruparlas."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
@@ -1046,7 +1046,7 @@ msgstr "una nueva transferencia por lotes"
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
 msgid "a new wave transfer"
-msgstr "una nueva ola de transferencia"
+msgstr "un nuevo traslado con recolección por olas"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing

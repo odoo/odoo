@@ -804,6 +804,11 @@ msgid "Archived"
 msgstr "Zarchiwizowane"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Are you sure you want to cancel this manufacturing order?"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Assembling"
 msgstr "Montaż"
@@ -4864,6 +4869,12 @@ msgid "Routing"
 msgstr "Marszruta"
 
 #. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
 msgid "Routing Lines"
 msgstr "Pozycje marszruty"
@@ -5184,16 +5195,6 @@ msgid ""
 msgstr ""
 "Niektóre z komponentów są śledzone, należy określić zamówienie produkcji w "
 "celu pobrania odpowiednich komponentów."
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid ""
-"Some product moves have already been confirmed, this manufacturing order "
-"can't be completely cancelled. Are you still sure you want to process?"
-msgstr ""
-"Niektóre ruchy produktu zostały już potwierdzone, tego zlecenia "
-"produkcyjnego nie można całkowicie anulować. Czy nadal jesteś pewien, że "
-"chcesz je przetworzyć?"
 
 #. module: mrp
 #. odoo-python
@@ -7034,6 +7035,15 @@ msgstr "Wyprodukowałeś mniej niż wynosił początkowy popyt"
 #, python-format
 msgid "You should provide a lot number for the final product."
 msgstr "Należy podać numer partii produktu końcowego."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid ""
+"You should update the components quantity instead of directly updating the "
+"quantity of the kit product."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__zpl
