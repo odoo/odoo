@@ -95,6 +95,13 @@ class TestPhonenumbersPatch(BaseCase):
         )
         self._assert_parsing_phonenumbers(parse_test_lines_CO)
 
+    def test_region_FR_monkey_patch(self):
+        """Makes sure that patch for French phone numbers work"""
+        parse_test_lines_FR = (
+            self.PhoneInputOutputLine("07 01 43 78 61", region="FR", gt_national_number=701437861, gt_country_code=33),
+        )
+        self._assert_parsing_phonenumbers(parse_test_lines_FR)
+
     def test_region_MA_monkey_patch(self):
         """Makes sure that patch for Morocco phone numbers work"""
         parse_test_lines_MU = (
