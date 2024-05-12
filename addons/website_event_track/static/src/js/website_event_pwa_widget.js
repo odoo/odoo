@@ -97,7 +97,7 @@
          */
         _hideInstallBanner: function () {
             this.installBanner ? this.installBanner.destroy() : undefined;
-            $(".o_livechat_button").css("bottom", "0");
+            document.querySelector(".o_livechat_button").style.bottom = "0";
         },
 
         /**
@@ -161,8 +161,13 @@
             this.installBanner = new PWAInstallBanner(this);
             this.installBanner.appendTo(this.$el).then(function () {
                 // If Livechat available, It should be placed above the PWA banner.
-                var height = self.$(".o_pwa_install_banner").outerHeight(true);
-                $(".o_livechat_button").css("bottom", height + "px");
+                const height = self.el
+                    .querySelector(".o_pwa_install_banner")
+                    .getBoundingClientRect().offsetHeight;
+                const livechatEl = document.querySelector(".o-livechat-LivechatButton");
+                if (livechatEl) {
+                    livechatEl.style.bottom = height;
+                }
             });
         },
 

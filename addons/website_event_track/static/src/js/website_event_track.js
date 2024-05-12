@@ -18,7 +18,10 @@ publicWidget.registry.websiteEventTrack = publicWidget.Widget.extend({
      */
     start: function () {
         this._super.apply(this, arguments).then(() => {
-            this.$el.find('[data-bs-toggle="popover"]').popover();
+            const popoverEl = this.el.querySelector("[data-bs-toggle='popover']");
+            if (popoverEl) {
+                Popover.getOrCreateInstance(popoverEl);
+            }
 
             this.agendas = Array.from(this.target.getElementsByClassName('o_we_online_agenda'));
 
@@ -137,23 +140,30 @@ publicWidget.registry.websiteEventTrack = publicWidget.Widget.extend({
      */
     _onEventTrackSearchInput: function (ev) {
         ev.preventDefault();
-        var text = $(ev.currentTarget).val();
-        var $tracks = $('.event_track');
+        const text = ev.currentTarget.value;
+        const trackEls = document.querySelectorAll(".event_track");
 
         //check if the user is performing a search; i.e., text is not empty
         if (text) {
             function filterTracks(index, element) {
                 //when filtering elements only check the text content
-                return this.textContent.toLowerCase().includes(text.toLowerCase());
+                return element.textContent.toLowerCase().includes(text.toLowerCase());
             }
-            $('#search_summary').removeClass('invisible');
-            $('#search_number').text($tracks.filter(filterTracks).length);
+            const filteredTrackEls = [...trackEls].filter((trackEl, index) =>
+                filterTracks(index, trackEl)
+            );
+            document.getElementById("search_summary").classList.remove("invisible");
+            document.getElementById("search_number").textContent = filteredTrackEls.length;
 
-            $tracks.removeClass('invisible').not(filterTracks).addClass('invisible');
+            trackEls.forEach((trackEl) => {
+                filterTracks(null, trackEl)
+                    ? trackEl.classList.remove("invisible")
+                    : trackEl.classList.add("invisible");
+            });
         } else {
             //if no search is being performed; hide the result count text
-            $('#search_summary').addClass('invisible');
-            $tracks.removeClass('invisible')
+            document.getElementById("search_summary").classList.add("invisible");
+            trackEls.forEach((track) => track.classList.remove("invisible"));
         }
     },
 });
