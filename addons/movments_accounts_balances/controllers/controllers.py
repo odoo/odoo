@@ -433,7 +433,7 @@ class AccountBalance(models.Model):
             return "Payment cannot be deleted as it is not in draft or cancelled state."
 
     @api.model
-    def create_account(self, name, code, company_id, reconcile=False, currency_id=None, tag_ids=None):
+    def create_account(self, name, code, company_id, reconcile, currency_id, tag_ids):
         """
         Create a financial account within Odoo's accounting module.
 
