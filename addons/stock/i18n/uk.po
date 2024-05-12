@@ -5,8 +5,8 @@
 # Translators:
 # Wil Odoo, 2023
 # Martin Trigaux, 2024
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # Kseina Tyshchenko, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Kseina Tyshchenko, 2024\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6001,7 +6001,7 @@ msgstr "Комплектування"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quant_id
 msgid "Pick From"
-msgstr ""
+msgstr "Взяти з"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pick_type_id
@@ -6118,7 +6118,7 @@ msgstr "Переважний маршрут"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Presence depends on the type of operation."
-msgstr ""
+msgstr "Наявність залежить від типу операції."
 
 #. module: stock
 #. odoo-python
@@ -7285,7 +7285,7 @@ msgstr "Повернення %s"
 #. module: stock
 #: model:ir.actions.report,name:stock.return_label_report
 msgid "Return slip"
-msgstr ""
+msgstr "Накладна на повернення"
 
 #. module: stock
 #. odoo-python
@@ -7790,7 +7790,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set expiration dates on lots & serial numbers"
-msgstr ""
+msgstr "Встановіть термін придатності партій та серійних номерів"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7816,7 +7816,7 @@ msgstr "Встановити 0"
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 msgid "Set to quantity on hand"
-msgstr ""
+msgstr "Встановити кількість в наявності"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
@@ -8164,7 +8164,7 @@ msgstr "Призначені складські серійні номери"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Stock In Transit"
-msgstr ""
+msgstr "Складські запаси на внутрішніх переміщеннях"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -8827,6 +8827,8 @@ msgid ""
 "This is the default location for returns created from a picking with this "
 "operation type."
 msgstr ""
+"Це місце за замовчуванням для повернень, створених із комплектування з цим "
+"типом операції."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -9019,6 +9021,10 @@ msgid ""
 "reference values or assign the existing reference sequence to this operation"
 " type."
 msgstr ""
+"Цей префікс послідовності вже використовується іншим типом операції. "
+"Рекомендується вибрати унікальний префікс, щоб уникнути проблем та/або "
+"повторюваних референсних значень, або призначити існуючу послідовність "
+"референсу цьому типу операції."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -10100,6 +10106,8 @@ msgid ""
 "You are going to pick products that are not referenced\n"
 "in this location. That leads to a negative stock."
 msgstr ""
+"Ви збираєтеся вибрати товари, які не згадуються в цьому місці.\n"
+" Це призводить до негативного запасу."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
@@ -10234,6 +10242,8 @@ msgid ""
 "You can only move a lot/serial to a new location if it exists in a single "
 "location."
 msgstr ""
+"Ви можете перемістити партію/серійний номер у нове місцезнаходження, лише "
+"якщо він існує в одному місцезнаходженні."
 
 #. module: stock
 #. odoo-python
@@ -10387,6 +10397,8 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types."
 msgstr ""
+"Ви не можете упаковувати товари в одну упаковку, якщо вони з різних "
+"переміщень з різними типами операцій."
 
 #. module: stock
 #. odoo-python

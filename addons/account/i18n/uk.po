@@ -5,7 +5,6 @@
 # Translators:
 # Wil Odoo, 2024
 # Martin Trigaux, 2024
-# Леонід Харченко, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
@@ -458,6 +457,8 @@ msgid ""
 "<br/>\n"
 "                            on this account:"
 msgstr ""
+"<br/>\n"
+"                            на це:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -715,6 +716,9 @@ msgid ""
 "title=\"The email address is unknown on the partner\" attrs=\"{'invisible': "
 "[('send_mail_readonly', '=', False)]}\"/>"
 msgstr ""
+"<i class=\"fa fa-question-circle ml4\" role=\"img\" aria-label=\"Warning\" "
+"title=\"The email address is unknown on the partner\" attrs=\"{'invisible': "
+"[('send_mail_readonly', '=', False)]}\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -744,7 +748,10 @@ msgid ""
 "<span attrs=\"{'invisible': ['|', '|', '|', ('state', '!=', 'draft'), "
 "('name', '!=', '/'), ('posted_before', '=', True), ('quick_edit_mode', '=', "
 "True)]}\">Draft</span>"
-msgstr "Чернетка"
+msgstr ""
+"<span attrs=\"{'invisible': ['|', '|', '|', ('state', '!=', 'draft'), "
+"('name', '!=', '/'), ('posted_before', '=', True), ('quick_edit_mode', '=', "
+"True)]}\">Чернетка</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
