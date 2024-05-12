@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-import secrets
+import secrets, logging
 
 
 class UsuarioEvaluacionRel(models.Model):
@@ -129,7 +129,7 @@ class UsuarioEvaluacionRel(models.Model):
                     correo = usuario.usuario_externo_id.email
                     nombre = usuario.usuario_externo_id.nombre
                 else:
-                    print("No se encontró un usuario asociado")
+                    logging.error("No se encontró un usuario asociado")
                     raise ValueError("No se encontró un usuario asociado")
                     
                 usuario.write({
@@ -150,7 +150,7 @@ class UsuarioEvaluacionRel(models.Model):
                         <p><a href="{evaluacion_url}">Comenzar Evaluación</a></p>''',
                 }
 
-                print(f"Nombre:{nombre}\nCorreo:{correo}\nURL: {evaluacion_url}")
+                logging.info(f"Nombre:{nombre}\nCorreo:{correo}\nURL: {evaluacion_url}")
                 mail = self.env['mail.mail'].create(mail_values)
                 mail.send()
     
