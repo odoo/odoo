@@ -431,3 +431,111 @@ class AccountBalance(models.Model):
                 return "Failed to delete payment: {}".format(e)
         else:
             return "Payment cannot be deleted as it is not in draft or cancelled state."
+
+    @api.model
+    def create_account(self, name, code, company_id, reconcile=False, currency_id=None, tag_ids=None):
+        """
+        Create a financial account within Odoo's accounting module.
+
+        Args:
+        - name (str): The name of the account.
+        - code (str): Unique identifier code for the account.
+        - account_type (str): The type of account (e.g., 'asset', 'expense').
+        - company_id (int): ID of the company this account belongs to.
+        - reconcile (bool): Whether the account should allow reconciliation.
+        - currency_id (int, optional): The currency this account operates in.
+        - tag_ids (list, optional): List of tag IDs for reporting purposes.
+
+        Returns:
+        dict: Dictionary containing a key 'account_info' with list of created account details.
+
+        Raises:
+        ValidationError: If any validation fails.
+        """
+
+        if self.search([('code', '=', code), ('company_id', '=', company_id)], limit=1):
+            raise ValidationError("An account with this code already exists in the selected company.")
+
+        account_vals = {
+            'name': name,
+            'code': code,
+            'reconcile': reconcile,
+            'company_id': company_id,
+            'account_type': "asset_current",
+            'currency_id': currency_id or None,
+            'tag_ids': [(6, 0, tag_ids)] if tag_ids else False,
+        }
+
+        new_account = self.create(account_vals)
+
+        account_data = [{
+            'id': new_account.id,
+            'account_name': new_account.name,
+            'account_code': new_account.code,
+            'account_type': new_account.account_type,
+            'is_reconcilable': new_account.reconcile,
+            'currency_id': new_account.currency_id.id if new_account.currency_id else 'None',
+            'company_id': new_account.company_id.id,
+        }]
+
+        response = {'account_info': account_data}
+        return response
+
+    @api.model
+    def get_account(self, account_id):
+        """
+        Retrieves a financial account by ID within Odoo's accounting module.
+
+        Args:
+        - account_id (int): The ID of the account to retrieve.
+
+        Returns:
+        dict: Dictionary containing a key 'account_info' with details of the retrieved account.
+
+        Raises:
+        ValidationError: If the account does not exist.
+        """
+        # Attempt to retrieve the account using the provided ID
+        account = self.browse(account_id)
+
+        # Check if the account actually exists
+        if not account.exists():
+            raise ValidationError("Account with ID {} does not exist.".format(account_id))
+
+        # Gather data from the retrieved account object
+        account_data = {
+            'id': account.id,
+            'account_name': account.name,
+            'account_code': account.code,
+            'is_reconcilable': account.reconcile,
+            'currency_id': account.currency_id.id if account.currency_id else 'None',
+            'company_id': account.company_id.id,
+        }
+
+        # Package the account data in a response dictionary
+        response = {'account_info': account_data}
+        return response
+
+    @api.model
+    def delete_account(self, account_id):
+        """
+        Deletes a financial account from Odoo's accounting module.
+
+        Args:
+        - account_id (int): The ID of the account to be deleted.
+
+        Returns:
+        str: Success or error message.
+        """
+        Account = self.env['account.account']
+        account = Account.search([('id', '=', account_id)])
+
+        if not account:
+            return "Account not found."
+
+        # Proceed to delete the account
+        try:
+            account.unlink()  # Delete the account
+            return "Account deleted successfully."
+        except Exception as e:
+            return "Failed to delete account: {}".format(e)
