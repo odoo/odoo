@@ -6,12 +6,6 @@ from odoo import fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    expense_product_id = fields.Many2one(
-        "product.product",
-        string="Default Expense Category",
-        check_company=True,
-        domain="[('can_be_expensed', '=', True)]",
-    )
     expense_journal_id = fields.Many2one(
         "account.journal",
         string="Default Expense Journal",

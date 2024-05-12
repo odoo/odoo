@@ -1,20 +1,62 @@
 .hr_expense {
     @include media-breakpoint-up(md) {
         &.o_list_view, &.o_kanban_view .o_kanban_renderer {
-            min-height: auto;
+            min-height: 100% !important;
         }
     }
 
     .o_view_nocontent {
-        top: 10%;
+        z-index: 3;
 
-        .o_view_nocontent_expense_receipt:before {
+        .o_view_nocontent_expense_receipt_image {
             @extend %o-nocontent-init-image;
             width: 300px;
             height: 230px;
             background: transparent url(/hr_expense/static/img/nocontent.png) no-repeat center;
             background-size: 300px 230px;
-            margin-bottom: 0.75rem;
+            margin: 0.65rem auto;
+        }
+
+        @include media-breakpoint-down(md) {
+            position: fixed;
+        }
+    }
+
+    .o_view_pink_overlay {
+        border: $border-width * 2 dashed $border-color;
+        border-radius: $border-radius-lg;
+        background-color: $o-view-background-color;
+        width: 600px;
+        height: 300px;
+
+        @include media-breakpoint-down(md) {
+            width: 100%;
+        }
+    }
+
+    .o_view_pink_overlay:hover {
+        border-color: $primary;
+        background-color: mix($primary, $o-view-background-color, 10%);
+        cursor: pointer;
+    }
+
+    .o_view_sample_data .o_kanban_renderer {
+        @include media-breakpoint-down(md) {
+            // kanban renderer of sample data should not be scrollable on mobile
+            position: fixed !important;
+        }
+    }
+}
+
+.o_graph_view, .o_pivot_view {
+    .o_view_nocontent {
+        h2:first-of-type {
+            visibility: hidden;
+            &::after {
+                content: "No expense found. Let's create one!";
+                visibility: visible;
+                display: block;
+            }
         }
     }
 }

@@ -17,6 +17,7 @@ class ProductTemplate(models.Model):
 
     can_be_expensed = fields.Boolean(string="Expenses", compute='_compute_can_be_expensed',
         store=True, readonly=False, help="Specify whether the product can be selected in an expense.")
+    purchase_ok = fields.Boolean('Purchase', default=True, compute='_compute_purchase_ok', store=True, readonly=False)
 
     def _auto_init(self):
         if not column_exists(self.env.cr, "product_template", "can_be_expensed"):
@@ -30,6 +31,12 @@ class ProductTemplate(models.Model):
             )
         return super()._auto_init()
 
-    @api.depends('type')
+    @api.depends('type', 'purchase_ok')
     def _compute_can_be_expensed(self):
-        self.filtered(lambda p: p.type not in ['consu', 'service']).update({'can_be_expensed': False})
+        self.filtered(lambda p: p.type not in ['consu', 'service'] or not p.purchase_ok).update({'can_be_expensed': False})
+
+    @api.depends('can_be_expensed')
+    def _compute_purchase_ok(self):
+        for record in self:
+            if record.can_be_expensed:
+                record.purchase_ok = True
