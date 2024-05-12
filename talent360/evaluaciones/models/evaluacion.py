@@ -83,9 +83,16 @@ class Evaluacion(models.Model):
     @api.constrains('fecha_inicio', 'fecha_final')
     def check_fechas(self):
         for record in self:
-            if record.fecha_inicio and record.fecha_final and record.fecha_inicio > record.fecha_final:
-                raise exceptions.ValidationError(_("La fecha de inicio debe ser anterior a la fecha final"))
-
+            fecha_actual = fields.Date.today()
+            if record.fecha_inicio:
+                # Verifica que la fecha de inicio no sea menor a la fecha actual
+                if record.fecha_inicio < fecha_actual:
+                    raise exceptions.ValidationError(_("La fecha de inicio debe ser igual o posterior a la fecha actual."))
+            
+            if record.fecha_inicio and record.fecha_final:
+                # Verifica que la fecha de inicio sea antes de la fecha final
+                if record.fecha_inicio > record.fecha_final:
+                    raise exceptions.ValidationError(_("La fecha de inicio debe ser anterior a la fecha final"))
 
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
