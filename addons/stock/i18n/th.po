@@ -160,7 +160,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "%s: Can't split: quantities done can't be above demand"
-msgstr ""
+msgstr "%s: ไม่สามารถแยกได้: ปริมาณที่ทำเสร็จแล้วต้องไม่เกินความต้องการ"
 
 #. module: stock
 #. odoo-python
@@ -443,6 +443,8 @@ msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
 msgstr ""
+"<br>สินค้าจะถูกเคลื่อนย้ายไปยังตาม <b>%(destination)s</b><br/> "
+"ที่ระบุจาก<b>%(operation)s</b>ปลายทาง"
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -1265,7 +1267,7 @@ msgstr "สิงหาคม"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__auto
 msgid "Auto"
-msgstr "Auto"
+msgstr "อัตโนมัติ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_delivery_slip
@@ -1780,7 +1782,7 @@ msgstr "คำนวณค่าจัดส่งและจัดส่งด
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Starshipit"
-msgstr ""
+msgstr "คำนวณค่าจัดส่งและจัดส่งด้วย Starshipit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2792,7 +2794,7 @@ msgstr "ตำแหน่งปลายทาง"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__location_dest_from_rule
 msgid "Destination location origin from rule"
-msgstr ""
+msgstr "ตำแหน่งปลายทางต้นทางจากกฎ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__route_ids
@@ -3056,7 +3058,7 @@ msgstr "อีเมลจะถูกส่งไปยังลูกค้า
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Empty Locations"
-msgstr ""
+msgstr "สถานที่ว่างเปล่า"
 
 #. module: stock
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
@@ -3182,18 +3184,18 @@ msgstr "First In First Out (FIFO)"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Lot Number"
-msgstr ""
+msgstr "เลขล็อตแรก"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial
 msgid "First SN/Lot"
-msgstr ""
+msgstr "SN/ล็อตแรก"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Serial Number"
-msgstr ""
+msgstr "หมายเลขซีเรียลแรก"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
@@ -3449,19 +3451,19 @@ msgstr "สร้าง"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Lot numbers"
-msgstr ""
+msgstr "สร้างหมายเลขล็อต"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Serial numbers"
-msgstr ""
+msgstr "สร้างหมายเลขซีเรียล"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Generate Serials/Lots"
-msgstr ""
+msgstr "สร้างหมายเลขซีเรียล/ล็อต"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3921,7 +3923,7 @@ msgstr "นำเข้าล็อต"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Serials"
-msgstr ""
+msgstr "นำเข้าซีเรียล"
 
 #. module: stock
 #. odoo-javascript
@@ -4019,7 +4021,7 @@ msgstr "การขนส่งระหว่างคลังสินค้
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_dest_id
 msgid "Intermediate Location"
-msgstr ""
+msgstr "ที่ตั้งระดับกลาง"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.int_picking
@@ -4232,7 +4234,7 @@ msgstr "สินค้าคงคลัง ณ วันที่"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
 msgid "Is Empty"
-msgstr ""
+msgstr "ว่างเปล่า"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_is_follower
@@ -4731,7 +4733,7 @@ msgstr "รูปแบบฉลากล็อตที่จะพิมพ์
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_label_lot_template_view
 msgid "Lot Label Report"
-msgstr ""
+msgstr "รายงานป้ายกำกับล็อต"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
@@ -4742,7 +4744,7 @@ msgstr "คุณสมบัติล็อต"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Lot numbers"
-msgstr ""
+msgstr "หมายเลขล็อต"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
@@ -5436,7 +5438,7 @@ msgstr "จำนวนของ SN"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial_count
 msgid "Number of SN/Lots"
-msgstr ""
+msgstr "จำนวนหมายเลขซีเรียล/ล็อต"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_has_error_counter
@@ -6783,7 +6785,7 @@ msgstr "ปริมาณในมือ"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Quantity Received"
-msgstr ""
+msgstr "ปริมาณที่ได้รับ"
 
 #. module: stock
 #. odoo-python
@@ -6878,7 +6880,7 @@ msgstr "ควรกำหนดปริมาณหรือปริมาณ
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Quantity per Lot"
-msgstr ""
+msgstr "ปริมาณต่อล็อต"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_positive_quantity
@@ -7499,7 +7501,7 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_rule.py:0
 msgid "Rule %s belongs to %s while the route belongs to %s."
-msgstr ""
+msgstr "กฎ %s เป็นของ %s ในขณะที่เส้นทางเป็นของ %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -7852,7 +7854,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Serial numbers"
-msgstr ""
+msgstr "หมายเลขซีเรียล"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -8197,7 +8199,7 @@ msgstr "สินค้าติดดาว"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_starshipit
 msgid "Starshipit Connector"
-msgstr ""
+msgstr "Starshipit Connector"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -8675,7 +8677,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 msgid "The operation takes and suggests products from this location."
-msgstr ""
+msgstr "การดำเนินการรับและแนะนำผลิตภัณฑ์จากตำแหน่งที่ตั้งนี้"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -8693,7 +8695,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "The operations brings product to this location"
-msgstr ""
+msgstr "ฝ่ายปฏิบัติการนำผลิตภัณฑ์ไปยังตำแหน่งที่ตั้งนี้"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__package_id
@@ -8753,7 +8755,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "The quantity per lot should always be a positive value."
-msgstr ""
+msgstr "ปริมาณต่อล็อตควรเป็นค่าบวกเสมอ"
 
 #. module: stock
 #. odoo-python
@@ -8770,7 +8772,7 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
 "The search does not support the %(operator)s operator or %(value)s value."
-msgstr ""
+msgstr "การค้นหาไม่รองรับตัวดำเนินการ %(operator)s หรือค่า %(value)s"
 
 #. module: stock
 #. odoo-python
@@ -9430,7 +9432,7 @@ msgstr "เรียกใช้ด้วยตนเอง"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_scrap__should_replenish
 msgid "Trigger replenishment for scrapped products"
-msgstr ""
+msgstr "กระตุ้นการเติมสินค้าสำหรับสินค้าที่ถูกทิ้ง"
 
 #. module: stock
 #. odoo-javascript
@@ -9486,7 +9488,7 @@ msgstr "ไม่ได้มอบหมาย"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "Unavailable Serial numbers. Please correct the serial numbers encoded:"
-msgstr ""
+msgstr "หมายเลขซีเรียลไม่พร้อมใช้งาน โปรดแก้ไขหมายเลขซีเรียลที่เข้ารหัส:"
 
 #. module: stock
 #. odoo-javascript
@@ -10754,7 +10756,7 @@ msgstr "เช่น คลังสินค้ากลาง"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "e.g. LOT-PR-00012"
-msgstr ""
+msgstr "เช่น LOT-PR-00012"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form

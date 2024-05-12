@@ -518,6 +518,8 @@ msgid ""
 "<br/>\n"
 "                            on this account:"
 msgstr ""
+"<br/>\n"
+"                            auf dieses Konto:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -2661,6 +2663,7 @@ msgstr "Kostenrechnung"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Analytic Accounts"
 msgstr "Kostenstellen"
 
@@ -2847,6 +2850,7 @@ msgstr "Zu Beginn der Periode"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/mail_attachments/mail_attachments.xml:0
 #: code:addons/account/static/src/components/mail_attachments/mail_attachments.xml:0
 msgid "Attach"
 msgstr "Anhängen"
@@ -10581,7 +10585,6 @@ msgstr "Konto für offene Rechnungen"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#: code:addons/account/saas~14.3.1.1/post-10.py:0
 #: model:account.account,name:account.1_account_journal_payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
 msgid "Outstanding Payments"
@@ -10595,7 +10598,6 @@ msgstr "Konten für ausstehende Zahlungen"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#: code:addons/account/saas~14.3.1.1/post-10.py:0
 #: model:account.account,name:account.1_account_journal_payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
 msgid "Outstanding Receipts"
@@ -13956,7 +13958,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#, python-format
 msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
@@ -16466,6 +16467,11 @@ msgstr ""
 "testen."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
+msgid "Writeoff Is Exchange Account"
+msgstr "Ausbuchung ist Konto für Wechselkurse"
+
+#. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
 msgid "Wrong credit or debit value in accounting entry!"
 msgstr "Falscher Buchungsbetrag in Soll oder Haben!"
@@ -17738,14 +17744,9 @@ msgstr "{label}: Berichtigungsbuchung vom {new_date}"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "{percent}% recognized on {new_date}"
 msgstr "{percent}% realisiert am {new_date}"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-msgid "{percent}% to recognize on {new_date}"
-msgstr "{percent}% zu realisieren am {new_date}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note

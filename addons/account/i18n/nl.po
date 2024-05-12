@@ -2661,6 +2661,7 @@ msgstr "Analytische boekhouding"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Analytic Accounts"
 msgstr "Analytische rekeningen"
 
@@ -2846,6 +2847,7 @@ msgstr "Aan het begin van de periode"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/mail_attachments/mail_attachments.xml:0
 #: code:addons/account/static/src/components/mail_attachments/mail_attachments.xml:0
 msgid "Attach"
 msgstr "Bijvoegen"
@@ -10545,7 +10547,6 @@ msgstr "Openstaande rekening"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#: code:addons/account/saas~14.3.1.1/post-10.py:0
 #: model:account.account,name:account.1_account_journal_payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
 msgid "Outstanding Payments"
@@ -10559,7 +10560,6 @@ msgstr "Openstaande betalingsrekeningen"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#: code:addons/account/saas~14.3.1.1/post-10.py:0
 #: model:account.account,name:account.1_account_journal_payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
 msgid "Outstanding Receipts"
@@ -13901,7 +13901,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#, python-format
 msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
@@ -16375,6 +16374,11 @@ msgid "Write here <b>your own email address</b> to test the flow."
 msgstr "Schrijf hier <b>je eigen e-mailadres</b> om het proces te testen."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
+msgid "Writeoff Is Exchange Account"
+msgstr "Afschrijven is een afschrijvingsrekening"
+
+#. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
 msgid "Wrong credit or debit value in accounting entry!"
 msgstr "Verkeerde debet- of creditwaarde in boekingsregel!"
@@ -17627,14 +17631,9 @@ msgstr "{label}: Correctiepost van {new_date}"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "{percent}% recognized on {new_date}"
 msgstr "{percent}% herkend op {new_date}"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-msgid "{percent}% to recognize on {new_date}"
-msgstr "{percent}% te herkennen op {new_date}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note

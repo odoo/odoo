@@ -519,6 +519,8 @@ msgid ""
 "<br/>\n"
 "                            on this account:"
 msgstr ""
+"<br/>\n"
+"                            nessa conta:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -2653,6 +2655,7 @@ msgstr "Contabilidade analítica"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Analytic Accounts"
 msgstr "Contas analíticas"
 
@@ -2838,6 +2841,7 @@ msgstr "No início do período"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/mail_attachments/mail_attachments.xml:0
 #: code:addons/account/static/src/components/mail_attachments/mail_attachments.xml:0
 msgid "Attach"
 msgstr "Anexar"
@@ -10547,7 +10551,6 @@ msgstr "Conta pendente"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#: code:addons/account/saas~14.3.1.1/post-10.py:0
 #: model:account.account,name:account.1_account_journal_payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
 msgid "Outstanding Payments"
@@ -10561,7 +10564,6 @@ msgstr "Contas de pagamentos pendentes"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#: code:addons/account/saas~14.3.1.1/post-10.py:0
 #: model:account.account,name:account.1_account_journal_payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
 msgid "Outstanding Receipts"
@@ -13910,7 +13912,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#, python-format
 msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
@@ -16382,6 +16383,11 @@ msgstr ""
 "Escreva aqui <b>seu próprio endereço de e-mail</b> para testar o fluxo."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
+msgid "Writeoff Is Exchange Account"
+msgstr "A baixa é uma conta de câmbio"
+
+#. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
 msgid "Wrong credit or debit value in accounting entry!"
 msgstr "Valor incorreto de crédito ou débito no lançamento contábil."
@@ -17646,14 +17652,9 @@ msgstr "{label}: lançamento de ajuste de {new_date}"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "{percent}% recognized on {new_date}"
 msgstr "{percent}% reconhecido em {new_date}"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-msgid "{percent}% to recognize on {new_date}"
-msgstr "{percent}% a reconhecer em {new_date}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note

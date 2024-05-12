@@ -28,13 +28,13 @@ msgstr "ทั้งหมด"
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__bharatqr
 msgid "BHARATQR"
-msgstr ""
+msgstr "BHARATQR"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/razorpay_pos_request.py:0
 msgid "Cannot decode Razorpay POS response"
-msgstr ""
+msgstr "ไม่สามารถถอดรหัสการตอบสนองของ Razorpay POS ได้"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -53,6 +53,8 @@ msgid ""
 "Choose allow payment mode: \n"
 " All/Card/UPI or QR"
 msgstr ""
+"เลือกอนุญาตโหมดการชำระเงิน:\n"
+" ทั้งหมด/บัตร/UPI หรือ QR โค้ด"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -70,6 +72,8 @@ msgid ""
 "Device Serial No \n"
 " ex: 7000012300"
 msgstr ""
+"หมายเลขซีเรียลของอุปกรณ์\n"
+"เช่น: 7000012300"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -99,53 +103,53 @@ msgstr "การชำระเงินระบบขายหน้าร้
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_api_key
 msgid "Razorpay API Key"
-msgstr ""
+msgstr "คีย์ API ของ Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_authcode
 msgid "Razorpay APPR Code"
-msgstr ""
+msgstr "รหัส APPR ของ Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_allowed_payment_modes
 msgid "Razorpay Allowed Payment Modes"
-msgstr ""
+msgstr "Razorpay อนุญาตโหมดการชำระเงิน"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_card_owner_name
 msgid "Razorpay Card Owner Name"
-msgstr ""
+msgstr "ชื่อเจ้าของบัตร Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_card_scheme
 msgid "Razorpay Card Scheme"
-msgstr ""
+msgstr "โครงการบัตร Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_tid
 msgid "Razorpay Device Serial No"
-msgstr ""
+msgstr "หมายเลขซีเรียลของอุปกรณ์ Razorpay"
 
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
 msgid "Razorpay Error"
-msgstr ""
+msgstr "ข้อผิดพลาด Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_issuer_card_no
 msgid "Razorpay Issue Card No Last 4 digits"
-msgstr ""
+msgstr "Razorpay ออกบัตร เลขที่ 4 หลักสุดท้าย"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_issuer_bank
 msgid "Razorpay Issuer Bank"
-msgstr ""
+msgstr "ธนาคารผู้ออก Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_reference_no
 msgid "Razorpay Merchant Reference No."
-msgstr ""
+msgstr "หมายเลขอ้างอิงผู้ค้า Razorpay"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -154,13 +158,14 @@ msgid ""
 "Razorpay POS payment cancel request expected errorCode not found in the "
 "response"
 msgstr ""
+"คำขอยกเลิกการชำระเงิน Razorpay POS ไม่พบรหัสข้อผิดพลาดที่คาดหวังในการตอบกลับ"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 msgid ""
 "Razorpay POS payment request expected errorCode not found in the response"
-msgstr ""
+msgstr "คำขอการชำระเงิน Razorpay POS ไม่พบรหัสข้อผิดพลาดในการตอบกลับ"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -168,39 +173,39 @@ msgstr ""
 msgid ""
 "Razorpay POS payment status request expected errorCode not found in the "
 "response"
-msgstr ""
+msgstr "คำขอสถานะการชำระเงินของ Razorpay POS ไม่พบรหัสข้อผิดพลาดในการตอบกลับ"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 msgid "Razorpay POS transaction canceled successfully"
-msgstr ""
+msgstr "ยกเลิกธุรกรรม Razorpay POS เรียบร้อยแล้ว"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 msgid "Razorpay POS transaction failed"
-msgstr ""
+msgstr "ธุรกรรม Razorpay POS ล้มเหลว"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_payment_method
 msgid "Razorpay Payment Method"
-msgstr ""
+msgstr "วิธีการชำระเงิน Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_reverse_ref_no
 msgid "Razorpay Reverse Reference No."
-msgstr ""
+msgstr "Razorpay หมายเลขอ้างอิงย้อนกลับ"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_test_mode
 msgid "Razorpay Test Mode"
-msgstr ""
+msgstr "โหมดทดสอบ Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_username
 msgid "Razorpay Username"
-msgstr ""
+msgstr "ชื่อผู้ใช้ Razorpay"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -218,17 +223,17 @@ msgstr "ช่องทางการชำระเงินนี้ใช้
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
 msgid "Transaction failed due to inactivity"
-msgstr ""
+msgstr "การทำธุรกรรมล้มเหลวเนื่องจากไม่มีการใช้งาน"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_test_mode
 msgid "Turn it on when in Test Mode"
-msgstr ""
+msgstr "เปิดเครื่องเมื่ออยู่ในโหมดทดสอบ"
 
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__upi
 msgid "UPI"
-msgstr ""
+msgstr "UPI"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_api_key
@@ -236,6 +241,8 @@ msgid ""
 "Used when connecting to Razorpay: "
 "https://razorpay.com/docs/payments/dashboard/account-settings/api-keys/"
 msgstr ""
+"ใช้เมื่อเชื่อมต่อกับ Razorpay: "
+"https://razorpay.com/docs/payments/dashboard/account-settings/api-keys/"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_username
@@ -243,3 +250,5 @@ msgid ""
 "Username(Device Login) \n"
 " ex: 1234500121"
 msgstr ""
+"ชื่อผู้ใช้(เข้าสู่ระบบอุปกรณ์)\n"
+"เช่น: 1234500121"

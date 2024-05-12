@@ -157,7 +157,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web_portal/chatter.js:0
 msgid "%(recipientCount)s more"
-msgstr ""
+msgstr "เหลือ %(recipientCount)s "
 
 #. module: mail
 #. odoo-javascript
@@ -376,6 +376,8 @@ msgid ""
 "<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
 "title=\"Steps count\"/>"
 msgstr ""
+"<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"นับก้าว\" "
+"title=\"นับก้าว\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -401,7 +403,7 @@ msgstr "<span class=\"d-block w-75 py-2\">สีของหัวเรื่�
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr ""
+msgstr "<span class=\"me-1 oe_inline\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -680,7 +682,7 @@ msgstr "กิจกรรม"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Activities To Create"
-msgstr ""
+msgstr "กิจกรรมที่จะสร้าง"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
@@ -717,7 +719,7 @@ msgstr "กิจกรรม Mixin"
 #: model:ir.actions.act_window,name:mail.mail_activity_action
 #: model:ir.ui.menu,name:mail.menu_mail_activities
 msgid "Activity Overview"
-msgstr ""
+msgstr "ภาพรวมกิจกรรม"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_plan
@@ -764,7 +766,7 @@ msgstr "ไอคอนประเภทกิจกรรม"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
 msgid "Activity Type Name"
-msgstr ""
+msgstr "ชื่อประเภทกิจกรรม"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
@@ -934,7 +936,7 @@ msgstr "ตัวเลือกขั้นสูง"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__after_plan_date
 msgid "After Plan Date"
-msgstr ""
+msgstr "หลังจากวันที่วางแผน"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_exception_decoration__warning
@@ -1463,7 +1465,7 @@ msgstr "อวตาร 512"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__avatar_cache_key
 msgid "Avatar Cache Key"
-msgstr ""
+msgstr "คีย์แคชอวาตาร์"
 
 #. module: mail
 #. odoo-javascript
@@ -1521,7 +1523,7 @@ msgstr "บันทึกแบทช์ไม่รองรับไฟล์
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__before_plan_date
 msgid "Before Plan Date"
-msgstr ""
+msgstr "ก่อนวันที่วางแผน"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__is_blacklisted
@@ -1750,12 +1752,12 @@ msgstr "ยกเลิก"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_canned_response
 msgid "Canned Response"
-msgstr ""
+msgstr "คำตอบสำเร็จรูป"
 
 #. module: mail
 #: model:res.groups,name:mail.group_mail_canned_response_admin
 msgid "Canned Response Administrator"
-msgstr ""
+msgstr "ผู้ดูแลระบบการตอบกลับสำเร็จรูป"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_canned_response_action
@@ -1771,7 +1773,7 @@ msgstr "ค้นหาคำตอบสำเร็จรูป"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_form
 msgid "Canned response"
-msgstr ""
+msgstr "คำตอบสำเร็จรูป"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__source
@@ -1786,7 +1788,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "Canned responses"
-msgstr ""
+msgstr "คำตอบสำเร็จรูป"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
@@ -2105,7 +2107,7 @@ msgstr "บริษัท"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
 msgid "Companies using this domain as default for sending mails"
-msgstr ""
+msgstr "บริษัทที่ใช้โดเมนนี้เป็นค่าเริ่มต้นในการส่งอีเมล"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
@@ -2284,7 +2286,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__unpin_dt
 msgid "Contains the date and time when the channel was unpinned by the user."
-msgstr ""
+msgstr "ประกอบด้วยวันที่และเวลาที่ผู้ใช้เลิกปักหมุดช่องสัญญาณ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__content
@@ -2324,6 +2326,8 @@ msgid ""
 "Couldn't get your emails. Check out the error message below for more info:\n"
 "%s"
 msgstr ""
+"ไม่สามารถรับอีเมลของคุณได้ ตรวจสอบข้อความแสดงข้อผิดพลาดด้านล่างเพื่อดูข้อมูลเพิ่มเติม:\n"
+"%s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_bounce
@@ -2378,7 +2382,7 @@ msgstr "สร้างการตอบกลับสำเร็จรูป
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
 msgid "Create an Activity Plan"
-msgstr ""
+msgstr "สร้างแผนกิจกรรม"
 
 #. module: mail
 #. odoo-python
@@ -2675,7 +2679,7 @@ msgstr "การสรุปเริ่มต้น"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
 msgid "Default Summary:"
-msgstr ""
+msgstr "สรุปเริ่มต้น:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_user_id
@@ -2692,7 +2696,7 @@ msgstr "ค่าเริ่มต้น"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Default deadline for the activities..."
-msgstr ""
+msgstr "กำหนดเวลาเริ่มต้นสำหรับกิจกรรม..."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__default_from
@@ -2833,12 +2837,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
 msgid "Determines if the canned response can be edited by the current user"
-msgstr ""
+msgstr "กำหนดว่าผู้ใช้ปัจจุบันสามารถแก้ไขการตอบกลับสำเร็จรูปได้หรือไม่"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_shared
 msgid "Determines if the canned_response is currently shared with other users"
-msgstr ""
+msgstr "กำหนดว่าปัจจุบัน canned_response แชร์กับผู้ใช้รายอื่นหรือไม่"
 
 #. module: mail
 #. odoo-javascript
@@ -3365,7 +3369,7 @@ msgstr "ตัวช่วยการเขียนอีเมล"
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
 #: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "โดเมนอีเมล เช่น 'example.com' ใน 'odoo@example.com'"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -3663,7 +3667,7 @@ msgstr "รายการโปรด"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "Feedback:"
-msgstr ""
+msgstr "ข้อเสนอแนะ:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -4866,7 +4870,7 @@ msgstr "เป็นผู้ติดตาม"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__is_hidden
 msgid "Is Hidden"
-msgstr ""
+msgstr "ถูกซ่อนไว้"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_member
@@ -5170,7 +5174,7 @@ msgstr "วันที่พบเห็นล่าสุด"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__last_used
 msgid "Last time this canned_response was used"
-msgstr ""
+msgstr "ครั้งล่าสุดที่ใช้ canned_response นี้"
 
 #. module: mail
 #. odoo-javascript
@@ -5280,6 +5284,8 @@ msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
 msgstr ""
+"ส่วนของอีเมลที่ใช้สำหรับการตอบกลับเพื่อรับคำตอบ เช่น 'catchall' ใน "
+"'catchall@example.com'"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -5287,6 +5293,8 @@ msgid ""
 "Local-part of email used for Return-Path used when emails bounce e.g. "
 "'bounce' in 'bounce@example.com'"
 msgstr ""
+"ส่วนของอีเมลภายในที่ใช้สำหรับ Return-Path ใช้เมื่ออีเมลตีกลับ เช่น 'ตีกลับ' "
+"ใน 'bounce@example.com'"
 
 #. module: mail
 #. odoo-javascript
@@ -6011,7 +6019,7 @@ msgstr "เทมเพลตของฉัน"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "My canned responses"
-msgstr ""
+msgstr "คำตอบสำเร็จรูปของฉัน"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__name
@@ -6427,7 +6435,7 @@ msgstr "จํานวนการดําเนินการ"
 msgid ""
 "Number of days/week/month before executing the action after or before the "
 "scheduled plan date."
-msgstr ""
+msgstr "จำนวนวัน/สัปดาห์/เดือนก่อนดำเนินการหลังจากหรือก่อนวันที่วางแผนไว้"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_count
@@ -6713,7 +6721,7 @@ msgstr "ข้อความต้นฉบับถูกลบแล้ว"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "Original note:"
-msgstr ""
+msgstr "หมายเหตุต้นฉบับ:"
 
 #. module: mail
 #. odoo-python
@@ -6968,7 +6976,7 @@ msgstr "สายเข้า"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Pick an Activity Plan to launch"
-msgstr ""
+msgstr "เลือกแผนกิจกรรมที่จะเปิดตัว"
 
 #. module: mail
 #. odoo-javascript
@@ -7861,7 +7869,7 @@ msgstr "บันทึกเป็นแม่แบบใหม่"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Save editing"
-msgstr ""
+msgstr "บันทึกการแก้ไข"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_gif_favorite
@@ -8304,7 +8312,7 @@ msgstr "แชร์หน้าจอ"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "Shared canned responses"
-msgstr ""
+msgstr "การตอบกลับสำเร็จรูปที่ใช้ร่วมกัน"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__description
@@ -9631,7 +9639,7 @@ msgstr "เลิกปักหมุดข้อความ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt
 msgid "Unpin date"
-msgstr ""
+msgstr "เลิกปักหมุดวันที่"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__message_unread_counter
@@ -10467,7 +10475,7 @@ msgstr "ชื่อของคุณ"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipient_list.js:0
 msgid "[%(name)s] (no email address)"
-msgstr ""
+msgstr "[%(name)s] (ไม่มีที่อยู่อีเมล)"
 
 #. module: mail
 #. odoo-python
@@ -10488,7 +10496,7 @@ msgstr "หลังจากหมดเขตกิจกรรมครั้
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
 msgid "alias"
-msgstr ""
+msgstr "นามแฝง"
 
 #. module: mail
 #. odoo-python
@@ -10663,12 +10671,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"bounce\""
-msgstr ""
+msgstr "เช่น \"ตีกลับ\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"catchall\""
-msgstr ""
+msgstr "เช่น \"catchall\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -10678,7 +10686,7 @@ msgstr "เช่น \"mycompany.com\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"notifications\""
-msgstr ""
+msgstr "เช่น \"การแจ้งเตือน\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -10700,7 +10708,7 @@ msgstr "เช่น รายชื่อติดต่อ"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_tree
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "e.g. Discuss Proposal"
-msgstr ""
+msgstr "เช่น พูดคุยเกี่ยวกับข้อเสนอ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -10713,7 +10721,7 @@ msgstr "เช่น พูดคุยเกี่ยวกับข้อเ�
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_form
 msgid "e.g. Log a note"
-msgstr ""
+msgstr "เช่น เข้าสู่ระบบบันทึก"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -10729,7 +10737,7 @@ msgstr "เช่น ตารางการประชุม"
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "เช่น mycompany.com"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form

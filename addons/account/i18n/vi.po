@@ -517,6 +517,8 @@ msgid ""
 "<br/>\n"
 "                            on this account:"
 msgstr ""
+"<br/>\n"
+"                            trên tài khoản này:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -2650,6 +2652,7 @@ msgstr "Kế toán phân tích"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Analytic Accounts"
 msgstr "Tài khoản phân tích"
 
@@ -2835,6 +2838,7 @@ msgstr "Vào đầu kỳ"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/mail_attachments/mail_attachments.xml:0
 #: code:addons/account/static/src/components/mail_attachments/mail_attachments.xml:0
 msgid "Attach"
 msgstr "Đính kèm"
@@ -10511,7 +10515,6 @@ msgstr "Tài khoản chưa liên kết"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#: code:addons/account/saas~14.3.1.1/post-10.py:0
 #: model:account.account,name:account.1_account_journal_payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
 msgid "Outstanding Payments"
@@ -10525,7 +10528,6 @@ msgstr "Tài khoản thanh toán chưa liên kết"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#: code:addons/account/saas~14.3.1.1/post-10.py:0
 #: model:account.account,name:account.1_account_journal_payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
 msgid "Outstanding Receipts"
@@ -13855,7 +13857,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#, python-format
 msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
@@ -16305,6 +16306,11 @@ msgid "Write here <b>your own email address</b> to test the flow."
 msgstr "Điền <b>địa chỉ email của bạn</b> vào đây để kiểm thử tính năng."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
+msgid "Writeoff Is Exchange Account"
+msgstr ""
+
+#. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
 msgid "Wrong credit or debit value in accounting entry!"
 msgstr "Giá trị nợ hoặc có không hợp lệ trong bút toán!"
@@ -17554,14 +17560,9 @@ msgstr "{label}: Điều chỉnh bút toán của {new_date}"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "{percent}% recognized on {new_date}"
 msgstr "{percent}% đã được ghi nhận vào {new_date}"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-msgid "{percent}% to recognize on {new_date}"
-msgstr "{percent}% để ghi nhận vào {new_date}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note

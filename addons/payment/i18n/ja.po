@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Junko Augias, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:05+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,9 +45,9 @@ msgid ""
 "                                and should be tested on a test database first."
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/> これらのプロパティは\n"
-"                                この支払に関してプロバイダとOdooとの統一のビヘイビアと\n"
+"この支払に関してプロバイダとOdooとの統一のビヘイビアと\n"
 "一致するよう定義されます。 変更によりエラーが発生する可能性があり、\n"
-"                                まずはテストデータベースでテストされる必要があります。"
+"まずはテストデータベースでテストされる必要があります。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
@@ -86,7 +88,7 @@ msgid ""
 "                                            Enable Payment Methods"
 msgstr ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-"                                            支払方法を有効化"
+"支払方法を有効化"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -116,8 +118,8 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"oe_inline text-muted\" invisible=\"supported_country_ids\">\n"
-"                                全ての国がサポートされています。\n"
-"                            </span>"
+"全ての国がサポートされています。\n"
+" </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -127,8 +129,8 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"oe_inline text-muted\" invisible=\"supported_currency_ids\">\n"
-"                                全ての通貨がサポートされています。\n"
-"                            </span>"
+" 全ての通貨がサポートされています。\n"
+" </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -157,7 +159,7 @@ msgid ""
 "                                administrator."
 msgstr ""
 "<strong>適用可能な決済方法が見つかりませんでした</strong><br/>\n"
-"                                エラーと思われる場合は、ウェブサイトの管理者までお問い合わせください。"
+"エラーと思われる場合は、ウェブサイトの管理者までお問い合わせ下さい。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -167,8 +169,8 @@ msgid ""
 "                    the capture is still pending after a few minutes."
 msgstr ""
 "<strong>警告！</strong>部分的なキャプチャは保留中です。処理されるまで\n"
-"                    しばらくお待ち下さい。数分経ってもキャプチャが保留中の場合は、\n"
-"                    決済プロバイダ設定を確認して下さい。"
+"しばらくお待ち下さい。数分経ってもキャプチャが保留中の場合は、\n"
+"決済プロバイダ設定を確認して下さい。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -186,16 +188,14 @@ msgid ""
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
 "<strong>警告</strong> <em>作成</em> ボタンからの決済プロバイダの作成はサポートされていません。\n"
-"                        代わりに <em>複製</em>アクションを使用して下さい。"
+"代わりに <em>複製</em>アクションを使用して下さい。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid ""
 "<strong>Warning</strong> Make sure you are logged in as the\n"
 "                                    correct partner before making this payment."
-msgstr ""
-"<strong>警告</strong> この支払を行う前に正しいパートナー\n"
-"　　　　　　　　　にログインしているか確認して下さい。"
+msgstr "<strong>警告</strong> この支払を行う前に正しいパートナーでログインしていることを確認してください。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay

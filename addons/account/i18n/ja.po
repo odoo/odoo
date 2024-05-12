@@ -514,6 +514,8 @@ msgid ""
 "<br/>\n"
 "                            on this account:"
 msgstr ""
+"<br/>\n"
+"                            以下のアカウントで:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -2585,6 +2587,7 @@ msgstr "分析用会計"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Analytic Accounts"
 msgstr "分析勘定"
 
@@ -2763,6 +2766,7 @@ msgstr "期間の開始時点"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/mail_attachments/mail_attachments.xml:0
 #: code:addons/account/static/src/components/mail_attachments/mail_attachments.xml:0
 msgid "Attach"
 msgstr "添付"
@@ -10216,7 +10220,6 @@ msgstr "未消込勘定"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#: code:addons/account/saas~14.3.1.1/post-10.py:0
 #: model:account.account,name:account.1_account_journal_payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
 msgid "Outstanding Payments"
@@ -10230,7 +10233,6 @@ msgstr "未消込支払勘定科目"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#: code:addons/account/saas~14.3.1.1/post-10.py:0
 #: model:account.account,name:account.1_account_journal_payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
 msgid "Outstanding Receipts"
@@ -13480,7 +13482,6 @@ msgstr "支払条件には、少なくとも1つ以上の％の行があり、�
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#, python-format
 msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
@@ -15755,6 +15756,11 @@ msgid "Write here <b>your own email address</b> to test the flow."
 msgstr "フローをテストするために、<b>自分のメールアドレス</b>を書いてください。"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
+msgid "Writeoff Is Exchange Account"
+msgstr ""
+
+#. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
 msgid "Wrong credit or debit value in accounting entry!"
 msgstr "会計項目の貸方または借方の値が間違っています！"
@@ -16604,23 +16610,23 @@ msgstr "は典型的な範囲から外れています。"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "for this customer. You can allocate them to mark this credit note as paid."
-msgstr "があります。割り当ててこのクレジットノートを支払済としてマックできます。"
+msgstr "があります。割当ててこのクレジットノートを支払済としてマークできます。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this customer. You can allocate them to mark this invoice as paid."
-msgstr "があります。割り当ててこの請求書を支払済としてマックできます。"
+msgstr "があります。割当ててこの請求書を支払済としてマークできます。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this vendor. You can allocate them to mark this bill as paid."
-msgstr "があります。割り当ててこの請求書を支払済としてマックできます。"
+msgstr "があります。割当ててこの請求書を支払済としてマークできます。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "for this vendor. You can allocate them to mark this credit note as paid."
-msgstr "があります。割り当ててこのクレジットノートを支払済としてマックできます。"
+msgstr "があります。割当ててこのクレジットノートを支払済としてマークできます。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -16864,14 +16870,9 @@ msgstr "{label}: {new_date}の調整仕訳"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "{percent}% recognized on {new_date}"
 msgstr "{percent}% が {new_date}に認識されました"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-msgid "{percent}% to recognize on {new_date}"
-msgstr "{percent}%が {new_date}に認識される予定です"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note

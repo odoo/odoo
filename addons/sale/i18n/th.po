@@ -68,8 +68,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
-"(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
-"'Order - %s' % (object.name)"
+"(object.state ใน ('ร่าง', 'ส่ง') และ 'ใบเสนอราคา - %s' % (ชื่อวัตถุ)) หรือ "
+"'คำสั่งซื้อ - %s' % (ชื่อวัตถุ)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -779,7 +779,7 @@ msgstr "<i class=\"fa fa-fw fa-check\"/> ชำระแล้ว"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> ย้อนกลับ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -881,6 +881,9 @@ msgid ""
 "                                                By paying,\n"
 "                                            </span>"
 msgstr ""
+"<span id=\"o_sale_portal_use_amount_total\">\n"
+"                                                โดยการชำระเงิน\n"
+"                                            </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1403,17 +1406,17 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying a <u>down payment</u> of"
-msgstr ""
+msgstr "โดย<u>ชำระเงินดาวน์</u>จำนวน"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying,"
-msgstr ""
+msgstr "โดยการชำระเงิน"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By signing, you confirm acceptance on behalf of"
-msgstr ""
+msgstr "โดยการลงนามแสดงว่าคุณยืนยันการยอมรับในนามของ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1603,7 +1606,7 @@ msgstr "คำนวณค่าจัดส่งและจัดส่งด
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Starshipit"
-msgstr ""
+msgstr "คำนวณค่าจัดส่งและจัดส่งด้วย Starshipit"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1709,7 +1712,7 @@ msgstr "สร้างใบแจ้งหนี้"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
 msgid "Create a Sale Order Activity Plan"
-msgstr ""
+msgstr "สร้างแผนกิจกรรมการสั่งซื้อการขาย"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -2141,13 +2144,13 @@ msgstr "เงินดาวน์"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment (Cancelled)"
-msgstr ""
+msgstr "เงินดาวน์ (ยกเลิกแล้ว)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment (ref: %(reference)s on %(date)s)"
-msgstr ""
+msgstr "เงินดาวน์ (อ้างอิง: %(reference)s บน %(date)s)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
@@ -3113,12 +3116,12 @@ msgstr "ในรายการคำสั่งซื้อทั้งหม
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on__sale_order
 msgid "On confirmed order"
-msgstr ""
+msgstr "ในการสั่งซื้อที่ได้รับการยืนยัน"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on__quotation
 msgid "On quote"
-msgstr ""
+msgstr "ในใบเสนอราคา"
 
 #. module: sale
 #: model:ir.model,name:sale.model_onboarding_onboarding
@@ -3934,6 +3937,8 @@ msgstr "ผู้ใช้ที่รับผิดชอบ"
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
 msgid "Revenue Target for the current month (untaxed total of paid invoices)."
 msgstr ""
+"เป้าหมายรายได้สำหรับเดือนปัจจุบัน "
+"(ยอดใบแจ้งหนี้ที่ชำระแล้วที่ไม่ต้องเสียภาษี)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -4519,7 +4524,7 @@ msgstr "ขั้นตอน"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_starshipit
 msgid "Starshipit Connector"
-msgstr ""
+msgstr "Starshipit Connector"
 
 #. module: sale
 #. odoo-javascript
@@ -5381,7 +5386,7 @@ msgstr "คุณไม่สามารถยกเลิกคำสั่ง
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "You cannot change the pricelist of a confirmed order !"
-msgstr ""
+msgstr "คุณไม่สามารถเปลี่ยนแปลงรายการราคาของคำสั่งซื้อที่ยืนยันแล้วได้!"
 
 #. module: sale
 #. odoo-python
@@ -5499,7 +5504,7 @@ msgstr "สำหรับคำสั่งขายนี้"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "quote."
-msgstr ""
+msgstr "ใบเสนอราคา"
 
 #. module: sale
 #. odoo-python
@@ -5524,7 +5529,7 @@ msgstr "หน่วย"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "you confirm acceptance on the behalf of"
-msgstr ""
+msgstr "คุณยืนยันการยอมรับในนามของ"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation
