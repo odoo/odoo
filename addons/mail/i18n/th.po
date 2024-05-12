@@ -388,7 +388,7 @@ msgstr "<span class=\"d-block w-75 py-2\">สีของหัวเรื่�
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr ""
+msgstr "<span class=\"me-1 oe_inline\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2000,7 +2000,7 @@ msgstr "บริษัท"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
 msgid "Companies using this domain as default for sending mails"
-msgstr ""
+msgstr "บริษัทที่ใช้โดเมนนี้เป็นค่าเริ่มต้นในการส่งอีเมล"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
@@ -3211,7 +3211,7 @@ msgstr "ตัวช่วยการเขียนอีเมล"
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
 #: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "โดเมนอีเมล เช่น 'example.com' ใน 'odoo@example.com'"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -5068,6 +5068,8 @@ msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
 msgstr ""
+"ส่วนของอีเมลที่ใช้สำหรับการตอบกลับเพื่อรับคำตอบ เช่น 'catchall' ใน "
+"'catchall@example.com'"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -5075,6 +5077,8 @@ msgid ""
 "Local-part of email used for Return-Path used when emails bounce e.g. "
 "'bounce' in 'bounce@example.com'"
 msgstr ""
+"ส่วนของอีเมลภายในที่ใช้สำหรับ Return-Path ใช้เมื่ออีเมลตีกลับ เช่น 'ตีกลับ' "
+"ใน 'bounce@example.com'"
 
 #. module: mail
 #. odoo-javascript
@@ -7536,7 +7540,7 @@ msgstr "บันทึกเป็นแม่แบบใหม่"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Save editing"
-msgstr ""
+msgstr "บันทึกการแก้ไข"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_gif_favorite
@@ -10001,6 +10005,13 @@ msgid "You may not define a template on an abstract model: %s"
 msgstr "คุณไม่สามารถกำหนดเทมเพลตบนโมเดลนามธรรมได้: %s"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "You may not unlink attachments from other people's messages"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/message_pin/common/message_pin_service.js:0
 msgid ""
@@ -10102,7 +10113,7 @@ msgstr "ชื่อของคุณ"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipient_list.js:0
 msgid "[%(name)s] (no email address)"
-msgstr ""
+msgstr "[%(name)s] (ไม่มีที่อยู่อีเมล)"
 
 #. module: mail
 #. odoo-python
@@ -10292,12 +10303,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"bounce\""
-msgstr ""
+msgstr "เช่น \"ตีกลับ\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"catchall\""
-msgstr ""
+msgstr "เช่น \"catchall\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -10307,7 +10318,7 @@ msgstr "เช่น \"mycompany.com\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"notifications\""
-msgstr ""
+msgstr "เช่น \"การแจ้งเตือน\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
