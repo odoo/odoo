@@ -108,6 +108,7 @@ class HrExpense(models.Model):
     approved_by = fields.Many2one(comodel_name='res.users', string="Approved By", related='sheet_id.user_id', tracking=False)
     approved_on = fields.Datetime(string="Approved On", related='sheet_id.approval_date')
     duplicate_expense_ids = fields.Many2many(comodel_name='hr.expense', compute='_compute_duplicate_expense_ids')  # Used to trigger warnings
+    same_receipt_expense_ids = fields.Many2many(comodel_name='hr.expense', compute='_compute_same_receipt_expense_ids')  # Used to trigger warnings
 
     # Amount fields
     tax_amount_currency = fields.Monetary(
@@ -435,6 +436,29 @@ class HrExpense(models.Model):
             for expense in self:
                 expense.employee_id = self.env.user.with_company(expense.company_id).employee_id
 
+    @api.depends('attachment_ids')
+    def _compute_same_receipt_expense_ids(self):
+        self.same_receipt_expense_ids = [Command.clear()]
+
+        expenses_with_attachments = self.filtered(lambda expense: expense.attachment_ids)
+        if not expenses_with_attachments:
+            return
+
+        expenses_groupby_checksum = dict(self.env['ir.attachment']._read_group(domain=[
+            ('res_model', '=', 'hr.expense'),
+            ('checksum', 'in', expenses_with_attachments.attachment_ids.mapped('checksum'))],
+            groupby=['checksum'],
+            aggregates=['res_id:array_agg'],
+        ))
+
+        for expense in expenses_with_attachments:
+            same_receipt_ids = set()
+            for attachment in expense.attachment_ids:
+                same_receipt_ids.update(expenses_groupby_checksum[attachment.checksum])
+            same_receipt_ids.remove(expense.id)
+
+            expense.same_receipt_expense_ids = [Command.set(list(same_receipt_ids))]
+
     @api.depends('employee_id', 'product_id', 'total_amount_currency')
     def _compute_duplicate_expense_ids(self):
         self.duplicate_expense_ids = [Command.clear()]
@@ -504,6 +528,7 @@ class HrExpense(models.Model):
         """When an attachment is uploaded as a receipt, set it as the main attachment."""
         self.message_main_attachment_id = kwargs['attachment_ids'][-1]
 
+    @api.model
     def create_expense_from_attachments(self, attachment_ids=None, view_type='list'):
         """
             Create the expenses from files.
@@ -529,7 +554,7 @@ class HrExpense(models.Model):
             vals = {
                 'name': attachment_name,
                 'price_unit': 0,
-                'product_id': self.env.company.expense_product_id.id or product.id,
+                'product_id': product.id,
             }
             if product.property_account_expense_id:
                 vals['account_id'] = product.property_account_expense_id.id
@@ -543,7 +568,7 @@ class HrExpense(models.Model):
             'res_model': 'hr.expense',
             'type': 'ir.actions.act_window',
             'views': [[False, view_type], [False, "form"]],
-            'context': {'search_default_my_expenses': 1, 'search_default_no_report': 1},
+            'domain': [('id', 'in', expenses.ids)],
         }
 
     # ----------------------------------------
@@ -642,17 +667,26 @@ class HrExpense(models.Model):
             # encode, but force %20 encoding for space instead of a + (URL / mailto difference)
             params = werkzeug.urls.url_encode({'subject': _("Lunch with customer $12.32")}).replace('+', '%20')
             return Markup(
-                """<p>%(send_string)s <a href="mailto:%(alias_email)s?%(params)s">%(alias_email)s</a></p>"""
+                """<div class="text-muted mt-4">%(send_string)s <a class="text-body" href="mailto:%(alias_email)s?%(params)s">%(alias_email)s</a></div>"""
             ) % {
                 'alias_email': expense_alias.display_name,
                 'params': params,
-                'send_string': _("Or send your receipts at"),
+                'send_string': _("Tip: try sending receipts by email"),
             }
         return ""
+
+    def get_expense_attachments(self):
+        return self.attachment_ids.mapped('image_src')
 
     # ----------------------------------------
     # Actions
     # ----------------------------------------
+
+    def action_show_same_receipt_expense_ids(self):
+        self.ensure_one()
+        return self.same_receipt_expense_ids._get_records_action(
+            name=_("Expenses with a similar receipt to %(other_expense_name)s", other_expense_name=self.name),
+        )
 
     def action_view_sheet(self):
         self.ensure_one()

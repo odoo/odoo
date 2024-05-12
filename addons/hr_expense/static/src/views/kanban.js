@@ -10,7 +10,9 @@ import { kanbanView } from '@web/views/kanban/kanban_view';
 import { KanbanController } from '@web/views/kanban/kanban_controller';
 import { KanbanRenderer } from '@web/views/kanban/kanban_renderer';
 
-export class ExpenseKanbanController extends ExpenseDocumentUpload(KanbanController) {}
+export class ExpenseKanbanController extends ExpenseDocumentUpload(KanbanController) {
+    static template = `hr_expense.KanbanView`;
+}
 
 export class ExpenseKanbanRenderer extends ExpenseDocumentDropZone(
     ExpenseMobileQRCode(KanbanRenderer)
