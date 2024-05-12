@@ -175,8 +175,8 @@ class Product(models.Model):
         quants_res = {product.id: (quantity, reserved_quantity) for product, quantity, reserved_quantity in Quant._read_group(domain_quant, ['product_id'], ['quantity:sum', 'reserved_quantity:sum'])}
         if dates_in_the_past:
             # Calculate the moves that were done before now to calculate back in time (as most questions will be recent ones)
-            domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
-            domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
+            domain_move_in_done = [('state', '=', 'done'), ('date', '<=', to_date)] + domain_move_in_done
+            domain_move_out_done = [('state', '=', 'done'), ('date', '<=', to_date)] + domain_move_out_done
             moves_in_res_past = {product.id: product_qty for product, product_qty in Move._read_group(domain_move_in_done, ['product_id'], ['product_qty:sum'])}
             moves_out_res_past = {product.id: product_qty for product, product_qty in Move._read_group(domain_move_out_done, ['product_id'], ['product_qty:sum'])}
 
@@ -193,7 +193,7 @@ class Product(models.Model):
             rounding = product.uom_id.rounding
             res[product_id] = {}
             if dates_in_the_past:
-                qty_available = quants_res.get(origin_product_id, [0.0])[0] - moves_in_res_past.get(origin_product_id, 0.0) + moves_out_res_past.get(origin_product_id, 0.0)
+                qty_available =  moves_in_res_past.get(origin_product_id, 0.0) - moves_out_res_past.get(origin_product_id, 0.0)
             else:
                 qty_available = quants_res.get(origin_product_id, [0.0])[0]
             reserved_quantity = quants_res.get(origin_product_id, [False, 0.0])[1]
