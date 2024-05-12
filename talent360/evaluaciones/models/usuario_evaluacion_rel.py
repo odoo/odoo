@@ -127,7 +127,6 @@ class UsuarioEvaluacionRel(models.Model):
                     correo = usuario.usuario_externo_id.email
                     nombre = usuario.usuario_externo_id.nombre
                 else:
-                    print("No se encontró un usuario asociado")
                     raise ValueError("No se encontró un usuario asociado")
                     
                 usuario.write({

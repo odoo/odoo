@@ -54,8 +54,6 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
 
         self.validar_columnas(csv_lector.fieldnames)
 
-        print("Columnas validadas")
-
         for i, fila in enumerate(csv_lector):
             try:
                 fecha_ingreso = datetime.strptime(fila["Fecha de ingreso"], "%d/%m/%Y").date()
@@ -66,8 +64,6 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
                 )
 
             self.validar_fila(fila)    
-
-            print(f"Fila {i} validada {fila['Nombre Completo']}")
 
             usuarios.append(
                 {
