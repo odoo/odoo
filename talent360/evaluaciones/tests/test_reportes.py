@@ -12,100 +12,19 @@ class TestReportes(TransactionCase):
         """
         super(TestReportes, self).setUp()
 
-        # Crear una evaluación de prueba
-        self.evaluacion = self.env["evaluacion"].create(
-            {
-                "nombre": "Evaluacion de prueba",
-                "estado": "borrador",
-            }
-        )
-
-        # Crear preguntas para la evaluación
-        pregunta1 = self.env["pregunta"].create(
-            {
-                "pregunta_texto": "Pregunta 1",
-                "tipo": "escala",
-                "categoria": "reclutamiento_y_seleccion_de_personal",
-            }
-        )
-        pregunta2 = self.env["pregunta"].create(
-            {
-                "pregunta_texto": "Pregunta 2",
-                "tipo": "escala",
-                "categoria": "reclutamiento_y_seleccion_de_personal",
-            }
-        )
-        pregunta3 = self.env["pregunta"].create(
-            {
-                "pregunta_texto": "Pregunta 3",
-                "tipo": "escala",
-                "categoria": "formacion_y_capacitacion",
-            }
-        )
-
-        # Asignar las preguntas a la evaluación
-        self.evaluacion.pregunta_ids = [
-            (6, 0, [pregunta1.id, pregunta2.id, pregunta3.id])
-        ]
-
-        # Crear respuestas para las preguntas
-        preguntas_respuestas = {
-            pregunta1.id: [
-                "1",
-                "1",
-                "1",
-                "2",
-                "2",
-                "3",
-                "3",
-                "3",
-                "3",
-                "3",
-            ],
-            pregunta2.id: [
-                "1",
-                "1",
-                "1",
-                "2",
-                "2",
-                "3",
-                "3",
-                "3",
-                "3",
-                "3",
-                "2",
-                "3",
-            ],
-            pregunta3.id: [
-                "5",
-                "5",
-                "5",
-                "4",
-                "4",
-                "3",
-                "3",
-                "3",
-                "3",
-                "3",
-                "3",
-                "3",
-                "3",
-            ],
-        }
-
-        # Create a department
-        department = self.env["hr.department"].create(
-            {
-                "name": "Test Department",
-            }
-        )
-
         # Create a user
         user = self.env["res.users"].create(
             {
                 "name": "Test User",
                 "login": "testuser",
                 "password": "testuser",
+            }
+        )
+
+        # Create a department
+        department = self.env["hr.department"].create(
+            {
+                "name": "Test Department",
             }
         )
 
@@ -118,17 +37,388 @@ class TestReportes(TransactionCase):
             }
         )
 
-        # Crear respuestas para las preguntas
-        for pregunta, respuestas in preguntas_respuestas.items():
-            for respuesta in respuestas:
-                self.env["respuesta"].create(
-                    {
-                        "pregunta_id": pregunta,
-                        "evaluacion_id": self.evaluacion.id,
-                        "respuesta_texto": respuesta,
-                        "usuario_id": user.id,
-                    }
-                )
+        opciones = self.env["opcion"].create(
+            [
+                {"opcion_texto": "A", "valor": 3},
+                {"opcion_texto": "B", "valor": 2},
+                {"opcion_texto": "C", "valor": 1},
+            ]
+        )
+
+        # Crear una evaluación de prueba
+        self.evaluacion = self.env["evaluacion"].create(
+            {
+                "nombre": "Evaluacion de prueba",
+                "estado": "borrador",
+                "tipo": "CLIMA",
+                "fecha_inicio": "2021-01-01",
+                "fecha_final": "2021-01-31",
+            }
+        )
+
+        preguntas = self.env["pregunta"].create(
+            [
+                {
+                    "pregunta_texto": "Pregunta 1",
+                    "tipo": "escala",
+                    "ponderacion": "ascendente",
+                    "categoria": "reclutamiento_y_seleccion_de_personal",
+                    "respuesta_ids": [
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "1",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "1",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "2",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "2",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "2",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "3",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "3",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "3",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "3",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                    ],
+                },
+                {
+                    "pregunta_texto": "Pregunta 2",
+                    "tipo": "escala",
+                    "ponderacion": "descendente",
+                    "categoria": "reclutamiento_y_seleccion_de_personal",
+                    "respuesta_ids": [
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "1",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "1",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "2",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "2",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "2",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "3",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "3",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "3",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "3",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                    ],
+                },
+                {
+                    "pregunta_texto": "Pregunta 3",
+                    "tipo": "multiple_choice",
+                    "categoria": "formacion_y_capacitacion",
+                    "opcion_ids": [(4, opcion.id) for opcion in opciones],
+                    "respuesta_ids": [
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "opcion_id": opciones[0].id,
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "opcion_id": opciones[0].id,
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "opcion_id": opciones[0].id,
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "opcion_id": opciones[1].id,
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "opcion_id": opciones[1].id,
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "opcion_id": opciones[2].id,
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "opcion_id": opciones[2].id,
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "opcion_id": opciones[2].id,
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "opcion_id": opciones[2].id,
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                    ],
+                },
+                {
+                    "pregunta_texto": "Pregunta 4",
+                    "tipo": "open_question",
+                    "categoria": "formacion_y_capacitacion",
+                    "respuesta_ids": [
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "5",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "5",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "5",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "4",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "4",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "3",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "3",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "3",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                        (
+                            0,
+                            0,
+                            {
+                                "usuario_id": user.id,
+                                "respuesta_texto": "3",
+                                "evaluacion_id": self.evaluacion.id,
+                            },
+                        ),
+                    ],
+                },
+            ],
+        )
+
+        self.evaluacion.write(
+            {"pregunta_ids": [(4, pregunta.id) for pregunta in preguntas]}
+        )
 
     def tearDown(self):
         """
@@ -146,44 +436,42 @@ class TestReportes(TransactionCase):
 
         # Verificar que la evaluación y el número de preguntas sean correctos
         self.assertEqual(params["evaluacion"], self.evaluacion)
-        self.assertEqual(len(params["preguntas"]), 3)
+        self.assertEqual(len(params["preguntas"]), 4)
 
         # Verificar que los datos de las preguntas sean correctos
-        for pregunta in params["preguntas"]:
-            if pregunta["pregunta"].tipo == "open_question":
-                self.assertEqual(len(pregunta["respuestas"]), 10)
-                self.assertEqual(len(pregunta["respuestas_tabuladas"]), 3)
-                self.assertEqual(
-                    pregunta["respuestas_tabuladas"],
-                    [
-                        {"nombre": "1", "valor": 3},
-                        {"nombre": "2", "valor": 2},
-                        {"nombre": "3", "valor": 5},
-                    ],
-                )
-            elif pregunta["pregunta"].tipo == "multiple_choice":
-                self.assertEqual(len(pregunta["respuestas"]), 12)
-                self.assertEqual(len(pregunta["respuestas_tabuladas"]), 3)
 
-                self.assertEqual(
-                    pregunta["respuestas_tabuladas"],
-                    [
-                        {"texto": "1", "conteo": 3},
-                        {"texto": "2", "conteo": 3},
-                        {"texto": "3", "conteo": 6},
-                    ],
-                )
-            elif pregunta["pregunta"].tipo == "escala":
-                self.assertEqual(len(pregunta["respuestas"]), 13)
-                self.assertEqual(len(pregunta["respuestas_tabuladas"]), 3)
+        self.assertEqual(
+            params["preguntas"][0]["respuestas_tabuladas"],
+            [
+                {"nombre": "Casi nunca", "valor": 2},
+                {"nombre": "A veces", "valor": 3},
+                {"nombre": "Casi siempre", "valor": 4},
+            ],
+        )
 
-                self.assertEqual(
-                    pregunta["respuestas_tabuladas"],
-                    [
-                        {"texto": "5", "conteo": 3},
-                        {"texto": "4", "conteo": 2},
-                        {"texto": "3", "conteo": 8},
-                    ],
-                )
-            else:
-                self.fail("Tipo de pregunta no soportado")
+        self.assertEqual(
+            params["preguntas"][1]["respuestas_tabuladas"],
+            [
+                {"nombre": "Casi siempre", "valor": 2},
+                {"nombre": "A veces", "valor": 3},
+                {"nombre": "Casi nunca", "valor": 4},
+            ],
+        )
+
+        self.assertEqual(
+            params["preguntas"][2]["respuestas_tabuladas"],
+            [
+                {"nombre": "A", "valor": 3},
+                {"nombre": "B", "valor": 2},
+                {"nombre": "C", "valor": 4},
+            ],
+        )
+
+        self.assertEqual(
+            params["preguntas"][3]["respuestas_tabuladas"],
+            [
+                {"nombre": "5", "valor": 3},
+                {"nombre": "4", "valor": 2},
+                {"nombre": "3", "valor": 4},
+            ],
+        )
