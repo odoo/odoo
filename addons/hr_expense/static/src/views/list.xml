@@ -5,9 +5,6 @@
        <!-- hr.expense and hr.expense.sheet -->
         <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
             <input type="file" name="ufile" class="d-none" t-ref="fileInput" multiple="1" accept="*" t-on-change="onChangeFileInput"/>
-            <button type="button" class="d-none d-md-inline o_button_upload_expense btn btn-primary me-1" t-on-click.prevent="uploadDocument">
-                Scan
-            </button>
             <button t-if="displayCreateReport()" class="d-none d-md-block btn btn-secondary"
                     t-on-click="() => this.action_show_expenses_to_submit()">
                 Create Report
@@ -24,6 +21,21 @@
             <button t-if="displayPayment()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_register_payment')">
                 Register Payment
             </button>
+        </xpath>
+    </t>
+
+    <t t-name="hr_expense.ListView" t-inherit="web.ListView" t-inherit-mode="primary">
+        <xpath expr="//button[hasclass('o_list_button_add')]" position="before">
+            <button type="button" class="d-none d-md-inline o_button_upload_expense btn btn-primary" t-on-click.prevent="uploadDocument">
+                Upload
+            </button>
+            <button type="button" class="d-inline d-md-none o_button_upload_expense btn btn-primary me-1" t-on-click.prevent="uploadDocument">
+                Scan
+            </button>
+        </xpath>
+
+        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="uploadDocument.bind">uploadDocument</attribute>
         </xpath>
     </t>
 

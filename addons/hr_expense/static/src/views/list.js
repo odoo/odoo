@@ -12,13 +12,19 @@ import { listView } from "@web/views/list/list_view";
 import { ListController } from "@web/views/list/list_controller";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { onWillStart } from "@odoo/owl";
+import { MEDIAS_BREAKPOINTS, SIZES } from '@web/core/ui/ui_service';
 
 export class ExpenseListController extends ExpenseDocumentUpload(ListController) {
+    static template = `hr_expense.ListView`;
+
     setup() {
         super.setup();
         this.orm = useService('orm');
         this.actionService = useService('action');
         this.isExpenseSheet = this.model.config.resModel === "hr.expense.sheet";
+
+        const mobileMaxWidth = MEDIAS_BREAKPOINTS[SIZES.MD].minWidth;
+        this.onMobile = window.innerWidth <= mobileMaxWidth;
 
         onWillStart(async () => {
             this.userIsExpenseTeamApprover = await user.hasGroup("hr_expense.group_hr_expense_team_approver");
@@ -28,27 +34,28 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
 
     displaySubmit() {
         const records = this.model.root.selection;
-        return records.length && records.every(record => record.data.state === 'draft') && this.isExpenseSheet;
+        return records.length && records.every(record => record.data.state === 'draft') && this.isExpenseSheet && !this.onMobile;
     }
 
     displayCreateReport() {
-        const records = this.model.root.selection;
-        return !this.isExpenseSheet && (records.length === 0 || records.some(record => record.data.state === "draft"))
+        const usesSampleData = this.model.useSampleModel;
+        const records = this.model.root.records;
+        return !usesSampleData && !this.isExpenseSheet && records.length && records.some(record => record.data.state === "draft") && !this.onMobile;
     }
 
     displayApprove() {
         const records = this.model.root.selection;
-        return this.userIsExpenseTeamApprover && records.length && records.every(record => record.data.state === 'submit') && this.isExpenseSheet;
+        return this.userIsExpenseTeamApprover && records.length && records.every(record => record.data.state === 'submit') && this.isExpenseSheet && !this.onMobile;
     }
 
     displayPost() {
         const records = this.model.root.selection;
-        return this.userIsAccountInvoicing && records.length && records.every(record => record.data.state === 'approve') && this.isExpenseSheet;
+        return this.userIsAccountInvoicing && records.length && records.every(record => record.data.state === 'approve') && this.isExpenseSheet && !this.onMobile;
     }
 
     displayPayment() {
         const records = this.model.root.selection;
-        return this.userIsAccountInvoicing && records.length && records.every(record => record.data.state === 'post' && record.data.payment_state === 'not_paid') && this.isExpenseSheet;
+        return this.userIsAccountInvoicing && records.length && records.every(record => record.data.state === 'post' && record.data.payment_state === 'not_paid') && this.isExpenseSheet && !this.onMobile;
     }
 
     async onClick (action) {

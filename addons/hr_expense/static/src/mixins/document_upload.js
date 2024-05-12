@@ -1,10 +1,15 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { useBus, useService } from '@web/core/utils/hooks';
+import { useBus, useRefListener, useService } from '@web/core/utils/hooks';
 import { useRef, useEffect, useState } from "@odoo/owl";
 
 export const ExpenseDocumentDropZone = (T) => class ExpenseDocumentDropZone extends T {
+    static props = [
+        ...T.props,
+        'uploadDocument',
+    ];
+
     setup() {
         super.setup();
         this.dragState = useState({
@@ -31,6 +36,13 @@ export const ExpenseDocumentDropZone = (T) => class ExpenseDocumentDropZone exte
             },
             () => [document.querySelector('.o_content')]
         );
+
+        useRefListener(this.root, 'click', (ev) => {
+            let targetElement = ev.target;
+            if (targetElement.closest('.o_view_nocontent_expense_receipt')) {
+                this.props.uploadDocument();
+            }
+        });
     }
 
     highlight(ev) {
@@ -98,7 +110,7 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
             return;
         }
 
-        const action = await this.orm.call('hr.expense', 'create_expense_from_attachments', ["", attachmentIds]);
+        const action = await this.orm.call('hr.expense', 'create_expense_from_attachments', [attachmentIds, this.env.config.viewType]);
         this.actionService.doAction(action);
     }
 };
