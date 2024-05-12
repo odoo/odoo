@@ -71,7 +71,7 @@ class EvaluacionesController(http.Controller):
             return request.render("evaluaciones.evaluacion_responder_form_draft")
 
         # Obtén la evaluación basada en el ID
-        parametros = evaluacion.action_get_evaluaciones(evaluacion_id)
+        parametros = evaluacion.get_evaluaciones_action(evaluacion_id)
 
         if request.env.user != request.env.ref("base.public_user"):
             parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(
