@@ -268,7 +268,7 @@ class Evaluacion(models.Model):
             "target": "current",
         }
 
-    def abrir_evaluacion_form(self):
+    def abrir_evaluacion_action_form(self):
         """
         Abre la evaluación en una vista de formulario.
 
@@ -293,7 +293,7 @@ class Evaluacion(models.Model):
 
         return action
 
-    def action_reporte_generico(self):
+    def reporte_generico_action(self):
         """
         Genera una acción de URL para el reporte genérico de la evaluación.
 
@@ -316,7 +316,7 @@ class Evaluacion(models.Model):
             "target": "new",
         }
 
-    def action_generar_datos_reporte_generico(self):
+    def generar_datos_reporte_generico_action(self):
         """
         Genera los datos necesarios para el reporte genérico de la evaluación.
 
@@ -447,7 +447,7 @@ class Evaluacion(models.Model):
             "categorias": [categorias[nombre] for nombre in categorias_orden],
             "dominios": [dominios[nombre] for nombre in dominios_orden],
             "final": final,
-            "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
+            "preguntas": self.generar_datos_reporte_generico_action()["preguntas"],
         }
 
         parametros.update(datos_demograficos)
@@ -580,7 +580,7 @@ class Evaluacion(models.Model):
             "total": total_puntuacion,
             "total_maximo": total_maximo_posible,
             "total_porcentaje": total_porcentaje,
-            "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
+            "preguntas": self.generar_datos_reporte_generico_action()["preguntas"],
         }
 
         parametros.update(datos_demograficos)
@@ -907,7 +907,7 @@ class Evaluacion(models.Model):
 
         return datos
     
-    def action_get_evaluaciones(self, evaluacion_id):
+    def get_evaluaciones_action(self, evaluacion_id):
         """
         Obtiene las preguntas asociadas a la evaluación.
 
