@@ -6318,7 +6318,7 @@ class BaseModel(metaclass=MetaModel):
 
     def _flush(self, fnames=None):
 
-        def convert_value(record, field, value):
+        def convert(record, field, value):
             if field.translate:
                 return field._convert_from_cache_to_column(value)
             return field.convert_to_column(
@@ -6365,7 +6365,9 @@ class BaseModel(metaclass=MetaModel):
                 for field in model._fields.values()
                 if (ids := self.env.cache.clear_dirty_field(field))
             }
-            # get a reference to each dirty field's cache (containing the values)
+            # Memory optimization: get a reference to each dirty field's cache.
+            # This avoids allocating extra memory for storing the data taken
+            # from cache. Beware that this breaks the cache abstraction!
             dirty_field_cache = {
                 field: self.env.cache._get_field_cache(model, field)
                 for field in dirty_field_ids
@@ -6375,21 +6377,21 @@ class BaseModel(metaclass=MetaModel):
             vals_ids = defaultdict(list)
             while dirty_field_ids:
                 some_field, some_ids = next(iter(dirty_field_ids.items()))
-                for id_ in some_ids:
-                    record = model.browse(id_)
-                    try:
+                try:
+                    for id_ in some_ids:
+                        record = model.browse(id_)
                         vals = {
-                            f.name: convert_value(record, f, dirty_field_cache[f][id_])
+                            f.name: convert(record, f, dirty_field_cache[f][id_])
                             for f, ids in dirty_field_ids.items()
                             if id_ in ids
                         }
                         vals_ids[frozendict(vals)].append(id_)
-                    except KeyError:
-                        raise AssertionError(
-                            f"Could not find all values for id {id_} of model {model} to flush it\n"
-                            f"    Context: {self.env.context}\n"
-                            f"    Cache: {self.env.cache!r}"
-                        )
+                except KeyError:
+                    raise AssertionError(
+                        f"Could not find all values of {record} to flush them\n"
+                        f"    Context: {self.env.context}\n"
+                        f"    Cache: {self.env.cache!r}"
+                    )
 
                 # discard some_ids from all dirty ids sets
                 dirty_field_ids.pop(some_field)
