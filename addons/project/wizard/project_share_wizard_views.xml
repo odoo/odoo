@@ -23,7 +23,7 @@
                 </field>
                 <p class="text-muted">Choose one of the following access modes for your collaborators:</p>
                 <ul class="text-muted">
-                    <li>Read-only: collaborators can view tasks but cannot edit them.</li>
+                    <li>Read: collaborators can view tasks but cannot edit them.</li>
                     <li>Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.</li>
                     <li>Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow.</li>
                 </ul>
@@ -41,7 +41,7 @@
         <field name="arch" type="xml">
             <form string="Confirmation">
                 <p>People invited to collaborate on the project will have portal access rights.</p>
-                <p>They can edit shared project tasks and view specific documents in read-only mode on your website. This includes leads/opportunities, quotations/sales orders, purchase orders, invoices and bills, timesheets, and tickets.</p>
+                <p>They can edit shared project tasks and view specific documents in read mode on your website. This includes leads/opportunities, quotations/sales orders, purchase orders, invoices and bills, timesheets, and tickets.</p>
                 <p>You have full control and can revoke portal access anytime. Are you ready to proceed?</p>
                 <footer>
                     <button string="Grant Portal Access" name="action_send_mail" type="object" class="btn-primary" data-hotkey="q"/>
@@ -52,7 +52,7 @@
     </record>
 
     <record id="project_share_wizard_action" model="ir.actions.act_window">
-        <field name="name">Share a Project</field>
+        <field name="name">Share Project</field>
         <field name="res_model">project.share.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
