@@ -559,7 +559,7 @@ class AccountPaymentRegister(models.TransientModel):
             # Foreign currency on payment different than the one set on the journal entries.
             selected_ids = self.env.context.get('active_ids', [])
             active_model = self.env.context.get('active_model')
-            if active_model == 'account.move.line':    
+            if active_model == 'account.move.line':
                 invoices = self.env['account.move.line'].search([('id', 'in', selected_ids)])
                 if invoices:
                     residual_amount = invoices[0].move_id.amount_residual
