@@ -5500,6 +5500,13 @@ X[]
                     contentAfter: '<table><tbody><tr style="height: 20px;"><td style="width: 20px;">ab</td><td>cd</td><td>ef[]</td></tr></tbody></table>',
                 });
             });
+            it('should move selection to the next cell', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li><br><table><tbody><tr style="height: 20px;"><td style="width: 20px;">ab</td><td>[cd]</td><td>ef</td></tr></tbody></table><br></li></ul>',
+                    stepFunction: async editor => triggerEvent(editor.editable, 'keydown', { key: 'Tab'}),
+                    contentAfter: '<ul><li><br><table><tbody><tr style="height: 20px;"><td style="width: 20px;">ab</td><td>cd</td><td>ef[]</td></tr></tbody></table><br></li></ul>',
+                });
+            });
         });
         describe('rectangular selections', () => {
             describe('select a full table on cross over', () => {
