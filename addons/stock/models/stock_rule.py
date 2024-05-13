@@ -387,7 +387,7 @@ class StockRule(models.Model):
         delays = defaultdict(float)
         delay = sum(self.filtered(lambda r: r.action in ['pull', 'pull_push']).mapped('delay'))
         delays['total_delay'] += delay
-        global_visibility_days = self.env['ir.config_parameter'].sudo().get_param('stock.visibility_days')
+        global_visibility_days = self.env.context.get('global_visibility_days', 0)
         if global_visibility_days:
             delays['total_delay'] += int(global_visibility_days)
         if self.env.context.get('bypass_delay_description'):
@@ -399,7 +399,7 @@ class StockRule(models.Model):
                 if rule.action in ['pull', 'pull_push'] and rule.delay
             ]
         if global_visibility_days:
-            delay_description.append((_('Global Visibility Days'), _('+ %d day(s)', int(global_visibility_days))))
+            delay_description.append((_('Time Horizon'), _('+ %d day(s)', int(global_visibility_days))))
         return delays, delay_description
 
 
