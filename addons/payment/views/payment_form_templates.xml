@@ -95,7 +95,7 @@
                     <h4 class="fs-6 small text-uppercase fw-bolder">
                         <t t-if="not collapse_payment_methods">Choose a payment method</t>
                         <t t-else="">Other payment methods</t>
-                        <!-- === Availability report button (for debug) === -->
+                        <!-- === Availability report button === -->
                         <t t-call="payment.availability_report_button"/>
                     </h4>
                     <!-- === Body === -->
@@ -128,7 +128,7 @@
                 <!-- === Submit button === -->
                 <t t-if="display_submit_button" t-call="payment.submit_button"/>
             </div>
-            <!-- === Availability report (for debug) === -->
+            <!-- === Availability report === -->
             <t t-call="payment.availability_report"/>
         </form>
         <t t-else="" t-call="payment.no_pms_available_warning"/>
@@ -408,37 +408,70 @@
 
     <template id="payment.no_pms_available_warning">
         <div class="alert alert-warning mt-2">
-            <strong>No suitable payment option could be found.</strong>
-            <!-- === Availability report button (for debug) === -->
-            <t t-call="payment.availability_report_button"/>
+            <strong>No payment method available for your order.</strong>
+            <!-- === Availability report button === -->
             <br/>
-            If you believe that it is an error, please contact the website administrator.
+            <t t-if="not request.env.is_admin()">
+                <p>If you believe that it is an error, please contact the website administrator.</p>
+            </t>
+            <t t-else="">
+                <t t-if="not is_payment_provider_active">
+                    <p>You didn't configure any payment provider.</p>
+                </t>
+                <t t-else="">
+                    <p>No payment method is available for
+                        <t t-esc="request.env.company.country_id.name"/>,
+                        <t t-esc="request.env.company.currency_id.name"/>.
+                    </p>
+                </t>
+            </t>
             <div class="mt-2" groups="base.group_system">
                 <a
-                    t-if="request.env.company.country_id.is_stripe_supported_country"
+                    t-if="request.env.company.country_id.is_stripe_supported_country
+                        and not is_payment_provider_active"
                     name="activate_stripe"
                     href="/web#action=payment.action_activate_stripe"
                     role="button"
                     class="btn btn-primary"
                 > ACTIVATE STRIPE </a>
                 <a
+                    t-if="request.env.user._is_system() and availability_report"
+                    role="button"
+                    class="btn-link alert-warning ps-2"
+                    data-bs-toggle="collapse"
+                    href="#payment_availability_report"
+                >
+                    <strong><i class="oi oi-arrow-right"></i> View debug report</strong>
+                </a>
+                <a
+                    t-if="not is_payment_provider_active"
                     role="button"
                     type="action"
                     class="btn-link alert-warning ps-2"
                     href="/web#action=payment.action_payment_provider"
                 >
-                    <strong><i class="oi oi-arrow-right"></i> View alternatives </strong>
+                    <strong><i class="oi oi-arrow-right"></i> Alternative Providers </strong>
                 </a>
+                <br/>
+                <a
+                    t-if="is_payment_provider_active"
+                    role="button"
+                    type="action"
+                    class="btn-link alert-warning ps-2"
+                    href="/web#action=payment.action_payment_method"
+                >
+                    <strong><i class="oi oi-arrow-right"></i> Payment Methods </strong>
+                </a>
+                <br/>
             </div>
         </div>
-        <!-- === Availability report (for debug) === -->
+        <!-- === Availability report === -->
         <t t-call="payment.availability_report"/>
     </template>
 
     <template id="payment.availability_report_button">
         <a
             t-if="request.env.user._is_system() and availability_report"
-            groups="base.group_no_one"
             role="button"
             data-bs-toggle="collapse"
             href="#payment_availability_report"
@@ -453,7 +486,6 @@
         <div
             t-if="request.env.user._is_system() and availability_report"
             id="payment_availability_report"
-            groups="base.group_no_one"
             class="collapse"
         >
             <h4 class="fs-6 text-uppercase fw-bolder"> Availability report </h4>
