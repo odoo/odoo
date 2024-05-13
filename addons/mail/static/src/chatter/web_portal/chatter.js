@@ -260,6 +260,7 @@ export class Chatter extends Component {
                     author: this.store.self,
                     body: _t("Creating a new record..."),
                     message_type: "notification",
+                    thread: this.state.thread,
                     trackingValues: [],
                     res_id: threadId,
                     model: threadModel,
