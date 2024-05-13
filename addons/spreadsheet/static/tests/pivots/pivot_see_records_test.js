@@ -8,6 +8,7 @@ import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { registry } from "@web/core/registry";
 import { setCellContent } from "../utils/commands";
+import { getCell } from "../utils/getters";
 
 const { cellMenuRegistry } = spreadsheet.registries;
 
@@ -115,3 +116,11 @@ QUnit.test(
         assert.strictEqual(action.isVisible(env), true);
     }
 );
+
+QUnit.test("See records is not visible on an empty cell", async function (assert) {
+    const { env, model } = await createSpreadsheetWithPivot();
+    assert.strictEqual(getCell(model, "A21"), undefined);
+    selectCell(model, "A21");
+    const action = cellMenuRegistry.getAll().find((item) => item.id === "pivot_see_records");
+    assert.strictEqual(action.isVisible(env), false);
+});
