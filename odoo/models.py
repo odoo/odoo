@@ -6373,7 +6373,8 @@ class BaseModel(metaclass=MetaModel):
 
             # build a mapping {vals: ids} of field updates and their record ids
             vals_ids = defaultdict(list)
-            for some_field, some_ids in dirty_field_ids.items():
+            while dirty_field_ids:
+                some_field, some_ids = next(iter(dirty_field_ids.items()))
                 for id_ in some_ids:
                     record = model.browse(id_)
                     try:
@@ -6391,9 +6392,11 @@ class BaseModel(metaclass=MetaModel):
                         )
 
                 # discard some_ids from all dirty ids sets
-                some_ids = list(some_ids)
-                for ids in dirty_field_ids.values():
+                dirty_field_ids.pop(some_field)
+                for field, ids in list(dirty_field_ids.items()):
                     ids.difference_update(some_ids)
+                    if not ids:
+                        dirty_field_ids.pop(field)
 
             # apply the field updates to their corresponding records
             for vals, ids in vals_ids.items():
