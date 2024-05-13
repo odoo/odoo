@@ -524,9 +524,10 @@ class Evaluacion(models.Model):
             maximo_pregunta = 0
 
             for respuesta in pregunta.respuesta_ids:
-                valor_respuesta = int(respuesta.respuesta_texto)
+                valor_respuesta = respuesta.valor_respuesta
                 valor_pregunta += valor_respuesta
                 maximo_pregunta += pregunta._calculate_valor_maximo()  # Suponiendo un máximo de 4 para cada respuesta en escala
+ # Suponiendo un máximo de 4 para cada respuesta en escala
 
                 nombre_departamento = respuesta.usuario_id.department_id.name if respuesta.usuario_id.department_id else "Sin departamento"
                 departamento = next(
