@@ -212,7 +212,7 @@ class Partner(models.Model):
     title = fields.Many2one('res.partner.title')
     parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
     parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
-    child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)])
+    child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)], context={'active_test': False})
     ref = fields.Char(string='Reference', index=True)
     lang = fields.Selection(_lang_get, string='Language',
                             help="All the emails and documents sent to this contact will be translated in this language.")
@@ -655,8 +655,12 @@ class Partner(models.Model):
         was meant to be company address """
         parent = self.parent_id
         address_fields = self._address_fields()
-        if (parent.is_company or not parent.parent_id) and len(parent.child_ids) == 1 and \
-            any(self[f] for f in address_fields) and not any(parent[f] for f in address_fields):
+        if (
+            (parent.is_company or not parent.parent_id)
+            and any(self[f] for f in address_fields)
+            and not any(parent[f] for f in address_fields)
+            and len(parent.child_ids) == 1
+        ):
             addr_vals = self._update_fields_values(address_fields)
             parent.update_address(addr_vals)
 
