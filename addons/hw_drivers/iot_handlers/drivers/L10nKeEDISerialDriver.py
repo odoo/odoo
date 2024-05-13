@@ -242,6 +242,7 @@ class TremolG03Controller(http.Controller):
             if device_vat != company_vat:
                 return json.dumps({'status': 'The company vat number does not match that of the device'})
             messages = json.loads(messages)
+            device.message_number = 0
             resp = json.dumps({**device.send([msg.encode('cp1251') for msg in messages]), 'serial_number': serial_number})
             return resp
         else:
