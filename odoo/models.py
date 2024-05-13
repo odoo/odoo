@@ -6361,7 +6361,7 @@ class BaseModel(metaclass=MetaModel):
 
             # pop dirty fields and their corresponding record ids from cache
             dirty_field_ids = {
-                field: set(ids)
+                field: ids
                 for field in model._fields.values()
                 if (ids := self.env.cache.clear_dirty_field(field))
             }
@@ -6375,12 +6375,13 @@ class BaseModel(metaclass=MetaModel):
             seen_ids = []
             vals_ids = defaultdict(list)
             for field in dirty_field_ids:
-                for id_ in sorted(dirty_field_ids[field]):
+                for id_ in dirty_field_ids[field]:
                     if any(id_ in s for s in seen_ids):
                         continue
+                    record = model.browse(id_)
                     try:
                         vals = {
-                            f.name: convert_value(model.browse(id_), f, dirty_field_cache[f][id_])
+                            f.name: convert_value(record, f, dirty_field_cache[f][id_])
                             for f, ids in dirty_field_ids.items()
                             if id_ in ids
                         }
@@ -6395,7 +6396,7 @@ class BaseModel(metaclass=MetaModel):
 
             # apply the field updates to their corresponding records
             for vals, ids in vals_ids.items():
-                model.browse(sorted(ids))._write(vals)
+                model.browse(ids)._write(vals)
 
         # flush the inverse of one2many fields, too
         for field in fields:
