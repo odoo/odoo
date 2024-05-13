@@ -36,6 +36,9 @@ export const SEE_RECORDS_PIVOT = async (cell, env) => {
 };
 
 export const SEE_RECORDS_PIVOT_VISIBLE = (cell, env) => {
+    if (!cell) {
+        return false;
+    }
     const { sheetId, col, row } = env.model.getters.getCellPosition(cell.id);
     const pivotId = env.model.getters.getPivotIdFromPosition(sheetId, col, row);
     if (!env.model.getters.isExistingPivot(pivotId)) {
