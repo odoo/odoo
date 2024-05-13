@@ -551,13 +551,6 @@ class ProductTemplate(models.Model):
             # probably to keep product sales price hidden from customers ?
             combination_info['list_price'] = combination_info['price']
 
-        if website.is_view_active('website_sale.product_tags') and product_or_template.is_product_variant:
-            combination_info['product_tags'] = self.env['ir.ui.view']._render_template(
-                'website_sale.product_tags', values={
-                    'all_product_tags': product_or_template.all_product_tag_ids.filtered('visible_on_ecommerce')
-                }
-            )
-
         return combination_info
 
     @api.model
