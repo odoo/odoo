@@ -778,6 +778,7 @@ class Contact(models.AbstractModel):
             no_tag_br=dict(type='boolean', string=_('Use comma'), description=_("Use comma instead of the <br> tag to display the address")),
             phone_icons=dict(type='boolean', string=_('Display phone icons'), description=_("Display the phone icons even if no_marker is True")),
             country_image=dict(type='boolean', string=_('Display country image'), description=_("Display the country image if the field is present on the record")),
+            no_title=dict(type='boolean', string=_('Hide title'), description=_("Hide the title when the field is present on the record"), default_value=False),
         )
         return options
 
@@ -803,6 +804,9 @@ class Contact(models.AbstractModel):
             opsep = Markup('<br/>')
 
         value = value.sudo().with_context(show_address=True)
+        if not options.get('no_title'):
+            value = value.with_context(show_title=True)
+
         display_name = value.display_name or ''
         # Avoid having something like:
         # display_name = 'Foo\n  \n' -> This is a res.partner with a name and no address
