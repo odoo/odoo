@@ -392,7 +392,21 @@ export class PosStore extends Reactive {
             return formattedUnitPrice;
         }
     }
+<<<<<<< HEAD
     async openConfigurator(product) {
+||||||| parent of f6b36c3f2323 (temp)
+    async openConfigurator({ product, initQuantity = 1 }) {
+        const attrById = this.models["product.attribute"].getAllBy("id");
+        const attributeLines = product.attribute_line_ids.filter(
+            (attr) => attr.attribute_id.id in attrById
+        );
+=======
+    async openConfigurator({ product, initQuantity = 1 }) {
+        const attrById = this.models["product.attribute"].getAllBy("id");
+        const attributeLines = product.attribute_line_ids.filter(
+            (attr) => attr.attribute_id?.id in attrById
+        );
+>>>>>>> f6b36c3f2323 (temp)
         return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
             product: product,
         });
