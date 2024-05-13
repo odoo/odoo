@@ -6168,9 +6168,11 @@ class BaseModel(metaclass=MetaModel):
             records.filtered("partner_id.is_company")
         """
         if isinstance(func, str):
-            name = func
-            func = lambda rec: any(rec.mapped(name))
-        return self.browse([rec.id for rec in self if func(rec)])
+            if '.' in func:
+                return self.browse(rec.id for rec in self if any(rec.mapped(func)))
+            else:  # Avoid costly mapped
+                return self.browse(rec.id for rec in self if rec[func])
+        return self.browse(rec.id for rec in self if func(rec))
 
     def grouped(self, key):
         """Eagerly groups the records of ``self`` by the ``key``, returning a
