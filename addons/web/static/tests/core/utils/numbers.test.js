@@ -33,33 +33,119 @@ test("range", () => {
     expect(range(1, -4, 1)).toEqual([]);
 });
 
-test("roundPrecision", () => {
-    expect(roundPrecision(1.0, 1)).toBe(1);
-    expect(roundPrecision(1.0, 0.1)).toBe(1);
-    expect(roundPrecision(1.0, 0.01)).toBe(1);
-    expect(roundPrecision(1.0, 0.001)).toBe(1);
-    expect(roundPrecision(1.0, 0.0001)).toBe(1);
-    expect(roundPrecision(1.0, 0.00001)).toBe(1);
-    expect(roundPrecision(1.0, 0.000001)).toBe(1);
-    expect(roundPrecision(1.0, 0.0000001)).toBe(1);
-    expect(roundPrecision(1.0, 0.00000001)).toBe(1);
-    expect(roundPrecision(0.5, 1)).toBe(1);
-    expect(roundPrecision(-0.5, 1)).toBe(-1);
-    expect(roundPrecision(2.6745, 0.001)).toBe(2.6750000000000003);
-    expect(roundPrecision(-2.6745, 0.001)).toBe(-2.6750000000000003);
-    expect(roundPrecision(2.6744, 0.001)).toBe(2.674);
-    expect(roundPrecision(-2.6744, 0.001)).toBe(-2.674);
-    expect(roundPrecision(0.0004, 0.001)).toBe(0);
-    expect(roundPrecision(-0.0004, 0.001)).toBe(0);
-    expect(roundPrecision(357.4555, 0.001)).toBe(357.456);
-    expect(roundPrecision(-357.4555, 0.001)).toBe(-357.456);
-    expect(roundPrecision(457.4554, 0.001)).toBe(457.455);
-    expect(roundPrecision(-457.4554, 0.001)).toBe(-457.455);
-    expect(roundPrecision(-457.4554, 0.05)).toBe(-457.45000000000005);
-    expect(roundPrecision(457.444, 0.5)).toBe(457.5);
-    expect(roundPrecision(457.3, 5)).toBe(455);
-    expect(roundPrecision(457.5, 5)).toBe(460);
-    expect(roundPrecision(457.1, 3)).toBe(456);
+describe("roundPrecision", () => {
+    test("default method (HALF-UP)", () => {
+        expect(roundPrecision(1.0, 1)).toBe(1);
+        expect(roundPrecision(1.0, 0.1)).toBe(1);
+        expect(roundPrecision(1.0, 0.01)).toBe(1);
+        expect(roundPrecision(1.0, 0.001)).toBe(1);
+        expect(roundPrecision(1.0, 0.0001)).toBe(1);
+        expect(roundPrecision(1.0, 0.00001)).toBe(1);
+        expect(roundPrecision(1.0, 0.000001)).toBe(1);
+        expect(roundPrecision(1.0, 0.0000001)).toBe(1);
+        expect(roundPrecision(1.0, 0.00000001)).toBe(1);
+        expect(roundPrecision(0.5, 1)).toBe(1);
+        expect(roundPrecision(-0.5, 1)).toBe(-1);
+        expect(roundPrecision(2.6745, 0.001)).toBe(2.6750000000000003);
+        expect(roundPrecision(-2.6745, 0.001)).toBe(-2.6750000000000003);
+        expect(roundPrecision(2.6744, 0.001)).toBe(2.674);
+        expect(roundPrecision(-2.6744, 0.001)).toBe(-2.674);
+        expect(roundPrecision(0.0004, 0.001)).toBe(0);
+        expect(roundPrecision(-0.0004, 0.001)).toBe(0);
+        expect(roundPrecision(357.4555, 0.001)).toBe(357.456);
+        expect(roundPrecision(-357.4555, 0.001)).toBe(-357.456);
+        expect(roundPrecision(457.4554, 0.001)).toBe(457.455);
+        expect(roundPrecision(-457.4554, 0.001)).toBe(-457.455);
+        expect(roundPrecision(-457.4554, 0.05)).toBe(-457.45000000000005);
+        expect(roundPrecision(457.444, 0.5)).toBe(457.5);
+        expect(roundPrecision(457.3, 5)).toBe(455);
+        expect(roundPrecision(457.5, 5)).toBe(460);
+        expect(roundPrecision(457.1, 3)).toBe(456);
+
+        expect(roundPrecision(2.6735, 0.001)).toBe(2.674);
+        expect(roundPrecision(-2.6735, 0.001)).toBe(-2.674);
+        expect(roundPrecision(2.6745, 0.001)).toBe(2.6750000000000003);
+        expect(roundPrecision(-2.6745, 0.001)).toBe(-2.6750000000000003);
+        expect(roundPrecision(2.6744, 0.001)).toBe(2.674);
+        expect(roundPrecision(-2.6744, 0.001)).toBe(-2.674);
+        expect(roundPrecision(0.0004, 0.001)).toBe(0);
+        expect(roundPrecision(-0.0004, 0.001)).toBe(-0);
+        expect(roundPrecision(357.4555, 0.001)).toBe(357.456);
+        expect(roundPrecision(-357.4555, 0.001)).toBe(-357.456);
+        expect(roundPrecision(457.4554, 0.001)).toBe(457.455);
+        expect(roundPrecision(-457.4554, 0.001)).toBe(-457.455);
+    });
+
+    test("DOWN", () => {
+        // We use 2.425 because when normalizing 2.425 with precision=0.001 it gives
+        // us 2424.9999999999995 as value, and if not handle correctly the rounding DOWN
+        // value will be incorrect (should be 2.425 and not 2.424)
+        expect(roundPrecision(2.425, 0.001, "DOWN")).toBe(2.4250000000000003);
+        expect(roundPrecision(2.4249, 0.001, "DOWN")).toBe(2.424);
+        expect(roundPrecision(-2.425, 0.001, "DOWN")).toBe(-2.4250000000000003);
+        expect(roundPrecision(-2.4249, 0.001, "DOWN")).toBe(-2.424);
+        expect(roundPrecision(-2.5, 0.001, "DOWN")).toBe(-2.5);
+        expect(roundPrecision(1.8, 1, "DOWN")).toBe(1);
+        expect(roundPrecision(-1.8, 1, "DOWN")).toBe(-1);
+    });
+
+    test("HALF-DOWN", () => {
+        expect(roundPrecision(2.6735, 0.001, "HALF-DOWN")).toBe(2.673);
+        expect(roundPrecision(-2.6735, 0.001, "HALF-DOWN")).toBe(-2.673);
+        expect(roundPrecision(2.6745, 0.001, "HALF-DOWN")).toBe(2.674);
+        expect(roundPrecision(-2.6745, 0.001, "HALF-DOWN")).toBe(-2.674);
+        expect(roundPrecision(2.6744, 0.001, "HALF-DOWN")).toBe(2.674);
+        expect(roundPrecision(-2.6744, 0.001, "HALF-DOWN")).toBe(-2.674);
+        expect(roundPrecision(0.0004, 0.001, "HALF-DOWN")).toBe(0);
+        expect(roundPrecision(-0.0004, 0.001, "HALF-DOWN")).toBe(-0);
+        expect(roundPrecision(357.4555, 0.001, "HALF-DOWN")).toBe(357.455);
+        expect(roundPrecision(-357.4555, 0.001, "HALF-DOWN")).toBe(-357.455);
+        expect(roundPrecision(457.4554, 0.001, "HALF-DOWN")).toBe(457.455);
+        expect(roundPrecision(-457.4554, 0.001, "HALF-DOWN")).toBe(-457.455);
+    });
+
+    test("HALF-UP", () => {
+        expect(roundPrecision(2.6735, 0.001, "HALF-UP")).toBe(2.674);
+        expect(roundPrecision(-2.6735, 0.001, "HALF-UP")).toBe(-2.674);
+        expect(roundPrecision(2.6745, 0.001, "HALF-UP")).toBe(2.6750000000000003);
+        expect(roundPrecision(-2.6745, 0.001, "HALF-UP")).toBe(-2.6750000000000003);
+        expect(roundPrecision(2.6744, 0.001, "HALF-UP")).toBe(2.674);
+        expect(roundPrecision(-2.6744, 0.001, "HALF-UP")).toBe(-2.674);
+        expect(roundPrecision(0.0004, 0.001, "HALF-UP")).toBe(0);
+        expect(roundPrecision(-0.0004, 0.001, "HALF-UP")).toBe(-0);
+        expect(roundPrecision(357.4555, 0.001, "HALF-UP")).toBe(357.456);
+        expect(roundPrecision(-357.4555, 0.001, "HALF-UP")).toBe(-357.456);
+        expect(roundPrecision(457.4554, 0.001, "HALF-UP")).toBe(457.455);
+        expect(roundPrecision(-457.4554, 0.001, "HALF-UP")).toBe(-457.455);
+    });
+
+    test("HALF-EVEN", () => {
+        expect(roundPrecision(2.6735, 0.001, "HALF-EVEN")).toBe(2.674);
+        expect(roundPrecision(-2.6735, 0.001, "HALF-EVEN")).toBe(-2.674);
+        expect(roundPrecision(2.6745, 0.001, "HALF-EVEN")).toBe(2.674);
+        expect(roundPrecision(-2.6745, 0.001, "HALF-EVEN")).toBe(-2.674);
+        expect(roundPrecision(2.6744, 0.001, "HALF-EVEN")).toBe(2.674);
+        expect(roundPrecision(-2.6744, 0.001, "HALF-EVEN")).toBe(-2.674);
+        expect(roundPrecision(0.0004, 0.001, "HALF-EVEN")).toBe(0);
+        expect(roundPrecision(-0.0004, 0.001, "HALF-EVEN")).toBe(-0);
+        expect(roundPrecision(357.4555, 0.001, "HALF-EVEN")).toBe(357.455);
+        expect(roundPrecision(-357.4555, 0.001, "HALF-EVEN")).toBe(-357.455);
+        expect(roundPrecision(457.4554, 0.001, "HALF-EVEN")).toBe(457.455);
+        expect(roundPrecision(-457.4554, 0.001, "HALF-EVEN")).toBe(-457.455);
+    });
+
+    test("UP", () => {
+        // We use 8.175 because when normalizing 8.175 with precision=0.001 it gives
+        // us 8175,0000000001234 as value, and if not handle correctly the rounding UP
+        // value will be incorrect (should be 8,175 and not 8,176)
+        expect(roundPrecision(8.175, 0.001, "UP")).toBe(8.175);
+        expect(roundPrecision(8.1751, 0.001, "UP")).toBe(8.176);
+        expect(roundPrecision(-8.175, 0.001, "UP")).toBe(-8.175);
+        expect(roundPrecision(-8.1751, 0.001, "UP")).toBe(-8.176);
+        expect(roundPrecision(-6.0, 0.001, "UP")).toBe(-6);
+        expect(roundPrecision(1.8, 1, "UP")).toBe(2);
+        expect(roundPrecision(-1.8, 1, "UP")).toBe(-2);
+    });
 });
 
 test("roundDecimals", () => {
