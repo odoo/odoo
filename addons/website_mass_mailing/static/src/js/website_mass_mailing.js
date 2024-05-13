@@ -93,7 +93,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
     },
 
     _getListId: function () {
-        return this.$el.closest('[data-snippet=s_newsletter_block').data('list-id') || this.$el.data('list-id');
+        return this.el.closest(".s_newsletter_block")?.dataset.listId || this.el.dataset.listId;
     },
 
     //--------------------------------------------------------------------------
@@ -105,13 +105,24 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
      */
     _onSubscribeClick: async function () {
         var self = this;
-        const inputName = this.$('input').attr('name');
-        const $input = this.$(".js_subscribe_value:visible, .js_subscribe_email:visible"); // js_subscribe_email is kept by compatibility (it was the old name of js_subscribe_value)
-        if (inputName === 'email' && $input.length && !$input.val().match(/.+@.+/)) {
-            this.$el.addClass('o_has_error').find('.form-control').addClass('is-invalid');
+        const inputName = this.el.querySelector("input").name;
+        const subscribeValueElements = Array.from(
+            this.el.querySelectorAll(".js_subscribe_value")
+        ).filter((elem) => !!elem.getClientRects().length);
+        const subscribeEmailElements = Array.from(
+            this.el.querySelectorAll(".js_subscribe_email")
+        ).filter((elem) => !!elem.getClientRects().length); // js_subscribe_email is kept by compatibility (it was the old name of js_subscribe_value)
+        const subscribeElements = [
+            ...new Set([...subscribeValueElements, ...subscribeEmailElements]),
+        ];
+        const input = subscribeElements.length > 0 ? subscribeElements[0] : null;
+        if (inputName === "email" && input && !input.value.match(/.+@.+/)) {
+            this.el.classList.add("o_has_error");
+            this.el.querySelector(".form-control").classList.add("is-invalid");
             return false;
         }
-        this.$el.removeClass('o_has_error').find('.form-control').removeClass('is-invalid');
+        this.el.classList.remove("o_has_error");
+        this.el.querySelector(".form-control").classList.remove("is-invalid");
         const tokenObj = await this._recaptcha.getToken('website_mass_mailing_subscribe');
         if (tokenObj.error) {
             self.notification.add(tokenObj.error, {
@@ -121,19 +132,20 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             });
             return false;
         }
-        rpc('/website_mass_mailing/subscribe', {
-            'list_id': this._getListId(),
-            'value': $input.length ? $input.val() : false,
-            'subscription_type': inputName,
+        rpc("/website_mass_mailing/subscribe", {
+            list_id: this._getListId(),
+            value: input ? input.value : false,
+            subscription_type: inputName,
             recaptcha_token_response: tokenObj.token,
         }).then(function (result) {
             let toastType = result.toast_type;
             if (toastType === 'success') {
                 self._updateSubscribeControlsStatus(true);
 
-                const $popup = self.$el.closest('.o_newsletter_modal');
-                if ($popup.length) {
-                    $popup.modal('hide');
+                const popup = self.el.closest(".o_newsletter_modal");
+                if (popup) {
+                    const modal = Modal.getOrCreateInstance(popup);
+                    modal.hide();
                 }
             }
             self.notification.add(result.toast_content, {
@@ -160,7 +172,7 @@ publicWidget.registry.fixNewsletterListClass = publicWidget.Widget.extend({
      * @override
      */
     start() {
-        this.$target[0].classList.add('s_newsletter_list');
+        this.target.classList.add("s_newsletter_list");
         return this._super(...arguments);
     },
 });
