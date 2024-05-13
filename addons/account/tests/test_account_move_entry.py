@@ -962,6 +962,48 @@ class TestAccountMove(AccountTestInvoicingCommon):
             move_form.journal_id, journal = journal, move_form.journal_id
             self.assertEqual(move_form.name, 'AJ/2021/10/0001')
 
+    def test_change_journal_posted_before(self):
+        """ Changes to a move posted before can only de done if move name is '/' or empty (False) """
+        journal = self.env['account.journal'].create({
+            'name': 'awesome journal',
+            'type': 'general',
+            'code': 'AJ',
+        })
+        self.test_move.action_post()
+        self.test_move.button_draft()  # move has posted_before == True
+        self.assertEqual(self.test_move.journal_id, self.company_data['default_journal_misc'])
+        self.assertEqual(self.test_move.name, 'MISC/2016/01/0001')
+        with self.assertRaisesRegex(UserError, 'You cannot edit the journal of an account move if it has been posted once, unless the name is removed or set to "/". This might create a gap in the sequence.'):
+            self.test_move.write({'journal_id': False})
+        # Once move name in draft is changed to '/', changing the journal is allowed
+        self.test_move.name = '/'
+        self.test_move.journal_id = journal
+        self.assertEqual(self.test_move.name, 'AJ/2016/01/0001')
+        self.assertEqual(self.test_move.journal_id, journal)
+
+    def test_change_journal_sequence_number(self):
+        """ Changes to an account move with a sequence number assigned can only de done
+        if the move name is '/' or empty (False)
+        """
+        journal = self.env['account.journal'].create({
+            'name': 'awesome journal',
+            'type': 'general',
+            'code': 'AJ',
+        })
+        # Post move with sequence number 1 and create new move with sequence number 2
+        self.test_move.action_post()
+        test_move_2 = self.test_move.copy({'name': 'TEST/2016/01/0002', 'date': '2016-01-01'})
+        self.assertEqual(test_move_2.sequence_number, 2)
+        self.assertEqual(test_move_2.journal_id, self.company_data['default_journal_misc'])
+        with self.assertRaisesRegex(UserError, 'You cannot edit the journal of an account move with a sequence number assigned, unless the name is removed or set to "/". This might create a gap in the sequence.'):
+            test_move_2.write({'journal_id': False})
+        # Once move name in draft is changed to '/', changing the journal is allowed
+        test_move_2.write({'name': '/', 'journal_id': journal.id})
+        test_move_2.action_post()
+        # Sequence number is updated for the new journal
+        self.assertEqual(test_move_2.sequence_number, 1)
+        self.assertEqual(test_move_2.journal_id, journal)
+
     def test_manually_modifying_taxes(self):
         """Manually modifying taxes on a move should not automatically recompute them"""
         move = self.env['account.move'].create({
