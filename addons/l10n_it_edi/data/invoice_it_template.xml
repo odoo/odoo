@@ -99,7 +99,7 @@
         </RappresentanteFiscale>
         <CessionarioCommittente>
             <DatiAnagrafici>
-                <IdFiscaleIVA>
+                <IdFiscaleIVA t-if="buyer_info['vat']">
                     <IdPaese t-out="buyer_info['country_code']"/>
                     <IdCodice t-out="buyer_info['vat']"/>
                 </IdFiscaleIVA>
