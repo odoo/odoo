@@ -184,13 +184,13 @@ Featuring
             'website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js',
             'website_slides/static/src/js/slides_embed.js',
         ],
-        'web.tests_assets': [
-            'website_slides/static/tests/helpers/*.js',
-        ],
         'web.qunit_suite_tests': [
+            'website_slides/static/tests/legacy/**/*',
+        ],
+        'web.assets_unit_tests': [
             'website_slides/static/tests/**/*',
+            ('remove', 'website_slides/static/tests/legacy/**/*'),
             ('remove', 'website_slides/static/tests/tours/**/*'),
-            ('remove', 'website_slides/static/tests/helpers/*.js'),
         ],
     },
     'license': 'LGPL-3',
