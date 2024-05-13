@@ -89,3 +89,7 @@ class UtmMedium(models.Model):
                 "functional flows, such as the SMS Marketing.",
                 utm_medium_sms.name
             ))
+
+    @property
+    def SELF_REQUIRED_UTM_MEDIUMS_REF(self):
+        return super().SELF_REQUIRED_UTM_MEDIUMS_REF | {"mass_mailing_sms.utm_medium_sms": "SMS"}
