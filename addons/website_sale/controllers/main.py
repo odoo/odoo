@@ -143,14 +143,32 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return expression.AND(domains)
 
     def sitemap_shop(env, rule, qs):
+        website = env['website'].get_current_website()
+        # Make sure urls are not listed in sitemap when restriction is active
+        if not website.with_user(website.user_id).has_ecommerce_access():
+            return
         if not qs or qs.lower() in '/shop':
             yield {'loc': '/shop'}
 
         Category = env['product.public.category']
         dom = sitemap_qs2dom(qs, '/shop/category', Category._rec_name)
-        dom += env['website'].get_current_website().website_domain()
+        dom += website.website_domain()
         for cat in Category.search(dom):
             loc = '/shop/category/%s' % slug(cat)
+            if not qs or qs.lower() in loc:
+                yield {'loc': loc}
+
+    def sitemap_products(env, rule, qs):
+        website = env['website'].get_current_website()
+        # Make sure urls are not listed in sitemap when restriction is active
+        if not website.with_user(website.user_id).has_ecommerce_access():
+            return
+
+        ProductModel = env['product.template'].with_user(website.user_id)
+        dom = sitemap_qs2dom(qs, '/shop', ProductModel._rec_name)
+        dom += website.sale_product_domain()
+        for product in ProductModel.search(dom):
+            loc = '/shop/%s' % slug(product)
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
@@ -429,7 +447,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         values.update(self._get_additional_shop_values(values))
         return request.render("website_sale.products", values)
 
-    @route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
+    @route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=sitemap_products)
     def product(self, product, category='', search='', **kwargs):
         if not request.website.has_ecommerce_access():
             return request.redirect('/web/login')
