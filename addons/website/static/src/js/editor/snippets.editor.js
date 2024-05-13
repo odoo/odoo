@@ -258,6 +258,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             }
             onClickSave() {
                 this.props.confirm(this.modalRef, this.state.apiKey);
+                this.props.close();
             }
         };
 
