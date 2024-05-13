@@ -41,9 +41,11 @@
                         />
                     </t>
 
-                    <t t-set-slot="control-panel-status-indicator">
+                    <t t-set-slot="control-panel-status-indicator" t-slot-scope="breadcrumbs">
                         <t t-if="canEdit">
-                            <FormStatusIndicator model="model" discard.bind="discard" save.bind="saveButtonClicked" />
+                            <t t-set="collapsedBreadcrumbs" t-value="Object.keys(breadcrumbs).slice(-3, -1)"/>
+                            <t t-set="visiblePathBreadcrumbs" t-value="Object.keys(breadcrumbs).slice(0, -3).reverse()"/>
+                            <FormStatusIndicator model="model" discard.bind="discard" save.bind="saveButtonClicked" breadcrumb="collapsedBreadcrumbs.length || visiblePathBreadcrumbs.length"/>
                         </t>
                     </t>
                     <t t-set-slot="control-panel-create-button">

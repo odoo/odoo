@@ -131,7 +131,7 @@
             <t t-call="web.Breadcrumb.Actions"/>
         </div>
 
-        <t t-slot="control-panel-status-indicator" />
+        <t t-slot="control-panel-status-indicator" t-props="breadcrumbs"/>
     </t>
 
     <t t-name="web.Breadcrumb.Actions">

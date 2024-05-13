@@ -7,6 +7,7 @@ export class FormStatusIndicator extends Component {
         model: Object,
         save: Function,
         discard: Function,
+        breadcrumb: { type: Number, optional: true },
     };
 
     setup() {
