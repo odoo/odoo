@@ -75,6 +75,8 @@ class WebsiteSnippetFilter(models.Model):
                         # Still display a product.product if the template is not configurable
                         res_product['_record'] = product = product.product_variant_id
 
+                    # TODO VFE combination_info is only called to get the price here
+                    # factorize and avoid computing the rest
                     if product.is_product_variant:
                         res_product.update(product._get_combination_info_variant())
                     else:

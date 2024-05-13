@@ -126,6 +126,7 @@ class Product(models.Model):
 
     def _website_show_quick_add(self):
         self.ensure_one()
+        # TODO VFE pass website as param and avoid existence check
         website = self.env['website'].get_current_website()
         return self.sale_ok and (not website.prevent_zero_price_sale or self._get_contextual_price())
 
