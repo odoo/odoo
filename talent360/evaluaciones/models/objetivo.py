@@ -100,29 +100,29 @@ class Objetivo(models.Model):
     evaluador = fields.Char()
 
     @api.constrains("piso_minimo", "piso_maximo")
-    def _check_pisos(self):
+    def _checar_pisos(self):
         """
         Método para verificar que el piso mínimo sea menor al piso máximo en todo momento. Asimismo, se verifica que los valores de piso mínimo y piso máximo sean mayores a 0
 
         De no ser el caso, el sistema manda un error al usuario.
         """
-        for record in self:
-            if record.piso_minimo >= record.piso_maximo:
+        for registro in self:
+            if registro.piso_minimo >= registro.piso_maximo:
                 raise ValidationError(_("El piso mínimo debe ser menor al piso máximo"))
-            if record.piso_minimo < 0 or record.piso_maximo < 0:
+            if registro.piso_minimo < 0 or registro.piso_maximo < 0:
                 raise ValidationError(
                     _("Los pisos minimos y maximos deben ser mayores a 0")
                 )
 
     @api.constrains("peso")
-    def _check_peso(self):
+    def _checar_peso(self):
         """
         Método para verificar que el valor del peso sea entre 1 y 100.
 
         De no ser el caso, el sistema manda un error al usuario.
         """
-        for record in self:
-            if record.peso > 100 or record.peso <= 0:
+        for registro in self:
+            if registro.peso > 100 or registro.peso <= 0:
                 raise ValidationError(_("El peso debe estar en el rango de 1 y 100"))
 
     def write(self, vals):
@@ -136,30 +136,30 @@ class Objetivo(models.Model):
         De no ser ningún caso, el sistema manda un error al usuario.
         """
         if "piso_minimo" in vals or "piso_maximo" in vals:
-            new_piso_minimo = vals.get("piso_minimo", self.piso_minimo)
-            new_piso_maximo = vals.get("piso_maximo", self.piso_maximo)
-            if new_piso_minimo >= new_piso_maximo:
+            nuevo_piso_minimo = vals.get("piso_minimo", self.piso_minimo)
+            nuevo_piso_maximo = vals.get("piso_maximo", self.piso_maximo)
+            if nuevo_piso_minimo >= nuevo_piso_maximo:
                 raise ValidationError(_("El piso mínimo debe ser menor al piso máximo"))
-            if new_piso_minimo < 0 or new_piso_maximo < 0:
+            if nuevo_piso_minimo < 0 or nuevo_piso_maximo < 0:
                 raise ValidationError(
                     _("Los pisos mínimos y máximos deben ser mayores a 0")
                 )
 
         if "peso" in vals:
-            new_peso = vals.get("peso", self.peso)
-            if new_peso > 100 or new_peso <= 0:
+            nuevo_peso = vals.get("peso", self.peso)
+            if nuevo_peso > 100 or nuevo_peso <= 0:
                 raise ValidationError(_("El peso debe estar en el rango de 1 y 100"))
         return super(Objetivo, self).write(vals)
 
     @api.constrains("fecha_fin")
-    def _check_fecha_fin(self):
+    def _checar_fecha_fin(self):
         """
         Método para verificar que la fecha final sea mayor a la fecha de hoy.
 
         De no ser el caso, el sistema manda un error al usuario.
         """
-        for record in self:
-            if record.fecha_fin and record.fecha_fin < date.today():
+        for registro in self:
+            if registro.fecha_fin and registro.fecha_fin < date.today():
                 raise ValidationError(
                     _("La fecha final debe ser mayor a la fecha de hoy")
                 )
@@ -169,25 +169,25 @@ class Objetivo(models.Model):
         """
         Método que calcula el estado actual del objetivo dependiendo del resultado
         """
-        for record in self:
-            if record.piso_maximo and record.resultado:
-                ratio = record.resultado / record.piso_maximo
+        for registro in self:
+            if registro.piso_maximo and registro.resultado:
+                ratio = registro.resultado / registro.piso_maximo
                 if 0 <= ratio <= 0.6:
-                    record.estado = "rojo"
+                    registro.estado = "rojo"
                 elif 0.61 <= ratio <= 0.85:
-                    record.estado = "amarillo"
+                    registro.estado = "amarillo"
                 elif 0.851 <= ratio <= 1:
-                    record.estado = "verde"
+                    registro.estado = "verde"
                 elif ratio > 1:
-                    record.estado = "azul"
+                    registro.estado = "azul"
 
     @api.constrains("usuario_ids")
-    def _check_usuario_ids(self):
+    def _checar_usuario_ids(self):
         """
         Método para verificar que el número de usuarios asignados a un objetivo sea mayor a 0.
 
         De no ser el caso, el sistema manda un error al usuario.
         """
-        for record in self:
-            if not record.usuario_ids:
+        for registro in self:
+            if not registro.usuario_ids:
                 raise ValidationError(_("Debe asignar al menos un usuario al objetivo"))
