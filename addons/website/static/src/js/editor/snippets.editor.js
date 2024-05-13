@@ -290,6 +290,7 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
             }
             onClickSave() {
                 this.props.confirm(this.modalRef, this.state.apiKey);
+                this.props.close();
             }
         };
 
