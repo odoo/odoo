@@ -1187,7 +1187,7 @@ class Field(MetaField('DummyField', (object,), {})):
     # Descriptor methods
     #
 
-    def __get__(self, record, owner):
+    def __get__(self, record, owner=None):
         """ return the value of field ``self`` on ``record`` """
         if record is None:
             return self         # the field is accessed through the owner class
@@ -1333,7 +1333,7 @@ class Field(MetaField('DummyField', (object,), {})):
             # [rec.line_ids.mapped('name') for rec in recs] would generate one
             # query per record in `recs`!
             remaining = records.__class__(records.env, records._ids[len(vals):], records._prefetch_ids)
-            self.__get__(first(remaining), type(remaining))
+            self.__get__(first(remaining))
             vals += records.env.cache.get_until_miss(remaining, self)
 
         return self.convert_to_record_multi(vals, records)
@@ -2949,7 +2949,7 @@ class _Relational(Field):
     context = {}                        # context for searching values
     check_company = False
 
-    def __get__(self, records, owner):
+    def __get__(self, records, owner=None):
         # base case: do the regular access
         if records is None or len(records._ids) <= 1:
             return super().__get__(records, owner)
@@ -4477,7 +4477,7 @@ class One2many(_RelationalMulti):
             domain = domain + [(inverse_field.model_field, '=', records._name)]
         return domain
 
-    def __get__(self, records, owner):
+    def __get__(self, records, owner=None):
         if records is not None and self.inverse_name is not None:
             # force the computation of the inverse field to ensure that the
             # cache value of self is consistent
@@ -5180,7 +5180,7 @@ class Id(Field):
     def update_db(self, model, columns):
         pass                            # this column is created with the table
 
-    def __get__(self, record, owner):
+    def __get__(self, record, owner=None):
         if record is None:
             return self         # the field is accessed through the class owner
 

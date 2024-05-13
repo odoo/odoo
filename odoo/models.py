@@ -6662,7 +6662,7 @@ class BaseModel(metaclass=MetaModel):
         """
         if isinstance(key, str):
             # important: one must call the field's getter
-            return self._fields[key].__get__(self, self.env.registry[self._name])
+            return self._fields[key].__get__(self)
         elif isinstance(key, slice):
             return self.browse(self._ids[key])
         else:
