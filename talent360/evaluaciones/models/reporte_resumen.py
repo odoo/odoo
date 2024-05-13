@@ -39,7 +39,7 @@ class ReporteResumen(models.Model):
     @api.depends("usuario_ids")
     def _compute_porcentaje_respuestas(self):
         for record in self:
-            conteo = len(record.usuario_ids)
+            conteo = len(record.usuario_ids) + len(record.usuario_externo_ids)
             if conteo == 0:
                 record.porcentaje_respuestas = 0
             else:

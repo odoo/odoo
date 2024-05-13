@@ -19,13 +19,14 @@ class Respuesta(models.Model):
     
     _name = "respuesta"
     _description = "Respuesta a una pregunta"
+    _rec_name = "respuesta_mostrar"
 
     pregunta_id = fields.Many2one("pregunta", string="Preguntas")
     usuario_id = fields.Many2one("res.users", string="Usuario")
     evaluacion_id = fields.Many2one("evaluacion", string="Evaluacion")
     pregunta_texto = fields.Char(related="pregunta_id.pregunta_texto")
     respuesta_texto = fields.Char("Respuesta")
-    token = fields.Char(string="Token")
+    token = fields.Char()
     opcion_id = fields.Many2one("opcion", string="Opción")
 
     respuesta_mostrar = fields.Char(

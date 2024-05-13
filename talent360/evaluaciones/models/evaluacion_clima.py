@@ -86,7 +86,7 @@ class EvaluacionClima(models.Model):
     @api.constrains(
         "techo_rojo", "techo_naranja", "techo_amarillo", "techo_verde", "techo_azul"
     )
-    def _check_techos(self):
+    def _checar_techos(self):
         """
         Se valida que los techos sean mayores a 0 y estén en orden ascendente.
         """

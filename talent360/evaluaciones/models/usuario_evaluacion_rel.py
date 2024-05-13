@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-import secrets
+import secrets, logging
 
 
 class UsuarioEvaluacionRel(models.Model):
@@ -20,6 +20,7 @@ class UsuarioEvaluacionRel(models.Model):
     
     _name = "usuario.evaluacion.rel"
     _description = "Relación entre evaluacion y usuarios"
+    _rec_name = "evaluacion_nombre"
 
     evaluacion_id = fields.Many2one("evaluacion", string="Evaluacion")
     usuario_id = fields.Many2one("res.users", string="Usuario")
@@ -46,7 +47,9 @@ class UsuarioEvaluacionRel(models.Model):
         string="Usuarios de Evaluación",
         readonly=True,
     )
-    token = fields.Char(string="Token")
+    token = fields.Char()
+
+    usuario_externo_id = fields.Many2one("usuario.externo", string="Usuario Externo")
 
     def write(self, vals):
         """Sobreescribir el método write para enviar la evaluación al usuario."""
@@ -116,10 +119,20 @@ class UsuarioEvaluacionRel(models.Model):
             [("evaluacion_id.id", "=", evaluacion_id)]
         )
 
-        for user in usuario_evaluacion:
+        for usuario in usuario_evaluacion:
             token = secrets.token_hex(length)
-            if not user.token:
-                user.write({
+            if not usuario.token:
+                if usuario.usuario_id:
+                    correo = usuario.usuario_id.email
+                    nombre = usuario.usuario_id.name
+                elif usuario.usuario_externo_id:
+                    correo = usuario.usuario_externo_id.email
+                    nombre = usuario.usuario_externo_id.nombre
+                else:
+                    logging.error("No se encontró un usuario asociado")
+                    raise ValueError("No se encontró un usuario asociado")
+                    
+                usuario.write({
                     "token": token,
                     "contestada": "pendiente"
                 })
@@ -128,15 +141,16 @@ class UsuarioEvaluacionRel(models.Model):
                 mail_values = {
                     'subject': 'Invitación para completar la evaluación',
                     'email_from': "talent360@cr-organizacional.com",
-                    'email_to': user.usuario_id.email,
+                    'email_to': correo,
                     'body_html': 
-                        f'''<p>Hola, <strong>{user.usuario_id.name}</strong>,</p>
+                        f'''<p>Hola, <strong>{nombre}</strong>,</p>
                         <p>En <strong>{self.env.user.company_id.name}</strong> estamos interesados en tu opinión para mejorar.</p>
                         <p>Por favor, participa en la evaluación de clima laboral disponible del <strong>(Fecha Inicio)</strong> al <strong>(Fecha Fin)</strong>.</p>
                         <p>Puedes comenzar la evaluación haciendo clic en el siguiente enlace:</p>
                         <p><a href="{evaluacion_url}">Comenzar Evaluación</a></p>''',
                 }
 
+                logging.info(f"Nombre:{nombre}\nCorreo:{correo}\nURL: {evaluacion_url}")
                 mail = self.env['mail.mail'].create(mail_values)
                 mail.send()
     

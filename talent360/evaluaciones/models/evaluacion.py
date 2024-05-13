@@ -1,4 +1,4 @@
-from odoo import api, models, fields
+from odoo import api, models, fields, _
 from collections import defaultdict
 from odoo import exceptions
 
@@ -10,10 +10,17 @@ class Evaluacion(models.Model):
     :param _name (str): Nombre del modelo en Odoo.
     :param _description (str): Descripción del modelo en Odoo.
     :param nombre (fields.Char): Nombre de la evaluación. Es un campo obligatorio.
+    :param tipo (fields.Selection): Tipo de evaluación con opciones 'CLIMA', 'NOM_035' y 'competencia'. Por defecto, es 'competencia'.
+    :param descripcion (fields.Text): Descripción de la evaluación.
     :param estado (fields.Selection): Estado de la evaluación con opciones 'borrador', 'publicado' y 'finalizado'. Por defecto, es 'borrador'.
     :param pregunta_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'pregunta' para almacenar las preguntas asociadas a la evaluación.
     :param competencia_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'competencia' para almacenar las competencias asociadas a la evaluación.
     :param usuario_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'res.users' para asignar usuarios a la evaluación.
+    :param usuario_externo_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'usuario.externo' para asignar usuarios externos a la evaluación.
+    :param fecha_inicio (fields.Date): Fecha de inicio de la evaluación. Es un campo obligatorio.
+    :param fecha_final (fields.Date): Fecha de finalización de la evaluación. Es un campo obligatorio.
+    :param mensaje (fields.Text): Mensaje de bienvenida para la evaluación.
+    :param incluir_demograficos (fields.Boolean): Campo booleano para indicar si se incluirán datos demográficos en el reporte. Por defecto, es True.
     """
 
     _name = "evaluacion"
@@ -34,8 +41,8 @@ class Evaluacion(models.Model):
     estado = fields.Selection(
         [
             ("borrador", "Borrador"),
-            ("publicado", "Publicado"),
-            ("finalizado", "Finalizado"),
+            ("publicado", "Abierta"),
+            ("finalizado", "Cerrada"),
         ],
         default="borrador",
         required=True,
@@ -65,18 +72,37 @@ class Evaluacion(models.Model):
         string="Asignados",
     )
 
+    usuario_externo_ids = fields.Many2many(
+        "usuario.externo",
+        "usuario_evaluacion_rel",
+        "evaluacion_id",
+        "usuario_externo_id",
+        string="Asignados Externos",
+    )
+
     fecha_inicio = fields.Date(string="Fecha de inicio", required=True)
     fecha_final = fields.Date(string="Fecha de finalización", required=True)
 
     mensaje = fields.Text(string="Mensaje de bienvenida")
 
-    @api.constrains('fecha_inicio', 'fecha_final')
-    def check_fechas(self):
-        for record in self:
-            if record.fecha_inicio and record.fecha_final and record.fecha_inicio > record.fecha_final:
-                raise exceptions.ValidationError("La fecha de inicio debe ser anterior a la fecha final")
-
     incluir_demograficos = fields.Boolean(string="Incluir datos demográficos", default = True)
+    
+    @api.constrains('fecha_inicio', 'fecha_final')
+    def checar_fechas(self):
+        """
+        Valida que la fecha de inicio sea anterior a la fecha final.
+        """
+        for record in self:
+            fecha_actual = fields.Date.today()
+            if record.fecha_inicio:
+                # Verifica que la fecha de inicio no sea menor a la fecha actual
+                if record.fecha_inicio < fecha_actual:
+                    raise exceptions.ValidationError(_("La fecha de inicio debe ser igual o posterior a la fecha actual."))
+            
+            if record.fecha_inicio and record.fecha_final:
+                # Verifica que la fecha de inicio sea antes de la fecha final
+                if record.fecha_inicio > record.fecha_final:
+                    raise exceptions.ValidationError(_("La fecha de inicio debe ser anterior a la fecha final"))
 
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
@@ -166,8 +192,7 @@ class Evaluacion(models.Model):
         actual tenga las preguntas correctas, y luego configura y devuelve un diccionario con
         los detalles para abrir esta evaluación en una vista de formulario específica.
 
-        Returns:
-        dict: Un diccionario que contiene todos los parámetros necesarios para abrir la
+        :return: Un diccionario que contiene todos los parámetros necesarios para abrir la
         evaluación en una vista de formulario específica de Odoo.
 
         """
@@ -250,7 +275,7 @@ class Evaluacion(models.Model):
             "target": "current",
         }
 
-    def abrir_evaluacion_form(self):
+    def abrir_evaluacion_action_form(self):
         """
         Abre la evaluación en una vista de formulario.
 
@@ -275,7 +300,7 @@ class Evaluacion(models.Model):
 
         return action
 
-    def action_reporte_generico(self):
+    def reporte_generico_action(self):
         """
         Genera una acción de URL para el reporte genérico de la evaluación.
 
@@ -298,7 +323,7 @@ class Evaluacion(models.Model):
             "target": "new",
         }
 
-    def action_generar_datos_reporte_generico(self):
+    def generar_datos_reporte_generico_action(self):
         """
         Genera los datos necesarios para el reporte genérico de la evaluación.
 
@@ -419,61 +444,29 @@ class Evaluacion(models.Model):
 
         # Datos demograficos
         if self.incluir_demograficos:
-            datos_demograficos = []
-
-            for usuario in self.usuario_ids:
-                usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
-                    [("usuario_id.id", "=", usuario.id), ("evaluacion_id.id", "=", self.id)]
-                )
-
-                if (
-                    usuario_evaluacion_rel
-                    and usuario_evaluacion_rel[0].contestada == "contestada"
-                ):
-                    datos_demograficos.append(self.obtener_datos_demograficos(usuario))
-
-            departamentos = defaultdict(int)
-            for dato in datos_demograficos:
-                departamentos[dato["departamento"]] += 1
-
-            generaciones = defaultdict(int)
-            for dato in datos_demograficos:
-                generaciones[dato["generacion"]] += 1
-                
-            puestos = defaultdict(int)
-            for dato in datos_demograficos:
-                puestos[dato["puesto"]] += 1
-
-            generos = defaultdict(int)
-            for dato in datos_demograficos:
-                dato["genero"] = dato["genero"].capitalize()
-                generos[dato["genero"]] += 1
-
-            # Organizar los parámetros en el orden deseado
-            parametros = {
-                "evaluacion": self,
-                "categorias": [categorias[nombre] for nombre in categorias_orden],
-                "dominios": [dominios[nombre] for nombre in dominios_orden],
-                "departamentos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in departamentos.items()],
-                "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
-                "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
-                "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],
-                "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
-                "final": final,
-            }
+            datos_demograficos = self.generar_datos_demograficos()
 
         else:
+            datos_demograficos = {}
             # Organizar los parámetros en el orden deseado
-            parametros = {
-                "evaluacion": self,
-                "categorias": [categorias[nombre] for nombre in categorias_orden],
-                "dominios": [dominios[nombre] for nombre in dominios_orden],
-                "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
-                "final": final,
-            }
+        parametros = {
+            "evaluacion": self,
+            "categorias": [categorias[nombre] for nombre in categorias_orden],
+            "dominios": [dominios[nombre] for nombre in dominios_orden],
+            "final": final,
+            "preguntas": self.generar_datos_reporte_generico_action()["preguntas"],
+        }
+
+        parametros.update(datos_demograficos)
 
         return parametros
     def action_generar_datos_reporte_clima(self):
+        """
+        Genera los datos necesarios para el reporte de clima organizacional de la evaluación.
+        Calcula el porcentaje de satisfacción para cada categoría y departamento.
+
+        :return: Los parámetros necesarios para generar el reporte.
+        """
         # Categorías para el reporte de clima laboral
         categorias_clima = [
             "Reclutamiento y Selección de Personal",
@@ -533,7 +526,7 @@ class Evaluacion(models.Model):
             for respuesta in pregunta.respuesta_ids:
                 valor_respuesta = int(respuesta.respuesta_texto)
                 valor_pregunta += valor_respuesta
-                maximo_pregunta += 4  # Suponiendo un máximo de 4 para cada respuesta en escala
+                maximo_pregunta += pregunta._calculate_valor_maximo()  # Suponiendo un máximo de 4 para cada respuesta en escala
 
                 nombre_departamento = respuesta.usuario_id.department_id.name if respuesta.usuario_id.department_id else "Sin departamento"
                 departamento = next(
@@ -583,64 +576,81 @@ class Evaluacion(models.Model):
 
       # Datos demograficos
         if self.incluir_demograficos:
-            datos_demograficos = []
+            datos_demograficos = self.generar_datos_demograficos()
 
-            for usuario in self.usuario_ids:
-                usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
-                    [("usuario_id.id", "=", usuario.id), ("evaluacion_id.id", "=", self.id)]
+        else:
+            datos_demograficos = {}
+            # Organizar los parámetros en el orden deseado
+        parametros = {
+            "evaluacion": self,
+            "categorias": detalles_categorias,
+            "total": total_puntuacion,
+            "total_maximo": total_maximo_posible,
+            "total_porcentaje": total_porcentaje,
+            "preguntas": self.generar_datos_reporte_generico_action()["preguntas"],
+        }
+
+        parametros.update(datos_demograficos)
+
+        return parametros
+
+    def generar_datos_demograficos(self):
+        """
+        Genera los datos demográficos de la evaluación.
+
+        :return: Los datos demográficos de los usuarios asignados a la evaluación. Incuye departamentos, generaciones, puestos y géneros.
+        """
+        datos_demograficos = []
+        for usuario in self.usuario_ids:
+            usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
+                [("usuario_id.id", "=", usuario.id), ("evaluacion_id.id", "=", self.id)]
+            )
+
+            if (
+                usuario_evaluacion_rel
+                and usuario_evaluacion_rel[0].contestada == "contestada"
+            ):
+                datos_demograficos.append(self.obtener_datos_demograficos(usuario))
+
+        for usuario_externo in self.usuario_externo_ids:
+            usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
+                [
+                    ("usuario_externo_id.id", "=", usuario_externo.id),
+                    ("evaluacion_id.id", "=", self.id),
+                ]
+            )
+
+            if (
+                usuario_evaluacion_rel
+                and usuario_evaluacion_rel[0].contestada == "contestada"
+            ):
+                datos_demograficos.append(
+                    self.obtener_datos_demograficos_externos(usuario_externo)
                 )
 
-                if (
-                    usuario_evaluacion_rel
-                    and usuario_evaluacion_rel[0].contestada == "contestada"
-                ):
-                    datos_demograficos.append(self.obtener_datos_demograficos(usuario))
+        departamentos = defaultdict(int)
+        for dato in datos_demograficos:
+            departamentos[dato["departamento"]] += 1
 
-            departamentos = defaultdict(int)
-            for dato in datos_demograficos:
-                departamentos[dato["departamento"]] += 1
+        generaciones = defaultdict(int)
+        for dato in datos_demograficos:
+            generaciones[dato["generacion"]] += 1
+            
+        puestos = defaultdict(int)
+        for dato in datos_demograficos:
+            puestos[dato["puesto"]] += 1
 
-            generaciones = defaultdict(int)
-            for dato in datos_demograficos:
-                generaciones[dato["generacion"]] += 1
-                
-            puestos = defaultdict(int)
-            for dato in datos_demograficos:
-                puestos[dato["puesto"]] += 1
+        generos = defaultdict(int)
+        for dato in datos_demograficos:
+            dato["genero"] = dato["genero"].capitalize()
+            generos[dato["genero"]] += 1
 
-            generos = defaultdict(int)
-            for dato in datos_demograficos:
-                dato["genero"] = dato["genero"].capitalize()
-                generos[dato["genero"]] += 1
-
-            # Organizar los parámetros en el orden deseado
-            parametros = {
-                "evaluacion": self,
-                "categorias": detalles_categorias,
-                "total": total_puntuacion,
-                "total_maximo": total_maximo_posible,
-                "total_porcentaje": total_porcentaje,
+        return {
                 "departamentos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in departamentos.items()],
                 "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
                 "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
-                "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()],
-                "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
+                "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()], 
             }
-
-        else:
-            # Organizar los parámetros en el orden deseado
-            parametros = {
-                "evaluacion": self,
-                "categorias": detalles_categorias,
-                "total": total_puntuacion,
-                "total_maximo": total_maximo_posible,
-                "total_porcentaje": total_porcentaje,
-                "preguntas": self.action_generar_datos_reporte_generico()["preguntas"],
-            }
-
-        # Parámetros para el template
-        #print(parametros)
-        return parametros
 
     def asignar_color(self, valor, categoria=None, dominio=None):
         """
@@ -837,6 +847,25 @@ class Evaluacion(models.Model):
 
         return dato
 
+    def obtener_generacion(self, anio_nacimiento):
+        """
+        Obtiene la generación a la que pertenece una persona de acuerdo al año de nacimiento.
+        :param anio_nacimiento: El año de nacimiento de la persona.
+
+        :return: La generación a la que pertenece la persona.
+        """
+
+        if 1946 <= anio_nacimiento <= 1964:
+            return "Baby Boomers"
+        elif 1965 <= anio_nacimiento <= 1980:
+            return "Generación X"
+        elif 1981 <= anio_nacimiento <= 1999:
+            return "Millenials"
+        elif 2000 <= anio_nacimiento <= 2015:
+            return "Generacion Z"
+        else:
+            return "N/A"
+
     def obtener_datos_demograficos(self, usuario):
         """
         Obtiene los datos demográficos de un usuario.
@@ -850,24 +879,11 @@ class Evaluacion(models.Model):
         
         datos = {}
         
-        def obtener_generacion(anio_nacimiento):
-            if 1946 <= anio_nacimiento <= 1964:
-                return "Baby Boomers"
-            elif 1965 <= anio_nacimiento <= 1980:
-                return "Generación X"
-            elif 1981 <= anio_nacimiento <= 1999:
-                return "Millenials"
-            elif 2000 <= anio_nacimiento <= 2015:
-                return "Generacion Z"
-            else:
-                return "N/A"
-
-
         datos["nombre"] = self.obtener_dato(usuario.name)
         datos["genero"] = self.obtener_dato(usuario.gender)
         datos["puesto"] = self.obtener_dato(usuario.job_title)
         datos["anio_nacimiento"] = usuario.birthday.year if usuario.birthday else "N/A"
-        datos["generacion"] = obtener_generacion(datos["anio_nacimiento"]) if datos["anio_nacimiento"] != "N/A" else "N/A"
+        datos["generacion"] = self.obtener_generacion(datos["anio_nacimiento"]) if datos["anio_nacimiento"] != "N/A" else "N/A"
         datos["departamento"] = self.obtener_dato(usuario.department_id.name)
         
         # Falta
@@ -878,8 +894,27 @@ class Evaluacion(models.Model):
         # Ubicación/Region
         
         return datos
+
+    def obtener_datos_demograficos_externos(self, usuario):
+        """
+        Obtiene los datos demográficos de un usuario externo.
+        :param usuario: El usuario externo del que se obtendrán los datos demográficos.
+
+        :return: Un diccionario con los datos demográficos del usuario externo. Incluye nombre, género, puesto, año de nacimiento, generación y departamento.
+        """
+
+        datos = {}
+
+        datos["nombre"] = self.obtener_dato(usuario.nombre)
+        datos["genero"] = self.obtener_dato(usuario.genero)
+        datos["puesto"] = self.obtener_dato(usuario.puesto)
+        datos["anio_nacimiento"] = usuario.fecha_nacimiento.year if usuario.fecha_nacimiento else "N/A"
+        datos["generacion"] = self.obtener_generacion(datos["anio_nacimiento"]) if datos["anio_nacimiento"] != "N/A" else "N/A"
+        datos["departamento"] = self.obtener_dato(usuario.direccion)
+
+        return datos
     
-    def action_get_evaluaciones(self, evaluacion_id):
+    def get_evaluaciones_action(self, evaluacion_id):
         """
         Obtiene las preguntas asociadas a la evaluación.
 
@@ -895,10 +930,23 @@ class Evaluacion(models.Model):
         }
     
     def enviar_evaluacion_action(self):
+        """
+        Envía la evaluación a los usuarios asignados.
+
+        :return: Un mensaje de notificación que indica que la evaluación ha sido enviada y los usuarios a los que se les ha enviado.
+        """
+
+        if self.estado != "publicado":
+            return
+
         usuarios = []
 
         for usuario in self.usuario_ids:
             usuarios.append(usuario.partner_id.name)
+        
+        for usuario_externo in self.usuario_externo_ids:
+            usuarios.append(usuario_externo.nombre)
+
         self.env['usuario.evaluacion.rel'].enviar_evaluacion_action(evaluacion_id=self.id)
         return {
             "type": "ir.actions.client",
@@ -919,7 +967,20 @@ class Evaluacion(models.Model):
         :return: Sobreescribe la asignación de usuarios si hubo cambio en ellos.
         """
         resultado = super(Evaluacion, self).write(vals)
-        if 'usuario_ids' in vals or self.usuario_ids:
-            self.enviar_evaluacion_action()
+        self.enviar_evaluacion_action()
+
         return resultado
 
+    def action_asignar_usuarios_externos(self):
+        """
+        Abre la ventana para asignar usuarios externos a la evaluación. 
+        
+        :return: Una acción para abrir la ventana de asignación de usuarios externos.
+        """
+        return {
+            'name': 'Asignar usuarios externos',
+            'type': 'ir.actions.act_window',
+            'res_model': 'asignar.usuario.externo.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+        }
