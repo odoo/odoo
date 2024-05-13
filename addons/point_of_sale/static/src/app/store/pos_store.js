@@ -1973,6 +1973,7 @@ export class PosStore extends Reactive {
 
     openCashControl() {
         if (this.shouldShowCashControl()) {
+<<<<<<< HEAD
             this.dialog.add(
                 CashOpeningPopup,
                 {},
@@ -1984,6 +1985,11 @@ export class PosStore extends Reactive {
                     },
                 }
             );
+||||||| parent of 86955d34d765 (temp)
+            this.popup.add(CashOpeningPopup, { keepBehind: true });
+=======
+            this.popup.add(CashOpeningPopup);
+>>>>>>> 86955d34d765 (temp)
         }
     }
     shouldShowCashControl() {

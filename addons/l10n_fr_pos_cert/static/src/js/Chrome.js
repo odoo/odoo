@@ -17,7 +17,13 @@ patch(Chrome.prototype, {
                 limitDate.setDate(limitDate.getDate() + 1);
                 if (limitDate.getTime() < now) {
                     const info = await this.pos.getClosePosInfo();
+<<<<<<< HEAD
                     this.dialog.add(ClosePosPopup, info);
+||||||| parent of 86955d34d765 (temp)
+                    this.popup.add(ClosePosPopup, { ...info, keepBehind: true });
+=======
+                    this.popup.add(ClosePosPopup, { ...info });
+>>>>>>> 86955d34d765 (temp)
                 }
             }
         });

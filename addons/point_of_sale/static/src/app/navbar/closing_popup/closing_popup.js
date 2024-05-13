@@ -23,6 +23,19 @@ export class ClosePosPopup extends Component {
         "other_payment_methods",
         "is_manager",
         "amount_authorized_diff",
+<<<<<<< HEAD
+||||||| parent of 86955d34d765 (temp)
+        // TODO: set the props for all popups
+        "id",
+        "keepBehind",
+        "resolve",
+        "isActive",
+=======
+        // TODO: set the props for all popups
+        "id",
+        "resolve",
+        "zIndex",
+>>>>>>> 86955d34d765 (temp)
         "close",
     ];
 
