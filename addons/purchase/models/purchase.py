@@ -1360,7 +1360,7 @@ class PurchaseOrderLine(models.Model):
 
     def _get_gross_price_unit(self):
         self.ensure_one()
-        price_unit = self.price_unit
+        price_unit = self._convert_to_tax_base_line_dict()['price_unit']
         if self.taxes_id:
             qty = self.product_qty or 1
             price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
