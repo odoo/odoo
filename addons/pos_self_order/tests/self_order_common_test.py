@@ -4,7 +4,9 @@
 import odoo.tests
 
 from odoo import Command
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.point_of_sale.tests.common import archive_products
+
 
 @odoo.tests.tagged("post_install", "-at_install")
 class SelfOrderCommonTest(odoo.tests.HttpCase):
@@ -16,26 +18,20 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
     def setUpClass(cls):
         super().setUpClass()
         archive_products(cls.env)
-        cls.pos_user = cls.env['res.users'].create({
-            'name': 'POS User',
-            'login': 'pos_user',
-            'password': 'pos_user',
-            'groups_id': [
-                (4, cls.env.ref('base.group_user').id),
-                (4, cls.env.ref('point_of_sale.group_pos_user').id),
-            ],
-            'tz': 'Europe/Brussels',
-        })
-        cls.pos_admin = cls.env['res.users'].create({
-            'name': 'POS Admin',
-            'login': 'pos_admin',
-            'password': 'pos_admin',
-            'groups_id': [
-                (4, cls.env.ref('base.group_user').id),
-                (4, cls.env.ref('point_of_sale.group_pos_manager').id),
-            ],
-            'tz': 'Europe/Brussels',
-        })
+        cls.pos_user = mail_new_test_user(
+            cls.env,
+            groups="base.group_user,point_of_sale.group_pos_user",
+            login="pos_user",
+            name="POS User",
+            tz="Europe/Brussels",
+        )
+        cls.pos_admin = mail_new_test_user(
+            cls.env,
+            groups="base.group_user,point_of_sale.group_pos_manager",
+            login="pos_admin",
+            name="POS Admin",
+            tz="Europe/Brussels",
+        )
 
         pos_categ_misc = cls.env['pos.category'].create({
             'name': 'Miscellaneous',
