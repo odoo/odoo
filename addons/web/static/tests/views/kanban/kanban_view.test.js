@@ -11822,8 +11822,10 @@ test("Can't use KanbanRecord implementation details in arch", async () => {
                     </div>
                 </card>
             </kanban>`,
+        limit: 1,
     });
     expect(queryFirst(".o_kanban_record")).toHaveInnerHTML(`<div></div>`);
+    expect(["warn", "warn", "warn", "warn"]).toVerifySteps();
 });
 
 test.tags("desktop")("rerenders only once after resequencing records", async () => {
