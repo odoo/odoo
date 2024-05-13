@@ -2443,8 +2443,11 @@ export class OdooEditor extends EventTarget {
      * @param {Range} range
      */
     _selectTableCells(range) {
-        this.observerUnactive('_selectTableCells');
         const table = closestElement(range.commonAncestorContainer, 'table');
+        if (!table) {
+            return;
+        }
+        this.observerUnactive('_selectTableCells');
         const alreadyHadSelection = table.classList.contains('o_selected_table');
         this.deselectTable(); // Undo previous selection.
         table.classList.toggle('o_selected_table', true);
