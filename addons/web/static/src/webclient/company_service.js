@@ -47,16 +47,24 @@ export const companyService = {
         };
         const allowedCompanyIds = computeAllowedCompanyIds(cids);
         const nextAvailableCompanies = allowedCompanyIds.slice();  // not using a Set because order is important
-        nextAvailableCompanies.add = (companyId) => {
+        nextAvailableCompanies.add = (companyId, unshift = false) => {
             if (!nextAvailableCompanies.includes(companyId)) {
-                nextAvailableCompanies.push(companyId);
-                availableCompanies[companyId].child_ids.map(nextAvailableCompanies.add);
+                if (unshift) {
+                    nextAvailableCompanies.unshift(companyId);
+                } else {
+                    nextAvailableCompanies.push(companyId);
+                }
+            } else if (unshift) {
+                const index = nextAvailableCompanies.findIndex(c => c === companyId);
+                nextAvailableCompanies.splice(index, 1);
+                nextAvailableCompanies.unshift(companyId);
             }
+            availableCompanies[companyId].child_ids.forEach(id => nextAvailableCompanies.add(id));
         }
         nextAvailableCompanies.remove = (companyId) => {
             if (nextAvailableCompanies.includes(companyId)) {
                 nextAvailableCompanies.splice(nextAvailableCompanies.indexOf(companyId), 1);
-                availableCompanies[companyId].child_ids.map(nextAvailableCompanies.remove);
+                availableCompanies[companyId].child_ids.forEach(nextAvailableCompanies.remove);
             }
         }
 
@@ -75,6 +83,49 @@ export const companyService = {
                 }
             }
         });
+
+        const isSingleCompanyMode = () => {
+            if (nextAvailableCompanies.length === 1) {
+                return true;
+            }
+
+            const getActiveCompany = (companyId) => {
+                const isActive = nextAvailableCompanies.includes(companyId);
+                return isActive ? availableCompaniesWithAncestors[companyId] : null;
+            }
+
+            let rootCompany = undefined;
+            for (const companyId of nextAvailableCompanies) {
+                let company = getActiveCompany(companyId);
+
+                // Find the root active parent of the company
+                while (getActiveCompany(company.parent_id)) {
+                    company = getActiveCompany(company.parent_id);
+                }
+
+                if (rootCompany === undefined) {
+                    rootCompany = company;
+                } else if (rootCompany !== company) {
+                    return false;
+                }
+            }
+
+            // If some children or sub-children of the root company
+            // are not active, we are in multi-company mode.
+            if (rootCompany) {
+                let queue = [...rootCompany.child_ids];
+                while (queue.length > 0) {
+                    let company = getActiveCompany(queue.pop());
+                    if (company && company.child_ids) {
+                        queue.push(...company.child_ids);
+                    } else if (!company) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        };
 
         return {
             availableCompanies,
@@ -97,8 +148,12 @@ export const companyService = {
                         nextAvailableCompanies.add(companyId);
                     }
                 } else if (mode === "loginto") {
-                    nextAvailableCompanies.splice(0, nextAvailableCompanies.length);
-                    nextAvailableCompanies.add(companyId)
+                    if (isSingleCompanyMode()) {
+                        nextAvailableCompanies.splice(0, nextAvailableCompanies.length);
+                        nextAvailableCompanies.add(companyId, true);
+                    } else {
+                        nextAvailableCompanies.add(companyId, true);
+                    }
                 }
             },
             logNextCompanies() {
