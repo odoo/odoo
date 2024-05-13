@@ -4,10 +4,10 @@
 import logging
 from odoo import Command
 
-from odoo.api import Environment
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tests import loaded_demo_data, tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_pos_combo_items
 from datetime import date, timedelta
 from odoo.addons.point_of_sale.tests.common import archive_products
@@ -46,29 +46,23 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         # Pricelists are set below, do not take demo data into account
         env['ir.property'].sudo().search([('name', '=', 'property_product_pricelist')]).unlink()
 
-        # Create user.
-        cls.pos_user = cls.env['res.users'].create({
-            'name': 'A simple PoS man!',
-            'login': 'pos_user',
-            'password': 'pos_user',
-            'groups_id': [
-                (4, cls.env.ref('base.group_user').id),
-                (4, cls.env.ref('point_of_sale.group_pos_user').id),
-            ],
-            'tz': 'Europe/Brussels',
-        })
-        cls.pos_admin = cls.env['res.users'].create({
-            'name': 'A powerful PoS man!',
-            'login': 'pos_admin',
-            'password': 'pos_admin',
-            'groups_id': [
-                (4, cls.env.ref('point_of_sale.group_pos_manager').id),
-            ],
-            'tz': 'Europe/Brussels',
-        })
-
-        cls.pos_user.partner_id.email = 'pos_user@test.com'
-        cls.pos_admin.partner_id.email = 'pos_admin@test.com'
+        # Create users
+        cls.pos_user = mail_new_test_user(
+            cls.env,
+            email="pos_user@test.com",
+            groups="base.group_user,point_of_sale.group_pos_user",
+            login="pos_user",
+            name="A simple PoS man!",
+            tz="Europe/Brussels",
+        )
+        cls.pos_admin = mail_new_test_user(
+            cls.env,
+            groups="base.group_user,point_of_sale.group_pos_manager",
+            email="pos_admin@test.com",
+            login="pos_admin",
+            name="A powerful PoS man!",
+            tz="Europe/Brussels",
+        )
 
         cls.bank_journal = journal_obj.create({
             'name': 'Bank Test',
