@@ -19,7 +19,11 @@ const INDEXED_DB_NAME = {
 const LOADED_ORM_METHODS = ["read", "search_read", "create"];
 export const CONFIG = {
     "missingModelsAllowedToLoad": ["product.product", "pos.combo", "pos.combo.line"],
-}
+    "relationsRestrictedFromLoading": {
+        "loyalty.reward": ["all_discount_product_ids"],
+        "loyalty.rule": ["valid_product_ids"],
+    },
+};
 
 export class PosData extends Reactive {
     static modelToLoad = []; // When empty all models are loaded
@@ -73,6 +77,14 @@ export class PosData extends Reactive {
             odoo.pos_session_id,
             PosData.modelToLoad,
         ]);
+
+        for (const [model, fields] of Object.entries(CONFIG.relationsRestrictedFromLoading)) {
+            for (const field of fields) {
+                if (response.relations[model] && response.relations[model][field]) {
+                    delete response.relations[model][field];
+                }
+            }
+        }
 
         for (const posModel of registry.category("pos_available_models").getAll()) {
             modelClasses[posModel.pythonModel] = posModel;
