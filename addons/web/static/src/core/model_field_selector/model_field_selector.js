@@ -86,6 +86,6 @@ export class ModelFieldSelector extends Component {
             this.popover.close();
             return;
         }
-        this.props.update("", { resModel: this.props.resModel, fieodDef: null });
+        this.props.update("", { resModel: this.props.resModel, fieldDef: null });
     }
 }
