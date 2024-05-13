@@ -3,9 +3,8 @@
 
 from base64 import b64decode
 
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.serialization import pkcs12
 from odoo import models
+from odoo.addons.account.tools.certificate import load_key_and_certificates
 
 
 class Certificate(models.Model):
@@ -21,10 +20,9 @@ class Certificate(models.Model):
         if not self.password:
             return None, None
 
-        private_key, certificate, dummy = pkcs12.load_key_and_certificates(
+        private_key, certificate = load_key_and_certificates(
             b64decode(self.with_context(bin_size=False).content),  # Without bin_size=False, size is returned instead of content
             self.password.encode(),
-            backend=default_backend(),
         )
 
         return private_key, certificate
