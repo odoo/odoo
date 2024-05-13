@@ -20,13 +20,14 @@ commandProviderRegistry.add("debug", {
                 name: env._t("Deactivate debug mode"),
             });
         } else {
-            if (options.searchValue.toLowerCase() === "debug") {
+            const debugKey = "debug";
+            if (options.searchValue.toLowerCase() === debugKey) {
                 result.push({
                     action() {
                         browser.location.search = "?debug=assets";
                     },
                     category: "debug",
-                    name: env._t("Activate debug mode"),
+                    name: `${env._t("Activate debug mode")} (${debugKey})`,
                 });
             }
         }
