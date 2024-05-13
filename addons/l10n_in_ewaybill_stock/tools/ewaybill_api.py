@@ -7,9 +7,7 @@ from datetime import timedelta
 from markupsafe import Markup
 
 from odoo import fields, _
-from odoo.addons.iap import jsonrpc
 from odoo.exceptions import AccessError
-from odoo.addons.l10n_in_edi.models.account_edi_format import DEFAULT_IAP_ENDPOINT, DEFAULT_IAP_TEST_ENDPOINT
 from odoo.addons.l10n_in_edi_ewaybill.models.error_codes import ERROR_CODES
 
 
@@ -58,21 +56,18 @@ class EWayBillApi:
         self.env = self.company.env
 
     def _ewaybill_jsonrpc_to_server(self, url_path, params):
-        user_token = self.env["iap.account"].get("l10n_in_edi")
         params.update({
-            "account_token": user_token.account_token,
-            "dbuuid": self.env["ir.config_parameter"].sudo().get_param("database.uuid"),
             "username": self.company.sudo().l10n_in_edi_ewaybill_username,
             "gstin": self.company.vat,
         })
-        if self.company.sudo().l10n_in_edi_production_env:
-            default_endpoint = DEFAULT_IAP_ENDPOINT
-        else:
-            default_endpoint = DEFAULT_IAP_TEST_ENDPOINT
-        endpoint = self.env["ir.config_parameter"].sudo().get_param("l10n_in_edi_ewaybill.endpoint", default_endpoint)
-        url = f"{endpoint}{url_path}"
         try:
-            response = jsonrpc(url, params=params, timeout=10)
+            response = self.env['iap.account']._l10n_in_connect_to_server(
+                is_production=self.company.sudo().l10n_in_edi_production_env,
+                params=params,
+                url_path=url_path,
+                config_parameter="l10n_in_edi_ewaybill.endpoint",
+                timeout=10
+            )
             if response.get('error'):
                 raise EWayBillError(response)
         except AccessError as e:

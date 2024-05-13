@@ -5,32 +5,20 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <div id="india_integration_section" position="attributes">
-                <attribute name="invisible">0</attribute>
-            </div>
-            <xpath expr="//block[@id='india_localization']" position="inside">
-                <setting id="l10n_in_eway_iap" string="Setup Electronic Waybill" help="Check the documentation to get credentials." documentation="/applications/finance/fiscal_localizations/india.html" company_dependent="1" >
-                    <div class="content-group">
-                        <div class="mt16 row">
-                            <label for="l10n_in_edi_ewaybill_username" string="Username" class="col-3 col-lg-3 o_light_label"/>
-                            <field name="l10n_in_edi_ewaybill_username" nolabel="1"/>
-                        </div>
-                        <div class="row">
-                            <label for="l10n_in_edi_ewaybill_password" string="Password" class="col-3 col-lg-3 o_light_label"/>
-                            <field name="l10n_in_edi_ewaybill_password" password="True" nolabel="1"/>
-                        </div>
-                        <div class="row">
-                            <label for="l10n_in_edi_production_env" string="Production Environment" class="col-3 col-lg-3 o_light_label"/>
-                            <field name="l10n_in_edi_production_env" nolabel="1"/>
-                        </div>
+            <xpath expr="//setting[@name='electronic_waybill_in']" position="inside">
+                <div class="content-group" invisible="not module_l10n_in_edi_ewaybill or not module_l10n_in_edi">
+                    <div class="mt16 row">
+                        <label for="l10n_in_edi_ewaybill_username" string="Username" class="col-3 col-lg-3 o_light_label"/>
+                        <field name="l10n_in_edi_ewaybill_username" nolabel="1"/>
                     </div>
-                    <div class='mt8'>
-                        <button name="l10n_in_edi_ewaybill_test" icon="oi-arrow-right" type="object" string="Verify Username and Password" class="btn-link"/>
+                    <div class="row">
+                        <label for="l10n_in_edi_ewaybill_password" string="Password" class="col-3 col-lg-3 o_light_label"/>
+                        <field name="l10n_in_edi_ewaybill_password" password="True" nolabel="1"/>
                     </div>
-                    <div class='mt8'>
-                        <button name="l10n_in_edi_buy_iap" title="Costs 1 credit per transaction. Free 200 credits will be available for the first time." icon="fa-arrow-right" type="object" string="Buy credits" class="btn-link"/>
-                    </div>
-                </setting>
+                </div>
+                <div class='mt8' invisible="not module_l10n_in_edi_ewaybill or not module_l10n_in_edi">
+                    <button name="l10n_in_edi_ewaybill_test" icon="oi-arrow-right" type="object" string="Verify Username and Password" class="btn-link"/>
+                </div>
             </xpath>
         </field>
     </record>

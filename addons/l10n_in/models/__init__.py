@@ -4,6 +4,7 @@ from . import account_invoice
 from . import account_move_line
 from . import account_tax
 from . import company
+from . import iap_account
 from . import product_template
 from . import port_code
 from . import res_config_settings

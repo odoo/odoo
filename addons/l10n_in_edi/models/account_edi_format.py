@@ -17,9 +17,6 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-DEFAULT_IAP_ENDPOINT = "https://l10n-in-edi.api.odoo.com"
-DEFAULT_IAP_TEST_ENDPOINT = "https://l10n-in-edi-demo.api.odoo.com"
-
 
 class AccountEdiFormat(models.Model):
     _inherit = "account.edi.format"
@@ -650,21 +647,17 @@ class AccountEdiFormat(models.Model):
 
     @api.model
     def _l10n_in_edi_connect_to_server(self, company, url_path, params):
-        user_token = self.env["iap.account"].get("l10n_in_edi")
         params.update({
-            "account_token": user_token.account_token,
-            "dbuuid": self.env["ir.config_parameter"].sudo().get_param("database.uuid"),
             "username": company.sudo().l10n_in_edi_username,
             "gstin": company.vat,
         })
-        if company.sudo().l10n_in_edi_production_env:
-            default_endpoint = DEFAULT_IAP_ENDPOINT
-        else:
-            default_endpoint = DEFAULT_IAP_TEST_ENDPOINT
-        endpoint = self.env["ir.config_parameter"].sudo().get_param("l10n_in_edi.endpoint", default_endpoint)
-        url = "%s%s" % (endpoint, url_path)
         try:
-            return jsonrpc(url, params=params, timeout=25)
+            return self.env['iap.account']._l10n_in_connect_to_server(
+              company.sudo().l10n_in_edi_production_env,
+              params,
+              url_path,
+              "l10n_in_edi.endpoint"
+            )
         except AccessError as e:
             _logger.warning("Connection error: %s", e.args[0])
             return {

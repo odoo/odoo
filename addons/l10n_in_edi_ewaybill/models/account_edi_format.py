@@ -9,8 +9,6 @@ from markupsafe import Markup
 from odoo import models, fields, api, _
 from odoo.tools import html_escape
 from odoo.exceptions import AccessError
-from odoo.addons.iap import jsonrpc
-from odoo.addons.l10n_in_edi.models.account_edi_format import DEFAULT_IAP_ENDPOINT, DEFAULT_IAP_TEST_ENDPOINT
 
 from .error_codes import ERROR_CODES
 
@@ -586,21 +584,18 @@ class AccountEdiFormat(models.Model):
 
     @api.model
     def _l10n_in_edi_ewaybill_connect_to_server(self, company, url_path, params):
-        user_token = self.env["iap.account"].get("l10n_in_edi")
         params.update({
-            "account_token": user_token.account_token,
-            "dbuuid": self.env["ir.config_parameter"].sudo().get_param("database.uuid"),
             "username": company.sudo().l10n_in_edi_ewaybill_username,
             "gstin": company.vat,
         })
-        if company.sudo().l10n_in_edi_production_env:
-            default_endpoint = DEFAULT_IAP_ENDPOINT
-        else:
-            default_endpoint = DEFAULT_IAP_TEST_ENDPOINT
-        endpoint = self.env["ir.config_parameter"].sudo().get_param("l10n_in_edi_ewaybill.endpoint", default_endpoint)
-        url = "%s%s" % (endpoint, url_path)
         try:
-            response = jsonrpc(url, params=params, timeout=70)
+            response = self.env['iap.account']._l10n_in_connect_to_server(
+                is_production=company.sudo().l10n_in_edi_production_env,
+                params=params,
+                url_path=url_path,
+                config_parameter="l10n_in_edi_ewaybill.endpoint",
+                timeout=70
+            )
             return self._l10n_in_set_missing_error_message(response)
         except AccessError as e:
             _logger.warning("Connection error: %s", e.args[0])
