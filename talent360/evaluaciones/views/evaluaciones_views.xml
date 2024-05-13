@@ -83,7 +83,7 @@
                 <field name="estado" readonly="1"/>
                 <field name="tipo" readonly="1"/>
                 <field name="porcentaje_respuestas" widget="percentage" readonly="1"/>
-                <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="abrir_evaluacion_form" string="Detalle" type="object"/>
+                <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="abrir_evaluacion_action_form" string="Detalle" type="object" readonly="1"/>
             </tree>
         </field>
     </record>
@@ -105,13 +105,16 @@
                 <header>
                     <!-- Generación de reporte de una evaluación-->
                     <button name="evaluacion_action_tree" string="Guardar" type="object" class="btn-primary my-3"/>
-                    <button class="btn btn-primary" name="action_reporte_generico" string="Reporte" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
+                    <button class="btn btn-primary" name="reporte_generico_action" string="Reporte" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
                     <button class="btn btn-primary" name="action_asignar_usuarios_externos" string="Asignar usuarios externos" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
                 </header>
                 <sheet string="Evaluacion de personal">
                     <h1>
                         <field class="text-primary font-weight-bold" name="nombre"/>
                     </h1>
+                    <group>
+                        <field name="estado"/>
+                    </group>
                     <p>
                         <field name="descripcion"/>
                     </p>
@@ -125,12 +128,9 @@
                         <field name="incluir_demograficos"/>
                     </group>
                     <group>
+                     <group>
                         <field name="mensaje"/>
                     </group>
-                    <group>
-                        <group>
-                            <field name="estado"/>
-                        </group>
                         <notebook>
                             <page string="Preguntas">
                                 <field class="lh-lg w-100" colspan="2" name="pregunta_ids" readonly="1" nolabel="1" context="{'current_evaluacion_id': active_id}">
@@ -326,7 +326,7 @@
                 <field name="tipo" readonly="1"/>
                 <field name="conteo_asignados" readonly="1"/>
                 <field name="porcentaje_respuestas" widget="percentage" readonly="1"/>
-                <button class="btn btn-primary" name="action_reporte_generico" string="Reporte" type="object"/>
+                <button class="btn btn-primary" name="reporte_generico_action" string="Reporte" type="object"/>
             </tree>
         </field>
     </record>
@@ -336,7 +336,7 @@
         <field name="res_model">evaluacion</field>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="reportes_view_tree"/>
-        <field name="domain" eval="[('porcentaje_respuestas', '>', '0')]"/>
+        <field name="domain" eval="[('porcentaje_respuestas','>','0')]"/>
     </record>
 
 
@@ -406,6 +406,9 @@
                         <field name="nombre"/>
                     </group>
                     <group>
+                        <field name="estado"/>
+                    </group>
+                    <group>
                         <field name="descripcion"/>
                     </group>
                     <group>
@@ -418,12 +421,9 @@
                         <field name="incluir_demograficos"/>
                     </group>
                     <group>
+                    <group>
                         <field name="mensaje"/>
                     </group>
-                    <group>
-                        <group>
-                            <field name="estado"/>
-                        </group>
                         <notebook>
                             <page string="Asignados">
                                 <field class="lh-lg w-100" colspan="2" name="usuario_ids" nolabel="1" context="{'current_evaluacion_id': active_id}">

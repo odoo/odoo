@@ -432,7 +432,7 @@ class TestReportes(TransactionCase):
 
         Este método verifica que los datos generados para el reporte genérico sean correctos.
         """
-        params = self.evaluacion.action_generar_datos_reporte_generico()
+        params = self.evaluacion.generar_datos_reporte_generico_action()
 
         # Verificar que la evaluación y el número de preguntas sean correctos
         self.assertEqual(params["evaluacion"], self.evaluacion)

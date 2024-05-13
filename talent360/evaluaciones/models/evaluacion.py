@@ -10,10 +10,17 @@ class Evaluacion(models.Model):
     :param _name (str): Nombre del modelo en Odoo.
     :param _description (str): Descripción del modelo en Odoo.
     :param nombre (fields.Char): Nombre de la evaluación. Es un campo obligatorio.
+    :param tipo (fields.Selection): Tipo de evaluación con opciones 'CLIMA', 'NOM_035' y 'competencia'. Por defecto, es 'competencia'.
+    :param descripcion (fields.Text): Descripción de la evaluación.
     :param estado (fields.Selection): Estado de la evaluación con opciones 'borrador', 'publicado' y 'finalizado'. Por defecto, es 'borrador'.
     :param pregunta_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'pregunta' para almacenar las preguntas asociadas a la evaluación.
     :param competencia_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'competencia' para almacenar las competencias asociadas a la evaluación.
     :param usuario_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'res.users' para asignar usuarios a la evaluación.
+    :param usuario_externo_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'usuario.externo' para asignar usuarios externos a la evaluación.
+    :param fecha_inicio (fields.Date): Fecha de inicio de la evaluación. Es un campo obligatorio.
+    :param fecha_final (fields.Date): Fecha de finalización de la evaluación. Es un campo obligatorio.
+    :param mensaje (fields.Text): Mensaje de bienvenida para la evaluación.
+    :param incluir_demograficos (fields.Boolean): Campo booleano para indicar si se incluirán datos demográficos en el reporte. Por defecto, es True.
     """
 
     _name = "evaluacion"
@@ -34,8 +41,8 @@ class Evaluacion(models.Model):
     estado = fields.Selection(
         [
             ("borrador", "Borrador"),
-            ("publicado", "Publicado"),
-            ("finalizado", "Finalizado"),
+            ("publicado", "Abierta"),
+            ("finalizado", "Cerrada"),
         ],
         default="borrador",
         required=True,
@@ -78,21 +85,24 @@ class Evaluacion(models.Model):
 
     mensaje = fields.Text(string="Mensaje de bienvenida")
 
-    incluir_demograficos = fields.Boolean(
-        string="Incluir datos demográficos", default=True
-    )
-
-    @api.constrains("fecha_inicio", "fecha_final")
-    def check_fechas(self):
+    incluir_demograficos = fields.Boolean(string="Incluir datos demográficos", default = True)
+    
+    @api.constrains('fecha_inicio', 'fecha_final')
+    def checar_fechas(self):
+        """
+        Valida que la fecha de inicio sea anterior a la fecha final.
+        """
         for record in self:
-            if (
-                record.fecha_inicio
-                and record.fecha_final
-                and record.fecha_inicio > record.fecha_final
-            ):
-                raise exceptions.ValidationError(
-                    _("La fecha de inicio debe ser anterior a la fecha final")
-                )
+            fecha_actual = fields.Date.today()
+            if record.fecha_inicio:
+                # Verifica que la fecha de inicio no sea menor a la fecha actual
+                if record.fecha_inicio < fecha_actual:
+                    raise exceptions.ValidationError(_("La fecha de inicio debe ser igual o posterior a la fecha actual."))
+            
+            if record.fecha_inicio and record.fecha_final:
+                # Verifica que la fecha de inicio sea antes de la fecha final
+                if record.fecha_inicio > record.fecha_final:
+                    raise exceptions.ValidationError(_("La fecha de inicio debe ser anterior a la fecha final"))
 
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
@@ -182,8 +192,7 @@ class Evaluacion(models.Model):
         actual tenga las preguntas correctas, y luego configura y devuelve un diccionario con
         los detalles para abrir esta evaluación en una vista de formulario específica.
 
-        Returns:
-        dict: Un diccionario que contiene todos los parámetros necesarios para abrir la
+        :return: Un diccionario que contiene todos los parámetros necesarios para abrir la
         evaluación en una vista de formulario específica de Odoo.
 
         """
@@ -266,7 +275,7 @@ class Evaluacion(models.Model):
             "target": "current",
         }
 
-    def abrir_evaluacion_form(self):
+    def abrir_evaluacion_action_form(self):
         """
         Abre la evaluación en una vista de formulario.
 
@@ -291,7 +300,7 @@ class Evaluacion(models.Model):
 
         return action
 
-    def action_reporte_generico(self):
+    def reporte_generico_action(self):
         """
         Genera una acción de URL para el reporte genérico de la evaluación.
 
@@ -314,7 +323,7 @@ class Evaluacion(models.Model):
             "target": "new",
         }
 
-    def action_generar_datos_reporte_generico(self):
+    def generar_datos_reporte_generico_action(self):
         """
         Genera los datos necesarios para el reporte genérico de la evaluación.
 
@@ -440,8 +449,13 @@ class Evaluacion(models.Model):
         }
 
         return parametros
-
     def action_generar_datos_reporte_clima(self):
+        """
+        Genera los datos necesarios para el reporte de clima organizacional de la evaluación.
+        Calcula el porcentaje de satisfacción para cada categoría y departamento.
+
+        :return: Los parámetros necesarios para generar el reporte.
+        """
         # Categorías para el reporte de clima laboral
         categorias_clima = [
             "Reclutamiento y Selección de Personal",
@@ -501,9 +515,8 @@ class Evaluacion(models.Model):
             for respuesta in pregunta.respuesta_ids:
                 valor_respuesta = respuesta.valor_respuesta
                 valor_pregunta += valor_respuesta
-                maximo_pregunta += (
-                    pregunta._calculate_valor_maximo()
-                )  # Suponiendo un máximo de 4 para cada respuesta en escala
+                maximo_pregunta += pregunta._calculate_valor_maximo()  # Suponiendo un máximo de 4 para cada respuesta en escala
+ # Suponiendo un máximo de 4 para cada respuesta en escala
 
                 nombre_departamento = (
                     respuesta.usuario_id.department_id.name
@@ -568,6 +581,11 @@ class Evaluacion(models.Model):
         return parametros
 
     def generar_datos_demograficos(self):
+        """
+        Genera los datos demográficos de la evaluación.
+
+        :return: Los datos demográficos de los usuarios asignados a la evaluación. Incuye departamentos, generaciones, puestos y géneros.
+        """
         datos_demograficos = []
         # SQL
         usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
@@ -820,6 +838,13 @@ class Evaluacion(models.Model):
         return dato
 
     def obtener_generacion(self, anio_nacimiento):
+        """
+        Obtiene la generación a la que pertenece una persona de acuerdo al año de nacimiento.
+        :param anio_nacimiento: El año de nacimiento de la persona.
+
+        :return: La generación a la que pertenece la persona.
+        """
+
         if 1946 <= anio_nacimiento <= 1964:
             return "Baby Boomers"
         elif 1965 <= anio_nacimiento <= 1980:
@@ -865,6 +890,13 @@ class Evaluacion(models.Model):
         return datos
 
     def obtener_datos_demograficos_externos(self, usuario):
+        """
+        Obtiene los datos demográficos de un usuario externo.
+        :param usuario: El usuario externo del que se obtendrán los datos demográficos.
+
+        :return: Un diccionario con los datos demográficos del usuario externo. Incluye nombre, género, puesto, año de nacimiento, generación y departamento.
+        """
+
         datos = {}
 
         datos["nombre"] = self.obtener_dato(usuario.nombre)
@@ -881,8 +913,8 @@ class Evaluacion(models.Model):
         datos["departamento"] = self.obtener_dato(usuario.direccion)
 
         return datos
-
-    def action_get_evaluaciones(self, evaluacion_id):
+    
+    def get_evaluaciones_action(self, evaluacion_id):
         """
         Obtiene las preguntas asociadas a la evaluación.
 
@@ -898,6 +930,11 @@ class Evaluacion(models.Model):
         }
 
     def enviar_evaluacion_action(self):
+        """
+        Envía la evaluación a los usuarios asignados.
+
+        :return: Un mensaje de notificación que indica que la evaluación ha sido enviada y los usuarios a los que se les ha enviado.
+        """
 
         if self.estado != "publicado":
             return
@@ -937,6 +974,11 @@ class Evaluacion(models.Model):
         return resultado
 
     def action_asignar_usuarios_externos(self):
+        """
+        Abre la ventana para asignar usuarios externos a la evaluación. 
+        
+        :return: Una acción para abrir la ventana de asignación de usuarios externos.
+        """
         return {
             "name": "Asignar usuarios externos",
             "type": "ir.actions.act_window",
