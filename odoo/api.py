@@ -917,7 +917,7 @@ NOTHING = object()
 EMPTY_DICT = frozendict()
 
 
-class Cache(object):
+class Cache:
     """ Implementation of the cache of records.
 
     For most fields, the cache is simply a mapping from a record and a field to
@@ -937,6 +937,7 @@ class Cache(object):
     the values that should be in the database must be in a context where all
     the field's context keys are ``None``.
     """
+    __slots__ = ('_data', '_dirty', '_patches')
 
     def __init__(self):
         # {field: {record_id: value}, field: {context_key: {record_id: value}}}
@@ -974,14 +975,14 @@ class Cache(object):
     def _get_field_cache(self, model, field):
         """ Return the field cache of the given field, but not for modifying it. """
         field_cache = self._data.get(field, EMPTY_DICT)
-        if field_cache and model.pool.field_depends_context[field]:
+        if field_cache and field in model.pool.field_depends_context:
             field_cache = field_cache.get(model.env.cache_key(field), EMPTY_DICT)
         return field_cache
 
     def _set_field_cache(self, model, field):
         """ Return the field cache of the given field for modifying it. """
         field_cache = self._data[field]
-        if model.pool.field_depends_context[field]:
+        if field in model.pool.field_depends_context:
             field_cache = field_cache.setdefault(model.env.cache_key(field), {})
         return field_cache
 
@@ -1050,7 +1051,7 @@ class Cache(object):
         if dirty:
             assert field.column_type and field.store and record_id
             self._dirty[field].add(record_id)
-            if record.pool.field_depends_context[field]:
+            if field in record.pool.field_depends_context:
                 # put the values under conventional context key values {'context_key': None},
                 # in order to ease the retrieval of those values to flush them
                 record = record.with_env(record.env(context={}))
@@ -1097,7 +1098,7 @@ class Cache(object):
         if dirty:
             assert field.column_type and field.store and all(records._ids)
             self._dirty[field].update(records._ids)
-            if records.pool.field_depends_context[field]:
+            if field in records.pool.field_depends_context:
                 # put the values under conventional context key values {'context_key': None},
                 # in order to ease the retrieval of those values to flush them
                 records = records.with_env(records.env(context={}))
@@ -1244,7 +1245,7 @@ class Cache(object):
         By default the method checks for values in the current context of ``model``.
         But when ``all_contexts`` is true, it checks for values *in all contexts*.
         """
-        if all_contexts and model.pool.field_depends_context[field]:
+        if all_contexts and field in model.pool.field_depends_context:
             field_cache = self._data.get(field, EMPTY_DICT)
             ids = OrderedSet(id_ for sub_cache in field_cache.values() for id_ in sub_cache)
         else:
@@ -1368,7 +1369,7 @@ class Cache(object):
                 continue
 
             model = env[field.model_name]
-            if depends_context[field]:
+            if field in depends_context:
                 for context_keys, inner_cache in field_cache.items():
                     context = dict(zip(depends_context[field], context_keys))
                     if 'company' in context:
