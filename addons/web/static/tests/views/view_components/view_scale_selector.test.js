@@ -51,12 +51,12 @@ test("basic ViewScaleSelector component usage", async () => {
     click(".scale_button_selection");
     await animationFrame();
     expect(".o-dropdown--menu").toHaveCount(1);
-    expect(queryAll(".o-dropdown--menu .active")[0], {
+    expect(queryAll(".o-dropdown--menu .active")[0]).toHaveText("Weekly", {
         message: "the active option is selected",
-    }).toHaveText("Weekly");
-    expect(".o-dropdown--menu span:nth-child(2)", {
+    });
+    expect(".o-dropdown--menu span:nth-child(2)").toHaveAttribute("data-hotkey", "o", {
         message: "'week' scale has the right hotkey",
-    }).toHaveAttribute("data-hotkey", "o");
+    });
     click(".o_scale_button_day");
     await animationFrame();
     expect(["day"]).toVerifySteps();

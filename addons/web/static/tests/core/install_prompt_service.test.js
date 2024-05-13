@@ -20,7 +20,7 @@ test("install prompt fetch the application name", async () => {
 
     appName = await getService("installPrompt").getAppName();
     expect(appName).toBe("Odoo PWA");
-    expect([], {
+    expect([]).toVerifySteps({
         message: "the manifest is only fetched once to get the app name",
-    }).toVerifySteps();
+    });
 });
