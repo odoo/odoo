@@ -17,7 +17,8 @@ export class BillScreen extends Component {
         this.printer = useState(useService("printer"));
     }
     async print() {
+        const order = this.pos.get_order();
         await this.pos.printReceipt();
-        this.pos.get_order()._printed = false;
+        order._printed = false;
     }
 }
