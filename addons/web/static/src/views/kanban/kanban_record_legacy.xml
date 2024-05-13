@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.KanbanRecord">
+    <t t-name="web.KanbanRecordLegacy">
         <div
         role="article"
         t-att-class="getRecordClasses()"
@@ -13,7 +13,7 @@
             <t t-call="{{ this.constructor.menuTemplate }}"/>
         </div>
     </t>
-    <t t-name="web.KanbanRecordMenu">
+    <t t-name="web.KanbanRecordMenuLegacy">
         <div t-if="showMenu" class="o_dropdown_kanban bg-transparent position-absolute end-0">
             <Dropdown menuClass="'o-dropdown--kanban-record-menu'" position="'bottom-end'">
                 <button class="btn o-no-caret rounded-0" title="Dropdown menu">

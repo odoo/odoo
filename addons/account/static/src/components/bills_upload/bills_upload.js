@@ -10,7 +10,7 @@ import { kanbanView } from "@web/views/kanban/kanban_view";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { KanbanDropdownMenuWrapper } from "@web/views/kanban/kanban_dropdown_menu_wrapper";
-import { KanbanRecord } from "@web/views/kanban/kanban_record";
+import { KanbanRecord } from "@web/views/kanban/kanban_record_legacy";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
@@ -219,10 +219,9 @@ export class DashboardKanbanRecord extends KanbanRecord {
 }
 
 export class DashboardKanbanRenderer extends KanbanRenderer {
-    static components = {
-        ...KanbanRenderer.components,
-        KanbanRecord: DashboardKanbanRecord,
-    };
+    get kanbanRecordComponent() {
+        return DashboardKanbanRecord;
+    }
 }
 
 export const DashboardKanbanView = {

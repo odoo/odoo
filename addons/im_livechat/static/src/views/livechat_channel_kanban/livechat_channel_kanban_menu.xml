@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <t t-name="im_livechat.KanbanRecordMenu" t-inherit="web.KanbanRecordMenu">
+    <t t-name="im_livechat.KanbanRecordMenu" t-inherit="web.KanbanRecordMenuLegacy">
         <xpath expr="//Dropdown" position="attributes">
             <attribute name="position">'bottom-start'</attribute>
             <attribute name="menuClass" add="` rounded-0 ${props.record.data.available_operator_ids.count > 0 ? 'o-livechat-ChannelKanban-highlighted': ''}`" separator="+"/>

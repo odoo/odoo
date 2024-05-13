@@ -68,8 +68,8 @@
 .o_status {
     border-radius: 50%;
     background-color: map-get($grays, '200');
-    height: 12px;
-    width: 12px;
+    height: var(--Status-size, 12px);
+    width: var(--Status-size, 12px);
     box-shadow: inset 0 0 0 1px rgba($black, .2);
 
     &.o_status_green {

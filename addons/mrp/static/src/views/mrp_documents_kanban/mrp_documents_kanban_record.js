@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { CANCEL_GLOBAL_CLICK, KanbanRecord } from "@web/views/kanban/kanban_record";
+import { CANCEL_GLOBAL_CLICK, KanbanRecord } from "@web/views/kanban/kanban_record_legacy";
 import { useService } from "@web/core/utils/hooks";
 import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 

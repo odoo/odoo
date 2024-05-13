@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanImage">
+        <div t-attf-class="h-100 o_kanban_image {{hasInnerPic ? 'o_kanban_image_with_inner' : ''}}">
+            <img loading="lazy" class="o_kanban_image_main" t-att-src="mainImageSrc" t-att-alt="mainImageAlt"/>
+            <img loading="lazy" class="h-100 o_kanban_image_inner_pic" t-if="hasInnerPic" t-att-alt="innerImageAlt" t-att-src="innerImageSrc"/>
+        </div>
+    </t>
+
+</templates>

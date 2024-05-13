@@ -252,7 +252,14 @@ export class Field extends Component {
             }
             for (const child of node.children) {
                 const viewType = child.tagName === "tree" ? "list" : child.tagName;
-                const { ArchParser } = viewRegistry.get(viewType);
+                const view = viewRegistry.get(viewType);
+                let ArchParser = view.ArchParser;
+                if (viewType === "kanban") {
+                    const isLegacyArch = !!child.querySelector(`templates [t-name="kanban-box"]`);
+                    if (isLegacyArch) {
+                        ArchParser = view.ArchParserLegacy;
+                    }
+                }
                 // We copy and hence isolate the subview from the main view's tree
                 // This way, the subview's tree is autonomous and CSS selectors will work normally
                 const childCopy = child.cloneNode(true);

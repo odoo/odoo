@@ -37,13 +37,13 @@ QUnit.module("Project", (hooks) => {
                 <kanban  class="o_kanban_test">
                     <field name="status"/>
                     <field name="id"/>
-                    <template>
+                    <templates>
                         <t t-name="kanban-box">
                             <div>
                                 <field name="status" widget="status_with_color" readonly="1" status_label="test status label"/>
                             </div>
                         </t>
-                    </template>
+                    </templates>
                 </kanban>`,
         };
         target = getFixture();

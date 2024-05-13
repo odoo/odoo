@@ -2,7 +2,7 @@
 import { useSubEnv } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { useDebounced } from "@web/core/utils/timing";
-import { KanbanRecord } from "@web/views/kanban/kanban_record";
+import { KanbanRecord } from "@web/views/kanban/kanban_record_legacy";
 import { ProductCatalogOrderLine } from "./order_line/order_line";
 
 export class ProductCatalogKanbanRecord extends KanbanRecord {

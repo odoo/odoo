@@ -7,10 +7,6 @@ import { ProductCatalogKanbanRecord } from "./kanban_record";
 
 export class ProductCatalogKanbanRenderer extends KanbanRenderer {
     static template = "ProductCatalogKanbanRenderer";
-    static components = {
-        ...KanbanRenderer.components,
-        KanbanRecord: ProductCatalogKanbanRecord,
-    };
 
     setup() {
         super.setup();
@@ -19,6 +15,10 @@ export class ProductCatalogKanbanRenderer extends KanbanRenderer {
 
     get createProductContext() {
         return {};
+    }
+
+    get kanbanRecordComponent() {
+        return ProductCatalogKanbanRecord;
     }
 
     async createProduct() {

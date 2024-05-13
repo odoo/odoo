@@ -2,7 +2,7 @@
 
 import { patch } from "@web/core/utils/patch";
 import { ProjectTaskListRenderer } from "@project/views/project_task_list/project_task_list_renderer";
-import { getRawValue } from "@web/views/kanban/kanban_record";
+import { getRawValue } from "@web/views/kanban/kanban_record_legacy";
 
 patch(ProjectTaskListRenderer.prototype, {
     isCellReadonly(column, record) {

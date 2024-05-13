@@ -11,12 +11,15 @@ export class ProductDocumentKanbanRenderer extends KanbanRenderer {
         ...KanbanRenderer.components,
         FileUploadProgressContainer,
         FileUploadProgressKanbanRecord,
-        KanbanRecord: ProductDocumentKanbanRecord,
     };
     static template = "product.ProductDocumentKanbanRenderer";
     setup() {
         super.setup();
         this.fileUploadService = useService("file_upload");
+    }
+
+    get kanbanRecordComponent() {
+        return ProductDocumentKanbanRecord;
     }
 }
 

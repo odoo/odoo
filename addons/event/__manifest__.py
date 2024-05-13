@@ -53,6 +53,7 @@ Key Features
             'event/static/src/scss/event.scss',
             'event/static/src/icon_selection_field/icon_selection_field.js',
             'event/static/src/icon_selection_field/icon_selection_field.xml',
+            'event/static/src/kanban_date_widget/**/*',
             'event/static/src/js/tours/**/*',
         ],
         'web.assets_frontend': [

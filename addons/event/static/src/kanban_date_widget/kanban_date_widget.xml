@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="event.KanbanDateWidget">
+        <div class="text-bg-primary p-2 h-100 text-center d-flex flex-column justify-content-center">
+            <div t-esc="format(this.dateBegin, 'd')" class="fs-1"/>
+            <div>
+                <t t-esc="format(this.dateBegin, 'MMM yyyy')"/>
+            </div>
+            <div>
+                <t t-esc="format(this.dateBegin, 't')"/>
+            </div>
+            <div t-if="!areDateEqual">
+                <i class="oi oi-arrow-right me-2 fs-5" title="End date"/>
+                <t t-esc="format(this.dateEnd, 'd MMM')"/>
+            </div>
+        </div>     
+    </t>
+
+</templates>

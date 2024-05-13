@@ -2458,13 +2458,8 @@ class Model(models.AbstractModel):
         :returns: a kanban view as an lxml document
         :rtype: etree._Element
         """
-
         field = E.field(name=self._rec_name_fallback())
-        content_div = E.div(field, {'class': "o_kanban_card_content"})
-        card_div = E.div(content_div, {'t-attf-class': "oe_kanban_card oe_kanban_global_click"})
-        kanban_box = E.t(card_div, {'t-name': "kanban-box"})
-        templates = E.templates(kanban_box)
-        return E.kanban(templates, string=self._description)
+        return E.kanban(E.card(field))
 
     @api.model
     def _get_default_graph_view(self):

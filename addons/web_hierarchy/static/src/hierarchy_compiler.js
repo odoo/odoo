@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
+import { KanbanCompiler } from "@web/views/kanban/kanban_compiler_legacy";
 
 export class HierarchyCompiler extends KanbanCompiler {
     /**

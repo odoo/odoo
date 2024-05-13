@@ -10,7 +10,6 @@ import { user } from "@web/core/user";
 export class ProjectTaskKanbanRenderer extends KanbanRenderer {
     static components = {
         ...KanbanRenderer.components,
-        KanbanRecord: ProjectTaskKanbanRecord,
         KanbanHeader: ProjectTaskKanbanHeader,
     };
 
@@ -21,6 +20,10 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
         onWillStart(async () => {
             this.isProjectManager = await user.hasGroup('project.group_project_manager');
         });
+    }
+
+    get kanbanRecordComponent() {
+        return ProjectTaskKanbanRecord;
     }
 
     canCreateGroup() {

@@ -11,12 +11,15 @@ export class MrpDocumentsKanbanRenderer extends KanbanRenderer {
         ...KanbanRenderer.components,
         FileUploadProgressContainer,
         FileUploadProgressKanbanRecord,
-        KanbanRecord: MrpDocumentsKanbanRecord,
     };
     static template = "mrp.MrpDocumentsKanbanRenderer";
     setup() {
         super.setup();
         this.fileUploadService = useService("file_upload");
+    }
+
+    get kanbanRecordComponent() {
+        return MrpDocumentsKanbanRecord;
     }
 }
 

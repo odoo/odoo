@@ -249,7 +249,7 @@ export class ViewCompiler {
      */
     compile(key, params = {}) {
         const root = this.templates[key].cloneNode(true);
-        const child = this.compileNode(root, params);
+        const child = this.compileNode(root, params, false);
         const newRoot = createElement("t", [child]);
         newRoot.setAttribute("t-translation", "off");
         return newRoot;
@@ -403,6 +403,7 @@ export class ViewCompiler {
         for (const child of el.childNodes) {
             append(compiled, this.compileNode(child, params));
         }
+        // TODO: remove this
         if (el.hasAttribute("t-foreach") && !el.hasAttribute("t-key")) {
             compiled.setAttribute("t-key", `${el.getAttribute("t-as")}_index`);
             console.warn(`Missing attribute "t-key" in "t-foreach" statement.`);

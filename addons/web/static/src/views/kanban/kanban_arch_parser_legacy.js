@@ -4,12 +4,28 @@ import { Field } from "@web/views/fields/field";
 import { Widget } from "@web/views/widgets/widget";
 import { archParseBoolean, getActiveActions, processButton } from "@web/views/utils";
 
+/**
+ * NOTE ON 't-name="kanban-box"':
+ *
+ * Multiple roots are supported in kanban box template definitions, however there
+ * are a few things to keep in mind when doing so:
+ *
+ * - each root will generate its own card, so it would be preferable to make the
+ * roots mutually exclusive to avoid rendering multiple cards for the same record;
+ *
+ * - certain fields such as the kanban 'color' or the 'handle' field are based on
+ * the last encountered node, so it is advised to keep the same values for those
+ * fields within all roots to avoid inconsistencies.
+ */
+
+export const KANBAN_BOX_ATTRIBUTE = "kanban-box";
+export const KANBAN_MENU_ATTRIBUTE = "kanban-menu";
+export const KANBAN_TOOLTIP_ATTRIBUTE = "kanban-tooltip";
+
 export class KanbanArchParser {
     parse(xmlDoc, models, modelName) {
         const fields = models[modelName].fields;
         const className = xmlDoc.getAttribute("class") || null;
-        const allowGlobalClick = archParseBoolean(xmlDoc.getAttribute("global_click"), true);
-        const cardColorField = xmlDoc.getAttribute("color") || false;
         let defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
         const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
         const limit = xmlDoc.getAttribute("limit");
@@ -35,14 +51,17 @@ export class KanbanArchParser {
         const action = xmlDoc.getAttribute("action");
         const type = xmlDoc.getAttribute("type");
         const openAction = action && type ? { action, type } : null;
+        const templateDocs = {};
         let headerButtons = [];
         const creates = [];
         let button_id = 0;
-        let cardClassName;
         // Root level of the template
         visitXML(xmlDoc, (node) => {
-            if (node.tagName === "header" && !node.closest("card")) {
-                // <header> tag not inside <card> (to define buttons for the control panel)
+            if (node.hasAttribute("t-name")) {
+                templateDocs[node.getAttribute("t-name")] = node;
+                return;
+            }
+            if (node.tagName === "header") {
                 headerButtons = [...node.children]
                     .filter((node) => node.tagName === "button")
                     .map((node) => ({
@@ -71,6 +90,14 @@ export class KanbanArchParser {
             }
             // Case: field node
             if (node.tagName === "field") {
+                // In kanban, we display many2many fields as tags by default
+                const widget = node.getAttribute("widget");
+                if (
+                    !widget &&
+                    models[modelName].fields[node.getAttribute("name")].type === "many2many"
+                ) {
+                    node.setAttribute("widget", "many2many_tags");
+                }
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "kanban", jsClass);
                 const name = fieldInfo.name;
                 if (!(fieldInfo.name in fieldNextIds)) {
@@ -92,8 +119,17 @@ export class KanbanArchParser {
                 widgetNodes[widgetId] = widgetInfo;
                 node.setAttribute("widget_id", widgetId);
             }
-            if (node.tagName === "card") {
-                cardClassName = node.getAttribute("class") || null;
+
+            // Keep track of last update so images can be reloaded when they may have changed.
+            if (node.tagName === "img") {
+                const attSrc = node.getAttribute("t-att-src");
+                if (
+                    attSrc &&
+                    /\bkanban_image\b/.test(attSrc) &&
+                    !Object.values(fieldNodes).some((f) => f.name === "write_date")
+                ) {
+                    fieldNodes.write_date_0 = { name: "write_date", type: "datetime" };
+                }
             }
         });
 
@@ -104,14 +140,25 @@ export class KanbanArchParser {
             progressAttributes = this.parseProgressBar(progressBar, fields);
         }
 
+        // Concrete kanban box elements in the template
+        const cardDoc = templateDocs[KANBAN_BOX_ATTRIBUTE];
+        if (!cardDoc) {
+            throw new Error(`Missing '${KANBAN_BOX_ATTRIBUTE}' template.`);
+        }
+
+        // Color and color picker (first node found is taken for each)
+        const cardColorEl = cardDoc.querySelector("[color]");
+        const cardColorField = cardColorEl && cardColorEl.getAttribute("color");
+
+        const colorEl = xmlDoc.querySelector("templates .oe_kanban_colorpicker[data-field]");
+        const colorField = (colorEl && colorEl.getAttribute("data-field")) || "color";
+
         if (!defaultOrder.length && handleField) {
             defaultOrder = stringToOrderBy(handleField);
         }
 
         return {
             activeActions,
-            allowGlobalClick,
-            cardClassName,
             className,
             creates,
             defaultGroupBy,
@@ -119,6 +166,7 @@ export class KanbanArchParser {
             widgetNodes,
             handleField,
             headerButtons,
+            colorField,
             defaultOrder,
             onCreate,
             openAction,
@@ -129,9 +177,11 @@ export class KanbanArchParser {
             countLimit: countLimit && parseInt(countLimit, 10),
             progressAttributes,
             cardColorField,
+            templateDocs,
             tooltipInfo,
             examples: xmlDoc.getAttribute("examples"),
             xmlDoc,
+            isLegacyKanban: true,
         };
     }
 

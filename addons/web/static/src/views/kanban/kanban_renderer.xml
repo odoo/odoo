@@ -38,7 +38,7 @@
                                 />
                             </t>
                             <t t-foreach="group.list.records" t-as="record" t-key="record.id">
-                                <KanbanRecord
+                                <t t-component="kanbanRecordComponent" t-on-click="(ev) => this.onRecordClicked(ev, record)"
                                     archInfo="props.archInfo"
                                     Compiler="props.Compiler"
                                     canResequence="!isGroupProcessing and !isProcessing(record.id) and canResequenceRecords"
@@ -68,7 +68,7 @@
                     </div>
                 </t>
                 <t t-else="">
-                    <KanbanRecord
+                    <t t-component="kanbanRecordComponent" t-on-click="(ev) => this.onRecordClicked(ev, groupOrRecord.record)"
                         archInfo="props.archInfo"
                         Compiler="props.Compiler"
                         canResequence="!isProcessing(groupOrRecord.record.id) and canResequenceRecords"
@@ -81,6 +81,7 @@
                         record="groupOrRecord.record"
                         templates="props.archInfo.templateDocs"
                     />
+                    <!-- TODO: remove legacy props "templates" -->
                 </t>
             </t>
             <t t-if="props.list.isGrouped">
@@ -124,7 +125,7 @@
         </div>
     </t>
 
-    <t t-name="web.KanbanColorPicker">
+    <t t-name="web.KanbanColorPickerLegacy">
         <ul t-if="this.dataState.widget.editable" class="oe_kanban_colorpicker mb-0 ms-2">
             <!--
                 Used in KanbanRecord

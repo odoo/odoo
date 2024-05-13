@@ -8,7 +8,7 @@ import { CrmKanbanRenderer } from "@crm/views/crm_kanban/crm_kanban_renderer";
 
 export const crmKanbanView = {
     ...kanbanView,
-    ArchParser: CrmKanbanArchParser,
+    ArchParserLegacy: CrmKanbanArchParser,
     // Makes it easier to patch
     Controller: class extends kanbanView.Controller {
         get progressBarAggregateFields() {

@@ -98,8 +98,14 @@ export async function loadSubViews(fieldNodes, fields, context, resModel, viewSe
             views: [[false, viewType]],
             context: makeContext([fieldContext, user.context, refinedContext]),
         });
-        const { ArchParser } = viewRegistry.get(viewType);
         const xmlDoc = parseXML(views[viewType].arch);
+        let { ArchParser, ArchParserLegacy } = viewRegistry.get(viewType);
+        if (viewType === "kanban") {
+            const isLegacyArch = !!xmlDoc.querySelector(`templates [t-name="kanban-box"]`);
+            if (isLegacyArch) {
+                ArchParser = ArchParserLegacy;
+            }
+        }
         const archInfo = new ArchParser().parse(xmlDoc, relatedModels, comodel);
         fieldInfo.views[viewType] = {
             ...archInfo,

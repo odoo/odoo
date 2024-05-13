@@ -9,7 +9,7 @@ import {
     getFormattedRecord,
     getImageSrcFromRecordInfo,
     isHtmlEmpty,
-} from "@web/views/kanban/kanban_record";
+} from "@web/views/kanban/kanban_record_legacy";
 import { useViewCompiler } from "@web/views/view_compiler";
 
 export class ActivityRecord extends Component {

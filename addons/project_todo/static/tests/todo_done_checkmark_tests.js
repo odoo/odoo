@@ -22,13 +22,13 @@ QUnit.module("TodoDoneCheckmark Tests", (hooks) => {
             views: {
                 "project.task,false,kanban": `
                     <kanban>
-                        <template>
+                        <templates>
                             <t t-name="kanban-box">
                                 <div>
                                     <field name="state" widget="todo_done_checkmark"/>
                                 </div>
                             </t>
-                        </template>
+                        </templates>
                     </kanban>`,
                 "project.task,false,list": `
                     <tree>

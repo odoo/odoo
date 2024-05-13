@@ -1,11 +1,11 @@
 import { expect, test } from "@odoo/hoot";
 
-import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
+import { KanbanCompiler as KanbanCompilerLegacy } from "@web/views/kanban/kanban_compiler_legacy";
 
 function compileTemplate(arch) {
     const parser = new DOMParser();
     const xml = parser.parseFromString(arch, "text/xml");
-    const compiler = new KanbanCompiler({ kanban: xml.documentElement });
+    const compiler = new KanbanCompilerLegacy({ kanban: xml.documentElement });
     return compiler.compile("kanban");
 }
 

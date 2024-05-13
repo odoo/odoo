@@ -11,6 +11,7 @@ import { useBounceButton } from "@web/views/view_hook";
 import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanHeader } from "./kanban_header";
 import { KanbanRecord } from "./kanban_record";
+import { KanbanRecord as KanbanRecordLegacy } from "./kanban_record_legacy";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Component, onPatched, onWillDestroy, onWillPatch, useRef, useState } from "@odoo/owl";
@@ -42,6 +43,7 @@ export class KanbanRenderer extends Component {
         KanbanColumnQuickCreate,
         KanbanHeader,
         KanbanRecord,
+        KanbanRecordLegacy,
         KanbanRecordQuickCreate,
     };
     static props = [
@@ -75,6 +77,7 @@ export class KanbanRenderer extends Component {
             columnQuickCreateIsFolded:
                 !this.props.list.isGrouped || this.props.list.groups.length > 0,
         });
+        this.action = useService("action");
         this.dialog = useService("dialog");
         this.exampleData = registry
             .category("kanban_examples")
@@ -167,6 +170,12 @@ export class KanbanRenderer extends Component {
                     return;
                 }
 
+                const { isLegacyKanban, allowGlobalClick } = this.props.archInfo;
+                if (!isLegacyKanban && allowGlobalClick) {
+                    target.click();
+                    return;
+                }
+
                 // Open first link
                 const firstLink = target.querySelector(".oe_kanban_global_click, a, button");
                 if (firstLink && firstLink instanceof HTMLElement) {
@@ -253,6 +262,11 @@ export class KanbanRenderer extends Component {
             recordsDraggable &&
                 (isGrouped || (handleField && (!orderBy[0] || orderBy[0].name === handleField)))
         );
+    }
+
+    get kanbanRecordComponent() {
+        const { KanbanRecord, KanbanRecordLegacy } = this.constructor.components;
+        return this.props.archInfo.isLegacyKanban ? KanbanRecordLegacy : KanbanRecord;
     }
 
     get showNoContentHelper() {
@@ -587,6 +601,34 @@ export class KanbanRenderer extends Component {
         if (nextCard && nextCard instanceof HTMLElement) {
             nextCard.focus();
             return true;
+        }
+    }
+
+    onRecordClicked(ev, record) {
+        if (this.props.archInfo.isLegacyKanban) {
+            // the legacy KanbanRecord handles the click itself
+            return;
+        }
+        // These classes determine whether a click on a record should open it.
+        const CANCEL_GLOBAL_CLICK = ["a", "button", ".dropdown"].join(",");
+        if (ev.target.closest(CANCEL_GLOBAL_CLICK)) {
+            return;
+        }
+        const { archInfo, forceGlobalClick, openRecord } = this.props;
+        if (!forceGlobalClick && archInfo.openAction) {
+            this.action.doActionButton({
+                name: archInfo.openAction.action,
+                type: archInfo.openAction.type,
+                resModel: record.resModel,
+                resId: record.resId,
+                resIds: record.resIds,
+                context: record.context,
+                onClose: async () => {
+                    await record.model.root.load();
+                },
+            });
+        } else if (forceGlobalClick || this.props.archInfo.allowGlobalClick) {
+            openRecord(record);
         }
     }
 }
