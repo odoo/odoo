@@ -256,3 +256,23 @@ test("value is formatted on Enter (even if same value)", async () => {
     await fieldInput("price").edit("8069", { confirm: "Enter" });
     expect(".o_field_widget input").toHaveValue("8,069");
 });
+
+test("value is formatted on click out (even if same value)", async () => {
+    // `localization > grouping` required for this test is [3, 0], which is the default in mock server
+    Product._records = [{ id: 1, price: 8069 }];
+
+    await mountView({
+        type: "form",
+        resModel: "product",
+        resId: 1,
+        arch: '<form><field name="price"/></form>',
+    });
+
+    expect(".o_field_widget input").toHaveValue("8,069");
+
+    await fieldInput("price").edit("8069", { confirm: false });
+    expect(".o_field_widget input").toHaveValue("8069");
+
+    await contains(".o_control_panel").click();
+    expect(".o_field_widget input").toHaveValue("8,069");
+});
