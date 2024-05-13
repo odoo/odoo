@@ -742,6 +742,11 @@ msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
 msgstr "<i class=\"fa fa-fw fa-check\"/> ชำระแล้ว"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
+msgstr "<i class=\"fa fa-fw fa-check\"/> ย้อนกลับ"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/>สิ้นสุด"
@@ -5492,6 +5497,13 @@ msgstr ""
 #, python-format
 msgid "You cannot cancel a locked order. Please unlock it first."
 msgstr "คุณไม่สามารถยกเลิกคำสั่งซื้อที่ถูกล็อคได้ กรุณาปลดล็อคก่อนดำเนินการ"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "You cannot change the pricelist of a confirmed order !"
+msgstr "คุณไม่สามารถเปลี่ยนแปลงรายการราคาของคำสั่งซื้อที่ยืนยันแล้วได้!"
 
 #. module: sale
 #. odoo-python

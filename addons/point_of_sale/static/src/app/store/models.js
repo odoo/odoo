@@ -184,7 +184,7 @@ export class Product extends PosModel {
         if (this.combo_ids.length) {
             const { confirmed, payload } = await this.env.services.popup.add(
                 ComboConfiguratorPopup,
-                { product: this, keepBehind: true }
+                { product: this }
             );
             if (!confirmed) {
                 return;

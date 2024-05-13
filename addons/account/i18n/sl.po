@@ -68,7 +68,7 @@ msgstr "# Poravnani računi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr ""
+msgstr "# Usklajeni računi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
@@ -513,7 +513,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "<b>Early Payment Discount applied.</b>"
-msgstr ""
+msgstr "<b>Uporabljen popust za predčasno plačilo.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -783,6 +783,9 @@ msgid ""
 "                                        Taxes\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                             Davki\n"
+"                                         </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -839,6 +842,9 @@ msgid ""
 "                                    Leave empty to create a new journal for this bank account, or select a journal to link it with the bank account.\n"
 "                                </span>"
 msgstr ""
+"<span class=\"text-muted\" colspan=\"2\">\n"
+"                                  Pustite prazno, če želite ustvariti nov dnevnik za ta bančni račun, ali pa izberite dnevnik in ga povežite z bančnim računom.\n"
+"                                          </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -948,7 +954,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span> Bill</span>"
-msgstr ""
+msgstr "<span>Račun</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -1082,7 +1088,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
-msgstr ""
+msgstr "<span>To je predogled vaših pogojev.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1238,6 +1244,9 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodically from your bank."
 msgstr ""
+"Bančni izpisek je povzetek vseh finančnih transakcij,\n"
+"               ki so se v določenem časovnem obdobju zgodile na bančnem računu. Izpisek \n"
+"morate redno prejemati od svoje banke."
 
 #. module: account
 #. odoo-python
@@ -1355,7 +1364,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
-msgstr ""
+msgstr "Davčno območje je mogoče za iste davke opredeliti samo enkrat."
 
 #. module: account
 #. odoo-python
@@ -1707,7 +1716,7 @@ msgstr "Konto uporabiti namesto tega"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__destination_account_id
 msgid "Account to transfer to."
-msgstr ""
+msgstr "To datoteko ste že uvozili"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill
@@ -2965,7 +2974,7 @@ msgstr "Bančni dovodi"
 #. module: account
 #: model:account.account,name:account.1_expense_finance
 msgid "Bank Fees"
-msgstr ""
+msgstr "Bančne preovizije"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -9460,7 +9469,7 @@ msgstr ""
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "No attachment was provided"
-msgstr ""
+msgstr "Priponka ni priloženo"
 
 #. module: account
 #. odoo-python
