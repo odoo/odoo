@@ -6,6 +6,8 @@ import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { url } from "@web/core/utils/urls";
+import { click, contains } from "@web/../tests/utils";
+import { editInput } from "@web/../tests/helpers/utils";
 
 QUnit.module("thread (patch)");
 
@@ -137,3 +139,30 @@ QUnit.test("Non-livechat channel should not show visitor banner", async (assert)
     assert.containsOnce($, ".o-mail-Thread");
     assert.containsNone($, ".o-website_livechat-VisitorBanner");
 });
+
+QUnit.test(
+    "Can create a new record as livechat operator with a custom livechat username",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "Harry" });
+        pyEnv["res.partner"].write([pyEnv.currentPartnerId], {
+            user_livechat_username: "MitchellOp",
+        });
+        const channelId = pyEnv["discuss.channel"].create({
+            anonymous_name: "Visitor #11",
+            channel_member_ids: [
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type: "livechat",
+            livechat_operator_id: pyEnv.currentPartnerId,
+        });
+        const { openDiscuss, openFormView } = await start();
+        await openDiscuss(channelId); // so that it loads custom livechat username
+        await openFormView("res.partner");
+        await contains(".o-mail-Message", { text: "Creating a new record..." });
+        await editInput(document.body, ".o_field_char input", "test");
+        await click(".o_form_button_save");
+        await contains(".o-mail-Message", { text: "Creating a new record...", count: 0 });
+    }
+);
