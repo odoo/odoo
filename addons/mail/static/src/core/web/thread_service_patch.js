@@ -109,6 +109,7 @@ patch(ThreadService.prototype, {
                 author: this.store.self,
                 body: _t("Creating a new record..."),
                 message_type: "notification",
+                originThread: thread,
                 trackingValues: [],
                 res_id: thread.id,
                 model: thread.model,
