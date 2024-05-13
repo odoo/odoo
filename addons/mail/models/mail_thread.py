@@ -2799,6 +2799,9 @@ class MailThread(models.AbstractModel):
     # MAIL.MESSAGE HELPERS
     # ------------------------------------------------------------
 
+    def _get_author(self):
+        return self.env.user.partner_id
+
     def _message_compute_author(self, author_id=None, email_from=None, raise_on_email=True):
         """ Tool method computing author information for messages. Purpose is
         to ensure maximum coherence between author / current user / email_from
@@ -2812,7 +2815,7 @@ class MailThread(models.AbstractModel):
             if email_from:
                 author = self._mail_find_partner_from_emails([email_from])[0]
             else:
-                author = self.env.user.partner_id
+                author = self._get_author()
                 email_from = author.email_formatted
             author_id = author.id
 
@@ -4536,6 +4539,9 @@ class MailThread(models.AbstractModel):
             res['hasWriteAccess'] = True
         except AccessError:
             pass
+        return self._get_request_list_data(res, request_list)
+
+    def _get_request_list_data(self, res, request_list):
         if isinstance(self.env[self._name], self.env.registry['mail.activity.mixin']):
             res['activities'] = self.with_context(active_test=True).activity_ids.activity_format()
         if 'attachments' in request_list:

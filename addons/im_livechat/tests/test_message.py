@@ -102,6 +102,7 @@ class TestImLivechatMessage(HttpCase):
                 'ratingImageUrl': record_rating.rating_image_url,
                 'ratingText': record_rating.rating_text,
             },
+            'rating_value': message.rating_value,
             'recipients': [],
             'record_name': "test1 Ernest Employee",
             'res_id': channel_livechat_1.id,

@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import json
 import math
 import re
 
@@ -16,6 +14,7 @@ from odoo.tools import consteq
 # --------------------------------------------------
 # Misc tools
 # --------------------------------------------------
+
 
 def pager(url, total, page=1, step=30, scope=5, url_args=None):
     """ Generate a dict with required value to render `website.pager` template.
@@ -301,7 +300,7 @@ class CustomerPortal(Controller):
         corresponding `ir.attachment`.
 
         The attachment will be created "pending" until the associated message
-        is actually created, and it will be garbage collected otherwise.
+        is actually created, and it will be garbage collected otherwise.l
 
         :param name: name of the file to save.
         :type name: string
@@ -337,9 +336,9 @@ class CustomerPortal(Controller):
             IrAttachment = IrAttachment.sudo()
 
         # At this point the related message does not exist yet, so we assign
-        # those specific res_model and res_is. They will be correctly set
-        # when the message is created: see `portal_chatter_post`,
-        # or garbage collected otherwise: see  `_garbage_collect_attachments`.
+        # those specific thread_model and thread_id. They will be correctly set
+        # when the message is created or garbage collected otherwise:
+        # see `_garbage_collect_attachments`.
         attachment = IrAttachment.create({
             'name': name,
             'datas': base64.b64encode(file.read()),
@@ -347,10 +346,9 @@ class CustomerPortal(Controller):
             'res_id': 0,
             'access_token': IrAttachment._generate_access_token(),
         })
-        return request.make_response(
-            data=json.dumps(attachment.read(['id', 'name', 'mimetype', 'file_size', 'access_token'])[0]),
-            headers=[('Content-Type', 'application/json')]
-        )
+        data = attachment.read(['id', 'name', 'mimetype', 'file_size', 'access_token'])[0]
+        data['accessToken'] = data.get('access_token')
+        return request.make_json_response(data)
 
     @http.route('/portal/attachment/remove', type='json', auth='public')
     def attachment_remove(self, attachment_id, access_token=None):

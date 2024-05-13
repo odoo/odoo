@@ -1,0 +1,23 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-name="portal.pager">
+        <div class="o_portal_chatter_pager">
+            <t t-if="Object.keys(widget.get('pager') || {}).length > 0">
+                <ul class="pagination" t-if="widget.get('pager')['pages'].length &gt; 1">
+                    <li t-if="widget.get('pager')['page'] != widget.get('pager')['page_previous']" t-att-data-page="widget.get('pager')['page_previous']" class="page-item o_portal_chatter_pager_btn">
+                        <a href="#" class="page-link"><i class="oi oi-chevron-left" role="img" aria-label="Previous" title="Previous"/></a>
+                    </li>
+                    <t t-foreach="widget.get('pager')['pages']" t-as="page" t-key="page_index">
+                        <li t-att-data-page="page" t-attf-class="page-item #{page == widget.get('pager')['page'] ? 'o_portal_chatter_pager_btn active' : 'o_portal_chatter_pager_btn'}">
+                            <a href="#" class="page-link"><t t-esc="page"/></a>
+                        </li>
+                    </t>
+                    <li t-if="widget.get('pager')['page'] != widget.get('pager')['page_next']" t-att-data-page="widget.get('pager')['page_next']" class="page-item o_portal_chatter_pager_btn">
+                        <a href="#" class="page-link"><i class="oi oi-chevron-right" role="img" aria-label="Next" title="Next"/></a>
+                    </li>
+                </ul>
+            </t>
+        </div>
+    </t>
+
+</templates>

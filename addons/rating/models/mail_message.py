@@ -44,4 +44,5 @@ class MailMessage(models.Model):
                         'ratingImageUrl': rating.rating_image_url,
                         'ratingText': rating.rating_text,
                     }
+                    vals['rating_value'] = rating.rating
         return message_values

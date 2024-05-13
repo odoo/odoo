@@ -63,6 +63,7 @@
                         </div>
                         <div
                             class="position-relative d-flex"
+                            name="message content"
                             t-att-class="{
                                    'justify-content-end': isAlignedRight,
                                    'ps-4': env.inChatWindow and isAlignedRight and !state.isEditing,
@@ -73,6 +74,9 @@
                         >
                             <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': state.isEditing }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': state.isEditing }">
+                                    <div t-if="message.message_type === 'notification' and message.body" class="o-mail-Message-body text-break mb-0 w-100" name="notification body">
+                                        <t t-out="messageSearch?.highlight(message.body) ?? message.body"/>
+                                    </div>
                                     <t t-if="message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or state.isEditing)">
                                         <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="false"/>
                                         <t t-else="">

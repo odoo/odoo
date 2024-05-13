@@ -102,7 +102,6 @@ Featuring
             'website_slides/static/src/js/slides_course_quiz_question_form.js',
             'website_slides/static/src/js/slides_course_tag_add.js',
             'website_slides/static/src/js/slides_course_unsubscribe.js',
-            'website_slides/static/src/js/portal_chatter.js',
             'website_slides/static/src/xml/website_slides_sidebar.xml',
             'website_slides/static/src/xml/website_slides_fullscreen.xml',
             'website_slides/static/src/xml/slide_management.xml',
@@ -111,6 +110,7 @@ Featuring
             'website_slides/static/src/xml/slide_quiz_create.xml',
             'website_slides/static/src/xml/slide_quiz.xml',
             'website_slides/static/src/js/public/**/*',
+            'website_slides/static/src/chatter/**/*',
         ],
         'website.assets_editor': [
             'website_slides/static/src/js/systray_items/*.js',

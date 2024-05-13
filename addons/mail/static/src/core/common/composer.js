@@ -161,7 +161,9 @@ export class Composer extends Component {
         );
         useEffect(
             () => {
-                this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
+                if (this.fakeTextarea.el.scrollHeight) {
+                    this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
+                }
                 this.saveContentDebounced();
             },
             () => [this.props.composer.text, this.ref.el]
@@ -561,7 +563,8 @@ export class Composer extends Component {
         if (
             this.props.composer.text.trim() ||
             (attachments.length > 0 && attachments.every(({ uploading }) => !uploading)) ||
-            (this.message && this.message.attachments.length > 0)
+            (this.message && (this.message.attachments.length > 0 || this.message.rating_value)) ||
+            (!this.message && this.state.ratingValue)
         ) {
             if (!this.state.active) {
                 return;
@@ -588,16 +591,21 @@ export class Composer extends Component {
             return;
         }
         await this.processMessage(async (value) => {
-            const postData = {
-                attachments: composer.attachments,
-                isNote: this.props.type === "note",
-                mentionedChannels: composer.mentionedChannels,
-                mentionedPartners: composer.mentionedPartners,
-                cannedResponseIds: composer.cannedResponses.map((c) => c.id),
-                parentId: this.props.messageToReplyTo?.message?.id,
-            };
+            const postData = this.postData(composer);
             await this._sendMessage(value, postData);
         });
+    }
+
+    postData(composer) {
+        return {
+            attachments: composer.attachments,
+            isNote: this.props.type === "note",
+            mentionedChannels: composer.mentionedChannels,
+            mentionedPartners: composer.mentionedPartners,
+            cannedResponseIds: composer.cannedResponses.map((c) => c.id),
+            parentId: this.props.messageToReplyTo?.message?.id,
+            extraData: {},
+        };
     }
 
     /**
@@ -626,11 +634,12 @@ export class Composer extends Component {
 
     async editMessage() {
         const composer = toRaw(this.props.composer);
-        if (composer.text || composer.message.attachments.length > 0) {
+        if (composer.text || composer.message.attachments.length > 0 || this.message.rating_value) {
             await this.processMessage(async (value) =>
                 composer.message.edit(value, composer.attachments, {
                     mentionedChannels: composer.mentionedChannels,
                     mentionedPartners: composer.mentionedPartners,
+                    rating_value: this.state.ratingValue,
                 })
             );
         } else {

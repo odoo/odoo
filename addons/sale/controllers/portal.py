@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import binascii
+from werkzeug.exceptions import Forbidden
 
 from odoo import fields, http, _
 from odoo.exceptions import AccessError, MissingError, ValidationError
@@ -10,7 +10,7 @@ from odoo.http import request
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
-from odoo.addons.portal.controllers.mail import _message_post_helper
+from odoo.addons.portal.controllers.mail import _check_special_access
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 
@@ -145,14 +145,14 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 context = {'lang': order_sudo.user_id.partner_id.lang or order_sudo.company_id.partner_id.lang}
                 msg = _('Quotation viewed by customer %s', order_sudo.partner_id.name if request.env.user._is_public() else request.env.user.partner_id.name)
                 del context
-                _message_post_helper(
-                    "sale.order",
-                    order_sudo.id,
-                    message=msg,
-                    token=order_sudo.access_token,
+                if not _check_special_access("sale.order", order_sudo.id, order_sudo.access_token):
+                    raise Forbidden()
+                order_sudo.message_post(
+                    body=msg,
                     message_type="notification",
                     subtype_xmlid="mail.mt_note",
                     partner_ids=order_sudo.user_id.sudo().partner_id.ids,
+                    author_id=order_sudo.partner_id.id
                 )
 
         backend_url = f'/web#model={order_sudo._name}'\
@@ -292,12 +292,14 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         pdf = request.env['ir.actions.report'].sudo()._render_qweb_pdf('sale.action_report_saleorder', [order_sudo.id])[0]
 
-        _message_post_helper(
-            'sale.order',
-            order_sudo.id,
-            _('Order signed by %s', name),
+        if not _check_special_access("sale.order", order_sudo.id, access_token):
+            raise Forbidden()
+        order_sudo.message_post(
+            body=_('Order signed by %s', name),
             attachments=[('%s.pdf' % order_sudo.name, pdf)],
-            token=access_token,
+            subtype_xmlid='mail.mt_comment',
+            message_type='comment',
+            author_id=order_sudo.partner_id.id,
         )
 
         query_string = '&message=sign_ok'
@@ -317,11 +319,13 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         if order_sudo._has_to_be_signed() and decline_message:
             order_sudo._action_cancel()
-            _message_post_helper(
-                'sale.order',
-                order_sudo.id,
-                decline_message,
-                token=access_token,
+            if not _check_special_access("sale.order", order_sudo.id, access_token):
+                raise Forbidden()
+            order_sudo.message_post(
+                body=decline_message,
+                subtype_xmlid='mail.mt_comment',
+                message_type='comment',
+                author_id=order_sudo.partner_id.id,
             )
             redirect_url = order_sudo.get_portal_url()
         else:

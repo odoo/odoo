@@ -95,6 +95,7 @@
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
+            ('include', 'web._assets_bootstrap_backend'),
 
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/lib/odoo_ui_icons/*',
@@ -146,7 +147,6 @@
             'web/static/lib/select2/select2.js',
             'web/static/src/legacy/js/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/jquery.js',
-            ('include', 'web._assets_bootstrap_backend'),
 
             'base/static/src/css/modules.css',
 
@@ -212,6 +212,16 @@
             'project/static/src/project_sharing/search/favorite_menu/custom_favorite_item.xml',
             'project/static/src/project_sharing/**/*',
             'web/static/src/start.js',
+
+            # To use mail chatter in portal
+            'web/static/src/libs/pdfjs.js',
+            'bus/static/src/*.js',
+            'bus/static/src/services/**/*.js',
+            'bus/static/src/workers/websocket_worker.js',
+            'bus/static/src/workers/websocket_worker_utils.js',
+            ('include', 'portal.assets_chatter'),
+            'portal/static/src/chatter/core/**/*',
+            'project/static/src/chatter/**/*',
         ],
     },
     'license': 'LGPL-3',

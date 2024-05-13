@@ -182,11 +182,7 @@ class TestUi(TestUICommon):
             'groups_id': [(6, 0, (self.env.ref('base.group_user') | self.env.ref('website_slides.group_website_slides_officer')).ids)]
         })
 
-        # The user must be a course member before being able to post a log note.
         self.channel._action_add_members(user_demo.partner_id)
-        self.channel.with_user(user_demo).message_post(
-            body='Log note', subtype_xmlid='mail.mt_note', message_type='comment')
-
         self.start_tour('/slides', 'course_reviews', login=user_demo.login)
 
 

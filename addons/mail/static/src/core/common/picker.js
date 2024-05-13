@@ -58,14 +58,7 @@ export class Picker extends Component {
 
     setup() {
         this.ui = useState(useService("ui"));
-        this.popover = usePopover(PickerContent, {
-            position: this.props.position,
-            fixedPosition: true,
-            onClose: () => this.close(),
-            closeOnClickAway: false,
-            animation: false,
-            arrow: false,
-        });
+        this.popover = usePopover(PickerContent, this.popoverSettings);
         useExternalListener(
             browser,
             "click",
@@ -87,6 +80,17 @@ export class Picker extends Component {
                 async (ev) => this.toggle(this.props.anchor?.el ?? button.el, ev)
             );
         }
+    }
+
+    get popoverSettings() {
+        return {
+            position: this.props.position,
+            fixedPosition: true,
+            onClose: () => this.close(),
+            closeOnClickAway: false,
+            animation: false,
+            arrow: false,
+        };
     }
 
     get contentProps() {

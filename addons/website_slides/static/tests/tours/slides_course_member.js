@@ -150,23 +150,22 @@ registry.category("web_tour.tours").add('course_member', {
 {
     trigger: 'a:contains("Basics of Gardening")'
 }, {
-    trigger: 'button[data-bs-target="#ratingpopupcomposer"]'
+    shadow_dom: "#ratingComposerRoot",
+    trigger: 'button:contains("Review")'
 }, {
-    trigger: 'div.o_portal_chatter_composer_input i.fa:eq(2)',
-    extra_trigger: 'div.modal_shown',
-    run: 'click',
-    in_modal: false,
-}, {
-    trigger: 'div.o_portal_chatter_composer_input textarea',
+    shadow_dom: "#ratingComposerRoot",
+    trigger: ".o-mail-Composer-input",
     run: "edit This is a great course. Top !",
-    in_modal: false,
 }, {
-    trigger: 'button.o_portal_chatter_composer_btn',
-    in_modal: false,
+    shadow_dom: "#ratingComposerRoot",
+    trigger: ".o-mail-Composer-send:enabled",
 }, {
-    trigger: 'a[id="review-tab"]'
-}, {
-    trigger: '.o_portal_chatter_message:contains("This is a great course. Top !")',
+    trigger: 'a[id="review-tab"]',
+    run: 'click',
+},
+    {
+    shadow_dom: "#chatterRoot",
+    trigger: '.o-mail-Message-body:contains("This is a great course. Top !")',
     run: function () {}, // check review is correctly added
-}
+    }
 ]});

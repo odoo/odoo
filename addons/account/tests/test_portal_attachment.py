@@ -171,7 +171,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
         # Test attachment can't be associated if no attachment token.
         res = self.opener.post(
-            url=f'{self.invoice_base_url}/mail/chatter_post',
+            url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
                     'thread_model': self.out_invoice._name,
@@ -189,7 +189,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
         # Test attachment can't be associated if no main document token
         res = self.opener.post(
-            url=f'{self.invoice_base_url}/mail/chatter_post',
+            url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
                     'thread_model': self.out_invoice._name,
@@ -206,7 +206,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         self.assertFalse(self.out_invoice.message_ids)
         attachment.write({'res_model': 'model'})
         res = self.opener.post(
-            url=f'{self.invoice_base_url}/mail/chatter_post',
+            url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
                     'thread_model': self.out_invoice._name,
@@ -226,7 +226,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         # Test attachment can't be associated if not correct user
         attachment.write({'res_model': 'mail.compose.message'})
         res = self.opener.post(
-            url=f'{self.invoice_base_url}/mail/chatter_post',
+            url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
                     'thread_model': self.out_invoice._name,
@@ -262,7 +262,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         self.assertEqual(create_res['name'], "final attachment")
 
         res = self.opener.post(
-            url=f'{self.invoice_base_url}/mail/chatter_post',
+            url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
                     'thread_model': self.out_invoice._name,
@@ -275,6 +275,8 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         )
         self.assertEqual(res.status_code, 200)
         self.out_invoice.invalidate_recordset(['message_ids'])
-        self.assertEqual(len(self.out_invoice.message_ids), 3)
-        self.assertEqual(self.out_invoice.message_ids[0].body, "<p>test message 3</p>")
-        self.assertEqual(len(self.out_invoice.message_ids[0].attachment_ids), 1)
+        # Only messages from the current user not OdooBot
+        messages = self.out_invoice.message_ids.filtered(lambda msg: msg.author_id == self.partner_a)
+        self.assertEqual(len(messages), 3)
+        self.assertEqual(messages[0].body, "<p>test message 3</p>")
+        self.assertEqual(len(messages[0].attachment_ids), 1)
