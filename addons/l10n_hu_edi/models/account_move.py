@@ -79,10 +79,22 @@ class AccountMove(models.Model):
         copy=False,
         tracking=True,
     )
+
+    # A dict with the following structure:
+    # {
+    #     'error_title': the main heading of the message
+    #     'errors': a list of message items
+    #     'blocking_level': {'error' | 'warning' | None}
+    #         directs which blocking behaviour to adopt in the Send and Print:
+    #         * error: blocks PDF generation and sending by e-mail
+    #         * warning: PDF is generated and sent by e-mail, but a warning appears in the banner
+    #         * None: PDF is generated and sent by e-mail, no warning appears
+    # }
     l10n_hu_edi_messages = fields.Json(
         string='Transaction messages (JSON)',
         copy=False,
     )
+
     l10n_hu_invoice_chain_index = fields.Integer(
         string='Invoice Chain Index',
         help="""
@@ -134,7 +146,7 @@ class AccountMove(models.Model):
     @api.depends('name')
     def _compute_l10n_hu_edi_attachment_filename(self):
         for move in self:
-            move.l10n_hu_edi_attachment_filename = f'{move.name.replace("/", "_")}.xml'
+            move.l10n_hu_edi_attachment_filename = f'{move.name.replace("/", "_")}.xml' if move.name else 'nav30.xml'
 
     # === Overrides === #
 
@@ -482,15 +494,7 @@ class AccountMove(models.Model):
         invoice_operations = [
             {
                 'index': invoice.l10n_hu_edi_batch_upload_index,
-                'operation': (
-                    'CREATE' if (base_invoice := invoice._l10n_hu_get_chain_base()) == invoice else (
-                        'STORNO' if (
-                            base_invoice._get_reconciled_amls().move_id == invoice
-                            and invoice.currency_id.is_zero(invoice.amount_residual)
-                            and base_invoice.currency_id.is_zero(base_invoice.amount_residual)
-                        ) else 'MODIFY'
-                    )
-                ),
+                'operation': 'CREATE' if invoice._l10n_hu_get_chain_base() == invoice else 'MODIFY',
                 'invoice_data': base64.b64decode(invoice.l10n_hu_edi_attachment),
             }
             for invoice in self
@@ -512,7 +516,7 @@ class AccountMove(models.Model):
                     'l10n_hu_edi_messages': {
                         'error_title': _('Invoice submission timed out. Please wait at least 6 minutes, then update the status.'),
                         'errors': e.errors,
-                        'blocking_level': 'error_but_continue',
+                        'blocking_level': 'warning',
                     },
                 })
             return self.write({
@@ -561,7 +565,7 @@ class AccountMove(models.Model):
                     'l10n_hu_edi_messages': {
                         'error_title': _('The invoice was sent to the NAV, but there was an error querying its status.'),
                         'errors': e.errors,
-                        'blocking_level': 'error_but_continue',
+                        'blocking_level': 'warning',
                     },
                 })
             else:
@@ -569,7 +573,7 @@ class AccountMove(models.Model):
                     'l10n_hu_edi_messages': {
                         'error_title': _('The annulment was sent to the NAV, but there was an error querying its status.'),
                         'errors': e.errors,
-                        'blocking_level': 'error_but_continue',
+                        'blocking_level': 'warning',
                     },
                 })
 
@@ -600,7 +604,7 @@ class AccountMove(models.Model):
                     'l10n_hu_edi_messages': {
                         'error_title': _('The invoice was received by the NAV, but has not been confirmed yet.'),
                         'errors': get_errors_from_processing_result(processing_result),
-                        'blocking_level': 'error_but_continue',
+                        'blocking_level': 'warning',
                     },
                 })
             elif self.l10n_hu_edi_state in ['cancel_sent', 'cancel_timeout']:
@@ -609,7 +613,7 @@ class AccountMove(models.Model):
                     'l10n_hu_edi_messages': {
                         'error_title': _('The annulment request was received by the NAV, but has not been confirmed yet.'),
                         'errors': get_errors_from_processing_result(processing_result),
-                        'blocking_level': 'error_but_continue',
+                        'blocking_level': 'warning',
                     },
                 })
 
@@ -632,7 +636,7 @@ class AccountMove(models.Model):
                                 'To reverse, create a credit note / debit note.'
                             ),
                             'errors': get_errors_from_processing_result(processing_result),
-                            'blocking_level': 'error_but_continue',
+                            'blocking_level': 'warning',
                         },
                     })
             elif self.l10n_hu_edi_state in ['cancel_sent', 'cancel_timeout', 'cancel_pending']:
@@ -642,7 +646,7 @@ class AccountMove(models.Model):
                         'l10n_hu_edi_messages': {
                             'error_title': _('The annulment request was rejected by NAV.'),
                             'errors': get_errors_from_processing_result(processing_result),
-                            'blocking_level': 'error_but_continue',
+                            'blocking_level': 'error',
                         },
                     })
                 elif annulment_status == 'VERIFICATION_PENDING':
@@ -651,7 +655,7 @@ class AccountMove(models.Model):
                         'l10n_hu_edi_messages': {
                             'error_title': _('The annulment request is pending, please confirm it on the OnlineSzámla portal.'),
                             'errors': get_errors_from_processing_result(processing_result),
-                            'blocking_level': 'error_but_continue',
+                            'blocking_level': 'warning',
                         }
                     })
                 elif annulment_status == 'VERIFICATION_DONE':
@@ -744,7 +748,7 @@ class AccountMove(models.Model):
                     'l10n_hu_edi_messages': {
                         'error_title': _('Cancellation request timed out. Please wait at least 6 minutes, then update the status.'),
                         'errors': e.errors,
-                        'blocking_level': 'error_but_continue',
+                        'blocking_level': 'warning',
                     },
                 })
             return self.write({

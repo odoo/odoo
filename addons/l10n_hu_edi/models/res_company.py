@@ -92,7 +92,7 @@ class ResCompany(models.Model):
             'signature_key': self.l10n_hu_edi_signature_key,
             'replacement_key': self.l10n_hu_edi_replacement_key,
         }
-        if not all(credentials_dict.values()):
+        if self.l10n_hu_edi_server_mode != 'demo' and not all(credentials_dict.values()):
             raise UserError(_('Missing NAV credentials for company %s', self.name))
         return credentials_dict
 
