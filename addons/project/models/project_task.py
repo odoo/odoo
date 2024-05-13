@@ -891,7 +891,7 @@ class Task(models.Model):
             self.check_access_rights('create')
         default_stage = dict()
         for vals in vals_list:
-            project_id = vals.get('project_id') or self.env.context.get('default_project_id')
+            project_id = vals.get('project_id')
             if vals.get('user_ids'):
                 vals['date_assign'] = fields.Datetime.now()
                 if not (vals.get('parent_id') or project_id or self._context.get('default_project_id')):
@@ -906,6 +906,7 @@ class Task(models.Model):
             if is_portal_user:
                 self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
 
+            project_id = project_id or self.env.context.get('default_project_id')
             if project_id:
                 # set the project => "I want to display the task in the project"
                 #                 => => set `display_in_project` to True
