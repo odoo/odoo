@@ -273,7 +273,7 @@ class Module(models.Model):
             else:
                 path = modules.module.get_module_icon_path(module)
             if path:
-                with tools.file_open(path, 'rb') as image_file:
+                with tools.file_open(path, 'rb', filter_ext=('.png', '.svg', '.gif', '.jpeg', '.jpg')) as image_file:
                     module.icon_image = base64.b64encode(image_file.read())
 
     name = fields.Char('Technical Name', readonly=True, required=True)
