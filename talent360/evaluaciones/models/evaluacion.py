@@ -1,5 +1,5 @@
 from odoo import api, models, fields, _
-from collections import defaultdict
+from collections import defaultdict, Counter
 from odoo import exceptions
 from datetime import timedelta
 
@@ -339,33 +339,24 @@ class Evaluacion(models.Model):
             "preguntas": [],
         }
 
-        respuesta_tabulada = {}
-
         for pregunta in self.pregunta_ids:
 
-            respuestas = []
-            respuestas_tabuladas = []
+            respuesta_ids = self.env["respuesta"].search(
+                [
+                    ("pregunta_id.id", "=", pregunta.id),
+                    ("evaluacion_id.id", "=", self.id),
+                ]
+            )
 
-            for respuesta in pregunta.respuesta_ids:
-                if respuesta.evaluacion_id.id != self.id:
-                    continue
-
-                respuestas.append(respuesta.respuesta_mostrar)
-
-                for i, respuesta_tabulada in enumerate(respuestas_tabuladas):
-                    if respuesta_tabulada["nombre"] == respuesta.respuesta_mostrar:
-                        respuestas_tabuladas[i]["valor"] += 1
-                        break
-                else:
-                    respuestas_tabuladas.append(
-                        {"nombre": respuesta.respuesta_mostrar, "valor": 1}
-                    )
-
+            respuestas = [respuesta.respuesta_mostrar for respuesta in respuesta_ids]
+            respuestas_tabuladas = dict(Counter(respuestas))
             datos_pregunta = {
                 "pregunta": pregunta,
                 "respuestas": respuestas,
-                "respuestas_tabuladas": respuestas_tabuladas,
-                "datos_grafica": str(respuestas_tabuladas).replace("'", '"'),
+                "respuestas_tabuladas": [
+                    {"nombre": nombre, "valor": valor}
+                    for nombre, valor in respuestas_tabuladas.items()
+                ],
             }
 
             parametros["preguntas"].append(datos_pregunta)
@@ -413,9 +404,14 @@ class Evaluacion(models.Model):
             dominio = dict(pregunta._fields["dominio"].selection).get(pregunta.dominio)
             valor_pregunta = 0
 
-            for respuesta in pregunta.respuesta_ids:
-                if respuesta.evaluacion_id.id != self.id:
-                    continue
+            respuesta_ids = self.env["respuesta"].search(
+                [
+                    ("pregunta_id.id", "=", pregunta.id),
+                    ("evaluacion_id.id", "=", self.id),
+                ]
+            )
+
+            for respuesta in respuesta_ids:
                 valor_respuesta = respuesta.valor_respuesta
                 valor_pregunta += valor_respuesta
                 final += valor_respuesta
@@ -443,25 +439,16 @@ class Evaluacion(models.Model):
                 "color": self.asignar_color(dominios[dominio], dominio=dominio),
             }
 
-        # Datos demograficos
-        if self.incluir_demograficos:
-            datos_demograficos = self.generar_datos_demograficos()
-
-        else:
-            datos_demograficos = {}
             # Organizar los parámetros en el orden deseado
         parametros = {
             "evaluacion": self,
             "categorias": [categorias[nombre] for nombre in categorias_orden],
             "dominios": [dominios[nombre] for nombre in dominios_orden],
             "final": final,
-            "preguntas": self.generar_datos_reporte_generico_action()["preguntas"],
         }
 
-        parametros.update(datos_demograficos)
-
         return parametros
-    def action_generar_datos_reporte_clima(self):
+    def generar_datos_reporte_clima_action(self):
         """
         Genera los datos necesarios para el reporte de clima organizacional de la evaluación.
         Calcula el porcentaje de satisfacción para cada categoría y departamento.
@@ -530,7 +517,11 @@ class Evaluacion(models.Model):
                 maximo_pregunta += pregunta._calculate_valor_maximo()  # Suponiendo un máximo de 4 para cada respuesta en escala
  # Suponiendo un máximo de 4 para cada respuesta en escala
 
-                nombre_departamento = respuesta.usuario_id.department_id.name if respuesta.usuario_id.department_id else "Sin departamento"
+                nombre_departamento = (
+                    respuesta.usuario_id.department_id.name
+                    if respuesta.usuario_id.department_id
+                    else "Sin departamento"
+                )
                 departamento = next(
                     (
                         dept
@@ -542,7 +533,7 @@ class Evaluacion(models.Model):
                 if departamento is None:
                     departamento = {
                         "nombre": nombre_departamento,
-                        "color": "#2894a7",  
+                        "color": "#2894a7",
                         "puntos": 0,
                         "puntos_maximos": 0,
                     }
@@ -555,7 +546,6 @@ class Evaluacion(models.Model):
             total_maximo_posible += maximo_pregunta
             categoria_actual["puntuacion"] += valor_pregunta
             categoria_actual["puntuacion_maxima"] += maximo_pregunta
-            
 
         for categoria in detalles_categorias:
             if categoria["puntuacion_maxima"] > 0:
@@ -569,29 +559,23 @@ class Evaluacion(models.Model):
                     dept["valor"] = (dept["puntos"] / dept["puntos_maximos"]) * 100
                     dept["color"] = self.asignar_color_clima(dept["valor"])
 
-        total_porcentaje = round((
-            (total_puntuacion / total_maximo_posible) * 100
-            if total_maximo_posible > 0
-            else 0
-        ),2)
+        total_porcentaje = round(
+            (
+                (total_puntuacion / total_maximo_posible) * 100
+                if total_maximo_posible > 0
+                else 0
+            ),
+            2,
+        )
 
-      # Datos demograficos
-        if self.incluir_demograficos:
-            datos_demograficos = self.generar_datos_demograficos()
-
-        else:
-            datos_demograficos = {}
-            # Organizar los parámetros en el orden deseado
+        # Organizar los parámetros en el orden deseado
         parametros = {
             "evaluacion": self,
             "categorias": detalles_categorias,
             "total": total_puntuacion,
             "total_maximo": total_maximo_posible,
             "total_porcentaje": total_porcentaje,
-            "preguntas": self.generar_datos_reporte_generico_action()["preguntas"],
         }
-
-        parametros.update(datos_demograficos)
 
         return parametros
 
@@ -602,70 +586,74 @@ class Evaluacion(models.Model):
         :return: Los datos demográficos de los usuarios asignados a la evaluación. Incuye departamentos, generaciones, puestos y géneros.
         """
         datos_demograficos = []
-        for usuario in self.usuario_ids:
-            usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
-                [("usuario_id.id", "=", usuario.id), ("evaluacion_id.id", "=", self.id)]
+        # SQL
+        usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
+            [
+                ("evaluacion_id.id", "=", self.id),
+                ("contestada", "=", "contestada"),
+                ("usuario_id.id", "in", self.usuario_ids.mapped("id")),
+            ]
+        )
+
+        for usuario in usuario_evaluacion.mapped("usuario_id"):
+            datos_demograficos.append(self.obtener_datos_demograficos(usuario))
+
+        usuario_evaluacion_externo = self.env["usuario.evaluacion.rel"].search(
+            [
+                ("evaluacion_id.id", "=", self.id),
+                ("contestada", "=", "contestada"),
+                ("usuario_externo_id.id", "in", self.usuario_externo_ids.ids),
+            ]
+        )
+
+        for usuario_externo in usuario_evaluacion_externo.mapped("usuario_externo_id"):
+            datos_demograficos.append(
+                self.obtener_datos_demograficos_externos(usuario_externo)
             )
-
-            if (
-                usuario_evaluacion_rel
-                and usuario_evaluacion_rel[0].contestada == "contestada"
-            ):
-                datos_demograficos.append(self.obtener_datos_demograficos(usuario))
-
-        for usuario_externo in self.usuario_externo_ids:
-            usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
-                [
-                    ("usuario_externo_id.id", "=", usuario_externo.id),
-                    ("evaluacion_id.id", "=", self.id),
-                ]
-            )
-
-            if (
-                usuario_evaluacion_rel
-                and usuario_evaluacion_rel[0].contestada == "contestada"
-            ):
-                datos_demograficos.append(
-                    self.obtener_datos_demograficos_externos(usuario_externo)
-                )
 
         departamentos = defaultdict(int)
+        generaciones = defaultdict(int)
+        puestos = defaultdict(int)
+        generos = defaultdict(int)
+
         for dato in datos_demograficos:
             departamentos[dato["departamento"]] += 1
-
-        generaciones = defaultdict(int)
-        for dato in datos_demograficos:
             generaciones[dato["generacion"]] += 1
-            
-        puestos = defaultdict(int)
-        for dato in datos_demograficos:
             puestos[dato["puesto"]] += 1
-
-        generos = defaultdict(int)
-        for dato in datos_demograficos:
-            dato["genero"] = dato["genero"].capitalize()
             generos[dato["genero"]] += 1
 
         return {
-                "departamentos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in departamentos.items()],
-                "generaciones": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generaciones.items()],
-                "puestos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in puestos.items()],
-                "generos": [{"nombre": nombre, "valor": conteo} for nombre, conteo in generos.items()], 
-            }
+            "departamentos": [
+                {"nombre": nombre, "valor": conteo}
+                for nombre, conteo in departamentos.items()
+            ],
+            "generaciones": [
+                {"nombre": nombre, "valor": conteo}
+                for nombre, conteo in generaciones.items()
+            ],
+            "puestos": [
+                {"nombre": nombre, "valor": conteo}
+                for nombre, conteo in puestos.items()
+            ],
+            "generos": [
+                {"nombre": nombre, "valor": conteo}
+                for nombre, conteo in generos.items()
+            ],
+        }
 
     def asignar_color(self, valor, categoria=None, dominio=None):
         """
         Asigna un color a un valor numérico.
-        
+
         Este método asigna un color a un valor numérico basado en una escala predefinida.
-        
+
         :param valor: El valor numérico al que se le asignará un color.
         :param categoria: La categoría de la pregunta.
         :param dominio: El dominio de la pregunta.
-        
+
         :return: El color asignado al valor.
         """
-        
+
         if categoria:
             if categoria == "Ambiente de Trabajo":
                 if valor < 3:
@@ -811,15 +799,15 @@ class Evaluacion(models.Model):
                 return "#ffa446"  # Naranja
             else:
                 return "#ff4747"  # Rojo
-            
+
     def asignar_color_clima(self, valor):
         """
         Asigna un color a un valor numérico.
-        
+
         Este método asigna un color a un valor numérico basado en una escala predefinida.
-        
+
         :param valor: El valor numérico al que se le asignará un color.
-        
+
         :return: El color asignado al valor.
         """
         if self.techo_verde <= valor <= self.techo_azul:
@@ -836,11 +824,11 @@ class Evaluacion(models.Model):
     def obtener_dato(self, dato):
         """
         Obtiene un dato y devuelve 'N/A' si es nulo.
-        
+
         Este método recibe un dato y verifica si es nulo. Si es nulo, devuelve 'N/A'.
-        
+
         :param dato: El dato a verificar.
-        
+
         :return: El dato si no es nulo, 'N/A' si es nulo.
         """
         if not dato:
@@ -870,30 +858,34 @@ class Evaluacion(models.Model):
     def obtener_datos_demograficos(self, usuario):
         """
         Obtiene los datos demográficos de un usuario.
-        
+
         Este método recibe un usuario y obtiene sus datos demográficos, como nombre, género, puesto, año de nacimiento, generación, departamento, nivel jerárquico, gerencia, jefatura, fecha de ingreso y ubicación/región.
-        
+
         :param usuario: El usuario del que se obtendrán los datos demográficos.
-        
+
         :return: Un diccionario con los datos demográficos del usuario.
         """
-        
+
         datos = {}
-        
+
         datos["nombre"] = self.obtener_dato(usuario.name)
-        datos["genero"] = self.obtener_dato(usuario.gender)
+        datos["genero"] = self.obtener_dato(usuario.gender).capitalize()
         datos["puesto"] = self.obtener_dato(usuario.job_title)
         datos["anio_nacimiento"] = usuario.birthday.year if usuario.birthday else "N/A"
-        datos["generacion"] = self.obtener_generacion(datos["anio_nacimiento"]) if datos["anio_nacimiento"] != "N/A" else "N/A"
+        datos["generacion"] = (
+            self.obtener_generacion(datos["anio_nacimiento"])
+            if datos["anio_nacimiento"] != "N/A"
+            else "N/A"
+        )
         datos["departamento"] = self.obtener_dato(usuario.department_id.name)
-        
+
         # Falta
         # Nivel Jerarquico
         # Gerencia
         # Jefatura
         # Fecha de ingreso
         # Ubicación/Region
-        
+
         return datos
 
     def obtener_datos_demograficos_externos(self, usuario):
@@ -907,10 +899,16 @@ class Evaluacion(models.Model):
         datos = {}
 
         datos["nombre"] = self.obtener_dato(usuario.nombre)
-        datos["genero"] = self.obtener_dato(usuario.genero)
+        datos["genero"] = self.obtener_dato(usuario.genero).capitalize()
         datos["puesto"] = self.obtener_dato(usuario.puesto)
-        datos["anio_nacimiento"] = usuario.fecha_nacimiento.year if usuario.fecha_nacimiento else "N/A"
-        datos["generacion"] = self.obtener_generacion(datos["anio_nacimiento"]) if datos["anio_nacimiento"] != "N/A" else "N/A"
+        datos["anio_nacimiento"] = (
+            usuario.fecha_nacimiento.year if usuario.fecha_nacimiento else "N/A"
+        )
+        datos["generacion"] = (
+            self.obtener_generacion(datos["anio_nacimiento"])
+            if datos["anio_nacimiento"] != "N/A"
+            else "N/A"
+        )
         datos["departamento"] = self.obtener_dato(usuario.direccion)
 
         return datos
@@ -929,7 +927,7 @@ class Evaluacion(models.Model):
             "evaluacion": self,
             "pregunta": self.pregunta_ids,
         }
-    
+
     def enviar_evaluacion_action(self):
         """
         Envía la evaluación a los usuarios asignados.
@@ -944,11 +942,13 @@ class Evaluacion(models.Model):
 
         for usuario in self.usuario_ids:
             usuarios.append(usuario.partner_id.name)
-        
+
         for usuario_externo in self.usuario_externo_ids:
             usuarios.append(usuario_externo.nombre)
 
-        self.env['usuario.evaluacion.rel'].enviar_evaluacion_action(evaluacion_id=self.id)
+        self.env["usuario.evaluacion.rel"].enviar_evaluacion_action(
+            evaluacion_id=self.id
+        )
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
@@ -959,9 +959,9 @@ class Evaluacion(models.Model):
                 "sticky": False,
             },
         }
-    
+
     def write(self, vals):
-        """ 
+        """
         Sobrescribe el método write para incluir el envío de enlaces al guardar de forma automática
         o manual la evaluación.
 
@@ -979,9 +979,9 @@ class Evaluacion(models.Model):
         :return: Una acción para abrir la ventana de asignación de usuarios externos.
         """
         return {
-            'name': 'Asignar usuarios externos',
-            'type': 'ir.actions.act_window',
-            'res_model': 'asignar.usuario.externo.wizard',
-            'view_mode': 'form',
-            'target': 'new',
+            "name": "Asignar usuarios externos",
+            "type": "ir.actions.act_window",
+            "res_model": "asignar.usuario.externo.wizard",
+            "view_mode": "form",
+            "target": "new",
         }

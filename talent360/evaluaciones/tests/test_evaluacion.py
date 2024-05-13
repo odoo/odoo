@@ -24,6 +24,8 @@ class test_evaluacion(TransactionCase):
             {
                 "nombre": nombre,
                 "estado": estado,
+                "fecha_inicio": "2021-01-01",
+                "fecha_final": "2021-01-31",
             }
         )
 

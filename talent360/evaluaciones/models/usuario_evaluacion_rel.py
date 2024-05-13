@@ -51,13 +51,10 @@ class UsuarioEvaluacionRel(models.Model):
 
     usuario_externo_id = fields.Many2one("usuario.externo", string="Usuario Externo")
 
-    def write(self, vals):
-        """Sobreescribir el método write para enviar la evaluación al usuario."""
-        res = super(UsuarioEvaluacionRel, self).write(vals)
-        if "contestada" in vals:
-            self.evaluacion_id._compute_porcentaje_respuestas()
-
-        return res
+    @api.onchange("contestada")
+    def _onchange_contestada(self):
+        """Método para actualizar el porcentaje de respuestas de la evaluación."""
+        self.evaluacion_id._compute_porcentaje_respuestas()
 
     def action_get_estado(self, usuario_id, evaluacion_id, token):
         """Método para obtener el estado de la evaluación para el usuario.
@@ -119,6 +116,7 @@ class UsuarioEvaluacionRel(models.Model):
             [("evaluacion_id.id", "=", evaluacion_id)]
         )
 
+        lista_mails = []
         for usuario in usuario_evaluacion:
             token = secrets.token_hex(length)
             if not usuario.token:
@@ -138,7 +136,7 @@ class UsuarioEvaluacionRel(models.Model):
                 })
 
                 evaluacion_url = f"{base_url}/{evaluacion_id}/{token}"
-                mail_values = {
+                mail = {
                     'subject': 'Invitación para completar la evaluación',
                     'email_from': "talent360@cr-organizacional.com",
                     'email_to': correo,
@@ -150,9 +148,10 @@ class UsuarioEvaluacionRel(models.Model):
                         <p><a href="{evaluacion_url}">Comenzar Evaluación</a></p>''',
                 }
 
+                lista_mails.append(mail)
                 logging.info(f"Nombre:{nombre}\nCorreo:{correo}\nURL: {evaluacion_url}")
-                mail = self.env['mail.mail'].create(mail_values)
-                mail.send()
+        
+        self.env['mail.mail'].create(lista_mails)
     
         return {
             "type": "ir.actions.act_window",
