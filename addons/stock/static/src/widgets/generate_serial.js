@@ -48,7 +48,7 @@ export class GenerateDialog extends Component {
         let qtyToProcess;
         if (this.props.move.data.has_tracking === 'lot'){
             count = parseFloat(this.nextSerialCount.el?.value || '0');
-            qtyToProcess = parseFloat(this.totalReceived.el.value || this.props.move.data.product_qty);
+            qtyToProcess = parseFloat(this.totalReceived.el?.value || this.props.move.data.product_qty);
         } else {
             count = parseInteger(this.nextSerialCount.el?.value || '0');
             qtyToProcess = this.props.move.data.product_qty;
