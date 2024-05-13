@@ -47,13 +47,14 @@ commandProviderRegistry.add("debug", {
                 name: _t("Run QUnit mobile tests (legacy)"),
             });
         } else {
-            if (options.searchValue.toLowerCase() === "debug") {
+            const debugKey = "debug";
+            if (options.searchValue.toLowerCase() === debugKey) {
                 result.push({
                     action() {
                         router.pushState({ debug: "assets" }, { reload: true });
                     },
                     category: "debug",
-                    name: _t("Activate debug mode (with assets)"),
+                    name: `${_t("Activate debug mode (with assets)")} (${debugKey})`,
                 });
             }
         }
