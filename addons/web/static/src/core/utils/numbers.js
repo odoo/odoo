@@ -33,32 +33,62 @@ export function range(start, stop, step = 1) {
 }
 
 /**
- * performs a half up rounding with arbitrary precision, correcting for float loss of precision
- * See the corresponding float_round() in server/tools/float_utils.py for more info
+ * Returns `value` rounded with `precision`, minimizing IEEE-754 floating point
+ * representation errors, and applying the tie-breaking rule selected with
+ * `method`, by default "HALF-UP" (away from zero).
  *
  * @param {number} value the value to be rounded
  * @param {number} precision a precision parameter. eg: 0.01 rounds to two digits.
+ * @param {"HALF-UP" | "HALF-DOWN" | "HALF-EVEN" | "UP" | "DOWN"} [method="HALF-UP"] the rounding method used:
+ *    - "HALF-UP" rounds to the closest number with ties going away from zero.
+ *    - "HALF-DOWN" rounds to the closest number with ties going towards zero.
+ *    - "HALF-EVEN" rounds to the closest number with ties going to the closest even number.
+ *    - "UP" always rounds away from 0.
+ *    - "DOWN" always rounds towards 0.
  */
-export function roundPrecision(value, precision) {
+export function roundPrecision(value, precision, method = "HALF-UP") {
     if (!value) {
         return 0;
     } else if (!precision || precision < 0) {
         precision = 1;
     }
     let normalizedValue = value / precision;
+    const sign = Math.sign(normalizedValue);
     const epsilonMagnitude = Math.log2(Math.abs(normalizedValue));
     const epsilon = Math.pow(2, epsilonMagnitude - 52);
-    normalizedValue += normalizedValue >= 0 ? epsilon : -epsilon;
+    let roundedValue = normalizedValue;
 
-    /**
-     * Javascript performs strictly the round half up method, which is asymmetric. However, in
-     * Python, the method is symmetric. For example:
-     * - In JS, Math.round(-0.5) is equal to -0.
-     * - In Python, round(-0.5) is equal to -1.
-     * We want to keep the Python behavior for consistency.
-     */
-    const sign = normalizedValue < 0 ? -1.0 : 1.0;
-    const roundedValue = sign * Math.round(Math.abs(normalizedValue));
+    switch (method) {
+        case "DOWN": {
+            normalizedValue += sign * epsilon;
+            roundedValue = sign * Math.floor(Math.abs(normalizedValue));
+            break;
+        }
+        case "HALF-DOWN": {
+            normalizedValue -= sign * epsilon;
+            roundedValue = sign * Math.round(Math.abs(normalizedValue));
+            break;
+        }
+        case "HALF-UP": {
+            normalizedValue += sign * epsilon;
+            roundedValue = sign * Math.round(Math.abs(normalizedValue));
+            break;
+        }
+        case "HALF-EVEN": {
+            const r = Math.round(normalizedValue);
+            roundedValue = Math.abs(normalizedValue) % 1 === 0.5 ? (r % 2 === 0 ? r : r - 1) : r;
+            break;
+        }
+        case "UP": {
+            normalizedValue -= sign * epsilon;
+            roundedValue = sign * Math.ceil(Math.abs(normalizedValue));
+            break;
+        }
+        default: {
+            throw new Error(`Unknown rounding method: ${method}`);
+        }
+    }
+
     return roundedValue * precision;
 }
 
