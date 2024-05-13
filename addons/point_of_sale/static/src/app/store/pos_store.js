@@ -1974,7 +1974,7 @@ export class PosStore extends Reactive {
     }
     openCashControl() {
         if (this.shouldShowCashControl()) {
-            this.popup.add(CashOpeningPopup, { keepBehind: true });
+            this.popup.add(CashOpeningPopup);
         }
     }
     shouldShowCashControl() {

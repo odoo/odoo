@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
-import { click, getFixture, mount, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
+import { getFixture, mount, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
 import { clearRegistryWithCleanup, makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { registry } from "@web/core/registry";
 import { popupService } from "@point_of_sale/app/popup/popup_service";
@@ -60,48 +60,6 @@ QUnit.module("unit tests for PopupContainer", {
     },
 });
 
-QUnit.test("allow multiple popups at the same time", async function (assert) {
-    const fixture = getFixture();
-    const root = await mount(Root, fixture, { env });
-
-    // Single popup
-    let popup1Promise = root.popup.add(CustomPopup1, {});
-    await nextTick();
-    assert.containsOnce(fixture, ".popup", "popup is open");
-    await click(fixture.querySelector(".modal-dialog .custom-popup-1 .confirm"));
-    let result1 = await popup1Promise;
-    assert.strictEqual(result1.confirmed, true, "popup is confirmed");
-    assert.containsNone(fixture, ".popup", 0, "popup is closed");
-
-    // Multiple popups
-    popup1Promise = root.popup.add(CustomPopup1, {});
-    await nextTick();
-
-    assert.containsOnce(fixture, ".popup", 1, "first popup is shown");
-
-    const popup2Promise = root.popup.add(CustomPopup2, {});
-    await nextTick();
-
-    assert.containsOnce(fixture, ".popup", "only one popup is displayed");
-    assert.containsOnce(fixture, ".custom-popup-2", "second popup is displayed");
-    assert.containsNone(fixture, ".custom-popup-1", "first popup is not displayed");
-
-    await click(fixture.querySelector(".modal-dialog .custom-popup-2 .confirm"));
-
-    assert.containsOnce(fixture, ".popup", "after confirming on popup 2, only 1 should remain");
-    assert.containsOnce(fixture, ".custom-popup-1", "first popup is displayed");
-    assert.containsNone(fixture, ".custom-popup-2", "second popup is closed");
-
-    await click(fixture.querySelector(".modal-dialog .custom-popup-1 .cancel"));
-
-    assert.containsNone(fixture, ".popup", "after cancelling popup 1, no popup should remain.");
-
-    result1 = await popup1Promise;
-    const result2 = await popup2Promise;
-    assert.strictEqual(result1.confirmed, false, "popup 1 is not confirmed");
-    assert.strictEqual(result2.confirmed, true, "popup 2 is confirmed");
-});
-
 QUnit.test("pressing cancel/confirm key should only close the top popup", async function (assert) {
     const fixture = getFixture();
     const root = await mount(Root, fixture, { env });
@@ -118,10 +76,11 @@ QUnit.test("pressing cancel/confirm key should only close the top popup", async 
         cancelKey: "Escape",
     });
     await nextTick();
-    assert.containsNone(fixture, ".custom-popup-1", "first popup no longer displayed");
-    assert.containsOnce(fixture, ".custom-popup-2", "second popup is open");
 
-    await triggerEvent(fixture, ".popup", "keyup", { key: "Escape" });
+    // Set selector to null because we want to trigger the event on the window
+    // to simulate a global keyup event. The top popup should be the only one
+    // to respond to the keyup event.
+    await triggerEvent(fixture, null, "keyup", { key: "Escape" });
     assert.containsNone(fixture, ".custom-popup-2", "second popup no longer displayed");
     assert.containsOnce(fixture, ".custom-popup-1", "first popup is displayed again");
 
