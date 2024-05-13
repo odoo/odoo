@@ -3730,10 +3730,10 @@ export class OdooEditor extends EventTarget {
             // Tab
             const tabHtml = '<span class="oe-tabs" contenteditable="false">\u0009</span>\u200B';
             const sel = this.document.getSelection();
-            const closestLi = closestElement(sel.anchorNode, 'li');
-            if (closestElement(sel.anchorNode, 'table') && !closestLi) {
+            const closestTableOrLi = closestElement(sel.anchorNode, 'table, li');
+            if (closestTableOrLi && closestTableOrLi.nodeName === 'TABLE') {
                 this._onTabulationInTable(ev);
-            } else if (!ev.shiftKey && sel.isCollapsed && !closestLi) {
+            } else if (!ev.shiftKey && sel.isCollapsed && !closestTableOrLi) {
                 // Indent text (collapsed selection).
                 this.execCommand('insert', parseHTML(tabHtml));
             } else {
