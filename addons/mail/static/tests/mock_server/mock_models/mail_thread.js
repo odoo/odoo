@@ -69,7 +69,14 @@ export class MailThread extends models.ServerModel {
             const attachments = IrAttachment._filter([
                 ["id", "in", kwargs.attachment_ids],
                 ["res_model", "=", "mail.compose.message"],
+<<<<<<< HEAD
                 ["res_id", "=", false],
+||||||| parent of 985b016ba8d4 (temp)
+                ["res_id", "=", 0],
+=======
+                // Record is created with res_id=0 but store as false in the mock server.
+                ["res_id", "=", false],
+>>>>>>> 985b016ba8d4 (temp)
             ]);
             const attachmentIds = attachments.map((attachment) => attachment.id);
             IrAttachment.write(attachmentIds, {
