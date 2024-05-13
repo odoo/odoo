@@ -6,6 +6,7 @@ from unittest.mock import patch
 from odoo import Command, fields
 from odoo.tools import mute_logger
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.pos_online_payment.tests.online_payment_common import OnlinePaymentCommon
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 from odoo.osv.expression import AND
@@ -102,18 +103,15 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
         })
 
         # Code from addons/point_of_sale/tests/test_frontend.py:
-        cls.pos_user = cls.env['res.users'].create({
-            'name': 'A simple PoS man!',
-            'login': 'pos_op_user',
-            'password': 'pos_op_user',
-            'groups_id': [
-                (4, cls.env.ref('base.group_user').id),
-                (4, cls.env.ref('point_of_sale.group_pos_user').id),
-                (4, cls.env.ref('account.group_account_invoice').id),
-            ],
-            'tz': 'Europe/Brussels',
-        })
-        cls.pos_user.partner_id.email = 'pos_op_user@test.com'
+        cls.pos_user = mail_new_test_user(
+            cls.env,
+            email="pos_op_user@test.com",
+            groups="base.group_user,point_of_sale.group_pos_user,account.group_account_invoice",
+            login="pos_op_user",
+            name="A simple PoS man!",
+            tz="Europe/Brussels",
+        )
+
         # End of code from addons/point_of_sale/tests/test_frontend.py
 
         archive_products(cls.env)

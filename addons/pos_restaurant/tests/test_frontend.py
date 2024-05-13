@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_pos_combo_items
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -244,17 +245,14 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
 
         cls.pos_config = pos_config
 
-        cls.pos_admin = cls.env['res.users'].create({
-            'name': 'A powerfull PoS man!',
-            'login': 'pos_admin',
-            'password': 'pos_admin',
-            'groups_id': [
-                (4, cls.env.ref('base.group_user').id),
-                (4, cls.env.ref('point_of_sale.group_pos_manager').id),
-            ],
-            'tz': 'Europe/Brussels',
-        })
-        cls.pos_admin.partner_id.email = 'pos_admin@test.com'
+        cls.pos_admin = mail_new_test_user(
+            cls.env,
+            groups="base.group_user,point_of_sale.group_pos_manager",
+            email="pos_admin@test.com",
+            login="pos_admin",
+            name="A powerful PoS man!",
+            tz="Europe/Brussels",
+        )
 
     def test_01_pos_restaurant(self):
 
