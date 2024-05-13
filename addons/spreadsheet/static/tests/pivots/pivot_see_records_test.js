@@ -208,3 +208,11 @@ QUnit.test("Cannot see records of pivot formula without value", async function (
     const action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);
     assert.notOk(action.isVisible(env));
 });
+
+QUnit.test("See records is not visible on an empty cell", async function (assert) {
+    const { env, model } = await createSpreadsheetWithPivot();
+    assert.strictEqual(getCell(model, "A21"), undefined);
+    selectCell(model, "A21");
+    const action = cellMenuRegistry.getAll().find((item) => item.id === "pivot_see_records");
+    assert.strictEqual(action.isVisible(env), false);
+});
