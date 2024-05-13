@@ -30,7 +30,7 @@ class EvaluacionesController(http.Controller):
             raise AccessError(_("No tienes permitido acceder a este recurso."))
 
         parametros = evaluacion.generar_datos_reporte_NOM_035_action()
-        parametros["preguntas"] = evaluacion.action_generar_datos_reporte_generico()["preguntas"]
+        parametros["preguntas"] = evaluacion.generar_datos_reporte_generico_action()["preguntas"]
 
         if evaluacion.incluir_demograficos:
             parametros.update(evaluacion.generar_datos_demograficos())
@@ -243,8 +243,8 @@ class EvaluacionesController(http.Controller):
             raise AccessError(_("No tienes permitido acceder a este recurso."))
 
         # Generar parámetros para el reporte
-        parametros = evaluacion.action_generar_datos_reporte_clima()
-        parametros["preguntas"] = evaluacion.action_generar_datos_reporte_generico()["preguntas"]
+        parametros = evaluacion.generar_datos_reporte_clima_action()
+        parametros["preguntas"] = evaluacion.generar_datos_reporte_generico_action()["preguntas"]
 
         if evaluacion.incluir_demograficos:
             parametros.update(evaluacion.generar_datos_demograficos())

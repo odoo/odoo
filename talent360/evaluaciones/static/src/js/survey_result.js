@@ -107,11 +107,16 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
             self.graphData = self.$el.data("graphData");
             self.label = self.$el.data("label") || 'Data';
 
+
+            
             // Asegurarse de que graphData es un array de objetos
             if (typeof self.graphData === 'string') {
                 self.graphData = JSON.parse(self.graphData.replace(/'/g, '"'));
             }
-
+            
+            console.log("Label", self.label)
+            console.log("Graph Data", self.graphData)
+            
             // Verifica que graphData es un array
             if (Array.isArray(self.graphData)) {
                 self.labels = self.graphData.map(function (categoria) {

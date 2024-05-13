@@ -348,8 +348,7 @@ class Evaluacion(models.Model):
             )
 
             respuestas = [respuesta.respuesta_mostrar for respuesta in respuesta_ids]
-            respuestas_tabuladas = Counter(respuestas)
-
+            respuestas_tabuladas = dict(Counter(respuestas))
             datos_pregunta = {
                 "pregunta": pregunta,
                 "respuestas": respuestas,
@@ -357,7 +356,6 @@ class Evaluacion(models.Model):
                     {"nombre": nombre, "valor": valor}
                     for nombre, valor in respuestas_tabuladas.items()
                 ],
-                "datos_grafica": str(respuestas_tabuladas).replace("'", '"'),
             }
 
             parametros["preguntas"].append(datos_pregunta)
@@ -449,7 +447,7 @@ class Evaluacion(models.Model):
         }
 
         return parametros
-    def action_generar_datos_reporte_clima(self):
+    def generar_datos_reporte_clima_action(self):
         """
         Genera los datos necesarios para el reporte de clima organizacional de la evaluación.
         Calcula el porcentaje de satisfacción para cada categoría y departamento.
