@@ -40,16 +40,26 @@ class Respuesta(models.Model):
     )
 
     def guardar_respuesta_action(
-        self, radios, texto, evaluacion_id, usuario_id, pregunta_id, token, scale=False
+        self, radios, texto, evaluacion_id, usuario_id, pregunta_id, token, escala=False
     ):
         """Método para guardar la respuesta de una pregunta.
         Este método se encarga de guardar la respuesta de una pregunta en la base de datos.
+        
+        :param radios (str): Respuesta de tipo radio
+        :param texto (str): Respuesta de tipo texto
+        :param evaluacion_id (int): Identificador de la evaluación
+        :param usuario_id (int): Identificador del usuario
+        :param pregunta_id (int): Identificador de la pregunta
+        :param token (str): Token del usuario no autenticado
+        :param escala (bool): Indica si la pregunta es de tipo escala
+
+        :return: Respuesta guardada en la base de datos
         """
 
         resp = None
 
         if usuario_id:
-            if scale:
+            if escala:
                 resp = self.env["respuesta"].create(
                     {
                         "evaluacion_id": evaluacion_id,
@@ -80,7 +90,7 @@ class Respuesta(models.Model):
                 )
 
         else:
-            if scale:
+            if escala:
                 resp = self.env["respuesta"].create(
                     {
                         "evaluacion_id": evaluacion_id,
@@ -113,23 +123,34 @@ class Respuesta(models.Model):
         return resp
 
     def _compute_respuesta_mostrar(self):
-        for record in self:
+        """
+        Método para calcular la respuesta a mostrar en la vista.
+
+        :return: Respuesta a mostrar en la vista
+        """
+
+        for registro in self:
             respuesta_texto = "N/A"
 
-            if record.pregunta_id.tipo == "escala":
-                respuesta_texto = record.pregunta_id.mapeo_valores_escala[record.pregunta_id.ponderacion][record.respuesta_texto]
-            elif record.pregunta_id.tipo == "multiple_choice":
-                respuesta_texto = record.opcion_id.opcion_texto
+            if registro.pregunta_id.tipo == "escala":
+                respuesta_texto = registro.pregunta_id.mapeo_valores_escala[registro.pregunta_id.ponderacion][registro.respuesta_texto]
+            elif registro.pregunta_id.tipo == "multiple_choice":
+                respuesta_texto = registro.opcion_id.opcion_texto
             else:
-                respuesta_texto = record.respuesta_texto
+                respuesta_texto = registro.respuesta_texto
 
-            record.respuesta_mostrar = respuesta_texto
+            registro.respuesta_mostrar = respuesta_texto
 
     def _compute_valor_respuesta(self):
-        for record in self:
-            if record.pregunta_id.tipo == "escala":
-                record.valor_respuesta = int(record.respuesta_texto)
-            elif record.pregunta_id.tipo == "multiple_choice":
-                record.valor_respuesta = record.opcion_id.valor
+        """
+        Método para calcular el valor de la respuesta.
+
+        :return: Valor de la respuesta
+        """
+        for registro in self:
+            if registro.pregunta_id.tipo == "escala":
+                registro.valor_respuesta = int(registro.respuesta_texto)
+            elif registro.pregunta_id.tipo == "multiple_choice":
+                registro.valor_respuesta = registro.opcion_id.valor
             else:
-                record.valor_respuesta = 0
+                registro.valor_respuesta = 0
