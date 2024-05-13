@@ -30,4 +30,13 @@ export class ResUsers extends ServerModel {
     _is_public(id) {
         return id === serverState.publicUserId;
     }
+
+    create(valuesList, kwargs = {}) {
+        const userId = super.create(...arguments);
+        const [user] = this.env["res.users"]._filter([["id", "=", userId]]);
+        if (user && !user.partner_id) {
+            this.env["res.users"].write(userId, { partner_id: this.env["res.partner"].create({}) });
+        }
+        return userId;
+    }
 }
