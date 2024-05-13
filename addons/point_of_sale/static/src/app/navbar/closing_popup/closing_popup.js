@@ -26,9 +26,8 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         "amount_authorized_diff",
         // TODO: set the props for all popups
         "id",
-        "keepBehind",
         "resolve",
-        "isActive",
+        "zIndex",
         "close",
         "confirmKey",
         "cancelKey",

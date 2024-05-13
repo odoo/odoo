@@ -102,7 +102,7 @@ export class Navbar extends Component {
 
     async closeSession() {
         const info = await this.pos.getClosePosInfo();
-        this.popup.add(ClosePosPopup, { ...info, keepBehind: true });
+        this.popup.add(ClosePosPopup, { ...info });
     }
 
     showBackButton() {
