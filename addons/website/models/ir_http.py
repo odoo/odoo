@@ -423,7 +423,7 @@ class Http(models.AbstractModel):
             obj = self._xmlid_to_obj(self.env, xmlid)
         elif id and model in self.env:
             obj = self.env[model].browse(int(id))
-        if obj and 'website_published' in obj._fields:
+        if obj and 'website_published' in obj._fields and field in obj._fields and not obj._fields[field].groups:
             if self.env[obj._name].sudo().search([('id', '=', obj.id), ('website_published', '=', True)]):
                 self = self.sudo()
         return super(Http, self).binary_content(

@@ -353,14 +353,15 @@ class IrHttp(models.AbstractModel):
         mimetype = getattr(record, 'mimetype', False)
         if record.type == 'url' and record.url:
             # if url in in the form /somehint server locally
-            url_match = re.match(r"^/(\w+)/(.+)$", record.url)
+            url_match = re.match(r"^/(\w+)/(static|images)/(.+)$", record.url)
             if url_match:
                 module = url_match.group(1)
+                static = url_match.group(2)
                 module_path = get_module_path(module)
-                module_resource_path = get_resource_path(module, url_match.group(2))
+                module_resource_path = get_resource_path(module, static, url_match.group(3))
 
                 if module_path and module_resource_path:
-                    module_path = os.path.join(os.path.normpath(module_path), '')  # join ensures the path ends with '/'
+                    module_path = os.path.join(os.path.normpath(module_path), static, '')  # join ensures the path ends with '/'
                     module_resource_path = os.path.normpath(module_resource_path)
                     if module_resource_path.startswith(module_path):
                         with open(module_resource_path, 'rb') as f:
@@ -398,7 +399,7 @@ class IrHttp(models.AbstractModel):
                 content = record['datas']
                 filehash = record['checksum']
 
-        if not content:
+        if not content and field_def.type == 'binary':
             try:
                 content = record[field] or ''
             except AccessError:
