@@ -16,6 +16,11 @@ class ResCompany(models.Model):
         store=True,
         readonly=False,
     )
+    l10n_in_edi_production_env = fields.Boolean(
+        string="Indian Production Environment",
+        help="Enable the use of production credentials",
+        groups="base.group_system",
+    )
 
     @api.depends('vat')
     def _compute_l10n_in_hsn_code_digit(self):
