@@ -59,6 +59,19 @@ test("register / unregister", async () => {
     expect([key]).toVerifySteps();
 });
 
+test("should ignore when IME is composing", async () => {
+    await makeMockEnv();
+    const key = "enter";
+    getService("hotkey").add(key, () => expect.step(key));
+    await animationFrame();
+
+    press([key]);
+    expect([key]).toVerifySteps();
+
+    press([key], { isComposing: true });
+    expect([]).toVerifySteps();
+});
+
 test("hotkey handles wrongly formed KeyboardEvent", async () => {
     // This test's aim is to assert that Chrome's autofill bug is handled.
     // When filling a form with the autofill feature of Chrome, a keyboard event without any
