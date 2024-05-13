@@ -137,9 +137,9 @@ test("can toggle multiple companies at once", async () => {
     await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
 
     /**
-     *   [ ] Hermit          -> toggle all
-     *   [x] **Herman's**    -> toggle all
-     *   [x] Heroes TM       -> toggle all
+     *   [x] **Hermit**
+     *   [ ] Herman's
+     *   [ ] Heroes TM
      *   [ ]    Hercules
      *   [ ]    Hulk
      */
@@ -151,9 +151,9 @@ test("can toggle multiple companies at once", async () => {
     expect("[data-company-id] .fa-square-o").toHaveCount(4);
 
     /**
-     *   [x] **Hermit**
-     *   [x] Herman's      -> toggle
-     *   [ ] Heroes TM
+     *   [ ] Hermit          -> toggle all
+     *   [x] **Herman's**    -> toggle all
+     *   [x] Heroes TM       -> toggle all
      *   [ ]    Hercules
      *   [ ]    Hulk
      */
@@ -262,15 +262,15 @@ test("multi company mode: log into a non selected company", async () => {
     expect("[data-company-id] .fa-square-o").toHaveCount(3);
 
     /**
-     *   [ ] Hermit
+     *   [x] Hermit
      *   [x] **Herman's**    -> log into
-     *   [ ] Heroes TM
+     *   [x] Heroes TM
      *   [ ]    Hercules
      *   [ ]    Hulk
      */
     await contains(".log_into:eq(1)").click();
     expect(".dropdown-menu").toHaveCount(0, { message: "dropdown is directly closed" });
-    expect(["cids=2"]).toVerifySteps();
+    expect(["cids=2-3-1"]).toVerifySteps();
 });
 
 test("multi company mode: log into an already selected company", async () => {
@@ -296,14 +296,14 @@ test("multi company mode: log into an already selected company", async () => {
 
     /**
      *   [ ] Hermit
-     *   [ ] Herman's
+     *   [x] Herman's
      *   [x] **Heroes TM**    -> log into
      *   [x]    Hercules
      *   [x]    Hulk
      */
     await contains(".log_into:eq(2)").click();
     expect(".dropdown-menu").toHaveCount(0, { message: "dropdown is directly closed" });
-    expect(["cids=1-4-5"]).toVerifySteps();
+    expect(["cids=1-2-4-5"]).toVerifySteps();
 });
 
 test("companies can be logged in even if some toggled within delay", async () => {
@@ -339,3 +339,134 @@ test("companies can be logged in even if some toggled within delay", async () =>
     expect(".dropdown-menu").toHaveCount(0, { message: "dropdown is directly closed" });
     expect(["cids=2"]).toVerifySteps();
 });
+
+test("single company mode: from company loginto branch", async () => {
+    expect.assertions(6);
+    await createSwitchCompanyMenu({
+        onPushState: (url) => expect.step(url.split("?")[1]),
+    });
+
+    /**
+     *   [x] **Hermit**
+     *   [ ] Herman's
+     *   [ ] Heroes TM
+     *   [ ]    Hercules
+     *   [ ]    Hulk
+     */
+    expect(getService("company").activeCompanyIds).toEqual([3]);
+    expect(getService("company").currentCompany.id).toBe(3);
+    await contains(".dropdown-toggle").click();
+    expect("[data-company-id]").toHaveCount(5);
+    expect("[data-company-id] .fa-check-square").toHaveCount(1);
+    expect("[data-company-id] .fa-square-o").toHaveCount(4);
+
+    /**
+     *   [ ] Hermit
+     *   [ ] Herman's
+     *   [x] **Heroes TM** -> log into
+     *   [x]    Hercules
+     *   [x]    Hulk
+     */
+    await contains(".log_into:eq(2)").click();
+    expect(["cids=1-4-5"]).toVerifySteps();
+});
+
+test("single company mode: from branch loginto company", async () => {
+    expect.assertions(6);
+    browser.location.search = "cids=1-4-5";
+    await createSwitchCompanyMenu({
+        onPushState: (url) => expect.step(url.split("?")[1]),
+    });
+
+    /**
+     *   [ ] Hermit
+     *   [ ] Herman's
+     *   [x] **Heroes TM**
+     *   [x]    Hercules
+     *   [x]    Hulk
+     */
+    expect(getService("company").activeCompanyIds).toEqual([1, 4, 5]);
+    expect(getService("company").currentCompany.id).toBe(1);
+    await contains(".dropdown-toggle").click();
+    expect("[data-company-id]").toHaveCount(5);
+    expect("[data-company-id] .fa-check-square").toHaveCount(3);
+    expect("[data-company-id] .fa-square-o").toHaveCount(2);
+
+    /**
+     *   [x] Hermit    -> log into
+     *   [ ] Herman's
+     *   [ ] Heroes TM
+     *   [ ]    Hercules
+     *   [ ]    Hulk
+     */
+    await contains(".log_into:eq(0)").click();
+    expect(["cids=3"]).toVerifySteps();
+});
+
+test(
+    "single company mode: from leaf (only one company in branch selected) loginto company",
+    async () => {
+        expect.assertions(6);
+        browser.location.search = "cids=1";
+        await createSwitchCompanyMenu({ onPushState: (url) => expect.step(url.split("?")[1]) });
+
+        /**
+         *   [ ] Hermit
+         *   [ ] Herman's
+         *   [x] **Heroes TM**
+         *   [ ]    Hercules
+         *   [ ]    Hulk
+         */
+        expect(getService("company").activeCompanyIds).toEqual([1]);
+        expect(getService("company").currentCompany.id).toBe(1);
+        await contains(".dropdown-toggle").click();
+        expect("[data-company-id]").toHaveCount(5);
+        expect("[data-company-id] .fa-check-square").toHaveCount(1);
+        expect("[data-company-id] .fa-square-o").toHaveCount(4);
+
+        /**
+         *   [ ] Hermit
+         *   [x] **Herman's**     -> log into
+         *   [ ] Heroes TM
+         *   [ ]    Hercules
+         *   [ ]    Hulk
+         */
+        await contains(".log_into:eq(1)").click();
+        expect(["cids=2"]).toVerifySteps();
+    }
+);
+
+test(
+    "multi company mode: switching company doesn't deselect already selected ones",
+    async () => {
+        expect.assertions(6);
+        browser.location.search = "cids=1-2-4-5";
+        await createSwitchCompanyMenu({
+            onPushState: (url) => expect.step(url.split("?")[1]),
+        });
+
+        /**
+         *   [ ] Hermit
+         *   [x] Herman's
+         *   [x] **Heroes TM**
+         *   [x]    Hercules
+         *   [x]    Hulk
+         */
+        expect(getService("company").activeCompanyIds).toEqual([1, 2, 4, 5]);
+        expect(getService("company").currentCompany.id).toBe(1);
+        await contains(".dropdown-toggle").click();
+        expect("[data-company-id]").toHaveCount(5);
+        expect("[data-company-id] .fa-check-square").toHaveCount(4);
+        expect("[data-company-id] .fa-square-o").toHaveCount(1);
+
+        /**
+         *   [ ] Hermit
+         *   [x] **Herman's** -> log into
+         *   [x] Heroes TM
+         *   [x]    Hercules
+         *   [x]    Hulk
+         */
+        await contains(".log_into:eq(1)").click();
+        expect(["cids=2-1-4-5"]).toVerifySteps();
+    }
+);

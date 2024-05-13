@@ -215,7 +215,7 @@ test("multi company mode: log into a non selected company", async () => {
      *   [x] **Company 3**
      */
     await contains(".log_into:eq(1)").click();
-    expect(["cids=2"]).toVerifySteps();
+    expect(["cids=2-3-1"]).toVerifySteps();
 });
 
 test("multi company mode: log into an already selected company", async () => {
@@ -242,7 +242,7 @@ test("multi company mode: log into an already selected company", async () => {
      *   [x] Company 3      -> log into
      */
     await contains(".log_into:eq(2)").click();
-    expect(["cids=3"]).toVerifySteps();
+    expect(["cids=3-2"]).toVerifySteps();
 });
 
 test("companies can be logged in even if some toggled within delay", async () => {
