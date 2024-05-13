@@ -53,8 +53,11 @@ function processModelDefs(modelDefs) {
             }
 
             if (field.type === "many2many") {
-                let [inverseField, ...others] = Object.entries(comodel).filter(
-                    (model_name, f) => model_name === field.relation
+                let [inverseField, ...others] = Object.values(comodel).filter(
+                    (f) =>
+                        model === f.relation &&
+                        f.relation_table === field.relation_table &&
+                        field.name !== f.name
                 );
                 if (others.length > 0) {
                     throw new Error("Many2many relation must have only one inverse");
