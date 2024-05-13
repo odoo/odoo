@@ -135,7 +135,3 @@ class Product(models.Model):
         website = self.env['website'].get_current_website()
         return (is_product_salable and website.has_ecommerce_access()) \
                or self.env.user.has_group('base.group_system')
-
-    def _get_contextual_price_tax_selection(self):
-        self.ensure_one()
-        return self.product_tmpl_id._get_contextual_price_tax_selection(self)
