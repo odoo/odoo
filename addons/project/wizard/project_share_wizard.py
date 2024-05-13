@@ -52,7 +52,7 @@ class ProjectShareWizard(models.TransientModel):
         project_model = self.env['ir.model']._get('project.project')
         return [(project_model.model, project_model.name)]
 
-    share_link = fields.Char("Public Link", help="Anyone with this link can access the project in read-only mode.")
+    share_link = fields.Char("Public Link", help="Anyone with this link can access the project in read mode.")
     collaborator_ids = fields.One2many('project.share.collaborator.wizard', 'parent_wizard_id', string='Collaborators')
     existing_partner_ids = fields.Many2many('res.partner', compute='_compute_existing_partner_ids', export_string_translation=False)
 

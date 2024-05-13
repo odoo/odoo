@@ -17,10 +17,10 @@ class ProjectSharingCollaboratorWizard(models.TransientModel):
         required=True,
     )
     access_mode = fields.Selection(
-        [('read', 'Read-only'), ('edit_limited', 'Edit with limited access'), ('edit', 'Edit')],
+        [('read', 'Read'), ('edit_limited', 'Edit with limited access'), ('edit', 'Edit')],
         default='read',
         required=True,
-        help="Read-only: collaborators can view tasks but cannot edit them.\n"
+        help="Read: collaborators can view tasks but cannot edit them.\n"
             "Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.\n"
             "Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow."
     )
