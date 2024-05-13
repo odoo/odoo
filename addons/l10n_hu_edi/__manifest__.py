@@ -4,7 +4,6 @@
     'name': 'Hungary - E-invoicing',
     'version': '1.0.0',
     'category': 'Accounting/Localizations/EDI',
-    'countries': ['hu'],
     'author': 'DO Tech (OdooTech Zrt.), BDSC Business Consulting Kft. & Odoo S.A.',
     'description': """
 * Submit e-invoices to the NAV (Hungarian Tax Agency) as part of the invoicing process.

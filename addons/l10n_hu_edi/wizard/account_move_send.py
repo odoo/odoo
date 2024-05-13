@@ -116,20 +116,9 @@ class AccountMoveSend(models.TransientModel):
             blocking_level = invoice.l10n_hu_edi_messages.get('blocking_level')
             if blocking_level == 'error':
                 invoices_data[invoice]['error'] = invoice.l10n_hu_edi_messages
-            elif blocking_level == 'error_but_continue':
-                invoices_data[invoice]['nav_30_error_but_continue'] = invoice.l10n_hu_edi_messages
 
         if self._can_commit():
             self.env.cr.commit()
-
-    @api.model
-    def _link_invoice_documents(self, invoice, invoice_data):
-        # EXTENDS 'account'
-        super()._link_invoice_documents(invoice, invoice_data)
-        # If we have a non-blocking error (intermediate non-confirmed state), we want to first link the PDF,
-        # and then make it a blocking error, so that an e-mail doesn't get sent to the customer.
-        if invoice_data.get('nav_30_error_but_continue'):
-            invoice_data['error'] = invoice_data.pop('nav_30_error_but_continue')
 
     @api.model
     def _l10n_hu_edi_cron_update_status(self):
