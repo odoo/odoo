@@ -60,6 +60,10 @@ export function getActiveHotkey(ev) {
         // See https://stackoverflow.com/questions/59534586/google-chrome-fires-keydown-event-when-form-autocomplete
         return "";
     }
+    if (ev.isComposing) {
+        // This case happens with an IME for example: we let it handle all key events.
+        return "";
+    }
     const hotkey = [];
 
     // ------- Modifiers -------
