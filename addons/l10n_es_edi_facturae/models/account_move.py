@@ -260,12 +260,12 @@ class AccountMove(models.Model):
                 'UnitPriceWithoutTax': line.currency_id.round(price_before_discount / line.quantity if line.quantity else 0.),
                 'TotalCost': price_before_discount,
                 'DiscountsAndRebates': [{
-                    'DiscountReason': '',
+                    'DiscountReason': '/',
                     'DiscountRate': f'{line.discount:.2f}',
                     'DiscountAmount': discount
                 }, ] if discount != 0. else [],
                 'Charges': [{
-                    'ChargeReason': '',
+                    'ChargeReason': '/',
                     'ChargeRate': f'{max(0, -line.discount):.2f}',
                     'ChargeAmount': surcharge,
                 }, ] if surcharge != 0. else [],
