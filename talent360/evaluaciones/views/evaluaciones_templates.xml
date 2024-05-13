@@ -451,7 +451,7 @@
                 </div>
             </div>
 
-            <t t-foreach="evaluacion.action_generar_datos_reporte_clima()['categorias']" t-as="categoria">
+            <t t-foreach="evaluacion.generar_datos_reporte_clima_action()['categorias']" t-as="categoria">
                 <div class="survey_section container-fluid">
                     <t t-if="'puntuacion' in categoria">
                         <div class="survey_page container-fluid d-flex flex-column">
