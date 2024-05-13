@@ -15,7 +15,7 @@ class PosSession(models.Model):
             params.update({
                 'restaurant.floor': {
                     'domain': [('pos_config_ids', '=', self.config_id.id)],
-                    'fields': ['name', 'background_color', 'table_ids', 'sequence'],
+                    'fields': ['name', 'background_color', 'table_ids', 'sequence', 'pos_config_ids'],
                 },
                 'restaurant.table': {
                     'domain': lambda data: [('active', '=', True), ('floor_id', 'in', [floor['id'] for floor in data['restaurant.floor']])],
