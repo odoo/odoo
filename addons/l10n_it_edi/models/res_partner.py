@@ -43,9 +43,8 @@ class ResPartner(models.Model):
             If there is no VAT and no Codice Fiscale, the invoice is not even exported, so this case is not handled.
 
             Country:
-            First, try and deduct the country from the VAT number.
-            If not, take the country directly from the partner.
-            If there's a codice fiscale, the country is 'IT'.
+            First, take the country configured on the partner.
+            If there's a codice fiscale and no country, the country is 'IT'.
 
             PA Index:
             If the partner is in Italy, then the l10n_it_pa_index is used, and '0000000' if missing.
@@ -71,14 +70,8 @@ class ResPartner(models.Model):
         if self.vat:
             normalized_vat = self.vat.replace(' ', '')
             if in_eu:
-                # If there is no country-code prefix, it's domestic to Italy
-                if normalized_vat[:2].isdecimal():
-                    if not normalized_country:
-                        normalized_country = 'IT'
                 # If the partner is from the EU, the country-code prefix of the VAT must be taken away
-                else:
-                    if not normalized_country:
-                        normalized_country = normalized_vat[:2].upper()
+                if not normalized_vat[:2].isdecimal():
                     normalized_vat = normalized_vat[2:]
             # If customer is from San Marino
             elif is_sm:
