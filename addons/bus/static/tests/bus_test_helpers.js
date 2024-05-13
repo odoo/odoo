@@ -136,3 +136,48 @@ export function waitForChannels(channels, { operation = "add" } = {}) {
     });
     return deferred;
 }
+
+/**
+ * Wait for a notification to be received/not received. Returns a deferred that
+ * resolves when the assertion is done.
+ *
+ * @param {ExpectedNotification} notification
+ */
+function _waitNotification(notification) {
+    const [env, type, payload, { received = true } = {}] = notification;
+    const notificationDeferred = new Deferred();
+    const failTimeout = setTimeout(() => {
+        expect(!received).toBe(true, {
+            message: `Notification of type "${type}" with payload ${payload} not received.`,
+        });
+        env.services["bus_service"].unsubscribe(type, callback);
+        notificationDeferred.resolve();
+    }, TIMEOUT);
+    const callback = (notifPayload) => {
+        if (payload === undefined || JSON.stringify(notifPayload) === JSON.stringify(payload)) {
+            expect(received).toBe(true, {
+                message: `Notification of type "${type}" with payload ${JSON.stringify(
+                    notifPayload
+                )} receveived.`,
+            });
+            notificationDeferred.resolve();
+            clearTimeout(failTimeout);
+            env.services["bus_service"].unsubscribe(type, callback);
+        }
+    };
+    env.services["bus_service"].subscribe(type, callback);
+    return notificationDeferred;
+}
+
+/**
+ * Wait for the expected notifications to be received/not received. Returns
+ * a deferred that resolves when the assertion is done.
+ *
+ * @param {ExpectedNotification[]} expectedNotifications
+ * @returns {import("@web/core/utils/concurrency").Deferred}
+ */
+export function waitNotifications(...expectedNotifications) {
+    return Promise.all(
+        expectedNotifications.map((expectedNotification) => _waitNotification(expectedNotification))
+    );
+}

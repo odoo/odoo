@@ -1,3 +1,4 @@
+import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import {
     click,
@@ -337,7 +338,10 @@ test("Message unread counter", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId, last_interest_dt: "2021-01-03 10:00:00" }),
+            Command.create({
+                partner_id: serverState.partnerId,
+                last_interest_dt: "2021-01-03 10:00:00",
+            }),
             Command.create({ guest_id: guestId, last_interest_dt: "2021-01-03 10:00:00" }),
         ],
         channel_type: "livechat",
@@ -371,7 +375,7 @@ test("unknown livechat can be displayed and interacted with", async () => {
         channel_type: "livechat",
         livechat_operator_id: partnerId,
     });
-    await start();
+    const env = await start();
     await openDiscuss();
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
@@ -384,6 +388,7 @@ test("unknown livechat can be displayed and interacted with", async () => {
     await insertText(".o-mail-Composer-input", "Hello", { replace: true });
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message", { text: "Hello" });
+    await waitNotifications([env, "discuss.channel/new_message"]);
     await click("button", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Jane" });
     await click("div[title='Unpin Conversation']", {
