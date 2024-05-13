@@ -35,6 +35,14 @@ class WebsiteSaleVariantController(Controller):
                     'website': request.env['website'].get_current_website(),
                 },
             )
+
+        product = request.env['product.product'].browse(combination_info['product_id'])
+        if product and request.website.is_view_active('website_sale.product_tags'):
+            combination_info['product_tags'] = request.env['ir.ui.view']._render_template(
+                'website_sale.product_tags', values={
+                    'all_product_tags': product.all_product_tag_ids.filtered('visible_on_ecommerce')
+                }
+            )
         return combination_info
 
     @route('/sale/create_product_variant', type='json', auth='public', methods=['POST'])
