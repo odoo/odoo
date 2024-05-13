@@ -31,7 +31,7 @@ class ProjectShareWizard(models.TransientModel):
         project_model = self.env['ir.model']._get('project.project')
         return [(project_model.model, project_model.name)]
 
-    access_mode = fields.Selection([('read', 'Read-only'), ('edit', 'Edit')])
+    access_mode = fields.Selection([('read', 'Read'), ('edit', 'Edit')])
     send_email = fields.Boolean(string="Send by Email")
 
     @api.depends('res_model', 'res_id')

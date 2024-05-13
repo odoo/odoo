@@ -28,8 +28,12 @@
                     <field name="partner_ids" widget="many2many_tags_email" options="{'no_quick_create': True}" placeholder="Add the contacts you would like to share the project with..." invisible="not send_email and access_mode == 'read'" nolabel="1" context="{'form_view_ref': 'base.view_partner_simple_form'}"/>
                 </group>
                 <footer>
-                    <button string="Send invitation" name="action_share_record" type="object" class="btn-primary" data-hotkey="q"/>
-                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                    <button string="Send invitation" name="action_share_record" type="object" class="btn-primary" data-hotkey="q"
+                        invisible="not send_email and access_mode == 'read'"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"
+                        invisible="not send_email and access_mode == 'read'"/>
+                    <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"
+                        invisible="send_email or access_mode == 'edit'"/>
                 </footer>
             </form>
         </field>
@@ -52,7 +56,7 @@
     </record>
 
     <record id="project_share_wizard_action" model="ir.actions.act_window">
-        <field name="name">Share a Project</field>
+        <field name="name">Share Project</field>
         <field name="res_model">project.share.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
