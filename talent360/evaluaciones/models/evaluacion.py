@@ -41,8 +41,8 @@ class Evaluacion(models.Model):
     estado = fields.Selection(
         [
             ("borrador", "Borrador"),
-            ("publicado", "Publicado"),
-            ("finalizado", "Finalizado"),
+            ("publicado", "Abierta"),
+            ("finalizado", "Cerrada"),
         ],
         default="borrador",
         required=True,
@@ -460,7 +460,6 @@ class Evaluacion(models.Model):
         parametros.update(datos_demograficos)
 
         return parametros
-
     def action_generar_datos_reporte_clima(self):
         """
         Genera los datos necesarios para el reporte de clima organizacional de la evaluación.
@@ -528,6 +527,7 @@ class Evaluacion(models.Model):
                 valor_respuesta = respuesta.valor_respuesta
                 valor_pregunta += valor_respuesta
                 maximo_pregunta += pregunta._calculate_valor_maximo()  # Suponiendo un máximo de 4 para cada respuesta en escala
+ # Suponiendo un máximo de 4 para cada respuesta en escala
 
                 nombre_departamento = respuesta.usuario_id.department_id.name if respuesta.usuario_id.department_id else "Sin departamento"
                 departamento = next(
@@ -574,7 +574,7 @@ class Evaluacion(models.Model):
             else 0
         ),2)
 
-        # Datos demograficos
+      # Datos demograficos
         if self.incluir_demograficos:
             datos_demograficos = self.generar_datos_demograficos()
 
