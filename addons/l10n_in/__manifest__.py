@@ -23,6 +23,7 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'base_vat',
         'account_debit_note',
         'account',
+        'iap',
     ],
     'auto_install': ['account'],
     'data': [

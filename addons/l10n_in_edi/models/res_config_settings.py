@@ -10,11 +10,6 @@ class ResConfigSettings(models.TransientModel):
 
     l10n_in_edi_username = fields.Char("Indian EDI username", related="company_id.l10n_in_edi_username", readonly=False)
     l10n_in_edi_password = fields.Char("Indian EDI password", related="company_id.l10n_in_edi_password", readonly=False)
-    l10n_in_edi_production_env = fields.Boolean(
-        string="Indian EDI Testing Environment",
-        related="company_id.l10n_in_edi_production_env",
-        readonly=False
-    )
 
     def l10n_in_check_gst_number(self):
         if not self.company_id.vat:
@@ -41,12 +36,3 @@ class ResConfigSettings(models.TransientModel):
                   'message': _("API credentials validated successfully"),
               }
           }
-
-    def l10n_in_edi_buy_iap(self):
-        if not self.l10n_in_edi_production_env:
-            raise UserError(_("You must enable production environment to buy credits"))
-        return {
-            'type': 'ir.actions.act_url',
-            'url': self.env["iap.account"].get_credits_url(service_name="l10n_in_edi", base_url=''),
-            'target': '_new'
-        }
