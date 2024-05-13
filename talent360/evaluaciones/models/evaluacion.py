@@ -1,6 +1,7 @@
 from odoo import api, models, fields, _
 from collections import defaultdict
 from odoo import exceptions
+from datetime import timedelta
 
 
 class Evaluacion(models.Model):
@@ -93,7 +94,7 @@ class Evaluacion(models.Model):
         Valida que la fecha de inicio sea anterior a la fecha final.
         """
         for record in self:
-            fecha_actual = fields.Date.today()
+            fecha_actual = fields.Date.today() - timedelta(days=1)
             if record.fecha_inicio:
                 # Verifica que la fecha de inicio no sea menor a la fecha actual
                 if record.fecha_inicio < fecha_actual:
