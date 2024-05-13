@@ -54,6 +54,20 @@ QUnit.test("register / unregister", async (assert) => {
     assert.verifySteps([key]);
 });
 
+QUnit.test("should ignore when IME is composing", async (assert) => {
+    const key = "enter";
+    env.services.hotkey.add(key, () => assert.step(key));
+    await nextTick();
+
+    triggerHotkey(key);
+    await nextTick();
+    assert.verifySteps([key]);
+
+    triggerHotkey(key, false, { isComposing: true });
+    await nextTick();
+    assert.verifySteps([]);
+});
+
 QUnit.test("hotkey handles wrongly formed KeyboardEvent", async (assert) => {
     // This test's aim is to assert that Chrome's autofill bug is handled.
     // When filling a form with the autofill feature of Chrome, a keyboard event without any
