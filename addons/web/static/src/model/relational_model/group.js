@@ -115,9 +115,9 @@ export class Group extends DataPoint {
         this.count -= records.length;
     }
 
-    async _removeRecords(recordIds) {
+    async _removeRecords(recordIds, options = {}) {
         const idsToRemove = recordIds.filter((id) => this.list.records.some((r) => r.id === id));
-        await this.list._removeRecords(idsToRemove);
+        await this.list._removeRecords(idsToRemove, options);
         this.count -= idsToRemove.length;
     }
 }

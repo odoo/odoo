@@ -105,7 +105,7 @@ export class DynamicGroupList extends DynamicList {
         // step 1: move record to correct position
         const refIndex = targetGroup.list.records.findIndex((r) => r.id === refId);
         const oldIndex = sourceGroup.list.records.findIndex((r) => r.id === dataRecordId);
-        sourceGroup._removeRecords([record.id]);
+        sourceGroup._removeRecords([record.id], { noLoad: true });
         targetGroup._addRecord(record, refIndex + 1);
         // step 2: update record value
         const value =
@@ -113,7 +113,7 @@ export class DynamicGroupList extends DynamicList {
                 ? [targetGroup.value, targetGroup.displayName]
                 : targetGroup.value;
         const revert = () => {
-            targetGroup._removeRecords([record.id]);
+            targetGroup._removeRecords([record.id], { noLoad: true });
             sourceGroup._addRecord(record, oldIndex);
         };
         try {
@@ -126,6 +126,24 @@ export class DynamicGroupList extends DynamicList {
             // revert changes
             revert();
             throw e;
+        }
+
+        let offset = sourceGroup.list.offset;
+        let shouldLoad = false;
+        if (sourceGroup.list.offset && !sourceGroup.records.length) {
+            offset = Math.max(sourceGroup.list.offset - sourceGroup.list.limit, 0);
+            shouldLoad = true;
+        } else if (sourceGroup.list.count > sourceGroup.list.offset + sourceGroup.list.limit) {
+            shouldLoad = true;
+        }
+
+        if (shouldLoad) {
+            sourceGroup.list._load(
+                offset,
+                sourceGroup.list.limit,
+                sourceGroup.list.orderBy,
+                sourceGroup.list.domain
+            );
         }
         if (!targetGroup.isFolded) {
             await targetGroup.list._resequence(
@@ -289,10 +307,10 @@ export class DynamicGroupList extends DynamicList {
         this.count--;
     }
 
-    _removeRecords(recordIds) {
+    _removeRecords(recordIds, options = {}) {
         const proms = [];
         for (const group of this.groups) {
-            proms.push(group._removeRecords(recordIds));
+            proms.push(group._removeRecords(recordIds, options));
         }
         return Promise.all(proms);
     }
