@@ -616,7 +616,7 @@ class StockWarehouseOrderpoint(models.Model):
                             origin = orderpoint.name
                         if float_compare(orderpoint.qty_to_order, 0.0, precision_rounding=orderpoint.product_uom.rounding) == 1:
                             date = orderpoint._get_orderpoint_procurement_date()
-                            global_visibility_days = self.env['ir.config_parameter'].sudo().get_param('stock.visibility_days')
+                            global_visibility_days = self.env.context.get('global_visibility_days', 0)
                             if global_visibility_days:
                                 date -= relativedelta.relativedelta(days=int(global_visibility_days))
                             values = orderpoint._prepare_procurement_values(date=date)
