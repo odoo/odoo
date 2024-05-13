@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="delivery.ChoosePickupPointForm" t-inherit="web.FormView" t-inherit-mode="primary">
+        <xpath expr="//Layout" position="inside">
+            <div class="container">
+                <div class="conatiner">
+                    <div class="d-inline-flex align-items-center mt-0" style="white-space: nowrap;">
+                        <span class="me-2" style="font-size: 16px; font-weight: 500;">Find pickup points near:</span>
+                        <input type="text" class="form-control me-2" placeholder="ZIP code" t-att-value="this.zipCode.value" t-on-change="onChangeZipCode"/>
+                        <button class="btn btn-primary" t-on-click="searchPickupPoints">Search</button>
+                    </div>
+                </div>
+                <t t-if="this.loading.value">
+                    <div class="d-flex flex-row align-items-center justify-content-center">
+                        <div class="o_spinner">
+                            <i class="m-3 h1 fa fa-2x fa-spinner fa-spin"/>
+                        </div>
+                    </div>
+                </t>
+                <t t-else="">
+                    <t t-if="this.pickupPoints.data.length === 0">
+                        <div class="alert alert-info mt-2">No pickup points found near this postal code.</div>
+                    </t>
+                    <t t-else="">
+                        <PickupLocations locations="this.pickupPoints.data" onSelectPickupPoint.bind="this.onSelectPickupPoint"/>
+                    </t>
+                </t>
+            </div>
+        </xpath>
+    </t>
+    <t t-name="delivery.ChoosePickupPointFormButtons" t-inherit="web.FormView.Buttons" t-inherit-mode="primary">
+        <xpath expr="//button[hasclass('o_form_button_save')]" position="attributes">
+            <attribute name="t-att-disabled">!this.selectedPickupPoint.id</attribute>
+        </xpath>
+    </t>
+</templates>
+        

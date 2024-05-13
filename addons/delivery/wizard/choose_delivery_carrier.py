@@ -18,6 +18,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
         string="Shipping Method",
         required=True,
     )
+    state = fields.Selection(related='order_id.state')
     delivery_type = fields.Selection(related='carrier_id.delivery_type')
     delivery_price = fields.Float()
     display_price = fields.Float(string='Cost', readonly=True)
@@ -28,6 +29,13 @@ class ChooseDeliveryCarrier(models.TransientModel):
     delivery_message = fields.Text(readonly=True)
     total_weight = fields.Float(string='Total Order Weight', related='order_id.shipping_weight', readonly=False)
     weight_uom_name = fields.Char(readonly=True, default=_get_default_weight_uom)
+    delivery_address_id = fields.Many2one('res.partner', string="Pickup Point")
+    show_pickup_points = fields.Boolean(compute='_compute_show_pickup_points')
+
+    @api.depends('carrier_id', 'delivery_type')
+    def _compute_show_pickup_points(self):
+        for rec in self:
+            rec.show_pickup_points = rec.carrier_id.is_pickup
 
     @api.onchange('carrier_id', 'total_weight')
     def _onchange_carrier_id(self):
@@ -91,4 +99,36 @@ class ChooseDeliveryCarrier(models.TransientModel):
         self.order_id.write({
             'recompute_delivery_price': False,
             'delivery_message': self.delivery_message,
+            'delivery_address_id': self.delivery_address_id.id,
         })
+
+    def action_open_pickup_point_wizard(self):
+        if not self.carrier_id.is_pickup:
+            raise UserError(_('This shipping method does not support pickup points.'))
+        if not self.order_id.partner_shipping_id.country_id:
+            raise UserError(_('Customer address must have a country in order to choose a pickup point.'))
+        view_id = self.env.ref('delivery.choose_pickup_point_view_form').id
+        return {
+            'name': _('Choose Pickup Point'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'choose.pickup.point',
+            'view_id': view_id,
+            'views': [(view_id, 'form')],
+            'target': 'new',
+            'context': {
+                'default_order_id': self.order_id.id,
+                'default_choose_delivery_carrier_id': self.id,
+            }
+        }
+
+    def action_close_pickup_point(self):
+        return {
+            'name': _('Add a shipping method'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'choose.delivery.carrier',
+            'views': [(False, 'form')],
+            'res_id': self.id,
+            'target': 'new',
+        }

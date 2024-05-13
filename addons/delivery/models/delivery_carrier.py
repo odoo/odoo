@@ -49,6 +49,7 @@ class DeliveryCarrier(models.Model):
     company_id = fields.Many2one('res.company', string='Company', related='product_id.company_id', store=True, readonly=False)
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True, ondelete='restrict')
     currency_id = fields.Many2one(related='product_id.currency_id')
+    is_pickup = fields.Boolean(compute='_compute_is_pickup', help="Technical field to know if the carrier is used as a pickup carrier.")
 
     invoice_policy = fields.Selection(
         selection=[('estimated', "Estimated cost")],
@@ -96,6 +97,10 @@ class DeliveryCarrier(models.Model):
         ('margin_not_under_100_percent', 'CHECK (margin >= -1)', 'Margin cannot be lower than -100%'),
         ('shipping_insurance_is_percentage', 'CHECK(shipping_insurance >= 0 AND shipping_insurance <= 100)', "The shipping insurance must be a percentage between 0 and 100."),
     ]
+
+    def _compute_is_pickup(self):
+        for carrier in self:
+            carrier.is_pickup = hasattr(carrier, f'{carrier.delivery_type}_use_locations') and getattr(carrier, f'{carrier.delivery_type}_use_locations')
 
     @api.depends('delivery_type')
     def _compute_can_generate_return(self):

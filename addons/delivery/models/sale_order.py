@@ -8,6 +8,15 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     carrier_id = fields.Many2one('delivery.carrier', string="Delivery Method", check_company=True, help="Fill this field if you plan to invoice the shipping based on picking.")
+    delivery_method = fields.Selection([
+        ('classic', 'Classic'),
+        ('pickup_point', 'Pick Up Point'),
+        ('store', 'Store'),
+    ], string='Delivery Type', compute='_compute_delivery_method', default='classic')
+    delivery_address_id = fields.Many2one(
+        'res.partner', string="Delivery Address",
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        compute='_compute_delivery_address_id', store=True, readonly=False)
     delivery_message = fields.Char(readonly=True, copy=False)
     delivery_rating_success = fields.Boolean(copy=False)
     delivery_set = fields.Boolean(compute='_compute_delivery_state')
@@ -24,6 +33,24 @@ class SaleOrder(models.Model):
         self.ensure_one()
         delivery_cost = sum([l.price_total for l in self.order_line if l.is_delivery])
         return self.amount_total - delivery_cost
+
+    @api.depends('carrier_id')
+    def _compute_delivery_method(self):
+        for order in self:
+            if order.carrier_id.is_pickup:
+                order.delivery_method = 'pickup_point'
+            elif order.carrier_id.delivery_type == 'onsite':
+                order.delivery_method = 'store'
+            else:
+                order.delivery_method = 'classic'
+
+    @api.depends('partner_shipping_id', 'carrier_id', 'delivery_method')
+    def _compute_delivery_address_id(self):
+        for order in self:
+            if order.delivery_method == 'store':
+                order.delivery_address_id = order.carrier_id.warehouse_id.partner_id.id
+            elif order.delivery_method == 'classic':
+                order.delivery_address_id = order.partner_shipping_id.id
 
     @api.depends('order_line')
     def _compute_delivery_state(self):
@@ -85,6 +112,25 @@ class SaleOrder(models.Model):
                 'default_order_id': self.id,
                 'default_carrier_id': carrier.id,
                 'default_total_weight': self._get_estimated_weight()
+            }
+        }
+
+    def action_open_pickup_point_wizard(self):
+        if not self.carrier_id.is_pickup:
+            raise UserError(_('The selected delivery method does not support pickup points.'))
+        if not self.partner_shipping_id.country_id:
+            raise UserError(_('Customer address must have a country in order to choose a pickup point.'))
+        view_id = self.env.ref('delivery.choose_pickup_point_view_form').id
+        return {
+            'name': _('Choose Pickup Point'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'choose.pickup.point',
+            'view_id': view_id,
+            'views': [(view_id, 'form')],
+            'target': 'new',
+            'context': {
+                'default_order_id': self.id,
             }
         }
 
