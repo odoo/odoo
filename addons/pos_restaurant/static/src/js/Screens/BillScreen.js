@@ -17,8 +17,9 @@ odoo.define('pos_restaurant.BillScreen', function (require) {
              * @override
              */
             async printReceipt() {
+                const currentOrder = this.currentOrder;
                 await super.printReceipt();
-                this.currentOrder._printed = false;
+                currentOrder._printed = false;
             }
         }
         BillScreen.template = 'BillScreen';
