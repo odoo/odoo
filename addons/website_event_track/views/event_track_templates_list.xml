@@ -210,7 +210,7 @@
 
 <!-- Tracks: Cards-based display -->
 <template id="tracks_display_cards" name="Tracks: Cards Display">
-    <div class="row mb-3" t-if="tracks_live">
+    <div class="row gap-2 mb-3" t-if="tracks_live">
         <div class="col-12">
             <h4>Live Now</h4>
         </div>
@@ -218,7 +218,7 @@
             <t t-set="tracks" t-value="tracks_live"/>
         </t>
     </div>
-    <div class="row mb-3" t-if="tracks_soon">
+    <div class="row gap-2 mb-3" t-if="tracks_soon">
         <div class="col-12">
             <h4>Coming soon ...</h4>
         </div>
@@ -344,7 +344,7 @@
 <!-- ============================================================ -->
 
 <template id="track_cards_section" name="Track Cards">
-    <div t-foreach="tracks" t-as="track" class="col-md-6 col-lg-4 col-xl-3 mb-4">
+    <div t-foreach="tracks" t-as="track">
         <t t-if="track.website_published or is_event_user">
             <a t-att-href="'/event/%s/track/%s' % (slug(track.event_id), slug(track))" class="text-decoration-none text-reset">
                 <t t-call="website_event_track.track_card"/>
@@ -357,52 +357,53 @@
 </template>
 
 <template id="track_card" name="Track Card">
-    <article t-att-class="'o_wesession_track_card card d-flex flex-column h-100 %s' % ('o_wesession_track_card_unpublished opacity-50' if (not track.website_published and is_event_user) else '')"
-        itemscope="itemscope" itemtype="http://schema.org/Event">
-            <header class="position-relative bg-secondary">
-                <small t-if="not track.website_published and is_event_user"
-                class="position-absolute bottom-0 w-100 p-3 text-bg-danger">
+    <article t-att-class="'o_wesession_track_card card %s' % ('o_wesession_track_card_unpublished opacity-50' if (not track.website_published and is_event_user) else '')"
+        itemscope="itemscope" itemtype="http://schema.org/subEvent">
+        <div class="row g-0">
+            <header t-attf-class="#{'col-4 col-md-2' if track.website_image_url else ''} position-relative bg-secondary">
+                <small t-if="not track.website_published and is_event_user" t-attf-class="#{'position-absolute bottom-0' if track.website_image_url else 'd-block'} w-100 p-3 text-bg-danger">
                     <i class="fa fa-ban me-2"/>Unpublished
                 </small>
-                <img t-if="track.website_image_url" class="object-fit-cover w-100" t-attf-src="#{track.website_image_url}"/>
-                <span t-if="option_track_wishlist" class="position-absolute top-0 end-0 mt-2 me-2">
-                    <t t-call="website_event_track.track_widget_reminder">
-                        <t t-set="reminder_light" t-value="True"/>
-                    </t>
-                </span>
+                <img t-if="track.website_image_url" class="w-100 h-100 object-fit-cover" t-attf-src="#{track.website_image_url}"/>
             </header>
-            <main class="card-body">
-                <!-- Tags -->
-                <div class="d-flex flex-wrap gap-1 mb-2">
+            <main class="col-8 col-md-10 card-body">         
+                <div class="d-flex flex-wrap gap-1 mb-2"> 
+                    <!-- Tags -->
                     <t t-foreach="track.tag_ids" t-as="tag">
                         <t t-if="tag.color" t-call="website_event_track.track_tag_badge_info"/>
                     </t>
+                    <!-- Wishlist widget -->
+                    <small t-if="option_track_wishlist" class="position-absolute end-0 me-2">
+                        <t t-call="website_event_track.track_widget_reminder">
+                            <t t-set="reminder_light" t-value="False"/>
+                        </t>
+                    </small>
                 </div>
                 <!-- Title -->
-                <h5 class="card-title mb-0 text-truncate">
+                <h5 class="card-title">
                     <span t-field="track.name" itemprop="name"/>
-                </h5>
+                </h5>   
+                <div class="d-flex align-items-center justify-content-between">
+                    <!-- Starts -->
+                    <span class="small text-muted">
+                        <t t-if="track.track_start_remaining &gt;= 60">In
+                            <span t-field="track.track_start_remaining" itemprop="duration"
+                                t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'second', 'round': 'minute'}"/>
+                        </t>
+                        <t t-elif="track.track_start_relative &gt;= 60">
+                            <span t-field="track.track_start_relative" itemprop="duration"
+                                t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'second', 'round': 'minute'}"/>
+                            ago
+                        </t>
+                        <t t-else="">
+                            Starting now!
+                        </t>
+                    </span> 
+                    <!-- Speaker -->
+                    <span class="small text-muted" t-field="track.partner_name" itemprop="performer"/>
+                </div>
             </main>
-            <!-- Footer -->
-            <footer class="small d-flex justify-content-between p-3">
-                <!-- Speaker -->
-                <span class="text-muted text-truncate" t-field="track.partner_name" itemprop="performer"/>
-                <!-- Starts -->
-                <span class="text-muted">
-                    <t t-if="track.track_start_remaining &gt;= 60">In
-                        <span t-field="track.track_start_remaining" itemprop="duration"
-                            t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'second', 'round': 'minute'}"/>
-                    </t>
-                    <t t-elif="track.track_start_relative &gt;= 60">
-                        <span t-field="track.track_start_relative" itemprop="duration"
-                            t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'second', 'round': 'minute'}"/>
-                        ago
-                    </t>
-                    <t t-else="">
-                        Starting now!
-                    </t>
-                </span>
-            </footer>
+        </div>
     </article>
 </template>
 
