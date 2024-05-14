@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from __future__ import annotations
+
 import codecs
 import fnmatch
 import functools
@@ -1373,7 +1376,7 @@ class TranslationImporter:
                      the language must be present and activated in the database
         :param xmlids: if given, only translations for records with xmlid in xmlids will be loaded
         """
-        with suppress(FileNotFoundError), file_open(filepath, mode='rb') as fileobj:
+        with suppress(FileNotFoundError), file_open(filepath, mode='rb', env=self.env) as fileobj:
             _logger.info('loading base translation file %s for language %s', filepath, lang)
             fileformat = os.path.splitext(filepath)[-1][1:].lower()
             self.load(fileobj, fileformat, lang, xmlids=xmlids)
@@ -1612,8 +1615,11 @@ def load_language(cr, lang):
     installer.lang_install()
 
 
-
 def get_po_paths(module_name: str, lang: str):
+    return get_po_paths_env(module_name, lang)
+
+
+def get_po_paths_env(module_name: str, lang: str, env: odoo.api.Environment | None = None):
     lang_base = lang.split('_')[0]
     # Load the base as a fallback in case a translation is missing:
     po_names = [lang_base, lang]
@@ -1627,7 +1633,7 @@ def get_po_paths(module_name: str, lang: str):
     ]
     for path in po_paths:
         with suppress(FileNotFoundError):
-            yield file_path(path)
+            yield file_path(path, env=env)
 
 
 class CodeTranslations:
