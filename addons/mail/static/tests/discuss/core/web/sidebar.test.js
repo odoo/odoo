@@ -1,3 +1,4 @@
+import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import {
     click,
@@ -65,7 +66,7 @@ test("unknown channel can be displayed and interacted with", async () => {
         channel_type: "channel",
         name: "Not So Secret",
     });
-    await start();
+    const env = await start();
     await openDiscuss();
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
@@ -77,6 +78,7 @@ test("unknown channel can be displayed and interacted with", async () => {
     await insertText(".o-mail-Composer-input", "Hello", { replace: true });
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message", { text: "Hello" });
+    await waitNotifications([env, "discuss.channel/new_message"]);
     await click("button", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Not So Secret" });
     await click("div[title='Leave this channel']", {

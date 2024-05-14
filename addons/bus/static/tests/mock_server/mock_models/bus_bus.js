@@ -67,8 +67,7 @@ export class BusBus extends models.Model {
         const authenticatedUserId =
             "res.users" in this.env && this.env.cookie.get("authenticated_user_sid");
         const channels = [
-            ...IrWebSocket._build_bus_channel_list(),
-            ...(this.channelsByUser[authenticatedUserId] || []),
+            ...IrWebSocket._build_bus_channel_list(this.channelsByUser[authenticatedUserId] || []),
         ];
         notifications = notifications.filter(([target]) =>
             channels.some((channel) => {
