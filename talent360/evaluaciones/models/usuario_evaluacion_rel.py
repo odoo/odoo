@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 import secrets
 
 
@@ -128,7 +128,7 @@ class UsuarioEvaluacionRel(models.Model):
                     correo = usuario.usuario_externo_id.email
                     nombre = usuario.usuario_externo_id.nombre
                 else:
-                    raise ValueError("No se encontró un usuario asociado")
+                    raise ValueError(_("No se encontró un usuario asociado"))
                     
                 usuario.write({
                     "token": token,
