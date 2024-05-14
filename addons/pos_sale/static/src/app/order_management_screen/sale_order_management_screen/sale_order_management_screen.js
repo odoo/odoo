@@ -344,7 +344,7 @@ export class SaleOrderManagementScreen extends Component {
                             : this.env.utils.formatCurrency(0)
                     );
                     this.dialog.add(AlertDialog, {
-                        title: "Error amount too high",
+                        title: _t("Error amount too high"),
                         body: errorBody,
                     });
                     down_payment = sale_order.amount_unpaid > 0 ? sale_order.amount_unpaid : 0;
