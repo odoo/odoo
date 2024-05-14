@@ -46,7 +46,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         payments = self.env['account.payment'].create(vals_list)
         payments.action_post()
         self.assertEqual(len(payments), 2, 'Checks where not created properly')
-        self.assertRecordValues(payments, [{
+        self.assertRecordValues(payments.l10n_latam_new_check_ids, [{
             'current_journal_id': self.third_party_check_journal.id,
         }]*2)
 
