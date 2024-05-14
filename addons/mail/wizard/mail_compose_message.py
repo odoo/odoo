@@ -307,6 +307,8 @@ class MailComposer(models.TransientModel):
                 for res_id, mail_values in all_mail_values.items():
                     if wizard.composition_mode == 'mass_mail':
                         batch_mails_sudo |= self.env['mail.mail'].sudo().create(mail_values)
+                        for m in batch_mails_sudo:
+                            m.write({"references": m.message_id})
                     else:
                         post_params = dict(
                             message_type=wizard.message_type,
