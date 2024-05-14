@@ -70,4 +70,7 @@ patch(Navbar.prototype, {
             },
         });
     },
+    get showEditPlanButton() {
+        return true;
+    },
 });

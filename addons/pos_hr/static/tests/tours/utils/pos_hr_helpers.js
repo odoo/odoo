@@ -53,3 +53,10 @@ export function login(name, pin) {
         Dialog.confirm(),
     ]);
 }
+export function clickLockButton() {
+    return {
+        content: "Click on the menu button",
+        trigger: ".pos-rightheader button.fa-lock",
+        run: "click",
+    };
+}

@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
             PosHr.clickCashierName(),
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
             PosHr.cashierNameIs("Mitchell Admin"),
-            Chrome.clickMenuOption("Lock"),
+            PosHr.clickLockButton(),
             PosHr.clickLoginButton(),
             SelectionPopup.has("Pos Employee2", { run: "click" }),
             NumberPopup.enterValue("12"),
@@ -57,7 +57,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
             TicketScreen.nthRowContains(2, "Pos Employee2", false),
 
             // order for employee 1
-            Chrome.clickMenuOption("Lock"),
+            PosHr.clickLockButton(),
             PosHr.login("Pos Employee1", "2580"),
             TicketScreen.clickNewTicket(),
             ProductScreen.addOrderline("Desk Pad", "1", "4"),

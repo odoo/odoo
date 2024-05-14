@@ -611,13 +611,20 @@ export class PosOrderline extends Base {
         );
     }
 
+    getPriceString() {
+        return this.get_discount_str() === "100"
+            ? // free if the discount is 100
+              _t("Free")
+            : this.combo_line_ids.length > 0
+            ? // empty string if it is a combo parent line
+              ""
+            : formatCurrency(this.get_display_price(), this.currency);
+    }
+
     getDisplayData() {
         return {
             productName: this.get_full_product_name(),
-            price:
-                this.get_discount_str() === "100"
-                    ? "free"
-                    : formatCurrency(this.get_display_price(), this.currency),
+            price: this.getPriceString(),
             qty: this.get_quantity_str(),
             unit: this.product_id.uom_id ? this.product_id.uom_id.name : "",
             unitPrice: formatCurrency(this.get_unit_display_price(), this.currency),

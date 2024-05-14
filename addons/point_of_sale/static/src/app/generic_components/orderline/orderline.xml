@@ -11,8 +11,7 @@
                         <t t-slot="product-name"/>
                     </div>
                     <div class="product-price d-inline-block text-end price fw-bolder">
-                        <t t-if="line.price === 'free'">Free</t>
-                        <t t-else="" t-esc="line.price"/>
+                        <t t-esc="line.price"/>
                     </div>
                 </div>
                 <ul class="info-list" t-attf-class="{{props.infoListClasses}}">

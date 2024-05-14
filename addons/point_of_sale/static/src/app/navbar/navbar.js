@@ -3,7 +3,10 @@ import { useService } from "@web/core/utils/hooks";
 
 import { CashierName } from "@point_of_sale/app/navbar/cashier_name/cashier_name";
 import { ProxyStatus } from "@point_of_sale/app/navbar/proxy_status/proxy_status";
-import { SaleDetailsButton } from "@point_of_sale/app/navbar/sale_details_button/sale_details_button";
+import {
+    SaleDetailsButton,
+    handleSaleDetails,
+} from "@point_of_sale/app/navbar/sale_details_button/sale_details_button";
 import { SyncNotification } from "@point_of_sale/app/navbar/sync_notification/sync_notification";
 import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
@@ -129,5 +132,13 @@ export class Navbar extends Component {
                     this.notification.add("Connection failed", { type: "danger" });
                 });
         }
+    }
+
+    get showCreateProductButton() {
+        return this.isSystemUser;
+    }
+
+    async showSaleDetails() {
+        await handleSaleDetails(this.pos, this.hardwareProxy, this.dialog);
     }
 }
