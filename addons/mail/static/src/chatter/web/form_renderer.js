@@ -25,6 +25,7 @@ patch(FormRenderer.prototype, {
             this.mailStore = useService("mail.store");
         }
         this.uiService = useService("ui");
+        this.mailPopoutService = useService("mail.popout");
 
         this.onResize = useDebounced(this.render, 200);
         onMounted(() => browser.addEventListener("resize", this.onResize));
@@ -33,8 +34,8 @@ patch(FormRenderer.prototype, {
     /**
      * @returns {boolean}
      */
-    hasFileViewer() {
-        if (!this.mailStore || this.uiService.size < SIZES.XXL || !this.props.record.resId) {
+    hasFile() {
+        if (!this.mailStore || !this.props.record.resId) {
             return false;
         }
         this.messagingState.thread = this.mailStore.Thread.insert({
@@ -43,4 +44,22 @@ patch(FormRenderer.prototype, {
         });
         return this.messagingState.thread.attachmentsInWebClientView.length > 0;
     },
+    mailLayout(hasAttachmentContainer) {
+        const xxl = this.uiService.size >= SIZES.XXL;
+        const hasFile = this.hasFile();
+        const hasChatter = !!this.mailStore;
+        const hasExternalWindow = !!this.mailPopoutService.externalWindow;
+        if (hasExternalWindow && hasFile && hasAttachmentContainer) {
+            if (xxl) return "EXTERNAL_COMBO_XXL";  //  chatter on the side, attachment in separate tab
+            return "EXTERNAL_COMBO"  // chatter on the bottom, attachment in separate tab
+        }
+        if (hasChatter) {
+            if (xxl) {
+                if (hasAttachmentContainer && hasFile) return "COMBO";  // chatter on the bottom, attachment on the side
+                return "SIDE_CHATTER";  // chatter on the side, no attachment
+            }
+            return "BOTTOM_CHATTER";  // chatter on the bottom, no attachment
+        }
+        return "NONE";
+    }
 });
