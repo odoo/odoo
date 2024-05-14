@@ -169,6 +169,13 @@ export class Base {
 
         return {};
     }
+    _getCacheSet(fieldName) {
+        const cacheName = `_${fieldName}`;
+        if (!(cacheName in this)) {
+            this[cacheName] = new Set();
+        }
+        return this[cacheName];
+    }
 }
 
 export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) {
@@ -204,17 +211,20 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
         return processedModelDefs[model];
     }
 
-    function removeItem(array, item) {
-        const index = array.indexOf(item);
-        if (index >= 0) {
-            array.splice(index, 1);
+    function removeItem(record, fieldName, item) {
+        const cacheSet = record._getCacheSet(fieldName);
+        if (cacheSet.has(item.id)) {
+            cacheSet.delete(item.id);
+            const index = record[fieldName].indexOf(item);
+            record[fieldName].splice(index, 1);
         }
     }
 
-    function addItem(array, item) {
-        const index = array.indexOf(item);
-        if (index === -1) {
-            array.push(item);
+    function addItem(record, fieldName, item) {
+        const cacheSet = record._getCacheSet(fieldName);
+        if (!cacheSet.has(item.id)) {
+            cacheSet.add(item.id);
+            record[fieldName].push(item);
         }
     }
 
@@ -237,10 +247,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                 return;
             }
             if (recordToConnect && inverse.name in recordToConnect) {
-                addItem(recordToConnect[inverse.name], ownerRecord);
+                addItem(recordToConnect, inverse.name, ownerRecord);
             }
             if (prevConnectedRecord) {
-                removeItem(prevConnectedRecord[inverse.name], ownerRecord);
+                removeItem(prevConnectedRecord, inverse.name, ownerRecord);
             }
             ownerRecord[field.name] = recordToConnect;
         } else if (field.type === "one2many") {
@@ -250,12 +260,12 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
             }
             recordToConnect[inverse.name] = ownerRecord;
             if (prevConnectedRecord) {
-                removeItem(prevConnectedRecord[field.name], recordToConnect);
+                removeItem(prevConnectedRecord, field.name, recordToConnect);
             }
-            addItem(ownerRecord[field.name], recordToConnect);
+            addItem(ownerRecord, field.name, recordToConnect);
         } else if (field.type === "many2many") {
-            addItem(ownerRecord[field.name], recordToConnect);
-            addItem(recordToConnect[inverse.name], ownerRecord);
+            addItem(ownerRecord, field.name, recordToConnect);
+            addItem(recordToConnect, inverse.name, ownerRecord);
         }
     }
 
@@ -268,17 +278,17 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
             const prevConnectedRecord = ownerRecord[field.name];
             if (prevConnectedRecord === recordToDisconnect) {
                 ownerRecord[field.name] = undefined;
-                removeItem(recordToDisconnect[inverse.name], ownerRecord);
+                removeItem(recordToDisconnect, inverse.name, ownerRecord);
             }
         } else if (field.type === "one2many") {
-            removeItem(ownerRecord[field.name], recordToDisconnect);
+            removeItem(ownerRecord, field.name, recordToDisconnect);
             const prevConnectedRecord = recordToDisconnect[inverse.name];
             if (prevConnectedRecord === ownerRecord) {
                 recordToDisconnect[inverse.name] = undefined;
             }
         } else if (field.type === "many2many") {
-            removeItem(ownerRecord[field.name], recordToDisconnect);
-            removeItem(recordToDisconnect[inverse.name], ownerRecord);
+            removeItem(ownerRecord, field.name, recordToDisconnect);
+            removeItem(recordToDisconnect, inverse.name, ownerRecord);
         }
     }
 
