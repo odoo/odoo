@@ -83,8 +83,8 @@ class Evaluacion(models.Model):
 
     fecha_inicio = fields.Date(string="Fecha de inicio", required=True)
     fecha_final = fields.Date(string="Fecha de finalización", required=True)
+    mensaje = fields.Text(string="Mensaje de bienvenida", placeholder="Escriba aqui su mensaje de bienvenida")
 
-    mensaje = fields.Text(string="Mensaje de bienvenida")
 
     incluir_demograficos = fields.Boolean(string="Incluir datos demográficos", default = True)
     
