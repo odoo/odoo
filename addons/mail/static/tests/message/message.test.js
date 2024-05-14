@@ -16,7 +16,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockDate, mockTimeZone, tick } from "@odoo/hoot-mock";
-import { Command, mockService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { Command, mockService, onRpc, patchWithCleanup, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -1156,6 +1156,52 @@ test("prevent attachment delete on non-authored message in channels", async () =
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentImage");
     await contains(".o-mail-AttachmentImage div[title='Remove']", { count: 0 });
+});
+
+test("prevent attachment delete on non-authored message in threads", async () => {
+    // admin would always be able to delete
+    const pyEnv = await startServer();
+    patchWithCleanup(pyEnv["res.users"], {
+        _init_store_data() {
+            const res = super._init_store_data(...arguments);
+            res.Store.self.isAdmin = false;
+            return res;
+        },
+    });
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.message"].create({
+        attachment_ids: [
+            [
+                0,
+                0,
+                {
+                    mimetype: "image/jpeg",
+                    name: "BLAH",
+                    res_id: partnerId,
+                    res_model: "res.partner",
+                },
+            ],
+            [
+                0,
+                0,
+                {
+                    mimetype: "image/png",
+                    name: "BLEH",
+                    res_id: partnerId,
+                    res_model: "res.partner",
+                },
+            ],
+        ],
+        author_id: partnerId,
+        body: "<p>Test</p>",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-AttachmentImage", { count: 2 });
+    await contains(".o-mail-AttachmentImage div[title='Remove']", { count: 0 });
+    await contains(".o-mail-AttachmentImage div[title='Download']", { count: 2 });
 });
 
 test("Toggle star should update starred counter on all tabs", async () => {
