@@ -511,7 +511,8 @@ class TestSaleOrder(SaleCommon):
         })
         self.env.companies = [self.env.company, company_2]
         so_form = Form(self.env['sale.order'])
-        so_form.company_id = self.env['res.company']
+        with self.assertRaises(ValidationError):
+            so_form.company_id = self.env['res.company']
 
     def test_so_is_not_invoiceable_if_only_discount_line_is_to_invoice(self):
         self.sale_order.order_line.product_id.invoice_policy = 'delivery'
