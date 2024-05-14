@@ -4170,6 +4170,9 @@ QUnit.module('Views', {
             }],
         });
 
+        this.data.product.records = new Array();
+        this.data.partner.records = new Array();
+
         var kanban = await createView({
             View: KanbanView,
             model: 'partner',
@@ -4185,10 +4188,7 @@ QUnit.module('Views', {
 
         assert.containsOnce(kanban, '.o_column_quick_create',
             "should have a ColumnQuickCreate widget");
-
-        // open the quick create
-        await testUtils.dom.click(kanban.$('.o_column_quick_create .o_quick_create_folded'));
-
+    
         assert.containsOnce(kanban, '.o_column_quick_create .o_kanban_examples:visible',
             "should have a link to see examples");
 
@@ -4227,18 +4227,14 @@ QUnit.module('Views', {
         delete kanbanExamplesRegistry.map['test'];
     });
 
-    QUnit.test("quick create column's apply button's display text", async function (assert) {
-        assert.expect(1);
+    QUnit.test('quick create column see examples hide when columns are already present', async function (assert) {
+        assert.expect(2);
 
-        const applyExamplesText = 'Use This For My Test';
         kanbanExamplesRegistry.add('test', {
-            applyExamplesText: applyExamplesText,
             examples:[{
                 name: "A first example",
                 columns: ["Column 1", "Column 2", "Column 3"],
-            }, {
-                name: "A second example",
-                columns: ["Col 1", "Col 2"],
+                description: "A <b>weak</b> description.",
             }],
         });
 
@@ -4255,8 +4251,48 @@ QUnit.module('Views', {
             groupBy: ['product_id'],
         });
 
-        // open the quick create
-        await testUtils.dom.click(kanban.$('.o_column_quick_create .o_quick_create_folded'));
+        assert.containsOnce(kanban, '.o_column_quick_create',
+            "should have a ColumnQuickCreate widget");
+
+        //open Quick Column create
+        await testUtils.dom.click(kanban.$('.o_kanban_add_column'));
+
+        assert.containsNone(kanban, '.o_column_quick_create .o_kanban_examples:visible',
+            "should have a link to see examples");
+
+        kanban.destroy();
+    });
+
+    QUnit.test("quick create column's apply button's display text", async function (assert) {
+        assert.expect(1);
+
+        const applyExamplesText = 'Use This For My Test';
+        kanbanExamplesRegistry.add('test', {
+            applyExamplesText: applyExamplesText,
+            examples:[{
+                name: "A first example",
+                columns: ["Column 1", "Column 2", "Column 3"],
+            }, {
+                name: "A second example",
+                columns: ["Col 1", "Col 2"],
+            }],
+        });
+
+        this.data.product.records = new Array();
+        this.data.partner.records = new Array();
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban examples="test">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
 
         // click to see the examples
         await testUtils.dom.click(kanban.$('.o_column_quick_create .o_kanban_examples'));
