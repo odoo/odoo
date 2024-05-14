@@ -42,7 +42,7 @@ class Evaluacion(models.Model):
     estado = fields.Selection(
         [
             ("borrador", "Borrador"),
-            ("publicado", "Abierta"),
+            ("publicado", "Publicada"),
             ("finalizado", "Cerrada"),
         ],
         default="borrador",
@@ -189,7 +189,7 @@ class Evaluacion(models.Model):
         Ejecuta la acción de copiar preguntas de un template a la evaluación actual y devuelve
         un diccionario con los parámetros necesarios para abrir una ventana de acción en Odoo.
 
-        Este método utiliza `copiar_preguntas_de_template_nom035` para asegurarse de que la evaluación
+        Nos basamos en el método de `copiar_preguntas_de_template_nom035` para asegurarse de que la evaluación
         actual tenga las preguntas correctas, y luego configura y devuelve un diccionario con
         los detalles para abrir esta evaluación en una vista de formulario específica.
 
