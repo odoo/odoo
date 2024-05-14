@@ -96,28 +96,46 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("edit record and check if edits get discarded when click on one of the buttons and redirects to proper record", async function (assert) {
-        assert.expect(3);
-        const form = await makeView({
+        assert.expect(8);
+        const modelAction = {
+            res_model: "account.move",
+            res_id: 2,
+            type: "ir.actions.act_window",
+            views: [[false, "form"]],
+        }
+
+        await makeView({
             resModel: "account.move",
             resId: 1,
             serverData,
             arch: fromArch,
             type: "form",
-        });
-        patchWithCleanup(form.env.services.action, {
-            doAction(action) {
-                assert.deepEqual(action, {
-                    res_model: "account.move",
-                    res_id: 2,
-                    type: "ir.actions.act_window",
-                    views: [[false, "form"]],
-                });
+            // as the redirection to the relevant model happens through py action, for mocking purposes we assume a simple account.move to account.move scenario
+            mockRPC(route, { args, method, model }) {
+                if (route === "/web/dataset/call_kw/account.move/action_open_business_doc") {
+                    assert.step("action_open_business_doc");
+                    assert.strictEqual(
+                        model,
+                        "account.move",
+                        'The model should be "account.move"'
+                    );
+                    assert.strictEqual(method, "action_open_business_doc");
+                    assert.strictEqual(
+                        args.length,
+                        1,
+                        "There should be one record"
+                    );
+                    assert.strictEqual(args[0], 2, "The record id returned should be 2");
+                    return modelAction;
+                }
             }
         });
+
         await editInput(target, "[name='ref'] input", "new ref");
         assert.strictEqual(target.querySelector("[name='ref'] input").value, "new ref", "should have edited the input");
         await click(target.querySelector(".o_field_x2many_buttons button"));
         assert.strictEqual(target.querySelector("[name='ref'] input").value, "b1", "should have discarded the input");
+        assert.verifySteps(["action_open_business_doc"])
     });
 
     // test if clicking on last button redirects to records in list view
@@ -141,6 +159,9 @@ QUnit.module("Fields", (hooks) => {
                         [false, "list"],
                         [false, "form"],
                     ],
+                    context: {
+                        form_view_ref: "account.view_duplicated_moves_tree_js",
+                    }
                 });
             }
         });
