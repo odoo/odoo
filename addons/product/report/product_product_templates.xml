@@ -13,8 +13,8 @@
                         <div class="text-center o_label_left_column">
                             <span class="text-nowrap" t-field="product.default_code"/>
                             <t t-if="barcode">
-                                <div t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
-                                <span class="text-center" t-out="barcode"/>
+                                <div t-if="product.valid_code_128" t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
+                                <div class="text-center" t-out="barcode"/>
                             </t>
                         </div>
                         <div class="text-end" style="line-height:normal">
@@ -45,8 +45,8 @@
                     <div class= "text-center o_label_small_barcode">
                         <span class="text-nowrap" t-field="product.default_code"/>
                         <t t-if="barcode">
-                            <div t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
-                            <span class="text-center" t-out="barcode"/>
+                            <div t-if="product.valid_code_128" t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
+                            <div class="text-center" t-out="barcode"/>
                         </t>
                     </div>
                 </div>
@@ -64,14 +64,14 @@
                     <div class="o_label_left_column">
                         <span class="text-nowrap" t-field="product.default_code"/>
                     </div>
-                    <div class="o_label_price_medium text-end">
+                    <div class="text-end" style="padding-top:0;padding-bottom:0">
                         <strong t-out="pricelist._get_product_price(product, 1, pricelist.currency_id or product.currency_id)"
                             t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id, 'label_price': True}"/>
                     </div>
                     <div class= "text-center o_label_small_barcode">
                         <t t-if="barcode">
-                            <div t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
-                            <span class="text-center" t-out="barcode"/>
+                            <div t-if="product.valid_code_128" t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
+                            <div class="text-center" t-out="barcode"/>
                         </t>
                     </div>
                 </div>
@@ -91,8 +91,8 @@
                     </div>
                     <div class= "text-center o_label_small_barcode">
                         <t t-if="barcode">
-                            <div t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
-                            <span class="text-center" t-out="barcode"/>
+                            <div t-if="product.valid_code_128" t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
+                            <div class="text-center" t-out="barcode"/>
                         </t>
                     </div>
                 </div>
@@ -105,7 +105,7 @@
                     <div class= "text-start o_label_small_barcode">
                         <t t-if="barcode">
                             <!-- `quiet=0` to remove the left and right margins on the barcode -->
-                            <div t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'quiet': 0, 'symbology': 'auto', 'img_style': barcode_size}"/>
+                            <div t-if="product.valid_code_128" t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'quiet': 0, 'symbology': 'auto', 'img_style': barcode_size}"/>
                             <div class="o_label_name" style="height:1.7em;background-color: transparent;">
                                 <span t-out="barcode"/>
                             </div>

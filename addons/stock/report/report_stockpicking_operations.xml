@@ -145,21 +145,23 @@
                                             </div>
                                         </td>
                                         <td class=" text-center h6" t-if="has_serial_number">
-                                            <span t-if="has_serial_number and (ml.lot_id or ml.lot_name)" t-esc="ml.lot_id.name or ml.lot_name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 400, 'height': 100, 'img_style': 'width:100%;height:35px;'}">
+                                            <span t-if="has_serial_number and (ml.lot_id or ml.lot_name) and ml.lot_id.valid_code_128" t-esc="ml.lot_id.name or ml.lot_name" t-options="{'widget': 'barcode', 'width': 400, 'height': 100, 'img_style': 'width:100%;height:35px;'}">
                                                 <div class="bg-light border-1 rounded d-flex flex-column align-items-center justify-content-center px-1 py-2 opacity-75 text-muted text-center">
                                                     (serial barcode)
                                                 </div>
                                             </span>
+                                            <span t-out="ml.lot_id.name or ml.lot_name">1234567890</span>
                                         </td>
                                         <td class="text-center" t-if="has_barcode">
                                             <t t-if="product_barcode != ml.product_id.barcode">
-                                                <span t-if="ml.product_id and ml.product_id.barcode">
+                                                <span t-if="ml.product_id and ml.product_id.barcode and ml.product_id.valid_code_128">
                                                     <div t-field="ml.product_id.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 400, 'height': 100, 'quiet': 0, 'img_style': 'height:35px;'}">
                                                         <div class="bg-light border-1 rounded d-flex flex-column align-items-center justify-content-center px-1 py-2 opacity-75 text-muted text-center">
                                                             (product barcode)
                                                         </div>
                                                     </div>
                                                 </span>
+                                                <span t-out="ml.product_id.barcode">112233445566</span>
                                                 <t t-set="product_barcode" t-value="ml.product_id.barcode"/>
                                             </t>
                                         </td>
