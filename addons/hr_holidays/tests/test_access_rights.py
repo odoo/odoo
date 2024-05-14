@@ -745,7 +745,7 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
         leave.with_user(self.user_employee.id).unlink()
 
     def test_leave_unlink_confirm_in_past_by_user(self):
-        """ A simple user cannot delete its leave in the past"""
+        """ A simple user cannot delete past leaves, but can delete today's leave"""
         values = {
             'name': 'Random Leave',
             'employee_id': self.employee_emp.id,
@@ -753,6 +753,8 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
             'state': 'confirm',
         }
         leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(days=-4), 1, values)
+        other_leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(hours=-4), 1, values)
+        other_leave.with_user(self.user_employee.id).unlink()
         with self.assertRaises(UserError), self.cr.savepoint():
             leave.with_user(self.user_employee.id).unlink()
 

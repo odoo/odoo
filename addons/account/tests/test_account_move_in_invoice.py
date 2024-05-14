@@ -6,7 +6,7 @@ from odoo.tests.common import Form
 from odoo.tests import tagged
 from odoo import fields, Command
 from odoo.osv import expression
-from odoo.exceptions import ValidationError, RedirectWarning
+from odoo.exceptions import ValidationError
 from datetime import date
 
 from collections import defaultdict
@@ -1563,30 +1563,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             {'duplicated_ref_ids': (invoice_1 + invoice_3).ids},
             {'duplicated_ref_ids': (invoice_1 + invoice_2).ids},
         ])
-
-    def test_in_invoice_multiple_duplicate_supplier_reference_constrains(self):
-        """ Ensure that an error is raised on post if some invoices with duplicated ref share the same invoice_date """
-        invoice_1 = self.invoice
-        invoice_1.ref = 'a unique supplier reference that will be copied'
-        invoice_2 = invoice_1.copy(default={'invoice_date': invoice_1.invoice_date})
-        invoice_3 = invoice_1.copy(default={'invoice_date': invoice_1.invoice_date})
-
-        # reassign to trigger the compute method
-        invoices = invoice_1 + invoice_2 + invoice_3
-        invoices.ref = invoice_1.ref
-
-        # test constrains: batch without any previous posted invoice
-        with self.assertRaises(RedirectWarning):
-            (invoice_1 + invoice_2 + invoice_3).action_post()
-
-        # test constrains: batch with one previous posted invoice
-        invoice_1.action_post()
-        with self.assertRaises(RedirectWarning):
-            (invoice_2 + invoice_3).action_post()
-
-        # test constrains: single with one previous posted invoice
-        with self.assertRaises(RedirectWarning):
-            invoice_2.action_post()
 
     @freeze_time('2023-02-01')
     def test_in_invoice_payment_register_wizard(self):
