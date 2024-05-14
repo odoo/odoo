@@ -3,13 +3,13 @@ import csv
 from datetime import datetime
 from io import StringIO
 
-from odoo import fields, models, api, exceptions
+from odoo import fields, models, api, exceptions, _
 
 
 class AsignarUsuariosExternosWizard(models.TransientModel):
     _name = "asignar.usuario.externo.wizard"
 
-    archivo = fields.Binary("Archivo")
+    archivo = fields.Binary()
 
     nombre_archivo = fields.Char()
 
@@ -30,14 +30,14 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
     @api.constrains("nombre_archivo")
     def _validar_nombre_archivo(self):
         if self.nombre_archivo and not self.nombre_archivo.lower().endswith(".csv"):
-            raise exceptions.ValidationError("Solo se aceptan archivos CSV.")
+            raise exceptions.ValidationError(_("Solo se aceptan archivos CSV."))
 
     def procesar_csv(self):
 
         evaluacion = self.env["evaluacion"].browse(self._context.get("active_id"))
 
         if not evaluacion:
-            raise exceptions.ValidationError("No se encontró la evaluación en el contexto.")
+            raise exceptions.ValidationError(_("No se encontró la evaluación en el contexto."))
 
         # Procesa el archivo CSV y crea los usuarios externos
         try:
@@ -60,7 +60,7 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
                 fecha_nacimiento = datetime.strptime(fila["Fecha de nacimiento"], "%d/%m/%Y").date()
             except ValueError:
                 raise exceptions.ValidationError(
-                    "El formato de las fechas debe ser dd/mm/yyyy. Verifica las fechas de nacimiento e ingreso."
+                    _("El formato de las fechas debe ser dd/mm/yyyy. Verifica las fechas de nacimiento e ingreso.")
                 )
 
             self.validar_fila(fila)    
