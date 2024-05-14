@@ -61,7 +61,7 @@ registry.category("web_tour.tours").add('account_tour', {
         extra_trigger: "[name=move_type] [raw-value=out_invoice]",
         content: _t("Add a line to your invoice"),
     }, {
-        trigger: "div[name=invoice_line_ids] div[name=name] textarea",
+        trigger: "div[name=invoice_line_ids] div[name=product_id] input",
         extra_trigger: "[name=move_type] [raw-value=out_invoice]",
         content: _t("Fill in the details of the line."),
         position: "bottom",

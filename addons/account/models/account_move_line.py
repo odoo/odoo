@@ -513,8 +513,6 @@ class AccountMoveLine(models.Model):
                 product = line.product_id
 
             values = []
-            if product.partner_ref:
-                values.append(product.partner_ref)
             if line.journal_id.type == 'sale':
                 if product.description_sale:
                     values.append(product.description_sale)

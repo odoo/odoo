@@ -472,7 +472,7 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     def assertInvoiceValues(self, move, expected_lines_values, expected_move_values):
         def sort_lines(lines):
-            return lines.sorted(lambda line: (line.sequence, not bool(line.tax_line_id), line.name or '', line.balance))
+            return lines.sorted(lambda line: (line.sequence, not bool(line.tax_line_id), line.name or line.product_id.display_name or '', line.balance))
         self.assertRecordValues(sort_lines(move.line_ids.sorted()), expected_lines_values)
         self.assertRecordValues(move, [expected_move_values])
 
