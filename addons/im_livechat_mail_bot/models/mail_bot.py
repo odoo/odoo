@@ -10,11 +10,13 @@ class MailBot(models.AbstractModel):
     def _get_answer(self, record, body, values, command):
         odoobot_state = self.env.user.odoobot_state
         if self._is_bot_in_private_channel(record):
+            source = _("Thanks")
+            description = _("This is a temporary canned response to see how canned responses work.")
             if odoobot_state == "onboarding_attachement" and values.get("attachment_ids"):
                 self.env["mail.canned.response"].create({
-                    "source": "Thanks",
-                    "substitution": "Thanks for your feedback. Goodbye!",
-                    "description": "This is a temporary canned response to see how canned responses work.",
+                    "source": source,
+                    "substitution": _("Thanks for your feedback. Goodbye!"),
+                    "description": description,
                 })
                 self.env.user.odoobot_failed = False
                 self.env.user.odoobot_state = "onboarding_canned"
@@ -22,8 +24,8 @@ class MailBot(models.AbstractModel):
             elif odoobot_state == "onboarding_canned" and self.env.context.get("canned_response_ids"):
                 self.env["mail.canned.response"].search([
                     ("create_uid", "=", self.env.user.id),
-                    ("source", "=", "Thanks"),
-                    ("description", "=", "This is a temporary canned response to see how canned responses work."),
+                    ("source", "=", source),
+                    ("description", "=", description),
                 ]).unlink()
                 self.env.user.odoobot_failed = False
                 self.env.user.odoobot_state = "idle"
