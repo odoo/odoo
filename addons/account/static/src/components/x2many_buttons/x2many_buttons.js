@@ -14,6 +14,7 @@ class X2ManyButtons extends Component {
     };
 
     setup() {
+        this.orm = useService("orm");
         this.action = useService("action");
     }
 
@@ -23,23 +24,22 @@ class X2ManyButtons extends Component {
         this.action.doAction({
             name: this.props.treeLabel,
             type: "ir.actions.act_window",
-            res_model: this.currentField.resModel,
+            res_model: "account.move",
             views: [
                 [false, "list"],
                 [false, "form"],
             ],
             domain: [["id", "in", ids]],
+            context: {
+                form_view_ref: "account.view_duplicated_moves_tree_js",
+            },
         });
     }
 
     async openFormAndDiscard(id) {
+        const action = await this.orm.call(this.currentField.resModel, "action_open_business_doc", [id], {});
         await this.props.record.discard();
-        this.action.doAction({
-            type: "ir.actions.act_window",
-            res_model: this.currentField.resModel,
-            res_id: id,
-            views: [[false, "form"]],
-        });
+        this.action.doAction(action);
     }
 
     get currentField() {

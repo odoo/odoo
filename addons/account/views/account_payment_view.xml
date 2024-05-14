@@ -175,6 +175,10 @@
                         The selected payment method requires a bank account but none is set on
                         <button class="oe_link alert-link" type="object" name="action_open_destination_journal" style="padding: 0; vertical-align: baseline;">the destination journal</button>.
                     </div>
+                    <div class="alert alert-warning mb-0" role="alert" invisible="not duplicate_move_ids or state!='draft'">
+                        <span>This payment has the same partner, amount and date as </span>
+                        <field name="duplicate_move_ids" widget="x2many_buttons" string="Duplicated Payments"/>
+                    </div>
                     <sheet>
                         <!-- Invisible fields -->
                         <field name="id" invisible="1"/>
