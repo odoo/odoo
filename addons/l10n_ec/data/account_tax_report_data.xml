@@ -87,6 +87,42 @@
                             </record>
                         </field>
                     </record>
+                    <record id="tax_report_line_parent_line_report_7" model="account.report.line">
+                        <field name="name">Ventas locales (excluye activos fijos) gravadas tarifa 5%</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_104_425" model="account.report.line">
+                                <field name="name">Valor bruto(425)</field>
+                                <field name="code">c425_104</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_104_425_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">425 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_104_435" model="account.report.line">
+                                <field name="name">Valor neto(435)</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_104_435_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">435 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_104_445" model="account.report.line">
+                                <field name="name">Impuesto generado(445)</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_104_445_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">445 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
                     <record id="tax_report_line_parent_line_report_10" model="account.report.line">
                         <field name="name">IVA generado en la diferencia entre ventas y notas de crédito con distinta tarifa (ajuste a pagar) </field>
                         <field name="children_ids">
@@ -568,6 +604,44 @@
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">521 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_parent_line_report_62" model="account.report.line">
+                        <field name="name">Adquisiciones y pagos locales (excluye activos fijos) gravados con tarifa 5% (con derecho a crédito tributario) </field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_104_540" model="account.report.line">
+                                <field name="name">Valor bruto(540)</field>
+                                <field name="code">c540</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_104_540_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">540 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_104_550" model="account.report.line">
+                                <field name="name">Valor neto(550)</field>
+                                <field name="code">c550</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_104_550_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">550 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_104_560" model="account.report.line">
+                                <field name="name">Impuesto generado(560)</field>
+                                <field name="code">c560</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_104_560_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">560 (Reporte 104)</field>
                                     </record>
                                 </field>
                             </record>
