@@ -226,13 +226,12 @@
                     <field name="move_raw_ids" readonly="1">
                         <tree>
                             <field name="state" column_invisible="True"/>
-                            <field name="product_type" column_invisible="True"/>
                             <field name="product_id" readonly="state == 'done'"/>
                             <field name="product_qty" string="To Consume"/>
                             <field name="quantity" string="Quantity"/>
                             <field name="picked" string="Consumed"/>
-                            <field name="product_qty_available" string="On Hand" invisible="product_type != 'product'"/>
-                            <field name="product_virtual_available" string="Forecasted" invisible="product_type != 'product'"/>
+                            <field name="product_qty_available" string="On Hand" invisible="not is_storable"/>
+                            <field name="product_virtual_available" string="Forecasted" invisible="not is_storable"/>
                         </tree>
                     </field>
                 </page>

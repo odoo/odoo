@@ -17,7 +17,7 @@ class MrpUnbuild(models.Model):
     name = fields.Char('Reference', copy=False, readonly=True, default=lambda x: _('New'))
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,
-        domain="[('type', 'in', ['product', 'consu'])]",
+        domain="[('type', '=', 'consu')]",
         compute='_compute_product_id', store=True, precompute=True, readonly=False,
         required=True)
     company_id = fields.Many2one(

@@ -16,7 +16,7 @@ class TestDropship(common.TransactionCase):
         # dropship route to be added in test
         cls.dropship_product = cls.env['product.product'].create({
             'name': "Pen drive",
-            'type': "product",
+            'is_storable': True,
             'categ_id': cls.env.ref('product.product_category_1').id,
             'lst_price': 100.0,
             'standard_price': 0.0,

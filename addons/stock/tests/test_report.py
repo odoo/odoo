@@ -20,7 +20,7 @@ class TestReportsCommon(TransactionCase):
 
         cls.product1 = cls.env['product.product'].create({
             'name': 'Mellohi"',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': cls.env.ref('product.product_category_all').id,
             'tracking': 'lot',
             'default_code': 'C4181234""154654654654',
@@ -28,7 +28,7 @@ class TestReportsCommon(TransactionCase):
         })
 
         product_form = Form(cls.env['product.product'])
-        product_form.detailed_type = 'product'
+        product_form.is_storable = True
         product_form.name = 'Product'
         cls.product = product_form.save()
         cls.product_template = cls.product.product_tmpl_id
@@ -75,7 +75,7 @@ class TestReports(TestReportsCommon):
     def test_reports_with_special_characters(self):
         product_test = self.env['product.product'].create({
             'name': 'Mellohi"',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
             'tracking': 'lot',
             'default_code': 'C4181234""154654654654',
@@ -107,7 +107,7 @@ class TestReports(TestReportsCommon):
 
     def test_report_quantity_1(self):
         product_form = Form(self.env['product.product'])
-        product_form.detailed_type = 'product'
+        product_form.is_storable = True
         product_form.name = 'Product'
         product = product_form.save()
 
@@ -226,7 +226,7 @@ class TestReports(TestReportsCommon):
         """ Not supported case.
         """
         product_form = Form(self.env['product.product'])
-        product_form.detailed_type = 'product'
+        product_form.is_storable = True
         product_form.name = 'Product'
         product = product_form.save()
 
@@ -286,7 +286,7 @@ class TestReports(TestReportsCommon):
 
     def test_report_quantity_3(self):
         product_form = Form(self.env['product.product'])
-        product_form.detailed_type = 'product'
+        product_form.is_storable = True
         product_form.name = 'Product'
         product = product_form.save()
 
@@ -911,7 +911,7 @@ class TestReports(TestReportsCommon):
         # Create a new product and set some variants on the product.
         product_template = self.env['product.template'].create({
             'name': 'Game Joy',
-            'type': 'product',
+            'is_storable': True,
             'attribute_line_ids': [
                 (0, 0, {
                     'attribute_id': product_attr_color.id,
@@ -1307,13 +1307,13 @@ class TestReports(TestReportsCommon):
         """
         product2 = self.env['product.product'].create({
             'name': 'Extra Product',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
 
         product3 = self.env['product.product'].create({
             'name': 'Unpopular Product',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
 

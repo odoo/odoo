@@ -17,7 +17,7 @@ class TestWebsiteSaleStockMultilang(HttpCase):
         # Configure product: out-of-stock message in EN and FR
         unavailable_product = self.env['product.product'].create({
             'name': 'unavailable_product',
-            'type': 'product',
+            'is_storable': True,
             'allow_out_of_stock_order': False,
             'sale_ok': True,
             'website_published': True,
@@ -27,5 +27,4 @@ class TestWebsiteSaleStockMultilang(HttpCase):
         unavailable_product.update_field_translations('out_of_stock_message', {
             'fr_FR': {'Out of stock': 'Hors-stock'},
         })
-
         self.start_tour("/fr/shop?search=unavailable", 'website_sale_stock_multilang')

@@ -34,7 +34,7 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
         cls.test_product_order = cls.env['product.product'].create({
             'name': "Test product template invoiced on order",
             'standard_price': 42.0,
-            'type': 'product',
+            'is_storable': True,
             'categ_id': cls.stock_account_product_categ.id,
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
@@ -42,7 +42,7 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
         cls.test_product_delivery = cls.env['product.product'].create({
             'name': 'Test product template invoiced on delivery',
             'standard_price': 42.0,
-            'type': 'product',
+            'is_storable': True,
             'categ_id': cls.stock_account_product_categ.id,
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,

@@ -23,7 +23,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
         self.finished2, self.comp3 = self.env['product.product'].create([{
             'name': 'SuperProduct',
-            'type': 'product',
+            'is_storable': True,
         }, {
             'name': 'Component',
             'type': 'consu',
@@ -215,11 +215,11 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
         product = self.env['product.product'].create({
             'name': 'Product',
-            'detailed_type': 'product',
+            'is_storable': True,
         })
         component = self.env['product.product'].create({
             'name': 'Component',
-            'detailed_type': 'product',
+            'is_storable': True,
         })
         subcontractor = self.env['res.partner'].create({
             'name': 'Subcontractor',
@@ -731,11 +731,11 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         resupply_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         finished, component = self.env['product.product'].create([{
             'name': 'Finished Product',
-            'type': 'product',
+            'is_storable': True,
             'seller_ids': [(0, 0, {'partner_id': self.subcontractor_partner1.id})]
         }, {
             'name': 'Component',
-            'type': 'product',
+            'is_storable': True,
             'route_ids': [(4, resupply_route.id)],
         }])
 

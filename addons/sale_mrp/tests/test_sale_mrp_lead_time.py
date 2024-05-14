@@ -19,7 +19,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
         with Form(cls.product_1) as p1:
             # `type` is invisible in the view,
             # and it's a compute field based on `detailed_type` which is the field visible in the view
-            p1.detailed_type = 'product'
+            p1.is_storable = True
             p1.sale_delay = 5.0
             p1.route_ids.clear()
             p1.route_ids.add(cls.warehouse_1.manufacture_pull_id.route_id)

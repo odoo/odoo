@@ -31,7 +31,7 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <div name="o_kanban_qty_available" position="after">
-                <div t-if="record.detailed_type.raw_value == 'product'"
+                <div t-if="record.is_storable.raw_value"
                      name="o_kanban_qty_forecasted">
                     <span>Forecasted: </span>
                     <field name="virtual_available"/>

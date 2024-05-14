@@ -34,7 +34,7 @@ class PurchaseOrderLine(models.Model):
     def _compute_qty_received_method(self):
         super(PurchaseOrderLine, self)._compute_qty_received_method()
         for line in self.filtered(lambda l: not l.display_type):
-            if line.product_id.type in ['consu', 'product']:
+            if line.product_id.type == 'consu':
                 line.qty_received_method = 'stock_moves'
 
     def _get_po_line_moves(self):
@@ -159,7 +159,7 @@ class PurchaseOrderLine(models.Model):
 
     def _create_or_update_picking(self):
         for line in self:
-            if line.product_id and line.product_id.type in ('product', 'consu'):
+            if line.product_id and line.product_id.type == 'consu':
                 rounding = line.product_uom.rounding
                 # Prevent decreasing below received quantity
                 if float_compare(line.product_qty, line.qty_received, precision_rounding=rounding) < 0:
@@ -219,7 +219,7 @@ class PurchaseOrderLine(models.Model):
         """
         self.ensure_one()
         res = []
-        if self.product_id.type not in ['product', 'consu']:
+        if self.product_id.type != 'consu':
             return res
 
         price_unit = self._get_stock_move_price_unit()

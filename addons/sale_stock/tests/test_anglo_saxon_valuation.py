@@ -17,7 +17,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         cls.product = cls.env['product.product'].create({
             'name': 'product',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': cls.stock_account_product_categ.id,
         })
 
@@ -483,7 +483,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         """ Sell and deliver some products before the user encodes the products receipt """
         product = self.product
         product.invoice_policy = 'order'
-        product.type = 'product'
+        product.is_storable = True
         product.categ_id.property_cost_method = 'average'
         product.categ_id.property_valuation = 'real_time'
         product.list_price = 100

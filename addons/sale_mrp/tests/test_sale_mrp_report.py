@@ -16,7 +16,7 @@ class TestSaleMrpInvoices(AccountTestInvoicingCommon):
 
         cls.product_by_lot = cls.env['product.product'].create({
             'name': 'Product By Lot',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'lot',
         })
         cls.warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.company.id)], limit=1)

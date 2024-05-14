@@ -22,12 +22,12 @@ class TestBatchPicking(TransactionCase):
         cls.env['stock.picking.type'].browse(cls.picking_type_out).reservation_method = 'manual'
         cls.productA = cls.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
         cls.productB = cls.env['product.product'].create({
             'name': 'Product B',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
 
@@ -694,12 +694,12 @@ class TestBatchPicking02(TransactionCase):
         self.picking_type_internal = self.env.ref('stock.picking_type_internal')
         self.productA = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.productB = self.env['product.product'].create({
             'name': 'Product B',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
 

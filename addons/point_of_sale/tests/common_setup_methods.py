@@ -29,7 +29,7 @@ def setup_pos_combo_items(self):
     combo_product_1 = self.env["product.product"].create(
         {
             "name": "Combo Product 1",
-            "type": "product",
+            "is_storable": True,
             "available_in_pos": True,
             "list_price": 10,
             "taxes_id": [(6, 0, [tax10.id])],
@@ -39,7 +39,7 @@ def setup_pos_combo_items(self):
     combo_product_2 = self.env["product.product"].create(
         {
             "name": "Combo Product 2",
-            "type": "product",
+            "is_storable": True,
             "available_in_pos": True,
             "list_price": 11,
             "taxes_id": [(6, 0, [tax20in.id])],
@@ -49,7 +49,7 @@ def setup_pos_combo_items(self):
     combo_product_3 = self.env["product.product"].create(
         {
             "name": "Combo Product 3",
-            "type": "product",
+            "is_storable": True,
             "available_in_pos": True,
             "list_price": 16,
             "taxes_id": [(6, 0, [tax30.id])],
@@ -97,7 +97,7 @@ def setup_pos_combo_items(self):
     combo_product_4 = self.env["product.product"].create(
         {
             "name": "Combo Product 4",
-            "type": "product",
+            "is_storable": True,
             "available_in_pos": True,
             "list_price": 20,
             "taxes_id": [(6, 0, [tax10.id])],
@@ -107,7 +107,7 @@ def setup_pos_combo_items(self):
     combo_product_5 = self.env["product.product"].create(
         {
             "name": "Combo Product 5",
-            "type": "product",
+            "is_storable": True,
             "available_in_pos": True,
             "list_price": 25,
             "taxes_id": [(6, 0, [tax20in.id])],
@@ -140,7 +140,7 @@ def setup_pos_combo_items(self):
     combo_product_6 = self.env["product.product"].create(
         {
             "name": "Combo Product 6",
-            "type": "product",
+            "is_storable": True,
             "available_in_pos": True,
             "list_price": 30,
             "taxes_id": [(6, 0, [tax30.id])],
@@ -150,7 +150,7 @@ def setup_pos_combo_items(self):
     combo_product_7 = self.env["product.product"].create(
         {
             "name": "Combo Product 7",
-            "type": "product",
+            "is_storable": True,
             "available_in_pos": True,
             "list_price": 32,
             "taxes_id": [(6, 0, [tax10.id])],
@@ -160,7 +160,7 @@ def setup_pos_combo_items(self):
     combo_product_8 = self.env["product.product"].create(
         {
             "name": "Combo Product 8",
-            "type": "product",
+            "is_storable": True,
             "available_in_pos": True,
             "list_price": 40,
             "taxes_id": [(6, 0, [tax20in.id])],

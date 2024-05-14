@@ -48,12 +48,8 @@ class ProductProduct(models.Model):
     _populate_sizes = {"small": 150, "medium": 5_000, "large": 50_000}
     _populate_dependencies = ["product.category"]
 
-    def _populate_get_types(self):
-        return ["consu", "service"], [2, 1]
-
     def _populate_get_product_factories(self):
         category_ids = self.env.registry.populated_models["product.category"]
-        types, types_distribution = self._populate_get_types()
 
         def get_rand_float(values, counter, random):
             return random.randrange(0, 1500) * random.random()
@@ -63,7 +59,7 @@ class ProductProduct(models.Model):
         return [
             ("sequence", populate.randomize([False] + [i for i in range(1, 101)])),
             ("active", populate.randomize([True, False], [0.8, 0.2])),
-            ("type", populate.randomize(types, types_distribution)),
+            ("type", populate.randomize(["consu", "service"], [0.7, 0.3])),
             ("categ_id", populate.randomize(category_ids)),
             ("list_price", populate.compute(get_rand_float)),
             ("standard_price", populate.compute(get_rand_float)),

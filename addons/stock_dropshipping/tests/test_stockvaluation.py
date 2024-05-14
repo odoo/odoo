@@ -16,7 +16,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         cls.partner_id = cls.env['res.partner'].create({'name': 'My Test Partner'})
         cls.product1 = cls.env['product.product'].create({
             'name': 'Large Desk',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': cls.stock_account_product_categ.id,
             'taxes_id': [(6, 0, [])],
         })

@@ -37,7 +37,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         cls.group = cls.env['procurement.group'].create({'partner_id': cls.customer.id, 'name': 'New Group'})
         cls.product = cls.env['product.product'].create({
             'name': 'Geyser',
-            'type': 'product',
+            'is_storable': True,
             'route_ids': [Command.link(cls.route_mto), Command.link(cls.route_buy)],
             'seller_ids': [Command.create({
                 'partner_id': cls.customer.id,

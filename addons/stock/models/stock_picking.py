@@ -832,7 +832,7 @@ class Picking(models.Model):
         """
         if not picking_type_id or picking_type_id.code == 'outgoing':
             return False
-        lines = self.move_ids.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel')
+        lines = self.move_ids.filtered(lambda m: m.product_id.is_storable and m.state != 'cancel')
         if lines:
             allowed_states = ['confirmed', 'partially_available', 'waiting']
             if self[0].state == 'done':
@@ -1068,7 +1068,7 @@ class Picking(models.Model):
             )
 
     def _check_move_lines_map_quant_package(self, package):
-        return package._check_move_lines_map_quant(self.move_line_ids.filtered(lambda ml: ml.package_id == package and ml.product_id.type == 'product'))
+        return package._check_move_lines_map_quant(self.move_line_ids.filtered(lambda ml: ml.package_id == package and ml.product_id.is_storable))
 
     def _get_entire_pack_location_dest(self, move_line_ids):
         location_dest_ids = move_line_ids.mapped('location_dest_id')
@@ -1223,7 +1223,7 @@ class Picking(models.Model):
         another_action = False
         if self.env.user.has_group('stock.group_reception_report'):
             pickings_show_report = self.filtered(lambda p: p.picking_type_id.auto_show_reception_report)
-            lines = pickings_show_report.move_ids.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel' and m.quantity and not m.move_dest_ids)
+            lines = pickings_show_report.move_ids.filtered(lambda m: m.product_id.is_storable and m.state != 'cancel' and m.quantity and not m.move_dest_ids)
             if lines:
                 # don't show reception report if all already assigned/nothing to assign
                 wh_location_ids = self.env['stock.location']._search([('id', 'child_of', pickings_show_report.picking_type_id.warehouse_id.view_location_id.ids), ('usage', '!=', 'supplier')])
@@ -1630,7 +1630,7 @@ class Picking(models.Model):
         view = self.env.ref('stock.stock_scrap_form_view2')
         products = self.env['product.product']
         for move in self.move_ids:
-            if move.state not in ('draft', 'cancel') and move.product_id.type in ('product', 'consu'):
+            if move.state not in ('draft', 'cancel') and move.product_id.type == 'consu':
                 products |= move.product_id
         return {
             'name': _('Scrap Products'),

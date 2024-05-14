@@ -46,26 +46,26 @@ class TestMrpAccount(TestMrpCommon):
             ]})
         cls.dining_table = cls.env['product.product'].create({
             'name': 'Table (MTO)',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
         })
         cls.product_table_sheet = cls.env['product.product'].create({
             'name': 'Table Top',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
         })
         cls.product_table_leg = cls.env['product.product'].create({
             'name': 'Table Leg',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'lot',
         })
         cls.product_bolt = cls.env['product.product'].create({
             'name': 'Bolt',
-            'type': 'product',
+            'is_storable': True,
         })
         cls.product_screw = cls.env['product.product'].create({
             'name': 'Screw',
-            'type': 'product',
+            'is_storable': True,
         })
 
         cls.mrp_workcenter = cls.env['mrp.workcenter'].create({
@@ -135,7 +135,7 @@ class TestMrpAccount(TestMrpCommon):
         cls.product_bolt.categ_id = cls.categ_standard.id
         cls.product_screw.categ_id = cls.categ_standard.id
         cls.env['stock.move'].search([('product_id', 'in', [cls.product_bolt.id, cls.product_screw.id])])._do_unreserve()
-        (cls.product_bolt + cls.product_screw).write({'type': 'product'})
+        (cls.product_bolt + cls.product_screw).write({'is_storable': True})
         cls.dining_table.tracking = 'none'
 
     def test_00_production_order_with_accounting(self):
@@ -214,7 +214,7 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         cls.product_B = cls.env["product.product"].create(
             {
                 "name": "Product B",
-                "type": "product",
+                "is_storable": True,
                 "default_code": "prda",
                 "categ_id": cls.auto_categ.id,
                 "taxes_id": [(5, 0, 0)],

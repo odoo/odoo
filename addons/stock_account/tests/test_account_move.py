@@ -37,7 +37,7 @@ class TestAccountMoveStockCommon(AccountTestInvoicingCommon):
         cls.product_A = cls.env["product.product"].create(
             {
                 "name": "Product A",
-                "type": "product",
+                "is_storable": True,
                 "default_code": "prda",
                 "categ_id": cls.auto_categ.id,
                 "taxes_id": [(5, 0, 0)],
@@ -218,7 +218,7 @@ class TestAccountMove(TestAccountMoveStockCommon):
         self.env.user.company_ids |= first_company
         basic_product = self.env['product.product'].create({
             'name': 'SuperProduct',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.all_categ.id,
         })
 

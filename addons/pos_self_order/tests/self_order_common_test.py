@@ -39,7 +39,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
 
         cls.cola = cls.env['product.product'].create({
             'name': 'Coca-Cola',
-            'type': 'product',
+            'is_storable': True,
             'list_price': 2.2,
             'taxes_id': False,
             'available_in_pos': True,
@@ -47,7 +47,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
         })
         cls.fanta = cls.env['product.product'].create({
             'name': 'Fanta',
-            'type': 'product',
+            'is_storable': True,
             'list_price': 2.2,
             'taxes_id': False,
             'available_in_pos': True,

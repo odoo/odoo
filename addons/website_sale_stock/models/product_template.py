@@ -15,7 +15,7 @@ class ProductTemplate(models.Model):
     out_of_stock_message = fields.Html(string="Out-of-Stock Message", translate=html_translate)
 
     def _is_sold_out(self):
-        return self.type == 'product' and self.product_variant_id._is_sold_out()
+        return self.is_storable and self.product_variant_id._is_sold_out()
 
     def _website_show_quick_add(self):
         return (self.allow_out_of_stock_order or not self._is_sold_out()) and super()._website_show_quick_add()

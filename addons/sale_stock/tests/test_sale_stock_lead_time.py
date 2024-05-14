@@ -130,7 +130,7 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
         warehouse.delivery_route_id.rule_ids.write({'delay': 5})
 
         # Update the product_1 with type and Customer Lead Time
-        self.test_product_order.write({'type': 'product', 'sale_delay': 30.0})
+        self.test_product_order.write({'is_storable': True, 'sale_delay': 30.0})
 
         # Now, create sale order of product_1 with customer_lead set on product
         order = self.env['sale.order'].create({

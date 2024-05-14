@@ -14,14 +14,14 @@ class TestPacking(TestPackingCommon):
         cls.uom_kg = cls.env.ref('uom.product_uom_kgm')
         cls.product_aw = cls.env['product.product'].create({
             'name': 'Product AW',
-            'type': 'product',
+            'is_storable': True,
             'weight': 2.4,
             'uom_id': cls.uom_kg.id,
             'uom_po_id': cls.uom_kg.id
         })
         cls.product_bw = cls.env['product.product'].create({
             'name': 'Product BW',
-            'type': 'product',
+            'is_storable': True,
             'weight': 0.3,
             'uom_id': cls.uom_kg.id,
             'uom_po_id': cls.uom_kg.id

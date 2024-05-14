@@ -563,7 +563,7 @@ class StockMove(models.Model):
         """ Accounting Valuation Entries """
         self.ensure_one()
         am_vals = []
-        if self.product_id.type != 'product':
+        if not self.product_id.is_storable:
             # no stock valuation for consumable products
             return am_vals
         if self._should_exclude_for_valuation():

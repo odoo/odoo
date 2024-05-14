@@ -208,7 +208,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, ppg=False, **post):
         if not request.website.has_ecommerce_access():
             return request.redirect('/web/login')
-
         add_qty = int(post.get('add_qty', 1))
         try:
             min_price = float(min_price)
@@ -620,10 +619,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def _prepare_product_values(self, product, category, search, **kwargs):
         ProductCategory = request.env['product.public.category']
-
         if category:
             category = ProductCategory.browse(int(category)).exists()
-
         keep = QueryURL(
             '/shop',
             **self._product_get_query_url_kwargs(

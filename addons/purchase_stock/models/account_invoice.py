@@ -40,7 +40,7 @@ class AccountMove(models.Model):
             for line in move.invoice_line_ids:
                 # Filter out lines being not eligible for price difference.
                 # Moreover, this function is used for standard cost method only.
-                if line.product_id.type != 'product' or line.product_id.valuation != 'real_time' or line.product_id.cost_method != 'standard':
+                if not line.product_id.is_storable or line.product_id.valuation != 'real_time' or line.product_id.cost_method != 'standard':
                     continue
 
                 # Retrieve accounts needed to generate the price difference.

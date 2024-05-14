@@ -36,7 +36,7 @@ class StockLot(models.Model):
     ref = fields.Char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's lot/serial number")
     product_id = fields.Many2one(
         'product.product', 'Product', index=True,
-        domain=("[('tracking', '!=', 'none'), ('type', '=', 'product')] +"
+        domain=("[('tracking', '!=', 'none'), ('is_storable', '=', True)] +"
             " ([('product_tmpl_id', '=', context['default_product_tmpl_id'])] if context.get('default_product_tmpl_id') else [])"),
         required=True, check_company=True)
     product_uom_id = fields.Many2one(

@@ -61,7 +61,7 @@ class MrpProduction(models.Model):
 
     product_id = fields.Many2one(
         'product.product', 'Product',
-        domain="[('type', 'in', ['product', 'consu'])]",
+        domain="[('type', '=', 'consu')]",
         compute='_compute_product_id', store=True, copy=True, precompute=True,
         readonly=False, required=True, check_company=True)
     product_variant_attributes = fields.Many2many('product.template.attribute.value', related='product_id.product_template_attribute_value_ids')
@@ -667,7 +667,7 @@ class MrpProduction(models.Model):
         for mo in self:
             if not mo.picking_type_id:
                 return
-            lines = mo.move_finished_ids.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel')
+            lines = mo.move_finished_ids.filtered(lambda m: m.product_id.is_storable and m.state != 'cancel')
             if lines:
                 allowed_states = ['confirmed', 'partially_available', 'waiting']
                 if mo.state == 'done':
@@ -1157,7 +1157,7 @@ class MrpProduction(models.Model):
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             for bom_line, line_data in lines:
                 if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom' or\
-                        bom_line.product_id.type not in ['product', 'consu']:
+                        bom_line.product_id.type != 'consu':
                     continue
                 operation = bom_line.operation_id.id or line_data['parent_line'] and line_data['parent_line'].operation_id.id
                 moves.append(production._get_move_raw_values(
@@ -2050,7 +2050,7 @@ class MrpProduction(models.Model):
                 }
             elif self.env.user.has_group('mrp.group_mrp_reception_report'):
                 mos_to_show = self.filtered(lambda mo: mo.picking_type_id.auto_show_reception_report)
-                lines = mos_to_show.move_finished_ids.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel' and m.picked and not m.move_dest_ids)
+                lines = mos_to_show.move_finished_ids.filtered(lambda m: m.product_id.is_storable and m.state != 'cancel' and m.picked and not m.move_dest_ids)
                 if lines:
                     if any(mo.show_allocation for mo in mos_to_show):
                         another_action = mos_to_show.action_view_reception_report()

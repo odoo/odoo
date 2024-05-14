@@ -36,10 +36,9 @@ stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Quotations')"),
     position: 'left',
     run: "edit the_flow.product",
 }, {
-    trigger: ".o_field_widget[name=detailed_type] select",
+    trigger: ".o_field_widget[name=is_storable] input",
     content: _t("Let's enter the product type"),
-    position: 'left',
-    run: `select "product"`,
+    position: 'right',
 }, {
     trigger: '.o_notebook .nav-link:contains("Inventory")',
     content: _t('Go to inventory tab'),

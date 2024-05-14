@@ -23,7 +23,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         })
         product_test = self.env['product.product'].create({
             'name': 'Usb Keyboard',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': unit,
             'uom_po_id': unit,
             'seller_ids': [(6, 0, [supplier_info1.id])],
@@ -116,7 +116,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         })
         product_1 = self.env['product.product'].create({
             'name': 'product1',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': unit,
             'uom_po_id': unit,
             'seller_ids': [(6, 0, [supplier_info1.id])],
@@ -124,7 +124,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         })
         product_2 = self.env['product.product'].create({
             'name': 'product2',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': unit,
             'uom_po_id': unit,
             'seller_ids': [(6, 0, [supplier_info1.id])],
@@ -246,7 +246,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         vendor_2 = self.env['res.partner'].create({'name': 'Vendor 2'})
         product = self.env['product.product'].create({
             'name': 'Test product',
-            'type': 'product',
+            'is_storable': True,
             'seller_ids': [Command.create({
                 'partner_id': vendor_1.id,
                 'price': 10.0,

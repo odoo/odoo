@@ -22,8 +22,8 @@ class TestPackingCommon(TransactionCase):
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.picking_type_in = cls.env.ref('stock.picking_type_in')
 
-        cls.productA = cls.env['product.product'].create({'name': 'Product A', 'type': 'product'})
-        cls.productB = cls.env['product.product'].create({'name': 'Product B', 'type': 'product'})
+        cls.productA = cls.env['product.product'].create({'name': 'Product A', 'is_storable': True})
+        cls.productB = cls.env['product.product'].create({'name': 'Product B', 'is_storable': True})
         cls.shelf1 = cls.env['stock.location'].create({
             'name': 'shelf1',
             'usage': 'internal',
@@ -1574,7 +1574,7 @@ class TestPacking(TestPackingCommon):
         """
         product = self.env['product.product'].create({
             'name': 'Product',
-            'type': 'product',
+            'is_storable': True,
         })
 
         # Set the removal strategy to 'least_packages'
@@ -1790,7 +1790,7 @@ class TestPackagePropagation(TestPackingCommon):
         })
         self.productA = self.env['product.product'].create({
             'name': 'productA',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'none',
         })
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 2)

@@ -374,12 +374,14 @@ class TestBoM(TestMrpCommon):
         uom_unit = self.env.ref('uom.product_uom_unit')
         product_unit = self.env['product.product'].create({
             'name': 'Test units',
-            'type': 'product',
+            'type': 'consu',
+            'is_storable': True,
             'uom_id': uom_unit.id,
         })
         product_dozens = self.env['product.product'].create({
             'name': 'Test dozens',
-            'type': 'product',
+            'type': 'consu',
+            'is_storable': True,
             'uom_id': uom_dozens.id,
         })
 
@@ -440,12 +442,12 @@ class TestBoM(TestMrpCommon):
         uom_unit = self.env.ref('uom.product_uom_unit')
         product_unit = self.env['product.product'].create({
             'name': 'Test units',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_unit.id,
         })
         product_dozens = self.env['product.product'].create({
             'name': 'Test dozens',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_dozens.id,
         })
 
@@ -469,7 +471,7 @@ class TestBoM(TestMrpCommon):
     def test_19_bom_kit_field_is_kits_bom_with_product_id(self):
         kit_products = self.env['product.product'].create({
             'name': 'No Kit',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': self.uom_unit.id,
         })
         self.env['mrp.bom'].create({
@@ -494,7 +496,7 @@ class TestBoM(TestMrpCommon):
 
         no_kit_products = self.env['product.product'].create({
             'name': 'No Kit',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': self.uom_unit.id,
         })
         self.assertFalse(no_kit_products.is_kits)
@@ -524,7 +526,7 @@ class TestBoM(TestMrpCommon):
     def test_19_bom_kit_field_is_kits_bom_without_product_id(self):
         kit_products = self.env['product.product'].create({
             'name': 'No Kit',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': self.uom_unit.id,
         })
         self.env['mrp.bom'].create({
@@ -548,7 +550,7 @@ class TestBoM(TestMrpCommon):
 
         no_kit_products = self.env['product.product'].create({
             'name': 'No Kit',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': self.uom_unit.id,
         })
         self.assertFalse(no_kit_products.is_kits)
@@ -583,20 +585,20 @@ class TestBoM(TestMrpCommon):
         uom_litre = self.env.ref('uom.product_uom_litre')
         crumble = self.env['product.product'].create({
             'name': 'Crumble',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_kg.id,
             'uom_po_id': uom_kg.id,
         })
         butter = self.env['product.product'].create({
             'name': 'Butter',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_kg.id,
             'uom_po_id': uom_kg.id,
             'standard_price': 7.01
         })
         biscuit = self.env['product.product'].create({
             'name': 'Biscuit',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_kg.id,
             'uom_po_id': uom_kg.id,
             'standard_price': 1.5
@@ -684,11 +686,11 @@ class TestBoM(TestMrpCommon):
         # Create a more complex BoM with a sub product
         cheese_cake = self.env['product.product'].create({
             'name': 'Cheese Cake 300g',
-            'type': 'product',
+            'is_storable': True,
         })
         cream = self.env['product.product'].create({
             'name': 'cream',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_litre.id,
             'uom_po_id': uom_litre.id,
             'standard_price': 5.17,
@@ -757,13 +759,13 @@ class TestBoM(TestMrpCommon):
         uom_unit = self.env.ref('uom.product_uom_unit')
         drawer = self.env['product.product'].create({
             'name': 'drawer',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
         })
         screw = self.env['product.product'].create({
             'name': 'screw',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
             'standard_price': 7.01
@@ -1031,28 +1033,28 @@ class TestBoM(TestMrpCommon):
 
         finished = self.env['product.product'].create({
             'name': 'Finished',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
         })
 
         semi_finished = self.env['product.product'].create({
             'name': 'Semi-Finished',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_kg.id,
             'uom_po_id': uom_kg.id,
         })
 
         assembly = self.env['product.product'].create({
             'name': 'Assembly',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_dozen.id,
             'uom_po_id': uom_dozen.id,
         })
 
         raw_material = self.env['product.product'].create({
             'name': 'Raw Material',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_litre.id,
             'uom_po_id': uom_litre.id,
             'standard_price': 5,
@@ -1096,18 +1098,18 @@ class TestBoM(TestMrpCommon):
 
         target = self.env['product.product'].create({
             'name': 'Target',
-            'type': 'product',
+            'is_storable': True,
         })
 
         product_one = self.env['product.product'].create({
             'name': 'Component one',
-            'type': 'product',
+            'is_storable': True,
         })
         self.env['stock.quant']._update_available_quantity(product_one, location, 3.0)
 
         product_two = self.env['product.product'].create({
             'name': 'Component two',
-            'type': 'product',
+            'is_storable': True,
         })
         self.env['stock.quant']._update_available_quantity(product_two, location, 4.0)
 
@@ -1163,8 +1165,8 @@ class TestBoM(TestMrpCommon):
         """
         location = self.env.ref('stock.stock_location_stock')
         uom_unit = self.env.ref('uom.product_uom_unit')
-        final_product_tmpl = self.env['product.template'].create({'name': 'Final Product', 'type': 'product'})
-        component_product = self.env['product.product'].create({'name': 'Compo 1', 'type': 'product'})
+        final_product_tmpl = self.env['product.template'].create({'name': 'Final Product', 'is_storable': True})
+        component_product = self.env['product.product'].create({'name': 'Compo 1', 'is_storable': True})
 
         self.env['stock.quant']._update_available_quantity(component_product, location, 3.0)
 
@@ -1211,7 +1213,7 @@ class TestBoM(TestMrpCommon):
         uom_unit = self.env.ref('uom.product_uom_unit')
         finished = self.env['product.product'].create({
             'name': 'Finished',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
         })
@@ -1285,7 +1287,7 @@ class TestBoM(TestMrpCommon):
 
         product_gram = self.env['product.product'].create({
             'name': 'Product sold in grams',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_gram.id,
             'uom_po_id': uom_gram.id,
             'route_ids': [(4, manufacturing_route_id)],
@@ -1320,7 +1322,7 @@ class TestBoM(TestMrpCommon):
         Checks the generated BoM has the expected BoM lines, by-products and operations.
         """
         # Creates some products.
-        common_vals = {'type': "product"}
+        common_vals = {'is_storable': True}
         finished_product = self.env['product.product'].create(dict(common_vals, name="Monster in Jar"))
         component_1 = self.env['product.product'].create(dict(common_vals, name="Monster"))
         component_2 = self.env['product.product'].create(dict(common_vals, name="Jar"))
@@ -1431,7 +1433,7 @@ class TestBoM(TestMrpCommon):
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_dozen = self.env.ref('uom.product_uom_dozen')
         # Creates some products.
-        common_vals = {'type': "product"}
+        common_vals = {'is_storable': True}
         finished_product = self.env['product.product'].create(dict(common_vals, name="CO² Molecule"))
         component_1 = self.env['product.product'].create(dict(common_vals, name="Carbon Molecule"))
         component_2 = self.env['product.product'].create(dict(common_vals, name="Oxygen Molecule"))
@@ -1467,7 +1469,7 @@ class TestBoM(TestMrpCommon):
         """
         self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')  # Enables by-products.
         # Creates some products.
-        common_vals = {'type': "product"}
+        common_vals = {'is_storable': True}
         finished_product = self.env['product.product'].create(dict(common_vals, name="Banana Bread"))
         component_1 = self.env['product.product'].create(dict(common_vals, name="Banana"))
         component_2 = self.env['product.product'].create(dict(common_vals, name="Sugar, Spice and Everything Nice"))
@@ -1523,7 +1525,7 @@ class TestBoM(TestMrpCommon):
         """
         self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')
         # Creates a BoM.
-        common_vals = {'type': "product"}
+        common_vals = {'is_storable': True}
         finished_product = self.env['product.product'].create(dict(common_vals, name="Monster in Jar"))
         component_1 = self.env['product.product'].create(dict(common_vals, name="Monster"))
         component_2 = self.env['product.product'].create(dict(common_vals, name="Jar"))
@@ -1642,7 +1644,7 @@ class TestBoM(TestMrpCommon):
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_dozen = self.env.ref('uom.product_uom_dozen')
         # Creates a BoM.
-        common_vals = {'type': "product"}
+        common_vals = {'is_storable': True}
         finished_product = self.env['product.product'].create(dict(common_vals, name="Monster in Jar"))
         component_1 = self.env['product.product'].create(dict(common_vals, name="Monster"))
         component_2 = self.env['product.product'].create(dict(common_vals, name="Jar"))
@@ -1742,7 +1744,7 @@ class TestBoM(TestMrpCommon):
         and checks the moves' operation/workorder are correctly updated too.
         """
         # Creates a BoM.
-        common_vals = {'type': "product"}
+        common_vals = {'is_storable': True}
         finished_product = self.env['product.product'].create(dict(common_vals, name="Monster in Jar"))
         component_1 = self.env['product.product'].create(dict(common_vals, name="Monster"))
         component_2 = self.env['product.product'].create(dict(common_vals, name="Jar"))
@@ -2171,12 +2173,12 @@ class TestBoM(TestMrpCommon):
         location = self.env.ref('stock.stock_location_stock')
         product_one = self.env['product.product'].create({
             'name': 'Product',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_unit.id,
         })
         product_two = self.env['product.product'].create({
             'name': 'Component',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_unit.id,
         })
         self.env['stock.quant']._update_available_quantity(product_two, location, 4.0)
@@ -2219,7 +2221,7 @@ class TestTourBoM(HttpCase):
     def test_mrp_bom_product_catalog(self):
         product = self.env['product.product'].create({
             'name': 'test1',
-            'type': 'product',
+            'is_storable': True,
         })
         bom = self.env['mrp.bom'].create({
             'product_id': product.id,

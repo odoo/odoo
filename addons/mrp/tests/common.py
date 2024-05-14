@@ -16,17 +16,20 @@ class TestMrpCommon(TestStockCommon):
         """
         product_to_build = cls.env['product.product'].create({
             'name': 'Young Tom',
-            'type': 'product',
+            'type': 'consu',
+            'is_storable': True,
             'tracking': tracking_final,
         })
         product_to_use_1 = cls.env['product.product'].create({
             'name': 'Botox',
-            'type': 'product',
+            'type': 'consu',
+            'is_storable': True,
             'tracking': tracking_base_1,
         })
         product_to_use_2 = cls.env['product.product'].create({
             'name': 'Old Tom',
-            'type': 'product',
+            'type': 'consu',
+            'is_storable': True,
             'tracking': tracking_base_2,
         })
         bom_1 = cls.env['mrp.bom'].create({
@@ -73,7 +76,8 @@ class TestMrpCommon(TestStockCommon):
 
         # Update demo products
         (cls.product_2 | cls.product_3 | cls.product_4 | cls.product_5 | cls.product_6 | cls.product_7_3 | cls.product_8).write({
-            'type': 'product',
+            'type': 'consu',
+            'is_storable': True,
         })
 
         # User Data: mrp user and mrp manager
@@ -218,7 +222,8 @@ class TestMrpCommon(TestStockCommon):
             'name': 'Acoustic Bloc Screens',
             'uom_id': cls.env.ref("uom.product_uom_unit").id,
             'uom_po_id': cls.env.ref("uom.product_uom_unit").id,
-            'type': 'product',
+            'type': 'consu',
+            'is_storable': True,
             'tracking': 'none',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
@@ -226,7 +231,8 @@ class TestMrpCommon(TestStockCommon):
             'name': 'Individual Workplace',
             'uom_id': cls.env.ref("uom.product_uom_unit").id,
             'uom_po_id': cls.env.ref("uom.product_uom_unit").id,
-            'type': 'product',
+            'type': 'consu',
+            'is_storable': True,
             'tracking': 'none',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
@@ -235,7 +241,7 @@ class TestMrpCommon(TestStockCommon):
     def make_prods(cls, n):
         return [
             cls.env["product.product"].create(
-                {"name": f"p{k + 1}", "type": "product"}
+                {"name": f"p{k + 1}", 'is_storable': True}
             )
             for k in range(n)
         ]

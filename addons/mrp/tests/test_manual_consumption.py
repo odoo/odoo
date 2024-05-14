@@ -16,11 +16,11 @@ class TestTourManualConsumption(HttpCase):
         Product = self.env['product.product']
         product_finish = Product.create({
             'name': 'finish',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'none',})
         product_nt = Product.create({
             'name': 'No tracking',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'none',})
         bom = self.env['mrp.bom'].create({
             'product_id': product_finish.id,
@@ -130,7 +130,7 @@ class TestManualConsumption(TestMrpCommon):
         self.bom_4.consumption = 'warning'
         component = self.bom_4.bom_line_ids.product_id
         component.write({
-            'type': 'product',
+            'is_storable': True,
             'standard_price': 10,
         })
         self.env['stock.quant']._update_available_quantity(component, self.stock_location, 2)
@@ -160,15 +160,15 @@ class TestManualConsumption(TestMrpCommon):
         Product = self.env['product.product']
         product_finish = Product.create({
             'name': 'finish',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'none'})
         product_auto_consumption = Product.create({
             'name': 'Automatic',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'none'})
         product_manual_consumption = Product.create({
             'name': 'Manual',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'none'})
         bom = self.env['mrp.bom'].create({
             'product_id': product_finish.id,

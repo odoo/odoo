@@ -226,7 +226,7 @@ class TestOldRules(TestStockCommon):
         final_location = partner_demo_customer.property_stock_customer
         product_a = self.env['product.product'].create({
             'name': 'ProductA',
-            'type': 'product',
+            'is_storable': True,
         })
 
         self.env['stock.quant']._update_available_quantity(product_a, warehouse.wh_output_stock_loc_id, 4.0)
@@ -406,7 +406,7 @@ class TestOldRules(TestStockCommon):
         procurement_group0 = self.env['procurement.group'].create({})
         product1 = self.env['product.product'].create({
             'name': 'test_procurement_group_merge',
-            'type': 'product',
+            'is_storable': True,
         })
         pick_ship_route = self.warehouse_2_steps.delivery_route_id
         ship_rule = pick_ship_route.rule_ids.filtered(lambda rule: '2S: Output → Customers' in rule.name)
@@ -471,7 +471,7 @@ class TestOldRules(TestStockCommon):
         # Create a product and add 10 units in stock
         product_a = self.env['product.product'].create({
             'name': 'ProductA',
-            'type': 'product',
+            'is_storable': True,
         })
         self.env['stock.quant']._update_available_quantity(product_a, self.warehouse_2_steps.lot_stock_id, 10.0)
         warehouse = self.warehouse_2_steps
@@ -551,7 +551,7 @@ class TestOldRules(TestStockCommon):
         warehouse = self.warehouse_3_steps
         self.product = self.env['product.product'].create({
             'name': 'Test product',
-            'type': 'product',
+            'is_storable': True,
         })
 
         ship_move = self.env['stock.move'].create({

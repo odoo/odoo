@@ -74,7 +74,6 @@
                     <field name="location_dest_id" column_invisible="True"/>
                     <field name="scrapped" column_invisible="True"/>
                     <field name="picking_code" column_invisible="True"/>
-                    <field name="product_type" column_invisible="True"/>
                     <field name="show_details_visible" column_invisible="True"/>
                     <field name="additional" column_invisible="True"/>
                     <field name="move_lines_count" column_invisible="True"/>
@@ -247,7 +246,7 @@
                     <header>
                         <button class="btn-primary" name="action_put_in_pack" type="object" string="Put in Pack" groups="stock.group_tracking_lot"/>
                     </header>
-                    <field name="product_id" context="{'default_detailed_type': 'product'}" required="1" readonly="state == 'done' or move_id"/>
+                    <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="state == 'done' or move_id"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="move_id" column_invisible="True"/>
                     <field name="picking_id" column_invisible="True"/>

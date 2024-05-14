@@ -31,7 +31,7 @@ class PurchaseTestCommon(TestStockCommon):
 
         # Update product_1 with type, route and Delivery Lead Time
         cls.product_1.write({
-            'type': 'product',
+            'is_storable': True,
             'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
             'seller_ids': [(0, 0, {'partner_id': cls.partner_1.id, 'delay': 5})]})
 
@@ -44,7 +44,7 @@ class PurchaseTestCommon(TestStockCommon):
 
         # Update product_2 with type, route and Delivery Lead Time
         cls.product_2.write({
-            'type': 'product',
+            'is_storable': True,
             'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
             'seller_ids': [(0, 0, {'partner_id': cls.partner_1.id, 'delay': 2})]})
 

@@ -19,14 +19,14 @@ class TestPosMrp(TestPointOfSaleCommon):
         self.kit = self.env['product.product'].create({
             'name': 'Kit Product',
             'available_in_pos': True,
-            'type': 'product',
+            'is_storable': True,
             'lst_price': 10.0,
             'categ_id': category.id,
         })
 
         self.component_a = self.env['product.product'].create({
             'name': 'Comp A',
-            'type': 'product',
+            'is_storable': True,
             'available_in_pos': True,
             'lst_price': 10.0,
             'standard_price': 5.0,
@@ -34,7 +34,7 @@ class TestPosMrp(TestPointOfSaleCommon):
 
         self.component_b = self.env['product.product'].create({
             'name': 'Comp B',
-            'type': 'product',
+            'is_storable': True,
             'available_in_pos': True,
             'lst_price': 10.0,
             'standard_price': 10.0,
@@ -97,7 +97,7 @@ class TestPosMrp(TestPointOfSaleCommon):
             'available_in_pos': True,
             'categ_id': category.id,
             'taxes_id': False,
-            'type': 'product',
+            'is_storable': True,
         })
 
         self.kit_2 = self.env['product.product'].create({
@@ -105,7 +105,7 @@ class TestPosMrp(TestPointOfSaleCommon):
             'available_in_pos': True,
             'categ_id': category.id,
             'taxes_id': False,
-            'type': 'product',
+            'is_storable': True,
         })
 
         self.subkit1 = self.env['product.product'].create({

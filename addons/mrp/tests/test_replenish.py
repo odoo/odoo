@@ -48,7 +48,7 @@ class TestMrpReplenish(TestMrpCommon):
         route_manufacture.rule_ids.delay = 2
         product_1 = self.env['product.product'].create({
             'name': 'Cake',
-            'type': 'product',
+            'is_storable': True,
             'route_ids': [(6, 0, [route_manufacture.id])]
         })
 

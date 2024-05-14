@@ -270,7 +270,7 @@ class ProductProduct(models.Model):
             product = stock_valuation_layer.product_id
             value = stock_valuation_layer.value
 
-            if product.type != 'product' or product.valuation != 'real_time':
+            if not product.is_storable or product.valuation != 'real_time':
                 continue
 
             # Sanity check.
@@ -558,7 +558,7 @@ class ProductProduct(models.Model):
         products_orig_quantity_svl = {}
 
         # get the impacted products
-        domain = [('type', '=', 'product')]
+        domain = [('is_storable', '=', True)]
         if product_category is not None:
             domain += [('categ_id', '=', product_category.id)]
         elif product_template is not None:

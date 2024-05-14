@@ -59,13 +59,13 @@ class TestStockValuationBase(TransactionCase):
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.product1 = cls.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'is_storable': True,
             'default_code': 'prda',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
         cls.product2 = cls.env['product.product'].create({
             'name': 'Product B',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
         cls.inventory_user = cls.env['res.users'].create({
@@ -179,7 +179,7 @@ class TestStockValuation(TestStockValuationBase):
         """ An automatic consumable product should not create any account move entries"""
         # Enter 10 products while price is 5.0
         self.product1.standard_price = 5.0
-        self.product1.type = 'consu'
+        self.product1.is_storable = False
         move1 = self.env['stock.move'].create({
             'name': 'IN 10 units @ 10.00 per unit',
             'location_id': self.supplier_location.id,
@@ -1918,7 +1918,7 @@ class TestStockValuation(TestStockValuationBase):
     def test_fifo_standard_price_upate_1(self):
         product = self.env['product.product'].create({
             'name': 'product1',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         product.product_tmpl_id.categ_id.property_cost_method = 'fifo'
@@ -1930,7 +1930,7 @@ class TestStockValuation(TestStockValuationBase):
     def test_fifo_standard_price_upate_2(self):
         product = self.env['product.product'].create({
             'name': 'product1',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         product.product_tmpl_id.categ_id.property_cost_method = 'fifo'
@@ -1943,7 +1943,7 @@ class TestStockValuation(TestStockValuationBase):
         """Standard price must be set on move in if no product and if first move."""
         product = self.env['product.product'].create({
             'name': 'product1',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         product.product_tmpl_id.categ_id.property_cost_method = 'fifo'

@@ -15,7 +15,7 @@ class StockQuantityHistory(models.TransientModel):
                                (self.env.ref('stock_account.stock_valuation_layer_form').id, 'form'),
                                (self.env.ref('stock_account.stock_valuation_layer_pivot').id, 'pivot'),
                                (self.env.ref('stock_account.stock_valuation_layer_graph').id, 'graph')]
-            action['domain'] = [('create_date', '<=', self.inventory_datetime), ('product_id.type', '=', 'product')]
+            action['domain'] = [('create_date', '<=', self.inventory_datetime), ('product_id.is_storable', '=', True)]
             action['display_name'] = format_datetime(self.env, self.inventory_datetime)
             action['context'] = "{}"
             return action

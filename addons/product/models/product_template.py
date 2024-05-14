@@ -400,8 +400,7 @@ class ProductTemplate(models.Model):
         for record in self:
             if record.type == 'consu':
                 record.product_tooltip = _(
-                    "Consumables are physical products for which you don't manage the inventory "
-                    "level: they are always available."
+                    "Consumables are physical products."
                 )
             else:
                 record.product_tooltip = ""

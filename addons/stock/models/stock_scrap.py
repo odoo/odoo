@@ -19,7 +19,7 @@ class StockScrap(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, required=True)
     origin = fields.Char(string='Source Document')
     product_id = fields.Many2one(
-        'product.product', 'Product', domain="[('type', 'in', ['product', 'consu'])]",
+        'product.product', 'Product', domain="[('type', '=', 'consu')]",
         required=True, check_company=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
@@ -176,7 +176,7 @@ class StockScrap(models.Model):
         return action
 
     def _should_check_available_qty(self):
-        return self.product_id.type == 'product'
+        return self.product_id.is_storable
 
     def check_available_qty(self):
         if not self._should_check_available_qty():

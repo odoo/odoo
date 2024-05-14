@@ -35,7 +35,7 @@ class TestBatchPicking(TransactionCase):
 
         cls.productA = cls.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'lot',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
@@ -45,7 +45,7 @@ class TestBatchPicking(TransactionCase):
         } for i in range(4)])
         cls.productB = cls.env['product.product'].create({
             'name': 'Product B',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
@@ -327,7 +327,7 @@ class TestBatchPicking(TransactionCase):
     def test_wave_mutliple_move_lines(self):
         self.productA = self.env['product.product'].create({
             'name': 'Product Test A',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         picking = self.env['stock.picking'].create({
@@ -456,12 +456,12 @@ class TestBatchPicking(TransactionCase):
         warehouse.reception_steps = 'three_steps'
         self.productA = self.env['product.product'].create({
             'name': 'Product Test A',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.productB = self.env['product.product'].create({
             'name': 'Product Test B',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         picking = self.env['stock.picking'].create({

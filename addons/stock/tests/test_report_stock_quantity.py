@@ -15,7 +15,7 @@ class TestReportStockQuantity(tests.TransactionCase):
         cls.product1 = cls.env['product.product'].create({
             'name': 'Mellohi',
             'default_code': 'C418',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': cls.env.ref('product.product_category_all').id,
             'tracking': 'lot',
             'barcode': 'scan_me'
@@ -114,7 +114,7 @@ class TestReportStockQuantity(tests.TransactionCase):
     def test_replenishment_report_1(self):
         self.product_replenished = self.env['product.product'].create({
             'name': 'Security razor',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         # get auto-created pull rule from when warehouse is created
@@ -184,7 +184,7 @@ class TestReportStockQuantity(tests.TransactionCase):
         """
         product = self.env['product.product'].create({
             'name': 'SuperProduct',
-            'type': 'product',
+            'is_storable': True,
         })
 
         today = datetime.now()

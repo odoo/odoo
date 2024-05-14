@@ -41,7 +41,7 @@ class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
         kit, compo01, compo02 = self.env['product.product'].create([{
             'name': name,
             'standard_price': price,
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.avco_category.id,
         } for name, price in [('Kit', 0), ('Compo 01', 10), ('Compo 02', 20)]])
 
@@ -102,7 +102,7 @@ class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
 
         component01, component02 = self.env['product.product'].create([{
             'name': 'Component %s' % name,
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.avco_category.id,
             'uom_id': uom_litre.id,
             'uom_po_id': uom_litre.id,
@@ -193,7 +193,7 @@ class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
         kit, cmp = self.env['product.product'].create([{
             'name': name,
             'standard_price': 0,
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.avco_category.id,
         } for name in ['Kit', 'Cmp']])
 

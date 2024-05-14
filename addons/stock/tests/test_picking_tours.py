@@ -22,7 +22,7 @@ class TestStockPickingTour(HttpCase):
         """validate a receipt with some move without any save except the last one"""
         product_lot = self.env['product.product'].create({
             'name': 'Product Lot',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'lot',
         })
         url = self._get_picking_url(self.receipt.id)
@@ -42,7 +42,7 @@ class TestStockPickingTour(HttpCase):
         """generate some serial numbers in the detailed operation modal"""
         product_serial = self.env['product.product'].create({
             'name': 'Product Serial',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
         })
         url = self._get_picking_url(self.receipt.id)
@@ -63,7 +63,7 @@ class TestStockPickingTour(HttpCase):
         """ Generate lot numbers in the detailed operation modal """
         product_lot_1 = self.env['product.product'].create({
             'name': 'Product Lot 1',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'lot',
         })
         url = self._get_picking_url(self.receipt.id)
@@ -93,8 +93,8 @@ class TestStockPickingTour(HttpCase):
         (without clicking on anything else)
         """
         self.env['product.product'].create([
-            {'name': 'Product 1', 'type': 'product'},
-            {'name': 'Product 2', 'type': 'product'},
+            {'name': 'Product 1', 'is_storable': True},
+            {'name': 'Product 2', 'is_storable': True},
         ])
 
         menu = self.env.ref('stock.menu_action_inventory_tree')
@@ -108,12 +108,12 @@ class TestStockPickingTour(HttpCase):
         product_one, _ = self.env["product.product"].create([
             {
                 'name': 'Product one',
-                'type': 'product',
+                'is_storable': True,
                 'tracking': 'serial',
             },
             {
                 'name': 'Product two',
-                'type': 'product',
+                'is_storable': True,
                 'tracking': 'serial',
             }
         ])
@@ -141,7 +141,7 @@ class TestStockPickingTour(HttpCase):
         self.uom_unit = self.env.ref('uom.product_uom_unit')
         product_one = self.env['product.product'].create({
             'name': 'Product one',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
         })
 

@@ -223,7 +223,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         # Test if the orderpoint is created when opening the replenishment view
         prod = self.env['product.product'].create({
             'name': 'Carrot',
-            'type': 'product',
+            'is_storable': True,
             'seller_ids': [
                 (0, 0, {'partner_id': vendor.id, 'delay': 1.0, 'company_id': company.id})
             ]
@@ -248,7 +248,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         # Test if purchase orders are created according to the days to purchase
         product = self.env['product.product'].create({
             'name': 'Chicory',
-            'type': 'product',
+            'is_storable': True,
             'seller_ids': [
                 (0, 0, {'partner_id': vendor2.id, 'delay': 15.0, 'company_id': company2.id}),
                 (0, 0, {'partner_id': vendor.id, 'delay': 1.0, 'company_id': company.id})

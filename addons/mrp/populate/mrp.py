@@ -44,7 +44,7 @@ class MrpBom(models.Model):
 
         product_tmpl_ids = self.env['product.product'].search([
             ('id', 'in', self.env.registry.populated_models['product.product']),
-            ('type', 'in', ('product', 'consu'))
+            ('type', '=', 'consu')
         ]).product_tmpl_id.ids
         # Use only a 80 % subset of the products - the 20 % remaining will leaves of the bom tree
         random = populate.Random('subset_product_bom')
@@ -281,7 +281,7 @@ class MrpProduction(models.Model):
         company_ids = self.env.registry.populated_models['res.company'][:COMPANY_NB_WITH_STOCK]
 
         products = self.env['product.product'].browse(self.env.registry.populated_models['product.product'])
-        product_ids = products.filtered(lambda product: product.type in ('product', 'consu')).ids
+        product_ids = products.filtered(lambda product: product.type == 'consu').ids
 
         boms = self.env['mrp.bom'].browse(self.env.registry.populated_models['mrp.bom'])
         boms_by_company = defaultdict(OrderedSet)

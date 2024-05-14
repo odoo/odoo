@@ -24,7 +24,7 @@ class TestReorderingRule(TransactionCase):
         # create product and set the vendor
         product_form = Form(cls.env['product.product'])
         product_form.name = 'Product A'
-        product_form.detailed_type = 'product'
+        product_form.is_storable = True
         product_form.description = 'Internal Notes'
         with product_form.seller_ids.new() as seller:
             seller.partner_id = cls.partner
@@ -217,7 +217,7 @@ class TestReorderingRule(TransactionCase):
         })
         product = self.env['product.product'].create({
             'name': 'product_rr_3',
-            'type': 'product',
+            'is_storable': True,
             'route_ids': [(4, route.id)],
             'seller_ids': [(6, 0, [supplier_info1.id])],
         })
@@ -330,14 +330,14 @@ class TestReorderingRule(TransactionCase):
 
         product_form = Form(self.env['product.product'])
         product_form.name = 'Simple Product'
-        product_form.detailed_type = 'product'
+        product_form.is_storable = True
         with product_form.seller_ids.new() as s:
             s.partner_id = partner
         product = product_form.save()
 
         product_form = Form(self.env['product.product'])
         product_form.name = 'Product BUY + MTO'
-        product_form.detailed_type = 'product'
+        product_form.is_storable = True
         product_form.route_ids.add(route_buy)
         product_form.route_ids.add(route_mto)
         with product_form.seller_ids.new() as s:
@@ -428,14 +428,14 @@ class TestReorderingRule(TransactionCase):
 
         product_form = Form(self.env['product.product'])
         product_form.name = 'Simple Product'
-        product_form.detailed_type = 'product'
+        product_form.is_storable = True
         with product_form.seller_ids.new() as s:
             s.partner_id = partner
         product = product_form.save()
 
         product_form = Form(self.env['product.product'])
         product_form.name = 'Product BUY + MTO'
-        product_form.detailed_type = 'product'
+        product_form.is_storable = True
         product_form.route_ids.add(route_buy)
         product_form.route_ids.add(route_mto)
         with product_form.seller_ids.new() as s:
@@ -525,7 +525,7 @@ class TestReorderingRule(TransactionCase):
         product = self.env["product.product"].create({
             "name": "product TEST",
             "standard_price": 100.0,
-            "type": "product",
+            "is_storable": True,
             "uom_id": uom_unit.id,
             "default_code": "A",
             "route_ids": [(6, 0, purchase_route.ids)],
@@ -630,7 +630,7 @@ class TestReorderingRule(TransactionCase):
         product = self.env["product.product"].create({
             "name": "product TEST",
             "standard_price": 100.0,
-            "type": "product",
+            "is_storable": True,
             "uom_id": uom_unit.id,
             "default_code": "A",
             "route_ids": [(6, 0, [
@@ -895,7 +895,7 @@ class TestReorderingRule(TransactionCase):
 
         product_02 = self.env['product.product'].create({
             'name': 'Super Product',
-            'type': 'product',
+            'is_storable': True,
             'seller_ids': [(0, 0, {'partner_id': self.partner.id})],
         })
 
@@ -1028,7 +1028,7 @@ class TestReorderingRule(TransactionCase):
         })
         product = self.env['product.product'].create({
             'name': 'Storable Product',
-            'type': 'product',
+            'is_storable': True,
             'seller_ids': [(0, 0, {'partner_id': self.partner.id})],
         })
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
@@ -1074,7 +1074,7 @@ class TestReorderingRule(TransactionCase):
         """
         product = self.env['product.product'].create({
             'name': 'Storable Product',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': self.env.ref('uom.product_uom_categ_kgm').uom_ids[3].id,
             'uom_po_id': self.env.ref('uom.product_uom_categ_kgm').uom_ids[4].id,
             'seller_ids': [(0, 0, {'partner_id': self.partner.id, 'min_qty': 6})],

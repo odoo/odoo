@@ -51,8 +51,8 @@ class TestMrpOrder(TestMrpCommon):
     def test_basic(self):
         """ Checks a basic manufacturing order: no routing (thus no workorders), no lot and
         consume strictly what's needed. """
-        self.product_1.type = 'product'
-        self.product_2.type = 'product'
+        self.product_1.is_storable = True
+        self.product_2.is_storable = True
         self.env['stock.quant'].create({
             'location_id': self.warehouse_1.lot_stock_id.id,
             'product_id': self.product_1.id,
@@ -948,7 +948,7 @@ class TestMrpOrder(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
         add_product = self.env['product.product'].create({
             'name': 'additional',
-            'type': 'product',
+            'is_storable': True,
         })
         mo.action_assign()
 
@@ -1005,7 +1005,7 @@ class TestMrpOrder(TestMrpCommon):
         dozen = self.env.ref('uom.product_uom_dozen')
         self.byproduct1 = self.env['product.product'].create({
             'name': 'Byproduct 1',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial'
         })
         self.serial_1 = self.env['stock.lot'].create({
@@ -1019,7 +1019,7 @@ class TestMrpOrder(TestMrpCommon):
 
         self.byproduct2 = self.env['product.product'].create({
             'name': 'Byproduct 2',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'lot',
         })
         self.lot_1 = self.env['stock.lot'].create({
@@ -1033,7 +1033,7 @@ class TestMrpOrder(TestMrpCommon):
 
         self.byproduct3 = self.env['product.product'].create({
             'name': 'Byproduct 3',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'none',
         })
 
@@ -1371,7 +1371,7 @@ class TestMrpOrder(TestMrpCommon):
         subassembly_product = self.env["product.product"].create(
             {
                 "name": "Subassembly",
-                "type": "product",
+                "is_storable": True,
                 "tracking": "serial",
             }
         )
@@ -1395,7 +1395,7 @@ class TestMrpOrder(TestMrpCommon):
         finished_good_product = self.env["product.product"].create(
             {
                 "name": "Finished Good",
-                "type": "product",
+                "is_storable": True,
                 "tracking": "serial",
             }
         )
@@ -1453,7 +1453,7 @@ class TestMrpOrder(TestMrpCommon):
         product = self.env["product.product"].create(
             {
                 "name": "Product",
-                "type": "product",
+                "is_storable": True,
                 "tracking": "serial",
             }
         )
@@ -1537,7 +1537,7 @@ class TestMrpOrder(TestMrpCommon):
         """ Check that the production can be completed without any consumption."""
         product = self.env['product.product'].create({
             'name': 'Product no BoM',
-            'type': 'product',
+            'is_storable': True,
         })
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = product
@@ -1571,7 +1571,7 @@ class TestMrpOrder(TestMrpCommon):
         """ Check two component move with the same product are not merged."""
         product = self.env['product.product'].create({
             'name': 'Product no BoM',
-            'type': 'product',
+            'is_storable': True,
         })
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = product
@@ -1597,14 +1597,14 @@ class TestMrpOrder(TestMrpCommon):
         unit = self.env.ref('uom.product_uom_unit')
         plastic_laminate = self.env['product.product'].create({
             'name': 'Plastic Laminate',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': unit.id,
             'uom_po_id': unit.id,
             'tracking': 'serial',
         })
         ply_veneer = self.env['product.product'].create({
             'name': 'Ply Veneer',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': unit.id,
             'uom_po_id': unit.id,
         })
@@ -1655,7 +1655,7 @@ class TestMrpOrder(TestMrpCommon):
         # Create finished product
         finished_product = self.env['product.product'].create({
             'name': 'Geyser',
-            'type': 'product',
+            'is_storable': True,
         })
 
         # Create service type product
@@ -1832,11 +1832,11 @@ class TestMrpOrder(TestMrpCommon):
         immediate production wizard should fill the correct quantities. """
         p_final = self.env['product.product'].create({
             'name': 'final',
-            'type': 'product',
+            'is_storable': True,
         })
         component = self.env['product.product'].create({
             'name': 'component',
-            'type': 'product',
+            'is_storable': True,
         })
         bom = self.env['mrp.bom'].create({
             'product_id': p_final.id,
@@ -1889,7 +1889,7 @@ class TestMrpOrder(TestMrpCommon):
         })
         storable_component = self.env['product.product'].create({
             'name': 'Storable Component',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_cL.id,
             'uom_po_id': uom_cL.id,
         })
@@ -1972,7 +1972,7 @@ class TestMrpOrder(TestMrpCommon):
         # create a product component and the final product using the component
         product_comp = self.env['product.product'].create({
             'name': 'Product Component',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'lot',
             'categ_id': self.env.ref('product.product_category_all').id,
             'uom_id': uom_L.id,
@@ -1981,7 +1981,7 @@ class TestMrpOrder(TestMrpCommon):
 
         product_final = self.env['product.product'].create({
             'name': 'Product Final',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'lot',
             'categ_id': self.env.ref('product.product_category_all').id,
             'uom_id': uom_L.id,
@@ -2686,9 +2686,9 @@ class TestMrpOrder(TestMrpCommon):
         work_center_3 = self.env['mrp.workcenter'].create({"name": "WorkCenter 3", "time_start": 13})
 
         product = self.env['product.template'].create({"name": "Finished Product"})
-        component_1 = self.env['product.template'].create({"name": "Component 1", "type": "product"})
-        component_2 = self.env['product.template'].create({"name": "Component 2", "type": "product"})
-        component_3 = self.env['product.template'].create({"name": "Component 3", "type": "product"})
+        component_1 = self.env['product.template'].create({"name": "Component 1", "is_storable": True})
+        component_2 = self.env['product.template'].create({"name": "Component 2", "is_storable": True})
+        component_3 = self.env['product.template'].create({"name": "Component 3", "is_storable": True})
 
         self.env['stock.quant'].create({
             "product_id": component_1.product_variant_id.id,
@@ -2847,12 +2847,12 @@ class TestMrpOrder(TestMrpCommon):
 
         product_to_build = self.env['product.product'].create({
             'name': 'final product',
-            'type': 'product',
+            'is_storable': True,
         })
 
         product_to_use = self.env['product.product'].create({
             'name': 'component',
-            'type': 'product',
+            'is_storable': True,
         })
 
         bom = self.env['mrp.bom'].create({
@@ -2961,7 +2961,7 @@ class TestMrpOrder(TestMrpCommon):
         warehouse.manu_type_id.reservation_method = 'manual'
 
         for product in self.product_1 + self.product_2:
-            product.type = 'product'
+            product.is_storable = True
             self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, 10)
 
         mo_form = Form(self.env['mrp.production'])
@@ -2995,7 +2995,7 @@ class TestMrpOrder(TestMrpCommon):
 
         grandparent, parent, child = self.env['product.product'].create([{
             'name': n,
-            'type': 'product',
+            'is_storable': True,
             'route_ids': [(6, 0, mto_route.ids + manufacture_route.ids)],
         } for n in ['grandparent', 'parent', 'child']])
         component = self.env['product.product'].create({
@@ -3703,7 +3703,7 @@ class TestMrpOrder(TestMrpCommon):
 
         product01, product02, product03 = self.env['product.product'].create([{
             'name': 'Product %s' % (i + 1),
-            'type': 'product',
+            'is_storable': True,
         } for i in range(3)])
 
         product02.route_ids = [(6, 0, (mto_route | manufacture_route).ids)]
@@ -3819,7 +3819,7 @@ class TestMrpOrder(TestMrpCommon):
         """
         finished, component, kit = self.env['product.product'].create([{
             'name': 'Product %s' % (i + 1),
-            'type': 'product',
+            'is_storable': True,
         } for i in range(3)])
         self.env['mrp.bom'].create({
             'product_id': kit.id,
@@ -3853,7 +3853,7 @@ class TestMrpOrder(TestMrpCommon):
              }])
         c1, c2, c3 = self.env['product.product'].create([{
             'name': i,
-            'type': 'product',
+            'is_storable': True,
         } for i in range(3)])
 
         self.env['mrp.bom'].create({
@@ -4187,7 +4187,7 @@ class TestTourMrpOrder(HttpCase):
     def test_mrp_order_product_catalog(self):
         product = self.env['product.product'].create({
             'name': 'test1',
-            'type': 'product',
+            'is_storable': True,
         })
         mo = self.env['mrp.production'].create({
             'product_id': product.id,
