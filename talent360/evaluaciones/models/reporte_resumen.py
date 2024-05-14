@@ -27,6 +27,9 @@ class ReporteResumen(models.Model):
 
     @api.depends("usuario_ids")
     def _compute_conteo_asignados(self):
+        """
+        Función que calcula el número de usuarios asignados a una evaluación     
+        """
         for record in self:
             conteo = len(record.usuario_ids)
             if conteo == 0:
@@ -38,6 +41,9 @@ class ReporteResumen(models.Model):
 
     @api.depends("usuario_ids", "usuario_externo_ids")
     def _compute_porcentaje_respuestas(self):
+        """
+        Esta función calcula el porcentaje de respuestas de los usuarios registradosy usuarios externos asignados a una evaluación.
+        """
         for record in self:
             conteo = len(record.usuario_ids) + len(record.usuario_externo_ids)
             if conteo == 0:
