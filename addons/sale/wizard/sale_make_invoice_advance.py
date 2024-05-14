@@ -157,6 +157,24 @@ class SaleAdvancePaymentInv(models.TransientModel):
             self = self.with_company(self.company_id)
             order = self.sale_order_ids
 
+<<<<<<< HEAD
+||||||| parent of 70c2f37f3c29 (temp)
+            # Create deposit product if necessary
+            if not self.product_id:
+                self.company_id.sale_down_payment_product_id = self.env['product.product'].create(
+                    self._prepare_down_payment_product_values()
+                )
+                self._compute_product_id()
+
+=======
+            # Create deposit product if necessary
+            if not self.product_id:
+                self.company_id.sudo().sale_down_payment_product_id = self.env['product.product'].create(
+                    self._prepare_down_payment_product_values()
+                )
+                self._compute_product_id()
+
+>>>>>>> 70c2f37f3c29 (temp)
             # Create down payment section if necessary
             SaleOrderline = self.env['sale.order.line'].with_context(sale_no_log_for_new_lines=True)
             if not any(line.display_type and line.is_downpayment for line in order.order_line):
