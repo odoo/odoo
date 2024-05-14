@@ -169,7 +169,7 @@ export class Base {
     serialize(options = {}) {
         const orm = options.orm ?? false;
 
-        const serializedData = this.model.serialize(this, { excludeLocal: orm });
+        const serializedData = this.model.serialize(this, { orm });
 
         if (orm) {
             const fields = this.model.modelFields;
@@ -180,7 +180,7 @@ export class Base {
                 if (params.dummy) {
                     continue;
                 }
-                if (orm && params.local) {
+                if (params.local || params.related || params.compute) {
                     continue;
                 }
 
@@ -644,14 +644,14 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
             },
             /**
              * @param {object} options
-             * @param {boolean} options.excludeLocal - Exclude local fields from the serialization
+             * @param {boolean} options.orm - Exclude local & related fields from the serialization
              */
             serialize(record, options = {}) {
-                const excludeLocal = options.excludeLocal ?? false;
+                const orm = options.orm ?? false;
                 const result = {};
                 for (const name in fields) {
                     const field = fields[name];
-                    if (excludeLocal && field.local) {
+                    if ((orm && field.local) || (orm && field.related) || (orm && field.compute)) {
                         continue;
                     }
 

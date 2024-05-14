@@ -96,26 +96,34 @@ class PosSession(models.Model):
 
     @api.model
     def _load_pos_data_relations(self, model, response):
-        model_fields = self.env[model].fields_get(allfields=response[model]['fields'] or None, attributes=['relation', 'type', 'relation_field'])
+        model_fields = self.env[model]._fields
+
         if not response[model].get('relations'):
             response[model]['relations'] = {}
+
         for name, params in model_fields.items():
-            if params.get("relation"):
+            if name not in response[model]['fields'] and len(response[model]['fields']) != 0:
+                continue
+
+            if params.comodel_name:
                 response[model]['relations'][name] = {
                     'name': name,
-                    'model': model,
-                    'relation': params['relation'],
-                    'type': params['type'],
+                    'model': params.model_name,
+                    'compute': bool(params.compute),
+                    'related': bool(params.related),
+                    'relation': params.comodel_name,
+                    'type': params.type,
                 }
-
-                if params['type'] == 'one2many' and params.get('relation_field'):
-                    response[model]['relations'][name]['inverse_name'] = params['relation_field']
-                if params['type'] == 'many2many':
+                if params.type == 'one2many' and params.inverse_name:
+                    response[model]['relations'][name]['inverse_name'] = params.inverse_name
+                if params.type == 'many2many':
                     response[model]['relations'][name]['relation_table'] = self.env[model]._fields[name].relation
             else:
                 response[model]['relations'][name] = {
                     'name': name,
-                    'type': params['type'],
+                    'type': params.type,
+                    'compute': bool(params.compute),
+                    'related': bool(params.related),
                 }
 
     @api.model
