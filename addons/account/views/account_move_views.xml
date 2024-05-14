@@ -546,6 +546,27 @@
             </field>
         </record>
 
+        <record id="view_duplicated_moves_tree_js" model="ir.ui.view">
+            <field name="name">account.duplicated.moves.tree.js</field>
+            <field name="model">account.move</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="js_class">account_x2many_list</attribute>
+                    <attribute name="create">false</attribute>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="after">
+                    <!-- For draft moves, name only displays '/'. Since there may be moves of differenty types,
+                         it is better to use display_name indicating what move it refers to when in draft-->
+                    <field name="display_name" decoration-bf="1" string="Number" context="{'name_with_move_type': True}"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_out_invoice_tree" model="ir.ui.view">
             <field name="name">account.out.invoice.tree</field>
             <field name="model">account.move</field>

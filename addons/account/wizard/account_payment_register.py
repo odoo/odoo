@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from odoo import Command, models, fields, api, _
 from odoo.exceptions import UserError
-from odoo.tools import frozendict
+from odoo.tools import frozendict, SQL
 
 
 class AccountPaymentRegister(models.TransientModel):
@@ -132,6 +132,7 @@ class AccountPaymentRegister(models.TransientModel):
     require_partner_bank_account = fields.Boolean(
         compute='_compute_show_require_partner_bank') # used to know whether the field `partner_bank_id` should be required
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
+    duplicate_move_ids = fields.Many2many(comodel_name='account.move', compute='_compute_duplicate_moves')
 
     # == trust check ==
     untrusted_bank_ids = fields.Many2many('res.partner.bank', compute='_compute_trust_values')
@@ -651,6 +652,76 @@ class AccountPaymentRegister(models.TransientModel):
                         <strong>{_('Scan me with your banking app.')}</strong>
                     '''
             pay.qr_code = qr_html
+
+    @api.depends('partner_id', 'amount', 'payment_date', 'payment_type', 'line_ids')
+    def _compute_duplicate_moves(self):
+        for wizard in self:
+            if wizard.can_edit_wizard:
+                wizard.duplicate_move_ids = self._fetch_duplicate_reference()
+            else:
+                wizard.duplicate_move_ids = self.env['account.move']
+
+    def _fetch_duplicate_reference(self, matching_states=('draft', 'posted')):
+        """ Retrieve move ids for possible duplicates of payments. Duplicates moves:
+        - Have the same partner_id, amount and date as the payment
+        - Are not reconciled
+        - Represent a credit in the same account receivable or a debit in the same account payable as the payment, or
+        - Represent a credit in outstanding receipts or debit in outstanding payments, so bank statement lines with an
+         outstanding counterpart can be matched, or
+        - Are in the suspense account
+        """
+        # Update tables involved in the query
+        self.env['account.move.line'].flush_model(('move_id', 'payment_id', 'balance', 'account_id', 'company_id', 'date', 'partner_id'))
+        outstanding_account_ids = tuple(
+            (self.journal_id._get_journal_inbound_outstanding_payment_accounts() if self.payment_type == 'inbound'
+             else self.journal_id._get_journal_outbound_outstanding_payment_accounts()).ids
+        )
+
+        place_holders = {
+            'move_id': 0,
+            'payment_type': self.payment_type,
+            'balance': self.amount if self.payment_type == 'outbound' else -self.amount,
+            'account_id': self.line_ids[0].account_id.id,
+            'company_id': self.company_id.id or None,
+            'date': self.payment_date or None,
+            'partner_id': self.partner_id.id,
+        }
+        move_table_and_alias = SQL('''
+            (VALUES (%(move_id)s::int4, %(payment_type)s::varchar, %(balance)s::numeric, %(account_id)s::int4,
+                     %(company_id)s::int4, %(date)s::date, %(partner_id)s::int4)
+            ) AS move_line(move_id, payment_type, balance, account_id, company_id, date, partner_id)
+        ''', **place_holders)
+
+        query = SQL(
+            """
+            SELECT
+                   array_agg(dup_move_line.move_id) AS duplicate_move_ids
+              FROM %(move_table_and_alias)s
+              JOIN account_move_line AS dup_move_line
+                ON move_line.move_id != dup_move_line.move_id
+               AND move_line.partner_id = dup_move_line.partner_id
+               AND move_line.company_id = dup_move_line.company_id
+               AND move_line.date = dup_move_line.date
+               AND dup_move_line.parent_state IN %(matching_states)s
+               AND (
+                   move_line.account_id = dup_move_line.account_id
+                   OR dup_move_line.account_id IN %(outstanding_account_ids)s
+                   OR dup_move_line.account_id = %(suspense_account_id)s
+               )
+               AND NOT dup_move_line.reconciled
+             WHERE move_line.balance = dup_move_line.balance
+               AND (
+                   move_line.payment_type = 'inbound' AND dup_move_line.balance < 0.0
+                   OR move_line.payment_type = 'outbound' AND dup_move_line.balance > 0.0
+               )
+        """,
+            move_table_and_alias=move_table_and_alias,
+            matching_states=tuple(matching_states),
+            suspense_account_id=self.company_id.account_journal_suspense_account_id.id,
+            outstanding_account_ids=outstanding_account_ids,
+        )
+        result = self.env.execute_query(query)[0][0]
+        return self.env['account.move'].browse(result)
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS

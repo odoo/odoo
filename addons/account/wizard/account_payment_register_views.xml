@@ -42,6 +42,10 @@
                     <div role="alert" class="alert alert-warning" invisible="not missing_account_partners">
                         <span class="fw-bold">Payments related to partners with no bank account specified will be skipped. <button class="oe_link p-0 align-baseline" type="object" name="action_open_missing_account_partners">View Partner(s)</button></span>
                     </div>
+                    <div role="alert" class="alert alert-warning" invisible="not duplicate_move_ids">
+                        <span>This payment has the same partner, amount and date as </span>
+                        <field name="duplicate_move_ids" widget="x2many_buttons" string="Duplicated Payments"/>
+                    </div>
                     <group>
                         <group name="group1">
                             <field name="journal_id" options="{'no_open': True, 'no_create': True}" required="1"/>
