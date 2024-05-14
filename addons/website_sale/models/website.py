@@ -532,7 +532,8 @@ class Website(models.Model):
                 [('code', '=', request.geoip.country_code)],
                 limit=1,
             )
-            fpos = AccountFiscalPosition._get_fpos_by_region(country.id)
+            partner_geoip = self.env["res.partner"].new({'country_id': country.id})
+            fpos = AccountFiscalPosition._get_fiscal_position(partner_geoip)
 
         if not fpos:
             fpos = AccountFiscalPosition._get_fiscal_position(partner_sudo)

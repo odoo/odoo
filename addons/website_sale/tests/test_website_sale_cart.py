@@ -173,6 +173,23 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
             sale_order = website.sale_get_order()
             self.assertEqual(len(sale_order._cart_accessories()), 0)
 
+    def test_cart_new_fpos_from_geoip(self):
+        fpos_be = self.env["account.fiscal.position"].create({
+            'name': 'Fiscal Position BE',
+            'country_id': self.country_be.id,
+            'company_id': self.company.id,
+            'auto_apply': True,
+        })
+
+        website = self.website.with_user(self.public_user)
+        with MockRequest(website.env, website=website, country_code='BE'):
+            self.WebsiteSaleController.cart_update_json(product_id=self.product.id, add_qty=1)
+            sale_order = website.sale_get_order()
+            self.assertEqual(
+                sale_order.fiscal_position_id, fpos_be,
+                "Fiscal position should be determined from GEOIP country for public users."
+            )
+
     def test_cart_update_with_fpos(self):
         # We will test that the mapping of an 10% included tax by a 6% by a fiscal position is taken into account when updating the cart
         pricelist = self.pricelist
