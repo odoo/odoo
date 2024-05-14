@@ -30,6 +30,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
     init() {
         this.isFullscreen = false;
         this.notification = this.bindService("notification");
+        this.orm = this.bindService("orm");
         return this._super(...arguments);
     },
     /**
@@ -224,15 +225,18 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
             return;
         }
 
-        var $data = $(ev.currentTarget).parents(".js_publish_management:first");
-        rpc($data.data('controller') || '/website/publish', {
-            id: +$data.data('id'),
-            object: $data.data('object'),
-        })
-        .then(function (result) {
-            $data.toggleClass("css_published", result).toggleClass("css_unpublished", !result);
-            $data.find('input').prop("checked", result);
-            $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
+        const publishEl = ev.currentTarget.closest(".js_publish_management");
+        this.orm.call(
+            publishEl.dataset.object,
+            "website_publish_button",
+            [[parseInt(publishEl.dataset.id, 10)]]
+        ).then(function (result) {
+            publishEl.classList.toggle("css_published", result);
+            publishEl.classList.toggle("css_unpublished", !result);
+            const itemEl = publishEl.closest("[data-publish]");
+            if (itemEl) {
+                itemEl.dataset.publish = result ? 'on' : 'off';
+            }
         });
     },
     /**

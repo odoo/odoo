@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { CheckBox } from '@web/core/checkbox/checkbox';
 import { useService, useBus } from '@web/core/utils/hooks';
@@ -24,6 +23,7 @@ class PublishSystray extends Component {
 
     setup() {
         this.website = useService('website');
+        this.orm = useService('orm');
 
         this.state = useState({
             published: this.website.currentWebsite.metadata.isPublished,
@@ -48,10 +48,11 @@ class PublishSystray extends Component {
         this.state.processing = true;
         this.state.published = !this.state.published;
         const { metadata: { mainObject } } = this.website.currentWebsite;
-        return rpc('/website/publish', {
-            id: mainObject.id,
-            object: mainObject.model,
-        }).then(
+        return this.orm.call(
+            mainObject.model,
+            "website_publish_button",
+            [[mainObject.id]],
+        ).then(
             published => {
                 this.state.published = published;
                 this.state.processing = false;
