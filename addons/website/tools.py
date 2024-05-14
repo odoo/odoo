@@ -51,7 +51,6 @@ def MockRequest(
         redirect=env['ir.http']._redirect,
         session=DotDict(
             odoo.http.get_default_session(),
-            geoip={'country_code': country_code},
             sale_order_id=sale_order_id,
             website_sale_current_pl=website_sale_current_pl,
             context={'lang': ''},
@@ -71,6 +70,8 @@ def MockRequest(
         request.httprequest.url = werkzeug.urls.url_join(url_root, path)
     if website:
         request.website_routing = website.id
+    if country_code:
+        request.geoip._city_record = odoo.http.geoip2.models.City({'country': {'iso_code': country_code}})
 
     # The following code mocks match() to return a fake rule with a fake
     # 'routing' attribute (routing=True) or to raise a NotFound
