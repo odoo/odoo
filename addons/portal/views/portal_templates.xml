@@ -177,7 +177,6 @@
                         </div>
                         <div class="row justify-content-between">
                             <div t-attf-class="o_portal_content col-12 col-lg-8 mb-5">
-                                <span>Hello world !!!!</span>
                                 <t t-out="0"/>
                             </div>
                             <div class="d-none d-lg-flex justify-content-end col-lg-4">
@@ -832,20 +831,29 @@
             <div class="o_my_contact" t-if="sales_user">
                 <t t-call="portal.portal_contact"/>
             </div>
-            <div>
-            <t t-foreach="reward_ids" t-as="reward">
-                <br/>
-                <t t-foreach="reward.program_id.coupon_ids" t-as="coupon">
-                    <span>Name:</span>
-                    <t t-out="reward.description"/>
-                    <span>| coupon Name:</span>
-                    <t t-out="coupon.description"/>
-                    <span>points:</span>
-                    <t t-out="coupon.points"/>
-                    <t t-out="coupon.point_name"/>
-                <!-- <t t-out="reward.program_id.coupon_ids[0].name"/> -->
+            <div id="o_modal_test_selector">
+
+                <t t-foreach="reward_ids" t-as="reward">
+                    <br/>
+                    <t t-foreach="reward.program_id.coupon_ids" t-as="coupon">
+                        <button
+                            class="btn btn-primary o_modal_test_event_click w-100"
+                            t-att-data-reward-id="reward.id"
+                            t-att-data-title="coupon.description"
+                            t-att-data-points="coupon.points"
+                            t-att-data-point-name="coupon.point_name"
+                        >
+                            <t t-out="coupon.description"/>
+                            <t t-out="coupon.history_id"/>
+                        </button>
+                        <!-- <t t-out="reward.description"/>
+                        <span>| coupon Name:</span> -->
+                        <span>points:</span>
+                        <t t-out="coupon.points"/>
+                        <t t-out="coupon.point_name"/>
+                        <br/>
+                    </t>
                 </t>
-            </t>
             </div>
         </div>
     </template>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="portal_loyalty_modal.LoyaltyModal">
+        <Dialog title="title" points="points" pointName="pointName">
+            <!-- <t t-set-slot="header">
+                <t t-call="web.Dialog.header">
+                    <span>A QUE COIUCOUC</span>
+                    <t t-set="fullscreen" t-value="false"/>
+                </t>
+                <span>Nieu </span>
+            </t> -->
+            <span>A que coucou BOB !</span>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="topUpNow">
+                    Top Up Now !!
+                </button>
+            </t>
+        </Dialog>
+    </t>
+
+    <t
+        t-name="web.Dialog.LoyaltyModal.header"
+        t-inherit="web.Dialog.header"
+        t-inherit-mode="extension"
+    >
+        <xpath expr="//h4[hasclass('modal-title')]" position="before">
+            <img src="https://cdn-icons-png.freepik.com/512/3757/3757881.png" width="100"/>
+        </xpath>
+        <xpath expr="//h4[hasclass('modal-title')]" position="after">
+            <div style="font-size: 3rem; right: 0; left: auto ;text-align: right">
+                <t t-esc="props.points"/>
+                <t t-esc="props.pointName"/>
+            </div>
+        </xpath>
+        <xpath expr="//button[hasclass('btn-close')]" position="attributes">
+            <attribute name="style">margin: 0</attribute>
+        </xpath>
+    </t>
+</templates>
