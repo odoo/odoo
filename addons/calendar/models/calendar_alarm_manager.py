@@ -180,6 +180,9 @@ class AlarmManager(models.AbstractModel):
         if not events_by_alarm:
             return
 
+        # force_send limit should apply to the total nb of attendees, not per alarm
+        force_send_limit = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail_force_send_limit', 100))
+
         event_ids = list(set(event_id for event_ids in events_by_alarm.values() for event_id in event_ids))
         events = self.env['calendar.event'].browse(event_ids)
         attendees = events.attendee_ids.filtered(lambda a: a.state != 'declined')
@@ -190,7 +193,7 @@ class AlarmManager(models.AbstractModel):
                 calendar_template_ignore_recurrence=True
             )._send_mail_to_attendees(
                 alarm.mail_template_id,
-                force_send=True
+                force_send=len(attendees) <= force_send_limit
             )
 
         for event in events:
