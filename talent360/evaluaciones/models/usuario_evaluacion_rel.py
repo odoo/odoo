@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-import secrets, logging
+import secrets
 
 
 class UsuarioEvaluacionRel(models.Model):
@@ -51,9 +51,10 @@ class UsuarioEvaluacionRel(models.Model):
 
     usuario_externo_id = fields.Many2one("usuario.externo", string="Usuario Externo")
 
-    @api.onchange("contestada")
+    # @api.depends("contestada")
     def _onchange_contestada(self):
         """Método para actualizar el porcentaje de respuestas de la evaluación."""
+        
         self.evaluacion_id._compute_porcentaje_respuestas()
 
     def action_get_estado(self, usuario_id, evaluacion_id, token):
@@ -97,6 +98,7 @@ class UsuarioEvaluacionRel(models.Model):
             )
 
         usuario_evaluacion.write({"contestada": "contestada"})
+        usuario_evaluacion._onchange_contestada()
 
     def enviar_evaluacion_action(self, evaluacion_id):
         """
@@ -127,7 +129,6 @@ class UsuarioEvaluacionRel(models.Model):
                     correo = usuario.usuario_externo_id.email
                     nombre = usuario.usuario_externo_id.nombre
                 else:
-                    logging.error("No se encontró un usuario asociado")
                     raise ValueError("No se encontró un usuario asociado")
                     
                 usuario.write({
@@ -149,7 +150,6 @@ class UsuarioEvaluacionRel(models.Model):
                 }
 
                 lista_mails.append(mail)
-                logging.info(f"Nombre:{nombre}\nCorreo:{correo}\nURL: {evaluacion_url}")
         
         self.env["mail.mail"].create(lista_mails)
     
