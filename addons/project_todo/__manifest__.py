@@ -21,7 +21,6 @@
     ],
     'installable': True,
     'application': True,
-    'uninstall_hook': '_todo_uninstall',
     'assets': {
         'web.assets_backend': [
             'project_todo/static/src/components/**/*',
