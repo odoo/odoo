@@ -703,7 +703,8 @@ class Meeting(models.Model):
         if 'partner_ids' in values:
             # we send to all partners and not only the new ones
             (current_attendees - previous_attendees)._send_mail_to_attendees(
-                self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False)
+                self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False),
+                force_send=True,
             )
         if not self.env.context.get('is_calendar_event_new') and 'start' in values:
             start_date = fields.Datetime.to_datetime(values.get('start'))
@@ -712,7 +713,8 @@ class Meeting(models.Model):
                 (current_attendees & previous_attendees).with_context(
                     calendar_template_ignore_recurrence=not update_recurrence
                 )._send_mail_to_attendees(
-                    self.env.ref('calendar.calendar_template_meeting_changedate', raise_if_not_found=False)
+                    self.env.ref('calendar.calendar_template_meeting_changedate', raise_if_not_found=False),
+                    force_send=True,
                 )
 
         return True
@@ -888,10 +890,9 @@ class Meeting(models.Model):
     def action_sendmail(self):
         email = self.env.user.email
         if email:
-            for meeting in self:
-                meeting.attendee_ids._send_mail_to_attendees(
-                    self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False)
-                )
+            self.attendee_ids._send_mail_to_attendees(
+                self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False),
+            )
         return True
 
     def action_open_composer(self):
@@ -967,6 +968,10 @@ class Meeting(models.Model):
     # ------------------------------------------------------------
     # MAILING
     # ------------------------------------------------------------
+
+    def _skip_send_mail_status_update(self):
+        """Overridable getter to identify whether to send invitation/cancelation emails."""
+        return False
 
     def _get_attendee_emails(self):
         """ Get comma-separated attendee email addresses. """

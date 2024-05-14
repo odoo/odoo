@@ -14,7 +14,7 @@ import pytz
 from collections import defaultdict
 from dateutil.parser import parse
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, registry, SUPERUSER_ID
 from odoo import tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 
@@ -565,6 +565,27 @@ class MailMail(models.Model):
         for (mail_server_id, alias_domain_id, smtp_from), record_ids in group_per_smtp_from.items():
             for batch_ids in tools.split_every(batch_size, record_ids):
                 yield mail_server_id, alias_domain_id, smtp_from, batch_ids
+
+    def send_after_commit(self):
+        """Queues the email to be sent after the commit of the current cursor.
+
+        Useful to send an email only if a transaction is successful.
+        """
+        # send immediately on same cursor when testing as we don't want
+        # to actually commit during tests
+        if getattr(threading.current_thread(), 'testing', False):
+            self.send()
+
+        email_ids = self.ids
+        dbname = self.env.cr.dbname
+        _context = self.env.context
+
+        @self.env.cr.postcommit.add
+        def send_emails_with_new_cursor():
+            db_registry = registry(dbname)
+            with db_registry.cursor() as cr:
+                env = api.Environment(cr, SUPERUSER_ID, _context)
+                env['mail.mail'].browse(email_ids).send()
 
     def send(self, auto_commit=False, raise_exception=False):
         """ Sends the selected emails immediately, ignoring their current
