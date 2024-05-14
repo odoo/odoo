@@ -44,7 +44,7 @@
                 <field name="product_category_id" column_invisible="True"/>
                 <field name="product_tmpl_id" column_invisible="True"/>
                 <field name="unwanted_replenish" column_invisible="True"/>
-                <field name="product_id" readonly="product_id" force_save="1" context="{'default_detailed_type': 'product'}"/>
+                <field name="product_id" readonly="product_id" force_save="1" context="{'default_is_storable': True}"/>
                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                 <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide"/>
                 <field name="qty_on_hand" force_save="1"/>

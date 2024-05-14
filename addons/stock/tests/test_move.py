@@ -43,18 +43,18 @@ class StockMove(TransactionCase):
         cls.uom_dozen = cls.env.ref('uom.product_uom_dozen')
         cls.product = cls.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
         cls.product_serial = cls.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
         cls.product_lot = cls.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'lot',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
@@ -260,7 +260,7 @@ class StockMove(TransactionCase):
         """
         # make some stock
 
-        self.product.type = 'consu'
+        self.product.is_storable = False
         self.assertEqual(len(self.gather_relevant(self.product, self.stock_location)), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0.0)
 
@@ -306,9 +306,9 @@ class StockMove(TransactionCase):
         Ensure the state is correct
         """
         productA, productB, productC = self.env['product.product'].create([
-            {'name': 'Product A', 'type': 'product'},
-            {'name': 'Product B', 'type': 'product'},
-            {'name': 'Product C (out of stock)', 'type': 'product'},
+            {'name': 'Product A', 'is_storable': True},
+            {'name': 'Product B', 'is_storable': True},
+            {'name': 'Product C (out of stock)', 'is_storable': True},
         ])
         # make some stock
         self.env['stock.quant']._update_available_quantity(productA, self.stock_location, 1)
@@ -1397,7 +1397,7 @@ class StockMove(TransactionCase):
         # create a different product and its quant
         product2 = self.env['product.product'].create({
             'name': 'Product 2',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.env['stock.quant'].create({
@@ -1791,7 +1791,7 @@ class StockMove(TransactionCase):
 
         product2 = self.env['product.product'].create({
             'name': 'Product 2',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
 
@@ -3362,12 +3362,12 @@ class StockMove(TransactionCase):
     def test_use_unreserved_move_line_4(self):
         product_01 = self.env['product.product'].create({
             'name': 'Product 01',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         product_02 = self.env['product.product'].create({
             'name': 'Product 02',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.env['stock.quant']._update_available_quantity(product_01, self.stock_location, 1)
@@ -4446,7 +4446,7 @@ class StockMove(TransactionCase):
         """
         product5 = self.env['product.product'].create({
             'name': 'Product 5',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
 
@@ -5019,7 +5019,7 @@ class StockMove(TransactionCase):
         product01 = self.product
         product02 = self.env['product.product'].create({
             'name': 'SuperProduct',
-            'type': 'product',
+            'is_storable': True,
         })
 
         self.env['stock.quant']._update_available_quantity(product01, self.stock_location, 3)
@@ -5489,6 +5489,7 @@ class StockMove(TransactionCase):
             - switching from a stockable product when qty_available is not zero
             - switching the product type when there are already done moves
         """
+        self.product.is_storable = False
         move_in = self.env['stock.move'].create({
             'name': 'test_customer',
             'location_id': self.customer_location.id,
@@ -5503,14 +5504,17 @@ class StockMove(TransactionCase):
 
         # Check raise UserError(_("You can not change the type of a product that is currently reserved on a stock
         with self.assertRaises(UserError):
-            self.product.detailed_type = 'consu'
+            self.product.is_storable = True
         move_in._action_cancel()
 
+        self.product.is_storable = True
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10)
+        # cache corruption
+        self.product.qty_available = 10
 
         # Check raise UserError(_("Available quantity should be set to zero before changing detailed_type"))
         with self.assertRaises(UserError):
-            self.product.detailed_type = 'consu'
+            self.product.is_storable = False
 
         move_out = self.env['stock.move'].create({
             'name': 'test_customer',
@@ -5529,7 +5533,7 @@ class StockMove(TransactionCase):
 
         # Check raise UserError(_("You can not change the type of a product that was already used."))
         with self.assertRaises(UserError):
-            self.product.detailed_type = 'consu'
+            self.product.is_storable = False
 
         move2 = self.env['stock.move'].create({
             'name': 'test_customer',
@@ -5545,10 +5549,10 @@ class StockMove(TransactionCase):
         move2._action_assign()
 
         with self.assertRaises(UserError):
-            self.product.detailed_type = 'consu'
+            self.product.is_storable = False
         move2._action_cancel()
         with self.assertRaises(UserError):
-            self.product.detailed_type = 'consu'
+            self.product.is_storable = False
 
     def test_edit_done_picking_1(self):
         """ Add a new move line in a done picking should generate an
@@ -5640,7 +5644,7 @@ class StockMove(TransactionCase):
         """
         product1 = self.env['product.product'].create({
             'name': 'Product B',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1)
@@ -5688,7 +5692,7 @@ class StockMove(TransactionCase):
         """
         product1 = self.env['product.product'].create({
             'name': 'Product B',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1)
@@ -5741,12 +5745,12 @@ class StockMove(TransactionCase):
         # Creates two other products.
         product2 = self.env['product.product'].create({
             'name': 'Product B',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         product3 = self.env['product.product'].create({
             'name': 'Product C',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         # Adds some quantity on stock.
@@ -6178,7 +6182,7 @@ class StockMove(TransactionCase):
         # create product
         product = self.env['product.product'].create({
             'name': 'Product In Units',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         # make some stock
@@ -6274,7 +6278,7 @@ class StockMove(TransactionCase):
         uom_kg = self.env.ref('uom.product_uom_kgm')
         product1 = self.env['product.product'].create({
             'name': 'product1',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_kg.id,
             'uom_po_id': uom_kg.id
         })

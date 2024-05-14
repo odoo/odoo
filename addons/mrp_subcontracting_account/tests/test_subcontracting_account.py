@@ -539,7 +539,7 @@ class TestBomPriceSubcontracting(TestBomPriceCommon):
         })
         product = self.env['product.product'].create({
             'name': 'product',
-            'type': 'product',
+            'is_storable': True,
             'standard_price': 100,
             'company_id': self.env.company.id,
         })

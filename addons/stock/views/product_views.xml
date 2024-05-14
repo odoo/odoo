@@ -42,8 +42,8 @@
             <field name="inherit_id" ref="product.product_product_tree_view"/>
             <field name="arch" type="xml">
                 <field name="type" position="after">
-                    <field name="qty_available" invisible="type != 'product'" string="On Hand" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1" groups="stock.group_stock_user"/>
-                    <field name="virtual_available" invisible="type != 'product'" string="Forecasted" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" groups="stock.group_stock_user"/>
+                    <field name="qty_available" invisible="not is_storable" string="On Hand" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1" groups="stock.group_stock_user"/>
+                    <field name="virtual_available" invisible="not is_storable" string="Forecasted" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" groups="stock.group_stock_user"/>
                 </field>
             </field>
         </record>
@@ -103,6 +103,13 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='detailed_type']" position="after">
+                    <label for="is_storable" class="oe_inline" invisible="type != 'consu'"/>
+                    <div class="o_row w-100" invisible="type != 'consu'">
+                        <field name="is_storable"/>
+                        <field name="tracking" invisible="not is_storable" groups="stock.group_production_lot"/>
+                    </div>
+                </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
                     <label for="sale_delay" invisible="not sale_ok"/>
                     <div invisible="not sale_ok">
@@ -116,16 +123,14 @@
                         <div>
                             <field name="route_ids" class="mb-0" widget="many2many_checkboxes" invisible="not has_available_route_ids or type == 'service'"/>
                             <button id="stock.view_diagram_button" string="View Diagram" type="action" name="%(action_open_routes)d" icon="oi-arrow-right"
-                                 invisible="type not in ['product', 'consu']"
+                                 invisible="type != 'consu'"
                                  class="btn btn-link pt-0" context="{'default_product_tmpl_id': id}"/>
                         </div>
                         <field name="route_from_categ_ids" widget="many2many_tags" invisible="not route_from_categ_ids"/>
                     </group>
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="after">
-                    <group string="Traceability" name="traceability" groups="stock.group_production_lot"
-                           invisible="type == 'consu'">
-                        <field name="tracking" widget="radio" invisible="type == 'service'"/>
+                    <group string="Traceability" name="traceability" groups="stock.group_production_lot" invisible="1">
                     </group>
                      <group string="Counterpart Locations" name="stock_property" groups="base.group_no_one">
                         <field name="property_stock_production"/>
@@ -218,12 +223,12 @@
                 <xpath expr="//header/button" position="before">
                     <button string="Update Quantity" type="object"
                         name="action_update_quantity_on_hand"
-                        invisible="type != 'product'"/>
+                        invisible="not is_storable"/>
                     <button string="Replenish" type="action"
                         name="%(action_product_replenish)d"
                         context="{'default_product_id': id}"
                         groups="stock.group_stock_user"
-                        invisible="type not in ['consu', 'product']"/>
+                        invisible="type != 'consu'"/>
                 </xpath>
                 <div name="button_box" position="inside">
                     <button string="Putaway Rules" type="object"
@@ -241,10 +246,10 @@
             <field name="inherit_id" ref="product.product_view_kanban_catalog"/>
             <field name="arch" type="xml">
                 <field name="default_code" invisible="1" position="after">
-                    <field name="detailed_type" invisible="1"/>
+                    <field name="is_storable" invisible="1"/>
                 </field>
                 <div name="o_kanban_price" position="after">
-                    <div t-if="record.detailed_type.raw_value == 'product'"
+                    <div t-if="record.is_storable.raw_value"
                          name="o_kanban_qty_available">
                         <span>On Hand: </span>
                         <field name="qty_available"/>
@@ -267,12 +272,12 @@
                     <xpath expr="//header/button" position="before">
                         <button string="Update Quantity" type="object"
                             name="action_update_quantity_on_hand"
-                            invisible="type != 'product'"/>
+                            invisible="not is_storable"/>
                         <button string="Replenish" type="action"
                             name="%(action_product_replenish)d"
                             context="{'default_product_id': id}"
                             groups="stock.group_stock_user"
-                            invisible="type not in ['consu', 'product']"/>
+                            invisible="type != 'consu'"/>
                     </xpath>
                     <div name="button_box" position="inside">
                         <t groups="stock.group_stock_user">
@@ -308,7 +313,7 @@
                             </button>
                             <button type="object"
                                 name= "action_view_stock_move_lines"
-                                invisible="type not in ['product', 'consu']"
+                                invisible="type != 'consu'"
                                 class="oe_stat_button" icon="fa-exchange"
                                 groups="stock.group_stock_user">
                                 <div class="d-flex flex-column">
@@ -323,7 +328,7 @@
                                 </div>
                             </button>
                             <button name="action_view_orderpoints" type="object"
-                                invisible="type not in ['product', 'consu'] or nbr_reordering_rules != 1"
+                                invisible="type != 'consu' or nbr_reordering_rules != 1"
                                 class="oe_stat_button" icon="fa-refresh">
                                 <div class="d-flex flex-column">
                                     <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
@@ -338,7 +343,7 @@
                             </button>
                             <button type="object"
                                 name="action_view_orderpoints"
-                                invisible="type != 'product' or nbr_reordering_rules == 1"
+                                invisible="not is_storable or nbr_reordering_rules == 1"
                                 class="oe_stat_button" icon="fa-refresh">
                                 <field name="nbr_reordering_rules" widget="statinfo"/>
                             </button>
@@ -390,12 +395,12 @@
                     <xpath expr="//header/button" position="before">
                         <button string="Update Quantity" type="object"
                             name="action_update_quantity_on_hand"
-                            invisible="type != 'product'"/>
+                            invisible="not is_storable"/>
                         <button string="Replenish" type="action"
                             name="%(action_product_replenish)d"
                             context="{'default_product_tmpl_id': id}"
                             groups="stock.group_stock_user"
-                            invisible="type not in ['consu', 'product']"/>
+                            invisible="type != 'consu'"/>
                     </xpath>
                     <button name="action_open_documents" position="before">
                         <t groups="stock.group_stock_user">
@@ -433,7 +438,7 @@
                         <t groups="stock.group_stock_user">
                             <button type="object"
                                 name="action_view_orderpoints"
-                                invisible="type != 'product' or nbr_reordering_rules != 1"
+                                invisible="not is_storable or nbr_reordering_rules != 1"
                                 class="oe_stat_button" icon="fa-refresh">
                                 <div class="d-flex flex-column">
                                     <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
@@ -448,14 +453,14 @@
                             </button>
                             <button type="object"
                                 name="action_view_orderpoints"
-                                invisible="type != 'product' or nbr_reordering_rules == 1"
+                                invisible="not is_storable or nbr_reordering_rules == 1"
                                 class="oe_stat_button"
                                 icon="fa-refresh">
                                 <field name="nbr_reordering_rules" widget="statinfo"/>
                             </button>
                             <button type="object"
                                 name= "action_view_stock_move_lines"
-                                invisible="type not in ['product', 'consu']"
+                                invisible="type != 'consu'"
                                 class="oe_stat_button" icon="fa-exchange"
                                 groups="stock.group_stock_user">
                                 <div class="d-flex flex-column">
@@ -558,7 +563,7 @@
                 <filter name="services" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </filter>
-                <filter name="consumable" position="attributes">
+                <filter name="goods" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </filter>
                 <filter name="real_stock_negative" position="after">
@@ -576,8 +581,8 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="product_product_stock_tree"/>
             <field name="search_view_id" ref="product_search_form_view_stock_report"/>
-            <field name="context">{'default_detailed_type': 'product'}</field>
-            <field name="domain">[('detailed_type', '=', 'product')]</field>
+            <field name="context">{'default_is_storable': True}</field>
+            <field name="domain">[('is_storable', '=', True)]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No stock to show
@@ -593,7 +598,7 @@
             <field name="res_model">product.template</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="product_template_search_form_view_stock"/>
-            <field name="context">{"search_default_consumable": 1, 'default_detailed_type': 'product'}</field>
+            <field name="context">{"search_default_goods": 1, 'default_is_storable': True}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No product found. Let's create one!

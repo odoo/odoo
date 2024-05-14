@@ -95,7 +95,7 @@ class ReportBomStructure(models.AbstractModel):
     @api.model
     def _get_quantities_info(self, product, bom_uom, product_info, parent_bom=False, parent_product=False):
         quantities_info = super()._get_quantities_info(product, bom_uom, product_info, parent_bom, parent_product)
-        if parent_product and parent_bom and parent_bom.type == 'subcontract' and product.type == 'product':
+        if parent_product and parent_bom and parent_bom.type == 'subcontract' and product.is_storable:
             route_info = product_info.get(parent_product.id, {}).get(parent_bom.id, {})
             if route_info and route_info['route_type'] == 'subcontract':
                 subcontracting_loc = route_info['supplier'].partner_id.property_stock_subcontractor

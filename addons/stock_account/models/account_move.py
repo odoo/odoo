@@ -257,7 +257,7 @@ class AccountMoveLine(models.Model):
 
     def _eligible_for_cogs(self):
         self.ensure_one()
-        return self.product_id.type == 'product' and self.product_id.valuation == 'real_time'
+        return self.product_id.is_storable and self.product_id.valuation == 'real_time'
 
     def _get_gross_unit_price(self):
         if float_is_zero(self.quantity, precision_rounding=self.product_uom_id.rounding):

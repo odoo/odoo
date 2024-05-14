@@ -21,14 +21,14 @@
             </group>
             <field name="product_tooltip" position="after">
                 <label for="product_tooltip" string=""
-                    invisible="type not in ('product', 'consu') or invoice_policy != 'order'"/>
-                <div invisible="type not in ('product', 'consu') or invoice_policy != 'order'"
+                    invisible="type != 'consu' or invoice_policy != 'order'"/>
+                <div invisible="type != 'consu' or invoice_policy != 'order'"
                     class="fst-italic text-muted">
                     You can invoice them before they are delivered.
                 </div>
                 <label for="product_tooltip" string=""
-                    invisible="type not in ('product', 'consu') or invoice_policy != 'delivery'"/>
-                <div invisible="type not in ('product', 'consu') or invoice_policy != 'delivery'"
+                    invisible="type != 'consu' or invoice_policy != 'delivery'"/>
+                <div invisible="type != 'consu' or invoice_policy != 'delivery'"
                     class="fst-italic text-muted">
                     Invoice after delivery, based on quantities delivered, not ordered.
                 </div>
@@ -132,7 +132,7 @@
         <field name="inherit_id" ref="product.product_view_search_catalog"/>
         <field name="model">product.product</field>
         <field name="arch" type="xml">
-            <filter name="products" position="after">
+            <filter name="goods" position="after">
                 <filter string="In the Order"
                         invisible="context.get('active_model', '') != 'sale.order.line'"
                         name="products_in_order"

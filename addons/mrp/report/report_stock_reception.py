@@ -23,7 +23,7 @@ class ReceptionReport(models.AbstractModel):
 
     def _get_moves(self, docs):
         if self.env.context.get('default_production_ids'):
-            return docs.move_finished_ids.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel')
+            return docs.move_finished_ids.filtered(lambda m: m.product_id.is_storable and m.state != 'cancel')
         return super()._get_moves(docs)
 
     def _get_extra_domain(self, docs):

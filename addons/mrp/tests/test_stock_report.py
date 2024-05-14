@@ -17,15 +17,15 @@ class TestMrpStockReports(TestReportsCommon):
         })
         product_chococake = self.env['product.product'].create({
             'name': 'Choco Cake',
-            'type': 'product',
+            'is_storable': True,
         })
         product_double_chococake = self.env['product.product'].create({
             'name': 'Double Choco Cake',
-            'type': 'product',
+            'is_storable': True,
         })
         byproduct = self.env['product.product'].create({
             'name': 'by-product',
-            'type': 'product',
+            'is_storable': True,
         })
 
         # Creates two BOM: one creating a regular slime, one using regular slimes.
@@ -114,7 +114,7 @@ class TestMrpStockReports(TestReportsCommon):
         # Configures a product.
         product_apple_pie = self.env['product.product'].create({
             'name': 'Apple Pie',
-            'type': 'product',
+            'is_storable': True,
         })
         product_apple = self.env['product.product'].create({
             'name': 'Apple',
@@ -176,7 +176,7 @@ class TestMrpStockReports(TestReportsCommon):
         """
         product_banana = self.env['product.product'].create({
             'name': 'Banana',
-            'type': 'product',
+            'is_storable': True,
         })
         product_chocolate = self.env['product.product'].create({
             'name': 'Chocolate',

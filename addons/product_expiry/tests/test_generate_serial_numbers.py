@@ -17,7 +17,7 @@ class TestStockLot(StockGenerateCommon):
         product_lot = self.env['product.product'].create({
             'name': 'Tracked by Lot Numbers',
             'tracking': 'lot',
-            'type': 'product',
+            'is_storable': True,
             'use_expiration_date': True,
         })
         user_lang = self.env['res.lang'].browse([get_lang(self.env).id])
@@ -65,7 +65,7 @@ class TestStockLot(StockGenerateCommon):
         product_lot = self.env['product.product'].create({
             'name': 'Tracked by Lot Numbers',
             'tracking': 'lot',
-            'type': 'product',
+            'is_storable': True,
         })
         user_lang = self.env['res.lang'].browse([get_lang(self.env).id])
         # Try first with the "day/month/year" date format.
@@ -93,7 +93,7 @@ class TestStockLot(StockGenerateCommon):
         product_lot = self.env['product.product'].create({
             'name': 'Tracked by Lot Numbers',
             'tracking': 'lot',
-            'type': 'product',
+            'is_storable': True,
             'use_expiration_date': True,
         })
         user_lang = self.env['res.lang'].browse([get_lang(self.env).id])
@@ -139,7 +139,7 @@ class TestStockLot(StockGenerateCommon):
         product_lot = self.env['product.product'].create({
             'name': 'Tracked by Lot Numbers',
             'tracking': 'lot',
-            'type': 'product',
+            'is_storable': True,
             'use_expiration_date': True,
         })
         list_lot_and_qty = [
@@ -165,7 +165,7 @@ class TestStockLot(StockGenerateCommon):
         product_lot = self.env['product.product'].create({
             'name': 'Tracked by Lot Numbers',
             'tracking': 'lot',
-            'type': 'product',
+            'is_storable': True,
             'use_expiration_date': True,
         })
         list_lot_and_qty = [
@@ -221,7 +221,7 @@ class TestStockLot(StockGenerateCommon):
         product_lot = self.env['product.product'].create({
             'name': 'Tracked by Lot Numbers',
             'tracking': 'lot',
-            'type': 'product',
+            'is_storable': True,
             'use_expiration_date': True,
         })
         user_lang = self.env['res.lang'].browse([get_lang(self.env).id])

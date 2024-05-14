@@ -18,7 +18,7 @@ class TestWebsiteSaleStockProductConfigurator(TestProductConfiguratorCommon, Htt
             'show_availability': True,
             'available_threshold': 5000,
             'allow_out_of_stock_order': False,
-            'type':'product',
+            'is_storable': True,
         })
         self.product_product_conf_chair.website_published = True
         self.env['stock.quant'].create({
@@ -37,7 +37,7 @@ class TestWebsiteSaleStockProductConfigurator(TestProductConfiguratorCommon, Htt
             'show_availability': True,
             'available_threshold': 5000,
             'allow_out_of_stock_order': False,
-            'detailed_type':'product',
+            'is_storable': True,
         })
         self.env['stock.quant'].create({
             'product_id': product_product_without_options.id,

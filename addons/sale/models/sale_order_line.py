@@ -1083,7 +1083,7 @@ class SaleOrderLine(models.Model):
                     old_qty=line.product_uom_qty,
                     new_qty=values["product_uom_qty"]
                 ) + Markup("<br/>")
-                if line.product_id.type in ('consu', 'product'):
+                if line.product_id.type == 'consu':
                     msg += _("Delivered Quantity: %s", line.qty_delivered) + Markup("<br/>")
                 msg += _("Invoiced Quantity: %s", line.qty_invoiced) + Markup("<br/>")
             msg += Markup("</ul>")

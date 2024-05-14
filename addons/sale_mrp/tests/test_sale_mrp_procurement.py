@@ -40,7 +40,7 @@ class TestSaleMrpProcurement(TransactionCase):
         product.categ_id = product_category_allproductssellable0
         product.list_price = 200.0
         product.name = 'Slider Mobile'
-        product.detailed_type = 'product'
+        product.is_storable = True
         product.uom_id = uom_unit
         product.uom_po_id = uom_unit
         product.route_ids.clear()
@@ -102,7 +102,7 @@ class TestSaleMrpProcurement(TransactionCase):
         # Create raw product for manufactured product
         product_form = Form(self.env['product.product'])
         product_form.name = 'Raw Stick'
-        product_form.detailed_type = 'product'
+        product_form.is_storable = True
         product_form.uom_id = self.uom_unit
         product_form.uom_po_id = self.uom_unit
         self.raw_product = product_form.save()
@@ -112,7 +112,7 @@ class TestSaleMrpProcurement(TransactionCase):
         product_form.name = 'Stick'
         product_form.uom_id = self.uom_unit
         product_form.uom_po_id = self.uom_unit
-        product_form.detailed_type = 'product'
+        product_form.is_storable = True
         product_form.route_ids.clear()
         product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
         product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
@@ -121,7 +121,7 @@ class TestSaleMrpProcurement(TransactionCase):
         # Create manifactured product which uses another manifactured
         product_form = Form(self.env['product.product'])
         product_form.name = 'Arrow'
-        product_form.detailed_type = 'product'
+        product_form.is_storable = True
         product_form.route_ids.clear()
         product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
         product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
@@ -130,7 +130,7 @@ class TestSaleMrpProcurement(TransactionCase):
         ## Create raw product for manufactured product
         product_form = Form(self.env['product.product'])
         product_form.name = 'Raw Iron'
-        product_form.detailed_type = 'product'
+        product_form.is_storable = True
         product_form.uom_id = self.uom_unit
         product_form.uom_po_id = self.uom_unit
         self.raw_product_2 = product_form.save()
@@ -202,7 +202,7 @@ class TestSaleMrpProcurement(TransactionCase):
 
         product, component = self.env['product.product'].create([{
             'name': 'Finished',
-            'type': 'product',
+            'is_storable': True,
             'route_ids': [(6, 0, manufacture_route.ids)],
         }, {
             'name': 'Component',
@@ -249,7 +249,7 @@ class TestSaleMrpProcurement(TransactionCase):
     def test_so_reordering_rule(self):
         kit_1, component_1 = self.env['product.product'].create([{
             'name': n,
-            'type': 'product',
+            'is_storable': True,
         } for n in ['Kit 1', 'Compo 1']])
 
         self.env['mrp.bom'].create([{
@@ -293,7 +293,7 @@ class TestSaleMrpProcurement(TransactionCase):
 
         product, component = self.env['product.product'].create([{
             'name': 'Finished',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_kg.id,
             'uom_po_id': uom_kg.id,
             'route_ids': [(6, 0, manufacture_route.ids)],

@@ -19,7 +19,7 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//filter[@name='consumable']" position="after">
+                <xpath expr="//filter[@name='goods']" position="after">
                     <separator/>
                     <filter string="Manufactured Products" name="manufactured_products" domain="[('bom_ids', '!=', False)]"/>
                     <filter string="BoM Components" name="components" domain="[('bom_line_ids', '!=', False)]"/>
@@ -33,7 +33,7 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//filter[@name='consumable']" position="after">
+                <xpath expr="//filter[@name='goods']" position="after">
                     <separator/>
                     <filter string="Manufactured Products" name="manufactured_products" domain="[('bom_ids', '!=', False)]"/>
                     <filter string="BoM Components" name="components" domain="[('bom_line_ids', '!=', False)]"/>
@@ -46,7 +46,7 @@
             <field name="res_model">product.template</field>
             <field name="search_view_id" ref="mrp_product_template_search_view"/>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="context">{"search_default_consumable": 1, 'default_detailed_type': 'product'}</field>
+            <field name="context">{"search_default_goods": 1, 'default_is_storable': True}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 No product found. Let's create one!
@@ -82,19 +82,19 @@
                 <button name="action_open_documents" position="before">
                     <button class="oe_stat_button" name="%(template_open_bom)d" type="action"
                         groups="mrp.group_mrp_user"
-                        invisible="type not in ['product', 'consu']" icon="fa-flask">
+                        invisible="type != 'consu'" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
                 </button>
                 <button name="action_open_documents" position="after">
                     <button class="oe_stat_button" name="action_used_in_bom" type="object"
                         groups="mrp.group_mrp_user"
-                        invisible="type not in ['product', 'consu'] or used_in_bom_count == 0" icon="fa-level-up">
+                        invisible="type != 'consu' or used_in_bom_count == 0" icon="fa-level-up">
                         <field string="Used In" name="used_in_bom_count" widget="statinfo" />
                     </button>
                     <button class="oe_stat_button" name="action_view_mos" type="object"
                         groups="mrp.group_mrp_user"
-                        invisible="type not in ['product', 'consu'] or bom_count == 0 or mrp_product_qty == 0" icon="fa-list-alt" help="Manufactured in the last 365 days">
+                        invisible="type != 'consu' or bom_count == 0 or mrp_product_qty == 0" icon="fa-list-alt" help="Manufactured in the last 365 days">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value">
                                 <field name="mrp_product_qty" widget="statinfo" nolabel="1" class="mr4"/>
@@ -115,17 +115,17 @@
                 <xpath expr="//button[@name='action_open_product_lot']" position="after">
                     <button class="oe_stat_button" name="action_view_bom" type="object"
                         groups="mrp.group_mrp_user"
-                        invisible="type not in ['product', 'consu']" icon="fa-flask">
+                        invisible="type != 'consu'" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
                     <button class="oe_stat_button" name="action_used_in_bom" type="object"
                         groups="mrp.group_mrp_user"
-                        invisible="type not in ['product', 'consu'] or used_in_bom_count == 0" icon="fa-level-up">
+                        invisible="type != 'consu' or used_in_bom_count == 0" icon="fa-level-up">
                         <field string="Used In" name="used_in_bom_count" widget="statinfo" />
                     </button>
                     <button class="oe_stat_button" name="action_view_mos" type="object"
                         groups="mrp.group_mrp_user"
-                        invisible="type not in ['product', 'consu'] or bom_count == 0 or mrp_product_qty == 0" icon="fa-list-alt" help="Manufactured in the last 365 days">
+                        invisible="type != 'consu' or bom_count == 0 or mrp_product_qty == 0" icon="fa-list-alt" help="Manufactured in the last 365 days">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value">
                                 <field name="mrp_product_qty" widget="statinfo" nolabel="1" class="mr4"/>

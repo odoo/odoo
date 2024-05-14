@@ -19,7 +19,7 @@ class TestMrpByProduct(common.TransactionCase):
         def create_product(name, route_ids=[]):
             return cls.env['product.product'].create({
                 'name': name,
-                'type': 'product',
+                'is_storable': True,
                 'route_ids': route_ids})
 
         # Create product A, B, C.
@@ -37,7 +37,7 @@ class TestMrpByProduct(common.TransactionCase):
             })
         cls.produced_serial = cls.env['product.product'].create({
             'name': 'Produced Serial',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
         })
         cls.sn_1 = cls.env['stock.lot'].create({
@@ -358,10 +358,10 @@ class TestMrpByProduct(common.TransactionCase):
         # Create product
         self.product_d = self.env['product.product'].create({
                 'name': 'Product D',
-                'type': 'product'})
+                'is_storable': True})
         self.product_e = self.env['product.product'].create({
                 'name': 'Product E',
-                'type': 'product'})
+                'is_storable': True})
 
         # Create byproduct
         byproduct_1 = self.env['stock.move'].create({

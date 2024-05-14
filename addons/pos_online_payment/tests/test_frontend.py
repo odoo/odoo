@@ -121,7 +121,7 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
         })
         cls.letter_tray = cls.env['product.product'].create({
             'name': 'Letter Tray',
-            'type': 'product',
+            'is_storable': True,
             'available_in_pos': True,
             'list_price': 4.8,
             'taxes_id': False,

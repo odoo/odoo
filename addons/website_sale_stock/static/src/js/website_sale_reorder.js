@@ -25,7 +25,7 @@ patch(ReorderDialog.prototype, {
 
     stockCheckCombinationInfo(product) {
         // Products that should have a max quantity available should be limited by default.
-        if (product.combinationInfo.allow_out_of_stock_order || product.type !== "product") {
+        if (product.combinationInfo.allow_out_of_stock_order || ! product.is_storable) {
             return;
         }
         product.max_quantity_available = product.combinationInfo.free_qty;

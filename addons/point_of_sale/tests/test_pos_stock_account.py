@@ -18,6 +18,7 @@ class TestPoSStock(TestPoSCommon):
         self.product3 = self.create_product('Product 3', self.categ_basic, 30.0, 15.0)
         self.product4 = self.create_product('Product 4', self.categ_anglo, 10.0, 5.0)
         self.product4.type = 'consu'
+        self.product4.is_storable = False
         # start inventory with 10 items for each product
         self.adjust_inventory([self.product1, self.product2, self.product3], [10, 10, 10])
 
@@ -273,5 +274,5 @@ class TestPoSStock(TestPoSCommon):
             self.env, 'temp_stock_manager', 'stock.group_stock_manager',
         )
         self.env['product.product'].with_user(stock_manager).create({
-            'name': 'temp', 'type': 'product', 'available_in_pos': False,
+            'name': 'temp', 'is_storable': True, 'available_in_pos': False,
         })

@@ -45,7 +45,7 @@ class TestAngloSaxonCommon(AccountTestInvoicingCommon):
             'name': 'New product',
             'standard_price': 100,
             'available_in_pos': True,
-            'type': 'product',
+            'is_storable': True,
         })
         cls.company.anglo_saxon_accounting = True
         cls.company.point_of_sale_update_stock_quantities = 'real'

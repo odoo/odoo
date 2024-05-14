@@ -112,7 +112,7 @@ class SaleOrderLine(models.Model):
                     'product_uom': line.product_uom.id,
                 }
                 new_repair_vals.extend([vals] * int(line.product_uom_qty))
-            elif line.product_id.type in ('consu', 'product'):
+            elif line.product_id.type == 'consu':
                 new_repair_vals.append({
                     **default_repair_vals,
                     'product_id': line.product_id.id,

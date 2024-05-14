@@ -20,7 +20,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         product_cable_management_box = self.env['product.product'].create({
             'default_code': 'AVG',
             'name': 'Average Ice Cream',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.stock_account_product_categ.id,
             'list_price': 100.0,
             'standard_price': 60.0,
@@ -133,7 +133,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
 
         avco_product = self.env['product.product'].create({
             'name': 'Average Ice Cream',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.stock_account_product_categ.id,
             'purchase_method': 'purchase',
         })
@@ -170,7 +170,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
 
         avco_product = self.env['product.product'].create({
             'name': 'Average Ice Cream',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': self.stock_account_product_categ.id,
             'purchase_method': 'purchase',
         })

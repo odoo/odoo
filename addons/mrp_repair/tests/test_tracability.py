@@ -104,10 +104,10 @@ class TestRepairTraceability(TestMrpCommon):
 
         finished, component = self.env['product.product'].create([{
             'name': 'Finished Product',
-            'type': 'product',
+            'is_storable': True,
         }, {
             'name': 'SN Componentt',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
         }])
 
@@ -142,10 +142,10 @@ class TestRepairTraceability(TestMrpCommon):
         """
         finished, component = self.env['product.product'].create([{
             'name': 'Finished Product',
-            'type': 'product',
+            'is_storable': True,
         }, {
             'name': 'SN Componentt',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
         }])
 
@@ -220,7 +220,7 @@ class TestRepairTraceability(TestMrpCommon):
         finished = self.bom_4.product_id
         component = self.bom_4.bom_line_ids.product_id
         component.write({
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
         })
 

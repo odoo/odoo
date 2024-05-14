@@ -26,7 +26,7 @@ class SaleOrder(models.Model):
     def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
         self.ensure_one()
         product = self.env['product.product'].browse(product_id)
-        if product.type == 'product' and not product.allow_out_of_stock_order:
+        if product.is_storable and not product.allow_out_of_stock_order:
             product_qty_in_cart, available_qty = self._get_cart_and_free_qty(
                 product, line=order_line
             )
@@ -87,7 +87,7 @@ class SaleOrder(models.Model):
     def _check_cart_is_ready_to_be_paid(self):
         values = []
         for line in self.order_line:
-            if line.product_id.type == 'product' and not line.product_id.allow_out_of_stock_order:
+            if line.product_id.is_storable and not line.product_id.allow_out_of_stock_order:
                 cart_qty, avl_qty = self._get_cart_and_free_qty(line.product_id, line=line)
                 if cart_qty > avl_qty:
                     line._set_shop_warning_stock(cart_qty, max(avl_qty, 0))
@@ -114,7 +114,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         for line in self.with_context(website_sale_stock_get_quantity=True).order_line:
             product = line.product_id
-            if product.type != 'product' or product.allow_out_of_stock_order:
+            if not product.is_storable or product.allow_out_of_stock_order:
                 continue
             free_qty = self.website_id._get_product_available_qty(product)
             if free_qty == 0:

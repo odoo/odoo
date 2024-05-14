@@ -21,7 +21,7 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             'weight': 10,
             'volume': 1,
             'categ_id': self.stock_account_product_categ.id,
-            'type': 'product',
+            'is_storable': True,
         })
 
         product_landed_cost_2 = self.env['product.product'].create({
@@ -29,7 +29,7 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             'weight': 20,
             'volume': 1.5,
             'categ_id': self.stock_account_product_categ.id,
-            'type': 'product',
+            'is_storable': True,
         })
 
         self.assertEqual(product_landed_cost_1.value_svl, 0)
