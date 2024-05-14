@@ -7,9 +7,9 @@ import lxml
 import os
 import requests
 import sys
-import tempfile
 import zipfile
 from collections import defaultdict
+from contextlib import suppress
 from io import BytesIO
 from os.path import join as opj
 
@@ -20,6 +20,8 @@ from odoo.osv.expression import is_leaf
 from odoo.release import major_version
 from odoo.tools import convert_csv_import, convert_sql_import, convert_xml_import, exception_to_unicode
 from odoo.tools import file_open, file_open_temporary_directory, ormcache
+from odoo.tools.misc import file_path
+from odoo.tools.translate import TranslationImporter
 
 _logger = logging.getLogger(__name__)
 
@@ -194,6 +196,36 @@ class IrModule(models.Model):
             'res_id': asset.id,
         } for asset in created_assets])
 
+        def get_po_paths(module_name, lang, env=None):
+            lang_base = lang.split('_')[0]
+            if lang_base == 'es' and lang != 'es_ES':
+                # force es_419 as fallback language for the spanish variations
+                if lang == 'es_419':
+                    langs = ['es_419']
+                else:
+                    langs = ['es_419', lang]
+            else:
+                langs = [lang_base, lang]
+            po_paths = [
+                opj(module_name, dir_, lang_ + '.po')
+                for lang_ in langs
+                for dir_ in ('i18n', 'i18n_extra')
+            ]
+            for path in po_paths:
+                with suppress(FileNotFoundError):
+                    yield file_path(path, env=env)
+
+        translation_importer = TranslationImporter(self.env.cr, verbose=False)
+        for lang_ in self.env['res.lang'].get_installed():
+            lang = lang_[0]
+            po_paths = get_po_paths(module, lang, env=self.env)
+            for po_path in po_paths:
+                _logger.info('module %s: loading translation file %s for language %s', module, po_path, lang)
+                translation_importer.load_file(po_path, lang)
+            if lang != 'en_US' and not po_paths:
+                _logger.info('module %s: no translation for language %s', module, lang)
+        translation_importer.save(overwrite=True)
+
         mod._update_from_terp(terp)
         _logger.info("Successfully imported module '%s'", module)
         return True
@@ -241,7 +273,8 @@ class IrModule(models.Model):
                     mod_name = filename.split('/')[0]
                     is_data_file = filename in module_data_files[mod_name]
                     is_static = filename.startswith('%s/static' % mod_name)
-                    if is_data_file or is_static:
+                    is_translation = filename.startswith('%s/i18n' % mod_name)
+                    if is_data_file or is_static or is_translation:
                         z.extract(file, module_dir)
 
                 dirs = [d for d in os.listdir(module_dir) if os.path.isdir(opj(module_dir, d))]
