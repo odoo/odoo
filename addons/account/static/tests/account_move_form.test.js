@@ -1,10 +1,8 @@
-import { AccountMove } from "./mock_server/mock_models/account_move";
-
+import { defineAccountModels } from "./account_test_helpers";
 import { test } from "@odoo/hoot";
 import {
     assertSteps,
     click,
-    defineMailModels,
     insertText,
     openFormView,
     start,
@@ -12,10 +10,9 @@ import {
     triggerHotkey,
     step,
 } from "@mail/../tests/mail_test_helpers";
-import { defineModels, onRpc } from "@web/../tests/web_test_helpers";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
-defineModels([AccountMove]);
-defineMailModels();
+defineAccountModels();
 
 test("When I switch tabs, it saves", async () => {
     const pyEnv = await startServer();
