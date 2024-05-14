@@ -46,6 +46,8 @@ class Product(models.Model):
         compute='_compute_product_website_url',
     )
 
+    hide_from_shop = fields.Boolean(compute="_compute_hide_from_shop", store=True)
+
     #=== COMPUTE METHODS ===#
 
     def _get_base_unit_price(self, price):
@@ -71,6 +73,10 @@ class Product(models.Model):
         for product in self:
             attributes = ','.join(str(x) for x in product.product_template_attribute_value_ids.product_attribute_value_id.ids)
             product.website_url = "%s#attribute_values=%s" % (product.product_tmpl_id.website_url, attributes)
+
+    def _compute_hide_from_shop(self):
+        # override this to hide specific product from show
+        self.hide_from_shop = False
 
     #=== CONSTRAINT METHODS ===#
 
@@ -136,3 +142,10 @@ class Product(models.Model):
         website = self.env['website'].get_current_website()
         return (is_product_salable and website.has_ecommerce_access()) \
                or self.env.user.has_group('base.group_system')
+
+    def _is_allow_zero_price(self):
+        """
+        Return whether this product should allow zero price or not
+        """
+        self.ensure_one()
+        return False

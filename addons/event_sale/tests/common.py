@@ -19,7 +19,7 @@ class TestEventSaleCommon(EventCase, TestSalesCommon):
             'description_sale': 'Mighty Description',
             'list_price': 10,
             'standard_price': 30.0,
-            'detailed_type': 'event',
+            'detailed_type': 'service',
         })
 
         cls.event_type_tickets = cls.env['event.type'].create({

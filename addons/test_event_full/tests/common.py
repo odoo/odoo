@@ -68,14 +68,14 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
 
         cls.ticket_product = cls.env['product.product'].create({
             'description_sale': 'Ticket Product Description',
-            'detailed_type': 'event',
+            'detailed_type': 'service',
             'list_price': 10,
             'name': 'Test Registration Product',
             'standard_price': 30.0,
         })
         cls.booth_product = cls.env['product.product'].create({
             'description_sale': 'Booth Product Description',
-            'detailed_type': 'event_booth',
+            'detailed_type': 'service',
             'list_price': 20,
             'name': 'Test Booth Product',
             'standard_price': 60.0,
@@ -319,7 +319,7 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, MockVisitor
             'description_sale': 'Mighty Description',
             'list_price': 10,
             'standard_price': 30.0,
-            'detailed_type': 'event',
+            'detailed_type': 'service',
         })
 
         self.event_tag_category_1 = self.env['event.tag.category'].create({

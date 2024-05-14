@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError
 
@@ -8,16 +5,17 @@ from odoo.exceptions import AccessError
 class Channel(models.Model):
     _inherit = 'slide.channel'
 
-    def _get_default_product_id(self):
-        product_courses = self.env['product.product'].search(
-            [('detailed_type', '=', 'course')], limit=2)
-        return product_courses.id if len(product_courses) == 1 else False
+    def _default_product_id(self):
+        return self.env.ref('website_sale_slides.default_product_course', raise_if_not_found=False)
 
     enroll = fields.Selection(selection_add=[
         ('payment', 'On payment')
     ], ondelete={'payment': lambda recs: recs.write({'enroll': 'invite'})})
-    product_id = fields.Many2one('product.product', 'Product', domain=[('detailed_type', '=', 'course')],
-                                 default=_get_default_product_id)
+    product_id = fields.Many2one('product.product',
+        'Product',
+        domain=[('detailed_type', '=', 'service')],
+        default=_default_product_id
+    )
     product_sale_revenues = fields.Monetary(
         string='Total revenues', compute='_compute_product_sale_revenues',
         groups="sales_team.group_sale_salesman")

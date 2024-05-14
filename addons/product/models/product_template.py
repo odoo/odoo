@@ -405,21 +405,10 @@ class ProductTemplate(models.Model):
             else:
                 record.product_tooltip = ""
 
-    def _detailed_type_mapping(self):
-        return {}
-
     @api.depends('detailed_type')
     def _compute_type(self):
-        type_mapping = self._detailed_type_mapping()
         for record in self:
-            record.type = type_mapping.get(record.detailed_type, record.detailed_type)
-
-    @api.constrains('type', 'detailed_type')
-    def _constrains_detailed_type(self):
-        type_mapping = self._detailed_type_mapping()
-        for record in self:
-            if record.type != type_mapping.get(record.detailed_type, record.detailed_type):
-                raise ValidationError(_("The Type of this product doesn't match the Detailed Type"))
+            record.type = record.detailed_type
 
     @api.constrains('uom_id', 'uom_po_id')
     def _check_uom(self):
@@ -452,8 +441,7 @@ class ProductTemplate(models.Model):
             if vals['type'] not in self.mapped('type'):
                 vals['detailed_type'] = vals['type']
         if 'detailed_type' in vals and 'type' not in vals:
-            type_mapping = self._detailed_type_mapping()
-            vals['type'] = type_mapping.get(vals['detailed_type'], vals['detailed_type'])
+            vals['type'] = vals['detailed_type']
 
     def _get_related_fields_variant_template(self):
         """ Return a list of fields present on template and variants models and that are related"""

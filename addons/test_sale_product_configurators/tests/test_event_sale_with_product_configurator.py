@@ -58,7 +58,7 @@ class TestEventProductConfiguratorUi(AccountTestInvoicingCommon, HttpCase):
         cls.event_product_template = cls.env['product.template'].create({
             'name': 'Registration Event (TEST variants)',
             'list_price': 30.0,
-            'detailed_type': 'event',
+            'detailed_type': 'service',
         })
 
         # Generate variants
