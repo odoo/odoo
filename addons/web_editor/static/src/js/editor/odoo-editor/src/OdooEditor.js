@@ -214,6 +214,9 @@ function getImageUrl (file) {
     });
 }
 export class OdooEditor extends EventTarget {
+
+    setup(editable, options = {}) {}
+
     constructor(editable, options = {}) {
         super();
 
@@ -685,6 +688,7 @@ export class OdooEditor extends EventTarget {
         if (editable.textContent === '' && this.options.placeholder) {
             this._makeHint(editable.firstChild, this.options.placeholder, true);
         }
+        this.setup(editable, options);
     }
     /**
      * Releases anything that was initialized.
