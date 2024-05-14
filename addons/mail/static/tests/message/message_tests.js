@@ -7,6 +7,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
+import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import {
     makeDeferred,
     nextTick,
@@ -1189,6 +1190,50 @@ QUnit.test("prevent attachment delete on non-authored message in channels", asyn
     openDiscuss(channelId);
     await contains(".o-mail-AttachmentImage");
     await contains(".o-mail-AttachmentImage div[title='Remove']", { count: 0 });
+});
+
+QUnit.test("prevent attachment delete on non-authored message in threads", async () => {
+    // admin would always be able to delete
+    patchUserWithCleanup({ isAdmin: false });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.message"].create({
+        attachment_ids: [
+            [
+                0,
+                0,
+                {
+                    mimetype: "image/jpeg",
+                    name: "BLAH",
+                    res_id: partnerId,
+                    res_model: "res.partner",
+                },
+            ],
+            [
+                0,
+                0,
+                {
+                    mimetype: "image/png",
+                    name: "BLEH",
+                    res_id: partnerId,
+                    res_model: "res.partner",
+                },
+            ],
+        ],
+        author_id: partnerId,
+        body: "<p>Test</p>",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    const { openView } = await start();
+    await openView({
+        res_id: partnerId,
+        res_model: "res.partner",
+        views: [[false, "form"]],
+    });
+    await contains(".o-mail-AttachmentImage", { count: 2 });
+    await contains(".o-mail-AttachmentImage div[title='Remove']", { count: 0 });
+    await contains(".o-mail-AttachmentImage div[title='Download']", { count: 2 });
 });
 
 QUnit.test("Toggle star should update starred counter on all tabs", async () => {
