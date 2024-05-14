@@ -88,6 +88,9 @@
     <record model="ir.rule" id="task_visibility_rule">
         <field name="name">Project/Task: employees: follow required for follower-only projects</field>
         <field name="model_id" ref="model_project_task"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
         <field name="domain_force">[
             '|',
                 '&amp;',
@@ -147,6 +150,25 @@
         <field name="name">Project: See my own personal stage</field>
         <field name="model_id" ref="project.model_project_task_stage_personal"/>
         <field name="domain_force">[('user_id', '=', user.id)]</field>
+    </record>
+
+    <record model="ir.rule" id="task_visibility_rule_project_user">
+        <field name="name">Project/Task: project users: follow required for follower-only projects</field>
+        <field name="model_id" ref="model_project_task"/>
+        <field name="perm_read" eval="False"/>
+        <field name="domain_force">[
+            '|',
+                '&amp;',
+                    ('project_id', '!=', False),
+                    '|',
+                        ('project_id.privacy_visibility', '!=', 'followers'),
+                        ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '|',
+                    ('message_partner_ids', 'in', [user.partner_id.id]),
+                    # to subscribe check access to the record, follower is not enough at creation
+                    ('user_ids', 'in', user.id)
+        ]</field>
+        <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
     </record>
 
     <record id="ir_rule_private_task" model="ir.rule">
