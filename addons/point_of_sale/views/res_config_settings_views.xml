@@ -16,6 +16,7 @@
                     <field name="pos_iface_print_via_proxy" invisible="1"/>
                     <field name="pos_company_has_template" invisible="1"/>
                     <field name="group_cash_rounding" invisible="1"/>
+                    <field name="company_country_code" invisible="1"/>
                 </t>
 
                 <app data-string="Point of sale" string="Point of Sale" name="point_of_sale" groups="point_of_sale.group_pos_manager">
@@ -207,6 +208,9 @@
                                             context="{'default_company_id': company_id, 'default_type': 'sale'}"/>
                                     </div>
                                 </div>
+                            </setting>
+                            <setting string="Closing Entry by product" id="pos_closeing_entry_by_product" help="Activate this setting to display the breakdown of sales lines by product in the automatically generated closing entry.">
+                                <field name="pos_is_closing_entry_by_product"/>
                             </setting>
                         </block>
 

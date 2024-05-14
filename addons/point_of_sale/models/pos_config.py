@@ -188,6 +188,10 @@ class PosConfig(models.Model):
     show_product_images = fields.Boolean(string="Show Product Images", help="Show product images in the Point of Sale interface.", default=True)
     show_category_images = fields.Boolean(string="Show Category Images", help="Show category images in the Point of Sale interface.", default=True)
     note_ids = fields.Many2many('pos.note', string='Note Models', help='The predefined notes of this point of sale.')
+    is_closing_entry_by_product = fields.Boolean(
+        string='Closing Entry by product',
+        default=False,
+        help="Activate this setting to display the breakdown of sales lines by product in the automatically generated closing entry.")
 
     @api.model
     def _load_pos_data_domain(self, data):

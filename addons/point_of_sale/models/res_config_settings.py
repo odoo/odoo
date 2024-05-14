@@ -111,6 +111,7 @@ class ResConfigSettings(models.TransientModel):
     pos_show_product_images = fields.Boolean(related='pos_config_id.show_product_images', readonly=False)
     pos_show_category_images = fields.Boolean(related='pos_config_id.show_category_images', readonly=False)
     pos_note_ids = fields.Many2many(related='pos_config_id.note_ids', readonly=False)
+    pos_is_closing_entry_by_product = fields.Boolean(related='pos_config_id.is_closing_entry_by_product', readonly=False)
 
     @api.model_create_multi
     def create(self, vals_list):
