@@ -1,9 +1,11 @@
 import { describe, test } from "@odoo/hoot";
+import { tick } from "@odoo/hoot-mock";
 import {
     click,
     contains,
     defineMailModels,
     openDiscuss,
+    scroll,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
@@ -47,4 +49,26 @@ test("keep separator when message is deleted", async () => {
     await click("button", { text: "Confirm" });
     await contains(".o-mail-Message", { text: "message 0", count: 0 });
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "message 1" });
+});
+
+test("separator is not shown if message is not yet loaded", async () => {
+    const pyEnv = await startServer();
+    const generalId = pyEnv["discuss.channel"].create({ name: "General" });
+    for (let i = 0; i < 60; i++) {
+        pyEnv["mail.message"].create({
+            body: `message ${i}`,
+            message_type: "comment",
+            model: "discuss.channel",
+            author_id: serverState.partnerId,
+            res_id: generalId,
+        });
+    }
+    await start();
+    await openDiscuss(generalId);
+    await contains(".o-mail-Message", { count: 30 });
+    await scroll(".o-mail-Thread", 0);
+    await contains(".o-mail-Message", { text: "message 0" });
+    await tick(); // give enough time for the useVisible hook to register load more as hidden
+    await scroll(".o-mail-Thread", 0);
+    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "message 0" });
 });

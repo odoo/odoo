@@ -454,24 +454,20 @@ export class Thread extends Component {
     }
 
     /**
-     * Determine if the new message separator should be shown. It is the case
-     * if:
-     * - Separator is equal to 0 and this is the first message of the thread
-     *   (channel was just created or user just joined).
-     * - Separator is equal to the id of the current message.
-     * - Separator is between the previous and the current id which means the
-     *   original message was deleted.
+     * Determine if the new message separator should be shown before current
+     * message.
      *
      * @param {import("models").Message} current
      * @param {import("models").Message?} previous
-     * @param {boolean} isFirst
      */
-    isNewMessageSeparatorVisible(current, previous, isFirst) {
+    isNewMessageSeparatorVisible(current, previous) {
         const separator = this.props.thread.selfMember?.new_message_separator;
-        return (
-            (separator === 0 && isFirst) ||
-            current.id === separator ||
-            (current.id > separator && (!previous || previous?.id < separator))
-        );
+        if (current.id === separator) {
+            return true;
+        }
+        if (current.id < separator) {
+            return false;
+        }
+        return (!previous && !this.props.thread.loadOlder) || previous?.id < separator;
     }
 }
