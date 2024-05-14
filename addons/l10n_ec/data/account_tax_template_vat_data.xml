@@ -7,40 +7,40 @@
         <!-- IVA 5% -->
         <record id="tax_vat_05_411_goods" model="account.tax.template">
             <!-- IVA 5% en ventas locales (excluye activos fijos) -->
-            <field name="name">IVA 5% (411, Bienes)</field>
+            <field name="name">IVA 5% (435, Bienes)</field>
             <field name="active">False</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">25</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
-            <field name="l10n_ec_code_base">411</field>
-            <field name="l10n_ec_code_applied">421</field>
+            <field name="l10n_ec_code_base">435</field>
+            <field name="l10n_ec_code_applied">445</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_vat_05"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_expression_ids': [ref('tax_report_line_104_401_tag'), ref('tax_report_line_104_411_tag')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_425_tag'), ref('tax_report_line_104_435_tag')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_vat'),
-                    'plus_report_expression_ids': [ref('tax_report_line_104_421_tag')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_445_tag')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_expression_ids': [ref('tax_report_line_104_411_tag')],
+                    'minus_report_expression_ids': [ref('tax_report_line_104_435_tag')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_vat'),
-                    'minus_report_expression_ids': [ref('tax_report_line_104_421_tag')],
+                    'minus_report_expression_ids': [ref('tax_report_line_104_445_tag')],
                 })]"/>
         </record>
         <record id="tax_vat_05_411_services" model="account.tax.template">
@@ -768,39 +768,39 @@
         <!--IVA 5%-->
         <record id="tax_vat_05_510_sup_01" model="account.tax.template">
             <!-- IVA 5% en compras locales (excluye activos fijos) con derecho a credito tributario -->
-            <field name="name">IVA 5% (510, 01 Crédito IVA)</field>
+            <field name="name">IVA 5% (550, 01 Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">13</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
-            <field name="l10n_ec_code_base">510</field>
-            <field name="l10n_ec_code_applied">520</field>
+            <field name="l10n_ec_code_base">550</field>
+            <field name="l10n_ec_code_applied">560</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_vat_05"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_expression_ids': [ref('tax_report_line_104_500_tag'), ref('tax_report_line_104_510_tag')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_540_tag'), ref('tax_report_line_104_550_tag')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_purchase_vat'),
-                    'plus_report_expression_ids': [ref('tax_report_line_104_520_tag')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_560_tag')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_expression_ids': [ref('tax_report_line_104_510_tag')],
+                    'minus_report_expression_ids': [ref('tax_report_line_104_550_tag')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_purchase_vat'),
-                    'minus_report_expression_ids': [ref('tax_report_line_104_520_tag')],
+                    'minus_report_expression_ids': [ref('tax_report_line_104_560_tag')],
                 })]"/>
         </record>
         <record id="tax_vat_05_510_sup_05" model="account.tax.template">
