@@ -92,7 +92,8 @@ export function getConsumeEventType(element, runCommand) {
         }
         if (
             (/^drag_and_drop_native/.test(runCommand) && classList.contains("o_draggable")) ||
-            element.closest(".o_draggable")
+            element.closest(".o_draggable") ||
+            element.draggable
         ) {
             return "pointerdown";
         }
