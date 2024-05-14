@@ -86,7 +86,7 @@ class AccountTaxPython(models.Model):
             local_dict = {**evaluation_context, 'base_amount': raw_base}
             json.dumps(local_dict) # Ensure it contains only json serializable data (security).
             try:
-                safe_eval(tax.python_applicable, local_dict, mode="exec", nocopy=True)
+                safe_eval(tax.python_applicable, locals_dict=local_dict, mode="exec")
             except Exception as e: # noqa: BLE001
                 raise UserError(_(
                     "You entered invalid code %r in %r taxes\n\nError : %s",
@@ -99,7 +99,7 @@ class AccountTaxPython(models.Model):
                 return
 
             try:
-                safe_eval(tax.python_compute, local_dict, mode="exec", nocopy=True)
+                safe_eval(tax.python_compute, locals_dict=local_dict, mode="exec")
             except Exception as e: # noqa: BLE001
                 raise UserError(_(
                     "You entered invalid code %r in %r taxes\n\nError : %s",

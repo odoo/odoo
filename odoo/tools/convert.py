@@ -36,7 +36,10 @@ from odoo.exceptions import ValidationError
 _logger = logging.getLogger(__name__)
 
 from .safe_eval import safe_eval as s_eval, pytz, time
-safe_eval = lambda expr, ctx={}: s_eval(expr, ctx, nocopy=True)
+
+
+def safe_eval(expr, ctx=None):
+    return s_eval(expr, ctx or {})
 
 class ParseError(Exception):
     ...

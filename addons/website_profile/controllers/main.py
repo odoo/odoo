@@ -14,8 +14,10 @@ from operator import itemgetter
 from odoo import _, fields, http, tools
 from odoo.http import request
 from odoo.osv import expression
+from odoo.tools.safe_eval import allow_instance
 
 
+@allow_instance
 class WebsiteProfile(http.Controller):
     _users_per_page = 30
     _pager_max_pages = 5

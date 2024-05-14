@@ -199,6 +199,7 @@ from .service import security, model as service_model
 from .tools import (config, consteq, date_utils, file_path, get_lang,
                     parse_version, profiler, submap, unique, ustr)
 from .tools.func import filter_kwargs, lazy_property
+from .tools.safe_eval import allow_instance
 from .tools._vendor import sessions
 from .tools._vendor.useragents import UserAgent
 
@@ -1390,6 +1391,7 @@ class FutureResponse:
         werkzeug.Response.set_cookie(self, key, value=value, max_age=max_age, expires=expires, path=path, domain=domain, secure=secure, httponly=httponly, samesite=samesite)
 
 
+@allow_instance
 class Request:
     """
     Wrapper around the incoming HTTP request with deserialized request

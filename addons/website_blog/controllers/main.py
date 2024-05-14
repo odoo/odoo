@@ -12,10 +12,12 @@ from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.http import request
 from odoo.tools import html2plaintext
+from odoo.tools.safe_eval import allow_instance
 from odoo.tools.misc import get_lang
 from odoo.tools import sql
 
 
+@allow_instance
 class WebsiteBlog(http.Controller):
     _blog_post_per_page = 12  # multiple of 2,3,4
     _post_comment_per_page = 10
