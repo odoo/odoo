@@ -1020,7 +1020,7 @@
                                   string="Invoice Lines"
                                   invisible="move_type == 'entry'">
                                 <field name="invoice_line_ids"
-                                       widget="section_and_note_one2many"
+                                       widget="product_label_section_and_note_field_o2m"
                                        mode="tree,kanban"
                                        context="{
                                            'default_move_type': context.get('default_move_type'),
@@ -1042,7 +1042,7 @@
                                         <field name="sequence" widget="handle"/>
                                         <field name="product_id"
                                                optional="show"
-                                               widget="many2one_barcode"
+                                               widget="product_label_section_and_note_field"
                                                domain="
                                                     context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')
                                                     and [('sale_ok', '=', True)]
