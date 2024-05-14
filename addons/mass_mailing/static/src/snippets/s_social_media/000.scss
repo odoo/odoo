@@ -1,0 +1,81 @@
+
+.s_social_media {
+    > * {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .s_social_media_title {
+        margin: 0 .4rem 0 0;
+    }
+    a {
+        i.fa, span.fa {
+        display: inline-block;
+        vertical-align: middle;
+        text-align: center;
+        width: 3rem;
+        height: 3rem ;
+        line-height: 3rem;
+        background-color: #F8F9FA;
+
+        }
+        margin: .2rem;
+    }
+    .rounded-empty-circle {
+        @extend .rounded-circle;
+        border-width: ceil(1.4 * $border-width);
+        border-style: solid;
+        background: transparent;
+    }
+    &:not(.no_icon_color) {
+        .s_social_media_facebook {
+            &, &:hover, &:focus {
+                color: #3B5999 !important;
+            }
+        }
+        .s_social_media_twitter {
+            &, &:hover, &:focus {
+                color: #000000 !important;
+            }
+        }
+        .s_social_media_linkedin {
+            &, &:hover, &:focus {
+                color: #0077B5 !important;
+            }
+        }
+        .s_social_media_youtube {
+            &, &:hover, &:focus {
+                color: #ff0000 !important;
+            }
+        }
+        .s_social_media_instagram {
+            &, &:hover, &:focus {
+                color:#cf2872 !important;
+            }
+        }
+        .s_social_media_github {
+            &, &:hover, &:focus {
+                color: #1a1e22 !important;
+            }
+        }
+        .s_social_media_tiktok {
+            &, &:hover, &:focus {
+                color: #000000 !important;
+            }
+        }
+        .s_social_media_google {
+            &, &:hover, &:focus {
+                color:#DD4B39 !important
+            }
+        }
+        .s_social_media_whatsapp {
+            &, &:hover, &:focus {
+                color: #25d366 !important;
+            }
+        }
+        .s_social_media_pinterest {
+            &, &:hover, &:focus {
+                color: #C8232C !important;
+            }
+        }
+    }
+}
