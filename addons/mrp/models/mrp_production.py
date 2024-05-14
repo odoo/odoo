@@ -2780,6 +2780,11 @@ class MrpProduction(models.Model):
             }
         return self.action_open_label_layout()
 
+    def action_start(self):
+        self.ensure_one()
+        if self.state == "confirmed":
+            self.state = "progress"
+
     # -------------------------------------------------------------------------
     # CATALOG
     # -------------------------------------------------------------------------
