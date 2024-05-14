@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import datetime
@@ -40,7 +39,7 @@ LOC_PER_SITEMAP = 45000
 SITEMAP_CACHE_TIME = datetime.timedelta(hours=12)
 
 
-class QueryURL(object):
+class QueryURL:
     def __init__(self, path='', path_args=None, **args):
         self.path = path
         self.args = args
@@ -58,9 +57,9 @@ class QueryURL(object):
                 if isinstance(value, models.BaseModel):
                     paths[key] = slug(value)
                 else:
-                    paths[key] = u"%s" % value
+                    paths[key] = "%s" % value
             elif value:
-                if isinstance(value, list) or isinstance(value, set):
+                if isinstance(value, (list, set)):
                     fragments.append(werkzeug.urls.url_encode([(key, item) for item in value]))
                 else:
                     fragments.append(werkzeug.urls.url_encode([(key, value)]))
@@ -362,7 +361,7 @@ class Website(Home):
                 'value': page['loc'],
                 'label': 'name' in page and '%s (%s)' % (page['loc'], page['name']) or page['loc'],
             })
-        matching_urls = set(map(lambda match: match['value'], matching_pages))
+        matching_urls = {match['value'] for match in matching_pages}
 
         matching_last_modified = []
         last_modified_pages = current_website._get_website_pages(order='write_date desc', limit=5)
@@ -380,7 +379,7 @@ class Website(Home):
                 icon = mod and '%s' % (module_sudo and module_sudo.icon or mod) or ''
                 suggested_controllers.append({
                     'value': url,
-                    'icon':  icon,
+                    'icon': icon,
                     'label': '%s (%s)' % (url, name),
                 })
 
@@ -726,7 +725,7 @@ class Website(Home):
     def reset_template(self, view_id, mode='soft', **kwargs):
         """ This method will try to reset a broken view.
         Given the mode, the view can either be:
-        - Soft reset: restore to previous architeture.
+        - Soft reset: restore to previous architecture.
         - Hard reset: it will read the original `arch` from the XML file if the
         view comes from an XML file (arch_fs).
         """
@@ -756,7 +755,7 @@ class Website(Home):
                 'ie': 'utf8', 'oe': 'utf8', 'output': 'toolbar', 'q': keywords, 'hl': language[0], 'gl': language[1]})
             req.raise_for_status()
             response = req.content
-        except IOError:
+        except OSError:
             return []
         xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
@@ -893,7 +892,7 @@ class Website(Home):
 
 class WebsiteBinary(Binary):
 
-    # Retrocompatibility routes
+    # Backward compatibility routes
     @http.route([
         '/website/image',
         '/website/image/<xmlid>',
@@ -903,15 +902,14 @@ class WebsiteBinary(Binary):
         '/website/image/<model>/<id>/<field>',
         '/website/image/<model>/<id>/<field>/<int:width>x<int:height>'
     ], type='http', auth="public", website=False, multilang=False)
-    # pylint: disable=redefined-builtin,invalid-name
-    def website_content_image(self, id=None, max_width=0, max_height=0, **kw):
+    def website_content_image(self, id=None, max_width=0, max_height=0, **kw):  # noqa: A002
         if max_width:
             kw['width'] = max_width
         if max_height:
             kw['height'] = max_height
         if id:
-            id, _, unique = id.partition('_')
-            kw['id'] = int(id)
+            identifier, _, unique = id.partition('_')
+            kw['id'] = int(identifier)
             if unique:
                 kw['unique'] = unique
         return self.content_image(**kw)
