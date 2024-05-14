@@ -751,6 +751,14 @@ class SaleOrder(models.Model):
                 }
             }
 
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        for order in self:
+            # This can't be caught by a python constraint as it is only triggered at save
+            # and a compute methodd needs this data to be set correctly before saving
+            if not order.company_id:
+                raise ValidationError(_("The company is required, please select one before making any other changes to the sale order."))
+
     @api.onchange('fiscal_position_id')
     def _onchange_fpos_id_show_update_fpos(self):
         if self.order_line and (
