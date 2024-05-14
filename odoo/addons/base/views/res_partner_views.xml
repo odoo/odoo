@@ -214,7 +214,7 @@
                     <notebook colspan="4">
                         <page string="Contacts &amp; Addresses" name="contact_addresses" autofocus="autofocus">
                             <field name="child_ids" mode="kanban" context="{'default_parent_id': id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id, 'default_type': 'other'}">
-                                <kanban>
+                                <kanban color="color">
                                     <field name="id"/>
                                     <field name="color"/>
                                     <field name="name"/>
@@ -238,31 +238,26 @@
                                     <!-- fields in form x2many view to diminish requests -->
                                     <field name="comment"/>
                                     <field name="display_name"/>
-                                    <templates>
-                                        <t t-name="kanban-box">
-                                            <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
-                                            <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban'">
-                                                <div class="o_kanban_image_fill_left">
-                                                    <img alt="Contact image" t-att-src="kanban_image('res.partner', 'avatar_128', record.id.raw_value)"/>
+                                    <card class="o_res_partner_kanban flex-row g-0">
+                                        <aside class="col-3">
+                                            <widget name="kanban_image" options="{'field': 'avatar_128'}"/>
+                                        </aside>
+                                        <main class="col ps-2">
+                                            <field name="name" class="fw-bold"/>
+                                            <field name="function"/>
+                                            <field name="email" widget="email"/>
+                                            <div invisible="type == 'contact'">
+                                                <div>
+                                                    <field name="zip" class="d-inline"/>
+                                                    <field name="city" class="d-inline ms-1"/>
                                                 </div>
-                                                <div class="oe_kanban_details">
-                                                    <field name="name" class="fw-bold"/>
-                                                    <div t-if="record.function.raw_value"><field name="function"/></div>
-                                                    <div t-if="record.email.raw_value"><field name="email" widget="email"/></div>
-                                                    <div t-if="record.type.raw_value != 'contact'">
-                                                        <div>
-                                                            <field name="zip"/><t t-if="record.city"> </t>
-                                                            <field name="city"/>
-                                                        </div>
-                                                        <field t-if="record.state_id.raw_value" name="state_id"/><t t-if="record.country_id"> </t>
-                                                        <field name="country_id"/>
-                                                    </div>
-                                                    <div t-if="record.phone.raw_value">Phone: <t t-esc="record.phone.value"/></div>
-                                                    <div t-if="record.mobile.raw_value">Mobile: <t t-esc="record.mobile.value"/></div>
-                                                </div>
+                                                <field name="state_id" class="d-inline"/>
+                                                <field name="country_id" class="d-inline ms-1"/>
                                             </div>
-                                        </t>
-                                    </templates>
+                                            <div invisible="not phone">Phone: <field name="phone" class="d-inline"/></div>
+                                            <div invisible="not mobile">Mobile: <field name="mobile" class="d-inline"/></div>
+                                        </main>
+                                    </card>
                                 </kanban>
                                 <form string="Contact / Address">
                                     <sheet>
@@ -438,54 +433,27 @@
                     <field name="avatar_128"/>
                     <field name="type"/>
                     <field name="active"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban">
-                                <t t-if="!record.is_company.raw_value">
-                                    <t t-set="avatar_image" t-value="kanban_image('res.partner', 'avatar_128', record.id.raw_value)"/>
-                                    <div class="o_kanban_image_fill_left d-none d-md-block">
-                                        <img t-attf-src="#{avatar_image}" t-att-alt="record.id.value"/>
-                                        <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'avatar_128', record.parent_id.raw_value)"/>
-                                    </div>
-                                    <div class="o_kanban_image d-md-none d-block">
-                                        <img t-attf-src="#{avatar_image}" t-att-alt="record.id.value"/>
-                                        <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'avatar_128', record.parent_id.raw_value)"/>
-                                    </div>
-                                </t>
-                                <t t-else="">
-                                    <div class="o_kanban_image_fill_left d-none d-md-block o_kanban_image_full">
-                                        <img t-attf-src="#{kanban_image('res.partner', 'avatar_128', record.id.raw_value)}" role="img" t-att-alt="record.id.value"/>
-                                    </div>
-                                    <div class="o_kanban_image d-md-none d-block o_kanban_image_full">
-                                        <img  t-attf-src="#{kanban_image('res.partner', 'avatar_128', record.id.raw_value)}" role="img" t-att-alt="record.id.value"/>
-                                    </div>
-                                </t>
-                                <div class="ribbon ribbon-top-right" invisible="active">
-                                    <span class="text-bg-danger">Archived</span>
-                                </div>
-                                <div class="oe_kanban_details d-flex flex-column justify-content-between">
-                                    <div>
-                                        <strong class="o_kanban_record_title oe_partner_heading"><field name="display_name"/></strong>
-                                        <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
-                                        <ul>
-                                            <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
-                                            <li t-elif="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
-                                            <li t-elif="record.parent_id.raw_value and record.function.raw_value"><field name="function"/> at <field name="parent_id"/></li>
-                                            <li t-if="record.city.raw_value or record.country_id.raw_value">
-                                                <t t-if="record.city.raw_value"><field name="city"/><t t-if="record.country_id.raw_value">, </t></t>
-                                                <t t-if="record.country_id.raw_value"><field name="country_id"/></t>
-                                            </li>
-                                            <li t-if="record.email.raw_value" class="o_text_overflow"><field name="email"/></li>
-                                        </ul>
-                                    </div>
-                                    <div class="o_kanban_record_bottom">
-                                        <div class="oe_kanban_bottom_left"/>
-                                        <div class="oe_kanban_bottom_right"/>
-                                    </div>
-                                </div>
+                    <card class="o_res_partner_kanban flex-row g-0">
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <aside class="col-3">
+                            <widget class="h-100" name="kanban_image" options="{'field': 'avatar_128', 'inner': 'parent_id'}"/>
+                        </aside>
+                        <main class="col-9 ps-2">
+                            <strong><field name="display_name"/></strong>
+                            <field invisible="not parent_id or function" name="parent_id"/>
+                            <field invisible="parent_id or not function" name="function"/>
+                            <div invisible="not parent_id or not function">
+                                <field class="d-inline" name="function"/> at <field class="d-inline" name="parent_id"/>
                             </div>
-                        </t>
-                    </templates>
+                            <div invisible="not city and not country_id">
+                                <field class="d-inline" invisible="not city" name="city"/>
+                                <span invisible="not city or not country_id">, </span>
+                                <field class="d-inline" invisible="not country_id" name="country_id"/>
+                            </div>
+                            <field name="email" class="text-truncate"/>
+                            <footer></footer>
+                        </main>
+                    </card>
                 </kanban>
             </field>
         </record>
