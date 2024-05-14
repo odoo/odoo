@@ -183,9 +183,7 @@ registerWebsitePreviewTour('rte_translator', {
 }, {
     content: "check if translation is activate",
     trigger: ':iframe [data-oe-translation-source-sha]',
-    run: "click",
-},
-{
+}, {
     trigger: "#oe_snippets.o_loaded",
 },
 {

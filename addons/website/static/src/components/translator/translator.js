@@ -69,6 +69,7 @@ const savableSelector = '[data-oe-translation-source-sha], ' +
     'textarea:contains(data-oe-translation-source-sha), ' +
     '[data-oe-translatable-link*="data-oe-translation-source-sha="], ' +
     '[data-oe-expression*="data-oe-translation-source-sha="], ' +
+    '[href*="data-oe-translation-source-sha="],' +
     '[alt*="data-oe-translation-source-sha="]';
 
 export class WebsiteTranslator extends WebsiteEditorComponent {
@@ -133,8 +134,8 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         const self = this;
         const $editable = this.getEditableArea();
         const translationRegex = /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>(.*)<\/span>/;
-        for (const attr of ["placeholder", "title", "alt", "value", "data-oe-translatable-link", "data-oe-expression"]) {
-            const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-source-sha="]').filter(':empty, input, select, textarea, img, div');
+        for (const attr of ["placeholder", "title", "alt", "value", "data-oe-translatable-link", "data-oe-expression", "href"]) {
+            const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-source-sha="]').filter(':empty, input, select, textarea, img, div, a');
             attrEdit.each(function () {
                 var $node = $(this);
                 var translation = $node.data('translation') || {};
