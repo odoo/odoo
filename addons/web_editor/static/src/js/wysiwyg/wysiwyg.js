@@ -1796,6 +1796,13 @@ export class Wysiwyg extends Component {
                         // the previous src.
                         iframeEl.replaceWith(iframeEl.cloneNode());
                     }
+                    // Case of a document uploaded through the media dialog
+                    // instead of the link tools: the title must be updated.
+                    // Note that this title is set to the document's name by
+                    // default and cannot be modified in the source language.
+                    if (params.node.tagName === "A" && params.node.classList.contains("o_image")) {
+                        params.node.title = element.getAttribute("title");
+                    }
                     const attributesToKeep = ["data-resize-width", "title", "alt", "data-oe-translation-state", "data-oe-translatable-link"];
                     // We don't replace the node with the element because there
                     // are mutation observers needed for the translation system.
