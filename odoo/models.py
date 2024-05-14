@@ -6489,8 +6489,6 @@ class BaseModel(metaclass=MetaModel):
         """ Test whether ``self`` is nonempty. """
         return True if self._ids else False  # fast version of bool(self._ids)
 
-    __nonzero__ = __bool__
-
     def __len__(self):
         """ Return the size of ``self``. """
         return len(self._ids)
