@@ -17,6 +17,7 @@ class ProductPricelist(models.Model):
         string="Websites",
         comodel_name='website',
         ondelete='restrict',
+        relation='selectable_pricelists',
         check_company=True,
         tracking=20,
     )
@@ -41,7 +42,7 @@ class ProductPricelist(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('company_id') and not vals.get('website_id'):
+            if vals.get('company_id') and not vals.get('website_ids'):
                 # l10n modules install will change the company currency, creating a
                 # pricelist for that currency. Do not use user's company in that
                 # case as module install are done with OdooBot (company 1)
@@ -85,7 +86,7 @@ class ProductPricelist(models.Model):
         - Have no `website_ids` set and have a `code` (generic promotion).
         - Have no `company_id` or a `company_id` matching its website one.
 
-        Note: A pricelist without a website_id, and without a
+        Note: A pricelist without website_ids, and without a
               code is a backend pricelist.
 
         Change in this method should be reflected in `_get_website_pricelists_domain`.
@@ -105,12 +106,16 @@ class ProductPricelist(models.Model):
         ''' Check above `_is_available_on_website` for explanation.
         Change in this method should be reflected in `_is_available_on_website`.
         '''
+        if website.company_id:
+            default_pricelist = website.company_id._get_default_pricelist_vals()
         return [
             ('active', '=', True),
             ('company_id', 'in', [False, website.company_id.id]),
-            '|', ('website_ids', 'any', [('id', '=', website.id)]),
+            '|', '|', ('website_ids', 'any', [('id', '=', website.id)]),
             '&', ('website_ids', '=', False),
             ('code', '!=', False),
+            # If default pricelist
+            ('name', '=', default_pricelist['name']),
         ]
 
     def _is_selectable(self):

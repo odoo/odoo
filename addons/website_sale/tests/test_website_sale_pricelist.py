@@ -60,10 +60,10 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         })
 
         cls.europe = cls.env.ref('base.europe')
-        # selectable False
+
         cls.list_christmas = cls.env['product.pricelist'].create({
             'name': 'Christmas',
-            'website_ids': [Command.link(cls.website.id)],
+            # 'website_ids': [Command.link(cls.website.id)],
             'country_group_ids': [Command.link(cls.europe.id)],
             'sequence': 20,
             'item_ids': [
@@ -157,6 +157,9 @@ class TestWebsitePriceList(WebsiteSaleCommon):
                               % (country, len(pls), pls.mapped('name'), len(result), result))
 
     def test_get_pricelist_available_promocode(self):
+        # According to new behaviour, we can not set a pricelist as not selectable
+        # only way to have a pricelist on a website is to add it to website_ids
+        self.list_christmas.website_ids = [Command.link(self.website.id)]
         christmas_pl = self.list_christmas.id
 
         # Christmas Pricelist only available for EU countries
@@ -176,6 +179,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
                 self.assertTrue(available, 'AssertTrue failed for %s' % country)
             else:
                 self.assertFalse(available, 'AssertFalse failed for %s' % country)
+        self.list_christmas.website_ids = False
 
     def test_get_pricelist_available_show_with_auto_property(self):
         show = True
@@ -438,11 +442,6 @@ class TestWebsitePriceListAvailable(WebsiteSaleCommon):
         pls = self.website.get_pricelist_available()
         self.assertEqual(pls, pls_to_return, "Every pricelist having the correct website_id set or (no website_id but a code or selectable) should be returned")
 
-        # Test get all available and visible pricelists
-        pls_to_return = self.generic_pl_select + self.generic_pl_code_select + self.w1_pl_select + self.w1_pl_code_select
-        pls = self.website.get_pricelist_available(show_visible=True)
-        self.assertEqual(pls, pls_to_return, "Only selectable pricelists website compliant (website_id False or current website) should be returned")
-
     def test_property_product_pricelist_for_inactive_partner(self):
         # `_get_partner_pricelist_multi` should consider inactive users when searching for pricelists.
         # Real case if for public user. His `property_product_pricelist` need to be set as it is passed
@@ -522,7 +521,7 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
 
     def test_get_pricelist_available_geoip4(self):
         # Test get all available with geoip and visible pricelists + promo pl
-        pls_to_return = self.generic_pl_select + self.w1_pl_select + self.generic_pl_code_select
+        pls_to_return = self.generic_pl_select + self.w1_pl_select + self.generic_pl_code_select + self.w1_pl
         # property_product_pricelist will also be returned in the available pricelists
         pls_to_return += self.env.user.partner_id.property_product_pricelist
 

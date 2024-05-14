@@ -96,7 +96,6 @@ class ResConfigSettings(models.TransientModel):
         comodel_name='product.pricelist',
         relation='selectable_pricelists',
         related='website_id.selectable_pricelist_ids',
-        string='Selectable Pricelists',
         readonly=False,
     )
 

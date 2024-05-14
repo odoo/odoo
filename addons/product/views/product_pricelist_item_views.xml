@@ -111,7 +111,11 @@
                                 options="{'no_create':1}" 
                                 invisible="product_variant_count &lt; 2"
                                 placeholder="All variants"/>
-                            <field name="compute_price" string="Computation" widget="radio" options="{'horizontal': true}" invisible="display_applied_on == '1_product'"/>
+                            <field name="compute_price"
+                                string="Computation"
+                                widget="radio"
+                                options="{'horizontal': true}"
+                                invisible="display_applied_on == '1_product' and compute_price == 'fixed_price'"/>
                         </group>
                         <group name="pricelist_rule_limits">
                             <field name="min_quantity"/>
