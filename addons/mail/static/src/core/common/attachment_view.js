@@ -1,6 +1,15 @@
-import { Component, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    onWillUpdateProps,
+    onPatched,
+    onWillUnmount,
+    onMounted,
+    useEffect,
+    useRef,
+    useState,
+} from "@odoo/owl";
 
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { hidePDFJSButtons } from "@web/libs/pdfjs";
 
 /**
@@ -17,6 +26,8 @@ export class AttachmentView extends Component {
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
+        this.uiService = useService("ui");
+        this.mailPopoutService = useService("mail.popout");
         this.iframeViewerPdfRef = useRef("iframeViewerPdf");
         this.state = useState({
             /** @type {import("models").Thread|undefined} */
@@ -29,6 +40,11 @@ export class AttachmentView extends Component {
         });
         this.updateFromProps(this.props);
         onWillUpdateProps((props) => this.updateFromProps(props));
+
+        useBus(this.uiService.bus, "resize", this.updatePopup);
+        onMounted(this.updatePopup);
+        onPatched(this.updatePopup);
+        onWillUnmount(this.mailPopoutService.reset);
     }
 
     onClickNext() {
@@ -54,6 +70,16 @@ export class AttachmentView extends Component {
             id: props.threadId,
             model: props.threadModel,
         });
+    }
+
+    popoutAttachment() {
+        this.mailPopoutService.popout(this.__owl__.bdom.parentEl).focus();
+    }
+
+    updatePopup() {
+        if (this.mailPopoutService.externalWindow) {
+            this.mailPopoutService.popout(this.__owl__.bdom.parentEl, false);
+        }
     }
 
     get displayName() {
