@@ -95,6 +95,7 @@ class SaleOrder(models.Model):
     @api.onchange('company_id')
     def _onchange_company_id(self):
         """Trigger quotation template recomputation on unsaved records company change"""
+        super()._onchange_company_id()
         if self._origin.id:
             return
         self._compute_sale_order_template_id()
