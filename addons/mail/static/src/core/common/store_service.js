@@ -12,7 +12,6 @@ import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
 import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
-import { escape } from "@web/core/utils/strings";
 import { browser } from "@web/core/browser/browser";
 
 export class Store extends BaseStore {
@@ -630,7 +629,7 @@ export class Store extends BaseStore {
     async search(searchTerm, thread, before = false) {
         const { messages, count } = await rpc(thread.getFetchRoute(), {
             ...thread.getFetchParams(),
-            search_term: escape(searchTerm),
+            search_term: await prettifyMessageContent(searchTerm), // formatted like message_post
             before,
         });
         return {
