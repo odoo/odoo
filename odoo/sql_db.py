@@ -776,7 +776,6 @@ class Connection(object):
 
     def __bool__(self):
         raise NotImplementedError()
-    __nonzero__ = __bool__
 
 def connection_info_for(db_or_uri, readonly=False):
     """ parse the given `db_or_uri` and return a 2-tuple (dbname, connection_params)
