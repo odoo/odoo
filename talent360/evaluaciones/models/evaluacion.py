@@ -94,11 +94,19 @@ class Evaluacion(models.Model):
         Valida que la fecha de inicio sea anterior a la fecha final.
         """
         for record in self:
-            fecha_actual = fields.Date.today() - timedelta(days=1)
-            if record.fecha_inicio:
-                # Verifica que la fecha de inicio no sea menor a la fecha actual
-                if record.fecha_inicio < fecha_actual:
-                    raise exceptions.ValidationError(_("La fecha de inicio debe ser igual o posterior a la fecha actual."))
+            
+            # Si ya se creo, se compara contra la fecha de creación
+            if record.create_date:
+                fecha_creacion = record.create_date.date() - timedelta(days=1)
+                if record.fecha_inicio < fecha_creacion:
+                    raise exceptions.ValidationError(_(f"La fecha de inicio debe ser igual o posterior a la fecha de creación de la evaluación ({fecha_creacion.strftime('%d/%m/%Y')})."))
+            # Si es nuevo, se compara contra la fecha actual
+            else:
+                fecha_actual = fields.Date.today() - timedelta(days=1)
+                if record.fecha_inicio:
+                    # Verifica que la fecha de inicio no sea menor a la fecha actual
+                    if record.fecha_inicio < fecha_actual:
+                        raise exceptions.ValidationError(_("La fecha de inicio debe ser igual o posterior a la fecha actual."))
             
             if record.fecha_inicio and record.fecha_final:
                 # Verifica que la fecha de inicio sea antes de la fecha final
