@@ -44,12 +44,13 @@ class ReporteResumen(models.Model):
         """
         Esta función calcula el porcentaje de respuestas de los usuarios registradosy usuarios externos asignados a una evaluación.
         """
+        
         for record in self:
             conteo = len(record.usuario_ids) + len(record.usuario_externo_ids)
             if conteo == 0:
                 record.porcentaje_respuestas = 0
             else:
                 respondidas = self.env["usuario.evaluacion.rel"].search(
-                    [("evaluacion_id", "=", record.id), ("contestada", "=", "contestada")]
+                    [("evaluacion_id.id", "=", record.id), ("contestada", "=", "contestada")]
                 )
                 record.porcentaje_respuestas = (len(respondidas) / conteo)
