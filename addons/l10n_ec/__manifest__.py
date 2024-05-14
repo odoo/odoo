@@ -1,10 +1,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
+<<<<<<< HEAD
     'name': 'Ecuadorian Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['ec'],
     'version': '3.8',
     'description': """
+||||||| parent of be09cfaa44b9 (temp)
+    "name": "Ecuadorian Accounting",
+    "version": "3.8",
+    "description": """
+=======
+    "name": "Ecuadorian Accounting",
+    "version": "3.9",
+    "description": """
+>>>>>>> be09cfaa44b9 (temp)
 Functional
 ----------
 
