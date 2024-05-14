@@ -28,7 +28,11 @@
     clear: both;
     float: right;
     min-width: 260px;
-    padding-top: 20px;
+    /* The max-width ensures that the widget is not too wide in larger screens,
+     but does not affect the width once the screen size decreases */
+    max-width: 400px;
+    margin-left: auto;
+    background-color: #FAFAFB;
 }
 
 .oe_account_terms {
