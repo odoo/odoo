@@ -22,4 +22,21 @@ patch(Navbar.prototype, {
         this.pos.reset_cashier();
         this.pos.showScreen("LoginScreen");
     },
+    get showCreateProductButton() {
+        if (!this.pos.config.module_pos_hr || this.employeeIsAdmin()) {
+            return super.showCreateProductButton;
+        } else {
+            return false;
+        }
+    },
+    get showEditPlanButton() {
+        if (
+            this.pos.config.module_pos_restaurant &&
+            (!this.pos.config.module_pos_hr || this.employeeIsAdmin())
+        ) {
+            return super.showEditPlanButton;
+        } else {
+            return false;
+        }
+    },
 });
