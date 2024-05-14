@@ -46,7 +46,6 @@ export class ExpenseLinesWidget extends X2ManyField {
 export const expenseLinesWidget = {
     ...x2ManyField,
     component: ExpenseLinesWidget,
-    relatedFields: [{ name: "message_main_attachment_checksum", type: "char" }],
 };
 
 registry.category("fields").add("expense_lines_widget", expenseLinesWidget);
