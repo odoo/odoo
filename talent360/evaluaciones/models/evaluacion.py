@@ -42,7 +42,7 @@ class Evaluacion(models.Model):
     estado = fields.Selection(
         [
             ("borrador", "Borrador"),
-            ("publicado", "Publicada"),
+            ("publicado", "Abierta"),
             ("finalizado", "Cerrada"),
         ],
         default="borrador",
