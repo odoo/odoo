@@ -174,8 +174,6 @@ class Foo extends models.Model {
 
 defineModels([Foo, Color, Product]);
 
-afterEach(runAllTimers);
-
 test("simple bar chart rendering", async () => {
     const view = await mountView({ type: "graph", resModel: "foo" });
 

@@ -80,7 +80,7 @@
             'project/static/src/scss/project_sharing_frontend.scss',
             'project/static/src/js/portal_rating.js',
         ],
-        'web.qunit_suite_tests': [
+        'web.assets_unit_tests': [
             'project/static/src/project_sharing/components/portal_file_input/portal_file_input.js',
             'project/static/tests/**/*.js',
         ],
