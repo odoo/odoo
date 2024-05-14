@@ -195,6 +195,17 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             )[0];
             element.remove();
         });
+
+        // TODO remove in master: should be simply replaced by a
+        // `data-text-selector` attribute to mark text options.
+        const AnimationOptionEl = $html.find('[data-js="WebsiteAnimate"]')[0];
+        const HighlightOptionEl = $html.find('[data-js="TextHighlight"]')[0];
+        if (AnimationOptionEl) {
+            AnimationOptionEl.dataset.textSelector = ".o_animated_text";
+        }
+        if (HighlightOptionEl) {
+            HighlightOptionEl.dataset.textSelector = HighlightOptionEl.dataset.selector;
+        }
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
@@ -486,6 +497,9 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             this._disableTextOptions(targetEl);
             this.options.wysiwyg.odooEditor.historyStep(true);
             restoreCursor();
+            if (this.options.enableTranslation) {
+                $(selectedTextParent).trigger("content_changed");
+            }
         } else {
             if (sel.getRangeAt(0).collapsed) {
                 return;
