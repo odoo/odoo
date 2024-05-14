@@ -155,7 +155,7 @@ TRANSLATED_ELEMENTS = {
 TRANSLATED_ATTRS = dict.fromkeys({
     'string', 'add-label', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
-    'value_label', 'data-tooltip', 'label', 'src', 'href',
+    'value_label', 'data-tooltip', 'label', 'src', 'href', 'data-oe-expression',
 }, lambda e: True)
 
 def translate_attrib_value(node):
@@ -1093,7 +1093,7 @@ class TranslationReader:
                 for term_en, term_langs in translation_dictionary.items():
                     term_en_unescaped = html_stdlib.unescape(term_en)
                     value_en_unescaped = html_stdlib.unescape(value_en)
-                    attr_no_export = ['src', 'href']
+                    attr_no_export = ['src', 'href', 'data-oe-expression']
                     for attr in attr_no_export:
                         if value_en_unescaped.count(f"{attr}='{term_en_unescaped}'") + value_en_unescaped.count(f'{attr}="{term_en_unescaped}"') > 0:
                             # That's not perfect, we could check that the term
