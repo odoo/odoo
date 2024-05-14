@@ -1689,6 +1689,7 @@ export class Wysiwyg extends Component {
             }),
             onAttachmentChange: this._onAttachmentChange.bind(this),
             close: () => restoreSelection(),
+            noIcons: this.options.enableTranslation,
             ...this.options.mediaModalParams,
             ...params,
         });
