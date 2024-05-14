@@ -137,21 +137,21 @@ class UsuarioEvaluacionRel(models.Model):
 
                 evaluacion_url = f"{base_url}/{evaluacion_id}/{token}"
                 mail = {
-                    'subject': 'Invitación para completar la evaluación',
-                    'email_from': "talent360@cr-organizacional.com",
-                    'email_to': correo,
-                    'body_html': 
-                        f'''<p>Hola, <strong>{nombre}</strong>,</p>
+                    "subject": "Invitación para completar la evaluación",
+                    "email_from": "talent360@cr-organizacional.com",
+                    "email_to": correo,
+                    "body_html": 
+                        f"""<p>Hola, <strong>{nombre}</strong>,</p>
                         <p>En <strong>{self.env.user.company_id.name}</strong> estamos interesados en tu opinión para mejorar.</p>
                         <p>Por favor, participa en la evaluación de clima laboral disponible del <strong>(Fecha Inicio)</strong> al <strong>(Fecha Fin)</strong>.</p>
                         <p>Puedes comenzar la evaluación haciendo clic en el siguiente enlace:</p>
-                        <p><a href="{evaluacion_url}">Comenzar Evaluación</a></p>''',
+                        <p><a href="{evaluacion_url}">Comenzar Evaluación</a></p>""",
                 }
 
                 lista_mails.append(mail)
                 logging.info(f"Nombre:{nombre}\nCorreo:{correo}\nURL: {evaluacion_url}")
         
-        self.env['mail.mail'].create(lista_mails)
+        self.env["mail.mail"].create(lista_mails)
     
         return {
             "type": "ir.actions.act_window",
