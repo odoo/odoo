@@ -1,18 +1,14 @@
-# -*- coding: utf-8 -*-
-
-from collections import defaultdict
-
-from odoo.exceptions import AccessError
-from odoo import api, fields, models, Command, _, osv
-from odoo import SUPERUSER_ID
-from odoo.exceptions import UserError, ValidationError
-from odoo.http import request
-from odoo.addons.account.models.account_tax import TYPE_TAX_USE
-from odoo.addons.account.models.account_account import ACCOUNT_CODE_REGEX
-from odoo.tools import float_compare, html_escape
-
 import logging
 import re
+from collections import defaultdict
+from operator import itemgetter
+
+from odoo import SUPERUSER_ID, Command, _, api, fields, models, osv
+from odoo.addons.account.models.account_account import ACCOUNT_CODE_REGEX
+from odoo.addons.account.models.account_tax import TYPE_TAX_USE
+from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.http import request
+from odoo.tools import float_compare, html_escape
 
 _logger = logging.getLogger(__name__)
 
@@ -272,6 +268,28 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
     if hasattr(chart_template, 'spoken_languages') and chart_template.spoken_languages:
         _process_taxes_translations(chart_template, new_template2tax)
     return new_template2tax
+
+
+def set_non_trade_accounts(cr, module, chart_template_xmlid, account_xmlids):
+    """This is a utility function to set some accounts as "non-trade"."""
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    chart_template = env.ref(chart_template_xmlid)
+    companies = env['res.company'].search_read(
+        domain=[('chart_template_id', '=', chart_template.id)],
+        fields=['id'],
+    )
+    account_codes = []
+    for company in companies:
+        account_codes += [f"{company['id']}_{code}" for code in account_xmlids]
+    account_ids = map(
+        itemgetter('res_id'),
+        env['ir.model.data'].search_read(
+            domain=[('module', '=', module), ('name', 'in', account_codes)],
+            fields=['res_id'],
+        )
+    )
+    env['account.account'].browse(account_ids).non_trade = True
+
 
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
