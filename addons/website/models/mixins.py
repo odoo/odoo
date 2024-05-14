@@ -197,7 +197,9 @@ class WebsitePublishedMixin(models.AbstractModel):
 
     def website_publish_button(self):
         self.ensure_one()
-        return self.write({'website_published': not self.website_published})
+        value = not self.website_published
+        self.write({'website_published': value})
+        return value
 
     def open_website_url(self):
         return self.env['website'].get_client_action(self.website_url)

@@ -734,18 +734,6 @@ class Website(Home):
         view.with_context(website_id=None).reset_arch(mode)
         return True
 
-    @http.route(['/website/publish'], type='json', auth="user", website=True)
-    def publish(self, id, object):
-        Model = request.env[object]
-        record = Model.browse(int(id))
-
-        values = {}
-        if 'website_published' in Model._fields:
-            values['website_published'] = not record.website_published
-            record.write(values)
-            return bool(record.website_published)
-        return False
-
     @http.route(['/website/seo_suggest'], type='json', auth="user", website=True)
     def seo_suggest(self, keywords=None, lang=None):
         language = lang.split("_")
