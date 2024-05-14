@@ -236,8 +236,111 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
         const toFind = $html.find("we-fontfamilypicker[data-variable]").toArray();
         const fontVariables = toFind.map((el) => el.dataset.variable);
         FontFamilyPickerUserValueWidget.prototype.fontVariables = fontVariables;
+<<<<<<< HEAD
         return super._computeSnippetTemplates(html);
     }
+||||||| parent of 054211e37147 (temp)
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _patchForComputeSnippetTemplates($html) {
+        this._super(...arguments);
+
+        // TODO adapt in master: as a stable fix we corrected the behavior of
+        // the logo button that led to an error when switching from Text to
+        // Logo. Remove me in master.
+        const logoViewName = 'website.option_header_brand_logo';
+        const logoButtonEl = $html.find(`[data-customize-website-views="${logoViewName}"]`)[0];
+        if (logoButtonEl) {
+            logoButtonEl.dataset.customizeWebsiteViews = `|website.option_header_brand_name|${logoViewName}`;
+            logoButtonEl.dataset.resetViewArch = "true";
+        }
+        const brandSelectorEl = $html.find('[data-name="option_header_brand_none"]')[0]
+            ?.closest("[data-selector]");
+        if (brandSelectorEl) {
+            brandSelectorEl.dataset.selector = brandSelectorEl.dataset.selector
+                .replace('.navbar-brand.logo', '.navbar-brand');
+        }
+
+        // TODO adapt in master: as a stable imp we added a preview for the
+        // "Effect" option of the "On Hover" animation option.
+        const hoverEffectSelectEl = $html.find('[data-set-img-shape-hover-effect]')[0];
+        delete hoverEffectSelectEl.dataset.noPreview;
+
+        // TODO remove in master: as a stable fix we exclude the form fields
+        // from the grid cell's Padding (Y, X) option.
+        const gridColumnsEl = $html.find('[data-js="GridColumns"]')[0];
+        if (gridColumnsEl) {
+            gridColumnsEl.dataset.selector = ".row:not(.s_col_no_resize) > div";
+        }
+
+        // Remove the input-border-width-sm and input-border-width-lg from the input-border-width
+        ['input-border-width-sm', 'input-border-width-lg'].forEach(variable => {
+            const element = $html.find(
+                `[data-selector='theme-input'] we-input[data-customize-website-variable][data-variable='${variable}']`
+            )[0];
+            element.remove();
+        });
+    },
+=======
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _patchForComputeSnippetTemplates($html) {
+        this._super(...arguments);
+
+        // TODO adapt in master: as a stable fix we corrected the behavior of
+        // the logo button that led to an error when switching from Text to
+        // Logo. Remove me in master.
+        const logoViewName = 'website.option_header_brand_logo';
+        const logoButtonEl = $html.find(`[data-customize-website-views="${logoViewName}"]`)[0];
+        if (logoButtonEl) {
+            logoButtonEl.dataset.customizeWebsiteViews = `|website.option_header_brand_name|${logoViewName}`;
+            logoButtonEl.dataset.resetViewArch = "true";
+        }
+        const brandSelectorEl = $html.find('[data-name="option_header_brand_none"]')[0]
+            ?.closest("[data-selector]");
+        if (brandSelectorEl) {
+            brandSelectorEl.dataset.selector = brandSelectorEl.dataset.selector
+                .replace('.navbar-brand.logo', '.navbar-brand');
+        }
+
+        // TODO adapt in master: as a stable imp we added a preview for the
+        // "Effect" option of the "On Hover" animation option.
+        const hoverEffectSelectEl = $html.find('[data-set-img-shape-hover-effect]')[0];
+        delete hoverEffectSelectEl.dataset.noPreview;
+
+        // TODO remove in master: as a stable fix we exclude the form fields
+        // from the grid cell's Padding (Y, X) option.
+        const gridColumnsEl = $html.find('[data-js="GridColumns"]')[0];
+        if (gridColumnsEl) {
+            gridColumnsEl.dataset.selector = ".row:not(.s_col_no_resize) > div";
+        }
+
+        // Remove the input-border-width-sm and input-border-width-lg from the input-border-width
+        ['input-border-width-sm', 'input-border-width-lg'].forEach(variable => {
+            const element = $html.find(
+                `[data-selector='theme-input'] we-input[data-customize-website-variable][data-variable='${variable}']`
+            )[0];
+            element.remove();
+        });
+
+        // TODO remove in master: should be simply replaced by a
+        // `data-text-selector` attribute to mark text options.
+        const AnimationOptionEl = $html.find('[data-js="WebsiteAnimate"]')[0];
+        const HighlightOptionEl = $html.find('[data-js="TextHighlight"]')[0];
+        if (AnimationOptionEl) {
+            AnimationOptionEl.dataset.textSelector = ".o_animated_text";
+        }
+        if (HighlightOptionEl) {
+            HighlightOptionEl.dataset.textSelector = HighlightOptionEl.dataset.selector;
+        }
+    },
+>>>>>>> 054211e37147 (temp)
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
      * if not already defined.
@@ -492,7 +595,14 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
             this.options.wysiwyg.odooEditor.historyResetLatestComputedSelection();
             this.options.wysiwyg.odooEditor.historyStep(true);
             restoreCursor();
+<<<<<<< HEAD
             return false;
+||||||| parent of 054211e37147 (temp)
+=======
+            if (this.options.enableTranslation) {
+                $(selectedTextParent).trigger("content_changed");
+            }
+>>>>>>> 054211e37147 (temp)
         } else {
             if (sel.getRangeAt(0).collapsed) {
                 return;
