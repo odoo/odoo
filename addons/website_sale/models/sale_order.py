@@ -522,6 +522,7 @@ class SaleOrder(models.Model):
                 combination = line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids
                 all_accessory_products |= accessory_products.filtered(lambda product:
                     product.id not in product_ids
+                    and product._website_show_quick_add()
                     and product.filtered_domain(self.env['product.product']._check_company_domain(line.company_id))
                     and product._is_variant_possible(parent_combination=combination)
                     and (
