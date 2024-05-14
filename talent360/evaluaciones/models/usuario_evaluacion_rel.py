@@ -51,7 +51,6 @@ class UsuarioEvaluacionRel(models.Model):
 
     usuario_externo_id = fields.Many2one("usuario.externo", string="Usuario Externo")
 
-    # @api.depends("contestada")
     def _onchange_contestada(self):
         """Método para actualizar el porcentaje de respuestas de la evaluación."""
         
