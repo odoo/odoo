@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { parseFloat } from "@web/views/fields/parsers";
 import { floatIsZero } from "@web/core/utils/numbers";
@@ -357,7 +358,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                                 : this.env.utils.formatCurrency(0)
                         );
                         await this.popup.add(ErrorPopup, {
-                            title: "Error amount too high",
+                            title: _t("Error amount too high"),
                             body: errorBody,
                         });
                         down_payment = sale_order.amount_unpaid > 0 ? sale_order.amount_unpaid : 0;
