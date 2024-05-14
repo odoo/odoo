@@ -26,7 +26,7 @@ class ProductProduct(models.Model):
 
     def _is_sold_out(self):
         self.ensure_one()
-        if not self.type == 'product':
+        if not self.is_storable:
             return False
         free_qty = self.env['website'].get_current_website()._get_product_available_qty(self.sudo())
         return free_qty <= 0

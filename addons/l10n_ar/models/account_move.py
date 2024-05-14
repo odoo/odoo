@@ -89,7 +89,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         invoice_lines = self.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section'))
         product_types = set([x.product_id.type for x in invoice_lines if x.product_id])
-        consumable = set(['consu', 'product'])
+        consumable = set('consu')
         service = set(['service'])
         # on expo invoice you can mix services and products
         expo_invoice = self.l10n_latam_document_type_id.code in ['19', '20', '21']

@@ -115,7 +115,7 @@ class TestCreatePicking(common.TestProductCommon):
 
         product = self.env['product.product'].create({
             'name': 'product',
-            'type': 'product',
+            'is_storable': True,
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
             'seller_ids': [(6, 0, [seller.id])],
             'categ_id': self.env.ref('product.product_category_all').id,
@@ -252,7 +252,7 @@ class TestCreatePicking(common.TestProductCommon):
 
         product = self.env['product.product'].create({
             'name': 'product',
-            'type': 'product',
+            'is_storable': True,
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
             'seller_ids': [(6, 0, [seller.id])],
             'categ_id': self.env.ref('product.product_category_all').id,
@@ -400,7 +400,7 @@ class TestCreatePicking(common.TestProductCommon):
 
         product = self.env['product.product'].create({
             'name': 'Usb Keyboard',
-            'type': 'product',
+            'is_storable': True,
             'uom_id': unit,
             'uom_po_id': unit,
             'seller_ids': [(6, 0, [supplier_info1.id])],
@@ -556,7 +556,7 @@ class TestCreatePicking(common.TestProductCommon):
         self.env['stock.route'].browse(self.ref('stock.route_warehouse0_mto')).action_unarchive()
         product = self.env['product.product'].create({
             'name': 'product',
-            'type': 'product',
+            'is_storable': True,
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
             'seller_ids': [(6, 0, [seller.id])],
             'categ_id': self.env.ref('product.product_category_all').id,

@@ -71,7 +71,7 @@ class Repair(models.Model):
         copy=False, readonly=True, tracking=True, check_company=True)
     product_id = fields.Many2one(
         'product.product', string='Product to Repair',
-        domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('id', 'in', picking_product_ids), ('id', '=?', picking_product_id)]",
+        domain="[('type', '=', 'consu'), '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('id', 'in', picking_product_ids), ('id', '=?', picking_product_id)]",
         check_company=True)
     product_qty = fields.Float(
         'Product Quantity',
@@ -487,7 +487,7 @@ class Repair(models.Model):
         self.ensure_one()
         if self.filtered(lambda repair: any(m.product_uom_qty < 0 for m in repair.move_ids)):
             raise UserError(_("You can not enter negative quantities."))
-        if not self.product_id or self.product_id.type == 'consu':
+        if not self.product_id or not self.product_id.is_storable:
             return self._action_repair_confirm()
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         available_qty_owner = sum(self.env['stock.quant'].search([

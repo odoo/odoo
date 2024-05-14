@@ -354,7 +354,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         product_A = self.env["product.product"].create(
             {
                 "name": "Product A",
-                "type": "product",
+                "is_storable": True,
                 "default_code": "prda",
                 "categ_id": self.stock_account_product_categ.id,
                 "taxes_id": [(5, 0, 0)],
@@ -413,11 +413,11 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         date_po_and_delivery = '2022-03-02'
         self.product_a.write({
             'categ_id': self.stock_account_product_categ,
-            'detailed_type': 'product',
+            'is_storable': True,
         })
         self.product_b.write({
             'categ_id': self.stock_account_product_categ,
-            'detailed_type': 'product',
+            'is_storable': True,
         })
         purchase_order = self.env['purchase.order'].create({
             'currency_id': self.other_currency.id,
@@ -457,7 +457,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         self.product_a.write({
             'standard_price': 27.0,
             'categ_id': self.stock_account_product_categ,
-            'detailed_type': 'product',
+            'is_storable': True,
         })
 
         self.stock_account_product_categ['property_cost_method'] = 'average'

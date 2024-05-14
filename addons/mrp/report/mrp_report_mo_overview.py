@@ -176,8 +176,8 @@ class ReportMoOverview(models.AbstractModel):
             'quantity': production.product_qty if production.state != 'done' else production.qty_produced,
             'uom_name': production.product_uom_id.display_name,
             'uom_precision': self._get_uom_precision(production.product_uom_id.rounding or 0.01),
-            'quantity_free': product.uom_id._compute_quantity(max(product.free_qty, 0), production.product_uom_id) if product.type == 'product' else False,
-            'quantity_on_hand': product.uom_id._compute_quantity(product.qty_available, production.product_uom_id) if product.type == 'product' else False,
+            'quantity_free': product.uom_id._compute_quantity(max(product.free_qty, 0), production.product_uom_id) if product.is_storable else False,
+            'quantity_on_hand': product.uom_id._compute_quantity(product.qty_available, production.product_uom_id) if product.is_storable else False,
             'quantity_reserved': 0.0,
             'receipt': self._check_planned_start(production.date_deadline, self._get_replenishment_receipt(production, components)),
             'unit_cost': self._get_unit_cost(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id)),
@@ -207,7 +207,7 @@ class ReportMoOverview(models.AbstractModel):
         for component in components:
             component = component["summary"]
             product = component["product"]
-            if product.type != 'product':
+            if not product.is_storable:
                 continue
             uom = component["uom"]
             components_qty_to_produce[product] += uom._compute_quantity(component["quantity"], product.uom_id)
@@ -449,8 +449,8 @@ class ReportMoOverview(models.AbstractModel):
             'uom': move_raw.product_uom,
             'uom_name': move_raw.product_uom.display_name,
             'uom_precision': self._get_uom_precision(move_raw.product_uom.rounding),
-            'quantity_free': product.uom_id._compute_quantity(max(product.free_qty, 0), move_raw.product_uom) if product.type == 'product' else False,
-            'quantity_on_hand': product.uom_id._compute_quantity(product.qty_available, move_raw.product_uom) if product.type == 'product' else False,
+            'quantity_free': product.uom_id._compute_quantity(max(product.free_qty, 0), move_raw.product_uom) if product.is_storable else False,
+            'quantity_on_hand': product.uom_id._compute_quantity(product.qty_available, move_raw.product_uom) if product.is_storable else False,
             'quantity_reserved': self._get_reserved_qty(move_raw, production.warehouse_id, replenish_data),
             'receipt': self._check_planned_start(production.date_start, self._get_component_receipt(product, move_raw, production.warehouse_id, replenishments, replenish_data)),
             'unit_cost': self._get_unit_cost(move_raw),
@@ -460,7 +460,7 @@ class ReportMoOverview(models.AbstractModel):
             'currency': currency,
         }
         component['mo_cost_decorator'] = self._get_comparison_decorator(component['real_cost'], component['mo_cost'], currency.rounding)
-        if product.type != 'product':
+        if not product.is_storable:
             return component
         if any(rep.get('summary', {}).get('model') == 'to_order' for rep in replenishments):
             # Means that there's an extra "To Order" line summing up what's left to order.
@@ -488,7 +488,7 @@ class ReportMoOverview(models.AbstractModel):
 
         if any(get(rep, 'type', True) == 'unavailable' for rep in replenishments):
             return self._format_receipt_date('unavailable')
-        if product.type != 'product' or move.state == 'done':
+        if not product.is_storable or move.state == 'done':
             return self._format_receipt_date('available')
 
         has_to_order_line = any(rep.get('summary', {}).get('model') == 'to_order' for rep in replenishments)
@@ -571,7 +571,7 @@ class ReportMoOverview(models.AbstractModel):
         # Avoid creating a "to_order" line to compensate for missing stock (i.e. negative free_qty).
         free_qty = max(0, product.uom_id._compute_quantity(product.free_qty, move_raw.product_uom))
         missing_quantity = quantity - (reserved_quantity + free_qty + total_ordered)
-        if product.type == 'product' and production.state not in ('done', 'cancel')\
+        if product.is_storable and production.state not in ('done', 'cancel')\
            and float_compare(missing_quantity, 0, precision_rounding=move_raw.product_uom.rounding) > 0:
             # Need to order more products to fulfill the need
             resupply_rules = self._get_resupply_rules(production, product, replenish_data)

@@ -56,7 +56,7 @@ WITH
         LEFT JOIN stock_warehouse whd ON ld.parent_path like concat('%%/', whd.view_location_id, '/%%')
         LEFT JOIN product_product pp on pp.id=m.product_id
         LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
-        WHERE pt.type = 'product' AND
+        WHERE pt.is_storable = true AND
             (whs.id IS NOT NULL OR whd.id IS NOT NULL) AND
             (whs.id IS NULL OR whd.id IS NULL OR whs.id != whd.id) AND
             m.product_qty != 0 AND

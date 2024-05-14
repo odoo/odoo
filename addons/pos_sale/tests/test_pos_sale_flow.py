@@ -15,13 +15,13 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.kit = self.env['product.product'].create({
             'name': 'Pizza Chicken',
             'available_in_pos': True,
-            'type': 'product',
+            'is_storable': True,
             'lst_price': 10.0,
         })
 
         self.component_a = self.env['product.product'].create({
             'name': 'Chicken',
-            'type': 'product',
+            'is_storable': True,
             'available_in_pos': True,
             'uom_id': self.env.ref('uom.product_uom_gram').id,
             'uom_po_id': self.env.ref('uom.product_uom_gram').id,
@@ -90,14 +90,14 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         product1 = self.env['product.product'].create({
             'name': 'product1',
             'available_in_pos': True,
-            'type': 'product',
+            'is_storable': True,
             'lst_price': 10,
             'taxes_id': [odoo.Command.clear()],
         })
         product2 = self.env['product.product'].create({
             'name': 'product2',
             'available_in_pos': True,
-            'type': 'product',
+            'is_storable': True,
             'lst_price': 11,
             'taxes_id': [odoo.Command.clear()],
         })
@@ -124,13 +124,13 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         product_a = self.env['product.product'].create({
             'name': 'Product A',
             'available_in_pos': True,
-            'type': 'product',
+            'is_storable': True,
             'lst_price': 10.0,
         })
         product_b = self.env['product.product'].create({
             'name': 'Product B',
             'available_in_pos': True,
-            'type': 'product',
+            'is_storable': True,
             'lst_price': 10.0,
         })
         #create a sale order with 2 lines
@@ -211,7 +211,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.product = self.env['product.product'].create({
             'name': 'Product',
             'available_in_pos': True,
-            'type': 'product',
+            'is_storable': True,
             'lst_price': 10.0,
             'taxes_id': False,
             'categ_id': self.product_category.id,
@@ -281,7 +281,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         product_a = self.env['product.product'].create({
             'name': 'Product A',
             'available_in_pos': True,
-            'type': 'product',
+            'is_storable': True,
             'lst_price': 10.0,
         })
         #create a sale order with 2 lines
@@ -320,7 +320,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         product_a = self.env['product.product'].create({
             'name': 'Product A',
             'available_in_pos': True,
-            'type': 'product',
+            'is_storable': True,
             'lst_price': 10.0,
             'uom_id': uom.id,
             'uom_po_id': uom.id,

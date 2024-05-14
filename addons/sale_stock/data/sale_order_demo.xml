@@ -157,6 +157,9 @@
 
 
         <!-- Inventory for new Customizable Desks -->
+        <record id="sale.product_product_4f" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
         <record id="stock_inventory_7e" model="stock.quant">
             <field name="product_id" ref="sale.product_product_4e"/>
             <field name="inventory_quantity">65.0</field>

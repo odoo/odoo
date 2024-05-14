@@ -230,7 +230,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         warehouse.write({'manufacture_steps': 'pbm'})
 
-        self.product_1.type = 'product'
+        self.product_1.is_storable = True
         self.env['stock.quant']._update_available_quantity(self.product_1, self.stock_location, 100)
 
         mo_form = Form(self.env['mrp.production'])
@@ -267,7 +267,7 @@ class TestKitPicking(common.TestMrpCommon):
         def create_product(name):
             p = Form(cls.env['product.product'])
             p.name = name
-            p.detailed_type = 'product'
+            p.is_storable = True
             return p.save()
 
         # Create a kit 'kit_parent' :
@@ -439,7 +439,7 @@ class TestKitPicking(common.TestMrpCommon):
         self.bom_4.type = 'phantom'
         kit = self.bom_4.product_id
         compo = self.bom_4.bom_line_ids.product_id
-        product = self.env['product.product'].create({'name': 'Super Product', 'type': 'product'})
+        product = self.env['product.product'].create({'name': 'Super Product', 'is_storable': True})
 
         receipt = self.env['stock.picking'].create({
             'picking_type_id': in_type.id,
@@ -481,7 +481,7 @@ class TestKitPicking(common.TestMrpCommon):
         uom_unit = self.env.ref('uom.product_uom_unit')
         kit, kit_component_1, kit_component_2, not_kit_1, not_kit_2 = self.env['product.product'].create([{
             'name': name,
-            'type': 'product',
+            'is_storable': True,
             'uom_id': uom_unit.id,
         } for name in ['Kit', 'Kit Component 1', 'Kit Component 2', 'Not Kit 1', 'Not Kit 2']])
 

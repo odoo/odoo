@@ -460,7 +460,7 @@ class ProcurementGroup(models.Model):
 
     @api.model
     def _skip_procurement(self, procurement):
-        return procurement.product_id.type not in ("consu", "product") or float_is_zero(
+        return procurement.product_id.type != "consu" or float_is_zero(
             procurement.product_qty, precision_rounding=procurement.product_uom.rounding
         )
 

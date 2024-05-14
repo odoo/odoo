@@ -24,7 +24,7 @@ class TestUninstallPurchaseStock(PurchaseTestCommon):
         order_line = purchase_order.order_line
         stock_move = order_line.move_ids
 
-        self.assertEqual(order_line.product_id.detailed_type, 'product')
+        self.assertEqual(order_line.product_id.is_storable, True)
 
         stock_move.quantity = 1
         stock_move.picked = True

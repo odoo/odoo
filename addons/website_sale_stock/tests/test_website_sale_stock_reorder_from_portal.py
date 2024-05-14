@@ -14,21 +14,21 @@ class TestWebsiteSaleStockReorderFromPortal(HttpCase):
 
         cls.available_product = cls.env['product.product'].create({
             'name': 'available_product',
-            'type': 'product',
+            'is_storable': True,
             'allow_out_of_stock_order': False,
             'sale_ok': True,
             'website_published': True,
         })
         cls.unavailable_product = cls.env['product.product'].create({
             'name': 'unavailable_product',
-            'type': 'product',
+            'is_storable': True,
             'allow_out_of_stock_order': False,
             'sale_ok': True,
             'website_published': True,
         })
         cls.partially_available_product = cls.env['product.product'].create({
             'name': 'partially_available_product',
-            'type': 'product',
+            'is_storable': True,
             'allow_out_of_stock_order': False,
             'sale_ok': True,
             'website_published': True,

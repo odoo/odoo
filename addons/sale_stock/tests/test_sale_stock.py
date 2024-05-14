@@ -74,7 +74,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         wiz.process()
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" after partial delivery')
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
-        del_qties_truth = [1.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
+        del_qties_truth = [1.0 if sol.product_id.type == 'consu' else 0.0 for sol in self.so.order_line]
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after partial delivery')
         # invoice on delivery: only storable products
         inv_1 = self.so._create_invoices()
@@ -90,7 +90,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertTrue(pick_2.button_validate(), 'Sale Stock: second picking should be final without need for a backorder')
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" after complete delivery')
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
-        del_qties_truth = [2.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
+        del_qties_truth = [2.0 if sol.product_id.type == 'consu' else 0.0 for sol in self.so.order_line]
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after complete delivery')
         # Without timesheet, we manually set the delivered qty for the product serv_del
         self.so.order_line.sorted()[1]['qty_delivered'] = 2.0
@@ -162,7 +162,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         pick.move_ids.write({'quantity': 2, 'picked': True})
         self.assertTrue(pick.button_validate(), 'Sale Stock: complete delivery should not need a backorder')
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
-        del_qties_truth = [2.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
+        del_qties_truth = [2.0 if sol.product_id.type == 'consu' else 0.0 for sol in self.so.order_line]
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after partial delivery')
         # invoice on delivery: nothing to invoice
         with self.assertRaises(UserError):
@@ -248,7 +248,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         item1 = self.company_data['product_order_no']  # consumable
         item1.type = 'consu'
         item2 = self.company_data['product_delivery_no']    # storable
-        item2.type = 'product'    # storable
+        item2.is_storable = True    # storable
 
         self.so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
@@ -314,7 +314,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         item1 = self.company_data['product_order_no']  # consumable
         item1.type = 'consu'  # consumable
         item2 = self.company_data['product_delivery_no']    # storable
-        item2.type = 'product'    # storable
+        item2.is_storable = True    # storable
 
         self.env['stock.quant']._update_available_quantity(item2, self.company_data['default_warehouse'].lot_stock_id, 2)
         self.so = self.env['sale.order'].create({
@@ -562,7 +562,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         available quantities on sale order lines are well updated """
         # sell two products
         item1 = self.company_data['product_order_no']
-        item1.type = 'product'
+        item1.is_storable = True
 
         warehouse1 = self.company_data['default_warehouse']
         self.env['stock.quant']._update_available_quantity(item1, warehouse1.lot_stock_id, 10)
@@ -601,7 +601,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         """create a sale order containing three times the same product. The
         quantity available should be different for the 3 lines"""
         item1 = self.company_data['product_order_no']
-        item1.type = 'product'
+        item1.is_storable = True
         self.env['stock.quant']._update_available_quantity(item1, self.company_data['default_warehouse'].lot_stock_id, 10)
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
@@ -918,7 +918,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         # make sure generated picking will auto-assign
         picking_type_out.reservation_method = 'at_confirm'
         product = self.company_data['product_delivery_no']
-        product.type = 'product'
+        product.is_storable = True
         self.env['stock.quant']._update_available_quantity(product, self.company_data['default_warehouse'].lot_stock_id, 20)
 
         sale_order1 = self._get_new_sale_order(amount=10.0)
@@ -965,7 +965,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         warehouse.delivery_steps = 'pick_pack_ship'
         product = self.env['product.product'].create({
             'name': 'Product with packaging',
-            'type': 'product',
+            'is_storable': True,
         })
 
         packOf10 = self.env['product.packaging'].create({
@@ -1082,7 +1082,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         warehouse.delivery_steps = 'pick_ship'
         # Sell a product.
         product = self.company_data['product_delivery_no']    # storable
-        product.type = 'product'    # storable
+        product.is_storable = True    # storable
 
         self.env['stock.quant']._update_available_quantity(product, self.company_data['default_warehouse'].lot_stock_id, 50)
         sale_order = self.env['sale.order'].create({
@@ -1159,7 +1159,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         modifying the sale order lines qty via import and ensures
         a new delivery is created.
         """
-        self.product_a.type = 'product'
+        self.product_a.is_storable = True
         self.env['stock.quant']._update_available_quantity(
             self.product_a, self.company_data['default_warehouse'].lot_stock_id, 10)
 
@@ -1185,7 +1185,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         modifying the sale order lines qty to 0
         move line should be deleted.
         """
-        self.product_a.type = 'product'
+        self.product_a.is_storable = True
         self.env['stock.quant']._update_available_quantity(
             self.product_a, self.company_data['default_warehouse'].lot_stock_id, 10,
             package_id=self.env['stock.quant.package'].create({'name': 'PacMan'}))
@@ -1281,7 +1281,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
     #     product = self.env['product.product'].create({
     #         'name': 'SuperProduct',
-    #         'type': 'product',
+    #         'is_storable': True,
     #     })
 
     #     self.env['stock.quant']._update_available_quantity(product, stock_location, 5)
@@ -1328,7 +1328,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         mto_route.active = True
 
-        self.product_a.type = 'product'
+        self.product_a.is_storable = True
         self.env['stock.quant']._update_available_quantity(self.product_a, warehouse.lot_stock_id, 10)
 
         so = self.env['sale.order'].create({
@@ -1610,7 +1610,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         return validates it and finally creates a second return.
         """
         self.product_a.tracking = 'serial'
-        self.product_a.type = 'product'
+        self.product_a.is_storable = True
         sn1 = self.env['stock.lot'].create({
             'name': 'SN0001',
             'product_id': self.product_a.id,
@@ -1757,7 +1757,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
     #         'name': 'Super product',
     #         'uom_id': self.env.ref('uom.product_uom_unit').id,
     #         'lst_price': 100.0,
-    #         'detailed_type': 'product',
+    #         'is_storable': True,
     #         'invoice_policy': 'delivery',
     #     })
     #     sale_order = self.env['sale.order'].create({

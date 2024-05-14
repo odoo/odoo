@@ -15,7 +15,7 @@ class StockMoveLine(TestStockCommon):
         cls.env.user.groups_id += cls.env.ref('stock.group_stock_multi_locations')
         cls.product = cls.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'lot',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })

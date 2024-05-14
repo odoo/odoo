@@ -17,7 +17,7 @@ class StockQuantityHistory(models.TransientModel):
     def open_at_date(self):
         tree_view_id = self.env.ref('stock.view_stock_product_tree').id
         form_view_id = self.env.ref('stock.product_form_view_procurement_button').id
-        domain = [('type', '=', 'product')]
+        domain = [('is_storable', '=', True)]
         product_id = self.env.context.get('product_id', False)
         product_tmpl_id = self.env.context.get('product_tmpl_id', False)
         if product_id:

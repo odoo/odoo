@@ -39,8 +39,8 @@ class StockQuant(models.Model):
     def _domain_product_id(self):
         if self.env.user.has_group('stock.group_stock_user'):
             return ("[] if not context.get('inventory_mode') else"
-                " [('type', '=', 'product'), ('product_tmpl_id', 'in', context.get('product_tmpl_ids', []) + [context.get('product_tmpl_id', 0)])] if context.get('product_tmpl_ids') or context.get('product_tmpl_id') else"
-                " [('type', '=', 'product')]")
+                " [('is_storable', '=', True), ('product_tmpl_id', 'in', context.get('product_tmpl_ids', []) + [context.get('product_tmpl_id', 0)])] if context.get('product_tmpl_ids') or context.get('product_tmpl_id') else"
+                " [('is_storable', '=', True)]")
         return "[]"
 
     product_id = fields.Many2one(
@@ -572,7 +572,7 @@ class StockQuant(models.Model):
 
     @api.constrains('product_id')
     def check_product_id(self):
-        if any(elem.product_id.type != 'product' for elem in self):
+        if any(not elem.product_id.is_storable for elem in self):
             raise ValidationError(_('Quants cannot be created for consumables or services.'))
 
     @api.constrains('quantity')

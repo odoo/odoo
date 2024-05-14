@@ -282,11 +282,13 @@ class TestMrpProductionBackorder(TestMrpCommon):
         """
         product_finished = self.env['product.product'].create({
             'name': 'Young Tom',
-            'type': 'product',
+            'type': 'consu',
+            'is_storable': True,
         })
         product_component = self.env['product.product'].create({
             'name': 'Botox',
-            'type': 'product',
+            'type': 'consu',
+            'is_storable': True,
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
             'uom_po_id': self.env.ref('uom.product_uom_kgm').id,
         })
@@ -556,7 +558,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
 
         # Make some stock and reserve
         for product in self.bom_1.bom_line_ids.product_id:
-            product.type = 'product'
+            product.is_storable = True
             self.env['stock.quant'].with_context(inventory_mode=True).create({
                 'product_id': product.id,
                 'inventory_quantity': 100,
@@ -636,15 +638,18 @@ class TestMrpWorkorderBackorder(TransactionCase):
         ], limit=1)
         cls.finished1 = cls.env['product.product'].create({
             'name': 'finished1',
-            'type': 'product',
+            'type': 'consu',
+            'is_storable': True,
         })
         cls.compfinished1 = cls.env['product.product'].create({
             'name': 'compfinished1',
-            'type': 'product',
+            'type': 'consu',
+            'is_storable': True,
         })
         cls.compfinished2 = cls.env['product.product'].create({
             'name': 'compfinished2',
-            'type': 'product',
+            'type': 'consu',
+            'is_storable': True,
         })
         cls.workcenter1 = cls.env['mrp.workcenter'].create({
             'name': 'workcenter1',

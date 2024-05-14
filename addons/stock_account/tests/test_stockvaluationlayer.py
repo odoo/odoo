@@ -19,7 +19,7 @@ class TestStockValuationCommon(TransactionCase):
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.product1 = cls.env['product.product'].create({
             'name': 'product1',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
         cls.picking_type_in = cls.env.ref('stock.picking_type_in')
@@ -274,11 +274,11 @@ class TestStockValuationStandard(TestStockValuationCommon):
     def test_empty_stock_move_valorisation(self):
         product1 = self.env['product.product'].create({
             'name': 'p1',
-            'type': 'product',
+            'is_storable': True,
         })
         product2 = self.env['product.product'].create({
             'name': 'p2',
-            'type': 'product',
+            'is_storable': True,
         })
         picking = self.env['stock.picking'].create({
             'picking_type_id': self.picking_type_in.id,
@@ -989,7 +989,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
 
         # Try to change the product category with a `default_detailed_type` key in the context and
         # check it doesn't break the account move generation.
-        self.product1.with_context(default_detailed_type='product').categ_id = cat2
+        self.product1.with_context(default_is_storable=True).categ_id = cat2
         self.assertEqual(self.product1.categ_id, cat2)
 
         self.assertEqual(self.product1.value_svl, 100)
@@ -1124,7 +1124,7 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationCom
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.product1 = cls.env['product.product'].create({
             'name': 'product1',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': cls.env.ref('product.product_category_all').id,
             'property_account_expense_id': cls.expense_account.id,
         })

@@ -23,7 +23,7 @@ class TestTraceability(TestMrpCommon):
     def _create_product(self, tracking):
         return self.env['product.product'].create({
             'name': 'Product %s' % tracking,
-            'type': 'product',
+            'is_storable': True,
             'tracking': tracking,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
@@ -145,27 +145,27 @@ class TestTraceability(TestMrpCommon):
     def test_tracking_on_byproducts(self):
         product_final = self.env['product.product'].create({
             'name': 'Finished Product',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
         })
         product_1 = self.env['product.product'].create({
             'name': 'Raw 1',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
         })
         product_2 = self.env['product.product'].create({
             'name': 'Raw 2',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
         })
         byproduct_1 = self.env['product.product'].create({
             'name': 'Byproduct 1',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
         })
         byproduct_2 = self.env['product.product'].create({
             'name': 'Byproduct 2',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
         })
         bom_1 = self.env['mrp.bom'].create({
@@ -371,10 +371,10 @@ class TestTraceability(TestMrpCommon):
 
         productA, productB, productC = self.env['product.product'].create([{
             'name': 'Product A',
-            'type': 'product',
+            'is_storable': True,
         }, {
             'name': 'Product B',
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'lot',
         }, {
             'name': 'Product C',
@@ -523,7 +523,7 @@ class TestTraceability(TestMrpCommon):
 
         component = self.bom_4.bom_line_ids.product_id
         component.write({
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
         })
         serial_number = self.env['stock.lot'].create({
@@ -652,7 +652,7 @@ class TestTraceability(TestMrpCommon):
     def test_assign_stock_move_date_on_mark_done(self):
         product_final = self.env['product.product'].create({
             'name': 'Finished Product',
-            'type': 'product',
+            'is_storable': True,
         })
         with freeze_time('2024-01-15'):
             production = self.env['mrp.production'].create({
@@ -675,7 +675,7 @@ class TestTraceability(TestMrpCommon):
         stock_location = self.env.ref('stock.stock_location_stock')
         component = self.bom_4.bom_line_ids.product_id
         component.write({
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
         })
 
@@ -734,7 +734,7 @@ class TestTraceability(TestMrpCommon):
         """
         component = self.bom_4.bom_line_ids.product_id
         component.write({
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
         })
 
@@ -798,7 +798,7 @@ class TestTraceability(TestMrpCommon):
         stock_location = self.env.ref('stock.stock_location_stock')
         component = self.bom_4.bom_line_ids.product_id
         component.write({
-            'type': 'product',
+            'is_storable': True,
             'tracking': 'serial',
         })
 

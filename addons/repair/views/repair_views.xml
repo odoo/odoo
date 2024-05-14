@@ -145,7 +145,6 @@
                                 <field name="partner_id" column_invisible="True" readonly="state == 'done'"/>
                                 <field name="scrapped" column_invisible="True"/>
                                 <field name="picking_code" column_invisible="True"/>
-                                <field name="product_type" column_invisible="True"/>
                                 <field name="show_details_visible" column_invisible="True"/>
                                 <field name="additional" column_invisible="True"/>
                                 <field name="move_lines_count" column_invisible="True"/>
@@ -153,7 +152,7 @@
                                 <field name="product_uom_category_id" column_invisible="True"/>
                                 <field name="has_tracking" column_invisible="True"/>
                                 <field name="display_assign_serial" column_invisible="True"/>
-                                <field name="product_id" context="{'default_detailed_type': 'product'}" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0"/>
+                                <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0"/>
                                 <field name="description_picking" string="Description" optional="hide"/>
                                 <field name="date" optional="hide"/>
                                 <field name="date_deadline" optional="hide"/>

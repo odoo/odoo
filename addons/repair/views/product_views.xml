@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <group name="group_general" position="inside">
-                <field name="create_repair" invisible="detailed_type not in ('consu', 'product', 'service')"/>
+                <field name="create_repair" invisible="detailed_type not in ('consu', 'service')"/>
             </group>
         </field>
     </record>
@@ -18,7 +18,7 @@
         <field name="mode">primary</field>
         <field name="inherit_id" ref="product.product_view_search_catalog"/>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='products']" position="after">
+            <xpath expr="//filter[@name='goods']" position="after">
                 <separator />
                 <filter name="bom_parts" string="BoM Components" domain="[('id', 'in', context.get('catalog_bom_product_ids'))]"/>
             </xpath>
