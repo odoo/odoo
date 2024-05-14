@@ -2005,8 +2005,8 @@ class Html(_String):
             original_value = record[self.name]
             if original_value:
                 # Note that sanitize also normalize
-                original_value_sanitized = html_sanitize(original_value, **sanitize_vals)
-                original_value_normalized = html_normalize(original_value)
+                original_value_normalized = html_normalize(original_value, self._filter_acceptable_sanitization_loss)
+                original_value_sanitized = html_sanitize(original_value_normalized, **sanitize_vals)
 
                 if (
                     not original_value_sanitized  # sanitizer could empty it
@@ -2025,6 +2025,56 @@ class Html(_String):
                     ))
 
         return html_sanitize(value, **sanitize_vals)
+
+    def _filter_acceptable_sanitization_loss(self, doc):
+        # FIXME this should be done only for some specific fields of some
+        # specific models. However, given the state of the codebase and the
+        # functional flows, doing it always should be the same. Facts:
+        #
+        # - "media_iframe_video" is a concept introduced by the web_editor app
+        #
+        # - Not considering "media_iframe_video" elements (so considering them
+        #   as an acceptable sanitization loss) is only ok for "fields that can
+        #   only be seen *and* modified through a website screen. Indeed, on
+        #   website loading, the iframe is rebuilt from the "media_iframe_video"
+        #   element dataset information if it was previously sanitized.
+        #
+        # - Some fields are sanitized_overridable despite the fact they do not
+        #   depend on the website model... but in that case, media_iframe_video
+        #   simply cannot appear in the field through user flows (the ability to
+        #   add videos is disabled since the field is sanitized).
+        #
+        # Special award to the survey.question description field though, which:
+        # - Does not depend on website
+        # - Is sanitize=True and sanitize_overridable=True
+        # - Contains "media_iframe_video" in some demo data although the only
+        #   way to get some in there by yourself is to:
+        #    1. Install website.
+        #    2. Fill in the survey.question with some content through the
+        #       backend form view.
+        #    3. Somehow reach the related survey from the website and enter edit
+        #       mode when reaching the question.
+        #    4. Add a video in the previously created content.
+        #
+        # => In that case, not considering media_iframe_video element here is
+        #    wrong as it allows non-admin users to save, have the video that was
+        #    added by an admin sanitized and thus not see it anymore... except
+        #    through website screens. This is unlikely though: first getting the
+        #    video in there is unlikely but re-editing it from the backend after
+        #    is probably not common either... and in the end, at worst, the user
+        #    sees the video disappear while it is still there in the actual
+        #    survey (from website screens).
+        #
+        # Ideally, this should be implemented per model/field. Probably with a
+        # mixin used by all relevant models (probably all except this survey app
+        # one).
+        #
+        # An even more ideal solution would be to get rid of this concept of
+        # acceptable sanitization loss and instead make it so safe videos are
+        # simply not sanitized at all in the first place.
+        for el in doc.xpath('//div[hasclass("media_iframe_video")]'):
+            el.getparent().remove(el)
+        return doc
 
     def convert_to_record(self, value, record):
         r = super().convert_to_record(value, record)
