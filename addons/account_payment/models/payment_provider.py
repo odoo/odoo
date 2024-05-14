@@ -45,9 +45,11 @@ class Paymentprovider(models.Model):
         if pay_method_line:
             pay_method_line.payment_provider_id = self
             pay_method_line.journal_id = self.journal_id
+            pay_method_line.name = self.name
         elif allow_create:
             default_payment_method_id = self._get_default_payment_method_id(self.code)
             self.env['account.payment.method.line'].create({
+                'name': self.name,
                 'payment_method_id': default_payment_method_id,
                 'journal_id': self.journal_id.id,
                 'payment_provider_id': self.id,

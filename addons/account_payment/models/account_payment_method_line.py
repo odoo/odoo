@@ -20,6 +20,13 @@ class AccountPaymentMethodLine(models.Model):
         related='payment_provider_id.state'
     )
 
+    @api.depends('payment_provider_id.name')
+    def _compute_name(self):
+        super()._compute_name()
+        for line in self:
+            if line.payment_provider_id and not line.name:
+                line.name = line.payment_provider_id.name
+
     @api.depends('payment_method_id')
     def _compute_payment_provider_id(self):
         results = self.journal_id._get_journals_payment_method_information()
@@ -33,6 +40,7 @@ class AccountPaymentMethodLine(models.Model):
             if (
                 company
                 and line.payment_method_id
+                and not line.payment_provider_id
                 and manage_providers
                 and method_information_mapping.get(line.payment_method_id.id, {}).get('mode') == 'electronic'
             ):
