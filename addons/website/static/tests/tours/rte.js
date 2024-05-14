@@ -133,6 +133,7 @@ wTourUtils.dragNDrop({
 }, {
     content: "check if translation is activate",
     trigger: ':iframe [data-oe-translation-initial-sha]',
+    isCheck: true,
 }, {
     content: "translate text",
     extra_trigger: '#oe_snippets.o_loaded',
