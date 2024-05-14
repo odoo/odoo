@@ -917,7 +917,7 @@ class AccountMove(models.Model):
                     'lineGrossAmountNormal': -line.amount_currency,
                     'lineGrossAmountNormalHUF': -amount_huf,
                 })
-
+            line_values['lineDescription'] = line_values['lineDescription'] or line.product_id.display_name
             invoice_values['lines_values'].append(line_values)
 
         is_company_huf = self.company_id.currency_id == currency_huf

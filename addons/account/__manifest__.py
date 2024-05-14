@@ -100,6 +100,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/views/**/*.js',
             'account/static/src/js/search/search_bar/search_bar.js',
             'account/static/src/helpers/*.js',
+            'account/static/src/core/utils/*.js',
         ],
         # Unit test files
         'web.assets_unit_tests': [
@@ -113,6 +114,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/js/account_portal.js',
             'account/static/src/components/tests_shared_js_python/*',
             'account/static/src/helpers/*.js',
+            'account/static/src/core/utils/*.js',
         ],
         'web.assets_tests': [
             'account/static/tests/tours/**/*',
