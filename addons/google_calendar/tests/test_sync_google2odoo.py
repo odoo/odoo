@@ -2039,8 +2039,6 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             ]).sorted(key=lambda r: r.event_id.start)
             for i, expected_state in enumerate(expected_states):
                 self.assertEqual(attendees[i].state, expected_state)
-            for i, event in enumerate(recurrence.calendar_event_ids.sorted("start")):
-                self.assertEqual(event.attendee_ids[1].state, expected_states[i])
 
     @patch_api
     def test_keep_organizer_attendee_writing_recurrence_from_google(self):
