@@ -22,6 +22,7 @@ from odoo.osv.expression import FALSE_DOMAIN
 from odoo.addons.http_routing.models import ir_http
 from odoo.addons.http_routing.models.ir_http import _guess_mimetype
 from odoo.addons.portal.controllers.portal import _build_url_w_params
+from odoo.addons.base.models.res_country import COUNTRY_CODE_2_TO_PHONE
 
 logger = logging.getLogger(__name__)
 
@@ -392,7 +393,7 @@ class Http(models.AbstractModel):
     def get_frontend_session_info(self):
         session_info = super(Http, self).get_frontend_session_info()
         geoip_country_code = request.geoip.country_code
-        geoip_phone_code = request.env['res.country']._phone_code_for(geoip_country_code) if geoip_country_code else None
+        geoip_phone_code = COUNTRY_CODE_2_TO_PHONE.get(geoip_country_code)
         session_info.update({
             'is_website_user': request.env.user.id == request.website.user_id.id,
             'geoip_country_code': geoip_country_code,
