@@ -73,4 +73,4 @@ class RelocateStockQuant(models.TransientModel):
             return lot_ids.action_lot_open_quants()
         elif self.env.context.get('single_product', False) and len(product_ids) == 1:
             return product_ids.action_update_quantity_on_hand()
-        return self.env['ir.actions.server']._for_xml_id(self.env.context.get('action_ref', 'stock.action_view_quants'))
+        return self.quant_ids.with_context(always_show_loc=1).action_view_quants()

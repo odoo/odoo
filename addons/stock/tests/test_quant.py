@@ -932,7 +932,10 @@ class StockQuant(TransactionCase):
         # testing assigning a package to a quant
         relocate_wizard = _get_relocate_wizard(quant_a)
         relocate_wizard.dest_package_id = package_02
-        relocate_wizard.save().action_relocate_quants()
+        action = relocate_wizard.save().action_relocate_quants()
+        self.assertEqual(action['type'], 'ir.actions.act_window')
+        self.assertEqual(action['res_model'], 'stock.quant')
+
         new_quant_a = self.env['stock.quant'].search([('product_id', '=', self.product.id), ('quantity', '=', 10)])
         self.assertEqual(new_quant_a.package_id, package_02)
 
