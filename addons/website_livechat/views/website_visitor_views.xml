@@ -31,18 +31,26 @@
         <field name="name">website.visitor.view.kanban.inherit.website.livechat</field>
         <field name="model">website.visitor</field>
         <field name="inherit_id" ref="website.website_visitor_view_kanban"/>
+        <field name="priority" eval="21"/>
         <field name="arch" type="xml">
             <field name="page_ids" position="after">
                 <field name="livechat_operator_id"/>
                 <field name="session_count"/>
             </field>
-            <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="before">
-                <div t-if="record.session_count.raw_value">Chats<span class="float-end fw-bold"><field name="session_count"/></span></div>
+            <xpath expr="//div[hasclass('w_visitor_kanban_stats')]" position="inside">
+                <div t-if="record.session_count.raw_value">
+                    Chats
+                    <a type="action" name="website_livechat.website_visitor_livechat_session_action">
+                        <span class="float-end fw-bold">
+                            <field name="session_count"/>
+                        </span>
+                    </a>
+                </div>
                 <div t-if="record.livechat_operator_id.raw_value">
                     Speaking With
                     <div name="livechat_operator_id"
                         class="fw-bold float-end d-inline-block">
-                        <img class="oe_avatar rounded-circle" width="19" height="19"
+                        <img class="oe_avatar rounded-circle me-1 mb-1" width="19" height="19"
                             t-attf-src="/web/image/res.partner/#{record.livechat_operator_id.raw_value}/avatar_128"
                             alt="Operator Avatar"/>
                         <field name="livechat_operator_name"/>
@@ -52,38 +60,9 @@
                     <br invisible="livechat_operator_id or not is_connected"/>
                 </t>
             </xpath>
-            <xpath expr="//div[hasclass('w_visitor_kanban_actions_ungrouped')]" position="before">
-                <div class="col-lg col-sm-4 col-6 py-0 my-2">
-                    <span t-att-class="record.session_count.raw_value ? 'fw-bold' : 'text-muted'">
-                        <field name="session_count"/>
-                    </span>
-                    <div t-att-class="record.session_count.raw_value ? '' : 'text-muted'">Chats</div>
-                </div>
-                <div t-if="record.livechat_operator_id.raw_value" class="col-lg col-sm-4 col-6 py-0 my-2">
-                    <div>
-                        <img name="livechat_operator_id"
-                            class="oe_avatar rounded-circle" width="19" height="19"
-                            t-attf-src="/web/image/res.partner/#{record.livechat_operator_id.raw_value}/avatar_128"
-                            alt="Operator Avatar"/>
-                        <b><field name="livechat_operator_name"/></b>
-                    </div>
-                    <div>Speaking With</div>
-                </div>
-                <div t-else="" class="col-lg d-none d-lg-block"/>
-            </xpath>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="inside">
-                <button name="action_send_chat_request" type="object"
-                        class="btn btn-secondary"
-                        invisible="livechat_operator_id or not is_connected">
-                        Chat
-                </button>
-            </xpath>
-            <xpath expr="//div[hasclass('w_visitor_kanban_actions_ungrouped')]" position="inside">
-                <button name="action_send_chat_request" type="object"
-                        class="btn btn-secondary"
-                        invisible="livechat_operator_id or not is_connected">
-                        Chat
-                </button>
+                <button name="action_send_chat_request" type="object" icon="fa-comments-o" class="btn btn-secondary"
+                        invisible="livechat_operator_id or not is_connected" string="Chat"/>
             </xpath>
         </field>
     </record>

@@ -44,24 +44,17 @@
         <field name="name">website.visitor.view.kanban.inherit.website.crm</field>
         <field name="model">website.visitor</field>
         <field name="inherit_id" ref="website.website_visitor_view_kanban"/>
+        <field name="priority" eval="18"/>
         <field name="arch" type="xml">
             <field name="page_ids" position="after">
                 <field name="lead_count"/>
             </field>
-            <xpath expr="//div[@id='o_page_count']" position="after">
-                <div t-if="record.lead_count.raw_value" groups="sales_team.group_sale_salesman">
+            <xpath expr="//div[hasclass('w_visitor_kanban_stats')]" position="inside">
+                <div groups="sales_team.group_sale_salesman">
                     Leads / Opportunities
-                    <span class="float-end fw-bold">
+                    <a type="action" name="website_crm.crm_lead_action_from_visitor">
                         <field name="lead_count"/>
-                    </span>
-                </div>
-            </xpath>
-            <xpath expr="//div[@id='wvisitor_visited_page']" position="after">
-                <div class="col-lg col-sm-4 col-6 py-0 my-2" groups="sales_team.group_sale_salesman">
-                    <span t-att-class="record.lead_count.raw_value ? 'fw-bold' : 'text-muted'">
-                        <field name="lead_count"/>
-                    </span>
-                    <div t-att-class="record.lead_count.raw_value ? '' : 'text-muted'">Leads / Opportunities</div>
+                    </a>
                 </div>
             </xpath>
         </field>
