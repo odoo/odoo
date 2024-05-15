@@ -146,7 +146,7 @@ export const tourService = {
                         component: TourPointer,
                         props: { pointerState, ...config },
                     };
-                    remove = overlay.add(pointers[tourName].component, pointers[tourName].props);
+                    remove = overlay.add(pointers[tourName].component, pointers[tourName].props, { sequence: 60 });
                 },
                 stop() {
                     remove?.();
