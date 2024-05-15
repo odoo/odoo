@@ -765,18 +765,35 @@ test(`save when action button clicked`, async () => {
     expect(`.o_field_widget[name='expertise'] input`).toHaveValue("Sales");
 
     await contains(`.o_field_widget[name='expertise'] input`).edit("test");
-    expect(`.o_pager_counter`).toHaveText("1 / 1");
     expect(`.o_field_widget[name='expertise'] input`).toHaveValue("test");
 
     await contains(`.o_cp_action_menus button`).click();
     await contains(`.o-dropdown--menu .dropdown-item`).click();
     expect(["save"]).toVerifySteps();
-    expect(`.o_pager_counter`).toHaveText("2 / 2");
     expect(`.o_field_widget[name='expertise'] input`).toHaveValue("test");
 
     await contains(`.o_pager_previous`).click();
-    expect(`.o_pager_counter`).toHaveText("1 / 2");
     expect(`.o_field_widget[name='expertise'] input`).toHaveValue("test");
+});
+
+test.tags("desktop")(`save when action button clicked on desktop`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="expertise"/></form>`,
+        actionMenus: {},
+        resId: 1,
+    });
+
+    await contains(`.o_field_widget[name='expertise'] input`).edit("test");
+    expect(`.o_pager_counter`).toHaveText("1 / 1");
+
+    await contains(`.o_cp_action_menus button`).click();
+    await contains(`.o-dropdown--menu .dropdown-item`).click();
+    expect(`.o_pager_counter`).toHaveText("2 / 2");
+
+    await contains(`.o_pager_previous`).click();
+    expect(`.o_pager_counter`).toHaveText("1 / 2");
 });
 
 test(`error on save when action button clicked`, async () => {

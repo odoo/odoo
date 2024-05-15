@@ -1,9 +1,10 @@
 import { test, expect } from "@odoo/hoot";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { click, press } from "@odoo/hoot-dom";
 import { Pager } from "@web/core/pager/pager";
 import { Component, useState, xml } from "@odoo/owl";
-import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { config as transitionConfig } from "@web/core/transition";
 
 class PagerController extends Component {
     static template = xml`<Pager t-props="state" />`;
@@ -24,8 +25,30 @@ test("basic interactions", async () => {
             offset: 0,
             limit: 4,
             total: 10,
-            onUpdate(data) {
-                pager.updateProps(data);
+            async onUpdate(data) {
+                expect.step(`offset: ${data.offset}, limit: ${data.limit}`);
+                await pager.updateProps(data);
+            },
+        },
+    });
+
+    click(".o_pager button.o_pager_next");
+    await animationFrame();
+
+    click(".o_pager button.o_pager_previous");
+    await animationFrame();
+
+    expect(["offset: 4, limit: 4", "offset: 0, limit: 4"]).toVerifySteps();
+});
+
+test.tags("desktop")("basic interactions on desktop", async () => {
+    const pager = await mountWithCleanup(PagerController, {
+        props: {
+            offset: 0,
+            limit: 4,
+            total: 10,
+            async onUpdate(data) {
+                await pager.updateProps(data);
             },
         },
     });
@@ -38,14 +61,52 @@ test("basic interactions", async () => {
     expect(".o_pager_counter .o_pager_value").toHaveText("5-8");
 });
 
-test("edit the pager", async () => {
+test.tags("mobile")("basic interactions on mobile", async () => {
+    patchWithCleanup(transitionConfig, { disabled: true });
     const pager = await mountWithCleanup(PagerController, {
         props: {
             offset: 0,
             limit: 4,
             total: 10,
-            onUpdate(data) {
-                pager.updateProps(data);
+            async onUpdate(data) {
+                await pager.updateProps(data);
+            },
+        },
+    });
+
+    expect(".o_pager_indicator").toHaveCount(0);
+
+    click(".o_pager button.o_pager_next");
+    await animationFrame();
+    await animationFrame(); // transition
+
+    expect(".o_pager_indicator").toHaveCount(1);
+    expect(".o_pager_indicator .o_pager_value").toHaveText("5-8");
+    await runAllTimers();
+    await animationFrame();
+
+    expect(".o_pager_indicator").toHaveCount(0);
+
+    click(".o_pager button.o_pager_previous");
+    await animationFrame();
+    await animationFrame(); // transition
+
+    expect(".o_pager_indicator").toHaveCount(1);
+    expect(".o_pager_indicator .o_pager_value").toHaveText("1-4");
+    await runAllTimers();
+    await animationFrame();
+
+    expect(".o_pager_indicator").toHaveCount(0);
+});
+
+test.tags("desktop")("edit the pager", async () => {
+    const pager = await mountWithCleanup(PagerController, {
+        props: {
+            offset: 0,
+            limit: 4,
+            total: 10,
+            async onUpdate(data) {
+                await pager.updateProps(data);
             },
         },
     });
@@ -58,6 +119,7 @@ test("edit the pager", async () => {
 
     await contains("input.o_pager_value").edit("1-6");
     click(document.body);
+    await animationFrame();
     await animationFrame();
 
     expect("input").toHaveCount(0);
@@ -90,15 +152,15 @@ test.tags("desktop")("keydown on pager with same value", async () => {
     expect(["pager-changed"]).toVerifySteps();
 });
 
-test("pager value formatting", async () => {
+test.tags("desktop")("pager value formatting", async () => {
     expect.assertions(8);
     const pager = await mountWithCleanup(PagerController, {
         props: {
             offset: 0,
             limit: 4,
             total: 10,
-            onUpdate(data) {
-                pager.updateProps(data);
+            async onUpdate(data) {
+                await pager.updateProps(data);
             },
         },
     });
@@ -110,6 +172,7 @@ test("pager value formatting", async () => {
         await animationFrame();
         await contains("input.o_pager_value").edit(inputValue);
         click(document.body);
+        await animationFrame();
         await animationFrame();
         expect(".o_pager_counter .o_pager_value").toHaveText(expected);
     }
@@ -137,7 +200,7 @@ test("pager disabling", async () => {
                 // 1. Simulate a (long) server action
                 await reloadPromise;
                 // 2. Update the view with loaded data
-                pager.updateProps(data);
+                await pager.updateProps(data);
             },
         },
     });
@@ -146,6 +209,33 @@ test("pager disabling", async () => {
     click(".o_pager button.o_pager_next");
     await animationFrame();
     expect(".o_pager button.o_pager_next").toHaveAttribute("disabled");
+
+    click(".o_pager button.o_pager_previous");
+    await animationFrame();
+    expect(".o_pager button.o_pager_previous").toHaveAttribute("disabled");
+});
+
+test.tags("desktop")("pager disabling on desktop", async () => {
+    const reloadPromise = new Deferred();
+    const pager = await mountWithCleanup(PagerController, {
+        props: {
+            offset: 0,
+            limit: 4,
+            total: 10,
+            // The goal here is to test the reactivity of the pager; in a
+            // typical views, we disable the pager after switching page
+            // to avoid switching twice with the same action (double click).
+            async onUpdate(data) {
+                // 1. Simulate a (long) server action
+                await reloadPromise;
+                // 2. Update the view with loaded data
+                await pager.updateProps(data);
+            },
+        },
+    });
+
+    click(".o_pager button.o_pager_next");
+    await animationFrame();
     // Try to edit the pager value
     click(".o_pager_value");
     await animationFrame();
@@ -156,6 +246,7 @@ test("pager disabling", async () => {
     expect("span.o_pager_value").toHaveCount(1);
 
     reloadPromise.resolve();
+    await animationFrame();
     await animationFrame();
 
     expect("button").toHaveCount(2);
@@ -175,8 +266,8 @@ test.tags("desktop")("desktop input interaction", async () => {
             offset: 0,
             limit: 4,
             total: 10,
-            onUpdate(data) {
-                pager.updateProps(data);
+            async onUpdate(data) {
+                await pager.updateProps(data);
             },
         },
     });
@@ -187,43 +278,19 @@ test.tags("desktop")("desktop input interaction", async () => {
     expect("input").toBeFocused();
     click(document.body);
     await animationFrame();
-    expect("input").toHaveCount(0);
-});
-
-test.tags("mobile")("mobile input interaction", async () => {
-    const pager = await mountWithCleanup(PagerController, {
-        props: {
-            offset: 0,
-            limit: 4,
-            total: 10,
-            onUpdate(data) {
-                pager.updateProps(data);
-            },
-        },
-    });
-    click(".o_pager_value");
-    await animationFrame();
-    expect(document.body).toBeFocused();
-    expect("input").toHaveCount(1);
-
-    click(".o_pager_value");
-    await animationFrame();
-    expect("input").toHaveCount(1);
-    expect("input").toBeFocused();
-    click(document.body);
     await animationFrame();
     expect("input").toHaveCount(0);
 });
 
-test("updateTotal props: click on total", async () => {
+test.tags("desktop")("updateTotal props: click on total", async () => {
     const pager = await mountWithCleanup(PagerController, {
         props: {
             offset: 0,
             limit: 5,
             total: 10,
             onUpdate() {},
-            updateTotal() {
-                pager.updateProps({ total: 25, updateTotal: undefined });
+            async updateTotal() {
+                await pager.updateProps({ total: 25, updateTotal: undefined });
             },
         },
     });
@@ -239,7 +306,7 @@ test("updateTotal props: click on total", async () => {
     expect(".o_pager_limit").not.toHaveClass("o_pager_limit_fetch");
 });
 
-test("updateTotal props: click next", async () => {
+test.tags("desktop")("updateTotal props: click next", async () => {
     let tempTotal = 10;
     const realTotal = 18;
     const pager = await mountWithCleanup(PagerController, {
@@ -247,13 +314,13 @@ test("updateTotal props: click next", async () => {
             offset: 0,
             limit: 5,
             total: tempTotal,
-            onUpdate(data) {
+            async onUpdate(data) {
                 tempTotal = Math.min(realTotal, Math.max(tempTotal, data.offset + data.limit));
                 const nextProps = { ...data, total: tempTotal };
                 if (tempTotal === realTotal) {
                     nextProps.updateTotal = undefined;
                 }
-                pager.updateProps(nextProps);
+                await pager.updateProps(nextProps);
             },
             updateTotal() {},
         },
@@ -282,7 +349,7 @@ test("updateTotal props: click next", async () => {
     expect(".o_pager_limit").not.toHaveClass("o_pager_limit_fetch");
 });
 
-test("updateTotal props: edit input", async () => {
+test.tags("desktop")("updateTotal props: edit input", async () => {
     let tempTotal = 10;
     const realTotal = 18;
     const pager = await mountWithCleanup(PagerController, {
@@ -290,13 +357,13 @@ test("updateTotal props: edit input", async () => {
             offset: 0,
             limit: 5,
             total: tempTotal,
-            onUpdate(data) {
+            async onUpdate(data) {
                 tempTotal = Math.min(realTotal, Math.max(tempTotal, data.offset + data.limit));
                 const nextProps = { ...data, total: tempTotal };
                 if (tempTotal === realTotal) {
                     nextProps.updateTotal = undefined;
                 }
-                pager.updateProps(nextProps);
+                await pager.updateProps(nextProps);
             },
             updateTotal() {},
         },
@@ -311,6 +378,7 @@ test("updateTotal props: edit input", async () => {
     await contains("input.o_pager_value").edit("3-8");
     click(document.body);
     await animationFrame();
+    await animationFrame();
 
     expect(".o_pager_value").toHaveText("3-8");
     expect(".o_pager_limit").toHaveText("10+");
@@ -321,19 +389,20 @@ test("updateTotal props: edit input", async () => {
     await contains("input.o_pager_value").edit("3-20");
     click(document.body);
     await animationFrame();
+    await animationFrame();
     expect(".o_pager_value").toHaveText("3-18");
     expect(".o_pager_limit").toHaveText("18");
     expect(".o_pager_limit").not.toHaveClass("o_pager_limit_fetch");
 });
 
-test("updateTotal props: can use next even if single page", async () => {
+test.tags("desktop")("updateTotal props: can use next even if single page", async () => {
     const pager = await mountWithCleanup(PagerController, {
         props: {
             offset: 0,
             limit: 5,
             total: 5,
-            onUpdate(data) {
-                pager.updateProps({ ...data, total: 10 });
+            async onUpdate(data) {
+                await pager.updateProps({ ...data, total: 10 });
             },
             updateTotal() {},
         },
@@ -351,18 +420,18 @@ test("updateTotal props: can use next even if single page", async () => {
     expect(".o_pager_limit").toHaveClass("o_pager_limit_fetch");
 });
 
-test("updateTotal props: click previous", async () => {
+test.tags("desktop")("updateTotal props: click previous", async () => {
     const pager = await mountWithCleanup(PagerController, {
         props: {
             offset: 0,
             limit: 5,
             total: 10,
-            onUpdate(data) {
-                pager.updateProps(data);
+            async onUpdate(data) {
+                await pager.updateProps(data);
             },
             async updateTotal() {
                 const total = 23;
-                pager.updateProps({ total, updateTotal: undefined });
+                await pager.updateProps({ total, updateTotal: undefined });
                 return total;
             },
         },
@@ -374,6 +443,7 @@ test("updateTotal props: click previous", async () => {
 
     click(".o_pager_previous");
     await animationFrame();
+    await animationFrame(); // double call to updateProps
 
     expect(".o_pager_value").toHaveText("21-23");
     expect(".o_pager_limit").toHaveText("23");

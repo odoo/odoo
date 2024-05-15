@@ -2411,7 +2411,6 @@ test("edition of one2many field with pager", async () => {
     });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(40);
-    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("1-40 / 45");
 
     // add a record on page one
     checkRead = true;
@@ -2425,7 +2424,6 @@ test("edition of one2many field with pager", async () => {
     expect(".o_kanban_record:not(.o_kanban_ghost):contains('new record')").toHaveCount(0);
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(40);
-    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("1-40 / 46");
 
     // save
     await clickSave();
@@ -2441,7 +2439,6 @@ test("edition of one2many field with pager", async () => {
         message: "should have read a record (to display 40 records on page 1)",
     });
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(40);
-    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("1-40 / 45");
     // save
     await clickSave();
 
@@ -2478,9 +2475,122 @@ test("edition of one2many field with pager", async () => {
     expect(readIDs).toBe(undefined, { message: "should not have read any record" });
     // checks
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
-    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("41-45 / 45");
     expect(".o_kanban_record:not(.o_kanban_ghost):contains('new record page 1')").toHaveCount(1);
     expect(".o_kanban_record:not(.o_kanban_ghost):contains('new record page 2')").toHaveCount(1);
+    // save
+    await clickSave();
+
+    expect(["web_save", "web_save", "web_save"]).toVerifySteps();
+});
+
+test.tags("desktop")("edition of one2many field with pager on desktop", async () => {
+    const ids = [];
+    for (let i = 0; i < 45; i++) {
+        const id = 10 + i;
+        ids.push(id);
+        Partner._records.push({
+            id: id,
+            name: "relational record " + id,
+        });
+    }
+    Partner._records[0].p = ids;
+    Partner._views = { form: '<form><field name="name"/></form>' };
+
+    let saveCount = 0;
+    let checkRead = false;
+    onRpc("web_read", (args) => {
+        if (checkRead) {
+            checkRead = false;
+        }
+    });
+    onRpc("web_save", (args) => {
+        expect.step("web_save");
+        saveCount++;
+        const commands = args.args[1].p;
+        switch (saveCount) {
+            case 1:
+                expect(commands).toEqual([[0, commands[0][1], { name: "new record" }]]);
+                break;
+            case 2:
+                expect(commands).toEqual([[2, 10]]);
+                break;
+            case 3:
+                expect(commands).toEqual([
+                    [0, commands[0][1], { name: "new record page 1" }],
+                    [2, 11],
+                    [2, 52],
+                    [0, commands[3][1], { name: "new record page 2" }],
+                ]);
+                break;
+        }
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="p">
+                    <kanban>
+                        <field name="name"/>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>
+                                    <span><t t-esc="record.name.value"/></span>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("1-40 / 45");
+
+    // add a record on page one
+    checkRead = true;
+    await contains(".o-kanban-button-new").click();
+    await contains(".modal input").edit("new record");
+
+    await contains(".modal .modal-footer .btn-primary").click();
+
+    // checks
+    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("1-40 / 46");
+
+    // save
+    await clickSave();
+
+    // delete a record on page one
+    checkRead = true;
+
+    await contains(".delete_icon").click(); // should remove record!!!
+
+    // checks
+    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("1-40 / 45");
+    // save
+    await clickSave();
+
+    // add and delete records in both pages
+    checkRead = true;
+    // add and delete a record in page 1
+    await contains(".o-kanban-button-new").click();
+    await contains(".modal input").edit("new record page 1");
+    await contains(".modal .modal-footer .btn-primary").click();
+
+    await contains(".delete_icon").click(); // should remove record!!!
+    // add and delete a record in page 2
+    await contains(".o_x2m_control_panel .o_pager_next").click();
+
+    checkRead = true;
+    await contains(".delete_icon").click(); // should remove record!!!
+    await contains(".o-kanban-button-new").click();
+
+    await contains(".modal input").edit("new record page 2");
+    await contains(".modal .modal-footer .btn-primary").click();
+
+    // checks
+    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("41-45 / 45");
     // save
     await clickSave();
 
@@ -3456,7 +3566,7 @@ test("one2many kanban: conditional create/delete actions", async () => {
     });
 });
 
-test("editable one2many list, pager is updated", async () => {
+test.tags("desktop")("editable one2many list, pager is updated on desktop", async () => {
     Turtle._records.push({ id: 4, turtle_foo: "stephen hawking" });
     Partner._records[0].turtles = [1, 2, 3, 4];
 
@@ -3785,8 +3895,36 @@ test("editable one2many list, adding line when only one page", async () => {
 
     await clickSave();
     expect(".o_field_widget[name=turtles] .o_pager").toHaveCount(1);
-    expect(".o_field_widget[name=turtles] .o_pager").toHaveText("1-3 / 4");
 });
+
+test.tags("desktop")(
+    "editable one2many list, adding line when only one page on desktop",
+    async () => {
+        Partner._records[0].turtles = [1, 2, 3];
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
+            <form>
+                <field name="turtles">
+                    <tree editable="bottom" limit="3">
+                        <field name="turtle_foo"/>
+                    </tree>
+                </field>
+            </form>`,
+            resId: 1,
+        });
+
+        // add a record, to reach the page size limit
+        await contains(".o_field_x2many_list_row_add a").click();
+
+        // enter value in turtle_foo field and click outside to unselect the row
+        await contains('.o_field_widget[name="turtle_foo"] input').edit("nora");
+        await contains(getFixture()).click();
+        await clickSave();
+        expect(".o_field_widget[name=turtles] .o_pager").toHaveText("1-3 / 4");
+    }
+);
 
 test("editable one2many list, adding line, then discarding", async () => {
     Turtle._records.push({ id: 4, turtle_foo: "stephen hawking" });
@@ -3813,8 +3951,34 @@ test("editable one2many list, adding line, then discarding", async () => {
     expect(".modal").toHaveCount(0);
 
     expect(".o_field_widget[name=turtles] .o_pager").toBeVisible();
-    expect(".o_field_widget[name=turtles] .o_pager").toHaveText("1-3 / 4");
 });
+
+test.tags("desktop")(
+    "editable one2many list, adding line, then discarding on desktop",
+    async () => {
+        Turtle._records.push({ id: 4, turtle_foo: "stephen hawking" });
+        Partner._records[0].turtles = [1, 2, 3, 4];
+
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
+            <form>
+                <field name="turtles">
+                    <tree editable="bottom" limit="3">
+                        <field name="turtle_foo"/>
+                    </tree>
+                </field>
+            </form>`,
+            resId: 1,
+        });
+
+        // add a record, then discard
+        await contains(".o_field_x2many_list_row_add a").click();
+        await contains(".o_form_button_cancel").click();
+        expect(".o_field_widget[name=turtles] .o_pager").toHaveText("1-3 / 4");
+    }
+);
 
 test("editable one2many list, required field and pager", async () => {
     Turtle._records.push({ id: 4, turtle_foo: "stephen hawking" });
@@ -3843,15 +4007,17 @@ test("editable one2many list, required field and pager", async () => {
     expect("tr.o_data_row").toHaveCount(1);
 });
 
-test("editable one2many list, required field, pager and confirm discard", async () => {
-    Turtle._records.push({ id: 4, turtle_foo: "stephen hawking" });
-    Turtle._fields.turtle_foo = fields.Char({ required: true });
-    Partner._records[0].turtles = [1, 2, 3, 4];
+test.tags("desktop")(
+    "editable one2many list, required field, pager and confirm discard on desktop",
+    async () => {
+        Turtle._records.push({ id: 4, turtle_foo: "stephen hawking" });
+        Turtle._fields.turtle_foo = fields.Char({ required: true });
+        Partner._records[0].turtles = [1, 2, 3, 4];
 
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: `
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
             <form>
                 <field name="turtles">
                     <tree editable="bottom" limit="3">
@@ -3860,22 +4026,23 @@ test("editable one2many list, required field, pager and confirm discard", async 
                     </tree>
                 </field>
             </form>`,
-        resId: 1,
-    });
+            resId: 1,
+        });
 
-    // add a record with a dirty state, but not valid
-    await contains(".o_field_x2many_list_row_add a").click();
-    await contains('.o_field_widget[name="turtle_int"] input').edit(4321);
+        // add a record with a dirty state, but not valid
+        await contains(".o_field_x2many_list_row_add a").click();
+        await contains('.o_field_widget[name="turtle_int"] input').edit(4321);
 
-    // try to go to next page. The new record is not valid, but dirty so we should
-    // stay on the current page, and the record should be marked as invalid
-    await contains(".o_field_widget[name=turtles] .o_pager_next").click();
+        // try to go to next page. The new record is not valid, but dirty so we should
+        // stay on the current page, and the record should be marked as invalid
+        await contains(".o_field_widget[name=turtles] .o_pager_next").click();
 
-    expect(".o_field_widget[name=turtles] .o_pager").toHaveText("1-4 / 5");
+        expect(".o_field_widget[name=turtles] .o_pager").toHaveText("1-4 / 5");
 
-    expect(".o_field_widget[name=turtles] .o_pager").toHaveText("1-4 / 5");
-    expect(".o_field_widget[name=turtle_foo].o_field_invalid").toHaveCount(1);
-});
+        expect(".o_field_widget[name=turtles] .o_pager").toHaveText("1-4 / 5");
+        expect(".o_field_widget[name=turtle_foo].o_field_invalid").toHaveCount(1);
+    }
+);
 
 test("save a record with not new, dirty and invalid subrecord", async () => {
     Partner._records[0].p = [2];
@@ -11628,7 +11795,6 @@ test("multi page, command forget for record of second page", async () => {
     expect("[name=int_field] input").toHaveValue("10");
     expect(".o_data_row").toHaveCount(2);
     expect(queryAllTexts(".o_data_cell")).toEqual(["first record", "second record"]);
-    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("1-2 / 3");
 
     // trigger the onchange
     await contains("[name=int_field] input").edit("16", { confirm: "blur" });
@@ -11636,6 +11802,40 @@ test("multi page, command forget for record of second page", async () => {
     expect(queryAllTexts(".o_data_cell")).toEqual(["first record", "second record"]);
     expect(".o_x2m_control_panel .o_pager").toHaveCount(0);
 });
+
+test.tags("desktop")(
+    "multi page, command forget for record of second page on desktop",
+    async () => {
+        Partner._records[0].p = [1, 2, 4];
+        Partner._onChanges = {
+            int_field: function (obj) {
+                obj.p = [[3, 4]];
+            },
+        };
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
+            <form>
+                <group>
+                    <field name="int_field"/>
+                    <field name="p">
+                        <tree limit="2">
+                            <field name="name"/>
+                        </tree>
+                    </field>
+                </group>
+            </form>`,
+            resId: 1,
+        });
+
+        expect(".o_x2m_control_panel .o_pager_counter").toHaveText("1-2 / 3");
+
+        // trigger the onchange
+        await contains("[name=int_field] input").edit("16", { confirm: "blur" });
+        expect(".o_x2m_control_panel .o_pager_counter").toHaveCount(0);
+    }
+);
 
 test("active actions are passed to o2m field", async () => {
     Partner._records[0].turtles = [1, 2, 3];
