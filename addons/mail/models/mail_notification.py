@@ -18,7 +18,7 @@ class MailNotification(models.Model):
     # origin
     author_id = fields.Many2one('res.partner', 'Author', ondelete='set null')
     mail_message_id = fields.Many2one('mail.message', 'Message', index=True, ondelete='cascade', required=True)
-    mail_mail_id = fields.Many2one('mail.mail', 'Mail', index=True, help='Optional mail_mail ID. Used mainly to optimize searches.')
+    mail_mail_id = fields.Many2one('mail.mail', 'Mail', index='btree_not_null', help='Optional mail_mail ID. Used mainly to optimize searches.')
     # recipient
     res_partner_id = fields.Many2one('res.partner', 'Recipient', index=True, ondelete='cascade')
     # status

@@ -38,9 +38,9 @@ class EventRegistration(models.Model):
     active = fields.Boolean(default=True)
     barcode = fields.Char(string='Barcode', default=lambda self: self._get_random_barcode(), readonly=True, copy=False)
     # utm informations
-    utm_campaign_id = fields.Many2one('utm.campaign', 'Campaign', index=True, ondelete='set null')
-    utm_source_id = fields.Many2one('utm.source', 'Source', index=True, ondelete='set null')
-    utm_medium_id = fields.Many2one('utm.medium', 'Medium', index=True, ondelete='set null')
+    utm_campaign_id = fields.Many2one('utm.campaign', 'Campaign', index='btree_not_null', ondelete='set null')
+    utm_source_id = fields.Many2one('utm.source', 'Source', index='btree_not_null', ondelete='set null')
+    utm_medium_id = fields.Many2one('utm.medium', 'Medium', index='btree_not_null', ondelete='set null')
     # attendee
     partner_id = fields.Many2one('res.partner', string='Booked by', tracking=1)
     name = fields.Char(
