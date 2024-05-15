@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests import Form
 from odoo.exceptions import UserError
@@ -469,6 +470,25 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(self.env['stock.quant']._gather(product, customer_location).quantity, 2)
         # Ensure there still no quants in distribution warehouse
         self.assertEqual(sum(self.env['stock.quant']._gather(product, warehouse_distribution_wavre.lot_stock_id).mapped('quantity')), 0)
+
+    def test_add_resupply_warehouse_one_by_one(self):
+        """ Checks that selecting a warehouse as a resupply warehouse one after another correctly sets the routes as well.
+        """
+        warehouse_A, warehouse_B, warehouse_C = self.env['stock.warehouse'].create([{
+            'name': code,
+            'code': code,
+        } for code in ['WH_A', 'WH_B', 'WH_C']])
+        warehouse_A.resupply_wh_ids = [Command.link(warehouse_B.id)]
+        # Assign Warehouse B as supplier warehouse
+        self.assertEqual(len(warehouse_A.resupply_route_ids), 1)
+        self.assertEqual(warehouse_A.resupply_route_ids.supplier_wh_id, warehouse_B)
+        # Assign Warehouse C as supplier warehouse
+        warehouse_A.resupply_wh_ids = [Command.link(warehouse_C.id)]
+        self.assertEqual(len(warehouse_A.resupply_route_ids), 2)
+        self.assertRecordValues(warehouse_A.resupply_route_ids.sorted('id'), [
+            {'supplier_wh_id': warehouse_B.id},
+            {'supplier_wh_id': warehouse_C.id},
+        ])
 
     def test_noleak(self):
         # non-regression test to avoid company_id leaking to other warehouses (see blame)
