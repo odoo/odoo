@@ -341,9 +341,9 @@ class HrExpenseSheet(models.Model):
     @api.depends_context('uid')
     @api.depends('employee_id')
     def _compute_can_approve(self):
-        is_team_approver = self.env.user.has_group('hr_expense.group_hr_expense_team_approver')
-        is_approver = self.env.user.has_group('hr_expense.group_hr_expense_user')
-        is_hr_admin = self.env.user.has_group('hr_expense.group_hr_expense_manager')
+        is_team_approver = self.env.user.has_group('hr_expense.group_hr_expense_team_approver') or self.env.su
+        is_approver = self.env.user.has_group('hr_expense.group_hr_expense_user') or self.env.su
+        is_hr_admin = self.env.user.has_group('hr_expense.group_hr_expense_manager') or self.env.su
 
         for sheet in self:
             reason = False
@@ -488,6 +488,20 @@ class HrExpenseSheet(models.Model):
         return sheets
 
     def write(self, values):
+        # Avoid user with write access on expense sheet in draft state to bypass the validation process
+        is_editing_states = 'state' in values or 'approval_state' in values
+        if is_editing_states:
+            valid_states = {'submit', None}
+            if (
+                    not (self.env.user.has_group('hr_expense.group_hr_expense_manager') or self.env.su)
+                    and any(state == 'draft' for state in self.mapped('state'))
+                    and (values.get('state') not in valid_states or values.get('approval_state') not in valid_states)
+            ):
+                raise UserError(_("You don't have the rights to bypass the validation process of this expense report."))
+            elif values.get('state') == 'approve' or values.get('approval_state') == 'approve':
+                self._check_can_approve()
+            elif values.get('state') == 'cancel' or values.get('approval_state') == 'cancel':
+                self._check_can_refuse()
         res = super().write(values)
 
         user_is_accountant = self.env.user.has_group('account.group_account_user')
@@ -779,14 +793,15 @@ class HrExpenseSheet(models.Model):
 
     def _do_reverse_moves(self):
         self = self.with_context(clean_context(self.env.context))
-        moves = self.account_move_ids
-        draft_moves = moves.filtered(lambda m: m.state == 'draft')
-        non_draft_moves = moves - draft_moves
-        non_draft_moves._reverse_moves(
-            default_values_list=[{'invoice_date': fields.Date.context_today(move), 'ref': False} for move in non_draft_moves],
-            cancel=True
-        )
-        draft_moves.unlink()
+        moves_sudo = self.sudo().account_move_ids
+        if moves_sudo:
+            draft_moves_sudo = moves_sudo.filtered(lambda m: m.state == 'draft')
+            non_draft_moves_sudo = moves_sudo - draft_moves_sudo
+            non_draft_moves_sudo._reverse_moves(
+                default_values_list=[{'invoice_date': fields.Date.context_today(move), 'ref': False} for move in non_draft_moves_sudo],
+                cancel=True
+            )
+            draft_moves_sudo.unlink()
 
     def _calculate_default_accounting_date(self):
         """
