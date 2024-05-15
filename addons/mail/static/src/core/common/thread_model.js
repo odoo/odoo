@@ -777,8 +777,8 @@ export class Thread extends Record {
     }
 
     async leave() {
-        await this.store.env.services.orm.call("discuss.channel", "action_unfollow", [this.id]);
         this.delete();
+        await this.store.env.services.orm.call("discuss.channel", "action_unfollow", [this.id]);
         const thread = this.store.discuss.channels.threads[0]
             ? this.store.discuss.channels.threads[0]
             : this.store.discuss.inbox;

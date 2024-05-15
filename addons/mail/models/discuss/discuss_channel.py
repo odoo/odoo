@@ -353,9 +353,6 @@ class Channel(models.Model):
         # channel_info is called before actually unpinning the channel
         channel_info['is_pinned'] = False
         notification = Markup('<div class="o_mail_notification">%s</div>') % _('left the channel')
-        # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
-        self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
-        self.env['bus.bus']._sendone(partner, 'discuss.channel/leave', channel_info)
         self.env['bus.bus']._sendone(self, 'mail.record/insert', {
             'Thread': {
                 'channelMembers': [('DELETE', {'id': member.id})],
@@ -364,6 +361,9 @@ class Channel(models.Model):
                 'model': "discuss.channel",
             }
         })
+        # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
+        self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
+        self.env['bus.bus']._sendone(partner, 'discuss.channel/leave', channel_info)
 
     def add_members(self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, open_chat_window=False, post_joined_message=True):
         """ Adds the given partner_ids and guest_ids as member of self channels. """
