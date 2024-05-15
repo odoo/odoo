@@ -1010,7 +1010,7 @@ test("there should be no limit on the number of fetched groups", async () => {
 });
 
 test("pager, ungrouped, with default limit", async () => {
-    expect.assertions(3);
+    expect.assertions(2);
 
     onRpc("web_search_read", ({ kwargs }) => {
         expect(kwargs.limit).toBe(40);
@@ -1032,11 +1032,29 @@ test("pager, ungrouped, with default limit", async () => {
     });
 
     expect(".o_pager").toHaveCount(1);
+});
+
+test.tags("desktop")("pager, ungrouped, with default limit on desktop", async () => {
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <field name="foo"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
     expect(getPagerValue()).toEqual([1, 4]);
 });
 
 test("pager, ungrouped, with limit given in options", async () => {
-    expect.assertions(3);
+    expect.assertions(1);
 
     onRpc("web_search_read", ({ kwargs }) => {
         expect(kwargs.limit).toBe(2);
@@ -1055,13 +1073,28 @@ test("pager, ungrouped, with limit given in options", async () => {
             </kanban>`,
         limit: 2,
     });
+});
 
+test.tags("desktop")("pager, ungrouped, with limit given in options on desktop", async () => {
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t>
+                </templates>
+            </kanban>`,
+        limit: 2,
+    });
     expect(getPagerValue()).toEqual([1, 2]);
     expect(getPagerLimit(), 4).toBe(4);
 });
 
 test("pager, ungrouped, with limit set on arch and given in options", async () => {
-    expect.assertions(3);
+    expect.assertions(1);
 
     onRpc("web_search_read", ({ kwargs }) => {
         expect(kwargs.limit).toBe(3);
@@ -1081,12 +1114,32 @@ test("pager, ungrouped, with limit set on arch and given in options", async () =
             </kanban>`,
         limit: 2,
     });
-
-    expect(getPagerValue()).toEqual([1, 3]);
-    expect(getPagerLimit(), 4).toBe(4);
 });
 
-test("pager, ungrouped, with count limit reached", async () => {
+test.tags("desktop")(
+    "pager, ungrouped, with limit set on arch and given in options on desktop",
+    async () => {
+        // the limit given in the arch should take the priority over the one given in options
+        await mountView({
+            type: "kanban",
+            resModel: "partner",
+            arch: `
+            <kanban limit="3">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t>
+                </templates>
+            </kanban>`,
+            limit: 2,
+        });
+
+        expect(getPagerValue()).toEqual([1, 3]);
+        expect(getPagerLimit(), 4).toBe(4);
+    }
+);
+
+test.tags("desktop")("pager, ungrouped, with count limit reached", async () => {
     patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
 
     stepAllNetworkCalls();
@@ -1141,8 +1194,6 @@ test("pager, ungrouped, with count limit reached, click next", async () => {
     });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(".o_pager_value").toHaveText("1-2");
-    expect(".o_pager_limit").toHaveText("3+");
     expect([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -1153,10 +1204,36 @@ test("pager, ungrouped, with count limit reached, click next", async () => {
     await contains(".o_pager_next").click();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(".o_pager_value").toHaveText("3-4");
-    expect(".o_pager_limit").toHaveText("4");
     expect(["web_search_read"]).toVerifySteps();
 });
+
+test.tags("desktop")(
+    "pager, ungrouped, with count limit reached, click next on desktop",
+    async () => {
+        patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
+
+        await mountView({
+            type: "kanban",
+            resModel: "partner",
+            arch: `
+            <kanban limit="2">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t>
+                </templates>
+            </kanban>`,
+        });
+
+        expect(".o_pager_value").toHaveText("1-2");
+        expect(".o_pager_limit").toHaveText("3+");
+
+        await contains(".o_pager_next").click();
+
+        expect(".o_pager_value").toHaveText("3-4");
+        expect(".o_pager_limit").toHaveText("4");
+    }
+);
 
 test("pager, ungrouped, with count limit reached, click next (2)", async () => {
     patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
@@ -1179,8 +1256,6 @@ test("pager, ungrouped, with count limit reached, click next (2)", async () => {
     });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(".o_pager_value").toHaveText("1-2");
-    expect(".o_pager_limit").toHaveText("3+");
     expect([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -1191,17 +1266,48 @@ test("pager, ungrouped, with count limit reached, click next (2)", async () => {
     await contains(".o_pager_next").click();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(".o_pager_value").toHaveText("3-4");
-    expect(".o_pager_limit").toHaveText("4+");
     expect(["web_search_read"]).toVerifySteps();
 
     await contains(".o_pager_next").click();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
-    expect(".o_pager_value").toHaveText("5-5");
-    expect(".o_pager_limit").toHaveText("5");
     expect(["web_search_read"]).toVerifySteps();
 });
+
+test.tags("desktop")(
+    "pager, ungrouped, with count limit reached, click next (2) on desktop",
+    async () => {
+        patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
+
+        Partner._records.push({ id: 5, foo: "xxx" });
+
+        await mountView({
+            type: "kanban",
+            resModel: "partner",
+            arch: `
+            <kanban limit="2">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t>
+                </templates>
+            </kanban>`,
+        });
+
+        expect(".o_pager_value").toHaveText("1-2");
+        expect(".o_pager_limit").toHaveText("3+");
+
+        await contains(".o_pager_next").click();
+
+        expect(".o_pager_value").toHaveText("3-4");
+        expect(".o_pager_limit").toHaveText("4+");
+
+        await contains(".o_pager_next").click();
+
+        expect(".o_pager_value").toHaveText("5-5");
+        expect(".o_pager_limit").toHaveText("5");
+    }
+);
 
 test("pager, ungrouped, with count limit reached, click previous", async () => {
     patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
@@ -1224,8 +1330,6 @@ test("pager, ungrouped, with count limit reached, click previous", async () => {
     });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(".o_pager_value").toHaveText("1-2");
-    expect(".o_pager_limit").toHaveText("3+");
     expect([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -1236,12 +1340,40 @@ test("pager, ungrouped, with count limit reached, click previous", async () => {
     await contains(".o_pager_previous").click();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
-    expect(".o_pager_value").toHaveText("5-5");
-    expect(".o_pager_limit").toHaveText("5");
     expect(["search_count", "web_search_read"]).toVerifySteps();
 });
 
-test("pager, ungrouped, with count limit reached, edit pager", async () => {
+test.tags("desktop")(
+    "pager, ungrouped, with count limit reached, click previous on desktop",
+    async () => {
+        patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
+
+        Partner._records.push({ id: 5, foo: "xxx" });
+
+        await mountView({
+            type: "kanban",
+            resModel: "partner",
+            arch: `
+            <kanban limit="2">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t>
+                </templates>
+            </kanban>`,
+        });
+
+        expect(".o_pager_value").toHaveText("1-2");
+        expect(".o_pager_limit").toHaveText("3+");
+
+        await contains(".o_pager_previous").click();
+
+        expect(".o_pager_value").toHaveText("5-5");
+        expect(".o_pager_limit").toHaveText("5");
+    }
+);
+
+test.tags("desktop")("pager, ungrouped, with count limit reached, edit pager", async () => {
     patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
 
     Partner._records.push({ id: 5, foo: "xxx" });
@@ -1287,7 +1419,7 @@ test("pager, ungrouped, with count limit reached, edit pager", async () => {
     expect(["web_search_read"]).toVerifySteps();
 });
 
-test("count_limit attrs set in arch", async () => {
+test.tags("desktop")("count_limit attrs set in arch", async () => {
     stepAllNetworkCalls();
 
     await mountView({
@@ -1321,7 +1453,7 @@ test("count_limit attrs set in arch", async () => {
     expect(["search_count"]).toVerifySteps();
 });
 
-test("pager, ungrouped, deleting all records from last page", async () => {
+test.tags("desktop")("pager, ungrouped, deleting all records from last page", async () => {
     await mountView({
         type: "kanban",
         resModel: "partner",
@@ -1356,7 +1488,7 @@ test("pager, ungrouped, deleting all records from last page", async () => {
     expect(getPagerLimit()).toBe(3);
 });
 
-test("pager, update calls onUpdatedPager", async () => {
+test.tags("desktop")("pager, update calls onUpdatedPager", async () => {
     class TestKanbanController extends KanbanController {
         setup() {
             super.setup();

@@ -1,7 +1,10 @@
 import { useAutofocus } from "../utils/hooks";
 import { clamp } from "../utils/numbers";
 
-import { Component, useExternalListener, useState } from "@odoo/owl";
+import { Component, useExternalListener, useState, EventBus } from "@odoo/owl";
+
+export const PAGER_UPDATED_EVENT = "PAGER:UPDATED";
+export const pagerBus = new EventBus();
 
 /**
  * Pager
@@ -131,6 +134,12 @@ export class Pager extends Component {
         try {
             await this.props.onUpdate({ offset, limit }, hasNavigated);
         } finally {
+            if (this.env.isSmall) {
+                pagerBus.trigger(PAGER_UPDATED_EVENT, {
+                    value: this.value,
+                    total: this.props.total,
+                });
+            }
             this.state.isDisabled = false;
             this.state.isEditing = false;
         }

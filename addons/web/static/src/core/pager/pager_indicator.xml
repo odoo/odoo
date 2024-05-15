@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.PagerIndicator">
+        <Transition visible="state.show" name="'o-fade'" t-slot-scope="transition" leaveDuration="400">
+            <div class="o_pager_indicator position-fixed top-0 w-100 mt-2 d-flex justify-content-center" t-att-class="transition.className">
+                <span class="o_pager_indicator_inner px-3 py-1 text-bg-primary shadow rounded-4 fs-4">
+                    <span class="o_pager_value" t-esc="state.value" />
+                    <span> / </span>
+                    <span class="o_pager_limit" t-esc="state.total"/>
+                </span>
+            </div>
+        </Transition>
+    </t>
+
+</templates>

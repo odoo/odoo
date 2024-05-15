@@ -1338,7 +1338,7 @@ test("many2many widget: creates a new record with a context containing the paren
 test("onchange with 40+ commands for a many2many", async () => {
     // this test ensures that the basic_model correctly handles more LINK_TO
     // commands than the limit of the dataPoint (40 for x2many kanban)
-    expect.assertions(15);
+    expect.assertions(10);
 
     // create a lot of partner_types that will be linked by the onchange
     const commands = [];
@@ -1384,27 +1384,76 @@ test("onchange with 40+ commands for a many2many", async () => {
 
     await contains(".o_field_widget[name=foo] input").edit("trigger onchange");
     expect(["onchange"]).toVerifySteps();
-    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("1-40 / 45");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(40);
     await contains(".o_field_widget[name=timmy] .o_pager_next:eq(0)").click();
     expect([]).toVerifySteps();
-    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("41-45 / 45");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
 
     await clickSave();
 
-    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("1-40 / 45");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(40);
 
     await contains(".o_field_widget[name=timmy] .o_pager_next:eq(0)").click();
-    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("41-45 / 45");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
 
     await contains(".o_field_widget[name=timmy] .o_pager_next:eq(0)").click();
-    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("1-40 / 45");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(40);
 
     expect(["web_save", "web_read"]).toVerifySteps();
+});
+
+test.tags("desktop")("onchange with 40+ commands for a many2many on desktop", async () => {
+    // this test ensures that the basic_model correctly handles more LINK_TO
+    // commands than the limit of the dataPoint (40 for x2many kanban)
+
+    // create a lot of partner_types that will be linked by the onchange
+    const commands = [];
+    for (var i = 0; i < 45; i++) {
+        var id = 100 + i;
+        PartnerType._records.push({ id: id, name: "type " + id });
+        commands.push([4, id]);
+    }
+    Partner._fields.foo = fields.Char({
+        default: "My little Foo Value",
+        onChange: function (obj) {
+            obj.timmy = commands;
+        },
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="foo"/>
+                <field name="timmy">
+                    <kanban>
+                        <field name="name"/>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div><t t-esc="record.name.value"/></div>
+                            </t>
+                        </templates>
+                    </kanban>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    await contains(".o_field_widget[name=foo] input").edit("trigger onchange");
+    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("1-40 / 45");
+    await contains(".o_field_widget[name=timmy] .o_pager_next:eq(0)").click();
+    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("41-45 / 45");
+
+    await clickSave();
+
+    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("1-40 / 45");
+
+    await contains(".o_field_widget[name=timmy] .o_pager_next:eq(0)").click();
+    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("41-45 / 45");
+
+    await contains(".o_field_widget[name=timmy] .o_pager_next:eq(0)").click();
+    expect(".o_x2m_control_panel .o_pager_counter").toHaveText("1-40 / 45");
 });
 
 test("default_get, onchange, onchange on m2m", async () => {
