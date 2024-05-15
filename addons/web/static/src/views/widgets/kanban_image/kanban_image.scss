@@ -7,9 +7,6 @@
         width: 100%;
         height: 100%;
     }
-    &.o_kanban_image_with_inner .o_kanban_image_main {
-        object-fit: cover;
-    }
 
     .o_kanban_image_inner_pic {
         max-height: 25px;
@@ -18,4 +15,8 @@
         background: white;
         box-shadow: -1px -1px 0 1px white;
     }
+}
+
+.o_kanban_record.o_legacy_kanban .o_kanban_image.o_kanban_image_with_inner .o_kanban_image_main {
+    object-fit: cover;
 }
