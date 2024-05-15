@@ -13,6 +13,7 @@ import {
     models,
     mountView,
     mountWithCleanup,
+    mountWebClient,
     onRpc,
     patchWithCleanup,
     serverState,
@@ -24,6 +25,7 @@ import { router } from "@web/core/browser/router";
 import { pick } from "@web/core/utils/objects";
 import { WebClient } from "@web/webclient/webclient";
 import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";
+import { redirect } from "@web/core/utils/urls";
 
 const MOCK_IMAGE =
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
@@ -1601,7 +1603,7 @@ test("standalone field labels with string inside a settings page", async () => {
         arch: /* xml */ `
             <form js_class="base_settings">
                 <app string="CRM" name="crm">
-                    <setting>
+                    <setting id="setting_id">
                         <label string="My&quot; little &apos;  Label" for="display_name" class="highhopes"/>
                         <field name="display_name" />
                     </setting>
@@ -1612,9 +1614,9 @@ test("standalone field labels with string inside a settings page", async () => {
 
     expect("label.highhopes").toHaveText(`My" little ' Label`);
     const expectedCompiled = /* xml */ `
-            <SettingsPage slots="{NoContentHelper:__comp__.props.slots.NoContentHelper}" initialTab="__comp__.props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;${MOCK_IMAGE}&quot;}]">
+            <SettingsPage slots="{NoContentHelper:__comp__.props.slots.NoContentHelper}" initialTab="__comp__.props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;${MOCK_IMAGE}&quot;}]" anchors="[{&quot;app&quot;:&quot;crm&quot;,&quot;settingId&quot;:&quot;setting_id&quot;}]">
                 <SettingsApp key="\`crm\`" string="\`CRM\`" imgurl="\`${MOCK_IMAGE}\`" selectedTab="settings.selectedTab">
-                    <SearchableSetting title="\`\`"  help="\`\`" companyDependent="false" documentation="\`\`" record="__comp__.props.record" string="\`\`" addLabel="true">
+                    <SearchableSetting title="\`\`"  help="\`\`" companyDependent="false" documentation="\`\`" record="__comp__.props.record" id="\`setting_id\`" string="\`\`" addLabel="true">
                         <FormLabel id="'display_name_0'" fieldName="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name_0']" className="&quot;highhopes&quot;" string="\`My&quot; little '  Label\`"/>
                         <Field id="'display_name_0'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name_0']" readonly="__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew"/>
                     </SearchableSetting>
@@ -1876,4 +1878,83 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
     expect(".o_field_char input").toHaveValue("", {
         message: "the filename field should be empty since we removed the file",
     });
+});
+
+test("Open settings from url, with app anchor", async () => {
+    defineActions([
+        {
+            id: 1,
+            name: "Settings view",
+            path: "settings",
+            res_model: "res.config.settings",
+            type: "ir.actions.act_window",
+            views: [[1, "form"]],
+        },
+    ]);
+    ResConfigSettings._views.form = /* xml */ `
+        <form string="Settings" js_class="base_settings">
+            <app string="Not CRM" name="not_crm">
+                <block>
+                    <setting help="this is bar">
+                        <field name="bar"/>
+                    </setting>
+                </block>
+            </app>
+            <app string="CRM" name="crm">
+                <block>
+                    <setting help="this is foo">
+                        <field name="foo"/>
+                    </setting>
+                </block>
+            </app>
+        </form>
+    `;
+    ResConfigSettings._views.search = /* xml */ `<search/>`;
+
+    redirect("/odoo/settings#crm");
+    await mountWithCleanup(WebClient);
+    await animationFrame();
+    expect(".selected").toHaveAttribute("data-key", "crm", { message: "crm setting selected" });
+    expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual(["Foo"]);
+});
+
+test("Open settings from url, with setting id anchor", async () => {
+    defineActions([
+        {
+            id: 1,
+            name: "Settings view",
+            path: "settings",
+            res_model: "res.config.settings",
+            type: "ir.actions.act_window",
+            views: [[1, "form"]],
+        },
+    ]);
+    ResConfigSettings._views.form = /* xml */ `
+        <form string="Settings" js_class="base_settings">
+            <app string="Not CRM" name="not_crm">
+                <block>
+                    <setting help="this is bar">
+                        <field name="bar"/>
+                    </setting>
+                </block>
+            </app>
+            <app string="CRM" name="crm">
+                <block>
+                    <setting help="this is foo" id="setting_id">
+                        <field name="foo"/>
+                    </setting>
+                </block>
+            </app>
+        </form>
+    `;
+    ResConfigSettings._views.search = /* xml */ `<search/>`;
+
+    redirect("/odoo/settings#setting_id");
+    await mountWebClient();
+    expect(".selected").toHaveAttribute("data-key", "crm", { message: "crm setting selected" });
+    expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual(["Foo"]);
+    expect(".o_setting_highlight").toHaveCount(1);
+    expect(queryAllTexts(".settings .o_setting_highlight .o_form_label")).toEqual(["Foo"]);
+    await runAllTimers();
+    expect(".o_setting_highlight").toHaveCount(0);
 });

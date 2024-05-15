@@ -1,0 +1,14 @@
+// ------- Searchable Setting -------
+.o_searchable_setting {
+    --SearchableSetting__highlight-background: #{tint-color($o-action, 90%)};
+    --SearchableSetting__highlight-border: #{$o-action};
+    
+    &.o_setting_highlight{
+        background-color: var(--SearchableSetting__highlight-background) !important;
+        box-shadow: 
+            -1px 0px 0px 0px var(--SearchableSetting__highlight-border) inset,
+            1px 0px 0px 0px var(--SearchableSetting__highlight-border) inset,
+            0px -1px 0px 0px var(--SearchableSetting__highlight-border) inset,
+            0px 1px 0px 0px var(--SearchableSetting__highlight-border) inset;
+    }
+}

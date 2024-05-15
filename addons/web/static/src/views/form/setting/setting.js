@@ -10,6 +10,7 @@ export class Setting extends Component {
         DocumentationLink,
     };
     static props = {
+        id: { type: String, optional: 1 },
         title: { type: String, optional: 1 },
         fieldId: { type: String, optional: 1 },
         help: { type: String, optional: 1 },

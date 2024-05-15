@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.Setting">
-        <div t-att-class="classNames">
+        <div t-att-class="classNames" t-att-id="props.id">
             <div class="o_setting_left_pane" t-att-data-tooltip="props.title" data-tooltip-delay="800">
                 <t t-if="props.fieldName and fieldType==='boolean'">
                     <t t-slot="fieldSlot"/>

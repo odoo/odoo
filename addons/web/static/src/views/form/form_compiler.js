@@ -619,6 +619,9 @@ export class FormCompiler extends ViewCompiler {
             documentation: toStringExpression(el.getAttribute("documentation") || ""),
             record: `__comp__.props.record`,
         });
+        if (el.getAttribute("id")) {
+            setting.setAttribute("id", toStringExpression(el.getAttribute("id")));
+        }
         let string = toStringExpression(el.getAttribute("string") || "");
         let addLabel = true;
         Array.from(el.children).forEach((child, index) => {
