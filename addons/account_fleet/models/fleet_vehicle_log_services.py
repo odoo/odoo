@@ -40,5 +40,6 @@ class FleetVehicleLogServices(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_no_linked_bill(self):
-        if any(log_service.account_move_line_id for log_service in self):
-            raise UserError(_("You cannot delete log services records because one or more of them were bill created."))
+        for log_service in self:
+            if log_service.account_move_line_id and log_service.account_move_state == 'posted':
+                raise UserError(_("You cannot delete log services records because one or more of them were bill created."))

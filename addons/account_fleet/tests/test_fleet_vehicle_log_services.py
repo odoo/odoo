@@ -73,11 +73,9 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
         self.assertEqual(self.car_2.log_services[0].amount, service_line_2.price_subtotal)
 
         self.bill.button_draft()
-        self.service_line.unlink()
 
         self.assertFalse(self.car_1.log_services)
-        self.assertEqual(self.car_2.log_services[0].account_move_line_id.move_id, self.bill)
-        self.assertEqual(self.car_2.log_services[0].amount, service_line_2.price_subtotal)
+        self.assertFalse(self.car_2.log_services)
 
     def test_service_log_deletion(self):
         self.bill.action_post()

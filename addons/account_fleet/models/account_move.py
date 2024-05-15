@@ -13,9 +13,8 @@ class AccountMove(models.Model):
 
         val_list = []
         log_list = []
-        not_posted_before = self.filtered(lambda r: not r.posted_before)
-        posted = super()._post(soft)  # We need the move name to be set, but we also need to know which move are posted for the first time.
-        for line in (not_posted_before & posted).line_ids.filtered(
+        posted = super()._post(soft)
+        for line in posted.line_ids.filtered(
             lambda ml: ml.vehicle_id and ml.move_id.move_type == 'in_invoice' and ml.display_type == "product"):
             val = line._prepare_fleet_log_service()
             log = _('Service Vendor Bill: %s', line.move_id._get_html_link())
@@ -25,6 +24,19 @@ class AccountMove(models.Model):
         for log_service_id, log in zip(log_service_ids, log_list):
             log_service_id.message_post(body=log)
         return posted
+
+    def button_draft(self):
+        lines = self.mapped('line_ids')
+        log_services = self.env['fleet.vehicle.log.services'].sudo().search([
+            ('account_move_line_id.id', 'in', lines.ids),
+        ])
+
+        res = super().button_draft()
+
+        if log_services:
+            log_services.unlink()
+
+        return res
 
 
 class AccountMoveLine(models.Model):
@@ -46,12 +58,3 @@ class AccountMoveLine(models.Model):
             'description': self.name,
             'account_move_line_id': self.id,
         }
-
-    def unlink(self):
-        log_services = self.env['fleet.vehicle.log.services'].sudo().search([
-            ('account_move_line_id.id', 'in', self.ids),
-        ])
-        res = super().unlink()
-        if log_services:
-            log_services.unlink()
-        return res
