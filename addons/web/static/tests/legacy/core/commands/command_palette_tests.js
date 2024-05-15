@@ -1665,3 +1665,32 @@ QUnit.test("searchValue must not change without edition", async (assert) => {
     await nextTick();
     assert.strictEqual(target.querySelector(".o_command_palette_search input").value, "deb");
 });
+
+QUnit.test("display spinner while loading results from providers", async (assert) => {
+    const provideDef = makeDeferred();
+    mount(TestComponent, target, { env });
+    env.services.dialog.add(CommandPalette, {
+        config: {
+            providers: [
+                {
+                    namespace: '?',
+                    provide: async (env, { searchValue }) => {
+                        await provideDef;
+                        return [];
+                    },
+                },
+            ],
+        },
+    });
+
+    await nextTick();
+    assert.containsOnce(target, ".o_command_palette_search i.oi.oi-search");
+    assert.containsNone(target, ".o_command_palette_search i.fa.fa-spinner");
+    await editSearchBar("? blabla");
+    assert.containsNone(target, ".o_command_palette_search i.oi.oi-search");
+    assert.containsOnce(target, ".o_command_palette_search i.fa.fa-spinner");
+    provideDef.resolve();
+    await nextTick();
+    assert.containsOnce(target, ".o_command_palette_search i.oi.oi-search");
+    assert.containsNone(target, ".o_command_palette_search i.fa.fa-spinner");
+});
