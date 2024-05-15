@@ -51,19 +51,20 @@ QUnit.test("display available spreadsheets", async (assert) => {
     assert.containsN(getFixture(), ".o_search_panel li", 3);
 });
 
-QUnit.test("display the active spreadsheet", async (assert) => {
+QUnit.test("display no spreadsheet when no one is selected", async (assert) => {
     await createSpreadsheetDashboard();
-    assert.containsOnce(
+    assert.containsNone(
         getFixture(),
         ".o_search_panel li.active",
-        "It should have one active element"
+        "It should have zero active element"
     );
-    assert.containsOnce(getFixture(), ".o-spreadsheet", "It should display the spreadsheet");
+    assert.containsNone(getFixture(), ".o-spreadsheet", "It should not display the spreadsheet");
 });
 
 QUnit.test("Fold/unfold the search panel", async function (assert) {
     await createSpreadsheetDashboard();
     const fixture = getFixture();
+    await click(fixture.querySelector(".o_search_panel li"));
     await click(fixture.querySelector(".o_spreadsheet_dashboard_search_panel button"));
     assert.containsNone(fixture, ".o_spreadsheet_dashboard_search_panel");
     assert.strictEqual(
@@ -97,13 +98,17 @@ QUnit.test("can switch spreadsheet", async (assert) => {
     await createSpreadsheetDashboard();
     const fixture = getFixture();
     const spreadsheets = fixture.querySelectorAll(".o_search_panel li");
-    assert.ok(spreadsheets[0].className.includes("active"));
+    assert.notOk(spreadsheets[0].className.includes("active"));
     assert.notOk(spreadsheets[1].className.includes("active"));
     assert.notOk(spreadsheets[2].className.includes("active"));
     await click(spreadsheets[1]);
     assert.notOk(spreadsheets[0].className.includes("active"));
     assert.ok(spreadsheets[1].className.includes("active"));
     assert.notOk(spreadsheets[2].className.includes("active"));
+    await click(spreadsheets[2]);
+    assert.notOk(spreadsheets[0].className.includes("active"));
+    assert.notOk(spreadsheets[1].className.includes("active"));
+    assert.ok(spreadsheets[2].className.includes("active"));
 });
 
 QUnit.test("display no dashboard message", async (assert) => {
@@ -120,9 +125,19 @@ QUnit.test("display no dashboard message", async (assert) => {
     const fixture = getFixture();
     assert.containsNone(fixture, ".o_search_panel li", "It should not display any spreadsheet");
     assert.strictEqual(
-        fixture.querySelector(".dashboard-loading-status").innerText,
-        "No available dashboard",
-        "It should display no dashboard message"
+        fixture.querySelector(".o_spreadsheet_dashboard_action h1").innerText,
+        "Welcome to Dashboards",
+        "It should display landing page"
+    );
+});
+
+QUnit.test("display landing page", async (assert) => {
+    await createSpreadsheetDashboard();
+    const fixture = getFixture();
+    assert.strictEqual(
+        fixture.querySelector(".o_spreadsheet_dashboard_action h1").innerText,
+        "Welcome to Dashboards",
+        "It should display landing page"
     );
 });
 
@@ -143,7 +158,7 @@ QUnit.test("display error message", async (assert) => {
     });
     const fixture = getFixture();
     const spreadsheets = fixture.querySelectorAll(".o_search_panel li");
-    assert.containsOnce(fixture, ".o-spreadsheet", "It should display the spreadsheet");
+    assert.containsNone(fixture, ".o-spreadsheet", "It should display no spreadsheet");
     await click(spreadsheets[1]);
     assert.containsOnce(
         fixture,
@@ -192,6 +207,7 @@ QUnit.test(
         const serverData = getServerData(spreadsheetData);
         const fixture = getFixture();
         await createSpreadsheetDashboard({ serverData });
+        await click(fixture, ".o_search_panel li");
         await click(fixture, ".o_search_panel li:last-child");
         await click(fixture, ".o-dashboard-clickable-cell");
         assert.containsOnce(fixture, ".o_list_view");
@@ -217,6 +233,7 @@ QUnit.test(
         const serverData = getServerData(spreadsheetData);
         const fixture = getFixture();
         await createSpreadsheetDashboard({ serverData });
+        await click(fixture, ".o_search_panel li");
         const year = fixture.querySelector(".o_control_panel_actions input.o_datetime_input");
         const this_year = luxon.DateTime.local().year;
         assert.equal(year.value, String(this_year));
@@ -250,6 +267,7 @@ QUnit.test("Can delete record tag in the filter by hitting Backspace", async fun
     const serverData = getServerData(spreadsheetData);
     const fixture = getFixture();
     await createSpreadsheetDashboard({ serverData });
+    await click(fixture, ".o_search_panel li");
     const filter = fixture.querySelector(".o_control_panel_actions div.o_multi_record_selector");
     const autoCompleteInput = filter.querySelector(".o-autocomplete--input.o_input");
     assert.equal(filter.querySelectorAll(".o_tag").length, 1);
@@ -282,6 +300,7 @@ QUnit.test("share dashboard from dashboard view", async function (assert) {
             }
         },
     });
+    await click(target.querySelectorAll(".o_search_panel li")[0], "");
     assert.containsNone(target, ".spreadsheet_share_dropdown");
     await click(target, "i.fa-share-alt");
     await nextTick();
@@ -330,6 +349,7 @@ QUnit.test("Changing filter values will create a new share", async function (ass
             }
         },
     });
+    await click(target, ".o_search_panel li");
     await click(target, "i.fa-share-alt");
     await nextTick();
     assert.strictEqual(

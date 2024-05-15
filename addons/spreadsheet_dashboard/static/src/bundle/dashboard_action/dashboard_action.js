@@ -111,10 +111,6 @@ export class SpreadsheetDashboardAction extends Component {
         if (params && params.dashboard_id) {
             return params.dashboard_id;
         }
-        const [firstSection] = this.getDashboardGroups();
-        if (firstSection && firstSection.dashboards.length) {
-            return firstSection.dashboards[0].id;
-        }
     }
 
     getDashboardGroups() {
