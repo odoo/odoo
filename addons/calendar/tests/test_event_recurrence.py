@@ -680,6 +680,48 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
         self.assertTrue(self.recurrence)
         self.assertEqual(self.events.exists(), self.events[0])
 
+    def test_recurrence_update_all_first_archived(self):
+        """Test to check the flow when a calendar event is
+        created from a day that does not belong to the recurrence.
+        """
+        event = self.env['calendar.event'].create({
+            'name': 'Recurrent Event',
+            'start': datetime(2019, 10, 22, 1, 0),
+            'stop': datetime(2019, 10, 22, 2, 0),
+            'recurrency': True,
+            'rrule_type': 'weekly',
+            'tue': False,
+            'wed': True,
+            'fri': True,
+            'interval': 1,
+            'count': 3,
+            'event_tz': 'Etc/GMT-4',
+        })
+        # Tuesday datetime(2019, 10, 22, 1, 0) - Archived
+        # Wednesday datetime(2019, 10, 23, 1, 0)
+        # Friday datetime(2019, 10, 25, 1, 0)
+        # Wednesday datetime(2019, 10, 30, 1, 0)
+        recurrence = self.env['calendar.recurrence'].search([('id', '!=', self.recurrence.id)])
+        events = recurrence.calendar_event_ids.sorted('start')
+        # Check first event is archived
+        self.assertFalse(event.active)
+        # Check base_event is different than archived and it is first active event
+        self.assertNotEqual(recurrence.base_event_id, event)
+        self.assertEqual(recurrence.base_event_id, events[0])
+        # Update all events to check that error is not thrown
+        events[0].write({
+            'recurrence_update': 'all_events',
+            'fri': False,
+        })
+        events = self.env['calendar.recurrence'].search(
+            [('id', '!=', self.recurrence.id)]
+        ).calendar_event_ids.sorted('start')
+        self.assertEventDates(events, [
+            (datetime(2019, 10, 23, 1, 0), datetime(2019, 10, 23, 2, 0)),
+            (datetime(2019, 10, 30, 1, 0), datetime(2019, 10, 30, 2, 0)),
+            (datetime(2019, 11, 6, 1, 0), datetime(2019, 11, 6, 2, 0)),
+        ])
+
 
 class TestUpdateMultiDayWeeklyRecurrentEvents(TestRecurrentEvents):
 

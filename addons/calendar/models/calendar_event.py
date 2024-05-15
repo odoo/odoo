@@ -626,6 +626,14 @@ class Meeting(models.Model):
                     self.env.ref('calendar.calendar_template_meeting_changedate', raise_if_not_found=False)
                 )
 
+        # Change base event when the main base event is archived. If it isn't done when trying to modify
+        # all events of the recurrence an error can be thrown or all the recurrence can be deleted.
+        if values.get("active") is False:
+            recurrences = self.env["calendar.recurrence"].search([
+                ('base_event_id', 'in', self.ids)
+            ])
+            recurrences._select_new_base_event()
+
         return True
 
     def _check_private_event_conditions(self):
