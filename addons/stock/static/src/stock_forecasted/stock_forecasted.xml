@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     <div t-name="stock.Forecasted" class="o_action">
-        <ControlPanel display="{ 'top-right' : false }">
+        <ControlPanel>
             <t t-set-slot="layout-buttons">
                 <ForecastedButtons action="props.action" reloadReport.bind="reloadReport" resModel="resModel"/>
             </t>

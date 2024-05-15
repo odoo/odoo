@@ -24,7 +24,7 @@ class Foo extends models.Model {
 defineModels([Foo]);
 
 test("simple rendering", async () => {
-    await mountWithSearch(ControlPanel, { resModel: "foo", display: { "top-right": false } });
+    await mountWithSearch(ControlPanel, { resModel: "foo" });
 
     expect(`.o_control_panel_breadcrumbs`).toHaveCount(1);
     expect(`.o_control_panel_actions`).toHaveCount(1);
