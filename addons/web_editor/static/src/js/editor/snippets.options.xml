@@ -21,6 +21,8 @@
         <WeButton selectClass="'test_class_8'">8</WeButton>
     </WeButtonGroup>
     <WeInput unit="'px'" step="'5'" selectStyle="'0'" cssProperty="'border-width'" extraClass="'border'"/>
+    <WeDatetime selectDataAttribute="''" attributeName="'datetime'"/>
+    <WeDatetime selectDataAttribute="''" attributeName="'dateonly'" pickerType="'date'"/>
 </t>
 
 <t t-name="web_editor.container_width">
@@ -100,7 +102,7 @@
             <t t-set="showUnit" t-value="(!!this.props.unit || !!this.props.fakeUnit) and !this.props.hideUnit"/>
             <input t-ref="input" t-att-name="this.props.optionName"
                 t-att-type="isNumber ? 'number' : 'text'"
-                t-att-class="{'text-end': isNumber, 'text-start': !isNumber, o_we_large: !showUnit}"
+                t-att-class="{'text-end': isNumber, 'text-start': !isNumber}"
                 autocomplete="chrome-off"
                 t-att-placeholder="this.props.placeholder"
                 t-on-input="this._onInputInput"
@@ -110,6 +112,19 @@
                 t-att-value="this.state.value"
             />
             <span t-if="showUnit" t-out="this.props.fakeUnit || this.props.unit"/>
+        </div>
+    </we-input>
+</t>
+<t t-name="web_editor.WeDatetime">
+    <we-input class="o_we_user_value_widget o_we_large" t-att-class="getAllClasses()">
+        <we-title t-if="props.slots?.title">
+            <t t-slot="title"/>
+        </we-title>
+        <div>
+            <input t-ref="input" type="text" class="datetimepicker-input mx-0 text-start"
+                t-on-blur="this._onInputBlur"
+                t-on-input="this._onDateInputInput"
+            />
         </div>
     </we-input>
 </t>

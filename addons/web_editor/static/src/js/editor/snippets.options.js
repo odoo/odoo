@@ -49,6 +49,7 @@ import {
     markup,
     onMounted,
     onWillStart,
+    onPatched,
     onWillDestroy,
     reactive,
     useComponent,
@@ -59,6 +60,7 @@ import {
     useState,
     useSubEnv,
 } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 
 const preserveCursor = OdooEditorLib.preserveCursor;
@@ -2313,42 +2315,50 @@ const VideopickerUserValueWidget = MediapickerUserValueWidget.extend({
     },
 });
 
-const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
-    events: { // Explicitely not consider all InputUserValueWidget events
-        'blur input': '_onInputBlur',
-        'input input': '_onDateInputInput',
-    },
-    pickerType: 'datetime',
-
+const DatetimePickerUserValueWidget = InputUserValueWidget.extend({});
+class WeDatetime extends WeInput {
+    static template = "web_editor.WeDatetime";
+    static props = { ...WeInput.props,
+        pickerType: { type: String, optional: true },
+    };
+    static defaultProps = {
+        pickerType: "datetime",
+    };
     /**
      * @override
      */
-    init: function () {
-        this._super(...arguments);
-        this._value = DateTime.now().toUnixInteger().toString();
-    },
-    /**
-     * @override
-     */
-    start: async function () {
-        await this._super(...arguments);
-
-        this.el.classList.add('o_we_large');
-        this.inputEl.classList.add('datetimepicker-input', 'mx-0', 'text-start');
-
-        this.picker = this.call("datetime_picker", "create", {
-            target: this.inputEl,
-            onChange: this._onDateTimePickerChange.bind(this),
-            pickerProps: {
-                type: this.pickerType,
-                minDate: DateTime.fromObject({ year: 1000 }),
-                maxDate: DateTime.now().plus({ year: 200 }),
-                value: DateTime.fromSeconds(parseInt(this._value)),
-                rounding: 0,
-            },
+    setup() {
+        super.setup();
+        this.datetimePicker = useService("datetime_picker");
+        onMounted(() => {
+            this.picker = this.datetimePicker.create({
+                target: this.inputRef.el,
+                onChange: this._onDateTimePickerChange.bind(this),
+                pickerProps: {
+                    type: this.props.pickerType,
+                    minDate: DateTime.fromObject({ year: 1000 }),
+                    maxDate: DateTime.now().plus({ year: 200 }),
+                    value: this.state.value,
+                    rounding: 0,
+                },
+            });
+            this.picker.enable();
         });
-        this.picker.enable();
-    },
+
+        useEffect(
+            (value) => {
+                let dateTime = null;
+                if (value) {
+                    dateTime = DateTime.fromSeconds(parseInt(value));
+                    if (!dateTime.isValid) {
+                        dateTime = DateTime.now();
+                    }
+                }
+                this.picker.state.value = dateTime;
+            },
+            () => [this.state.value]
+        );
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -2357,31 +2367,17 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     /**
      * @override
      */
-    getMethodsParams: function () {
+    getMethodsParams() {
         return Object.assign(this._super(...arguments), {
             format: this.defaultFormat,
         });
-    },
+    }
     /**
      * @override
      */
-    isPreviewed: function () {
+    isPreviewed() {
         return this._super(...arguments) || this.picker.isOpen;
-    },
-    /**
-     * @override
-     */
-    async setValue() {
-        await this._super(...arguments);
-        let dateTime = null;
-        if (this._value) {
-            dateTime = DateTime.fromSeconds(parseInt(this._value))
-            if (!dateTime.isValid) {
-                dateTime = DateTime.now();
-            }
-        }
-        this.picker.state.value = dateTime;
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -2391,14 +2387,14 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
      * @private
      * @param {Event} ev
      */
-    _onDateTimePickerChange: function (newDateTime) {
+    _onDateTimePickerChange(newDateTime) {
         if (!newDateTime || !newDateTime.isValid) {
-            this._value = '';
+            this.state.value = "";
         } else {
-            this._value = newDateTime.toUnixInteger().toString();
+            this.state.value = newDateTime.toUnixInteger().toString();
         }
         this._onUserValuePreview();
-    },
+    }
     /**
      * Handles the clear button of the datepicker.
      *
@@ -2406,16 +2402,15 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
      * @param {Event} ev
      */
     _onDateInputInput(ev) {
-        if (!this.inputEl.value) {
-            this._value = '';
+        if (!this.inputRef.el.value) {
+            this.state.value = "";
             this._onUserValuePreview(ev);
         }
-    },
-});
+    }
+}
+registry.category("snippet_widgets").add("WeDatetime", WeDatetime);
 
-const DatePickerUserValueWidget = DatetimePickerUserValueWidget.extend({
-    pickerType: 'date',
-});
+const DatePickerUserValueWidget = DatetimePickerUserValueWidget.extend({});
 
 const ListUserValueWidget = UserValueWidget.extend({
     tagName: 'we-list',
@@ -2856,7 +2851,6 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
             this.outputEl.classList.add('ms-2');
             this.containerEl.appendChild(this.outputEl);
         }
-
         this._onInputChange = debounce(this._onInputChange, 100);
     },
 
@@ -4149,7 +4143,7 @@ export class SnippetOption {
     }
     getMethodsNames() {
         // TODO: @owl-options either add all possible method or find a way to compute it.
-        return ["selectClass", "selectStyle"];
+        return ["selectClass", "selectStyle", "selectDataAttribute"];
     }
     /**
      * Updates the UI. For widget update, @see _computeWidgetState.
