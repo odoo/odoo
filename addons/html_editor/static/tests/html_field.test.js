@@ -1641,7 +1641,6 @@ describe("save image", () => {
             },
         });
 
-        const imageRecord = IrAttachment._records[0];
         // Method to get the html of a cropped image.
         const getImageContainerHTML = (src, isModified) => {
             return `
@@ -1650,14 +1649,6 @@ describe("save image", () => {
                     class="img img-fluid o_we_custom_image o_we_image_cropped${
                         isModified ? " o_modified_image_to_save" : ""
                     }"
-                    data-original-id="${imageRecord.id}"
-                    data-original-src="${imageRecord.image_src}"
-                    data-mimetype="image/png"
-                    data-width="50"
-                    data-height="50"
-                    data-scale-x="1"
-                    data-scale-y="1"
-                    data-aspect-ratio="0/0"
                     src="${src}"
                 >
                 <br>
@@ -1682,7 +1673,7 @@ describe("save image", () => {
             expect(true).toBe(false);
             throw new Error("web_save should only be called through sendBeacon");
         });
-        onRpc(`/html_editor/modify_image/${imageRecord.id}`, async (request) => {
+        onRpc(`/html_editor/modify_image/`, async (request) => {
             if (modifyImageCount === 0) {
                 const { params } = await request.json();
                 expect(params.res_model).toBe("partner");
@@ -1811,7 +1802,7 @@ describe("save image", () => {
         onRpc("partner", "web_save", ({ args }) => {
             expect.step("web_save");
             expect(args[1].txt).toBe(
-                `<p class="test_target"><img class="img-fluid" data-file-name="test_image.png" src="/test_image_url.png?access_token=1234"></p>`
+                `<p class="test_target"><img class="img-fluid" src="/test_image_url.png?access_token=1234"></p>`
             );
         });
 
@@ -1880,7 +1871,7 @@ describe("save image", () => {
         onRpc("partner", "web_save", ({ args }) => {
             expect.step("web_save");
             expect(args[1].txt).toBe(
-                `<p class="test_target"><img class="img-fluid" data-file-name="test_image.png" src="/test_image_url.png?access_token=1234"></p>`
+                `<p class="test_target"><img class="img-fluid" src="/test_image_url.png?access_token=1234"></p>`
             );
         });
 

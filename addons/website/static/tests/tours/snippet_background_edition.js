@@ -123,7 +123,7 @@ registerWebsitePreviewTour('snippet_background_edition', {
 ...clickOnSave(),
 {
     content: "Check that the image is set",
-    trigger: `:iframe section.${snippets[0].id} img[data-original-id]`,
+    trigger: `:iframe section.${snippets[0].id} img`,
 },
 ...clickOnEditAndWaitEditMode(),
 ...clickOnSnippet(snippets[0]),

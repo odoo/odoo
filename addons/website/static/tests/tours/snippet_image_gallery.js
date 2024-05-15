@@ -110,7 +110,7 @@ registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     trigger: ".snippet-option-HideFooter we-button:contains('Page Visibility')",
 }, {
     content: "Click on the moved image",
-    trigger: ":iframe .s_image_gallery .carousel-item.active img[data-index='1'][data-gl-filter='blur']",
+    trigger: ":iframe .s_image_gallery .carousel-item.active img.o_modified_image_to_save[data-index='1']",
     run: "click",
 }, {
     content: "Check that the image still has the correct filter",

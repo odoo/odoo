@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { dragNDrop, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+import { clickOnSave, dragNDrop, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 import { FileSelectorControlPanel } from "@web_editor/components/media_dialog/file_selector";
 import { patch } from "@web/core/utils/patch";
@@ -228,9 +228,11 @@ registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
         content: "notification should close after 3 seconds",
         trigger: 'body:not(:has(.o_notification_close))',
         run: "click",
-    }, {
+    },
+    ...clickOnSave(),
+    {
         content: "unsplash image (mocked to logo) should have been used",
-        trigger: ":iframe #wrap .s_image_gallery .img[data-original-src^='/unsplash/HQqIOc8oYro/fox']",
+        trigger: ":iframe #wrap .s_image_gallery .img[src^='/unsplash/HQqIOc8oYro']",
         run() {
             unpatchMediaDialog();
         },

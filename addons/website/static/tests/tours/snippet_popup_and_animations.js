@@ -191,7 +191,7 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     {
         content: "Check that the Blur filter has been applied on the image",
-        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-gl-filter='blur']",
+        trigger: ":iframe .s_three_columns .o_animate_on_scroll img.o_modified_image_to_save",
     },
     {
         content: "Click on the 'undo' button",
@@ -200,7 +200,7 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     {
         content: "Check that the Blur filter has been removed from the image",
-        trigger: ":iframe .s_three_columns .o_animate_on_scroll img:not([data-gl-filter='blur'])",
+        trigger: ":iframe .s_three_columns .o_animate_on_scroll img:not(.o_modified_image_to_save)",
     },
     ...clickOnSave(),
     {

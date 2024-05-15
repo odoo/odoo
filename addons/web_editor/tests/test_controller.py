@@ -134,9 +134,9 @@ class TestController(HttpCase):
                 }
             }),
         ).json()
-        self.assertEqual(attachment_id, response['result']['original']['id'], "Wrong id")
-        self.assertEqual(image_src, response['result']['original']['image_src'], "Wrong image_src")
-        self.assertEqual(mimetype, response['result']['original']['mimetype'], "Wrong mimetype")
+        self.assertEqual(attachment_id, response['result']['original_id'], "Wrong id")
+        self.assertEqual(image_src, response['result']['original_src'], "Wrong image_src")
+        self.assertEqual(mimetype, response['result']['mimetype'], "Wrong mimetype")
 
     def test_04_admin_attachment(self):
         self.authenticate(self.admin, self.admin)
