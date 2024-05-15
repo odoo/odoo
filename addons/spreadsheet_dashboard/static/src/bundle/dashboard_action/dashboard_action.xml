@@ -13,7 +13,7 @@
                     t-key="filter.id"
                 />
             </t>
-            <t t-set-slot="control-panel-navigation-additional">
+            <t t-set-slot="control-panel-navigation-additional" t-if="state.activeDashboard">
                 <SpreadsheetShareButton t-key="activeDashboardId" model="state.activeDashboard?.model" onSpreadsheetShared.bind="shareSpreadsheet"/>
             </t>
         </ControlPanel>
@@ -31,7 +31,7 @@
                 <t t-else="" t-call="spreadsheet_dashboard.DashboardAction.Collapsed"/>
             </t>
             <!-- Main content -->
-            <h3 t-if="!dashboard" class="dashboard-loading-status">No available dashboard</h3>
+            <t t-if="!dashboard" t-call="spreadsheet_dashboard.DashboardLandingPage"/>
             <t t-else="">
                 <t t-set="status" t-value="dashboard.status"/>
                 <h3 t-if="status === Status.Loading" class="dashboard-loading-status">Loading...</h3>
@@ -81,9 +81,53 @@
                         t-esc="dashboard.displayName"
                         t-att-data-name="dashboard.displayName"
                         class="o_search_panel_category_value list-group-item cursor-pointer border-0"
-                        t-att-class="{'active': dashboard.id === state.activeDashboard.id}"/>
+                        t-att-class="{'active': dashboard.id === state.activeDashboard?.id}"/>
                 </ul>
             </section>
         </div>
     </t>
+
+    <div t-name="spreadsheet_dashboard.DashboardLandingPage" class="mx-auto h-100" style="max-width:1000px;">
+        <h1 class="text-primary text-center pt-3">Welcome to Dashboards</h1>
+        <h2 class="text-action">What is Dashboards?</h2>
+        <p>
+            Dashboards allows you to access all your important information.
+            Your data is sorted into customizable categories and translated
+            into visual representations for easy comprehension and informed decision-making.
+        </p>
+        <img src="/spreadsheet_dashboard/static/img/dashboards.png" alt="Dashboards" class="mb-5 mx-auto border shadow w-75"/>
+        <h2 class="text-action pt-3">How do you create a dashboard?</h2>
+        <p>
+            To create or edit a dashboard, you need to have the proper rights (Dashboards: Admin).<br/>
+            Then you can either go to:
+            <ul>
+                <li>Dashboards > Configuration > Select a category > click on Add a spreadsheet > select a Blank spreadsheet</li>
+                <li>Documents > New spreadsheet > File > Add to dashboard > select a category</li>
+            </ul>
+        </p>
+        <p>
+            Once in your spreadsheet, the first sheet on the left will be the one displayed in Dashboards. You can then make your calculations on other sheets and place your visuals in the first sheet.
+        </p>
+        <h2 class="text-action pt-3">How do you insert data in your dashboard?</h2>
+        <h3>Odoo List</h3>
+        <p>
+            To insert a list in a spreadsheet, you can go to any list and then click on insert in spreadsheet in the tool button.
+        </p>
+        <img src="/spreadsheet_dashboard/static/img/insert_list.png" alt="Odoo List" class="mb-5 mx-auto border shadow w-75"/>
+        <h3>Odoo Pivot</h3>
+        <p>
+            A pivot table is usually composed of :
+            <ul>
+                <li>A first dimension on the vertical axis. A first field by which you group-by.</li>
+                <li>A second dimension on the horizontal axis. A second field by which you group-by.</li>
+                <li>A measure : any quantitative summable field that needs to be measured at the intersection of these two dimensions.</li>
+            </ul>
+        </p>
+        <img src="/spreadsheet_dashboard/static/img/insert_pivot.png" alt="Odoo Pivot" class="mb-5 mx-auto border shadow w-75"/>
+        <h3>Odoo Graph</h3>
+        <p>
+            To insert a chart in a spreadsheet, you can go to any chart and then click on insert in spreadsheet in the tool button.
+        </p>
+        <img src="/spreadsheet_dashboard/static/img/insert_chart.png" alt="Odoo Graph" class="mb-5 mx-auto border shadow w-75"/>
+    </div>
 </templates>

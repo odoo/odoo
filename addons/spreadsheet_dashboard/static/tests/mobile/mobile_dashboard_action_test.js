@@ -4,11 +4,18 @@ import { click, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
 import { createSpreadsheetDashboard } from "../utils/dashboard_action";
 import { getDashboardServerData } from "../utils/data";
 
+async function selectFirstDashboard(fixture) {
+    await click(fixture, ".o_search_panel_current_selection");
+    const dashboards = document.querySelectorAll("section header.list-group-item");
+    await click(dashboards[0]);
+}
+
 QUnit.module("spreadsheet_dashboard > Mobile Dashboard action");
 
 QUnit.test("is empty with no figures", async (assert) => {
     await createSpreadsheetDashboard();
     const fixture = getFixture();
+    await selectFirstDashboard(fixture);
     assert.containsOnce(fixture, ".o_mobile_dashboard");
     const content = fixture.querySelector(".o_mobile_dashboard");
     assert.deepEqual(content.innerText.split("\n"), [
@@ -23,8 +30,8 @@ QUnit.test("with no available dashboard", async (assert) => {
     serverData.models["spreadsheet.dashboard.group"].records = [];
     await createSpreadsheetDashboard({ serverData });
     const fixture = getFixture();
-    const content = fixture.querySelector(".o_mobile_dashboard");
-    assert.deepEqual(content.innerText, "No available dashboard");
+    const content = fixture.querySelector(".o_mobile_dashboard h1");
+    assert.deepEqual(content.innerText, "Welcome to Dashboards");
 });
 
 QUnit.test("displays figures in first sheet", async (assert) => {
@@ -74,6 +81,7 @@ QUnit.test("displays figures in first sheet", async (assert) => {
     ];
     const fixture = getFixture();
     await createSpreadsheetDashboard({ serverData });
+    await selectFirstDashboard(fixture);
     assert.containsOnce(fixture, ".o-chart-container");
 });
 
@@ -120,6 +128,7 @@ QUnit.test("double clicking on a figure doesn't open the side panel", async (ass
     ];
     const fixture = getFixture();
     await createSpreadsheetDashboard({ serverData });
+    await selectFirstDashboard(fixture);
     await triggerEvent(fixture, ".o-chart-container", "focus");
     await triggerEvent(fixture, ".o-chart-container", "dblclick");
     assert.containsOnce(fixture, ".o-chart-container");
@@ -129,6 +138,7 @@ QUnit.test("double clicking on a figure doesn't open the side panel", async (ass
 QUnit.test("can switch dashboard", async (assert) => {
     await createSpreadsheetDashboard();
     const fixture = getFixture();
+    await selectFirstDashboard(fixture);
     assert.strictEqual(
         fixture.querySelector(".o_search_panel_summary").innerText,
         "Dashboard CRM 1"
@@ -150,6 +160,7 @@ QUnit.test("can switch dashboard", async (assert) => {
 QUnit.test("can go back from dashboard selection", async (assert) => {
     await createSpreadsheetDashboard();
     const fixture = getFixture();
+    await selectFirstDashboard(fixture);
     assert.containsOnce(fixture, ".o_mobile_dashboard");
     assert.strictEqual(
         fixture.querySelector(".o_search_panel_summary").innerText,
