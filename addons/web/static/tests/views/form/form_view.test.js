@@ -4553,22 +4553,37 @@ test(`switching to another record from a dirty one`, async () => {
         resIds: [1, 2],
         resId: 1,
     });
-    expect(getPagerValue()).toEqual([1]);
-    expect(getPagerLimit()).toBe(2);
     expect(`.o_field_widget[name=foo] input`).toHaveValue("yop");
 
     await contains(`.o_field_widget[name=foo] input`).edit("new value");
     expect(`.o_field_widget[name=foo] input`).toHaveValue("new value");
 
     await contains(`.o_pager_next`).click();
-    expect(getPagerValue()).toEqual([2]);
     expect(`.o_field_widget[name=foo] input`).toHaveValue("blip");
     expect(["web_save"]).toVerifySteps();
 
     await contains(`.o_pager_previous`).click();
-    expect(getPagerValue()).toEqual([1]);
     expect(`.o_field_widget[name=foo] input`).toHaveValue("new value");
     expect([]).toVerifySteps();
+});
+
+test.tags("desktop")(`switching to another record from a dirty one on desktop`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo"></field></form>`,
+        resIds: [1, 2],
+        resId: 1,
+    });
+    expect(getPagerValue()).toEqual([1]);
+    expect(getPagerLimit()).toBe(2);
+
+    await contains(`.o_field_widget[name=foo] input`).edit("new value");
+    await contains(`.o_pager_next`).click();
+    expect(getPagerValue()).toEqual([2]);
+
+    await contains(`.o_pager_previous`).click();
+    expect(getPagerValue()).toEqual([1]);
 });
 
 test(`do not reload after save when using pager`, async () => {
@@ -4581,15 +4596,28 @@ test(`do not reload after save when using pager`, async () => {
         resId: 1,
     });
     expect(["get_views", "web_read"]).toVerifySteps();
-    expect(getPagerValue()).toEqual([1]);
-    expect(getPagerLimit()).toBe(2);
     expect(`.o_input`).toHaveValue("yop");
 
     await contains(`.o_field_widget[name=foo] input`).edit("new value");
     await contains(`.o_pager_next`).click();
-    expect(getPagerValue()).toEqual([2]);
     expect(`.o_input`).toHaveValue("blip");
     expect(["web_save"]).toVerifySteps();
+});
+
+test.tags("desktop")(`do not reload after save when using pager on desktop`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo"></field></form>`,
+        resIds: [1, 2],
+        resId: 1,
+    });
+    expect(getPagerValue()).toEqual([1]);
+    expect(getPagerLimit()).toBe(2);
+
+    await contains(`.o_field_widget[name=foo] input`).edit("new value");
+    await contains(`.o_pager_next`).click();
+    expect(getPagerValue()).toEqual([2]);
 });
 
 test(`switching to another record from an invalid one`, async () => {
@@ -4603,8 +4631,6 @@ test(`switching to another record from an invalid one`, async () => {
     });
     expect(`.o_breadcrumb`).toHaveText("first record");
     expect(`.o_field_widget[name=foo]`).toHaveClass("o_required_modifier");
-    expect(getPagerValue()).toEqual([1]);
-    expect(getPagerLimit()).toBe(2);
 
     await contains(`.o_field_widget[name=foo] input`).edit("");
     await contains(`.o_pager_next`).click();
@@ -4613,11 +4639,26 @@ test(`switching to another record from an invalid one`, async () => {
         "data-tooltip",
         "Unable to save. Correct the issue or discard all changes"
     );
-    expect(getPagerValue()).toEqual([1]);
-    expect(getPagerLimit()).toBe(2);
     expect(`.o_field_widget[name=foo]`).toHaveClass("o_field_invalid");
     expect(`.o_notification_manager .o_notification`).toHaveCount(1);
     expect([]).toVerifySteps();
+});
+
+test.tags("desktop")(`switching to another record from an invalid one on desktop`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo" required="1"/></form>`,
+        resIds: [1, 2],
+        resId: 1,
+    });
+    expect(getPagerValue()).toEqual([1]);
+    expect(getPagerLimit()).toBe(2);
+
+    await contains(`.o_field_widget[name=foo] input`).edit("");
+    await contains(`.o_pager_next`).click();
+    expect(getPagerValue()).toEqual([1]);
+    expect(getPagerLimit()).toBe(2);
 });
 
 test(`keynav: switching to another record from an invalid one`, async () => {
@@ -4631,7 +4672,6 @@ test(`keynav: switching to another record from an invalid one`, async () => {
     });
     expect(`.o_breadcrumb`).toHaveText("first record");
     expect(`.o_field_widget[name=foo]`).toHaveClass("o_required_modifier");
-    expect(`.o_pager_counter`).toHaveText("1 / 2");
 
     await contains(`.o_field_widget[name=foo] input`).edit("");
     press(["alt", "n"]);
@@ -4641,11 +4681,30 @@ test(`keynav: switching to another record from an invalid one`, async () => {
         "data-tooltip",
         "Unable to save. Correct the issue or discard all changes"
     );
-    expect(`.o_pager_counter`).toHaveText("1 / 2");
     expect(`.o_field_widget[name=foo]`).toHaveClass("o_field_invalid");
     expect(`.o_notification_manager .o_notification`).toHaveCount(1);
     expect([]).toVerifySteps();
 });
+
+test.tags("desktop")(
+    `keynav: switching to another record from an invalid one on desktop`,
+    async () => {
+        onRpc("web_save", () => expect.step("web_save"));
+        await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `<form><field name="foo" required="1"/></form>`,
+            resIds: [1, 2],
+            resId: 1,
+        });
+        expect(`.o_pager_counter`).toHaveText("1 / 2");
+
+        await contains(`.o_field_widget[name=foo] input`).edit("");
+        press(["alt", "n"]);
+        await animationFrame();
+        expect(`.o_pager_counter`).toHaveText("1 / 2");
+    }
+);
 
 test(`switching to another record from an invalid one (2)`, async () => {
     // in this scenario, the record is already invalid in db, so we should be allowed to
@@ -4661,15 +4720,33 @@ test(`switching to another record from an invalid one (2)`, async () => {
     });
     expect(`.o_breadcrumb`).toHaveText("first record");
     expect(`.o_field_widget[name=foo]`).toHaveClass("o_required_modifier");
-    expect(`.o_pager_counter`).toHaveText("1 / 2");
 
     await contains(`.o_pager_next`).click();
     expect(`.o_breadcrumb`).toHaveText("second record");
-    expect(`.o_pager_counter`).toHaveText("2 / 2");
 
     await contains(`.o_pager_previous`).click();
     expect(`.o_breadcrumb`).toHaveText("first record");
     expect(`.o_field_widget[name=foo]`).toHaveClass("o_required_modifier");
+});
+
+test.tags("desktop")(`switching to another record from an invalid one (2) on desktop`, async () => {
+    // in this scenario, the record is already invalid in db, so we should be allowed to
+    // leave it
+    Partner._records[0].foo = false;
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo" required="1"/></form>`,
+        resIds: [1, 2],
+        resId: 1,
+    });
+    expect(`.o_pager_counter`).toHaveText("1 / 2");
+
+    await contains(`.o_pager_next`).click();
+    expect(`.o_pager_counter`).toHaveText("2 / 2");
+
+    await contains(`.o_pager_previous`).click();
     expect(`.o_pager_counter`).toHaveText("1 / 2");
 });
 
@@ -4682,23 +4759,43 @@ test(`keynav: switching to another record from a dirty one`, async () => {
         resIds: [1, 2],
         resId: 1,
     });
-    expect(getPagerValue()).toEqual([1]);
-    expect(getPagerLimit()).toBe(2);
     expect(`.o_field_widget[name=foo] input`).toHaveValue("yop");
 
     await contains(`.o_field_widget[name=foo] input`).edit("new value", { confirm: false });
     press(["alt", "n"]);
     await animationFrame();
     expect(["web_save"]).toVerifySteps();
-    expect(`.o_pager_counter`).toHaveText("2 / 2");
     expect(`.o_field_widget[name=foo] input`).toHaveValue("blip");
 
     press(["alt", "p"]);
     await animationFrame();
     expect([]).toVerifySteps();
-    expect(`.o_pager_counter`).toHaveText("1 / 2");
     expect(`.o_field_widget[name=foo] input`).toHaveValue("new value");
 });
+
+test.tags("desktop")(
+    `keynav: switching to another record from a dirty one on desktop`,
+    async () => {
+        await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `<form><field name="foo"></field></form>`,
+            resIds: [1, 2],
+            resId: 1,
+        });
+        expect(getPagerValue()).toEqual([1]);
+        expect(getPagerLimit()).toBe(2);
+
+        await contains(`.o_field_widget[name=foo] input`).edit("new value", { confirm: false });
+        press(["alt", "n"]);
+        await animationFrame();
+        expect(`.o_pager_counter`).toHaveText("2 / 2");
+
+        press(["alt", "p"]);
+        await animationFrame();
+        expect(`.o_pager_counter`).toHaveText("1 / 2");
+    }
+);
 
 test(`handling dirty state: switching to another record`, async () => {
     Partner._fields.priority = fields.Selection({
@@ -4722,7 +4819,7 @@ test(`handling dirty state: switching to another record`, async () => {
         resIds: [1, 2],
         resId: 1,
     });
-    expect(`.o_pager_counter`).toHaveText("1 / 2");
+    expect(`.o_breadcrumb`).toHaveText("first record");
     expect(`.o_field_widget[name=foo] input`).toHaveValue("yop");
 
     await contains(`.o_field_widget[name=foo] input`).edit("new value");
@@ -4730,15 +4827,56 @@ test(`handling dirty state: switching to another record`, async () => {
 
     await contains(`.o_form_button_save`).click();
     await contains(`.o_pager_next`).click();
-    expect(`.o_pager_counter`).toHaveText("2 / 2");
+    expect(`.o_breadcrumb`).toHaveText("second record");
     expect(`.o_priority .fa-star-o`).toHaveCount(2);
 
     await contains(`.o_priority .fa-star-o`).click();
     expect(`.o_priority .fa-star`).toHaveCount(1);
 
     await contains(`.o_pager_next`).click();
-    expect(`.o_pager_counter`).toHaveText("1 / 2");
+    expect(`.o_breadcrumb`).toHaveText("first record");
     expect(`.o_field_widget[name=foo] input`).toHaveValue("new value");
+
+    await contains(`.o_field_widget[name=foo] input`).edit("wrong value");
+    await contains(`.o_form_button_cancel`).click();
+    await contains(`.o_pager_next`).click();
+    expect(`.o_breadcrumb`).toHaveText("second record");
+});
+
+test.tags("desktop")(`handling dirty state: switching to another record on desktop`, async () => {
+    Partner._fields.priority = fields.Selection({
+        default: 1,
+        selection: [
+            [1, "Low"],
+            [2, "Medium"],
+            [3, "High"],
+        ],
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="foo"></field>
+                <field name="priority" widget="priority"></field>
+            </form>
+        `,
+        resIds: [1, 2],
+        resId: 1,
+    });
+    expect(`.o_pager_counter`).toHaveText("1 / 2");
+
+    await contains(`.o_field_widget[name=foo] input`).edit("new value");
+
+    await contains(`.o_form_button_save`).click();
+    await contains(`.o_pager_next`).click();
+    expect(`.o_pager_counter`).toHaveText("2 / 2");
+
+    await contains(`.o_priority .fa-star-o`).click();
+
+    await contains(`.o_pager_next`).click();
+    expect(`.o_pager_counter`).toHaveText("1 / 2");
 
     await contains(`.o_field_widget[name=foo] input`).edit("wrong value");
     await contains(`.o_form_button_cancel`).click();
@@ -4936,6 +5074,22 @@ test(`pager is hidden in create mode`, async () => {
         resIds: [1, 2],
     });
     expect(`.o_pager`).toHaveCount(1);
+
+    await contains(`.o_form_button_create`).click();
+    expect(`.o_pager`).toHaveCount(0);
+
+    await contains(`.o_form_button_save`).click();
+    expect(`.o_pager`).toHaveCount(1);
+});
+
+test.tags("desktop")(`pager is hidden in create mode on desktop`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo"/></form>`,
+        resId: 1,
+        resIds: [1, 2],
+    });
     expect(getPagerValue()).toEqual([1]);
     expect(getPagerLimit()).toBe(2);
 
@@ -4943,12 +5097,25 @@ test(`pager is hidden in create mode`, async () => {
     expect(`.o_pager`).toHaveCount(0);
 
     await contains(`.o_form_button_save`).click();
-    expect(`.o_pager`).toHaveCount(1);
     expect(getPagerValue()).toEqual([3]);
     expect(getPagerLimit()).toBe(3);
 });
 
 test(`switching to another record`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo"></field></form>`,
+        resId: 1,
+        resIds: [1, 2],
+    });
+    expect(`.o_breadcrumb`).toHaveText("first record");
+
+    await contains(`.o_pager_next`).click();
+    expect(`.o_breadcrumb`).toHaveText("second record");
+});
+
+test.tags("desktop")(`switching to another record on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -4972,12 +5139,10 @@ test(`switching to non-existing record`, async () => {
         resId: 1,
         resIds: [1, 999, 2],
     });
-    expect(getPagerValue()).toEqual([1]);
-    expect(getPagerLimit()).toBe(3);
+    expect(`.o_breadcrumb`).toHaveText("first record");
 
     await contains(`.o_pager_next`).click();
-    expect(getPagerValue()).toEqual([1]);
-    expect(getPagerLimit()).toBe(2);
+    expect(`.o_breadcrumb`).toHaveText("first record");
 
     await animationFrame();
     expect(`.o_notification_body`).toHaveCount(1);
@@ -4986,9 +5151,32 @@ test(`switching to non-existing record`, async () => {
     ]).toVerifyErrors();
 
     await contains(`.o_pager_next`).click();
+    expect(`.o_breadcrumb`).toHaveText("second record");
+    expect(`.o_notification_body`).toHaveCount(1);
+});
+
+test.tags("desktop")(`switching to non-existing record on desktop`, async () => {
+    expect.errors(1);
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo"></field></form>`,
+        resId: 1,
+        resIds: [1, 999, 2],
+    });
+    expect(getPagerValue()).toEqual([1]);
+    expect(getPagerLimit()).toBe(3);
+
+    await contains(`.o_pager_next`).click();
+    expect(getPagerValue()).toEqual([1]);
+    expect(getPagerLimit()).toBe(2);
+
+    await animationFrame();
+
+    await contains(`.o_pager_next`).click();
     expect(getPagerValue()).toEqual([2]);
     expect(getPagerLimit()).toBe(2);
-    expect(`.o_notification_body`).toHaveCount(1);
 });
 
 test(`modifiers are reevaluated when creating new record`, async () => {
@@ -5070,8 +5258,7 @@ test(`deleting a record`, async () => {
         resIds: [1, 2, 4],
         resId: 1,
     });
-    expect(getPagerValue()).toEqual([1]);
-    expect(getPagerLimit()).toBe(3);
+    expect(`.o_breadcrumb`).toHaveText("first record");
 
     // open action menu and delete
     await toggleActionMenu();
@@ -5079,9 +5266,29 @@ test(`deleting a record`, async () => {
     expect(`.modal`).toHaveCount(1);
 
     await contains(`.modal-footer button.btn-primary`).click();
+    expect(`.o_breadcrumb`).toHaveText("second record");
+    expect(`.o_field_widget[name=foo] input`).toHaveValue("blip");
+});
+
+test.tags("desktop")(`deleting a record on desktop`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo"></field></form>`,
+        actionMenus: {},
+        resIds: [1, 2, 4],
+        resId: 1,
+    });
+    expect(getPagerValue()).toEqual([1]);
+    expect(getPagerLimit()).toBe(3);
+
+    // open action menu and delete
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+
+    await contains(`.modal-footer button.btn-primary`).click();
     expect(getPagerValue()).toEqual([1]);
     expect(getPagerLimit()).toBe(2);
-    expect(`.o_field_widget[name=foo] input`).toHaveValue("blip");
 });
 
 test(`deleting the last record`, async () => {
@@ -8428,7 +8635,7 @@ test.tags("desktop")(`do not display unset attributes in debug field tooltip`, a
     ]);
 });
 
-test(`do not change pager when discarding current record`, async () => {
+test.tags("desktop")(`do not change pager when discarding current record on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
