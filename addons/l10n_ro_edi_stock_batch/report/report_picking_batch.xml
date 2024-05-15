@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="l10n_ro_edi_stock_report_picking_batch" inherit_id="stock_picking_batch.report_picking_batch">
+        <xpath expr="//div/h3[contains(text(), 'Summary:')]/../.." position="after">
+            <div t-if="o.l10n_ro_edi_stock_enable and o.l10n_ro_edi_stock_document_uit" name="div_etransport_uit">
+                <strong>eTransport UIT:</strong>
+                <span t-field="o.l10n_ro_edi_stock_document_uit">3U3H3P4C2U5Y8N20</span>
+            </div>
+        </xpath>
+    </template>
+</odoo>
