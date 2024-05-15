@@ -47,7 +47,7 @@
                                 </span>
                             </td>
                             <td>
-                                <span t-if="data['route_name']"><t t-esc="data['route_name']"/>: </span>
+                                <span t-if="data['route_name']" t-attf-class="{{'text-danger' if data.get('route_alert') else ''}}"><t t-esc="data['route_name']"/>: </span>
                                 <span t-esc="data['route_detail']"/>
                             </td>
                             <td t-if="data['show_costs']" class="text-end" t-esc="data['bom_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
@@ -129,7 +129,7 @@
                     </span>
                 </td>
                 <td>
-                    <span t-if="l.get('route_name')"><t t-esc="l['route_name']"/>: <t t-esc="l['route_detail']"/></span>
+                    <span t-if="l.get('route_name')" t-attf-class="{{'text-danger' if l.get('route_alert') else ''}}"><t t-esc="l['route_name']"/>: <t t-esc="l['route_detail']"/></span>
                 </td>
                 <td t-if="data['show_costs']" t-attf-class="text-end {{ 'text-muted' if l['type'] == 'component' else '' }}" t-esc="l['bom_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                 <td t-if="data['show_costs']" class="text-end">
