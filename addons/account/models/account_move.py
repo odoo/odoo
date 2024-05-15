@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from collections import defaultdict
-from contextlib import ExitStack, contextmanager
+from contextlib import closing, contextmanager, ExitStack
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 from hashlib import sha256
@@ -3154,71 +3154,88 @@ class AccountMove(models.Model):
                 else:
                     attachments_by_invoice[attachment] = invoice
 
+        def get_parts(file_data):
+            yield from [{**file_data.copy(), **part} for part in file_data.pop('parts', [])] or [file_data]
+
         file_data_list = attachments._unwrap_edi_attachments()
-        attachments_by_invoice = {}
-        invoices = self
-        current_invoice = self
-        passed_file_data_list = []
-        for file_data in file_data_list:
 
-            # Rogue binaries from mail alias are skipped and unlinked.
-            if (
-                file_data['type'] == 'binary'
-                and self._context.get('from_alias')
-                and not attachments_by_invoice.get(file_data['attachment'])
-                and file_data['attachment'].mimetype not in ALLOWED_MIMETYPES
-            ):
-                close_file(file_data)
-                continue
+        with closing(self.env.registry.cursor()) as import_cr:
+            import_env = api.Environment(import_cr, self.env.user.id, self._context.copy())
+            import_self = self.with_company(self.company_id).with_env(import_env)
+            attachments_by_invoice = {}
+            invoices = import_self
+            current_invoice = import_self
+            passed_file_data_list = []
+            for file_data in file_data_list:
 
-            # The invoice has already been decoded by an embedded file.
-            if attachments_by_invoice.get(file_data['attachment']):
-                add_file_data_results(file_data, attachments_by_invoice[file_data['attachment']])
-                close_file(file_data)
-                continue
+                # Rogue binaries from mail alias are skipped and unlinked.
+                if (
+                    file_data['type'] == 'binary'
+                    and import_env.context.get('from_alias')
+                    and not attachments_by_invoice.get(file_data['attachment'])
+                    and file_data['attachment'].mimetype not in ALLOWED_MIMETYPES
+                ):
+                    close_file(file_data)
+                    continue
 
-            # When receiving multiple files, if they have a different type, we supposed they are all linked
-            # to the same invoice.
-            if (
-                passed_file_data_list
-                and passed_file_data_list[-1]['filename'] != file_data['filename']
-                and passed_file_data_list[-1]['sort_weight'] != file_data['sort_weight']
-            ):
-                add_file_data_results(file_data, invoices[-1])
-                close_file(file_data)
-                continue
+                # The invoice has already been decoded by an embedded file.
+                if attachments_by_invoice.get(file_data['attachment']):
+                    add_file_data_results(file_data, attachments_by_invoice[file_data['attachment']])
+                    close_file(file_data)
+                    continue
 
-            if passed_file_data_list and not new:
-                add_file_data_results(file_data, invoices[-1])
-                close_file(file_data)
-                continue
+                # When receiving multiple files, if they have a different type, we supposed they are all linked
+                # to the same invoice.
+                if (
+                    passed_file_data_list
+                    and passed_file_data_list[-1]['filename'] != file_data['filename']
+                    and passed_file_data_list[-1]['sort_weight'] != file_data['sort_weight']
+                ):
+                    add_file_data_results(file_data, invoices[-1])
+                    close_file(file_data)
+                    continue
 
-            extend_with_existing_lines = file_data.get('process_if_existing_lines', False)
-            if current_invoice.invoice_line_ids and not extend_with_existing_lines:
-                continue
+                if passed_file_data_list and not new:
+                    add_file_data_results(file_data, invoices[-1])
+                    close_file(file_data)
+                    continue
+
+                extend_with_existing_lines = file_data.get('process_if_existing_lines', False)
+                if current_invoice.invoice_line_ids and not extend_with_existing_lines:
+                    continue
 
             decoder = (current_invoice or current_invoice.new(self.default_get(['move_type', 'journal_id'])))._get_edi_decoder(file_data, new=new)
             if decoder:
-                try:
-                    with self.env.cr.savepoint():
-                        invoice = current_invoice or self.create({})
-                        success = decoder(invoice, file_data, new)
+                for file_data_part in get_parts(file_data):
+                    try:
+
+                        invoice = current_invoice or import_self.create({})
+                        success = decoder(invoice, file_data_part, new)
 
                         if success or file_data['attachment'].mimetype in ALLOWED_MIMETYPES:
                             invoice._link_bill_origin_to_purchase_orders(timeout=4)
                             invoices |= invoice
-                            current_invoice = self.env['account.move']
+                            current_invoice = import_self.env['account.move']
                             add_file_data_results(file_data, invoice)
+                            import_cr.commit()
+                        else:
+                            import_cr.rollback()
 
-                except RedirectWarning:
-                    raise
-                except Exception:
-                    message = _("Error importing attachment '%s' as invoice (decoder=%s)", file_data['filename'], decoder.__name__)
-                    current_invoice.sudo().message_post(body=message)
-                    _logger.exception(message)
+                    except RedirectWarning:
+                        raise
+                    except Exception:
+                        import_cr.rollback()
 
-            passed_file_data_list.append(file_data)
-            close_file(file_data)
+                        message = _(
+                            "Error importing attachment '%(file_name)s' as invoice (decoder=%(decoder)s)",
+                            file_name=file_data['filename'],
+                            decoder=decoder.__name__,
+                        )
+                        current_invoice.sudo().message_post(body=message)
+                        _logger.exception(message)
+
+                passed_file_data_list.append(file_data)
+                close_file(file_data)
 
         return attachments_by_invoice
 

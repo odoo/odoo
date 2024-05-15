@@ -10,6 +10,7 @@ except ImportError:
     from PyPDF2.utils import PdfReadError
 import io
 import logging
+import re
 import zipfile
 
 _logger = logging.getLogger(__name__)
@@ -34,23 +35,28 @@ class IrAttachment(models.Model):
         """Decodes an xml into a list of one dictionary representing an attachment.
         :returns:           A list with a dictionary.
         """
-        try:
-            xml_tree = etree.fromstring(content)
-        except Exception as e:
-            _logger.info('Error when reading the xml file "%s": %s', filename, e)
-            return []
+        xml_tree = None
+        original_content = content
+        for iteration in (0, 1):
+            try:
+                xml_tree = etree.fromstring(content)
+                break
+            except etree.XMLSyntaxError as se:
+                if iteration == 0:
+                    if 'xmlns' in se.msg and 'not a valid URI' in se.msg:
+                        content = re.sub(r" ?xmlns:\w+=(['\"])[^\1]+\1", "", content)
+            except Exception as e:  # noqa: BLE001
+                _logger.info('Error when reading the xml file "%s": %s', filename, e)
+                break
 
-        to_process = []
-        if xml_tree is not None:
-            to_process.append({
-                'attachment': self,
-                'filename': filename,
-                'content': content,
-                'xml_tree': xml_tree,
-                'sort_weight': 10,
-                'type': 'xml',
-            })
-        return to_process
+        return [{
+            'attachment': self,
+            'filename': filename,
+            'content': original_content,
+            'xml_tree': xml_tree,
+            'sort_weight': 10,
+            'type': 'xml',
+        }] if xml_tree is not None else []
 
     def _decode_edi_pdf(self, filename, content):
         """Decodes a pdf and unwrap sub-attachment into a list of dictionary each representing an attachment.

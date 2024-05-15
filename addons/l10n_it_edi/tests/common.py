@@ -129,6 +129,7 @@ class TestItEdi(AccountTestInvoicingCommon):
             import_content = etree.tostring(tree)
 
         attachment = self.env['ir.attachment'].create({
+            'company_id': self.company_data_2['company'].id,
             'name': filename,
             'raw': import_content,
         })

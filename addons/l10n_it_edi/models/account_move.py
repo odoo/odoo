@@ -168,7 +168,11 @@ class AccountMove(models.Model):
 
     def _get_edi_decoder(self, file_data, new=False):
         # EXTENDS 'account'
-        if file_data['type'] == 'l10n_it_edi':
+        if (
+            file_data['type'] == 'xml'
+            and len(xml_tree := file_data.get('xml_tree'))
+            and etree.QName(xml_tree).localname == 'FatturaElettronica'
+        ):
             return self._l10n_it_edi_import_invoice
         return super()._get_edi_decoder(file_data, new=new)
 
@@ -176,19 +180,6 @@ class AccountMove(models.Model):
         # EXTENDS 'account'
         self.write({'l10n_it_edi_header': False})
         return super()._post(soft)
-
-    def _extend_with_attachments(self, attachments, new=False):
-        result = False
-        # Prediction is an enterprise feature.
-        if self._is_prediction_enabled():
-            # Italy needs a custom order in prediction, since prediction generally deduces taxes
-            # from products, while in Italian EDI, taxes are generally explicited in the XML file
-            # while the product may not be labelled exactly the same as in the database
-            l10n_it_attachments = attachments.filtered(lambda rec: rec._is_l10n_it_edi_import_file())
-            if l10n_it_attachments:
-                attachments = attachments - l10n_it_attachments
-                result = super(AccountMove, self.with_context(disable_onchange_name_predictive=True))._extend_with_attachments(l10n_it_attachments, new)
-        return result or super()._extend_with_attachments(attachments, new)
 
     # -------------------------------------------------------------------------
     # Business actions
@@ -1066,16 +1057,15 @@ class AccountMove(models.Model):
                 self.sudo().message_post(body=message)
             return self
 
-    @api.model
-    def _is_prediction_enabled(self):
-        return self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
-
     def _l10n_it_edi_import_line(self, element, move_line, extra_info=None):
         extra_info = extra_info or {}
         company = move_line.company_id
         partner = move_line.partner_id
         message_to_log = []
-        predict_enabled = self._is_prediction_enabled()
+
+        # The account_accountant module overwrites new lines with predicted products, taxes and accounts.
+        # We want to take manual control over that in the Italian localization
+        predict_enabled = 'payment_state_before_switch' in self._fields
 
         # Sequence.
         line_elements = element.xpath('.//NumeroLinea')
