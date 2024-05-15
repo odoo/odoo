@@ -142,7 +142,7 @@ class TestHttpStatic(TestHttpStaticCommon):
             res.headers.get('Location'),
             'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
 
-    def test_static08_binary_field_attach(self):
+    def test_static08_binary_field(self):
         earth = self.env.ref('test_http.earth')
         attachment = self.env['ir.attachment'].search([
             ('res_model', '=', 'test_http.stargate'),
@@ -151,25 +151,26 @@ class TestHttpStatic(TestHttpStaticCommon):
         ], limit=1)
         attachment_path = opj(config.filestore(self.env.cr.dbname), attachment.store_fname)
 
-        with self.subTest(x_sendfile=False):
-            self.assertDownloadGizeh(
-                f'/web/content/test_http.stargate/{earth.id}/glyph_attach',
-                assert_filename='Earth.png'
-            )
+        for field, is_attachment in (
+            ('glyph_attach', True),
+            ('glyph_inline', False),
+            ('glyph_related', True),
+            ('glyph_compute', False),
+        ):
+            with self.subTest(x_sendfile=False):
+                self.assertDownloadGizeh(
+                    f'/web/content/test_http.earth?field={field}',
+                    assert_filename='Earth.png'
+                )
 
-        with self.subTest(x_sendfile=True), \
-             patch.object(config, 'options', {**config.options, 'x_sendfile': True}):
-            self.assertDownloadGizeh(
-                f'/web/content/test_http.stargate/{earth.id}/glyph_attach',
-                x_sendfile=attachment_path,
-                assert_filename='Earth.png'
-            )
-
-    def test_static09_binary_field_inline(self):
-        self.assertDownloadGizeh(
-            '/web/content/test_http.earth?field=glyph_inline',
-            assert_filename='Earth.png'
-        )
+            if is_attachment:
+                with self.subTest(x_sendfile=True), \
+                     patch.object(config, 'options', {**config.options, 'x_sendfile': True}):
+                    self.assertDownloadGizeh(
+                        f'/web/content/test_http.earth?field={field}',
+                        x_sendfile=is_attachment and attachment_path,
+                        assert_filename='Earth.png'
+                    )
 
     def test_static10_filename(self):
         with self.subTest("record name"):
