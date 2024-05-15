@@ -301,8 +301,8 @@
                             <t t-set="_record" t-value="event"/>
                             <!-- Short Date -->
                             <div t-attf-class="o_wevent_event_date o_not_editable position-absolute d-flex flex-column justify-content-center align-items-center rounded-circle shadow-sm #{(not opt_events_list_columns) and 'left'} ">
-                                <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'LLL'}" class="o_wevent_event_month smaller fw-bold text-uppercase"/>
-                                <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit fs-5 lh-1 fw-light"/>
+                                <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'LLL'}" class="smaller fw-bold text-uppercase"/>
+                                <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd'}" class="oe_hide_on_date_edit fs-5 lh-1 fw-light"/>
                             </div>
                             <!-- Not open -->
                             <span t-if="not event.event_registrations_open and (not opt_events_list_cards or not opt_events_list_columns)" class="position-absolute bottom-0 w-100 px-3 py-2 text-bg-light">

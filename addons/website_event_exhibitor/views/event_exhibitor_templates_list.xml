@@ -240,7 +240,7 @@
         itemscope="itemscope" itemtype="http://schema.org/Sponsor">
         <t t-set="sponsor_image_url" t-value="sponsor.website_image_url"/>      
         <header class="card-header position-relative p-0 bg-body">
-            <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge position-absolute bottom-0 w-100 p-3 text-bg-danger">
+            <small t-if="not sponsor.is_published" class="position-absolute bottom-0 w-100 p-3 text-bg-danger">
                 <i class="fa fa-ban me-2"/>Unpublished
             </small>     
             <img t-if="sponsor_image_url" 
