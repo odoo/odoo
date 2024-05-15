@@ -6,7 +6,7 @@ class EvaluacionClima(models.Model):
     """
     Modelo para representar Evaluaciones de Clima Laboral.
     Hereda de "evaluacion".
-    
+
     :param _name (str): Nombre del modelo en Odoo
     :param _description (str): Descripción del modelo en Odoo
     :param piso_rojo (float): Piso del nivel rojo
@@ -108,6 +108,9 @@ class EvaluacionClima(models.Model):
 
         for i in range(len(techos) - 1):
             for j in range(i + 1, len(techos)):
-                if techos[i][1] >= techos[j][1]:
+                if techos[i][1] > techos[j][1]:
                     raise ValidationError(
                         (f"Los niveles de techo deben estar en orden ascendente"))
+                if techos[i][1] == techos[j][1]:
+                    raise ValidationError(
+                        (f"Los niveles de techo no pueden ser iguales"))
