@@ -2,13 +2,31 @@ import { Component } from "@odoo/owl";
 import { TagsList } from "@web/core/tags_list/tags_list";
 
 export class Input extends Component {
-    static props = ["value", "update", "startEmpty?"];
+    static props = ["value", "update", "startEmpty?", "prefill?"];
     static template = "web.TreeEditor.Input";
+
+    setup() {
+        if (this.props.prefill) {
+            this.props.update(this.props.prefill)
+        }
+    }
 }
 
 export class Select extends Component {
-    static props = ["value", "update", "options", "addBlankOption?"];
+    static props = ["value", "update", "options", "addBlankOption?", "prefill?"];
     static template = "web.TreeEditor.Select";
+
+    setup() {
+        // If there is a prefill, check if we have a similarily starting string to prefill the select field
+        if (this.props.prefill) {
+            for (const option of this.props.options) {
+                if (option[1].toLowerCase().startsWith(this.props.prefill.toLowerCase())) {
+                    this.props.update(option[0])
+                    break;
+                }
+            }
+        }
+    }
 
     deserialize(value) {
         return JSON.parse(value);

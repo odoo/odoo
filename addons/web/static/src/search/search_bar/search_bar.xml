@@ -89,6 +89,11 @@
                     </a>
                 </li>
             </t>
+            <li class="dropdown-item primary text-action"
+                t-att-class="{ focus: item_index === state.focusedIndex}"
+                t-on-click="() => this.onAddCustomFilterClick(item)"
+                t-on-mousemove="() => this.onItemMousemove(-1)"
+            >Add Custom Filter</li>
         </ul>
     </t>
 

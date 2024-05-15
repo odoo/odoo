@@ -50,11 +50,13 @@ function genericDeserializeDate(type, value) {
     return type === "date" ? deserializeDate(value) : deserializeDateTime(value);
 }
 
-const STRING_EDITOR = {
-    component: Input,
-    extractProps: ({ value, update }) => ({ value, update }),
-    isSupported: (value) => typeof value === "string",
-    defaultValue: () => "",
+function makeStringEditor(params = {}) {
+    return {
+        component: Input,
+        extractProps: ({ value, update }) => ({ value, update, prefill: params.prefill }),
+        isSupported: (value) => typeof value === "string",
+        defaultValue: () => "",
+    }
 };
 
 function makeSelectEditor(options, params = {}) {
@@ -66,6 +68,7 @@ function makeSelectEditor(options, params = {}) {
             update,
             options,
             addBlankOption: params.addBlankOption,
+            prefill: params.prefill
         }),
         isSupported: (value) => Boolean(getOption(value)),
         defaultValue: () => options[0]?.[0] ?? false,
@@ -77,7 +80,7 @@ function makeSelectEditor(options, params = {}) {
     };
 }
 
-function makeAutoCompleteEditor(fieldDef) {
+function makeAutoCompleteEditor(fieldDef, params = {}) {
     return {
         component: DomainSelectorAutocomplete,
         extractProps: ({ value, update }) => {
@@ -86,6 +89,7 @@ function makeAutoCompleteEditor(fieldDef) {
                 fieldString: fieldDef.string,
                 update: (value) => update(unique(value)),
                 resIds: unique(value),
+                prefill: params.prefill,
             };
         },
         isSupported: (value) => Array.isArray(value),
@@ -111,7 +115,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "not like":
         case "ilike":
         case "not ilike":
-            return STRING_EDITOR;
+            return makeStringEditor(params);
         case "between": {
             const editorInfo = getValueEditorInfo(fieldDef, "=");
             return {
@@ -132,11 +136,11 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "not in": {
             switch (fieldDef.type) {
                 case "tags":
-                    return STRING_EDITOR;
+                    return makeStringEditor(params);
                 case "many2one":
                 case "many2many":
                 case "one2many":
-                    return makeAutoCompleteEditor(fieldDef);
+                    return makeAutoCompleteEditor(fieldDef, params);
                 default: {
                     const editorInfo = getValueEditorInfo(fieldDef, "=", {
                         addBlankOption: true,
@@ -230,7 +234,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "char":
         case "html":
         case "text":
-            return STRING_EDITOR;
+            return makeStringEditor(params);
         case "boolean": {
             if (["is", "is_not"].includes(operator)) {
                 const options = [
@@ -267,7 +271,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "many2many":
         case "one2many":
             if (["=", "!="].includes(operator)) {
-                return makeAutoCompleteEditor(fieldDef);
+                return makeAutoCompleteEditor(fieldDef, params);
             }
             break;
         case "selection": {

@@ -3,6 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { formatAST, toPyValue } from "@web/core/py_js/py_utils";
 import { Expression } from "@web/core/tree_editor/condition_tree";
 import { RecordSelector } from "@web/core/record_selectors/record_selector";
+import { onMounted, useRef } from "@odoo/owl";
 
 export const isId = (val) => Number.isInteger(val) && val >= 1;
 
@@ -29,7 +30,21 @@ export class DomainSelectorAutocomplete extends MultiRecordSelector {
     static props = {
         ...MultiRecordSelector.props,
         resIds: true, //resIds could be an array of ids or an array of expressions
+        prefill: { type: String, optional: true },
     };
+
+    setup() {
+        super.setup();
+        this.ref = useRef("multiRecordSelector");
+        onMounted(() => {
+            if (this.props.prefill) {
+                const input = this.ref.el.querySelector("input.o-autocomplete--input");
+                input.focus();
+                input.value = this.props.prefill;
+                input.dispatchEvent(new Event("input"));
+            }
+        })
+    }
 
     getIds(props = this.props) {
         return props.resIds.filter((val) => isId(val));

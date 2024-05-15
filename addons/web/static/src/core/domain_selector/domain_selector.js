@@ -33,6 +33,7 @@ export class DomainSelector extends Component {
         readonly: { type: Boolean, optional: true },
         update: { type: Function, optional: true },
         debugUpdate: { type: Function, optional: true },
+        prefill: { type: String, optional: true }
     };
     static defaultProps = {
         isDebugMode: false,

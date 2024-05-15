@@ -28,6 +28,7 @@ export class DomainSelectorDialog extends Component {
         discardButtonText: { type: String, optional: true },
         title: { type: String, optional: true },
         context: { type: Object, optional: true },
+        prefill: { type: String, optional: true },
     };
     static defaultProps = {
         isDebugMode: false,
@@ -72,6 +73,7 @@ export class DomainSelectorDialog extends Component {
             update: (domain) => {
                 this.state.domain = domain;
             },
+            prefill: this.props.prefill,
         };
     }
 

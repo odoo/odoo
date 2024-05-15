@@ -11,6 +11,7 @@ import { SearchBarMenu } from "../search_bar_menu/search_bar_menu";
 import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { hasTouch } from "@web/core/browser/feature_detection";
+import { useGetDefaultLeafDomain } from "@web/core/domain_selector/utils";
 const parsers = registry.category("parsers");
 
 const CHAR_FIELDS = ["char", "html", "many2many", "many2one", "one2many", "text", "properties"];
@@ -44,6 +45,7 @@ export class SearchBar extends Component {
         this.searchItemsFields = this.env.searchModel.getSearchItems((f) => f.type === "field");
         this.root = useRef("root");
         this.ui = useService("ui");
+        this.getDefaultLeafDomain = useGetDefaultLeafDomain();
 
         // core state
         this.state = useState({
@@ -412,6 +414,24 @@ export class SearchBar extends Component {
             onConfirm: (domain) => this.env.searchModel.splitAndAddDomain(domain, groupId),
             disableConfirmButton: (domain) => domain === `[]`,
             title: _t("Modify Condition"),
+            isDebugMode: this.env.searchModel.isDebugMode,
+        });
+    }
+
+    async onAddCustomFilterClick() {
+        const { domainEvalContext: context, resModel } = this.env.searchModel;
+        const domain = await this.getDefaultLeafDomain(resModel);
+        this.dialogService.add(DomainSelectorDialog, {
+            resModel,
+            defaultConnector: "|",
+            domain,
+            context,
+            prefill: this.inputRef.el.value,
+            onConfirm: (domain) => this.env.searchModel.splitAndAddDomain(domain),
+            disableConfirmButton: (domain) => domain === `[]`,
+            title: _t("Add Custom Filter"),
+            confirmButtonText: _t("Add"),
+            discardButtonText: _t("Cancel"),
             isDebugMode: this.env.searchModel.isDebugMode,
         });
     }

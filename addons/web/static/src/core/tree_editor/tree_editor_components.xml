@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.TreeEditor.Input">
-        <input type="text" class="o_input" t-att-value="props.startEmpty ? '' : props.value" t-on-change="(ev) => props.update(ev.target.value)" />
+        <input t-ref="input" type="text" class="o_input" t-att-value="props.startEmpty ? '' : props.value" t-on-change="(ev) => props.update(ev.target.value)" />
     </t>
 
     <t t-name="web.TreeEditor.Select">
