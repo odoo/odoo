@@ -814,6 +814,9 @@ var SnippetEditor = Widget.extend({
                         ...val.data,
                     },
                     options: this.options,
+                    callbacks: {
+                        requestUserValue: this._requestUserValue.bind(this),
+                    }
                 });
                 optionName = (option.Class || SnippetOption).name
                 option.isOwl = true;
@@ -1677,6 +1680,29 @@ var SnippetEditor = Widget.extend({
         if (!ev.data.allowParentOption) {
             ev.stopPropagation();
         }
+    },
+    /**
+     * Requests the UserValue of another option
+     *
+     * @param {string} name - the name of the userValue / Component
+     * @param {boolean} allowParentOption - if true, the request will be propagated to the parent
+     * @returns {import('./snippets.options.js').UserValue} the UserValue of the requested option
+     */
+    _requestUserValue({ name, allowParentOption }) {
+        for (const key of Object.keys(this.styles)) {
+            const widget = this.styles[key].findWidget(name);
+            if (widget) {
+                return widget;
+            }
+        }
+        if (!allowParentOption) {
+            return null;
+        }
+        const parent = this.getParent();
+        if (parent._requestUserValue) {
+            return parent._requestUserValue({ name });
+        }
+        return null;
     },
     /**
      * Called when the 'mouse wheel' is used when hovering over the overlay.
@@ -4899,8 +4925,9 @@ class SnippetsMenu extends Component {
      * potential new values being computed/asked.
      */
     _onOptionMounted() {
-        this.execWithLoadingEffect(() => {
-            return Promise.all(this.snippetEditors.map(editor => editor.updateOptionsUI()));
+        this.execWithLoadingEffect(async () => {
+            await Promise.all(this.snippetEditors.map(editor => editor.updateOptionsUI()));
+            await Promise.all(this.snippetEditors.map(editor => editor.updateOptionsUIVisibility()));
         });
     }
 

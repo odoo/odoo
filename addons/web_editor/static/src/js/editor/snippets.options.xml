@@ -8,7 +8,7 @@
 <t t-name="web_editor.TestSnippetOption">
     <WeButton selectClass="'test_class'">Test Class</WeButton>
     <WeSelect>
-        <WeButton selectClass="'test_class_1'">Test Class 1</WeButton>
+        <WeButton selectClass="'test_class_1'" name="'test_class_1'">Test Class 1</WeButton>
         <WeButton selectClass="'test_class_2'">Test Class 2</WeButton>
         <WeButton selectClass="'test_class_3'">Test Class 3</WeButton>
         <WeButton selectClass="'test_class_4'">Test Class 4</WeButton>
@@ -23,6 +23,7 @@
     <WeInput unit="'px'" step="'5'" selectStyle="'0'" cssProperty="'border-width'" extraClass="'border'"/>
     <WeDatetime selectDataAttribute="''" attributeName="'datetime'"/>
     <WeDatetime selectDataAttribute="''" attributeName="'dateonly'" pickerType="'date'"/>
+    <WeButton selectClass="''" dependencies="'test_class_1'">Show when test_class_1</WeButton>
 </t>
 
 <t t-name="web_editor.container_width">

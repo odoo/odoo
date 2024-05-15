@@ -345,7 +345,7 @@ const NULL_ID = '__NULL__';
  */
 const UserValueWidget = Widget;
 
-class UserValue {
+export class UserValue {
     static custom_events = {
         'user_value_update': '_onUserValueNotification',
     };
@@ -487,12 +487,13 @@ class UserValue {
     enable() {
         this.notifyValueChange(false);
     }
+    // TODO: @owl-options: rename this to findUserValue
     /**
      * @param {string} name
      * @returns {UserValueWidget|null}
      */
     findWidget(name) {
-        for (const widget of this._userValueWidgets) {
+        for (const widget of Object.values(this._subValues)) {
             if (widget.getName() === name) {
                 return widget;
             }
@@ -761,15 +762,16 @@ class UserValue {
      * @param {boolean} show
      */
     toggleVisibility(show) {
-        let doFocus = false;
-        if (show) {
-            const wasInvisible = this.el.classList.contains('d-none');
-            doFocus = wasInvisible && this.el.dataset.requestFocus === "true";
-        }
-        this.el.classList.toggle('d-none', !show);
-        if (doFocus) {
-            this.focus();
-        }
+        this._state.show = show;
+        // let doFocus = false;
+        // if (show) {
+        //     const wasInvisible = this.el.classList.contains('d-none');
+        //     doFocus = wasInvisible && this.el.dataset.requestFocus === "true";
+        // }
+        // this.el.classList.toggle('d-none', !show);
+        // if (doFocus) {
+        //     this.focus();
+        // }
     }
 
     //--------------------------------------------------------------------------
@@ -3664,13 +3666,16 @@ export class SnippetOption {
      *
      * @constructor
      */
-    constructor({ editor, $target, $overlay, data, options }) {
+    constructor({ editor, $target, $overlay, data, options, callbacks }) {
 
         this.env = options.env;
         this.$target = $target;
         this.$overlay = $overlay;
         this.data = data;
         this.options = options;
+        // TODO: @owl-options better name or do it differently? It's to replace
+        // what was previously done by trigger_up's.
+        this.callbacks = callbacks;
 
         this.className = 'snippet-option-' + this.data.optionName;
 
@@ -4101,7 +4106,7 @@ export class SnippetOption {
      * @returns {UserValueWidget|null}
      */
     findWidget(name) {
-        for (const widget of this._userValueWidgets) {
+        for (const widget of Object.values(this._userValues)) {
             if (widget.getName() === name) {
                 return widget;
             }
@@ -4160,12 +4165,12 @@ export class SnippetOption {
         // For each widget, for each of their option method, notify to the
         // widget the current value they should hold according to the $target's
         // current state, related for that method.
-        const userValueWidgets = Object.values(this._userValues);
-        const proms = userValueWidgets.map(async (widget) => {
+        const useValueStates = Object.values(this._userValues);
+        const proms = useValueStates.map(async (userValue) => {
             // Update widget value (for each method)
-            const methodsNames = widget.getMethodsNames();
+            const methodsNames = userValue.getMethodsNames();
             for (const methodName of methodsNames) {
-                const params = widget.getMethodsParams(methodName);
+                const params = userValue.getMethodsParams(methodName);
 
                 let obj = this;
                 if (params.applyTo) {
@@ -4181,7 +4186,7 @@ export class SnippetOption {
                     continue;
                 }
                 const normalizedValue = this._normalizeWidgetValue(value);
-                await widget.setValue(normalizedValue, methodName);
+                await userValue.setValue(normalizedValue, methodName);
             }
         });
         await Promise.all(proms);
@@ -4197,14 +4202,14 @@ export class SnippetOption {
      * @returns {Promise}
      */
     async updateUIVisibility() {
-        const proms = this._userValueWidgets.map(async widget => {
-            const params = widget.getMethodsParams();
+        const proms = Object.values(this._userValues).map(async userValue => {
+            const params = userValue.getMethodsParams();
 
             let obj = this;
             if (params.applyTo) {
                 const $firstSubTarget = this.$(params.applyTo).eq(0);
                 if (!$firstSubTarget.length) {
-                    widget.toggleVisibility(false);
+                    userValue.toggleVisibility(false);
                     return;
                 }
                 obj = createPropertyProxy(this, '$target', $firstSubTarget);
@@ -4213,23 +4218,23 @@ export class SnippetOption {
             // Make sure to check the visibility of all sub-widgets. For
             // simplicity and efficiency, those will be checked with main
             // widgets params.
-            const allSubWidgets = [widget];
+            const allSubValues = [userValue];
             let i = 0;
-            while (i < allSubWidgets.length) {
-                allSubWidgets.push(...allSubWidgets[i]._userValueWidgets);
+            while (i < allSubValues.length) {
+                allSubValues.push(...Object.values(allSubValues[i]._subValues));
                 i++;
             }
-            const proms = allSubWidgets.map(async widget => {
-                const show = await this._computeWidgetVisibility.call(obj, widget.getName(), params);
+            const proms = allSubValues.map(async userValue => {
+                const show = await this._computeWidgetVisibility.call(obj, userValue.getName(), params);
                 if (!show) {
-                    widget.toggleVisibility(false);
+                    userValue.toggleVisibility(false);
                     return;
                 }
 
-                const dependencies = widget.getDependencies();
+                const dependencies = userValue.getDependencies();
 
                 if (dependencies.length === 1 && dependencies[0] === 'fake') {
-                    widget.toggleVisibility(false);
+                    userValue.toggleVisibility(false);
                     return;
                 }
 
@@ -4240,19 +4245,19 @@ export class SnippetOption {
                         depName = depName.substr(1);
                     }
 
-                    const widget = this._requestUserValueWidgets(depName, true)[0];
-                    if (widget) {
+                    const userValue = this._requestUserValueWidgets(depName, true)[0];
+                    if (userValue) {
                         dependenciesData.push({
-                            widget: widget,
+                            userValue: userValue,
                             toBeActive: toBeActive,
                         });
                     }
                 });
                 const dependenciesOK = !dependenciesData.length || dependenciesData.some(depData => {
-                    return (depData.widget.isActive() === depData.toBeActive);
+                    return (depData.userValue.isActive() === depData.toBeActive);
                 });
 
-                widget.toggleVisibility(dependenciesOK);
+                userValue.toggleVisibility(dependenciesOK);
             });
             return Promise.all(proms);
         });
@@ -4614,9 +4619,8 @@ export class SnippetOption {
         const widgets = [];
         for (const widgetName of widgetNames) {
             let widget = null;
-            this.trigger_up('user_value_widget_request', {
+            widget = this.callbacks.requestUserValue({
                 name: widgetName,
-                onSuccess: _widget => widget = _widget,
                 allowParentOption: allowParentOption,
             });
             if (widget) {
