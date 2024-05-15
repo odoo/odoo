@@ -691,3 +691,61 @@ class TestSaleProject(TestSaleProjectCommon):
         reported_sale_order_lines = self.env['sale.order.line'].search(project.action_view_sols()['domain'])
         self.assertEqual(project.sale_order_line_count, 2)
         self.assertEqual(relevant_sale_order_lines, reported_sale_order_lines)
+
+    def test_sale_order_with_project_task_from_multi_companies(self):
+        uom_hour = self.env.ref("uom.product_uom_hour")
+        will_smith = self.env["res.partner"].create({"name": "Will Smith"})
+        multi_company_project = self.env["project.project"].create({
+            "name": "Multi Company Project",
+            "company_id": None,
+            "allow_billable": True,
+        })
+
+        company_a, company_b = self.env['res.company'].create([
+            {"name": "Company A"},
+            {"name": "Company B"},
+        ])
+
+        # cannot be done in batch because of `_check_sale_product_company` constraint
+        product_a, product_b = (
+            self.env["product.product"].with_company(company).create({
+                "name": "Task Creating Product",
+                "standard_price": 30,
+                "list_price": 90,
+                "type": "service",
+                "service_tracking": "task_global_project",
+                "invoice_policy": "order",
+                "uom_id": uom_hour.id,
+                "uom_po_id": uom_hour.id,
+                "project_id": multi_company_project.id,
+            })
+            for company in [company_a, company_b]
+        )
+        sale_order_a, sale_order_b = self.env["sale.order"].create([
+            {
+                "partner_id": will_smith.id,
+                "order_line": [
+                    Command.create({
+                        "product_id": product.id,
+                        "product_uom_qty": 10,
+                    }),
+                    Command.create({
+                        "product_id": product.id,
+                        "product_uom_qty": 10,
+                    }),
+                ],
+                'company_id': company.id,
+            }
+            for company, product in zip([company_a, company_b], [product_a, product_b])
+        ])
+        (sale_order_a + sale_order_b).action_confirm()
+
+        for company in [company_a, company_b]:
+            self.assertEqual(multi_company_project.with_company(company).sale_order_count, 2, "Expected all sale orders to be counted by project")
+            self.assertEqual(
+                multi_company_project.with_company(company).sale_order_line_count,
+                len(sale_order_a.order_line) + len(sale_order_b.order_line),  # expect 4
+                "Expected all sale order lines lines to be counted by project")
+            sale_order_action = multi_company_project.with_company(company).action_view_sos()
+            self.assertEqual(sale_order_action["type"], "ir.actions.act_window")
+            self.assertEqual(sale_order_action["res_model"], "sale.order")
