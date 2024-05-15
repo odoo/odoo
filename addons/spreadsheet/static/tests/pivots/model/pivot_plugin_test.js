@@ -692,6 +692,50 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.strictEqual(getEvaluatedCell(model, "A3").value, 0);
     });
 
+    QUnit.test(
+        "pivot formula for total should return empty string instead of 'FALSE' when pivot doesn't match any data",
+        async function (assert) {
+            const serverData = getBasicServerData();
+            serverData.models.partner.records = [{ id: 1, name: "A", probability: 10 }];
+
+            const { model } = await createSpreadsheetWithPivot({
+                serverData,
+                arch: /*xml*/ `
+                <pivot>
+                    <field name="name" type="row"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+            });
+
+            const [pivotId] = model.getters.getPivotIds();
+            model.dispatch("UPDATE_PIVOT", {
+                pivotId,
+                pivot: {
+                    ...model.getters.getPivotCoreDefinition(pivotId),
+                    domain: [["probability", "=", 100]],
+                },
+            });
+            await waitForDataLoaded(model);
+
+            setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability", "name", "A")');
+            setCellContent(model, "A2", '=PIVOT.VALUE(1, "probability")');
+            assert.strictEqual(getEvaluatedCell(model, "A1").value, "");
+            assert.strictEqual(getEvaluatedCell(model, "A2").value, "");
+
+            model.dispatch("UPDATE_PIVOT", {
+                pivotId,
+                pivot: {
+                    ...model.getters.getPivotCoreDefinition(pivotId),
+                    domain: [],
+                },
+            });
+            await waitForDataLoaded(model);
+
+            assert.strictEqual(getEvaluatedCell(model, "A1").value, 10);
+            assert.strictEqual(getEvaluatedCell(model, "A2").value, 10);
+        }
+    );
+
     QUnit.test("can import/export sorted pivot", async (assert) => {
         const spreadsheetData = {
             pivots: {
