@@ -118,7 +118,7 @@
                     <group>
                         <field name="estado"/>
                     </group>
-                     <group>
+                    <group>
                         <field name="descripcion"/>
                     </group>
                     <group>
@@ -131,7 +131,7 @@
                         <field name="incluir_demograficos"/>
                     </group>
                     <group>
-                     <group>
+                    <group>
                         <field name="mensaje"/>
                     </group>
                         <notebook>
@@ -148,7 +148,7 @@
                             <page string="Asignados">
                                 <field class="lh-lg w-100" colspan="2" name="usuario_ids" nolabel="1" context="{'current_evaluacion_id': active_id}">
                                     <tree editable="bottom">
-                                        <field class="lh-m" name="name" readonly="1"/>
+                                        <field class="lh-m" name="name" readonly="1" string="Nombre del usuario"/>
                                         <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="ver_respuestas_usuario" string="Ver respuestas" type="object"/>
                                     </tree>
                                 </field>
@@ -156,7 +156,7 @@
                             <page string="Asignados Externos">
                                 <field class="lh-lg w-100" colspan="2" name="usuario_externo_ids" nolabel="1" context="{'current_evaluacion_id': active_id}" options="{'link':false}">
                                     <tree editable="top">
-                                        <field class="lh-m" name="nombre" readonly="1"/>
+                                        <field class="lh-m" name="nombre" readonly="1" string="Nombre del usuario"/>
                                         <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="ver_respuestas_usuario_externo" string="Respuestas" type="object"/>
                                     </tree>
                                 </field>
@@ -187,7 +187,7 @@
                                         width: 60%;
                                     }
 
-                                   .color-pill {
+                                    .color-pill {
                                         display: inline-block;
                                         width: 50px;
                                         height: 25px;
@@ -431,14 +431,14 @@
                             <page string="Asignados">
                                 <field class="lh-lg w-100" colspan="2" name="usuario_ids" nolabel="1" context="{'current_evaluacion_id': active_id}">
                                     <tree editable="bottom">
-                                        <field class="lh-m" name="name" readonly="1"/>
+                                        <field class="lh-m" name="name" readonly="1" string="Nombre del usuario"/>
                                     </tree>
                                 </field>
                             </page>
                             <page string="Asignados Externos">
                                 <field class="lh-lg w-100" colspan="2" name="usuario_externo_ids" nolabel="1" context="{'current_evaluacion_id': active_id}" options="{'link':false}">
                                     <tree create="false" editable="bottom">
-                                        <field class="lh-m" name="nombre" readonly="1"/>
+                                        <field class="lh-m" name="nombre" readonly="1" string="Nombre del usuario"/>
                                     </tree>
                                 </field>
                             </page>
