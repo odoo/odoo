@@ -156,14 +156,10 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_kanban_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//kanban" position="inside">
-                    <field name="type"/>
-                    <field name="show_on_hand_qty_status_button" groups="stock.group_stock_user"/>
-                </xpath>
-                <xpath expr="//div[@name='product_lst_price']" position="after">
-                    <t groups="stock.group_stock_user">
-                    <div t-if="record.show_on_hand_qty_status_button.raw_value">On hand: <field name="qty_available"/> <field name="uom_id"/></div>
-                    </t>
+                <xpath expr="//field[@name='product_properties']" position="before">
+                    <div groups="stock.group_stock_user" invisible="not show_on_hand_qty_status_button">
+                        On hand: <field class="d-inline" name="qty_available"/> <field class="d-inline" name="uom_id"/>
+                    </div>
                 </xpath>
             </field>
         </record>
