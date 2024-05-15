@@ -382,6 +382,28 @@ class ProductProduct(models.Model):
             }
         return vals
 
+    def _prepare_fifo_vacuum_valuation_values(self, svl_to_vacuum, corrected_value):
+        move = svl_to_vacuum.stock_move_id
+        return {
+            'product_id': self.id,
+            'value': corrected_value,
+            'unit_cost': 0,
+            'quantity': 0,
+            'remaining_qty': 0,
+            'stock_move_id': move.id,
+            'company_id': move.company_id.id,
+            'description': 'Revaluation of %s (negative inventory)' % (move.picking_id.name or move.name),
+            'stock_valuation_layer_id': svl_to_vacuum.id,
+        }
+
+    def _prepare_fifo_vacuum_values(self):
+        return {'standard_price': self.value_svl / self.quantity_svl}
+
+    def _update_fifo_vacuum_values(self):
+        for product in self:
+            product_values = product._prepare_fifo_vacuum_values()
+            product.sudo().with_context(disable_auto_svl=True).write(product_values)
+
     def _run_fifo_vacuum(self, company=None):
         """Compensate layer valued at an estimated price with the price of future receipts
         if any. If the estimated price is equals to the real price, no layer is created but
@@ -458,18 +480,7 @@ class ProductProduct(models.Model):
                 continue
 
             corrected_value = svl_to_vacuum.currency_id.round(corrected_value)
-            move = svl_to_vacuum.stock_move_id
-            vals = {
-                'product_id': self.id,
-                'value': corrected_value,
-                'unit_cost': 0,
-                'quantity': 0,
-                'remaining_qty': 0,
-                'stock_move_id': move.id,
-                'company_id': move.company_id.id,
-                'description': 'Revaluation of %s (negative inventory)' % (move.picking_id.name or move.name),
-                'stock_valuation_layer_id': svl_to_vacuum.id,
-            }
+            vals = self._prepare_fifo_vacuum_valuation_values(corrected_value, svl_to_vacuum)
             vacuum_svl = self.env['stock.valuation.layer'].sudo().create(vals)
 
             if self.valuation != 'real_time':
@@ -479,7 +490,7 @@ class ProductProduct(models.Model):
         # If some negative stock were fixed, we need to recompute the standard price.
         product = self.with_company(company.id)
         if product.product_tmpl_id.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
-            product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
+            product._update_fifo_vacuum_values()
 
         self.env['stock.valuation.layer'].browse(x[0].id for x in as_svls)._validate_accounting_entries()
 
