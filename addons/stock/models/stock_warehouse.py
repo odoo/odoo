@@ -178,9 +178,6 @@ class Warehouse(models.Model):
             warehouses._update_reception_delivery_resupply(vals.get('reception_steps'), vals.get('delivery_steps'))
 
         if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
-            new_resupply_whs = self.new({
-                'resupply_wh_ids': vals['resupply_wh_ids']
-            }).resupply_wh_ids._origin
             old_resupply_whs = {warehouse.id: warehouse.resupply_wh_ids for warehouse in warehouses}
 
         # If another partner assigned
@@ -263,6 +260,7 @@ class Warehouse(models.Model):
 
         if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
             for warehouse in warehouses:
+                new_resupply_whs = warehouse.resupply_wh_ids
                 to_add = new_resupply_whs - old_resupply_whs[warehouse.id]
                 to_remove = old_resupply_whs[warehouse.id] - new_resupply_whs
                 if to_add:
