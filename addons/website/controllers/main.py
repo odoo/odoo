@@ -626,7 +626,7 @@ class Website(Home):
         # towards files (with spaces, apostrophes, etc.).
         menu = request.env['website.menu'].search([('url', '=', '/' + path)])
         if menu:
-            menu.url = url
+            menu.page_id = page['page_id']
         if noredirect:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
 
