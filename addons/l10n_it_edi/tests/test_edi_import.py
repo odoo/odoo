@@ -42,6 +42,12 @@ class TestItEdiImport(TestItEdi):
     # Vendor bills
     # -----------------------------
 
+    def test_receive_invalid_xml(self):
+        xml_decode = self.env['ir.attachment']._decode_edi_xml
+        with tools.mute_logger("odoo.addons.l10n_it_edi.models.ir_attachment"):
+            xml_tree = xml_decode("non_italian.xml", "<invalid/>")[0]['xml_tree']
+            self.assertNotEqual("FatturaElettronica", xml_tree.tag)
+
     def test_receive_vendor_bill(self):
         """ Test a sample e-invoice file from
         https://www.fatturapa.gov.it/export/documenti/fatturapa/v1.2/IT01234567890_FPR01.xml
@@ -264,3 +270,34 @@ class TestItEdiImport(TestItEdi):
                 }
             ],
         }], applied_xml)
+
+    def test_receive_two_bills_in_one_file(self):
+        self._assert_import_invoice('IT01234567890_FPR03.xml', [
+        {
+            'invoice_date': fields.Date.from_string('2014-12-18'),
+            'amount_tax': 5.5,
+            'amount_untaxed': 25.0,
+            'invoice_line_ids': [
+                {
+                    'name': 'DESCRIZIONE DELLA FORNITURA',
+                    'price_unit': 1.0,
+                    'quantity': 5.0,
+                },
+                {
+                    'name': 'FORNITURE VARIE PER UFFICIO',
+                    'price_unit': 2.0,
+                    'quantity': 10.0,
+                }
+            ],
+        },
+        {
+            'invoice_date': fields.Date.from_string('2014-12-20'),
+            'amount_untaxed': 2000.0,
+            'amount_tax': 440.0,
+            'invoice_line_ids': [{
+                'name': 'DESCRIZIONE DEL SERVIZIO',
+                'price_unit': 2000.0,
+                'quantity': 1.0,
+            }],
+        },
+    ])

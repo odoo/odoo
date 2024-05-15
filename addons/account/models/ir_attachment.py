@@ -34,8 +34,11 @@ class IrAttachment(models.Model):
         """Decodes an xml into a list of one dictionary representing an attachment.
         :returns:           A list with a dictionary.
         """
+
+        # No need to search the entities on Internet, especially in test/demo environments
+        parser = etree.XMLParser(resolve_entities=False)
         try:
-            xml_tree = etree.fromstring(content)
+            xml_tree = etree.fromstring(content, parser)
         except Exception as e:
             _logger.info('Error when reading the xml file "%s": %s', filename, e)
             return []
