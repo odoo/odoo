@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="l10n_ro_edi_etransport.ErrorInfoPopover">
+        <div class="row m-2 justify-content-between error_info_popover">
+            <t t-if="props.errors">
+                <ul t-if="props.errors.length > 1" class="mt-0 mb-0">
+                    <t t-foreach="props.errors" t-as="error" t-key="error">
+                        <li t-out="error"/>
+                    </t>
+                </ul>
+                <div t-else="" t-out="props.errors[0]"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="l10n_ro_edi_etransport.ErrorInfoButton" t-inherit="web.SelectionField" t-inherit-mode="primary">
+        <span position="after">
+            <button invisible="!shouldShow()" class="btn btn_debug" t-on-click="(ev) => this.showPopover(ev)">
+                <i class="fa fa-info-circle"/>
+            </button>
+        </span>
+    </t>
+</templates>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="l10n_ro_edi_etransport_customs_view_form" model="ir.ui.view">
+        <field name="name">l10n.ro.edi.etransport.customs.form</field>
+        <field name="model">l10n_ro.edi.etransport.customs</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_ro_edi_etransport_customs_view_tree" model="ir.ui.view">
+        <field name="name">l10n.ro.edi.etransport.customs.tree</field>
+        <field name="model">l10n_ro.edi.etransport.customs</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_ro_edi_etransport_customs_action" model="ir.actions.act_window">
+        <field name="name">Customs</field>
+        <field name="res_model">l10n_ro.edi.etransport.customs</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="l10n_ro_edi_etransport_customs_menu_item"
+              name="Customs"
+              parent="l10n_ro_edi_etransport_menu_item"
+              action="l10n_ro_edi_etransport_customs_action"
+              sequence="25"/>
+</odoo>
