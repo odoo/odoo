@@ -18,13 +18,7 @@ export class SettingsFormController extends formView.Controller {
         super.setup();
         useAutofocus();
         this.state = useState({ displayNoContent: false });
-        // Deprecated warning: a new way to point to sections or items will be
-        // developed so that putting a default search value won't be necessary
-        if ("default_search_setting" in this.props.context) {
-            this.searchState = useState({ value: this.props.context.default_search_setting });
-        } else {
-            this.searchState = useState({ value: "" });
-        }
+        this.searchState = useState({ value: "" });
         this.rootRef = useRef("root");
         this.canCreate = false;
         useSubEnv({ searchState: this.searchState });
