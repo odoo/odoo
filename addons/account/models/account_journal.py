@@ -866,22 +866,24 @@ class AccountJournal(models.Model):
         # As we are coming from the journal, we assume that each attachments
         # will create an invoice with a tentative to enhance with EDI / OCR..
         all_invoices = self.env['account.move']
-        for attachment in attachments:
-            invoice = self.env['account.move'].create({
-                'journal_id': self.id,
-                'move_type': move_type,
-            })
-
-            invoice._extend_with_attachments(attachment, new=True)
-
-            all_invoices |= invoice
-
+        Move = self.env['account.move'].with_context(default_journal_id=self.id, default_move_type=move_type)
+        mapping = Move._extend_with_attachments(attachments, new=True)
+        results = [
+            (idx, attachment, invoice)
+            for attachment, invoices in mapping.items()
+            for idx, invoice in enumerate(invoices)
+        ]
+        for idx, attachment, invoice in results:
             invoice.with_context(
                 account_predictive_bills_disable_prediction=True,
                 no_new_invoice=True,
             ).message_post(attachment_ids=attachment.ids)
-
-            attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
+            rel_data = {'res_model': 'account.move', 'res_id': invoice.id}
+            if idx == 0:
+                attachment.write(rel_data)
+            else:
+                attachment.copy(rel_data)
+            all_invoices |= invoice
 
         return all_invoices
 
