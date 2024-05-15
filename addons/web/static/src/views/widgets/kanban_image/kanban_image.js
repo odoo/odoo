@@ -46,6 +46,7 @@ class KanbanImage extends Component {
         ...standardWidgetProps,
         imgFieldName: { type: String },
         innerImgField: { type: String, optional: true },
+        imgClass: { type: String, optional: true },
     };
 
     get mainImageSrc() {
@@ -72,6 +73,7 @@ export const kanbanImageWidget = {
         return {
             imgFieldName: options.field,
             innerImgField: options.inner,
+            imgClass: options.class,
             // alt: attrs.alt, // TODO
             // todo: placeholder
         };
