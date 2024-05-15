@@ -281,6 +281,7 @@ class AccountMoveLine(models.Model):
         string="Account Root",
         store=True,
     )
+    product_category_id = fields.Many2one(related='product_id.product_tmpl_id.categ_id')
 
     # ==============================================================================================
     #                                          INVOICE
