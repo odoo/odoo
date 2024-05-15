@@ -9,6 +9,7 @@ import { NavBar } from "./navbar/navbar";
 
 import { Component, onMounted, onWillStart, useExternalListener, useState } from "@odoo/owl";
 import { router, routerBus } from "@web/core/browser/router";
+import { browser } from "@web/core/browser/browser";
 
 export class WebClient extends Component {
     static template = "web.WebClient";
@@ -89,6 +90,20 @@ export class WebClient extends Component {
             if (menuId) {
                 // Sets the menu according to the current action
                 this.menuService.setCurrentMenu(menuId);
+            }
+        }
+
+        // Scroll to anchor after the state is loaded
+        if (stateLoaded) {
+            if (browser.location.hash !== "") {
+                try {
+                    const el = document.querySelector(browser.location.hash);
+                    if (el !== null) {
+                        el.scrollIntoView(true);
+                    }
+                } catch {
+                    // do nothing if the hash is not a correct selector.
+                }
             }
         }
 
