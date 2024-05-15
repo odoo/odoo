@@ -157,7 +157,14 @@ class IrModuleModule(models.Model):
                 if not find and model_name == 'ir.attachment':
                     # In master, a unique constraint over (theme_template_id, website_id)
                     # will be introduced, thus ensuring unicity of 'find'
-                    find = rec.copy_ids.search([('key', '=', rec.key), ('website_id', '=', website.id), ("original_id", "=", False)])
+                    find = rec.copy_ids.search(
+                        [
+                            ('theme_template_id', '=', rec.id),
+                            ('key', '=', rec.key),
+                            ('website_id', '=', website.id),
+                            ("original_id", "=", False),
+                        ]
+                    )
 
                 if find:
                     imd = self.env['ir.model.data'].search([('model', '=', find._name), ('res_id', '=', find.id)])
