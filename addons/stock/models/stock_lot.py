@@ -140,7 +140,7 @@ class StockLot(models.Model):
             lot.location_id = quants.location_id if len(quants.location_id) == 1 else False
 
     def _set_single_location(self):
-        quants = self.quant_ids.filtered(lambda q: q.quantity > 0)
+        quants = self.quant_ids.filtered(lambda q: q.quantity > 0 and q.location_id.usage == "internal")
         if len(quants.location_id) == 1:
             unpack = len(quants.package_id.quant_ids) > 1
             quants.move_quants(location_dest_id=self.location_id, message=_("Lot/Serial Number Relocated"), unpack=unpack)
