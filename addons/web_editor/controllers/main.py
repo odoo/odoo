@@ -699,7 +699,10 @@ class Web_Editor(http.Controller):
                     raise werkzeug.exceptions.NotFound()
             svg = attachment.raw.decode('utf-8')
         else:
-            svg = self._get_shape_svg(module, 'shapes', filename)
+            try:
+                svg = self._get_shape_svg(module, 'shapes', filename)
+            except ValueError:
+                raise werkzeug.exceptions.NotFound()
 
         svg, options = self._update_svg_colors(kwargs, svg)
         flip_value = options.get('flip', False)
