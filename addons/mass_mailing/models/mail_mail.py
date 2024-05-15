@@ -65,7 +65,7 @@ class MailMail(models.Model):
     def _prepare_outgoing_list(self, recipients_follower_status=None):
         """ Update mailing specific links to add tracking based on res_id """
         email_list = super()._prepare_outgoing_list(recipients_follower_status)
-        if not self.res_id or not self.mailing_id:
+        if not self.mailing_id:
             return email_list
 
         base_url = self.mailing_id.get_base_url()

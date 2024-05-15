@@ -61,8 +61,6 @@ class TestMassMailing(models.TransientModel):
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
                 'auto_delete': False,  # they are manually deleted after notifying the document
                 'mail_server_id': mailing.mail_server_id.id,
-                'res_id': self.env.user.id,
-                'model': 'res.users'
             }
             mail = self.env['mail.mail'].sudo().create(mail_values)
             mails_sudo |= mail
