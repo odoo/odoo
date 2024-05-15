@@ -926,7 +926,7 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
 
         payment_method_line = self.acquirer_id.journal_id.inbound_payment_method_line_ids\
-            .filtered(lambda l: l.code == self.provider)
+            .filtered(lambda l: l.payment_acquirer_id == self.acquirer_id)
         payment_values = {
             'amount': abs(self.amount),  # A tx may have a negative amount, but a payment must >= 0
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
