@@ -289,7 +289,11 @@ export class SpreadsheetPivotModel extends PivotModel {
         const { cols, rows } = this._getColsRowsValuesFromDomain(domain);
         const group = JSON.stringify([rows, cols]);
         const values = this.data.measurements[group];
-        return (values && values[0][measure]) ?? "";
+
+        if (values && (values[0][measure] || values[0][measure] === 0)) {
+            return values[0][measure];
+        }
+        return "";
     }
 
     /**
