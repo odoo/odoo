@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.l10n_latam_check.tests.common import L10nLatamCheckTest
 from odoo.tests import Form, tagged
-from odoo import fields, Command
+from odoo import fields
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -14,8 +14,8 @@ class TestOwnChecks(L10nLatamCheckTest):
         with Form(self.env['account.payment'].with_context(default_payment_type='outbound')) as payment_form:
             payment_form.partner_id = self.partner_a
             payment_form.journal_id = self.bank_journal
-            payment_form.payment_method_line_id = self.bank_journal._get_available_payment_method_lines('outbound').filtered(lambda x: x.code == 'own_checks')[0]
-
+            payment_form.payment_method_line_id = self.bank_journal._get_available_payment_method_lines(
+                'outbound').filtered(lambda x: x.code == 'own_checks')[0]
             payment_form.ref = 'Deferred check'
             with payment_form.l10n_latam_new_check_ids.new() as check1:
                 check1.name = '00000001'
@@ -46,7 +46,8 @@ class TestOwnChecks(L10nLatamCheckTest):
         with Form(self.env['account.payment'].with_context(default_payment_type='outbound')) as payment_form:
             payment_form.partner_id = self.partner_a
             payment_form.journal_id = self.bank_journal
-            payment_form.payment_method_line_id = self.bank_journal._get_available_payment_method_lines('outbound').filtered(lambda x: x.code == 'own_checks')[0]
+            payment_form.payment_method_line_id = self.bank_journal._get_available_payment_method_lines(
+                'outbound').filtered(lambda x: x.code == 'own_checks')[0]
 
             payment_form.ref = 'Deferred check'
             with payment_form.l10n_latam_new_check_ids.new() as check1:
@@ -59,5 +60,7 @@ class TestOwnChecks(L10nLatamCheckTest):
         payment.action_post()
         self.assertEqual(payment.amount, 50)
         payment.action_cancel()
-        self.assertFalse(payment.l10n_latam_new_check_ids.issue_state, "Canceled payment checks must not have issue state")
-        self.assertEqual(len(payment.l10n_latam_new_check_ids.split_move_line_id), 0, "Canceled payment checks must not have split move")
+        self.assertFalse(payment.l10n_latam_new_check_ids.issue_state,
+                         "Canceled payment checks must not have issue state")
+        self.assertEqual(len(payment.l10n_latam_new_check_ids.split_move_line_id), 0,
+                         "Canceled payment checks must not have split move")

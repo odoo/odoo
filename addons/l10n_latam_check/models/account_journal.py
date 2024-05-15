@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import models, api
 
 
@@ -9,7 +6,7 @@ class AccountJournal(models.Model):
 
     def _default_outbound_payment_methods(self):
         res = super()._default_outbound_payment_methods()
-        if self.company_id.country_id.code in ["AR"] and self._is_payment_method_available('own_checks'):
+        if self.company_id.country_id.code == "AR" and self._is_payment_method_available('own_checks'):
             res |= self.env.ref('l10n_latam_check.account_payment_method_own_checks')
         return res
 

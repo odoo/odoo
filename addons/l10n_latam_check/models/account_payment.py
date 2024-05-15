@@ -105,7 +105,7 @@ class AccountPayment(models.Model):
         if checks_reconciled:
             raise UserError(_(
                 "You can't cancel or re-open a payment with checks if some check has been debited or been voided. Checks:\n"
-                "%s" % ('\n'.join(['* %s (%s)' % (x.name, x.issue_state) for x in checks_reconciled]))))
+                "%s") % ('\n'.join(['* %s (%s)' % (x.name, x.issue_state) for x in checks_reconciled])))
 
     def action_cancel(self):
         self._get_reconciled_checks_error()
@@ -120,7 +120,7 @@ class AccountPayment(models.Model):
             move_id = self.env['account.move'].create({
                 'journal_id': payment.journal_id.id,
             })
-            liquidity_line, dummy, dummy = payment._seek_for_lines()
+            liquidity_line, counterpart_lines, dummy = payment._seek_for_lines()
 
             for check in payment.l10n_latam_new_check_ids:
                 liquidity_amount_currency = -check.amount
@@ -165,7 +165,7 @@ class AccountPayment(models.Model):
         split_move_ids.unlink()
 
     @api.depends(
-        'payment_method_line_id', 'state',  'date', 'is_internal_transfer', 'amount', 'currency_id', 'company_id',
+        'payment_method_line_id', 'state', 'date', 'is_internal_transfer', 'amount', 'currency_id', 'company_id',
         'l10n_latam_check_ids.issuer_vat', 'l10n_latam_check_ids.bank_id', 'l10n_latam_check_ids.date',
         'l10n_latam_new_check_ids.amount', 'l10n_latam_new_check_ids.name',
     )
