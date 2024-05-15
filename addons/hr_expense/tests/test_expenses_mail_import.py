@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged
+from odoo.exceptions import UserError
 
 
 @tagged('-at_install', 'post_install')
@@ -212,3 +213,17 @@ class TestExpensesMailImport(TestExpenseCommon):
             self.product_a,
             self.company_data['currency'],
         )
+
+    def test_import_expense_from_mail_get_default_expense_sheet_values_errors(self):
+        # Make sure we get the expected UserError when trying to validate an expense with no product
+        message = {
+            'message_id': "the-world-is-a-ghetto",
+            'subject': 'no product code 800',
+            'email_from': self.expense_user_employee.email,
+            'to': 'catchall@yourcompany.com',
+            'body': "Don't you know, that for me, and for you",
+            'attachments': [],
+        }
+
+        expense = self.env['hr.expense'].message_new(message)
+        self.assertRaisesRegex(UserError, r"You can not create report without category\.", expense._get_default_expense_sheet_values)
