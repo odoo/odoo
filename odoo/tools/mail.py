@@ -46,6 +46,18 @@ SANITIZE_TAGS = {
     'kill_tags': ['base', 'embed', 'frame', 'head', 'iframe', 'link', 'meta',
                   'noscript', 'object', 'script', 'style', 'title'],
     'remove_tags': ['html', 'body'],
+    'whitelist_tags': ['iframe'],
+    'host_whitelist': [
+        # TODO probably some of those can be removed but kept in stable for now
+        'youtu.be', 'www.youtu.be',
+        'youtube.com', 'www.youtube.com',
+        'youtube-nocookie.com', 'www.youtube-nocookie.com',
+        'instagram.com', 'www.instagram.com',
+        'vine.co', 'www.vine.co',
+        'player.vimeo.com', 'vimeo.com', 'www.vimeo.com',
+        'dailymotion.com', 'www.dailymotion.com',
+        'player.youku.com', 'youku.com', 'www.youku.com',
+    ],
 }
 
 
@@ -105,6 +117,13 @@ class _Cleaner(clean.Cleaner):
                 el.attrib['style'] = '; '.join('%s:%s' % (key, val) for (key, val) in valid_styles.items())
             else:
                 del el.attrib['style']
+
+    def allow_embedded_url(self, el, url):
+        # Fix the lib implementation: protocol relative URLs should be
+        # considered as http(s) URLs.
+        if url.startswith('//'):
+            url = f'https:{url}'
+        return super().allow_embedded_url(el, url)
 
 
 def tag_quote(el):
