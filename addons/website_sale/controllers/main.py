@@ -1769,14 +1769,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return request.redirect('/shop')
 
         if order and not order.amount_total and not tx_sudo:
-            order.with_context(send_email=True).with_user(SUPERUSER_ID).action_confirm()
-            auto_invoice = order.env['ir.config_parameter'].get_param('sale.automatic_invoice')
-            # create an invoice for order with zero total amount and automatic invoice enabled
-            if auto_invoice and order.reward_amount:
-                invoice = order._create_invoices(final=True)
-                invoice.action_post()
-                # clean context and session, then redirect to the portal page
-                request.website.sale_reset()
+            order._validate_zero_amount_cart()
+
+            # clean context and session, then redirect to the portal page
+            request.website.sale_reset()
             return request.redirect(order.get_portal_url())
 
         # clean context and session, then redirect to the confirmation page
