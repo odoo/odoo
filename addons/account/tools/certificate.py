@@ -39,6 +39,17 @@ def load_key_and_certificates(content, password):
                 for item in certificate.issuer.get_attributes_for_oid(oid)
             ]
         ),
+        subject=SimpleNamespace(
+            rfc4514_string=certificate.subject.rfc4514_string,
+            rdns=[
+                SimpleNamespace(rfc4514_string=item.rfc4514_string)
+                for item in certificate.subject.rdns
+            ],
+            get_attributes_for_oid=lambda oid: [
+                SimpleNamespace(value=item.value)
+                for item in certificate.subject.get_attributes_for_oid(oid)
+            ]
+        ),
         not_valid_after=certificate.not_valid_after,
         not_valid_before=certificate.not_valid_before,
         public_key=public_key,
