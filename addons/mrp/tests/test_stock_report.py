@@ -23,6 +23,10 @@ class TestMrpStockReports(TestReportsCommon):
             'name': 'Double Choco Cake',
             'type': 'product',
         })
+        byproduct = self.env['product.product'].create({
+            'name': 'by-product',
+            'type': 'product',
+        })
 
         # Creates two BOM: one creating a regular slime, one using regular slimes.
         bom_chococake = self.env['mrp.bom'].create({
@@ -34,6 +38,8 @@ class TestMrpStockReports(TestReportsCommon):
             'bom_line_ids': [
                 (0, 0, {'product_id': product_chocolate.id, 'product_qty': 4}),
             ],
+            'byproduct_ids':
+                [(0, 0, {'product_id': byproduct.id, 'product_qty': 2})],
         })
         bom_double_chococake = self.env['mrp.bom'].create({
             'product_id': product_double_chococake.id,
@@ -86,6 +92,17 @@ class TestMrpStockReports(TestReportsCommon):
         self.assertEqual(draft_picking_qty['out'], 0)
         self.assertEqual(draft_production_qty['in'], 0)
         self.assertEqual(draft_production_qty['out'], 0)
+
+        mo_form = Form(mo_1)
+        mo_form.qty_producing = 10
+        mo_form.save()
+        mo_1.move_byproduct_ids.quantity = 18
+        mo_1.button_mark_done()
+
+        self.env.flush_all()  # flush to correctly build report
+        report_values = self.env['report.mrp.report_mo_overview']._get_report_data(mo_1.id)['byproducts']['details'][0]
+        self.assertEqual(report_values['name'], byproduct.name)
+        self.assertEqual(report_values['quantity'], 18)
 
     def test_report_forecast_2_production_backorder(self):
         """ Creates a manufacturing order and produces half the quantity.
