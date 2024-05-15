@@ -71,6 +71,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             // Create first order
             FloorScreen.clickTable("5"),
             ProductScreen.orderBtnIsPresent(),
+            ProductScreen.tableNameShown("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             inLeftSide(Order.hasLine({ productName: "Coca-Cola", run: "dblclick" })),
             ProductScreen.clickDisplayedProduct("Water", true),

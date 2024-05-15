@@ -14,7 +14,7 @@
         </xpath>
         <xpath expr="//div[hasclass('pos-rightheader')]" position="before">
             <div t-if="pos.config.module_pos_restaurant" class="ms-1 d-flex overflow-hidden position-relative">
-                <span t-if="showTableIcon" t-esc="pos.selectedTable.name" t-attf-style="background-color: {{pos.selectedTable.color}};border-radius: 0.25rem;" class="text-white fw-bolder px-3 my-2 py-1 d-flex align-items-center" />
+                <span t-if="showTableIcon" t-esc="pos.selectedTable.name" t-attf-style="background-color: {{pos.selectedTable.color}};border-radius: 0.25rem;" class="table-name text-white fw-bolder px-3 my-2 py-1 d-flex align-items-center" />
                 <button t-if="!pos.selectedOrderUuid" class="btn btn-primary mx-2" t-on-click="newFloatingOrder">
                     <i class="fa fa-plus-circle" aria-hidden="true"/>
                 </button>
