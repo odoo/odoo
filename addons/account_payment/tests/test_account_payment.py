@@ -2,6 +2,7 @@
 
 from unittest.mock import patch
 
+from odoo import Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.account_payment.tests.common import AccountPaymentCommon
 from odoo.tests import tagged
@@ -187,8 +188,12 @@ class TestAccountPayment(AccountPaymentCommon):
             with self.assertRaises(ValidationError):
                 # ...but not having both with the same name.
                 provider.journal_id = journal
-                journal._check_payment_method_line_ids_multiplicity()
 
             method_line = get_payment_method_line(copy_provider)
             method_line.name = "dummy (copy)"
             provider.journal_id = journal
+
+            # You can't have twice the same acquirer on the same journal.
+            copy_provider_pml = get_payment_method_line(copy_provider)
+            with self.assertRaises(ValidationError):
+                journal.inbound_payment_method_line_ids = [Command.update(copy_provider_pml.id, {'payment_provider_id': provider.id})]
