@@ -238,11 +238,11 @@
                                     <!-- fields in form x2many view to diminish requests -->
                                     <field name="comment"/>
                                     <field name="display_name"/>
-                                    <card class="o_res_partner_kanban flex-row g-0">
-                                        <aside class="col-3">
+                                    <card class="o_res_partner_kanban flex-row">
+                                        <aside class="col-3 o_kanban_aside_full">
                                             <widget name="kanban_image" options="{'field': 'avatar_128'}"/>
                                         </aside>
-                                        <main class="col ps-2">
+                                        <main class="col-9 ps-2">
                                             <field name="name" class="fw-bold"/>
                                             <field name="function"/>
                                             <field name="email" widget="email"/>
@@ -435,15 +435,17 @@
                     <field name="active"/>
                     <card class="o_res_partner_kanban flex-row g-0">
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                        <aside class="col-3">
-                            <widget class="h-100" name="kanban_image" options="{'field': 'avatar_128', 'inner': 'parent_id'}"/>
+                        <aside class="col-3 col-md-4 o_kanban_aside_full">
+                            <widget name="kanban_image" options="{'field': 'avatar_128', 'inner': 'parent_id'}"/>
                         </aside>
-                        <main class="col-9 ps-2">
-                            <strong><field name="display_name"/></strong>
-                            <field invisible="not parent_id or function" name="parent_id"/>
-                            <field invisible="parent_id or not function" name="function"/>
-                            <div invisible="not parent_id or not function">
-                                <field class="d-inline" name="function"/> at <field class="d-inline" name="parent_id"/>
+                        <main class="col-9 col-md-8 ps-2">
+                            <div class="mb-1">
+                                <field name="display_name" class="mb-0 h5"/>
+                                <field class="text-muted" invisible="not parent_id or function" name="parent_id"/>
+                                <field class="text-muted" invisible="parent_id or not function" name="function"/>
+                                <div class="text-muted" invisible="not parent_id or not function">
+                                    <field class="d-inline" name="function"/> at <field class="d-inline" name="parent_id"/>
+                                </div>
                             </div>
                             <div invisible="not city and not country_id">
                                 <field class="d-inline" invisible="not city" name="city"/>
@@ -451,7 +453,7 @@
                                 <field class="d-inline" invisible="not country_id" name="country_id"/>
                             </div>
                             <field name="email" class="text-truncate"/>
-                            <footer></footer>
+                            <footer><div/></footer>
                         </main>
                     </card>
                 </kanban>

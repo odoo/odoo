@@ -22,12 +22,10 @@
         <field name="inherit_id" ref="base.res_partner_kanban_view"/>
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
-            <xpath expr="//footer" position="inside">
-                <a invisible="sale_order_count == 0" type="object" name="action_view_sale_order">
-                    <span class="badge rounded-pill">
-                        <i class="fa fa-usd me-1" role="img" aria-label="Sale orders" title="Sales orders"/>
-                        <field class="d-inline" name="sale_order_count"/>
-                    </span>
+            <xpath expr="//footer/div" position="inside">
+                <a invisible="sale_order_count == 0" type="object" name="action_view_sale_order" class="btn btn-sm btn-link smaller">
+                    <i class="fa fa-usd me-1" role="img" aria-label="Sale orders" title="Sales orders"/>
+                    <field class="d-inline" name="sale_order_count"/>
                 </a>
             </xpath>
         </field>
