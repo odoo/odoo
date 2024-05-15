@@ -54,7 +54,7 @@
                 <xpath expr="//footer/div" position="inside">
                     <a invisible="purchase_order_count == 0" type="action" name="%(purchase.act_res_partner_2_purchase_order)d" class="btn btn-sm btn-link smaller">
                         <i class="fa fa-credit-card me-1" aria-label="Purchases" role="img" title="Purchases"/>
-                        <field class="d-inline" name="purchase_order_count"/>
+                        <field name="purchase_order_count"/>
                     </a>
                 </xpath>
             </field>

@@ -248,14 +248,14 @@
                                             <field name="email" widget="email"/>
                                             <div invisible="type == 'contact'">
                                                 <div>
-                                                    <field name="zip" class="d-inline"/>
-                                                    <field name="city" class="d-inline ms-1"/>
+                                                    <field name="zip"/>
+                                                    <field name="city" class="ms-1"/>
                                                 </div>
-                                                <field name="state_id" class="d-inline"/>
-                                                <field name="country_id" class="d-inline ms-1"/>
+                                                <field name="state_id"/>
+                                                <field name="country_id" class="ms-1"/>
                                             </div>
-                                            <div invisible="not phone">Phone: <field name="phone" class="d-inline"/></div>
-                                            <div invisible="not mobile">Mobile: <field name="mobile" class="d-inline"/></div>
+                                            <div invisible="not phone">Phone: <field name="phone"/></div>
+                                            <div invisible="not mobile">Mobile: <field name="mobile"/></div>
                                         </main>
                                     </card>
                                 </kanban>
@@ -444,13 +444,13 @@
                                 <field class="text-muted" invisible="not parent_id or function" name="parent_id"/>
                                 <field class="text-muted" invisible="parent_id or not function" name="function"/>
                                 <div class="text-muted" invisible="not parent_id or not function">
-                                    <field class="d-inline" name="function"/> at <field class="d-inline" name="parent_id"/>
+                                    <field name="function"/> at <field name="parent_id"/>
                                 </div>
                             </div>
                             <div invisible="not city and not country_id">
-                                <field class="d-inline" invisible="not city" name="city"/>
+                                <field invisible="not city" name="city"/>
                                 <span invisible="not city or not country_id">, </span>
-                                <field class="d-inline" invisible="not country_id" name="country_id"/>
+                                <field invisible="not country_id" name="country_id"/>
                             </div>
                             <field name="email" class="text-truncate"/>
                             <footer><div/></footer>
