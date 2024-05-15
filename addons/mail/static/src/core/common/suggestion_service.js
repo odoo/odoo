@@ -148,7 +148,7 @@ export class SuggestionService {
                 .filter((persona) => persona.type === "partner");
         } else {
             partners = Object.values(this.store.Persona.records).filter((persona) => {
-                if (thread.model !== "discuss.channel" && persona.eq(this.store.odoobot)) {
+                if (thread?.model !== "discuss.channel" && persona.eq(this.store.odoobot)) {
                     return false;
                 }
                 return persona.type === "partner";
