@@ -25959,7 +25959,7 @@
     function matchReference(tokens) {
         let head = 0;
         let transitions = machine[State.LeftRef];
-        const matchedTokens = [];
+        let matchedTokens = "";
         while (transitions !== undefined) {
             const token = tokens[head++];
             if (!token) {
@@ -25971,15 +25971,15 @@
                 case undefined:
                     return null;
                 case State.Found:
-                    matchedTokens.push(token);
+                    matchedTokens += token.value;
                     tokens.splice(0, head);
                     return {
                         type: "REFERENCE",
-                        value: concat(matchedTokens.map((token) => token.value)),
+                        value: matchedTokens,
                     };
                 default:
                     transitions = machine[nextState];
-                    matchedTokens.push(token);
+                    matchedTokens += token.value;
                     break;
             }
         }
@@ -48092,9 +48092,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.34';
-    __info__.date = '2024-04-26T07:57:35.342Z';
-    __info__.hash = '196324c';
+    __info__.version = '16.3.35';
+    __info__.date = '2024-05-15T10:57:27.651Z';
+    __info__.hash = '255caa0';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
