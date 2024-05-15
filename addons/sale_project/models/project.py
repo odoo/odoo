@@ -96,7 +96,9 @@ class Project(models.Model):
         for project in self:
             sale_order_lines = sale_order_items_per_project_id.get(project.id, self.env['sale.order.line'])
             project.sale_order_line_count = len(sale_order_lines)
-            project.sale_order_count = len(sale_order_lines.order_id)
+
+            # Use sudo to avoid AccessErrors when the SOLs belong to different companies.
+            project.sale_order_count = len(sale_order_lines.sudo().order_id)
 
     def _compute_invoice_count(self):
         data = self.env['account.move.line']._read_group(
@@ -144,7 +146,8 @@ class Project(models.Model):
 
     def action_view_sos(self):
         self.ensure_one()
-        all_sale_orders = self._fetch_sale_order_items({'project.task': [('is_closed', '=', False)]}).order_id
+        # Use sudo to avoid AccessErrors when the SOLs belong to different companies.
+        all_sale_orders = self._fetch_sale_order_items({'project.task': [('is_closed', '=', False)]}).sudo().order_id
         action_window = {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
