@@ -368,7 +368,7 @@ class ReportMoOverview(models.AbstractModel):
                 'model': product._name,
                 'id': product.id,
                 'name': product.display_name,
-                'quantity': move_bp.product_uom_qty,
+                'quantity': move_bp.product_uom_qty if move_bp.state != 'done' else move_bp.quantity,
                 'uom_name': move_bp.product_uom.display_name,
                 'uom_precision': self._get_uom_precision(move_bp.product_uom.rounding),
                 'unit_cost': self._get_unit_cost(move_bp),
