@@ -64,7 +64,7 @@ class AccountMove(models.Model):
         # Reversing vendor bills that represent employee reimbursements should clear them from the expense sheet such that another
         # can be generated in place.
         own_account_moves = self.filtered(lambda move: move.expense_sheet_id.payment_mode == 'own_account')
-        own_account_moves.expense_sheet_id.write({
+        own_account_moves.expense_sheet_id.sudo().write({
             'state': 'approve',
             'account_move_id': False,
         })
