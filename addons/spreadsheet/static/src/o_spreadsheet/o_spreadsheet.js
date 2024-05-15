@@ -18751,7 +18751,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         var _a;
         let head = 0;
         let transitions = machine[State.LeftRef];
-        const matchedTokens = [];
+        let matchedTokens = "";
         while (transitions !== undefined) {
             const token = tokens[head++];
             if (!token) {
@@ -18763,15 +18763,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case undefined:
                     return null;
                 case State.Found:
-                    matchedTokens.push(token);
+                    matchedTokens += token.value;
                     tokens.splice(0, head);
                     return {
                         type: "REFERENCE",
-                        value: concat(matchedTokens.map((token) => token.value)),
+                        value: matchedTokens,
                     };
                 default:
                     transitions = machine[nextState];
-                    matchedTokens.push(token);
+                    matchedTokens += token.value;
                     break;
             }
         }
@@ -43322,9 +43322,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.40';
-    __info__.date = '2024-04-26T07:56:37.850Z';
-    __info__.hash = '70a6783';
+    __info__.version = '16.0.41';
+    __info__.date = '2024-05-15T10:56:33.803Z';
+    __info__.hash = '3b3f648';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
