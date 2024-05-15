@@ -717,6 +717,14 @@ class Meeting(models.Model):
                     force_send=True,
                 )
 
+        # Change base event when the main base event is archived. If it isn't done when trying to modify
+        # all events of the recurrence an error can be thrown or all the recurrence can be deleted.
+        if values.get("active") is False:
+            recurrences = self.env["calendar.recurrence"].search([
+                ('base_event_id', 'in', self.ids)
+            ])
+            recurrences._select_new_base_event()
+
         return True
 
     def _check_calendar_privacy_write_permissions(self):
