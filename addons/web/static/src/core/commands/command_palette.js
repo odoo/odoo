@@ -316,11 +316,16 @@ export class CommandPalette extends Component {
     }
 
     async search(searchValue) {
-        await this.setCommands(this.state.namespace, {
-            searchValue,
-            activeElement: this.activeElement,
-            sessionId: this._sessionId,
-        });
+        this.state.isLoading = true;
+        try {
+            await this.setCommands(this.state.namespace, {
+                searchValue,
+                activeElement: this.activeElement,
+                sessionId: this._sessionId,
+            });
+        } finally {
+            this.state.isLoading = false;
+        }
         if (this.inputRef.el) {
             this.inputRef.el.focus();
         }
