@@ -123,13 +123,17 @@ class TestHrContracts(TestContractCommon):
         self.assertEqual(self.employee.first_contract_date, date(2017, 1, 1))
 
     def test_current_contract_stage_change(self):
+        """
+            If the current date falls within the contract date range, it will be considered the current contract.
+            A future contract will be considered the current contract if there are no other contracts covering the contract date.
+        """
         today = date.today()
         contract = self.create_contract('open', 'normal', today + relativedelta(day=1), today + relativedelta(day=31))
         self.assertEqual(self.employee.contract_id, contract)
 
         draft_contract = self.create_contract('draft', 'normal', today + relativedelta(months=1, day=1), today + relativedelta(months=1, day=31))
         draft_contract.state = 'open'
-        self.assertEqual(self.employee.contract_id, draft_contract)
+        self.assertEqual(self.employee.contract_id, contract)
 
         draft_contract.state = 'draft'
         self.assertEqual(self.employee.contract_id, contract)

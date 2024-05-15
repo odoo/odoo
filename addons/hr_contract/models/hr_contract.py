@@ -257,8 +257,16 @@ class Contract(models.Model):
             self.write(vals)
 
     def _assign_open_contract(self):
+        current_date = fields.Datetime.now().date()
         for contract in self:
-            contract.employee_id.sudo().write({'contract_id': contract.id})
+            current_contract = False
+            if contract.date_start <= current_date or (contract.date_end and contract.date_end <= current_date):
+                current_contract = contract
+            elif contract.employee_id.contract_id.state != 'open':
+                employee_open_contracts = contract.employee_id.contract_ids.filtered(lambda c: c.state == 'open' and c.date_start >= current_date)
+                current_contract = min(employee_open_contracts, default=False, key=lambda c: c.date_start)
+            if current_contract:
+                contract.employee_id.sudo().write({'contract_id': current_contract.id})
 
     @api.depends('wage')
     def _compute_contract_wage(self):
