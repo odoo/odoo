@@ -24,11 +24,26 @@
         <record id="ir_rule_hr_expense_employee" model="ir.rule">
             <field name="name">Employee Expense</field>
             <field name="model_id" ref="model_hr_expense"/>
+<<<<<<< faf59432ac5e8cdfe5161054009090b83e665235
             <field name="domain_force">[
                 '|', '&amp;', ('employee_id.expense_manager_id', '=', user.id), ('state', 'in', ['draft', 'submitted', 'approved', 'refused']),
                      '&amp;', ('employee_id.user_id', '=', user.id), ('state', '=', 'draft')
             ]</field>
+||||||| 22261f40267bff818a61cde9bb938e6061783465
+            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+=======
+            <field name="domain_force">[('employee_id.user_id', '=', user.id), ('state', 'in', ('draft', 'reported'))]</field>
+>>>>>>> febff3a846bae3fb0862060e54d429e69255393e
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+        <record id="ir_rule_hr_expense_employee_not_draft" model="ir.rule">
+            <field name="name">Employee can't modify expense that is not in draft state</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id), ('state', 'not in', ('draft', 'reported'))]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
         </record>
 
         <record id="ir_rule_hr_expense_employee_not_draft" model="ir.rule">

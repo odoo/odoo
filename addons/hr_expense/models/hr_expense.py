@@ -796,8 +796,27 @@ class HrExpense(models.Model):
                 raise UserError(_('You cannot delete a posted or approved expense.'))
 
     def write(self, vals):
+<<<<<<< faf59432ac5e8cdfe5161054009090b83e665235
         if any(field in vals for field in {'is_editable', 'can_approve', 'can_refuse'}):
             raise UserError(_("You cannot edit the security fields of an expense manually"))
+||||||| 22261f40267bff818a61cde9bb938e6061783465
+        expense_to_previous_sheet = {}
+        if 'sheet_id' in vals:
+            # Check access rights on the sheet
+            self.env['hr.expense.sheet'].browse(vals['sheet_id']).check_access('write')
+=======
+        if (
+                'state' in vals
+                and vals['state'] != 'submitted'
+                and not (self.env.user.has_group('hr_expense.group_hr_expense_manager') or self.env.su)
+                and any(state == 'draft' for state in self.mapped('state'))
+        ):
+            raise UserError(_("You don't have the rights to bypass the validation process of this expense."))
+        expense_to_previous_sheet = {}
+        if 'sheet_id' in vals:
+            # Check access rights on the sheet
+            self.env['hr.expense.sheet'].browse(vals['sheet_id']).check_access('write')
+>>>>>>> febff3a846bae3fb0862060e54d429e69255393e
 
         if any(field in vals for field in {'tax_ids', 'analytic_distribution', 'account_id', 'manager_id'}):
             if any(not expense.is_editable for expense in self):
