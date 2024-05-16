@@ -67,9 +67,9 @@ class AccountPayment(models.Model):
                     'Please try to deselect and select the check again.'))
             # checks being moved
             if rec._is_latam_check_payment(check_subtype='move_check'):
-                if any(check.state != 'posted' for check in rec.l10n_latam_check_ids):
+                if any(check.payment_id.state != 'posted' for check in rec.l10n_latam_check_ids):
                     msgs.append(_('Selecteds check "%s" are not posted',
-                                  rec.l10n_latam_check_ids.filtered(lambda x: x.state != 'posted').mapped('display_name')))
+                                  rec.l10n_latam_check_ids.filtered(lambda x: x.payment_id.state != 'posted').mapped('display_name')))
                 elif (rec.payment_type == 'outbound' and
                         any(check.current_journal_id != rec.journal_id for check in rec.l10n_latam_check_ids)) or (
                         rec.payment_type == 'inbound' and rec.is_internal_transfer and
@@ -161,7 +161,7 @@ class AccountPayment(models.Model):
 
     @api.depends(
         'payment_method_line_id', 'state', 'date', 'is_internal_transfer', 'amount', 'currency_id', 'company_id',
-        'l10n_latam_check_ids.issuer_vat', 'l10n_latam_check_ids.bank_id', 'l10n_latam_check_ids.date',
+        'l10n_latam_check_ids.issuer_vat', 'l10n_latam_check_ids.bank_id', 'l10n_latam_check_ids.payment_id.date',
         'l10n_latam_new_check_ids.amount', 'l10n_latam_new_check_ids.name',
     )
     def _compute_l10n_latam_check_warning_msg(self):
@@ -184,7 +184,7 @@ class AccountPayment(models.Model):
                         ('bank_id', '=', check.bank_id.id),
                         ('issuer_vat', '=', check.issuer_vat),
                         ('name', '=', check.name),
-                        ('state', '=', 'posted'),
+                        ('payment_id.state', '=', 'posted'),
                         ('id', '!=', check._origin.id)], limit=1)
                 if same_checks:
                     msgs.append(_(

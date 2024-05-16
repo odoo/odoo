@@ -21,7 +21,6 @@ class l10nLatamAccountPaymentCheck(models.Model):
         'account.payment',
         required=True,
         ondelete='cascade',
-        delegate=True,
     )
     operation_ids = fields.Many2many(
         comodel_name='account.payment', relation='account_payment_account_payment_check_rel',
@@ -45,6 +44,10 @@ class l10nLatamAccountPaymentCheck(models.Model):
     split_move_line_id = fields.Many2one('account.move.line', readonly=True, check_company=True,)
     issue_state = fields.Selection([('handed', 'Handed'), ('debited', 'Debited'), ('voided', 'Voided')],
                                    compute='_compute_issue_state', store=True)
+    # fields from payment
+    payment_method_code = fields.Char(related='payment_id.payment_method_code')
+    partner_id = fields.Many2one(related='payment_id.partner_id')
+    journal_id = fields.Many2one(related='payment_id.journal_id')
     company_id = fields.Many2one(related='payment_id.company_id')
     currency_id = fields.Many2one(related='payment_id.currency_id')
     payment_method_line_id = fields.Many2one(
@@ -79,7 +82,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
                     'debit': self.split_move_line_id.debit,
                     'credit': self.split_move_line_id.credit,
                     'partner_id': self.split_move_line_id.partner_id.id,
-                    'account_id': self.destination_account_id.id,
+                    'account_id': self.payment_id.destination_account_id.id,
                    }),
                     Command.create({
                         'name': "Void check %s" % self.split_move_line_id.name,
@@ -119,7 +122,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
         return (self.payment_id + self.operation_ids).filtered(
                 lambda x: x.state == 'posted').sorted(key=lambda payment: (payment.date, payment._origin.id))[-1:]
 
-    @api.depends('state', 'operation_ids.state')
+    @api.depends('payment_id.state', 'operation_ids.state')
     def _compute_current_journal(self):
         for rec in self:
             last_operation = rec._get_last_operation()
@@ -185,18 +188,18 @@ class l10nLatamAccountPaymentCheck(models.Model):
         if min_amount_error:
             raise ValidationError(_('The amount of the check must be greater than 0'))
 
-    @api.depends('payment_method_line_id.code', 'partner_id')
+    @api.depends('payment_method_line_id.code', 'payment_id.partner_id')
     def _compute_bank_id(self):
         new_third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
         for rec in new_third_party_checks:
             rec.bank_id = rec.partner_id.bank_ids[:1].bank_id
         (self - new_third_party_checks).bank_id = False
 
-    @api.depends('payment_method_line_id.code', 'partner_id')
+    @api.depends('payment_method_line_id.code', 'payment_id.partner_id')
     def _compute_issuer_vat(self):
         new_third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
         for rec in new_third_party_checks:
-            rec.issuer_vat = rec.partner_id.vat
+            rec.issuer_vat = rec.payment_id.partner_id.vat
         (self - new_third_party_checks).issuer_vat = False
 
     @api.onchange('issuer_vat')
@@ -216,5 +219,5 @@ class l10nLatamAccountPaymentCheck(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_payment_is_draft(self):
-        if any(check.state == 'posted' for check in self):
+        if any(check.payment_id.state == 'posted' for check in self):
             raise UserError("Can't delete a check if payment is posted!")

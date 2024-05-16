@@ -4,11 +4,12 @@
     <record model="ir.ui.view" id="view_account_payment_search">
         <field name="name">account.check.search</field>
         <field name="model">l10n_latam.check</field>
-        <field name="priority">20</field>
-        <field name="mode">primary</field>
-        <field name="inherit_id" ref="account.view_account_payment_search"/>
+        <field name="inherit_id" eval="False"/>
         <field name="arch" type="xml">
-            <filter name="date" position="after">
+            <search>
+                <field name="name"/>
+            </search>
+            <!-- <filter name="date" position="after">
                 <separator/>
             </filter>
             <filter name="groupby_date" position="after">
@@ -19,7 +20,7 @@
                 <filter string="On hand" name="checks_on_hand" domain="[('issue_state', '=', 'handed')]"/>
                 <filter string="Voided" name="checks_voided" domain="[('issue_state', '=', 'voided')]"/>
                 <filter string="Debited" name="checks_debited" domain="[('issue_state', '=', 'debited')]"/>
-            </filter>
+            </filter> -->
         </field>
     </record>
 
@@ -27,11 +28,11 @@
     <record model="ir.ui.view" id="view_account_payment_third_party_checks_search">
         <field name="name">account.check.search</field>
         <field name="model">l10n_latam.check</field>
-        <field name="priority">22</field>
-        <field name="mode">primary</field>
-        <field name="inherit_id" ref="account.view_account_payment_search"/>
         <field name="arch" type="xml">
-            <field name="journal_id" position="after">
+            <search>
+                <field name="name"/>
+            </search>
+            <!-- <field name="journal_id" position="after">
                 <field name="current_journal_id"/>
             </field>
             <filter name="date" position="after">
@@ -52,7 +53,7 @@
                 <filter string="Check Cash-In Date"
                     name="groupby_payment_date"
                     context="{'group_by': 'payment_date'}"/>
-            </filter>
+            </filter> -->
         </field>
     </record>
 
@@ -150,7 +151,6 @@
             <tree edit="false" sample="1" decoration-info="issue_state == 'handed'" decoration-muted="issue_state == 'voided'">
                     <header>
                     </header>
-                    <field name="date"/>
                     <field name="payment_date" optional="show"/>
                     <field name="name"/>
                     <field name="journal_id"/>
