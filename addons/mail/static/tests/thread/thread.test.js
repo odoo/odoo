@@ -263,7 +263,7 @@ test('mention a channel with "&" in the name', async () => {
     await contains(".o-mail-Message-body .o_channel_redirect", { text: "#General & good" });
 });
 
-test("mark channel as fetched when a new message is loaded and as seen when focusing composer [REQUIRE FOCUS]", async () => {
+test("mark channel as fetched when a new message is loaded", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "fred@example.com",
@@ -283,9 +283,9 @@ test("mark channel as fetched when a new message is loaded and as seen when focu
             step(`/mail/action - ${JSON.stringify(args)}`);
         }
     });
-    onRpcBefore("/discuss/channel/set_last_seen_message", (args) => {
+    onRpcBefore("/discuss/channel/mark_as_read", (args) => {
         expect(args.channel_id).toBe(channelId);
-        step("rpc:set_last_seen_message");
+        step("rpc:mark_as_read");
     });
     onRpc("discuss.channel", "channel_fetched", ({ args }) => {
         expect(args[0][0]).toBe(channelId);
@@ -314,11 +314,10 @@ test("mark channel as fetched when a new message is loaded and as seen when focu
     await assertSteps(["rpc:channel_fetch"]);
     await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
     await focus(".o-mail-Composer-input");
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
-    await assertSteps(["rpc:set_last_seen_message"]);
+    await assertSteps(["rpc:mark_as_read"]);
 });
 
-test("mark channel as fetched and seen when a new message is loaded if composer is focused [REQUIRE FOCUS]", async () => {
+test("mark channel as fetched when a new message is loaded and thread is focused [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -329,9 +328,10 @@ test("mark channel as fetched and seen when a new message is loaded if composer 
             Command.create({ partner_id: partnerId }),
         ],
     });
-    onRpcBefore("/discuss/channel/set_last_seen_message", (args) => {
+    onRpc("/discuss/channel/messages", () => step("/discuss/channel/messages"));
+    onRpcBefore("/discuss/channel/mark_as_read", (args) => {
         expect(args.channel_id).toBe(channelId);
-        step("rpc:set_last_seen_message");
+        step("rpc:mark_as_read");
     });
     onRpc("discuss.channel", "channel_fetched", ({ args }) => {
         if (args[0] === channelId) {
@@ -343,7 +343,8 @@ test("mark channel as fetched and seen when a new message is loaded if composer 
     const env = await start();
     rpc = rpcWithEnv(env);
     await openDiscuss(channelId);
-    await focus(".o-mail-Composer-input");
+    await assertSteps(["/discuss/channel/messages"]);
+    await click(".o-mail-Composer");
     // simulate receiving a message
     await withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -353,7 +354,7 @@ test("mark channel as fetched and seen when a new message is loaded if composer 
         })
     );
     await contains(".o-mail-Message");
-    await assertSteps(["rpc:set_last_seen_message"]);
+    await assertSteps(["rpc:mark_as_read"]);
 });
 
 test("should scroll to bottom on receiving new message if the list is initially scrolled to bottom (asc order)", async () => {

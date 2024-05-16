@@ -659,6 +659,9 @@ class Channel(models.Model):
         Automatically set the message posted by the current user as seen for themselves.
         """
         self._set_last_seen_message(message, notify=False)
+        current_channel_member = self.env["discuss.channel.member"].search([("channel_id", "=", self.id), ("is_self", "=", True)])
+        if current_channel_member:
+            current_channel_member._set_new_message_separator(message.id + 1)
         return super()._message_post_after_hook(message, msg_vals)
 
     def _check_can_update_message_content(self, message):
@@ -1019,9 +1022,10 @@ class Channel(models.Model):
         else:
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', {"Thread": self._channel_info()[0]})
 
-    def _channel_seen(self, last_message_id=None):
+    def _mark_as_read(self, last_message_id=None):
         """
-        Mark channel as seen by updating seen message id of the current persona.
+        Mark channel as read by updating seen message id of the current persona
+        as well as its new message separator.
         :param last_message_id: the id of the message to be marked as seen, last message of the
         thread by default. This param SHOULD be required, the default behaviour is DEPRECATED and
         kept only for compatibility reasons.
@@ -1037,6 +1041,10 @@ class Channel(models.Model):
         if last_message_id is not False and not last_message:
             return
         self._set_last_seen_message(last_message)
+        current_member = self.env["discuss.channel.member"].search(
+            [("channel_id", "=", self.id), ("is_self", "=", True)]
+        )
+        current_member._set_new_message_separator(last_message.id + 1)
         return last_message.id
 
     def _set_last_seen_message(self, last_message, notify=True):
@@ -1067,7 +1075,6 @@ class Channel(models.Model):
             'seen_message_id': last_message.id,
             'last_seen_dt': fields.Datetime.now(),
         })
-        member._set_new_message_separator(last_message.id + 1)
         if notify:
             target = current_partner or current_guest
             if self.channel_type in self._types_allowing_seen_infos():

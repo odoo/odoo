@@ -400,7 +400,7 @@ export class Message extends Component {
         if (!thread.selfMember || thread.selfMember?.new_message_separator === message.id) {
             return;
         }
-        return rpc("/discuss/channel/set_new_message_separator", {
+        return rpc("/discuss/channel/mark_as_unread", {
             channel_id: message.thread.id,
             message_id: message.id,
         });

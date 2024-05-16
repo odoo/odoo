@@ -950,7 +950,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {number[]} ids
      * @param {number} last_message_id
      */
-    _channel_seen(ids, last_message_id) {
+    _mark_as_read(ids, last_message_id) {
         const kwargs = parseModelParams(arguments, "ids", "last_message_id");
         ids = kwargs.ids;
         delete kwargs.ids;
@@ -973,6 +973,14 @@ export class DiscussChannel extends models.ServerModel {
             return;
         }
         this._set_last_seen_message([channel.id], last_message_id);
+        const member = this._find_or_create_member_for_self(channel_id);
+        if (!member) {
+            return;
+        }
+        this.env["discuss.channel.member"]._set_new_message_separator(
+            [member.id],
+            last_message_id + 1
+        );
     }
 
     /**

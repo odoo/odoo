@@ -7,7 +7,7 @@ from odoo.addons.bus.tests.common import WebsocketCase
 
 @tagged("post_install", "-at_install")
 class TestGuestFeature(WebsocketCase):
-    def test_channel_seen_as_guest(self):
+    def test_mark_as_read_as_guest(self):
         guest = self.env["mail.guest"].create({"name": "Guest"})
         partner = self.env["res.partner"].create({"name": "John"})
         channel = self.env["discuss.channel"].channel_create(
@@ -22,7 +22,7 @@ class TestGuestFeature(WebsocketCase):
         )
         self.assertEqual(guest_member.seen_message_id, self.env["mail.message"])
         self.make_jsonrpc_request(
-            "/discuss/channel/set_last_seen_message",
+            "/discuss/channel/mark_as_read",
             {
                 "channel_id": channel.id,
                 "last_message_id": channel.message_ids[0].id,

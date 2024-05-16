@@ -464,7 +464,7 @@ export class Thread extends Component {
      * @param {import("models").Message?} previous
      */
     isNewMessageSeparatorVisible(current, previous) {
-        const separator = this.props.thread.selfMember?.new_message_separator;
+        const separator = this.props.thread.selfMember?.localNewMessageSeparator;
         if (current.id === separator) {
             return true;
         }

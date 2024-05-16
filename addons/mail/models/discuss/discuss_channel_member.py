@@ -416,26 +416,30 @@ class ChannelMember(models.Model):
             self.env['bus.bus']._sendone(self.channel_id, 'mail.record/insert', {'Thread': channel_data})
         return members
 
-    def _set_new_message_separator(self, message_id):
+    def _set_new_message_separator(self, message_id, sync=False):
         """
         :param message_id: id of the message above which the new message
             separator should be displayed.
+        :param sync: if True, the new message separator in the UX will be
+            updated to the `message_id` value.
+
         """
         self.ensure_one()
         if message_id == self.new_message_separator:
             return
         self.new_message_separator = message_id
         target = self.partner_id or self.guest_id
-        self.env["bus.bus"]._sendone(target, "mail.record/insert", {
-            "ChannelMember": {
-                "id": self.id,
-                "new_message_separator": self.new_message_separator,
-                "thread": {
-                    "id": self.channel_id.id,
-                    "message_unread_counter": self.message_unread_counter,
-                    # sudo: bus.bus: reading non-sensitive last id
-                    "message_unread_counter_bus_id": self.env["bus.bus"].sudo()._bus_last_id(),
-                    "model": "discuss.channel",
-                },
-            }
-        })
+        channel_member = {
+            "id": self.id,
+            "new_message_separator": self.new_message_separator,
+            "thread": {
+                "id": self.channel_id.id,
+                "message_unread_counter": self.message_unread_counter,
+                # sudo: bus.bus: reading non-sensitive last id
+                "message_unread_counter_bus_id": self.env["bus.bus"].sudo()._bus_last_id(),
+                "model": "discuss.channel",
+            },
+        }
+        if sync:
+            channel_member["localNewMessageSeparator"] = self.new_message_separator
+        self.env["bus.bus"]._sendone(target, "mail.record/insert", {"ChannelMember": channel_member})

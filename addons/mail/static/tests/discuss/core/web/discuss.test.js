@@ -22,9 +22,9 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     onRpcBefore((route, args) => {
         if (route.startsWith("/mail") || route.startsWith("/discuss")) {
-            // 'set_last_seen_message' order can change in last assertSteps.
+            // 'mark_as_read' order can change in last assertSteps.
             // Removed to not deal with non-deterministic assertion
-            if (route !== "/discuss/channel/set_last_seen_message") {
+            if (route !== "/discuss/channel/mark_as_read") {
                 step(`${route} - ${JSON.stringify(args)}`);
             }
         }
