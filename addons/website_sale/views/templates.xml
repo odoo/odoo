@@ -1895,18 +1895,13 @@
                         <div class="oe_cart col-12 col-lg-8">
                             <div>
                                 <t t-set="address_mode" t-value="mode[1]"/>
-                                <t t-if="is_public_order">
-                                    <h3 class="mb-3">
-                                        <span t-if="account_on_checkout != 'mandatory'">Fill in your address</span>
-                                        <small class="text-muted" t-if="account_on_checkout == 'optional'"> or </small>
-                                        <a t-if="account_on_checkout != 'disabled'" role="button" href='/web/login?redirect=/shop/checkout'  style="margin-top: -11px"> Sign in</a>
-                                    </h3>
-                                </t>
-                                <t t-elif="address_mode == 'billing'">
-                                    <h3 class="mb-3">Billing address</h3>
-                                </t>
-                                <t t-else="">
-                                    <h3 class="mb-3">Shipping address</h3>
+                                <t t-if="not is_public_order">
+                                    <t t-if="address_mode == 'billing'">
+                                        <h3 class="mb-3">Billing address</h3>
+                                    </t>
+                                    <t t-else="">
+                                        <h3 class="mb-3">Shipping address</h3>
+                                    </t>
                                 </t>
                                 <t t-if="partner_id == website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id">
                                     <div class="alert alert-warning" role="alert" t-if="not only_services" groups="account.group_delivery_invoice_address">
@@ -1921,16 +1916,29 @@
                                     <h5 class="text-danger" t-esc="err" />
                                 </t>
                                 <form t-if="account_on_checkout != 'mandatory' or not is_public_user" action="/shop/address" method="post" class="checkout_autoformat">
+                                    <t t-if="is_public_order">
+                                        <div t-attf-class="#{error.get('email') and 'o_has_error'} col-lg-12" id="div_email_public">
+                                            <label t-attf-class="col-form-label #{mode[1] == 'shipping' and 'label-optional' or ''}" for="email">Email</label>
+                                            <div style="display: inline" class="float-end">
+                                                <span> Already have an account?</span>
+                                                <a t-if="account_on_checkout != 'disabled'" role="button" href='/web/login?redirect=/shop/checkout' style="margin-top: -11px" class="btn btn-primary">Sign in</a>
+                                            </div>
+                                            <input type="email" name="email" t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}" t-att-value="'email' in checkout and checkout['email']"/>
+                                        </div>
+                                        <h4 class="mb-1 mt-5">Fill in your address</h4>
+                                    </t>
                                     <div class="row">
                                         <div t-attf-class="#{error.get('name') and 'o_has_error'} div_name col-lg-12 mb-2">
                                             <label class="col-form-label" for="name">Full name</label>
                                             <input type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="'name' in checkout and checkout['name']" />
                                         </div>
                                         <div class="w-100"/>
-                                        <div t-attf-class="#{error.get('email') and 'o_has_error'} col-lg-6 mb-2" id="div_email">
-                                            <label t-attf-class="col-form-label #{mode[1] == 'shipping' and 'label-optional' or ''}" for="email">Email</label>
-                                            <input type="email" name="email" t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}" t-att-value="'email' in checkout and checkout['email']" />
-                                        </div>
+                                        <t t-if="not is_public_order">
+                                            <div t-attf-class="#{error.get('email') and 'o_has_error'} col-lg-6 mb-2" id="div_email">
+                                                <label t-attf-class="col-form-label #{mode[1] == 'shipping' and 'label-optional' or ''}" for="email">Email</label>
+                                                <input type="email" name="email" t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}" t-att-value="'email' in checkout and checkout['email']" />
+                                            </div>
+                                        </t>
                                         <div t-attf-class="#{error.get('phone') and 'o_has_error'} col-lg-6 mb-2" id="div_phone">
                                             <label class="col-form-label" for="phone">Phone</label>
                                             <input type="tel" name="phone" t-attf-class="form-control #{error.get('phone') and 'is-invalid' or ''}" t-att-value="'phone' in checkout and checkout['phone']" />

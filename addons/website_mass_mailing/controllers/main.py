@@ -40,6 +40,15 @@ class MassMailController(main.MassMailController):
                 'toast_content': _("Suspicious activity detected by Google reCaptcha."),
             }
 
+        fname = self._get_fname(subscription_type)
+        self.subscribe_to_newsletter(subscription_type, value, list_id, fname)
+        return {
+            'toast_type': 'success',
+            'toast_content': _("Thanks for subscribing!"),
+        }
+
+    @staticmethod
+    def subscribe_to_newsletter(subscription_type, value, list_id, fname):
         ContactSubscription = request.env['mailing.subscription'].sudo()
         Contacts = request.env['mailing.contact'].sudo()
         if subscription_type == 'email':
@@ -47,7 +56,6 @@ class MassMailController(main.MassMailController):
         elif subscription_type == 'mobile':
             name = value
 
-        fname = self._get_fname(subscription_type)
         subscription = ContactSubscription.search(
             [('list_id', '=', int(list_id)), (f'contact_id.{fname}', '=', value)], limit=1)
         if not subscription:
@@ -60,7 +68,3 @@ class MassMailController(main.MassMailController):
             subscription.opt_out = False
         # add email to session
         request.session[f'mass_mailing_{fname}'] = value
-        return {
-            'toast_type': 'success',
-            'toast_content': _("Thanks for subscribing!"),
-        }
