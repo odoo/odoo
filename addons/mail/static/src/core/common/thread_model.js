@@ -499,6 +499,13 @@ export class Thread extends Record {
         return Boolean(this.selfMember);
     }
 
+    hasSeenFeature = Record.attr(false, {
+        /** @this {import("models").Thread} */
+        compute() {
+            return this.store.channel_types_with_seen_infos.includes(this.channel_type);
+        },
+    });
+
     get invitationLink() {
         if (!this.uuid || this.channel_type === "chat") {
             return undefined;
@@ -533,7 +540,7 @@ export class Thread extends Record {
     /** @type {undefined|number[]} */
     lastMessageSeenByAllId = Record.attr(undefined, {
         compute() {
-            if (!this.store.channel_types_with_seen_infos.includes(this.channel_type)) {
+            if (!this.hasSeenFeature) {
                 return;
             }
             const otherMembers = this.channelMembers.filter((member) =>

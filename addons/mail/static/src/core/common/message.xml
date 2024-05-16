@@ -25,7 +25,7 @@
                             </small>
                             <div t-else="">
                                 <MessageSeenIndicator
-                                    t-if="props.message.isSelfAuthored and props.thread"
+                                    t-if="props.message.isSelfAuthored and props.thread?.hasSeenFeature"
                                     message="props.message"
                                     thread="props.thread"/>
                             </div>
@@ -42,7 +42,7 @@
                                 <RelativeTime datetime="message.datetime"/>
                             </small>
                             <MessageSeenIndicator
-                                t-if="props.message.isSelfAuthored and !props.squashed and props.thread"
+                                t-if="props.message.isSelfAuthored and !props.squashed and props.thread?.hasSeenFeature"
                                 className="'ms-1'"
                                 message="props.message"
                                 thread="props.thread"/>
