@@ -78,7 +78,7 @@ class SaleOrderLine(models.Model):
             grouped_lines[(line.warehouse_id.id, line.order_id.commitment_date or line._expected_date())] |= line
 
         for (warehouse, scheduled_date), lines in grouped_lines.items():
-            product_qties = lines.mapped('product_id').with_context(to_date=scheduled_date, warehouse=warehouse).read([
+            product_qties = lines.mapped('product_id').with_context(to_date=scheduled_date, warehouse_id=warehouse).read([
                 'qty_available',
                 'free_qty',
                 'virtual_available',
@@ -358,7 +358,7 @@ class SaleOrderLine(models.Model):
 
     def _get_action_add_from_catalog_extra_context(self, order):
         extra_context = super()._get_action_add_from_catalog_extra_context(order)
-        extra_context.update(warehouse=order.warehouse_id.id)
+        extra_context.update(warehouse_id=order.warehouse_id.id)
         return extra_context
 
     def _get_product_catalog_lines_data(self, **kwargs):

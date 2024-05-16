@@ -77,7 +77,7 @@ class PurchaseOrderLine(models.Model):
             warehouse = line.order_id.picking_type_id.warehouse_id
             line.forecasted_issue = False
             if line.product_id:
-                virtual_available = line.product_id.with_context(warehouse=warehouse.id, to_date=line.date_planned).virtual_available
+                virtual_available = line.product_id.with_context(warehouse_id=warehouse.id, to_date=line.date_planned).virtual_available
                 if line.state == 'draft':
                     virtual_available += line.product_uom_qty
                 if virtual_available < 0:
@@ -124,7 +124,7 @@ class PurchaseOrderLine(models.Model):
         }
         warehouse = self.order_id.picking_type_id.warehouse_id
         if warehouse:
-            action['context']['warehouse'] = warehouse.id
+            action['context']['warehouse_id'] = warehouse.id
         return action
 
     def unlink(self):

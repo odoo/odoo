@@ -67,7 +67,7 @@ class ReportBomStructure(models.AbstractModel):
             candidates = variant and self.env['product.product'].browse(int(variant)) or bom.product_id or bom.product_tmpl_id.product_variant_ids
             quantity = float(data.get('quantity', bom.product_qty))
             if data.get('warehouse_id'):
-                self = self.with_context(warehouse=int(data.get('warehouse_id')))
+                self = self.with_context(warehouse_id=int(data.get('warehouse_id')))  # noqa: PLW0642
             for product_variant_id in candidates.ids:
                 docs.append(self._get_pdf_doc(bom_id, data, quantity, product_variant_id))
             if not candidates:
@@ -111,8 +111,8 @@ class ReportBomStructure(models.AbstractModel):
                 for variant in bom.product_tmpl_id.product_variant_ids:
                     bom_product_variants[variant.id] = variant.display_name
 
-        if self.env.context.get('warehouse'):
-            warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse'))
+        if self.env.context.get('warehouse_id'):
+            warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse_id'))
         else:
             warehouse = self.env['stock.warehouse'].browse(self.get_warehouses()[0]['id'])
 
@@ -164,8 +164,8 @@ class ReportBomStructure(models.AbstractModel):
                 closest_forecasted[product.id][line.id] = None
         date_today = self.env.context.get('from_date', fields.date.today())
         domain = [('state', '=', 'forecast'), ('date', '>=', date_today), ('product_id', 'in', list(set(remaining_products)))]
-        if self.env.context.get('warehouse'):
-            domain.append(('warehouse_id', '=', self.env.context.get('warehouse')))
+        if self.env.context.get('warehouse_id'):
+            domain.append(('warehouse_id', '=', self.env.context.get('warehouse_id')))
         if remaining_products:
             res = self.env['report.stock.quantity']._read_group(
                 domain,
@@ -480,8 +480,8 @@ class ReportBomStructure(models.AbstractModel):
         else:
             product = bom.product_id or bom.product_tmpl_id.product_variant_id or bom.product_tmpl_id.with_context(active_test=False).product_variant_id
 
-        if self.env.context.get('warehouse'):
-            warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse'))
+        if self.env.context.get('warehouse_id'):
+            warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse_id'))
         else:
             warehouse = self.env['stock.warehouse'].browse(self.get_warehouses()[0]['id'])
 
@@ -669,8 +669,8 @@ class ReportBomStructure(models.AbstractModel):
         # No need to check forecast if the product isn't located in our stock
         if stock_loc == 'in_stock':
             domain = [('state', '=', 'forecast'), ('date', '>=', date_today), ('product_id', '=', product.id), ('product_qty', '>=', product_info[product.id]['consumptions'][stock_loc])]
-            if self.env.context.get('warehouse'):
-                domain.append(('warehouse_id', '=', self.env.context.get('warehouse')))
+            if self.env.context.get('warehouse_id'):
+                domain.append(('warehouse_id', '=', self.env.context.get('warehouse_id')))
 
             # Seek the closest date in the forecast report where consummed quantity >= forecasted quantity
             if not closest_forecasted:

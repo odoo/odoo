@@ -72,7 +72,7 @@ class ReportMoOverview(models.AbstractModel):
     def _get_report_data(self, production_id):
         production = self.env['mrp.production'].browse(production_id)
         # Necessary to fetch the right quantities for multi-warehouse
-        production = production.with_context(warehouse=production.warehouse_id.id)
+        production = production.with_context(warehouse_id=production.warehouse_id.id)
 
         components = self._get_components_data(production, level=1, current_index='')
         operations = self._get_operations_data(production, level=1, current_index='')

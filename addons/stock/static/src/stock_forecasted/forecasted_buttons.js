@@ -36,7 +36,7 @@ export class ForecastedButtons extends Component {
         } else if (this.resModel === 'product.template') {
             context.default_product_tmpl_id = this.productId;
         }
-        context.default_warehouse_id = this.context.warehouse;
+        context.default_warehouse_id = this.context.warehouse_id;
 
         const action = {
             res_model: 'product.replenish',
