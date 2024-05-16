@@ -17,7 +17,7 @@
     </xpath>
   </template>
 
-  <template id="portal_my_home_purchase" name="Show Requests for Quotation / Purchase Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="25">
+  <template id="portal_my_home_purchase" name="Requests for Quotation / Purchase Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="25">
     <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
           <t t-set="portal_vendor_category_enable" t-value="True"/>
       </xpath>
@@ -137,44 +137,32 @@
           <div class="row o_portal_purchase_sidebar">
               <!-- Sidebar -->
               <t t-call="portal.portal_record_sidebar">
-                  <t t-set="classes" t-value="'col-lg-3 col-xl-4 d-print-none'"/>
+                  <t t-set="classes" t-value="'col-lg-4 col-xxl-3 d-print-none'"/>
 
                   <t t-set="title">
-                      <h2 t-field="order.amount_total" data-id="total_amount"/>
+                      <h2 t-field="order.amount_total" data-id="total_amount" class="mb-0 text-break"/>
                   </t>
                   <t t-set="entries">
-                      <div class="d-flex flex-column gap-4">
-                          <div class="flex-grow-1 order-md-last order-lg-first">
-                              <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
-                                  <div class="btn-group flex-grow-1 mb-1">
-                                      <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print" t-att-href="order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" target="_blank"><i class="fa fa-print"/> View Details</a>
-                                  </div>
-                              </div>
-                          </div>
-
+                      <div class="d-flex flex-column gap-4 mt-3">
+                        <a class="btn btn-secondary o_print_btn o_portal_invoice_print" t-att-href="order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" role="button" target="_blank"><i class="fa fa-print me-1"/> View Details</a>
                           <div class="navspy flex-grow-1 ps-0" t-ignore="true" role="complementary">
                               <ul class="nav flex-column bs-sidenav"></ul>
                           </div>
-
                           <div t-if="order.user_id">
-                              <h6><small class="text-muted">Purchase Representative</small></h6>
-                              <div class="o_portal_contact_details d-flex flex-column gap-2">
-                                <div class="d-flex justify-content-start align-items-center gap-2">
-                                    <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(order.user_id.avatar_128)" alt="Contact"/>
-                                    <div>
-                                        <h6 class="mb-0" t-out="order.user_id.name"/>
-                                        <a href="#discussion" class="small fw-bold">Send message</a>
-                                    </div>
-                                </div>
-                                <div t-field="order.user_id" t-options='{"widget": "contact", "fields": ["phone"], "no_marker": False}'/>
-                            </div>
+                              <h6 class="small text-muted">Purchase Representative</h6>
+                                <t t-call="portal.portal_my_contact">
+                                    <t t-set="_contactAvatar" t-value="image_data_uri(order.user_id.avatar_128)"/>
+                                    <t t-set="_contactName" t-value="order.user_id.name"/>
+                                    <t t-set="_contactLink" t-value="True"/>
+                                    <div t-field="order.user_id" t-options='{"widget": "contact", "fields": ["phone"], "no_marker": False}'/>
+                                </t>
                           </div>
                       </div>
                   </t>
               </t>
 
               <!-- Page content -->
-              <div id="quote_content" class="o_portal_content col-12 col-lg-9 col-xl-8">
+              <div id="quote_content" class="o_portal_content col-12 col-lg-8 col-xxl-9">
 
                   <!-- status messages -->
                   <div t-if="order.state == 'cancel'" class="alert alert-danger alert-dismissable d-print-none" role="alert">
@@ -249,9 +237,9 @@
                                       </a>
                                       <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
                                   </div>
-                                  <span t-if="i.payment_state in ('paid', 'in_payment')" class="badge text-bg-success small"><i class="fa fa-fw fa-check"/>Paid</span>
-                                  <span t-elif="i.payment_state == 'reversed'" class="badge text-bg-success small"><i class="fa fa-fw fa-check"/>Reversed</span>
-                                  <span t-else="" class="small badge text-bg-primary"><i class="fa fa-fw fa-clock-o"/>Waiting Payment</span>
+                                  <span t-if="i.payment_state in ('paid', 'in_payment')" class="badge rounded-pill text-bg-success small"><i class="fa fa-fw fa-check"/>Paid</span>
+                                  <span t-elif="i.payment_state == 'reversed'" class="badge rounded-pill text-bg-success small"><i class="fa fa-fw fa-check"/>Reversed</span>
+                                  <span t-else="" class="small badge rounded-pill text-bg-primary"><i class="fa fa-fw fa-clock-o"/>Waiting Payment</span>
                               </div>
                           </t>
                       </ul>
