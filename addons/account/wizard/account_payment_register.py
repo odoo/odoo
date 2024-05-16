@@ -115,9 +115,6 @@ class AccountPaymentRegister(models.TransientModel):
         copy=False,
         domain="[('deprecated', '=', False)]",
         check_company=True,
-        compute='_compute_writeoff_account_id',
-        store=True,
-        readonly=False,
     )
     writeoff_label = fields.Char(string='Journal Item Label', default='Write-Off',
         help='Change label of the counterpart that will hold the payment difference')
