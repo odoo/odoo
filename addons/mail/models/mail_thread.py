@@ -1968,9 +1968,12 @@ class MailThread(models.AbstractModel):
                              for email_normalized in (tools.email_normalize(contact, strict=False) for contact in emails)
                              if email_normalized
                             ]
-        matching_aliases = self.env['mail.alias'].sudo().search([('alias_full_name', 'in', normalized_emails)])
+        matching_aliases = self.env['mail.alias'].sudo().search(['|', ('alias_full_name', 'in', normalized_emails),
+                                                                 '&', ('alias_name', 'in', normalized_emails),
+                                                                 ('alias_incoming_local', '=', True)])
         if matching_aliases:
-            normalized_emails = [email for email in normalized_emails if email not in matching_aliases.mapped('alias_full_name')]
+            normalized_emails = [email for email in normalized_emails if email not in matching_aliases.mapped('alias_full_name')
+                                 and email.split('@')[0] not in matching_aliases.filtered('alias_incoming_local').mapped('alias_name')]
 
         done_partners = [follower for follower in followers if follower.email_normalized in normalized_emails]
         remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
