@@ -569,7 +569,7 @@ class BaseAutomation(models.Model):
         eval_context = self._get_eval_context()
         for action in self.with_context(active_test=True).search([('trigger', '=', 'on_time')]):
             _logger.info("Starting time-based automated action `%s`.", action.name)
-            last_run = fields.Datetime.from_string(action.last_run) or datetime.datetime.utcfromtimestamp(0)
+            last_run = fields.Datetime.from_string(action.last_run) or datetime.datetime.fromtimestamp(0, tz=datetime.timezone.utc)
 
             # retrieve all the records that satisfy the action's condition
             domain = []
