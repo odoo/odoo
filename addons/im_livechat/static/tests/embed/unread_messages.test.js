@@ -123,7 +123,7 @@ test("focus on unread livechat marks it as read", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "Are you there?" });
+    await contains(".o-mail-ChatWindow-counter", { text: "1" });
     await focus(".o-mail-Composer-input");
-    await contains(".o-mail-Thread-newMessage", { count: 0 });
+    await contains(".o-mail-ChatWindow-counter", { count: 0 });
 });

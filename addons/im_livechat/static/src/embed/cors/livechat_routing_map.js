@@ -13,10 +13,7 @@ export const livechatRoutingMap = registry.category("discuss.routing_map");
 livechatRoutingMap
     .add("/discuss/channel/messages", "/im_livechat/cors/channel/messages")
     .add("/discuss/channel/notify_typing", "/im_livechat/cors/channel/notify_typing")
-    .add(
-        "/discuss/channel/set_last_seen_message",
-        "/im_livechat/cors/channel/set_last_seen_message"
-    )
+    .add("/discuss/channel/mark_as_read", "/im_livechat/cors/channel/mark_as_read")
     .add("/discuss/channel/fold", "/im_livechat/cors/channel/fold")
     .add("/mail/attachment/delete", "/im_livechat/cors/attachment/delete")
     .add("/discuss/channel/ping", "/im_livechat/cors/channel/ping")

@@ -111,10 +111,10 @@ patch(MockServer.prototype, {
             const description = args.args[1] || args.kwargs.description;
             return this._mockDiscussChannelChannelChangeDescription(ids, description);
         }
-        if (route === "/discuss/channel/set_last_seen_message") {
+        if (route === "/discuss/channel/mark_as_read") {
             const id = args.channel_id;
             const last_message_id = args.last_message_id;
-            return this._mockDiscussChannel_ChannelSeen([id], last_message_id);
+            return this._mockDiscussChannel_MarkAsRead([id], last_message_id);
         }
         if (args.model === "discuss.channel" && args.method === "channel_set_custom_name") {
             const ids = args.args[0];
@@ -692,13 +692,13 @@ patch(MockServer.prototype, {
         }
     },
     /**
-     * Simulates the `_channel_seen` method of `discuss.channel`.
+     * Simulates the `_mark_as_read` method of `discuss.channel`.
      *
      * @private
      * @param integer[] ids
      * @param {integer} last_message_id
      */
-    async _mockDiscussChannel_ChannelSeen(ids, last_message_id) {
+    async _mockDiscussChannel_MarkAsRead(ids, last_message_id) {
         // Update record
         const channel_id = ids[0];
         if (!channel_id) {

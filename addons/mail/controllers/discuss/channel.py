@@ -115,17 +115,17 @@ class ChannelController(http.Controller):
         }
         request.env["bus.bus"]._sendone(member.partner_id, "mail.record/insert", {"Thread": channel_data})
 
-    @http.route("/discuss/channel/set_last_seen_message", methods=["POST"], type="json", auth="public")
+    @http.route("/discuss/channel/mark_as_read", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
-    def discuss_channel_mark_as_seen(self, channel_id, last_message_id):
+    def discuss_channel_mark_as_read(self, channel_id, last_message_id):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
-        return channel._channel_seen(last_message_id)
+        return channel._mark_as_read(last_message_id)
 
-    @http.route("/discuss/channel/set_new_message_separator", methods=["POST"], type="json", auth="public")
+    @http.route("/discuss/channel/mark_as_unread", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
-    def discuss_channel_set_new_message_separator(self, channel_id, message_id):
+    def discuss_channel_mark_as_unread(self, channel_id, message_id):
         with replace_exceptions(ValueError, by=UserError("Invalid `message_id` argument")):
             message_id = int(message_id)
         partner, guest = request.env["res.partner"]._get_current_persona()
@@ -135,7 +135,7 @@ class ChannelController(http.Controller):
         ])
         if not member:
             raise NotFound()
-        return member._set_new_message_separator(message_id)
+        return member._set_new_message_separator(message_id, sync=True)
 
     @http.route("/discuss/channel/notify_typing", methods=["POST"], type="json", auth="public")
     @add_guest_to_context

@@ -472,13 +472,13 @@ test("mark unread channel as read", async () => {
         ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([currentMemberId], { seen_message_id: messagId_1 });
-    onRpcBefore("/discuss/channel/set_last_seen_message", (args) => step("set_last_seen_message"));
+    onRpcBefore("/discuss/channel/mark_as_read", (args) => step("mark_as_read"));
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"]);
     await click(".o-mail-NotificationItem [title='Mark As Read']");
     await contains(".o-mail-NotificationItem.text-muted");
-    await assertSteps(["set_last_seen_message"]);
+    await assertSteps(["mark_as_read"]);
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"]);
     await contains(".o-mail-NotificationItem [title='Mark As Read']", { count: 0 });
     await contains(".o-mail-ChatWindow", { count: 0 });
