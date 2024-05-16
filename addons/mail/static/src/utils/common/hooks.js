@@ -191,6 +191,25 @@ export function useMessageHighlight(duration = 2000) {
             state.highlightedMessageId = message.id;
             timeout = browser.setTimeout(() => this.clearHighlight(), duration);
         },
+        scrollPromise: null,
+        /**
+         * Scroll the element into view and expose a promise that will resolved
+         * once the scroll is done.
+         *
+         * @param {Element} el
+         */
+        scrollTo(el) {
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+            state.scrollPromise = new Promise((resolve) => {
+                if ("scrollend" in window) {
+                    document.addEventListener("scrollend", resolve, { once: true, capture: true });
+                } else {
+                    // To remove when safari will support the "scrollend" event.
+                    setTimeout(resolve, 250);
+                }
+            });
+            return state.scrollPromise;
+        },
         highlightedMessageId: null,
     });
     return state;
