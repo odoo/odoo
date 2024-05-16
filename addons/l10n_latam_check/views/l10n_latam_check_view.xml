@@ -150,9 +150,6 @@
             <tree edit="false" sample="1" decoration-info="issue_state == 'handed'" decoration-muted="issue_state == 'voided'">
                     <header>
                     </header>
-                    <field name="company_currency_id" column_invisible="True"/>
-                    <field name="suitable_journal_ids" column_invisible="True"/>
-                    <field name="available_payment_method_line_ids" column_invisible="True"/>
                     <field name="date"/>
                     <field name="payment_date" optional="show"/>
                     <field name="name"/>
@@ -200,7 +197,7 @@
 
             <tree position="inside">
                 <header>
-                    <button name="%(action_view_l10n_latam_payment_mass_transfer)d" type="action" string="Check Transfer" groups="account.group_account_user"/>
+                    <button name="%(action_view_l10n_latam_payment_mass_transfer)d" type="action" string="Check Transfer"/>
                 </header>
             </tree>
         </field>
