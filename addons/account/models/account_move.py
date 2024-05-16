@@ -4121,7 +4121,7 @@ class AccountMove(models.Model):
             move.mapped('line_ids.analytic_line_ids').unlink()
 
         self.mapped('line_ids').remove_move_reconcile()
-        self.write({'state': 'draft', 'is_move_sent': False})
+        self.state = 'draft'
 
     def button_cancel(self):
         self.write({'auto_post': 'no', 'state': 'cancel'})

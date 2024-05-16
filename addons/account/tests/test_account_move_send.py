@@ -880,3 +880,17 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             self.create_send_and_print(invoice_draft)
         with self.assertRaises(UserError):
             self.create_send_and_print(invoice_posted + invoice_draft)
+
+    def test_out_invoice_is_move_sent(self):
+        invoice = self.init_invoice(move_type='out_invoice', amounts=[1000.0], post=True)
+        wizard = self.create_send_and_print(invoice)
+
+        self.assertEqual(invoice.state, 'posted')
+        self.assertFalse(invoice.is_move_sent)
+
+        wizard.action_send_and_print()
+        self.assertTrue(invoice.is_move_sent)
+
+        invoice.button_draft()
+        self.assertEqual(invoice.state, 'draft')
+        self.assertTrue(invoice.is_move_sent)
