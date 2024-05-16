@@ -222,7 +222,8 @@ class AccountMove(models.Model):
 
                 Country:
                 First, take the country configured on the partner.
-                If there's a codice fiscale and no country, the country is 'IT'.
+                If there is no country, try to deduct the country from the VAT number.
+                If there's a codice fiscale, the country is 'IT'.
             """
             europe = self.env.ref('base.europe', raise_if_not_found=False)
             in_eu = europe and partner.country_id and partner.country_id in europe.country_ids
@@ -233,8 +234,14 @@ class AccountMove(models.Model):
             if partner.vat:
                 normalized_vat = partner.vat.replace(' ', '')
                 if in_eu:
+                    # If there is no country-code prefix, it's domestic to Italy
+                    if normalized_vat[:2].isdecimal():
+                        if not normalized_country:
+                            normalized_country = 'IT'
                     # If the partner is from the EU, the country-code prefix of the VAT must be taken away
-                    if not normalized_vat[:2].isdecimal():
+                    else:
+                        if not normalized_country:
+                            normalized_country = normalized_vat[:2].upper()
                         normalized_vat = normalized_vat[2:]
                 # If customer is from San Marino
                 elif is_sm:
