@@ -1,0 +1,58 @@
+<!-- Archivo: report_templates.xml -->
+<odoo>
+    <data>
+        <template id="portada_clima">
+            <div class="page portada">
+                <div class="header">
+                    <h2>Software de Talento Humano</h2>
+                </div>
+                <div class="main-content text-center">
+                    <div class="icon">
+                        <img src="/path/to/your/icon.png" alt="icon"/>
+                    </div>
+                    <h1>Reporte de Clima Organizacional</h1>
+                    <h3>Nombre de la compañía evaluada</h3>
+                </div>
+                <div class="footer text-center">
+                    <img t-att-src="'/evaluaciones/static/src/img/logo.png'" alt="company logo" class="company-logo"/>
+                </div>
+                <p>Fecha: <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d')"/></p>
+            </div>
+            <style>
+                .portada {
+                    font-family: Arial, sans-serif;
+                    padding: 50px;
+                }
+                .header {
+                    text-align: center;
+                    margin-bottom: 50px;
+                }
+                .logo {
+                    height: 50px;
+                }
+                .icon {
+                    margin: 50px 0;
+                }
+                .icon img {
+                    height: 100px;
+                }
+                .main-content h1 {
+                    font-size: 36px;
+                    margin: 20px 0;
+                }
+                .main-content h3 {
+                    font-size: 24px;
+                }
+                .footer {
+                    margin-top: 50px;
+                }
+                .company-logo {
+                    height: 100px;
+                }
+                .page {
+                    page-break-after: always;
+                }
+            </style>
+        </template>
+    </data>
+</odoo>
