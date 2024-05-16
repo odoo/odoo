@@ -506,3 +506,20 @@ class TestProjectBase(TestProjectCommon):
         self.assertEqual(project2.task_count, 2)
         self.assertEqual(project2.open_task_count, 2)
         self.assertEqual(project2.closed_task_count, 0)
+
+    def test_archived_duplicate_task(self):
+        """ Test to check duplication of an archived task.
+            The duplicate of an archived task should be active.
+        """
+        project = self.env['project.project'].create({
+            'name': 'Project',
+        })
+        task = self.env['project.task'].create({
+            'name': 'Task',
+            'project_id': project.id,
+        })
+        copy_task1 = task.copy()
+        self.assertTrue(copy_task1.active, "Active task should be active when duplicating an active task")
+        task.active = False
+        copy_task2 = task.copy()
+        self.assertTrue(copy_task2.active, "Archived task should be active when duplicating an archived task")
