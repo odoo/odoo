@@ -39,6 +39,7 @@ export function useCashierSelector(
         const { confirmed, payload: inputPin } = await popup.add(NumberPopup, {
             isPassword: true,
             title: _t("Password?"),
+            zIndex: 1040,
         });
 
         if (!confirmed) {
@@ -49,6 +50,7 @@ export function useCashierSelector(
             await popup.add(ErrorPopup, {
                 title: _t("Incorrect Password"),
                 body: _t("Please try again."),
+                zIndex: 1040,
             });
             return false;
         }
@@ -83,6 +85,7 @@ export function useCashierSelector(
             const { confirmed, payload: employee } = await popup.add(SelectionPopup, {
                 title: _t("Change Cashier"),
                 list: employeesList,
+                zIndex: 1040,
             });
 
             if (!confirmed || !employee || (employee.pin && !(await checkPin(employee)))) {
