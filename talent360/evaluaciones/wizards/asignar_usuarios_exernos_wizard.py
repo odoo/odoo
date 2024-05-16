@@ -55,6 +55,10 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
         self.validar_columnas(csv_lector.fieldnames)
 
         for i, fila in enumerate(csv_lector):
+            if i >= 50000: 
+                raise exceptions.ValidationError(
+                    _("Error: No se pueden cargar más de 50,000 usuarios.")
+                )
             try:
                 fecha_ingreso = datetime.strptime(fila["Fecha de ingreso"], "%d/%m/%Y").date()
                 fecha_nacimiento = datetime.strptime(fila["Fecha de nacimiento"], "%d/%m/%Y").date()
