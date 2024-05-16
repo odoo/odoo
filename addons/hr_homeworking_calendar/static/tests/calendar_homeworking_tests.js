@@ -90,6 +90,8 @@ async function createHomeWorkingView(serverData, workLocationMock) {
                 return Promise.resolve([]);
             } else if (route === "/calendar/check_credentials") {
                 return Promise.resolve({});
+            } else if (route === "/web/dataset/call_kw/res.users/check_synchronization_status") {
+                return Promise.resolve({});
             } else if (route === "/web/dataset/call_kw/event/get_state_selections") {
                 return Promise.resolve([
                     ('needsAction', 'Needs Action'),
