@@ -239,26 +239,31 @@ async function buildSvgElement(src) {
     const svgMarkup = await _buildImgElementCache[src];
     return svgMarkup;
 }
-/**
- * Build the correct DOM for a we-row element.
- *
- * @param {string} [title] - @see _buildElement
- * @param {Object} [options] - @see _buildElement
- * @param {HTMLElement[]} [options.childNodes]
- * @returns {HTMLElement}
- */
-function _buildRowElement(title, options) {
-    const groupEl = _buildElement('we-row', title, options);
 
-    const rowEl = document.createElement('div');
-    groupEl.appendChild(rowEl);
-
-    if (options && options.childNodes) {
-        options.childNodes.forEach(node => rowEl.appendChild(node));
+class WeRow extends Component {
+    static template = "web_editor.WeRow";
+    setup() {
+        /** @type {Object.<string, UserValue>} */
+        this.userValues = {};
+        this.state = useState({
+            show: false,
+        });
+        this.env.registerLayoutElement({ state: this.state, userValues: this.userValues }, true);
+        useChildSubEnv({
+            registerUserValue: (userValue) => {
+                this.userValues[userValue.id] = userValue;
+                this.env.registerUserValue(userValue);
+            },
+            unregsiterUserValue: (userValue) => {
+                delete this.userValues[userValue.id];
+                this.env.unregisterUserValue(userValue);
+            },
+        });
     }
-
-    return groupEl;
 }
+
+registry.category("snippet_widgets").add("WeRow", WeRow);
+
 /**
  * Build the correct DOM for a we-collapse element.
  *
@@ -3596,6 +3601,9 @@ export class SnippetOptionComponent extends Component {
                 return this.props.snippetOption.instance.unregisterUserValue(userValue);
             },
             renderContext: this.renderContext,
+            registerLayoutElement: (layoutElement) => {
+                return this.props.snippetOption.instance.registerLayoutElement(layoutElement);
+            },
         });
 
         onMounted(() => {
@@ -3683,6 +3691,7 @@ export class SnippetOption {
 
         /** @type {UserValue[]} */
         this._userValues = {};
+        this._layoutElements = [];
         this._userValueWidgets = [];
         this._actionQueues = new Map();
 
@@ -3809,6 +3818,14 @@ export class SnippetOption {
      */
     unregisterUserValue(userValue) {
         delete this._userValues[userValue.id];
+    }
+    /**
+     * Register a layout element to hide them if no component is visible
+     * within it.
+     * @params {Object} layoutElement
+     */
+    registerLayoutElement(layoutElement) {
+        this._layoutElements.push(layoutElement);
     }
 
     //--------------------------------------------------------------------------
@@ -4265,6 +4282,12 @@ export class SnippetOption {
         this.renderContext.showUI = await this._computeVisibility();
 
         await Promise.all(proms);
+
+        for (const layout of this._layoutElements) {
+            const shouldShow = Object.values(layout.userValues)
+                .some(uv => uv.show);
+            layout.state.show = shouldShow;
+        }
 
         // TODO: @owl-options, layout should probably be hidden in template.
         // Hide layouting elements which contains only hidden widgets

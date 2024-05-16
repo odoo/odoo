@@ -24,6 +24,10 @@
     <WeDatetime selectDataAttribute="''" attributeName="'datetime'"/>
     <WeDatetime selectDataAttribute="''" attributeName="'dateonly'" pickerType="'date'"/>
     <WeButton selectClass="''" dependencies="'test_class_1'">Show when test_class_1</WeButton>
+    <WeRow>
+        <t t-set-slot="title">Row</t>
+        <WeButton dependencies="'test_class_1'" selectClass="'visible_class_test'">Button</WeButton>
+    </WeRow>
 </t>
 
 <t t-name="web_editor.container_width">
@@ -42,6 +46,18 @@
                   img="'/website/static/src/img/snippets_options/content_width_full.svg'"
                   title="full_tooltip"/>
     </WeButtonGroup>
+</t>
+
+<!-- TODO: @owl-options convert title into component for processing props? -->
+<t t-name="web_editor.WeRow">
+    <we-row t-att-class="{'d-none': !this.state.show, [props.class]: true}" t-att-data-tooltip="props.title || props.tooltip">
+        <we-title t-if="props.slots.title" t-att-style="props.fontFamily ? `font-family: ${props.fontFamily}` : false ">
+            <t t-slot="title"/>
+        </we-title>
+        <div>
+            <t t-slot="default"/>
+        </div>
+    </we-row>
 </t>
 
 <t t-name="web_editor.WeButton">
