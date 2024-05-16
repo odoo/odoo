@@ -556,6 +556,11 @@ class Project(models.Model):
                 self.update_ids.message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
         return res
 
+    def message_unsubscribe(self, partner_ids=None):
+        super().message_unsubscribe(partner_ids=partner_ids)
+        if partner_ids:
+            self.env['project.collaborator'].search([('partner_id', 'in', partner_ids), ('project_id', 'in', self.ids)]).unlink()
+
     def _alias_get_creation_values(self):
         values = super(Project, self)._alias_get_creation_values()
         values['alias_model_id'] = self.env['ir.model']._get('project.task').id
@@ -985,3 +990,11 @@ class Project(models.Model):
                     dict_partner_ids_to_subscribe_per_partner[task.partner_id] = partner_ids_to_subscribe
         for partner, tasks in dict_tasks_per_partner.items():
             tasks.message_subscribe(dict_partner_ids_to_subscribe_per_partner[partner])
+
+    def _get_mail_thread_data(self, request_list):
+        result = super()._get_mail_thread_data(request_list)
+        if len(self) == 1 and 'followers' in request_list and result.get('followers'):
+            collaborator_ids = self.collaborator_ids.partner_id.ids
+            for follower in result['followers']:
+                follower['is_project_collaborator'] = follower['partner_id'] in collaborator_ids
+        return result
