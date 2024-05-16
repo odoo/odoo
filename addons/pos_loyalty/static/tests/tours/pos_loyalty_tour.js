@@ -373,3 +373,26 @@ registry.category("web_tour.tours").add("PosLoyaltyMinAmountAndSpecificProductTo
             PosLoyalty.orderTotalIs("66.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosLoyaltyTour12", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.addOrderline("Free Product A", "2"),
+            ProductScreen.clickDisplayedProduct("Free Product A"),
+            ProductScreen.totalAmountIs("2.00"),
+            PosLoyalty.hasRewardLine("Free Product", "-1.00"),
+            ProductScreen.addOrderline("Free Product B", "2"),
+            ProductScreen.clickDisplayedProduct("Free Product B"),
+            ProductScreen.totalAmountIs("12.00"),
+            PosLoyalty.hasRewardLine("Free Product", "-5.00"),
+            ProductScreen.clickDisplayedProduct("Free Product B"),
+            ProductScreen.clickDisplayedProduct("Free Product B"),
+            ProductScreen.clickDisplayedProduct("Free Product B"),
+            ProductScreen.selectedOrderlineHas("Free Product B", "6.00"),
+            ProductScreen.totalAmountIs("22.00"),
+            PosLoyalty.hasRewardLine("Free Product", "-10.00"),
+        ].flat(),
+});
