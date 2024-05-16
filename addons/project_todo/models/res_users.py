@@ -30,11 +30,12 @@ class Users(models.Model):
                         END AS states
                      FROM mail_activity AS act
                      JOIN project_task AS t ON act.res_id = t.id
-                    WHERE act.res_model = 'project.task' AND act.user_id = %(user_id)s
+                    WHERE act.res_model = 'project.task' AND act.user_id = %(user_id)s AND act.active in (TRUE, %(active)s)
                  GROUP BY is_task, states, act.res_model, act.res_id
                 """
         self.env.cr.execute(query, {
             'user_id': self.env.uid,
+            'active': self._context.get('active_test', True),
         })
         activity_data = self.env.cr.dictfetchall()
         view_type = self.env['project.task']._systray_view
