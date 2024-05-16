@@ -200,7 +200,7 @@
                                                <span>$ <span class="oe_currency_value">19,250.00</span></span>
                                            </td>
                                        </tr>
-                                           <tr style="">
+                                           <tr class="o_taxes">
                                                <td><span class="text-nowrap">Tax 15%</span></td>
                                                <td class="text-end o_price_total">
                                                    <span class="text-nowrap">$ 2,887.50</span>
@@ -366,14 +366,12 @@
     </template>
 
     <template id="external_layout_boxed">
-        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
-            <div class="o_boxed_header">
+        <div t-attf-class="header o_company_#{company.id}_layout">
             <div class="row mb8">
-                <div class="col-6">
-                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                <div class="col-4">
+                    <img t-if="company.logo" class="o_company_logo_big" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
                 </div>
-                <div class="col-6 text-end mb4">
-                    <div class="mt0 h4" t-if="company.report_header" t-field="company.report_header">Company tagline</div>
+                <div class="col-8 text-end mb4">
                     <div name="company_address" class="float-end mb4">
                         <ul class="list-unstyled" name="company_address_list">
                             <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
@@ -399,25 +397,25 @@
                     </div>
                 </div>
             </div>
-            </div>
         </div>
 
-        <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}" t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <div class="pt-5">
-                <!-- This div ensures that the address is not cropped by the header. -->
-                <t t-call="web.address_layout"/>
-            </div>
+        <div t-attf-class="article o_report_layout_boxed o_table_boxed o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  ''}}"
+             t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});"
+             t-att-data-oe-model="o and o._name"
+             t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-call="web.address_layout"/>
             <t t-out="0"/>
         </div>
 
-        <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout">
-            <div class="text-center">
-                <div t-field="company.report_footer">Company Report Footer</div>
-                <div t-if="report_type == 'pdf'">
-                    Page: <span class="page"/> / <span class="topage"/>
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
+            <div class="o_footer_content row border-top pt-2">
+                <div class="col-8">
+                    <span t-field="company.report_footer"/>
                 </div>
-                <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
-                    <span t-out="o.name">(document name)</span>
+                <div class="col-4 text-end">
+                    <span t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold">Company tagline</span>
+                    <strong t-if="report_type == 'pdf'" class="page"></strong>
                 </div>
             </div>
         </div>
@@ -646,6 +644,15 @@
             <t t-set="primary" t-value="company.primary_color or '#212529'" />
             <t t-set="secondary" t-value="company.secondary_color or '#212529'" />
             <t t-set="layout" t-value="company.external_report_layout_id.key or 'web.external_layout_standard'" />
+                // Simplified color-contrast function to replicate bootstrap in report preview.
+                @function preview-color-contrast($background) {
+                    @if (lightness($background) > 50) {
+                        @return black;
+                    } @else {
+                        @return white;
+                    }
+                }
+
                 .o_company_<t t-esc='company.id'/>_layout {
                     font-family: <t t-esc="font" />;
 
@@ -666,8 +673,12 @@
                     }
             <t t-if="layout == 'web.external_layout_boxed'">
                 &amp;.o_report_layout_boxed {
-                    .o_totals_taxes_company_currency .o_total td {
-                        background-color: rgba(<t t-esc='primary'/>, 0.9);
+                    #total .o_total td {
+                        background-color: <t t-esc='primary'/>;
+
+                        strong {
+                            color: preview-color-contrast(<t t-esc='primary'/>);
+                        }
                     }
                 }
             </t>
