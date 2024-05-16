@@ -438,6 +438,9 @@ patch(Order.prototype, {
                 coupon_id: line.coupon_id,
                 args: {
                     product: line.reward_product_id,
+                    price: line.price,
+                    quantity: line.quantity,
+                    cost: line.points_cost,
                 },
                 reward_identifier_code: line.reward_identifier_code,
             };
@@ -453,7 +456,26 @@ patch(Order.prototype, {
             }
             this.orderlines.remove(line);
         }
-        for (const claimedReward of productRewards.concat(otherRewards).concat(paymentRewards)) {
+        const allRewards = productRewards.concat(otherRewards).concat(paymentRewards);
+        const allRewardsMerged = [];
+        allRewards.forEach((reward) => {
+            if (reward.reward.reward_type == "discount") {
+                allRewardsMerged.push(reward);
+            } else {
+                const reward_index = allRewardsMerged.findIndex(
+                    (item) =>
+                        item.reward.id === reward.reward.id && item.args.price === reward.args.price
+                );
+                if (reward_index > -1) {
+                    allRewardsMerged[reward_index].args.quantity += reward.args.quantity;
+                    allRewardsMerged[reward_index].args.cost += reward.args.cost;
+                } else {
+                    allRewardsMerged.push(reward);
+                }
+            }
+        });
+
+        for (const claimedReward of allRewardsMerged) {
             // For existing coupons check that they are still claimed, they can exist in either `couponPointChanges` or `codeActivatedCoupons`
             if (
                 !this.codeActivatedCoupons.find(
@@ -1046,6 +1068,9 @@ patch(Order.prototype, {
             reward: reward,
             coupon_id: coupon_id,
             product: args["product"] || null,
+            price: args["price"] || null,
+            quantity: args["quantity"] || null,
+            cost: args["cost"] || null,
         });
         if (!Array.isArray(rewardLines)) {
             return rewardLines; // Returned an error.
@@ -1490,12 +1515,12 @@ patch(Order.prototype, {
                     this.pos.currency.decimal_places
                 ),
                 tax_ids: product.taxes_id,
-                quantity: freeQuantity,
+                quantity: args["quantity"] || freeQuantity,
                 reward_id: reward.id,
                 is_reward_line: true,
                 reward_product_id: product.id,
                 coupon_id: args["coupon_id"],
-                points_cost: cost,
+                points_cost: args["cost"] || cost,
                 reward_identifier_code: _newRandomRewardCode(),
                 merge: false,
             },
