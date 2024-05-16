@@ -1,28 +1,38 @@
-import { Chatter } from "@mail/chatter/web_portal/chatter";
 import { Activity } from "@mail/core/web/activity";
+import { AttachmentList } from "@mail/core/common/attachment_list";
+import { Chatter } from "@mail/chatter/web_portal/chatter";
 import { SuggestedRecipientsList } from "@mail/core/web/suggested_recipient_list";
-import { RecipientList } from "@mail/core/web/recipient_list";
 import { FollowerList } from "@mail/core/web/follower_list";
-import { useHover } from "@mail/utils/common/hooks";
-import { useDropzone } from "@mail/core/common/dropzone_hook";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
+import { RecipientList } from "@mail/core/web/recipient_list";
+import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
+import { useDropzone } from "@mail/core/common/dropzone_hook";
+import { useHover, useMessageHighlight } from "@mail/utils/common/hooks";
 
 import { markup, useEffect } from "@odoo/owl";
+
+import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 import { escape } from "@web/core/utils/strings";
+import { FileUploader } from "@web/views/fields/file_handler";
 import { formatList } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
-import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { useService } from "@web/core/utils/hooks";
 
 export const DELAY_FOR_SPINNER = 1000;
 
 Object.assign(Chatter.components, {
     Activity,
-    SuggestedRecipientsList,
+    AttachmentList,
+    Dropdown,
+    FileUploader,
     FollowerList,
+    SearchMessagesPanel,
+    SuggestedRecipientsList,
 });
 
 Chatter.props.push(
@@ -58,15 +68,19 @@ Object.assign(Chatter.defaultProps, {
 patch(Chatter.prototype, {
     setup() {
         super.setup(...arguments);
+        this.orm = useService("orm");
         this.recipientsPopover = usePopover(RecipientList);
         Object.assign(this.state, {
+            composerType: false,
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
+            isSearchOpen: false,
             showActivities: true,
             showAttachmentLoading: false,
         });
         this.attachmentUploader = useAttachmentUploader(
             this.store.Thread.insert({ model: this.props.threadModel, id: this.props.threadId })
         );
+        this.messageHighlight = useMessageHighlight();
         this.unfollowHover = useHover("unfollow");
         this.followerListDropdown = useDropdownState();
         /** @type {number|null} */
@@ -146,6 +160,10 @@ patch(Chatter.prototype, {
         return this.state.thread?.attachments ?? [];
     },
 
+    get childSubEnv() {
+        return { ...super.childSubEnv, messageHighlight: this.messageHighlight };
+    },
+
     get followerButtonLabel() {
         return _t("Show Followers");
     },
@@ -208,6 +226,10 @@ patch(Chatter.prototype, {
         }
     },
 
+    closeSearch() {
+        this.state.isSearchOpen = false;
+    },
+
     async _follow(thread) {
         await this.orm.call(thread.model, "message_subscribe", [[thread.id]], {
             partner_ids: [this.store.self.id],
@@ -261,6 +283,11 @@ patch(Chatter.prototype, {
             return this.recipientsPopover.close();
         }
         this.recipientsPopover.open(ev.target, { thread: this.state.thread });
+    },
+
+    onClickSearch() {
+        this.state.composerType = false;
+        this.state.isSearchOpen = !this.state.isSearchOpen;
     },
 
     async onClickUnfollow() {
