@@ -1081,7 +1081,7 @@ export class Thread extends Record {
                 ? "chat"
                 : "channel";
         if (pushState) {
-            router.pushState({ active_id: activeId });
+            router.pushState({ channel_id: activeId });
         }
     }
 
@@ -1096,7 +1096,7 @@ export class Thread extends Record {
     async unpin() {
         this.isLocallyPinned = false;
         if (this.eq(this.store.discuss.thread)) {
-            router.replaceState({ active_id: undefined });
+            router.replaceState({ channel_id: undefined });
         }
         if (this.model === "discuss.channel" && this.is_pinned) {
             return this.store.env.services.orm.silent.call(

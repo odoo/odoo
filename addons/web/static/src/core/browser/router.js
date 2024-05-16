@@ -307,8 +307,10 @@ function makeDebouncedPush(mode) {
                 document.title = pushArgs.title;
                 browser.history.pushState({ nextState }, "", url);
                 document.title = originalTitle;
+                console.log("pushState:" + url);
             } else {
                 browser.history.replaceState({ nextState }, "", url);
+                console.log("replaceState:" + url);
             }
         } else {
             // URL didn't change but state might have, update it in place
