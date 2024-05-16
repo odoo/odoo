@@ -216,7 +216,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         message = self.env['discuss.channel'].browse(channel_info['id']).message_post(body='cc')
         member_of_operator.channel_id.with_user(self.operators.filtered(
             lambda operator: operator.partner_id == member_of_operator.partner_id
-        ))._channel_seen(message.id)
+        ))._mark_as_read(message.id)
         with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=1))):
             member_of_operator._gc_unpin_livechat_sessions()
         self.assertFalse(member_of_operator.is_pinned, "read channel should be unpinned after one day")

@@ -1,14 +1,13 @@
 import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
-import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
-import { advanceTime } from "@odoo/hoot-mock";
+import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import {
     click,
     contains,
+    focus,
     insertText,
     onRpcBefore,
     start,
@@ -16,6 +15,8 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { rpcWithEnv } from "@mail/utils/common/misc";
+import { describe, expect, test } from "@odoo/hoot";
+import { advanceTime } from "@odoo/hoot-mock";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 import { mountWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
@@ -101,8 +102,9 @@ test("Seen message is saved on the server", async () => {
         })
     );
     await contains(".o-mail-Thread-newMessage");
-    await contains(".o-mail-Composer-input", { setFocus: true });
-    await contains(".o-mail-Thread-newMessage", { count: 0 });
+    await contains(".o-mail-ChatWindow-counter", { text: "1" });
+    await focus(".o-mail-Composer-input");
+    await contains(".o-mail-ChatWindow-counter", { count: 0 });
     const guestId = pyEnv.cookie.get("dgid");
     const [member] = pyEnv["discuss.channel.member"].search_read([
         ["guest_id", "=", guestId],

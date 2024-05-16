@@ -425,6 +425,14 @@ export class MailThread extends models.ServerModel {
                     },
                 ]);
                 DiscussChannel._set_last_seen_message(ids, message.id, false);
+                const memberOfCurrentUser = this._find_or_create_member_for_self(ids[0]);
+                if (memberOfCurrentUser) {
+                    this.env["discuss.channel.member"]._set_new_message_separator(
+                        [memberOfCurrentUser.id],
+                        message.id + 1,
+                        true
+                    );
+                }
             }
         }
         if (message.partner_ids) {

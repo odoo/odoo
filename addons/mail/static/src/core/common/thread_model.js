@@ -192,6 +192,17 @@ export class Thread extends Record {
             return this.correspondent?.persona.eq(this.store.odoobot);
         },
     });
+    isDisplayed = Record.attr(false, {
+        compute() {
+            if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
+                return this.eq(this.store.discuss.thread);
+            }
+            return this.store.ChatWindow.get({ thread: this })?.isOpen;
+        },
+        onUpdate() {
+            this.selfMember?.onChangeIsThreadDisplayed(this.isDisplayed);
+        },
+    });
     isLoadingAttachments = false;
     isLoadedDeferred = new Deferred();
     isLoaded = Record.attr(false, {
@@ -837,15 +848,12 @@ export class Thread extends Record {
         if (!newestPersistentMessage && !this.isLoaded) {
             this.isLoadedDeferred.then(() => new Promise(setTimeout)).then(() => this.markAsRead());
         }
+        const alreadyReadBySelf = newestPersistentMessage?.isReadBySelf;
         if (this.selfMember) {
             this.selfMember.seen_message_id = newestPersistentMessage;
         }
-        if (
-            this.message_unread_counter > 0 &&
-            this.model === "discuss.channel" &&
-            newestPersistentMessage
-        ) {
-            rpc("/discuss/channel/set_last_seen_message", {
+        if (newestPersistentMessage && !alreadyReadBySelf && this.model === "discuss.channel") {
+            rpc("/discuss/channel/mark_as_read", {
                 channel_id: this.id,
                 last_message_id: newestPersistentMessage.id,
             }).catch((e) => {
@@ -1041,6 +1049,7 @@ export class Thread extends Record {
             this.messages.push(tmpMsg);
             if (this.selfMember) {
                 this.selfMember.seen_message_id = tmpMsg;
+                this.selfMember.localNewMessageSeparator = tmpMsg + 1;
             }
         }
         const data = await rpc("/mail/message/post", params);
@@ -1055,7 +1064,7 @@ export class Thread extends Record {
         this.addOrReplaceMessage(message, tmpMsg);
         if (this.selfMember?.seen_message_id?.id < message.id) {
             this.selfMember.seen_message_id = message;
-            this.selfMember.new_message_separator = message.id + 1;
+            this.selfMember.localNewMessageSeparator = message.id + 1;
         }
         // Only delete the temporary message now that seen_message_id is updated
         // to avoid flickering.

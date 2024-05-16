@@ -414,29 +414,30 @@ async function discuss_channel_pins(request) {
     return MailMessage._message_format(messageIds, true);
 }
 
-registerRoute("/discuss/channel/set_last_seen_message", discuss_channel_mark_as_seen);
+registerRoute("/discuss/channel/mark_as_read", discuss_channel_mark_as_read);
 /** @type {RouteCallback} */
-async function discuss_channel_mark_as_seen(request) {
+async function discuss_channel_mark_as_read(request) {
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
 
     const { channel_id, last_message_id } = await parseRequestParams(request);
-    return DiscussChannel._channel_seen([channel_id], last_message_id);
+    return DiscussChannel._mark_as_read([channel_id], last_message_id);
 }
 
-registerRoute(
-    "/discuss/channel/set_new_message_separator",
-    discuss_channel_set_new_message_separator
-);
+registerRoute("/discuss/channel/mark_as_unread", discuss_channel_mark_as_unread);
 /** @type {RouteCallback} */
-async function discuss_channel_set_new_message_separator(request) {
+async function discuss_channel_mark_as_unread(request) {
     const { channel_id, message_id } = await parseRequestParams(request);
     const [partner, guest] = this.env["res.partner"]._get_current_persona();
     const [memberId] = this.env["discuss.channel.member"].search([
         ["channel_id", "=", channel_id],
         partner ? ["partner_id", "=", partner.id] : ["guest_id", "=", guest.id],
     ]);
-    return this.env["discuss.channel.member"]._set_new_message_separator([memberId], message_id);
+    return this.env["discuss.channel.member"]._set_new_message_separator(
+        [memberId],
+        message_id,
+        true
+    );
 }
 
 registerRoute("/discuss/gif/favorites", get_favorites);

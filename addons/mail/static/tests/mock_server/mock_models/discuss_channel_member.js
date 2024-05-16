@@ -149,12 +149,14 @@ export class DiscussChannelMember extends models.ServerModel {
     /**
      * @param {number[]} ids
      * @param {number} message_id
+     * @param {boolean} sync
      */
-    _set_new_message_separator(ids, message_id) {
-        const kwargs = parseModelParams(arguments, "ids", "message_id");
+    _set_new_message_separator(ids, message_id, sync) {
+        const kwargs = parseModelParams(arguments, "ids", "message_id", "sync");
         ids = kwargs.ids;
         delete kwargs.ids;
         message_id = kwargs.message_id;
+        sync = kwargs.sync;
         const [member] = this._filter([["id", "in", ids]]);
         if (!member) {
             return;
@@ -164,17 +166,19 @@ export class DiscussChannelMember extends models.ServerModel {
         });
         const [partner, guest] = this.env["res.partner"]._get_current_persona();
         const target = guest ?? partner;
-        this.env["bus.bus"]._sendone(target, "mail.record/insert", {
-            ChannelMember: {
-                id: member.id,
-                new_message_separator: message_id,
-                thread: {
-                    id: member.channel_id,
-                    message_unread_counter: this._compute_message_unread_counter([member.id]),
-                    message_unread_counter_bus_id: this.env["discuss.channel"].bus_last_id,
-                    model: "discuss.channel",
-                },
+        const memberData = {
+            id: member.id,
+            new_message_separator: message_id,
+            thread: {
+                id: member.channel_id,
+                message_unread_counter: this._compute_message_unread_counter([member.id]),
+                message_unread_counter_bus_id: this.env["discuss.channel"].bus_last_id,
+                model: "discuss.channel",
             },
-        });
+        };
+        if (sync) {
+            memberData["localNewMessageSeparator"] = message_id;
+        }
+        this.env["bus.bus"]._sendone(target, "mail.record/insert", { ChannelMember: memberData });
     }
 }
