@@ -193,7 +193,7 @@
                        <div id="right-elements" t-attf-class="#{'col-5' if report_type != 'html' else 'col-12 col-md-5'} ms-5 d-inline-block float-end">
                            <div id="total" class="clearfix row mt-n3">
                                <div class="ms-auto">
-                                   <table class="table table-sm table-borderless" style="page-break-inside: avoid; position:relative;">
+                                   <table class="o_total_table table table-sm table-borderless" style="page-break-inside: avoid; position:relative;">
                                        <tbody><tr class="o_subtotal">
                                            <td><strong>Untaxed Amount</strong></td>
                                            <td class="text-end">
@@ -484,17 +484,10 @@
     </template>
 
     <template id="external_layout_standard">
-        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
-            <div class="row">
-                <div class="col-3 mb4">
-                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 45px;" alt="Logo"/>
-                </div>
-                <div class="col-9 text-end" style="margin-top:22px;" t-if="company.report_header" t-field="company.report_header" name="moto">Company tagline</div>
-            </div>
-            <div t-if="company.logo or company.report_header" class="row zero_min_height">
-                <div class="col-12">
-                    <div style="border-bottom: 1px solid black;"/>
-                </div>
+        <div t-attf-class="header o_company_#{company.id}_layout">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <img t-if="company.logo" class="o_company_logo_small" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                <div t-if="company.report_header" t-field="company.report_header" class="o_company_tagline mw-50 fw-bold">Company tagline</div>
             </div>
             <div class="row">
                 <div class="col-6" name="company_address">
@@ -523,25 +516,21 @@
             </div>
         </div>
 
-        <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}" t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <div class="pt-5">
-                <!-- This div ensures that the address is not cropped by the header. -->
-                <t t-call="web.address_layout"/>
-            </div>
+        <div t-attf-class="article o_report_layout_standard o_table_standard o_company_#{company.id}_layout {{ 'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}"
+             t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});"
+             t-att-data-oe-model="o and o._name"
+             t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-call="web.address_layout"/>
             <t t-out="0"/>
         </div>
 
-        <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
-            <div class="text-center" style="border-top: 1px solid black;">
-                <ul class="list-inline mb4">
-                    <div t-field="company.report_footer"/>
-                </ul>
-
-                <div t-if="report_type == 'pdf'" class="text-muted">
-                    Page: <span class="page"/> / <span class="topage"/>
-                </div>
-                <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
-                    <span t-out="o.name">(document name)</span>
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
+            <div class="o_footer_content d-flex border-top pt-2">
+                <div class="flex-grow-1 text-start me-2" t-field="company.report_footer"/>
+                <div class="text-end text-muted">
+                    <div t-if="report_type == 'pdf' and display_name_in_footer" t-out="o.name">(document name)</div>
+                    <div t-if="report_type == 'pdf'">Page <span class="page"/> / <span class="topage"/></div>
                 </div>
             </div>
         </div>

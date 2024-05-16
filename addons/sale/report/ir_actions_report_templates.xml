@@ -149,7 +149,7 @@
             <div class="clearfix" name="so_total_summary">
                 <div id="total" class="row mt-n3" name="total">
                     <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
-                        <table class="table table-borderless">
+                        <table class="o_total_table table table-borderless">
                             <!-- Tax totals -->
                             <t t-set="tax_totals" t-value="doc.tax_totals"/>
                             <t t-call="sale.document_tax_totals"/>
