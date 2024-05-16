@@ -238,6 +238,8 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
                     return Promise.resolve([]);
                 } else if (route === "/calendar/check_credentials") {
                     return Promise.resolve({});
+                } else if (route === "/web/dataset/call_kw/res.users/check_synchronization_status") {
+                    return Promise.resolve({});
                 } else if (route === "/web/dataset/call_kw/calendar.event/get_default_duration") {
                     return 3.25;
                 }
@@ -285,6 +287,8 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
                 } else if (route === "/web/dataset/call_kw/res.partner/get_attendee_detail") {
                     return Promise.resolve([]);
                 } else if (route === "/calendar/check_credentials") {
+                    return Promise.resolve({});
+                } else if (route === "/web/dataset/call_kw/res.users/check_synchronization_status") {
                     return Promise.resolve({});
                 } else if (route === "/web/dataset/call_kw/calendar.event/get_default_duration") {
                     return 3.25;
