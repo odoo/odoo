@@ -430,13 +430,13 @@ test.tags("desktop")("open a record while reloading the list view", async () => 
     await getService("action").doAction(3);
     expect(".o_list_view").toHaveCount(1);
     expect(".o_list_view .o_data_row").toHaveCount(2);
-    expect(".o_control_panel .d-none.d-xl-inline-flex .o_list_buttons").toHaveCount(1);
+    expect(".o_control_panel .o_list_buttons").toHaveCount(1);
 
     // reload (the search_read RPC will be blocked)
     def = new Deferred();
     await switchView("list");
     expect(".o_list_view .o_data_row").toHaveCount(2);
-    expect(".o_control_panel .d-none.d-xl-inline-flex .o_list_buttons").toHaveCount(1);
+    expect(".o_control_panel .o_list_buttons").toHaveCount(1);
 
     // open a record in form view
     await contains(".o_list_view .o_data_cell").click();

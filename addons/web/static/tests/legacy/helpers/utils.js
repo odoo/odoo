@@ -489,21 +489,21 @@ export function click(
 export function clickCreate(htmlElement) {
     if (
         htmlElement.querySelectorAll(
-            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_form_button_create"
+            ".o_control_panel_main_buttons .o_form_button_create"
         ).length
     ) {
         return click(
             htmlElement,
-            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_form_button_create"
+            ".o_control_panel_main_buttons .o_form_button_create"
         );
     } else if (
         htmlElement.querySelectorAll(
-            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_create"
+            ".o_control_panel_main_buttons .o_list_button_create"
         ).length
     ) {
         return click(
             htmlElement,
-            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_create"
+            ".o_control_panel_main_buttons .o_list_button_create"
         );
     } else {
         throw new Error("No edit button found to be clicked.");

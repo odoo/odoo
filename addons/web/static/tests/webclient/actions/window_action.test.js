@@ -1483,7 +1483,7 @@ test("switch request to unknown view type", async () => {
     ]).toVerifySteps();
 });
 
-test("execute action with unknown view type", async () => {
+test.tags("desktop")("execute action with unknown view type", async () => {
     Partner._views["unknown,false"] = "<unknown/>";
     defineActions([
         {

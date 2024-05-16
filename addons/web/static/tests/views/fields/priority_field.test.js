@@ -198,7 +198,7 @@ test("PriorityField can write after adding a record -- kanban", async () => {
     await animationFrame();
     expect(['web_save [[1],{"selection":"1"}]']).toVerifySteps();
     expect(".o_kanban_record .fa-star").toHaveCount(1);
-    click(".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o-kanban-button-new");
+    click(".o_control_panel_main_buttons .o-kanban-button-new");
     await animationFrame();
     click(".o_kanban_quick_create .o_kanban_add");
     await animationFrame();
@@ -245,7 +245,7 @@ test("PriorityField in editable list view", async () => {
     });
 
     // save
-    click(".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_save");
+    click(".o_control_panel_main_buttons .o_list_button_save");
     await animationFrame();
 
     expect(".o_data_row:first-child .o_priority a.o_priority_star").toHaveCount(2, {
@@ -302,7 +302,7 @@ test("PriorityField in editable list view", async () => {
     });
 
     // save
-    click(".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_save");
+    click(".o_control_panel_main_buttons .o_list_button_save");
     await animationFrame();
 
     expect(".o_data_row:last-child .o_priority a.o_priority_star").toHaveCount(2, {

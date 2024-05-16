@@ -8,13 +8,7 @@ import {
     queryAllTexts,
     queryFirst,
 } from "@odoo/hoot-dom";
-import {
-    Deferred,
-    animationFrame,
-    mockTimeZone,
-    mockTouch,
-    runAllTimers,
-} from "@odoo/hoot-mock";
+import { Deferred, animationFrame, mockTimeZone, mockTouch, runAllTimers } from "@odoo/hoot-mock";
 import {
     Component,
     EventBus,
@@ -1696,38 +1690,40 @@ test(`reset local state when switching to another view`, async () => {
     expect(`.o_notebook .nav-link:eq(0)`).toHaveClass("active");
 });
 
-test(`trying to leave an invalid form view should not change the navbar`, async () => {
-    defineMenus([
-        {
-            id: "root",
-            children: [
-                { id: 1, children: [], name: "App0", appID: 1, xmlid: "menu_1", actionID: 1 },
-                { id: 2, children: [], name: "App1", appID: 2, xmlid: "menu_2", actionID: 2 },
-            ],
-            name: "root",
-            appID: "root",
-        },
-    ]);
+test.tags("desktop")(
+    `trying to leave an invalid form view should not change the navbar`,
+    async () => {
+        defineMenus([
+            {
+                id: "root",
+                children: [
+                    { id: 1, children: [], name: "App0", appID: 1, xmlid: "menu_1", actionID: 1 },
+                    { id: 2, children: [], name: "App1", appID: 2, xmlid: "menu_2", actionID: 2 },
+                ],
+                name: "root",
+                appID: "root",
+            },
+        ]);
 
-    defineActions([
-        {
-            id: 1,
-            name: "Partner",
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            views: [[false, "form"]],
-        },
-        {
-            id: 2,
-            name: "Product",
-            res_model: "product",
-            type: "ir.actions.act_window",
-            views: [[false, "list"]],
-        },
-    ]);
+        defineActions([
+            {
+                id: 1,
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+            },
+            {
+                id: 2,
+                name: "Product",
+                res_model: "product",
+                type: "ir.actions.act_window",
+                views: [[false, "list"]],
+            },
+        ]);
 
-    Partner._views = {
-        form: `
+        Partner._views = {
+            form: `
             <form>
                 <sheet>
                     <field name="name" required="1"/>
@@ -1735,30 +1731,31 @@ test(`trying to leave an invalid form view should not change the navbar`, async 
                 </sheet>
             </form>
         `,
-        search: `<search/>`,
-    };
-    Product._views = {
-        list: `<tree><field name="name"/></tree>`,
-        search: `<search/>`,
-    };
+            search: `<search/>`,
+        };
+        Product._views = {
+            list: `<tree><field name="name"/></tree>`,
+            search: `<search/>`,
+        };
 
-    await mountWithCleanup(WebClient);
-    await animationFrame();
-    await getService("action").doAction(1);
-    expect(`.o_main_navbar .o_menu_brand`).toHaveText("App0");
+        await mountWithCleanup(WebClient);
+        await animationFrame();
+        await getService("action").doAction(1);
+        expect(`.o_main_navbar .o_menu_brand`).toHaveText("App0");
 
-    await contains(`[name='foo'] input`).edit("blop");
-    await contains(`.o_navbar_apps_menu button`).click();
-    await contains(`.o-dropdown--menu .dropdown-item[data-section='2']`).click();
-    await animationFrame();
-    expect(`.o_main_navbar .o_menu_brand`).toHaveText("App0");
+        await contains(`[name='foo'] input`).edit("blop");
+        await contains(`.o_navbar_apps_menu button`).click();
+        await contains(`.o-dropdown--menu .dropdown-item[data-section='2']`).click();
+        await animationFrame();
+        expect(`.o_main_navbar .o_menu_brand`).toHaveText("App0");
 
-    await contains(`[name='name'] input`).edit("blop");
-    await contains(`.o_navbar_apps_menu button`).click();
-    await contains(`.o-dropdown--menu .dropdown-item[data-section='2']`).click();
-    await animationFrame();
-    expect(`.o_main_navbar .o_menu_brand`).toHaveText("App1");
-});
+        await contains(`[name='name'] input`).edit("blop");
+        await contains(`.o_navbar_apps_menu button`).click();
+        await contains(`.o-dropdown--menu .dropdown-item[data-section='2']`).click();
+        await animationFrame();
+        expect(`.o_main_navbar .o_menu_brand`).toHaveText("App1");
+    }
+);
 
 test(`rendering stat buttons with action`, async () => {
     mockService("action", {
@@ -4921,7 +4918,7 @@ test.tags("desktop")(
         // back to the list view
         await contains(`.o_back_button`).click();
         // Create a new record
-        await contains(`.o_control_panel_main_buttons .d-none button.o_list_button_add`).click();
+        await contains(`.o_control_panel_main_buttons button.o_list_button_add`).click();
         expect(`.o_notebook:eq(0) .nav-link:eq(0)`).toHaveClass("active");
         expect(`.o_notebook:eq(0) .nav-link:eq(1)`).not.toHaveClass("active");
         expect(`.o_notebook:eq(1) .nav-link:eq(0)`).not.toHaveClass("active");
@@ -7659,7 +7656,7 @@ test.tags("desktop")(`buttons are disabled until status bar action is resolved`,
         resId: 1,
     });
     // Contains invisible buttons that are only displayed under xl screens
-    expect(`.o_control_panel_breadcrumbs button:not(.fa):not(:disabled)`).toHaveCount(5);
+    expect(`.o_control_panel_breadcrumbs button:not(.fa):not(:disabled)`).toHaveCount(3);
     expect(`.o_form_statusbar button:not(:disabled)`).toHaveCount(2);
     expect(`.o-form-buttonbox button:not(:disabled)`).toHaveCount(1);
 
@@ -7667,13 +7664,13 @@ test.tags("desktop")(`buttons are disabled until status bar action is resolved`,
     await animationFrame();
 
     // The unresolved promise lets us check the state of the buttons
-    expect(`.o_control_panel_breadcrumbs button:not(.fa):disabled`).toHaveCount(5);
+    expect(`.o_control_panel_breadcrumbs button:not(.fa):disabled`).toHaveCount(3);
     expect(`.o_form_statusbar button:disabled`).toHaveCount(2);
     expect(`.o-form-buttonbox button:disabled`).toHaveCount(1);
 
     deferred.resolve();
     await animationFrame();
-    expect(`.o_control_panel_breadcrumbs button:not(.fa):not(:disabled)`).toHaveCount(5);
+    expect(`.o_control_panel_breadcrumbs button:not(.fa):not(:disabled)`).toHaveCount(3);
     expect(`.o_form_statusbar button:not(:disabled)`).toHaveCount(2);
     expect(`.o-form-buttonbox button:not(:disabled)`).toHaveCount(1);
 });
@@ -8702,7 +8699,7 @@ test.tags("desktop")(`leave the form view while saving`, async () => {
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    await contains(`.o_control_panel_main_buttons .d-none button.o_list_button_add`).click();
+    await contains(`.o_control_panel_main_buttons button.o_list_button_add`).click();
 
     // edit foo to trigger a delayed onchange
     onchangeDeferred = new Deferred();
@@ -8826,7 +8823,7 @@ test.tags("desktop")(`discard after a failed save (and close notifications)`, as
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    await contains(`.o_control_panel_main_buttons .d-none button.o-kanban-button-new`).click();
+    await contains(`.o_control_panel_main_buttons button.o-kanban-button-new`).click();
 
     //cannot save because there is a required field
     await contains(`.o_control_panel .o_form_button_save`).click();
@@ -9559,7 +9556,7 @@ test.tags("desktop")(`form view does not deactivate sample data on other views`,
     });
     expect(`.o_list_view .o_content.o_view_sample_data`).toHaveCount(1);
 
-    await contains(`.o_control_panel_main_buttons .d-none button.o_list_button_add`).click();
+    await contains(`.o_control_panel_main_buttons button.o_list_button_add`).click();
     expect(`.o_form_view`).toHaveCount(1);
 
     await contains(`.o_form_view .breadcrumb-item a`).click();
@@ -9598,7 +9595,7 @@ test.tags("desktop")(`empty x2manys when coming form a list with sample data`, a
     });
     expect(`.o_list_view .o_content.o_view_sample_data`).toHaveCount(1);
 
-    await contains(`.o_control_panel_main_buttons .d-none button.o_list_button_add`).click();
+    await contains(`.o_control_panel_main_buttons button.o_list_button_add`).click();
     expect(`.o_form_view .o_field_x2many .o_kanban_renderer`).toHaveCount(1);
     expect(`.o_view_nocontent`).toHaveCount(0);
 });

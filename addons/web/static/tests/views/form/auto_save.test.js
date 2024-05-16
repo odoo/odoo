@@ -811,9 +811,7 @@ test.tags("desktop")(`save when create button clicked`, async () => {
     expect(`.o_field_widget[name='expertise'] input`).toHaveValue("Sales");
 
     await contains(`.o_field_widget[name='expertise'] input`).edit("test");
-    await contains(
-        `.o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_form_button_create`
-    ).click();
+    await contains(`.o_control_panel_main_buttons .o_form_button_create`).click();
     expect(["save"]).toVerifySteps();
     expect(`.o_field_widget[name='expertise'] input`).toHaveValue("Marketing");
     expect(`.o_breadcrumb .active`).toHaveText("New");
