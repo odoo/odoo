@@ -255,11 +255,18 @@ export class SearchArchParser {
             preSearchItem.name = name;
             if (name in this.searchDefaults) {
                 preSearchItem.isDefault = true;
+                const value = this.searchDefaults[name];
                 if (["groupBy", "dateGroupBy"].includes(preSearchItem.type)) {
-                    const value = this.searchDefaults[name];
                     preSearchItem.defaultRank = typeof value === "number" ? value : 100;
                 } else {
                     preSearchItem.defaultRank = -5;
+                }
+                if (
+                    preSearchItem.type === "dateFilter" &&
+                    typeof value === "string" &&
+                    !/^(true|1)$/i.test(value)
+                ) {
+                    preSearchItem.defaultGeneratorIds = value.split(",");
                 }
             }
         }
