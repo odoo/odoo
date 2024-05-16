@@ -6,7 +6,6 @@ from odoo.tools.misc import format_date
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
-    l10n_latam_new_check_ids = fields.One2many('l10n_latam.check', 'payment_id', string='New Checks')
     l10n_latam_check_ids = fields.Many2many(
         comodel_name='l10n_latam.check', relation='account_payment_account_payment_check_rel',
         required=True,
@@ -17,11 +16,9 @@ class AccountPayment(models.Model):
     l10n_latam_check_warning_msg = fields.Text(compute='_compute_l10n_latam_check_warning_msg',)
     amount = fields.Monetary(compute="_compute_amount", readonly=False, store=True)
 
-    @api.depends('l10n_latam_check_ids.amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')
+    @api.depends('l10n_latam_check_ids.amount', 'payment_method_code')
     def _compute_amount(self):
-        for rec in self.filtered(lambda x: x._is_latam_check_payment(check_subtype='new_check')):
-            rec.amount = sum(rec.l10n_latam_new_check_ids.mapped('amount'))
-        for rec in self.filtered(lambda x: x._is_latam_check_payment(check_subtype='move_check')):
+        for rec in self.filtered(lambda x: x._is_latam_check_payment()):
             rec.amount = sum(rec.l10n_latam_check_ids.mapped('amount'))
 
     def _is_latam_check_payment(self, check_subtype=False):
@@ -37,8 +34,8 @@ class AccountPayment(models.Model):
         # unlink checks if payment method code is not for checks. We do it on post and not when changing payment
         # method so that the user don't loose checks data in case of changing payment method and coming back again
         # also, changing partner recompute payment method so all checks would be cleaned
-        for payment in self.filtered(lambda x: x.l10n_latam_new_check_ids and not x._is_latam_check_payment(check_subtype='new_check')):
-            payment.l10n_latam_new_check_ids.unlink()
+        for payment in self.filtered(lambda x: x.l10n_latam_check_ids and not x._is_latam_check_payment(check_subtype='new_check')):
+            payment.l10n_latam_check_ids.unlink()
         for payment in self.filtered(lambda x: x.l10n_latam_check_ids and not x._is_latam_check_payment(check_subtype='move_check')):
             payment.l10n_latam_check_ids = False
         msgs = self._get_blocking_l10n_latam_warning_msg()
@@ -47,21 +44,12 @@ class AccountPayment(models.Model):
         super().action_post()
         self._l10n_latam_check_split_move()
 
-    def _get_latam_checks(self):
-        self.ensure_one()
-        if self._is_latam_check_payment(check_subtype='new_check'):
-            return self.l10n_latam_new_check_ids
-        elif self._is_latam_check_payment(check_subtype='move_check'):
-            return self.l10n_latam_check_ids
-        else:
-            return self.env['l10n_latam.check']
-
     def _get_blocking_l10n_latam_warning_msg(self):
         msgs = []
         for rec in self.filtered(lambda x: x.state == 'draft' and x._is_latam_check_payment()):
-            if any(rec.currency_id != check.currency_id for check in rec._get_latam_checks()):
+            if any(rec.currency_id != check.currency_id for check in rec.l10n_latam_check_ids):
                 msgs.append(_('The currency of the payment and the currency of the check must be the same.'))
-            if not rec.currency_id.is_zero(sum(rec._get_latam_checks().mapped('amount')) - rec.amount):
+            if not rec.currency_id.is_zero(sum(rec.l10n_latam_check_ids.mapped('amount')) - rec.amount):
                 msgs.append(_(
                     'The amount of the payment  does not match the amount of the selected check. '
                     'Please try to deselect and select the check again.'))
@@ -96,7 +84,7 @@ class AccountPayment(models.Model):
         return msgs
 
     def _get_reconciled_checks_error(self):
-        checks_reconciled = self.l10n_latam_new_check_ids.filtered(lambda x: x.issue_state in ['debited', 'voided'])
+        checks_reconciled = self.l10n_latam_check_ids.filtered(lambda x: x.issue_state in ['debited', 'voided'])
         if checks_reconciled:
             raise UserError(_(
                 "You can't cancel or re-open a payment with checks if some check has been debited or been voided. Checks:\n"
@@ -117,7 +105,7 @@ class AccountPayment(models.Model):
             })
             liquidity_line, counterpart_lines, dummy = payment._seek_for_lines()
 
-            for check in payment.l10n_latam_new_check_ids:
+            for check in payment.l10n_latam_check_ids:
                 liquidity_amount_currency = -check.amount
                 liquidity_balance = payment.currency_id._convert(
                     liquidity_amount_currency,
@@ -155,14 +143,14 @@ class AccountPayment(models.Model):
             (inverse_liquidity_line + liquidity_line).reconcile()
 
     def _l10n_latam_check_unlink_split_move(self):
-        split_move_ids = self.mapped('l10n_latam_new_check_ids.split_move_line_id.move_id')
+        split_move_ids = self.mapped('l10n_latam_check_ids.split_move_line_id.move_id')
         split_move_ids.button_draft()
         split_move_ids.unlink()
 
     @api.depends(
         'payment_method_line_id', 'state', 'date', 'is_internal_transfer', 'amount', 'currency_id', 'company_id',
         'l10n_latam_check_ids.issuer_vat', 'l10n_latam_check_ids.bank_id', 'l10n_latam_check_ids.payment_id.date',
-        'l10n_latam_new_check_ids.amount', 'l10n_latam_new_check_ids.name',
+        'l10n_latam_check_ids.amount', 'l10n_latam_check_ids.name',
     )
     def _compute_l10n_latam_check_warning_msg(self):
         """
@@ -176,7 +164,7 @@ class AccountPayment(models.Model):
             # new third party check uniqueness warning (on own checks it's done by a sql constraint)
             if rec.payment_method_code == 'new_third_party_checks':
                 same_checks = self.env['l10n_latam.check']
-                for check in rec.l10n_latam_new_check_ids.filtered(
+                for check in rec.l10n_latam_check_ids.filtered(
                         lambda x: x.name and x.payment_method_line_id.code == 'new_third_party_checks' and
                         x.bank_id and x.issuer_vat):
                     same_checks += same_checks.search([

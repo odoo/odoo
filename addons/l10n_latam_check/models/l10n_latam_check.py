@@ -19,8 +19,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
 
     payment_id = fields.Many2one(
         'account.payment',
-        required=True,
-        ondelete='cascade',
+        compute='_compute_payment',
     )
     operation_ids = fields.Many2many(
         comodel_name='account.payment', relation='account_payment_account_payment_check_rel',
@@ -64,6 +63,11 @@ class l10nLatamAccountPaymentCheck(models.Model):
                     ON l10n_latam_check(name, payment_method_line_id)
                 WHERE issue_state is not null
             """)
+
+    @api.depends('operation_ids')
+    def _compute_payment(self):
+        for rec in self:
+            rec.payment_ids = rec.operation_ids.sorted()[:1]
 
     @api.onchange('name')
     def _onchange_name(self):
@@ -119,7 +123,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
 
     def _get_last_operation(self):
         self.ensure_one()
-        return (self.payment_id + self.operation_ids).filtered(
+        return self.operation_ids.filtered(
                 lambda x: x.state == 'posted').sorted(key=lambda payment: (payment.date, payment._origin.id))[-1:]
 
     @api.depends('payment_id.state', 'operation_ids.state')
@@ -141,7 +145,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
         :return:    An action on account.move.
         '''
         self.ensure_one()
-        operations = ((self.operation_ids + self.payment_id).filtered(lambda x: x.state == 'posted'))
+        operations = self.operation_ids.filtered(lambda x: x.state == 'posted')
         action = {
             'name': _("Check Operations"),
             'type': 'ir.actions.act_window',

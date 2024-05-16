@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <group>
                 <group name="latam_checks" string="Checks" invisible="payment_method_code not in ['in_third_party_checks', 'out_third_party_checks', 'new_third_party_checks', 'own_checks']" colspan="2">
-                    <field name="l10n_latam_new_check_ids" invisible="payment_method_code not in ['new_third_party_checks', 'own_checks']" nolabel="1" colspan="2" readonly="state != 'draft'">
+                    <field name="l10n_latam_check_ids" invisible="payment_method_code not in ['new_third_party_checks', 'own_checks']" nolabel="1" colspan="2" readonly="state != 'draft'" widget="one2many_list">
                         <tree name="new_checks" editable="bottom">
                             <field name="company_id" column_invisible="True"/>
                             <field name="currency_id" column_invisible="True"/>
