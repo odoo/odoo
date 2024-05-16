@@ -97,3 +97,6 @@ class Users(models.Model):
     @api.model
     def check_calendar_credentials(self):
         return {}
+
+    def check_synchronization_status(self):
+        return {}

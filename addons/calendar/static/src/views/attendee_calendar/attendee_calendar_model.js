@@ -19,10 +19,12 @@ export class AttendeeCalendarModel extends CalendarModel {
      */
     async load() {
         const res = await super.load(...arguments);
-        const [credentialStatus, defaultDuration] = await Promise.all([
+        const [credentialStatus, syncStatus, defaultDuration] = await Promise.all([
             rpc("/calendar/check_credentials"),
+            this.orm.call("res.users", "check_synchronization_status", [[user.userId]]),
             this.orm.call("calendar.event", "get_default_duration"),
         ]);
+        this.syncStatus = syncStatus;
         this.credentialStatus = credentialStatus;
         this.defaultDuration = defaultDuration;
         return res;
