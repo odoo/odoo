@@ -488,6 +488,53 @@ test("date filter with custom option set as default_period", async () => {
     expect(searchBarMenu.env.searchModel.domain).toEqual([["date_field", "=", "2019-07-31"]]);
 });
 
+test("date filter with default_period in the context", async () => {
+    mockDate("2019-07-31T13:43:00");
+
+    await mountWithSearch(SearchBarMenu, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Date" name="date_field" date="date_field" default_period="custom_date_field_today">
+                    <filter name="date_field_today" string="Today" domain="[('date_field', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                </filter>
+            </search>
+        `,
+        context: { search_default_date_field: "year-1,month-1" },
+    });
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Date");
+    expect(isItemSelected("Date")).toBe(true);
+    expect(isOptionSelected("Date", "June")).toBe(true);
+    expect(isOptionSelected("Date", "2018")).toBe(true);
+});
+
+for (const contextValue of ["True", "1"]) {
+    test(`date filter with search_default with a value of "${contextValue}" in the context`, async () => {
+        mockDate("2019-07-31T13:43:00");
+        const searchBarMenu = await mountWithSearch(SearchBarMenu, {
+            resModel: "foo",
+            searchViewId: false,
+            searchMenuTypes: ["filter"],
+            searchViewArch: `
+                <search>
+                    <filter string="Date" name="date_field" date="date_field" default_period="custom_date_field_today">
+                        <filter name="date_field_today" string="Today" domain="[('date_field', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    </filter>
+                </search>
+            `,
+            context: { search_default_date_field: contextValue },
+        });
+        await toggleSearchBarMenu();
+        await toggleMenuItem("Date");
+        expect(isItemSelected("Date")).toBe(true);
+        expect(isOptionSelected("Date", "Today")).toBe(true);
+        expect(searchBarMenu.env.searchModel.domain).toEqual([["date_field", "=", "2019-07-31"]]);
+    });
+}
+
 test("filter domains are correcly combined by OR and AND", async () => {
     const searchBar = await mountWithSearch(SearchBar, {
         resModel: "foo",
