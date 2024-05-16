@@ -15,6 +15,8 @@ class AccountAnalyticDistributionModel(models.Model):
     _description = 'Analytic Distribution Model'
     _rec_name = 'create_date'
     _order = 'id desc'
+    _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
     partner_id = fields.Many2one(
         'res.partner',

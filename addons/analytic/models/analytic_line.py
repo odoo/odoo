@@ -10,6 +10,7 @@ class AccountAnalyticLine(models.Model):
     _description = 'Analytic Line'
     _order = 'date desc, id desc'
     _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
     name = fields.Char(
         'Description',

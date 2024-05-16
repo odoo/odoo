@@ -12,6 +12,7 @@ class AccountAnalyticPlan(models.Model):
     _rec_name = 'complete_name'
     _order = 'complete_name asc'
     _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
     def _default_color(self):
         return randint(1, 11)
