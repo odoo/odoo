@@ -13,12 +13,12 @@
         </div>
 
         <!-- support for custom footer -->
-        <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout" position="attributes">
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" position="attributes">
             <attribute name="t-if">not custom_footer</attribute>
         </div>
 
-        <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout" position="after">
-            <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout" t-if="custom_footer">
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" position="after">
+            <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}" t-if="custom_footer">
                 <t t-out="custom_footer"/>
             </div>
         </div>
