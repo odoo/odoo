@@ -336,7 +336,7 @@
                                     <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
                                     <!-- copy-pasted template "account.tax_groups_totals" with reversed columns order -->
                                     <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
-                                        <tr>
+                                        <tr class="o_taxes">
                                             <t t-if="tax_totals['display_tax_base']">
                                                 <td class="text-end o_price_total">
                                                     <span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']"/>
