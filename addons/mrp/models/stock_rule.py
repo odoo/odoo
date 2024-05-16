@@ -73,7 +73,7 @@ class StockRule(models.Model):
         for procurement, rule in procurements:
             bom = rule._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
             mo = self._get_linked_mo_id(procurement, rule, bom)
-            if not mo and float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:  # TODO : Change here to allow propagation of diminution
+            if not mo and float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:
                 # If procurement contains negative quantity, don't create a MO that would be for a negative value.
                 continue
             if not mo:

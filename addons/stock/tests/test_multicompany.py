@@ -611,7 +611,7 @@ class TestMultiCompany(TransactionCase):
         self.assertFalse(move_transit_to_wha in move_whb_to_transit.move_dest_ids,
                          "Chained move created in transit location")
         self.assertEqual(move_wha_to_cus.state, "waiting")
-        self.assertEqual(move_transit_to_wha.state, "waiting")
+        self.assertEqual(move_transit_to_wha.state, "assigned")  # No waiting state in MTSO
         self.assertEqual(move_whb_to_transit.state, "assigned")
 
         (move_wha_to_cus + move_whb_to_transit + move_transit_to_wha).picking_id.action_assign()

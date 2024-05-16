@@ -167,7 +167,12 @@ class TestOldRules(TestStockCommon):
         picking_ids = self.env['stock.picking'].search([('group_id', '=', pg.id)])
         self.assertEqual(len(picking_ids), 3)
         for picking in picking_ids:
-            self.assertEqual(picking.move_ids.procure_method, 'make_to_stock')
+            # Only the picking from Stock to Pack should be MTS
+            if picking.location_id == self.warehouse_3_steps.lot_stock_id or picking.location_dest_id == final_location: # First rule and MTSO rule are make_to_stock
+                self.assertEqual(picking.move_ids.procure_method, 'make_to_stock')
+            else:
+                self.assertEqual(picking.move_ids.procure_method, 'make_to_order')
+
             self.assertEqual(len(picking.move_ids), 1)
             if picking.location_dest_id == final_location:
                 self.assertEqual(picking.move_ids.product_uom_qty, 5, 'The quantity of the move should be the same as on the SO')
@@ -294,7 +299,13 @@ class TestOldRules(TestStockCommon):
         # The last one should have 3 pickings as there's nothing left in the delivery location
         self.assertEqual(len(pickings_pg3), 3)
         for picking in pickings_pg3:
-            self.assertEqual(picking.move_ids.procure_method, 'make_to_stock')
+            # Only the picking from Stock to Pack should be MTS
+            if picking.location_id == warehouse.lot_stock_id or picking.location_dest_id == final_location:
+                self.assertEqual(picking.move_ids.procure_method, 'make_to_stock')
+            else:
+                self.assertEqual(picking.move_ids.procure_method, 'make_to_order')
+
+            # All the moves should be should have the same quantity as it is on each procurements
             self.assertEqual(len(picking.move_ids), 1)
             self.assertEqual(picking.move_ids.product_uom_qty, 2)
 
@@ -380,7 +391,7 @@ class TestOldRules(TestStockCommon):
         ship_move._assign_picking()
         ship_move._action_confirm()
         pack_move = ship_move.move_orig_ids[0]
-        pick_move = pack_move.group_id.stock_move_ids.filtered(lambda m: m.location_dest_id == pack_move.picking_id.location_id)[0]
+        pick_move = pack_move.move_orig_ids[0]
 
         picking = pick_move.picking_id
         picking.action_confirm()
@@ -562,12 +573,10 @@ class TestOldRules(TestStockCommon):
         # create chained pick/pack moves to test with
         ship_move._assign_picking()
         ship_move._action_confirm()
-
         pack_move = ship_move.move_orig_ids[0]
-        pick_move = pack_move.group_id.stock_move_ids.filtered(lambda m: m.location_dest_id == pack_move.picking_id.location_id)[0]
+        pick_move = pack_move.move_orig_ids[0]
 
-        self.assertEqual(ship_move.state, 'waiting', "Ship move wasn't created...") # MTO -> Waiting for pack_move
-        self.assertEqual(pack_move.state, 'confirmed', "Pack move wasn't created...") # MTSO -> Waiting is not appliable
+        self.assertEqual(pack_move.state, 'waiting', "Pack move wasn't created...")
         self.assertEqual(pick_move.state, 'confirmed', "Pick move wasn't created...")
 
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')

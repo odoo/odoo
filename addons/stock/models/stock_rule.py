@@ -302,11 +302,10 @@ class StockRule(models.Model):
             group_id = values.get('group_id', False) and values['group_id'].id
         elif self.group_propagation_option == 'fixed':
             group_id = self.group_id.id
-        if self.procure_method == 'mts_else_mto' and group_id is False and len(self.route_id.rule_ids) > 1:  #move created without parent (SO/MO/PO)
+        if not group_id and self.procure_method == 'mts_else_mto' and len(self.route_id.rule_ids) > 1:  # move created without parent (SO/MO/PO)
             group_id = self.group_id.create({
-                'name': self.route_id.name,  # TODO : What name ?
+                'name': self.name,
             }).id
-            # Create group based on route
 
         date_scheduled = fields.Datetime.to_string(
             fields.Datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0)
@@ -325,14 +324,15 @@ class StockRule(models.Model):
         procure_method = self.procure_method if self.procure_method != 'mts_else_mto' else 'make_to_stock'
         move_dest_ids = []
 
-        # TODO : Fix following behavior since we now work with chained PG
+        # TODO : Check Me for V3
         mts_move_dest_ids = self.env['stock.move']
-        if values.get('move_dest_ids', False) and not self.location_dest_id.should_bypass_reservation():  # FIXME : we may still want to keep the pg-link even if we don't do reservation such that the second condition is too much
+        if values.get('move_dest_ids', False) and not self.location_dest_id.should_bypass_reservation():
             # make_to_stock moves MAY have dest moves but SHOULD NOT have orig moves, in other words, a make_to_stock move CAN NOT be a destination move
             for m in values['move_dest_ids']:
-                if m.procure_method == 'make_to_stock' and not m.group_id:
-                    mts_move_dest_ids |= m
-                else:  # !!! not if == (m != mts OR m.group_id)
+                if m.procure_method == 'make_to_stock':
+                    if not m.group_id:
+                        mts_move_dest_ids |= m
+                else:
                     move_dest_ids.append((4, m.id))
 
         if group_id and mts_move_dest_ids:
@@ -646,5 +646,5 @@ class ProcurementGroup(models.Model):
 
     @api.constrains('group_dest_ids')
     def _check_no_cyclic_dependencies(self):
-        if not self._check_m2m_recursion('group_dest_ids'):
+        if self._has_cycle('group_dest_ids'):
             raise ValidationError(_("You cannot create cyclic dependency."))

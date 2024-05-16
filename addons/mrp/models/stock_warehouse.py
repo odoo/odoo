@@ -127,7 +127,7 @@ class StockWarehouse(models.Model):
             'manufacture_mto_pull_id': {
                 'depends': ['manufacture_steps', 'manufacture_to_resupply'],
                 'create_values': {
-                    'procure_method': 'mts_else_mto',
+                    'procure_method': 'make_to_order',  # TODO : Check if ok as default behavior, else rework tests with move chaining to use pg chaining.
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
@@ -144,7 +144,7 @@ class StockWarehouse(models.Model):
             'pbm_mto_pull_id': {
                 'depends': ['manufacture_steps', 'manufacture_to_resupply'],
                 'create_values': {
-                    'procure_method': 'mts_else_mto',
+                    'procure_method': 'make_to_order',
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',

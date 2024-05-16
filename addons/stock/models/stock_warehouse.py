@@ -437,7 +437,7 @@ class Warehouse(models.Model):
                 'depends': ['delivery_steps'],
                 'create_values': {
                     'active': True,
-                    'procure_method': 'mts_else_mto',
+                    'procure_method': 'make_to_order',
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
@@ -611,7 +611,7 @@ class Warehouse(models.Model):
                 'rules_values': {
                     'active': True,
                     'propagate_cancel': True,
-                    'procure_method': 'mts_else_mto',
+                    'procure_method': 'make_to_order',
                 }
             }
         }
@@ -835,7 +835,7 @@ class Warehouse(models.Model):
                 'action': routing.action,
                 'auto': 'manual',
                 'picking_type_id': routing.picking_type.id,
-                'procure_method': first_rule and 'make_to_stock' or 'mts_else_mto',  # TODO : CHECK ME
+                'procure_method': first_rule and 'make_to_stock' or 'make_to_order',
                 'warehouse_id': self.id,
                 'company_id': self.company_id.id,
             }
@@ -861,7 +861,7 @@ class Warehouse(models.Model):
         pull_values['active'] = True
         rules_list = self._get_rule_values(route_values, values=pull_values)
         for pull_rules in rules_list:
-            pull_rules['procure_method'] = self.lot_stock_id.id != pull_rules['location_src_id'] and 'mts_else_mto' or 'make_to_stock'  # first part of the resuply route is MTS #TODO : mto is replace by MTSO
+            pull_rules['procure_method'] = self.lot_stock_id.id != pull_rules['location_src_id'] and 'make_to_order' or 'make_to_stock'  # first part of the resuply route is MTS
         return rules_list
 
     def _update_reception_delivery_resupply(self, reception_new, delivery_new):
@@ -880,7 +880,7 @@ class Warehouse(models.Model):
         rules = Rule.search(['&', '&', ('route_id', 'in', routes.ids), ('action', '!=', 'push'), ('location_dest_id.usage', '=', 'transit')])
         rules.write({
             'location_src_id': new_location.id,
-            'procure_method': change_to_multiple and "mts_else_mto" or "make_to_stock"})
+            'procure_method': change_to_multiple and "make_to_order" or "make_to_stock"})
         if not change_to_multiple:
             # Remove the extra rule to resupply Output from Stock
             rules_to_archive = Rule.search([('route_id', 'in', routes.ids), ('action', '!=', 'push'),

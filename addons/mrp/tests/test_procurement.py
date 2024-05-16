@@ -18,7 +18,6 @@ class TestProcurement(TestMrpCommon):
         self.bom_1.bom_line_ids.filtered(lambda x: x.product_id == self.product_1).unlink()
         # Update route
         self.warehouse = self.env.ref('stock.warehouse0')
-        self.warehouse.mto_pull_id.route_id.active = True
         route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
         route_mto = self.warehouse.mto_pull_id.route_id.id
         self.product_4.write({'route_ids': [(6, 0, [route_manufacture, route_mto])]})
@@ -116,7 +115,6 @@ class TestProcurement(TestMrpCommon):
         # set the MTO route to the parent category (all)
         self.warehouse = self.env.ref('stock.warehouse0')
         mto_route = self.warehouse.mto_pull_id.route_id
-        mto_route.active = True
         mto_route.product_categ_selectable = True
         all_categ_id.write({'route_ids': [(6, 0, [mto_route.id])]})
 
@@ -528,7 +526,6 @@ class TestProcurement(TestMrpCommon):
 
         self.assertEqual(mo_assign_at_confirm.move_raw_ids.quantity, 5, "Components should have been auto-reserved")
 
-    # TODO : Redefine test in sale_mrp
     def test_check_update_qty_mto_chain(self):
         """ Simulate a mto chain with a manufacturing order. Updating the
         initial demand should also impact the initial move but not the
@@ -552,8 +549,6 @@ class TestProcurement(TestMrpCommon):
         vendor = self.env['res.partner'].create({
             'name': 'Roger'
         })
-        # This needs to be tried with MTO route activated
-        # self.env['stock.route'].browse(self.ref('stock.route_warehouse0_mto'))  # Now unarchived by default
         # Define products requested for this BoM.
         product = self.env['product.product'].create({
             'name': 'product',
@@ -595,30 +590,17 @@ class TestProcurement(TestMrpCommon):
         # Check manufacturing order data.
         self.assertEqual(manufacturing_order.product_qty, 10, 'The manufacturing order qty should be the same as the move.')
 
-        # Create procurement to decrease the initial quantity.
+        # Create procurement to decrease quantity in the initial move but not in the related MO.
         create_run_procurement(product, -5.00)
         self.assertEqual(customer_move.product_uom_qty, 5, 'The demand on the initial move should have been decreased when merged with the procurement.')
-        self.assertEqual(manufacturing_order.product_qty, 5, 'The demand on the manufacturing order should have been decreased.')
+        self.assertEqual(manufacturing_order.product_qty, 10, 'The demand on the manufacturing order should not have been decreased.')
 
-        # Create procurement to increase the quantity.
-        create_run_procurement(product, 3.00)
-        self.assertEqual(customer_move.product_uom_qty, 8, 'The demand on the initial move should have changed.')
-        self.assertEqual(manufacturing_order.product_qty, 8, 'The demand on the initial manufacturing order should have been increased.')
-        current_demand = sum(self.env['stock.move'].search([('group_id', '=', procurement_group.id)]).mapped('product_uom_qty'))
-        self.assertEqual(float_compare(current_demand, manufacturing_order.product_uom_qty, precision_rounding=product.uom_id.rounding), 0, 'The current demand should equal the MO production')
+        # Create procurement to increase quantity on the initial move and should create a new MO for the missing qty.
+        create_run_procurement(product, 2.00)
+        self.assertEqual(customer_move.product_uom_qty, 5, 'The demand on the initial move should not have been increased since it should be a new move.')
+        self.assertEqual(manufacturing_order.product_qty, 10, 'The demand on the initial manufacturing order should not have been increased.')
         manufacturing_orders = self.env['mrp.production'].search([('product_id', '=', product.id)])
-        self.assertEqual(len(manufacturing_orders), 1, 'Initial MO should be sufficient to cover missing demand.')
-
-        # Create procurement to increase quantity on the initial move
-        create_run_procurement(product, 3.00)
-        self.assertEqual(customer_move.product_uom_qty, 11, 'The demand on the initial move should have been increased')
-        self.assertEqual(manufacturing_order.product_qty, 11, 'The demand on the initial manufacturing order should have been increased.')
-        current_demand = sum(self.env['stock.move'].search([('group_id', '=', procurement_group.id)]).mapped('product_uom_qty'))
-        self.assertEqual(float_compare(current_demand, manufacturing_order.product_uom_qty, precision_rounding=product.uom_id.rounding), 0, 'The current demand should still equals MO production')
-        manufacturing_orders = self.env['mrp.production'].search([('product_id', '=', product.id)])
-        self.assertEqual(len(manufacturing_orders), 1, 'The initial MO should have been updated for missing demand.')
-        self.assertEqual(float_compare(current_demand, manufacturing_orders.product_uom_qty, precision_rounding=product.uom_id.rounding), 0, 'The current demand should equals the whole MOs production')
-
+        self.assertEqual(len(manufacturing_orders), 2, 'A new MO should have been created for missing demand.')
 
         # Secondary test
         self.assertEqual(self.env['stock.route'].search_count([]), routes_count)
@@ -626,7 +608,6 @@ class TestProcurement(TestMrpCommon):
     def test_rr_with_dependance_between_bom(self):
         self.warehouse = self.env.ref('stock.warehouse0')
         route_mto = self.warehouse.mto_pull_id.route_id
-        route_mto.active = True
         route_manufacture = self.warehouse.manufacture_pull_id.route_id
         product_1 = self.env['product.product'].create({
             'name': 'Product A',
@@ -932,7 +913,6 @@ class TestProcurement(TestMrpCommon):
                 raw_line.product_id = self.product_2
                 raw_line.product_uom_qty = 2.0
 
-        # FIXME : Trough Command.Create, move is added to procurement but not to picking
         move_vals = mo._get_move_raw_values(self.product_3, 0, self.product_3.uom_id)
         mo.move_raw_ids = [(0, 0, move_vals)]
         mo.move_raw_ids[-1].product_uom_qty = 3.0
