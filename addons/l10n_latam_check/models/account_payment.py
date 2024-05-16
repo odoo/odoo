@@ -8,18 +8,13 @@ class AccountPayment(models.Model):
 
     l10n_latam_new_check_ids = fields.One2many('l10n_latam.check', 'payment_id', string='New Checks')
     l10n_latam_check_ids = fields.Many2many(
-        comodel_name='l10n_latam.check',
-        relation='account_payment_account_payment_check_rel',
-        column1="payment_id",
-        column2="check_id",
+        comodel_name='l10n_latam.check', relation='account_payment_account_payment_check_rel',
         required=True,
         copy=False,
         string="Checks"
     )
     # Warning message in case of unlogical third party check operations
-    l10n_latam_check_warning_msg = fields.Text(
-        compute='_compute_l10n_latam_check_warning_msg',
-    )
+    l10n_latam_check_warning_msg = fields.Text(compute='_compute_l10n_latam_check_warning_msg',)
     amount = fields.Monetary(compute="_compute_amount", readonly=False, store=True)
 
     @api.depends('l10n_latam_check_ids.amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')

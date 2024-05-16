@@ -24,9 +24,7 @@ class l10nLatamCheckPaymentRegisterCheck(models.TransientModel):
     issuer_vat = fields.Char(
         compute='_compute_issuer_vat', store=True, readonly=False,
     )
-    payment_date = fields.Date(
-        readonly=False,
-    )
+    payment_date = fields.Date(readonly=False,)
     amount = fields.Monetary()
 
     @api.onchange('name')

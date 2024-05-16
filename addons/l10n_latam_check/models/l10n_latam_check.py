@@ -23,14 +23,14 @@ class l10nLatamAccountPaymentCheck(models.Model):
         ondelete='cascade',
         delegate=True,
     )
-    payment_method_line_id = fields.Many2one(related='payment_id.payment_method_line_id', store=True)
+    payment_method_line_id = fields.Many2one(
+        related='payment_id.payment_method_line_id',
+        store=True,
+    )
     operation_ids = fields.Many2many(
-        comodel_name='account.payment',
-        relation='account_payment_account_payment_check_rel',
-        column1="check_id",
-        column2="payment_id",
-        required=True,
+        comodel_name='account.payment', relation='account_payment_account_payment_check_rel',
         readonly=True,
+        check_company=True,
     )
     current_journal_id = fields.Many2one(
         comodel_name='account.journal',
@@ -46,12 +46,9 @@ class l10nLatamAccountPaymentCheck(models.Model):
     issuer_vat = fields.Char(
         compute='_compute_issuer_vat', store=True, readonly=False,
     )
-    payment_date = fields.Date(
-        readonly=False,
-    )
+    payment_date = fields.Date(readonly=False)
     amount = fields.Monetary()
-    split_move_line_id = fields.Many2one('account.move.line')
-    reconcile_move_line_id = fields.Many2one('account.move.line')
+    split_move_line_id = fields.Many2one('account.move.line', readonly=True, check_company=True,)
     issue_state = fields.Selection([('handed', 'Handed'), ('debited', 'Debited'), ('voided', 'Voided')],
                                    compute='_compute_issue_state', store=True)
 

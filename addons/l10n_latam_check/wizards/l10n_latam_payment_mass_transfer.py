@@ -20,9 +20,7 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
         check_company=True,
         domain="[('type', 'in', ('bank', 'cash')), ('id', '!=', journal_id)]",
     )
-    communication = fields.Char(
-        string="Memo",
-    )
+    communication = fields.Char(string="Memo")
     journal_id = fields.Many2one(
         'account.journal',
         check_company=True,
