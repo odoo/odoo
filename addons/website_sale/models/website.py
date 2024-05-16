@@ -467,7 +467,7 @@ class Website(models.Model):
 
         # If the current user is the website public user, the fiscal position
         # is computed according to geolocation.
-        if request and request.website.partner_id.id == partner_sudo.id:
+        if request and hasattr(request, 'website') and request.website.partner_id.id == partner_sudo.id:
             country_code = request.geoip.get('country_code')
             if country_code:
                 country_id = self.env['res.country'].search([('code', '=', country_code)], limit=1).id

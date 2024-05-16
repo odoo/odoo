@@ -613,6 +613,14 @@ class Website(Home):
             website._force()
         page = request.env['website'].new_page(path, add_menu=add_menu, **template)
         url = page['url']
+        # In case the page is created through the 404 "Create Page" button, the
+        # URL may use special characters which are slugified on page creation.
+        # If that URL is also a menu, we update it accordingly.
+        # NB: we don't want to slugify on menu creation as it could redirect
+        # towards files (with spaces, apostrophes, etc.).
+        menu = request.env['website.menu'].search([('url', '=', '/' + path)])
+        if menu:
+            menu.page_id = page['page_id']
 
         if redirect:
             if ext_special_case:  # redirect non html pages to backend to edit
