@@ -3122,7 +3122,7 @@ export class OdooEditor extends EventTarget {
         }
         const unlinkButton = this.toolbar.querySelector('#unlink');
         if (!this.isSelectionInEditable(sel)) {
-            unlinkButton.classList.add('d-none');
+            unlinkButton?.classList.add('d-none');
             return;
         }
         const paragraphDropdownButton = this.toolbar.querySelector('#paragraphDropdownButton');
