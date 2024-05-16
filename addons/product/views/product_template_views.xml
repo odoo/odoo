@@ -94,20 +94,22 @@
                 <field name="categ_id"/>
                 <field name="image_128"/>
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
-                <card class="d-flex flex-row">
-                    <main class="col-10">
-                        <div class="d-flex h5">
-                            <field class="me-1" name="is_favorite" widget="boolean_favorite" nolabel="1"/>
-                            <div><field name="name"/></div>
+                <card class="flex-row">
+                    <main class="col-10 pe-2">
+                        <div class="mb-1">
+                            <div class="d-flex mb-0 h5">
+                                <field class="me-1" name="is_favorite" widget="boolean_favorite" nolabel="1"/>
+                                <field name="name"/>
+                            </div>
+                            <span invisible="not default_code">
+                                [<field name="default_code"/>]
+                            </span>
+                            <strong invisible="product_variant_count &lt; 2">
+                                <field name="product_variant_count"/> Variants
+                            </strong>
                         </div>
-                        <span invisible="not default_code">
-                            [<field class="d-inline" name="default_code"/>]
-                        </span>
-                        <strong invisible="product_variant_count &lt; 2">
-                            <field class="d-inline" name="product_variant_count"/> Variants
-                        </strong>
                         <span>
-                            Price: <field class="d-inline" name="list_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                            Price: <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                         </span>
                         <field name="product_properties" widget="properties"/>
                     </main>

@@ -158,7 +158,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_properties']" position="before">
                     <div groups="stock.group_stock_user" invisible="not show_on_hand_qty_status_button">
-                        On hand: <field class="d-inline" name="qty_available"/> <field class="d-inline" name="uom_id"/>
+                        On hand: <field name="qty_available"/> <field name="uom_id"/>
                     </div>
                 </xpath>
             </field>
