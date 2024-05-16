@@ -1,6 +1,16 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { contains, defineMailModels, openDiscuss, start, startServer } from "../mail_test_helpers";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import {
+    click,
+    contains,
+    defineMailModels,
+    openDiscuss,
+    start,
+    startServer,
+} from "../mail_test_helpers";
+import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { rpcWithEnv } from "@mail/utils/common/misc";
+
+let rpc;
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -377,4 +387,91 @@ test("only show messaging seen indicator if authored by me, after last seen by a
     await contains(".o-mail-Message");
     await contains(".o-mail-MessageSeenIndicator");
     await contains(".o-mail-MessageSeenIndicator i");
+});
+
+test("no seen indicator in 'channel' channels (with is_typing)", async () => {
+    // is_typing info contains fetched / seen message so this could mistakenly show seen indicators
+    const pyEnv = await startServer();
+    const demoId = pyEnv["res.partner"].create({ name: "Demo User" });
+    const demoUserId = pyEnv["res.users"].create({ partner_id: demoId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test-channel",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: demoId }),
+        ],
+    });
+    const chatId = pyEnv["discuss.channel"].create({
+        name: "test-chat",
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: demoId }),
+        ],
+    });
+    const [channelMsgId, chatMsgId] = pyEnv["mail.message"].create([
+        {
+            author_id: serverState.partnerId,
+            body: "<p>channel-msg</p>",
+            res_id: channelId,
+            model: "discuss.channel",
+        },
+        {
+            author_id: serverState.partnerId,
+            body: "<p>chat-msg</p>",
+            res_id: chatId,
+            model: "discuss.channel",
+        },
+    ]);
+    const channelMemberIds = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+    ]);
+    const chatMemberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", chatId]]);
+    pyEnv["discuss.channel.member"].write(channelMemberIds, {
+        fetched_message_id: channelMsgId,
+        seen_message_id: 0,
+    });
+    pyEnv["discuss.channel.member"].write(chatMemberIds, {
+        fetched_message_id: chatMsgId,
+        seen_message_id: 0,
+    });
+    const env = await start();
+    rpc = rpcWithEnv(env);
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { text: "channel-msg" });
+    await contains(".o-mail-MessageSeenIndicator i", { count: 0 }); // none in channel
+    await click(".o-mail-DiscussSidebar-item", { text: "Demo User" });
+    await contains(".o-mail-Message", { text: "chat-msg" });
+    await contains(".o-mail-MessageSeenIndicator i", { count: 1 }); // received in chat
+    // simulate channel read by Demo User in both threads
+    await withUser(demoUserId, () =>
+        rpc("/discuss/channel/mark_as_read", {
+            channel_id: channelId,
+            last_message_id: channelMsgId,
+        })
+    );
+    await withUser(demoUserId, () =>
+        rpc("/discuss/channel/mark_as_read", {
+            channel_id: chatId,
+            last_message_id: chatMsgId,
+        })
+    );
+    // simulate typing by Demo User in both threads
+    await withUser(demoUserId, () =>
+        rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            is_typing: true,
+        })
+    );
+    await withUser(demoUserId, () =>
+        rpc("/discuss/channel/notify_typing", {
+            channel_id: chatId,
+            is_typing: true,
+        })
+    );
+    await contains(".o-mail-MessageSeenIndicator i", { count: 2 }); // seen in chat
+    await click(".o-mail-DiscussSidebar-item", { text: "test-channel" });
+    await contains(".o-mail-Message", { text: "channel-msg" });
+    await contains(".o-mail-MessageSeenIndicator i", { count: 0 }); // none in channel
 });
