@@ -87,7 +87,8 @@ export class Thread extends Component {
         this.scrollableRef = this.props.scrollRef ?? useRef("messages");
         this.loadOlderState = useVisible(
             "load-older",
-            () => {
+            async () => {
+                await this.messageHighlight?.scrollPromise;
                 if (this.loadOlderState.isVisible) {
                     toRaw(this.props.thread).fetchMoreMessages();
                 }
@@ -96,7 +97,8 @@ export class Thread extends Component {
         );
         this.loadNewerState = useVisible(
             "load-newer",
-            () => {
+            async () => {
+                await this.messageHighlight?.scrollPromise;
                 if (this.loadNewerState.isVisible) {
                     toRaw(this.props.thread).fetchMoreMessages("newer");
                 }
@@ -146,11 +148,12 @@ export class Thread extends Component {
         );
         useEffect(
             () => {
-                this.refByMessageId
-                    .get(this.messageHighlight?.highlightedMessageId)
-                    ?.el?.scrollIntoView({ behavior: "smooth", block: "center" });
+                const el = this.refByMessageId.get(this.messageHighlight?.highlightedMessageId)?.el;
+                if (el) {
+                    this.messageHighlight.scrollTo(el);
+                }
             },
-            () => [this.messageHighlight?.highlightedMessageId]
+            () => [this.state.mountedAndLoaded, this.messageHighlight?.highlightedMessageId]
         );
         onMounted(() => {
             if (!this.env.chatter || this.env.chatter?.fetchMessages) {
