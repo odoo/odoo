@@ -32,9 +32,7 @@
     <record id="action_hr_holidays_by_employee_and_type_report" model="ir.actions.server">
         <field name="name">Time off Analysis by Employee and Time Off Type</field>
         <field name="model_id" ref="hr_holidays.model_hr_leave_employee_type_report"/>
-        <field name="binding_model_id" ref="hr.model_hr_employee"/>
         <field name="state">code</field>
-        <field name="groups_id" eval="[(4, ref('base.group_no_one'))]"/>
         <field name="code">
             action = model.action_time_off_analysis()
         </field>
