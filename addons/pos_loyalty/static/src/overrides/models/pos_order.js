@@ -244,6 +244,9 @@ patch(PosOrder.prototype, {
                 coupon_id: line.coupon_id?.id,
                 args: {
                     product: line.reward_product_id,
+                    price: line.price_unit,
+                    quantity: line.qty,
+                    cost: line.points_cost,
                 },
                 reward_identifier_code: line.reward_identifier_code,
             };
@@ -264,8 +267,27 @@ patch(PosOrder.prototype, {
             }
             line.delete();
         }
-        for (const claimedReward of productRewards.concat(otherRewards).concat(paymentRewards)) {
-            // For existing coupons check that they are still claimed, they can exist in either `couponPointChanges` or `code_activated_coupon_ids`
+        const allRewards = productRewards.concat(otherRewards).concat(paymentRewards);
+        const allRewardsMerged = [];
+        allRewards.forEach((reward) => {
+            if (reward.reward.reward_type == "discount") {
+                allRewardsMerged.push(reward);
+            } else {
+                const reward_index = allRewardsMerged.findIndex(
+                    (item) =>
+                        item.reward.id === reward.reward.id && item.args.price === reward.args.price
+                );
+                if (reward_index > -1) {
+                    allRewardsMerged[reward_index].args.quantity += reward.args.quantity;
+                    allRewardsMerged[reward_index].args.cost += reward.args.cost;
+                } else {
+                    allRewardsMerged.push(reward);
+                }
+            }
+        });
+
+        for (const claimedReward of allRewardsMerged) {
+            // For existing coupons check that they are still claimed, they can exist in either `couponPointChanges` or `codeActivatedCoupons`
             if (
                 !this.code_activated_coupon_ids.find(
                     (coupon) => coupon.id === claimedReward.coupon_id
@@ -787,6 +809,9 @@ patch(PosOrder.prototype, {
             reward: reward,
             coupon_id: coupon_id,
             product: args["product"] || null,
+            price: args["price"] || null,
+            quantity: args["quantity"] || null,
+            cost: args["cost"] || null,
         });
         if (!Array.isArray(rewardLines)) {
             return rewardLines; // Returned an error.
@@ -1108,8 +1133,13 @@ patch(PosOrder.prototype, {
         for (const line of this.get_orderlines()) {
             if (line.get_product() === product) {
                 available += line.get_quantity();
-            } else if (line.reward_product_id === product) {
-                if (line.reward_id === reward) {
+            } else if (
+                reward.reward_product_ids
+                    .map((reward) => reward.id)
+                    .includes(line.reward_product_id?.id)
+            ) {
+                if (line.reward_id.id == reward.id) {
+                    remainingPoints += line.points_cost;
                     claimed += line.get_quantity();
                 } else {
                     shouldCorrectRemainingPoints = true;
@@ -1213,7 +1243,7 @@ patch(PosOrder.prototype, {
     _getRewardLineValuesProduct(args) {
         const reward = args["reward"];
         const product =
-            reward.reward_product_ids.find((p) => p === args["product"]) ||
+            reward.reward_product_ids.find((p) => p.id === args["product"]?.id) ||
             reward.reward_product_ids[0];
 
         const points = this._getRealCouponPoints(args["coupon_id"]);
@@ -1243,12 +1273,12 @@ patch(PosOrder.prototype, {
                     this.currency.decimal_places
                 ),
                 tax_ids: product.taxes_id,
-                qty: freeQuantity,
+                qty: args["quantity"] || freeQuantity,
                 reward_id: reward,
                 is_reward_line: true,
                 reward_product_id: product,
                 coupon_id: args["coupon_id"],
-                points_cost: cost,
+                points_cost: args["cost"] || cost,
                 reward_identifier_code: _newRandomRewardCode(),
             },
         ];
