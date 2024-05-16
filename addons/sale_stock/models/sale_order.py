@@ -31,6 +31,7 @@ class SaleOrder(models.Model):
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     delivery_status = fields.Selection([
         ('pending', 'Not Delivered'),
+        ('preparation', 'In Preparation'),
         ('partial', 'Partially Delivered'),
         ('full', 'Fully Delivered'),
     ], string='Delivery Status', compute='_compute_delivery_status', store=True,
@@ -80,8 +81,10 @@ class SaleOrder(models.Model):
                 order.delivery_status = False
             elif all(p.state in ['done', 'cancel'] for p in order.picking_ids):
                 order.delivery_status = 'full'
-            elif any(p.state == 'done' for p in order.picking_ids):
+            elif any(p.state == 'done' for p in order.picking_ids) and any(line.qty_delivered > 0 and line.qty_delivered < line.product_uom_qty for line in order.order_line):
                 order.delivery_status = 'partial'
+            elif any(p.state == 'assigned' for p in order.picking_ids):
+                order.delivery_status = 'preparation'
             else:
                 order.delivery_status = 'pending'
 
@@ -225,7 +228,7 @@ class SaleOrder(models.Model):
             picking_id = picking_id[0]
         else:
             picking_id = pickings[0]
-        action['context'] = dict(default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_group_id=picking_id.group_id.id)
+        action['context'] = dict(self._context, default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_group_id=picking_id.group_id.id, create=False)
         return action
 
     def _prepare_invoice(self):

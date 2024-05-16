@@ -10,7 +10,7 @@
                     <group>
                         <group name="vendor" string="Vendor">
                             <field name="product_variant_count" invisible="1"/>
-                            <field name="partner_id" context="{'res_partner_search_mode': 'supplier'}"/>
+                            <field name="partner_id" context="{'res_partner_search_mode': 'supplier','default_company_type':'company'}"/>
                             <field name="product_name"/>
                             <field name="product_code"/>
                             <label for="delay"/>
@@ -57,6 +57,7 @@
                 <group expand="0" string="Group By">
                     <filter string="Product" name="groupby_product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
                     <filter string="Vendor" name="groupby_vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Product Category" name="groupby_category" domain="[]" context="{'group_by': 'product_category_id'}"/>
                 </group>
             </search>
         </field>

@@ -45,6 +45,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_id']" position="attributes">
                     <attribute name="domain">[('product_tmpl_id', '=', parent.product_tmpl_id)]</attribute>
+                    <attribute name="optional">show</attribute>
                 </xpath>
             </field>
         </record>
@@ -95,7 +96,7 @@
                     <attribute name="context">{'default_product_tmpl_id': product_tmpl_id, 'product_template_invisible_variant': True, 'tree_view_ref':'purchase.product_product_supplierinfo_tree_view2'}</attribute>
                 </field>
                 <field name="variant_seller_ids" position="attributes">
-                    <attribute name="context">{'model': 'product.product', 'active_id': id, 'tree_view_ref':'purchase.product_product_supplierinfo_tree_view2'}</attribute>
+                    <attribute name="context">{'default_product_tmpl_id': product_tmpl_id, 'model': 'product.product', 'active_id': id, 'tree_view_ref':'purchase.product_product_supplierinfo_tree_view2'}</attribute>
                 </field>
             </field>
         </record>

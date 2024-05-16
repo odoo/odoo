@@ -58,6 +58,7 @@ class SupplierInfo(models.Model):
         'product.template', 'Product Template', check_company=True,
         index=True, ondelete='cascade')
     product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count')
+    product_category_id = fields.Many2one('product.category', name='Product Category', related='product_id.categ_id')
     delay = fields.Integer(
         'Delivery Lead Time', default=1, required=True,
         help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning.")
