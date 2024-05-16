@@ -17,7 +17,6 @@ import { isBarcodeScannerSupported } from "@web/webclient/barcode/barcode_scanne
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { deduceUrl } from "@point_of_sale/utils";
-import { View } from "@web/views/view";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -31,7 +30,6 @@ export class Navbar extends Component {
         Input,
         Dropdown,
         DropdownItem,
-        View,
     };
     static props = {};
     setup() {
