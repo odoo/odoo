@@ -282,6 +282,11 @@ body.editor_enable {
     .js_change_lang {
         pointer-events: none;
     }
+
+    // Disable "input group date" calendar icon
+    .input-group.date .input-group-text:has(.fa-calendar) {
+        pointer-events: none;
+    }
 }
 .o_homepage_editor_welcome_message {
     padding-top: 128px;

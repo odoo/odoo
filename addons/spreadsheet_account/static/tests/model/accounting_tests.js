@@ -70,6 +70,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         assert.equal(getCellValue(model, "A1"), 16);
         assert.equal(getCellValue(model, "A2"), 42);
         assert.equal(getCellValue(model, "A3"), 26);
+        assert.equal(getCellValue(model, "B1"), 44593);
         assert.verifySteps(["spreadsheet_fetch_debit_credit"]);
     });
 

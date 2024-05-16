@@ -203,7 +203,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
             # Create deposit product if necessary
             if not self.product_id:
-                self.company_id.sale_down_payment_product_id = self.env['product.product'].create(
+                self.company_id.sudo().sale_down_payment_product_id = self.env['product.product'].create(
                     self._prepare_down_payment_product_values()
                 )
                 self._compute_product_id()

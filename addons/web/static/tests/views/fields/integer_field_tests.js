@@ -75,7 +75,7 @@ QUnit.module("Fields", (hooks) => {
             "The value should be rendered in human readable format (k, M, G, T)."
         );
     });
-    
+
     QUnit.test("human readable format 3", async function (assert) {
         await makeView({
             type: "form",
@@ -470,6 +470,27 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector(".o_field_widget input").value, "8069");
 
         await triggerEvent(target, ".o_field_widget input", "keydown", { key: "Enter" });
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "8,069");
+    });
+
+    QUnit.test("value is formatted on click out (even if same value)", async function (assert) {
+        patchWithCleanup(localization, { ...defaultLocalization, grouping: [3, 0] });
+
+        await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 3,
+            arch: '<form><field name="int_field"/></form>',
+        });
+
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "8,069");
+
+        target.querySelector(".o_field_widget input").value = 8069;
+        await triggerEvent(target, ".o_field_widget input", "input");
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "8069");
+
+        await triggerEvent(target, ".o_field_widget input", "change"); // triggered when clicking out
         assert.strictEqual(target.querySelector(".o_field_widget input").value, "8,069");
     });
 });
