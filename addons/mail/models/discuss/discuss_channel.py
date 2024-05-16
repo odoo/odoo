@@ -794,6 +794,8 @@ class Channel(models.Model):
         """
         if not self:
             return []
+        # sudo: bus.bus: reading non-sensitive last id
+        bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         channel_infos = []
         # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
         rtc_sessions_by_channel = self.sudo().rtc_session_ids._mail_rtc_session_format_by_channel(extra=True)
@@ -840,6 +842,7 @@ class Channel(models.Model):
                     info['channelMembers'] = [('ADD', list(member._discuss_channel_member_format().values()))]
                     info['state'] = member.fold_state or 'open'
                     info['message_unread_counter'] = member.message_unread_counter
+                    info["message_unread_counter_bus_id"] = bus_last_id
                     info['is_minimized'] = member.is_minimized
                     info['custom_notifications'] = member.custom_notifications
                     info['mute_until_dt'] = member.mute_until_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT) if member.mute_until_dt else False
