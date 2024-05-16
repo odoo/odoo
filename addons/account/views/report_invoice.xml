@@ -352,7 +352,7 @@
             -->
             <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
                 <t t-set="display_tax_base" t-value="tax_totals['display_tax_base']"/>
-                <tr>
+                <tr class="o_taxes">
                     <t t-if="not display_tax_base">
                         <td><span class="text-nowrap" t-out="amount_by_group['tax_group_name']">Tax 15%</span></td>
                         <td class="text-end o_price_total">
@@ -384,7 +384,7 @@
             <div t-if="not show_company_taxes" class="oe_structure"></div>
             <div class="mb-2 mt-3 border p-2 avoid-page-break-inside totals_taxes_company_currency"
                  t-else="">
-                <table class="table table-borderless mb-0">
+                <table class="o_total_table table table-borderless mb-0">
                     <p class="tax_computation_company_currency">
                         Taxes <span t-field="o.company_currency_id"/>
                     </p>
@@ -400,7 +400,7 @@
                         </tr>
                         <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
                         <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
-                            <tr>
+                            <tr class="o_taxes">
                                 <t t-if="tax_totals['display_tax_base']">
                                     <td>
                                         <span class="text-nowrap">

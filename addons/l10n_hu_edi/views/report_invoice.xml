@@ -115,15 +115,13 @@
     </template>
 
     <template id="custom_header">
-            <div class="o_boxed_header">
-            <div class="row mb8">
-                <div class="col-6">
-                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
-                </div>
-                <div class="col-6 text-end mb4">
-                    <div class="mt0 h4" t-field="company.report_header"/>
-                </div>
+        <div class="row mb8">
+            <div class="col-6">
+                <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
             </div>
+            <div class="col-6 text-end mb4">
+                <div class="mt0 h4" t-field="company.report_header"/>
             </div>
+        </div>
     </template>
 </odoo>
