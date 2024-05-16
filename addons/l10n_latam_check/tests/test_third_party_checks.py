@@ -156,7 +156,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         self.assertEqual(check.current_journal_id, self.rejected_check_journal, 'Current journal was not computed properly on delivery')
 
         # test that checks created on different journals but that are on same current journal, can be transfered together
-        payment2 = self.create_third_party_check()
+        payment2 = self.create_third_party_check(journal=self.rejected_check_journal)
         check2 = payment2.l10n_latam_new_check_ids[0]
         self.env['l10n_latam.payment.mass.transfer'].with_context(
             active_model='l10n_latam.check', active_ids=[check.id, check2.id]).create({'destination_journal_id': self.third_party_check_journal.id})._create_payments()
