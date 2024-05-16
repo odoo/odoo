@@ -47,7 +47,7 @@ export class StockForecasted extends Component {
         this.reportModelName = `stock.forecasted_product_${isTemplate ? "template" : "product"}`;
         this.warehouses.splice(0, this.warehouses.length);
         this.warehouses.push(...await this.orm.searchRead('stock.warehouse', [],['id', 'name', 'code']));
-        if (!this.context.warehouse) {
+        if (!this.context.warehouse_id) {
             this.updateWarehouse(this.warehouses[0].id);
         }
         const reportValues = await this.orm.call(this.reportModelName, "get_report_values", [], {
@@ -79,8 +79,8 @@ export class StockForecasted extends Component {
     }
 
     async updateWarehouse(id) {
-        const hasPreviousValue = this.context.warehouse !== undefined;
-        this.context.warehouse = id;
+        const hasPreviousValue = this.context.warehouse_id !== undefined;
+        this.context.warehouse_id = id;
         if (hasPreviousValue) {
             await this.reloadReport();
         }
@@ -101,7 +101,7 @@ export class StockForecasted extends Component {
     get graphDomain() {
         const domain = [
             ["state", "=", "forecast"],
-            ["warehouse_id", "=", this.context.warehouse],
+            ["warehouse_id", "=", this.context.warehouse_id],
         ];
         if (this.resModel === "product.template") {
             domain.push(["product_tmpl_id", "=", this.productId]);

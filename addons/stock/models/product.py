@@ -120,7 +120,7 @@ class Product(models.Model):
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state', 'stock_move_ids.quantity')
     @api.depends_context(
         'lot_id', 'owner_id', 'package_id', 'from_date', 'to_date',
-        'location', 'warehouse', 'allowed_company_ids'
+        'location', 'warehouse_id', 'allowed_company_ids'
     )
     def _compute_quantities(self):
         products = self.with_context(prefetch_fields=False).filtered(lambda p: p.type != 'service').with_context(prefetch_fields=True)
@@ -272,7 +272,7 @@ class Product(models.Model):
         location = self.env.context.get('location')
         if location and not isinstance(location, list):
             location = [location]
-        warehouse = self.env.context.get('warehouse')
+        warehouse = self.env.context.get('warehouse_id')
         if warehouse and not isinstance(warehouse, list):
             warehouse = [warehouse]
         # filter by location and/or warehouse

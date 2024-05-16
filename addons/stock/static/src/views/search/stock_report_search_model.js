@@ -32,7 +32,7 @@ export class StockReportSearchModel extends SearchModel {
      * warehouses
      */
     clearWarehouseContext() {
-        delete this.globalContext.warehouse;
+        delete this.globalContext.warehouse_id;
         this._notify();
     }
 
@@ -42,7 +42,7 @@ export class StockReportSearchModel extends SearchModel {
      * will recalculate based on this without filtering out any records
      */
     applyWarehouseContext(warehouse_id) {
-        this.globalContext['warehouse'] = warehouse_id;
+        this.globalContext['warehouse_id'] = warehouse_id;
         this._notify();
     }
 }

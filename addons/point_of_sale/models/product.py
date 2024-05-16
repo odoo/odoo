@@ -179,8 +179,8 @@ class ProductProduct(models.Model):
         # Warehouses
         warehouse_list = [
             {'name': w.name,
-            'available_quantity': self.with_context({'warehouse': w.id}).qty_available,
-            'forecasted_quantity': self.with_context({'warehouse': w.id}).virtual_available,
+            'available_quantity': self.with_context({'warehouse_id': w.id}).qty_available,
+            'forecasted_quantity': self.with_context({'warehouse_id': w.id}).virtual_available,
             'uom': self.uom_name}
             for w in self.env['stock.warehouse'].search([])]
 

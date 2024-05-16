@@ -459,7 +459,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             elif move.picking_type_id.code == 'incoming':
                 prefetch_virtual_available[key_virtual_available(move, incoming=True)].add(move.product_id.id)
         for key_context, product_ids in prefetch_virtual_available.items():
-            read_res = self.env['product.product'].browse(product_ids).with_context(warehouse=key_context[0], to_date=key_context[1]).read(['virtual_available'])
+            read_res = self.env['product.product'].browse(product_ids).with_context(warehouse_id=key_context[0], to_date=key_context[1]).read(['virtual_available'])
             virtual_available_dict[key_context] = {res['id']: res['virtual_available'] for res in read_res}
 
         for move in product_moves:
@@ -806,7 +806,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             warehouse = self.location_dest_id.warehouse_id
 
         if warehouse:
-            action['context']['warehouse'] = warehouse.id
+            action['context']['warehouse_id'] = warehouse.id
         return action
 
     def _do_unreserve(self):

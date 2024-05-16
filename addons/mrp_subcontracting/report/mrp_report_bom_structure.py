@@ -99,7 +99,7 @@ class ReportBomStructure(models.AbstractModel):
             route_info = product_info.get(parent_product.id, {}).get(parent_bom.id, {})
             if route_info and route_info['route_type'] == 'subcontract':
                 subcontracting_loc = route_info['supplier'].partner_id.property_stock_subcontractor
-                subloc_product = product.with_context(location=subcontracting_loc.id, warehouse=False)
+                subloc_product = product.with_context(location=subcontracting_loc.id, warehouse_id=False)
                 subloc_product.fetch(['free_qty', 'qty_available'])
                 stock_loc = f"subcontract_{subcontracting_loc.id}"
                 if not product_info[product.id]['consumptions'].get(stock_loc, False):

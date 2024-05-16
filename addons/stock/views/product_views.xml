@@ -75,7 +75,7 @@
                 <xpath expr="//field[@name='attribute_line_ids']" position="after">
                     <separator/>
                     <field name="location_id" context="{'location': self}" filter_domain="[]"/>
-                    <field name="warehouse_id" context="{'warehouse': self}" filter_domain="[]"/>
+                    <field name="warehouse_id" context="{'warehouse_id': self}" filter_domain="[]"/>
                     <separator/>
                     <filter name="real_stock_available" string="Available Products" domain="[('qty_available','&gt;',0)]"/>
                     <filter name="real_stock_negative" string="Negative Forecasted Quantity" domain="[('virtual_available','&lt;',0)]"/>
@@ -205,7 +205,7 @@
             <field name="arch" type="xml">
                 <filter name="activities_overdue" position="after">
                     <field name="location_id" options="{'no_create': True}" context="{'location': self}" filter_domain="[]"/>
-                    <field name="warehouse_id" context="{'warehouse': self}" filter_domain="[]"/>
+                    <field name="warehouse_id" context="{'warehouse_id': self}" filter_domain="[]"/>
                 </filter>
             </field>
         </record>

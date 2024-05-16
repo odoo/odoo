@@ -25,8 +25,8 @@ export class ForecastedWarehouseFilter extends Component {
     }
 
     get activeWarehouse(){
-        return this.context.warehouse ?
-            this.warehouses.find(w => w.id == this.context.warehouse) :
+        return this.context.warehouse_id ?
+            this.warehouses.find(w => w.id == this.context.warehouse_id) :
             this.warehouses[0];
     }
 
