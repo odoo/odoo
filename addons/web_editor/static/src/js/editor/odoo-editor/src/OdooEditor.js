@@ -4212,11 +4212,15 @@ export class OdooEditor extends EventTarget {
             .map(node => closestElement(node, 'a:not(.btn)'));
         const singleLinkInSelection = anchorLink === focusLink && anchorLink && isLinkEligibleForZwnbsp(this.editable, anchorLink) && anchorLink;
         if (singleLinkInSelection) {
+            this.observerUnactive('add.o_link_in_selection');
             singleLinkInSelection.classList.add('o_link_in_selection');
+            this.observerActive('add.o_link_in_selection');
         }
         for (const link of this.editable.querySelectorAll('.o_link_in_selection')) {
             if (link !== singleLinkInSelection) {
+                this.observerUnactive('remove.o_link_in_selection');
                 link.classList.remove('o_link_in_selection');
+                this.observerActive('remove.o_link_in_selection');
             }
         };
     }
