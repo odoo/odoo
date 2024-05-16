@@ -27,7 +27,7 @@ body {
         padding-top: $o-default-report-margins;
     }
 
-    .footer > div {
+    .footer > .o_footer_content {
         padding-bottom: $o-default-report-margins;
     }
 }
@@ -49,26 +49,8 @@ span.o_force_ltr {
     font-weight: bolder;
 }
 
-/*Total table*/
-div#total {
-    page-break-inside: avoid;
-}
-
-table {
-    &.table {
-        td {
-            vertical-align: $table-cell-vertical-align;
-        }
-    }
-    thead {
-        &.o_black_border {
-            tr {
-                th {
-                    border-bottom: 2px solid black !important;
-                }
-            }
-        }
-    }
+.o_black_border tr th {
+    border-bottom: 2px solid black !important;
 }
 
 /* Checklist */
@@ -115,4 +97,23 @@ li.oe-nested {
     span[itemprop="telephone"] {
         white-space: nowrap;
     }
+}
+
+.o_company_logo {
+    max-height: 6rem;
+    max-width: 12rem;
+
+    &_small {
+        max-height: 4rem;
+    }
+}
+
+.o_company_tagline p {
+    margin-bottom: 0;
+}
+
+div[name=comment] p, div[name=address] p {
+    // wkhtmltopdf trims margin top/bottom which would extend a flex
+    // container's height. This rule cut the address block's p margins to replicate in html.
+    margin-bottom: 0;
 }
