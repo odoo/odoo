@@ -1146,6 +1146,7 @@ export class Wysiwyg extends Component {
      * @returns {Promise}
      */
     savePendingImages($editable = this.$editable) {
+        const savedImageInfoDict = {};
         const defs = Array.from($editable).map(async (editableEl) => {
             const { resModel, resId, resField, type } = this._getRecordInfo(editableEl);
             // When saving a webp, o_b64_image_to_save is turned into
@@ -1153,20 +1154,14 @@ export class Wysiwyg extends Component {
             // of the pre-converted webp resizes and all the equivalent jpgs.
             const b64Proms = [...editableEl.querySelectorAll('.o_b64_image_to_save')].map(async el => {
                 const dirtyEditable = el.closest(".o_dirty");
-                if (dirtyEditable && dirtyEditable !== editableEl) {
-                    // Do nothing as there is an editable element closer to the
-                    // image that will perform the `_saveB64Image()` call with
-                    // the correct "resModel" and "resId" parameters.
+                if (this._doNotSaveImage(dirtyEditable, editableEl, savedImageInfoDict, el, resModel, resId, resField)) {
                     return;
                 }
                 await this._saveB64Image(el, resModel, resId, resField, type);
             });
             const modifiedProms = [...editableEl.querySelectorAll('.o_modified_image_to_save')].map(async el => {
                 const dirtyEditable = el.closest(".o_dirty");
-                if (dirtyEditable && dirtyEditable !== editableEl) {
-                    // Do nothing as there is an editable element closer to the
-                    // image that will perform the `_saveModifiedImage()` call
-                    // with the correct "resModel" and "resId" parameters.
+                if (this._doNotSaveImage(dirtyEditable, editableEl, savedImageInfoDict, el, resModel, resId, resField)) {
                     return;
                 }
                 await this._saveModifiedImage(el, resModel, resId, resField, type);
@@ -1233,6 +1228,40 @@ export class Wysiwyg extends Component {
     }
     isSelectionInEditable() {
         return this.odooEditor.isSelectionInEditable();
+    }
+    /**
+     * Checks if an image should go through the saving process or not.
+     *
+     * @param {HTMLElement} closestDirtyEditableEl - The closest dirty editable
+     * element to the image.
+     * @param {HTMLElement} currentEditableEl - An editable element that
+     * contains the image.
+     * @param {Object} savedImageInfoDict - The info of the already saved
+     * images.
+     * @param {HTMLElement} imgToSaveEl - The image to save.
+     * @param {string} resModel - The res model linked to currentEditableEl.
+     * @param {string} resId - The res id linked to currentEditableEl.
+     * @param {string} resField - The res field linked to currentEditableEl.
+     * @returns True if the image should not be saved.
+     */
+    _doNotSaveImage(closestDirtyEditableEl, currentEditableEl, savedImageInfoDict, imgToSaveEl, resModel, resId, resField) {
+        if (closestDirtyEditableEl && closestDirtyEditableEl !== currentEditableEl) {
+            // Do not do the save image process as there is an editable element
+            // closer to the image that will perform it with the correct
+            // "resModel", "resId" and "resField" parameters.
+            return true;
+        }
+        const savedImageInfo = savedImageInfoDict[imgToSaveEl.getAttribute("src")];
+        if (savedImageInfo
+            && savedImageInfo["resModel"] === resModel
+            && savedImageInfo["resId"] === resId
+            && savedImageInfo["resField"] === resField) {
+                // The image is duplicated and has already been saved (e.g. logo
+                // of the website), do not save it again.
+                return true;
+        }
+        savedImageInfoDict[imgToSaveEl.getAttribute("src")] = {"resModel": resModel, "resId": resId, "resField": resField};
+        return false;
     }
     /**
      * Start or resume the Odoo field changes muation observers.
