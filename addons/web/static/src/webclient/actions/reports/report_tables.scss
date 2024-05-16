@@ -39,3 +39,63 @@ div#total {
         border-top: $border-width solid $border-color;
     }
 }
+
+.o_table_boxed {
+    table {
+        position: relative;
+
+        &::before {
+            // Avoid inner borders overlapping the table borders
+            content: '';
+            @include o-position-absolute(0, 0, 0, 0);
+            border: $border-width solid $gray-700;
+        }
+
+        thead {
+            text-transform: uppercase;
+
+            th:not(:last-child) {
+                border-right: $border-width solid $gray-700;
+            }
+
+            th {
+                border-bottom: $border-width solid $border-color;
+            }
+        }
+
+        tbody {
+            tr:not(:last-child) td {
+                border-bottom: $border-width solid $gray-400;
+            }
+
+            td:not(:last-child) {
+                border-right: $border-width solid $gray-400;
+            }
+
+            &.o_line_section td,
+            &.o_line_note td,
+            &.is-subtotal td {
+                border-top: $border-width solid $gray-700;
+                border-bottom: $border-width solid $gray-700;
+            }
+
+            &.o_line_section td {
+                background-color: rgba($gray-200, .5);
+            }
+
+            td.o_price_total, .o_taxes td {
+                background-color: rgba($gray-200, .5);
+            }
+        }
+    }
+
+    .o_total_table {
+        td {
+            border-right: none;
+        }
+
+        &::before {
+            border-top: none;
+        }
+    }
+}
