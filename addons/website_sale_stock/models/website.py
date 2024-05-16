@@ -27,7 +27,7 @@ class Website(models.Model):
     # FIXME VFE check if still needed
     def sale_get_order(self, *args, **kwargs):
         so = super().sale_get_order(*args, **kwargs)
-        return so.with_context(warehouse=so.warehouse_id.id) if so else so
+        return so.with_context(warehouse_id=so.warehouse_id.id) if so else so
 
     def _get_product_available_qty(self, product):
-        return product.with_context(warehouse=self._get_warehouse_available()).free_qty
+        return product.with_context(warehouse_id=self._get_warehouse_available()).free_qty

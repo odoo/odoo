@@ -318,7 +318,7 @@ class TestVirtualAvailable(TestStockCommon):
             (warehouses.ids, False, 1111.0),
             (warehouses.ids, (other_loc | sub_loc02).ids, 1001),
         ]:
-            product_qty = self.product_3.with_context(warehouse=wh, location=loc).qty_available
+            product_qty = self.product_3.with_context(warehouse_id=wh, location=loc).qty_available
             self.assertEqual(product_qty, expected)
 
     def test_change_type_tracked_product(self):

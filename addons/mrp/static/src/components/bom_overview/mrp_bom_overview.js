@@ -79,7 +79,7 @@ export class BomOverviewComponent extends Component {
             this.state.bomQuantity,
             this.state.currentVariantId,
         ];
-        const context = this.state.currentWarehouse ? { warehouse: this.state.currentWarehouse.id } : {};
+        const context = this.state.currentWarehouse ? { warehouse_id: this.state.currentWarehouse.id } : {};
         const bomData = await this.orm.call(
             "report.mrp.report_bom_structure",
             "get_html",

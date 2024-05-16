@@ -689,7 +689,7 @@ class MrpProduction(models.Model):
             warehouse = order.location_dest_id.warehouse_id
             order.forecasted_issue = False
             if order.product_id:
-                virtual_available = order.product_id.with_context(warehouse=warehouse.id, to_date=order.date_start).virtual_available
+                virtual_available = order.product_id.with_context(warehouse_id=warehouse.id, to_date=order.date_start).virtual_available
                 if order.state == 'draft':
                     virtual_available += order.product_uom_qty
                 if virtual_available < 0:
@@ -1025,7 +1025,7 @@ class MrpProduction(models.Model):
         }
         warehouse = self.picking_type_id.warehouse_id
         if warehouse:
-            action['context']['warehouse'] = warehouse.id
+            action['context']['warehouse_id'] = warehouse.id
         return action
 
     def action_update_bom(self):

@@ -70,7 +70,7 @@ export class BomOverviewLine extends Component {
             active_id: this.data.link_id,
         };
         if (this.props.currentWarehouseId) {
-            action.context["warehouse"] = this.props.currentWarehouseId;
+            action.context["warehouse_id"] = this.props.currentWarehouseId;
         }
         return this.actionService.doAction(action);
     }
