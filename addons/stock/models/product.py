@@ -487,7 +487,7 @@ class Product(models.Model):
                 'search_default_product_id': self.ids[0]
             })
         else:
-            action['domain'] = expression.AND([action.get('domain', []), [('product_id', 'in', self.ids)]])
+            action['domain'] = expression.AND([action.get('domain') or [], [('product_id', 'in', self.ids)]])
         return action
 
     def action_view_routes(self):
