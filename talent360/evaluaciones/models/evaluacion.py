@@ -993,3 +993,4 @@ class Evaluacion(models.Model):
             "view_mode": "form",
             "target": "new",
         }
+    

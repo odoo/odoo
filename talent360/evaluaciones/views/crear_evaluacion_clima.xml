@@ -9,6 +9,7 @@
                 <header>
                     <button name="evaluacion_action_tree" string="Guardar" type="object" class="btn-primary my-3"/>
                     <button class="btn btn-primary" name="action_asignar_usuarios_externos" string="Asignar usuarios externos" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
+                    <button name="action_agregar_catalogo_preguntas" string="Agregar catálogo de preguntas clima"  class="btn-primary my-3"/>
                 </header>
                 <sheet>
                     <h1>Crear evaluación Clima Laboral</h1>
@@ -32,16 +33,25 @@
                         <field name="incluir_demograficos"/>
                     </group>
                     <group>
-                     <group>
-                        <field name="mensaje" placeholder="Escribe aquí tu mensaje de bienvenida"/>
-                    </group>
+                        <group>
+                            <field name="mensaje" placeholder="Escribe aquí tu mensaje de bienvenida"/>
+                        </group>
                         <notebook>
                             <page string="Preguntas">
-                                <field class="lh-lg w-100" readonly="1" colspan="2" name="pregunta_ids">
-                                    <tree create="false" editable="bottom">
-                                        <field class="lh-m" name="pregunta_texto" readonly="1"/>
-                                        <field class="lh-m" name="tipo" readonly="1"/>
+                                <field class="lh-lg w-100" name="pregunta_ids">
+                                    <tree create="true" delete="true" editable="bottom">
+                                        <field class="lh-m" name="pregunta_texto"/>
+                                        <field class="lh-m" name="tipo"/>
                                     </tree>
+                                    <form string="Agregar pregunta">
+                                        <group>
+                                            <field name="pregunta_texto"/>
+                                            <field name="tipo"/>
+                                            <field name="categoria"/>
+                                            <field name="opcion_ids"/> 
+                                            <field name="respuesta_ids"/>
+                                        </group>
+                                    </form>
                                 </field>
                             </page>
                             <page string="Asignados">
@@ -84,14 +94,14 @@
                                         width: 60%;
                                     }
 
-                                   .color-pill {
+                                    .color-pill {
                                         display: inline-block;
                                         width: 50px;
                                         height: 25px;
                                         border-radius: 10%;
                                         background-color: inherit; 
-                                        margin-top : 20%;
-                                        margin-left : 20%;
+                                        margin-top: 20%;
+                                        margin-left: 20%;
                                     }
 
                                     .rojo { background-color: #E46053; }
