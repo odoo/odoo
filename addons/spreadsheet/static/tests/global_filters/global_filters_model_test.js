@@ -2370,4 +2370,35 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         moveGlobalFilter(model, lastYearFilterId, -2);
         assert.deepEqual(model.getters.getGlobalFilters()[0].id, lastYearFilterId);
     });
+
+    QUnit.test("Spreadsheet pivot are not impacted by global filter", function (assert) {
+        // This test is to ensure that the start of evaluation do not crash.
+        // It will be removed as soon as the feature is implemented in spreadsheet.
+        assert.expect(0);
+        new Model({
+            sheets: [{ id: "1" }],
+            pivots: [
+                {
+                    name: "Pivot",
+                    type: "SPREADSHEET",
+                    dataSet: {
+                        zone: toZone("A1:D5"),
+                        sheetId: "1",
+                    },
+                    rows: [],
+                    columns: [],
+                    measures: [],
+                },
+            ],
+            globalFilters: [
+                {
+                    id: "1",
+                    type: "date",
+                    label: "This year",
+                    defaultValue: "this_year",
+                    rangeType: "fixedPeriod",
+                },
+            ],
+        });
+    });
 });

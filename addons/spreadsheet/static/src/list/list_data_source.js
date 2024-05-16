@@ -18,12 +18,12 @@ const { toNumber } = spreadsheet.helpers;
 const { DEFAULT_LOCALE } = spreadsheet.constants;
 
 /**
- * @typedef {import("@spreadsheet/data_sources/metadata_repository").Field} Field
+ * @typedef {import("@spreadsheet").OdooFields} OdooFields
  *
  * @typedef {Object} ListMetaData
  * @property {Array<string>} columns
  * @property {string} resModel
- * @property {Record<string, Field>} fields
+ * @property {OdooFields} fields
  *
  * @typedef {Object} ListSearchParams
  * @property {Array<string>} orderBy

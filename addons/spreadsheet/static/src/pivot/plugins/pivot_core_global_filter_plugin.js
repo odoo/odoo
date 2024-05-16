@@ -7,7 +7,6 @@
  * @typedef {import("@spreadsheet").GFLocalPivot} GFLocalPivot
  *
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
- * @typedef {import("@spreadsheet").SPTableCell} SPTableCell
  */
 
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";

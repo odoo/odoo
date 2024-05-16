@@ -3,6 +3,8 @@ import {
   UIPlugin,
   DispatchResult,
   CommandResult,
+  AddPivotCommand,
+  UpdatePivotCommand,
 } from "@odoo/o-spreadsheet";
 import * as CancelledReason from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
@@ -52,57 +54,12 @@ declare module "@spreadsheet" {
 
   // CORE
 
-  type AddPivotDefinition = SpreadsheetPivotDefinition;
-
-  export interface OdooAddPivotPayload {
-    type: "ODOO";
-    definition: OdooPivotDefinition;
-  }
-
-  export type ExtendedAddPivotDefinition =
-    | AddPivotDefinition
-    | OdooPivotDefinition;
-
-  export interface AddPivotCommand {
-    type: "ADD_PIVOT";
-    pivotId: string;
-    pivot: AddPivotDefinition;
-  }
-
-  export interface UpdatePivotCommand {
-    type: "UPDATE_PIVOT";
-    pivotId: string;
-    pivot: ExtendedAddPivotDefinition;
-  }
-
-  export interface InsertPivotCommand {
-    type: "INSERT_PIVOT";
-    pivotId: string;
-    sheetId: string;
-    col: number;
-    row: number;
-    table: SPTableData;
-  }
-
   export interface ExtendedAddPivotCommand extends AddPivotCommand {
-    pivot: ExtendedAddPivotDefinition;
+    pivot: ExtendedPivotCoreDefinition;
   }
 
-  export interface RenamePivotCommand {
-    type: "RENAME_PIVOT";
-    pivotId: string;
-    name: string;
-  }
-
-  export interface RemovePivotCommand {
-    type: "REMOVE_PIVOT";
-    pivotId: string;
-  }
-
-  export interface DuplicatePivotCommand {
-    type: "DUPLICATE_PIVOT";
-    pivotId: string;
-    newPivotId: string;
+  export interface ExtendedUpdatePivotCommand extends UpdatePivotCommand {
+    pivot: ExtendedPivotCoreDefinition;
   }
 
   export interface AddThreadCommand {
@@ -144,13 +101,9 @@ declare module "@spreadsheet" {
   }
 
   type OdooCoreCommand =
-    | InsertPivotCommand
-    | RenamePivotCommand
-    | RemovePivotCommand
-    | DuplicatePivotCommand
-    | UpdatePivotDomainCommand
-    | UpdatePivotCommand
     | ExtendedAddPivotCommand
+    | ExtendedUpdatePivotCommand
+    | UpdatePivotDomainCommand
     | AddThreadCommand
     | DeleteThreadCommand
     | EditThreadCommand;

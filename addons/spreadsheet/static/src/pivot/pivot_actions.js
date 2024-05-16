@@ -38,13 +38,13 @@ export const SEE_RECORDS_PIVOT = async (position, env) => {
 
 /**
  * @param {import("@odoo/o-spreadsheet").CellPosition} position
- * @param {import("@spreadsheet").SpreadsheetChildEnv} env
+ * @param {import("@spreadsheet").OdooGetters} getters
  * @returns {boolean}
  */
-export const SEE_RECORDS_PIVOT_VISIBLE = (position, env) => {
-    const cell = env.model.getters.getCorrespondingFormulaCell(position);
-    const evaluatedCell = env.model.getters.getEvaluatedCell(position);
-    const argsDomain = env.model.getters.getPivotDomainArgsFromPosition(position);
+export const SEE_RECORDS_PIVOT_VISIBLE = (position, getters) => {
+    const cell = getters.getCorrespondingFormulaCell(position);
+    const evaluatedCell = getters.getEvaluatedCell(position);
+    const argsDomain = getters.getPivotDomainArgsFromPosition(position);
     return (
         evaluatedCell.type !== "empty" &&
         evaluatedCell.type !== "error" &&
@@ -64,18 +64,18 @@ export const SEE_RECORDS_PIVOT_VISIBLE = (position, env) => {
  *
  * @returns {boolean}
  */
-export function SET_FILTER_MATCHING_CONDITION(position, env) {
-    if (!SEE_RECORDS_PIVOT_VISIBLE(position, env)) {
+export function SET_FILTER_MATCHING_CONDITION(position, getters) {
+    if (!SEE_RECORDS_PIVOT_VISIBLE(position, getters)) {
         return false;
     }
-    const cell = env.model.getters.getCorrespondingFormulaCell(position);
+    const cell = getters.getCorrespondingFormulaCell(position);
 
-    const pivotId = env.model.getters.getPivotIdFromPosition(position);
-    const domainArgs = env.model.getters.getPivotDomainArgsFromPosition(position);
+    const pivotId = getters.getPivotIdFromPosition(position);
+    const domainArgs = getters.getPivotDomainArgsFromPosition(position);
     if (domainArgs === undefined) {
         return false;
     }
-    const matchingFilters = env.model.getters.getFiltersMatchingPivotArgs(pivotId, domainArgs);
+    const matchingFilters = getters.getFiltersMatchingPivotArgs(pivotId, domainArgs);
     const pivotFunction = getFirstPivotFunction(cell.compiledFormula.tokens).functionName;
     return (
         (pivotFunction === "PIVOT.VALUE" ||

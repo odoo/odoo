@@ -30,7 +30,7 @@ cellMenuRegistry.add("pivot_see_records", {
     },
     isVisible: (env) => {
         const position = env.model.getters.getActivePosition();
-        return SEE_RECORDS_PIVOT_VISIBLE(position, env);
+        return SEE_RECORDS_PIVOT_VISIBLE(position, env.model.getters);
     },
     icon: "o-spreadsheet-Icon.SEE_RECORDS",
 });
