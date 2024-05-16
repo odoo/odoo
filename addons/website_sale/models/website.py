@@ -362,7 +362,7 @@ class Website(models.Model):
         return expression.AND([self._product_domain(), website_domain])
 
     def _product_domain(self):
-        return [('sale_ok', '=', True), ('product_variant_ids.hide_from_shop', '=', False)]
+        return [('sale_ok', '=', True)]
 
     def sale_get_order(self, force_create=False, update_pricelist=False):
         """ Return the current sales order after mofications specified by params.

@@ -19,8 +19,8 @@
                         ('date_end','&gt;=',time.strftime('%Y-%m-%d 00:00:00')),
                         '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
                     ]"
-                    invisible="product_type != 'service' or not is_event_ticket"
-                    required="product_type == 'service' and is_event_ticket"
+                    invisible="not is_event_ticket"
+                    required="is_event_ticket"
                     options="{'no_open': True, 'no_create': True}"/>
                 <field
                     name="event_ticket_id"
@@ -28,8 +28,8 @@
                         ('event_id', '=', event_id), ('product_id','=',product_id),
                          '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
                     ]"
-                    invisible="product_type != 'service' or not event_id"
-                    required="product_type == 'service' and event_id"
+                    invisible="not is_event_ticket or not event_id"
+                    required="is_event_ticket and event_id"
                     options="{'no_open': True, 'no_create': True}"/>
             </xpath>
             <xpath expr="//field[@name='order_line']//tree//field[@name='product_template_id']" position="after">
@@ -39,16 +39,16 @@
                         ('date_end','&gt;=',time.strftime('%Y-%m-%d 00:00:00')),
                         '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
                     ]"
-                    invisible="product_type != 'service' or not is_event_ticket"
-                    required="product_type == 'service' and is_event_ticket"
+                    invisible="not is_event_ticket"
+                    required="is_event_ticket"
                     options="{'no_open': True, 'no_create': True}"/>
                 <field name="event_ticket_id" optional="hide"
                     domain="[
                         ('event_id', '=', event_id), ('product_id','=',product_id),
                          '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
                     ]"
-                    invisible="product_type != 'service' or not event_id"
-                    required="product_type == 'service' and event_id"
+                    invisible="not is_event_ticket or not event_id"
+                    required="is_event_ticket and event_id"
                     options="{'no_open': True, 'no_create': True}"/>
             </xpath>
         </field>

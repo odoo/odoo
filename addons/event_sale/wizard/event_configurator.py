@@ -13,6 +13,7 @@ class EventConfigurator(models.TransientModel):
     event_id = fields.Many2one('event.event', string="Event")
     event_ticket_id = fields.Many2one('event.event.ticket', string="Ticket Type",
         compute="_compute_event_ticket_id", readonly=False, store=True)
+    has_available_tickets = fields.Boolean("Has Available Tickets", compute="_compute_has_available_tickets")
 
     @api.constrains('event_id', 'event_ticket_id')
     def check_event_id(self):
@@ -23,6 +24,17 @@ class EventConfigurator(models.TransientModel):
                     _('Invalid ticket choice "%(ticket_name)s" for event "%(event_name)s".'))
         if error_messages:
             raise ValidationError('\n'.join(error_messages))
+
+    @api.depends('product_id')
+    def _compute_has_available_tickets(self):
+        product_ticket_data = self.env['event.event.ticket']._read_group([
+            ('product_id', 'in', self.product_id.ids),
+            ('event_id.date_end', '>=', fields.Date.today())],
+            ['product_id'],
+            ['__count'])
+        mapped_data = {product: ticket_count for product, ticket_count in product_ticket_data}
+        for configurator in self:
+            configurator.has_available_tickets = bool(mapped_data.get(configurator.product_id, 0))
 
     @api.depends('event_id')
     def _compute_event_ticket_id(self):

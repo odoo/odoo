@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
@@ -28,10 +28,10 @@ class SaleOrder(models.Model):
         unconfirmed_registrations._update_mail_schedulers()
 
         for so in self:
-            event_so_lines = so.order_line.filtered('event_id')
+            event_so_lines = so.order_line.filtered('is_event_ticket')
             if not event_so_lines:
                 continue
-            so_lines_missing_events = so.order_line.filtered(lambda line: line.is_event_ticket and not line.event_id)
+            so_lines_missing_events = event_so_lines.filtered(lambda line: not line.event_id)
             if so_lines_missing_events:
                 so_lines_descriptions = "".join(f"\n- {so_line_description.name}" for so_line_description in so_lines_missing_events)
                 raise ValidationError(_("Please make sure all your event related lines are configured before confirming this order:%s", so_lines_descriptions))
@@ -67,4 +67,4 @@ class SaleOrder(models.Model):
         :rtype: list
         """
         domain = super()._get_product_catalog_domain()
-        return expression.AND([domain, [('is_event_ticket', '=', 'False')]])
+        return expression.AND([domain, [('is_event_ticket', '=', False)]])

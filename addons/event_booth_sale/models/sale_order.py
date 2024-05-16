@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
@@ -25,10 +24,11 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for so in self:
-            if not any(line.product_type == 'service' and line.is_event_booth for line in so.order_line):
+            event_booth_lines = so.order_line.filtered('is_event_booth')
+            if not event_booth_lines:
                 continue
-            so_lines_missing_booth = so.order_line.filtered(
-                lambda line: line.product_type == 'service' and line.is_event_booth and not line.event_booth_pending_ids
+            so_lines_missing_booth = event_booth_lines.filtered(
+                lambda line: not line.event_booth_pending_ids
             )
             if so_lines_missing_booth:
                 so_lines_descriptions = "".join(f"\n- {so_line_description.name}" for so_line_description in so_lines_missing_booth)
@@ -48,4 +48,4 @@ class SaleOrder(models.Model):
         :rtype: list
         """
         domain = super()._get_product_catalog_domain()
-        return expression.AND([domain, [('is_event_booth', '=', 'False')]])
+        return expression.AND([domain, [('is_event_booth', '=', False)]])

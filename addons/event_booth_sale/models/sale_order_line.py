@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -17,7 +16,7 @@ class SaleOrderLine(models.Model):
     event_booth_registration_ids = fields.One2many(
         'event.booth.registration', 'sale_order_line_id', string='Confirmed Registration')
     event_booth_ids = fields.One2many('event.booth', 'sale_order_line_id', string='Confirmed Booths')
-    is_event_booth = fields.Boolean(related="product_id.is_event_booth")
+    is_event_booth = fields.Boolean(related='product_id.is_event_booth')
 
     @api.depends('event_booth_ids')
     def _compute_name_short(self):

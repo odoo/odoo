@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -16,7 +16,7 @@ class SaleOrderLine(models.Model):
         compute="_compute_event_ticket_id", store=True, readonly=False, precompute=True,
         help="Choose an event ticket and it will automatically create a registration for this event ticket.")
     registration_ids = fields.One2many('event.registration', 'sale_order_line_id', string="Registrations")
-    is_event_ticket = fields.Boolean(related="product_id.is_event_ticket")
+    is_event_ticket = fields.Boolean(related='product_id.is_event_ticket')
 
     @api.constrains('event_id', 'event_ticket_id', 'product_id')
     def _check_event_registration_ticket(self):

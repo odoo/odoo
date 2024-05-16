@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import account_move
-from . import product
+from . import product_product
 from . import event_booth_registration
 from . import event_booth
 from . import event_booth_category

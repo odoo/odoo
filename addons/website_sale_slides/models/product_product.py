@@ -21,12 +21,6 @@ class Product(models.Model):
         for product in self:
             product.is_slide_channel = has_slide_channel_per_product.get(product.id, False)
 
-    @api.depends('is_slide_channel')
-    def _compute_hide_from_shop(self):
-        super()._compute_hide_from_shop()
-        for product in self:
-            product.hide_from_shop = product.hide_from_shop or product.is_slide_channel
-
     def get_product_multiline_description_sale(self):
         payment_channels = self.channel_ids.filtered(lambda course: course.enroll == 'payment')
 
