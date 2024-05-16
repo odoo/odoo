@@ -260,7 +260,7 @@ export class DiscussCoreCommon {
             if (message.isSelfAuthored) {
                 channel.seen_message_id = message.id;
             } else {
-                if (notif.id > this.store.initBusId) {
+                if (notif.id > this.store.message_unread_counter_bus_id) {
                     channel.message_unread_counter++;
                 }
             }
