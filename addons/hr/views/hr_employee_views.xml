@@ -192,7 +192,19 @@
                                 <group>
                                     <group string='Status' name="active_group">
                                         <field name="employee_type"/>
-                                        <field name="user_id" string="Related User" domain="[('company_ids', 'in', company_id), ('share', '=', False)]" context="{'default_create_employee_id': id}" widget="many2one_avatar_user"/>
+                                        <label for="user_id"/>
+                                        <div class="o_row">
+                                            <field name="user_id"
+                                                string="Related User"
+                                                domain="[('company_ids', 'in', company_id), ('share', '=', False)]"
+                                                context="{'default_create_employee_id': id}"
+                                                widget="many2one_avatar_user"/>
+                                            <button string="Create User"
+                                                class="btn btn-link"
+                                                type="object"
+                                                name="action_create_user"
+                                                invisible="user_id"/>
+                                        </div>
                                     </group>
                                     <group string="Attendance/Point of Sale" name="identification_group">
                                         <field name="pin" string="PIN Code"/>
@@ -450,18 +462,6 @@
             <field name="view_mode">form,tree</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
-        </record>
-
-        <record id="action_hr_employee_create_user" model="ir.actions.server">
-            <field name="name">Create User</field>
-            <field name="model_id" ref="model_hr_employee"/>
-            <field name="binding_model_id" ref="model_hr_employee"/>
-            <field name="binding_view_types">form</field>
-            <field name="groups_id" eval="[(4, ref('base.group_erp_manager'))]"/>
-            <field name="state">code</field>
-            <field name="code">
-                action = records.action_create_user()
-            </field>
         </record>
 
         <record id="act_employee_from_department" model="ir.actions.act_window">
