@@ -139,7 +139,7 @@ test("No attachment loading spinner when switching from loading record to creati
     await contains("button[aria-label='Attach files']");
     await advanceTime(DELAY_FOR_SPINNER);
     await contains("button[aria-label='Attach files'] .fa-spin");
-    await click(".o_control_panel_collapsed_create .o_form_button_create");
+    await click(".o_control_panel_main_buttons .o_form_button_create");
     await contains("button[aria-label='Attach files'] .fa-spin", { count: 0 });
 });
 
@@ -501,7 +501,7 @@ test('chatter just contains "creating a new record" message during the creation 
     };
     await start({ serverData: { views } });
     await openFormView("res.partner", partnerId);
-    await click(".o_control_panel_collapsed_create .o_form_button_create");
+    await click(".o_control_panel_main_buttons .o_form_button_create");
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-body", { text: "Creating a new record..." });
 });

@@ -40,7 +40,7 @@ test("MRP documents kanban basic rendering", async () => {
     registerArchs(newArchs);
     await start();
     await openView({ res_model: "mrp.document", views: [[false,"kanban"]] });
-    await contains(".d-xl-inline-flex .o_mrp_documents_kanban_upload");
+    await contains(".o_mrp_documents_kanban_upload");
     await contains(".o_kanban_renderer .o_kanban_record:not(.o_kanban_ghost)", { count: 3 });
     // check control panel buttons
     await contains(".o_cp_buttons .btn-primary", { text: "Upload"});
@@ -66,7 +66,7 @@ test("mrp: upload multiple files", async () => {
         "FILE_UPLOAD_ADDED",
         () => step("xhrSend")
     );
-    await inputFiles(".o_control_panel_collapsed_create .o_input_file", [
+    await inputFiles(".o_control_panel_main_buttons .o_input_file", [
         await createFile({
             name: "text1.txt",
             content: "hello, world",
@@ -74,7 +74,7 @@ test("mrp: upload multiple files", async () => {
         }),
     ]);
     assertSteps(["xhrSend"]);
-    await inputFiles(".o_control_panel_collapsed_create .o_input_file", [
+    await inputFiles(".o_control_panel_main_buttons .o_input_file", [
         await createFile({
             name: "text2.txt",
             content: "hello, world",
@@ -155,7 +155,7 @@ test("mrp: upload progress bars", async () => {
         },
     });
 
-    await inputFiles(".o_control_panel_collapsed_create .o_input_file", [
+    await inputFiles(".o_control_panel_main_buttons .o_input_file", [
         await createFile({
             name: "text1.txt",
             content: "hello, world",

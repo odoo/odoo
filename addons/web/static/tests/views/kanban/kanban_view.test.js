@@ -232,9 +232,7 @@ test("basic ungrouped rendering", async () => {
 
     expect(".o_kanban_view").toHaveClass("o_kanban_test");
     expect(".o_kanban_renderer").toHaveClass("o_kanban_ungrouped");
-    expect(
-        ".o_control_panel_main_buttons .d-none.d-xl-inline-flex button.o-kanban-button-new"
-    ).toHaveCount(1);
+    expect(".o_control_panel_main_buttons button.o-kanban-button-new").toHaveCount(1);
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
     expect(".o_kanban_ghost").toHaveCount(6);
     expect(".o_kanban_record:contains(gnap)").toHaveCount(1);
@@ -438,9 +436,7 @@ test.tags("desktop")("basic grouped rendering", async () => {
 
     expect(".o_kanban_view").toHaveClass("o_kanban_test");
     expect(".o_kanban_renderer").toHaveClass("o_kanban_grouped");
-    expect(
-        ".o_control_panel_main_buttons .d-none.d-xl-inline-flex button.o-kanban-button-new"
-    ).toHaveCount(1);
+    expect(".o_control_panel_main_buttons button.o-kanban-button-new").toHaveCount(1);
     expect(".o_kanban_group").toHaveCount(2);
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1);
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(3);
@@ -491,9 +487,7 @@ test("basic grouped rendering with no record", async () => {
     });
     expect(".o_kanban_grouped").toHaveCount(1);
     expect(".o_view_nocontent").toHaveCount(1);
-    expect(
-        ".o_control_panel_main_buttons .d-none.d-xl-inline-flex button.o-kanban-button-new"
-    ).toHaveCount(1, {
+    expect(".o_control_panel_main_buttons button.o-kanban-button-new").toHaveCount(1, {
         message:
             "There should be a 'New' button even though there is no column when groupby is not a many2one",
     });
@@ -1592,9 +1586,7 @@ test.tags("desktop")("create in grouped on m2o", async () => {
     });
 
     expect(".o_kanban_group.o_group_draggable").toHaveCount(2);
-    expect(
-        ".o_control_panel_main_buttons .d-none.d-xl-inline-flex button.o-kanban-button-new"
-    ).toHaveCount(1);
+    expect(".o_control_panel_main_buttons button.o-kanban-button-new").toHaveCount(1);
     expect(".o_column_quick_create").toHaveCount(1);
 
     await createKanbanRecord();
@@ -8172,9 +8164,7 @@ test("update buttons after column creation", async () => {
     await editKanbanColumnName("new column");
     await validateKanbanColumn();
 
-    expect(
-        ".o_control_panel_main_buttons .d-none.d-xl-inline-flex button.o-kanban-button-new"
-    ).toHaveCount(1);
+    expect(".o_control_panel_main_buttons button.o-kanban-button-new").toHaveCount(1);
 });
 
 test.tags("desktop")("group_by_tooltip option when grouping on a many2one", async () => {

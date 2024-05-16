@@ -18,7 +18,7 @@ export async function clickKanbanRecord(options) {
 }
 
 export function createKanbanRecord() {
-    return contains(".o_control_panel_main_buttons .d-none button.o-kanban-button-new").click();
+    return contains(".o_control_panel_main_buttons button.o-kanban-button-new").click();
 }
 
 export function discardKanbanRecord() {

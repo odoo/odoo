@@ -400,9 +400,7 @@ test.tags("desktop")("context is correctly passed to the client action report", 
     await getService("action").doAction(action);
     expect(["/report/html/ennio.morricone/99"]).toVerifySteps();
 
-    await contains(
-        ".o_control_panel_main_buttons .d-none.d-xl-inline-flex button[title='Print']"
-    ).click();
+    await contains(".o_control_panel_main_buttons button[title='Print']").click();
     expect(["/report/check_wkhtmltopdf", "/report/download"]).toVerifySteps();
 });
 

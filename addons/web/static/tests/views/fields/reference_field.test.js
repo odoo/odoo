@@ -758,12 +758,12 @@ test("Reference field with default value in list view", async () => {
             </tree>
         `,
     });
-    click(".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_add");
+    click(".o_control_panel_main_buttons .o_list_button_add");
     await animationFrame();
     click('.o_list_char[name="name"] input');
     edit("Blabla");
     await runAllTimers();
-    click(".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_save");
+    click(".o_control_panel_main_buttons .o_list_button_save");
     await animationFrame();
 });
 
