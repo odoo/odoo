@@ -172,6 +172,10 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
 
         for (const filter of filters) {
             const dataSource = this.getters.getPivot(pivotId);
+            const { type } = this.getters.getPivotCoreDefinition(pivotId);
+            if (type !== "ODOO") {
+                continue;
+            }
             const { field, granularity: time } = dataSource.parseGroupField(argField);
             const pivotFieldMatching = this.getters.getPivotFieldMatching(pivotId, filter.id);
             if (pivotFieldMatching && pivotFieldMatching.chain === field.name) {
@@ -220,7 +224,7 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
     // ---------------------------------------------------------------------
 
     /**
-     * @param {import("../../data_sources/metadata_repository").Field} field
+     * @param {import("@spreadsheet").OdooField} field
      * @param {"day" | "week" | "month" | "quarter" | "year"} granularity
      * @returns {string | undefined}
      */
@@ -267,7 +271,9 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
      *
      */
     _addDomains() {
-        for (const pivotId of this.getters.getPivotIds()) {
+        for (const pivotId of this.getters
+            .getPivotIds()
+            .filter((pivotId) => this.getters.getPivot(pivotId).type === "ODOO")) {
             this._addDomain(pivotId);
         }
     }
@@ -279,6 +285,8 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
     _getPivotsWaitForReady() {
         return this.getters
             .getPivotIds()
-            .map((pivotId) => this.getters.getPivot(pivotId).loadMetadata());
+            .map((pivotId) => this.getters.getPivot(pivotId))
+            .filter((pivot) => pivot.type === "ODOO")
+            .map((pivot) => pivot.loadMetadata());
     }
 }

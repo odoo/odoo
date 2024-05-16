@@ -46,12 +46,12 @@ export const SEE_RECORD_LIST = async (position, env) => {
 
 /**
  * @param {import("@odoo/o-spreadsheet").CellPosition} position
- * @param {import("@spreadsheet").SpreadsheetChildEnv} env
+ * @param {import("@spreadsheet").OdooGetters} getters
  * @returns {boolean}
  */
-export const SEE_RECORD_LIST_VISIBLE = (position, env) => {
-    const evaluatedCell = env.model.getters.getEvaluatedCell(position);
-    const cell = env.model.getters.getCell(position);
+export const SEE_RECORD_LIST_VISIBLE = (position, getters) => {
+    const evaluatedCell = getters.getEvaluatedCell(position);
+    const cell = getters.getCell(position);
     return (
         evaluatedCell.type !== "empty" &&
         evaluatedCell.type !== "error" &&
