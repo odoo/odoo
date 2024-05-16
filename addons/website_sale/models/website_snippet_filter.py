@@ -93,6 +93,10 @@ class WebsiteSnippetFilter(models.Model):
         website = self.env['website'].get_current_website()
         search_domain = self.env.context.get('search_domain')
         limit = self.env.context.get('limit')
+        hide_variants = False
+        if search_domain and 'hide_variants' in search_domain:
+            hide_variants = True
+            search_domain.remove('hide_variants')
         domain = expression.AND([
             [('website_published', '=', True)] if self.env.user._is_public() else [],
             website.website_domain(),
@@ -100,7 +104,9 @@ class WebsiteSnippetFilter(models.Model):
             search_domain or [],
         ])
         products = handler(website, limit, domain, **kwargs)
-        return dynamic_filter._filter_records_to_values(products, is_sample=False)
+        return dynamic_filter.with_context(
+            hide_variants=hide_variants,
+        )._filter_records_to_values(products, is_sample=False)
 
     def _get_products_latest_sold(self, website, limit, domain, **kwargs):
         products = self.env['product.product']
