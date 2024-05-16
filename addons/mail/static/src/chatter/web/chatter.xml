@@ -96,7 +96,7 @@
                 <t t-if="props.has_activities and activities.length and !state.isSearchOpen">
                     <t t-call="mail.ActivityList"/>
                 </t>
-                <div t-if="state.isAttachmentBoxOpened" class="o-mail-AttachmentBox position-relative" t-ref="attachment-box">
+                <div t-if="state.isAttachmentBoxOpened" class="o-mail-AttachmentBox position-relative">
                     <div class="d-flex align-items-center">
                         <hr class="flex-grow-1"/>
                         <span class="p-3 fw-bold">
