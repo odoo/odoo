@@ -473,6 +473,8 @@ class MailMail(models.Model):
                 # TDE note: could be great to pre-detect missing to/cc and skip sending it
                 # to go directly to failed state update
                 for email in email_list:
+                    if email.get('headers'):
+                        headers.update(email.get('headers'))
                     msg = IrMailServer.build_email(
                         email_from=email_from,
                         email_to=email.get('email_to'),
