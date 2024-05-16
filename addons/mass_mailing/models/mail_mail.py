@@ -74,6 +74,19 @@ class MailMail(models.Model):
             for url_to_replace, new_url in urls_to_replace:
                 if url_to_replace in res['body']:
                     res['body'] = res['body'].replace(url_to_replace, new_url if new_url else '#')
+            if urls_to_replace[0][1]:
+                # if we compute a unique unsubscribe URL we prepare the related
+                # unsubscribe email headers for RFC 8058
+                res.update(
+                    {
+                        "headers": {
+                            "List-Unsubscribe": f"<{urls_to_replace[0][1]}>",  # grab one-click unsubscribe link
+                            "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+                            "Precedence": "list",
+                            "X-Auto-Response-Suppress": "OOF",  # avoid out-of-office replies from MS Exchange)
+                        }
+                    }
+                )
         return res
 
     def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
