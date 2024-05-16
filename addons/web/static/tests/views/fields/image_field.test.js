@@ -608,7 +608,7 @@ test("ImageField is reset when changing record", async () => {
     );
 
     await clickSave();
-    click(".o_control_panel_main_buttons .d-none .o_form_button_create");
+    click(".o_control_panel_main_buttons .o_form_button_create");
     await runAllTimers();
     await animationFrame();
     expect("img[data-alt='Binary file']").toHaveAttribute(

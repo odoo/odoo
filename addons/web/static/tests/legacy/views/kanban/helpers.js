@@ -63,7 +63,7 @@ export function getTooltips(target, groupIndex) {
 
 // Record
 export async function createRecord(target) {
-    await click(target, ".o_control_panel_main_buttons .d-none button.o-kanban-button-new");
+    await click(target, ".o_control_panel_main_buttons button.o-kanban-button-new");
 }
 
 export async function quickCreateRecord(target, groupIndex) {

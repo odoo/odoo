@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add('account_tax_group', {
     },
     {
         content: "Create new bill",
-        trigger: '.o_control_panel_main_buttons .d-none .o_list_button_add',
+        trigger: '.o_control_panel_main_buttons .o_list_button_add',
         extra_trigger: '.o_breadcrumb .text-truncate:contains("Bills")',
     },
     // Set a vendor

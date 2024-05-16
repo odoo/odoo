@@ -109,7 +109,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_hierarchy_view");
-        assert.containsN(target, ".o_hierarchy_button_add", 2);
+        assert.containsOnce(target, ".o_hierarchy_button_add");
         assert.containsOnce(target, ".o_hierarchy_view .o_hierarchy_renderer");
         assert.containsOnce(target, ".o_hierarchy_view .o_hierarchy_renderer > .o_hierarchy_container");
         assert.containsN(target, ".o_hierarchy_row", 2);

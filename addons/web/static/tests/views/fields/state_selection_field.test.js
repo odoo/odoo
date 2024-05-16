@@ -314,7 +314,7 @@ test("StateSelectionField in editable list view", async () => {
     expect(".o-dropdown--menu").toHaveCount(0, { message: "there should not be a dropdown" });
 
     // save
-    click(".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_save");
+    click(".o_control_panel_main_buttons .o_list_button_save");
     await animationFrame();
     expect(".o_state_selection_cell .o_field_state_selection span.o_status").toHaveCount(5, {
         message: "should have five status selection widgets",

@@ -298,8 +298,7 @@ QUnit.module("Views", (hooks) => {
             "right",
             "integer cells should be right aligned"
         );
-        assert.isNotVisible(target.querySelector(".d-xl-none .o_list_button_add"));
-        assert.isVisible(target.querySelector(".d-xl-inline-flex .o_list_button_add"));
+        assert.containsOnce(target, ".o_list_button_add");
         assert.isNotVisible(target.querySelector(".o_list_button_save"));
         assert.isNotVisible(target.querySelector(".o_list_button_discard"));
     });
@@ -1420,40 +1419,20 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_list_record_selector input:enabled", 5);
         assert.containsOnce(target, "td:contains(yop)", "should contain yop");
 
-        assert.containsN(
-            target,
-            ".o_list_button_add",
-            2,
-            "Should have 2 add button (small and xl screens)"
-        );
+        assert.containsOnce(target, ".o_list_button_add");
         assert.containsNone(target, ".o_list_button_save");
         assert.containsNone(target, ".o_list_button_discard");
 
         await click(target.querySelector(".o_field_cell"));
 
         assert.containsNone(target, ".o_list_button_add");
-        assert.containsN(
-            target,
-            ".o_list_button_save",
-            2,
-            "Should have 2 save button (small and xl screens)"
-        );
-        assert.containsN(
-            target,
-            ".o_list_button_discard",
-            2,
-            "Should have 2 discard button (small and xl screens)"
-        );
+        assert.containsOnce(target, ".o_list_button_save");
+        assert.containsOnce(target, ".o_list_button_discard");
         assert.containsNone(target, ".o_list_record_selector input:enabled");
 
         await click($(".o_list_button_save:visible").get(0));
 
-        assert.containsN(
-            target,
-            ".o_list_button_add",
-            2,
-            "Should have 2 add button (small and xl screens)"
-        );
+        assert.containsOnce(target, ".o_list_button_add");
         assert.containsNone(target, ".o_list_button_save");
         assert.containsNone(target, ".o_list_button_discard");
         assert.containsN(target, ".o_list_record_selector input:enabled", 5);
@@ -3287,12 +3266,7 @@ QUnit.module("Views", (hooks) => {
             await click($(".o_list_button_add:visible").get(0));
 
             assert.containsNone(target, ".o_list_button_add");
-            assert.containsN(
-                target,
-                ".o_list_button_save",
-                2,
-                "Should have 2 save button (small and xl screens)"
-            );
+            assert.containsOnce(target, ".o_list_button_save");
 
             await toggleSearchBarMenu(target);
             await toggleMenuItem(target, "candle");
@@ -7052,12 +7026,7 @@ QUnit.module("Views", (hooks) => {
                     [false, "kanban"],
                 ],
             });
-            assert.containsN(
-                target,
-                ".o_cp_switch_buttons",
-                2,
-                "Should have 2 button (small and xl screens)"
-            );
+            assert.containsOnce(target, ".o_cp_switch_buttons");
             assert.containsN(target, ".o_switch_view", 2);
             assert.containsOnce(target, ".o_list_view");
 
@@ -8743,12 +8712,7 @@ QUnit.module("Views", (hooks) => {
             "td:not(.o_list_record_selector) input",
             "first cell should be editable"
         );
-        assert.containsN(
-            target,
-            ".o_list_button_discard",
-            2,
-            "Should have 2 discard button (small and xl screens)"
-        );
+        assert.containsOnce(target, ".o_list_button_discard");
 
         await click(target.querySelector(".o_list_button_discard:not(.dropdown-item)"));
 
@@ -9361,31 +9325,16 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(target, "tr.o_data_row", 4, "should have 4 records");
-        assert.containsN(
-            target,
-            ".o_list_button_add",
-            2,
-            "Should have 2 add button (small and xl screens)"
-        );
+        assert.containsOnce(target, ".o_list_button_add");
         assert.containsNone(target, ".o_list_button_discard");
         assert.containsN(target, ".o_list_record_selector input:enabled", 5);
         await click($(".o_list_button_add:visible").get(0));
         assert.containsNone(target, ".o_list_button_add");
-        assert.containsN(
-            target,
-            ".o_list_button_discard",
-            2,
-            "Should have 2 discard button (small and xl screens)"
-        );
+        assert.containsOnce(target, ".o_list_button_discard");
         assert.containsNone(target, ".o_list_record_selector input:enabled");
         await click(target.querySelector(".o_list_button_discard:not(.dropdown-item)"));
         assert.containsN(target, "tr.o_data_row", 4, "should still have 4 records");
-        assert.containsN(
-            target,
-            ".o_list_button_add",
-            2,
-            "Should have 2 add button (small and xl screens)"
-        );
+        assert.containsOnce(target, ".o_list_button_add");
         assert.containsNone(target, ".o_list_button_discard");
         assert.containsN(target, ".o_list_record_selector input:enabled", 5);
     });
@@ -14316,12 +14265,7 @@ QUnit.module("Views", (hooks) => {
                 </search>`,
         });
 
-        assert.containsN(
-            target,
-            ".o_list_button_add",
-            2,
-            "Should have 2 add button (small and xl screens)"
-        );
+        assert.containsOnce(target, ".o_list_button_add");
 
         // reload with a groupby
         await toggleSearchBarMenu(target);
@@ -14332,12 +14276,7 @@ QUnit.module("Views", (hooks) => {
         // reload without groupby
         await toggleMenuItem(target, "bar");
 
-        assert.containsN(
-            target,
-            ".o_list_button_add",
-            2,
-            "Should have 2 add button (small and xl screens)"
-        );
+        assert.containsOnce(target, ".o_list_button_add");
     });
 
     QUnit.test(
@@ -15949,12 +15888,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_data_row");
 
         // focus create button as a starting point
-        assert.containsN(
-            target,
-            ".o_list_button_add",
-            2,
-            "Should have 2 add button (small and xl screens)"
-        );
+        assert.containsOnce(target, ".o_list_button_add");
         $(".o_list_button_add:visible").get(0).focus();
         assert.strictEqual(document.activeElement, $(".o_list_button_add:visible").get(0));
 
@@ -19987,11 +19921,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             //  When we try to select new record in edit mode
-            await click(
-                target.querySelector(
-                    ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_add"
-                )
-            );
+            await click(target.querySelector(".o_control_panel_main_buttons .o_list_button_add"));
             await click(target.querySelector(".o_data_row .o_list_record_selector"));
             assert.strictEqual(
                 target.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]')

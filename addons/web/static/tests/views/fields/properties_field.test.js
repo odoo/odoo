@@ -1614,7 +1614,7 @@ test("properties: kanban view without properties", async () => {
 /**
  * Check that the properties are shown when switching view.
  */
-test("properties: switch view", async () => {
+test.tags("desktop")("properties: switch view on desktop", async () => {
     Partner._views[["search", false]] = /* xml */ `<search/>`;
     Partner._views[["kanban", 99]] = /* xml */ `<kanban>
                 <templates>
@@ -1643,6 +1643,43 @@ test("properties: switch view", async () => {
     });
     await animationFrame();
     click(".o_switch_view.o_list");
+    await animationFrame();
+    expect(".o_optional_columns_dropdown").toHaveCount(1, {
+        message: "Properties should be added as optional columns.",
+    });
+});
+
+test.tags("mobile")("properties: switch view on mobile", async () => {
+    Partner._views[["search", false]] = /* xml */ `<search/>`;
+    Partner._views[["kanban", 99]] = /* xml */ `<kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <field name="company_id"/> <hr/>
+                            <field name="display_name"/> <hr/>
+                            <field name="properties" widget="properties"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`;
+    Partner._views[["list", 100]] = /* xml */ `<list limit="1">
+                <field name="display_name"/>
+                <field name="properties"/>
+            </list>`;
+    onRpc("has_group", () => true);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "kanban"],
+            [false, "list"],
+        ],
+    });
+    await animationFrame();
+    click(".o_cp_switch_buttons .dropdown-toggle");
+    await animationFrame();
+    click(".dropdown-item:contains(List)");
     await animationFrame();
     expect(".o_optional_columns_dropdown").toHaveCount(1, {
         message: "Properties should be added as optional columns.",
