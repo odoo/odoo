@@ -295,3 +295,14 @@ class TestAccessRights(TransactionCase):
                 self.assertEqual(search_fetch_event['name'], "Busy", "Event name must be 'Busy', hiding the information from uninvited administrators.")
             else:
                 self.assertFalse(search_fetch_event[field], "Field %s contains private information, it must be hidden from uninvited administrators." % field)
+
+    def test_user_update_calendar_default_privacy(self):
+        """
+        Ensure that administrators and normal users can update their own calendar
+        default privacy from the 'res.users' related field without throwing any error.
+        """
+        for privacy in ['public', 'private', 'confidential']:
+            self.john.write({'calendar_default_privacy': privacy})
+            self.admin_user.write({'calendar_default_privacy': privacy})
+            self.assertEqual(self.john.calendar_default_privacy, privacy, 'Normal user must be able to update its calendar default privacy.')
+            self.assertEqual(self.admin_user.calendar_default_privacy, privacy, 'Admin must be able to update its calendar default privacy.')
