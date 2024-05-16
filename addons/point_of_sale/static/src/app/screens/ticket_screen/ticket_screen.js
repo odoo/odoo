@@ -373,11 +373,6 @@ export class TicketScreen extends Component {
         }
 
         if (this.state.filter === "SYNCED") {
-            console.log(
-                "PAID ORDER RANGE:",
-                (this.state.page - 1) * NBR_BY_PAGE,
-                this.state.page * NBR_BY_PAGE
-            );
             return orders
                 .sort((a, b) => {
                     const dateA = DateTime.fromFormat(a.date_order, "yyyy-MM-dd HH:mm:ss");
@@ -633,7 +628,10 @@ export class TicketScreen extends Component {
                 modelField: "pos_reference",
             },
             DATE: {
-                repr: (order) => formatDateTime(order.date_order),
+                repr: (order) =>
+                    formatDateTime(
+                        luxon.DateTime.fromFormat(order.date_order, "yyyy-MM-dd HH:mm:ss")
+                    ),
                 displayName: _t("Date"),
                 modelField: "date_order",
             },
