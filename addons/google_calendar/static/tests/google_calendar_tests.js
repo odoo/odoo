@@ -120,6 +120,10 @@ QUnit.module('Google Calendar', {
                     return Promise.resolve({
                         google_calendar: true,
                     });
+                } else if (route === "/web/dataset/call_kw/res.users/check_synchronization_status") {
+                    return Promise.resolve({
+                        google_calendar: 'sync_active',
+                    });
                 } else if (route === "/web/dataset/call_kw/calendar.event/get_default_duration") {
                     return 3.25;
                 }
