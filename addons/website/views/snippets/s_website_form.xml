@@ -205,6 +205,8 @@
                            data-img="/website/static/src/img/snippets_options/pos_right.svg"/>
             </we-button-group>
             <we-checkbox string="Description" data-toggle-description="true" data-no-preview="true"/>
+            <we-checkbox string="Allow Empty" data-name="form_allow_empty" data-allow-empty="true" data-no-preview="true"/>
+            <we-input string="Placeholder" class="o_we_large" data-apply-placeholder="" data-dependencies="form_allow_empty"/>
             <we-input string="Placeholder" class="o_we_large"
                 data-select-attribute="" data-attribute-name="placeholder"
                 data-apply-to="input[type='text'], input[type='email'], input[type='number'], input[type='tel'], input[type='url'], textarea"/>
@@ -252,6 +254,8 @@
                     <we-button data-select-data-attribute="!selected">Is not equal to</we-button>
                     <we-button data-select-data-attribute="contains">Contains</we-button>
                     <we-button data-select-data-attribute="!contains">Doesn't contain</we-button>
+                    <we-button data-select-data-attribute="set">Is set</we-button>
+                    <we-button data-select-data-attribute="!set">Is not set</we-button>
                 </we-select>
                 <we-select data-name="hidden_condition_text_opt" data-attribute-name="visibilityComparator" data-no-preview="true">
                     <!-- str comparator possibilities -->
@@ -296,7 +300,7 @@
                     <we-button data-select-data-attribute="!selected">Is not equal to</we-button>
                 </we-select>
             </we-row>
-            <we-select class="o_we_large" data-name="hidden_condition_no_text_opt" data-attribute-name="visibilityCondition" data-no-preview="true">
+            <we-select class="o_we_large" data-name="hidden_condition_option_list" data-attribute-name="visibilityCondition" data-no-preview="true">
                 <!-- checkbox, select, radio possible values -->
             </we-select>
             <we-select class="o_we_large" data-name="hidden_condition_record_opt" data-attribute-name="visibilityCondition" data-no-preview="true">

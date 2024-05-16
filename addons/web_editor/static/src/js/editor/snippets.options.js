@@ -2332,6 +2332,11 @@ const ListUserValueWidget = UserValueWidget.extend({
         if (id) {
             inputEl.name = id;
         }
+        // Hiding the placeholder options from options list of editor
+        if (id === "" && !this.listTable.hasChildNodes()) {
+            trEl.classList.add("d-none");
+            inputEl.classList.add("o_we_list_placeholder");
+        }
         if (recordData) {
             recordDataSelected = recordData.selected;
             if (recordData.placeholder) {
@@ -2408,6 +2413,9 @@ const ListUserValueWidget = UserValueWidget.extend({
         const trimmed = (str) => str.trim().replace(/\s+/g, " ");
         const values = [...this.listTable.querySelectorAll('.o_we_list_record_name input')].map(el => {
             const id = trimmed(isIdModeName ? el.name : el.value);
+            if (el.classList.contains("o_we_list_placeholder")) {
+                id = "";
+            }
             return Object.assign({
                 id: /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id,
                 name: trimmed(el.value),
