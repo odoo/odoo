@@ -83,6 +83,7 @@ export class MockPosData {
                     data: [
                         {
                             name: "PoS Session",
+                            id: 1,
                         },
                     ],
                 },
