@@ -5,7 +5,7 @@
         <field name="model">asignar.usuario.externo.wizard</field>
         <field name="arch" type="xml">
             <form string="Upload File">
-                <group>
+                <div>
                     <div>Para asignar usuarios externos, por favor subir un archvo CSV con los datos de los participantes con la siguiente plantilla.</div>
                     <group class="py-3">
                         <button name="descargar_template_usuarios" string="Plantilla" type="object" class="btn-primary"/>
@@ -14,7 +14,7 @@
                         <field name="nombre_archivo" invisible="1"/>
                         <field name="archivo" filename="nombre_archivo"/>
                     </group>
-                </group>
+                </div>
                 <footer>
                     <button string="Asignar" class="btn-primary" name="procesar_csv" type="object"/>
                     <button string="Cancelar" class="btn-secondary" special="cancel"/>
