@@ -12,7 +12,7 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home_invoice" name="Show Invoices &amp; Bills" inherit_id="portal.portal_my_home" customize_show="True" priority="30">
+    <template id="portal_my_home_invoice" name="Invoices / Bills" inherit_id="portal.portal_my_home" customize_show="True" priority="30">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
             <t t-set="portal_client_category_enable" t-value="True"/>
             <t t-set="portal_vendor_category_enable" t-value="True"/>
@@ -111,9 +111,9 @@
             <div class="row o_portal_invoice_sidebar">
                 <!-- Sidebar -->
                 <t t-call="portal.portal_record_sidebar">
-                    <t t-set="classes" t-value="'col-lg-3 col-xl-4 d-print-none me-lg-auto'"/>
+                    <t t-set="classes" t-value="'col-lg-4 col-xxl-3 d-print-none'"/>
                     <t t-set="title">
-                        <h2>
+                        <h2 class="mb-0 text-break">
                             <span t-if="invoice.amount_residual > 0" t-field="invoice.amount_residual"/>
                             <span t-else="1" t-field="invoice.amount_total"/>
                         </h2>
@@ -121,12 +121,12 @@
                     </t>
 
                     <t t-set="entries">
-                        <div class="d-flex flex-column gap-4">
-                            <div class="flex-basis-100 flex-basis-sm-50 flex-basis-lg-100 order-1 order-lg-0">
-                                <div class="o_download_pdf d-flex gap-1 flex-lg-column flex-xl-row">
-                                    <div class="flex-grow-1">
-                                        <a class="btn btn-secondary d-block o_download_btn" t-att-href="invoice.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
-                                    </div>
+                        <div class="d-flex flex-column gap-4 mt-3">
+                            <div class="d-flex flex-column gap-2">
+                                <div class="o_download_pdf d-flex flex-lg-column flex-xl-row flex-wrap gap-2">
+                                    <a class="btn btn-light o_download_btn flex-grow-1" t-att-href="invoice.get_portal_url(report_type='pdf', download=True)" title="Download" role="button">
+                                        <i class="fa fa-download"/> Download
+                                    </a>
                                 </div>
                             </div>
                             <div t-if="invoice.invoice_user_id" class="flex-grow-1">
@@ -140,33 +140,27 @@
                                         </t>
                                     </small>
                                 </h6>
-                                <div class="o_portal_contact_details d-flex flex-column gap-2">
-                                    <div class="d-flex justify-content-start align-items-center gap-2">
-                                        <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(invoice.invoice_user_id.avatar_128)" alt="Contact"/>
-                                        <div>
-                                            <h6 class="mb-0" t-out="invoice.invoice_user_id.name"/>
-                                            <a href="#discussion" class="d-flex align-items-center gap-2 small fw-bold">
-                                            Send message
-                                            </a>
-                                        </div>
-                                    </div>
+                                <t t-call="portal.portal_my_contact">
+                                    <t t-set="_contactAvatar" t-value="image_data_uri(invoice.invoice_user_id.avatar_128)"/>
+                                    <t t-set="_contactName" t-value="invoice.invoice_user_id.name"/>
+                                    <t t-set="_contactLink" t-value="True"/>
                                     <div t-field="invoice.invoice_user_id" t-options='{"widget": "contact", "fields": ["city", "phone"]}'/>
-                                </div>
+                                </t>
                             </div>
                         </div>
                     </t>
                 </t>
 
                 <!-- Page Content -->
-                <div id="invoice_content" class="o_portal_content col-12 col-lg-9 col-xl-8">
+                <div id="invoice_content" class="o_portal_content col-12 col-lg-8 col-xxl-9">
                     <t t-if="error or warning" t-call="account.portal_invoice_error"/>
                     <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
 
-                    <div class="o_portal_html_view shadow p-3">
+                    <div class="o_portal_html_view position-relative bg-white shadow p-3 overflow-hidden">
                         <div class="o_portal_html_loader text-center">
                             <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw text-black-50"></i>
                         </div>
-                        <iframe id="invoice_html" class="mt8 mb8" width="100%" height="100%" frameborder="0" scrolling="no" t-att-src="invoice.get_portal_url(report_type='html')"/>
+                        <iframe id="invoice_html" class="position-relative my-2" width="100%" height="100%" frameborder="0" scrolling="no" t-att-src="invoice.get_portal_url(report_type='html')"/>
                     </div>
                     <!-- chatter -->
                     <div id="invoice_communication" class="mt-4">

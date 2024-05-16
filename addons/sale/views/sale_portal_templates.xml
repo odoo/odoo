@@ -18,14 +18,14 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home_sale" name="Show Quotations / Sales Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
+    <template id="portal_my_home_sale" name="Quotations / Sales Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
             <t t-set="portal_client_category_enable" t-value="True"/>
             <t t-set="portal_alert_category_enable" t-value="True"/>
         </xpath>
         <div id="portal_alert_category" position="inside">
             <t t-call="portal.portal_docs_entry">
-                <t t-set="bg_color" t-value="'alert alert-primary'"/>
+                <t t-set="bg_color" t-value="'alert alert-primary align-items-center'"/>
                 <t t-set="placeholder_count" t-value="'quotation_count'"/>
                 <t t-set="title">Quotations to review</t>
                 <t t-set="url" t-value="'/my/quotes'"/>
@@ -135,24 +135,22 @@
             <div class="row o_portal_sale_sidebar">
                 <!-- Sidebar -->
                 <t t-call="portal.portal_record_sidebar" id="sale_order_portal_sidebar">
-                    <t t-set="classes" t-value="'d-print-none col-lg-3 col-xl-4'"/>
+                    <t t-set="classes" t-value="'col-lg-4 col-xxl-3 d-print-none'"/>
 
                     <t t-set="title">
-                        <h2 t-field="sale_order.amount_total" data-id="total_amount"/>
+                        <h2 t-field="sale_order.amount_total" data-id="total_amount" class="mb-0 text-break"/>
                     </t>
                     <t t-set="entries">
-                        <div class="d-flex flex-column gap-4">
+                        <div class="d-flex flex-column gap-4 mt-3">
                             <div class="d-flex flex-column gap-2" id="sale_order_sidebar_button">
-                                <a t-if="sale_order._has_to_be_signed()" role="button" class="btn btn-primary d-block" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#">
+                                <a t-if="sale_order._has_to_be_signed()" role="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#">
                                     <i class="fa fa-check"/><t t-if="sale_order._has_to_be_paid()"> Sign &amp; Pay</t><t t-else=""> Accept &amp; Sign</t>
                                 </a>
-                                <a t-elif="sale_order._has_to_be_paid()" role="button" id="o_sale_portal_paynow" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#" t-att-class="'d-block %s' % ('btn btn-light' if sale_order.transaction_ids else 'btn btn-primary')" >
+                                <a t-elif="sale_order._has_to_be_paid()" role="button" id="o_sale_portal_paynow" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#" t-att-class="'%s' % ('btn btn-light' if sale_order.transaction_ids else 'btn btn-primary')" >
                                     <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; Pay</t><t t-else="">Pay Now</t>
                                 </a>
-                                <div class="o_download_pdf d-flex gap-1 flex-lg-column flex-xl-row">
-                                    <div class="flex-grow-1">
-                                        <a class="btn btn-secondary o_print_btn o_portal_invoice_print d-block" t-att-href="sale_order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" target="_blank"><i class="fa fa-print"/> View Details</a>
-                                    </div>
+                                <div class="o_download_pdf d-flex gap-2 flex-lg-column flex-xl-row flex-wrap">
+                                    <a class="btn btn-light o_print_btn o_portal_invoice_print flex-grow-1" t-att-href="sale_order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" role="button" target="_blank"><i class="fa fa-print me-1"/>View Details</a>
                                 </div>
                             </div>
 
@@ -182,24 +180,18 @@
 
                             <div t-if="sale_order.user_id">
                                 <h6><small class="text-muted">Your contact</small></h6>
-                                <div class="o_portal_contact_details d-flex flex-column gap-2">
-                                    <div class="d-flex justify-content-start align-items-center gap-2">
-                                        <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(sale_order.user_id.avatar_1024)" alt="Contact"/>
-                                        <div>
-                                            <h6 class="mb-0" t-out="sale_order.user_id.name"/>
-                                            <a href="#discussion" class="d-flex align-items-center gap-2 small fw-bold">
-                                            Send message
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                                <t t-call="portal.portal_my_contact">
+                                    <t t-set="_contactAvatar" t-value="image_data_uri(sale_order.user_id.avatar_1024)"/>
+                                    <t t-set="_contactName" t-value="sale_order.user_id.name"/>
+                                    <t t-set="_contactLink" t-value="True"/>
+                                </t>
                             </div>
                         </div>
                     </t>
                 </t>
 
                 <!-- Page content -->
-                <div id="quote_content" class="col-12 col-lg-9 col-xl-8 mt-5 mt-lg-0">
+                <div id="quote_content" class="col-12 col-lg-8 col-xxl-9 mt-5 mt-lg-0">
 
                     <!-- modal relative to the actions sign and pay -->
                     <div role="dialog" class="modal fade" id="modalaccept">
@@ -364,7 +356,7 @@
                                 <a role="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#"><i class="fa fa-check"/><t t-if="sale_order._has_to_be_paid()"> Sign &amp; Pay</t><t t-else=""> Accept &amp; Sign</t></a>
                             </div>
                             <div class="col-sm-auto mt8">
-                                <a role="button" class="btn btn-secondary" href="#discussion"><i class="fa fa-comment"/> Feedback</a>
+                                <a role="button" class="btn btn-light" href="#discussion"><i class="fa fa-comment"/> Feedback</a>
                             </div>
                             <div class="col-sm-auto mt8">
                                 <a role="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modaldecline" href="#"> <i class="fa fa-times"/> Reject</a>
@@ -395,9 +387,9 @@
     -->
     <template id="sale_order_portal_content" name="Sales Order Portal Content">
         <!-- Intro -->
-        <div id="introduction" t-attf-class="#{'border-bottom-0 pt-0 pb-3 bg-white' if report_type == 'html' else ''}">
-            <div class="row" id="intro_row">
-                <h2 class="my-0 col-12 col-lg flex-grow-1 mb-1 mb-lg-0">
+        <div id="introduction" t-attf-class="#{'border-bottom-0 pt-0 pb-3' if report_type == 'html' else ''}">
+            <div class="d-flex gap-2" id="intro_row">
+                <h2>
                     <t t-out="sale_order.type_name"/> -
                     <em t-out="sale_order.name"/>
                 </h2>
@@ -418,7 +410,7 @@
                 <!-- Information -->
                 <div id="sale_info" class="col-12 col-lg-6 mb-4">
                     <span id="sale_info_title">
-                        <h4 class="mb-1">Sale Information</h4>
+                        <h5 class="mb-1">Sale Information</h5>
                         <hr class="mt-1 mb-2"/>
                     </span>
                     <table class="table table-borderless table-sm">
@@ -442,7 +434,7 @@
 
                 <!-- ======  Customer Information  ====== -->
                 <div id="customer_info" class="col-12 col-lg-6 mb-4">
-                    <h4 class="mb-1">
+                    <h5 class="mb-1">
                         <t t-if="sale_order.partner_shipping_id == sale_order.partner_invoice_id">
                             Invoicing and Shipping Address
                         </t>
@@ -454,46 +446,48 @@
                                 <i class="fa fa-fw fa-pencil"/>
                             </a>
                         </small>
-                    </h4>
+                    </h5>
                     <hr class="mt-1 mb-2"/>
                     <div t-field="sale_order.partner_invoice_id" t-options="{'widget': 'contact', 'fields': ['name', 'address', 'phone', 'email']}"/>
                     <span t-if="sale_order.partner_shipping_id != sale_order.partner_invoice_id"
                             id="shipping_address"
                             class="col-lg-6">
                         <br/>
-                        <h4 class="mb-1">
+                        <h5 class="mb-1">
                             Shipping Address
-                        </h4>
+                        </h5>
                         <hr class="mt-1 mb-2"/>
                         <div t-field="sale_order.partner_shipping_id" t-options='{ "widget": "contact", "fields": [ "name", "address"]}'/>
                     </span>
                 </div>
                 <t t-set="invoices" t-value="sale_order.invoice_ids.filtered(lambda i: i.state not in ['draft', 'cancel']).sorted('date', reverse=True)[:3]"/>
                 <div id="sale_invoices" t-if="invoices and sale_order.state in ['sale', 'cancel']" class="col-12 col-lg-6 mb-4">
-                    <h4 class="mb-1">Last Invoices</h4>
+                    <h5 class="mb-1">Last Invoices</h5>
                     <hr class="mt-1 mb-2"/>
                     <t t-foreach="invoices" t-as="i">
                         <t t-set="report_url" t-value="i.get_portal_url()"/>
                         <t t-set="authorized_tx_ids" t-value="i.authorized_transaction_ids"/>
-                        <div class="d-flex flex-column">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <a t-att-href="report_url">
-                                    <span t-out="i.name"/>
-                                </a>
-                                <div t-if="i.payment_state in ('paid', 'in_payment')" class="small badge text-bg-success orders_label_text_align">
-                                    <i class="fa fa-fw fa-check"/> Paid
+                        <div class="d-flex flex-column gap-2">
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <a t-att-href="report_url">
+                                        <span t-out="i.name"/>
+                                    </a>
+                                    <div t-if="i.payment_state in ('paid', 'in_payment')" class="small badge rounded-pill text-bg-success orders_label_text_align">
+                                        <i class="fa fa-fw fa-check"/> Paid
+                                    </div>
+                                    <div t-elif="i.payment_state == 'reversed'" class="small badge text-bg-success orders_label_text_align">
+                                        <i class="fa fa-fw fa-check"/> Reversed
+                                    </div>
+                                    <div t-elif="authorized_tx_ids" class="small badge rounded-pill text-bg-success orders_label_text_align">
+                                        <i class="fa fa-fw fa-check"/> Authorized
+                                    </div>
+                                    <div t-else="" class="small badge rounded-pill text-bg-info orders_label_text_align">
+                                        <i class="fa fa-fw fa-clock-o"/> Waiting Payment
+                                    </div>
                                 </div>
-                                <div t-elif="i.payment_state == 'reversed'" class="small badge text-bg-success orders_label_text_align">
-                                    <i class="fa fa-fw fa-check"/> Reversed
-                                </div>
-                                <div t-elif="authorized_tx_ids" class="small badge text-bg-success orders_label_text_align">
-                                    <i class="fa fa-fw fa-check"/> Authorized
-                                </div>
-                                <div t-else="" class="small badge text-bg-info orders_label_text_align">
-                                    <i class="fa fa-fw fa-clock-o"/> Waiting Payment
-                                </div>
+                                <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
                             </div>
-                            <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
                         </div>
                     </t>
                 </div>
@@ -525,7 +519,7 @@
 
                 <div class="table-responsive">
                     <table t-att-data-order-id="sale_order.id" t-att-data-token="sale_order.access_token" class="table table-sm" id="sales_order_table">
-                        <thead class="bg-100">
+                        <thead>
                             <tr>
                                 <th class="text-start" id="product_name_header">Products</th>
                                 <th class="text-end" id="product_qty_header">Quantity</th>

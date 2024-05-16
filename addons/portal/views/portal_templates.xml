@@ -158,13 +158,13 @@
             <t t-set="is_portal" t-value="True"/>
 
             <div t-if="not no_breadcrumbs and not my_details and not breadcrumbs_searchbar" class="o_portal container mt-3">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
                     <t t-call="portal.portal_breadcrumbs"/>
                     <t t-if="prev_record or next_record" t-call='portal.record_pager'/>
                 </div>
             </div>
             <div id="wrap" class='o_portal_wrap'>
-                <div class="container pt-3">
+                <div class="container pt-3 pb-5">
                     <t t-if="my_details">
                         <div class="wrapper col-12 d-flex flex-wrap justify-content-between align-items-center">
                             <h3 class="my-3">My account</h3>
@@ -245,22 +245,28 @@
 
     <template id="portal_docs_entry" name="My Portal Docs Entry">
         <div t-att-class="'o_portal_index_card ' +  ('' if config_card else 'd-none ') + ('col-12 order-0' if show_count else 'col-md-6 order-2')">
-            <a t-att-href="url" t-att-title="title" t-attf-class="d-flex justify-content-start gap-2 gap-md-3 align-items-center py-3 pe-2 px-md-3 h-100 rounded text-decoration-none text-reset #{bg_color if bg_color else 'text-bg-light'}">
-                <div t-if="icon" class="o_portal_icon align-self-start">
+            <a t-att-href="url" t-att-title="title" t-attf-class="d-flex gap-2 gap-md-3 py-3 pe-2 px-md-3 h-100 rounded text-decoration-none #{bg_color if bg_color else 'bg-100'}">
+                <div t-if="icon" class="o_portal_icon d-none">
                     <img t-attf-src="#{icon}"/>
                 </div>
-                <div>
-                    <h5 t-attf-class="mt-0 mb-1 #{'d-flex gap-2' if placeholder_count or count else ''}">
+                <div t-att-class="'alert-link' if bg_color else ''">
+                    <div t-attf-class="mt-0 mb-1 fs-5 fw-normal lh-1 #{'d-flex gap-2' if placeholder_count or count else ''}">
                         <t t-out="count"/>
-                        <span t-if="placeholder_count" t-att-class="'' if show_count else 'd-none'" t-att-data-placeholder_count="placeholder_count"/>
+                        <span t-if="placeholder_count" t-att-class="'fw-bold' if show_count else 'd-none'" t-att-data-placeholder_count="placeholder_count"/>
                         <span t-out="title"/>
-                    </h5>
-                    <p class="m-0 text-600">
+                    </div>
+                    <div class="opacity-75">
                         <t t-out="text"/>
-                    </p>
+                    </div>
                 </div>
             </a>
         </div>
+    </template>
+
+    <template id="portal_docs_entry_layout" inherit_id="portal.portal_docs_entry" active="True" customize_show="True" name="Use Pictograms">
+        <xpath expr="//div[hasclass('o_portal_icon')]" position="attributes">
+            <attribute name="class" remove="d-none" add="d-block align-self-start" separator=" "/>
+        </xpath>
     </template>
 
     <template id="portal_table" name="My Portal Table">
@@ -275,8 +281,8 @@
     </template>
 
     <template id="portal_record_sidebar" name="My Portal Record Sidebar">
-        <div t-attf-class="#{classes}">
-            <div class="o_portal_sidebar_content d-lg-inline-block mb-4 mb-lg-0 p-3 p-lg-0" id="sidebar_content">
+        <div t-attf-class="d-flex #{classes}">
+            <div class="o_portal_sidebar_content flex-grow-1 mb-4 mb-lg-0 pe-lg-4" id="sidebar_content">
                 <div t-if="title" class="position-relative d-flex align-items-center justify-content-md-center justify-content-lg-between flex-wrap gap-2">
                     <t t-out="title"/>
                 </div>
@@ -285,6 +291,7 @@
                     Powered by <a target="_blank" href="http://www.odoo.com?utm_source=db&amp;utm_medium=portal" title="odoo"><img src="/web/static/img/logo.png" alt="Odoo Logo" height="15"/></a>
                 </div>
             </div>
+            <div class="vr d-none d-lg-block bg-300"/>
         </div>
     </template>
 
@@ -328,7 +335,7 @@
                     <div t-if="searchbar_sortings">
                         <span class="small me-1 navbar-text">Sort By:</span>
                         <div class="btn-group">
-                            <button id="portal_searchbar_sortby" data-bs-toggle="dropdown" class="btn btn-secondary dropdown-toggle">
+                            <button id="portal_searchbar_sortby" data-bs-toggle="dropdown" class="btn btn-light dropdown-toggle">
                                 <t t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="portal_searchbar_sortby">
@@ -344,7 +351,7 @@
                     <div t-if="searchbar_filters" class="ms-lg-2">
                         <span class="small me-1 navbar-text">Filter By:</span>
                         <div class="btn-group">
-                            <button id="portal_searchbar_filters" data-bs-toggle="dropdown" class="btn btn-secondary dropdown-toggle">
+                            <button id="portal_searchbar_filters" data-bs-toggle="dropdown" class="btn btn-light dropdown-toggle">
                                 <t t-esc="searchbar_filters.get(filterby,searchbar_filters.get('all')).get('label', 'All')"/>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="portal_searchbar_filters">
@@ -360,7 +367,7 @@
                     <div t-if="searchbar_groupby" class="ms-lg-2">
                         <span class="small me-1 navbar-text">Group By:</span>
                         <div class="btn-group">
-                            <button id="portal_searchbar_groupby" data-bs-toggle="dropdown" class="btn btn-secondary dropdown-toggle">
+                            <button id="portal_searchbar_groupby" data-bs-toggle="dropdown" class="btn btn-light dropdown-toggle">
                                 <t t-esc="searchbar_groupby[groupby].get('label', 'None')"/>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="portal_searchbar_groupby">
@@ -377,7 +384,7 @@
                 </div>
                 <form t-if="searchbar_inputs" class="o_portal_search_panel col-md-5 col-xl-4 ms-lg-2">
                     <div class="input-group w-100">
-                        <button type="button" class="btn btn-secondary border-end dropdown-toggle" data-bs-toggle="dropdown"/>
+                        <button type="button" class="btn btn-light border-end dropdown-toggle" data-bs-toggle="dropdown"/>
                         <div class="dropdown-menu dropdown-menu-end" role="menu">
                             <t t-foreach='searchbar_inputs' t-as='input'>
                                 <a t-att-href="'#' + input_value['input']"
@@ -386,8 +393,8 @@
                                 </a>
                             </t>
                         </div>
-                        <input type="text" class="form-control" placeholder="Search" t-att-value='search' name="search"/>
-                        <button class="btn btn-secondary" type="submit">
+                        <input type="text" class="form-control border-0 bg-light" placeholder="Search" t-att-value='search' name="search"/>
+                        <button class="btn btn-light" type="submit">
                             <span class="oi oi-search"/>
                         </button>
                     </div>
@@ -396,34 +403,36 @@
         </nav>
     </template>
 
-    <template id="portal_record_layout" name="Portal single record layout">
-        <div t-attf-class="card mt-0 rounded #{classes if classes else ''}">
-            <div t-if="card_header" t-attf-class="card-header #{header_classes if header_classes else ''}">
-                <t t-out="card_header"/>
+    <template id="portal_contact" name="Contact">
+        <div class="o_portal_contact_details mb-5">
+            <h5>Your contact</h5>
+            <hr class="mt-1"/>
+            <h6 t-esc="sales_user.name"/>
+            <div class="d-flex mb-1">
+                <i class="fa fa-envelope fa-fw me-1 text-600"/>
+                <a t-att-href="'mailto:'+sales_user.email" t-esc="sales_user.email"/>
             </div>
-            <div t-if="card_body" t-attf-class="card-body #{body_classes if body_classes else ''}">
-                <t t-out="card_body"/>
+            <div class="d-flex flex-nowrap align-items-center mb-1">
+                <i class="fa fa-phone fa-fw me-1 text-600"/>
+                <span t-esc="sales_user.phone"/>
+            </div>
+            <div class="d-flex flex-nowrap align-items-center mb-1">
+                <i class="fa fa-map-marker fa-fw me-1 text-600"/>
+                <span t-esc="sales_user.city"/>
             </div>
         </div>
     </template>
 
-    <template id="portal_contact" name="Contact">
-        <div class="o_portal_contact_details mb-5">
-            <h4>Your contact</h4>
-            <hr class="mt-1 mb0"/>
-            <h6 class="mb-1"><b t-esc="sales_user.name"/></h6>
-            <div class="d-flex align-items-center mb-1">
-                <div class="fa fa-envelope fa-fw me-1"></div>
-                <a t-att-href="'mailto:'+sales_user.email" t-esc="sales_user.email"/>
+    <template id="portal_my_contact">
+        <div t-attf-class="o_portal_contact_details d-flex flex-column gap-2 #{_spacingClass}">
+            <div class="d-flex gap-2">
+                <img class="o_avatar o_portal_contact_img rounded" t-att-src="_contactAvatar" alt="Contact"/>
+                <div>
+                    <span class="d-block lh-1 mb-1" t-out="_contactName"/>
+                    <a t-if="_contactLink" href="#discussion" class="d-flex align-items-center gap-2 small lh-1">Send message</a>
+                </div>
             </div>
-            <div class="d-flex flex-nowrap align-items-center mb-1">
-                <div class="fa fa-phone fa-fw me-1"></div>
-                <span t-esc="sales_user.phone"/>
-            </div>
-            <div class="d-flex flex-nowrap align-items-center mb-1">
-                <div class="fa fa-map-marker fa-fw me-1"></div>
-                <span t-esc="sales_user.city"/>
-            </div>
+            <t t-out="0"/>
         </div>
     </template>
 
@@ -526,7 +535,7 @@
                             <input type="hidden" name="redirect" t-att-value="redirect"/>
                         </div>
                         <div class="clearfix text-end mb-5">
-                            <a href="/my/" class="btn btn-secondary me-2">
+                            <a href="/my/" class="btn btn-light me-2">
                                 Discard
                             </a>
                             <button type="submit" class="btn btn-primary float-end">
@@ -589,13 +598,13 @@
                             <t t-esc="get_error(errors, 'password.new2')"/>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-secondary">Change Password</button>
+                    <button type="submit" class="btn btn-light">Change Password</button>
                 </form>
             </section>
             <section name="portal_revoke_all_devices_popup">
             <h4>Revoke All Sessions</h4>
                 <t t-set="path"/>
-                    <button type="button" class="btn btn-secondary" id="portal_revoke_all_sessions_popup">
+                    <button type="button" class="btn btn-light" id="portal_revoke_all_sessions_popup">
                         Log out from all devices
                     </button>
             </section>
@@ -631,13 +640,13 @@
                     </table>
                 </div>
                 <div>
-                    <button type="submit" class="btn btn-secondary o_portal_new_api_key">New API Key</button>
+                    <button type="submit" class="btn btn-light o_portal_new_api_key">New API Key</button>
                 </div>
             </section>
             <section name="portal_deactivate_account" groups="base.group_portal">
                 <h4>Delete Account</h4>
                 <t t-set="deactivate_error" t-value="get_error(errors, 'deactivate')"/>
-                <button class="btn btn-secondary" data-bs-toggle="modal"
+                <button class="btn btn-light" data-bs-toggle="modal"
                     data-bs-target="#portal_deactivate_account_modal">
                     Delete Account
                 </button>
@@ -810,7 +819,7 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"/>
         </div>
         <div t-attf-class="{{'offcanvas-body' if isOffcanvas else 'mt-3'}}">
-            <div class="d-flex justify-content-start align-items-center gap-3 mb-4">
+            <div class="d-flex justify-content-start align-items-start gap-3 mb-4">
                 <img class="o_portal_contact_img rounded o_object_fit_cover" t-att-src="image_data_uri(user_id.partner_id.avatar_128)" alt="Contact" width="50"/>
                 <div class="d-flex flex-column justify-content-center">
                     <h5 class="mb-0" t-out="user_id.name"/>
@@ -821,8 +830,7 @@
                 <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address"]}'/>
             </div>
             <a role="button" href="/my/account" class="btn btn-link p-0 mt-3"><i class="fa fa-pencil"/> Edit information</a>
-            <hr t-if="sales_user"/>
-            <div class="o_my_contact" t-if="sales_user">
+            <div class="o_my_contact mt-5" t-if="sales_user">
                 <t t-call="portal.portal_contact"/>
             </div>
         </div>
