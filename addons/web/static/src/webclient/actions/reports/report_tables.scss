@@ -1,0 +1,41 @@
+// This file regroups the fixes and styling related to table inside reports
+
+table.table {
+    // Fix alignment in PDF (default bs inheritance doesn't seem to apply)
+    td {
+        vertical-align: $table-cell-vertical-align;
+    }
+
+    th {
+        text-align: left;
+        vertical-align: middle;
+    }
+}
+
+div#total {
+    // Avoid crop in the total table if in middle of 2 pages
+    page-break-inside: avoid;
+}
+
+// Table styling of the reports, apply the styling class .o_table_x
+// to the .article bloc of the report to change the table style.
+
+.o_table_standard {
+    table {
+        thead {
+            border-bottom: $border-width solid $o-gray-900;
+        }
+
+        th:first-child, td:first-child {
+            padding-left: 0;
+        }
+
+        th:last-child, td:last-child {
+            padding-right: 0;
+        }
+    }
+
+    .o_total_table, .o_total_table .o_total {
+        border-top: $border-width solid $border-color;
+    }
+}
