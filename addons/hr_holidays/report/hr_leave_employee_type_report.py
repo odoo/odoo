@@ -121,7 +121,7 @@ class LeaveReport(models.Model):
 
     @api.model
     def action_time_off_analysis(self):
-        domain = []
+        domain = [('company_id', 'in', self.env.context.get('allowed_company_ids', []))]
         if self.env.context.get('active_ids'):
             domain = [('employee_id', 'in', self.env.context.get('active_ids', [])),
                       ('state', '!=', 'cancel')]
