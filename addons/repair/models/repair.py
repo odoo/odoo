@@ -292,7 +292,7 @@ class Repair(models.Model):
             picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id', self.default_get('picking_type_id')))
             if 'picking_type_id' not in vals:
                 vals['picking_type_id'] = picking_type.id
-            if not vals.get('name', False) or vals['name'] == _('New'):
+            if not vals.get('name', False) or vals['name'] == 'New':
                 vals['name'] = picking_type.sequence_id.next_by_id()
             if not vals.get('procurement_group_id'):
                 vals['procurement_group_id'] = self.env["procurement.group"].create({'name': vals['name']}).id
