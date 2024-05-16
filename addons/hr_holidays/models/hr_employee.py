@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, date, time
+from datetime import datetime, date, time, timezone
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 import pytz
@@ -175,7 +175,7 @@ class HrEmployeeBase(models.AbstractModel):
             raise UserError(_('Operation not supported'))
         # This search is only used for the 'Absent Today' filter however
         # this only returns employees that are absent right now.
-        today_date = datetime.utcnow().date()
+        today_date = datetime.now(timezone.utc).date()
         today_start = fields.Datetime.to_string(today_date)
         today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
         holidays = self.env['hr.leave'].sudo().search([
