@@ -3,6 +3,7 @@
 
 from collections import defaultdict
 from datetime import timedelta
+import re
 
 from markupsafe import Markup
 
@@ -1149,10 +1150,18 @@ class SaleOrderLine(models.Model):
         :rtype: dict
         """
         self.ensure_one()
+
+        # Compatibility fix for creating invoices from a SO since the computation of the line name has been changed in the account module.
+        # Has to be removed as soon as the new behavior for the line name has been implemented in the sale module.
+        line_name = self.name
+        if self.product_id.display_name:
+            line_name = re.sub(re.escape(self.product_id.display_name), '', line_name)
+            line_name = re.sub(r'^\n', '', line_name)
+            line_name = re.sub(r'(?<=\n) ', '', line_name)
         res = {
             'display_type': self.display_type or 'product',
             'sequence': self.sequence,
-            'name': self.name,
+            'name': line_name,
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom.id,
             'quantity': self.qty_to_invoice,
