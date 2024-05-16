@@ -115,7 +115,7 @@ class StockWarehouse(models.Model):
                     'procure_method': 'make_to_order',
                     'company_id': self.company_id.id,
                     'picking_type_id': self.manu_type_id.id,
-                    'route_id': self._find_global_route('mrp.route_warehouse0_manufacture', _('Manufacture'), raise_if_not_found=False).id
+                    'route_id': self._find_or_create_global_route('mrp.route_warehouse0_manufacture', _('Manufacture')).id
                 },
                 'update_values': {
                     'active': self.manufacture_to_resupply,
@@ -131,7 +131,7 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'), raise_if_not_found=False).id,
+                    'route_id': self._find_or_create_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)')).id,
                     'location_dest_id': production_location.id,
                     'location_src_id': self.lot_stock_id.id,
                     'picking_type_id': self.manu_type_id.id
@@ -148,7 +148,7 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'), raise_if_not_found=False).id,
+                    'route_id': self._find_or_create_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)')).id,
                     'name': self._format_rulename(self.lot_stock_id, self.pbm_loc_id, 'MTO'),
                     'location_dest_id': self.pbm_loc_id.id,
                     'location_src_id': self.lot_stock_id.id,
