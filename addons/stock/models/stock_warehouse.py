@@ -376,17 +376,21 @@ class Warehouse(models.Model):
         return True
 
     def _find_global_route(self, xml_id, route_name, raise_if_not_found=True):
+        return self._find_or_create_global_route(xml_id, route_name, create=False, raise_if_not_found=raise_if_not_found)
+
+    def _find_or_create_global_route(self, xml_id, route_name, create=True, raise_if_not_found=False):
         """ return a route record set from an xml_id or its name. """
         data_route = route = self.env.ref(xml_id, raise_if_not_found=False)
-        if not route or (route.company_id and route.company_id != self.company_id):
-            route = self.env['stock.route'].search([
-                ('name', 'like', route_name), ('company_id', 'in', [False, self.company_id.id])
+        company = self.company_id[:1] or self.env.company
+        if not route or (route.company_id and route.company_id != company):
+            route = self.env['stock.route'].with_context(active_test=False).search([
+                ('name', 'like', route_name), ('company_id', 'in', [False, company.id])
             ], order='company_id', limit=1)
         if not route:
-            if not data_route and raise_if_not_found:
+            if raise_if_not_found:
                 raise UserError(_('Can\'t find any generic route %s.') % (route_name))
-            elif data_route:
-                route = data_route.copy({'company_id': self.company_id.id, 'rule_ids': False})
+            elif data_route and create:
+                route = data_route.copy({'name': data_route.name, 'company_id': company.id, 'rule_ids': False})
         return route
 
     def _get_global_route_rules_values(self):
@@ -424,7 +428,7 @@ class Warehouse(models.Model):
                     'action': 'pull',
                     'auto': 'manual',
                     'propagate_carrier': True,
-                    'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'), raise_if_not_found=False).id
+                    'route_id': self._find_or_create_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)')).id
                 },
                 'update_values': {
                     'name': self._format_rulename(location_id, location_dest_id, 'MTO'),
