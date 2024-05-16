@@ -32,6 +32,12 @@ server {
     location /502.html {
         root /var/www/html;
     }
+
+    location /odoo-logs/ {
+        alias /var/log/odoo/;
+        autoindex on;
+    }
+
         # SSL configuration
         #
         # listen 443 ssl default_server;
@@ -94,5 +100,10 @@ server {
        error_page 502 /502.html;
        location /502.html {
            root /var/www/html;
+        }
+
+       location /odoo-logs/ {
+            alias /var/log/odoo/;
+            autoindex on;
        }
 }
