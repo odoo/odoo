@@ -55,3 +55,4 @@ from . import test_profiler
 from . import test_pdf
 from . import test_config_parameter
 from . import test_ir_module_category
+from . import test_base_address_get_demo
