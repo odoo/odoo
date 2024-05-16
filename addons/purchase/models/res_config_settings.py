@@ -28,6 +28,12 @@ class ResConfigSettings(models.TransientModel):
         string="Security Lead Time for Purchase",
         config_parameter='purchase.use_po_lead',
         help="Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays.")
+    allow_vendor_bill_upload = fields.Boolean(
+        related="company_id.allow_vendor_bill_upload",
+        readonly=False,
+        string="Allow Vendor Bill Upload",
+        help="Allows vendors to upload bills for their POs and create bank accounts in the portal."
+    )
 
     group_send_reminder = fields.Boolean("Receipt Reminder", implied_group='purchase.group_send_reminder', default=True,
         help="Allow automatically send email to remind your vendor the receipt date")

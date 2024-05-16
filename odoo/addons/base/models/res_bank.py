@@ -28,7 +28,7 @@ class Bank(models.Model):
     email = fields.Char()
     phone = fields.Char()
     active = fields.Boolean(default=True)
-    bic = fields.Char('Bank Identifier Code', index=True, help="Sometimes called BIC or Swift.")
+    bic = fields.Char('Bank Identifier Code', index='trigram', help="Sometimes called BIC or Swift.")
 
     @api.depends('bic')
     def _compute_display_name(self):

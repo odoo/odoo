@@ -2,6 +2,10 @@
 <odoo>
     <data noupdate="1">
 
+        <record id="base.main_company" model="res.company" >
+            <field name="allow_vendor_bill_upload">True</field>
+        </record>
+
         <record id="base.user_demo" model="res.users">
             <field name="groups_id" eval="[(3, ref('purchase.group_purchase_manager'))]"/>
         </record>
@@ -255,6 +259,25 @@
                     'product_qty': 10.0,
                     'product_uom': ref('uom.product_uom_dozen'),
                     'date_planned': time.strftime('%Y-%m-%d')}),
+            ]"/>
+        </record>
+
+        <!-- confirmed, billable PO to make the "Upload Bill" feature discoverable -->
+        <record id="purchase_order_11" model="purchase.order">
+            <field name="partner_id" ref="base.partner_demo_portal"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">purchase</field>
+            <field name="create_date" eval="DateTime.today() - relativedelta(days=18)"/>
+            <field name="date_order" eval="DateTime.today() - relativedelta(days=13)"/>
+            <field name="date_approve" eval="DateTime.today() - relativedelta(days=16)"/>
+            <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+                (0, 0, {
+                    'product_id': ref('product.product_product_1'),
+                    'name': obj().env.ref('product.product_product_1').partner_ref,
+                    'price_unit': 20.50,
+                    'product_qty': 5.0,
+                    'product_uom': ref('uom.product_uom_hour'),
+                    'date_planned': DateTime.today() + relativedelta(days=1)}),
             ]"/>
         </record>
 

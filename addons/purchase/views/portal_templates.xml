@@ -11,6 +11,9 @@
         <a t-if="order" t-attf-href="/my/purchase?{{ keep_query() }}">Purchase Orders</a>
         <t t-else="">Purchase Orders</t>
       </li>
+      <li t-if="page_name == 'bank_accounts'" class="breadcrumb-item active">
+        Bank Accounts
+      </li>
       <li t-if="order" class="breadcrumb-item active">
         <t t-esc="order.name"/>
       </li>
@@ -133,6 +136,7 @@
                   <t t-set="backend_url" t-value="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (order._name, order.id, order.env.ref('purchase.purchase_rfq').id)"/>
               </t>
           </t>
+          <t t-set="invoices" t-value="order.invoice_ids.filtered(lambda i: i.state != 'cancel')"/>
 
           <div class="row o_portal_purchase_sidebar">
               <!-- Sidebar -->
@@ -144,7 +148,63 @@
                   </t>
                   <t t-set="entries">
                       <div class="d-flex flex-column gap-4">
-                          <div class="flex-grow-1 order-md-last order-lg-first">
+                          <div class="flex-grow-1" t-if="order.company_id.allow_vendor_bill_upload">
+                              <div class="btn-toolbar flex-sm-nowrap" t-if="order._portal_has_upload_bill_button(request.env.user.partner_id)">
+                                  <div class="btn-group flex-grow-1 mb-2">
+                                      <t t-set="modal_target" t-value="'#modal_verify_email'"/>
+                                      <t t-if="verified_session">
+                                          <t t-if="invoices" t-set="modal_target" t-value="'#modal_upload_bill_warning'"/>
+                                          <t t-else="invoices" t-set="modal_target" t-value="'#modal_upload_bill'"/>
+                                      </t>
+                                      <button
+                                         t-att-disabled="not is_logged_in_user_customer or invoices.filtered(lambda i: i.state == 'posted')"
+                                         t-att-title="'You must be logged in as the customer to upload a bill' if not is_logged_in_user_customer else ''"
+                                         t-attf-class="btn {{'btn-secondary' if invoices else 'btn-primary'}}"
+                                         data-bs-toggle="modal"
+                                         t-att-data-bs-target="modal_target"
+                                         href="#">
+                                          Upload Your Bill
+                                      </button>
+                                  </div>
+                              </div>
+
+                              <t t-set="used_bank_accounts" t-value="invoices.mapped('partner_bank_id')"/>
+                              <a t-if="len(used_bank_accounts) == 1"
+                                 t-att-href="my_bank_account_link"
+                                 t-att-class="'o_disabled' if not is_logged_in_user_customer else ''"
+                                 t-att-data-bs-toggle="'modal' if not verified_session else ''"
+                                 t-att-data-bs-target="'#modal_verify_email' if not verified_session else ''"
+                              >
+                                  <div class="card">
+                                      <div class="card-body d-flex flex-column flex-lg-row align-items-lg-center gap-3 border-start border-5 border-info">
+                                          <i class="fa fa-lg fa-university"/>
+                                          <div>
+                                              <b>Your Bank Account</b>
+                                              <div t-out="used_bank_accounts[0].bank_id.name" class="mt-2"/>
+                                              <div t-out="used_bank_accounts[0].masked_acc_number"/>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </a>
+                              <a t-elif="is_logged_in_user_customer"
+                                 role="button"
+                                 t-attf-class="btn col-12 {{'btn-secondary' if invoices else 'btn-primary'}}"
+                                 t-att-href="my_bank_account_link"
+                                 t-att-data-bs-toggle="'modal' if not verified_session else ''"
+                                 t-att-data-bs-target="'#modal_verify_email' if not verified_session else ''"
+                              >
+                                  Manage Bank Accounts
+                              </a>
+                              <button t-else=""
+                                      disabled="disabled"
+                                      title="You must be logged in as the customer to manage bank accounts'}}"
+                                      t-attf-class="btn col-12 {{'btn-secondary' if invoices else 'btn-primary'}}"
+                              >
+                                  Manage Bank Accounts
+                              </button>
+                          </div>
+
+                          <div class="flex-grow-1">
                               <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
                                   <div class="btn-group flex-grow-1 mb-1">
                                       <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print" t-att-href="order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" target="_blank"><i class="fa fa-print"/> View Details</a>
@@ -175,6 +235,13 @@
 
               <!-- Page content -->
               <div id="quote_content" class="o_portal_content col-12 col-lg-9 col-xl-8">
+                  <t t-if="order.company_id.allow_vendor_bill_upload">
+                      <t t-if="verified_session">
+                          <t t-call="purchase.upload_bill_warning_modal"/>
+                          <t t-call="purchase.upload_bill_modal"/>
+                      </t>
+                      <t t-else="" t-call="purchase.verify_email_modal"/>
+                  </t>
 
                   <!-- status messages -->
                   <div t-if="order.state == 'cancel'" class="alert alert-danger alert-dismissable d-print-none" role="alert">
@@ -196,6 +263,15 @@
               </div><!-- // #quote_content -->
           </div>
       </xpath>
+  </template>
+
+  <template id="bill_trashcan">
+      <i class="fa fa-trash"
+         title="Delete invoice"
+         data-bs-toggle="tooltip"
+         data-bs-placement="top"
+         data-bs-delay="0"
+      />
   </template>
 
   <template id="purchase_order_portal_content" name="Purchase Order Portal Content">
@@ -227,15 +303,19 @@
               <div class="row">
                   <div class="col-lg-6">
                     <strong class="d-block mb-1">From:</strong>
-                    <address t-field="order.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                    <address t-field="order.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "vat"], "no_marker": True}'/>
                     <strong>Confirmation Date:</strong> <span t-field="order.date_approve" t-options='{"widget": "date"}'/><br/>
                     <div t-att-class="'d-inline' if order.date_planned else 'd-none'">
                       <strong>Receipt Date:</strong><span class="ms-1" t-field="order.date_planned" t-options='{"widget": "date"}'/>
                     </div>
                   </div>
+                  <div class="col-lg-6">
+                    <strong class="d-block mb-1">Your Address:</strong>
+                    <address t-field="order.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "vat"], "no_marker": True}'/>
+                    <a t-if="request.env.user.partner_id == order.partner_id" href="/my/account">Edit</a>
+                  </div>
               </div>
 
-              <t t-set="invoices" t-value="[i for i in order.invoice_ids if i.state not in ['draft', 'cancel']]"/>
               <div t-if="invoices" class="row">
                   <div class="col">
                       <strong class="d-block mb-1">Invoices</strong>
@@ -245,12 +325,28 @@
                               <div class="d-flex flex-wrap align-items-center justify-content-between">
                                   <div>
                                       <a t-att-href="report_url">
-                                          <span t-esc="i.name"/>
+                                          <span t-esc="i.display_name"/>
                                       </a>
-                                      <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
+                                      <div t-if="i.invoice_date" class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
                                   </div>
                                   <span t-if="i.payment_state in ('paid', 'in_payment')" class="badge text-bg-success small"><i class="fa fa-fw fa-check"/>Paid</span>
                                   <span t-elif="i.payment_state == 'reversed'" class="badge text-bg-success small"><i class="fa fa-fw fa-check"/>Reversed</span>
+                                  <div t-elif="i._can_be_cancelled_by_vendor_partner(request.env.user.partner_id)">
+                                      <form t-if="verified_session" t-attf-action="/my/bill/{{ i.id }}/cancel?{{ keep_query(purchase_order_id=order.id) }}" method="POST" class="d-inline">
+                                          <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                          <button id="bill_deletion_submit_button" type="submit" class="btn btn-link">
+                                              <t t-call="purchase.bill_trashcan"/>
+                                          </button>
+                                      </form>
+                                      <button t-elif="is_logged_in_user_customer"
+                                              id="bill_deletion_verification_button"
+                                              class="btn btn-link"
+                                              data-bs-toggle="modal"
+                                              data-bs-target="#modal_verify_email">
+                                          <t t-call="purchase.bill_trashcan"/>
+                                      </button>
+                                      <div class="badge text-bg-info small">Draft</div>
+                                  </div>
                                   <span t-else="" class="small badge text-bg-primary"><i class="fa fa-fw fa-clock-o"/>Waiting Payment</span>
                               </div>
                           </t>
@@ -391,6 +487,234 @@
         <div t-call="purchase.purchase_order_portal_content"/>
       </div>
     </xpath>
+  </template>
+
+    <template id="verify_email_modal">
+        <div role="dialog" class="modal fade" id="modal_verify_email">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header pb-0">
+                        <h4 class="modal-title">Verify your email address</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <t t-if="order.partner_id.email">
+                            Verify your email address at <t t-out="order.partner_id.email"/>. Click "Verify" and keep
+                            an eye on your inbox!
+                        </t>
+                        <t t-else="">
+                            There is no email address specified for this vendor. Please send us a message at the bottom of
+                            this page to configure a trusted email address.
+                        </t>
+                    </div>
+                    <div class="modal-footer justify-content-start">
+                        <form t-if="order.partner_id.email" t-attf-action="/my/purchase/{{ order.id }}/verify?{{ keep_query() }}" method="POST">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <button type="submit" class="btn btn-primary">Verify</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="upload_bill_warning_modal">
+        <div role="dialog" class="modal fade" id="modal_upload_bill_warning">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header pb-0">
+                        <h4 class="modal-title">Bill for <t t-out="order.name"/></h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        This action will erase your current bill.
+                    </div>
+                    <div class="modal-footer justify-content-start">
+                        <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_upload_bill">Continue</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="upload_bill_modal">
+        <div role="dialog" class="modal fade" id="modal_upload_bill">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header pb-0">
+                        <h4 class="modal-title">Upload your bill for <t t-out="order.name"/></h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="upload_bill" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div t-if="bank_accounts" class="modal-body">
+                            <div>
+                                Make sure your information is correct and address your bill to:
+                            </div>
+                            <address t-field="order.company_id.partner_id"
+                                     t-options='{"widget": "contact", "fields": ["address", "name", "vat"], "no_marker": True}'
+                                     class="small"/>
+                            <input type="file" class="form-control mb-2" accept="application/pdf" id="bill_pdf"
+                                   name="bill_pdf" required="required"></input>
+                            <label for="bank_account">Payment will be done on:</label>
+                            <select name="bank_account" id="bank_account" class="form-select" required="required">
+                                <option t-foreach="bank_accounts" t-as="account" t-att-value="account.id"
+                                        t-out="account.portal_display_name"/>
+                            </select>
+                        </div>
+                        <div t-else="" class="modal-body">
+                            Create a bank account to which payment will be done.
+                        </div>
+                        <div class="modal-footer justify-content-start">
+                            <button type="submit" class="btn btn-primary" t-if="bank_accounts">Upload Your
+                                Bill</button>
+                            <a role="button"
+                               t-attf-class="btn {{'btn-secondary' if bank_accounts else 'btn-primary'}}"
+                               t-att-href="my_bank_account_link">
+                                Create a Bank Account
+                            </a>
+                            <button type="button" class="btn btn-secondary d-none d-sm-block"
+                                    data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
+
+  <!-- /my/bank_accounts -->
+    <template id="portal_bank_accounts" name="Bank Accounts">
+        <t t-call="portal.portal_layout">
+            <t t-set="page_title" t-value="'Bank Accounts'"/>
+            <t t-set="additional_title"><t t-out="page_title"/></t>
+            <div class="wrap ">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-7">
+                            <h4 t-if="bank_accounts" class="fs-6 small text-uppercase fw-bolder my-3">Your bank accounts</h4>
+                            <ul class="list-group">
+                                <li t-foreach="bank_accounts" t-as="account"
+                                    class="list-group-item d-flex flex-column gap-2 py-3 px-2">
+                                    <div class="d-flex gap-3 align-items-start align-items-md-center">
+                                        <!-- query is kept so when deleting it will still redirect to the same purchase order when they save afterward -->
+                                        <form t-attf-action="/my/bank_account/{{ account.id }}/archive?{{ keep_query() }}" method="POST">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <button type="submit" class="btn btn-link">
+                                                <i class="fa fa-trash"
+                                                   title="Delete bank account"
+                                                   data-bs-toggle="tooltip"
+                                                   data-bs-placement="top"
+                                                   data-bs-delay="0"
+                                                />
+                                            </button>
+                                        </form>
+                                        <div class="col text-break" t-out="account.portal_display_name"/>
+                                        <span class="col px-2">
+                                            Saved on
+                                            <time t-field="account.create_date" class="text-nowrap"
+                                                  t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'medium'}"/>
+                                        </span>
+                                        <span class="col-3 d-none d-md-block">
+                                            <p class="small text-600 mb-0">
+                                                <span><i class="fa fa-lock"/> Secured by Odoo</span>
+                                            </p>
+                                        </span>
+                                    </div>
+                                </li>
+                            </ul>
+
+                        <h4 class="fs-6 small text-uppercase fw-bolder my-3">
+                            Add a bank account
+                        </h4>
+                        <form id="bank_account_form" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <!-- related to res.bank -->
+                            <div class="row row-gap-2">
+                                <div class="col-xl-12">
+                                    <label for="bic">Bank SWIFT/BIC</label>*
+                                    <input required="required" type="text" name="bic" id="bic"
+                                           class="form-control js-select2-swift"></input>
+                                </div>
+
+                                <div class="col-xl-6">
+                                    <label for="name">Bank name</label>*
+                                    <input required="required" type="text" name="name" id="name"
+                                           maxlength="70"
+                                           class="form-control"></input>
+                                </div>
+
+                                <div class="col-xl-6">
+                                    <label for="street">Street</label>*
+                                    <input required="required" type="text" name="street" id="street" maxlength="50"
+                                           class="form-control">
+                                    </input>
+                                </div>
+
+                                <div class="col-xl-6">
+                                    <label for="street2">Suite, Building or Floor</label>
+                                    <input type="text" name="street2" id="street2" maxlength="50" class="form-control">
+                                    </input>
+                                </div>
+
+                                <div class="col-xl-6">
+                                    <label for="city">City</label>*
+                                    <input required="required" type="text" name="city" id="city" maxlength="50"
+                                           class="form-control"></input>
+                                </div>
+
+                                <div class="col-xl-6">
+                                    <label for="state">State</label>*
+                                    <select name="state" id="state" class="form-select">
+                                        <option t-foreach="states" t-as="state" t-att-value="state.id"
+                                                t-att-country="state.country_id.id" t-out="state.name"/>
+                                    </select>
+                                </div>
+
+                                <div class="col-xl-6">
+                                    <label for="zip">Zip</label>*
+                                    <input required="required" type="text" name="zip" id="zip" maxlength="10"
+                                           class="form-control"></input>
+                                </div>
+
+                                <div class="col-xl-6">
+                                    <label for="country">Country</label>*
+                                    <select required="required" name="country" id="country" class="form-select">
+                                        <option t-foreach="countries" t-as="country" t-att-value="country.id"
+                                                t-out="country.name"/>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- related to res.partner.bank -->
+                            <div class="row row-gap-2 pt-2">
+                                <div class="col-xl-6"
+                                     t-foreach="bank_account_fields"
+                                     t-as="bank_account_field">
+                                    <label t-att-for="bank_account_field.name"
+                                           t-out="bank_account_field.label + ('*' if bank_account_field.required else '')"/>
+                                    <t t-set="input_accept" t-value="'application/pdf' if bank_account_field.type == 'file' else None"/>
+                                    <input t-att-type="bank_account_field.type"
+                                           t-att-accept="input_accept"
+                                           t-att-name="bank_account_field.name"
+                                           t-att-id="bank_account_field.name"
+                                           t-att-required="bank_account_field.required"
+                                           t-att-data-country-id="bank_account_field.country_id"
+                                           class="form-control o_country_specific_bank_field"/>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end flex-column flex-md-row gap-2 my-2">
+                                <button type="submit" class="btn btn-primary w-100 w-md-auto ms-auto px-5">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
   </template>
 
 </odoo>
