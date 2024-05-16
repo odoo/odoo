@@ -2,19 +2,8 @@
 // It doesn't support CSS's rgba function
 // We re-define here the .bg-[theme-colors] (and text)
 // In order to define them as a css rgb function
-$report-extended-theme-colors: map-merge(
-  $utilities-colors,
-  (
-    "black": to-rgb($black),
-    "white": to-rgb($white),
-    "body": to-rgb($body-bg)
-  )
-);
 
-@each $color-name, $color-value in $report-extended-theme-colors {
-    .text-#{$color-name} {
-        color: RGB($color-value) if($enable-important-utilities, !important, null);
-    }
+@each $color-name, $color-value in $utilities-bg {
     .bg-#{$color-name} {
         background-color: RGB($color-value) if($enable-important-utilities, !important, null);
     }
@@ -22,13 +11,28 @@ $report-extended-theme-colors: map-merge(
 
 // Do a similar operation than before for grays.
 @each $color-name, $color-value in $grays {
-    .text-#{$color-name} {
-        color: $color-value if($enable-important-utilities, !important, null);
-    }
     .bg-#{$color-name} {
         background-color: $color-value if($enable-important-utilities, !important, null);
     }
 }
+// Add the extra theme colors to match backend text-x colors
+// Note: text-muted is using $o-gray-600 (bs_overidden_report) to avoid rgba.
+$report-text-colors: map-merge-multiple($theme-colors, $o-theme-text-colors, $grays,
+    (
+        "body": $body-color,
+        "muted": $text-muted,
+    )
+);
+
+// Generate 'text-x' utility classes.
+@each $color-name, $color-value in $report-text-colors {
+    .text-#{$color-name} {
+        color: $color-value if($enable-important-utilities, !important, null);
+    }
+}
+
+// Cleanup temporary map
+$report-text-colors: null;
 
 /* To avoid broken snippets in report rendering */
 .jumbotron, .panel, .carousel, section {
@@ -83,6 +87,12 @@ $report-extended-theme-colors: map-merge(
     padding-left: $container-padding-x;
 }
 
+//BS5.3 adapt
+.table > :not(caption) > * > * {
+    color: $table-color;
+    background-color: $table-bg;
+}
+
 // Removes borders within a table-borderless as its new definition in Boostrap 5 still has its borders visible in PDFs 
 .table-borderless {
     tbody, thead, tfoot, tr, td, th {
@@ -90,5 +100,52 @@ $report-extended-theme-colors: map-merge(
     }
     > :not(:first-child) {
         border-top-style: none;
+    }
+}
+
+// Fix flex utilites for compatibility with wkhtmltopdf 12.6
+.flex-column {
+    -webkit-box-orient: vertical;
+}
+
+.justify-content {
+    &-center {
+        -webkit-box-pack: center;
+    }
+    &-between {
+        -webkit-box-pack: justify;
+    }
+}
+
+.align-items {
+    &-start {
+        -webkit-box-align: start;
+    }
+    &-center {
+        -webkit-box-align: center;
+    }
+    &-between {
+        -webkit-box-align: justify;
+    }
+    &-end {
+        -webkit-box-align: end;
+    }
+}
+
+.flex-grow {
+    &-0{
+        -webkit-box-flex: 0;
+    }
+    &-1{
+        -webkit-box-flex: 1;
+    }
+}
+
+.flex-shrink {
+    &-0 {
+        -webkit-box-flex-group: 0;
+    }
+    &-1 {
+        -webkit-box-flex-group: 1;
     }
 }
