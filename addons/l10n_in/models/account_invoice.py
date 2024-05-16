@@ -29,6 +29,7 @@ class AccountMove(models.Model):
     l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code')
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller")
     l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
+    l10n_in_warnings = fields.Json(compute="_compute_l10n_in_warnings")
 
     @api.depends('partner_id', 'partner_id.l10n_in_gst_treatment', 'state')
     def _compute_l10n_in_gst_treatment(self):
@@ -153,3 +154,29 @@ class AccountMove(models.Model):
                 'taxes_data': taxes_data,
             })
         return self.env['account.tax']._l10n_in_get_hsn_summary_table(base_lines, display_uom)
+
+    @api.depends('country_code', 'invoice_line_ids.tax_ids', 'l10n_in_gst_treatment', 'l10n_in_state_id.code')
+    def _compute_l10n_in_warnings(self):
+        igst_tag_ref = self.env.ref('l10n_in.tax_tag_igst')
+        igst_tag_id_unsaved = "NewId_" + str(igst_tag_ref.id)
+        zero_rated_tag_ref = self.env.ref('l10n_in.tax_tag_zero_rated')
+        zero_rated_tag_id_unsaved = "NewId_" + str(zero_rated_tag_ref.id)
+        for move in self:
+            if move.country_code != 'IN':
+                move.l10n_in_warnings = {}
+                continue
+            warnings = {}
+            if move.l10n_in_state_id.code == 'IN_OC' and move.l10n_in_gst_treatment == 'overseas':
+                indian_taxes = move.invoice_line_ids.tax_ids.filtered(lambda tax: tax.country_code == 'IN')
+                for tax in indian_taxes:
+                    if all(
+                        tag not in [igst_tag_ref, zero_rated_tag_ref] and
+                        str(tag.id) not in [igst_tag_id_unsaved, zero_rated_tag_id_unsaved]
+                        for tag in tax.invoice_repartition_line_ids.tag_ids
+                    ):
+                        warnings['invalid_gst_type_on_overseas_invoice'] = {
+                            'message': _("IGST should be used when the place of supply is a foreign country."),
+                            'level': 'warning',
+                        }
+                        break
+            move.l10n_in_warnings = warnings
