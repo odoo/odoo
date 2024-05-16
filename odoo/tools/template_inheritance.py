@@ -15,6 +15,7 @@ RSTRIP_REGEXP = re.compile(r'\n[ \t]*$')
 
 def add_stripped_items_before(node, spec, extract):
     text = spec.text or ''
+    falsy_text = None if spec.text is None else ''
 
     before_text = ''
     prev = node.getprevious()
@@ -22,7 +23,9 @@ def add_stripped_items_before(node, spec, extract):
         parent = node.getparent()
         result = parent.text and RSTRIP_REGEXP.search(parent.text)
         before_text = result.group(0) if result else ''
-        parent.text = (parent.text or '').rstrip() + text
+        parent_text = (parent.text or '').rstrip() + text
+        parent_text = parent_text or falsy_text
+        parent.text = parent_text
     else:
         result = prev.tail and RSTRIP_REGEXP.search(prev.tail)
         before_text = result.group(0) if result else ''
