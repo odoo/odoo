@@ -461,14 +461,6 @@
         <field name="view_id" ref="view_calendar_event_form"/>
     </record>
 
-    <record id="action_view_start_calendar_sync" model="ir.actions.act_window">
-        <field name="name">Connect your Calendar</field>
-        <field name="res_model">calendar.provider.config</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-        <field name="context">{'dialog_size': 'medium'}</field>
-    </record>
-
     <record id="calendar_settings_action" model="ir.actions.act_window">
         <field name="name">Settings</field>
         <field name="res_model">res.config.settings</field>
