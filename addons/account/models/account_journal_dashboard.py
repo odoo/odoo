@@ -549,6 +549,7 @@ class account_journal(models.Model):
                 'sum_late': currency.format(sum_late),
                 'has_sequence_holes': journal.has_sequence_holes,
                 'is_sample_data': is_sample_data_by_journal_id[journal.id],
+                'entries_count': 1 if not is_sample_data_by_journal_id[journal.id] else 0,  # TODO: remove in master
             })
 
     def _fill_general_dashboard_data(self, dashboard_data):
