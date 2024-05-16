@@ -798,6 +798,8 @@ class Task(models.Model):
 
             if not default.get('stage_id'):
                 vals['stage_id'] = task.stage_id.id
+            if 'active' not in default and not task['active'] and not self.env.context.get('copy_project'):
+                vals['active'] = True
             vals['name'] = task.name if self.env.context.get('copy_project') else _("%s (copy)", task.name)
             if task.recurrence_id and not default.get('recurrence_id'):
                 vals['recurrence_id'] = task.recurrence_id.copy().id
