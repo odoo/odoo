@@ -97,5 +97,12 @@ export class ProjectMilestone extends models.Model {
 
 export function defineProjectModels() {
     defineWebModels();
-    defineModels([ProjectProject, ProjectTaskType, ProjectMilestone, ProjectTask]);
+    defineModels(projectModels);
 }
+
+export const projectModels = {
+    ProjectProject,
+    ProjectTask,
+    ProjectTaskType,
+    ProjectMilestone,
+};
