@@ -11,39 +11,6 @@ body {
     color: #000 !important;
     word-wrap: break-word;
     font-family: $o-default-report-font;
-}
-
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    line-height: 1.2;
-}
-
-h1, .h1 {
-    font-size: 2.5rem;
-}
-
-h2, .h2 {
-    font-size: 2rem;
-}
-
-h3, .h3 {
-    font-size: 1.75rem;
-}
-
-h4, .h4 {
-    font-size: 1.5rem;
-}
-
-h5, .h5 {
-    font-size: 1.25rem;
-}
-
-h6, .h6 {
-    font-size: 1rem;
-}
-
-p, span, strong, em {
     line-height: 1.5;
 }
 
@@ -74,12 +41,6 @@ span.o_force_ltr {
 
 .o_bold {
     font-weight: bolder;
-}
-.o_italic {
-    font-style: italic;
-}
-.o_underline {
-    text-decoration: underline;
 }
 
 /*Total table*/
@@ -117,17 +78,6 @@ table {
             }
         }
     }
-}
-
-// TODO: investigate further for proper fix
-// By default there is 40px padding on the lists (both <ol> and <ul>) and it is
-// also the case with HTML reports, but when PDFs are rendered with Wkhtmltopdf,
-// the padding is not applied on <ol>, it is strangely applied on <ul> only.
-// So we simply remove the left padding, and apply left margin instead which
-// seems to do the job while not breaking layout in both html/pdf.
-ol {
-    margin-left: 40px;
-    padding-left: 0;
 }
 
 /* Checklist */
