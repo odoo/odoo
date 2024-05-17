@@ -12,9 +12,6 @@ Install this if you are using the Point of Sale app in Peru.
         "l10n_pe",
         "point_of_sale",
     ],
-    "countries": [
-        "pe",
-    ],
     "data": [
         "data/res_partner_data.xml",
         "views/templates.xml",
