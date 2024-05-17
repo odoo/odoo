@@ -20,3 +20,4 @@ from . import stock_rule
 from . import stock_scrap
 from . import stock_warehouse
 from . import stock_quant
+from . import stock_replenish_mixin
