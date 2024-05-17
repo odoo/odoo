@@ -16,7 +16,7 @@ export const popupService = {
             props: { popups },
         });
         let popupId = 0;
-        let zIndex = 100;
+        let zIndex = 10000;
         return {
             /**
              * Displays a popup over the interface.
