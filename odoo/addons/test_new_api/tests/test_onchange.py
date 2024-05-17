@@ -1325,3 +1325,14 @@ class TestComputeOnchange2(TransactionCase):
             form.name = f"{START}->{START + 20}"
             self.assertEqual(form.start, START, "updating 'name' should recompute 'start'")
             self.assertEqual(form.end, START + 20, "updating 'name' should recompute 'end'")
+
+    def test_absent_dependencies_fields(self):
+        model = self.env['test_new_api.onchange.partial']
+        created_record = model.create({})
+        self.assertEqual(created_record.currency_id, self.env.company.currency_id)
+
+        with Form(self.env['test_new_api.onchange.partial']) as record_form:
+            self.assertEqual(record_form.currency_id, self.env.company.currency_id)
+            saved_record = record_form.save()
+
+        self.assertEqual(saved_record.currency_id, self.env.company.currency_id)
