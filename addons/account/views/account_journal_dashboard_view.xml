@@ -290,13 +290,13 @@
                                 </button>
                             </t>
                             <t t-if="journal_type == 'purchase'">
-                                <t t-if="dashboard.entries_count > 0">
-                                    <widget name="account_file_uploader" btnClass="btn btn-primary oe_kanban_action_button"/>
-                                </t>
-                                <t t-else="">
+                                <t t-if="dashboard.is_sample_data">
                                     <button type="object" name="action_create_vendor_bill" class="btn btn-primary d-block" journal_type="purchase" groups="account.group_account_invoice">
                                         <span>Upload</span>
                                     </button>
+                                </t>
+                                <t t-else="">
+                                    <widget name="account_file_uploader" btnClass="btn btn-primary oe_kanban_action_button"/>
                                 </t>
                                 <a type="object" name="action_create_new" class="o_invoice_new" groups="account.group_account_invoice">Create Manually</a>
                             </t>
