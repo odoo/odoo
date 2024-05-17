@@ -11,7 +11,7 @@ from odoo.addons.product.tests.common import ProductAttributesCommon
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.controllers.payment import PaymentPortal
-from odoo.addons.website_sale.models.product_template import ProductTemplate
+from odoo.addons.website_sale.models.product_product import Product
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
@@ -73,7 +73,7 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
         With the `prevent_zero_price_sale` that we have on website, we can't add free products
         to our cart.
         There is an exception for certain product types specified by the
-        `_get_product_types_allow_zero_price` method, so this test ensures that it works
+        `_is_allow_zero_price` method, so this test ensures that it works
         by mocking that function to return the "service" product type.
         """
         website_prevent_zero_price = self.env['website'].create({
@@ -93,7 +93,7 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
             'website_published': True,
         })
 
-        with patch.object(ProductTemplate, '_get_product_types_allow_zero_price', lambda pt: ['service']):
+        with patch.object(Product, '_is_allow_zero_price', lambda pp: pp.detailed_type == 'service'):
             with self.assertRaises(UserError, msg="'consu' product type is not allowed to have a 0 price sale"), \
                  MockRequest(self.env, website=website_prevent_zero_price):
                 self.WebsiteSaleController.cart_update_json(product_id=product_consu.id, add_qty=1)

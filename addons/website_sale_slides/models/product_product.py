@@ -1,18 +1,18 @@
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 
 
 class Product(models.Model):
     _inherit = "product.product"
 
     channel_ids = fields.One2many('slide.channel', 'product_id', string='Courses')
-    is_slide_channel = fields.Boolean(compute="_compute_is_slide_channel")
+    is_slide_channel = fields.Boolean(compute="_compute_is_slide_channel", compute_sudo=True)
 
     def _compute_is_slide_channel(self):
         has_slide_channel_per_product = {
             product.id: bool(count)
             for product, count in self.env['slide.channel']._read_group(
                 domain=[
-                    ('product_id', '!=', False),
+                    ('product_id', 'in', self.ids),
                 ],
                 groupby=['product_id'],
                 aggregates=['__count'],
