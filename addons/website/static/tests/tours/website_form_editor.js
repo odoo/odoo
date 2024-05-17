@@ -858,7 +858,7 @@
             run: "click",
         }, {
             content: "Check the form was sent (success page without form)",
-            trigger: ':iframe body:not(:has([data-snippet="s_website_form"])) .fa-check-circle',
+            trigger: ':iframe body:not(:has([data-snippet="s_website_form"])) .fa-paper-plane',
         }, {
             content: "Go back to the form",
             trigger: ':iframe a.navbar-brand.logo',
@@ -875,7 +875,7 @@
             run: "click",
         }, {
             content: "Check the form was again sent (success page without form)",
-            trigger: ':iframe body:not(:has([data-snippet="s_website_form"])) .fa-check-circle',
+            trigger: ':iframe body:not(:has([data-snippet="s_website_form"])) .fa-paper-plane',
         }
     ]);
 
@@ -987,7 +987,7 @@
             run: "click",
         }, {
             content: "Check the form was again sent (success page without form)",
-            trigger: ":iframe body:not(:has([data-snippet='s_website_form'])) .fa-check-circle",
+            trigger: ":iframe body:not(:has([data-snippet='s_website_form'])) .fa-paper-plane",
         },
     ]);
 
