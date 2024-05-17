@@ -6,7 +6,7 @@ export function clickLoginButton() {
     return [
         {
             content: "click login button",
-            trigger: ".login-overlay .login-button.select-cashier",
+            trigger: ".login-overlay .select-cashier",
             run: "click",
         },
     ];
