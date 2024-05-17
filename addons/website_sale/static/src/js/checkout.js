@@ -429,11 +429,11 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
      * Set the pickup location on the order.
      *
      * @private
-     * @param {String} pickupLocation - The pickup location to set.
+     * @param {String} pickupLocationData - The pickup location's data to set.
      * @return {void}
      */
-    async _setPickupLocation(pickupLocation) {
-        await rpc("/shop/set_pickup_location", {pickup_location: pickupLocation});
+    async _setPickupLocation(pickupLocationData) {
+        await rpc("/shop/set_pickup_location", {pickup_location_data: pickupLocationData});
     },
 
     /**
