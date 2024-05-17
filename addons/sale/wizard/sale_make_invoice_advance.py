@@ -161,12 +161,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
     @api.constrains('product_id')
     def _check_down_payment_product_is_valid(self):
         for wizard in self:
-            if wizard.count > 1 or not wizard.product_id:
+            if wizard.count > 1 or not wizard.product_id or wizard.advance_payment_method == "delivered":
                 continue
             if wizard.product_id.invoice_policy != 'order':
                 raise UserError(_(
                     "The product used to invoice a down payment should have an invoice policy"
-                    "set to \"Ordered quantities\"."
+                    " set to \"Ordered quantities\"."
                     " Please update your deposit product to be able to create a deposit invoice."))
             if wizard.product_id.type != 'service':
                 raise UserError(_(
