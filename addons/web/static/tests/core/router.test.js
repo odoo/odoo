@@ -1623,16 +1623,11 @@ describe("Retrocompatibility", () => {
 describe("internal links", () => {
     test.todo("click on internal link does a loadState instead of a full reload", async () => {
         redirect("/odoo");
-        await createRouter({ onPushState: () => expect.step("pushState") });
+        createRouter({ onPushState: () => expect.step("pushState") });
         const fixture = getFixture();
         const link = document.createElement("a");
         link.href = "/odoo/some-action/2";
         fixture.appendChild(link);
-        patchWithCleanup(HTMLAnchorElement.prototype, {
-            get href() {
-                return new URL(this.getAttribute("href"), browser.location.origin).href;
-            },
-        });
 
         expect(router.current).toEqual({});
 
@@ -1642,7 +1637,7 @@ describe("internal links", () => {
             defaultPrevented = ev.defaultPrevented;
             ev.preventDefault();
         });
-        await click("a");
+        click("a");
         await tick();
         expect(["click"]).toVerifySteps();
         expect(router.current).toEqual({
@@ -1663,17 +1658,12 @@ describe("internal links", () => {
 
     test.todo("click on internal link with target _blank doesn't do a loadState", async () => {
         redirect("/odoo");
-        await createRouter({ onPushState: () => expect.step("pushState") });
+        createRouter({ onPushState: () => expect.step("pushState") });
         const fixture = getFixture();
         const link = document.createElement("a");
         link.href = "/odoo/some-action/2";
         link.target = "_blank";
         fixture.appendChild(link);
-        patchWithCleanup(HTMLAnchorElement.prototype, {
-            get href() {
-                return new URL(this.getAttribute("href"), browser.location.origin).href;
-            },
-        });
 
         expect(router.current).toEqual({});
 
@@ -1683,7 +1673,7 @@ describe("internal links", () => {
             defaultPrevented = ev.defaultPrevented;
             ev.preventDefault();
         });
-        await click("a");
+        click("a");
         await tick();
         expect(["click"]).toVerifySteps();
         expect(router.current).toEqual({});
