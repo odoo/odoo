@@ -1111,6 +1111,19 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         for meeting in meetings:
             Holiday.browse(meeting.res_id).meeting_id = meeting
 
+        for holiday in holidays:
+            user_tz = timezone(holiday.tz)
+            utc_tz = pytz.utc.localize(holiday.date_from).astimezone(user_tz)
+            notify_partner_ids = holiday.employee_id.user_id.partner_id.ids
+            holiday.message_post(
+                body=_(
+                    'Your %(leave_type)s planned on %(date)s has been accepted',
+                    leave_type=holiday.holiday_status_id.display_name,
+                    date=utc_tz.replace(tzinfo=None)
+                ),
+                partner_ids=notify_partner_ids)
+
+
     def _prepare_holidays_meeting_values(self):
         result = defaultdict(list)
         for holiday in self:
@@ -1211,20 +1224,6 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
         current_employee = self.env.user.employee_id
         self.filtered(lambda hol: hol.validation_type == 'both').write({'state': 'validate1', 'first_approver_id': current_employee.id})
-
-        # Post a second message, more verbose than the tracking message
-        for holiday in self.filtered(lambda holiday: holiday.employee_id.user_id):
-            user_tz = timezone(holiday.tz)
-            utc_tz = pytz.utc.localize(holiday.date_from).astimezone(user_tz)
-            # Do not notify the employee by mail, in case if the time off still needs Officer's approval
-            notify_partner_ids = holiday.employee_id.user_id.partner_id.ids if holiday.validation_type != 'both' else []
-            holiday.message_post(
-                body=_(
-                    'Your %(leave_type)s planned on %(date)s has been accepted',
-                    leave_type=holiday.holiday_status_id.display_name,
-                    date=utc_tz.replace(tzinfo=None)
-                ),
-                partner_ids=notify_partner_ids)
 
         self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()
         if not self.env.context.get('leave_fast_create'):
