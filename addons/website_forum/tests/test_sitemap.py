@@ -3,6 +3,7 @@
 from freezegun import freeze_time
 from unittest.mock import patch
 
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website_forum.tests.common import TestForumCommon
 from odoo.tests import tagged
 
@@ -19,13 +20,13 @@ class TestWebsiteControllers(TestForumCommon):
             self.post.name = "RenameIt"  # update write_date
             self.post._update_last_activity()  # update last_activity_date
 
-        locs = website._enumerate_pages(query_string='/forum/%s' % self.forum.name)
-        self.assertEqual(list(locs)[1]['lastmod'].strftime("%Y-%m-%d"), datetime)
+        locs = website._enumerate_pages(query_string='/forum/%s' % slug(self.forum))
+        self.assertEqual(next(iter(locs))['lastmod'].strftime("%Y-%m-%d"), datetime)
 
         # Edit post content the 2024-01-01
         datetime = '2024-01-01'
         with freeze_time(datetime), patch.object(self.env.cr, 'now', lambda: datetime):
             self.post.content = "I am a bird"  # update write_date
 
-        locs = website._enumerate_pages(query_string='/forum/%s' % self.forum.name)
-        self.assertEqual(list(locs)[1]['lastmod'].strftime("%Y-%m-%d"), datetime)
+        locs = website._enumerate_pages(query_string='/forum/%s' % slug(self.forum))
+        self.assertEqual(next(iter(locs))['lastmod'].strftime("%Y-%m-%d"), datetime)
