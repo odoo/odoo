@@ -481,6 +481,11 @@ export class DateTimePicker extends Component {
     applyValueAtIndex(value, valueIndex) {
         const result = [...this.values];
         if (this.isRange) {
+            if (result[0] && result[1] === false){
+                valueIndex = 1;
+            }else if (result[1] && result[0] === false){
+                valueIndex = 0;
+            }
             if (result[0] && value.endOf("day") < result[0].startOf("day")) {
                 valueIndex = 0;
             } else if (result[1] && result[1].endOf("day") < value.startOf("day")) {

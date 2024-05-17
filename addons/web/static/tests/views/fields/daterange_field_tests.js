@@ -850,4 +850,30 @@ QUnit.module("Fields", (hooks) => {
             "No arrow should be displayed with no values and in readonly"
         );
     });
+
+    QUnit.test(
+        "update the selected input date after removing the existing date",
+        async (assert) => {
+            serverData.models.partner.fields.date_end = { string: "Date End", type: "date" };
+            serverData.models.partner.records[0].date_end = "2017-02-08";
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                        <form>
+                            <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}" attrs="{'required': ['|', ('date', '!=', False), ('date_end', '!=', False)]}"/>
+                        </form>`,
+            });
+            await click(target, "input[data-field=date_end]");
+            await editInput(target, "input[data-field=date_end]",null);
+            await click(getPickerCell("12").at(0));
+
+            assert.equal(
+                target.querySelector("input[data-field=date_end]").value,
+                "02/12/2017"
+            );
+        }
+    );
 });
