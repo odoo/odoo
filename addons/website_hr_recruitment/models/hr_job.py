@@ -1,5 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from werkzeug.urls import url_join
 
 from odoo import fields, models, api
 from odoo.addons.http_routing.models.ir_http import slug
@@ -50,6 +51,12 @@ class Job(models.Model):
             <h6>4 Days after Interview</h6>
         """)
     published_date = fields.Date(compute='_compute_published_date', store=True)
+    full_url = fields.Char('job URL', compute='_compute_full_url')
+
+    @api.depends('website_url')
+    def _compute_full_url(self):
+        for job in self:
+            job.full_url = url_join(job.get_base_url(), (job.website_url or '/jobs'))
 
     @api.depends('website_published')
     def _compute_published_date(self):
