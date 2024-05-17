@@ -102,21 +102,21 @@ export class OrderSummary extends Component {
             if (lastId != selectedLine.uuid) {
                 this._showDecreaseQuantityPopup();
             } else if (currentQuantity < parsedInput) {
-                this._setValue(buffer);
+                this._setValue(buffer, key);
             } else if (parsedInput < currentQuantity) {
                 this._showDecreaseQuantityPopup();
             }
             return;
         }
         const val = buffer === null ? "remove" : buffer;
-        this._setValue(val);
+        this._setValue(val, key);
         if (val == "remove") {
             this.numberBuffer.reset();
             this.pos.numpadMode = "quantity";
         }
     }
 
-    _setValue(val) {
+    _setValue(val, key = "Backspace") {
         const { numpadMode } = this.pos;
         const selectedLine = this.currentOrder.get_selected_orderline();
         if (selectedLine) {
@@ -124,6 +124,12 @@ export class OrderSummary extends Component {
                 if (val === "remove") {
                     this.currentOrder.removeOrderline(selectedLine);
                 } else {
+                    if (key === "-") {
+                        val = !selectedLine.refunded_orderline_id
+                            ? selectedLine.qty * -1
+                            : selectedLine.qty;
+                        this.numberBuffer.set(val.toString());
+                    }
                     const result = selectedLine.set_quantity(val);
 
                     if (result !== true) {
@@ -132,8 +138,16 @@ export class OrderSummary extends Component {
                     }
                 }
             } else if (numpadMode === "discount" && val !== "remove") {
+                if (key === "-") {
+                    val = val * -1;
+                    this.numberBuffer.set(val.toString());
+                }
                 selectedLine.set_discount(val);
             } else if (numpadMode === "price" && val !== "remove") {
+                if (key === "-") {
+                    val = selectedLine.price_unit * -1;
+                    this.numberBuffer.set(val.toString());
+                }
                 selectedLine.uiState.price_type = "manual";
                 selectedLine.set_unit_price(val);
             }

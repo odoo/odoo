@@ -58,7 +58,7 @@ patch(OrderSummary.prototype, {
      *
      * @override
      */
-    _setValue(val) {
+    _setValue(val, key) {
         const selectedLine = this.currentOrder.get_selected_orderline();
         if (!selectedLine) {
             return;
@@ -79,7 +79,7 @@ patch(OrderSummary.prototype, {
             !selectedLine.is_reward_line ||
             (selectedLine.is_reward_line && ["", "remove"].includes(val))
         ) {
-            super._setValue(val);
+            super._setValue(val, key);
         }
         if (!selectedLine.is_reward_line || (selectedLine.is_reward_line && val === "remove")) {
             this.pos.updateRewards();

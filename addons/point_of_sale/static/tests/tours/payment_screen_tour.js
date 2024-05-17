@@ -96,7 +96,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingUp", {
             Chrome.clickMenuOption("Orders"),
             TicketScreen.clickNewTicket(),
 
-            ProductScreen.addOrderline("Product Test", "-1"),
+            ProductScreen.addOrderline("Product Test", "-"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.totalIs("-2.00"),
@@ -118,7 +118,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
             Chrome.clickMenuOption("Orders"),
             TicketScreen.clickNewTicket(),
 
-            ProductScreen.addOrderline("Product Test", "-1"),
+            ProductScreen.addOrderline("Product Test", "-"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.totalIs("-1.95"),
