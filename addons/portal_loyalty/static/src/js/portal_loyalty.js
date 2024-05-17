@@ -1,7 +1,11 @@
 /** @odoo-module **/
 
+import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
+// import { formatMonetary } from "@web/views/fields/formatters";
+import { formatCurrency, getCurrency } from "@web/core/currency";
+import { formatDate, parseDate } from "@web/core/l10n/dates";
 
 // Widget responsible for opening the modal
 
@@ -17,8 +21,14 @@ publicWidget.registry.PortalLoyaltyWidget = publicWidget.Widget.extend({
         const points = ev.currentTarget.dataset.points;
         const pointName = ev.currentTarget.dataset.pointName;
         const rewardId = parseInt(ev.currentTarget.dataset.rewardId);
+        const couponId = parseInt(ev.currentTarget.dataset.couponId);
+        const value = ev.currentTarget.dataset.value;
+        console.log("value:");
+        console.log(value);
         console.log("title:");
         console.log(title);
+        console.log("couponId:");
+        console.log(couponId);
         console.log("rewardId:");
         console.log(rewardId);
         if (!rewardId || !title) {
@@ -28,6 +38,7 @@ publicWidget.registry.PortalLoyaltyWidget = publicWidget.Widget.extend({
         this.call("dialog", "add", PortalLoyalty, {
             title: title,
             rewardId: rewardId,
+            couponId: couponId,
             points: points,
             pointName: pointName,
         });
@@ -35,15 +46,28 @@ publicWidget.registry.PortalLoyaltyWidget = publicWidget.Widget.extend({
 });
 
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, useState } from "@odoo/owl";
-
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import {
+    Component,
+    useState,
+    onWillStart,
+} from "@odoo/owl";
 
 export class PortalLoyalty extends Component {
-    static components = { Dialog };
+    static components = {
+        Dialog,
+        Dropdown,
+        DropdownItem,
+    };
     static template = 'portal_loyalty_modal.LoyaltyModal';
     static props = {
         title: String,
         rewardId: Number,
+        couponId: Number,
+        points: Number,
+        pointName: String,
+        historyId: Number,
         // partnerId: Number,
     };
 
@@ -51,20 +75,34 @@ export class PortalLoyalty extends Component {
         this.title = this.props.title;
         this.points = this.props.points;
         this.pointName = this.props.pointName;
+        this.topUpValues = [25, 50, 100, 200, 42.4242];
         this.state = useState({
-            rewards: [],
+            currencyId: null,
+            history: [],
+            topUpIndex: 0,
         });
 
-        // onWillStart(this.onWillStartHandler.bind(this));
+        onWillStart(this.onWillStartHandler.bind(this));
 
         // onWillStart(async () => {
         //     this.state.rewards = await this._loadData(this.props.edit);
         // });
     }
 
+    async topUpNow() {
+        console.log("Top-Up for", this.topUpValues[this.state.topUpIndex], this.props.pointName);
+    }
 
-    async topUpNow(ev) {
-        console.log("Hello World !!")
+    formatDate(date) {
+        return formatDate(parseDate(date));
+    }
+
+    formatPoints(points){
+        if (this.pointName == getCurrency(this.state.currencyId).symbol)
+            return formatCurrency(points, this.state.currencyId);
+        if (points % 1 === 0)
+            return points.toString() + this.pointName;
+        return points.toFixed(2) + this.pointName;
     }
 
     // async _loadData(onlyMainProduct) {
@@ -73,7 +111,28 @@ export class PortalLoyalty extends Component {
     //     });
     // }
 
-    // async onWillStartHandler() {
+    onChangetopUpValue(ev) {
+        const value = JSON.parse(ev.target.value);
+        this.state.topUpIndex = this.topUpValues.indexOf(value);
+    }
+
+    get topUpValue() {
+        return this.formatPoints(this.topUpValues[this.state.topUpIndex])
+    }
+
+    async onWillStartHandler() {
+        console.log('this.props.couponId: ');
+        console.log(this.props.couponId);
+        const { currencyId, history } = await rpc("/my/rewards/history", {
+            coupon_id: this.props.couponId,
+        });
+        this.state.history = history;
+        this.state.currencyId = currencyId;
+        console.log('this.state.history: ');
+        console.log(this.state.history);
+        console.log('this.state.currencyId: ');
+        console.log(this.state.currencyId);
+
     //     // Cart Qty should not change while the dialog is opened.
     //     this.cartQty = parseInt(sessionStorage.getItem("website_sale_cart_quantity"));
     //     if (!this.cartQty) {
@@ -90,7 +149,7 @@ export class PortalLoyalty extends Component {
     //             this.loadProductCombinationInfo(product).then(this.render.bind(this));
     //         }, 200);
     //     }
-    // }
+    }
 }
 
 // export class ReorderDialog extends Component {

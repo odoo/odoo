@@ -75,6 +75,22 @@ class SaleOrder(models.Model):
             coupon.points += change
         res = super().action_confirm()
         self._send_reward_coupon_mail()
+
+
+        print('__'*32)
+        # transaction.sale_order_id.order_line.filtered(lambda line: line.coupon_id == transaction.coupon_id).price_total
+        for line in self.order_line.filtered(lambda line: line.coupon_id.id != False):
+            line.coupon_id.history_ids += self.env['sale.loyalty.history'].create({
+                'coupon_id': line.coupon_id.id,
+                'sale_order_id': self.id,
+                'sale_order_name': self.name,
+                # 'points': -line.points_cost,
+                'used': -line.points_cost,
+                'new_balance': line.coupon_id.points,
+            })
+        print('__'*32)
+
+
         return res
 
     def _action_cancel(self):
@@ -620,6 +636,11 @@ class SaleOrder(models.Model):
         elif self._get_real_points_for_coupon(coupon) < reward.required_points:
             return {'error': _('The coupon does not have enough points for the selected reward.')}
         reward_vals = self._get_reward_line_values(reward, coupon, **kwargs)
+
+
+
+
+
         self._write_vals_from_reward_vals(reward_vals, old_reward_lines)
         return {}
 

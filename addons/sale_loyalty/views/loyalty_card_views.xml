@@ -9,6 +9,22 @@
             <field name="partner_id"  position="after">
                 <field name="order_id" invisible="not order_id"/>
             </field>
+            <group name="loyalty_card_form" position="after">
+                <notebook>
+                    <page name="history" string="History">
+                        <field name="history_ids" widget="one2many" nolabel="1">
+                            <tree create="False" edit="False" delete="False" no_open="True">
+                                <field name="description" string="Description" readonly="1"/>
+                                <field name="sale_order_name" string="Order" readonly="1"/>
+                                <field name="date" string="Date" readonly="1"/>
+                                <field name="issued" string="Issued" readonly="1"/>
+                                <field name="used" string="Used" readonly="1"/>
+                                <field name="new_balance" string="New Balance" readonly="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </group>
         </field>
     </record>
 

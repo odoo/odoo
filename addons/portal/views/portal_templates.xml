@@ -836,22 +836,48 @@
                 <t t-foreach="reward_ids" t-as="reward">
                     <br/>
                     <t t-foreach="reward.program_id.coupon_ids" t-as="coupon">
-                        <button
+                        <div
+                            t-attf-class="o_modal_test_event_click d-flex mb-2 position-relative rounded shadow-lg"
+                            role="button"
+                            t-att-data-reward-id="reward.id"
+                            t-att-data-coupon-id="coupon.id"
+                            t-att-data-title="coupon.description"
+                            t-att-data-points="coupon.points_display"
+                            t-att-data-point-name="coupon.point_name"
+                        >
+                            <span t-attf-class="o_notification_bar rounded-start" style="width: 0.5rem; background-color: var(--cyan)"/>
+                            <div class="w-100 py-3 ps-3 pe-5 border border-start-0 rounded-end d-flex flex-row gap-3">
+                                <img class="object-fit-scale" src="https://cdn-icons-png.freepik.com/512/3757/3757881.png" width="40"/>
+                                <div class="d-flex flex-column gap-1">
+                                    <span t-out="coupon.description"/>
+                                    <!-- <p class="m-0 text-600" t-out="round(coupon.points if coupon.points > 0 else 0, 2)"/> -->
+                                    <p class="m-0 text-600" t-out="coupon.points_display"/>
+                                    <!-- <div t-if="props.buttons.length" class="o_notification_buttons d-flex gap-2 mt-3">
+                                        <button t-foreach="props.buttons" t-as="button" type="button" t-key="button_index" t-attf-class="btn {{button.primary ? 'btn-primary' : 'btn-secondary'}}" t-on-click="button.onClick">
+                                            <t t-if="button.icon">
+                                                <i t-if="button.icon.indexOf('fa-') === 0" role="img" t-att-aria-label="button.name" t-att-title="button.name" t-attf-class="fa fa-fw {{button.icon}} me-1"/>
+                                                <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>
+                                            </t>
+                                            <span t-esc="button.name"/>
+                                        </button>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <button
                             class="btn btn-primary o_modal_test_event_click w-100"
                             t-att-data-reward-id="reward.id"
+                            t-att-data-coupon-id="coupon.id"
                             t-att-data-title="coupon.description"
-                            t-att-data-points="coupon.points"
+                            t-att-data-points="coupon.points_display"
                             t-att-data-point-name="coupon.point_name"
                         >
                             <t t-out="coupon.description"/>
-                            <t t-out="coupon.history_id"/>
                         </button>
-                        <!-- <t t-out="reward.description"/>
-                        <span>| coupon Name:</span> -->
                         <span>points:</span>
-                        <t t-out="coupon.points"/>
+                        <t t-out="round(coupon.points if coupon.points > 0 else 0, 2)"/>
                         <t t-out="coupon.point_name"/>
-                        <br/>
+                        <br/> -->
                     </t>
                 </t>
             </div>

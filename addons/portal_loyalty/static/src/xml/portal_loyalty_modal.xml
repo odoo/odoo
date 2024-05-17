@@ -2,15 +2,127 @@
 <templates>
     <t t-name="portal_loyalty_modal.LoyaltyModal">
         <Dialog title="title" points="points" pointName="pointName">
-            <!-- <t t-set-slot="header">
-                <t t-call="web.Dialog.header">
-                    <span>A QUE COIUCOUC</span>
-                    <t t-set="fullscreen" t-value="false"/>
-                </t>
-                <span>Nieu </span>
+            <!-- <t t-call="loyalty.loyalty_history_view_tree"/> -->
+            <!-- <tree>
+                <field name="props.history.amount"/>
+            </tree>
+            <t t-out="props.history.amount"/> -->
+            <!-- <t t-foreach="props.history" t-as="so" t-key="so">
+                <t t-out="so"/>
+                <span>Amount: </span>
+                <t t-out="so.amount"/>
+                <span>SO: </span>
+                <t t-out="so.sale_order_id"/>
+                <br/>
             </t> -->
-            <span>A que coucou BOB !</span>
+            <!-- <t t-out="this.state.history[0].amount"/> -->
+            <span>Last Movements</span>
+            <table class="table table-bordered">
+                <tbody>
+                    <t t-foreach="this.state.history" t-as="transaction" t-key="transaction">
+                        <tr>
+                            <td><t t-out="transaction.description"/></td>
+                            <td><t t-out="transaction.sale_order"/></td>
+                            <td><t t-out="this.formatDate(transaction.date)"/></td> 
+                            <td t-if="transaction.issued"><t t-out="transaction.issued"/></td>
+                            <td t-if="transaction.used"><t t-out="transaction.used"/></td> 
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+
+            <!-- <t t-foreach="this.state.history" t-as="transaction" t-key="transaction">
+                <t t-out="transaction"/>
+                <span>Amount: </span>
+                <t t-out="transaction.amount"/>
+                <span>SO: </span>
+                <t t-out="transaction.sale_order"/>
+                <br/>
+            </t> -->
+
             <t t-set-slot="footer">
+                <!-- <select
+                    class="btn btn-link dropdown-toggle"
+                    t-on-change="onChangetopUpValue"
+                    t-on-click.stop="() =&gt; {}"
+                    t-att-id="props.id">
+                    <t t-foreach="topUpValues" t-as="value" t-key="value">
+                        <option
+                            t-attf-class="dropdown-item #{topUpValues[state.topUpIndex] == value and ' active' or ''}"
+                            t-att-selected="topUpValues[state.topUpIndex] === value"
+                            t-esc="value"
+                        />
+                    </t>
+                </select>
+
+                <select
+                    class="o_input pe-3 btn btn-secondary dropdown-toggle"
+                    t-on-change="onChangetopUpValue"
+                    t-on-click.stop="() =&gt; {}"
+                    t-att-id="props.id">
+                    <option
+                        t-esc="topUpValues[state.topUpIndex]"
+                    />
+                    <t t-foreach="topUpValues" t-as="value" t-key="value">
+                        <option
+                            t-attf-class="dropdown-item #{topUpValues[state.topUpIndex] == value and ' active' or ''}"
+                            t-att-selected="topUpValues[state.topUpIndex] === value"
+                            t-esc="value"
+                        />
+                    </t>
+                </select>
+
+                <Dropdown menuClass="'state_selection_field_menu'">
+                    <button class="btn btn-link d-flex p-0">
+                        <div class="d-flex align-items-center" >
+                            <span class="o_status_label ms-1" t-esc="topUpValues[state.topUpIndex]"/>
+                        </div>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-foreach="topUpValues" t-as="value" t-key="value">
+                            <DropdownItem
+                                class="`d-flex align-items-center ${topUpValues[state.topUpIndex] === value ? 'active' : ''}`"
+                            >
+²                                <span t-esc="value"/>
+                            </DropdownItem>
+                        </t>
+                    </t>
+                </Dropdown> -->
+
+
+                <div class="btn-group">
+                    <button id="portal_top_up_amount" data-bs-toggle="dropdown" class="btn btn-link dropdown-toggle">
+                        <t t-out="topUpValue"/>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="portal_searchbar_sortby">
+                        <t t-foreach="topUpValues" t-as="val" t-key="val">
+                            <button
+                                t-attf-class="dropdown-item #{topUpValues[state.topUpIndex] == val and ' active' or ''}"
+                                t-on-click="() => {state.topUpIndex = topUpValues.indexOf(val)}"
+                            >
+                                <span t-out="formatPoints(val)"/>
+                            </button>
+                        </t>
+                    </div>
+                </div>
+
+<!-- 
+                <div class="btn-group" t-if='this.state.history and this.state.history[0]'>
+                    <button id="portal_top_up_amount" data-bs-toggle="dropdown" class="btn btn-link dropdown-toggle">
+                        <t t-out="this.state.history[0].top_up_options[state.topUpIndex]"/>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="portal_searchbar_sortby">
+                        <t t-foreach="this.state.history[0].top_up_options" t-as="val" t-key="val">
+                            <button
+                                t-attf-class="dropdown-item #{this.state.history[0].top_up_options[state.topUpIndex] == val and ' active' or ''}"
+                                t-on-click="() => {state.topUpIndex = this.state.history[0].top_up_options.indexOf(val)}"
+                            >
+                                <span t-out="val"/>
+                            </button>
+                        </t>
+                    </div>
+                </div> -->
+                
                 <button class="btn btn-primary" t-on-click="topUpNow">
                     Top Up Now !!
                 </button>
@@ -24,16 +136,30 @@
         t-inherit-mode="extension"
     >
         <xpath expr="//h4[hasclass('modal-title')]" position="before">
-            <img src="https://cdn-icons-png.freepik.com/512/3757/3757881.png" width="100"/>
+            <img src="https://cdn-icons-png.freepik.com/512/3757/3757881.png" class="" style="max-height: 3rem"/>
         </xpath>
-        <xpath expr="//h4[hasclass('modal-title')]" position="after">
+        <xpath expr="//h4[hasclass('modal-title')]" position="attributes">
+            <attribute name="class" add="d-flex w-100 ps-3" separator=" "/>
+        </xpath>
+        <!-- <xpath expr="//h4[hasclass('modal-title')]" position="after">
             <div style="font-size: 3rem; right: 0; left: auto ;text-align: right">
-                <t t-esc="props.points"/>
-                <t t-esc="props.pointName"/>
+                <t t-out="props.points"/>
+            </div>
+        </xpath> -->
+        <xpath expr="//button[hasclass('btn-close')]" position="replace">
+            <div class="d-flex flex-row">
+                <h3 class="pe-3" t-out="props.points"/>
+                <button type="button" class="btn-close" style="margin: 0;" aria-label="Close" tabindex="-1" t-on-click="dismiss"></button>
             </div>
         </xpath>
-        <xpath expr="//button[hasclass('btn-close')]" position="attributes">
-            <attribute name="style">margin: 0</attribute>
+    </t>
+    <t
+        t-name="web.Dialog.LoyaltyModal"
+        t-inherit="web.Dialog"
+        t-inherit-mode="extension"
+    >
+        <xpath expr="//header[hasclass('modal-header')]" position="attributes">
+            <attribute name="class" add="d-flex justify-content-md-between" separator=" "/>
         </xpath>
     </t>
 </templates>
