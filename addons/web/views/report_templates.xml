@@ -125,10 +125,10 @@
                        </address>
                    </t>
                    <div class="page mt-5">
-                       <h2>
+                       <t t-set="layout_document_title">
                            <span>Invoice</span>
                            <span>INV/2023/00003</span>
-                       </h2>
+                       </t>
                        <div id="informations" class="row mb-4">
                            <div class="col" name="invoice_date">
                                <strong>Invoice Date</strong>
@@ -345,6 +345,7 @@
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
+            <h2 t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>
 
@@ -397,6 +398,7 @@
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
+            <h2 t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>
 
@@ -452,6 +454,7 @@
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
+            <h2 t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>
 
@@ -508,6 +511,7 @@
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
+            <h2 t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>
 
