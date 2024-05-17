@@ -135,7 +135,8 @@ class DiscussChannel(models.Model):
             if not self.message_ids:
                 return
             # Notify that the visitor has left the conversation
-            self.message_post(
+            # sudo: mail.message - posting visitor leave message is allowed
+            self.sudo().message_post(
                 author_id=self.env.ref('base.partner_root').id,
                 body=Markup('<div class="o_mail_notification o_hide_author">%s</div>')
                 % self._get_visitor_leave_message(**kwargs),
@@ -249,8 +250,8 @@ class DiscussChannel(models.Model):
         self.sudo().chatbot_current_step_id = False
         # sudo: chatbot.message - visitor can clear chatbot messages to restart the script
         self.sudo().chatbot_message_ids.unlink()
-
-        return self._chatbot_post_message(
+        # sudo: mail.message - chat bot can send the restart message
+        return self.sudo()._chatbot_post_message(
             chatbot_script,
             Markup('<div class="o_mail_notification">%s</div>') % _('Restarting conversation...'),
         )

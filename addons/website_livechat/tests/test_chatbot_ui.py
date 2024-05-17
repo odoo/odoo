@@ -25,9 +25,7 @@ class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
 
         self.env.ref('website.default_website').channel_id = self.livechat_channel.id
 
-    def test_complete_chatbot_flow_ui(self):
-        self.start_tour('/', 'website_livechat_chatbot_flow_tour', step_delay=100)
-
+    def _check_complete_chatbot_flow_result(self):
         operator = self.chatbot_script.operator_partner_id
         livechat_discuss_channel = self.env['discuss.channel'].search([
             ('livechat_channel_id', '=', self.livechat_channel.id),
@@ -94,6 +92,17 @@ class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
                         ('mail_message_id', '=', conversation_message.id)
                     ], limit=1).user_script_answer_id
                 )
+
+    def test_complete_chatbot_flow_ui(self):
+        operator = self.chatbot_script.operator_partner_id
+        self.start_tour('/', 'website_livechat_chatbot_flow_tour', step_delay=100)
+        self._check_complete_chatbot_flow_result()
+        self.env['discuss.channel'].search([
+            ('livechat_channel_id', '=', self.livechat_channel.id),
+            ('livechat_operator_id', '=', operator.id),
+        ]).unlink()
+        self.start_tour('/', 'website_livechat_chatbot_flow_tour', step_delay=100, login="portal")
+        self._check_complete_chatbot_flow_result()
 
     def test_chatbot_available_after_reload(self):
         self.start_tour("/", "website_livechat_chatbot_after_reload_tour", step_delay=100)
