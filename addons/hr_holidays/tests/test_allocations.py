@@ -38,6 +38,11 @@ class TestAllocations(TestHrHolidaysCommon):
             'allocation_validation_type': 'no_validation',
         })
 
+    def compare_values(self, allocations, expected_values):
+        for allocation in allocations:
+            for field, expected_value in expected_values.items():
+                self.assertEqual(allocation[field], expected_value)
+
     def test_allocation_whole_company(self):
         company_allocation = self.env['hr.leave.allocation.generate.multi.wizard'].create({
             'name': 'Bank Holiday',

@@ -586,34 +586,52 @@ class HolidaysAllocation(models.Model):
 
         self.add_follower(employee_id)
 
-        if 'number_of_days_display' not in values and 'number_of_hours_display' not in values:
-            res = super().write(values)
+        if 'number_of_days_display' in values\
+                or 'number_of_hours_display' in values\
+                or 'number_of_days' in values:
+            previous_consumed_leaves = self.employee_id._get_consumed_leaves(leave_types=self.holiday_status_id)
+            result = super().write(values)
             if 'allocation_type' in values:
                 self._add_lastcalls()
-            return res
+            consumed_leaves = self.employee_id._get_consumed_leaves(leave_types=self.holiday_status_id)
+            for allocation in self:
+                current_excess = dict(consumed_leaves[1]).get(allocation.employee_id, {}) \
+                    .get(allocation.holiday_status_id, {}).get('excess_days', {})
+                previous_excess = dict(previous_consumed_leaves[1]).get(allocation.employee_id, {}) \
+                    .get(allocation.holiday_status_id, {}).get('excess_days', {})
+                total_current_excess = sum(leave_date['amount'] for leave_date in current_excess.values())
+                total_previous_excess = sum(leave_date['amount'] for leave_date in previous_excess.values())
 
-        previous_consumed_leaves = self.employee_id._get_consumed_leaves(leave_types=self.holiday_status_id)
-        result = super().write(values)
-        consumed_leaves = self.employee_id._get_consumed_leaves(leave_types=self.holiday_status_id)
+                if total_current_excess <= total_previous_excess:
+                    continue
+                lt = allocation.holiday_status_id
+                if lt.allows_negative and total_current_excess <= lt.max_allowed_negative:
+                    continue
+                raise ValidationError(
+                    _('You cannot reduce the duration below the duration of leaves already taken by the employee.'))
+        else:
+            result = super().write(values)
+            if 'allocation_type' in values:
+                self._add_lastcalls()
 
-        if 'allocation_type' in values:
-            self._add_lastcalls()
-        for allocation in self:
-            current_excess = dict(consumed_leaves[1]).get(allocation.employee_id, {}) \
-                .get(allocation.holiday_status_id, {}).get('excess_days', {})
-            previous_excess = dict(previous_consumed_leaves[1]).get(allocation.employee_id, {}) \
-                .get(allocation.holiday_status_id, {}).get('excess_days', {})
-            total_current_excess = sum(map(lambda leave_date: leave_date['amount'], current_excess.values()))
-            total_previous_excess = sum(map(lambda leave_date: leave_date['amount'], previous_excess.values()))
-
-            if total_current_excess <= total_previous_excess:
-                continue
-            lt = allocation.holiday_status_id
-            if lt.allows_negative and total_current_excess <= lt.max_allowed_negative:
-                continue
-            raise ValidationError(
-                _('You cannot reduce the duration below the duration of leaves already taken by the employee.'))
-
+        if not self.linked_request_ids:
+            return result
+        write_vals = {
+            field: values.get(field)
+            for field in [
+                'private_name',
+                'holiday_type',
+                'holiday_status_id',
+                'notes',
+                'number_of_days',
+                'allocation_type',
+                'date_from',
+                'date_to',
+                'accrual_plan_id',
+            ] if field in values
+        }
+        if write_vals:
+            self.linked_request_ids.write(write_vals)
         return result
 
     @api.ondelete(at_uninstall=False)
@@ -690,7 +708,6 @@ class HolidaysAllocation(models.Model):
             days_taken = days_per_allocation[allocation.employee_id][allocation.holiday_status_id][allocation]['virtual_leaves_taken']
             if days_taken > 0:
                 raise UserError(_('You cannot refuse this allocation request since the employee has already taken leaves for it. Please refuse or delete those leaves first.'))
-
         self.write({'state': 'refuse', 'approver_id': current_employee.id})
         self.activity_update()
         return True
