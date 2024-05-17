@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     "name": "Peruvian eCommerce",
-    "countries": ["pe"],
     "version": "0.1",
     "summary": "Be able to see Identification Type in ecommerce checkout form.",
     "category": "Accounting/Localizations/Website",
