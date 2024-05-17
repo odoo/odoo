@@ -454,7 +454,14 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * Call print dialog
      * @private
      */
-    _onPrintResultsClick: function () {  
+    _onPrintResultsClick: function () { 
+        for (let chart of this.charts) {
+            chart.chart.resize();
+        }
+
+        for (let chart of this.other_charts) {
+            chart.chart.resize();
+        }
         window.print();
     },
     
