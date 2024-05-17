@@ -32,8 +32,15 @@ class kioskAttendanceApp extends Component{
         this.companyImageUrl = url("/web/binary/company_logo", {
             company: this.props.companyId,
         });
+        this.state = useState({
+            active_display: "settings",
+            displayDemoMessage: browser.localStorage.getItem("hr_attendance.ShowDemoMessage") !== "false"
+        });
         this.lockScanner = false;
-        if (this.props.kioskMode !== 'manual'){
+        if (this.props.kioskMode === 'settings' || this.props.fromEmptyScreen){
+            this.manualKioskMode = false;
+        }
+        else if (this.props.kioskMode !== 'manual'){
             useBus(this.barcode.bus, "barcode_scanned", (ev) => this.onBarcodeScanned(ev.detail.barcode));
             this.state = useState({active_display: "main"});
             this.manualKioskMode = false
@@ -133,6 +140,7 @@ export async function createPublicKioskAttendance(document, kiosk_backend_info) 
                 departments: kiosk_backend_info.departments,
                 kioskMode: kiosk_backend_info.kiosk_mode,
                 barcodeSource: kiosk_backend_info.barcode_source,
+                fromEmptyScreen: kiosk_backend_info.from_trial_mode,
             },
         dev: env.debug,
         translateFn: _t,
