@@ -1,4 +1,8 @@
 @media print {
+    .detalles-wrapper:has(button.collapsed) {
+        display: none;
+    }
+
     body{
         display: flex;
         align-items: center;
@@ -206,6 +210,7 @@
     gap: 0.5rem;
     width: 100%;
     align-items: center;
+    page-break-inside: avoid;
 
     h4 {
         width: 100%;

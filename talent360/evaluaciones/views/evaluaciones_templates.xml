@@ -48,16 +48,13 @@
         <template id="encuestas_reporte_header" name="Reporte: cabecera de reporte genérico">
             <div class="o_survey_statistics_header mt32">
                 <div class="d-flex justify-content-between">
-                    
+
                 </div>
-                <button class="btn btn-primary d-none d-print-none d-md-inline-block o_survey_results_print" aria-label="Print" title="Print">
-                    <i class="fa fa-print"></i> Exportar
-                </button>
             </div>
         </template>
 
         <template id="encuestas_reporte_inner" name="Reporte: contenido de reporte genérico">
-            <h4>
+            <h4 class="detalles-wrapper">
                 <button class="btn btn-link ps-0 pt-2 d-print-none" type="button" data-bs-toggle="collapse" t-attf-data-bs-target=".question_detail">
                     <i class="fa fa-eye" aria-hidden="true"/>
                 </button>Ver detalles de preguntas
@@ -74,9 +71,14 @@
         <template id="encuestas_reporte_nom_035" name="Reporte: NOM-035">
             <t t-call="evaluaciones.portada_nom035"/>
             <div class="container-fluid row gap-5 justify-content-between g-2">
-                <h1>
-                    <span t-field="evaluacion.nombre"/>
-                </h1>
+                <div class="d-flex flex-row justify-content-between">
+                    <h1>
+                        <span t-field="evaluacion.nombre"/>
+                    </h1>
+                    <button class="btn btn-primary d-none d-print-none d-md-inline-block o_survey_results_print" aria-label="Print" title="Print">
+                        <i class="fa fa-print"></i> Exportar
+                    </button>
+                </div>
                 <div class="col survey_section">
                     <h4>Calificación final</h4>
                     <span t-att-class="'color_nulo' if final &lt; 20 else 'color_bajo' if 20 &lt;= final &lt; 45 else 'color_medio' if 45 &lt;= final &lt; 70 else 'color_alto' if 70 &lt;= final &lt; 90 else 'color_muy-alto'">
@@ -92,7 +94,7 @@
                     </span>
                 </div>
 
-                <div class="col survey_section w-100">
+                <div class="col survey_section w-100"  style="page-break-inside: avoid;">
                     <h4>Semáforo de riesgos</h4>
                     <div class="container-fluid row gap-2 align-items-center">
                         <div class="color_circle" style="background-color: #ff4747;"/>
@@ -331,9 +333,14 @@
         <template id="encuesta_reporte_clima" name="Reporte de Clima Laboral">
             <t t-call="evaluaciones.portada_clima"/>
             <div class="container-fluid row gap-5 justify-content-between g-2">
-            <h1>
-                <span t-field="evaluacion.nombre"/>
-            </h1>
+                <div class="d-flex flex-row justify-content-between">
+                    <h1>
+                        <span t-field="evaluacion.nombre"/>
+                    </h1>
+                    <button class="btn btn-primary d-none d-print-none d-md-inline-block o_survey_results_print" aria-label="Print" title="Print">
+                        <i class="fa fa-print"></i> Exportar
+                    </button>
+                </div>
                 <div class="col survey_section">
                     <h4>Calificación final</h4>
                     <span t-att-class="'color_muy-alto' if total_porcentaje &lt; 20 else 'color_alto' if 20 &lt;= total_porcentaje &lt; 45 else 'color_medio' if 45 &lt;= total_porcentaje &lt; 70 else 'color_bajo' if 70 &lt;= total_porcentaje &lt;= 90 else 'color_muy-alto'">
@@ -379,7 +386,7 @@
                 <h4>Datos demográficos</h4>
                 <div class="container-fluid">
                     <div class="row gap-5">
-                        <div class="col survey_section" >
+                        <div class="col survey_section">
                             <h4>
                             Por generación
                             </h4>
@@ -426,7 +433,7 @@
                     <h4 style="font-size: 2em;">Resumen del Clima Laboral</h4>
                     <div class="survey_graph" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'radar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias" style="height: 745px;">
                         <canvas t-att-id="'canvas_barras_categorias_clima'"></canvas>
-                    </div>
+                    </div>d
                 </div>
 
                 <div class="container-fluid">
@@ -458,9 +465,9 @@
                 </div>
             </div>
 
-           
-           <t t-foreach="evaluacion.generar_datos_reporte_clima_action()['categorias']" t-as="categoria">
-                <div class="survey_section container-fluid d-flex align-items-center justify-content-center page-categoria" style="page-break-inside: avoid;">
+
+            <t t-foreach="evaluacion.generar_datos_reporte_clima_action()['categorias']" t-as="categoria">
+                <div class="survey_section container-fluid d-flex align-items-center justify-content-center" style="page-break-inside: avoid; height: 90vh;">
                     <t t-if="'puntuacion' in categoria">
                         <div class="survey_page container-fluid d-flex flex-column align-items-center" style="font-size: 0.9em;">
                             <div class="survey_section container-fluid text-center" style="page-break-inside: avoid;">
