@@ -234,7 +234,7 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
     return output
 
 
-def get_displayed_text(text):
+def reshape_text(text):
     """
     Display the text based on his first character unicode name to choose Right-to-left or Left-to-right
     This is just a hotfix to make things work
