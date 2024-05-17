@@ -24,10 +24,10 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
         const timeline = this.el.querySelector(".twitter_timeline");
 
         const newElement = document.createElement("center");
-        newElement.innerHTML = '<div><img src="/website_twitter/static/src/img/loadtweet.gif"></div>';
+        newElement.append("<div><img src='/website_twitter/static/src/img/loadtweet.gif'></div>");
         timeline.appendChild(newElement);
         var def = rpc('/website_twitter/get_favorites').then(function (data) {
-            timeline.innerHTML = '';
+            timeline.replaceChild();
 
             if (data.error) {
                 timeline.append(renderToElement("website.Twitter.Error", { data: data }));
@@ -79,8 +79,8 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
             var f = Math.floor(tweets.length / 3);
             var tweetSlices = [tweets.slice(0, f).join(' '), tweets.slice(f, f * 2).join(' '), tweets.slice(f * 2, tweets.length).join(' ')];
 
-            self.scroller = timeline.appendChild(renderToElement('website.Twitter.Scroller'));
-            [...self.scroller.querySelectorAll('div[id^="scroller"]')].forEach((element, index) => {
+            self.scroller = timeline.appendChild(renderToElement("website.Twitter.Scroller"));
+            [...self.scroller.querySelectorAll("div[id^='scroller']")].forEach((element, index) => {
                 const scrollWrapper = document.createElement("div");
                 scrollWrapper.className = "scrollWrapper";
                 const scrollableArea = document.createElement("div");
@@ -91,14 +91,12 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
                 element.append(scrollWrapper);
                 var totalWidth = 0;
                 scrollableArea.childNodes.forEach((area) => {
-                    // TODO_VISP: debug this as i'm not sure
                     totalWidth +=
-                        area.offsetWidth +
+                        area.getBoundingClientRect().width +
                         parseFloat(window.getComputedStyle(area).marginLeft) +
                         parseFloat(window.getComputedStyle(area).marginRight);
                 });
                 scrollableArea.style.width = totalWidth;
-                // TODO-VISP: debug this as we need to create method
                 scrollWrapper.scrollLeft = index * 180;
             });
             self._startScrolling();
@@ -125,27 +123,27 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
         if (!this.scroller) {
             return;
         }
-        [...this.scroller.querySelectorAll(".scrollWrapper")].forEach((el) => {
-            const wrapper = el;
+        [...this.scroller.querySelectorAll(".scrollWrapper")].forEach((wrapper) => {
             wrapper.dataset.getNextElementWidth = true;
+            // TODO: VISP: To Test, as dataset will store in string format while interval is integer value
             wrapper.dataset.autoScrollingInterval = setInterval(function () {
                 const firstChild = wrapper.querySelector(".scrollableArea").firstElementChild;
                 wrapper.scrollLeft = wrapper.scrollLeft + 1;
-                if (wrapper.dataset.getNextElementWidth) {
-                    // TODO_VISP: debug this as we need to create method
+                if (Boolean(wrapper.dataset.getNextElementWidth)) {
                     const totalWidth =
-                        firstChild.offsetWidth +
+                        firstChild.getBoundingClientRect().width +
                         parseFloat(window.getComputedStyle(firstChild).marginLeft) +
                         parseFloat(window.getComputedStyle(firstChild).marginRight);
                     wrapper.dataset.swapAt = totalWidth;
                     wrapper.dataset.getNextElementWidth = false;
                 }
-                if (wrapper.dataset.swapAt <= wrapper.scrollLeft) {
+                if (parseInt(wrapper.dataset.swapAt) <= wrapper.scrollLeft) {
                     const swap_el = firstChild.remove();
-                    wrapper.querySelector(".scrollableArea").append(swap_el);
+                    // TODO: VISP: To Test
+                    wrapper.getAttribute("data-scrollableArea").append(swap_el);
                     wrapper.scrollLeft =
                         wrapper.scrollLeft -
-                        swap_el.offsetWidth +
+                        swap_el.getBoundingClientRect().width +
                         parseFloat(window.getComputedStyle(swap_el).marginLeft) +
                         parseFloat(window.getComputedStyle(swap_el).marginRight);
                     wrapper.dataset.getNextElementWidth = true;
@@ -160,8 +158,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
         if (!this.scroller) {
             return;
         }
-        [...this.scroller.querySelectorAll(".scrollWrapper")].forEach((el) => {
-            const wrapper = el;
+        this.scroller.querySelectorAll(".scrollWrapper").forEach((wrapper) => {
             clearInterval(wrapper.dataset.autoScrollingInterval);
         });
     },
