@@ -111,7 +111,7 @@ class StockForecasted(models.AbstractModel):
         assert product_template_ids or product_ids
         res = {}
 
-        if self.env.context.get('warehouse_id'):
+        if self.env.context.get('warehouse_id') and isinstance(self.env.context['warehouse_id'], int):
             warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse_id'))
         else:
             warehouse = self.env['stock.warehouse'].search([['active', '=', True]])[0]
