@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.exceptions import AccessError, UserError
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 
 @tagged('-at_install', 'post_install')
@@ -28,12 +28,20 @@ class TestExpensesAccessRights(TestExpenseCommon):
             })
 
         expense = self.env['hr.expense'].with_user(self.expense_user_employee).create({
-                    'name': 'expense_1',
-                    'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 10.0,
-                    'employee_id': self.expense_employee.id,
-                })
+            'name': 'expense_1',
+            'date': '2016-01-01',
+            'product_id': self.product_a.id,
+            'unit_amount': 10.0,
+            'employee_id': self.expense_employee.id,
+        })
+
+        # Employee can report & submit their expense
+        expense_sheet = self.env['hr.expense.sheet'].with_user(self.expense_user_employee).create({
+            'name': 'expense sheet for employee',
+            'expense_line_ids': expense,
+            'payment_mode': expense.payment_mode,
+        })
+        expense_sheet.with_user(self.expense_user_employee).action_submit_sheet()
 
         # The expense employee shouldn't be able to bypass the submit state.
         with self.assertRaises(UserError):
