@@ -40,7 +40,9 @@ const {
  * @param {Record<string, number>} values
  */
 const formatIncludes = (values) =>
-    $entries(values).map(([id, value]) => (value >= 0 ? id : `${EXCLUDE_PREFIX}${id}`));
+    $entries(values)
+        .filter(([id, value]) => Math.abs(value) < 3)
+        .map(([id, value]) => (value >= 0 ? id : `${EXCLUDE_PREFIX}${id}`));
 
 /**
  * @param {string} query
@@ -417,10 +419,17 @@ export class HootSearch extends Component {
             let include = 0;
             let exclude = 0;
             for (const value of $values(includeSpecs[category])) {
-                if (value > 0) {
-                    include++;
-                } else if (value < 0) {
-                    exclude++;
+                switch (value) {
+                    case 1:
+                    case 2: {
+                        include++;
+                        break;
+                    }
+                    case -1:
+                    case -2: {
+                        exclude++;
+                        break;
+                    }
                 }
             }
             if (include + exclude) {
@@ -474,7 +483,7 @@ export class HootSearch extends Component {
      * @param {number} value
      */
     isReadonly(value) {
-        return value === 2 || value === -2;
+        return Math.abs(value) > 1;
     }
 
     /**

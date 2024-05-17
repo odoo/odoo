@@ -1091,7 +1091,7 @@ export class Runner {
                             `"${job.fullName}" is marked as "${tag.name}". This is not suitable for CI`
                         );
                     }
-                    this._include(job instanceof Suite ? "suites" : "tests", [job.id], true);
+                    this._include(job instanceof Suite ? "suites" : "tests", [job.id], 2);
                     ignoreSkip = true;
                     break;
                 case Tag.SKIP:
@@ -1197,18 +1197,18 @@ export class Runner {
     /**
      * @param {"suites" | "tags" | "tests"} type
      * @param {Iterable<string>} ids
-     * @param {boolean} [readonly]
+     * @param {number} [priority=1]
      */
-    _include(type, ids, readonly) {
+    _include(type, ids, priority = 1) {
         const values = this.state.includeSpecs[type];
         for (const id of ids) {
             const nId = normalize(id);
             if (id.startsWith(EXCLUDE_PREFIX)) {
-                values[nId.slice(EXCLUDE_PREFIX.length)] = readonly ? -2 : -1;
+                values[nId.slice(EXCLUDE_PREFIX.length)] = Math.abs(priority) * -1;
                 this._hasExcludeFilter = true;
             } else if ((values[nId]?.[0] || 0) >= 0) {
                 this._hasIncludeFilter = true;
-                values[nId] = readonly ? +2 : +1;
+                values[nId] = Math.abs(priority);
             }
         }
     }
@@ -1345,7 +1345,7 @@ export class Runner {
             }
 
             if (preset.tags?.length) {
-                this._include("tags", preset.tags, true);
+                this._include("tags", preset.tags, 3);
             }
             if (preset.platform) {
                 mockUserAgent(preset.platform);
