@@ -441,6 +441,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     selector: '.o_survey_result',
     events: {
         "click .o_survey_results_print": "_onPrintResultsClick",
+        "click .btn-detalles": "_loadDetalles"
     },
 
     //--------------------------------------------------------------------------
@@ -496,6 +497,10 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
             chart.chart.resize();
         }
         window.print();
+    },
+
+    _loadDetalles: function() {
+        this._attach_listener(this);
     },
     
     _attach_listener: function (self){

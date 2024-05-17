@@ -55,11 +55,11 @@
 
         <template id="encuestas_reporte_inner" name="Reporte: contenido de reporte genérico">
             <h4 class="detalles-wrapper">
-                <button class="btn btn-link ps-0 pt-2 d-print-none" type="button" data-bs-toggle="collapse" t-attf-data-bs-target=".question_detail">
+                <button class="btn btn-link ps-0 pt-2 d-print-none btn-detalles collapsed" type="button" data-bs-toggle="collapse" t-attf-data-bs-target=".question_detail">
                     <i class="fa fa-eye" aria-hidden="true"/>
                 </button>Ver detalles de preguntas
             </h4>
-            <div class="question_detail survey_section container-fluid collapse show">
+            <div class="question_detail survey_section container-fluid collapse">
                 <t t-foreach="preguntas" t-as='datos_pregunta'>
                     <t t-set="pregunta" t-value="datos_pregunta['pregunta']"/>
                     <div class="o_survey_results_question_wrapper container-fluid p-5" style="page-break-inside: avoid; margin-bottom: 20px;" t-call="evaluaciones.encuestas_reporte_pregunta" />
