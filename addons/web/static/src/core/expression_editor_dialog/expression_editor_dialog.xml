@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ExpressionEditorDialog">
-        <Dialog title="'Edit Condition'">
+        <Dialog title.translate="Edit Condition">
             <ExpressionEditor t-props="expressionEditorProps" />
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="onConfirm" t-ref="confirm">Confirm</button>

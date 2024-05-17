@@ -24,8 +24,8 @@
         <xpath expr="//Layout/t[@t-component='props.Renderer']" position="inside">
             <t t-set-slot="NoContentHelper" isVisible="state.displayNoContent">
                 <t t-call="web.NoContentHelper">
-                    <t t-set="title" t-value="'No setting found'"/>
-                    <t t-set="description" t-value="'Try searching for another keyword'"/>
+                    <t t-set="title">No setting found</t>
+                    <t t-set="description">Try searching for another keyword</t>
                 </t>
             </t>
         </xpath>

@@ -143,6 +143,10 @@ export class ControlPanel extends Component {
         };
     }
 
+    breadcrumbTooltip(breadcrumb) {
+        return _t('Back to "%s"', breadcrumb.name);
+    }
+
     /**
      * Called when an element of the breadcrumbs is clicked.
      *

@@ -6,6 +6,7 @@ import { registry } from "@web/core/registry";
 import { Component, useChildSubEnv, useState } from "@odoo/owl";
 import { debounce } from "@web/core/utils/timing";
 import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
 
 class CompanySelector {
     constructor(companyService, toggleDelay) {
@@ -80,6 +81,17 @@ export class SwitchCompanyItem extends Component {
 
     get isCurrent() {
         return this.props.company.id === this.companyService.currentCompany.id;
+    }
+
+    get toggleCompanyTooltip() {
+        if (this.isCompanySelected) {
+            return _t("Hide %s content", this.props.company.name);
+        }
+        return _t("Show %s content", this.props.company.name);
+    }
+
+    get switchCompanyTooltip() {
+        return _t("Switch to %s", this.props.company.name);
     }
 
     logIntoCompany() {
