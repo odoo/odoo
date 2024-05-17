@@ -1,35 +1,45 @@
 .login-overlay{
-    z-index:1000;
+    background: {
+        size: cover;
+        attachment: fixed;
+        color: var(--homeMenu-bg-color, #{$o-gray-200});
+        image: var(--homeMenu-bg-image, url("/hr_attendance/static/img/background-light.svg"));
+    }
+}
 
-    &:before {
-        content: '';
-        background-image: url(../../img/login-bg-overlay.svg);
-        background-color: rgba(0, 0, 0, 0.3);
-        position: fixed;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        width: 100%;
-        height:100%;
+.screen-login-header {
+    .screen-login-timer {
+        background-color: #dbdae6;
+        .timer-hours {
+            height: $navbar-height;
+        }
+        .timer-date-container {
+            height:$navbar-height;
+            div {
+                height:calc(#{$navbar-height} / 2);
+            }
+        }
+    }
+
+    .screen-login-logo {
+        img {
+            height:$navbar-height;
+        }
     }
 }
 
 .screen-login{
-    max-width: 500px;
     height: fit-content;
-}
-
-.screen-login img,
-.screen-login button{
-    width: 180px;
-}
-.screen-login button{
-    height: 150px;
 }
 
 @media screen and (max-width: 576px) {
     .screen-login {
         height: 450px;
     }
+}
+
+.login-element {
+    width:180px;
+    height: 150px;
+    cursor:pointer;
 }
