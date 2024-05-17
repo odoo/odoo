@@ -36,8 +36,7 @@ class Pregunta(models.Model):
     )
 
     opcion_ids = fields.One2many("opcion", "pregunta_id", string="Opciones")
-    respuesta_ids = fields.One2many(
-        "respuesta", "pregunta_id", string="Respuestas")
+    respuesta_ids = fields.One2many("respuesta", "pregunta_id", string="Respuestas")
     competencia_ids = fields.Many2many("competencia", string="Competencias")
     condicional = fields.Boolean(default=False)
     respuesta_trigger = fields.Many2one("opcion", string="Respuesta trigger")
@@ -66,13 +65,11 @@ class Pregunta(models.Model):
                 "corresponsabilidad_en_la_vida_laboral_familiar_y_personal",
                 "Corresponsabilidad en la Vida Laboral, Familiar y Personal",
             ),
-            ("clima_laboral_libre_de_violencia",
-             "Clima Laboral Libre de Violencia"),
+            ("clima_laboral_libre_de_violencia", "Clima Laboral Libre de Violencia"),
             ("acoso_y_hostigamiento", "Acoso y Hostigamiento"),
             ("accesibilidad", "Accesibilidad"),
             ("respeto_a_la_diversidad", "Respeto a la Diversidad"),
-            ("condiciones_generales_de_trabajo",
-             "Condiciones Generales de Trabajo"),
+            ("condiciones_generales_de_trabajo", "Condiciones Generales de Trabajo"),
         ],
     )
 
