@@ -154,7 +154,7 @@
             <div name="no_shipping"/>
         </xpath>
 
-        <xpath expr="//h2" position="replace"/>
+        <xpath expr="//t[@t-set='layout_document_title']" position="replace"/>
 
         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="before">
             <t t-set="l10n_cl_values" t-value="line._l10n_cl_prices_and_taxes()"/>

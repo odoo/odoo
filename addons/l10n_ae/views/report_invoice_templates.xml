@@ -9,7 +9,7 @@
                 </b>
             </p>
         </xpath>
-        <xpath expr="//h2/span" position="before">
+        <xpath expr="//t[@t-set='layout_document_title']/span" position="before">
             <span t-if="o.company_id.country_id.code == 'AE' and o.move_type in ['out_invoice', 'out_refund']">TAX
             </span>
         </xpath>
