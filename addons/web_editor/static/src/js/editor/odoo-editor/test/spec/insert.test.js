@@ -308,3 +308,26 @@ describe('insert text', () => {
         });
     });
 });
+describe('insert horizontal rule', () => {
+    it('should insert a horizontal rule within a p tag', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p>[]<br></p>',
+            stepFunction: editor => editor.execCommand('insertHorizontalRule'),
+            contentAfter: '<hr><p>[]<br></p>',
+        });
+    });
+    it('should insert a horizontal rule within a h1 tag', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<h1>[]<br></h1>',
+            stepFunction: editor => editor.execCommand('insertHorizontalRule'),
+            contentAfter: '<hr><h1>[]<br></h1>',
+        });
+    });
+    it('should insert a horizontal rule within a block node', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<div>[]<br></div>',
+            stepFunction: editor => editor.execCommand('insertHorizontalRule'),
+            contentAfter: '<hr><div>[]<br></div>',
+        });
+    });
+});
