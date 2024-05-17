@@ -225,11 +225,6 @@ class User(models.Model):
 
     def _get_personal_info_partner_ids_to_notify(self, employee):
         # To override in appropriate module
-        if self.env['ir.config_parameter'].sudo().get_param('hr.hr_employee_self_edit'):
-            return (
-                'You were receving this message because you are set as notifier',
-                self.env.companies.hr_notify_user_ids.partner_id.ids
-            )
         return ('', [])
 
     def write(self, vals):
