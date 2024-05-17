@@ -23,11 +23,11 @@ describe(parseUrl(import.meta.url), () => {
 
         await advanceTime(10_000); // 10 seconds
 
-        expect(["animation", "timeout", "interval"]).toVerifySteps();
+        expect(["animation", "timeout", "interval", "interval", "interval"]).toVerifySteps();
 
         await advanceTime(10_000);
 
-        expect(["interval"]).toVerifySteps();
+        expect(["interval", "interval", "interval"]).toVerifySteps();
 
         window.clearInterval(intervalId);
 
