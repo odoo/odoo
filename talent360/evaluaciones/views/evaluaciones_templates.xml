@@ -69,7 +69,7 @@
             <div class="question_detail survey_section container-fluid collapse show">
                 <t t-foreach="preguntas" t-as='datos_pregunta'>
                     <t t-set="pregunta" t-value="datos_pregunta['pregunta']"/>
-                    <div class="o_survey_results_question_wrapper container-fluid p-5" style="page-break-before: always;" t-call="evaluaciones.encuestas_reporte_pregunta" />
+                    <div class="o_survey_results_question_wrapper container-fluid p-5" style="page-break-inside: avoid; margin-bottom: 20px;" t-call="evaluaciones.encuestas_reporte_pregunta" />
                 </t>
             </div>
         </template>
@@ -526,6 +526,7 @@
             </div>
             <t t-call="evaluaciones.question_table_pagination"/>
         </template>
+
 
 
         <template id="pregunta_resultados_seleccion" name="Question: choice result (simple_choice, multiple_choice)">
