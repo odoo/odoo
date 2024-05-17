@@ -325,7 +325,7 @@ const FieldEditor = FormEditor.extend({
      */
     _getFieldName: function (fieldEl = this.$target[0]) {
         const multipleName = fieldEl.querySelector('.s_website_form_multiple');
-        return multipleName ? multipleName.dataset.name : fieldEl.querySelector('.s_website_form_input').name;
+        return multipleName ? multipleName.dataset.name : fieldEl.querySelector('.s_website_form_input')?.name;
     },
     /**
      * Returns the type of the  field, can be used for both custom and existing fields
@@ -1006,7 +1006,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      * @override
      */
     onRemove() {
-        const fieldName = this.$target[0].querySelector('.s_website_form_input').name;
+        const fieldName = this.$target[0].querySelector(".s_website_form_input")?.name;
         const isMultipleField = this.formEl.querySelectorAll(`.s_website_form_input[name="${CSS.escape(fieldName)}"]`).length > 1;
         if (isMultipleField) {
             return;
@@ -1170,7 +1170,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         // depends on the current field
         const newValuesText = valueList.map(value => value.name);
         const inputEls = this.$target[0].querySelectorAll('.s_website_form_input, option');
-        const inputName = this.$target[0].querySelector('.s_website_form_input').name;
+        const inputName = this.$target[0].querySelector(".s_website_form_input")?.name;
         for (let i = 0; i < inputEls.length; i++) {
             const input = inputEls[i];
             if (newValuesText[i] && input.value && !newValuesText.includes(input.value)) {
@@ -1429,7 +1429,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         for (const el of this.formEl.querySelectorAll('.s_website_form_field:not(.s_website_form_dnone)')) {
             const inputEl = el.querySelector('.s_website_form_input');
             if (el.querySelector('.s_website_form_label_content') && inputEl && inputEl.name
-                    && inputEl.name !== this.$target[0].querySelector('.s_website_form_input').name
+                    && inputEl.name !== this.$target[0].querySelector(".s_website_form_input")?.name
                     && !existingDependencyNames.includes(inputEl.name) && !this._findCircular(el)) {
                 const button = document.createElement('we-button');
                 button.textContent = el.querySelector('.s_website_form_label_content').textContent;
@@ -1553,8 +1553,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const dataFillWith = inputEl ? inputEl.dataset.fillWith : undefined;
         const hasConditionalVisibility = this.$target[0].classList.contains('s_website_form_field_hidden_if');
         const previousInputEl = this.$target[0].querySelector('.s_website_form_input');
-        const previousName = previousInputEl.name;
-        const previousType = previousInputEl.type;
+        const previousName = previousInputEl?.name;
+        const previousType = previousInputEl?.type;
         [...this.$target[0].childNodes].forEach(node => node.remove());
         [...fieldEl.childNodes].forEach(node => this.$target[0].appendChild(node));
         [...fieldEl.attributes].forEach(el => this.$target[0].removeAttribute(el.nodeName));
@@ -1564,8 +1564,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         }
         const dependentFieldEls = this.formEl.querySelectorAll(`.s_website_form_field[data-visibility-dependency="${CSS.escape(previousName)}"]`);
         const newFormInputEl = this.$target[0].querySelector('.s_website_form_input');
-        const newName = newFormInputEl.name;
-        const newType = newFormInputEl.type;
+        const newName = newFormInputEl?.name;
+        const newType = newFormInputEl?.type;
         if ((previousName !== newName || previousType !== newType) && dependentFieldEls) {
             // In order to keep the visibility conditions consistent,
             // when the name has changed, it means that the type has changed so
