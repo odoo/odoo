@@ -321,6 +321,15 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                     }
                 }
             },
+            plugins: [
+              {
+                beforeInit: function (chart) {
+                    chart.data.labels.forEach(function (label, index, array) {
+                        array[index] = self._splitLabels(label, 25);
+                    })
+                  }
+              }
+            ]
         };
     },
 
@@ -384,6 +393,30 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         };
     },
     
+    _splitLabels: function (label, maxLength){
+        if (typeof label !== 'string') {
+            return label;
+        }
+
+        if (label.length < maxLength) {
+            return [label];
+        }
+
+        let breakIndex = label.lastIndexOf(" ", maxLength + 1);
+        if (breakIndex === -1) {
+            breakIndex = label.indexOf(" ", maxLength);
+
+            if (breakIndex === -1) {
+                return [label];
+            }
+        }
+        var respuesta = [label.slice(0, breakIndex)]
+        var respuesta2 = this._splitLabels(label.slice(breakIndex + 1), maxLength)
+
+        respuesta = respuesta.concat(respuesta2)
+
+        return respuesta
+    },
     /**
      * Loads the chart using the provided Chart library.
      *
