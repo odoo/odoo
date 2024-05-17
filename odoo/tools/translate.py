@@ -923,7 +923,6 @@ def _extract_translatable_qweb_terms(element, callback):
         if isinstance(el, SKIPPED_ELEMENT_TYPES): continue
         if (el.tag.lower() not in SKIPPED_ELEMENTS
                 and "t-js" not in el.attrib
-                and not ("t-jquery" in el.attrib and "t-operation" not in el.attrib)
                 and not (el.tag == 'attribute' and el.get('name') not in TRANSLATED_ATTRS)
                 and el.get("t-translation", '').strip() != "off"):
 
@@ -936,10 +935,10 @@ def _extract_translatable_qweb_terms(element, callback):
             # them all lower case.
             # https://www.w3schools.com/html/html5_syntax.asp
             # https://github.com/odoo/owl/blob/master/doc/reference/component.md#composition
-            if not el.tag[0].isupper() and 't-component' not in el.attrib and 't-set-slot' not in el.attrib:
-                for att in TRANSLATED_ATTRS:
-                    if att in el.attrib:
-                        _push(callback, el.attrib[att], el.sourceline)
+            is_component = el.tag[0].isupper() or 't-component' in el.attrib or 't-set-slot' in el.attrib
+            for att in el.attrib:
+                if (not is_component and att in TRANSLATED_ATTRS) or (is_component and att.endswith('.translate')):
+                    _push(callback, el.attrib[att], el.sourceline)
             _extract_translatable_qweb_terms(el, callback)
         _push(callback, el.tail, el.sourceline)
 
