@@ -57,7 +57,7 @@ export function mockBrowserFactory(name, { fn }) {
             Object.defineProperty(HTMLAnchorElement.prototype, "href", {
                 ...anchorHrefDescriptor,
                 get() {
-                    return new URL(this.getAttribute("href")).href;
+                    return this.hasAttribute("href") ? new URL(this.getAttribute("href")).href : "";
                 },
             });
 
