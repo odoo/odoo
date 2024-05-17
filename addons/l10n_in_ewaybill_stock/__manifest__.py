@@ -3,7 +3,6 @@
 {
     "name": """Indian - E-waybill Stock""",
     "version": "1.0",
-    'countries': ['in'],
     "category": "Accounting/Localizations/EDI",
     "depends": [
         "l10n_in_stock",
