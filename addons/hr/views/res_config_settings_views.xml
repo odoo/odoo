@@ -57,11 +57,6 @@
                     <block title="Employee Update Rights" name="employee_rights_setting_container">
                         <setting help="Allow employees to update their own data" title="Allow employees to update their own data.">
                             <field name="hr_employee_self_edit"/>
-                            <div invisible="not hr_employee_self_edit">
-                                <lable class="o_form_label">Edit Notification</lable>
-                                <p class="text-muted">Specify users that will be notified when an employee changes his own data</p>
-                                <field name="hr_notify_user_ids" widget="many2many_tags"/>
-                            </div>
                         </setting>
                     </block>
                 </app>
