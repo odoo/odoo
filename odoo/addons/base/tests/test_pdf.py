@@ -4,6 +4,7 @@
 from odoo.tests.common import TransactionCase
 from odoo.tools import pdf
 from odoo.tools.misc import file_open
+from odoo.tools.pdf import reshape_text
 import io
 
 
@@ -91,3 +92,26 @@ class TestPdf(TransactionCase):
     def tearDown(self):
         super().tearDown()
         self.minimal_reader_buffer.close()
+
+    def test_reshaping_non_arabic_text(self):
+        """
+        Test that reshaper doesn't alter non-Arabic text.
+        """
+        english_text = "Hello, I'm just an English text"
+        processed_text = reshape_text(english_text)
+        self.assertEqual(english_text, processed_text, "English text shouldn't be altered.")
+
+        brazilian_text = "Ayrton Senna foi o melhor piloto de Formula 1 que já existiu"
+        processed_brazilian_text = reshape_text(brazilian_text)
+        self.assertEqual(brazilian_text, processed_brazilian_text, "Brazilian text shouldn't be altered.")
+
+    def test_reshaping_arabic_text(self):
+        """
+        Test reshaping is applied properly on Arabic text.
+        """
+        text = "بث مباشر"
+        processed_text = reshape_text(text)
+        expected_shapes = ['ﺮ', 'ﺷ', 'ﺎ', 'ﺒ', 'ﻣ', ' ', 'ﺚ', 'ﺑ']
+
+        for i, expected_shape in enumerate(expected_shapes):
+            self.assertEqual(processed_text[i], expected_shape)
