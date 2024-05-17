@@ -8,4 +8,25 @@ export class CalendarWithRecurrenceCommonRenderer extends CalendarCommonRenderer
         ...CalendarCommonRenderer.components,
         Popover: CalendarWithRecurrenceCommonPopover,
     };
+
+    onDblClick(info) {
+        const record = this.props.model.records[info.event.id];
+        this.props.editRecord({ ...record, id: record.rawRecord.id });
+    }
+
+    fcEventToRecord(event) {
+        const record = super.fcEventToRecord(event);
+        if (record.id) {
+            record.id = this.props.model.records[record.id].rawRecord.id;
+        }
+        return record;
+    }
+
+    convertRecordToEvent(record) {
+        const event = super.convertRecordToEvent(record);
+        // https://fullcalendar.io/docs/editable
+        // this is used to disable the 'drag and drop' and 'resizing' for recurring events
+        event.editable = !record.isRecurrent;
+        return event;
+    }
 }
