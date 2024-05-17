@@ -20,6 +20,7 @@ IGNORE_MODEL_NAMES_NEW_FORM = {
     'stock.warehouse',  # avoid warning "Creating a new warehouse will automatically activate the Storage Locations setting"
     'website.visitor',  # Visitors can only be created through the frontend.
     'marketing.activity',  # only used as wizard and always used form marketing.campaign
+    'crm.stage',  # Avoid warning "Changing the value of 'Is Won Stage' may induce ..."
 }
 
 IGNORE_COMPUTED_FIELDS = {

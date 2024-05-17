@@ -2348,3 +2348,11 @@ class TestOrmCreatePerformanceLine(models.Model):
     _name = _description = 'test_orm.create.performance.line'
 
     perf_id = fields.Many2one('test_orm.create.performance')
+
+
+class OnchangePartialView(models.Model):
+    _name = _description = 'test_orm.onchange.partial.view'
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company', default=lambda r: r.env.company)
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
