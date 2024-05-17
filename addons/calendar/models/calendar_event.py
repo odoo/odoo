@@ -741,9 +741,10 @@ class Meeting(models.Model):
         the calendar defaut privacy of an user from a 'calendar.event' record, since it is a res.users field.
         Otherwise we would have to create a new computed field on that model, which we don't want.
         """
-        for event in self:
-            if event._check_private_event_conditions():
-                raise self.env['ir.rule']._make_access_error("write", event)
+        if not self.env.su:
+            for event in self:
+                if event._check_private_event_conditions():
+                    raise self.env['ir.rule']._make_access_error("write", event)
 
     def _check_private_event_conditions(self):
         """ Checks if the event is private, returning True if the conditions match and False otherwise. """
@@ -769,10 +770,12 @@ class Meeting(models.Model):
         grouped_fields = {group_field.split(':')[0] for group_field in groupby + fields_aggregates}
         private_fields = grouped_fields - self._get_public_fields()
         if not self.env.su and private_fields:
+            # Sub query user settings from calendars that are not private ('public' and 'confidential').
+            public_calendars_settings = self.env['res.users.settings'].sudo()._search([('calendar_default_privacy', '!=', 'private')])
             # display public, confidential events and events with default privacy when owner's default privacy is not private
             domain = AND([domain, [
                 '|', '|', '|', ('privacy', '=', 'public'), ('privacy', '=', 'confidential'), ('user_id', '=', self.env.user.id),
-                '&', ('privacy', '=', False), ('user_id.calendar_default_privacy', '!=', 'private')
+                '&', ('privacy', '=', False), ('user_id.res_users_settings_id', 'in', public_calendars_settings)
             ]])
             return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
         return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
