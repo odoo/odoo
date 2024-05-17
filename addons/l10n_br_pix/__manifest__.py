@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     "name": "Brazil Pix QR codes",
-    "countries": ["br"],
     "category": "Accounting/Localizations",
     "description": """
 Implements Pix QR codes for Brazil.
