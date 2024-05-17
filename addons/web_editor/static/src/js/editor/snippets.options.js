@@ -9188,7 +9188,7 @@ registry.VersionControl = SnippetOptionWidget.extend({
         // be free for that so we wait for it first.
         this.options.wysiwyg.waitForEmptyMutexAction().then(async () => {
             await new Promise((resolve) => {
-                this.options.wysiwyg.snippetsMenuBus.trigger("CALL_POST_SNIPPET_DROPPED", { 
+                this.options.wysiwyg.snippetsMenuBus.trigger("CALL_POST_SNIPPET_DROP", {
                     $snippet: $(newBlockEl),
                     onSuccess: resolve,
                 });
