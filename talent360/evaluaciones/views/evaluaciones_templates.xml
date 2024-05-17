@@ -342,29 +342,29 @@
                     </span>
                 </div>
 
-                <div class="col survey_section w-100">
+                <div class="col survey_section w-100" style="page-break-inside: avoid;">
                     <h4>Semáforo</h4>
                     <div class="container-fluid row gap-2 align-items-center">
                         <div class="color_circle" style="background-color: #2894a7;"></div>
-                        <span class="col">Superior</span>
+                        <span class="col">Excelente</span>
                     </div>
                     <div class="container-fluid row gap-2 align-items-center">
                         <div class="color_circle" style="background-color: #5aaf2b;"></div>
-                        <span class="col">Suficiente</span>
+                        <span class="col">Bueno</span>
                     </div>
                     <div class="container-fluid row gap-2 align-items-center">
                         <div class="color_circle" style="background-color: #fcd703;"></div>
-                        <span class="col">Marginal</span>
-                    </div>
-
-                    <div class="container-fluid row gap-2 align-items-center">
-                        <div class="color_circle" style="background-color: #fc8803;"></div>
                         <span class="col">Regular</span>
                     </div>
 
                     <div class="container-fluid row gap-2 align-items-center">
+                        <div class="color_circle" style="background-color: #fc8803;"></div>
+                        <span class="col">Malo</span>
+                    </div>
+
+                    <div class="container-fluid row gap-2 align-items-center">
                         <div class="color_circle" style="background-color: #ff4747;"></div>
-                        <span class="col">Deficiente</span>
+                        <span class="col">Muy malo</span>
                     </div>
                 </div>
             </div>
@@ -373,7 +373,7 @@
                 <h4>Datos demográficos</h4>
                 <div class="container-fluid">
                     <div class="row gap-5">
-                        <div class="col survey_section">
+                        <div class="col survey_section" >
                             <h4>
                             Por generación
                             </h4>
@@ -382,7 +382,7 @@
                             </div>
                         </div>
 
-                        <div class="col survey_section">
+                        <div class="col survey_section" style="page-break-inside: avoid;">
                             <h4>
                             Por género
                             </h4>
@@ -415,35 +415,35 @@
                 </div>
             </t>
 
-            <div class="survey_page container-fluid d-flex flex-column">
-                <div class="survey_section">
-                    <h4>Resumen del Clima Laboral</h4>
-                    <div class="survey_graph" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'radar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
+            <div class="survey_page container-fluid d-flex flex-column" style="font-size: 0.9em;">
+                <div class="survey_section" style="page-break-inside: avoid;">
+                    <h4 style="font-size: 2em;">Resumen del Clima Laboral</h4>
+                    <div class="survey_graph" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'radar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias" style="height: 745px;">
                         <canvas t-att-id="'canvas_barras_categorias_clima'"></canvas>
                     </div>
                 </div>
 
                 <div class="container-fluid">
                     <div class="row gap-5">
-                        <div class="col survey_section align-items-start">
-                            <h4>Categoría con mayor puntaje</h4>
+                        <div class="col survey_section align-items-start" style="page-break-inside: avoid;">
+                            <h4 style="font-size: 1em;">Categoría con mayor puntaje</h4>
                             <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
-                                <span class="fs-1">
+                                <span class="fs-1" style="font-size: 1.5em;">
                                     <t t-esc="'{:.2f}'.format(max(categorias, key=lambda x: x['valor'])['valor'])"/>
                                 </span>
-                                <span class="fs-5">
+                                <span class="fs-5" style="font-size: 1em;">
                                     <t t-esc="max(categorias, key=lambda x: x['valor'])['nombre']"/>
                                 </span>
                             </div>
                         </div>
 
-                        <div class="col survey_section align-items-start">
-                            <h4>Categoría con menor puntaje:</h4>
+                        <div class="col survey_section align-items-start" style="page-break-inside: avoid;">
+                            <h4 style="font-size: 1em;">Categoría con menor puntaje:</h4>
                             <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
-                                <span class="fs-1">
+                                <span class="fs-1" style="font-size: 1.5em;">
                                     <t t-esc="'{:.2f}'.format(min(categorias, key=lambda x: x['valor'])['valor'])"/>
                                 </span>
-                                <span class="fs-5">
+                                <span class="fs-5" style="font-size: 1em;">
                                     <t t-esc="min(categorias, key=lambda x: x['valor'])['nombre']"/>
                                 </span>
                             </div>
@@ -452,21 +452,22 @@
                 </div>
             </div>
 
+           
             <t t-foreach="evaluacion.generar_datos_reporte_clima_action()['categorias']" t-as="categoria">
-                <div class="survey_section container-fluid">
+                <div class="survey_section container-fluid" style="page-break-inside: avoid; margin-top: 50px; margin-bottom: 50px;">
                     <t t-if="'puntuacion' in categoria">
-                        <div class="survey_page container-fluid d-flex flex-column">
-                            <div class="survey_section container-fluid">
-                                <h4>
+                        <div class="survey_page container-fluid d-flex flex-column align-items-center" style="font-size: 0.9em;">
+                            <div class="survey_section container-fluid" style="page-break-inside: avoid;">
+                                <h4 style="font-size: 2em; text-align: center;">
                                     <t t-esc="categoria['nombre']"/>
                                 </h4>
-                                <div class="survey_graph containar-fluid" t-att-id="'grafica_pie_' + categoria['nombre']" t-att-data-graph-type="'doughnut'" t-att-data-graph-data="[categoria,{'valor': 100 - categoria['valor'],'color':'#9c9c9c'}]">
+                                <div class="survey_graph containar-fluid" t-att-id="'grafica_pie_' + categoria['nombre']" t-att-data-graph-type="'doughnut'" t-att-data-graph-data="[categoria,{'valor': 100 - categoria['valor'],'color':'#9c9c9c'}]" style="max-height: 200px; max-width: 100%; margin: 0 auto;">
                                     <canvas t-att-id="'canvas_pie_' + categoria['nombre']"></canvas>
                                 </div>
-                                <h4>Resumen por departamentos</h4>
                             </div>
-                            <div class="survey_section">
-                                <div class="survey_graph" t-att-id="'grafica_radar_departamentos_' + categoria['nombre']" t-att-data-graph-type="'col'" t-att-data-label="'Resultados por departamento'" t-att-data-graph-data="categoria['departamentos']">
+                            <div class="survey_section" style="page-break-inside: avoid;">
+                                <h4 style="font-size: 2em; text-align: center;">Resumen por departamentos</h4>
+                                <div class="survey_graph" t-att-id="'grafica_radar_departamentos_' + categoria['nombre']" t-att-data-graph-type="'col'" t-att-data-label="'Resultados por departamento'" t-att-data-graph-data="categoria['departamentos']" style="max-height: 200px; max-width: 100%; margin: 0 auto;">
                                     <canvas t-att-id="'canvas_radar_departamentos_' + categoria['nombre']"></canvas>
                                 </div>
                             </div>
@@ -474,6 +475,10 @@
                     </t>
                 </div>
             </t>
+
+
+
+
             <div class="survey_section mb-5">
                 <h4>Necesidad de acción</h4>
                 <span class="container-fluid">
@@ -485,6 +490,9 @@
                 </span>
             </div>
         </template>
+
+
+
         <template id="pregunta_resultados_texto" name="Question: text result (text_box, char_box)">
             <t t-set="respuestas" t-value="datos_pregunta['respuestas']"/>
             <t t-set="first_page_records_count" t-value="len(respuestas) if len(respuestas) &lt; limite_registros else limite_registros"/>
