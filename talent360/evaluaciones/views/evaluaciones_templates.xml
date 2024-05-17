@@ -460,7 +460,7 @@
 
            
            <t t-foreach="evaluacion.generar_datos_reporte_clima_action()['categorias']" t-as="categoria">
-                <div class="survey_section container-fluid d-flex align-items-center justify-content-center" style="page-break-inside: avoid; height: 90vh;">
+                <div class="survey_section container-fluid d-flex align-items-center justify-content-center page-categoria" style="page-break-inside: avoid;">
                     <t t-if="'puntuacion' in categoria">
                         <div class="survey_page container-fluid d-flex flex-column align-items-center" style="font-size: 0.9em;">
                             <div class="survey_section container-fluid text-center" style="page-break-inside: avoid;">
