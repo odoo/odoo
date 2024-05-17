@@ -21,6 +21,7 @@ import {
 } from "../hoot_utils";
 import { MockMath, internalRandom } from "../mock/math";
 import { cleanupNavigator, mockUserAgent } from "../mock/navigator";
+import { cleanupNetwork } from "../mock/network";
 import { cleanupTime, setFrameRate } from "../mock/time";
 import { cleanupWindow, mockTouch, watchListeners } from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
@@ -31,7 +32,6 @@ import { Suite, suiteError } from "./suite";
 import { Tag } from "./tag";
 import { Test, testError } from "./test";
 import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
-import { cleanupNetwork } from "../mock/network";
 
 /**
  * @typedef {{
@@ -1266,22 +1266,6 @@ export class TestRunner {
     }
 
     /**
-     * @param {Preset} preset
-     */
-    #applyPreset(preset) {
-        if (preset.tags?.length) {
-            this.#include("tags", preset.tags, true);
-        }
-        if (preset.platform) {
-            mockUserAgent(preset.platform);
-        }
-
-        if (typeof preset.touch === "boolean") {
-            mockTouch(preset.touch);
-        }
-    }
-
-    /**
      * @param {Job} job
      */
     #applyTagModifiers(job) {
@@ -1304,7 +1288,7 @@ export class TestRunner {
                             `"${job.fullName}" is marked as "${tag.name}". This is not suitable for CI`
                         );
                     }
-                    this.#include(job instanceof Suite ? "suites" : "tests", [job.id], true);
+                    this.#include(job instanceof Suite ? "suites" : "tests", [job.id], 2);
                     ignoreSkip = true;
                     break;
                 case Tag.SKIP:
@@ -1410,18 +1394,18 @@ export class TestRunner {
     /**
      * @param {"suites" | "tags" | "tests"} type
      * @param {Iterable<string>} ids
-     * @param {boolean} [readonly]
+     * @param {number} [priority=1]
      */
-    #include(type, ids, readonly) {
+    #include(type, ids, priority = 1) {
         const values = this.state.includeSpecs[type];
         for (const id of ids) {
             const nId = normalize(id);
             if (id.startsWith(EXCLUDE_PREFIX)) {
-                values[nId.slice(EXCLUDE_PREFIX.length)] = readonly ? -2 : -1;
                 this.#hasExcludeFilter = true;
+                values[nId.slice(EXCLUDE_PREFIX.length)] = Math.abs(priority) * -1;
             } else if ((values[nId]?.[0] || 0) >= 0) {
                 this.#hasIncludeFilter = true;
-                values[nId] = readonly ? +2 : +1;
+                values[nId] = Math.abs(priority);
             }
         }
     }
@@ -1482,7 +1466,16 @@ export class TestRunner {
             if (!preset) {
                 throw new HootError(`unknown preset: "${this.config.preset}"`);
             }
-            this.#applyPreset(preset);
+            if (preset.tags?.length) {
+                this.#include("tags", preset.tags, 3);
+            }
+            if (preset.platform) {
+                mockUserAgent(preset.platform);
+            }
+
+            if (typeof preset.touch === "boolean") {
+                mockTouch(preset.touch);
+            }
         }
 
         this.#currentJobs = this.prepareJobs();
