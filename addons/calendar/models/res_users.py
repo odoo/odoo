@@ -66,9 +66,8 @@ class Users(models.Model):
         #   |           |
         #   |           | <--- `stop_dt_utc` = `stop_dt` if user lives in an area of West longitude (positive shift compared to UTC, America for example)
         #   |           |
-        now_utc = datetime.datetime.utcnow()
-        start_dt_utc = start_dt = now_utc.replace(tzinfo=UTC)
-        stop_dt_utc = datetime.datetime.combine(now_utc.date(), datetime.time.max).replace(tzinfo=UTC)
+        start_dt_utc = start_dt = datetime.datetime.now(UTC)
+        stop_dt_utc = datetime.datetime.combine(start_dt_utc.date(), datetime.time.max).replace(tzinfo=UTC)
 
         tz = self.env.user.tz
         if tz:
