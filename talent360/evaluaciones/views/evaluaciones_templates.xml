@@ -64,10 +64,13 @@
             <h4>
                 <button class="btn btn-link ps-0 pt-2 d-print-none" type="button" data-bs-toggle="collapse" t-attf-data-bs-target=".question_detail">
                     <i class="fa fa-eye" aria-hidden="true"/>
-                </button>Ver detalles de preguntas</h4>
-            <div class="question_detail survey_section container-fluid collapse show" t-foreach="preguntas" t-as='datos_pregunta'>
-                <t t-set="pregunta" t-value="datos_pregunta['pregunta']"/>
-                <div class="o_survey_results_question_wrapper container-fluid p-5" t-call="evaluaciones.encuestas_reporte_pregunta" />
+                </button>Ver detalles de preguntas
+            </h4>
+            <div class="question_detail survey_section container-fluid collapse show">
+                <t t-foreach="preguntas" t-as='datos_pregunta'>
+                    <t t-set="pregunta" t-value="datos_pregunta['pregunta']"/>
+                    <div class="o_survey_results_question_wrapper container-fluid p-5" style="page-break-before: always;" t-call="evaluaciones.encuestas_reporte_pregunta" />
+                </t>
             </div>
         </template>
 
@@ -453,21 +456,21 @@
             </div>
 
            
-            <t t-foreach="evaluacion.generar_datos_reporte_clima_action()['categorias']" t-as="categoria">
-                <div class="survey_section container-fluid" style="page-break-inside: avoid; margin-top: 50px; margin-bottom: 50px;">
+           <t t-foreach="evaluacion.generar_datos_reporte_clima_action()['categorias']" t-as="categoria">
+                <div class="survey_section container-fluid d-flex align-items-center justify-content-center" style="page-break-inside: avoid; height: 90vh;">
                     <t t-if="'puntuacion' in categoria">
                         <div class="survey_page container-fluid d-flex flex-column align-items-center" style="font-size: 0.9em;">
-                            <div class="survey_section container-fluid" style="page-break-inside: avoid;">
+                            <div class="survey_section container-fluid text-center" style="page-break-inside: avoid;">
                                 <h4 style="font-size: 2em; text-align: center;">
                                     <t t-esc="categoria['nombre']"/>
                                 </h4>
-                                <div class="survey_graph containar-fluid" t-att-id="'grafica_pie_' + categoria['nombre']" t-att-data-graph-type="'doughnut'" t-att-data-graph-data="[categoria,{'valor': 100 - categoria['valor'],'color':'#9c9c9c'}]" style="max-height: 200px; max-width: 100%; margin: 0 auto;">
+                                <div class="survey_graph container-fluid d-flex justify-content-center" t-att-id="'grafica_pie_' + categoria['nombre']" t-att-data-graph-type="'doughnut'" t-att-data-graph-data="[categoria,{'valor': 100 - categoria['valor'],'color':'#9c9c9c'}]" style="max-height: 200px; max-width: 200px;">
                                     <canvas t-att-id="'canvas_pie_' + categoria['nombre']"></canvas>
                                 </div>
                             </div>
-                            <div class="survey_section" style="page-break-inside: avoid;">
+                            <div class="survey_section container-fluid text-center" style="page-break-inside: avoid;">
                                 <h4 style="font-size: 2em; text-align: center;">Resumen por departamentos</h4>
-                                <div class="survey_graph" t-att-id="'grafica_radar_departamentos_' + categoria['nombre']" t-att-data-graph-type="'col'" t-att-data-label="'Resultados por departamento'" t-att-data-graph-data="categoria['departamentos']" style="max-height: 200px; max-width: 100%; margin: 0 auto;">
+                                <div class="survey_graph container-fluid d-flex justify-content-center" t-att-id="'grafica_radar_departamentos_' + categoria['nombre']" t-att-data-graph-type="'col'" t-att-data-label="'Resultados por departamento'" t-att-data-graph-data="categoria['departamentos']" style="max-height: 200px; max-width: 400px;">
                                     <canvas t-att-id="'canvas_radar_departamentos_' + categoria['nombre']"></canvas>
                                 </div>
                             </div>
@@ -477,9 +480,7 @@
             </t>
 
 
-
-
-            <div class="survey_section mb-5">
+            <div class="survey_section mb-5" style="page-break-inside: avoid;  margin-top: 50px;">
                 <h4>Necesidad de acción</h4>
                 <span class="container-fluid">
                     <t t-if="total_porcentaje &lt; 20">Se requiere realizar el análisis de cada categoría y dominio para establecer las acciones de intervención apropiadas, mediante un Programa de intervención que deberá incluir evaluaciones específicas, y contemplar campañas de sensibilización, revisar la política de prevención de riesgos psicosociales y programas para la prevención de los factores de riesgo psicosocial, la promoción de un entorno organizacional favorable y la prevención de la violencia laboral, así como reforzar su aplicación y difusión.</t>
@@ -497,17 +498,19 @@
             <t t-set="respuestas" t-value="datos_pregunta['respuestas']"/>
             <t t-set="first_page_records_count" t-value="len(respuestas) if len(respuestas) &lt; limite_registros else limite_registros"/>
             <t t-set="cell_height" t-value="default_line_height"/>
-            <div t-attf-style="height: auto" class="overflow_auto o_survey_user_responses_table_wrapper">
-                <table class="table table-hover table-sm o_survey_results_table_indexed" t-att-id="'survey_table_question_%d' % pregunta.id">
+
+            <div class="overflow_auto o_survey_user_responses_table_wrapper" style="height: auto; page-break-inside: avoid; margin-bottom: 20px;">
+                <h4 t-esc="pregunta.titulo" style="page-break-inside: avoid; text-align: center;"/>
+                <table class="table table-hover table-sm o_survey_results_table_indexed" t-att-id="'survey_table_question_%d' % pregunta.id" style="page-break-inside: avoid;">
                     <thead>
-                        <tr>
+                        <tr style="page-break-inside: avoid;">
                             <th>#</th>
                             <th>Respuestas</th>
                         </tr>
                     </thead>
                     <tbody>
                         <t t-foreach="respuestas" t-as="respuesta">
-                            <tr t-att-class="'d-none' if not respuesta in respuestas[:limite_registros] else ''">
+                            <tr t-att-class="'d-none' if not respuesta in respuestas[:limite_registros] else ''" style="page-break-inside: avoid;">
                                 <td>
                                     <t t-esc="respuesta_index + 1"></t>
                                 </td>
@@ -523,6 +526,7 @@
             </div>
             <t t-call="evaluaciones.question_table_pagination"/>
         </template>
+
 
         <template id="pregunta_resultados_seleccion" name="Question: choice result (simple_choice, multiple_choice)">
             <t t-set="respuestas" t-value="datos_pregunta['respuestas']"/>
