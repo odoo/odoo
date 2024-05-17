@@ -10,17 +10,29 @@ import odoo
 from odoo.http import root, content_disposition
 from odoo.tests import tagged
 from odoo.tests.common import HOST, new_test_user, get_db_name, BaseCase
-from odoo.tools import config, file_path
+from odoo.tools import config, file_path, parse_version
 from odoo.addons.test_http.controllers import CT_JSON
 
 from .test_common import TestHttpBase
+
+try:
+    from importlib import metadata
+    werkzeug_version = metadata.version('werkzeug')
+except ImportError:
+    import werkzeug
+    werkzeug_version = werkzeug.__version__
 
 
 @tagged('post_install', '-at_install')
 class TestHttpMisc(TestHttpBase):
     def test_misc0_redirect(self):
         res = self.nodb_url_open('/test_http//greeting')
-        self.assertEqual(res.status_code, 404)
+        awaited_codes = [404]
+        if parse_version('2.2.0') <= parse_version(werkzeug_version) <= parse_version('3.0.1'):
+            # Bug in werkzeug from 2.2.0 up to 3.0.1 (shipped in Ubuntu Noble 24.04)
+            # not a big deal but should be removed once fixed upstream.
+            awaited_codes.append(308)
+        self.assertIn(res.status_code, awaited_codes)
 
     def test_misc1_reverse_proxy(self):
         # client <-> reverse-proxy <-> odoo
