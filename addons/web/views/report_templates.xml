@@ -341,6 +341,9 @@
 
         <div t-attf-class="o_company_#{company.id}_layout article o_report_layout_striped {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}" t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
+             <t t-if="layout_document_title">
+                <t t-out="layout_document_title"/>
+            </t>
             <t t-out="0"/>
         </div>
 
@@ -404,6 +407,9 @@
                 <!-- This div ensures that the address is not cropped by the header. -->
                 <t t-call="web.address_layout"/>
             </div>
+             <t t-if="layout_document_title">
+                <t t-out="layout_document_title"/>
+            </t>
             <t t-out="0"/>
         </div>
 
@@ -465,6 +471,9 @@
                 <!-- This div ensures that the address is not cropped by the header. -->
                 <t t-call="web.address_layout"/>
             </div>
+             <t t-if="layout_document_title">
+                <t t-out="layout_document_title"/>
+            </t>
             <t t-out="0"/>
         </div>
 
@@ -535,6 +544,9 @@
                 <!-- This div ensures that the address is not cropped by the header. -->
                 <t t-call="web.address_layout"/>
             </div>
+             <t t-if="layout_document_title">
+                <t t-out="layout_document_title"/>
+            </t>
             <t t-out="0"/>
         </div>
 
@@ -606,6 +618,9 @@
                 <!-- This div ensures that the address is not cropped by the header. -->
                 <t t-call="web.address_layout"/>
             </div>
+            <t t-if="layout_document_title">
+                <t t-out="layout_document_title"/>
+            </t>
             <t t-out="0"/>
         </div>
 
@@ -677,6 +692,9 @@
                 <!-- This div ensures that the address is not cropped by the header. -->
                 <t t-call="web.address_layout"/>
             </div>
+             <t t-if="layout_document_title">
+                <t t-out="layout_document_title"/>
+             </t>
             <t t-out="0"/>
         </div>
 
@@ -748,6 +766,9 @@
                 <!-- This div ensures that the address is not cropped by the header. -->
                 <t t-call="web.address_layout"/>
             </div>
+             <t t-if="layout_document_title">
+                <t t-out="layout_document_title"/>
+             </t>
             <t t-out="0"/>
         </div>
 
