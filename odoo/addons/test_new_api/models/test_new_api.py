@@ -1538,6 +1538,7 @@ class ModelAllAccess(models.Model):
     def action_full(self):
         return
 
+
 class ModelSomeAccess(models.Model):
     _name = 'test_new_api.model.some_access'
     _description = 'Testing Utilities attrs and groups'
@@ -1570,6 +1571,26 @@ class Model3SomeAccess(models.Model):
 
     xxx_id = fields.Many2one('test_new_api.model2.some_access')
     xxx_sub_id = fields.Many2one(related='xxx_id.g_id')
+
+
+class ComputedModifier(models.Model):
+    _name = 'test_new_api.computed.modifier'
+    _description = 'Test onchange and compute for automatically added invisible fields'
+
+    foo = fields.Integer()
+    sub_foo = fields.Integer(compute='_compute_sub_foo')
+    bar = fields.Integer()
+    sub_bar = fields.Integer()
+    name = fields.Char()
+
+    @api.depends('foo')
+    def _compute_sub_foo(self):
+        for record in self:
+            record.sub_foo = record.foo
+
+    @api.onchange('bar')
+    def _onchange_moderator(self):
+        self.sub_bar = self.bar
 
 
 class ComputeEditable(models.Model):

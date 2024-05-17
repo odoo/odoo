@@ -1058,9 +1058,6 @@ actual arch.
             self._raise_view_error(_('Model not found: %(model)s', model=model_name), root)
         model = self.env[model_name]
 
-        if self._onchange_able_view(root):
-            self._postprocess_on_change(root, model)
-
         group_definitions = self.env['res.groups']._get_group_definitions()
 
         # model_groups/view_groups: access groups for the model/view
@@ -1117,6 +1114,9 @@ actual arch.
         name_manager.update_available_fields()
 
         root.set('model_access_rights', model._name)
+
+        if self._onchange_able_view(root):
+            self._postprocess_on_change(root, model)
 
         return name_manager
 
