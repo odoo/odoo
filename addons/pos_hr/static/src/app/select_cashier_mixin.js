@@ -19,7 +19,7 @@ export function useCashierSelector(
         {
             async cashier(code) {
                 const employee = pos.models["hr.employee"].find(
-                    (emp) => emp._pin === Sha1.hash(code.code)
+                    (emp) => emp._barcode === Sha1.hash(code.code)
                 );
                 if (
                     employee &&
@@ -37,11 +37,21 @@ export function useCashierSelector(
         exclusive
     );
 
-    async function checkPin(employee) {
-        const inputPin = await makeAwaitable(dialog, NumberPopup, {
-            formatDisplayedValue: (x) => x.replace(/./g, "•"),
-            title: _t("Password?"),
-        });
+    async function checkPin(employee, pin = false) {
+        let inputPin = pin;
+        if (!pin) {
+            inputPin = await makeAwaitable(dialog, NumberPopup, {
+                formatDisplayedValue: (x) => x.replace(/./g, "•"),
+                title: _t("Password?"),
+            });
+        } else {
+            if (employee._pin !== Sha1.hash(inputPin)) {
+                inputPin = await makeAwaitable(dialog, NumberPopup, {
+                    formatDisplayedValue: (x) => x.replace(/./g, "•"),
+                    title: _t("Password?"),
+                });
+            }
+        }
         if (!inputPin || employee._pin !== Sha1.hash(inputPin)) {
             dialog.add(AlertDialog, {
                 title: _t("Incorrect Password"),
@@ -55,7 +65,7 @@ export function useCashierSelector(
     /**
      * Select a cashier, the returning value will either be an object or nothing (undefined)
      */
-    return async function selectCashier() {
+    return async function selectCashier(pin = false) {
         if (!pos.config.module_pos_hr) {
             return;
         }
@@ -83,7 +93,7 @@ export function useCashierSelector(
             title: _t("Change Cashier"),
             list: employeesList,
         });
-        if (!employee || (employee._pin && !(await checkPin(employee)))) {
+        if (!employee || (employee._pin && !(await checkPin(employee, pin)))) {
             return;
         }
         pos.set_cashier(employee);
