@@ -1347,3 +1347,14 @@ class TestComputeOnchange2(TransactionCase):
                 # check that Msg1 is visible in the one2many during onchange()
                 self.assertEqual(message_form.has_important_sibling, True)
                 message_form.body = 'Msg3: New'
+
+    def test_absent_dependencies_fields(self):
+        model = self.env['test_orm.onchange.partial.view']
+        created_record = model.create({})
+        self.assertEqual(created_record.currency_id, self.env.company.currency_id)
+
+        with Form(self.env['test_orm.onchange.partial.view']) as record_form:
+            self.assertEqual(record_form.currency_id, self.env.company.currency_id)
+            saved_record = record_form.save()
+
+        self.assertEqual(saved_record.currency_id, self.env.company.currency_id)
