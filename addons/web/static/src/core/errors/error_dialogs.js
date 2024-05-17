@@ -172,7 +172,6 @@ export class RedirectWarningDialog extends Component {
 export class Error504Dialog extends Component {
     static template = "web.Error504Dialog";
     static components = { Dialog };
-    static title = _t("Request timeout");
     static props = { ...standardErrorDialogProps };
 }
 
@@ -182,7 +181,6 @@ export class Error504Dialog extends Component {
 export class SessionExpiredDialog extends Component {
     static template = "web.SessionExpiredDialog";
     static components = { Dialog };
-    static title = _t("Odoo Session Expired");
     static props = { ...standardErrorDialogProps };
 
     onClick() {
