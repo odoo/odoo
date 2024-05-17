@@ -51,7 +51,7 @@ class AccountPayment(models.Model):
                 # payments linked to such refund transactions. Indeed, should a refund transaction
                 # be stuck forever in a transient state (due to webhook failure, for example), the
                 # user would never be allowed to refund the source transaction again.
-                refund_payments = self.search([('source_payment_id', '=', self.id)])
+                refund_payments = self.search([('source_payment_id', '=', payment.id)])
                 refunded_amount = abs(sum(refund_payments.mapped('amount')))
                 payment.amount_available_for_refund = payment.amount - refunded_amount
             else:
