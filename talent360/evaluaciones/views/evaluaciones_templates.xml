@@ -48,11 +48,7 @@
         <template id="encuestas_reporte_header" name="Reporte: cabecera de reporte genérico">
             <div class="o_survey_statistics_header mt32">
                 <div class="d-flex justify-content-between">
-                    <div class="d-block">
-                        <h1>
-                            <span t-field="evaluacion.nombre"/>
-                        </h1>
-                    </div>
+                    
                 </div>
                 <button class="btn btn-primary d-none d-print-none d-md-inline-block o_survey_results_print" aria-label="Print" title="Print">
                     <i class="fa fa-print"></i> Exportar
@@ -76,7 +72,11 @@
 
         <!--AQUÍ COMIENZA NOM 035-->
         <template id="encuestas_reporte_nom_035" name="Reporte: NOM-035">
+            <t t-call="evaluaciones.portada_nom035"/>
             <div class="container-fluid row gap-5 justify-content-between g-2">
+                <h1>
+                    <span t-field="evaluacion.nombre"/>
+                </h1>
                 <div class="col survey_section">
                     <h4>Calificación final</h4>
                     <span t-att-class="'color_nulo' if final &lt; 20 else 'color_bajo' if 20 &lt;= final &lt; 45 else 'color_medio' if 45 &lt;= final &lt; 70 else 'color_alto' if 70 &lt;= final &lt; 90 else 'color_muy-alto'">
@@ -284,7 +284,7 @@
                     </t>
                 </div>
             </div>
-            <div class="survey_section">
+            <div class="survey_section" style="page-break-inside: avoid;">
                 <h4>Necesidad de acción</h4>
                 <span class="container-fluid">
                     <t t-if="final &lt; 20">El riesgo resulta despreciable por lo que no se requiere medidas adicionales.</t>
@@ -331,6 +331,9 @@
         <template id="encuesta_reporte_clima" name="Reporte de Clima Laboral">
             <t t-call="evaluaciones.portada_clima"/>
             <div class="container-fluid row gap-5 justify-content-between g-2">
+            <h1>
+                <span t-field="evaluacion.nombre"/>
+            </h1>
                 <div class="col survey_section">
                     <h4>Calificación final</h4>
                     <span t-att-class="'color_muy-alto' if total_porcentaje &lt; 20 else 'color_alto' if 20 &lt;= total_porcentaje &lt; 45 else 'color_medio' if 45 &lt;= total_porcentaje &lt; 70 else 'color_bajo' if 70 &lt;= total_porcentaje &lt;= 90 else 'color_muy-alto'">
