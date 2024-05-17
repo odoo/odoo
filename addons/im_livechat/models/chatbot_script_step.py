@@ -317,8 +317,8 @@ class ChatbotScriptStep(models.Model):
 
         if self.step_type == 'forward_operator':
             return self._process_step_forward_operator(discuss_channel)
-
-        return discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
+        # sudo: mail.message - chat bot is allowed to send messages related to its steps
+        return discuss_channel.sudo()._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
 
     def _process_step_forward_operator(self, discuss_channel):
         """ Special type of step that will add a human operator to the conversation when reached,

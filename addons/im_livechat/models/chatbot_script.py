@@ -208,7 +208,8 @@ class ChatbotScript(models.Model):
                 "'%(input_email)s' does not look like a valid email. Can you please try again?",
                 input_email=email_address
             )
-            posted_message = discuss_channel._chatbot_post_message(self, plaintext2html(error_message))
+            # sudo - mail.message - chat bot can post a message as part of the email validation
+            posted_message = discuss_channel.sudo()._chatbot_post_message(self, plaintext2html(error_message))
 
         return {
             'success': bool(email_normalized),
