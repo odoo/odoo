@@ -196,3 +196,31 @@ class TestViewGroups(common.TransactionCase):
                 </form>
             """,
         })
+
+    def test_computed_invisible_modifier(self):
+        self.env['ir.ui.view'].create({
+                'name': 'stuff',
+                'model': 'test_new_api.computed.modifier',
+                'arch': """
+                    <form>
+                        <field name="foo"/>
+                        <field name="bar"/>
+                        <field name="name" readonly="sub_foo or sub_bar"/>
+                    </form>
+                """,
+            })
+
+        with Form(self.env['test_new_api.computed.modifier']) as form:
+            form.name = 'toto'
+            self.assertEqual(form._view['onchange']['foo'], '1')
+            self.assertEqual(form._view['onchange']['bar'], '1')
+
+        with Form(self.env['test_new_api.computed.modifier']) as form:
+            form.foo = 1  # should make 'name' readonly by recomputing sub_foo
+            with self.assertRaisesRegex(AssertionError, "can't write on readonly field 'name'"):
+                form.name = 'toto'
+
+        with Form(self.env['test_new_api.computed.modifier']) as form:
+            form.bar = 1  # should make 'name' readonly by onchange modifying sub_bar
+            with self.assertRaisesRegex(AssertionError, "can't write on readonly field 'name'"):
+                form.name = 'toto'
