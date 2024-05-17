@@ -61,6 +61,9 @@ var VariantMixin = {
         }
         const combination = this.getSelectedVariantValues(parentEl);
         let parentCombination;
+        if (typeof combination === "string") {
+            combination = JSON.parse(combination);
+        }
 
         if (parentEl.classList.contains("main_product")) {
             if (parentEl.querySelector("ul[data-attribute_exclusions]")) {
@@ -623,8 +626,8 @@ var VariantMixin = {
             contactUsButtonEl.classList.remove("d-flex");
             contactUsButtonEl.classList.add("d-none");
 
-            product_unavailable.classList.remove("d-flex");
-            product_unavailable.classList.add("d-none");
+            product_unavailable?.classList.remove("d-flex");
+            product_unavailable?.classList.add("d-none");
         }
 
         var self = this;
