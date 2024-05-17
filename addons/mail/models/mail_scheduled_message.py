@@ -164,7 +164,7 @@ class MailScheduledMessage(models.Model):
         """ Compute 'bcc' which are followers that are going to be 'silently'
         notified by the scheduled message. """
 
-        mapped_records = self.mapped(
+        mapped_records = self.filtered('model').mapped(
             lambda record: [
                 record.model,
                 {key: value for key, value in json.loads(record.notification_parameters or '{}').items() if key in ['message_type', 'subtype_id']},
@@ -174,7 +174,7 @@ class MailScheduledMessage(models.Model):
 
         groupby_model = groupby(mapped_records, operator.itemgetter(0))
 
-        recipients_data_by_res_id = {}
+        recipients_data_by_res_id = defaultdict(dict)
 
         for [model, grouping] in groupby_model:
             for [params, id_group] in groupby(list(grouping), operator.itemgetter(1)):
@@ -186,7 +186,7 @@ class MailScheduledMessage(models.Model):
                 recipients_data_by_res_id.update(recipients_data.items())
 
         for composer in self:
-            recipients_data = recipients_data_by_res_id.get(composer.res_id)
+            recipients_data = recipients_data_by_res_id[composer.res_id]
             partner_ids = [
                 pid
                 for pid, pdata in recipients_data.items()
