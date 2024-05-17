@@ -10,7 +10,7 @@ import {
     startServer,
     step,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 
@@ -238,12 +238,15 @@ test("current partner notify is typing again to other members for long continuou
     await insertText(".o-mail-Composer-input", "a");
     await assertSteps(["notify_typing:true"]);
     // simulate current partner typing a character for a long time.
-    const elapseTickTime = SHORT_TYPING / 2;
-    for (let i = 0; i <= LONG_TYPING / elapseTickTime; i++) {
-        await insertText(".o-mail-Composer-input", "a");
-        await advanceTime(elapseTickTime);
-    }
+    let inserted = 0;
+    const interval = SHORT_TYPING / 2;
+    setInterval(() => {
+        inserted++;
+        insertText(".o-mail-Composer-input", "a");
+    }, interval);
+    await advanceTime(LONG_TYPING);
     await assertSteps(["notify_typing:true"]);
+    expect(inserted).toBe(LONG_TYPING / interval);
 });
 
 test("current partner notify no longer is typing to thread members after 5 seconds inactivity", async () => {
