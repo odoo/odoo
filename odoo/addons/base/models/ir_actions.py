@@ -974,11 +974,6 @@ class IrActionsServer(models.Model):
     def _selection_target_model(self):
         return [(model.model, model.name) for model in self.env['ir.model'].sudo().search([])]
 
-    @api.constrains('update_field_id', 'evaluation_type')
-    def _raise_many2many_error(self):
-        if self.filtered(lambda line: line.update_field_id.ttype == 'many2many' and line.evaluation_type == 'reference'):
-            raise ValidationError(_('many2many fields cannot be evaluated by reference'))
-
     @api.onchange('resource_ref')
     def _set_resource_ref(self):
         for action in self.filtered(lambda action: action.value_field_to_show == 'resource_ref'):
