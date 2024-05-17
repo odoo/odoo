@@ -256,3 +256,26 @@ odoo.define('point_of_sale.tour.limitedProductPricelistLoading', function (requi
 
     Tour.register('limitedProductPricelistLoading', { test: true, url: '/pos/ui' }, getSteps());
 });
+
+odoo.define('point_of_sale.tour.priceExtraVariant', function (require) {
+    'use strict';
+
+    const { ProductScreen } = require('point_of_sale.tour.ProductScreenTourMethods');
+    const { getSteps, startSteps } = require('point_of_sale.tour.utils');
+    var Tour = require('web_tour.tour');
+
+    startSteps();
+
+    ProductScreen.do.confirmOpeningPopup();
+    ProductScreen.do.clickHomeCategory();
+
+    ProductScreen.do.clickDisplayedProduct('Test Product');
+    ProductScreen.do.clickVariantCombination('M');
+    ProductScreen.check.selectedOrderlineHas('Test Product', '1', '22.50')
+
+    ProductScreen.do.clickDisplayedProduct('Test Product');
+    ProductScreen.do.clickVariantCombination('S');
+    ProductScreen.check.selectedOrderlineHas('Test Product', '1', '18.00')
+
+    Tour.register('priceExtraVariant', { test: true, url: '/pos/ui' }, getSteps());
+});

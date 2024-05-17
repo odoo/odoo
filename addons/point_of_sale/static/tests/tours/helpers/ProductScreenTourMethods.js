@@ -127,6 +127,20 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 },
             ];
         }
+
+        clickVariantCombination(name) {
+            return [
+                {
+                    content: `click variant combination '${name}'`,
+                    trigger: `.attribute-name-cell:contains("${name}") input[type="radio"]`
+                },
+                {
+                    content: `add product variant '${name}'`,
+                    trigger: '.button:contains("Add")'
+                },
+            ];
+        }
+
         confirmOpeningPopup() {
             return [{ trigger: '.opening-cash-control .button:contains("Open session")' }];
         }

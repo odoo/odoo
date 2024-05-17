@@ -1055,3 +1055,80 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptTrackingMethodTour', login="accountman")
+
+    def test_price_variant_with_extra_price(self):
+        """ Verify that a product variant has the right price with a pricelist depending on another pricelist """
+        pricelist_1 = self.env['product.pricelist'].create({
+            'name': 'Pricelist 1',
+            'item_ids': [
+                Command.create({
+                    'base': 'standard_price',
+                    'product_tmpl_id': self.whiteboard_pen.product_tmpl_id.id,
+                    'compute_price': 'fixed',
+                    'fixed_price': 1.10,
+                    'applied_on': '1_product'
+                }),
+            ]
+        })
+
+        # Create a second pricelist depending on the first
+        pricelist_2 = self.env['product.pricelist'].create({
+            'name': 'Pricelist 2',
+            'item_ids': [
+                Command.create({
+                    'base': 'pricelist',
+                    'base_pricelist_id': pricelist_1.id,
+                    'compute_price': 'formula',
+                    'price_discount': 10,
+                    'applied_on': '3_global'
+                }),
+            ]
+        })
+
+        # Set the main pricelist to be used
+        self.main_pos_config.write({
+            'use_pricelist': True,
+            'available_pricelist_ids': [(4, pricelist_2.id), (4, pricelist_1.id)],
+            'pricelist_id': pricelist_2.id,
+        })
+
+        self.assertEqual(self.main_pos_config.pricelist_id.id, pricelist_2.id)
+
+        # Create attributes which doesn't generate variant
+        size_attribute = self.env['product.attribute'].create({
+            'name': 'Size',
+            'create_variant': 'no_variant',
+            'value_ids': [
+                Command.create({'name': 'S', 'sequence': 1}),
+                Command.create({'name': 'M', 'sequence': 2}),
+            ]
+        })
+        size_s, size_m = size_attribute.value_ids
+
+        test_product = self.env['product.template'].create({
+            'name': 'Test Product',
+            'list_price': 20,
+            'available_in_pos': True,
+            'taxes_id': False
+        })
+
+        # Create attribute lines
+        ptal = self.env['product.template.attribute.line'].create({
+            'attribute_id': size_attribute.id,
+            'product_tmpl_id': test_product.id,
+            'value_ids': [Command.set([size_s.id, size_m.id])],
+        })
+        ptal.product_template_value_ids[1].price_extra = 5  # Set an extra price for size M
+
+        # Create products
+        for size in (size_s, size_m):
+            ptav = test_product.valid_product_template_attribute_line_ids.filtered(
+                lambda l: l.attribute_id == size.attribute_id
+            ).product_template_value_ids.filtered(
+                lambda v: v.product_attribute_value_id == size
+            )
+            product_size_variant = test_product._get_variant_for_combination(ptav)
+            self.assertTrue(product_size_variant)
+
+        self.main_pos_config.open_ui()
+        self.start_tour('/pos/ui?config_id=%d' % self.main_pos_config.id, 'priceExtraVariant', login='accountman')
