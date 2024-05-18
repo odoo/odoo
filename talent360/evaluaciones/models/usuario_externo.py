@@ -26,7 +26,7 @@ class UsuarioExterno(models.Model):
     _description = "Usuarios externos a la plataforma. Se utiliza para que puedan responer encuestas sin tener un usuario"
     _rec_name = "nombre"
 
-    nombre = fields.Char(string="Nombre Completo", required=True)
+    nombre = fields.Char(string="Nombre", required=True)
     email = fields.Char(string="Correo electrónico", required=True)
     puesto = fields.Char()
     nivel_jerarquico = fields.Char(string="Nivel jerárquico")
@@ -54,7 +54,10 @@ class UsuarioExterno(models.Model):
         evaluacion_id = self._context.get("current_evaluacion_id")
 
         usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
-            [("evaluacion_id.id", "=", evaluacion_id), ("usuario_externo_id.id", "=", self.id)]
+            [
+                ("evaluacion_id.id", "=", evaluacion_id),
+                ("usuario_externo_id.id", "=", self.id),
+            ]
         )
 
         if not usuario_evaluacion_rel:
@@ -64,9 +67,11 @@ class UsuarioExterno(models.Model):
 
         if len(usuario_evaluacion_rel) > 1:
             raise ValidationError(
-                _("El usuario seleccionado está asognado a la evaluación multiples veces. Por favor contactar a un administrador.")
+                _(
+                    "El usuario seleccionado está asognado a la evaluación multiples veces. Por favor contactar a un administrador."
+                )
             )
-            
+
         token = usuario_evaluacion_rel.token
 
         respuesta_ids = self.env["respuesta"].search(

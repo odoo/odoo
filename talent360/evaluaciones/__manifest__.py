@@ -9,6 +9,7 @@
         "views/crear_evaluaciones_360.xml",
         "views/crear_evaluacion_clima.xml",
         "views/objetivos_views.xml",
+        "views/portada_clima.xml",
         "views/evaluaciones_menus.xml",
         "views/evaluaciones_templates.xml",
         "views/evaluaciones_responder.xml",

@@ -321,6 +321,15 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                     }
                 }
             },
+            plugins: [
+              {
+                beforeInit: function (chart) {
+                    chart.data.labels.forEach(function (label, index, array) {
+                        array[index] = self._splitLabels(label, 25);
+                    })
+                  }
+              }
+            ]
         };
     },
 
@@ -384,6 +393,30 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         };
     },
     
+    _splitLabels: function (label, maxLength){
+        if (typeof label !== 'string') {
+            return label;
+        }
+
+        if (label.length < maxLength) {
+            return [label];
+        }
+
+        let breakIndex = label.lastIndexOf(" ", maxLength + 1);
+        if (breakIndex === -1) {
+            breakIndex = label.indexOf(" ", maxLength);
+
+            if (breakIndex === -1) {
+                return [label];
+            }
+        }
+        var respuesta = [label.slice(0, breakIndex)]
+        var respuesta2 = this._splitLabels(label.slice(breakIndex + 1), maxLength)
+
+        respuesta = respuesta.concat(respuesta2)
+
+        return respuesta
+    },
     /**
      * Loads the chart using the provided Chart library.
      *
@@ -408,6 +441,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     selector: '.o_survey_result',
     events: {
         "click .o_survey_results_print": "_onPrintResultsClick",
+        "click .btn-detalles": "_loadDetalles"
     },
 
     //--------------------------------------------------------------------------
@@ -454,8 +488,19 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * Call print dialog
      * @private
      */
-    _onPrintResultsClick: function () {  
+    _onPrintResultsClick: function () { 
+        for (let chart of this.charts) {
+            chart.chart.resize();
+        }
+
+        for (let chart of this.other_charts) {
+            chart.chart.resize();
+        }
         window.print();
+    },
+
+    _loadDetalles: function() {
+        this._attach_listener(this);
     },
     
     _attach_listener: function (self){

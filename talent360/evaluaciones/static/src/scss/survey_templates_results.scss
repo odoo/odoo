@@ -1,4 +1,25 @@
 @media print {
+    .detalles-wrapper:has(button.collapsed) {
+        display: none;
+    }
+
+    body{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;   
+    }
+    .page-categoria{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        text-align: center;
+        height: 90vh; /* Para que ocupe toda la altura de la página */
+        width: 90vw; /* Para que ocupe todo el ancho de la página */
+        page-break-before: always;
+
+    }
     .chartjs-size-monitor {
         display: none;
     }
@@ -189,6 +210,7 @@
     gap: 0.5rem;
     width: 100%;
     align-items: center;
+    page-break-inside: avoid;
 
     h4 {
         width: 100%;
