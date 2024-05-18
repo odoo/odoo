@@ -27,15 +27,15 @@
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Simon S, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
-# Lasse L, 2024
 # Kristoffer Grundström <lovaren@gmail.com>, 2024
 # Caroline Renson <car@odoo.com>, 2024
 # Frida E, 2024
 # sesn-odoo, 2024
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2024
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
-# Martin Trigaux, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Martin Trigaux, 2024
+# Lasse L, 2024
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -43,7 +43,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -564,6 +564,8 @@ msgid ""
 "<br/>\n"
 "                            on this account:"
 msgstr ""
+"<br/>\n"
+"                            på detta konto:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -1105,6 +1107,8 @@ msgid ""
 "<span invisible=\"state != 'draft' or name != '/' or posted_before or "
 "quick_edit_mode\">Draft</span>"
 msgstr ""
+"<span invisible=\"state != 'draft' or name != '/' or posted_before or "
+"quick_edit_mode\">Utkast</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2457,7 +2461,7 @@ msgstr "Alla våra kontraktsrelationer kommer uteslutande att styras av"
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "All selected moves for reversal must belong to the same company."
-msgstr ""
+msgstr "Alla utvalda drag för reversering måste tillhöra samma bolag."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -2575,7 +2579,7 @@ msgstr "Belopp i företagsvaluta signerat"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount
 msgid "Amount Condition"
-msgstr "Beloppsvillkor"
+msgstr "Mängdvillkor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__amount_residual
@@ -3994,7 +3998,7 @@ msgstr "Kontoplan fastställd!"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Check Partner(s)"
-msgstr ""
+msgstr "Kontrollera kontakt(er)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
@@ -6133,17 +6137,6 @@ msgid "Duplicated Ref"
 msgstr "Dubblerad referens"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr ""
-"Upptäckt dubblerad leverantörsreferens. Du har förmodligen kodat samma "
-"leverantörsfaktura/kreditnota två gånger."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "Dynamiska rapporter"
@@ -6412,7 +6405,7 @@ msgstr "Eget kapital"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Error importing attachment '%s' as invoice (decoder=%s)"
-msgstr ""
+msgstr "Fel vid import av bilaga '%s' som faktura (decoder=%s)"
 
 #. module: account
 #. odoo-python
@@ -8078,7 +8071,7 @@ msgstr "Sista dagen för ett ogiltigt räkenskapsår"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
 msgid "Inventory Value"
-msgstr "Inventariernas värde"
+msgstr "Lagervärde"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
@@ -10406,13 +10399,6 @@ msgid "Open"
 msgstr "Öppna"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr "Öppen lista"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
 msgid "Opening Balance"
 msgstr "Ingående saldo"
@@ -10891,7 +10877,7 @@ msgstr "Företagsmappning för avstämningsmodeller"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Partner(s) should have an email address."
-msgstr ""
+msgstr "Partnern/partnerna bör ha en e-postadress."
 
 #. module: account
 #. odoo-python
@@ -14018,6 +14004,8 @@ msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
 msgstr ""
+"Syscohadas diagrammall bör inte väljas direkt. Istället bör du direkt välja "
+"den diagrammall som är relaterad till ditt land."
 
 #. module: account
 #. odoo-python
@@ -14785,6 +14773,8 @@ msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
 msgstr ""
+"Den valda betalningsmetoden är inte tillgänglig för denna betalning, "
+"vänligen välj betalningsmetod igen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -16319,7 +16309,7 @@ msgstr "Visa"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "View Partner(s)"
-msgstr ""
+msgstr "Visa partner"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__warning
@@ -16513,7 +16503,7 @@ msgstr "Skriv här <b> din egna e-postadress</b> för att pröva på flödet."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
 msgid "Writeoff Is Exchange Account"
-msgstr ""
+msgstr "Avskrivning är valutakonto"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
@@ -16834,6 +16824,8 @@ msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
 msgstr ""
+"Du kan inte registrera betalningar för både inkommande och utgående flyttar "
+"samtidigt."
 
 #. module: account
 #. odoo-python
@@ -16953,6 +16945,8 @@ msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
 "definition."
 msgstr ""
+"Du kan inte ta bort denna kontotagg (%s), den används i kontoplanens "
+"definition."
 
 #. module: account
 #. odoo-python
@@ -16974,6 +16968,8 @@ msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
 msgstr ""
+"Du kan inte ta bort den här rapporten (%s), den används av PDF-"
+"genereringsmotorn för redovisning."
 
 #. module: account
 #. odoo-python
@@ -17074,6 +17070,9 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
+"Du kan inte importera \"opening_balance\" om öppningsrörelsen (%s) redan är "
+"bokförd.                 Om du är helt säker på att du vill ändra "
+"öppningsbalansen för dina konton, återställer du draget till utkast."
 
 #. module: account
 #. odoo-python
