@@ -38,16 +38,16 @@
                         <page string="Preguntas">
                             <field class="lh-lg w-100" name="pregunta_ids">
                                 <tree create="true" delete="true" editable="bottom">
-                                    <field class="lh-m" name="pregunta_texto"/>
-                                    <field class="lh-m" name="tipo"/>
+                                    <field name="pregunta_texto" readonly="1"/>
+                                    <field name="tipo" readonly="1"/>
                                 </tree>
                                 <form string="Agregar pregunta">
                                     <group>
                                         <field name="pregunta_texto" placeholder="Ingrese la pregunta"/>
                                         <field name="tipo"/>
-                                        <field name="categoria" placeholder="Seleccione o agregue una categoría"/>
-                                        <field name="ponderacion" placeholder="Seleccione la ponderación" invisible="tipo != 'escala'"/>
-                                        <field name="opcion_ids"  invisible="tipo != 'multiple_choice'"/>
+                                        <field name="categoria" placeholder="Seleccione o agregue una categoría" required="True"/>
+                                        <field name="ponderacion" invisible="tipo != 'escala'" required="True"/>
+                                        <field name="opcion_ids" invisible="tipo != 'multiple_choice'" required="True"/>
                                     </group>
                                 </form>
                             </field>

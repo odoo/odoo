@@ -18,7 +18,7 @@ class Pregunta(models.Model):
     ponderacion = fields.Selection(
         [("ascendente", "Ascendente"), ("descendente", "Descendente")],
         string="Ponderación",
-        required=True,
+        required=False,
     )
 
     mapeo_valores_escala = {
