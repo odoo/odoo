@@ -3783,7 +3783,7 @@ msgstr "Счет для перехода на кассовый метод"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Cash: Balance"
-msgstr "Наличные Баланс"
+msgstr "Наличные: Баланс"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__category
@@ -4340,7 +4340,7 @@ msgstr "Себестоимость"
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_direct_cost
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__expense_direct_cost
 msgid "Cost of Revenue"
-msgstr "Себестоимость Дохода"
+msgstr "Себестоимость"
 
 #. module: account
 #. odoo-python
@@ -4923,7 +4923,7 @@ msgstr "Курс валюты из валюты компании в валюту
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_current
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__asset_current
 msgid "Current Assets"
-msgstr "Текущие Активы"
+msgstr "Текущие активы"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__current_balance
@@ -4934,7 +4934,7 @@ msgstr "Текущий баланс"
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__liability_current
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__liability_current
 msgid "Current Liabilities"
-msgstr "Текущие Обязательства"
+msgstr "Краткосрочные обязательства"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__current_statement_balance
@@ -4945,7 +4945,7 @@ msgstr "Текущий остаток по ведомости"
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity_unaffected
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__equity_unaffected
 msgid "Current Year Earnings"
-msgstr "Прибыль/Убыток Текущего Года"
+msgstr "Прибыль текущего года"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6023,17 +6023,6 @@ msgid "Duplicated Ref"
 msgstr "Дублированная ссылка"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr ""
-"Обнаружена дублированная ссылка поставщика. Вероятно, вы дважды закодировали"
-" один и тот же счет-фактуру / кредитную ноту."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "динамические отчеты"
@@ -6271,7 +6260,7 @@ msgstr "Требуется Epd"
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 #, python-format
 msgid "Equity"
-msgstr "Собственные средства"
+msgstr "Капитал"
 
 #. module: account
 #. odoo-python
@@ -6670,7 +6659,7 @@ msgstr "Фиксированная величина"
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_fixed
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__asset_fixed
 msgid "Fixed Assets"
-msgstr "Внеоборотные Активы  "
+msgstr "Основные средства"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__float
@@ -9833,13 +9822,13 @@ msgstr "Неторговая дебиторская задолженность"
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_non_current
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__asset_non_current
 msgid "Non-current Assets"
-msgstr "Внеоборотные Активы"
+msgstr "Внеоборотные активы"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__liability_non_current
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__liability_non_current
 msgid "Non-current Liabilities"
-msgstr "Долгосрочные Обязательства"
+msgstr "Долгосрочные обязательства"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__type_tax_use__none
@@ -10228,13 +10217,6 @@ msgid "Open"
 msgstr "Открытые"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr "Открыть список"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
 msgid "Opening Balance"
 msgstr "Начальное сальдо"
@@ -10425,7 +10407,7 @@ msgstr "Другое"
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__income_other
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__income_other
 msgid "Other Income"
-msgstr "Прочие доходы"
+msgstr "Прочий доход"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16906,7 +16888,7 @@ msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
 "type. (accounts: %s)"
 msgstr ""
-"Вы не можете иметь более одного счета с типом \"Прибыли текущего периода\". "
+"Вы не можете иметь более одного счета с типом \"Прибыль текущего года\". "
 "(Счета:%s )"
 
 #. module: account

@@ -979,6 +979,9 @@ msgid ""
 "When the session is open, we keep on loading all remaining partners in the background.\n"
 "In the meantime, you can use the 'Load Customers' button to load partners from database."
 msgstr ""
+"Oletusarvoisesti ladataan 10000 kumppania.\n"
+"Kun istunto on avoinna, Odoo lataa kaikki loput kumppanit taustalla.\n"
+"Sillä välin voit ladata kumppaneita tietokannasta 'Lataa asiakkaat' -painikkeella."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -1361,7 +1364,7 @@ msgstr "Ohjattu istunnon sulkeminen"
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Close anyway"
-msgstr ""
+msgstr "Sulje joka tapauksessa"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closed
@@ -2143,7 +2146,7 @@ msgstr "Näyttönimi"
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Do not close"
-msgstr ""
+msgstr "Älä sulje"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4616,7 +4619,7 @@ msgstr "Kassan tuotekategoria"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "PoS order %s can not be processed"
-msgstr ""
+msgstr "Kassan tilausta %s ei voida käsitellä"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -6343,6 +6346,10 @@ msgid ""
 "from the point of sale has been saved in the attachments.<br/>Please contact"
 " your support service to assist you on restoring it"
 msgstr ""
+"Odoo-palvelin vastaanotti kassan tilauksen, jonka viite on %s, mutta "
+"tilauksen käsittelyvaihe epäonnistui.<br/>Kassasta saadut tiedot on "
+"tallennettu liitetiedostoihin.<br/>Ota yhteyttä ylläpitoon, joka auttaa "
+"sinua palauttamisessa"
 
 #. module: point_of_sale
 #. odoo-javascript

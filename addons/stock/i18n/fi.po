@@ -1834,7 +1834,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.stock_quant_stock_move_line_desynchronization
 msgid "Correct inconsistencies for reservation"
-msgstr ""
+msgstr "Korjaa epäjohdonmukaisuudet varausta varten"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -3010,7 +3010,7 @@ msgstr "Ensimmäinen sarjanumero"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Fix discrepancies"
-msgstr ""
+msgstr "Korjaa ristiriidat"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
@@ -4072,6 +4072,11 @@ msgid ""
 "The correction will remove the reservation of the impacted operations on all companies.\n"
 "If the error persists, or you see this message appear often, please submit a Support Ticket at https://www.odoo.com/help"
 msgstr ""
+"Ei ole mahdollista varata enempää %s-tuotteita kuin mitä sinulla on varastossa.\n"
+"\n"
+"Voit korjata poikkeamat klikkaamalla alla olevaa painiketta.\n"
+"Korjaus poistaa vaikutuksen kohteena olevien toimintojen varauksen kaikista yrityksistä.\n"
+"Jos virhe jatkuu tai tämä viesti näkyy usein, lähetä tukipyyntö osoitteeseen https://www.odoo.com/help"
 
 #. module: stock
 #. odoo-python
@@ -4081,6 +4086,8 @@ msgid ""
 "It is not possible to unreserve more products of %s than you have in stock.\n"
 "Please contact your system administrator to rectify this issue."
 msgstr ""
+"Ei ole mahdollista purkaa varauksia useammasta %s-tuotteesta kuin mitä sinulla on varastossa.\n"
+"Ota yhteyttä järjestelmänvalvojaan tämän ongelman korjaamiseksi."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -10043,6 +10050,8 @@ msgid ""
 "You cannot pack products into the same package when they are from both "
 "immediate and planned transfers."
 msgstr ""
+"Samaan pakkaukseen ei voi pakata tuotteita, jotka ovat peräisin sekä "
+"välittömistä että suunnitelluista siirroista."
 
 #. module: stock
 #. odoo-python
