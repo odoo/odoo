@@ -7,6 +7,14 @@
     <field name="view_mode">tree,form</field>
   </record>
 
+  <record id="mis_objetivo_action" model="ir.actions.act_window">
+    <field name="name">Mis Objetivos</field>
+    <field name="res_model">objetivo</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[('usuario_ids', 'in', [uid])]</field>
+    <field name="context">{'create': False}</field>
+  </record>
+
   <record id="objetivo_tree" model="ir.ui.view">
     <field name="name">objetivo.tree</field>
     <field name="model">objetivo</field>
