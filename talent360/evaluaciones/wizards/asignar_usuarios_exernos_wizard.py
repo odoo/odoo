@@ -14,18 +14,18 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
     nombre_archivo = fields.Char()
 
     campos_obligatorios = [
-            "Nombre Completo",
-            "Correo",
-            "Puesto",
-            "Nivel Jerarquico",
-            "Direccion",
-            "Gerencia",
-            "Jefatura",
-            "Genero",
-            "Fecha de ingreso",
-            "Fecha de nacimiento",
-            "Ubicacion/Region",
-        ]
+        "Nombre Completo",
+        "Correo",
+        "Puesto",
+        "Nivel Jerarquico",
+        "Direccion",
+        "Gerencia",
+        "Jefatura",
+        "Genero",
+        "Fecha de ingreso",
+        "Fecha de nacimiento",
+        "Ubicacion/Region",
+    ]
 
     @api.constrains("nombre_archivo")
     def _validar_nombre_archivo(self):
@@ -37,7 +37,9 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
         evaluacion = self.env["evaluacion"].browse(self._context.get("active_id"))
 
         if not evaluacion:
-            raise exceptions.ValidationError(_("No se encontró la evaluación en el contexto."))
+            raise exceptions.ValidationError(
+                _("No se encontró la evaluación en el contexto.")
+            )
 
         # Procesa el archivo CSV y crea los usuarios externos
         try:
@@ -49,21 +51,31 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
             raise exceptions.ValidationError(
                 f"Error al procesar el archivo: {str(e)}. Verifica que el archivo sea un CSV válido."
             )
-        
+
         usuarios = []
 
         self.validar_columnas(csv_lector.fieldnames)
 
         for i, fila in enumerate(csv_lector):
+            if i >= 50000:
+                raise exceptions.ValidationError(
+                    _("Error: No se pueden cargar más de 50,000 usuarios.")
+                )
             try:
-                fecha_ingreso = datetime.strptime(fila["Fecha de ingreso"], "%d/%m/%Y").date()
-                fecha_nacimiento = datetime.strptime(fila["Fecha de nacimiento"], "%d/%m/%Y").date()
+                fecha_ingreso = datetime.strptime(
+                    fila["Fecha de ingreso"], "%d/%m/%Y"
+                ).date()
+                fecha_nacimiento = datetime.strptime(
+                    fila["Fecha de nacimiento"], "%d/%m/%Y"
+                ).date()
             except ValueError:
                 raise exceptions.ValidationError(
-                    _("El formato de las fechas debe ser dd/mm/yyyy. Verifica las fechas de nacimiento e ingreso.")
+                    _(
+                        "El formato de las fechas debe ser dd/mm/yyyy. Verifica las fechas de nacimiento e ingreso."
+                    )
                 )
 
-            self.validar_fila(fila)    
+            self.validar_fila(fila)
 
             usuarios.append(
                 {
@@ -81,16 +93,13 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
                 }
             )
 
-        
         usuarios_db = self.env["usuario.externo"].create(usuarios)
-        
+
         usuario_ids = [(4, usuario.id) for usuario in usuarios_db]
         evaluacion.write({"usuario_externo_ids": usuario_ids})
-        
 
     def validar_columnas(self, columnas: list[str]):
         # Valida que las columnas del archivo CSV sean las correctas
-
 
         columnas_faltantes = []
         columnas_duplicadas = []
@@ -118,13 +127,17 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
         for campo in self.campos_obligatorios:
             if not row.get(campo):
                 campos.append(campo)
-        
+
         if campos:
-            raise exceptions.ValidationError(f"Los siguientes campos son requeridos: {', '.join(campos)}")     
+            raise exceptions.ValidationError(
+                f"Los siguientes campos son requeridos: {', '.join(campos)}"
+            )
 
     def descargar_template_usuarios(self):
         # Descarga el archivo /evaluaciones/static/csv/template_usuarios_externos.csv
-        ruta_archivo = "talent360/evaluaciones/static/csv/template_usuarios_externos.csv"
+        ruta_archivo = (
+            "talent360/evaluaciones/static/csv/template_usuarios_externos.csv"
+        )
         with open(ruta_archivo, "r") as archivo:
             datos = archivo.read()
             nombre_archivo = "template_usuarios_externos.csv"

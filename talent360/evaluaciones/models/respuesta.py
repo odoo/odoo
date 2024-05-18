@@ -4,7 +4,7 @@ from odoo import models, fields
 class Respuesta(models.Model):
     """
     Modelo para representar las respuestas a las preguntas
-    
+
     :param _name (str): Nombre del modelo en Odoo
     :param _description (str): Descripción del modelo en Odoo
     :param pregunta_id (int): Identificador de la pregunta
@@ -16,7 +16,7 @@ class Respuesta(models.Model):
     :param opcion_id (int): Identificador de la opción
     :param respuesta_mostrar (str): Respuesta a mostrar
     """
-    
+
     _name = "respuesta"
     _description = "Respuesta a una pregunta"
     _rec_name = "respuesta_mostrar"
@@ -44,7 +44,7 @@ class Respuesta(models.Model):
     ):
         """Método para guardar la respuesta de una pregunta.
         Este método se encarga de guardar la respuesta de una pregunta en la base de datos.
-        
+
         :param radios (str): Respuesta de tipo radio
         :param texto (str): Respuesta de tipo texto
         :param evaluacion_id (int): Identificador de la evaluación
@@ -133,7 +133,9 @@ class Respuesta(models.Model):
             respuesta_texto = "N/A"
 
             if registro.pregunta_id.tipo == "escala":
-                respuesta_texto = registro.pregunta_id.mapeo_valores_escala[registro.pregunta_id.ponderacion][registro.respuesta_texto]
+                respuesta_texto = registro.pregunta_id.mapeo_valores_escala[
+                    registro.pregunta_id.ponderacion
+                ][registro.respuesta_texto]
             elif registro.pregunta_id.tipo == "multiple_choice":
                 respuesta_texto = registro.opcion_id.opcion_texto
             else:

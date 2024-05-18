@@ -83,35 +83,49 @@ class Evaluacion(models.Model):
 
     fecha_inicio = fields.Date(string="Fecha de inicio", required=True)
     fecha_final = fields.Date(string="Fecha de finalización", required=True)
-    mensaje = fields.Text(string="Mensaje de bienvenida", placeholder="Escriba aqui su mensaje de bienvenida")
+    mensaje = fields.Text(
+        string="Mensaje de bienvenida",
+        placeholder="Escriba aqui su mensaje de bienvenida",
+    )
 
+    incluir_demograficos = fields.Boolean(
+        string="Incluir datos demográficos", default=True
+    )
 
-    incluir_demograficos = fields.Boolean(string="Incluir datos demográficos", default = True)
-    
-    @api.constrains('fecha_inicio', 'fecha_final')
+    @api.constrains("fecha_inicio", "fecha_final")
     def checar_fechas(self):
         """
         Valida que la fecha de inicio sea anterior a la fecha final.
         """
         for record in self:
-            
+
             # Si ya se creo, se compara contra la fecha de creación
             if record.create_date:
                 fecha_creacion = record.create_date.date() - timedelta(days=1)
                 if record.fecha_inicio < fecha_creacion:
-                    raise exceptions.ValidationError(_(f"La fecha de inicio debe ser igual o posterior a la fecha de creación de la evaluación ({fecha_creacion.strftime('%d/%m/%Y')})."))
+                    raise exceptions.ValidationError(
+                        _(
+                            f"La fecha de inicio debe ser igual o posterior a la fecha de creación de la evaluación ({fecha_creacion.strftime('%d/%m/%Y')})."
+                        )
+                    )
             # Si es nuevo, se compara contra la fecha actual
             else:
                 fecha_actual = fields.Date.today() - timedelta(days=1)
                 if record.fecha_inicio:
                     # Verifica que la fecha de inicio no sea menor a la fecha actual
                     if record.fecha_inicio < fecha_actual:
-                        raise exceptions.ValidationError(_("La fecha de inicio debe ser igual o posterior a la fecha actual."))
-            
+                        raise exceptions.ValidationError(
+                            _(
+                                "La fecha de inicio debe ser igual o posterior a la fecha actual."
+                            )
+                        )
+
             if record.fecha_inicio and record.fecha_final:
                 # Verifica que la fecha de inicio sea antes de la fecha final
                 if record.fecha_inicio > record.fecha_final:
-                    raise exceptions.ValidationError(_("La fecha de inicio debe ser anterior a la fecha final"))
+                    raise exceptions.ValidationError(
+                        _("La fecha de inicio debe ser anterior a la fecha final")
+                    )
 
     # Método para copiar preguntas de la plantilla a la evaluación
     def copiar_preguntas_de_template(self):
@@ -456,6 +470,7 @@ class Evaluacion(models.Model):
         }
 
         return parametros
+
     def generar_datos_reporte_clima_action(self):
         """
         Genera los datos necesarios para el reporte de clima organizacional de la evaluación.
@@ -522,8 +537,10 @@ class Evaluacion(models.Model):
             for respuesta in pregunta.respuesta_ids:
                 valor_respuesta = respuesta.valor_respuesta
                 valor_pregunta += valor_respuesta
-                maximo_pregunta += pregunta._calculate_valor_maximo()  # Suponiendo un máximo de 4 para cada respuesta en escala
- # Suponiendo un máximo de 4 para cada respuesta en escala
+                maximo_pregunta += (
+                    pregunta._calculate_valor_maximo()
+                )  # Suponiendo un máximo de 4 para cada respuesta en escala
+                # Suponiendo un máximo de 4 para cada respuesta en escala
 
                 nombre_departamento = (
                     respuesta.usuario_id.department_id.name
@@ -920,7 +937,7 @@ class Evaluacion(models.Model):
         datos["departamento"] = self.obtener_dato(usuario.direccion)
 
         return datos
-    
+
     def get_evaluaciones_action(self, evaluacion_id):
         """
         Obtiene las preguntas asociadas a la evaluación.
@@ -982,8 +999,8 @@ class Evaluacion(models.Model):
 
     def action_asignar_usuarios_externos(self):
         """
-        Abre la ventana para asignar usuarios externos a la evaluación. 
-        
+        Abre la ventana para asignar usuarios externos a la evaluación.
+
         :return: Una acción para abrir la ventana de asignación de usuarios externos.
         """
         return {

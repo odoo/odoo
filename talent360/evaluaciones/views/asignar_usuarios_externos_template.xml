@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Upload File">
                 <div>
-                    <div>Para asignar usuarios externos, por favor subir un archvo CSV con los datos de los participantes con la siguiente plantilla.</div>
+                    <div>Para asignar usuarios externos, llene la siguiente plantilla con los datos de los usuarios y cargue aquí el archivo CSV. </div>
                     <group class="py-3">
                         <button name="descargar_template_usuarios" string="Plantilla" type="object" class="btn-primary"/>
                     </group>
@@ -16,7 +16,7 @@
                     </group>
                 </div>
                 <footer>
-                    <button string="Asignar" class="btn-primary" name="procesar_csv" type="object"/>
+                    <button string="Guardar" class="btn-primary" name="procesar_csv" type="object"/>
                     <button string="Cancelar" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>

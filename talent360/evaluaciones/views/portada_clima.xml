@@ -1,0 +1,130 @@
+<!-- Archivo: report_templates.xml -->
+<odoo>
+    <data>
+        <template id="portada_clima">
+            <div class="page portada">
+                <div class="header">
+                    <h1>Software de Talento Humano</h1>
+                </div>
+                <div class="main-content">
+                    <div class="icon">
+                        <img t-att-src="'/evaluaciones/static/src/img/image.png'" alt="company logo" class="icon"/>    
+                    </div>
+                    <h1>Reporte de Clima Organizacional</h1>
+                </div>
+                <br></br>
+                <div class="footer">
+                    <img t-att-src="'/evaluaciones/static/src/img/logo.png'" alt="company logo" class="company-logo"/>
+                </div>
+                <br></br>
+                <h2 class="text-center">Fecha: <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d')"/></h2>
+            </div>
+            <style>
+                @page {
+                    margin: 0; /* Elimina los márgenes predeterminados de la página */
+                }
+                body {
+                    margin: 0; /* Elimina los márgenes del cuerpo del documento */
+                }
+                .portada {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    text-align: center;
+                    background-color: #f8f9fa; /* Ajusta el color de fondo según tus necesidades */
+                    height: 85vh; /* Para que ocupe toda la altura de la página */
+                    width: 90vw; /* Para que ocupe todo el ancho de la página */
+                    font-family: Arial, sans-serif;
+                }
+                .header {
+                    margin-bottom: 20px;
+                }
+                .icon {
+                    margin: 20px 0;
+                }
+                .icon img {
+                    height: 100px;
+                }
+                .main-content h1 {
+                    font-size: 36px;
+                }
+                .main-content h3 {
+                    font-size: 24px;
+                }
+                .footer {
+                    margin-top: 20px;
+                }
+                .company-logo {
+                    height: 100px;
+                }
+                .page {
+                    page-break-after: always;
+                }
+            </style>
+        </template>
+
+        <template id="portada_nom035">
+            <div class="page portada">
+                <div class="header">
+                    <h1>Software de Talento Humano</h1>
+                </div>
+                <div class="main-content">
+                    <div class="icon">
+                        <img t-att-src="'/evaluaciones/static/src/img/image.png'" alt="company logo" class="icon"/>    
+                    </div>
+                    <h1>Reporte de NOM 035</h1>
+                </div>
+                <br></br>
+                <div class="footer">
+                    <img t-att-src="'/evaluaciones/static/src/img/logo.png'" alt="company logo" class="company-logo"/>
+                </div>
+                <br></br>
+                <h2 class="text-center">Fecha: <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d')"/></h2>
+            </div>
+            <style>
+                @page {
+                    margin: 0; /* Elimina los márgenes predeterminados de la página */
+                }
+                body {
+                    margin: 0; /* Elimina los márgenes del cuerpo del documento */
+                }
+                .portada {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    text-align: center;
+                    background-color: #f8f9fa; /* Ajusta el color de fondo según tus necesidades */
+                    height: 85vh; /* Para que ocupe toda la altura de la página */
+                    width: 90vw; /* Para que ocupe todo el ancho de la página */
+                    font-family: Arial, sans-serif;
+                }
+                .header {
+                    margin-bottom: 20px;
+                }
+                .icon {
+                    margin: 20px 0;
+                }
+                .icon img {
+                    height: 100px;
+                }
+                .main-content h1 {
+                    font-size: 36px;
+                }
+                .main-content h3 {
+                    font-size: 24px;
+                }
+                .footer {
+                    margin-top: 20px;
+                }
+                .company-logo {
+                    height: 100px;
+                }
+                .page {
+                    page-break-after: always;
+                }
+            </style>
+        </template>
+    </data>
+</odoo>

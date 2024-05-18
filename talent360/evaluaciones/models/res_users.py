@@ -49,6 +49,6 @@ class Users(models.Model):
                 ],
             }
         else:
-            raise ValidationError(_(
-                "No se encontraron respuestas para el usuario seleccionado."
-            ))
+            raise ValidationError(
+                _("No se encontraron respuestas para el usuario seleccionado.")
+            )

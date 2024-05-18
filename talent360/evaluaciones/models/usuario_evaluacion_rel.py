@@ -5,7 +5,7 @@ import secrets
 class UsuarioEvaluacionRel(models.Model):
     """
     Modelo para representar la relación entre evaluaciones y usuarios
-    
+
     :param _name (str): Nombre del modelo en Odoo
     :param _description (str): Descripción del modelo en Odoo
     :param evaluacion_id (int): Identificador de la evaluación
@@ -17,7 +17,7 @@ class UsuarioEvaluacionRel(models.Model):
     :param evaluacion_usuario_ids (list): Lista de usuarios de la evaluación
     :param token (str): Token para la evaluación
     """
-    
+
     _name = "usuario.evaluacion.rel"
     _description = "Relación entre evaluacion y usuarios"
     _rec_name = "evaluacion_nombre"
@@ -53,7 +53,7 @@ class UsuarioEvaluacionRel(models.Model):
 
     def _onchange_contestada(self):
         """Método para actualizar el porcentaje de respuestas de la evaluación."""
-        
+
         self.evaluacion_id._compute_porcentaje_respuestas()
 
     def action_get_estado(self, usuario_id, evaluacion_id, token):
@@ -129,19 +129,15 @@ class UsuarioEvaluacionRel(models.Model):
                     nombre = usuario.usuario_externo_id.nombre
                 else:
                     raise ValueError(_("No se encontró un usuario asociado"))
-                    
-                usuario.write({
-                    "token": token,
-                    "contestada": "pendiente"
-                })
+
+                usuario.write({"token": token, "contestada": "pendiente"})
 
                 evaluacion_url = f"{base_url}/{evaluacion_id}/{token}"
                 mail = {
                     "subject": "Invitación para completar la evaluación",
                     "email_from": "talent360@cr-organizacional.com",
                     "email_to": correo,
-                    "body_html": 
-                        f"""<p>Hola, <strong>{nombre}</strong>,</p>
+                    "body_html": f"""<p>Hola, <strong>{nombre}</strong>,</p>
                         <p>En <strong>{self.env.user.company_id.name}</strong> estamos interesados en tu opinión para mejorar.</p>
                         <p>Por favor, participa en la evaluación de clima laboral disponible del <strong>(Fecha Inicio)</strong> al <strong>(Fecha Fin)</strong>.</p>
                         <p>Puedes comenzar la evaluación haciendo clic en el siguiente enlace:</p>
@@ -149,14 +145,13 @@ class UsuarioEvaluacionRel(models.Model):
                 }
 
                 lista_mails.append(mail)
-        
+
         self.env["mail.mail"].create(lista_mails)
-    
+
         return {
             "type": "ir.actions.act_window",
             "name": "Evaluaciones",
             "res_model": "evaluacion.evaluacion",
             "view_mode": "tree,form",
             "target": "current",
-        }    
-    
+        }
