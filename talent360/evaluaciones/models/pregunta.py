@@ -177,3 +177,21 @@ class Pregunta(models.Model):
         })
 
         return True
+    
+    def agregar_opcion_action(self):
+        """
+        Método para agregar una opción de respuesta a la pregunta.
+
+        :return: Parámetros necesarios para abrir la vista de creación de opciones de respuesta.
+        """
+        return {
+            "name": "Agregar Opción",
+            "type": "ir.actions.act_window",
+            "res_model": "opcion",
+            "view_mode": "form",
+            "id": self.env.ref("evaluaciones.opcion_view_form").id,
+            "target": "new",
+            "context": {
+                "default_pregunta_id": self.id,
+            },
+        }

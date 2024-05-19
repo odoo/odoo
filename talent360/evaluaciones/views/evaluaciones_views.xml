@@ -559,7 +559,8 @@
                 <group invisible="tipo != 'multiple_choice'">
                     <group>
                         <field name="condicional"/>
-                        <field name="opcion_ids"/>
+                        <button class="btn btn-primary" name="agregar_opcion_action" string="Agregar opcion" type="object" context="{'default_pregunta_id': active_id}"  groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
+                        <field name="opcion_ids" options="{'link':false}"/>
                     </group>
                     <group invisible="condicional != True">
                         <field name="respuesta_trigger"/>
@@ -579,6 +580,28 @@
                             'default_respuesta_trigger': respuesta_trigger.id,
                             'default_preguntas_desbloqueadas': preguntas_desbloqueadas.ids,
                             'default_ponderacion': ponderacion
+                        }"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="opcion_view_form" model="ir.ui.view">
+        <field name="name">opcion.form</field>
+        <field name="model">opcion</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="opcion_texto"/>
+                    <field name="valor"/>
+                </group>
+                <footer>
+                    <button string="Guardar" class="btn-primary" name="crear_opcion_action" type="object"
+                    context="{
+                        'pregunta_id': context.get('default_pregunta_id'),
+                        'default_opcion_texto': opcion_texto, 
+                        'default_valor': valor
                         }"/>
                     <button string="Cancelar" class="btn-secondary" special="cancel"/>
                 </footer>

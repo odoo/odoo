@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class Opcion(models.Model):
@@ -18,3 +18,33 @@ class Opcion(models.Model):
     pregunta_id = fields.Many2one("pregunta", string="Pregunta")
     opcion_texto = fields.Char("Opción", required=True)
     valor = fields.Integer(required=True, default=0)
+
+    @api.model
+    def crear_opcion_action(self, *args, **kwargs):
+        """
+        Método para crear una opción para las preguntas.
+
+        :param opcion_texto (str): Texto de la opción.
+        :param valor (int): Valor de la opción.
+
+        :return: True si la opción fue creada exitosamente.
+        """
+
+        # Verifica si opcion_texto está en el contexto
+        opcion_texto = self.env.context.get("default_opcion_texto")
+        valor = self.env.context.get("default_valor")
+
+        if not opcion_texto:
+            raise ValueError("El campo 'Opción' es obligatorio.")
+
+        pregunta_id = self.env.context.get("pregunta_id")
+        if not pregunta_id:
+            raise ValueError("Pregunta ID no proporcionado.")
+
+        opcion = self.create({
+            "opcion_texto": opcion_texto,
+            "valor": valor,
+            "pregunta_id": pregunta_id,
+        })
+
+        return True
