@@ -510,7 +510,7 @@
             <t t-set="cell_height" t-value="default_line_height"/>
 
             <div class="overflow_auto o_survey_user_responses_table_wrapper" style="height: auto; page-break-inside: avoid; margin-bottom: 20px;">
-                <h4 t-esc="pregunta.titulo" style="page-break-inside: avoid; text-align: center;"/>
+                <h4 t-esc="pregunta.pregunta_texto" style="page-break-inside: avoid; text-align: center;"/>
                 <table class="table table-hover table-sm o_survey_results_table_indexed" t-att-id="'survey_table_question_%d' % pregunta.id" style="page-break-inside: avoid;">
                     <thead>
                         <tr style="page-break-inside: avoid;">

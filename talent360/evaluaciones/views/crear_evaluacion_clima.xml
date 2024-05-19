@@ -45,7 +45,7 @@
                                     <group>
                                         <field name="pregunta_texto" placeholder="Ingrese la pregunta"/>
                                         <field name="tipo"/>
-                                        <field name="categoria" placeholder="Seleccione o agregue una categoría" required="True"/>
+                                        <field name="categoria" placeholder="Seleccione o agregue una categoría" invisible="tipo !='escala'" required="True"/>
                                         <field name="ponderacion" invisible="tipo != 'escala'" required="True"/>
                                         <field name="opcion_ids" placeholder="Opciones" context="{'default_pregunta_id': active_id}" invisible="tipo != 'multiple_choice'" required="True">
                                             <tree create="true" delete="true" editable="bottom">
