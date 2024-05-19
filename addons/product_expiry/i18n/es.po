@@ -26,6 +26,8 @@ msgid ""
 "<span class=\"badge text-bg-danger\" attrs=\"{'invisible': "
 "[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
 msgstr ""
+"<span class=\"badge text-bg-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Alerta de caducidad</span>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
@@ -34,6 +36,9 @@ msgid ""
 "attrs=\"{'invisible': ['|', '|', ('product_qty', '&lt;=', 0), "
 "('product_expiry_alert', '=', False), ('expiration_date', '=', False)]}\"/>"
 msgstr ""
+"<span title=\"Alert\" class=\"fa fa-exclamation-triangle text-danger ms-2\" "
+"attrs=\"{'invisible': ['|', '|', ('product_qty', '&lt;=', 0), "
+"('product_expiry_alert', '=', False), ('expiration_date', '=', False)]}\"/>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry

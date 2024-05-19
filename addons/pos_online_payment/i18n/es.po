@@ -6,8 +6,8 @@
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
-# Larissa Manderfeld, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-08-19 08:03+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +31,7 @@ msgstr "<b>Importe:</b>"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "<b>Order Reference:</b>"
-msgstr ""
+msgstr "<b>Referencia de la orden:</b>"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -39,6 +39,8 @@ msgid ""
 "<br/>\n"
 "                            <b>Order id:</b>"
 msgstr ""
+"<br/>\n"
+"                            <b>ID de la orden:</b>"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -58,6 +60,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/> If you "
 "believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>No se encontró ninguna opción de pago adecuada.</strong><br/> Si "
+"cree que esto es un error, póngase en contacto con un administrador."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -245,7 +249,7 @@ msgstr "Los pagos en línea no pueden tener un importe negativo (%s: %s)."
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Order Reference:"
-msgstr ""
+msgstr "Referencia de la orden:"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -584,11 +588,13 @@ msgstr ""
 #, python-format
 msgid "Tokenization is not available for logged off customers."
 msgstr ""
+"La tokenización no está disponible para clientes que no hayan iniciado "
+"sesión."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Transaction Reference:"
-msgstr ""
+msgstr "Referencia de la transacción:"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation

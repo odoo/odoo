@@ -18,8 +18,8 @@
 # Camille Dantinne <cmd@odoo.com>, 2023
 # Pablo Rojas <rojaspablo88@gmail.com>, 2024
 # Wil Odoo, 2024
-# Larissa Manderfeld, 2024
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-05 16:24+0000\n"
 "PO-Revision-Date: 2023-07-25 12:21+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -730,6 +730,9 @@ msgid ""
 "title=\"The email address is unknown on the partner\" attrs=\"{'invisible': "
 "[('send_mail_readonly', '=', False)]}\"/>"
 msgstr ""
+"<i class=\"fa fa-question-circle ml4\" role=\"img\" aria-label=\"Warning\" "
+"title=\"The email address is unknown on the partner\" attrs=\"{'invisible': "
+"[('send_mail_readonly', '=', False)]}\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -771,6 +774,9 @@ msgid ""
 "                                        A second payment will be created in the destination journal.\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|','|',('paired_internal_transfer_payment_id','!=',False),('is_internal_transfer','=',False),('state','!=','draft')]}\" class=\"fst-italic\">\n"
+"                                        Se creará un segundo pago en el diario de destino.\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -778,6 +784,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('early_discount', '=', False)]}\"> % if paid "
 "within </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('early_discount', '=', False)]}\"> % si se "
+"paga dentro de </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -826,6 +834,10 @@ msgid ""
 "                            <span attrs=\"{'invisible': [('allow_out_payment', '=', False)]}\" class=\"text-success\">Trusted</span>\n"
 "                        </span>"
 msgstr ""
+"<span class=\"d-flex gap-2 w-100\">\n"
+"                            <span attrs=\"{'invisible': [('allow_out_payment', '=', True)]}\" class=\"text-muted\">No fiable</span>\n"
+"                            <span attrs=\"{'invisible': [('allow_out_payment', '=', False)]}\" class=\"text-success\">Confiable</span>\n"
+"                        </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5921,17 +5933,6 @@ msgid "Duplicated Ref"
 msgstr "Referencia Duplicada"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr ""
-"Se detectó una referencia duplicada del proveedor. Es probable que haya "
-"codificado dos veces la misma factura / factura rectificativa del proveedor."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "Informes dinámicos"
@@ -9475,7 +9476,7 @@ msgstr "Sin conciliación bancaria"
 #: code:addons/account/controllers/download_edi_docs.py:0
 #, python-format
 msgid "No EDI documents found for export."
-msgstr ""
+msgstr "No se encontraron documentos EDI para exportar."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
@@ -9996,13 +9997,6 @@ msgstr "Oops"
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
 msgid "Open"
 msgstr "Abierto"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr "Abrir lista"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
@@ -14644,7 +14638,7 @@ msgstr "Esto solo se puede usar en apuntes de diario"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This document is being sent by another process already."
-msgstr ""
+msgstr "Otro proceso ya está enviando este documento."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -16279,7 +16273,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "You can't send invoice(s) in draft state."
-msgstr ""
+msgstr "No puede enviar facturas que se encuentran en estado de borrador."
 
 #. module: account
 #. odoo-python
@@ -17191,7 +17185,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "reversed"
-msgstr ""
+msgstr "revertido"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain

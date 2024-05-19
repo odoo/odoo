@@ -451,6 +451,8 @@ msgid ""
 "<br/>\n"
 "                            on this account:"
 msgstr ""
+"<br/>\n"
+"                            在此賬戶上："
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -5729,15 +5731,6 @@ msgid "Duplicated Ref"
 msgstr "重複參考"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr "檢測到重複的供應商參照，您可能對同一個供應商帳單/折讓單輸入了兩次."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "動態報表"
@@ -9640,13 +9633,6 @@ msgstr "哎呀"
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
 msgid "Open"
 msgstr "開啟"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr "開啟清單"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
@@ -15546,7 +15532,7 @@ msgstr "您無法登記付款，因為所選日記帳項目沒有任何餘款要
 msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
-msgstr ""
+msgstr "不可同時登記入賬及支賬分錄的付款。"
 
 #. module: account
 #. odoo-python

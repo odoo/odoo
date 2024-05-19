@@ -109,6 +109,7 @@ msgstr "%(name)s:%(message)s)"
 #, python-format
 msgid "%(user)s connected. This is their first connection. Wish them luck."
 msgstr ""
+"%(user)s połączonych. To ich pierwsze połączenie. Życzę im powodzenia."
 
 #. module: mail
 #. odoo-python
@@ -130,7 +131,7 @@ msgstr "%(user_name)s zaprasza Cię do obserwowania nowego dokumentu."
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "%(user_name)s pinned a message to this channel."
-msgstr ""
+msgstr "%(user_name)s przypiął wiadomość do tego kanału."
 
 #. module: mail
 #. odoo-python
@@ -417,7 +418,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/composer.js:0
 #, python-format
 msgid "<samp>%(send_keybind)s</samp><i> to send</i>"
-msgstr ""
+msgstr "<samp>%(send_keybind)s</samp><i> do wysłania</i>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -835,7 +836,7 @@ msgstr "Dodaj reakcję"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Add a Tenor GIF API key to enable GIFs support."
-msgstr ""
+msgstr "Dodaj klucz API Tenor GIF, aby włączyć obsługę GIF-ów."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
@@ -843,6 +844,8 @@ msgid ""
 "Add a Tenor GIF API key to enable GIFs support. "
 "https://developers.google.com/tenor/guides/quickstart#setup"
 msgstr ""
+"Dodaj klucz API Tenor GIF, aby włączyć obsługę GIF-ów. "
+"https://developers.google.com/tenor/guides/quickstart#setup"
 
 #. module: mail
 #. odoo-javascript
@@ -1494,7 +1497,7 @@ msgstr "DW e-mail"
 #: code:addons/mail/static/src/core/common/composer.js:0
 #, python-format
 msgid "CTRL-Enter"
-msgstr ""
+msgstr "CTRL-Enter"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_call
@@ -2266,7 +2269,7 @@ msgstr "Dostosuj wygląd i styl automatycznych wiadomości e-mail"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "DTLS:"
-msgstr ""
+msgstr "DTLS:"
 
 #. module: mail
 #. odoo-javascript
@@ -2446,7 +2449,7 @@ msgstr "Usuń e-maile"
 #: code:addons/mail/static/src/core/common/link_preview_confirm_delete.xml:0
 #, python-format
 msgid "Delete all previews"
-msgstr ""
+msgstr "Usuń wszystkie podglądy"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__exception
@@ -2849,7 +2852,7 @@ msgstr "Czarna lista e-mail"
 #: model:ir.model.fields,field_description:mail.field_res_company__email_secondary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_secondary_color
 msgid "Email Button Color"
-msgstr ""
+msgstr "Kolor przycisku e-mail"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_cc
@@ -2865,7 +2868,7 @@ msgstr "Konfiguracja Poczty"
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_primary_color
 msgid "Email Header Color"
-msgstr ""
+msgstr "Kolor nagłówka wiadomości e-mail"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_mail
@@ -3163,7 +3166,7 @@ msgstr "Niepowodzenie"
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "Failed to load gifs..."
-msgstr ""
+msgstr "Nie udało się załadować gifów..."
 
 #. module: mail
 #. odoo-python
@@ -3174,6 +3177,9 @@ msgid ""
 "\n"
 "%(template_traceback)s)"
 msgstr ""
+"Nie udało się wyrenderować szablonu QWeb: %(template_src)s\n"
+"\n"
+"%(template_traceback)s)"
 
 #. module: mail
 #. odoo-python
@@ -3241,7 +3247,7 @@ msgstr "Pobierz teraz"
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_gif_limit
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Fetch up to the specified number of GIF."
-msgstr ""
+msgstr "Pobiera do określonej liczby GIF-ów."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field
@@ -3481,21 +3487,21 @@ msgstr "Przyszłe czynności"
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "GIF"
-msgstr ""
+msgstr "GIF"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "GIF Category"
-msgstr ""
+msgstr "Kategoria GIF"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "GIF Favorites"
-msgstr ""
+msgstr "Ulubione GIF-y"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.discuss_gif_favorite_action
@@ -3503,19 +3509,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.discuss_gif_favorite_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_gif_favorite_view_tree
 msgid "GIF favorite"
-msgstr ""
+msgstr "Ulubiony GIF"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_gif_favorite__tenor_gif_id
 msgid "GIF id from Tenor"
-msgstr ""
+msgstr "Identyfikator GIF od Tenor"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/composer_patch.xml:0
 #, python-format
 msgid "GIFs"
-msgstr ""
+msgstr "GIFy"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
@@ -3532,7 +3538,7 @@ msgstr "Ogólny użytkownik z rekordu"
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #, python-format
 msgid "Go to conversation"
-msgstr ""
+msgstr "Przejdź do rozmowy"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__group
@@ -3717,7 +3723,7 @@ msgstr "Ukryj listę członków"
 #: code:addons/mail/static/src/discuss/message_pin/common/thread_actions.js:0
 #, python-format
 msgid "Hide Pinned Messages"
-msgstr ""
+msgstr "Ukryj przypięte wiadomości"
 
 #. module: mail
 #. odoo-javascript
@@ -4591,7 +4597,7 @@ msgstr "Data ostatniej aktualizacji"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__last_used
 msgid "Last Used"
-msgstr ""
+msgstr "Ostatnio używany"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__last_seen_dt
@@ -4601,7 +4607,7 @@ msgstr "Data ostatniej wizyty"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__last_used
 msgid "Last time this shortcode was used"
-msgstr ""
+msgstr "Ostatni raz użyto tego shortcode"
 
 #. module: mail
 #. odoo-javascript
@@ -4756,7 +4762,7 @@ msgstr "Krok dziennika:"
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #, python-format
 msgid "Logged in as %s"
-msgstr ""
+msgstr "Zalogowany jako %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -4773,7 +4779,7 @@ msgstr "Niski"
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 #, python-format
 msgid "Lower Hand"
-msgstr ""
+msgstr "Dolna ręka"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__og_mimetype
@@ -5071,7 +5077,7 @@ msgstr "Liczba członków"
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.js:0
 #, python-format
 msgid "Member List"
-msgstr ""
+msgstr "Lista członków"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_member_ids
@@ -5328,6 +5334,8 @@ msgid ""
 "Mixin to compute the time a record has spent in each value a many2one field "
 "can take"
 msgstr ""
+"Mixin do obliczania czasu, jaki rekord spędził w każdej wartości pola "
+"many2one."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model
@@ -9393,7 +9401,9 @@ msgstr "Nie można zdefiniować szablonu na modelu abstrakcyjnym: %s"
 #. odoo-python
 #: code:addons/mail/models/ir_attachment.py:0
 #, python-format
-msgid "You may not unlink attachments from other people's messages"
+msgid ""
+"You may not unlink or modify the content of attachments from other people's "
+"messages"
 msgstr ""
 
 #. module: mail
@@ -9612,14 +9622,14 @@ msgstr "dni"
 #: code:addons/mail/static/src/core/web/activity.xml:0
 #, python-format
 msgid "days overdue:"
-msgstr ""
+msgstr "dni po terminie:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 #, python-format
 msgid "days:"
-msgstr ""
+msgstr "dni:"
 
 #. module: mail
 #. odoo-javascript
@@ -9732,7 +9742,7 @@ msgstr "właśnie przydzielił ci następującą aktywność:"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_content_filter
 msgid "https://developers.google.com/tenor/guides/content-filtering"
-msgstr ""
+msgstr "https://developers.google.com/tenor/guides/content-filtering"
 
 #. module: mail
 #. odoo-python
@@ -9753,7 +9763,7 @@ msgstr "niepoprawnie skonfigurowany alias (nieznany rekord referencyjny)"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "invited %s to the channel"
-msgstr ""
+msgstr "zaprosił %s do kanału"
 
 #. module: mail
 #. odoo-python
@@ -9761,14 +9771,14 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "joined the channel"
-msgstr ""
+msgstr "dołączył do kanału"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "left the channel"
-msgstr ""
+msgstr "opuścił kanał"
 
 #. module: mail
 #. odoo-javascript
@@ -9784,7 +9794,7 @@ msgstr "lista"
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "list-item"
-msgstr ""
+msgstr "lista-pozycja"
 
 #. module: mail
 #. odoo-javascript
@@ -9806,7 +9816,7 @@ msgstr "mail_blacklist_removal"
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #, python-format
 msgid "media player Error"
-msgstr ""
+msgstr "Błąd odtwarzacza multimedialnego"
 
 #. module: mail
 #. odoo-python
@@ -9834,7 +9844,7 @@ msgstr "bez mikrofonu"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.js:0
 #, python-format
 msgid "no connection"
-msgstr ""
+msgstr "brak połączenia"
 
 #. module: mail
 #. odoo-javascript
