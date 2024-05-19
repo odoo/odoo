@@ -3,6 +3,7 @@
 # 	* mrp
 # 
 # Translators:
+# Tony Ng, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
@@ -374,7 +375,7 @@ msgstr "<span>動作</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span>Generate BOM</span>"
-msgstr ""
+msgstr "<span>產生用料清單</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -764,6 +765,11 @@ msgid "Archived"
 msgstr "已封存"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Are you sure you want to cancel this manufacturing order?"
+msgstr "您確定要取消此製造訂單嗎？"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Assembling"
 msgstr "組裝"
@@ -939,13 +945,13 @@ msgstr "參考bom中的BOM細項"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to BoM"
-msgstr ""
+msgstr "返回用料清單"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Production"
-msgstr ""
+msgstr "返回生產"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder_line
@@ -2189,7 +2195,7 @@ msgstr "篩選"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_final_id
 msgid "Final Location from procurement"
-msgstr ""
+msgstr "採購物資最終位置"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__done
@@ -4690,7 +4696,7 @@ msgstr "途程"
 #: code:addons/mrp/models/stock_quant.py:0
 #, python-format
 msgid "Return to Inventory"
-msgstr ""
+msgstr "返回庫存"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
@@ -4734,7 +4740,7 @@ msgstr "預定日期"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Scheduled End"
-msgstr ""
+msgstr "已排定結束"
 
 #. module: mrp
 #. odoo-python
@@ -4976,13 +4982,6 @@ msgid ""
 "Some of your components are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct components."
 msgstr "追蹤了一些物料,必須指定生產單才能檢索正確的物料."
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid ""
-"Some product moves have already been confirmed, this manufacturing order "
-"can't be completely cancelled. Are you still sure you want to process?"
-msgstr "部份產品轉移已確認，無法完全取消該生產訂單。確定要處理？"
 
 #. module: mrp
 #. odoo-python
@@ -6660,7 +6659,7 @@ msgstr "需要為成品提供批號."
 msgid ""
 "You should update the components quantity instead of directly updating the "
 "quantity of the kit product."
-msgstr ""
+msgstr "你應該更新組件數量，而不是直接更新工具套裝產品的數量。"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__zpl

@@ -1174,6 +1174,11 @@ msgid "Archived"
 msgstr "アーカイブ済"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Are you sure you want to cancel this transfer?"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
 msgid "As soon as possible"
 msgstr "なるべく早く"
@@ -2637,7 +2642,7 @@ msgstr "配送オーダ用説明"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Internal Transfers"
-msgstr "内部振替用説明"
+msgstr "内部運送用説明"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -3909,7 +3914,7 @@ msgstr "初期要求"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Input"
-msgstr "入力"
+msgstr "入荷"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_input_stock_loc_id
@@ -3954,7 +3959,7 @@ msgstr "内部参照"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__internal
 msgid "Internal Transfer"
-msgstr "内部振替"
+msgstr "内部運送"
 
 #. module: stock
 #. odoo-python
@@ -3962,7 +3967,7 @@ msgstr "内部振替"
 #: model:ir.actions.act_window,name:stock.action_picking_tree_internal
 #: model:stock.picking.type,name:stock.picking_type_internal
 msgid "Internal Transfers"
-msgstr "内部振替"
+msgstr "内部運送"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__internal_transit_location_id
@@ -3990,7 +3995,7 @@ msgstr "メーカーのロット/シリアル番号と異なる場合の内部�
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_internal
 msgid ""
 "Internal transfers allow you to move products from one location to another."
-msgstr "内部振替で、あるロケーションから別のロケーションへプロダクトを移動させることができます。"
+msgstr "内部運送で、あるロケーションから別のロケーションへプロダクトを移動させることができます。"
 
 #. module: stock
 #. odoo-python
@@ -4620,7 +4625,7 @@ msgstr "ロック/アンロック"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Logistics"
-msgstr "ロジスティクス"
+msgstr "物流"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__lot
@@ -5193,7 +5198,7 @@ msgstr "配送が見つかりません。作成しましょう！"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_internal
 msgid "No internal transfer found. Let's create one!"
-msgstr "内部振替が見つかりません。作成しましょう！"
+msgstr "内部運送が見つかりません。作成しましょう！"
 
 #. module: stock
 #. odoo-python
@@ -5328,7 +5333,7 @@ msgstr "アクション数"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Number of SN"
-msgstr "SNの数"
+msgstr "シリアル番号の数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial_count
@@ -6896,7 +6901,7 @@ msgstr "1ステップで受け取る(在庫)"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Receive in 2 steps (input + stock)"
-msgstr "2ステップで受け取る(入力+在庫)"
+msgstr "2ステップ入荷(受入+在庫)"
 
 #. module: stock
 #. odoo-python
@@ -8841,7 +8846,7 @@ msgstr "このメモは配送オーダに追加されます。"
 msgid ""
 "This note is added to internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
-msgstr "このメモは内部振替オーダに追加されます(倉庫内のピッキング場所を指定する等)。"
+msgstr "このメモは内部運送オーダに追加されます(倉庫内のピッキング場所を指定する等)。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form

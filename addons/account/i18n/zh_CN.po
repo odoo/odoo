@@ -513,6 +513,8 @@ msgid ""
 "<br/>\n"
 "                            on this account:"
 msgstr ""
+"<br/>\n"
+"                            在此账户上："
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -1882,7 +1884,7 @@ msgstr "科目：过账启用auto_post功能、截至今日的会议日期的草
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Accountant"
-msgstr ""
+msgstr "会计人员"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -2329,7 +2331,7 @@ msgstr "我们所有的合同关系将完全由"
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "All selected moves for reversal must belong to the same company."
-msgstr ""
+msgstr "所有已选取的撤销分录，必须属于同一公司。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -4992,7 +4994,7 @@ msgstr "数据不变性检查"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Data Inalterability Check Report -"
-msgstr ""
+msgstr "数据不可篡改性检查报告 -"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -5102,12 +5104,12 @@ msgstr "发票日期后天数"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__delay_type__days_end_of_month_on_the
 msgid "Days end of month on the"
-msgstr ""
+msgstr "截止日月底起计天数"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__days_next_month
 msgid "Days on the next month"
-msgstr ""
+msgstr "天，在下月"
 
 #. module: account
 #. odoo-python
@@ -5551,7 +5553,7 @@ msgstr "显示金额"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
 msgid "Display Days Next Month"
-msgstr ""
+msgstr "显示下月天数"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_post
@@ -5881,7 +5883,7 @@ msgstr "重复的银行账户合作伙伴计数"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Duplicated Documents"
-msgstr ""
+msgstr "重复的文件"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__duplicated_ref_ids
@@ -5889,14 +5891,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment__duplicated_ref_ids
 msgid "Duplicated Ref"
 msgstr "重复的参考号"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr "检测到重复的供应商参考号。可能对同一供应商账单/贷项凭单编码了两次。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
@@ -10003,12 +9997,6 @@ msgid "Open"
 msgstr "打开"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "Open list"
-msgstr "开放列表"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
 msgid "Opening Balance"
 msgstr "期初余额"
@@ -13473,7 +13461,7 @@ msgstr "付款期限必须至少有一个百分比行，且百分比之和须为
 msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
-msgstr ""
+msgstr "不应直接选择 Syscohada 图表模板。相反，您应该直接选择与您的国家/地区相关的图表模板。"
 
 #. module: account
 #. odoo-python
@@ -13548,6 +13536,8 @@ msgid ""
 "The amount for %(partner_name)s appears unusual. Based on your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
+"%(partner_name)s的金额似乎不正常。根据您的历史数据，预计金额为%(mean)s（%(wiggle)s）。\n"
+"请核实该金额是否准确。"
 
 #. module: account
 #. odoo-python
@@ -14342,7 +14332,7 @@ msgstr "选定订单无发票。但可以使用金额字段强制创建应计分
 #: code:addons/account/models/company.py:0
 msgid ""
 "There is no journal entry flagged for accounting data inalterability yet."
-msgstr ""
+msgstr "尚未有标记为会计数据不可更改的日记账分录。"
 
 #. module: account
 #. odoo-python
@@ -14478,7 +14468,7 @@ msgstr "该项只能用于日记账项目"
 msgid ""
 "This document is protected by a hash. Therefore, you cannot edit the "
 "following fields: %s."
-msgstr ""
+msgstr "本文档受哈希值保护。因此，您不能编辑以下字段：%s。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -14559,7 +14549,7 @@ msgstr "默认信用额度，将用于没有特定限额的合作伙伴。"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "This journal is not restricted"
-msgstr ""
+msgstr "此日记账并非受限制"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
@@ -14582,12 +14572,15 @@ msgid ""
 "- some move with the same sequence prefix has a higher number. You may need to resequence it.\n"
 "- the move's date is anterior to the lock date"
 msgstr ""
+"此分录无法锁定，因为： \n"
+"- 具有相同序列前缀的某些分录的数字更高。您可能需要重新排序。\n"
+"- 分录日期早于锁定日期。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This move has been locked."
-msgstr ""
+msgstr "此分录已被锁定。"
 
 #. module: account
 #. odoo-python
@@ -16167,7 +16160,7 @@ msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
-msgstr ""
+msgstr "如果期初分录（%s）已经发布，则无法导入 \"openning_balance\"。 如果您确定要修改账户期初余额，请将分录重置为草稿。"
 
 #. module: account
 #. odoo-python
@@ -16180,7 +16173,7 @@ msgstr "您无法合并帐户。"
 #: code:addons/account/models/account_move.py:0
 msgid ""
 "You cannot modify a sent entry of this journal because it is in strict mode."
-msgstr ""
+msgstr "您不可修改此日记账的已发送记项，因为它处于限制模式。"
 
 #. module: account
 #. odoo-python
@@ -16454,7 +16447,7 @@ msgstr "启用发票币种"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "alias"
-msgstr ""
+msgstr "别名"
 
 #. module: account
 #. odoo-javascript

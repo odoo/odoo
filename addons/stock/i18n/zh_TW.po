@@ -1175,6 +1175,11 @@ msgid "Archived"
 msgstr "已封存"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Are you sure you want to cancel this transfer?"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
 msgid "As soon as possible"
 msgstr "盡快"
@@ -8755,14 +8760,14 @@ msgid ""
 "This is the default destination location when you create a picking manually "
 "with this operation type. It is possible however to change it or that the "
 "routes put another location."
-msgstr ""
+msgstr "你使用此操作類型手動建立提貨時，會使用的預設目標位置。不過，你可更改此位置，或將路線設為向另一個位置放置。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_return_id
 msgid ""
 "This is the default location for returns created from a picking with this "
 "operation type."
-msgstr "若退貨是根據此操作類型的揀貨而建立，這是預設退貨位置。"
+msgstr "使用此操作類型、基於提貨而建立的退貨，會使用的預設位置。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -8770,7 +8775,7 @@ msgid ""
 "This is the default source location when you create a picking manually with "
 "this operation type. It is possible however to change it or that the routes "
 "put another location."
-msgstr ""
+msgstr "你使用此操作類型手動建立提貨時，會使用的預設來源位置。不過，你可更改此位置，或將路線設為向另一個位置放置。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id

@@ -513,6 +513,8 @@ msgid ""
 "<br/>\n"
 "                            on this account:"
 msgstr ""
+"<br/>\n"
+"                            在此賬戶上："
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -4976,7 +4978,7 @@ msgstr "資料不變性檢查"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Data Inalterability Check Report -"
-msgstr ""
+msgstr "數據不變性檢查報告 -"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -5875,14 +5877,6 @@ msgid "Duplicated Ref"
 msgstr "重複參考"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr "檢測到重複的供應商參照，您可能對同一個供應商帳單/折讓單輸入了兩次."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "動態報表"
@@ -6064,7 +6058,7 @@ msgstr "分錄數"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Entries are correctly hashed"
-msgstr ""
+msgstr "記項已正確進行雜湊處理"
 
 #. module: account
 #. odoo-python
@@ -7461,7 +7455,7 @@ msgstr "不可更改性複述"
 #: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
 #: model:ir.model.fields,field_description:account.field_account_payment__secure_sequence_number
 msgid "Inalterability No Gap Sequence #"
-msgstr ""
+msgstr "不變性無間隙序列 #"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -8266,7 +8260,7 @@ msgstr "日記賬記項（按日期）"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/company.py:0
 msgid "Journal Entries to Hash"
-msgstr ""
+msgstr "待雜湊處理的日記賬記項"
 
 #. module: account
 #. odoo-javascript
@@ -8857,7 +8851,7 @@ msgstr "鎖定日期訊息"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Lock Entries Manually"
-msgstr ""
+msgstr "手動鎖定記項"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -8865,7 +8859,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_payment__restrict_mode_hash_table
 msgid "Lock Sent Invoices with Hash"
-msgstr ""
+msgstr "使用雜湊鎖定已傳送發票"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
@@ -9984,12 +9978,6 @@ msgstr "哎呀"
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
 msgid "Open"
 msgstr "開啟"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "Open list"
-msgstr "開啟清單"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
@@ -12555,7 +12543,7 @@ msgstr "顯示強制含稅"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show Journal Entries to Hash"
-msgstr ""
+msgstr "顯示要雜湊處理的日記賬記項"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
@@ -13457,7 +13445,7 @@ msgstr "付款期限必須至少有一行計算百分比的資料行，而所有
 msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
-msgstr ""
+msgstr "不應直接選擇 Syscohada 圖表範本。相反，你應該直接選擇與你適用國家/地區相關的圖表範本。"
 
 #. module: account
 #. odoo-python
@@ -14552,7 +14540,7 @@ msgstr "這是預設的信用額度，將用於沒有特定限制的合作夥伴
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "This journal is not restricted"
-msgstr ""
+msgstr "此日記賬並非受限制"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
@@ -14583,7 +14571,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This move has been locked."
-msgstr ""
+msgstr "此分錄已被鎖定。"
 
 #. module: account
 #. odoo-python
@@ -15060,12 +15048,12 @@ msgstr "展開所有"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_unhashed_entries
 msgid "Unhashed Entries"
-msgstr ""
+msgstr "未雜湊處理記項"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Unhashed entries"
-msgstr ""
+msgstr "未雜湊處理記項"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
@@ -15724,7 +15712,7 @@ msgstr "在此處填寫<b>您的電子郵件地址</b>來測試流程."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
 msgid "Writeoff Is Exchange Account"
-msgstr ""
+msgstr "撇賬是匯兌賬戶"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
@@ -15981,7 +15969,7 @@ msgstr "您無法登記付款，因為所選日記帳項目沒有任何餘款要
 msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
-msgstr ""
+msgstr "不可同時登記入賬及支賬分錄的付款。"
 
 #. module: account
 #. odoo-python

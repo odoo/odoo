@@ -367,6 +367,8 @@ msgid ""
 "<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
 "title=\"Steps count\"/>"
 msgstr ""
+"<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
+"title=\"Steps count\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -1747,7 +1749,7 @@ msgid ""
 "Canned response that will automatically be substituted with longer content "
 "in your messages. Type ':' followed by the name of your shortcut (e.g. "
 ":hello) to use in your messages."
-msgstr ""
+msgstr "消息内的预制回复，将在邮件中自动替换为较长内容。键入“:”，然后输入要在邮件中使用的快捷方式名称（例如 :hello）。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
@@ -10142,6 +10144,15 @@ msgid "You may not define a template on an abstract model: %s"
 msgstr "无法在抽象模型上定义模板：%s"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"You may not unlink or modify the content of attachments from other people's "
+"messages"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/message_pin/common/message_pin_service.js:0
 msgid ""
@@ -10263,7 +10274,7 @@ msgstr "上次活动结束后"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
 msgid "alias"
-msgstr ""
+msgstr "别名"
 
 #. module: mail
 #. odoo-python

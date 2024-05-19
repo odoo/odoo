@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Junko Augias, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-29 11:36+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4211,7 +4211,7 @@ msgstr "製造原価"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_direct_cost
 msgid "Cost of Revenue"
-msgstr "営業原価"
+msgstr "売上原価"
 
 #. module: account
 #. odoo-python
@@ -4794,7 +4794,7 @@ msgstr "現在の明細書残高"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity_unaffected
 msgid "Current Year Earnings"
-msgstr "当期収益"
+msgstr "当期利益"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__custom_audit_action_id
@@ -5894,14 +5894,6 @@ msgid "Duplicated Ref"
 msgstr "重複した番号"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr "仕入先参照の重複が検出されました。同じ仕入先に請求書・クレジットノートを二重入力しました可能性があります。"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "ダイナミックレポート"
@@ -6567,7 +6559,7 @@ msgstr "固定資産"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_fixed
 msgid "Fixed Assets"
-msgstr "固定資産"
+msgstr "有形固定資産"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__float
@@ -7039,7 +7031,7 @@ msgstr "現金主義オプションの使用を非表示"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__hide_writeoff_section
 msgid "Hide Writeoff Section"
-msgstr "消去セクションを隠す"
+msgstr "償却セクションを隠す"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__hide_if_zero
@@ -7260,8 +7252,8 @@ msgid ""
 "If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
 "If not, this account will belong to Trade Receivable/Payable in reports and filters."
 msgstr ""
-"セットした場合は、この勘定科目はレポート及びフィルタ上に取引外売掛金・買掛金として扱われます。\n"
-"セットしない場合は、この勘定科目はレポート及びフィルタ上に取引売掛金・買掛金として扱われます。"
+"セットした場合は、この勘定科目はレポート及びフィルタ上に未収金・未払金として扱われます。\n"
+"セットしない場合は、この勘定科目はレポート及びフィルタ上に売掛金・買掛金として扱われます。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__preceding_subtotal
@@ -9421,7 +9413,7 @@ msgstr "必要条件ダーティ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__tax_negate
 msgid "Negate Tax Balance"
-msgstr "税収を無効にする"
+msgstr "税を無効にする"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__amount_signed
@@ -9584,7 +9576,7 @@ msgstr "アドバイザーを含むユーザーは、この日付より前の日
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
 msgid "Non Trade"
-msgstr "取引外"
+msgstr "営業基準外"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -9599,18 +9591,18 @@ msgstr "未収入金"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_non_current
 msgid "Non-current Assets"
-msgstr "固定資産"
+msgstr "その他固定資産"
 
 #. module: account
 #: model:account.account,name:account.1_non_current_liabilities
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__liability_non_current
 msgid "Non-current Liabilities"
-msgstr "非流動負債"
+msgstr "固定負債"
 
 #. module: account
 #: model:account.account,name:account.1_non_current_assets
 msgid "Non-current assets"
-msgstr "固定資産"
+msgstr "その他固定資産"
 
 #. module: account
 #. odoo-python
@@ -10008,12 +10000,6 @@ msgstr "Oops"
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
 msgid "Open"
 msgstr "開く"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "Open list"
-msgstr "リストを開く"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
@@ -10972,7 +10958,7 @@ msgstr "以下で銀行取引や支払を計上する："
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Post discounts in:"
-msgstr "以下で値引を計上する："
+msgstr "以下で割引を計上する："
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__posted
@@ -12396,7 +12382,7 @@ msgstr "収入値引用に勘定を分ける"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Separate discount accounts on invoices"
-msgstr "請求書で割引勘定を分ける"
+msgstr "請求書で値引勘定を分ける"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__9
@@ -15459,7 +15445,7 @@ msgid ""
 "You could enter\n"
 "BRT: ([\\d,]+)"
 msgstr ""
-"償却ラインの金額の値\n"
+"償却明細の金額の値\n"
 "*パーセンテージ:0と100の間のバランスの割合。\n"
 "*固定値:償却の固定値。金額は、負の場合は借方として、正の場合は貸方としてカウントされます。\n"
 "* Labelから:正規表現区切り文字は必要ありません。必要なのは正規表現だけです。たとえば、の量を抽出する場合\n"
@@ -15758,7 +15744,7 @@ msgstr "フローをテストするために、<b>自分のメールアドレス
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
 msgid "Writeoff Is Exchange Account"
-msgstr ""
+msgstr "償却は為替勘定科目"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
