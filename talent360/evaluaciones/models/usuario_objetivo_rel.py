@@ -1,5 +1,4 @@
-from odoo import models, fields
-
+from odoo import models, fields, api
 
 class UsuarioObjetivoRel(models.Model):
     """
@@ -18,7 +17,9 @@ class UsuarioObjetivoRel(models.Model):
     usuario_id = fields.Many2one("res.users", string="Usuario")
 
     titulo = fields.Char(related="objetivo_id.titulo", string="Título del Objetivo")
+    titulo_corto = fields.Char(compute="_compute_kanban")
     descripcion = fields.Text(related="objetivo_id.descripcion")
+    descripcion_corta = fields.Char(compute='_compute_kanban')
     resultado = fields.Integer(related="objetivo_id.resultado", string="Resultado")
 
     def open_objetivo_form(self):
@@ -29,3 +30,8 @@ class UsuarioObjetivoRel(models.Model):
             'view_mode': 'form',
             'res_id': self.objetivo_id.id,
         }
+    @api.depends("descripcion", "titulo")
+    def _compute_kanban(self):
+        for record in self:
+            record.descripcion_corta = record.descripcion[:100] + "..." if len(record.descripcion) > 100 else record.descripcion
+            record.titulo_corto = record.titulo[:30] + "..." if len(record.titulo) > 30 else record.titulo

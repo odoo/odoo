@@ -30,9 +30,9 @@
                         <div>
                             <div class="oe_kanban_card">
                                 <div class="oe_kanban_card_header d-flex justify-content-between">
-                                    <div class="oe_kanban_card_header_title">
+                                    <div class="oe_kanban_card_header_title" style="overflow: hidden; text-overflow: ellipsis; width: 100%;">
                                         <h3>
-                                            <field name="titulo" class="d-block text-truncate"/>
+                                            <field name="titulo_corto" class="d-block text-truncate"/>
                                         </h3>
                                     </div>
                                     <div>
@@ -42,8 +42,8 @@
                                     </div>
                                 </div>
                                 <div class="oe_kanban_card_content">
-                                    <div>
-                                        <field name="descripcion" widget="text"/>
+                                    <div style="overflow: hidden; text-overflow: ellipsis; width: 100%;">
+                                        <field name="descripcion_corta"/>
                                     </div>
                                     <div>
                                         <button class="btn btn-primary" name="open_objetivo_form" string="Detalles" type="object"/>
