@@ -566,6 +566,9 @@
                         <field name="preguntas_desbloqueadas"/>
                     </group>
                 </group>
+                <group invisible="tipo != 'escala'">
+                    <field name="ponderacion"/>
+                </group>
                 <footer>
                     <button string="Guardar" class="btn-primary" name="crear_pregunta_action" type="object" context="{
                             'evaluacion_id': context.get('default_evaluacion_id'),
@@ -574,7 +577,8 @@
                             'default_opcion_ids': opcion_ids.ids,
                             'default_condicional': condicional,
                             'default_respuesta_trigger': respuesta_trigger.id,
-                            'default_preguntas_desbloqueadas': preguntas_desbloqueadas.ids
+                            'default_preguntas_desbloqueadas': preguntas_desbloqueadas.ids,
+                            'default_ponderacion': ponderacion
                         }"/>
                     <button string="Cancelar" class="btn-secondary" special="cancel"/>
                 </footer>

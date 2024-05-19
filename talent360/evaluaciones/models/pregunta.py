@@ -138,6 +138,7 @@ class Pregunta(models.Model):
         condicional = self.env.context.get('default_condicional', False)
         respuesta_trigger = self.env.context.get('default_respuesta_trigger')
         preguntas_desbloqueadas = self.env.context.get('default_preguntas_desbloqueadas')
+        ponderacion = self.env.context.get('default_ponderacion')
 
         if not pregunta_texto:
             raise ValueError("El campo 'Pregunta' es obligatorio.")
@@ -153,6 +154,7 @@ class Pregunta(models.Model):
             "preguntas_desbloqueadas": [(6, 0, preguntas_desbloqueadas)] if preguntas_desbloqueadas else [],
             "opcion_ids": [(6, 0, opcion_ids)] if opcion_ids else [],
             "respuesta_trigger": respuesta_trigger,
+            "ponderacion": ponderacion,
         })
 
         self.env["pregunta.evaluacion.rel"].create({
