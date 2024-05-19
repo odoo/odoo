@@ -510,7 +510,7 @@
                     </group>
                         <notebook>
                             <page string="Preguntas">
-                                <button class="btn btn-primary" name="crear_pregunta_action" string="Agregar preguntas" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
+                                <button class="btn btn-primary" name="crear_pregunta_action" string="Agregar preguntas" type="object" context="{'default_evaluacion_id': active_id}" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
                                 <field class="lh-lg w-100" colspan="2" name="pregunta_ids" nolabel="1" options="{'link':false}">
                                     <tree editable="bottom" create="0">
                                         <field class="lh-m" name="pregunta_texto" readonly="1"/>
@@ -567,7 +567,15 @@
                     </group>
                 </group>
                 <footer>
-                    <button string="Guardar" class="btn-primary" name="crear_pregunta_action" type="object" args="[active_id]"/>
+                    <button string="Guardar" class="btn-primary" name="crear_pregunta_action" type="object" context="{
+                            'evaluacion_id': context.get('default_evaluacion_id'),
+                            'default_pregunta_texto': pregunta_texto,
+                            'default_tipo': tipo,
+                            'default_opcion_ids': opcion_ids.ids,
+                            'default_condicional': condicional,
+                            'default_respuesta_trigger': respuesta_trigger.id,
+                            'default_preguntas_desbloqueadas': preguntas_desbloqueadas.ids
+                        }"/>
                     <button string="Cancelar" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>

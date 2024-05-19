@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class Pregunta(models.Model):
@@ -129,29 +129,35 @@ class Pregunta(models.Model):
             return self.preguntas_desbloqueadas
         return False
     
-    def crear_pregunta_action(self, evaluacion_id):
-        """
-        Crea una pregunta en el sistema.
+    @api.model
+    def crear_pregunta_action(self, *args):
+        # Verifica si pregunta_texto está en el contexto
+        pregunta_texto = self.env.context.get('default_pregunta_texto')
+        tipo = self.env.context.get('default_tipo', 'multiple_choice')
+        opcion_ids = self.env.context.get('default_opcion_ids')
+        condicional = self.env.context.get('default_condicional', False)
+        respuesta_trigger = self.env.context.get('default_respuesta_trigger')
+        preguntas_desbloqueadas = self.env.context.get('default_preguntas_desbloqueadas')
 
-        Returns:
-            Diccionario con los valores de la pregunta creada.
-        """
-        pregunta = self.env["pregunta"].create(
-            {
-                "pregunta_texto": self.pregunta_texto,
-                "tipo": self.tipo,
-                "condicional": self.condicional,
-                "preguntas_desbloqueadas": self.preguntas_desbloqueadas,
-                "opcion_ids": self.opcion_ids
-            }
-        )
+        if not pregunta_texto:
+            raise ValueError("El campo 'Pregunta' es obligatorio.")
+        
+        evaluacion_id = self.env.context.get("evaluacion_id")
+        if not evaluacion_id:
+            raise ValueError("Evaluacion ID no proporcionado.")
 
-        print("Pregunta creada: ", pregunta)
-        print(evaluacion_id)
+        pregunta = self.create({
+            "pregunta_texto": pregunta_texto,
+            "tipo": tipo,
+            "condicional": condicional,
+            "preguntas_desbloqueadas": [(6, 0, preguntas_desbloqueadas)] if preguntas_desbloqueadas else [],
+            "opcion_ids": [(6, 0, opcion_ids)] if opcion_ids else [],
+            "respuesta_trigger": respuesta_trigger,
+        })
 
-        pregunta_evaluacion = self.env["pregunta.evaluacion.rel"].create(
-            {
-                "pregunta_id": pregunta.id,
-                "evaluacion_id": evaluacion_id,
-            }
-        )
+        self.env["pregunta.evaluacion.rel"].create({
+            "pregunta_id": pregunta.id,
+            "evaluacion_id": evaluacion_id,
+        })
+
+        return True
