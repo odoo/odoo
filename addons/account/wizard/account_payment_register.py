@@ -113,21 +113,8 @@ class AccountPaymentRegister(models.TransientModel):
         store=True,
         readonly=False,
     )
-    writeoff_account_id = fields.Many2one(
-        comodel_name='account.account',
-        string="Difference Account",
-        copy=False,
-        domain="[('deprecated', '=', False)]",
-        check_company=True,
-        compute='_compute_writeoff_account_id',
-        store=True,
-        readonly=False,
-    )
-    writeoff_label = fields.Char(string='Journal Item Label', default='Write-Off',
-        help='Change label of the counterpart that will hold the payment difference')
-    writeoff_is_exchange_account = fields.Boolean(
-        compute='_compute_writeoff_is_exchange_account',
-    )
+    account_payment_register_dif_ids = fields.One2many('account.payment.register.dif.line', 'account_payment_register_id')
+    writeoff_amount_total = fields.Monetary(compute="_compute_writeoff_amount_total")
 
     # == Display purpose fields ==
     show_partner_bank_account = fields.Boolean(
@@ -600,18 +587,13 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 wizard.payment_difference = 0.0
 
-    @api.depends('can_edit_wizard', 'writeoff_account_id')
-    def _compute_writeoff_is_exchange_account(self):
-        for wizard in self:
-            wizard.writeoff_is_exchange_account = all((
-                wizard.can_edit_wizard,
-                wizard.currency_id != wizard.source_currency_id,
-                wizard.writeoff_account_id,
-                wizard.writeoff_account_id in (
-                    wizard.company_id.expense_currency_exchange_account_id,
-                    wizard.company_id.income_currency_exchange_account_id,
-                ),
-            ))
+    @api.depends('account_payment_register_dif_ids.writeoff_amount')
+    def _compute_writeoff_amount_total(self):
+        for payment in self:
+            writeoff_amount_total = payment.payment_difference
+            for writeoff_line in payment.account_payment_register_dif_ids:
+                writeoff_amount_total -= writeoff_line.writeoff_amount
+            payment.writeoff_amount_total = writeoff_amount_total
 
     @api.depends('early_payment_discount_mode')
     def _compute_payment_difference_handling(self):
@@ -749,28 +731,29 @@ class AccountPaymentRegister(models.TransientModel):
 
             elif not self.currency_id.is_zero(self.payment_difference):
 
-                if self.writeoff_is_exchange_account:
+                if any(line.writeoff_is_exchange_account for line in self.account_payment_register_dif_ids):
                     # Force the rate when computing the 'balance' only when the payment has a foreign currency.
                     # If not, the rate is forced during the reconciliation to put the difference directly on the
                     # exchange difference.
                     if self.currency_id != self.company_currency_id:
                         payment_vals['force_balance'] = sum(batch_result['lines'].mapped('amount_residual'))
                 else:
-                    if self.payment_type == 'inbound':
-                        # Receive money.
-                        write_off_amount_currency = self.payment_difference
-                    else:  # if self.payment_type == 'outbound':
-                        # Send money.
-                        write_off_amount_currency = -self.payment_difference
+                    for line in self.account_payment_register_dif_ids:
+                        if self.payment_type == 'inbound':
+                            # Receive money.
+                            write_off_amount_currency = line.writeoff_amount
+                        else:  # if self.payment_type == 'outbound':
+                            # Send money.
+                            write_off_amount_currency = -line.writeoff_amount
 
-                    payment_vals['write_off_line_vals'].append({
-                        'name': self.writeoff_label,
-                        'account_id': self.writeoff_account_id.id,
-                        'partner_id': self.partner_id.id,
-                        'currency_id': self.currency_id.id,
-                        'amount_currency': write_off_amount_currency,
-                        'balance': self.currency_id._convert(write_off_amount_currency, self.company_id.currency_id, self.company_id, self.payment_date),
-                    })
+                        payment_vals['write_off_line_vals'].append({
+                            'name': line.writeoff_label,
+                            'account_id': line.writeoff_account_id.id,
+                            'partner_id': self.partner_id.id,
+                            'currency_id': self.currency_id.id,
+                            'amount_currency': write_off_amount_currency,
+                            'balance': self.currency_id._convert(write_off_amount_currency, self.company_id.currency_id, self.company_id, self.payment_date),
+                        })
 
         return payment_vals
 
@@ -960,7 +943,7 @@ class AccountPaymentRegister(models.TransientModel):
 
             # Force the rate during the reconciliation to put the difference directly on the
             # exchange difference.
-            if self.writeoff_is_exchange_account and self.currency_id == self.company_currency_id:
+            if any(line.writeoff_is_exchange_account for line in self.account_payment_register_dif_ids) and self.currency_id == self.company_currency_id:
                 total_batch_residual = sum(first_batch_result['lines'].mapped('amount_residual_currency'))
                 to_process_values['rate'] = abs(total_batch_residual / self.amount) if self.amount else 0.0
 
@@ -994,6 +977,12 @@ class AccountPaymentRegister(models.TransientModel):
         return payments
 
     def action_create_payments(self):
+        if self.payment_difference_handling == 'reconcile' and len(self.account_payment_register_dif_ids) == 0:
+            raise UserError(_('You need to add a line before creating payment.'))
+
+        if self.payment_difference_handling == 'reconcile' and self.writeoff_amount_total != 0:
+            raise UserError(_('The total of the writeoff amount should be equal to the payment difference.'))
+
         payments = self._create_payments()
 
         if self._context.get('dont_redirect_to_payments'):
@@ -1053,3 +1042,63 @@ class AccountPaymentRegister(models.TransientModel):
             listview_id = self.env.ref('account.partner_missing_account_list_view').id
             vals['views'] = [(listview_id, 'list'), (False, "form")]
         return self.missing_account_partner._get_records_action(**vals)
+
+
+class AccountPaymentRegisterDifLine(models.TransientModel):
+    _name = 'account.payment.register.dif.line'
+    _description = 'Payment Diffrence Lines'
+
+    account_payment_register_id = fields.Many2one('account.payment.register', string='Account Payment Register')
+    currency_id = fields.Many2one(related='account_payment_register_id.currency_id')
+    source_currency_id = fields.Many2one(related='account_payment_register_id.source_currency_id')
+    company_id = fields.Many2one(related='account_payment_register_id.company_id')
+    can_edit_wizard = fields.Boolean(related='account_payment_register_id.can_edit_wizard')
+    writeoff_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string="Difference Account",
+        copy=False,
+        domain="[('deprecated', '=', False)]",
+        check_company=True,
+        readonly=False,
+    )
+    writeoff_amount = fields.Monetary(
+        currency_field='currency_id',
+        required=True,
+        readonly=False,
+    )
+    writeoff_label = fields.Char(
+        string='Label',
+        required=True,
+        readonly=False,
+        help='Change label of the counterpart that will hold the payment difference',
+        compute='_compute_writeoff_label',
+        store=True,
+    )
+    writeoff_is_exchange_account = fields.Boolean(
+        default=False,
+        compute='_compute_writeoff_is_exchange_account',
+        store=True,
+    )
+
+    @api.onchange('account_payment_register_id')
+    def onchange_account_payment_register_id(self):
+        for line in self:
+            line.writeoff_amount = line.account_payment_register_id.writeoff_amount_total
+
+    @api.depends('account_payment_register_id.communication')
+    def _compute_writeoff_label(self):
+        for line in self:
+            line.writeoff_label = self.account_payment_register_id.communication
+
+    @api.depends('can_edit_wizard', 'writeoff_account_id')
+    def _compute_writeoff_is_exchange_account(self):
+        for wizard in self:
+            wizard.writeoff_is_exchange_account = all((
+                wizard.can_edit_wizard,
+                wizard.currency_id != wizard.source_currency_id,
+                wizard.writeoff_account_id,
+                wizard.writeoff_account_id in (
+                    wizard.company_id.expense_currency_exchange_account_id,
+                    wizard.company_id.income_currency_exchange_account_id,
+                ),
+            ))

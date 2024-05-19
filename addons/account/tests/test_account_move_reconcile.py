@@ -4837,7 +4837,13 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         payment_vals = {
             'currency_id': self.other_currency.id,
             'payment_difference_handling': 'reconcile',
-            'writeoff_account_id': self.env.company.expense_currency_exchange_account_id.id,
+            'account_payment_register_dif_ids': [
+                Command.create({
+                    'writeoff_account_id': self.env.company.expense_currency_exchange_account_id.id,
+                    'writeoff_label': 'Writeoff Label',
+                    'writeoff_amount': 0.0,
+                })
+            ],
         }
 
         # Check that a payment can be created if no exchange difference entry is generated.

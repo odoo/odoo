@@ -29,7 +29,6 @@
                     <field name="available_partner_bank_ids" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="hide_writeoff_section" invisible="1"/>
-                    <field name="writeoff_is_exchange_account" invisible="1"/>
                     <field name="untrusted_bank_ids" invisible="1"/>
                     <field name="missing_account_partners" invisible="1"/>
 
@@ -70,31 +69,31 @@
                             <field name="communication"
                                    invisible="not can_edit_wizard or (can_group_payments and not group_payment)"/>
                         </group>
-                        <group name="group3"
-                               invisible="payment_difference == 0.0 or not can_edit_wizard or can_group_payments and not group_payment">
-                            <label for="payment_difference"/>
-                            <div>
-                                <field name="payment_difference"/>
-                                <field name="payment_difference_handling" widget="radio" nolabel="1"/>
-                                <div invisible="hide_writeoff_section or payment_difference_handling == 'open'">
-                                    <label for="writeoff_account_id" string="Post Difference In" class="oe_edit_only"/>
-                                    <field name="writeoff_account_id"
-                                           string="Post Difference In"
-                                           options="{'no_create': True}"
-                                           required="payment_difference_handling == 'reconcile' and not early_payment_discount_mode"/>
-                                    <label for="writeoff_label"
-                                           class="oe_edit_only"
-                                           string="Label"
-                                           invisible="writeoff_is_exchange_account"/>
-                                    <field name="writeoff_label"
-                                           required="payment_difference_handling == 'reconcile'"
-                                           invisible="writeoff_is_exchange_account"/>
-                                </div>
-                            </div>
-                        </group>
                         <field name="qr_code" invisible="1"/>
                         <div invisible="not qr_code" colspan="2" class="text-center">
                             <field name="qr_code"/>
+                        </div>
+                    </group>
+                    <group invisible="payment_difference == 0.0 or not can_edit_wizard or can_group_payments and not group_payment">
+                        <label for="payment_difference"/>
+                        <div>
+                            <field name="payment_difference"/>
+                            <field name="payment_difference_handling" widget="radio" nolabel="1"/>
+                            <div invisible="hide_writeoff_section or payment_difference_handling == 'open'">
+                                <field name="account_payment_register_dif_ids">
+                                    <tree string="Difference Lines" editable="bottom">
+                                        <!-- Invisible fields -->
+                                        <field name="currency_id" invisible="1" column_invisible="1"/>
+                                        <field name='source_currency_id' invisible="1" column_invisible="1"/>
+                                        <field name='can_edit_wizard' invisible="1" column_invisible="1"/>
+                                        <field name="writeoff_is_exchange_account" invisible="1" column_invisible="1"/>
+
+                                        <field name="writeoff_account_id" string="Post Difference In" modifiers="{'required':true}" options="{'no_create': True}"/>
+                                        <field name="writeoff_label" placeholder="eg. Writeoff label..." modifiers="{'required':true}"/>
+                                        <field name="writeoff_amount" string="Amount" modifiers="{'required':true}"/>
+                                    </tree>
+                                </field>
+                            </div>
                         </div>
                     </group>
                     <footer>
