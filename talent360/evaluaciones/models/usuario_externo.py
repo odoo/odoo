@@ -51,7 +51,7 @@ class UsuarioExterno(models.Model):
         Esta función busca las respuestas de un usuario externo para una evaluación específica. Si encuentra respuestas, muestra una ventana con las respuestas del usuario. Si no encuentra respuestas o si el usuario está asignado a la evaluación varias veces, lanza un error.
         """
 
-        evaluacion_id = self._context.get("current_evaluacion_id")
+        evaluacion_id = self._context.get("actual_evaluacion_id")
 
         usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
             [
