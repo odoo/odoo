@@ -104,7 +104,6 @@
                 <field name="tipo" invisible="1" readonly="1"/>
                 <header>
                     <!-- Generación de reporte de una evaluación-->
-                    <button name="evaluacion_action_tree" string="Guardar" type="object" class="btn-primary my-3"/>
                     <button class="btn btn-primary" name="reporte_generico_action" string="Reporte" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
                     <button class="btn btn-primary" name="action_asignar_usuarios_externos" string="Asignar usuarios externos" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
                 </header>
@@ -399,7 +398,6 @@
         <field name="arch" type="xml">
             <form string="NOM035" create="false" duplicate="0">
                 <header>
-                    <button name="evaluacion_action_tree" string="Guardar" type="object" class="btn-primary my-3"/>
                     <button class="btn btn-primary" name="action_asignar_usuarios_externos" string="Asignar usuarios externos" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
                 </header>
                 <sheet>
@@ -476,4 +474,67 @@
         <field name="state">code</field>
         <field name="code">action = model.evaluacion_action_tree()</field>
     </record>
+
+    <!-- Evaluacion generica -->
+    <record id="evaluacion_general_view_form" model="ir.ui.view">
+        <field name="name">evaluacion.generica.form</field>
+        <field name="model">evaluacion</field>
+        <field name="arch" type="xml">
+            <form string="Evaluación genérica" create="false" duplicate="0">
+                <header>
+                    <button class="btn btn-primary" name="action_asignar_usuarios_externos" string="Asignar usuarios externos" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
+                </header>
+                <sheet>
+                    <h1>Crear evaluación genérica</h1>
+                    <br></br>
+                    <group>
+                        <field name="nombre"/>
+                    </group>
+                    <group>
+                        <field name="estado"/>
+                    </group>
+                    <group>
+                        <field name="descripcion" placeholder="Escribe aquí la descripción para te evaluación"/>
+                    </group>
+                    <group>
+                        <field name="fecha_inicio">
+                            <widget name="date"/>
+                        </field>
+                        <field name="fecha_final">
+                            <widget name="date"/>
+                        </field>
+                    </group>
+                    <group>
+                    <group>
+                        <field name="mensaje" placeholder="Escribe aquí tu mensaje de bienvenida"/>
+                    </group>
+                        <notebook>
+                            <page string="Asignados">
+                                <field class="lh-lg w-100" colspan="2" name="usuario_ids" nolabel="1" context="{'current_evaluacion_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field class="lh-m" name="name" readonly="1" string="Nombre del usuario"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Asignados Externos">
+                                <field class="lh-lg w-100" colspan="2" name="usuario_externo_ids" nolabel="1" context="{'current_evaluacion_id': active_id}" options="{'link':false}">
+                                    <tree create="false" editable="bottom">
+                                        <field class="lh-m" name="nombre" readonly="1" string="Nombre del usuario"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="evaluacion_general_action_form" model="ir.actions.act_window">
+        <field name="name">Evaluación genérica</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="evaluacion_general_view_form"/>
+    </record>
+
 </odoo>

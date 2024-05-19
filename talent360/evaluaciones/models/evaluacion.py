@@ -34,9 +34,10 @@ class Evaluacion(models.Model):
             ("CLIMA", "Clima Organizacional"),
             ("NOM_035", "NOM 035"),
             ("competencia", "Competencia"),
+            ("generica", "Genérica")
         ],
         required=True,
-        default="competencia",
+        default="generica",
     )
     descripcion = fields.Text(string="Descripción")
     estado = fields.Selection(
