@@ -131,6 +131,20 @@ class Pregunta(models.Model):
     
     @api.model
     def crear_pregunta_action(self, *args):
+        """
+        Método para crear una pregunta para las evaluaciones genericas.
+
+        :param pregunta_texto (str): Texto de la pregunta.
+        :param tipo (str): Tipo de pregunta.
+        :param opcion_ids (list): Lista de opciones de respuesta.
+        :param condicional (bool): Indica si la pregunta es condicional.
+        :param respuesta_trigger (int): Identificador de la respuesta trigger.
+        :param preguntas_desbloqueadas (list): Lista de preguntas desbloqueadas.
+        :param ponderacion (float): Ponderación de la pregunta.
+        
+        :return: True si la pregunta fue creada exitosamente.
+        """
+
         # Verifica si pregunta_texto está en el contexto
         pregunta_texto = self.env.context.get('default_pregunta_texto')
         tipo = self.env.context.get('default_tipo', 'multiple_choice')

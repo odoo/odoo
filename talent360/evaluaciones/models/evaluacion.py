@@ -1012,7 +1012,7 @@ class Evaluacion(models.Model):
             "target": "new",
         }
     
-    def crear_pregunta_action(self):
+    def agregar_pregunta_action(self):
         """
         Abre la ventana para crear una pregunta.
 
