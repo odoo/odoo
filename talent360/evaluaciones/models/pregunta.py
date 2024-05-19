@@ -128,3 +128,30 @@ class Pregunta(models.Model):
         if self.condicional and respuesta == self.respuesta_trigger:
             return self.preguntas_desbloqueadas
         return False
+    
+    def crear_pregunta_action(self, evaluacion_id):
+        """
+        Crea una pregunta en el sistema.
+
+        Returns:
+            Diccionario con los valores de la pregunta creada.
+        """
+        pregunta = self.env["pregunta"].create(
+            {
+                "pregunta_texto": self.pregunta_texto,
+                "tipo": self.tipo,
+                "condicional": self.condicional,
+                "preguntas_desbloqueadas": self.preguntas_desbloqueadas,
+                "opcion_ids": self.opcion_ids
+            }
+        )
+
+        print("Pregunta creada: ", pregunta)
+        print(evaluacion_id)
+
+        pregunta_evaluacion = self.env["pregunta.evaluacion.rel"].create(
+            {
+                "pregunta_id": pregunta.id,
+                "evaluacion_id": evaluacion_id,
+            }
+        )
