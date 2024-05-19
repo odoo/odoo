@@ -17,13 +17,9 @@ class UsuarioObjetivoRel(models.Model):
     objetivo_id = fields.Many2one("objetivo", string="Objetivos")
     usuario_id = fields.Many2one("res.users", string="Usuario")
 
-    titulo = fields.Char(related='objetivo_id.titulo', string="Título del Objetivo")
-    fecha_fin = fields.Date(related='objetivo_id.fecha_fin', string="Fecha Fin")
-    tipo = fields.Selection(related='objetivo_id.tipo', string="Tipo")
-    estado = fields.Selection(related='objetivo_id.estado', string="Estado")
-    peso = fields.Integer(related='objetivo_id.peso', string="Peso")
-    piso_minimo = fields.Integer(related='objetivo_id.piso_minimo', string="Piso Mínimo")
-    piso_maximo = fields.Integer(related='objetivo_id.piso_maximo', string="Piso Máximo")
+    titulo = fields.Char(related="objetivo_id.titulo", string="Título del Objetivo")
+    descripcion = fields.Text(related="objetivo_id.descripcion")
+    resultado = fields.Integer(related="objetivo_id.resultado", string="Resultado")
 
     def open_objetivo_form(self):
         self.ensure_one()

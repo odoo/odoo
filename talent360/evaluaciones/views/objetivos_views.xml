@@ -2,8 +2,8 @@
 <odoo>
     <!-- Vista en árbol para usuario.objetivo.rel -->
     <record id="view_usuario_objetivo_rel_tree" model="ir.ui.view">
-        <field name="name">usuario.objetivo.rel.tree</field>
-        <field name="model">usuario.objetivo.rel</field>
+        <field name="name">objetivo</field>
+        <field name="model">objetivo</field>
         <field name="arch" type="xml">
             <tree string="Objetivos de Usuarios">
                 <field name="titulo" string="Nombre del Objetivo"/>
@@ -13,9 +13,47 @@
                 <field name="peso" string="Peso"/>
                 <field name="piso_minimo" string="Piso Mínimo"/>
                 <field name="piso_maximo" string="Piso Máximo"/>
-                <field name="usuario_id" string="Usuario"/>
-                <button name="open_objetivo_form" string="Ver Objetivo" type="object"/>
             </tree>
+        </field>
+    </record>
+
+    <!-- Vista Kanban para usuario.objetivo.rel -->
+    <record id="view_usuario_objetivo_rel_kanban" model="ir.ui.view">
+        <field name="name">usuario.objetivo.rel.kanban</field>
+        <field name="model">usuario.objetivo.rel</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" default_group_by="usuario_id" quick_create="false" create="false" records_draggable="false" group_create="false">
+                <field name="objetivo_id"/>
+                <field name="usuario_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <div class="oe_kanban_card">
+                                <div class="oe_kanban_card_header d-flex justify-content-between">
+                                    <div class="oe_kanban_card_header_title">
+                                        <h3>
+                                            <field name="titulo" class="d-block text-truncate"/>
+                                        </h3>
+                                    </div>
+                                    <div>
+                                        <strong>
+                                            <field name="resultado"/>%
+                                        </strong>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_card_content">
+                                    <div>
+                                        <field name="descripcion" widget="text"/>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-primary" name="open_objetivo_form" string="Ver Objetivo" type="object"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
@@ -30,21 +68,6 @@
                 </group>
             </form>
         </field>
-    </record>
-
-    <!-- Acción para abrir la vista en árbol y formulario -->
-    <record id="usuario_objetivo_rel_action" model="ir.actions.act_window"> 
-        <field name="name">Objetivos de Usuarios</field>
-        <field name="res_model">usuario.objetivo.rel</field>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="view_usuario_objetivo_rel_tree"/>
-        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('view_usuario_objetivo_rel_tree')}), (0, 0, {'view_mode': 'form', 'view_id': ref('objetivo_form')})]"/>
-    </record>
-
-    <record id="objetivo_form_action" model="ir.actions.act_window">
-        <field name="name">Crear Objetivos</field>
-        <field name="res_model">objetivo</field>
-        <field name="view_mode">form</field>
     </record>
 
     <!-- Formulario para el modelo objetivo -->
@@ -90,10 +113,10 @@
                                 </div>
                                 <group col="2" style="margin-top: 20px;">
                                     <group>
-                                        <field name="piso_minimo" string="Valor inicial"/>
+                                        <field name="piso_minimo" string="Piso mínimo"/>
                                     </group>
                                     <group>
-                                        <field name="piso_maximo" string="Valor deseado"/>
+                                        <field name="piso_maximo" string="Piso máximo"/>
                                     </group>
                                 </group>
                             </div>
@@ -107,5 +130,25 @@
                 </sheet>
             </form>
         </field>
+    </record>
+    <record id="objetivo_action" model="ir.actions.act_window">
+        <field name="name">Objetivos</field>
+        <field name="res_model">objetivo</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="objetivo_form_action" model="ir.actions.act_window">
+        <field name="name">Crear Objetivos</field>
+        <field name="res_model">objetivo</field>
+        <field name="view_mode">form</field>
+    </record>
+
+    <!-- Acción para abrir la vista en árbol y formulario -->
+    <record id="usuario_objetivo_rel_action" model="ir.actions.act_window"> 
+        <field name="name">Objetivos de Colaboradores</field>
+        <field name="res_model">usuario.objetivo.rel</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="view_usuario_objetivo_rel_kanban"/>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_usuario_objetivo_rel_kanban')}), (0, 0, {'view_mode': 'form', 'view_id': ref('objetivo_form')})]"/>
     </record>
 </odoo>

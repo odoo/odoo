@@ -30,7 +30,7 @@ class Objetivo(models.Model):
 
     titulo = fields.Char(required=True, string="Título")
     descripcion = fields.Text(
-        required=True, string="Descripción", help="Descripción del objetivo"
+        required=True, string="Descripción", help="Descripción del objetivo", size="20"
     )
     metrica = fields.Selection(
         [
