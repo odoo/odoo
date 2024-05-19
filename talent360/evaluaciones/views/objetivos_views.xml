@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
     <!-- Vista en árbol para usuario.objetivo.rel -->
-    <record id="view_usuario_objetivo_rel_tree" model="ir.ui.view">
+    <record id="usuario_objetivo_rel_view_tree" model="ir.ui.view">
         <field name="name">objetivo</field>
         <field name="model">objetivo</field>
         <field name="arch" type="xml">
@@ -18,7 +18,7 @@
     </record>
 
     <!-- Vista Kanban para usuario.objetivo.rel -->
-    <record id="view_usuario_objetivo_rel_kanban" model="ir.ui.view">
+    <record id="usuario_objetivo_rel_view_kanban" model="ir.ui.view">
         <field name="name">usuario.objetivo.rel.kanban</field>
         <field name="model">usuario.objetivo.rel</field>
         <field name="arch" type="xml">
@@ -46,7 +46,7 @@
                                         <field name="descripcion_corta"/>
                                     </div>
                                     <div>
-                                        <button class="btn btn-primary" name="open_objetivo_form" string="Detalles" type="object"/>
+                                        <button class="btn btn-primary" name="abrir_objetivo_form" string="Detalles" type="object"/>
                                     </div>
                                 </div>
                             </div>
@@ -58,7 +58,7 @@
     </record>
 
     <!-- Vista en formulario para usuario.objetivo.rel -->
-    <record id="view_usuario_objetivo_rel_form" model="ir.ui.view">
+    <record id="usuario_objetivo_rel_view_form" model="ir.ui.view">
         <field name="name">usuario.objetivo.rel.form</field>
         <field name="model">usuario.objetivo.rel</field>
         <field name="arch" type="xml">
@@ -71,7 +71,7 @@
     </record>
 
     <!-- Formulario para el modelo objetivo -->
-    <record id="objetivo_form" model="ir.ui.view">
+    <record id="objetivo_view_form" model="ir.ui.view">
         <field name="name">objetivo.form</field>
         <field name="model">objetivo</field>
         <field name="arch" type="xml">
@@ -131,24 +131,20 @@
             </form>
         </field>
     </record>
+
+    <!-- Acción para abrir la vista en tree y formulario para bjetivol -->
     <record id="objetivo_action" model="ir.actions.act_window">
         <field name="name">Objetivos</field>
         <field name="res_model">objetivo</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <record id="objetivo_form_action" model="ir.actions.act_window">
-        <field name="name">Crear Objetivos</field>
-        <field name="res_model">objetivo</field>
-        <field name="view_mode">form</field>
-    </record>
-
-    <!-- Acción para abrir la vista en árbol y formulario -->
+    <!-- Acción para abrir la vista en kanban y formulario para usuario.objetivo.rel -->
     <record id="usuario_objetivo_rel_action" model="ir.actions.act_window"> 
         <field name="name">Objetivos de Colaboradores</field>
         <field name="res_model">usuario.objetivo.rel</field>
         <field name="view_mode">kanban,form</field>
-        <field name="view_id" ref="view_usuario_objetivo_rel_kanban"/>
-        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_usuario_objetivo_rel_kanban')}), (0, 0, {'view_mode': 'form', 'view_id': ref('objetivo_form')})]"/>
+        <field name="view_id" ref="usuario_objetivo_rel_view_kanban"/>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'kanban', 'view_id': ref('usuario_objetivo_rel_view_kanban')}), (0, 0, {'view_mode': 'form', 'view_id': ref('objetivo_view_form')})]"/>
     </record>
 </odoo>
