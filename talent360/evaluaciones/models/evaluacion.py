@@ -1011,3 +1011,18 @@ class Evaluacion(models.Model):
             "view_mode": "form",
             "target": "new",
         }
+    
+    def crear_pregunta_action(self):
+        """
+        Abre la ventana para crear una pregunta.
+
+        :return: Una acción para abrir la ventana de creación de preguntas.
+        """
+        return {
+            "name": "Crear pregunta",
+            "type": "ir.actions.act_window",
+            "res_model": "pregunta",
+            "view_mode": "form",
+            "view_id": self.env.ref("evaluaciones.pregunta_view_form").id,
+            "target": "new",
+        }
