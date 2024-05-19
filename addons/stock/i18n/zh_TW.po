@@ -4369,6 +4369,13 @@ msgid "Locations"
 msgstr "位置"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Lock"
 msgstr "鎖定"
@@ -8302,7 +8309,8 @@ msgid ""
 "with this operation type. It is possible however to change it or that the "
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
-msgstr "這是使用此操作類型以手動建立揀貨時的預設目的地位置.但是可以改變它或者將路線放在另一位置.如果它是空的，它將於合作夥伴上檢查客戶位置. "
+msgstr ""
+"你使用此操作類型手動建立提貨時，會使用的預設目標位置。不過，你可更改此位置，或將路線設為向另一個位置放置。如果留空，系統會檢查為合作夥伴設定的客戶位置。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -8311,7 +8319,8 @@ msgid ""
 "this operation type. It is possible however to change it or that the routes "
 "put another location. If it is empty, it will check for the supplier "
 "location on the partner. "
-msgstr "當您使用此操作類型手動建立揀貨時的預設來源位置.但是有可能改變它或者將路線放置在另一位置.如果它是空的，它將檢查合作夥伴上的供應商位置. "
+msgstr ""
+"你使用此操作類型手動建立提貨時，會使用的預設來源位置。不過，你可更改此位置，或將路線設為向另一個位置放置。如果留空，系統會檢查為合作夥伴設定的供應商位置。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
