@@ -75,7 +75,6 @@ class CrearFiltrosWizard(models.TransientModel):
         evaluacion = self.env["evaluacion"].browse(evaluacion_id)
         query_params = self.crear_filtros_query_params()
 
-        self.unlink()
         return {
             "type": "ir.actions.act_url",
             "url": f"/evaluacion/reporte/{evaluacion.id}?{query_params}",

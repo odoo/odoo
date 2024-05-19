@@ -588,7 +588,7 @@ class Evaluacion(models.Model):
             maximo_pregunta = 0
 
             for respuesta in pregunta.respuesta_ids:
-                if not self.validar_filtro(filtros, respuesta):
+                if filtros and not self.validar_filtro(filtros, respuesta):
                     continue
 
                 valor_respuesta = respuesta.valor_respuesta
@@ -681,6 +681,9 @@ class Evaluacion(models.Model):
         :return: True si la respuesta cumple con los filtros, False en caso contrario.
         """
         
+        if not filtros:
+            return True
+
         if not datos_demograficos:
             if not respuesta:
                 return False
