@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Larissa Manderfeld, 2024
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-10 09:48+0000\n"
 "PO-Revision-Date: 2022-06-17 09:54+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -589,7 +589,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Order Date:</strong>"
-msgstr "<strong>Fecha orden:</strong>"
+msgstr "<strong>Fecha de pedido:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -666,13 +666,13 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
-msgstr "Aceptar y pagar cotización"
+msgstr "Aceptar y pagar presupuesto"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
-msgstr "Aceptar y firmar cotización"
+msgstr "Aceptar y firmar presupuesto"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -768,7 +768,7 @@ msgstr "Agregar una sección"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
-msgstr "Añadir varias variantes a una orden desde una matriz"
+msgstr "Añadir varias variantes a un pedido desde una matriz"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -807,8 +807,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
-"Una orden de venta adicional es aquella en la que las cantidades entregadas son superiores a las que se habían ordenado inicialmente,\n"
-"                la política de facturación se basa en las cantidades ordenadas."
+"Un pedido de venta adicional es aquel en el que las cantidades entregadas son superiores a las que se habían pedido inicialmente,\n"
+"                y la política de facturación se basa en las cantidades pedidas."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
@@ -1961,7 +1961,7 @@ msgstr "Factura lo que se entrega"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__order
 msgid "Invoice what is ordered"
-msgstr "Factura lo que se ordena"
+msgstr "Factura lo pedido"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2566,7 +2566,7 @@ msgstr "Fecha de pedido"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order Date:"
-msgstr "Fecha de la orden"
+msgstr "Fecha de pedido:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -2600,7 +2600,7 @@ msgstr "Pedido firmado por %s"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 msgid "Order to Invoice"
-msgstr "Orden para Facturar"
+msgstr "Pedido a facturar"
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
@@ -2920,7 +2920,7 @@ msgstr "Ctdad Facturada"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_qty
 msgid "Qty Ordered"
-msgstr "Ctdad Ordenada"
+msgstr "Ctd. pedida"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
@@ -3568,7 +3568,7 @@ msgstr "Mostrar márgenes en pedidos"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Sign & Pay Quotation"
-msgstr "Firmar y pagar cotización"
+msgstr "Firmar y pagar presupuesto"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3655,7 +3655,7 @@ msgstr "Empiece por comprobar los datos de su compañía."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
 msgid "State of the onboarding confirmation order step"
-msgstr "Estado del paso de orden de confirmación de incorporación"
+msgstr "Estado del paso de incorporación de confirmación de pedido"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
@@ -4383,7 +4383,7 @@ msgstr "Entrada de la cuadrícula de variante"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "View Order"
-msgstr "Ver orden"
+msgstr "Ver pedido"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4477,8 +4477,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
-"Puede seleccionar todas las órdenes y facturarlas juntas,<br>\n"
-"                o revisar cada orden y facturar una por una."
+"Puede seleccionar todos las pedidos y facturarlos juntos,<br>\n"
+"                o revisar cada pedido y facturar uno por uno."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_acquirer__so_reference_type
