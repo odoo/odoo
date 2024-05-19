@@ -69,7 +69,7 @@ class CrearFiltrosWizard(models.TransientModel):
         Este método se encarga de generar el reporte de evaluación con los filtros seleccionados por el usuario.
 
         :return: acción para abrir el reporte en una nueva pestaña
-        """ 
+        """
 
         evaluacion_id = self.env.context.get("actual_evaluacion_id")
         evaluacion = self.env["evaluacion"].browse(evaluacion_id)
@@ -89,7 +89,7 @@ class CrearFiltrosWizard(models.TransientModel):
 
         :return: query params de los filtros
         """
-        
+
         filtros = []
         for filtro in self.filtros_ids:
             selecciones = filtro.filtro_seleccion_ids.mapped("texto")

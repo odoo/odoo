@@ -23,7 +23,9 @@ class Respuesta(models.Model):
 
     pregunta_id = fields.Many2one("pregunta", string="Preguntas")
     usuario_id = fields.Many2one("res.users", string="Usuario")
-    usuario_externo_id = fields.Integer(string="Usuario externo", compute="_compute_usuario_externo_id")
+    usuario_externo_id = fields.Integer(
+        string="Usuario externo", compute="_compute_usuario_externo_id"
+    )
     evaluacion_id = fields.Many2one("evaluacion", string="Evaluacion")
     pregunta_texto = fields.Char(related="pregunta_id.pregunta_texto")
     respuesta_texto = fields.Char("Respuesta")
@@ -173,6 +175,8 @@ class Respuesta(models.Model):
                 ]
             )
             if usuario_evaluacion_rel.usuario_externo_id:
-                registro.usuario_externo_id = usuario_evaluacion_rel.usuario_externo_id.id
+                registro.usuario_externo_id = (
+                    usuario_evaluacion_rel.usuario_externo_id.id
+                )
             else:
                 registro.usuario_externo_id = False

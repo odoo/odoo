@@ -31,10 +31,14 @@ class EvaluacionesController(http.Controller):
         # Parsear filtros
         if filtros:
             filtros = json.loads(filtros)
-            filtros = {categoria: valores for categoria, valores in filtros.items() if valores}
+            filtros = {
+                categoria: valores for categoria, valores in filtros.items() if valores
+            }
 
         parametros = {
-            "preguntas": evaluacion.generar_datos_reporte_generico_action(filtros)["preguntas"]
+            "preguntas": evaluacion.generar_datos_reporte_generico_action(filtros)[
+                "preguntas"
+            ]
         }
 
         if evaluacion.incluir_demograficos:

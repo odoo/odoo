@@ -344,7 +344,7 @@ class Evaluacion(models.Model):
         """
         Genera filtros para el reporte de la evaluación.
 
-        Esta función genera filtros para el reporte de la evaluación actual 
+        Esta función genera filtros para el reporte de la evaluación actual
         y sigue con el proceso de renderización del reporte.
 
         :return: una acción de redirección al modal creación de filtros
@@ -612,7 +612,7 @@ class Evaluacion(models.Model):
                     )
                 else:
                     nombre_departamento = "Sin Usuario"
-                
+
                 departamento = next(
                     (
                         dept
@@ -680,7 +680,7 @@ class Evaluacion(models.Model):
 
         :return: True si la respuesta cumple con los filtros, False en caso contrario.
         """
-        
+
         if not filtros:
             return True
 
