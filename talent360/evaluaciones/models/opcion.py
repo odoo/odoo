@@ -40,6 +40,10 @@ class Opcion(models.Model):
         pregunta_id = self.env.context.get("pregunta_id")
         if not pregunta_id:
             raise ValueError("Pregunta ID no proporcionado.")
+        
+        evaluacion_id = self.env.context.get("evaluacion_id")
+        print("OOOOOOOOOOOOOOOOOOOOOOOOO")
+        print(evaluacion_id)
 
         opcion = self.create({
             "opcion_texto": opcion_texto,
@@ -47,4 +51,15 @@ class Opcion(models.Model):
             "pregunta_id": pregunta_id,
         })
 
-        return True
+        return {
+            "name": "Agregar pregunta",
+            "type": "ir.actions.act_window",
+            "res_model": "pregunta",
+            "view_mode": "form",
+            'res_id': pregunta_id,
+            "view_id": self.env.ref("evaluaciones.pregunta_view_form").id,
+            "target": "new",
+            "context": {
+                "default_evaluacion_id": evaluacion_id,
+            }
+        }
