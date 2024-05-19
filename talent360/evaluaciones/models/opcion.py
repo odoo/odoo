@@ -42,8 +42,6 @@ class Opcion(models.Model):
             raise ValueError("Pregunta ID no proporcionado.")
         
         evaluacion_id = self.env.context.get("evaluacion_id")
-        print("OOOOOOOOOOOOOOOOOOOOOOOOO")
-        print(evaluacion_id)
 
         opcion = self.create({
             "opcion_texto": opcion_texto,
@@ -61,5 +59,6 @@ class Opcion(models.Model):
             "target": "new",
             "context": {
                 "default_evaluacion_id": evaluacion_id,
+                "default_pregunta_id": pregunta_id,
             }
         }

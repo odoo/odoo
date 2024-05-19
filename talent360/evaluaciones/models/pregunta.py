@@ -153,6 +153,7 @@ class Pregunta(models.Model):
         respuesta_trigger = self.env.context.get('default_respuesta_trigger')
         preguntas_desbloqueadas = self.env.context.get('default_preguntas_desbloqueadas')
         ponderacion = self.env.context.get('default_ponderacion')
+        pregunta_id = self.env.context.get('pregunta_id')
 
         if not pregunta_texto:
             raise ValueError("El campo 'Pregunta' es obligatorio.")
@@ -160,9 +161,6 @@ class Pregunta(models.Model):
         evaluacion_id = self.env.context.get("evaluacion_id")
         if not evaluacion_id:
             raise ValueError("Evaluacion ID no proporcionado.")
-        
-        print("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP")
-        print(evaluacion_id)
 
         pregunta = self.create({
             "pregunta_texto": pregunta_texto,
@@ -175,7 +173,7 @@ class Pregunta(models.Model):
         })
 
         self.env["pregunta.evaluacion.rel"].create({
-            "pregunta_id": pregunta.id,
+            "pregunta_id": pregunta_id or pregunta.id,
             "evaluacion_id": evaluacion_id,
         })
 
