@@ -1019,7 +1019,7 @@ class Evaluacion(models.Model):
         :return: Una acción para abrir la ventana de creación de preguntas.
         """
         return {
-            "name": "Crear pregunta",
+            "name": "Agregar pregunta",
             "type": "ir.actions.act_window",
             "res_model": "pregunta",
             "view_mode": "form",

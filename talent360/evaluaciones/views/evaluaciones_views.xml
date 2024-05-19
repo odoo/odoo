@@ -556,6 +556,16 @@
                     <field name="pregunta_texto"/>
                     <field name="tipo"/>
                 </group>
+                <group invisible="tipo != 'multiple_choice'">
+                    <group>
+                        <field name="condicional"/>
+                        <field name="opcion_ids"/>
+                    </group>
+                    <group invisible="condicional != True">
+                        <field name="respuesta_trigger"/>
+                        <field name="preguntas_desbloqueadas"/>
+                    </group>
+                </group>
             </form>
         </field>
     </record>
