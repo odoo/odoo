@@ -130,6 +130,10 @@ class ResourceResource(models.Model):
             calendar_end = calendar._get_closest_work_time(max(start, end), match_end=True,
                                                                        resource=resource, search_range=search_range,
                                                                        compute_leaves=compute_leaves)
+
+            if calendar_end and calendar_start and calendar_end < calendar_start:
+                calendar_start = calendar._get_closest_work_time(start, resource=resource, recompute_start=True,
+                                                                    compute_leaves=compute_leaves)
             result[resource] = (
                 calendar_start and revert_start_tz(calendar_start),
                 calendar_end and revert_end_tz(calendar_end),

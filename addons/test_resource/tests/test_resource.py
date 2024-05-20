@@ -648,6 +648,16 @@ class TestResMixin(TestResourceCommon):
             datetime_tz(2020, 4, 2, 18, 0, tzinfo='UTC')
         ), "It should have found the start and end of the shift on the same day on April 2nd, 2020")
 
+        result = self.sam._adjust_to_calendar(
+            datetime_tz(2020, 4, 3, 11, 0, 0, tzinfo=self.sam.tz),
+            datetime_tz(2020, 4, 3, 12, 0, 0, tzinfo=self.sam.tz),
+        )
+
+        self.assertEqual(result[self.sam], (
+            datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.sam.tz),
+            datetime_tz(2020, 4, 3, 12, 0, 0, tzinfo=self.sam.tz)
+        ), "The start date should never be greater than end date.")
+
     def test_adjust_calendar_timezone_before(self):
         # Calendar:
         # Every day 8-16

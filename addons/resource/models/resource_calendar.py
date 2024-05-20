@@ -546,13 +546,14 @@ class ResourceCalendar(models.Model):
                 day_total[start.date()] += (stop - start).total_seconds() / 3600
         return result
 
-    def _get_closest_work_time(self, dt, match_end=False, resource=None, search_range=None, compute_leaves=True):
+    def _get_closest_work_time(self, dt, match_end=False, resource=None, search_range=None, compute_leaves=True, recompute_start=False):
         """Return the closest work interval boundary within the search range.
         Consider only starts of intervals unless `match_end` is True. It will then only consider
         ends of intervals.
         :param dt: reference datetime
         :param match_end: wether to search for the begining of an interval or the end.
         :param search_range: time interval considered. Defaults to the entire day of `dt`
+        :param recompute_start : Check whether the start datetime is greater than end datetime or not
         :rtype: datetime | None
         """
         def interval_dt(interval):
@@ -579,6 +580,9 @@ class ResourceCalendar(models.Model):
             self._work_intervals_batch(range_start, range_end, resource, compute_leaves=compute_leaves)[resource.id],
             key=lambda i: abs(interval_dt(i) - dt),
         )
+
+        if recompute_start:
+            return work_intervals[1][0]
         return interval_dt(work_intervals[0]) if work_intervals else None
 
     def _get_unusual_days(self, start_dt, end_dt, company_id=False):

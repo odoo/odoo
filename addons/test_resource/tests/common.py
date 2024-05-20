@@ -64,6 +64,8 @@ class TestResourceCommon(TransactionCase):
 
         cls.calendar_bob = cls._define_calendar('Calendar with adjacent attendances', sum([((8, 12, i, 0.5), (12, 16, i, 0.5)) for i in range(5)], ()), 'Europe/Brussels')
 
+        cls.calendar_sam = cls._define_calendar('40 Hours working calendar with Lunch break', sum([((8, 12, i, 0.5), (13, 16, i, 0.5)) for i in range(5)], ()), 'Europe/Brussels')
+
         # Employee is linked to a resource.resource via resource.mixin
         cls.jean = cls.env['resource.test'].create({
             'name': 'Jean',
@@ -92,6 +94,10 @@ class TestResourceCommon(TransactionCase):
             'resource_calendar_id': cls.calendar_bob.id,
         })
 
+        cls.sam = cls.env['resource.test'].create({
+            'name': 'Sam',
+            'resource_calendar_id': cls.calendar_sam.id,
+        })
 
         cls.two_weeks_resource = cls._define_calendar_2_weeks(
             'Two weeks resource',
