@@ -191,18 +191,3 @@ class Objetivo(models.Model):
         for registro in self:
             if not registro.usuario_ids:
                 raise ValidationError(_("Debe asignar al menos un usuario al objetivo"))
-
-    @api.model
-    def toggle_edit(self):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'objetivo',
-            'view_id': self.env.ref('module_name.objetivo_form').id,
-            'res_id': self.id,
-            'view_mode': 'form',
-            'target': 'new',
-            'flags': {'form': {'editable': True}}
-        }
-        
-        
