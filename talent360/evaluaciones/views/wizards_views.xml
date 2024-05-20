@@ -30,7 +30,7 @@
             <form string="Crear Filtros">
                 <field name="filtros_ids">
                     <tree string="Filtros" editable="bottom" create="false" delete="false" edit="true">
-                        <field name="categoria"/>
+                        <field name="categoria" readonly="1"/>
                         <field name="filtro_seleccion_ids" widget="many2many_tags" domain="[('categoria', '=', categoria), ('filtro_original_id', '=', active_id)]" options="{'no_quick_create':True,'no_create_edit':True}"/>
                     </tree>
                 </field>
