@@ -16,7 +16,7 @@
         "views/reportes/reportes_templates/reporte_generico_template.xml",
         "views/evaluaciones_menus.xml",
         "views/evaluaciones_responder.xml",
-        "views/asignar_usuarios_externos_template.xml",
+        "views/wizards_views.xml",
         "data/pregunta.csv",
         "data/competencia.csv",
         "data/opcion.csv",
