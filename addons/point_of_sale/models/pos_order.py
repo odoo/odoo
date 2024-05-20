@@ -820,6 +820,7 @@ class PosOrder(models.Model):
             'date': fields.Date.context_today(self),
             'ref': _('Reversal of POS closing entry %(entry)s for order %(order)s from session %(session)s', entry=self.session_move_id.name, order=self.name, session=self.session_id.name),
             'invoice_line_ids': [(0, 0, aml_value) for aml_value in move_lines],
+            'reversed_pos_order_id': self.id
         })
         reversal_entry.action_post()
 

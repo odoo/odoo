@@ -48,6 +48,7 @@
         'views/pos_ticket_view.xml',
         'views/res_config_settings_views.xml',
         'views/customer_display_index.xml',
+        'views/account_move_views.xml',
     ],
     'demo': [
         'data/demo_data.xml',
