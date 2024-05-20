@@ -59,7 +59,7 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <div t-att-class="{'opacity-50': ['1_done', '1_canceled'].includes(record.state.raw_value), 'o_todo_hide_avatar': !todoHasAssignees}">
-                                            <field name="user_ids" widget="many2many_avatar_user"/>
+                                            <field name="user_ids" widget="many2many_avatar_user" readonly="True"/>
                                         </div>
                                         <field name="state" widget="todo_done_checkmark"/>
                                     </div>
@@ -86,7 +86,7 @@
                 <field name="priority" widget="priority" nolabel="1"/>
                 <field name="state" widget="todo_done_checkmark" nolabel="1"/>
                 <field name="name"/>
-                <field name="user_ids" optional="show" widget="many2many_avatar_user" options="{'no_quick_create': True}"/>
+                <field name="user_ids" optional="show" required="1" widget="many2many_avatar_user" options="{'no_quick_create': True}"/>
                 <field name="tag_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                 <field name="personal_stage_type_id" string="Stage" optional="hide"/>
                 <field name="activity_ids" optional="show" widget="list_activity"/>
@@ -115,6 +115,7 @@
                     <div class="py-1 px-2 border rounded bg-view">
                         <field name="user_ids"
                                widget="many2many_avatar_user"
+                               required="1"
                                options="{'no_quick_create': True}"
                                placeholder="Assignees"/>
                     </div>
@@ -164,7 +165,6 @@
                         <field name="company_id" invisible="1"/>
                         <field name="project_id"
                                required="1"
-                               placeholder="Select an existing project"
                                default_focus="1"/>
                         <field name="user_ids"
                                class="o_task_user_field"
@@ -199,7 +199,7 @@
                                 <field name="name" display="full" class="w-100 o_text_block align-middle"/>
                             </span>
                         </div>
-                        <field name="user_ids" widget="many2many_avatar_user"/>
+                        <field name="user_ids" widget="many2many_avatar_user" readonly="True"/>
                     </div>
                 </templates>
             </activity>
@@ -299,6 +299,7 @@
         <field name="res_model">project.task</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
+        <field name="context">{'dialog_size': 'medium'}</field>
     </record>
 
     <record model="ir.actions.act_window.view" id="project_task_action_convert_todo_to_task_form_view">
