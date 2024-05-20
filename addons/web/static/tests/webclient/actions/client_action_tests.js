@@ -598,6 +598,58 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "test display_notification client action with multiple links",
+        async function (assert) {
+            assert.expect(8);
+
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, 1);
+            assert.containsOnce(target, ".o_kanban_view");
+
+            const links = [
+                { label: "test1 <R&D>", url: "#first_link" },
+                { label: "test2 <R&D>", url: "#second_link" },
+                { label: "test3 <R&D>", url: "#third_link" },
+            ];
+
+            await doAction(webClient, {
+                type: "ir.actions.client",
+                tag: "display_notification",
+                params: {
+                    title: "title",
+                    message: "message %s <R&D>",
+                    sticky: true,
+                    links: links,
+                },
+            });
+            const notificationSelector = ".o_notification_manager .o_notification";
+            assert.containsOnce(
+                document.body,
+                notificationSelector,
+                "a notification should be present"
+            );
+            const notificationElement = document.body.querySelector(notificationSelector);
+            assert.strictEqual(
+                notificationElement.querySelector(".o_notification_title").textContent,
+                "title",
+                "the notification should have the correct title"
+            );
+            assert.strictEqual(
+                notificationElement.querySelector(".o_notification_content").textContent,
+                `message test1 <R&D>,test2 <R&D>,test3 <R&D> <R&D>`,
+                "the notification should have the correct message"
+            );
+            const notificationLinks = notificationElement.querySelector(".o_notification_content");
+            assert.strictEqual(notificationLinks.children[0].getAttribute("href"), "#first_link");
+            assert.strictEqual(notificationLinks.children[1].getAttribute("href"), "#second_link");
+            assert.strictEqual(notificationLinks.children[2].getAttribute("href"), "#third_link");
+
+            await testUtils.dom.click(notificationElement.querySelector(".o_notification_close"));
+            assert.containsNone(document.body, notificationSelector);
+        }
+    );
+
     QUnit.test("test next action on display_notification client action", async function (assert) {
         const webClient = await createWebClient({ serverData });
         const options = {
