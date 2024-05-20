@@ -134,6 +134,9 @@
                     <group>
                         <field name="mensaje"/>
                     </group>
+                     <group>
+                        <field name="escalar_format" invisible="tipo != 'CLIMA'"/>
+                    </group>
                         <notebook>
                             <page string="Preguntas">
                                 <field class="lh-lg w-100" colspan="2" name="pregunta_ids" readonly="1" nolabel="1" context="{'current_evaluacion_id': active_id}">

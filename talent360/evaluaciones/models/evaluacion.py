@@ -1010,3 +1010,11 @@ class Evaluacion(models.Model):
             "view_mode": "form",
             "target": "new",
         }
+
+    def get_escalar_format(self):
+        """
+        Devuelve el formato escalar seleccionado para la evaluación actual.
+        
+        :return: El formato escalar seleccionado para la evaluación.
+        """
+        return self.escalar_format
