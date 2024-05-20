@@ -593,6 +593,8 @@
                 class="o_purchase_order" js_class="purchase_dashboard_list" sample="1">
                     <header>
                         <button name="action_create_invoice" type="object" string="Create Bills"/>
+                        <button name="button_cancel" type="object" string="Cancel"
+                            confirm="Are you sure you want to cancel the selected RFQs/Orders?"/>
                     </header>
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="partner_ref" optional="hide"/>
@@ -633,6 +635,8 @@
                     sample="1">
                     <header>
                         <button name="action_create_invoice" type="object" string="Create Bills"/>
+                        <button name="button_cancel" type="object" string="Cancel"
+                            confirm="Are you sure you want to cancel the selected RFQs/Orders?"/>
                     </header>
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="partner_ref" optional="hide"/>
