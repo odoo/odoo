@@ -507,6 +507,16 @@ class PurchaseOrder(models.Model):
         return True
 
     def button_cancel(self):
+        purchase_orders_with_receipt = self.filtered(lambda po: any(line.qty_received > 0 for line in po.order_line))
+        purchase_orders_with_invoices = self.filtered(lambda po: any(i.state == 'posted' for i in po.invoice_ids))
+
+        if purchase_orders_with_receipt and purchase_orders_with_invoices:
+            raise UserError(_('Unable to cancel selected order as either some receptions have already been done or Vendor bills created'))
+        if purchase_orders_with_invoices:
+            raise UserError(_('Unable to cancel purchase order %s. You must first cancel the related Vendor bills.', ', '.join(purchase_orders_with_invoices.mapped('name'))))
+        if purchase_orders_with_receipt:
+            raise UserError(_('Unable to cancel purchase order %s as some receptions have already been done.', ', '.join(purchase_orders_with_receipt.mapped('name'))))
+
         for order in self:
             for inv in order.invoice_ids:
                 if inv and inv.state not in ('cancel', 'draft'):
@@ -1085,3 +1095,15 @@ class PurchaseOrder(models.Model):
         """
         self.ensure_one()
         return self.state == 'cancel'
+
+    def action_cancel_wizard(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Cancel Purchase Orders',
+            'res_model': 'purchase.cancel.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_purchase_order_ids': self.ids,
+            },
+        }
