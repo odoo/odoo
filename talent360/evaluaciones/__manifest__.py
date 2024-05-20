@@ -10,7 +10,7 @@
         "views/crear_evaluacion_clima.xml",
         "views/objetivos_views.xml",
         "views/portadas_templates.xml",
-        "views/reportes/portada_reporte_template.xml",
+        "views/portada_reporte_template.xml",
         "views/reporte_clima_template.xml",
         "views/reporte_nom_035_template.xml",
         "views/reporte_generico_template.xml",
