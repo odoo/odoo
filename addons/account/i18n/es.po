@@ -582,7 +582,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Estimado/a\n"
+"        Apreciable\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "        </t>\n"
@@ -729,7 +729,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Estimado/a<t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
+"        Apreciable<t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
 "        Gracias por su pago.\n"
 "        Aquí está su recibo de pago <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> por un importe de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">10,00 €</span> de parte de <t t-out=\"object.company_id.name or ''\">SuCompañía</t>.\n"
 "        <br><br>\n"
@@ -5566,7 +5566,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
 msgid "Defines how the bank statements will be registered"
-msgstr "Define como se registrarán los extractos bancarios"
+msgstr "Define cómo se registrarán los extractos bancarios"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_applicability__display_account_prefix
@@ -6153,17 +6153,6 @@ msgstr "Número de empresas con cuenta bancaria duplicada"
 #: model:ir.model.fields,field_description:account.field_account_payment__duplicated_ref_ids
 msgid "Duplicated Ref"
 msgstr "Referencia duplicada"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr ""
-"Se detectó una referencia duplicada del proveedor. Es probable que haya "
-"codificado dos veces la misma factura/factura rectificativa del proveedor."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
@@ -8463,7 +8452,7 @@ msgstr "Coincidencia perfecta de facturas"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
-msgstr "Facturación / Contabilidad"
+msgstr "Facturación"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
@@ -8934,7 +8923,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
 msgid "Kpi Account Total Revenue Value"
-msgstr "KPI valor total de ingresos de la cuenta"
+msgstr "Valor total de la cuenta de ingresos Kpi "
 
 #. module: account
 #. odoo-python
@@ -10453,13 +10442,6 @@ msgstr "Uy"
 #, python-format
 msgid "Open"
 msgstr "Abierto"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr "Abrir lista"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance

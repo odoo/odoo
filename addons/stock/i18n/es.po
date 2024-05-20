@@ -654,7 +654,7 @@ msgstr "<span>Productos sin paquete asignado</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<span>Remaining quantities not yet delivered:</span>"
-msgstr "<span>Cantidades restantes aún sin entregar:</span>"
+msgstr "<span>Cantidades restantes aún no entregadas:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -699,7 +699,7 @@ msgid ""
 "quantity and now, the difference of quantity is not consistent "
 "anymore.</strong>"
 msgstr ""
-"<strong>Debido a algunos movimientos de existencias realizados entre su "
+"<strong>Debido a algunos movimientos de stock realizados entre su "
 "actualización de la cantidad inicial y ahora, la diferencia en la cantidad "
 "ya no es consistente.</strong>"
 
@@ -1202,7 +1202,7 @@ msgstr "Archivado"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Are you sure you want to cancel this transfer?"
-msgstr ""
+msgstr "¿Está seguro de que desea cancelar este traslado?"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -2222,8 +2222,8 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
 "Cantidad actual de los productos.\n"
-"En un contexto de una sola ubicación de Stock, esto incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijas.\n"
-"En un contexto de un solo almacén, esto incluye los bienes almacenados en la ubicación de Stock de ese almacén, o cualquiera de sus hijas.\n"
+"En un contexto de una sola ubicación de stock, esto incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijas.\n"
+"En un contexto de un solo almacén, esto incluye los bienes almacenados en la ubicación de stock de ese almacén, o cualquiera de sus hijas.\n"
 "En cualquier otro caso, esto incluye los bienes almacenados en cualquier ubicación de Stock de tipo 'Interna'."
 
 #. module: stock
@@ -3312,10 +3312,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"Cantidad prevista (calculada como cantidad a mano - saliente + entrante)\n"
-"En un contexto de una sola ubicación de stock, esto incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijas.\n"
-"En un contexto de un solo almacén, esto incluye los bienes almacenados en la ubicación de stock de ese almacén, o cualquiera de sus hijas.\n"
-"En cualquier otro caso, esto incluye los bienes almacenados en cualquier ubicación de stock de tipo 'Interna'."
+"Cantidad pronosticada (calculada como cantidad a la mano - saliente + entrante)\n"
+"En un contexto de una sola ubicación de stock, esto incluye los artículos que se almacenan en esta ubicación o cualquier ubicación secundaria.\n"
+"En un contexto de un solo almacén, esto incluye los artículos que se almacenan en la ubicación de stock de ese almacén o cualquier almacén secundario.\n"
+"En cualquier otro caso, esto incluye los artículos que se almacenan en cualquier ubicación de stock de tipo 'Interna'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__free_qty
@@ -3325,10 +3325,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"Cantidad prevista (calculada como Cantidad disponible - cantidad reservada)\n"
-"En un contexto con una única Ubicación de inventario, esto incluye bienes almacenados en esta ubicación, o cualquiera de sus ubicaciones secundarias.\n"
-"En un contexto con un único Almacén, esto incluye bienes almacenados en la Ubicación de inventario de este Almacén, o cualquiera de sus hijos.\n"
-"De lo contrario, esto incluye bienes almacenados en cualquier ubicación de stock con tipo 'interno'."
+"Cantidad pronosticada (calculada como cantidad a la mano- cantidad reservada)\n"
+"En un contexto con una única ubicación de existencias, esto incluye artículos que se almacenan en esta ubicación o cualquiera de sus ubicaciones secundarias.\n"
+"En un contexto con un único almacén, esto incluye artículos que se almacenan en la ubicación de existencias de este almacén o cualquier almacén secundario.\n"
+"De lo contrario, esto incluye artículos que se almacenan en cualquier ubicación de existencias con tipo 'interno'."
 
 #. module: stock
 #. odoo-javascript
@@ -4468,7 +4468,7 @@ msgstr "Mantener las líneas actuales"
 msgid ""
 "Keep the <strong>Counted Quantity</strong> (the Difference will be updated)"
 msgstr ""
-"Mantener la<strong>cantidad contada</strong> (se actualizará la diferencia)"
+"Mantener la <strong>cantidad contada</strong> (se actualizará la diferencia)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -4476,7 +4476,7 @@ msgid ""
 "Keep the <strong>Difference</strong> (the Counted Quantity will be updated "
 "to reflect the same difference as when you counted)"
 msgstr ""
-"Mantener la<strong>diferencia</strong> (la cantidad contada se actualizará "
+"Mantener la <strong>diferencia</strong> (la cantidad contada se actualizará "
 "para reflejar la misma diferencia que cuando se contó)"
 
 #. module: stock
@@ -9326,7 +9326,7 @@ msgstr ""
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
 msgstr ""
-"Esta cantidad está expresada en la unidad de medida predeterminada del "
+"Esta cantidad está expresada en la unidad de medida por defecto del "
 "producto."
 
 #. module: stock
@@ -10175,12 +10175,12 @@ msgstr "Almacenes"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty
 msgid "Warn Insufficient Quantity"
-msgstr "Aviso Cantidad Insuficiente"
+msgstr "Advertir de cantidad insuficiente"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty_scrap
 msgid "Warn Insufficient Scrap Quantity"
-msgstr "Aviso Cantidad de Desecho Insuficiente"
+msgstr "Advertir de cantidad de desecho insuficiente"
 
 #. module: stock
 #. odoo-python
@@ -10349,8 +10349,9 @@ msgid ""
 "When the picking is not done this allows changing the initial demand. When "
 "the picking is done this allows changing the done quantities."
 msgstr ""
-"Cuando la operación no está hecha, esto permite cambiar la demanda inicial. "
-"Cuando se realiza la operación, esto permite cambiar las cantidades hechas."
+"Cuando la recolección no está hecha, esto permite cambiar la demanda "
+"inicial. Cuando se realiza la operación, esto permite cambiar las cantidades"
+" hechas."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
@@ -10572,7 +10573,7 @@ msgid ""
 "You can not delete product moves if the picking is done. You can only "
 "correct the done quantities."
 msgstr ""
-"No puede eliminar movimientos del producto si el albarán está realizado. "
+"No puede eliminar movimientos del producto si ya realizó la recolección. "
 "Solo puede corregir las cantidades hechas."
 
 #. module: stock

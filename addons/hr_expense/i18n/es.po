@@ -569,7 +569,7 @@ msgstr "Moneda"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__currency_rate
 msgid "Currency Rate"
-msgstr "Tasa monetaria"
+msgstr "Tipo de cambio"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -580,7 +580,7 @@ msgstr "Fecha"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Dear"
-msgstr "Estimado"
+msgstr "Apreciable"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_prefix
@@ -607,7 +607,7 @@ msgstr "Diario de gastos por defecto"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default accounting journal for expenses paid by employees."
-msgstr "Diario contable predeterminado para gastos pagados por empleados."
+msgstr "Diario contable por defecto para gastos pagados por empleados."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1235,7 +1235,7 @@ msgstr "Asiento contable eliminado"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_currency_rate
 msgid "Label Currency Rate"
-msgstr "Etiqueta de la tasa de cambio"
+msgstr "Etiqueta del tipo de cambio"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_uid
@@ -1266,7 +1266,7 @@ msgstr "Actividades atrasadas"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_use_mailgateway
 msgid "Let your employees record expenses by email"
-msgstr "Permite que tus empleados registren sus gastos por correo electrónico"
+msgstr "Permita que sus empleados registren sus gastos por correo electrónico"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1308,8 +1308,8 @@ msgid ""
 "Managers can approve the report here, then an accountant can post the "
 "accounting entries."
 msgstr ""
-"Los responsables pueden aprobar el informe aquí, posteriormente un contable "
-"puede publicar los asientos contables."
+"Los gerentes pueden aprobar el informe aquí, posteriormente un contable "
+"puede registrar los asientos contables."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1317,7 +1317,7 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Managers can inspect all expenses from here."
-msgstr "Los responsables pueden revisar todos los gastos aquí."
+msgstr "Los gerentes pueden inspeccionar todos los gastos aquí."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1544,7 +1544,7 @@ msgstr "O"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Or send your receipts at"
-msgstr "O envie sus recibos a"
+msgstr "O envíe sus recibos a"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
@@ -1593,7 +1593,7 @@ msgstr "Pago creado para: %s"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Payment method allowed for expenses paid by company."
-msgstr "Método de pago permitido para los gastos cubiertos por la empresa"
+msgstr "Método de pago permitido para los gastos pagados por la empresa."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1604,7 +1604,7 @@ msgstr "Métodos de pago"
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__company_expense_allowed_payment_method_line_ids
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__company_expense_allowed_payment_method_line_ids
 msgid "Payment methods available for expenses paid by company"
-msgstr "Métodos de pago disponibles para los gastos cubiertos por la empresa"
+msgstr "Métodos de pago disponibles para los gastos pagados por la empresa"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment
@@ -1631,7 +1631,7 @@ msgstr "Registrar asientos contables"
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__post
 msgid "Posted"
-msgstr "Publicado"
+msgstr "Registrado"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
@@ -2045,8 +2045,8 @@ msgstr "Aprobador de equipo"
 msgid ""
 "The company's default journal used when an employee expense is created."
 msgstr ""
-"El diario predeterminado de la empresa que se utiliza cuando se crea un "
-"gasto de empleado."
+"El diario por defecto de la empresa que se utiliza cuando se crea un gasto "
+"de empleado."
 
 #. module: hr_expense
 #. odoo-python
@@ -2062,8 +2062,8 @@ msgid ""
 " You'll have to set the category manually on the expense."
 msgstr ""
 "La primera palabra del asunto del correo electrónico no corresponde con "
-"ningún código de categoría. Debe establecer la categoría en el gasto de "
-"forma manual. "
+"ningún código de categoría. Debe establecer la categoría en el gasto "
+"manualmente. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -2079,18 +2079,17 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
 msgid "The journal must be set on posted expense"
-msgstr "El diario debe establecerse en gastos contabilizados"
+msgstr "El diario debe establecerse en gastos registrados"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__employee_journal_id
 msgid "The journal used when the expense is paid by employee."
-msgstr "El diario se utiliza cuando los gastos son pagados por el empleado"
+msgstr "El diario se utiliza cuando los gastos son pagados por el empleado."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__payment_method_line_id
 msgid "The payment method used when the expense is paid by the company."
-msgstr ""
-"El método de pago usado cuando el gasto ha sido pagado por la empresa."
+msgstr "El método de pago que se utiliza cuando la empresa paga el gasto."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2124,7 +2123,7 @@ msgid ""
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
 msgstr ""
-"Hay gastos sin publicar en esta categoría. Actualizar el coste de la "
+"Hay gastos no enviados en esta categoría. Actualizar el coste de la "
 "categoría cambiará los importes de los gastos. Asegúrese de que es lo que "
 "desea hacer. "
 
@@ -2288,7 +2287,7 @@ msgstr "Ver informe"
 #, python-format
 msgid "Wasting time recording your receipts? Let’s try a better way."
 msgstr ""
-"¿Perdiendo el tiempo registrando tus recibos? Probemos una forma mejor."
+"¿Registrar sus recibos le toma mucho tiempo? Probemos una mejor forma."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
@@ -2387,14 +2386,14 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot delete a posted or approved expense."
-msgstr "No puede eliminar un gasto publicado o aprobado."
+msgstr "No puede eliminar un gasto registrado o aprobado."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 #, python-format
 msgid "You cannot delete a posted or paid expense."
-msgstr "No puede eliminar un gasto contabilizado o pagado."
+msgstr "No puede eliminar un gasto registrado o pagado."
 
 #. module: hr_expense
 #. odoo-python

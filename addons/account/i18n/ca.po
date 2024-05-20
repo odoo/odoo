@@ -25,7 +25,6 @@
 # eriiikgt, 2023
 # ericrolo, 2023
 # Quim - eccit <quim@eccit.com>, 2023
-# Óscar Fonseca <tecnico@pyming.com>, 2024
 # Jonatan Gk, 2024
 # Carles Antoli <carlesantoli@hotmail.com>, 2024
 # Braulio D. López Vázquez <bdl@odoo.com>, 2024
@@ -36,6 +35,8 @@
 # Martin Trigaux, 2024
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
 # RGB Consulting <odoo@rgbconsulting.com>, 2024
+# Jonathan Pasquier <jpasquier@fundesplai.org>, 2024
+# Óscar Fonseca <tecnico@pyming.com>, 2024
 # Santiago Payà <santiagopim@gmail.com>, 2024
 # 
 msgid ""
@@ -2785,7 +2786,7 @@ msgstr "Filtre Analític"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
 msgid "Analytic Items"
-msgstr "Anotacions analítiques"
+msgstr "Apunts analítics"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
@@ -6167,17 +6168,6 @@ msgid "Duplicated Ref"
 msgstr "Ref duplicat"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr ""
-"S'ha detectat una referència duplicada del proveïdor. Probablement heu "
-"codificat dues vegades la mateixa nota de factura/crèdit del proveïdor."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "Informes Dinàmics"
@@ -7078,7 +7068,7 @@ msgstr "Des de"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Non Trade Receivable accounts"
-msgstr "De comptes no comercials"
+msgstr "Des de comptes no comercials a cobrar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -7093,7 +7083,7 @@ msgstr "De comptes comercials pagables"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Trade Receivable accounts"
-msgstr "Des dels comptes de mercaderies a rebre"
+msgstr "Des de comptes comercials a cobrar"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__regex
@@ -7627,8 +7617,8 @@ msgid ""
 "If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
 "If not, this account will belong to Trade Receivable/Payable in reports and filters."
 msgstr ""
-"Si s'estableix, aquest compte pertanyerà a No Comercial Receptible/Payable en informes i filtres.\n"
-"Si no, aquest compte pertanyerà a Trade Receivable/Payable en informes i filtres."
+"Si s'estableix, aquest compte correspondrà a No Comercial a cobrar/pagar en informes i filtres.\n"
+"Si no, aquest compte correspondrà a Comercial a cobrar/pagar en informes i filtres."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__preceding_subtotal
@@ -10016,7 +10006,7 @@ msgstr "Pagable no comercial"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Non Trade Receivable"
-msgstr "No percebible"
+msgstr "A cobrar no comercial"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_non_current
@@ -10463,13 +10453,6 @@ msgstr "Oops"
 #, python-format
 msgid "Open"
 msgstr "Oberts"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr "Obre la llista"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
@@ -14127,8 +14110,8 @@ msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
 msgstr ""
-"El compte ja està en ús en un diari \"ale\" o \"purchase.\" Això vol dir que"
-" el tipus de compte no podia ser'reviable' o 'patible'."
+"El compte ja està en ús en un diari de 'venda' o 'compra'. Això vol dir que "
+"el tipus de compte no pot ser 'a cobrar' o 'a pagar'."
 
 #. module: account
 #. odoo-python
@@ -15046,8 +15029,8 @@ msgid ""
 "The type of the journal's default credit/debit account shouldn't be "
 "'receivable' or 'payable'."
 msgstr ""
-"El tipus de compte de crèdit/debit per omissió del diari no hauria de "
-"ser'reviable' o 'payable'."
+"El tipus de compte de crèdit/debit per omissió del diari no hauria de 'a "
+"cobrar' o 'a pagar'."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_currency__display_rounding_warning
@@ -15791,7 +15774,7 @@ msgid ""
 "Total Receivable amount exceeding a limit."
 msgstr ""
 "Activador d'alertes en crear factures i comandes de vendes per a contactes "
-"amb un import total percebible que excedeix el límit."
+"amb un import total a cobrar que excedeix un límit."
 
 #. module: account
 #. odoo-python
@@ -16897,8 +16880,8 @@ msgid ""
 "You can't open the register payment wizard without at least one "
 "receivable/payable line."
 msgstr ""
-"No podeu obrir l' assistent de pagament de registre sense almenys una línia "
-"reivible/payable."
+"No podeu obrir l'assistent de registre de pagament sense almenys una línia a"
+" cobrar/pagar."
 
 #. module: account
 #. odoo-python
@@ -16983,7 +16966,7 @@ msgid ""
 " Receivable or Payable."
 msgstr ""
 "No podeu canviar el tipus d'un compte establert com a compte bancari en un "
-"diari a Receptable o Payable."
+"diari de comptes a cobrar/pagar."
 
 #. module: account
 #. odoo-python
@@ -17044,8 +17027,8 @@ msgid ""
 "You cannot delete a payable/receivable line as it would not be consistent "
 "with the payment terms"
 msgstr ""
-"No podeu suprimir una línia de pagament/receptible perquè no seria coherent "
-"amb els termes de pagament"
+"No podeu suprimir una línia a pagar/cobrar perquè no seria coherent amb els "
+"termes de pagament"
 
 #. module: account
 #. odoo-python
@@ -17165,7 +17148,7 @@ msgid ""
 "You cannot have a receivable/payable account that is not reconcilable. "
 "(account code: %s)"
 msgstr ""
-"No es pot tenir un compte reivible/pay que no es pot compilar. (codi de "
+"No podeu tenir un compte a cobrar/pagar que no sigui conciliable. (codi de "
 "compte: %s)"
 
 #. module: account
@@ -17188,6 +17171,9 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
+"No es pot importar 'opening_balance' si l'assentament inicial (%s) ja està "
+"publicat. Si esteu absolutament segurs que voleu modificar el saldo "
+"d'obertura dels vostres comptes, reinicieu l'assentament a esborrany."
 
 #. module: account
 #. odoo-python
@@ -17525,8 +17511,8 @@ msgid ""
 "[(Total Receivable/Total Revenue) * number of days since the first invoice] "
 "for this customer"
 msgstr ""
-"[(Total a rebre/Total ingressat) * número de dies des de la primera factura]"
-" per aquest client"
+"[(Total a cobrar/Total ingressat) * número de dies des de la primera "
+"factura] per aquest client"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
