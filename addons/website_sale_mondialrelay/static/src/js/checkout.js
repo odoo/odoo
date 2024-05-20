@@ -32,8 +32,8 @@ websiteSaleCheckoutWidget.include({
      *
      * @override
      */
-    _handleCarrierUpdateResult: async function (carrierInput) {
-        await this._super(...arguments);
+    _updateAmountBadge(radio, result) {
+        this._super(...arguments);
         if (result.mondial_relay) {
             if (!this.el.querySelector("#modal_mondialrelay")) {
                 this._loadMondialRelayModal(result);
@@ -56,10 +56,10 @@ websiteSaleCheckoutWidget.include({
     _loadMondialRelayModal: function (result) {
         // add modal to body and bind 'save' button
         document.body.append(renderToElement("website_sale_mondialrelay", {}));
-        this.modal_mondialrelay = this.el.querySelector("#modal_mondialrelay");
+        this.modal_mondialrelay = document.querySelector("#modal_mondialrelay");
         this.modal_mondialrelay
             .querySelector("#btn_confirm_relay")
-            .addEventListner("click", this._onClickBtnConfirmRelay.bind(this));
+            ?.addEventListener("click", this._onClickBtnConfirmRelay.bind(this));
 
         // load mondial relay script
         const script = document.createElement('script');
@@ -94,7 +94,8 @@ websiteSaleCheckoutWidget.include({
                     }, 10000);
                 },
             };
-            this.modal_mondialrelay.querySelector("#o_zone_widget").MR_ParcelShopPicker(params);
+            // TODO: MSH: Need to find a way to remove jQuery plugin dependency
+            $(this.modal_mondialrelay.querySelector("#o_zone_widget")).MR_ParcelShopPicker(params);
             new Modal(this.modal_mondialrelay).show();
             this.modal_mondialrelay
                 .querySelector("#o_zone_widget")
