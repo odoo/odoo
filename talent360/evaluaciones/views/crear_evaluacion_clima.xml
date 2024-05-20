@@ -8,7 +8,7 @@
                 <header>
                     <button name="evaluacion_action_tree" string="Guardar" type="object" class="btn-primary my-3"/>
                     <button class="btn btn-primary" name="action_asignar_usuarios_externos" string="Asignar usuarios externos" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
-                    <button name="action_agregar_catalogo_preguntas" string="Agregar catálogo de preguntas clima" class="btn-primary my-3"/>
+                    <button name="action_agregar_catalogo_preguntas" string="Agregar preguntas" class="btn-primary my-3"/>
                 </header>
                 <sheet>
                     <h1>Crear evaluación Clima Laboral</h1>
@@ -45,7 +45,7 @@
                                     <group>
                                         <field name="pregunta_texto" placeholder="Ingrese la pregunta"/>
                                         <field name="tipo"/>
-                                        <field name="categoria" placeholder="Seleccione o agregue una categoría" invisible="tipo !='escala'" required="True"/>
+                                        <field name="categoria" placeholder="Seleccione o agregue una categoría" required="True"/>
                                         <field name="ponderacion" invisible="tipo != 'escala'" required="True"/>
                                         <field name="opcion_ids" placeholder="Opciones" context="{'default_pregunta_id': active_id}" invisible="tipo != 'multiple_choice'" required="True">
                                             <tree create="true" delete="true" editable="bottom">
