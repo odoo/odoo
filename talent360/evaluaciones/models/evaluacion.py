@@ -34,7 +34,7 @@ class Evaluacion(models.Model):
             ("CLIMA", "Clima Organizacional"),
             ("NOM_035", "NOM 035"),
             ("competencia", "Competencia"),
-            ("generico", "Genérico")
+            ("generico", "Genérico"),
         ],
         required=True,
         default="competencia",
@@ -336,9 +336,9 @@ class Evaluacion(models.Model):
         """
 
         if self.porcentaje_respuestas <= 0:
-            raise exceptions.ValidationError(_(
-                "No se puede generar un reporte para una evaluación sin respuestas."
-            ))
+            raise exceptions.ValidationError(
+                _("No se puede generar un reporte para una evaluación sin respuestas.")
+            )
 
         return {
             "type": "ir.actions.act_url",
@@ -358,9 +358,9 @@ class Evaluacion(models.Model):
 
         # Validar si existen respuestas
         if self.porcentaje_respuestas <= 0:
-            raise exceptions.ValidationError(_(
-                "No se puede generar un reporte para una evaluación sin respuestas."
-            ))
+            raise exceptions.ValidationError(
+                _("No se puede generar un reporte para una evaluación sin respuestas.")
+            )
 
         datos_demograficos = self.generar_datos_demograficos()
 
@@ -437,8 +437,7 @@ class Evaluacion(models.Model):
                     lambda r: self.validar_filtro(filtros, r)
                 )
 
-            respuestas = [
-                respuesta.respuesta_mostrar for respuesta in respuesta_ids]
+            respuestas = [respuesta.respuesta_mostrar for respuesta in respuesta_ids]
             respuestas_tabuladas = dict(Counter(respuestas))
             datos_pregunta = {
                 "pregunta": pregunta,
@@ -491,8 +490,7 @@ class Evaluacion(models.Model):
             categoria = dict(pregunta._fields["categoria"].selection).get(
                 pregunta.categoria
             )
-            dominio = dict(pregunta._fields["dominio"].selection).get(
-                pregunta.dominio)
+            dominio = dict(pregunta._fields["dominio"].selection).get(pregunta.dominio)
             valor_pregunta = 0
 
             respuesta_ids = self.env["respuesta"].search(
@@ -661,13 +659,11 @@ class Evaluacion(models.Model):
                 categoria["valor"] = (
                     categoria["puntuacion"] / categoria["puntuacion_maxima"]
                 ) * 100
-                categoria["color"] = self.asignar_color_clima(
-                    categoria["valor"])
+                categoria["color"] = self.asignar_color_clima(categoria["valor"])
 
             for dept in categoria["departamentos"]:
                 if dept["puntos_maximos"] > 0:
-                    dept["valor"] = (dept["puntos"] /
-                                     dept["puntos_maximos"]) * 100
+                    dept["valor"] = (dept["puntos"] / dept["puntos_maximos"]) * 100
                     dept["color"] = self.asignar_color_clima(dept["valor"])
 
         total_porcentaje = round(
@@ -745,8 +741,7 @@ class Evaluacion(models.Model):
         )
 
         for usuario in usuario_evaluacion.mapped("usuario_id"):
-            datos_demograficos_usuario = self.obtener_datos_demograficos(
-                usuario)
+            datos_demograficos_usuario = self.obtener_datos_demograficos(usuario)
             if filtros and not self.validar_filtro(
                 filtros, datos_demograficos=datos_demograficos_usuario
             ):

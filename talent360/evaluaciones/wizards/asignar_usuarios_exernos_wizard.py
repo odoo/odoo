@@ -30,13 +30,11 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
     @api.constrains("nombre_archivo")
     def _validar_nombre_archivo(self):
         if self.nombre_archivo and not self.nombre_archivo.lower().endswith(".csv"):
-            raise exceptions.ValidationError(
-                _("Solo se aceptan archivos CSV."))
+            raise exceptions.ValidationError(_("Solo se aceptan archivos CSV."))
 
     def procesar_csv(self):
 
-        evaluacion = self.env["evaluacion"].browse(
-            self._context.get("active_id"))
+        evaluacion = self.env["evaluacion"].browse(self._context.get("active_id"))
 
         if not evaluacion:
             raise exceptions.ValidationError(
@@ -149,8 +147,7 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
             )
 
             if attachment:
-                attachment.write(
-                    {"datas": base64.b64encode(datos.encode("utf-8"))})
+                attachment.write({"datas": base64.b64encode(datos.encode("utf-8"))})
             else:
                 attachment = self.env["ir.attachment"].create(
                     {

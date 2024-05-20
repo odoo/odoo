@@ -40,18 +40,15 @@ class EvaluacionesController(http.Controller):
         if evaluacion.incluir_demograficos:
             parametros.update(evaluacion.generar_datos_demograficos(filtros))
         if evaluacion.tipo == "NOM_035":
-            parametros.update(
-                evaluacion.generar_datos_reporte_NOM_035_action())
+            parametros.update(evaluacion.generar_datos_reporte_NOM_035_action())
             return request.render("evaluaciones.encuestas_reporte_nom_035", parametros)
         elif evaluacion.tipo == "CLIMA":
-            parametros.update(
-                evaluacion.generar_datos_reporte_clima_action(filtros))
+            parametros.update(evaluacion.generar_datos_reporte_clima_action(filtros))
             return request.render("evaluaciones.encuestas_reporte_clima", parametros)
         elif evaluacion.tipo == "generico":
             return request.render("evaluaciones.encuestas_reporte_generico", parametros)
         else:
-            raise ValueError(
-                _("Tipo de evaluación no soportado para reporte."))
+            raise ValueError(_("Tipo de evaluación no soportado para reporte."))
 
     @http.route(
         "/evaluacion/responder/<int:evaluacion_id>/<string:token>",
@@ -140,8 +137,7 @@ class EvaluacionesController(http.Controller):
             if not request.env.user.has_group(
                 "evaluaciones.evaluaciones_cliente_cr_group_user"
             ):
-                raise AccessError(
-                    _("No tienes permitido acceder a este recurso."))
+                raise AccessError(_("No tienes permitido acceder a este recurso."))
 
             user = request.env.user.id
 
