@@ -7,6 +7,7 @@ import {
     Many2XAutocomplete,
     useActiveActions,
     useX2ManyCrud,
+    useOpenMany2XRecord,
 } from "@web/views/fields/relational_utils";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "../standard_field_props";
@@ -50,6 +51,7 @@ export class Many2ManyTagsField extends Component {
         context: { type: Object, optional: true },
         placeholder: { type: String, optional: true },
         nameCreateField: { type: String, optional: true },
+        canEditTags: { type: Boolean, optional: true },
         string: { type: String, optional: true },
         noSearchMore: { type: Boolean, optional: true },
     };
@@ -58,6 +60,7 @@ export class Many2ManyTagsField extends Component {
         canQuickCreate: true,
         canCreateEdit: true,
         nameCreateField: "name",
+        canEditTags: false,
         context: {},
     };
 
@@ -92,6 +95,18 @@ export class Many2ManyTagsField extends Component {
                     evalContext: this.evalContext,
                     readonly: props.readonly,
                 };
+            },
+        });
+
+        this.openMany2xRecord = useOpenMany2XRecord({
+            resModel: this.relation,
+            activeActions: {
+                create: false,
+                write: true,
+            },
+            onRecordSaved: async (record) => {
+                await this.props.record.data[this.props.name].forget(record);
+                return saveRecord([record.resId]);
             },
         });
 
@@ -141,7 +156,19 @@ export class Many2ManyTagsField extends Component {
                 }
                 this.onTagKeydown(ev);
             },
+            onClick: (ev) => this.onTagClick(ev, record),
         };
+    }
+
+    onTagClick(ev, record) {
+        if (!this.props.canEditTags) {
+            return;
+        }
+        this.openMany2xRecord({
+            resId: record.resId,
+            context: this.props.context,
+            title: _t("Edit: %s", record.data.display_name),
+        })
     }
 
     get tags() {
@@ -208,6 +235,14 @@ export const many2ManyTagsField = {
             help: _t("Write a domain to allow the creation of records conditionnally."),
         },
         {
+            label: _t("Edit Tags"),
+            name: "edit_tags",
+            type: "boolean",
+            help: _t(
+                "If checked, users will be able to edit tag related records by clicking on the tags."
+            ),
+        },
+        {
             label: _t("Color field"),
             name: "color_field",
             type: "field",
@@ -227,6 +262,8 @@ export const many2ManyTagsField = {
         const hasCreatePermission = attrs.can_create ? evaluateBooleanExpr(attrs.can_create) : true;
         const noCreate = Boolean(options.no_create);
         const canCreate = noCreate ? false : hasCreatePermission;
+        const hasEditPermission = attrs.can_write ? evaluateBooleanExpr(attrs.can_write) : true;
+        const canEditTags = Boolean(options.edit_tags) ? hasEditPermission : false;
         const noQuickCreate = Boolean(options.no_quick_create);
         const noCreateEdit = Boolean(options.no_create_edit);
         return {
@@ -235,6 +272,7 @@ export const many2ManyTagsField = {
             canCreate,
             canQuickCreate: canCreate && !noQuickCreate,
             canCreateEdit: canCreate && !noCreateEdit,
+            canEditTags,
             createDomain: options.create,
             context: dynamicInfo.context,
             domain: dynamicInfo.domain,
@@ -266,15 +304,9 @@ export class Many2ManyTagsFieldColorEditable extends Many2ManyTagsField {
         canEditColor: true,
     };
 
-    getTagProps(record) {
-        const props = super.getTagProps(record);
-        props.onClick = (ev) => this.onBadgeClick(ev, record);
-        return props;
-    }
-
-    onBadgeClick(ev, record) {
+    onTagClick(ev, record) {
         if (!this.props.canEditColor) {
-            return;
+            return super.onTagClick(...arguments);
         }
         if (this.popover.isOpen) {
             this.popover.close();
