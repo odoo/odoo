@@ -145,7 +145,6 @@ class Pregunta(models.Model):
         :return: True si la pregunta fue creada exitosamente.
         """
 
-        # Verifica si pregunta_texto está en el contexto
         pregunta_texto = self.env.context.get('default_pregunta_texto')
         tipo = self.env.context.get('default_tipo', 'multiple_choice')
         opcion_ids = self.env.context.get('default_opcion_ids')
