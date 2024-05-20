@@ -27,7 +27,7 @@
             <t t-call="evaluaciones.diseño">
                 <t t-set="limite_registros" t-value="10"/>
                 <div class="o_survey_result mb-5">
-                    <t t-call="evaluaciones.encuestas_reporte_header" />
+                    <t t-call="evaluaciones.portada_reporte_template"/>
                     <t t-call="evaluaciones.encuestas_reporte_nom_035_body" />
                     <t t-call="evaluaciones.encuestas_reporte_inner" />
                 </div>
@@ -38,20 +38,23 @@
             <t t-call="evaluaciones.diseño">
                 <t t-set="limite_registros" t-value="10"/>
                 <div class="o_survey_result">
-                    <t t-call="evaluaciones.encuestas_reporte_header" />
+                    <t t-call="evaluaciones.portada_reporte_template"/>
                     <t t-call="evaluaciones.encuestas_reporte_clima_body" />
                     <t t-call="evaluaciones.encuestas_reporte_inner" />
                 </div>
             </t>
         </template>
 
-        <template id="encuestas_reporte_header" name="Reporte: cabecera de reporte genérico">
-            <div class="o_survey_statistics_header mt32">
-                <div class="d-flex justify-content-between">
-
+        <template id="encuestas_reporte_generico" name="Reporte: página de reporte genérico">
+            <t t-call="evaluaciones.diseño">
+                <t t-set="limite_registros" t-value="10"/>
+                <div class="o_survey_result">
+                    <t t-call="evaluaciones.portada_reporte_template"/>
+                    <t t-call="evaluaciones.encuestas_reporte_generico_inner" />
                 </div>
-            </div>
+            </t>
         </template>
+
 
         <template id="encuestas_reporte_inner" name="Reporte: contenido de reporte genérico">
             <h4 class="detalles-wrapper">
@@ -67,9 +70,9 @@
             </div>
         </template>
 
+
         <!--AQUÍ COMIENZA NOM 035-->
         <template id="encuestas_reporte_nom_035_body" name="Reporte: NOM-035">
-            <t t-call="evaluaciones.portada_nom035"/>
             <div class="container-fluid row gap-5 justify-content-between g-2">
                 <div class="d-flex flex-row justify-content-between">
                     <h1>
@@ -94,7 +97,7 @@
                     </span>
                 </div>
 
-                <div class="col survey_section w-100"  style="page-break-inside: avoid;">
+                <div class="col survey_section w-100" style="page-break-inside: avoid;">
                     <h4>Semáforo de riesgos</h4>
                     <div class="container-fluid row gap-2 align-items-center">
                         <div class="color_circle" style="background-color: #ff4747;"/>
@@ -331,7 +334,6 @@
 
         <!-- AQUÍ COMIENZA CLIMA -->
         <template id="encuestas_reporte_clima_body" name="Reporte de Clima Laboral">
-            <t t-call="evaluaciones.portada_clima"/>
             <div class="container-fluid row gap-5 justify-content-between g-2">
                 <div class="d-flex flex-row justify-content-between">
                     <h1>
@@ -503,6 +505,7 @@
         </template>
 
 
+        <!-- genericosCompo -->
 
         <template id="pregunta_resultados_texto" name="Question: text result (text_box, char_box)">
             <t t-set="respuestas" t-value="datos_pregunta['respuestas']"/>
@@ -538,6 +541,7 @@
         </template>
 
 
+        <!-- genericosCompo -->
 
         <template id="pregunta_resultados_seleccion" name="Question: choice result (simple_choice, multiple_choice)">
             <t t-set="respuestas" t-value="datos_pregunta['respuestas']"/>
@@ -607,6 +611,7 @@
             </div>
         </template>
 
+        <!-- genericosCompo -->
         <template id="question_table_pagination" name="Survey: statistics table pagination">
             <t t-set="respuestas_conteo" t-value="len(datos_pregunta['respuestas'])"/>
             <t t-if="respuestas_conteo > limite_registros">
@@ -620,6 +625,16 @@
                     <button class="btn btn-sm btn-primary mx-0 my-3 o_survey_question_answers_show_btn">Show All</button>
                 </div>
             </t>
+        </template>
+
+        <!-- Aquí comienza generico -->
+        <template id="encuestas_reporte_generico_inner" name="Reporte: contenido de reporte genérico">
+            <div class="question_detail survey_section container-fluid">
+                <t t-foreach="preguntas" t-as='datos_pregunta'>
+                    <t t-set="pregunta" t-value="datos_pregunta['pregunta']"/>
+                    <div class="o_survey_results_question_wrapper container-fluid p-5" style="page-break-inside: avoid; margin-bottom: 20px;" t-call="evaluaciones.encuestas_reporte_pregunta" />
+                </t>
+            </div>
         </template>
     </data>
 </odoo>
