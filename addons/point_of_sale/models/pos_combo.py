@@ -26,7 +26,7 @@ class PosCombo(models.Model):
     sequence = fields.Integer(copy=False)
     base_price = fields.Float(
         compute="_compute_base_price",
-        string="Product Price",
+        string="Combo Price",
         help="The value from which pro-rating of the component price is based. This is to ensure that whatever product the user chooses for a component, it will always be they same price."
     )
 
