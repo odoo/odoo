@@ -26,7 +26,7 @@ class UsuarioExterno(models.Model):
     _description = "Usuarios externos a la plataforma. Se utiliza para que puedan responer encuestas sin tener un usuario"
     _rec_name = "nombre"
 
-    nombre = fields.Char(string="Nombre", required=True)
+    nombre = fields.Char(required=True)
     email = fields.Char(string="Correo electrónico", required=True)
     puesto = fields.Char()
     nivel_jerarquico = fields.Char(string="Nivel jerárquico")

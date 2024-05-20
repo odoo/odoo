@@ -335,9 +335,9 @@ class Evaluacion(models.Model):
         """
 
         if self.porcentaje_respuestas <= 0:
-            raise exceptions.ValidationError(
+            raise exceptions.ValidationError(_(
                 "No se pueden generar filtros para una evaluación sin respuestas."
-            )
+            ))
 
         return {
             "type": "ir.actions.act_url",
@@ -357,9 +357,9 @@ class Evaluacion(models.Model):
 
         # Validar si existen respuestas
         if self.porcentaje_respuestas <= 0:
-            raise exceptions.ValidationError(
+            raise exceptions.ValidationError(_(
                 "No se pueden generar filtros para una evaluación sin respuestas."
-            )
+            ))
 
         datos_demograficos = self.generar_datos_demograficos()
 
