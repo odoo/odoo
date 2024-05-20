@@ -917,8 +917,8 @@ class StockMoveLine(models.Model):
 
     def action_put_in_pack(self):
         for picking in self.picking_id:
-            picking.action_put_in_pack()
-        return self.picking_id.action_detailed_operations()
+            picking.with_context(move_lines_to_pack_ids=self.ids).action_put_in_pack()
+        return True
 
     def _get_revert_inventory_move_values(self):
         self.ensure_one()
