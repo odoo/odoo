@@ -12,15 +12,14 @@
     <field name="res_model">objetivo</field>
     <field name="view_mode">tree,form</field>
     <field name="domain">[('usuario_ids', 'in', [uid])]</field>
-    <field name="context">{'form_view_ref': 'module_name.objetivo_form_mis_objetivos', 'create': False, 'edit': False, 'delete': False, 'duplicate': False}</field>
+    <field name="context">{'create': False}</field>
   </record>
-
 
   <record id="objetivo_tree" model="ir.ui.view">
     <field name="name">objetivo.tree</field>
     <field name="model">objetivo</field>
     <field name="arch" type="xml">
-      <tree string="Objetivos" create="true" delete="true" duplicate="true">
+      <tree string="Objetivos">
         <field name="titulo" string="Nombre"/>
         <field name="fecha_fin" />
         <field name="tipo" />
@@ -31,7 +30,6 @@
       </tree>
     </field>
   </record>
-
 
   <record id="objetivo_form" model="ir.ui.view">
     <field name="name">objetivo.form</field>
@@ -92,33 +90,6 @@
           </notebook>
         </sheet>
       </form>
-    </field>
-  </record>
-
-  <record id="objetivo_form_mis_objetivos" model="ir.ui.view">
-    <field name="name">objetivo.form.mis_objetivos</field>
-    <field name="model">objetivo</field>
-    <field name="arch" type="xml">
-        <form string="Objetivo">
-            <header>
-                <button name="toggle_edit" type="object" string="Editar" class="oe_highlight" groups="evaluaciones.evaluaciones_colaborador_cr_group_user"/>
-                <field name="estado" widget="statusbar" statusbar_visible="rojo, amarillo, verde, azul"/>
-            </header>
-            <sheet>
-                <group>
-                    <field name="titulo" readonly="1"/>
-                    <field name="descripcion" readonly="1"/>
-                    <field name="metrica" readonly="1"/>
-                    <field name="orden" readonly="1"/>
-                    <field name="peso" readonly="1"/>
-                    <field name="fecha_fin" readonly="1"/>
-                    <field name="tipo" readonly="1"/>
-                    <field name="piso_minimo" readonly="1"/>
-                    <field name="piso_maximo" readonly="1"/>
-                    <field name="usuario_ids" readonly="1" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
-                </group>
-            </sheet>
-        </form>
     </field>
   </record>
 
