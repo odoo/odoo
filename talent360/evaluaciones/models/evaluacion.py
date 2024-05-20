@@ -334,6 +334,11 @@ class Evaluacion(models.Model):
 
         """
 
+        if self.porcentaje_respuestas <= 0:
+            raise exceptions.ValidationError(
+                "No se pueden generar filtros para una evaluación sin respuestas."
+            )
+
         return {
             "type": "ir.actions.act_url",
             "url": f"/evaluacion/reporte/{self.id}",
@@ -350,6 +355,12 @@ class Evaluacion(models.Model):
         :return: una acción de redirección al modal creación de filtros
         """
 
+        # Validar si existen respuestas
+        if self.porcentaje_respuestas <= 0:
+            raise exceptions.ValidationError(
+                "No se pueden generar filtros para una evaluación sin respuestas."
+            )
+
         datos_demograficos = self.generar_datos_demograficos()
 
         categorias = [
@@ -359,30 +370,34 @@ class Evaluacion(models.Model):
             ("Género", "generos", "genero"),
         ]
 
-        filtros = [
-            {
-                "categoria": categoria,
-                "categoria_interna": nombre_individual,
-                "filtro_seleccion_ids": [
-                    (0, 0, {"texto": dep["nombre"], "categoria": categoria})
+        filtros_ids = []
+
+        for categoria, nombre_grupal, nombre_individual in categorias:
+            filtro_id = self.env["filtro.wizard"].create(
+                {
+                    "categoria": categoria,
+                    "categoria_interna": nombre_individual,
+                }
+            )
+            filtros_ids.append(filtro_id.id)
+
+            self.env["filtro.seleccion.wizard"].create(
+                [
+                    {
+                        "texto": dep["nombre"],
+                        "categoria": categoria,
+                        "filtro_original_id": filtro_id.id,
+                    }
                     for dep in datos_demograficos[nombre_grupal]
-                ],
-            }
-            for categoria, nombre_grupal, nombre_individual in categorias
-        ]
-
-        filtros_ids = self.env["filtro.wizard"].create(filtros)
-
-        # Se añade filtro?original id a slecciones
-        for filtro in filtros_ids:
-            filtro.filtro_seleccion_ids.write({"filtro_original_id": filtro.id})
+                ]
+            )
 
         filtros_wizard = self.env["crear.filtros.wizard"].create(
-            {"filtros_ids": [(6, 0, filtros_ids.ids)]}
+            {"filtros_ids": [(6, 0, filtros_ids)]}
         )
 
         return {
-            "name": "Crear filtros",
+            "name": "Filtrar Reporte",
             "type": "ir.actions.act_window",
             "res_model": "crear.filtros.wizard",
             "view_mode": "form",

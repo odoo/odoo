@@ -37,11 +37,11 @@ class Filtro(models.TransientModel):
     _name = "filtro.wizard"
     _rec_name = "categoria"
 
-    categoria = fields.Char()
+    categoria = fields.Char("Filtro")
     categoria_interna = fields.Char()
 
     filtro_seleccion_ids = fields.One2many(
-        "filtro.seleccion.wizard", "filtro_id", string="Selecciones"
+        "filtro.seleccion.wizard", "filtro_id", string="Valores"
     )
 
     crear_filtros_wizard_id = fields.Many2one("crear.filtros.wizard")
