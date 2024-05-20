@@ -23,7 +23,7 @@ test("check content confirmation dialog", async () => {
     expect(".modal-body").toHaveText("Some content");
 });
 
-test("pressing escape to close the dialog", async () => {
+test("Without dismiss callback: pressing escape to close the dialog", async () => {
     const env = await makeDialogMockEnv();
     await mountWithCleanup(ConfirmationDialog, {
         env,
@@ -33,7 +33,9 @@ test("pressing escape to close the dialog", async () => {
             close: () => {
                 expect.step("Close action");
             },
-            confirm: () => {},
+            confirm: () => {
+                throw new Error("should not be called");
+            },
             cancel: () => {
                 expect.step("Cancel action");
             },
@@ -43,6 +45,80 @@ test("pressing escape to close the dialog", async () => {
     press("escape");
     await tick();
     expect(["Cancel action", "Close action"]).toVerifySteps();
+});
+
+
+test("With dismiss callback: pressing escape to close the dialog", async () => {
+    const env = await makeDialogMockEnv();
+    await mountWithCleanup(ConfirmationDialog, {
+        env,
+        props: {
+            body: "Some content",
+            title: "Confirmation",
+            close: () => {
+                expect.step("Close action");
+            },
+            confirm: () => {
+                throw new Error("should not be called");
+            },
+            cancel: () => {
+                throw new Error("should not be called");
+            },
+            dismiss: () => {
+                expect.step("Dismiss action");
+            },
+        },
+    });
+    press("escape");
+    await tick();
+    expect(["Dismiss action", "Close action"]).toVerifySteps();
+});
+
+test("Without dismiss callback: clicking on 'X' to close the dialog", async () => {
+    const env = await makeDialogMockEnv();
+    await mountWithCleanup(ConfirmationDialog, {
+        env,
+        props: {
+            body: "Some content",
+            title: "Confirmation",
+            close: () => {
+                expect.step("Close action");
+            },
+            confirm: () => {
+                throw new Error("should not be called");
+            },
+            cancel: () => {
+                expect.step("Cancel action");
+            },
+        },
+    });
+    await contains(".modal-header .btn-close").click();
+    expect(["Cancel action", "Close action"]).toVerifySteps();
+});
+
+test("With dismiss callback: clicking on 'X' to close the dialog", async () => {
+    const env = await makeDialogMockEnv();
+    await mountWithCleanup(ConfirmationDialog, {
+        env,
+        props: {
+            body: "Some content",
+            title: "Confirmation",
+            close: () => {
+                expect.step("Close action");
+            },
+            confirm: () => {
+                throw new Error("should not be called");
+            },
+            cancel: () => {
+                throw new Error("should not be called");
+            },
+            dismiss: () => {
+                expect.step("Dismiss action");
+            },
+        },
+    });
+    await contains(".modal-header .btn-close").click();
+    expect(["Dismiss action", "Close action"]).toVerifySteps();
 });
 
 test("clicking on 'Ok'", async () => {
