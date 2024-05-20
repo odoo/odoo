@@ -45,7 +45,7 @@ class EvaluacionesController(http.Controller):
             parametros.update(evaluacion.generar_datos_demograficos(filtros))
 
         if evaluacion.tipo == "NOM_035":
-            parametros.update(evaluacion.generar_datos_reporte_NOM_035_action())
+            parametros.update(evaluacion.generar_datos_reporte_NOM_035_action(filtros))
             return request.render("evaluaciones.encuestas_reporte_nom_035", parametros)
 
         elif evaluacion.tipo == "CLIMA":

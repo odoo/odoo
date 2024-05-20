@@ -451,7 +451,7 @@ class Evaluacion(models.Model):
 
         return parametros
 
-    def generar_datos_reporte_NOM_035_action(self):
+    def generar_datos_reporte_NOM_035_action(self, filtros=None):
         """
         Genera los datos necesarios para el reporte genérico de la evaluación.
 
@@ -500,6 +500,9 @@ class Evaluacion(models.Model):
             )
 
             for respuesta in respuesta_ids:
+                if filtros and not self.validar_filtro(filtros, respuesta):
+                    continue
+
                 valor_respuesta = respuesta.valor_respuesta
                 valor_pregunta += valor_respuesta
                 final += valor_respuesta
