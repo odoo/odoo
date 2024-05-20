@@ -32,7 +32,7 @@ publicWidget.registry.websiteSlidesUpload = publicWidget.Widget.extend({
         const dataset = element.dataset;
         this.call("dialog", "add", SlideUploadDialog, {
             categoryId: dataset.categoryId,
-            channelId: dataset.channelId,
+            channelId: parseInt(dataset.channelId),
             canPublish: dataset.canPublish === "True",
             canUpload: dataset.canUpload === "True",
             modulesToInstall: dataset.modulesToInstall || [],

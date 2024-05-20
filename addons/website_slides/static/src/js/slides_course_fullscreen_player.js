@@ -53,7 +53,7 @@
         _loadYoutubeAPI: function () {
             var self = this;
             var prom = new Promise(function (resolve, reject) {
-                if (document.querySelector('script[src="' + self.youtubeUrl + '"]').length === 0) {
+                if (!document.querySelector('script[src="' + self.youtubeUrl + '"]')) {
                     const youtubeElement = document.createElement("script");
                     youtubeElement.src = self.youtubeUrl;
                     document.head.append(youtubeElement);
@@ -307,7 +307,7 @@
          * @param {*} ev
          */
         _onClickMiniQuiz: function (ev){
-            const slideID = parseInt(ev.currentTarget.dataset.slide_id);
+            const slideID = parseInt(ev.currentTarget.dataset.slideId);
             this.set('slideEntry',{
                 slideID: slideID,
                 isMiniQuiz: true
@@ -324,7 +324,7 @@
             ev.stopPropagation();
             const elem = ev.currentTarget.closest(".o_wslides_fs_sidebar_list_item");
             if (elem.dataset.canAccess === "True") {
-                const isQuiz = elem.dataset.isQuiz;
+                const isQuiz = elem.dataset.isQuiz === "1";
                 const slideID = parseInt(elem.dataset.id);
                 const slide = findSlide(this.slideEntries, { id: slideID, isQuiz: isQuiz });
                 this.set("slideEntry", slide);
@@ -340,7 +340,7 @@
             var slide = this.get('slideEntry');
             this.el.querySelector(".o_wslides_fs_sidebar_list_item.active").classList.remove("active");
             if (slide) {
-                const selector = `.o_wslides_fs_sidebar_list_item[data-id=${slide.id}][data-is-quiz!="1"]`;
+                const selector = `.o_wslides_fs_sidebar_list_item[data-id="${slide.id}"]`;
                 this.el.querySelector(selector).classList.add("active");
             }
 
@@ -556,7 +556,7 @@
                 if (slide.category === 'quiz' || slide.isQuiz) {
                     content.classList.add('bg-white');
                     var QuizWidget = new Quiz(this, slide, this.channel);
-                    return await content.appendChild(QuizWidget);
+                    return await QuizWidget.appendTo(content);
                 }
 
                 // render slide content
@@ -565,7 +565,7 @@
                     content.appendChild(renderToElement('website.slides.fullscreen.content', {widget: this}));
                 } else if (slide.category === 'video' && slide.videoSourceType === 'youtube') {
                     this.videoPlayer = new VideoPlayerYouTube(this, slide);
-                    return await content.append(this.videoPlayer);
+                    return await this.videoPlayer.appendTo(content)
                 } else if (slide.category === 'video' && slide.videoSourceType === 'vimeo') {
                     this.videoPlayer = new VideoPlayerVimeo(this, slide);
                     return await content.append(this.videoPlayer);
@@ -579,7 +579,7 @@
                     wpContainer.innerHTML = slide.htmlContent;
                     content.append(wpContainer);
                     this.trigger_up('widgets_start_request', {
-                        target: content,
+                        $target: $(content),
                     });
                     this.websiteAnimateWidget.attachTo(wpContainer);
                 }

@@ -275,7 +275,7 @@
                             answer.querySelector("label input").checked = false;
                         }
                     } else {
-                        answer.classList.remove("list-group-item-danger list-group-item-success");
+                        answer.classList.remove("list-group-item-danger", "list-group-item-success");
                         answer.querySelector("i.fa-circle").classList.remove("d-none");
                     }
                 });
@@ -317,10 +317,12 @@
          */
         _renderValidationInfo: function () {
             const validationElem = this.el.querySelector(".o_wslides_js_lesson_quiz_validation");
-            validationElem.innerHTML = "";
-            validationElem.appendChild(
-            renderToElement("slide.slide.quiz.validation", { widget: this })
-            );
+            if(validationElem){
+                validationElem.innerHTML = "";
+                validationElem.appendChild(
+                renderToElement("slide.slide.quiz.validation", { widget: this })
+                );
+            }
         },
         /*
         * Toggle additional resource info box
@@ -341,7 +343,7 @@
          */
         _renderJoinWidget: function () {
             var widgetLocation = this.el.querySelector(".o_wslides_join_course_widget");
-            if (widgetLocation.length !== 0) {
+            if (widgetLocation) {
                 var courseJoinWidget = new CourseJoinWidget(this, {
                     isQuiz: true,
                     channel: this.channel,
@@ -367,8 +369,7 @@
          */
         _getQuizAnswers: function () {
             return [...this.el.querySelectorAll("input[type=radio]:checked")]
-            .map((element) => parseInt(element.value))
-            .get();
+            .map((element) => parseInt(element.value));
         },
 
         /**
@@ -530,8 +531,9 @@
          * @private
          */
         _onCreateQuizClick: function () {
-            const elem = this.querySelector(".o_wslides_js_lesson_quiz_new_question");
-            this.el.querySelector(".o_wslides_js_quiz_add").classList.add("d-none");
+            const elem = this.el.querySelector(".o_wslides_js_lesson_quiz_new_question");
+            this.el.querySelector(".o_wslides_js_quiz_add_quiz").classList.add("d-none");
+            this.el.querySelector(".o_wslides_js_quiz_add_question").classList.add("d-none");
             new QuestionFormWidget(this, {
                 slideId: this.slide.id,
                 sequence: this.quiz.questionsCount + 1
@@ -592,11 +594,11 @@
          * @private
          */
         _displayCreatedQuestion: function (event) {
-            const lastQuestion = this.el.querySelector('.o_wslides_js_lesson_quiz_question:last-child');
-            if (lastQuestion.length !== 0) {
-                lastQuestion.after(event.data.newQuestionRenderedTemplate);
+            const lastQuestion = this.el.querySelectorAll('.o_wslides_js_lesson_quiz_question');
+            if (lastQuestion.length >= 1) {
+                lastQuestion[lastQuestion.length-1].insertAdjacentHTML('afterend',event.data.newQuestionRenderedTemplate);
             } else {
-                this.el.prepend(event.data.newQuestionRenderedTemplate);
+                this.el.querySelector('.o_wslides_js_lesson_quiz_new_question').insertAdjacentHTML('beforebegin',event.data.newQuestionRenderedTemplate);
             }
             this.quiz.questionsCount++;
             event.data.questionFormWidget.destroy();
@@ -677,8 +679,8 @@
             const ret = this._super(...arguments);
 
             const quiz = this.el.querySelector(".o_wslides_js_lesson_quiz");
-            if (quiz.length) {
-                const slideData = quiz.dataset;
+            if (quiz) {
+                const slideData = Object.assign({}, quiz.dataset);
                 const channelData = this._extractChannelData(slideData);
                 slideData.quizData = {
                     questions: this._extractQuestionsAndAnswers(),
@@ -755,7 +757,7 @@
             // The quiz has been submitted in a documentation and in non fullscreen view,
             // should update the button "Mark Done" to "Mark To Do"
             const doneButton = this.el.querySelector(".o_wslides_done_button");
-            if (doneButton.length && completed) {
+            if (doneButton && completed) {
                 doneButton.classList.remove("o_wslides_done_button", "btn-primary", "text-white");
                 doneButton.classList.add("o_wslides_undone_button", "btn-light");
                 doneButton.textContent = _t("Mark To Do");

@@ -128,7 +128,7 @@ var CourseJoinWidget = publicWidget.Widget.extend({
     joinChannel: function (channelId) {
         var self = this;
         rpc('/slides/channel/join', {
-            channel_id: channelId,
+            channel_id: parseInt(channelId),
         }).then(function (data) {
             if (!data.error) {
                 self.afterJoin();
@@ -173,8 +173,8 @@ publicWidget.registry.websiteSlidesCourseJoin = publicWidget.Widget.extend({
             isMemberOrInvited: data.isMemberOrInvited,
             isPartnerWithoutUser: data.isPartnerWithoutUser
         };
-        [...this.el.querySelectorAll(".o_wslides_js_course_join")].forEach(() => {
-            proms.push(new CourseJoinWidget(self, options).attachTo(this));
+        document.querySelectorAll(".o_wslides_js_course_join").forEach((el) => {
+            proms.push(new CourseJoinWidget(self, options).attachTo(el));
         });
         return Promise.all(proms);
     },

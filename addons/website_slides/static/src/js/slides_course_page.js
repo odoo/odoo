@@ -43,13 +43,13 @@ export const SlideCoursePage = publicWidget.Widget.extend({
             `.o_wslides_sidebar_done_button[data-id="${slide.id}"]`
         );
 
-        if (!button.length) {
+        if (!button) {
             return;
         }
 
         const newButton = renderToElement('website.slides.sidebar.done.button', {
             slideId: slide.id,
-            uncompletedIcon: button.datset.uncompletedIcon ?? "fa-circle-thin",
+            uncompletedIcon: button.dataset.uncompletedIcon ?? "fa-circle-thin" ,
             slideCompleted: completed ? 1 : 0,
             canSelfMarkUncompleted: slide.canSelfMarkUncompleted,
             canSelfMarkCompleted: slide.canSelfMarkCompleted,
@@ -67,8 +67,8 @@ export const SlideCoursePage = publicWidget.Widget.extend({
     updateProgressbar: function (channelCompletion) {
         const completion = Math.min(100, channelCompletion);
 
-        const completed = this.el.querySelector(".o_wslides_channel_completion_completed");
-        const progressbar = this.el.querySelector(".o_wslides_channel_completion_progressbar");
+        const completed = document.querySelector(".o_wslides_channel_completion_completed");
+        const progressbar = document.querySelector(".o_wslides_channel_completion_progressbar");
 
         if (completion < 100) {
             // Hide the "Completed" text and show the progress bar

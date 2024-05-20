@@ -106,7 +106,7 @@ var QuestionFormWidget = publicWidget.Widget.extend({
      * @private
      */
     _removeAnswerLine: function (ev) {
-        if (this.el.querySelector(".o_wslides_js_quiz_answer").length > 1) {
+        if (this.el.querySelector(".o_wslides_js_quiz_answer")) {
             ev.currentTarget.closest(".o_wslides_js_quiz_answer").remove();
         }
     },
@@ -217,14 +217,14 @@ var QuestionFormWidget = publicWidget.Widget.extend({
     _serializeForm: function (form) {
         var answers = [];
         var sequence = 1;
-        [...form.querySelectorAll(".o_wslides_js_quiz_answer")].forEach(() => {
-            const value = this.el.querySelector(".o_wslides_js_quiz_answer_value").value;
+        [...form.querySelectorAll(".o_wslides_js_quiz_answer")].forEach((el) => {
+            const value = el.querySelector(".o_wslides_js_quiz_answer_value").value;
             if (value.trim() !== "") {
                 var answer = {
                     'sequence': sequence++,
                     'text_value': value,
-                    'is_correct': this.el.querySelector("input[type=radio]").checked === true,
-                    'comment': this.el
+                    'is_correct': el.querySelector("input[type=radio]").checked === true,
+                    'comment': el
                         .querySelector(".o_wslides_js_quiz_answer_comment > input[type=text]")
                         .value.trim(),
                 };
