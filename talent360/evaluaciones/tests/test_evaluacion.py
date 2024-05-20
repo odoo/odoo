@@ -1,6 +1,7 @@
 from odoo.tests.common import TransactionCase
 from datetime import datetime
 
+
 class test_evaluacion(TransactionCase):
     """
     Caso de prueba para evaluar la funcionalidades relacionada con evaluaciones en Odoo.
@@ -24,7 +25,7 @@ class test_evaluacion(TransactionCase):
             {
                 "nombre": nombre,
                 "estado": estado,
-                "fecha_inicio": datetime.today() ,
+                "fecha_inicio": datetime.today(),
                 "fecha_final": datetime.today(),
             }
         )

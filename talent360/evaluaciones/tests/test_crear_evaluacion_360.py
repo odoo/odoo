@@ -15,7 +15,7 @@ class TestCrearEvaluacion360(TransactionCase):
                 "tipo": "competencia",
                 "tipo_competencia": "90",
                 "estado": "borrador",
-                "fecha_inicio": datetime.today() ,
+                "fecha_inicio": datetime.today(),
                 "fecha_final": datetime.today(),
             }
         )

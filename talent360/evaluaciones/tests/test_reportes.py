@@ -52,7 +52,7 @@ class TestReportes(TransactionCase):
                 "nombre": "Evaluacion de prueba",
                 "estado": "borrador",
                 "tipo": "CLIMA",
-                "fecha_inicio": datetime.today() ,
+                "fecha_inicio": datetime.today(),
                 "fecha_final": datetime.today(),
             }
         )
@@ -477,7 +477,6 @@ class TestReportes(TransactionCase):
             ],
         )
 
-
     def test_validar_filtro(self):
         """
         Prueba la validación de un filtro.
@@ -492,17 +491,31 @@ class TestReportes(TransactionCase):
             "generacion": "Millennials",
         }
 
-        filtro = self.evaluacion.validar_filtro({"departamento": ["Test Department"]}, datos_demograficos=datos_demograficos)
+        filtro = self.evaluacion.validar_filtro(
+            {"departamento": ["Test Department"]}, datos_demograficos=datos_demograficos
+        )
         self.assertEqual(filtro, True)
 
-        filtro = self.evaluacion.validar_filtro({"departamento": ["Test Department"], "puesto": ["Test Employee"]}, datos_demograficos=datos_demograficos)
+        filtro = self.evaluacion.validar_filtro(
+            {"departamento": ["Test Department"], "puesto": ["Test Employee"]},
+            datos_demograficos=datos_demograficos,
+        )
         self.assertEqual(filtro, True)
 
-        filtro = self.evaluacion.validar_filtro({"departamento": ["Test Department"], "puesto": ["Test Employee"]}, datos_demograficos=datos_demograficos)
+        filtro = self.evaluacion.validar_filtro(
+            {"departamento": ["Test Department"], "puesto": ["Test Employee"]},
+            datos_demograficos=datos_demograficos,
+        )
         self.assertEqual(filtro, True)
 
-        filtro = self.evaluacion.validar_filtro({"departamento": ["Test Department"], "puesto": ["No valido"]}, datos_demograficos=datos_demograficos)
+        filtro = self.evaluacion.validar_filtro(
+            {"departamento": ["Test Department"], "puesto": ["No valido"]},
+            datos_demograficos=datos_demograficos,
+        )
         self.assertEqual(filtro, False)
 
-        filtro = self.evaluacion.validar_filtro({"departamento": ["Test Department", "Otro departamento"]}, datos_demograficos=datos_demograficos)
+        filtro = self.evaluacion.validar_filtro(
+            {"departamento": ["Test Department", "Otro departamento"]},
+            datos_demograficos=datos_demograficos,
+        )
         self.assertEqual(filtro, True)
