@@ -339,9 +339,11 @@
         _onChangeCurrentSlide: function () {
             var slide = this.get('slideEntry');
             this.el.querySelector(".o_wslides_fs_sidebar_list_item.active").classList.remove("active");
-            const selector = `.o_wslides_fs_sidebar_list_item[data-id=${slide.id}][data-is-quiz!="1"]`;
+            if (slide) {
+                const selector = `.o_wslides_fs_sidebar_list_item[data-id=${slide.id}][data-is-quiz!="1"]`;
+                this.el.querySelector(selector).classList.add("active");
+            }
 
-            this.el.querySelector(selector).classList.add("active");
             this.trigger_up('change_slide', this.get('slideEntry'));
         },
 
@@ -454,7 +456,7 @@
         */
         _fetchSlideContent: function (){
             var slide = this.get('slide');
-            if (slide.category === 'article' && !slide.isQuiz) {
+            if (slide?.category === 'article' && !slide?.isQuiz) {
                 return this._fetchHtmlContent();
             }
             return Promise.resolve();
@@ -518,11 +520,11 @@
          */
         _pushUrlState: function (){
             var urlParts = window.location.pathname.split('/');
-            urlParts[urlParts.length-1] = this.get('slide').slug;
+            urlParts[urlParts.length-1] = this.get('slide')?.slug;
             var url =  urlParts.join('/');
             this.el.querySelector(".o_wslides_fs_exit_fullscreen").setAttribute("href", url);
             var params = {'fullscreen': 1 };
-            if (this.get('slide').isQuiz){
+            if (this.get('slide')?.isQuiz){
                 params.quiz = 1;
             }
             const fullscreenUrl = `${url}?${new URLSearchParams(params).toString()}`;
