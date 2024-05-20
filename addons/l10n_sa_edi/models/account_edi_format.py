@@ -439,7 +439,7 @@ class AccountEdiFormat(models.Model):
             errors.append(_("- Please, make sure the invoice date is set to either the same as or before Today."))
         if invoice.move_type in ('in_refund', 'out_refund') and not invoice._l10n_sa_check_refund_reason():
             errors.append(
-                _("- Please, make sure both the Reversed Entry and the Reversal Reason are specified when confirming a Credit/Debit note"))
+                _("- Please, make sure either the Reversed Entry or the Reversal Reason are specified when confirming a Credit/Debit note"))
         return errors
 
     def _needs_web_services(self):
