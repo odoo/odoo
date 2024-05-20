@@ -476,3 +476,33 @@ class TestReportes(TransactionCase):
                 {"nombre": "3", "valor": 4},
             ],
         )
+
+
+    def test_validar_filtro(self):
+        """
+        Prueba la validación de un filtro.
+
+        Este método verifica que el filtro sea válido.
+        """
+
+        datos_demograficos = {
+            "departamento": "Test Department",
+            "puesto": "Test Employee",
+            "genero": "Masculino",
+            "generacion": "Millennials",
+        }
+
+        filtro = self.evaluacion.validar_filtro({"departamento": ["Test Department"]}, datos_demograficos=datos_demograficos)
+        self.assertEqual(filtro, True)
+
+        filtro = self.evaluacion.validar_filtro({"departamento": ["Test Department"], "puesto": ["Test Employee"]}, datos_demograficos=datos_demograficos)
+        self.assertEqual(filtro, True)
+
+        filtro = self.evaluacion.validar_filtro({"departamento": ["Test Department"], "puesto": ["Test Employee"]}, datos_demograficos=datos_demograficos)
+        self.assertEqual(filtro, True)
+
+        filtro = self.evaluacion.validar_filtro({"departamento": ["Test Department"], "puesto": ["No valido"]}, datos_demograficos=datos_demograficos)
+        self.assertEqual(filtro, False)
+
+        filtro = self.evaluacion.validar_filtro({"departamento": ["Test Department", "Otro departamento"]}, datos_demograficos=datos_demograficos)
+        self.assertEqual(filtro, True)
