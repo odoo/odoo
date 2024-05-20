@@ -34,6 +34,7 @@ class Evaluacion(models.Model):
             ("CLIMA", "Clima Organizacional"),
             ("NOM_035", "NOM 035"),
             ("competencia", "Competencia"),
+            ("generico", "Genérico"),
         ],
         required=True,
         default="competencia",
@@ -335,9 +336,9 @@ class Evaluacion(models.Model):
         """
 
         if self.porcentaje_respuestas <= 0:
-            raise exceptions.ValidationError(_(
-                "No se puede generar un reporte para una evaluación sin respuestas."
-            ))
+            raise exceptions.ValidationError(
+                _("No se puede generar un reporte para una evaluación sin respuestas.")
+            )
 
         return {
             "type": "ir.actions.act_url",
@@ -357,9 +358,9 @@ class Evaluacion(models.Model):
 
         # Validar si existen respuestas
         if self.porcentaje_respuestas <= 0:
-            raise exceptions.ValidationError(_(
-                "No se puede generar un reporte para una evaluación sin respuestas."
-            ))
+            raise exceptions.ValidationError(
+                _("No se puede generar un reporte para una evaluación sin respuestas.")
+            )
 
         datos_demograficos = self.generar_datos_demograficos()
 

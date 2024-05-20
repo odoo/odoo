@@ -35,23 +35,18 @@ class EvaluacionesController(http.Controller):
                 categoria: valores for categoria, valores in filtros.items() if valores
             }
 
-        parametros = {
-            "preguntas": evaluacion.generar_datos_reporte_generico_action(filtros)[
-                "preguntas"
-            ]
-        }
+        parametros = evaluacion.generar_datos_reporte_generico_action(filtros)
 
         if evaluacion.incluir_demograficos:
             parametros.update(evaluacion.generar_datos_demograficos(filtros))
-
         if evaluacion.tipo == "NOM_035":
             parametros.update(evaluacion.generar_datos_reporte_NOM_035_action(filtros))
             return request.render("evaluaciones.encuestas_reporte_nom_035", parametros)
-
         elif evaluacion.tipo == "CLIMA":
             parametros.update(evaluacion.generar_datos_reporte_clima_action(filtros))
             return request.render("evaluaciones.encuestas_reporte_clima", parametros)
-
+        elif evaluacion.tipo == "generico":
+            return request.render("evaluaciones.encuestas_reporte_generico", parametros)
         else:
             raise ValueError(_("Tipo de evaluación no soportado para reporte."))
 
