@@ -22,6 +22,7 @@
             </xpath>
         </template>
 
+        <!-- Definición de reporte genérico -->
         <template id="encuestas_reporte_generico" name="Reporte: página de reporte genérico">
             <t t-call="evaluaciones.diseño">
                 <t t-set="limite_registros" t-value="10"/>
@@ -32,6 +33,7 @@
             </t>
         </template>
 
+        <!-- Componente wrapper de preguntas reporte -->
         <template id="encuestas_reporte_inner" name="Reporte: contenido de reporte genérico">
             <h4 class="detalles-wrapper">
                 <button class="btn btn-link ps-0 pt-2 d-print-none btn-detalles collapsed" type="button" data-bs-toggle="collapse" t-attf-data-bs-target=".question_detail">
@@ -46,6 +48,7 @@
             </div>
         </template>
 
+        <!-- Componente de respuesta de pregunta en texto -->
         <template id="pregunta_resultados_texto" name="Question: text result (text_box, char_box)">
             <t t-set="respuestas" t-value="datos_pregunta['respuestas']"/>
             <t t-set="first_page_records_count" t-value="len(respuestas) if len(respuestas) &lt; limite_registros else limite_registros"/>
@@ -79,6 +82,7 @@
             <t t-call="evaluaciones.question_table_pagination"/>
         </template>
 
+        <!-- Componente de respuesta de pregunta en selección -->
         <template id="pregunta_resultados_seleccion" name="Question: choice result (simple_choice, multiple_choice)">
             <t t-set="respuestas" t-value="datos_pregunta['respuestas']"/>
             <t t-set="respuestas_tabuladas" t-value="datos_pregunta['respuestas_tabuladas']"/>
@@ -147,6 +151,7 @@
             </div>
         </template>
 
+        <!-- Componente de respuesta de pregunta en selección múltiple -->
         <template id="question_table_pagination" name="Survey: statistics table pagination">
             <t t-set="respuestas_conteo" t-value="len(datos_pregunta['respuestas'])"/>
             <t t-if="respuestas_conteo > limite_registros">
@@ -162,6 +167,7 @@
             </t>
         </template>
 
+        <!-- Componente de respuesta de preguntas  -->
         <template id="encuestas_reporte_generico_inner" name="Reporte: contenido de reporte genérico">
             <div class="question_detail survey_section container-fluid">
                 <t t-foreach="preguntas" t-as='datos_pregunta'>
