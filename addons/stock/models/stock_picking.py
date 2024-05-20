@@ -1693,7 +1693,7 @@ class Picking(models.Model):
                 return action
         return package_id
 
-    def _package_move_lines(self, batch_pack=False):
+    def _package_move_lines(self, batch_pack=False, move_lines=False):
         # in theory, the picking_type should always be the same (i.e. for batch transfers),
         # but customizations may bypass it and cause unexpected behavior so we avoid allowing those situations
         if len(self.picking_type_id) > 1:
@@ -1703,15 +1703,17 @@ class Picking(models.Model):
                 float_compare(ml.quantity, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0 and
                 not ml.result_package_id
         )
+        if move_lines:
+            quantity_move_line_ids = quantity_move_line_ids & move_lines
         move_line_ids = quantity_move_line_ids.filtered(lambda ml: ml.picked)
         if not move_line_ids:
             move_line_ids = quantity_move_line_ids
         return move_line_ids
 
-    def action_put_in_pack(self):
+    def action_put_in_pack(self, move_lines=False):
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
-            move_line_ids = self._package_move_lines()
+            move_line_ids = self._package_move_lines(move_lines=move_lines)
             if move_line_ids:
                 res = self._pre_put_in_pack_hook(move_line_ids)
                 if not res:
