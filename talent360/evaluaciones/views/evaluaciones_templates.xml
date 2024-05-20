@@ -23,12 +23,12 @@
         </template>
 
 
-        <template id="encuestas_reporte" name="Reporte: página de reporte genérico">
+        <template id="encuestas_reporte_nom_035" name="Reporte: página de reporte genérico">
             <t t-call="evaluaciones.diseño">
                 <t t-set="limite_registros" t-value="10"/>
                 <div class="o_survey_result mb-5">
                     <t t-call="evaluaciones.encuestas_reporte_header" />
-                    <t t-call="evaluaciones.encuestas_reporte_nom_035" />
+                    <t t-call="evaluaciones.encuestas_reporte_nom_035_body" />
                     <t t-call="evaluaciones.encuestas_reporte_inner" />
                 </div>
             </t>
@@ -39,7 +39,7 @@
                 <t t-set="limite_registros" t-value="10"/>
                 <div class="o_survey_result">
                     <t t-call="evaluaciones.encuestas_reporte_header" />
-                    <t t-call="evaluaciones.encuesta_reporte_clima" />
+                    <t t-call="evaluaciones.encuestas_reporte_clima_body" />
                     <t t-call="evaluaciones.encuestas_reporte_inner" />
                 </div>
             </t>
@@ -68,7 +68,7 @@
         </template>
 
         <!--AQUÍ COMIENZA NOM 035-->
-        <template id="encuestas_reporte_nom_035" name="Reporte: NOM-035">
+        <template id="encuestas_reporte_nom_035_body" name="Reporte: NOM-035">
             <t t-call="evaluaciones.portada_nom035"/>
             <div class="container-fluid row gap-5 justify-content-between g-2">
                 <div class="d-flex flex-row justify-content-between">
@@ -330,7 +330,7 @@
         </template>
 
         <!-- AQUÍ COMIENZA CLIMA -->
-        <template id="encuesta_reporte_clima" name="Reporte de Clima Laboral">
+        <template id="encuestas_reporte_clima_body" name="Reporte de Clima Laboral">
             <t t-call="evaluaciones.portada_clima"/>
             <div class="container-fluid row gap-5 justify-content-between g-2">
                 <div class="d-flex flex-row justify-content-between">
@@ -466,7 +466,7 @@
             </div>
 
 
-            <t t-foreach="evaluacion.generar_datos_reporte_clima_action()['categorias']" t-as="categoria">
+            <t t-foreach="categorias" t-as="categoria">
                 <div class="survey_section container-fluid d-flex align-items-center justify-content-center" style="page-break-inside: avoid; height: 90vh;">
                     <t t-if="'puntuacion' in categoria">
                         <div class="survey_page container-fluid d-flex flex-column align-items-center" style="font-size: 0.9em;">
