@@ -644,6 +644,7 @@ class HrExpense(models.Model):
             expense.currency_id.is_zero(expense.total_amount_currency)
             or expense.company_currency_id.is_zero(expense.total_amount)
             or not float_round(expense.quantity, precision_rounding=expense.product_uom_id.rounding)
+            if expense.product_uom_id else None
         ))
 
         if any(expense.state != 'draft' or expense.sheet_id for expense in expenses_with_amount):
