@@ -808,3 +808,36 @@ test("attr that are default [] should be isolated per record", async () => {
     expect(p1.names).toEqual(["John"]);
     expect(p2.names).toEqual([]);
 });
+
+test("record.toData() is JSON stringified and can be reinserted as record", async () => {
+    // If the default value is stored and reused for all records,
+    // this could lead to mistakenly sharing the default value among records
+    (class Person extends Record {
+        static id = "id";
+        id;
+        names = Record.attr([]);
+        messages = Record.many("Message");
+    }).register(localRegistry);
+    (class Message extends Record {
+        static id = "body";
+        body = Record.attr("");
+    }).register(localRegistry);
+    const store = await start();
+    const p = store.Person.insert({
+        id: 1,
+        names: ["John", "Marc"],
+        messages: [{ body: "1" }, { body: "2" }],
+    });
+    expect(p.names).toEqual(["John", "Marc"]);
+    expect(p.messages.map((msg) => msg.body)).toEqual(["1", "2"]);
+    expect(toRaw(store.Person.records[p.localId])).toBe(toRaw(p));
+    // export data, delete, then insert back
+    const data = JSON.parse(JSON.stringify(p.toData()));
+    p.delete();
+    expect(toRaw(store.Person.records[p.localId])).toBe(undefined);
+    const p2 = store.Person.insert(data);
+    // Same assertions as before
+    expect(p2.names).toEqual(["John", "Marc"]);
+    expect(p2.messages.map((msg) => msg.body)).toEqual(["1", "2"]);
+    expect(toRaw(store.Person.records[p2.localId])).toBe(toRaw(p2));
+});
