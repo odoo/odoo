@@ -1,5 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import models, fields, api
 from odoo.addons.l10n_gr_edi.models.classification_data import (
     CLASSIFICATION_MAP, CLASSIFICATION_CATEGORY_SELECTION, CLASSIFICATION_TYPE_SELECTION, CLASSIFICATION_VAT_SELECTION,
@@ -50,7 +48,6 @@ class AccountMoveLine(models.Model):
                                self.l10n_gr_edi_available_cls_category.split(',') or ())
 
         # Try to get preferred classification from move's fiscal position first
-        print(category_domain)
         preferred_classification = self.env['l10n_gr_edi.preferred_classification'].search([
             ('fiscal_position_id', '=', self.move_id.fiscal_position_id.id),
             ('fiscal_position_id', '!=', False),

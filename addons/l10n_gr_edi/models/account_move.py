@@ -1,5 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import models, fields, _, api
 from odoo.addons.l10n_gr_edi.models.classification_data import (
     CLASSIFICATION_CATEGORY_EXPENSE, INVOICE_TYPES_SELECTION, INVOICE_TYPES_HAVE_INCOME, INVOICE_TYPES_HAVE_EXPENSE,
@@ -51,7 +49,9 @@ class AccountMove(models.Model):
 
     @api.depends('l10n_gr_edi_state')
     def _compute_show_reset_to_draft_button(self):
+        # EXTENDS 'account'
         """ Prevent user from resetting the move to draft if it's already sent to MyDATA """
+        super()._compute_show_reset_to_draft_button()
         for move in self:
             if move.l10n_gr_edi_state == 'sent':
                 move.show_reset_to_draft_button = False
@@ -79,7 +79,6 @@ class AccountMove(models.Model):
 
     @api.depends('state')
     def _compute_l10n_gr_edi_warnings(self):
-        print('_compute_l10n_gr_edi_warnings')
         for move in self:
             if move.state == 'posted':
                 warnings = move.l10n_gr_edi_compute_errors()

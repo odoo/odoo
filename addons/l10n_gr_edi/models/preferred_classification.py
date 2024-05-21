@@ -1,5 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import fields, models, api
 from odoo.addons.l10n_gr_edi.models.classification_data import INVOICE_TYPES_SELECTION, \
     CLASSIFICATION_CATEGORY_SELECTION, CLASSIFICATION_TYPE_SELECTION, CLASSIFICATION_MAP, \

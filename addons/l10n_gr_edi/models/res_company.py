@@ -1,5 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import requests
 from datetime import timedelta
 from lxml import etree
@@ -7,11 +5,7 @@ from lxml import etree
 from odoo import models, fields, Command, _
 from odoo.exceptions import UserError
 
-ACCEPTED_ENDPOINTS = (
-    'sendinvoices',
-    'sendexpensesclassification',
-    'requestdocs',
-)
+ACCEPTED_ENDPOINTS = ('sendinvoices', 'sendexpensesclassification', 'requestdocs')
 NAMESPACES = {"ns": "http://www.aade.gr/myDATA/invoice/v1.0"}
 DEFAULT_TEST_ID = 'odoodev'
 DEFAULT_TEST_KEY = '20ea658627fd8c7d90594fe4601d3327'

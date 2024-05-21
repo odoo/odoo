@@ -1,5 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import fields, models
 from odoo.addons.l10n_gr_edi.models.classification_data import TAX_EXEMPTION_CATEGORY_SELECTION
 
