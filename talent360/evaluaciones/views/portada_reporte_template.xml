@@ -2,67 +2,90 @@
     <data>
         <template id="portada_reporte_template">
             <div class="page portada">
-                <div class="header">
-                    <h1>Software de Talento Humano</h1>
-                </div>
+                <svg class="wave-top" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#9b9b9b" fill-opacity="1" d="M0,256L80,234.7C160,213,320,171,480,160C640,149,800,171,960,154.7C1120,139,1280,85,1360,58.7L1440,32L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path></svg>
+                <svg class="wave-top" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#fbb03c" fill-opacity="1" d="M0,128L80,112C160,96,320,64,480,64C640,64,800,96,960,138.7C1120,181,1280,235,1360,261.3L1440,288L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path></svg>
+                
+                <img t-att-src="'/evaluaciones/static/src/img/logo.png'" alt="company logo" class="company-logo"/>
                 <div class="main-content">
-                    <div class="icon">
-                        <img t-att-src="'/evaluaciones/static/src/img/image.png'" alt="company logo" class="icon"/>
-                    </div>
-                    <h1>Reporte 
-                        <span t-esc="dict(evaluacion._fields['tipo'].selection).get(evaluacion.tipo)"/>
-                    </h1>
-                    <h2 t-esc="evaluacion.nombre"/>
+                    <h2 class="left-align">REPORTE</h2>
+                    <h1 class="left-align"><span t-esc="dict(evaluacion._fields['tipo'].selection).get(evaluacion.tipo)"/></h1>
+                    <p class="center-align">[Nombre de la empresa]</p>
+                    <p class="center-align fecha-expedicion">Fecha de expedición: <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d')"/></p>
                 </div>
-                <br></br>
-                <div class="footer">
-                    <img t-att-src="'/evaluaciones/static/src/img/logo.png'" alt="company logo" class="company-logo"/>
-                </div>
-                <br></br>
-                <h2 class="text-center">Fecha: <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d')"/>
-                </h2>
+                <svg class="wave-bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#fbb03c" fill-opacity="1" d="M0,32L120,58.7C240,85,480,139,720,170.7C960,203,1200,213,1320,218.7L1440,224L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path></svg>
+                <svg class="wave-bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#9b9b9b" fill-opacity="1" d="M0,256L120,261.3C240,267,480,277,720,256C960,235,1200,181,1320,154.7L1440,128L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path></svg>
             </div>
             <style>
                 @page {
-                    margin: 0; /* Elimina los márgenes predeterminados de la página */
+                    margin: 0;
                 }
                 body {
-                    margin: 0; /* Elimina los márgenes del cuerpo del documento */
+                    margin: 0;
                 }
                 .portada {
+                    position: relative;
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;
                     text-align: center;
-                    background-color: #f8f9fa; /* Ajusta el color de fondo según tus necesidades */
-                    height: 85vh; /* Para que ocupe toda la altura de la página */
-                    width: 90vw; /* Para que ocupe todo el ancho de la página */
+                    background-color: #fff;
+                    height: 100vh;
+                    width: 100vw;
                     font-family: Arial, sans-serif;
-                }
-                .header {
-                    margin-bottom: 20px;
-                }
-                .icon {
-                    margin: 20px 0;
-                }
-                .icon img {
-                    height: 100px;
-                }
-                .main-content h1 {
-                    font-size: 36px;
-                }
-                .main-content h3 {
-                    font-size: 24px;
-                }
-                .footer {
-                    margin-top: 20px;
+                    overflow: hidden;
+                    padding-top: 20px;
+                    padding-bottom: 20px;
                 }
                 .company-logo {
+                    position: absolute;
+                    top: 190px;
+                    left: 20px;
                     height: 100px;
+                    width: auto;
                 }
-                .page {
-                    page-break-after: always;
+                .main-content {
+                    margin-top: 40px;
+                    width: 80%;
+                }
+                .main-content h1 {
+                    font-size: 60px;
+                    margin: 10px 0;
+                    text-align: left;
+                }
+                .main-content h2 {
+                    font-size: 48px;
+                    margin: 0;
+                    text-align: left;
+                }
+                .main-content p {
+                    font-size: 24px;
+                    margin: 5px 0;
+                    text-align: center;
+                }
+                .fecha-expedicion {
+                    margin-top: 30px;
+                }
+                .wave-top, .wave-bottom {
+                    position: absolute;
+                    width: 100%;
+                    height: auto;
+                }
+                .wave-top {
+                    top: 0;
+                }
+                .wave-bottom {
+                    bottom: 0;
+                }
+
+                /* Estilos específicos para la visualización en pantalla */
+                @media screen {
+                    .company-logo {
+                        top: 100px; /* Ajusta este valor según sea necesario */
+                    }
+                    .main-content {
+                        margin-top: 80px; /* Ajusta este valor según sea necesario */
+                    }
                 }
             </style>
         </template>
