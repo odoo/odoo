@@ -283,6 +283,7 @@
                         Please wait for a moderator to validate your previous post to be allowed replying questions.
                     </div>
                 </t>
+                <t t-if="is_public_user" t-call="website_forum.forum_sign_up_cta"/>
                 <section t-if="related_posts" t-call="website_forum.forum_related_posts"/>
             </div>
         </div>
@@ -614,6 +615,14 @@
             <t t-set="show_author_avatar" t-value="true"/>
         </t>
     </table>
+</template>
+
+<template id="forum_sign_up_cta" name="Sign-Up Call to Action">
+    <div class="o_wforum_sign_up_cta alert alert-info mt-4">
+       <h6 class="alert-heading">Enjoying the discussion? Don't just read, join in!</h6>
+       <p>Create an account today to enjoy exclusive features and engage with our awesome community!</p>
+       <a class="btn btn-primary me-2" t-att-href="'/web/login?redirect=forum/%s/%s' % (slug(forum), slug(question))">Sign up</a>
+    </div>
 </template>
     </data>
 </odoo>
