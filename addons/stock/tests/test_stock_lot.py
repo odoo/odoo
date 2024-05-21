@@ -72,3 +72,18 @@ class TestLotSerial(TestStockCommon):
         self.StockQuantObj.invalidate_model()
         self.StockQuantObj._unlink_zero_quants()
         self.assertEqual(self.lot_p_a.location_id, self.locationC)
+
+    def test_import_lots(self):
+        vals = self.MoveObj.action_generate_lot_line_vals({
+            'default_tracking': 'lot',
+            'default_product_id': self.productA.id,
+            'default_location_dest_id': self.locationC.id,
+        }, "import", "", 0, "aze;2\nqsd;4\nwxc")
+
+        self.assertEqual(len(vals), 3)
+        self.assertEqual(vals[0]['lot_name'], 'aze')
+        self.assertEqual(vals[0]['quantity'], 2)
+        self.assertEqual(vals[1]['lot_name'], 'qsd')
+        self.assertEqual(vals[1]['quantity'], 4)
+        self.assertEqual(vals[2]['lot_name'], 'wxc')
+        self.assertEqual(vals[2]['quantity'], 1, "default lot qty")
