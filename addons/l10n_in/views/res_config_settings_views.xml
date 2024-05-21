@@ -29,6 +29,12 @@
                     </setting>
                 </block>
             </app>
+            <block id="print_vendor_checks_setting_container" position="inside">
+                <setting id="vendor_payment_order_file" company_dependent="1"
+                    help="Generate Vendor Payment Order file(csv file), upload to your bank to make the payments" invisible="country_code != 'IN'">
+                    <field name="module_l10n_in_enet" widget="upgrade_boolean"/>
+                </setting>
+            </block>
         </field>
     </record>
 </odoo>
