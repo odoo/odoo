@@ -226,14 +226,16 @@ export class TicketScreen extends Component {
                 const quantity = Math.abs(parseFloat(buffer));
                 if (quantity > refundableQty) {
                     this.numberBuffer.reset();
-                    this.dialog.add(AlertDialog, {
-                        title: _t("Maximum Exceeded"),
-                        body: _t(
-                            "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
-                            quantity,
-                            refundableQty
-                        ),
-                    });
+                    if (!toRefundDetail.line.combo_parent_id) {
+                        this.dialog.add(AlertDialog, {
+                            title: _t("Maximum Exceeded"),
+                            body: _t(
+                                "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
+                                quantity,
+                                refundableQty
+                            ),
+                        });
+                    }
                 } else {
                     toRefundDetail.qty = quantity;
                 }
