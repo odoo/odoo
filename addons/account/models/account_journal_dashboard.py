@@ -579,6 +579,9 @@ class account_journal(models.Model):
                 'title_has_sequence_holes': title_has_sequence_holes,
                 'has_unhashed_entries': journal.has_unhashed_entries,
                 'is_sample_data': is_sample_data_by_journal_id[journal.id],
+                # 'entries_count' is kept here to maintain compatibility with a view for the stable version.
+                # The name will be changed in master
+                'entries_count': not is_sample_data_by_journal_id[journal.id],
             })
 
     def _fill_general_dashboard_data(self, dashboard_data):
