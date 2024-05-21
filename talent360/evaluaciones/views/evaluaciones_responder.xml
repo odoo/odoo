@@ -279,10 +279,10 @@
         </t>
         <t t-elif="format == 'caritas'">
             <t t-set="opciones" t-value="[
+                '/evaluaciones/static/src/img/mad.png',
                 '/evaluaciones/static/src/img/angry.png',
-                '/evaluaciones/static/src/img/medio.png',
-                '/evaluaciones/static/src/img/neutral.png',
-                '/valuaciones/static/src/img/maso.png',
+                '/evaluaciones/static/src/img/medium.png',
+                '/evaluaciones/static/src/img/normal.png',
                 '/evaluaciones/static/src/img/happy.png'
             ]"/>
         </t>
@@ -309,7 +309,7 @@
                 <tr>
                     <th class="fw-normal" t-foreach="opciones" t-as="col_label">
                         <t t-if="format in ['caritas', 'estrellas']">
-                            <img t-att-src="col_label" alt="icono" style="width: 25px; height: 25px, background: transparent;;"/>
+                            <img t-att-src="col_label" alt="icono" style="width: 25px; height: 25px, background: transparent;"/>
                         </t>
                         <t t-else="">
                             <span t-esc="col_label"/>
