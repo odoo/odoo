@@ -75,7 +75,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
             });
 
             var f = Math.floor(tweets.length / 3);
-            var tweetSlices = [tweets.slice(0, f).join(' '), tweets.slice(f, f * 2).join(' '), tweets.slice(f * 2, tweets.length).join(' ')];
+            var tweetSlices = [tweets.slice(0, f), tweets.slice(f, f * 2), tweets.slice(f * 2, tweets.length)];
 
             self.$scroller = $(renderToElement('website.Twitter.Scroller')).appendTo($timeline);
             self.$scroller.find('div[id^="scroller"]').toArray().forEach((element, index) => {
@@ -86,7 +86,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
                 $scrollableArea.append(tweetSlices[index]);
                 $(element).append($scrollWrapper);
                 var totalWidth = 0;
-                $scrollableArea.children().forEach((area) => {
+                [...$scrollableArea.children()].forEach((area) => {
                     totalWidth += $(area).outerWidth(true);
                 });
                 $scrollableArea.width(totalWidth);
