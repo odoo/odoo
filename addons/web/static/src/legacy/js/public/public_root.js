@@ -160,7 +160,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
             var defs = Array.from($target).map((el) => {
                 var widget = new PublicWidget(self, options);
                 self.publicWidgets.push(widget);
-                return widget.attachTo($(el));
+                return widget.attachTo(el);
             });
             return Promise.all(defs);
         });

@@ -40,49 +40,71 @@ export function closestScrollableY(el) {
  * Ensures that `element` will be visible in its `scrollable`.
  *
  * @param {HTMLElement} element
- * @param {Object} options
+ * @param {object} options
  * @param {HTMLElement} [options.scrollable] a scrollable area
- * @param {Boolean} [options.isAnchor] states if the scroll is to an anchor
- * @param {String} [options.behavior] "smooth", "instant", "auto" <=> undefined
+ * @param {boolean} [options.isAnchor] states if the scroll is to an anchor
+ * @param {string} [options.behavior] "smooth", "instant", "auto" <=> undefined
  *        @url https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollTo#behavior
+ * @param {number} [options.offset] applies a vertical offset
  */
-export function scrollTo(
-    element,
-    options = { behavior: "auto", scrollable: null, isAnchor: false }
-) {
+export function scrollTo(element, options = {}) {
+    const { behavior = "auto", isAnchor = false, offset = 0 } = options;
     const scrollable = closestScrollableY(options.scrollable || element.parentElement);
-    if (scrollable) {
-        const scrollBottom = scrollable.getBoundingClientRect().bottom;
-        const scrollTop = scrollable.getBoundingClientRect().top;
-        const elementBottom = element.getBoundingClientRect().bottom;
-        const elementTop = element.getBoundingClientRect().top;
-        if (elementBottom > scrollBottom && !options.isAnchor) {
-            // The scroll place the element at the bottom border of the scrollable
-            scrollable.scrollTo({
-                top:
-                    scrollable.scrollTop +
-                    elementTop -
-                    scrollBottom +
-                    Math.ceil(element.getBoundingClientRect().height),
-                behavior: options.behavior,
-            });
-        } else if (elementTop < scrollTop || options.isAnchor) {
-            // The scroll place the element at the top of the scrollable
-            scrollable.scrollTo({
-                top: scrollable.scrollTop - scrollTop + elementTop,
-                behavior: options.behavior,
-            });
-            if (options.isAnchor) {
-                // If the scrollable is within a scrollable, another scroll should be done
-                const parentScrollable = closestScrollableY(scrollable.parentElement);
-                if (parentScrollable) {
+    if (!scrollable) {
+        return;
+    }
+
+    const scrollBottom = scrollable.getBoundingClientRect().bottom;
+    const scrollTop = scrollable.getBoundingClientRect().top;
+    const elementBottom = element.getBoundingClientRect().bottom;
+    const elementTop = element.getBoundingClientRect().top;
+
+    const scrollPromises = [];
+
+    if (elementBottom > scrollBottom && !isAnchor) {
+        // The scroll place the element at the bottom border of the scrollable
+        scrollPromises.push(
+            new Promise((resolve) => {
+                scrollable.addEventListener("scrollend", () => resolve(), { once: true });
+            })
+        );
+
+        scrollable.scrollTo({
+            top:
+                scrollable.scrollTop +
+                elementTop -
+                scrollBottom +
+                Math.ceil(element.getBoundingClientRect().height) +
+                offset,
+            behavior,
+        });
+    }  else if (elementTop < scrollTop || isAnchor) {
+        // The scroll place the element at the top of the scrollable
+        scrollPromises.push(
+            new Promise((resolve) => {
+                scrollable.addEventListener("scrollend", () => resolve(), { once: true });
+            })
+        );
+
+        scrollable.scrollTo({
+            top: scrollable.scrollTop - scrollTop + elementTop + offset,
+            behavior,
+        });
+
+        if (options.isAnchor) {
+            // If the scrollable is within a scrollable, another scroll should be done
+            const parentScrollable = closestScrollableY(scrollable.parentElement);
+            if (parentScrollable) {
+                scrollPromises.push(
                     scrollTo(scrollable, {
-                        behavior: options.behavior,
+                        behavior,
                         isAnchor: true,
                         scrollable: parentScrollable,
-                    });
-                }
+                    })
+                );
             }
         }
     }
+
+    return Promise.all(scrollPromises);
 }

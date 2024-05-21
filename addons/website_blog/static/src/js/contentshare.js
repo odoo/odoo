@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { sprintf } from "@web/core/utils/strings";
-import dom from "@web/legacy/js/core/dom";
+import { scrollTo } from "@web/core/utils/scrolling";
 
 $.fn.share = function (options) {
     var option = $.extend($.fn.share.defaults, options);
@@ -44,7 +44,7 @@ $.fn.share = function (options) {
             $(".o_portal_chatter_composer_form textarea").val('"' + selected_text + '" ').focus();
             const commentsEl = $('#o_wblog_post_comments')[0];
             if (commentsEl) {
-                dom.scrollTo(commentsEl).then(() => {
+                scrollTo(commentsEl).then(() => {
                     window.location.hash = 'blog_post_comment_quote';
                 });
             }
