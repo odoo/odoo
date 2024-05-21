@@ -101,7 +101,7 @@ class Pregunta(models.Model):
         Returns:
             Parámetros necesarios para abrir la vista gráfica de las respuestas.
         """
-        evaluacion_id = self._context.get("current_evaluacion_id")
+        evaluacion_id = self._context.get("actual_evaluacion_id")
         # Redirect to graph view of respuestas filtered by evaluacion_id and pregunta_id grouped by respuesta
         return {
             "type": "ir.actions.act_window",
