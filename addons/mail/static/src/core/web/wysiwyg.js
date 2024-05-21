@@ -67,12 +67,14 @@ patch(Wysiwyg.prototype, {
         }
         this.mentionList.close();
         const mentionBlock = renderToElement("mail.Wysiwyg.mentionLink", {
-            option,
-            href: `${url("/web")}#model=${option.partner ? "res.partner" : "discuss.channel"}&id=${
-                option.partner ? option.partner.id : option.channel.id
-            }`,
+            option: option.mention,
+            href: `${url("/web")}#model=${
+                option.mention.partner ? "res.partner" : "discuss.channel"
+            }&id=${option.mention.partner ? option.mention.partner.id : option.mention.channel.id}`,
         });
-        const nameNode = document.createTextNode(`${option.partner ? "@" : "#"}${option.label}`);
+        const nameNode = document.createTextNode(
+            `${option.mention.partner ? "@" : "#"}${option.label}`
+        );
         const space = document.createTextNode("\u00A0");
         mentionBlock.appendChild(nameNode);
         this.odooEditor.historyRevertUntil(this.stepBeforeMention);

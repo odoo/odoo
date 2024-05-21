@@ -470,8 +470,16 @@ export class Message extends Component {
     enterEditMode() {
         const message = toRaw(this.props.message);
         const text = convertBrToLineBreak(message.body);
+        const mentions = message.recipients.map((recipient) =>
+            this.store.Mention.new({ partner: recipient })
+        );
+        mentions.push(
+            ...Object.keys(this.store.Mention.specialMentions)
+                .filter((special) => text.includes(`@${special}`))
+                .map((special) => this.store.Mention.new({ special }))
+        );
         message.composer = {
-            mentionedPartners: message.recipients,
+            mentions,
             text,
             selection: {
                 start: text.length,

@@ -37,7 +37,7 @@ export class MentionList extends Component {
                         delimiter: this.props.type === "partner" ? "@" : "#",
                         term: this.state.searchTerm,
                     });
-                    const { suggestions } = this.suggestionService.searchSuggestions(
+                    const suggestions = this.suggestionService.searchSuggestions(
                         {
                             delimiter: this.props.type === "partner" ? "@" : "#",
                             term: this.state.searchTerm,
@@ -68,27 +68,8 @@ export class MentionList extends Component {
             position: "bottom-fit",
             placeholder: _t("Loading"),
             onSelect: this.props.onSelect,
-            options: [],
+            options: this.state.options.map((suggestion) => suggestion.navigableListInfo),
         };
-        switch (this.props.type) {
-            case "partner":
-                this.state.options.forEach((option) => {
-                    props.options.push({
-                        label: option.name,
-                        partner: option,
-                    });
-                });
-                break;
-            case "channel": {
-                this.state.options.forEach((option) => {
-                    props.options.push({
-                        label: option.name,
-                        channel: option,
-                    });
-                });
-                break;
-            }
-        }
         return props;
     }
 

@@ -420,54 +420,36 @@ export class Store extends BaseStore {
         );
     }
 
-    getMentionsFromText(body, { mentionedChannels = [], mentionedPartners = [] } = {}) {
+    getMentionsFromText(body, mentions = []) {
         if (this.self.type !== "partner") {
             // mentions are not supported for guests
-            return {};
+            return [];
         }
-        const validMentions = {};
-        const partners = [];
-        const threads = [];
-        for (const partner of mentionedPartners) {
-            const index = body.indexOf(`@${partner.name}`);
-            if (index === -1) {
-                continue;
+
+        const validMentions = mentions.filter((mention) => {
+            switch (mention.type) {
+                case "channel":
+                    return body.includes(`#${mention.channel.displayName}`);
+                case "partner":
+                    return body.includes(`@${mention.partner.name}`);
+                case "special":
+                    return body.includes(`@${mention.special}`);
             }
-            partners.push(partner);
-        }
-        for (const thread of mentionedChannels) {
-            const index = body.indexOf(`#${thread.displayName}`);
-            if (index === -1) {
-                continue;
-            }
-            threads.push(thread);
-        }
-        validMentions.partners = partners;
-        validMentions.threads = threads;
+        });
         return validMentions;
     }
 
     /**
      * Get the parameters to pass to the message post route.
      */
-    async getMessagePostParams({
-        attachments,
-        body,
-        cannedResponseIds,
-        isNote,
-        mentionedChannels,
-        mentionedPartners,
-        thread,
-    }) {
+    async getMessagePostParams({ attachments, body, cannedResponseIds, isNote, mentions, thread }) {
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions =
-            this.self.type === "partner"
-                ? this.getMentionsFromText(body, {
-                      mentionedChannels,
-                      mentionedPartners,
-                  })
-                : undefined;
-        const partner_ids = validMentions?.partners.map((partner) => partner.id) ?? [];
+            this.self.type === "partner" ? this.getMentionsFromText(body, mentions) : undefined;
+        const partner_ids =
+            validMentions
+                ?.filter((mention) => mention.type === "partner")
+                .map((mention) => mention.partner.id) ?? [];
         const recipientEmails = [];
         const recipientAdditionalValues = {};
         if (!isNote) {
@@ -499,6 +481,10 @@ export class Store extends BaseStore {
             partner_additional_values: recipientAdditionalValues,
             thread_id: thread.id,
             thread_model: thread.model,
+            special_mentions:
+                validMentions
+                    ?.filter((mention) => mention.type === "special")
+                    .map((mention) => mention.special) ?? [],
         };
     }
 

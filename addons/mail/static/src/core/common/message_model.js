@@ -363,14 +363,11 @@ export class Message extends Record {
         });
     }
 
-    async edit(body, attachments = [], { mentionedChannels = [], mentionedPartners = [] } = {}) {
+    async edit(body, attachments = [], mentions) {
         if (convertBrToLineBreak(this.body) === body && attachments.length === 0) {
             return;
         }
-        const validMentions = this.store.getMentionsFromText(body, {
-            mentionedChannels,
-            mentionedPartners,
-        });
+        const validMentions = this.store.getMentionsFromText(body, mentions);
         const messageData = await rpc("/mail/message/update_content", {
             attachment_ids: attachments.concat(this.attachments).map((attachment) => attachment.id),
             attachment_tokens: attachments
@@ -378,7 +375,9 @@ export class Message extends Record {
                 .map((attachment) => attachment.accessToken),
             body: await prettifyMessageContent(body, validMentions),
             message_id: this.id,
-            partner_ids: validMentions?.partners?.map((partner) => partner.id),
+            partner_ids: validMentions
+                ?.filter((mention) => mention.type === "partner")
+                .map((mention) => mention.partner.id),
         });
         this.store.Message.insert(messageData, { html: true });
         if (this.hasLink && this.store.hasLinkPreviewFeature) {

@@ -31,7 +31,7 @@ class UseSuggestion {
                         this.search.delimiter === delimiter &&
                         this.search.position === position &&
                         this.search.term === term &&
-                        !this.state.items?.suggestions.length
+                        !this.state.suggestions?.length
                     ) {
                         this.clearSearch();
                     }
@@ -57,7 +57,7 @@ class UseSuggestion {
     suggestionService = useService("mail.suggestion");
     state = useState({
         count: 0,
-        items: undefined,
+        suggestions: undefined,
     });
     search = {
         delimiter: undefined,
@@ -65,8 +65,7 @@ class UseSuggestion {
         term: "",
     };
     clearRawMentions() {
-        this.composer.mentionedChannels.length = 0;
-        this.composer.mentionedPartners.length = 0;
+        this.composer.mentions.length = 0;
     }
     clearCannedResponses() {
         this.composer.cannedResponses = [];
@@ -77,7 +76,7 @@ class UseSuggestion {
             position: undefined,
             term: "",
         });
-        this.state.items = undefined;
+        this.state.suggestions = undefined;
     }
     detect() {
         const { start, end } = this.composer.selection;
@@ -148,17 +147,8 @@ class UseSuggestion {
             before = text.substring(0, this.search.position);
             after = text.substring(position, text.length);
         }
-        if (option.partner) {
-            this.composer.mentionedPartners.add({
-                id: option.partner.id,
-                type: "partner",
-            });
-        }
-        if (option.thread) {
-            this.composer.mentionedChannels.add({
-                model: "discuss.channel",
-                id: option.thread.id,
-            });
+        if (option.mention) {
+            this.composer.mentions.add(option.mention);
         }
         if (option.cannedResponse) {
             this.composer.cannedResponses.push(option.cannedResponse);
@@ -173,19 +163,19 @@ class UseSuggestion {
         if (!this.search.delimiter) {
             return;
         }
-        const { type, suggestions } = this.suggestionService.searchSuggestions(this.search, {
+        const suggestions = this.suggestionService.searchSuggestions(this.search, {
             thread: this.thread,
             sort: true,
         });
         if (!suggestions.length) {
-            this.state.items = undefined;
+            this.state.suggestions = undefined;
             return;
         }
         // arbitrary limit to avoid displaying too many elements at once
         // ideally a load more mechanism should be introduced
         const limit = 8;
         suggestions.length = Math.min(suggestions.length, limit);
-        this.state.items = { type, suggestions };
+        this.state.suggestions = suggestions;
     }
 }
 

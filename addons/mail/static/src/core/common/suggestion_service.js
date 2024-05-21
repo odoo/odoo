@@ -68,14 +68,14 @@ export class SuggestionService {
     }
 
     searchCannedResponseSuggestions(cleanedSearchTerm, sort) {
-        const cannedResponses = Object.values(this.store.CannedResponse.records).filter(
-            (cannedResponse) => {
+        const cannedResponses = Object.values(this.store.CannedResponse.records)
+            .filter((cannedResponse) => {
                 return cleanTerm(cannedResponse.source).includes(cleanedSearchTerm);
-            }
-        );
+            })
+            .map((cannedResponse) => this.store.Suggestion.new({ cannedResponse }));
         const sortFunc = (c1, c2) => {
-            const cleanedName1 = cleanTerm(c1.source);
-            const cleanedName2 = cleanTerm(c2.source);
+            const cleanedName1 = cleanTerm(c1.cannedResponse.source);
+            const cleanedName2 = cleanTerm(c2.cannedResponse.source);
             if (
                 cleanedName1.startsWith(cleanedSearchTerm) &&
                 !cleanedName2.startsWith(cleanedSearchTerm)
@@ -96,10 +96,7 @@ export class SuggestionService {
             }
             return c1.id - c2.id;
         };
-        return {
-            type: "CannedResponse",
-            suggestions: sort ? cannedResponses.sort(sortFunc) : cannedResponses,
-        };
+        return sort ? cannedResponses.sort(sortFunc) : cannedResponses;
     }
 
     /**
@@ -116,18 +113,14 @@ export class SuggestionService {
     searchSuggestions({ delimiter, term }, { thread, sort = false } = {}) {
         const cleanedSearchTerm = cleanTerm(term);
         switch (delimiter) {
-            case "@": {
+            case "@":
                 return this.searchPartnerSuggestions(cleanedSearchTerm, thread, sort);
-            }
             case "#":
                 return this.searchChannelSuggestions(cleanedSearchTerm, sort);
             case ":":
                 return this.searchCannedResponseSuggestions(cleanedSearchTerm, sort);
         }
-        return {
-            type: undefined,
-            suggestions: [],
-        };
+        return [];
     }
 
     searchPartnerSuggestions(cleanedSearchTerm, thread, sort) {
@@ -163,15 +156,28 @@ export class SuggestionService {
                 cleanTerm(partner.name).includes(cleanedSearchTerm) ||
                 (partner.email && cleanTerm(partner.email).includes(cleanedSearchTerm))
             ) {
-                suggestions.push(partner);
+                suggestions.push(this.store.Mention.new({ partner }));
             }
         }
-        return {
-            type: "Partner",
-            suggestions: sort
-                ? [...this.sortPartnerSuggestions(suggestions, cleanedSearchTerm, thread)]
-                : suggestions,
-        };
+        suggestions.push(...this.searchSpecialMentionsSuggestions());
+        return sort
+            ? [...this.sortPartnerMentionSuggestions(suggestions, cleanedSearchTerm, thread)]
+            : suggestions;
+    }
+
+    searchSpecialMentionsSuggestions(cleanedSearchTerm, thread) {
+        if (!thread) {
+            return [];
+        }
+        return Object.values(this.store.Mention.specialMentions)
+            .filter(
+                (special) =>
+                    special.channel_types.includes(thread.channel_type) &&
+                    cleanedSearchTerm.length >= Math.min(4, special.label.length) &&
+                    (special.label.startsWith(cleanedSearchTerm) ||
+                        cleanTerm(special.description.toString()).includes(cleanedSearchTerm))
+            )
+            .map((special) => this.store.Mention.new({ special: special.label }));
     }
 
     /**
@@ -199,14 +205,46 @@ export class SuggestionService {
         });
     }
 
+    /**
+     * @param {[import("models").Mention]} [mentions]
+     * @param {String} [searchTerm]
+     * @param {import("models").Thread} thread
+     * @returns {[import("models").Mention]}
+     */
+    sortPartnerMentionSuggestions(mentions, searchTerm = "", thread = undefined) {
+        const cleanedSearchTerm = cleanTerm(searchTerm);
+        const compareFunctions = partnerCompareRegistry.getAll();
+        const context = { recentChatPartnerIds: this.store.getRecentChatPartnerIds() };
+        return mentions.sort((m1, m2) => {
+            if (m1.type === "special" || m2.type === "special") {
+                return 0;
+            }
+            for (const fn of compareFunctions) {
+                const result = fn(m1.partner, m2.partner, {
+                    env: this.env,
+                    searchTerms: cleanedSearchTerm,
+                    thread,
+                    context,
+                });
+                if (result !== undefined) {
+                    return result;
+                }
+            }
+        });
+    }
+
     searchChannelSuggestions(cleanedSearchTerm, sort) {
-        const suggestionList = Object.values(this.store.Thread.records).filter(
-            (thread) =>
-                thread.channel_type === "channel" &&
-                thread.displayName &&
-                cleanTerm(thread.displayName).includes(cleanedSearchTerm)
-        );
-        const sortFunc = (c1, c2) => {
+        const suggestionList = Object.values(this.store.Thread.records)
+            .filter(
+                (thread) =>
+                    thread.channel_type === "channel" &&
+                    thread.displayName &&
+                    cleanTerm(thread.displayName).includes(cleanedSearchTerm)
+            )
+            .map((thread) => this.store.Mention.new({ channel: thread }));
+        const sortFunc = (m1, m2) => {
+            const c1 = m1.channel;
+            const c2 = m2.channel;
             const isPublicChannel1 = c1.channel_type === "channel" && !c2.authorizedGroupFullName;
             const isPublicChannel2 = c2.channel_type === "channel" && !c2.authorizedGroupFullName;
             if (isPublicChannel1 && !isPublicChannel2) {
@@ -243,10 +281,7 @@ export class SuggestionService {
             }
             return c1.id - c2.id;
         };
-        return {
-            type: "Thread",
-            suggestions: sort ? suggestionList.sort(sortFunc) : suggestionList,
-        };
+        return sort ? suggestionList.sort(sortFunc) : suggestionList;
     }
 }
 

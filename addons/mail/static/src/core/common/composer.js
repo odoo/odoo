@@ -302,7 +302,7 @@ export class Composer extends Component {
     }
 
     get hasSuggestions() {
-        return Boolean(this.suggestion?.state.items);
+        return Boolean(this.suggestion?.state.suggestions);
     }
 
     get navigableListProps() {
@@ -319,60 +319,14 @@ export class Composer extends Component {
         if (!this.hasSuggestions) {
             return props;
         }
-        const suggestions = this.suggestion.state.items.suggestions;
-        switch (this.suggestion.state.items.type) {
-            case "Partner":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionPartner",
-                    options: suggestions.map((suggestion) => {
-                        return {
-                            label: suggestion.name,
-                            partner: suggestion,
-                            classList: "o-mail-Composer-suggestion",
-                        };
-                    }),
-                };
-            case "Thread":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionThread",
-                    options: suggestions.map((suggestion) => {
-                        return {
-                            label: suggestion.displayName,
-                            thread: suggestion,
-                            classList: "o-mail-Composer-suggestion",
-                        };
-                    }),
-                };
-            case "ChannelCommand":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionChannelCommand",
-                    options: suggestions.map((suggestion) => {
-                        return {
-                            label: suggestion.name,
-                            help: suggestion.help,
-                            classList: "o-mail-Composer-suggestion",
-                        };
-                    }),
-                };
-            case "CannedResponse":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionCannedResponse",
-                    options: suggestions.map((suggestion) => {
-                        return {
-                            cannedResponse: suggestion,
-                            source: suggestion.source,
-                            label: suggestion.substitution,
-                            classList: "o-mail-Composer-suggestion",
-                        };
-                    }),
-                };
-            default:
-                return props;
-        }
+        const suggestions = this.suggestion.state.suggestions;
+        return {
+            ...props,
+            options: suggestions.map((suggestion) => ({
+                ...suggestion.navigableListInfo,
+                classList: "o-mail-Composer-suggestion",
+            })),
+        };
     }
 
     onDropFile(ev) {
@@ -480,10 +434,7 @@ export class Composer extends Component {
         const body = this.props.composer.text;
         const validMentions =
             this.store.self.type === "partner"
-                ? this.store.getMentionsFromText(body, {
-                      mentionedChannels: this.props.composer.mentionedChannels,
-                      mentionedPartners: this.props.composer.mentionedPartners,
-                  })
+                ? this.store.getMentionsFromText(body, this.props.composer.mentions)
                 : undefined;
         const context = {
             default_attachment_ids: attachmentIds,
@@ -591,8 +542,7 @@ export class Composer extends Component {
             const postData = {
                 attachments: composer.attachments,
                 isNote: this.props.type === "note",
-                mentionedChannels: composer.mentionedChannels,
-                mentionedPartners: composer.mentionedPartners,
+                mentions: composer.mentions,
                 cannedResponseIds: composer.cannedResponses.map((c) => c.id),
                 parentId: this.props.messageToReplyTo?.message?.id,
             };
@@ -628,10 +578,7 @@ export class Composer extends Component {
         const composer = toRaw(this.props.composer);
         if (composer.text || composer.message.attachments.length > 0) {
             await this.processMessage(async (value) =>
-                composer.message.edit(value, composer.attachments, {
-                    mentionedChannels: composer.mentionedChannels,
-                    mentionedPartners: composer.mentionedPartners,
-                })
+                composer.message.edit(value, composer.attachments, composer.mentions)
             );
         } else {
             this.env.services.dialog.add(MessageConfirmDialog, {
