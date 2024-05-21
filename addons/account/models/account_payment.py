@@ -254,72 +254,31 @@ class AccountPayment(models.Model):
             self.journal_id.outbound_payment_method_line_ids.payment_account_id
         )
 
-    def _get_aml_default_display_map(self):
-        return {
-            ('outbound', 'customer'): _("Customer Reimbursement"),
-            ('inbound', 'customer'): _("Customer Payment"),
-            ('outbound', 'supplier'): _("Vendor Payment"),
-            ('inbound', 'supplier'): _("Vendor Reimbursement"),
-        }
-
     def _get_aml_default_display_name_list(self):
         """ Hook allowing custom values when constructing the default label to set on the journal items.
 
         :return: A list of terms to concatenate all together. E.g.
             [
-                ('label', "Vendor Reimbursement"),
-                ('sep', ' '),
-                ('amount', "$ 1,555.00"),
-                ('sep', ' - '),
-                ('date', "05/14/2020"),
+                ('label', "Greg's Card"),
+                ('sep', ": "),
+                ('memo', "New Computer"),
             ]
-        """
-        self.ensure_one()
-        display_map = self._get_aml_default_display_map()
-        values = [
-            ('label', _("Internal Transfer") if self.is_internal_transfer else display_map[(self.payment_type, self.partner_type)]),
-            ('sep', ' '),
-            ('amount', formatLang(self.env, self.amount, currency_obj=self.currency_id)),
-        ]
-        if self.partner_id:
-            values += [
-                ('sep', ' - '),
-                ('partner', self.partner_id.display_name),
-            ]
-        values += [
-            ('sep', ' - '),
-            ('date', format_date(self.env, fields.Date.to_string(self.date))),
-        ]
-        return values
-
-    def _get_liquidity_aml_display_name_list(self):
-        """ Hook allowing custom values when constructing the label to set on the liquidity line.
-
-        :return: A list of terms to concatenate all together. E.g.
-            [('reference', "INV/2018/0001")]
         """
         self.ensure_one()
         if self.is_internal_transfer:
-            if self.payment_type == 'inbound':
-                return [('transfer_to', _('Transfer to %s', self.journal_id.name))]
-            else: # payment.payment_type == 'outbound':
-                return [('transfer_from', _('Transfer from %s', self.journal_id.name))]
-        elif self.payment_reference:
-            return [('reference', self.payment_reference)]
+            label = _("Internal Transfer")
         else:
-            return self._get_aml_default_display_name_list()
+            label = self.payment_method_line_id.name if self.payment_method_line_id else _("No Payment Method")
 
-    def _get_counterpart_aml_display_name_list(self):
-        """ Hook allowing custom values when constructing the label to set on the counterpart line.
-
-        :return: A list of terms to concatenate all together. E.g.
-            [('reference', "INV/2018/0001")]
-        """
-        self.ensure_one()
-        if self.payment_reference:
-            return [('reference', self.payment_reference)]
-        else:
-            return self._get_aml_default_display_name_list()
+        if self.ref:
+            return [
+                ('label', label),
+                ('sep', ": "),
+                ('memo', self.ref),
+            ]
+        return [
+            ('label', label),
+        ]
 
     def _prepare_move_line_default_vals(self, write_off_line_vals=None, force_balance=None):
         ''' Prepare the dictionary to create the default account.move.lines for the current payment.
@@ -367,8 +326,8 @@ class AccountPayment(models.Model):
         currency_id = self.currency_id.id
 
         # Compute a default label to set on the journal items.
-        liquidity_line_name = ''.join(x[1] for x in self._get_liquidity_aml_display_name_list())
-        counterpart_line_name = ''.join(x[1] for x in self._get_counterpart_aml_display_name_list())
+        liquidity_line_name = ''.join(x[1] for x in self._get_aml_default_display_name_list())
+        counterpart_line_name = ''.join(x[1] for x in self._get_aml_default_display_name_list())
 
         line_vals_list = [
             # Liquidity line.

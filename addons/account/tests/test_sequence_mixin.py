@@ -671,6 +671,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
 
         for move in payments.move_id:
             self.assertRecordValues(move.line_ids, [{'move_name': move.name}] * len(move.line_ids))
+            self.assertRecordValues(move.line_ids, [{'name': "Manual Payment"}] * len(move.line_ids))
 
     def test_resequence_payment_and_non_payment_without_payment_sequence(self):
         """Resequence wizard could be open for different move type if the payment sequence is set to False on the journal."""

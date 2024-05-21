@@ -115,12 +115,24 @@ class AccountPayment(models.Model):
 
     def _get_aml_default_display_name_list(self):
         # Extends 'account'
-        values = super()._get_aml_default_display_name_list()
-        if self.check_number:
-            date_index = [i for i, value in enumerate(values) if value[0] == 'date'][0]
-            values.insert(date_index - 1, ('check_number', self.check_number))
-            values.insert(date_index - 1, ('sep', ' - '))
-        return values
+        self.ensure_one()
+
+        if not self.check_number:
+            return super()._get_aml_default_display_name_list()
+
+        result = [
+            ('label', _("Checks")),
+            ('sep', ' - '),
+            ('check_number', self.check_number),
+        ]
+
+        if self.ref:
+            result += [
+                ('sep', ': '),
+                ('memo', self.ref),
+            ]
+
+        return result
 
     def action_post(self):
         payment_method_check = self.env.ref('account_check_printing.account_payment_method_check')
