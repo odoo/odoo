@@ -231,6 +231,11 @@ export const datetimePickerService = {
                             }
                         }
                     }
+                    if(ev.code == "Space"){
+                        ev.preventDefault();
+                        updateValueFromInputs();
+                        return openPicker(ev.target === getInput(1) ? 1 : 0)
+                    }
                 };
 
                 /**
