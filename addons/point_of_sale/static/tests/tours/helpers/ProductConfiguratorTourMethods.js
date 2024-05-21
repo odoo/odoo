@@ -70,6 +70,19 @@ class Check {
             },
         ];
     }
+    numberRadioOptions(number) {
+        return [
+            {
+                trigger: `.product-configurator-popup .attribute-name-cell`,
+                run: () => {
+                    const radio_options = $('.product-configurator-popup .attribute-name-cell').length;
+                    if (radio_options !== number) {
+                        throw new Error(`Expected ${number} radio options, got ${radio_options}`);
+                    }
+                }
+            },
+        ];
+    }
 }
 
 // FIXME: this is a horrible hack to export an object as named exports.
