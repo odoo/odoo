@@ -15,7 +15,7 @@
     You will find more details here:
     <div style="margin: 16px 0px 16px 0px;">
         <a t-attf-href="/event/{{ object.event_id.id }}/track/{{ object.id }}"
-                style="padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
+                t-attf-style="padding: 8px 16px 8px 16px; font-size: 14px; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none !important; background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:3px">
             View Talk
         </a>
     </div>
