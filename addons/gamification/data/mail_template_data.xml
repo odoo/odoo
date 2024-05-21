@@ -92,7 +92,7 @@
 <tr><td align="center" style="min-width: 590px;">
     <table width="590" border="0" cellpadding="0" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
       <tr><td style="text-align: center; font-size: 14px;">
-        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=gamification" style="color: #875A7B;">Odoo</a>
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=gamification" t-attf-style="color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}};">Odoo</a>
       </td></tr>
     </table>
 </td></tr>
@@ -351,7 +351,7 @@
                     <t t-foreach="gamification_redirection_data" t-as="data">
                         <t t-set="url" t-value="data['url']"/>
                         <t t-set="label" t-value="data['label']"/>
-                        <a t-att-href="url" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;" t-out="label or ''">LABEL</a>
+                        <a t-att-href="url" t-attf-style="background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px; display: flex; max-width: fit-content; margin-bottom: 8px;" t-out="label or ''">LABEL</a>
                     </t>
                 </div>
             </td>
