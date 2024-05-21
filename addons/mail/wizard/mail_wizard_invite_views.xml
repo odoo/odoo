@@ -15,14 +15,16 @@
                                 placeholder="Add contacts to notify..."
                                 options="{'no_quick_create': True}"
                                 context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
-                        <field name="notify"/>
-                        <field name="message" invisible="not notify"
-                               options="{'style-inline': true, 'no-attachment': true}"
-                               class="oe-bordered-editor"/>
+                        <field name="message"
+                                placeholder="Extra Comments ..."
+                                options="{'style-inline': true, 'no-attachment': true}"
+                                class="oe-bordered-editor"/>
                     </group>
                     <footer>
-                        <button string="Add Followers"
-                            name="add_followers" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Add and notify"
+                            name="add_followers_notify" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Add and close"
+                            name="add_followers" type="object" class="btn-secondary" data-hotkey="w"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
                     </footer>
                 </form>
