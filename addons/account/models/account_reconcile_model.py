@@ -184,10 +184,14 @@ class AccountReconcileModelLine(models.Model):
         """
         self.ensure_one()
         currency = st_line.foreign_currency_id or st_line.journal_id.currency_id or st_line.company_currency_id
+        aml_currency = currency
 
         amount_currency = None
         if self.amount_type == 'percentage_st_line':
-            amount_currency = currency.round(residual_amount_currency * (self.amount / 100.0))
+            _transaction_amount, _transaction_currency, journal_amount, journal_currency, _company_amount, _company_currency \
+                = st_line._get_accounting_amounts_and_currencies()
+            amount_currency = currency.round(-journal_amount * (self.amount / 100.0))
+            aml_currency = journal_currency
         elif self.amount_type == 'regex':
             match = re.search(self.amount_string, st_line.payment_ref)
             if match:
@@ -203,11 +207,11 @@ class AccountReconcileModelLine(models.Model):
                 amount_currency = 0.0
 
         if amount_currency is None:
-            aml_vals = self._apply_in_manual_widget(residual_amount_currency, partner, currency)
+            aml_vals = self._apply_in_manual_widget(residual_amount_currency, partner, aml_currency)
         else:
             aml_vals = {
                 **self._prepare_aml_vals(partner),
-                'currency_id': currency.id,
+                'currency_id': aml_currency.id,
                 'amount_currency': amount_currency,
             }
 
