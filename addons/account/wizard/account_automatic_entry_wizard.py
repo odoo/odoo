@@ -161,6 +161,11 @@ class AutomaticEntryWizard(models.TransientModel):
         res['action'] = allowed_actions.pop()
         return res
 
+    def _get_cut_off_label_format(self):
+        """ Get the translated format string used in cut-off labels """
+        self.ensure_one()
+        return _("Cut-off {label}") if self.percentage == 100 else _("Cut-off {label} {percent}%")
+
     def _get_move_dict_vals_change_account(self):
         line_vals = []
 
@@ -259,11 +264,12 @@ class AutomaticEntryWizard(models.TransientModel):
         reported_debit = aml.company_id.currency_id.round((self.percentage / 100) * aml.debit)
         reported_credit = aml.company_id.currency_id.round((self.percentage / 100) * aml.credit)
         reported_amount_currency = aml.currency_id.round((self.percentage / 100) * aml.amount_currency)
+        name = self._format_strings(self._get_cut_off_label_format(), aml.move_id)
 
         if date == 'new_date':
             return [
                 (0, 0, {
-                    'name': aml.name or '',
+                    'name': name,
                     'debit': reported_debit,
                     'credit': reported_credit,
                     'amount_currency': reported_amount_currency,
@@ -273,7 +279,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'analytic_distribution': aml.analytic_distribution,
                 }),
                 (0, 0, {
-                    'name': self._format_strings(_('{percent}% recognized on {new_date}'), aml.move_id),
+                    'name': name,
                     'debit': reported_credit,
                     'credit': reported_debit,
                     'amount_currency': -reported_amount_currency,
@@ -285,7 +291,7 @@ class AutomaticEntryWizard(models.TransientModel):
             ]
         return [
             (0, 0, {
-                'name': aml.name or '',
+                'name': name,
                 'debit': reported_credit,
                 'credit': reported_debit,
                 'amount_currency': -reported_amount_currency,
@@ -295,7 +301,7 @@ class AutomaticEntryWizard(models.TransientModel):
                 'analytic_distribution': aml.analytic_distribution,
             }),
             (0, 0, {
-                'name': self._format_strings(_('{percent}% recognized on {new_date}'), aml.move_id),
+                'name': name,
                 'debit': reported_debit,
                 'credit': reported_credit,
                 'amount_currency': reported_amount_currency,
@@ -315,11 +321,12 @@ class AutomaticEntryWizard(models.TransientModel):
 
         # set the change_period account on the selected journal items
 
+        ref_format = self._get_cut_off_label_format()
         move_data = {'new_date': {
             'currency_id': self.journal_id.currency_id.id or self.journal_id.company_id.currency_id.id,
             'move_type': 'entry',
             'line_ids': [],
-            'ref': self._format_strings(_('{label}: Adjusting Entry of {new_date}'), self.move_line_ids[0].move_id),
+            'ref': self._format_strings(ref_format, self.move_line_ids[0].move_id),
             'date': fields.Date.to_string(self.date),
             'journal_id': self.journal_id.id,
         }}
@@ -331,7 +338,7 @@ class AutomaticEntryWizard(models.TransientModel):
                 'currency_id': self.journal_id.currency_id.id or self.journal_id.company_id.currency_id.id,
                 'move_type': 'entry',
                 'line_ids': [],
-                'ref': self._format_strings(_('{label}: Adjusting Entry of {date}'), grouped_lines[0].move_id, amount),
+                'ref': self._format_strings(ref_format, grouped_lines[0].move_id, amount),
                 'date': fields.Date.to_string(date),
                 'journal_id': self.journal_id.id,
             }
