@@ -232,3 +232,16 @@ registry.category("web_tour.tours").add("DecimalCommaOrderlinePrice", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("CheckProductInformation", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickInfoProduct("product_a"),
+            {
+                trigger: ".section-financials :contains('Margin')",
+                run: () => {},
+            },
+        ].flat(),
+});
