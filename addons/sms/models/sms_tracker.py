@@ -28,7 +28,7 @@ class SmsTracker(models.Model):
         'pending': 'pending',
     }
 
-    sms_uuid = fields.Char('SMS uuid', required=True)
+    sms_uuid = fields.Char('SMS uuid', required=True, index=True)
     mail_notification_id = fields.Many2one('mail.notification', ondelete='cascade')
 
     _sql_constraints = [
