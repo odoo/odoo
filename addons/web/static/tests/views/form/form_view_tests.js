@@ -6536,6 +6536,8 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, ".o_field_widget[name=foo] input", "1234");
         await clickDiscard(target);
         assert.containsNone(target, ".modal");
+        def.resolve();
+        await nextTick();
         assert.strictEqual(
             target.querySelector('.o_field_widget[name="foo"] input').value,
             "blip",
@@ -6543,8 +6545,6 @@ QUnit.module("Views", (hooks) => {
         );
 
         // complete the onchange
-        def.resolve();
-        await nextTick();
         assert.strictEqual(
             target.querySelector('.o_field_widget[name="foo"] input').value,
             "blip",
