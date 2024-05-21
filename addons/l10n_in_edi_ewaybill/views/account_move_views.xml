@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@name='button_set_checked']" position="after">
                 <field name="l10n_in_edi_ewaybill_show_send_button" invisible="1"/>
-                <button name="l10n_in_edi_ewaybill_send" string="Send E-waybill" class="oe_highlight" type="object" groups="account.group_account_invoice" invisible="not l10n_in_edi_ewaybill_show_send_button"/>
+                <button name="l10n_in_edi_ewaybill_send" string="Send E-waybill" class="oe_highlight" type="object" groups="account.group_account_invoice" invisible="not l10n_in_edi_ewaybill_show_send_button" data-hotkey="e"/>
             </xpath>
             <xpath expr="//notebook/page[@name='other_info']" position="before">
                 <page string="eWayBill" name="l10n_in_edi_ewaybill_page"
