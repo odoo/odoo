@@ -89,6 +89,11 @@ class HrLeave(models.Model):
         For example take an employee working mon-wed in a company where the regular calendar is mon-fri.
         If the employee were to take a time off ending on wednesday, the legal duration would count until friday.
         """
-        if self._l10n_fr_leave_applies():
-            return super()._get_durations(resource_calendar=(resource_calendar or self.company_id.resource_calendar_id))
+        if not resource_calendar:
+            fr_leaves = self.filtered(lambda leave: leave._l10n_fr_leave_applies())
+            duration_by_leave_id = super(HrLeave, self - fr_leaves)._get_durations(resource_calendar=resource_calendar)
+            fr_leaves_by_company = fr_leaves.grouped('company_id')
+            for company, leaves in fr_leaves_by_company.items():
+                duration_by_leave_id.update(leaves._get_durations(resource_calendar=company.resource_calendar_id))
+            return duration_by_leave_id
         return super()._get_durations(resource_calendar=resource_calendar)
