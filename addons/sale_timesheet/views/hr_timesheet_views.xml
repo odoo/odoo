@@ -95,7 +95,7 @@
             <pivot string="Timesheets" sample="1">
                 <field name="date" interval="month" type="row"/>
                 <field name="timesheet_invoice_type" type="col"/>
-                <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                <field name="unit_amount" string="Time Spent" type="measure" widget="timesheet_uom"/>
                 <field name="amount" string="Timesheet Costs"/>
             </pivot>
         </field>
@@ -109,7 +109,7 @@
                 <field name="date" interval="month" />
                 <field name="employee_id"/>
                 <field name="amount" type="measure" string="Timesheet Costs"/>
-                <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                <field name="unit_amount" string="Time Spent" type="measure" widget="timesheet_uom"/>
             </graph>
         </field>
     </record>

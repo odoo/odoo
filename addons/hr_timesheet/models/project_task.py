@@ -237,12 +237,6 @@ class Task(models.Model):
                     )
                     task.display_name = task.display_name + "\u00A0" + hours_left
 
-    @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-        arch = self.env['account.analytic.line'].sudo()._apply_timesheet_label(arch)
-        return arch, view
-
     @api.ondelete(at_uninstall=False)
     def _unlink_except_contains_entries(self):
         """
