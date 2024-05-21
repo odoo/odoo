@@ -164,7 +164,7 @@ class PosSession(models.Model):
                 'fields': ['display_name', 'attribute_id', 'product_template_value_ids'],
             },
             'product.template.attribute.value': {
-                'domain': lambda data: [('attribute_id', 'in', [attr['id'] for attr in data['product.attribute']])],
+                'domain': lambda data: AND([[('ptav_active', '=', True)], [('attribute_id', 'in', [attr['id'] for attr in data['product.attribute']])]]),
                 'fields': ['attribute_id', 'attribute_line_id', 'product_attribute_value_id', 'price_extra', 'name', 'is_custom', 'html_color', 'image']
             },
             'pos.combo': {
