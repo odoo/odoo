@@ -37,6 +37,20 @@ export function fillCustomAttribute(value) {
     ];
 }
 
+export function numberRadioOptions(number) {
+    return [
+        {
+            trigger: `.attribute-name-cell`,
+            run: () => {
+                const radio_options = $(".attribute-name-cell").length;
+                if (radio_options !== number) {
+                    throw new Error(`Expected ${number} radio options, got ${radio_options}`);
+                }
+            },
+        },
+    ];
+}
+
 export function isOptionShown(option) {
     return [
         {
