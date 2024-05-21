@@ -82,7 +82,7 @@ export class ActivityMenu extends Component {
                 });
             return;
         }
-        let domain = [["activity_user_id", "=", this.userId]];
+        let domain = [["activity_user_id", "=", this.userId], ["activity_ids.active", "=", true]];
         if (group.domain) {
             domain = Domain.and([domain, group.domain]).toList();
         }
