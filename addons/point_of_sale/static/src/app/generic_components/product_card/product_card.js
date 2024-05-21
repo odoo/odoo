@@ -12,10 +12,12 @@ export class ProductCard extends Component {
         productInfo: { Boolean, optional: true },
         onClick: { type: Function, optional: true },
         onProductInfoClick: { type: Function, optional: true },
+        showWarning: { type: Boolean, optional: true },
     };
     static defaultProps = {
         onClick: () => {},
         onProductInfoClick: () => {},
         class: "",
+        showWarning: false,
     };
 }
