@@ -7,7 +7,6 @@ from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import is_html_empty
 
 
 class Invite(models.TransientModel):
@@ -15,69 +14,35 @@ class Invite(models.TransientModel):
     _name = 'mail.wizard.invite'
     _description = 'Invite wizard'
 
-    @api.model
-    def default_get(self, fields):
-        result = super(Invite, self).default_get(fields)
-        if 'message' not in fields:
-            return result
-
-        user_name = self.env.user.display_name
-        model = result.get('res_model')
-        res_id = result.get('res_id')
-        if model and res_id:
-            document = self.env['ir.model']._get(model).display_name
-            title = self.env[model].browse(res_id).display_name
-            text = _(
-                '%(user_name)s invited you to follow %(document)s document: %(title)s',
-                user_name=user_name,
-                document=document,
-                title=title,
-            )
-        else:
-            text = _('%(user_name)s invited you to follow a new document.', user_name=user_name)
-
-        result['message'] = Markup("<div><p>%s</p><p>%s</p></div>") % (
-            _('Hello,'),
-            text,
-        )
-        return result
-
     res_model = fields.Char('Related Document Model', required=True, help='Model of the followed resource')
     res_id = fields.Integer('Related Document ID', help='Id of the followed resource')
     partner_ids = fields.Many2many('res.partner', string='Recipients')
     message = fields.Html('Message')
-    notify = fields.Boolean('Send Notification', default=True)
+    notify = fields.Boolean('Notify Recipients', default=True)
 
     def add_followers(self):
         if not self.env.user.email:
             raise UserError(_("Unable to post message, please configure the sender's email address."))
-        email_from = self.env.user.email_formatted
         for wizard in self:
-            Model = self.env[wizard.res_model]
-            document = Model.browse(wizard.res_id)
-
-            # filter partner_ids to get the new followers, to avoid sending email to already following partners
-            new_partners = wizard.partner_ids - document.sudo().message_partner_ids
-            document.message_subscribe(partner_ids=new_partners.ids)
-
-            model_name = self.env['ir.model']._get(wizard.res_model).display_name
-            # send a notification if option checked and if a message exists (do not send void notifications)
-            if wizard.notify and wizard.message and not is_html_empty(wizard.message):
-                message_values = wizard._prepare_message_values(document, model_name, email_from)
-                message_values['partner_ids'] = new_partners.ids
+            document = self.env[wizard.res_model].browse(wizard.res_id)
+            document.message_subscribe(partner_ids=wizard.partner_ids.ids)
+            if wizard.notify:
+                model_name = self.env['ir.model']._get(wizard.res_model).display_name
+                message_values = wizard._prepare_message_values(document, model_name)
                 document.message_notify(**message_values)
         return {'type': 'ir.actions.act_window_close'}
 
-    def _prepare_message_values(self, document, model_name, email_from):
+    def _prepare_message_values(self, document, model_name):
         return {
+            'body': self.message or "",
+            'email_add_signature': False,
+            'email_from': self.env.user.email_formatted,
+            'email_layout_xmlid': "mail.mail_notification_invite",
+            'model': self.res_model,
+            'partner_ids': self.partner_ids.ids,
+            'record_name': document.display_name,
+            'reply_to': self.env.user.email_formatted,
+            'reply_to_force_new': True,
             'subject': _('Invitation to follow %(document_model)s: %(document_name)s', document_model=model_name,
                          document_name=document.display_name),
-            'body': self.message,
-            'record_name': document.display_name,
-            'email_from': email_from,
-            'reply_to': email_from,
-            'model': self.res_model,
-            'res_id': self.res_id,
-            'reply_to_force_new': True,
-            'email_add_signature': True,
         }

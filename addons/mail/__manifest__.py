@@ -119,6 +119,7 @@ For more specific needs, you may also assign custom-defined actions
         'views/mail_menus.xml',
         'views/res_company_views.xml',
         "data/mail_canned_response_data.xml",
+        'data/mail_templates_invite.xml',
     ],
     'demo': [
         'demo/discuss_channel_demo.xml',
