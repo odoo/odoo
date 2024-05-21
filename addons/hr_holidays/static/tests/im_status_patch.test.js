@@ -1,15 +1,12 @@
-/* @odoo-module */
+import { describe, test } from "@odoo/hoot";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { startServer, start, openDiscuss, contains } from "@mail/../tests/mail_test_helpers";
+import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_helpers";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
+describe.current.tags("desktop");
+defineHrHolidaysModels();
 
-import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
-import { contains } from "@web/../tests/utils";
-
-QUnit.module("im_status");
-
-QUnit.test("on leave & online", async () => {
+test("on leave & online", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "leave_online" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -24,7 +21,7 @@ QUnit.test("on leave & online", async () => {
     await contains(".o-mail-ImStatus i.fa-plane[title='Online']");
 });
 
-QUnit.test("on leave & away", async () => {
+test("on leave & away", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "leave_away" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -39,7 +36,7 @@ QUnit.test("on leave & away", async () => {
     await contains(".o-mail-ImStatus i.fa-plane[title='Idle']");
 });
 
-QUnit.test("on leave & offline", async () => {
+test("on leave & offline", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "leave_offline" });
     const channelId = pyEnv["discuss.channel"].create({
