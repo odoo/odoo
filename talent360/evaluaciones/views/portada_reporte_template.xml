@@ -21,7 +21,7 @@
                 <br></br>
                 <h2 class="text-center">Fecha: <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d')"/>
                 </h2>
-                <t t-call="evaluaciones.encuestas_reporte_filtros"/>
+                    <t t-if="filtros != None" t-call="evaluaciones.encuestas_reporte_filtros"/>
             </div>
             <style>
                 @page {
