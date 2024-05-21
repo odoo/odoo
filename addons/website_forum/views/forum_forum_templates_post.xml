@@ -283,6 +283,7 @@
                         Please wait for a moderator to validate your previous post to be allowed replying questions.
                     </div>
                 </t>
+                <section t-if="related_posts" t-call="website_forum.forum_related_posts"/>
             </div>
         </div>
     </t>
@@ -592,5 +593,27 @@
     </div>
 </template>
 
+<template id="forum_related_posts" name="Related Posts">
+    <table class="o_wforum_table table mt-5" height="1">
+        <thead>
+            <tr class="d-none d-lg-table-row">
+                <th class="o_wforum_table_title">Related Posts</th>
+                <th class="o_wforum_table_posters"></th>
+                <th class="o_wforum_table_replies small fw-normal text-center text-muted">
+                    Replies
+                </th>
+                <th class="o_wforum_table_views small fw-normal text-center text-muted">
+                    Views
+                </th>
+                <th class="o_wforum_table_activity small fw-normal text-center text-muted">
+                    Activity
+                </th>
+            </tr>
+        </thead>
+        <t t-foreach="related_posts" t-as="question" t-call="website_forum.display_post">
+            <t t-set="show_author_avatar" t-value="true"/>
+        </t>
+    </table>
+</template>
     </data>
 </odoo>
