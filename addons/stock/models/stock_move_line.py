@@ -332,6 +332,8 @@ class StockMoveLine(models.Model):
 
         move_to_recompute_state = self.env['stock.move']
         for move_line in mls:
+            if move_line.state == 'done':
+                continue
             location = move_line.location_id
             product = move_line.product_id
             move = move_line.move_id
