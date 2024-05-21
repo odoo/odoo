@@ -19,6 +19,32 @@ export function assignIn(obj, data, keys = Object.keys(data)) {
     return obj;
 }
 
+/**
+ * @template T
+ * @param {T[]} list
+ * @param {number} target
+ * @param {(item: T) => number} [itemToCompareVal]
+ * @returns {T}
+ */
+export function nearestGreaterThanOrEqual(list, target, itemToCompareVal) {
+    const findNext = (left, right, next) => {
+        if (left > right) {
+            return next;
+        }
+        const index = Math.floor((left + right) / 2);
+        const item = list[index];
+        const val = itemToCompareVal?.(item) ?? item;
+        if (val === target) {
+            return item;
+        } else if (val > target) {
+            return findNext(left, index - 1, item);
+        } else {
+            return findNext(index + 1, right, next);
+        }
+    };
+    return findNext(0, list.length - 1, null);
+}
+
 export const mailGlobal = {
     isInTest: false,
     elligibleEnvs: new Set(),
