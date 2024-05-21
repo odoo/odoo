@@ -237,6 +237,10 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'name': 'Leather',
             'attribute_id': chair_fabrics_attribute.id,
         })
+        chair_fabrics_wool = env['product.attribute.value'].create({
+            'name': 'wool',
+            'attribute_id': chair_fabrics_attribute.id,
+        })
         chair_fabrics_other = env['product.attribute.value'].create({
             'name': 'Other',
             'attribute_id': chair_fabrics_attribute.id,
@@ -245,7 +249,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         chair_fabrics_line = env['product.template.attribute.line'].create({
             'product_tmpl_id': cls.configurable_chair.product_tmpl_id.id,
             'attribute_id': chair_fabrics_attribute.id,
-            'value_ids': [(6, 0, [chair_fabrics_leather.id, chair_fabrics_other.id])]
+            'value_ids': [(6, 0, [chair_fabrics_leather.id, chair_fabrics_wool.id, chair_fabrics_other.id])]
         })
         chair_color_line.product_template_value_ids[1].is_custom = True
 
@@ -568,6 +572,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(n_paid, 2, 'There should be 2 paid order.')
 
     def test_04_product_configurator(self):
+        # Making one attribute inactive to verify that it doesn't show
+        configurable_product = self.env['product.product'].search([('name', '=', 'Configurable Chair'), ('available_in_pos', '=', 'True')], limit=1)
+        fabrics_line = configurable_product.attribute_line_ids[2]
+        fabrics_line.product_template_value_ids[1].ptav_active = False
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('ProductConfiguratorTour')
