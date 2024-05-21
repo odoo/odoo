@@ -297,10 +297,10 @@
                                 required="required">
 
                                 <t t-if="format == 'caritas'">
-                                    <img t-att-src="opciones[iterador]" alt="icono" style="width: 25px; height: 25px; background: transparent;"/>
+                                    <img t-att-src="opciones[iterador]" alt="icono" style="width: 25px; height: 25px; background: transparent;" class="mx-4"/>
                                 </t>
                                 <t t-elif="format == 'estrellas'">
-                                    <img t-att-src="opciones[iterador]" alt="estrella" style="width: 120px; height: 25px; background: transparent;"/>
+                                    <img t-att-src="opciones[iterador]" alt="estrella" style="width: 120px; height: 25px; background: transparent;" class="mx-4"/>
                                 </t>
                                 <t t-else="">
                                     <span class="text-break mx-3" t-esc='opciones[iterador]'/>
@@ -316,10 +316,10 @@
                                 required="required">
 
                                 <t t-if="format == 'caritas'">
-                                    <img t-att-src="opciones[iterador]" alt="icono" style="width: 25px; height: 25px; background: transparent;"/>
+                                    <img t-att-src="opciones[iterador]" alt="icono" style="width: 25px; height: 25px; background: transparent;" class="mx-4"/>
                                 </t>
                                 <t t-elif="format == 'estrellas'">
-                                    <img t-att-src="opciones[iterador]" alt="estrella" style="width: 120px; height: 25px; background: transparent;"/>
+                                    <img t-att-src="opciones[iterador]" alt="estrella" style="width: 120px; height: 25px; background: transparent;" class="mx-4"/>
                                 </t>
                                 <t t-else="">
                                     <span class="text-break mx-3" t-esc='opciones[iterador]'/>
@@ -332,7 +332,6 @@
             </div>
         </div>
     </template>
-
 
     <!-- Conditional question -->
     <template id="conditional_question" name="Pregunta: Condicional">
