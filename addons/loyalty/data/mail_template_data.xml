@@ -59,7 +59,7 @@
 
         <t t-foreach="object.program_id.reward_ids" t-as="reward">
             <t t-if="reward.required_points &lt;= object.points">
-                <span style="font-size: 50px; color: #875A7B; font-weight: bold;" t-esc="reward.description">Reward Description</span>
+                <span t-attf-style="font-size: 50px; color: {{object.program_id.company_id.email_secondary_color or '#875A7B'}}; font-weight: bold;" t-esc="reward.description">Reward Description</span>
                 <br/>
             </t>
         </t>

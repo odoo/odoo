@@ -80,7 +80,7 @@
                 <br/><br/>
                 <div t-if="'website_url' in object.job_id and object.job_id.website_url" style="padding: 16px 8px 16px 8px;">
                     <a t-att-href="object.job_id.website_url"
-                        style="background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Job Description</a>
+                        t-attf-style="background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Job Description</a>
                 </div>
 
                 <t t-if="object.user_id">
@@ -170,7 +170,7 @@
 
                 <div t-if="'website_url' in object.job_id and object.job_id.website_url" style="padding: 16px 8px 16px 8px;">
                     <a t-att-href="object.job_id.website_url"
-                        style="background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Job Description</a>
+                        t-attf-style="background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Job Description</a>
                 </div>
 
                 <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
