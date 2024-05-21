@@ -95,6 +95,8 @@ class User(models.Model):
     address_id = fields.Many2one(related='employee_id.address_id', readonly=False, related_sudo=False)
     work_contact_id = fields.Many2one(related='employee_id.work_contact_id', readonly=False, related_sudo=False)
     work_location_id = fields.Many2one(related='employee_id.work_location_id', readonly=False, related_sudo=False)
+    work_location_name = fields.Char(related="employee_id.work_location_name")
+    work_location_type = fields.Selection(related="employee_id.work_location_type")
     employee_parent_id = fields.Many2one(related='employee_id.parent_id', readonly=False, related_sudo=False)
     coach_id = fields.Many2one(related='employee_id.coach_id', readonly=False, related_sudo=False)
     private_street = fields.Char(related='employee_id.private_street', string="Private Street", readonly=False, related_sudo=False)

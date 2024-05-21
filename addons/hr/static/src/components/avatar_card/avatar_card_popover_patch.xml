@@ -4,6 +4,14 @@
         <xpath expr="//div[hasclass('o_avatar_card_buttons')]" position="inside">
             <button class="btn btn-secondary btn-sm" t-if="user.employee_ids?.length > 0" t-on-click.stop="onClickViewEmployee">View profile</button>
         </xpath>
+        <xpath expr="//a[hasclass('o-mail-avatar-card-tel')]" position="after">
+            <span t-if="user.work_location_name" class="text-muted" data-tooltip="Work Location">
+                <i t-if="user.work_location_type === 'office'" class="me-1 fa fa-fw fa-building-o"/>
+                <i t-elif="user.work_location_type === 'home'" class="me-1 fa fa-fw fa-home"/>
+                <i t-else="" class="me-1 fa fa-fw fa-map-marker"/>
+                <t t-esc="user.work_location_name"/>
+            </span>
+        </xpath>
     </t>
 
     <t t-name="hr.avatarCardUserInfos">
