@@ -82,6 +82,14 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
                 "1.0",
                 "10.0"
             ),
+
+            // Inactive variant attributes should not be displayed
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickDisplayedProduct('Configurable Chair'),
+            ProductConfigurator.isShown(),
+            // Active: Other and Leather, Inactive: Wool
+            ProductConfigurator.numberRadioOptions(2),
+            ProductConfigurator.confirmAttributes(),
             Chrome.endTour(),
         ].flat(),
 });
