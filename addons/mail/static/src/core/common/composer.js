@@ -596,7 +596,13 @@ export class Composer extends Component {
      */
     async _sendMessage(value, postData) {
         const thread = this.props.composer.thread;
-        await this.threadService.post(this.thread, value, postData);
+        const post = this.threadService.post.bind(this.threadService, this.thread, value, postData);
+        if (thread.type !== "chatter") {
+            // feature of (optimistic) temp message
+            post();
+        } else {
+            await post();
+        }
         if (thread.type === "mailbox") {
             this.notifySendFromMailbox();
         }
