@@ -8,7 +8,12 @@
         <field name="arch" type="xml">
             <block id="website_info_settings" position="after">
                 <block title="Shop - Payment" id="div_website_payment">
-                    <setting id="website_payment" string="Activate Payments" help="Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring charges.">
+                    <setting
+                        id="website_payment"
+                        string="Activate Payments"
+                        help="Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring charges."
+                        documentation="/applications/finance/payment_providers.html"
+                    >
                         <div class="content-group">
                             <div class="row" invisible="providers_state == 'other_than_paypal'">
                                 <field name="providers_state" invisible="1"/>
