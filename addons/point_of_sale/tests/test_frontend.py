@@ -600,6 +600,11 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'TicketScreenTour', login="pos_user")
 
+    def test_product_information_screen_admin(self):
+        self.product_a.available_in_pos = True
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CheckProductInformation', login="pos_admin")
+
     def test_fixed_tax_negative_qty(self):
         """ Assert the negative amount of a negative-quantity orderline
             with zero-amount product with fixed tax.
