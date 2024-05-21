@@ -30,11 +30,11 @@
         ],
         "web.qunit_suite_tests": [
             "spreadsheet_dashboard/static/tests/**/*",
-            ("remove", "spreadsheet_dashboard/static/tests/mobile/**/*.js"),
+            ("remove", "spreadsheet_dashboard/static/tests/legacy/mobile/**/*.js"),
         ],
         "web.qunit_mobile_suite_tests": [
-            "spreadsheet_dashboard/static/tests/mobile/**/*.js",
-            "spreadsheet_dashboard/static/tests/utils/**/*.js",
+            "spreadsheet_dashboard/static/tests/legacy/mobile/**/*.js",
+            "spreadsheet_dashboard/static/tests/legacy/utils/**/*.js",
             ("include", "spreadsheet.o_spreadsheet"),
         ],
     },
