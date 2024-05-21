@@ -7,6 +7,7 @@ import { insertThousandsSep } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
 import { rpc } from "@web/core/network/rpc";
+import { getElementData } from "@web/core/utils/ui";
 
 var VariantMixin = {
     events: {
@@ -67,10 +68,13 @@ var VariantMixin = {
 
         if (parentEl.classList.contains("main_product")) {
             if (parentEl.querySelector("ul[data-attribute_exclusions]")) {
-                parentCombination = JSON.parse(
-                    parentEl.querySelector("ul[data-attribute_exclusions]").dataset
-                        .attributeExclusions
-                ).parent_combination;
+                const attributeExclusionEl = parent.querySelector("ul[data-attribute_exclusions]");
+                if (attributeExclusionEl && attributeExclusionEl.dataset.attribute_exclusions) {
+                    parentCombination = getElementData(
+                        attributeExclusionEl,
+                        "attribute_exclusions"
+                    ).parent_combination;
+                }
             }
             const optProducts = parentEl.parentElement.querySelectorAll(
                 `[data-parent-unique-id='${parentEl.dataset.uniqueId}']`
@@ -408,8 +412,9 @@ var VariantMixin = {
      */
     _checkExclusions: function (parent, combination, parentExclusions) {
         var self = this;
-        const combinationData = JSON.parse(
-            parent.querySelector("ul[data-attribute_exclusions]").dataset.attribute_exclusions
+        const combinationData = getElementData(
+            parent.querySelector("ul[data-attribute_exclusions]"),
+            "attribute_exclusions"
         );
 
         if (parentExclusions && combinationData.parent_exclusions) {
