@@ -23,6 +23,7 @@ export class CallContextMenu extends Component {
             downloadStats: {},
             uploadStats: {},
             producerStats: {},
+            peerStats: {},
         });
         onMounted(() => {
             if (!this.env.debug) {
@@ -42,7 +43,7 @@ export class CallContextMenu extends Component {
         const candidateType =
             this.rtc.state.connectionType === CONNECTION_TYPES.SERVER
                 ? this.state.downloadStats.remoteCandidateType
-                : this.props.rtcSession.remoteCandidateType;
+                : this.state.peerStats.remoteCandidateType;
         return this.formatProtocol(candidateType);
     }
 
@@ -50,7 +51,7 @@ export class CallContextMenu extends Component {
         const candidateType =
             this.rtc.state.connectionType === CONNECTION_TYPES.SERVER
                 ? this.state.uploadStats.localCandidateType
-                : this.props.rtcSession.localCandidateType;
+                : this.state.peerStats.localCandidateType;
         return this.formatProtocol(candidateType);
     }
 
@@ -130,7 +131,9 @@ export class CallContextMenu extends Component {
             }
             return;
         }
-        await this.props.rtcSession.updateStats();
+        this.state.peerStats = await this.rtc.p2pService.getFormattedStats(
+            this.props.rtcSession.id
+        );
     }
 
     onChangeVolume(ev) {
