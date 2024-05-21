@@ -70,7 +70,12 @@
                             </div>
                         </div>
                     </setting>
-                    <setting id="pricelists_setting" title="With the first mode you can set several prices in the product config form (from Sales tab). With the second one, you set prices and computation rules from Pricelists." help="Manage pricelists to apply specific prices per country, customer, products, etc">
+                    <setting
+                        id="pricelists_setting"
+                        title="With the first mode you can set several prices in the product config form (from Sales tab). With the second one, you set prices and computation rules from Pricelists."
+                        help="Manage pricelists to apply specific prices per country, customer, products, etc"
+                        documentation="/applications/sales/sales/products_prices/prices/pricing.html"
+                    >
                         <field name="group_product_pricelist"/>
                         <div class="content-group mt16" invisible="not group_product_pricelist">
                             <field name="group_sale_pricelist" invisible="1"/>
@@ -87,7 +92,12 @@
                     <setting id="ecom_uom_price_option_setting" string="Product Reference Price" help="Add a reference price per UoM on products (i.e $/kg), in addition to the sale price">
                         <field name="group_show_uom_price"/>
                     </setting>
-                    <setting id="product_attributes_setting" string="Product Variants" help="One product might have different attributes (size, color, ...)">
+                    <setting
+                        id="product_attributes_setting"
+                        string="Product Variants"
+                        help="One product might have different attributes (size, color, ...)"
+                        documentation="/applications/websites/ecommerce/managing_products/variants.html"
+                    >
                         <field name="group_product_variant"/>
                         <div class="content-group" invisible="not group_product_variant">
                             <div class="mt8">
@@ -95,7 +105,13 @@
                             </div>
                         </div>
                     </setting>
-                    <setting id="promotion_coupon_programs" title="Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products." string="Discounts, Loyalty &amp; Gift Card" help="Manage Promotions, coupons, loyalty cards, Gift cards &amp; eWallet">
+                    <setting
+                        id="promotion_coupon_programs"
+                        title="Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products."
+                        string="Discounts, Loyalty &amp; Gift Card"
+                        help="Manage Promotions, coupons, loyalty cards, Gift cards &amp; eWallet"
+                        documentation="/applications/sales/sales/products_prices/loyalty_discount.html"
+                    >
                         <field name="module_loyalty" />
                     </setting>
                     <setting id="wishlist_option_setting" help="Allow signed-in users to save product in a wishlist">
@@ -246,7 +262,11 @@
             </setting>
 
             <setting id="google_analytics_setting" position="after">
-                <setting id="autocomplete_googleplaces_setting" help="Use Google Places API to validate addresses entered by your visitors">
+                <setting
+                    id="autocomplete_googleplaces_setting"
+                    help="Use Google Places API to validate addresses entered by your visitors"
+                    documentation="/applications/websites/website/configuration/address_autocomplete.html"
+                >
                     <field name="module_website_sale_autocomplete"/>
                 </setting>
             </setting>
