@@ -37,6 +37,8 @@ class EvaluacionesController(http.Controller):
 
         parametros = evaluacion.generar_datos_reporte_generico_action(filtros)
 
+        parametros["filtros"] = filtros
+
         if evaluacion.incluir_demograficos:
             parametros.update(evaluacion.generar_datos_demograficos(filtros))
         if evaluacion.tipo == "NOM_035":

@@ -21,6 +21,7 @@
                 <br></br>
                 <h2 class="text-center">Fecha: <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d')"/>
                 </h2>
+                <t t-call="evaluaciones.encuestas_reporte_filtros"/>
             </div>
             <style>
                 @page {
@@ -36,7 +37,7 @@
                     align-items: center;
                     text-align: center;
                     background-color: #f8f9fa; /* Ajusta el color de fondo según tus necesidades */
-                    height: 85vh; /* Para que ocupe toda la altura de la página */
+                    min-height: 85vh; /* Para que ocupe toda la altura de la página */
                     width: 90vw; /* Para que ocupe todo el ancho de la página */
                     font-family: Arial, sans-serif;
                 }
@@ -65,6 +66,27 @@
                     page-break-after: always;
                 }
             </style>
+        </template>
+
+        <!-- Componente de mostrar filtros  -->
+        <template id="encuestas_reporte_filtros" name="Reporte: filtros seleccionados">
+            <div class="py-5">
+                <h3 >Filtrado por</h3>
+                <table>
+                    <t t-foreach="filtros.items()" t-as='item'>
+                        <t t-set="filtro" t-value="item[0]"/>
+                        <t t-set="valores" t-value="item[1]['valores']"/>
+                        <tr>
+                            <td class="text-end" style="padding-right: 15px;" t-esc="filtro + ':'"/>
+                            <td class="text-start">
+                                <t t-foreach="valores" t-as="valor">
+                                    <span class="badge" style="background-color: #003B6E" t-esc="valor"/>
+                                </t>
+                            </td>
+                        </tr>
+                    </t>
+                </table>
+            </div>
         </template>
     </data>
 </odoo>

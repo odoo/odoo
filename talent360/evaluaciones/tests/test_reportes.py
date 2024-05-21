@@ -492,30 +492,57 @@ class TestReportes(TransactionCase):
         }
 
         filtro = self.evaluacion.validar_filtro(
-            {"departamento": ["Test Department"]}, datos_demograficos=datos_demograficos
-        )
-        self.assertEqual(filtro, True)
-
-        filtro = self.evaluacion.validar_filtro(
-            {"departamento": ["Test Department"], "puesto": ["Test Employee"]},
+            {
+                "Departamento": {
+                    "valores": ["Test Department"],
+                    "categoria_interna": "departamento",
+                }
+            },
             datos_demograficos=datos_demograficos,
         )
         self.assertEqual(filtro, True)
 
         filtro = self.evaluacion.validar_filtro(
-            {"departamento": ["Test Department"], "puesto": ["Test Employee"]},
+            {
+                "Departamento": {
+                    "valores": ["Test Department"],
+                    "categoria_interna": "departamento",
+                },
+                "Puesto": {
+                    "valores": ["Test Employee"],
+                    "categoria_interna": "puesto",
+                },
+            },
             datos_demograficos=datos_demograficos,
         )
         self.assertEqual(filtro, True)
 
         filtro = self.evaluacion.validar_filtro(
-            {"departamento": ["Test Department"], "puesto": ["No valido"]},
+            {
+                "Departamento": {
+                    "valores": ["Test Department"],
+                    "categoria_interna": "departamento",
+                },
+                "Puesto": {"valores": ["Test Employee"], "categoria_interna": "puesto"},
+            },
+            datos_demograficos=datos_demograficos,
+        )
+        self.assertEqual(filtro, True)
+
+        filtro = self.evaluacion.validar_filtro(
+            {
+                "Departamento": {
+                    "valores": ["Test Department"],
+                    "categoria_interna": "departamento",
+                },
+                "Puesto": {"valores": ["No valido"], "categoria_interna": "puesto"},
+            },
             datos_demograficos=datos_demograficos,
         )
         self.assertEqual(filtro, False)
 
         filtro = self.evaluacion.validar_filtro(
-            {"departamento": ["Test Department", "Otro departamento"]},
+            {"Departamento": {"valores": ["Test Department"], "categoria_interna": "departamento"}},
             datos_demograficos=datos_demograficos,
         )
         self.assertEqual(filtro, True)
