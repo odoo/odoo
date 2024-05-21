@@ -32,7 +32,7 @@
                         <tbody>
                             <tr>
                                 <td t-if="has_button_access" t-att-style="'border-radius: 3px; text-align: center; background: ' + (company.email_secondary_color or '#875A7B') + ';'">
-                                    <a t-att-href="button_access['url']" style="font-size: 12px; color: #FFFFFF; display: block; padding: 8px 12px 11px; text-decoration: none !important; font-weight: bold;">
+                                    <a t-att-href="button_access['url']" t-att-style="'font-size: 12px; color: ' + (company.email_primary_color or '#FFFFFF') + '; display: block; padding: 8px 12px 11px; text-decoration: none !important; font-weight: bold;'">
                                         <t t-out="button_access['title']"/>
                                     </a>
                                 </td>
