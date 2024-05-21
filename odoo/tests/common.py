@@ -1739,6 +1739,7 @@ class HttpCase(TransactionCase):
         # setup an url opener helper
         self.opener = Opener(self.cr)
 
+    # def url_open(self, url, data=None, files=None, timeout=12, headers=None, allow_redirects=True, head=False):
     def url_open(self, url, data=None, files=None, timeout=12, headers=None, allow_redirects=True, head=False):
         if url.startswith('/'):
             url = self.base_url() + url
