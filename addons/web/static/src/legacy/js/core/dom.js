@@ -44,80 +44,56 @@ var dom = {
 
         return $results;
     },
-    /**
-     * Renders a button with standard odoo template. This does not use any xml
-     * template to avoid forcing the frontend part to lazy load a xml file for
-     * each widget which might want to create a simple button.
-     *
-     * @param {Object} options
-     * @param {Object} [options.attrs] - Attributes to put on the button element
-     * @param {string} [options.attrs.type='button']
-     * @param {string} [options.attrs.class='btn-secondary']
-     *        Note: automatically completed with "btn btn-X"
-     *        (@see options.size for the value of X)
-     * @param {string} [options.size] - @see options.attrs.class
-     * @param {string} [options.icon]
-     *        The specific fa icon class (for example "fa-home") or an URL for
-     *        an image to use as icon.
-     * @param {string} [options.text] - the button's text
-     * @returns {jQuery}
-     */
-    renderButton: function (options) {
-        var jQueryParams = Object.assign({
-            type: 'button',
-        }, options.attrs || {});
 
-        var extraClasses = jQueryParams.class;
-        if (extraClasses) {
-            // If we got extra classes, check if old oe_highlight/oe_link
-            // classes are given and switch them to the right classes (those
-            // classes have no style associated to them anymore).
-            // TODO ideally this should be dropped at some point.
-            extraClasses = extraClasses.replace(/\boe_highlight\b/g, 'btn-primary')
-                                       .replace(/\boe_link\b/g, 'btn-link');
+    // Helper function to determine if an element is scrollable
+    isScrollable(element) {
+        if (!element) {
+            return false;
         }
-
-        jQueryParams.class = 'btn';
-        if (options.size) {
-            jQueryParams.class += (' btn-' + options.size);
-        }
-        jQueryParams.class += (' ' + (extraClasses || 'btn-secondary'));
-
-        var $button = $('<button/>', jQueryParams);
-
-        if (options.icon) {
-            if (options.icon.substr(0, 3) === 'fa-') {
-                $button.append($('<i/>', {
-                    class: 'fa fa-fw o_button_icon ' + options.icon,
-                }));
-            } else {
-                $button.append($('<img/>', {
-                    src: options.icon,
-                }));
-            }
-        }
-        if (options.text) {
-            $button.append($('<span/>', {
-                text: options.text,
-            }));
-        }
-
-        return $button;
+        const overflowY = window.getComputedStyle(element).overflowY;
+        return overflowY === 'auto' || overflowY === 'scroll' ||
+            (overflowY === 'visible' && element === element.ownerDocument.scrollingElement);
     },
+
+    /**
+     * Finds the closest scrollable element for the given element.
+     *
+     * @param {Element} element - The element to find the closest scrollable element for.
+     * @returns {Element} The closest scrollable element.
+     */
+    closestScrollable(element) {
+        const document = element.ownerDocument || window.document;
+
+        while (element && element !== document.scrollingElement) {
+            if (element instanceof Document) {
+                return null;
+            }
+            if (dom.isScrollable(element)) {
+                return element;
+            }
+            element = element.parentElement;
+        }
+        return element || document.scrollingElement;
+    },
+
     /**
      * Computes the size by which a scrolling point should be decreased so that
      * the top fixed elements of the page appear above that scrolling point.
      *
-     * @return {Document} [document=window.document]
+     * @param {Document} [doc=document]
      * @returns {number}
      */
-    scrollFixedOffset(document = window.document) {
+    scrollFixedOffset(doc = document) {
         let size = 0;
-        for (const el of document.querySelectorAll('.o_top_fixed_element')) {
-            size += $(el).outerHeight();
-        }
+        const elements = doc.querySelectorAll('.o_top_fixed_element');
+
+        elements.forEach(el => {
+            size += el.offsetHeight;
+        });
+
         return size;
     },
+
     /**
      * @param {HTMLElement|string} el - the element to scroll to. If "el" is a
      *      string, it must be a valid selector of an element in the DOM or
@@ -128,58 +104,52 @@ var dom = {
      *      string set to '#top' or an HTML element with the "top" id) or the
      *      footer (el is then a string set to '#bottom' or an HTML element
      *      with the "bottom" id) for which exceptions have been made.
-     * @param {number} [options] - same as animate of jQuery
+     * @param {number} [options] - options for the scroll behavior
      * @param {number} [options.extraOffset=0]
      *      extra offset to add on top of the automatic one (the automatic one
      *      being computed based on fixed header sizes)
      * @param {number} [options.forcedOffset]
      *      offset used instead of the automatic one (extraOffset will be
      *      ignored too)
-     * @param {JQuery} [options.$scrollable] the $element to scroll
+     * @param {HTMLElement} [options.scrollable] the element to scroll
      * @return {Promise}
      */
     scrollTo(el, options = {}) {
         if (!el) {
             throw new Error("The scrollTo function was called without any given element");
         }
-        const $el = $(el);
-        if (typeof(el) === 'string' && $el[0]) {
-            el = $el[0];
+        if (typeof el === 'string') {
+            el = document.querySelector(el);
         }
-        const isTopOrBottomHidden = (el === '#top' || el === '#bottom');
-        const $scrollable = isTopOrBottomHidden ? $().getScrollingElement() : (options.$scrollable || $el.parent().closestScrollable());
-        // If $scrollable and $el are not in the same document, we can safely
-        // assume $el is in an $iframe. We retrieve it by filtering the list of
-        // iframes in $scrollable to keep only the one that contains $el.
-        const scrollDocument = $scrollable[0].ownerDocument;
-        const isInOneDocument = isTopOrBottomHidden || scrollDocument === $el[0].ownerDocument;
-        const $iframe = !isInOneDocument && $scrollable.find('iframe').filter((i, node) => $(node).contents().has($el));
-        const $topLevelScrollable = $().getScrollingElement(scrollDocument);
-        const isTopScroll = $scrollable.is($topLevelScrollable);
+        const isTopOrBottomHidden = (el.id === 'top' || el.id === 'bottom');
+        const scrollable = isTopOrBottomHidden ? document.scrollingElement : (options.scrollable || dom.closestScrollable(el.parentElement));
+        const scrollDocument = scrollable.ownerDocument;
+        const isInOneDocument = isTopOrBottomHidden || scrollDocument === el.ownerDocument;
+        const iframe = !isInOneDocument && Array.from(scrollable.querySelectorAll('iframe')).find(node => node.contentDocument.contains(el));
+        const topLevelScrollable = scrollDocument.scrollingElement;
 
         function _computeScrollTop() {
-            if (el === '#top' || el.id === 'top') {
+            if (el.id === 'top') {
                 return 0;
             }
-            if (el === '#bottom' || el.id === 'bottom') {
-                return $scrollable[0].scrollHeight - $scrollable[0].clientHeight;
+            if (el.id === 'bottom') {
+                return scrollable.scrollHeight - scrollable.clientHeight;
             }
 
-            let offsetTop = $el.offset().top;
+            let offsetTop = el.getBoundingClientRect().top + window.scrollY;
             if (el.classList.contains('d-none')) {
                 el.classList.remove('d-none');
-                offsetTop = $el.offset().top;
+                offsetTop = el.getBoundingClientRect().top + window.scrollY;
                 el.classList.add('d-none');
             }
-            const isDocScrollingEl = $scrollable.is(el.ownerDocument.scrollingElement);
-            let elPosition = offsetTop
-                - ($scrollable.offset().top - (isDocScrollingEl ? 0 : $scrollable[0].scrollTop));
-            if (!isInOneDocument && $iframe.length) {
-                elPosition += $iframe.offset().top;
+            const isDocScrollingEl = scrollable === el.ownerDocument.scrollingElement;
+            let elPosition = offsetTop - (scrollable.getBoundingClientRect().top - (isDocScrollingEl ? 0 : scrollable.scrollTop));
+            if (!isInOneDocument && iframe) {
+                elPosition += iframe.getBoundingClientRect().top + window.scrollY;
             }
             let offset = options.forcedOffset;
             if (offset === undefined) {
-                offset = (isTopScroll ? dom.scrollFixedOffset(scrollDocument) : 0) + (options.extraOffset || 0);
+                offset = (scrollable === topLevelScrollable ? dom.scrollFixedOffset(scrollDocument) : 0) + (options.extraOffset || 0);
             }
             return Math.max(0, elPosition - offset);
         }
@@ -187,39 +157,27 @@ var dom = {
         const originalScrollTop = _computeScrollTop();
 
         return new Promise(resolve => {
-            const clonedOptions = Object.assign({}, options);
+            const start = scrollable.scrollTop;
+            const change = originalScrollTop - start;
+            const duration = options.duration || 600;
+            const startTime = performance.now();
 
-            // During the animation, detect any change needed for the scroll
-            // offset. If any occurs, stop the animation and continuing it to
-            // the new scroll point for the remaining time.
-            // Note: limitation, the animation won't be as fluid as possible if
-            // the easing mode is different of 'linear'.
-            clonedOptions.progress = function (a, b, remainingMs) {
-                if (options.progress) {
-                    options.progress.apply(this, ...arguments);
-                }
-                const newScrollTop = _computeScrollTop();
-                if (Math.abs(newScrollTop - originalScrollTop) <= 1.0
-                        && (isTopOrBottomHidden || !(el.classList.contains('o_transitioning')))) {
-                    return;
-                }
-                $scrollable.stop();
-                dom.scrollTo(el, Object.assign({}, options, {
-                    duration: remainingMs,
-                    easing: 'linear',
-                })).then(() => resolve());
-            };
+            function animateScroll(currentTime) {
+                const elapsedTime = currentTime - startTime;
+                const progress = Math.min(elapsedTime / duration, 1);
+                const easeInOutQuad = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+                const newScrollTop = start + change * easeInOutQuad;
 
-            // Detect the end of the animation to be able to indicate it to
-            // the caller via the returned Promise.
-            clonedOptions.complete = function () {
-                if (options.complete) {
-                    options.complete.apply(this, ...arguments);
-                }
-                resolve();
-            };
+                scrollable.scrollTop = newScrollTop;
 
-            $scrollable.animate({scrollTop: originalScrollTop}, clonedOptions);
+                if (elapsedTime < duration) {
+                    requestAnimationFrame(animateScroll);
+                } else {
+                    resolve();
+                }
+            }
+
+            requestAnimationFrame(animateScroll);
         });
     },
 };

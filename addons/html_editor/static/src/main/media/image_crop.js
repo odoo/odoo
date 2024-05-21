@@ -241,8 +241,7 @@ export class ImageCrop extends Component {
         // to allow editing.
         if (rect.top < viewportTop || viewportBottom - rect.bottom < 100) {
             await scrollTo(this.media, {
-                easing: "linear",
-                duration: 500,
+                behavior: "smooth",
                 ...(scrollable && { scrollable }),
             });
         }

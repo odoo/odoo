@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { renderToElement } from "@web/core/utils/render";
-import dom from "@web/legacy/js/core/dom";
+import { scrollTo } from "@web/core/utils/scrolling";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import portalComposer from "@portal/js/portal_composer";
 import { range } from "@web/core/utils/numbers";
@@ -329,7 +329,7 @@ publicWidget.registry.portalChatter = publicWidget.Widget.extend({
         await Promise.all(proms);
         // scroll to the right place after chatter loaded
         if (window.location.hash === `#${this.el.id}`) {
-            dom.scrollTo(this.el, {duration: 0});
+            scrollTo(this.el, { behavior: "instant" });
         }
     },
 });
