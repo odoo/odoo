@@ -270,25 +270,6 @@ class AccountAnalyticLine(models.Model):
                         view_data['toolbar']['print'] = [print_data for print_data in print_data_list if print_data['id'] != wip_report_id]
         return res
 
-    @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        """ Set the correct label for `unit_amount`, for timesheet record"""
-        arch, view = super()._get_view(view_id, view_type, **options)
-        # Use of sudo as the portal user doesn't have access to uom
-        arch = self.sudo()._apply_timesheet_label(arch, view_type=view_type)
-        return arch, view
-
-    @api.model
-    def _apply_timesheet_label(self, view_node, view_type='form'):
-        doc = view_node
-        encoding_uom = self.env.company.timesheet_encode_uom_id
-        # Here, we select only the unit_amount field having no string set to give priority to
-        # custom inheretied view stored in database. Even if normally, no xpath can be done on
-        # 'string' attribute.
-        for node in doc.xpath("//field[@name='unit_amount'][@widget='timesheet_uom'][not(@string)]"):
-            node.set('string', _('Time Spent'))
-        return doc
-
     def _timesheet_get_portal_domain(self):
         if self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
             # Then, he is internal user, and we take the domain for this current user
