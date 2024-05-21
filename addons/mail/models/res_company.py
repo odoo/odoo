@@ -26,7 +26,7 @@ class ResCompany(models.Model):
         string="Formatted Email",
         compute="_compute_email_formatted", compute_sudo=True)
     email_primary_color = fields.Char(
-        "Email Header Color", compute="_compute_email_primary_color",
+        "Email Button Text", compute="_compute_email_primary_color",
         readonly=False, store=True)
     email_secondary_color = fields.Char(
         "Email Button Color", compute="_compute_email_secondary_color",
