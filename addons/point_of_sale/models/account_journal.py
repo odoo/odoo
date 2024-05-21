@@ -21,3 +21,18 @@ class AccountJournal(models.Model):
         for payment_method in self.sudo().pos_payment_method_ids:
             account_ids.add(payment_method.outstanding_account_id.id or self.company_id.account_journal_payment_debit_account_id.id)
         return self.env['account.account'].browse(account_ids)
+
+    @api.model
+    def _ensure_company_account_journal(self):
+        journal = self.search([
+            ('code', '=', 'POSS'),
+            ('company_id', '=', self.env.company.id),
+        ], limit=1)
+        if not journal:
+            journal = self.create({
+                'name': _('Point of Sale'),
+                'code': 'POSS',
+                'type': 'general',
+                'company_id': self.env.company.id,
+            })
+        return journal

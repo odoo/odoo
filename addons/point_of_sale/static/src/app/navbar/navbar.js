@@ -69,38 +69,6 @@ export class Navbar extends Component {
             this.pos.showScreen("ProductScreen");
         }
     }
-    async onTicketButtonClick() {
-        if (this.isTicketScreenShown) {
-            this.pos.closeScreen();
-        } else {
-            if (this._shouldLoadOrders()) {
-                try {
-                    this.pos.setLoadingOrderState(true);
-                    const orders = await this.pos.getServerOrders();
-                    if (orders && orders.length > 0) {
-                        const message = _t(
-                            "%s orders have been loaded from the server. ",
-                            orders.length
-                        );
-                        this.notification.add(message);
-                    }
-                } finally {
-                    this.pos.setLoadingOrderState(false);
-                    this.pos.showScreen("TicketScreen");
-                }
-            } else {
-                this.pos.showScreen("TicketScreen");
-            }
-        }
-    }
-
-    _shouldLoadOrders() {
-        return this.pos.config.raw.trusted_config_ids.length > 0;
-    }
-
-    get isTicketScreenShown() {
-        return this.pos.mainScreen.component === TicketScreen;
-    }
 
     get orderCount() {
         return this.pos.get_order_list().length;

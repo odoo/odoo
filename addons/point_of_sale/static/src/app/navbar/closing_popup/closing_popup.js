@@ -10,11 +10,8 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { parseFloat } from "@web/views/fields/parsers";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
+import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { deduceUrl } from "@point_of_sale/utils";
-
-export class CancelConfirmationDialog extends ConfirmationDialog {
-    static template = "point_of_sale.CancelConfirmationDialog";
-}
 
 export class ClosePosPopup extends Component {
     static components = { SaleDetailsButton, Input, Dialog };
@@ -60,14 +57,17 @@ export class ClosePosPopup extends Component {
             return;
         }
         if (this.hasUserAuthority()) {
-            this.dialog.add(CancelConfirmationDialog, {
+            const response = await ask(this.dialog, {
                 title: _t("Payments Difference"),
                 body: _t(
                     "The money counted doesn't match what we expected. Want to log the difference for the books?"
                 ),
-                confirm: this.closeSession.bind(this),
-                cancel: () => {},
+                confirmLabel: _t("Proceed Anyway"),
+                cancelLabel: _t("Discard"),
             });
+            if (response) {
+                return this.closeSession();
+            }
             return;
         }
         this.dialog.add(ConfirmationDialog, {
@@ -232,6 +232,11 @@ export class ClosePosPopup extends Component {
         this.dialog.add(AlertDialog, {
             title: response.title || "Error",
             body: response.message,
+            confirmLabel: _t("Review Orders"),
+            confirm: () => {
+                this.props.close();
+                this.pos.onTicketButtonClick();
+            },
         });
         if (response.redirect) {
             window.location = "/web#action=point_of_sale.action_client_pos_menu";

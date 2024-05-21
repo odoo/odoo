@@ -428,3 +428,18 @@ class PosConfig(models.Model):
             'target': 'new',
             'views': [(self.env.ref('pos_self_order.pos_self_order_kiosk_read_only_form_dialog').id, 'form')],
         }
+
+    @api.model
+    def _modify_pos_restaurant_config(self):
+        pos_config = self.env.ref('pos_restaurant.pos_config_main_restaurant', raise_if_not_found=False)
+        if pos_config:
+            pos_config.write({
+                'self_ordering_mode': 'mobile',
+                'self_ordering_service_mode': 'table',
+                'self_ordering_pay_after': 'meal'
+            })
+
+    @api.model
+    def _load_restaurant_data(self):
+        super()._load_restaurant_data()
+        self._modify_pos_restaurant_config()

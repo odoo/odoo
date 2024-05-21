@@ -4,10 +4,12 @@
     <t t-name="point_of_sale.ClosePosPopup">
         <Dialog contentClass="'close-pos-popup'">
             <t t-set-slot="header">
-                <h4 class="modal-title">Closing Register</h4>
-                <div class="total-orders fw-bolder">
-                    Total <t t-esc="props.orders_details.quantity"/> orders:
-                    <span class="amount" t-esc="env.utils.formatCurrency(props.orders_details.amount)"/>
+                <div class="d-flex flex-grow-1 justify-content-between">
+                    <h4 class="align-middle my-1">Closing Register</h4>
+                    <div class="total-orders fw-bolder align-middle my-1">
+                        <t t-esc="props.orders_details.quantity"/> orders:
+                        <span class="amount" t-esc="env.utils.formatCurrency(props.orders_details.amount)"/>
+                    </div>
                 </div>
             </t>
                 <div class="payment-methods-overview overflow-auto">
@@ -29,9 +31,7 @@
                                         <Input tModel="[state.payments[props.default_cash_details.id], 'counted']"
                                             callback.bind="(value) =>  this.setManualCashInput(value)"
                                             isValid.bind="env.utils.isValidFloat" class="'cash-input'"/>
-                                        <div class="button icon ClosePosPopup btn btn-secondary" t-on-click="openDetailsPopup">
-                                            <i class="fa fa-money fa-2x" role="img" title="Open the money details popup"/>
-                                        </div>
+                                        <button class="icon fa fa-money fa-lg btn btn-secondary" t-on-click="openDetailsPopup" />
                                     </td>
                                     <t t-set="diff" t-value="getDifference(props.default_cash_details.id)" />
                                     <td t-esc="env.utils.isValidFloat(diff) ? env.utils.formatCurrency(diff) : ''"
@@ -68,7 +68,7 @@
                         </t>
                         <tbody t-if="props.other_payment_methods.length > 0">
                             <tr t-foreach="props.other_payment_methods" t-as="pm" t-key="pm.id">
-                                <td t-esc="pm.name"/>
+                                <td t-esc="pm.name" t-att-class="{ 'pt-2': pm_index === 0 }" />
                                 <td t-esc="env.utils.formatCurrency(pm.amount)"/>
                                 <t t-set="_showDiff" t-value="pm.type === 'bank' and pm.number !== 0" />
                                 <td t-if="_showDiff">
@@ -84,13 +84,13 @@
                 <div class="notes-container d-flex flex-column flex-sm-row gap-3 border-top mt-3 pt-3">
                     <div class="opening-notes-container d-flex flex-column flex-grow-1 align-items-start" t-if="props.opening_notes" >
                         <label class="form-label" for="props.opening_notes">Opening note</label>
-                        <textarea class="opening-notes form-control" id="props.opening_notes">
+                        <textarea class="opening-notes form-control" rows="7" id="props.opening_notes">
                             <t t-esc="props.opening_notes"/>
                         </textarea>
                     </div>
                     <div class="closing-notes-container d-flex flex-column flex-grow-1 align-items-start">
                         <label class="form-label" for="closingNotes">Closing note</label>
-                        <textarea class="closing-notes form-control" id="closingNotes" placeholder="Add a closing note..." t-model="state.notes"/>
+                        <textarea class="closing-notes form-control" rows="7" id="closingNotes" placeholder="Add a closing note..." t-model="state.notes"/>
                     </div>
                 </div>
             <t t-set-slot="footer">
@@ -99,7 +99,7 @@
                     <button class="button btn btn-lg btn-secondary" t-att-disabled="!canCancel()" t-on-click="cancel">Discard</button>
                 </div>
                 <!-- Download Sale Details -->
-                <div class="modal-footer-right d-flex gap-2">
+                <div class="modal-footer-right d-flex gap-2 ms-auto">
                     <button class="button icon btn btn-lg btn-secondary"
                         t-on-click="downloadSalesReport"
                         title="Download a report with all the sales of the current PoS Session">
@@ -111,22 +111,6 @@
                         <SaleDetailsButton/>
                     </button>
                 </div>
-            </t>
-        </Dialog>
-    </t>
-    <t t-name="point_of_sale.CancelConfirmationDialog">
-        <Dialog size="'md'" modalRef="modalRef">
-            <t t-set-slot="header">
-                <h4 class="modal-title title" t-esc="props.title" />
-            </t>
-            <p t-out="props.body" class="text-prewrap"/>
-            <t t-set-slot="footer">
-                <button class="button confirm btn btn-secondary" t-on-click="props.confirm">
-                    Proceed anyway
-                </button>
-                <button class="button cancel btn btn-primary" t-on-click="props.close">
-                    Discard
-                </button>
             </t>
         </Dialog>
     </t>

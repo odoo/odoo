@@ -35,7 +35,9 @@ export class PaymentScreen extends Component {
         this.notification = useService("notification");
         this.hardwareProxy = useService("hardware_proxy");
         this.printer = useService("printer");
-        this.payment_methods_from_config = this.pos.config.payment_method_ids;
+        this.payment_methods_from_config = this.pos.config.payment_method_ids
+            .slice()
+            .sort((a, b) => a.sequence - b.sequence);
         this.numberBuffer = useService("number_buffer");
         this.numberBuffer.use(this._getNumberBufferConfig);
         useErrorHandlers();

@@ -18,6 +18,7 @@ class ResCompany(models.Model):
     point_of_sale_ticket_unique_code = fields.Boolean(
         string='Generate a code on ticket',
         help="Add a 5-digit code on the receipt to allow the user to request the invoice for an order on the portal.")
+    point_of_sale_show_predefined_scenarios = fields.Boolean("Show Predefined Scenarios", default=True)
 
     @api.model
     def _load_pos_data_domain(self, data):

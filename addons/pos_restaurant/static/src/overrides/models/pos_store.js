@@ -360,4 +360,7 @@ patch(PosStore.prototype, {
         }
         return super.addProductToCurrentOrder(...arguments);
     },
+    _shouldLoadOrders() {
+        return super._shouldLoadOrders() || this.config.module_pos_restaurant;
+    },
 });

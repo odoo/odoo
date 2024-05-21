@@ -38,5 +38,6 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
             "pos_sale/static/tests/unit/pos_app_tests.js",
         ],
     },
+    'post_init_hook': '_pos_sale_post_init',
     'license': 'LGPL-3',
 }

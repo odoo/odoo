@@ -158,7 +158,7 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
             ProductScreen.closeWithCashAmount("50.0"),
             ProductScreen.cashDifferenceIs("-1.00"),
             Dialog.confirm("Close Register"),
-            Dialog.confirm("Proceed Anyway", ".btn-secondary"),
+            Dialog.confirm("Proceed Anyway", ".btn-primary"),
             ProductScreen.lastClosingCashIs("50.00"),
         ].flat(),
 });

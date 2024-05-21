@@ -29,9 +29,6 @@ patch(Navbar.prototype, {
         }
         return super.orderCount;
     },
-    _shouldLoadOrders() {
-        return super._shouldLoadOrders() || this.pos.config.module_pos_restaurant;
-    },
     onSwitchButtonClick() {
         const mode = this.pos.floorPlanStyle === "kanban" ? "default" : "kanban";
         localStorage.setItem("floorPlanStyle", mode);

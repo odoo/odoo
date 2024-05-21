@@ -160,7 +160,13 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         })
 
         # Set basic defaults
-        cls.pos_sale_journal = cls.env['account.journal'].search([('company_id', '=', cls.company.id), ('code', '=', 'POSS')])
+        cls.pos_sale_journal = cls.env['account.journal'].create({
+            'type': 'general',
+            'name': 'Point of Sale',
+            'code': 'POSS',
+            'company_id': cls.company.id,
+            'sequence': 20
+        })
         cls.sales_account = cls.company_data['default_account_revenue']
         cls.invoice_journal = cls.company_data['default_journal_sale']
         cls.receivable_account = cls.company_data['default_account_receivable']

@@ -2,20 +2,17 @@
     .table-handle {
         padding: 0px;
         position: absolute;
-        width: 48px;
-        height: 48px;
-        border-radius: 24px;
+        width: 24px;
+        height: 24px;
+        border-radius: 12px;
         background: white;
         box-shadow: 0px 2px 3px rgba(0,0,0,0.2);
         /* See o-grab-cursor mixin */
         cursor: url(/web/static/img/openhand.cur), grab;
-        transition: width 150ms linear, height 150ms linear;
+        transition: 150ms;
         z-index: 100;
-
         &:hover {
-            width: 60px;
-            height: 60px;
-            border-radius: 30px;
+            transform: scale(1.5);
         }
     }
 }
