@@ -2,7 +2,6 @@
 
 import { markup } from "@odoo/owl";
 import { FlagMarkAsOffensiveDialog } from "../components/flag_mark_as_offensive/flag_mark_as_offensive";
-import dom from "@web/legacy/js/core/dom";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { cookie } from "@web/core/browser/cookie";;
 import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
@@ -12,6 +11,7 @@ import { rpc } from "@web/core/network/rpc";
 import { escape } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
+import { scrollTo } from "@web/core/utils/scrolling";
 
 publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',
@@ -174,8 +174,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         this.$('#post_reply').on('shown.bs.collapse', function (e) {
             const replyEl = document.querySelector('#post_reply');
             const scrollingElement = $(replyEl.parentNode).closestScrollable()[0];
-            dom.scrollTo(replyEl, {
-                forcedOffset: $(scrollingElement).innerHeight() - $(replyEl).innerHeight(),
+            scrollTo(replyEl, {
+                behavior: "smooth",
+                offset: $(scrollingElement).innerHeight() - $(replyEl).innerHeight(),
             });
         });
         document.querySelectorAll('.o_wforum_question, .o_wforum_answer, .o_wforum_post_comment, .o_wforum_last_activity')

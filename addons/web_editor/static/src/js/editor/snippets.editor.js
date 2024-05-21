@@ -1149,7 +1149,7 @@ var SnippetEditor = Widget.extend({
         self.$target.detach();
         self.$el.addClass('d-none');
 
-        var $selectorSiblings;
+        var $selectorSiblings = $();
         for (var i = 0; i < self.selectorSiblings.length; i++) {
             let $siblings = self.selectorSiblings[i].all();
             if (this.excludeAncestors) {
@@ -3717,7 +3717,8 @@ class SnippetsMenu extends Component {
         if (modalEl && !$(modalEl).hasScrollableContent()) {
             return;
         }
-        return dom.scrollTo($el[0], {extraOffset: 50, $scrollable: $scrollable});
+        const scrollable = $scrollable?.get(0);
+        return dom.scrollTo($el[0], {extraOffset: 50, scrollable: scrollable});
     }
     /**
      * @private
