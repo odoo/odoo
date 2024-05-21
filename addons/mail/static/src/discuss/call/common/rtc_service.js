@@ -15,15 +15,15 @@ import { memoize } from "@web/core/utils/functions";
 import { callActionsRegistry } from "./call_actions";
 
 /**
- * @return {Promise<{ SfuClient: import("@mail/static/libs/odoo_sfu/odoo_sfu").SfuClient, SFU_CLIENT_STATE: import("@mail/static/libs/odoo_sfu/odoo_sfu").SFU_CLIENT_STATE }>}
+ * @typedef {'audio' | 'camera' | 'screen' } streamType
+ */
+
+/**
+ * @return {Promise<{ SfuClient: import("@mail/../lib/odoo_sfu/odoo_sfu").SfuClient, SFU_CLIENT_STATE: import("@mail/../lib/odoo_sfu/odoo_sfu").SFU_CLIENT_STATE }>}
  */
 const loadSfuAssets = memoize(async () => await loadBundle("mail.assets_odoo_sfu"));
 
-const ORDERED_TRANSCEIVER_NAMES = ["audio", "screen", "camera"];
 export const CONNECTION_TYPES = { P2P: "p2p", SERVER: "server" };
-const PEER_NOTIFICATION_WAIT_DELAY = 50;
-const RECOVERY_TIMEOUT = 15_000;
-const RECOVERY_DELAY = 3_000;
 const SCREEN_CONFIG = {
     width: { max: 1920 },
     height: { max: 1080 },
@@ -40,47 +40,10 @@ const CAMERA_CONFIG = {
         max: 30,
     },
 };
-const INVALID_ICE_CONNECTION_STATES = new Set(["disconnected", "failed", "closed"]);
 const IS_CLIENT_RTC_COMPATIBLE = Boolean(window.RTCPeerConnection && window.MediaStream);
 const DEFAULT_ICE_SERVERS = [
     { urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"] },
 ];
-
-let tmpId = 0;
-
-/**
- * Returns a string representation of a data channel for logging and
- * debugging purposes.
- *
- * @param {RTCDataChannel} dataChannel
- * @returns string
- */
-function serializeRTCDataChannel(data) {
-    const toLog = [
-        "binaryType",
-        "bufferedAmount",
-        "bufferedAmountLowThreshold",
-        "id",
-        "label",
-        "maxPacketLifeTime",
-        "maxRetransmits",
-        "negotiated",
-        "ordered",
-        "protocol",
-        "readyState",
-    ];
-    return JSON.stringify(Object.fromEntries(toLog.map((p) => [p, data[p]])));
-}
-
-/**
- * @param {RTCPeerConnection} peerConnection
- * @param {String} trackKind
- * @returns {RTCRtpTransceiver} the transceiver used for this trackKind.
- */
-function getTransceiver(peerConnection, trackKind) {
-    const transceivers = peerConnection.getTransceivers();
-    return transceivers[ORDERED_TRANSCEIVER_NAMES.indexOf(trackKind)];
-}
 
 /**
  * @param {Array<RTCIceServer>} iceServers
@@ -101,6 +64,87 @@ function hasTurn(iceServers) {
         }
         return hasTurn;
     });
+}
+
+/**
+ * Allows to use both peer to peer and SFU connections simultaneously, which makes it possible to
+ * establish a connection with other call participants with the SFU when possible, and still handle
+ * peer-to-peer for the participants who did not manage to establish a SFU connection.
+ */
+class Network {
+    /** @type {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer} */
+    p2p;
+    /** @type {import("@mail/../lib/odoo_sfu/odoo_sfu").SfuClient} */
+    sfu;
+    /** @type {array[{ name: string, f: EventListener }]} */
+    _listeners = [];
+    /**
+     * @param {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer} p2p
+     * @param {import("@mail/../lib/odoo_sfu/odoo_sfu").SfuClient} [sfu]
+     */
+    constructor(p2p, sfu) {
+        this.p2p = p2p;
+        this.sfu = sfu;
+    }
+
+    /**
+     * add a SFU to the network.
+     * @param {import("@mail/../lib/odoo_sfu/odoo_sfu").SfuClient} sfu
+     */
+    addSfu(sfu) {
+        if (this.sfu) {
+            this.sfu.disconnect();
+        }
+        this.sfu = sfu;
+    }
+    /**
+     * @param {string} name
+     * @param {function} f
+     * @override
+     */
+    addEventListener(name, f) {
+        this._listeners.push({ name, f });
+        this.p2p.addEventListener(name, f);
+        this.sfu?.addEventListener(name, f);
+    }
+    /**
+     * @param {streamType} type
+     * @param {MediaStreamTrack | null} track track to be sent to the other call participants,
+     * not setting it will remove the track from the server
+     */
+    async updateUpload(type, track) {
+        await this.p2p.updateUpload(type, track);
+        await this.sfu?.updateUpload(type, track);
+    }
+    /**
+     * Stop or resume the consumption of tracks from the other call participants.
+     *
+     * @param {number} sessionId
+     * @param {Object<[streamType, boolean]>} states e.g: { audio: true, camera: false }
+     */
+    updateDownload(sessionId, states) {
+        this.p2p.updateDownload(sessionId, states);
+        this.sfu?.updateDownload(sessionId, states);
+    }
+    /**
+     * Updates the server with the info of the session (isTalking, isCameraOn,...) so that it can broadcast it to the
+     * other call participants.
+     *
+     * @param {import("#src/models/session.js").SessionInfo} info
+     * @param {Object} [options] see documentation of respective classes
+     */
+    updateInfo(info, options = {}) {
+        this.p2p.updateInfo(info, options);
+        this.sfu?.updateInfo(info, options);
+    }
+    disconnect() {
+        for (const { name, f } of this._listeners.splice(0)) {
+            this.p2p.removeEventListener(name, f);
+            this.sfu?.removeEventListener(name, f);
+        }
+        this.p2p.disconnect();
+        this.sfu?.disconnect();
+    }
 }
 
 export class Rtc extends Record {
@@ -125,7 +169,11 @@ export class Rtc extends Record {
     });
     selfSession = Record.one("RtcSession");
     serverInfo;
-    /** @type {import("@mail/static/libs/odoo_sfu/odoo_sfu").SfuClient} */
+    /**
+     * @type {Network}
+     */
+    network;
+    /** @type {import("@mail/../lib/odoo_sfu/odoo_sfu").SfuClient} */
     sfuClient = undefined;
 
     /** @type {Object<string, boolean>} The keys are action names and the values are booleans indicating whether each action is active */
@@ -173,8 +221,6 @@ export class Rtc extends Record {
             sendScreen: false,
             serverState: undefined,
             updateAndBroadcastDebounce: undefined,
-            isPendingNotify: false,
-            notificationsToSend: new Map(),
             audioTrack: undefined,
             cameraTrack: undefined,
             screenTrack: undefined,
@@ -184,17 +230,6 @@ export class Rtc extends Record {
              * audioTrack for the voice activation feature.
              */
             disconnectAudioMonitor: undefined,
-            /**
-             * Object { sessionId: timeoutId<Number> }
-             * Contains the timeoutIds of the reconnection attempts.
-             */
-            recoverTimeouts: new Map(),
-            /**
-             * Set of sessionIds, used to track which calls are outgoing,
-             * which is used when attempting to recover a failed peer connection by
-             * inverting the call direction.
-             */
-            outgoingSessions: new Set(),
             pttReleaseTimeout: undefined,
             sourceCameraStream: null,
             sourceScreenStream: null,
@@ -207,6 +242,10 @@ export class Rtc extends Record {
         this.notification = services.notification;
         this.soundEffectsService = services["mail.sound_effects"];
         this.pttExtService = services["discuss.ptt_extension"];
+        /**
+         * @type {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer}
+         */
+        this.p2pService = services["discuss.p2p"];
         onChange(this.store.settings, "useBlur", () => {
             if (this.state.sendCamera) {
                 this.toggleVideo("camera", true);
@@ -314,31 +353,6 @@ export class Rtc extends Record {
         this.setTalking(true);
     }
 
-    async loadSfuClient() {
-        this.state.connectionType = CONNECTION_TYPES.P2P;
-        if (!this.serverInfo) {
-            return;
-        }
-        try {
-            await loadSfuAssets();
-            const sfuModule = odoo.loader.modules.get("@mail/../lib/odoo_sfu/odoo_sfu");
-            this.disconnectFromSfu();
-            this.SFU_CLIENT_STATE = sfuModule.SFU_CLIENT_STATE;
-            this.sfuClient = new sfuModule.SfuClient();
-            this.sfuClient.addEventListener("update", this._handleSfuClientUpdates);
-            this.sfuClient.addEventListener("stateChange", this._handleSfuClientStateChange);
-            this.state.connectionType = CONNECTION_TYPES.SERVER;
-        } catch (e) {
-            this.notification.add(
-                _t("Failed to load the SFU server, falling back to peer-to-peer"),
-                {
-                    type: "warning",
-                }
-            );
-            this.log(this.selfSession, "failed to load sfu server", { error: e });
-        }
-    }
-
     /**
      * @param {Object} param0
      * @param {any} param0.id
@@ -378,15 +392,6 @@ export class Rtc extends Record {
         this.state.hasPendingRequest = false;
     }
 
-    disconnectFromSfu() {
-        if (!this.sfuClient) {
-            return;
-        }
-        this.sfuClient.removeEventListener("update", this._handleSfuClientUpdates);
-        this.sfuClient.removeEventListener("stateChange", this._handleSfuClientStateChange);
-        this.sfuClient.disconnect();
-    }
-
     /**
      * @param {import("models").Thread} [channel]
      */
@@ -395,7 +400,7 @@ export class Rtc extends Record {
         channel.activeRtcSession = undefined;
         if (channel.eq(this.state.channel)) {
             this.pttExtService.unsubscribe();
-            this.disconnectFromSfu();
+            this.network?.disconnect();
             this.clear();
             this.soundEffectsService.play("channel-leave");
         }
@@ -411,6 +416,9 @@ export class Rtc extends Record {
      * @param {boolean} active
      */
     setRemoteRaiseHand(session, active) {
+        if (Boolean(session.raisingHand) === active) {
+            return;
+        }
         Object.assign(session, {
             raisingHand: active ? new Date() : undefined,
         });
@@ -422,158 +430,6 @@ export class Rtc extends Record {
             });
         } else {
             this.removeCallNotification(notificationId);
-        }
-    }
-
-    async handleNotification(sessionId, content) {
-        const { event, channelId, payload } = JSON.parse(content);
-        const session = this.store.RtcSession.get(sessionId);
-        if (
-            !session ||
-            !IS_CLIENT_RTC_COMPATIBLE ||
-            (!session.peerConnection &&
-                (!channelId || !this.state.channel || channelId !== this.state.channel.id))
-        ) {
-            return;
-        }
-        switch (event) {
-            case "offer": {
-                this.log(session, `received notification: ${event}`, {
-                    step: "received offer",
-                });
-                const peerConnection = session.peerConnection || this.createConnection(session);
-                if (
-                    !peerConnection ||
-                    INVALID_ICE_CONNECTION_STATES.has(peerConnection.iceConnectionState) ||
-                    peerConnection.signalingState === "have-remote-offer"
-                ) {
-                    return;
-                }
-                const description = new window.RTCSessionDescription(payload.sdp);
-                try {
-                    await peerConnection.setRemoteDescription(description);
-                } catch (e) {
-                    this.log(session, "offer handling: failed at setting remoteDescription", {
-                        error: e,
-                    });
-                    return;
-                }
-                if (peerConnection.getTransceivers().length === 0) {
-                    for (const trackKind of ORDERED_TRANSCEIVER_NAMES) {
-                        const type = ["screen", "camera"].includes(trackKind) ? "video" : trackKind;
-                        peerConnection.addTransceiver(type);
-                    }
-                }
-                for (const transceiverName of ORDERED_TRANSCEIVER_NAMES) {
-                    await this.updateRemote(session, transceiverName);
-                }
-
-                let answer;
-                try {
-                    answer = await peerConnection.createAnswer();
-                } catch (e) {
-                    this.log(session, "offer handling: failed at creating answer", {
-                        error: e,
-                    });
-                    return;
-                }
-                try {
-                    await peerConnection.setLocalDescription(answer);
-                } catch (e) {
-                    this.log(session, "offer handling: failed at setting localDescription", {
-                        error: e,
-                    });
-                    return;
-                }
-
-                this.log(session, "sending notification: answer", {
-                    step: "sending answer",
-                });
-                await this.notify([session], "answer", {
-                    sdp: peerConnection.localDescription,
-                });
-                this.recover(session, RECOVERY_TIMEOUT, "standard answer timeout");
-                break;
-            }
-            case "answer": {
-                this.log(session, `received notification: ${event}`, {
-                    step: "received answer",
-                });
-                const peerConnection = session.peerConnection;
-                if (
-                    !peerConnection ||
-                    INVALID_ICE_CONNECTION_STATES.has(peerConnection.iceConnectionState) ||
-                    peerConnection.signalingState === "stable" ||
-                    peerConnection.signalingState === "have-remote-offer"
-                ) {
-                    return;
-                }
-                const description = new window.RTCSessionDescription(payload.sdp);
-                try {
-                    await peerConnection.setRemoteDescription(description);
-                } catch (e) {
-                    this.log(session, "answer handling: Failed at setting remoteDescription", {
-                        error: e,
-                    });
-                    // ignored the transaction may have been resolved by another concurrent offer.
-                }
-                break;
-            }
-            case "ice-candidate": {
-                const peerConnection = session.peerConnection;
-                if (
-                    !peerConnection ||
-                    INVALID_ICE_CONNECTION_STATES.has(peerConnection.iceConnectionState)
-                ) {
-                    return;
-                }
-                const rtcIceCandidate = new window.RTCIceCandidate(payload.candidate);
-                try {
-                    await peerConnection.addIceCandidate(rtcIceCandidate);
-                } catch (error) {
-                    this.log(
-                        session,
-                        "ICE candidate handling: failed at adding the candidate to the connection",
-                        { error }
-                    );
-                    this.recover(session, RECOVERY_TIMEOUT, "failed at adding ice candidate");
-                }
-                break;
-            }
-            case "disconnect":
-                this.log(session, `received notification: ${event}`, {
-                    step: " peer cleanly disconnected ",
-                });
-                this.disconnect(session);
-                break;
-            case "raise_hand":
-                this.setRemoteRaiseHand(session, payload.active);
-                break;
-            case "trackChange": {
-                if (payload.type === "audio") {
-                    const { isSelfMuted, isTalking, isDeaf } = payload.state;
-                    if (!session.audioStream) {
-                        return;
-                    }
-                    Object.assign(session, {
-                        isSelfMuted,
-                        isTalking,
-                        isDeaf,
-                    });
-                    return;
-                }
-                /**
-                 * Since WebRTC "unified plan", the local track is tied to the
-                 * remote transceiver.sender and not the remote track. Therefore
-                 * when the remote track is 'ended' the local track is not 'ended'
-                 * but only 'muted'. This is why we do not stop the local track
-                 * until the peer is completely removed.
-                 */
-                this.updateActiveSession(session, payload.type);
-                session.videoStreams.delete(payload.type);
-                session.updateStreamState(payload.type, false);
-                break;
-            }
         }
     }
 
@@ -627,6 +483,64 @@ export class Rtc extends Record {
     // Private
     //----------------------------------------------------------------------
 
+    async _loadSfu() {
+        const load = async () => {
+            await loadSfuAssets();
+            const sfuModule = odoo.loader.modules.get("@mail/../lib/odoo_sfu/odoo_sfu");
+            this.SFU_CLIENT_STATE = sfuModule.SFU_CLIENT_STATE;
+            this.sfuClient = new sfuModule.SfuClient();
+        };
+        try {
+            await load();
+        } catch {
+            // trying again with a delay in case of race condition with the asset loading.
+            await new Promise((resolve, reject) => {
+                browser.setTimeout(async () => {
+                    try {
+                        await load();
+                    } catch (error) {
+                        reject(error);
+                    }
+                    resolve();
+                }, 1000);
+            });
+        }
+    }
+
+    async _initConnection() {
+        this.state.connectionType = CONNECTION_TYPES.P2P;
+        this.network?.disconnect();
+        // loading p2p in any case as we may need to receive peer-to-peer connections from users who failed to connect to the SFU.
+        this.p2pService.connect(this.selfSession.id, this.state.channel.id, {
+            info: this.formatInfo(),
+            iceServers: this.iceServers,
+        });
+        this.network = new Network(this.p2pService);
+        if (this.serverInfo) {
+            try {
+                await this._loadSfu();
+                this.state.connectionType = CONNECTION_TYPES.SERVER;
+                this.network.addSfu(this.sfuClient);
+            } catch (e) {
+                this.notification.add(
+                    _t("Failed to load the SFU server, falling back to peer-to-peer"),
+                    {
+                        type: "warning",
+                    }
+                );
+                this.log(this.selfSession, "failed to load sfu server", { error: e });
+            }
+        }
+        this.network.addEventListener("stateChange", this._handleSfuClientStateChange);
+        this.network.addEventListener("update", this._handleNetworkUpdates);
+        this.network.addEventListener("log", ({ detail: { id, level, message } }) => {
+            const session = this.store.RtcSession.get(id);
+            if (session) {
+                this.log(session, message, { step: "p2p", level });
+            }
+        });
+    }
+
     /**
      * @param {RtcSession} session
      * @param {String} entry
@@ -662,25 +576,27 @@ export class Rtc extends Record {
         });
     }
 
-    async connect(session) {
-        this.createConnection(session);
-        for (const transceiverName of ORDERED_TRANSCEIVER_NAMES) {
-            await this.updateRemote(session, transceiverName);
-        }
-        this.state.outgoingSessions.add(session.id);
-    }
-
     /**
      * @param {CustomEvent} param0
      * @param {Object} param0.detail
      * @param {String} param0.detail.name
      * @param {any} param0.detail.payload
      */
-    async _handleSfuClientUpdates({ detail: { name, payload } }) {
+    async _handleNetworkUpdates({ detail: { name, payload } }) {
         if (!this.state.channel) {
             return;
         }
         switch (name) {
+            case "connection_change":
+                {
+                    const { id, state } = payload;
+                    const session = this.store.RtcSession.get(id);
+                    if (!session) {
+                        return;
+                    }
+                    session.connectionState = state;
+                }
+                return;
             case "disconnect":
                 {
                     const { sessionId } = payload;
@@ -733,7 +649,8 @@ export class Rtc extends Record {
         switch (state) {
             case this.SFU_CLIENT_STATE.AUTHENTICATED:
                 // if we are hot-swapping connection type, we clear the p2p as late as possible
-                this.clearPeerToPeer();
+                this.p2pService.removeALlPeers();
+                this.selfSession.connectionState = "connecting";
                 break;
             case this.SFU_CLIENT_STATE.CONNECTED:
                 this.sfuClient.updateInfo(this.formatInfo(), {
@@ -742,6 +659,7 @@ export class Rtc extends Record {
                 this.sfuClient.updateUpload("audio", this.state.audioTrack);
                 this.sfuClient.updateUpload("camera", this.state.cameraTrack);
                 this.sfuClient.updateUpload("screen", this.state.screenTrack);
+                this.selfSession.connectionState = "connected";
                 return;
             case this.SFU_CLIENT_STATE.CLOSED:
                 {
@@ -774,148 +692,18 @@ export class Rtc extends Record {
             return;
         }
         for (const session of this.state.channel.rtcSessions) {
-            if (session.peerConnection || session.eq(this.selfSession)) {
+            if (session.eq(this.selfSession)) {
                 continue;
             }
             this.log(session, "init call", { step: "init call" });
-            this.connect(session);
+            this.p2pService.addPeer(session.id);
         }
-    }
-
-    createConnection(session) {
-        const peerConnection = new window.RTCPeerConnection({ iceServers: this.iceServers });
-        this.log(session, "RTCPeerConnection created", {
-            step: "peer connection created",
-        });
-        peerConnection.onicecandidate = async (event) => {
-            if (!event.candidate) {
-                return;
-            }
-            await this.notify([session], "ice-candidate", {
-                candidate: event.candidate,
-            });
-        };
-        peerConnection.oniceconnectionstatechange = async (event) => {
-            this.log(
-                session,
-                `ICE connection state changed: ${peerConnection.iceConnectionState}`,
-                {
-                    state: peerConnection.iceConnectionState,
-                }
-            );
-            if (!this.state.channel.rtcSessions.some((s) => s.id === session.id)) {
-                return;
-            }
-            session.connectionState = peerConnection.iceConnectionState;
-            switch (peerConnection.iceConnectionState) {
-                case "closed":
-                    this.disconnect(session);
-                    break;
-                case "failed":
-                case "disconnected":
-                    await this.recover(
-                        session,
-                        RECOVERY_DELAY,
-                        `ice connection ${peerConnection.iceConnectionState}`
-                    );
-                    break;
-            }
-        };
-        peerConnection.onicegatheringstatechange = (event) => {
-            this.log(session, `ICE gathering state changed: ${peerConnection.iceGatheringState}`);
-        };
-        peerConnection.onconnectionstatechange = async (event) => {
-            this.log(session, `connection state changed: ${peerConnection.connectionState}`);
-            switch (peerConnection.connectionState) {
-                case "closed":
-                    this.disconnect(session);
-                    break;
-                case "failed":
-                case "disconnected":
-                    await this.recover(
-                        session,
-                        RECOVERY_DELAY,
-                        `connection ${peerConnection.connectionState}`
-                    );
-                    break;
-            }
-        };
-        peerConnection.onicecandidateerror = async (error) => {
-            this.log(session, "ice candidate error");
-            this.recover(session, RECOVERY_TIMEOUT, "ice candidate error");
-        };
-        peerConnection.onnegotiationneeded = async (event) => {
-            const offer = await peerConnection.createOffer();
-            try {
-                await peerConnection.setLocalDescription(offer);
-            } catch (error) {
-                // Possibly already have a remote offer here: cannot set local description
-                this.log(session, "couldn't setLocalDescription", { error });
-                return;
-            }
-            this.log(session, "sending notification: offer", {
-                step: "sending offer",
-            });
-            await this.notify([session], "offer", {
-                sdp: peerConnection.localDescription,
-            });
-        };
-        peerConnection.ontrack = ({ transceiver, track }) => {
-            this.log(session, `received ${track.kind} track`);
-            this.handleRemoteTrack({
-                session,
-                track,
-                type: this.getTransceiverType(session.peerConnection, transceiver),
-            });
-        };
-        const dataChannel = peerConnection.createDataChannel("notifications", {
-            negotiated: true,
-            id: 1,
-        });
-        dataChannel.onmessage = (event) => {
-            this.handleNotification(session.id, event.data);
-        };
-        dataChannel.onopen = async () => {
-            /**
-             * FIXME? it appears that the track yielded by the peerConnection's 'ontrack' event is always enabled,
-             * even when it is disabled on the sender-side.
-             */
-            try {
-                await this.notify([session], "trackChange", {
-                    type: "audio",
-                    state: {
-                        isTalking: this.selfSession.isTalking,
-                        isSelfMuted: this.selfSession.isSelfMuted,
-                    },
-                });
-                await this.notify([session], "raise_hand", {
-                    active: Boolean(this.selfSession.raisingHand),
-                });
-            } catch (e) {
-                if (!(e instanceof DOMException) || e.name !== "OperationError") {
-                    throw e;
-                }
-                this.log(
-                    session,
-                    `failed to send on datachannel; dataChannelInfo: ${serializeRTCDataChannel(
-                        dataChannel
-                    )}`,
-                    { error: e }
-                );
-            }
-        };
-        Object.assign(session, {
-            peerConnection,
-            dataChannel,
-            connectionState: "connecting",
-        });
-        return peerConnection;
     }
 
     /**
      * @param {import("@mail/discuss/call/common/rtc_session_model").RtcSession} session
      * @param {MediaStreamTrack} track
-     * @param {"audio" | "screen" | "camera"} type
+     * @param {streamType} type
      * @param {boolean} active false if the track is muted/disabled
      */
     async handleRemoteTrack({ session, track, type, active = true }) {
@@ -925,15 +713,6 @@ export class Rtc extends Record {
             videoType: type,
         });
         this.updateActiveSession(session, type, { addVideo: true });
-    }
-
-    /**
-     * @param {RTCPeerConnection} peerConnection
-     * @param {RTCRtpTransceiver} transceiver
-     */
-    getTransceiverType(peerConnection, transceiver) {
-        const transceivers = peerConnection.getTransceivers();
-        return ORDERED_TRANSCEIVER_NAMES[transceivers.indexOf(transceiver)];
     }
 
     /**
@@ -1007,7 +786,7 @@ export class Rtc extends Record {
             { leading: true, trailing: true }
         );
         this.state.channel.rtcInvitingSession = undefined;
-        await this.loadSfuClient();
+        await this._initConnection();
         if (!this.state.channel?.id) {
             return;
         }
@@ -1016,49 +795,13 @@ export class Rtc extends Record {
             return;
         }
         this.soundEffectsService.play("channel-join");
+        this.state.hasPendingRequest = false;
         await this.resetAudioTrack({ force: audio });
         if (!this.state.channel?.id) {
             return;
         }
         if (camera) {
             await this.toggleVideo("camera");
-        }
-        this.state.hasPendingRequest = false;
-    }
-
-    /**
-     * @param {RtcSession[]} sessions
-     * @param {String} event
-     * @param {Object} [payload]
-     */
-    async notify(sessions, event, payload) {
-        if (!sessions.length || !this.state.channel.id || !this.selfSession) {
-            return;
-        }
-        if (event === "trackChange") {
-            // p2p
-            for (const session of sessions) {
-                if (!session?.dataChannel || session?.dataChannel.readyState !== "open") {
-                    continue;
-                }
-                session.dataChannel.send(
-                    JSON.stringify({
-                        event,
-                        channelId: this.state.channel.id,
-                        payload,
-                    })
-                );
-            }
-        } else {
-            // server
-            this.state.notificationsToSend.set(++tmpId, {
-                channelId: this.state.channel.id,
-                event,
-                payload,
-                sender: this.selfSession,
-                sessions,
-            });
-            await this.sendNotifications();
         }
     }
 
@@ -1085,47 +828,6 @@ export class Rtc extends Record {
         this.store.insert(data);
     }
 
-    /**
-     * @param {number} [delay] in ms
-     */
-    recover(session, delay = 0, reason = "") {
-        if (this.state.recoverTimeouts.get(session.id)) {
-            return;
-        }
-        this.state.recoverTimeouts.set(
-            session.id,
-            browser.setTimeout(async () => {
-                this.state.recoverTimeouts.delete(session.id);
-                const peerConnection = session.peerConnection;
-                if (
-                    !peerConnection ||
-                    !this.state.channel.id ||
-                    this.state.outgoingSessions.has(session.id) ||
-                    peerConnection.iceConnectionState === "connected"
-                ) {
-                    return;
-                }
-                if (this.store.settings.logRtc) {
-                    let stats;
-                    try {
-                        const iterableStats = await peerConnection.getStats();
-                        stats = iterableStats && [...iterableStats.values()];
-                    } catch {
-                        // ignore
-                    }
-                    this.log(
-                        session,
-                        `calling back to recover "${peerConnection.iceConnectionState}" connection`,
-                        { reason, stats }
-                    );
-                }
-                await this.notify([session], "disconnect");
-                this.disconnect(session);
-                this.connect(session);
-            }, delay)
-        );
-    }
-
     disconnect(session) {
         const downloadTimeout = this.downloadTimeouts.get(session.id);
         if (downloadTimeout) {
@@ -1133,76 +835,29 @@ export class Rtc extends Record {
             this.downloadTimeouts.delete(session.id);
         }
         this.removeCallNotification("raise_hand_" + session.id);
-        closeStream(session.audioStream);
-        if (session.audioElement) {
-            session.audioElement.pause();
-            try {
-                session.audioElement.srcObject = undefined;
-            } catch {
-                // ignore error during remove, the value will be overwritten at next usage anyway
-            }
-        }
-        session.audioStream = undefined;
-        session.connectionState = undefined;
-        session.localCandidateType = undefined;
-        session.remoteCandidateType = undefined;
-        session.dataChannelState = undefined;
-        session.packetsReceived = undefined;
-        session.packetsSent = undefined;
-        session.dtlsState = undefined;
-        session.iceState = undefined;
         session.raisingHand = undefined;
         session.logStep = undefined;
         session.audioError = undefined;
         session.videoError = undefined;
+        session.connectionState = undefined;
         session.isTalking = false;
         session.mainVideoStreamType = undefined;
+        this.removeAudioFromSession(session);
         this.removeVideoFromSession(session);
-        session.dataChannel?.close();
-        delete session.dataChannel;
-        const peerConnection = session.peerConnection;
-        if (peerConnection) {
-            const RTCRtpSenders = peerConnection.getSenders();
-            for (const sender of RTCRtpSenders) {
-                try {
-                    peerConnection.removeTrack(sender);
-                } catch {
-                    // ignore error
-                }
-            }
-            for (const transceiver of peerConnection.getTransceivers()) {
-                try {
-                    transceiver.stop();
-                } catch {
-                    // transceiver may already be stopped by the remote.
-                }
-            }
-            peerConnection.close();
-            session.peerConnection = undefined;
-        }
-        browser.clearTimeout(this.state.recoverTimeouts.get(session.id));
-        this.state.recoverTimeouts.delete(session.id);
-        this.state.outgoingSessions.delete(session.id);
+        this.p2pService?.removePeer(session.id);
         this.log(session, "peer removed", { step: "peer removed" });
     }
 
-    clearPeerToPeer() {
-        for (const session of Object.values(this.store.RtcSession.records)) {
-            if (session === this.selfSession) {
-                continue;
-            }
-            this.disconnect(session);
-        }
-        for (const timeoutId of this.state.recoverTimeouts.values()) {
-            clearTimeout(timeoutId);
-        }
-        this.state.recoverTimeouts.clear();
-        this.state.notificationsToSend.clear();
-    }
-
     clear() {
-        this.clearPeerToPeer();
+        if (this.state.channel) {
+            for (const session of this.state.channel.rtcSessions) {
+                this.removeAudioFromSession(session);
+                this.removeVideoFromSession(session);
+                session.isTalking = false;
+            }
+        }
         this.sfuClient = undefined;
+        this.network = undefined;
         this.state.serverState = undefined;
         this.state.updateAndBroadcastDebounce?.cancel();
         this.state.disconnectAudioMonitor?.();
@@ -1223,7 +878,6 @@ export class Rtc extends Record {
             updateAndBroadcastDebounce: undefined,
             connectionType: undefined,
             disconnectAudioMonitor: undefined,
-            outgoingSessions: new Set(),
             cameraTrack: undefined,
             screenTrack: undefined,
             audioTrack: undefined,
@@ -1231,45 +885,6 @@ export class Rtc extends Record {
             sendScreen: false,
             channel: undefined,
         });
-    }
-
-    async sendNotifications() {
-        if (this.state.isPendingNotify) {
-            return;
-        }
-        this.state.isPendingNotify = true;
-        await new Promise((resolve) => setTimeout(resolve, PEER_NOTIFICATION_WAIT_DELAY));
-        const ids = [];
-        const notifications = [];
-        this.state.notificationsToSend.forEach((notification, id) => {
-            ids.push(id);
-            notifications.push([
-                notification.sender.id,
-                notification.sessions.map((session) => session.id),
-                JSON.stringify({
-                    event: notification.event,
-                    channelId: notification.channelId,
-                    payload: notification.payload,
-                }),
-            ]);
-        });
-        try {
-            await rpc(
-                "/mail/rtc/session/notify_call_members",
-                {
-                    peer_notifications: notifications,
-                },
-                { silent: true }
-            );
-            for (const id of ids) {
-                this.state.notificationsToSend.delete(id);
-            }
-        } finally {
-            this.state.isPendingNotify = false;
-            if (this.state.notificationsToSend.size > 0) {
-                this.sendNotifications();
-            }
-        }
     }
 
     /**
@@ -1302,9 +917,7 @@ export class Rtc extends Record {
             return;
         }
         this.selfSession.raisingHand = raise ? new Date() : undefined;
-        await this.notify(this.state.channel.rtcSessions, "raise_hand", {
-            active: this.selfSession.raisingHand,
-        });
+        await this.network?.updateInfo(this.formatInfo());
     }
 
     /**
@@ -1365,16 +978,7 @@ export class Rtc extends Record {
             }
         }
         const updatedTrack = type === "camera" ? this.state.cameraTrack : this.state.screenTrack;
-        if (this.sfuClient) {
-            await this.sfuClient.updateUpload(type, updatedTrack);
-        } else {
-            for (const session of this.state.channel.rtcSessions) {
-                if (session.eq(this.selfSession)) {
-                    continue;
-                }
-                await this.updateRemote(session, type);
-            }
-        }
+        await this.network.updateUpload(type, updatedTrack);
         if (!this.selfSession) {
             return;
         }
@@ -1409,17 +1013,7 @@ export class Rtc extends Record {
             return;
         }
         this.state.audioTrack.enabled = !this.selfSession.isMute && this.selfSession.isTalking;
-        if (this.sfuClient && this.sfuClient.state === this.SFU_CLIENT_STATE.CONNECTED) {
-            this.sfuClient.updateInfo(this.formatInfo());
-        }
-        await this.notify(this.state.channel.rtcSessions, "trackChange", {
-            type: "audio",
-            state: {
-                isTalking: this.selfSession.isTalking && !this.selfSession.isSelfMuted,
-                isSelfMuted: this.selfSession.isSelfMuted,
-                isDeaf: this.selfSession.isDeaf,
-            },
-        });
+        this.network?.updateInfo(this.formatInfo());
     }
 
     /**
@@ -1513,7 +1107,7 @@ export class Rtc extends Record {
                 Object.assign(this.state, {
                     sourceCameraStream: sourceStream,
                     cameraTrack: track,
-                    sendCamera: Boolean(type === "camera" && track),
+                    sendCamera: Boolean(track),
                 });
                 break;
             }
@@ -1521,55 +1115,10 @@ export class Rtc extends Record {
                 Object.assign(this.state, {
                     sourceScreenStream: sourceStream,
                     screenTrack: track,
-                    sendScreen: Boolean(type === "screen" && track),
+                    sendScreen: Boolean(track),
                 });
                 break;
             }
-        }
-    }
-
-    /**
-     * Updates the track that is broadcasted to the RTCPeerConnection.
-     * This will start new transaction by triggering a negotiationneeded event
-     * on the peerConnection given as parameter.
-     *
-     * negotiationneeded -> offer -> answer -> ...
-     */
-    async updateRemote(session, trackKind) {
-        if (!session.peerConnection) {
-            return;
-        }
-        this.log(session, `updating ${trackKind} transceiver`);
-        let track;
-        switch (trackKind) {
-            case "audio": {
-                track = this.state.audioTrack;
-                break;
-            }
-            case "camera": {
-                track = this.state.cameraTrack;
-                break;
-            }
-            case "screen": {
-                track = this.state.screenTrack;
-                break;
-            }
-        }
-        let transceiverDirection = track ? "sendrecv" : "recvonly";
-        if (trackKind !== "audio") {
-            transceiverDirection = this.getTransceiverDirection(session, Boolean(track));
-        }
-        const transceiver = getTransceiver(session.peerConnection, trackKind);
-        try {
-            await transceiver.sender.replaceTrack(track || null);
-            transceiver.direction = transceiverDirection;
-        } catch {
-            this.log(session, `failed to update ${trackKind} transceiver`);
-        }
-        if (!track && trackKind !== "audio") {
-            this.notify([session], "trackChange", {
-                type: this.getTransceiverType(session.peerConnection, transceiver),
-            });
         }
     }
 
@@ -1617,16 +1166,7 @@ export class Rtc extends Record {
             audioTrack.enabled = !this.selfSession.isMute && this.selfSession.isTalking;
             this.state.audioTrack = audioTrack;
             this.linkVoiceActivationDebounce();
-            if (this.sfuClient) {
-                await this.sfuClient.updateUpload("audio", this.state.audioTrack);
-                return;
-            }
-            for (const session of this.state.channel.rtcSessions) {
-                if (session.eq(this.selfSession)) {
-                    continue;
-                }
-                await this.updateRemote(session, "audio");
-            }
+            await this.network.updateUpload("audio", this.state.audioTrack);
         }
     }
 
@@ -1737,6 +1277,21 @@ export class Rtc extends Record {
             session.videoStreams.clear();
         }
     }
+    /**
+     * @param {RtcSession} session
+     */
+    removeAudioFromSession(session) {
+        closeStream(session.audioStream);
+        if (session.audioElement) {
+            session.audioElement.pause();
+            try {
+                session.audioElement.srcObject = undefined;
+            } catch {
+                // ignore error during remove, the value will be overwritten at next usage anyway
+            }
+        }
+        session.audioStream = undefined;
+    }
 
     /**
      * @param {RtcSession} session
@@ -1783,54 +1338,26 @@ export class Rtc extends Record {
             this.downloadTimeouts.delete(rtcSession.id);
             browser.clearTimeout(downloadTimeout);
         }
-        if (this.state.connectionType === CONNECTION_TYPES.SERVER) {
-            if (rtcSession.videoComponentCount > 0) {
-                this.sfuClient?.updateDownload(rtcSession.id, {
-                    camera: true,
-                    screen: true,
-                });
-            } else {
-                /**
-                 * We wait a bit before pausing a download to avoid flickering, if the user stops downloading and starts again
-                 * soon after, it is not worth pausing the download.
-                 */
-                this.downloadTimeouts.set(
-                    rtcSession.id,
-                    browser.setTimeout(() => {
-                        this.downloadTimeouts.delete(rtcSession.id);
-                        this.sfuClient?.updateDownload(rtcSession.id, {
-                            camera: false,
-                            screen: false,
-                        });
-                    }, 1000)
-                );
-            }
-        }
-        if (!rtcSession.peerConnection) {
-            return;
-        }
-        const transceivers = rtcSession.peerConnection.getTransceivers();
-        const cameraTransceiver = transceivers[ORDERED_TRANSCEIVER_NAMES.indexOf("camera")];
-        const screenTransceiver = transceivers[ORDERED_TRANSCEIVER_NAMES.indexOf("screen")];
-        if (cameraTransceiver) {
-            cameraTransceiver.direction = this.getTransceiverDirection(
-                rtcSession,
-                Boolean(this.state.cameraTrack)
-            );
-        }
-        if (screenTransceiver) {
-            screenTransceiver.direction = this.getTransceiverDirection(
-                rtcSession,
-                Boolean(this.state.screenTrack)
-            );
-        }
-    }
-
-    getTransceiverDirection(session, allowUpload = false) {
-        if (session.videoComponentCount > 0) {
-            return allowUpload ? "sendrecv" : "recvonly";
+        if (rtcSession.videoComponentCount > 0) {
+            this.network?.updateDownload(rtcSession.id, {
+                camera: true,
+                screen: true,
+            });
         } else {
-            return allowUpload ? "sendonly" : "inactive";
+            /**
+             * We wait a bit before pausing a download to avoid flickering, if the user stops downloading and starts again
+             * soon after, it is not worth pausing the download.
+             */
+            this.downloadTimeouts.set(
+                rtcSession.id,
+                browser.setTimeout(() => {
+                    this.downloadTimeouts.delete(rtcSession.id);
+                    this.network?.updateDownload(rtcSession.id, {
+                        camera: false,
+                        screen: false,
+                    });
+                }, 1000)
+            );
         }
     }
 }
@@ -1840,6 +1367,7 @@ Rtc.register();
 export const rtcService = {
     dependencies: [
         "bus_service",
+        "discuss.p2p",
         "discuss.ptt_extension",
         "mail.sound_effects",
         "mail.store",
@@ -1851,6 +1379,7 @@ export const rtcService = {
      */
     start(env, services) {
         const rtc = env.services["mail.store"].rtc;
+        rtc.p2pService = services["discuss.p2p"];
         services["bus_service"].subscribe(
             "discuss.channel.rtc.session/sfu_hot_swap",
             async ({ serverInfo }) => {
@@ -1863,16 +1392,8 @@ export const rtcService = {
                     return;
                 }
                 rtc.serverInfo = serverInfo;
-                await rtc.loadSfuClient();
+                await rtc._initConnection();
                 await rtc.call();
-            }
-        );
-        services["bus_service"].subscribe(
-            "discuss.channel.rtc.session/peer_notification",
-            ({ sender, notifications }) => {
-                for (const content of notifications) {
-                    rtc.handleNotification(sender, content);
-                }
             }
         );
         services["bus_service"].subscribe("discuss.channel.rtc.session/ended", ({ sessionId }) => {
