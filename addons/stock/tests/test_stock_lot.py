@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests import Form
 from odoo.exceptions import ValidationError
@@ -134,3 +135,39 @@ class TestLotSerial(TestStockCommon):
                 'product_id': self.productB.id,
                 'company_id': self.env.company.id,
             })
+
+    def test_bypass_reservation(self):
+        """
+        Check that the reservation of is bypassed when a stock move is added after the picking is done
+        """
+        customer = self.PartnerObj.create({'name': 'bob'})
+        delivery_picking = self.env['stock.picking'].create({
+            'partner_id': customer.id,
+            'picking_type_id': self.picking_type_out,
+            'move_ids': [Command.create({
+                'name': self.productC.name,
+                'product_id': self.productC.id,
+                'product_uom_qty': 5,
+                'quantity': 5,
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+            })]
+        })
+        stock = self.env['stock.location'].browse(self.stock_location)
+        additional_product = self.productA
+        lot = self.lot_p_a
+        lot.location_id = stock
+        quant = additional_product.stock_quant_ids.filtered(lambda q: q.location_id == stock)
+        self.assertRecordValues(quant, [{'quantity': 10.0, 'reserved_quantity': 0.0}])
+        delivery_picking.button_validate()
+        delivery_picking.is_locked = False
+        self.env['stock.move.line'].create({
+            'product_id': additional_product.id,
+            'product_uom_id': additional_product.uom_id.id,
+            'picking_id': delivery_picking.id,
+            'quantity': 3,
+            'lot_id': lot.id,
+            'quant_id': quant.id
+        })
+        self.assertRecordValues(delivery_picking.move_ids, [{'state': 'done', 'quantity': 5.0, 'picked': True}, {'state': 'done', 'quantity': 3.0, 'picked': True}])
+        self.assertRecordValues(quant, [{'quantity': 7.0, 'reserved_quantity': 0.0}])
