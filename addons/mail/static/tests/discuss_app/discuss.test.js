@@ -22,6 +22,7 @@ import { Deferred, mockDate } from "@odoo/hoot-mock";
 import { Command, mockService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpcWithEnv } from "@mail/utils/common/misc";
+import { queryFirst } from "@odoo/hoot-dom";
 
 /** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
 let rpc;
@@ -863,13 +864,15 @@ test('all messages in "Inbox" in "History" after marked all as read', async () =
 test("post a simple message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    onRpcBefore("/mail/message/post", (args) => {
+    const messagePostDef = new Deferred();
+    onRpcBefore("/mail/message/post", async (args) => {
         step("message_post");
         expect(args.thread_model).toBe("discuss.channel");
         expect(args.thread_id).toBe(channelId);
         expect(args.post_data.body).toBe("Test");
         expect(args.post_data.message_type).toBe("comment");
         expect(args.post_data.subtype_xmlid).toBe("mail.mt_comment");
+        await messagePostDef;
     });
     await start();
     await openDiscuss(channelId);
@@ -878,9 +881,104 @@ test("post a simple message", async () => {
     await insertText(".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer-send:enabled");
     await assertSteps(["message_post"]);
+    // optimistically show posted message
     await contains(".o-mail-Composer-input", { value: "" });
     await contains(".o-mail-Message-author", { text: "Mitchell Admin" });
     await contains(".o-mail-Message-content", { text: "Test" });
+    expect(
+        getComputedStyle(queryFirst(".o-mail-Message-content")).getPropertyValue("opacity")
+    ).toBe("0.5");
+    await contains(".o-mail-Message-pendingProgress"); // visible after 0.5 sec. elapsed
+    // simulate message genuinely posted
+    messagePostDef.resolve();
+    await contains(".o-mail-Message-pendingProgress", { count: 0 });
+    await contains(".o-mail-Message-content", { text: "Test" });
+    expect(
+        getComputedStyle(queryFirst(".o-mail-Message-content")).getPropertyValue("opacity")
+    ).toBe("1");
+});
+
+test("post several messages with failures", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    /** awaiting deferreds of message_post of msg 0, 1, 2 respectively  */
+    const messagePostDefs = [new Deferred(), new Deferred(), new Deferred()];
+    onRpcBefore("/mail/message/post", async (args) => {
+        await messagePostDefs[parseInt(args.post_data.body)];
+    });
+    await start();
+    await openDiscuss(channelId);
+    // post 3 messages
+    await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
+    await contains(".o-mail-Message", { count: 0 });
+    await insertText(".o-mail-Composer-input", "0");
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Composer-input", { value: "" });
+    await insertText(".o-mail-Composer-input", "1");
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Composer-input", { value: "" });
+    await insertText(".o-mail-Composer-input", "2");
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Composer-input", { value: "" });
+    await contains(".o-mail-Message-author", { text: "Mitchell Admin" });
+    await contains(".o-mail-Thread", {
+        contains: [
+            [".o-mail-Message-content", { text: "0" }],
+            [".o-mail-Message-content", { text: "1" }],
+            [".o-mail-Message-content", { text: "2" }],
+        ],
+    });
+    // all are pending
+    expect(
+        getComputedStyle(queryFirst(".o-mail-Message-content:eq(0)")).getPropertyValue("opacity")
+    ).toBe("0.5");
+    expect(
+        getComputedStyle(queryFirst(".o-mail-Message-content:eq(1)")).getPropertyValue("opacity")
+    ).toBe("0.5");
+    expect(
+        getComputedStyle(queryFirst(".o-mail-Message-content:eq(2)")).getPropertyValue("opacity")
+    ).toBe("0.5");
+    await contains(".o-mail-Message-pendingProgress", { count: 3 }); // visible after 0.5 sec. elapsed
+    // simulate OK for 1, NOT-OK for 0, 2
+    messagePostDefs[0].reject();
+    messagePostDefs[1].resolve();
+    messagePostDefs[2].reject();
+    await contains(".o-mail-Message-pendingProgress", { count: 0 });
+    expect(
+        getComputedStyle(queryFirst(".o-mail-Message-content:eq(0)")).getPropertyValue("opacity")
+    ).toBe("0.5");
+    expect(
+        getComputedStyle(queryFirst(".o-mail-Message-content:eq(1)")).getPropertyValue("opacity")
+    ).toBe("1");
+    expect(
+        getComputedStyle(queryFirst(".o-mail-Message-content:eq(2)")).getPropertyValue("opacity")
+    ).toBe("0.5");
+    // re-try failed posted messages
+    messagePostDefs[0] = true;
+    messagePostDefs[2] = true;
+    await click(
+        ".o-mail-Message:contains(0) button[title='Failed to post the message. Click to retry']"
+    );
+    await click(
+        ".o-mail-Message:contains(2) button[title='Failed to post the message. Click to retry']"
+    );
+    // check all genuinely posted
+    await contains(".o-mail-Thread", {
+        contains: [
+            [".o-mail-Message-content:not(.opacity-50)", { text: "1" }], // was ok before
+            [".o-mail-Message-content:not(.opacity-50)", { text: "0" }],
+            [".o-mail-Message-content:not(.opacity-50)", { text: "2" }],
+        ],
+    });
+    expect(
+        getComputedStyle(queryFirst(".o-mail-Message-content:eq(0)")).getPropertyValue("opacity")
+    ).toBe("1");
+    expect(
+        getComputedStyle(queryFirst(".o-mail-Message-content:eq(1)")).getPropertyValue("opacity")
+    ).toBe("1");
+    expect(
+        getComputedStyle(queryFirst(".o-mail-Message-content:eq(2)")).getPropertyValue("opacity")
+    ).toBe("1");
 });
 
 test("starred: unstar all", async () => {

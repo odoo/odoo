@@ -615,7 +615,14 @@ export class Composer extends Component {
      */
     async _sendMessage(value, postData) {
         const thread = toRaw(this.props.composer.thread);
-        await toRaw(this.thread).post(value, postData);
+        const postThread = toRaw(this.thread);
+        const post = postThread.post.bind(postThread, value, postData);
+        if (postThread.model === "discuss.channel") {
+            // feature of (optimistic) temp message
+            post();
+        } else {
+            await post();
+        }
         if (thread.model === "mail.box") {
             this.notifySendFromMailbox();
         }

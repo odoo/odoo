@@ -482,6 +482,14 @@ export class Message extends Component {
         this.state.isEditing = true;
     }
 
+    getAuthorAttClass() {
+        return { "opacity-50": this.message.isPending };
+    }
+
+    getAvatarContainerAttClass() {
+        return { "opacity-50": this.message.isPending };
+    }
+
     exitEditMode() {
         const message = toRaw(this.props.message);
         this.props.messageEdition?.exitEditMode();

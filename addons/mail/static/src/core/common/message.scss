@@ -59,6 +59,17 @@
     z-index: $o-mail-NavigableList-zIndex;
 }
 
+.o-mail-Message-pendingProgress {
+    animation: o-mail-message-pendingProgress-animation 0s ease-in 0.5s forwards;
+    visibility: hidden;
+}
+
+@keyframes o-mail-message-pendingProgress-animation {
+    to {
+        visibility: visible;
+    }
+}
+
 .o-mail-Message-searchHighlight {
     background: rgba($warning, 0.75);
 }

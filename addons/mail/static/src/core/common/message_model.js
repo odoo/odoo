@@ -128,6 +128,13 @@ export class Message extends Record {
     /** @type {number[]} */
     needaction_partner_ids = [];
     parentMessage = Record.one("Message");
+    /**
+     * When set, this temporary/pending message failed message post, and the
+     * value is a callback to re-attempt to post the message.
+     *
+     * @type {() => {} | undefined}
+     */
+    postFailRedo = undefined;
     reactions = Record.many("MessageReactions", { inverse: "message" });
     notifications = Record.many("Notification", { inverse: "message" });
     recipients = Record.many("Persona");
@@ -242,6 +249,8 @@ export class Message extends Record {
     get isStarred() {
         return this.store.self.in(this.starredPersonas);
     }
+
+    isPending = false;
 
     get isNeedaction() {
         return (
