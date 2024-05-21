@@ -96,7 +96,9 @@ test("chat with member should be opened after clicking on channel member", async
     await start();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
-    await click(".o-discuss-ChannelMember.cursor-pointer");
+    await click(".o-discuss-ChannelMember.cursor-pointer", { text: "Demo" });
+    await contains(".o_avatar_card .o_card_user_infos", { text: "Demo" });
+    await click(".o_avatar_card button", { text: "Send message" });
     await contains(".o-mail-AutoresizeInput[title='Demo']");
 });
 

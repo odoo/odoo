@@ -40,6 +40,11 @@ class HrEmployeeBase(models.AbstractModel):
     email = fields.Char(related="user_id.email")
     work_contact_id = fields.Many2one('res.partner', 'Work Contact', copy=False)
     work_location_id = fields.Many2one('hr.work.location', 'Work Location', domain="[('address_id', '=', address_id)]")
+    work_location_name = fields.Char("Work Location Name", compute="_compute_work_location_name_type")
+    work_location_type = fields.Selection([
+        ("home", "Home"),
+        ("office", "Office"),
+        ("other", "Other")], compute="_compute_work_location_name_type")
     user_id = fields.Many2one('res.users')
     share = fields.Boolean(related='user_id.share')
     resource_id = fields.Many2one('resource.resource')
@@ -94,6 +99,11 @@ class HrEmployeeBase(models.AbstractModel):
         op = 'in' if value and operator == '=' or not value and operator != '=' else 'not in'
         return [('id', op, new_hires.ids)]
 
+    @api.depends("work_location_id.name", "work_location_id.location_type")
+    def _compute_work_location_name_type(self):
+        for employee in self:
+            employee.work_location_name = employee.work_location_id.name or None
+            employee.work_location_type = employee.work_location_id.location_type or 'other'
 
     def _get_valid_employee_for_user(self):
         user = self.env.user
