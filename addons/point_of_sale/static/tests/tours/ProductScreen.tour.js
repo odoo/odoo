@@ -241,3 +241,18 @@ registry.category("web_tour.tours").add("TranslateProductNameTour", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("CheckProductInformation", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickShowProductsMobile(),
+            ProductScreen.clickInfoProduct("product_a"),
+            {
+                trigger: ".section-financials :contains('Margin')",
+                run: () => {},
+            },
+        ].flat(),
+});
