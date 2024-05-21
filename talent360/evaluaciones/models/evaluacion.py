@@ -41,6 +41,7 @@ class Evaluacion(models.Model):
             ("CLIMA", "Clima Organizacional"),
             ("NOM_035", "NOM 035"),
             ("competencia", "Competencia"),
+            ("generico", "Genérico"),
         ],
         required=True,
         default="competencia",
@@ -341,24 +342,86 @@ class Evaluacion(models.Model):
 
         """
 
-        url_base = "/evaluacion/reporte/"
-        if self.tipo == "CLIMA":
-            url_base = "/evaluacion/reporte-clima/"
-        else:
-            url_base = "/evaluacion/reporte/"
+        if self.porcentaje_respuestas <= 0:
+            raise exceptions.ValidationError(
+                _("No se puede generar un reporte para una evaluación sin respuestas.")
+            )
 
         return {
             "type": "ir.actions.act_url",
-            "url": f"{url_base}{self.id}",
+            "url": f"/evaluacion/reporte/{self.id}",
             "target": "new",
         }
 
-    def generar_datos_reporte_generico_action(self):
+    def filtros_reporte_action(self):
+        """
+        Genera filtros para el reporte de la evaluación.
+
+        Esta función genera filtros para el reporte de la evaluación actual
+        y sigue con el proceso de renderización del reporte.
+
+        :return: una acción de redirección al modal creación de filtros
+        """
+
+        # Validar si existen respuestas
+        if self.porcentaje_respuestas <= 0:
+            raise exceptions.ValidationError(
+                _("No se puede generar un reporte para una evaluación sin respuestas.")
+            )
+
+        datos_demograficos = self.generar_datos_demograficos()
+
+        categorias = [
+            ("Departamento", "departamentos", "departamento"),
+            ("Generación", "generaciones", "generacion"),
+            ("Puesto", "puestos", "puesto"),
+            ("Género", "generos", "genero"),
+        ]
+
+        filtros_ids = []
+
+        for categoria, nombre_grupal, nombre_individual in categorias:
+            filtro_id = self.env["filtro.wizard"].create(
+                {
+                    "categoria": categoria,
+                    "categoria_interna": nombre_individual,
+                }
+            )
+            filtros_ids.append(filtro_id.id)
+
+            self.env["filtro.seleccion.wizard"].create(
+                [
+                    {
+                        "texto": dep["nombre"],
+                        "categoria": categoria,
+                        "filtro_original_id": filtro_id.id,
+                    }
+                    for dep in datos_demograficos[nombre_grupal]
+                ]
+            )
+
+        filtros_wizard = self.env["crear.filtros.wizard"].create(
+            {"filtros_ids": [(6, 0, filtros_ids)]}
+        )
+
+        return {
+            "name": "Filtrar Reporte",
+            "type": "ir.actions.act_window",
+            "res_model": "crear.filtros.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "res_id": filtros_wizard.id,
+            "context": {"actual_evaluacion_id": self.id},
+        }
+
+    def generar_datos_reporte_generico_action(self, filtros=None):
         """
         Genera los datos necesarios para el reporte genérico de la evaluación.
 
         Esta función genera los parámetros requeridos para generar un reporte genérico de la evaluación actual,
         incluyendo las preguntas y las respuestas tabuladas.
+
+        :param filtros: Los filtros a aplicar al reporte.
 
         :return: Los parámetros necesarios para generar el reporte.
 
@@ -376,6 +439,10 @@ class Evaluacion(models.Model):
                     ("evaluacion_id.id", "=", self.id),
                 ]
             )
+            if filtros:
+                respuesta_ids = respuesta_ids.filtered(
+                    lambda r: self.validar_filtro(filtros, r)
+                )
 
             respuestas = [respuesta.respuesta_mostrar for respuesta in respuesta_ids]
             respuestas_tabuladas = dict(Counter(respuestas))
@@ -392,7 +459,7 @@ class Evaluacion(models.Model):
 
         return parametros
 
-    def generar_datos_reporte_NOM_035_action(self):
+    def generar_datos_reporte_NOM_035_action(self, filtros=None):
         """
         Genera los datos necesarios para el reporte genérico de la evaluación.
 
@@ -441,6 +508,9 @@ class Evaluacion(models.Model):
             )
 
             for respuesta in respuesta_ids:
+                if filtros and not self.validar_filtro(filtros, respuesta):
+                    continue
+
                 valor_respuesta = respuesta.valor_respuesta
                 valor_pregunta += valor_respuesta
                 final += valor_respuesta
@@ -478,10 +548,12 @@ class Evaluacion(models.Model):
 
         return parametros
 
-    def generar_datos_reporte_clima_action(self):
+    def generar_datos_reporte_clima_action(self, filtros=None):
         """
         Genera los datos necesarios para el reporte de clima organizacional de la evaluación.
         Calcula el porcentaje de satisfacción para cada categoría y departamento.
+
+        :param filtros: Los filtros a aplicar al reporte.
 
         :return: Los parámetros necesarios para generar el reporte.
         """
@@ -542,18 +614,31 @@ class Evaluacion(models.Model):
             maximo_pregunta = 0
 
             for respuesta in pregunta.respuesta_ids:
+                if filtros and not self.validar_filtro(filtros, respuesta):
+                    continue
+
                 valor_respuesta = respuesta.valor_respuesta
                 valor_pregunta += valor_respuesta
-                maximo_pregunta += (
-                    pregunta._calculate_valor_maximo()
-                )  # Suponiendo un máximo de 4 para cada respuesta en escala
-                # Suponiendo un máximo de 4 para cada respuesta en escala
+                maximo_pregunta += pregunta._calculate_valor_maximo()
 
-                nombre_departamento = (
-                    respuesta.usuario_id.department_id.name
-                    if respuesta.usuario_id.department_id
-                    else "Sin departamento"
-                )
+                if respuesta.usuario_id:
+                    nombre_departamento = (
+                        respuesta.usuario_id.department_id.name
+                        if respuesta.usuario_id.department_id
+                        else "Sin departamento"
+                    )
+                elif respuesta.usuario_externo_id:
+                    usuario_externo = self.env["usuario.externo"].browse(
+                        respuesta.usuario_externo_id
+                    )
+                    nombre_departamento = (
+                        usuario_externo.direccion
+                        if usuario_externo.direccion
+                        else "Sin departamento"
+                    )
+                else:
+                    nombre_departamento = "Sin Usuario"
+
                 departamento = next(
                     (
                         dept
@@ -572,7 +657,7 @@ class Evaluacion(models.Model):
                     categoria_actual["departamentos"].append(departamento)
 
                 departamento["puntos"] += valor_respuesta
-                departamento["puntos_maximos"] += 4
+                departamento["puntos_maximos"] += pregunta._calculate_valor_maximo()
 
             total_puntuacion += valor_pregunta
             total_maximo_posible += maximo_pregunta
@@ -611,7 +696,50 @@ class Evaluacion(models.Model):
 
         return parametros
 
-    def generar_datos_demograficos(self):
+    def validar_filtro(self, filtros, respuesta=None, datos_demograficos=None):
+        """
+        Valida si una respuesta cumple con los filtros especificados.
+
+        :param filtros: Los filtros a aplicar.
+        :param respuesta: La respuesta a validar.
+        :param datos_demograficos: Los datos demográficos del usuario.
+
+        :return: True si la respuesta cumple con los filtros, False en caso contrario.
+        """
+
+        if not filtros:
+            return True
+
+        if not datos_demograficos:
+            if not respuesta:
+                return False
+
+            if respuesta.usuario_id:
+                datos_demograficos = self.obtener_datos_demograficos(
+                    respuesta.usuario_id
+                )
+            elif respuesta.usuario_externo_id:
+                usuario_externo = self.env["usuario.externo"].browse(
+                    respuesta.usuario_externo_id
+                )
+                datos_demograficos = self.obtener_datos_demograficos_externos(
+                    usuario_externo
+                )
+            else:
+                return False
+
+        for _, filtro in filtros.items():
+            categoria = filtro["categoria_interna"]
+
+            if not (categoria in datos_demograficos.keys()):
+                continue
+
+            if not datos_demograficos[filtro["categoria_interna"]] in filtro["valores"]:
+                return False
+
+        return True
+
+    def generar_datos_demograficos(self, filtros=None):
         """
         Genera los datos demográficos de la evaluación.
 
@@ -628,7 +756,13 @@ class Evaluacion(models.Model):
         )
 
         for usuario in usuario_evaluacion.mapped("usuario_id"):
-            datos_demograficos.append(self.obtener_datos_demograficos(usuario))
+            datos_demograficos_usuario = self.obtener_datos_demograficos(usuario)
+            if filtros and not self.validar_filtro(
+                filtros, datos_demograficos=datos_demograficos_usuario
+            ):
+                continue
+
+            datos_demograficos.append(datos_demograficos_usuario)
 
         usuario_evaluacion_externo = self.env["usuario.evaluacion.rel"].search(
             [
@@ -639,9 +773,15 @@ class Evaluacion(models.Model):
         )
 
         for usuario_externo in usuario_evaluacion_externo.mapped("usuario_externo_id"):
-            datos_demograficos.append(
-                self.obtener_datos_demograficos_externos(usuario_externo)
+            datos_demograficos_usuario = self.obtener_datos_demograficos_externos(
+                usuario_externo
             )
+            if filtros and not self.validar_filtro(
+                filtros, datos_demograficos=datos_demograficos_usuario
+            ):
+                continue
+
+            datos_demograficos.append(datos_demograficos_usuario)
 
         departamentos = defaultdict(int)
         generaciones = defaultdict(int)

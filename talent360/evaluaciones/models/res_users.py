@@ -29,7 +29,7 @@ class Users(models.Model):
             Parámetros necesarios para abrir la vista gráfica de las respuestas.
         """
 
-        evaluacion_id = self._context.get("current_evaluacion_id")
+        evaluacion_id = self._context.get("actual_evaluacion_id")
         respuesta_ids = self.env["respuesta"].search(
             [
                 ("evaluacion_id.id", "=", evaluacion_id),

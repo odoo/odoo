@@ -1,12 +1,7 @@
 from odoo import http, _
 from odoo.http import request
 from odoo.exceptions import AccessError
-from ..models.evaluacion import Evaluacion
-from ..models.respuesta import Respuesta as respuesta
-from ..models.pregunta import Pregunta as pregunta
 import json
-from ..models.usuario_evaluacion_rel import UsuarioEvaluacionRel as usuario_evaluacion
-import time
 import werkzeug
 
 
@@ -16,28 +11,46 @@ class EvaluacionesController(http.Controller):
     @http.route(
         "/evaluacion/reporte/<model('evaluacion'):evaluacion>", type="http", auth="user"
     )
-    def reporte_controller(self, evaluacion: Evaluacion):
+    def reporte_controller(self, evaluacion, filtros=None):
         """Método para generar y mostrar un reporte de evaluación.
         Este método verifica que el usuario tenga los permisos necesario, obtiene los datos
         del modelo de evaluaciones y renderiza el reporte con esos datos.
 
+        :param evaluacion: objeto de la evaluación a generar el reporte
+        :param filtros: filtros a aplicar al reporte
+
         :return: html renderizado del template con los datos del reporte
         """
 
+        # Verificar permisos de usuario
         if not request.env.user.has_group(
             "evaluaciones.evaluaciones_cliente_cr_group_user"
         ):
             raise AccessError(_("No tienes permitido acceder a este recurso."))
 
-        parametros = evaluacion.generar_datos_reporte_NOM_035_action()
-        parametros["preguntas"] = evaluacion.generar_datos_reporte_generico_action()[
-            "preguntas"
-        ]
+        # Parsear filtros
+        if filtros:
+            filtros = json.loads(filtros)
+            filtros = {
+                categoria: valores for categoria, valores in filtros.items() if valores
+            }
+
+        parametros = evaluacion.generar_datos_reporte_generico_action(filtros)
+
+        parametros["filtros"] = filtros
 
         if evaluacion.incluir_demograficos:
-            parametros.update(evaluacion.generar_datos_demograficos())
-
-        return request.render("evaluaciones.encuestas_reporte", parametros)
+            parametros.update(evaluacion.generar_datos_demograficos(filtros))
+        if evaluacion.tipo == "NOM_035":
+            parametros.update(evaluacion.generar_datos_reporte_NOM_035_action(filtros))
+            return request.render("evaluaciones.encuestas_reporte_nom_035", parametros)
+        elif evaluacion.tipo == "CLIMA":
+            parametros.update(evaluacion.generar_datos_reporte_clima_action(filtros))
+            return request.render("evaluaciones.encuestas_reporte_clima", parametros)
+        elif evaluacion.tipo == "generico":
+            return request.render("evaluaciones.encuestas_reporte_generico", parametros)
+        else:
+            raise ValueError(_("Tipo de evaluación no soportado para reporte."))
 
     @http.route(
         "/evaluacion/responder/<int:evaluacion_id>/<string:token>",
@@ -227,30 +240,3 @@ class EvaluacionesController(http.Controller):
             usuario_eva_mod.sudo().action_update_estado(None, evaluacion_id, token)
 
         return werkzeug.utils.redirect("/evaluacion/contestada")
-
-    @http.route(
-        "/evaluacion/reporte-clima/<model('evaluacion'):evaluacion>",
-        type="http",
-        auth="user",
-    )
-    def reporte_clima_controller(self, evaluacion: Evaluacion):
-        """Método para generar y mostrar el reporte de clima laboral.
-        :return: HTML renderizado del template con los datos del reporte.
-        """
-
-        # Verificar permisos de usuario
-        if not request.env.user.has_group(
-            "evaluaciones.evaluaciones_cliente_cr_group_user"
-        ):
-            raise AccessError(_("No tienes permitido acceder a este recurso."))
-
-        # Generar parámetros para el reporte
-        parametros = evaluacion.generar_datos_reporte_clima_action()
-        parametros["preguntas"] = evaluacion.generar_datos_reporte_generico_action()[
-            "preguntas"
-        ]
-
-        if evaluacion.incluir_demograficos:
-            parametros.update(evaluacion.generar_datos_demograficos())
-
-        return request.render("evaluaciones.encuestas_reporte_clima", parametros)
