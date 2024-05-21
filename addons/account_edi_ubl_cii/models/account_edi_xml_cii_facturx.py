@@ -280,7 +280,7 @@ class AccountEdiXmlCII(models.AbstractModel):
 
         # ==== ref, invoice_origin, narration, payment_reference ====
         invoice.ref = tree.findtext('./{*}ExchangedDocument/{*}ID')
-        invoice.invoice_origin = tree.findtext('./{*}OrderReference/{*}ID')
+        invoice.invoice_origin = tree.findtext('.//{*}BuyerOrderReferencedDocument/{*}IssuerAssignedID')
         self._import_narration(invoice, tree, xpaths=[
             './{*}ExchangedDocument/{*}IncludedNote/{*}Content',
             './/{*}SpecifiedTradePaymentTerms/{*}Description',
