@@ -60,6 +60,12 @@ class AccountMove(models.Model):
                             'pos_payment_name': pos_payment.payment_method_id.name,
                         })
 
+    def _compute_amount(self):
+        super()._compute_amount()
+        for move in self:
+            if move.move_type == 'entry' and move.reversed_pos_order_id:
+                move.amount_total_signed = move.amount_total_signed * -1
+
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
