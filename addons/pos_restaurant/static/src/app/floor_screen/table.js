@@ -173,8 +173,8 @@ export class Table extends Component {
      */
     computeHandleStyle(handleName) {
         const table = this.props.table;
-        // 24 is half the handle's width
-        let offset = -24;
+        // 12 is half the handle's width
+        let offset = -12;
         if (table.shape === "round") {
             // min(width/2, height/2) is the real border radius
             // 0.2929 is (1 - cos(45°)) to get in the middle of the border's arc

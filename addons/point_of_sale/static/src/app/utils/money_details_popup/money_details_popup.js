@@ -4,6 +4,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { floatIsZero } from "@web/core/utils/numbers";
 import { NumericInput } from "@point_of_sale/app/generic_components/inputs/numeric_input/numeric_input";
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 export class MoneyDetailsPopup extends Component {
     static template = "point_of_sale.MoneyDetailsPopup";
@@ -22,6 +23,7 @@ export class MoneyDetailsPopup extends Component {
     setup() {
         super.setup();
         this.pos = usePos();
+        this.ui = useService("ui");
         this.currency = this.pos.currency;
         this.state = useState({
             moneyDetails: this.props.moneyDetails

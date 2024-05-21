@@ -6,9 +6,6 @@
     "category": "Sales/Point Of Sale",
     "depends": ["pos_restaurant", "http_routing"],
     "auto_install": ["pos_restaurant"],
-    "demo": [
-        "demo/pos_restaurant_demo.xml",
-    ],
     "data": [
         "security/ir.model.access.csv",
         "views/pos_self_order.index.xml",
@@ -20,10 +17,8 @@
         "views/pos_restaurant_views.xml",
         "views/product_views.xml",
         "data/init_access.xml",
-        "data/custom_link_data.xml",
         "views/res_config_settings_views.xml",
         "views/point_of_sale_dashboard.xml",
-        "data/pos_restaurant_data.xml",
     ],
     "assets": {
         # Assets

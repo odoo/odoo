@@ -46,15 +46,18 @@ class PosConfig(models.Model):
             res.append((self.simplified_partner_id.id,))
         return res
 
-    def setup_defaults(self, company):
-        # EXTENDS point_of_sale
-        super().setup_defaults(company)
+    @api.model_create_multi
+    def create(self, vals_list):
+        result = super().create(vals_list)
+        for pos_config in result:
+            pos_config._ensure_sinv_journal()
+        return result
+
+    def _ensure_sinv_journal(self):
+        self.ensure_one()
+        company = self.company_id
         if company.chart_template.startswith('es_'):
-            sinv_journal = self.env['account.journal'].search([
-                *self.env['account.journal']._check_company_domain(company),
-                ('type', '=', 'sale'),
-                ('code', '=', 'SINV'),
-            ])
+            sinv_journal = self._default_sinv_journal_id()
             if not sinv_journal:
                 income_account = self.env.ref(f'account.{company.id}_account_common_7000', raise_if_not_found=False)
                 sinv_journal = self.env['account.journal'].create({
@@ -65,6 +68,5 @@ class PosConfig(models.Model):
                     'company_id': company.id,
                     'sequence': 30
                 })
-            for pos_config in self.filtered(lambda config: config.company_id == company):
-                if not pos_config.l10n_es_simplified_invoice_journal_id:
-                    pos_config.l10n_es_simplified_invoice_journal_id = sinv_journal.id
+            if not self.l10n_es_simplified_invoice_journal_id:
+                self.l10n_es_simplified_invoice_journal_id = sinv_journal.id
