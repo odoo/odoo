@@ -16,9 +16,10 @@
                 <MessageInReply t-if="message.parentMessage" alignedRight="isAlignedRight" message="message" onClick="props.onParentMessageClick"/>
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
                     <div class="o-mail-Message-sidebar d-flex flex-shrink-0" t-att-class="{ 'justify-content-end': isAlignedRight and !props.squashed, 'align-items-center justify-content-center': props.squashed }">
-                        <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view">
+                        <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view" t-att-class="getAvatarContainerAttClass()">
                             <img class="o-mail-Message-avatar w-100 h-100 rounded" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
                         </div>
+                        <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>
                         <t t-elif="!message.is_transient">
                             <small t-if="isActive and props.showDates" class="o-mail-Message-date text-muted opacity-75">
                                 <t t-esc="message.dateSimple"/>
@@ -33,13 +34,14 @@
                     </div>
                     <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': message.composer }" t-ref="messageContent">
                         <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline mb-1 lh-1">
-                            <span t-if="authorName and shouldDisplayAuthorName" class="o-mail-Message-author">
+                            <span t-if="authorName and shouldDisplayAuthorName" class="o-mail-Message-author" t-att-class="getAuthorAttClass()">
                                 <strong class="me-1 text-truncate" t-esc="authorName"/>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
                             <small t-if="!message.is_transient" class="o-mail-Message-date text-muted opacity-75" t-att-class="{ 'me-2': !isAlignedRight }" t-att-title="message.datetimeShort">
                                 <t t-if="shouldDisplayAuthorName">- </t>
-                                <RelativeTime datetime="message.datetime"/>
+                                <t t-if="message.isPending" t-call="mail.Message.pendingStatus"/>
+                                <RelativeTime t-else="" datetime="message.datetime"/>
                             </small>
                             <MessageSeenIndicator
                                 t-if="props.message.isSelfAuthored and !props.squashed and props.thread"
@@ -71,7 +73,7 @@
                                    'pe-2': env.inChatWindow and !isAlignedRight and composerViewInEditing,
                                    }"
                         >
-                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': state.isEditing }">
+                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': state.isEditing, 'opacity-50': message.isPending }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': state.isEditing }">
                                     <t t-if="message.message_type === 'notification' and message.body" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
                                     <t t-if="message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or state.isEditing)">
@@ -111,7 +113,7 @@
                                             </div>
                                         </t>
                                     </t>
-                                    <t t-if="message.hasTextContent and !env.inChatWindow" t-call="mail.Message.actions"/>
+                                    <t t-if="!message.isPending and message.hasTextContent and !env.inChatWindow" t-call="mail.Message.actions"/>
                                 </div>
                                 <AttachmentList
                                     t-if="message.attachments.length > 0"
@@ -121,7 +123,7 @@
                                     messageSearch="props.messageSearch"/>
                                 <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="deletable"/>
                             </div>
-                            <t t-if="!message.hasTextContent or env.inChatWindow" t-call="mail.Message.actions"/>
+                            <t t-if="!message.isPending and (!message.hasTextContent or env.inChatWindow)" t-call="mail.Message.actions"/>
                         </div>
                         <MessageReactions message="message" openReactionMenu="openReactionMenu" t-if="message.reactions.length"/>
                     </div>
@@ -182,6 +184,11 @@
     <div class="o-mail-Message-body text-break mb-0 w-100">
         <t t-out="props.messageSearch?.highlight(message.body) ?? message.body"/>
     </div>
+</t>
+
+<t t-name="mail.Message.pendingStatus">
+    <button t-if="message.postFailRedo" class="btn p-0" title="Failed to post the message. Click to retry" t-on-click="() => message.postFailRedo?.()"><i class="fa fa-fw fa-warning text-warning"/></button>
+    <span t-else="" class="o-mail-Message-pendingProgress"><i class="fa fa-fw fa-circle-o-notch fa-spin opacity-50"/></span>
 </t>
 
 </templates>

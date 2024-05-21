@@ -7,12 +7,15 @@ import { router } from "@web/core/browser/router";
 let rpc;
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { Deferred } from "@web/core/utils/concurrency";
+import { Deferred, Mutex } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
 import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
 import { browser } from "@web/core/browser/browser";
+
+let prevLastMessageId = null;
+let temporaryIdOffset = 0.01;
 
 export class Store extends BaseStore {
     static FETCH_DATA_DEBOUNCE_DELAY = 1;
@@ -232,6 +235,32 @@ export class Store extends BaseStore {
     closeNewMessage() {
         const newMessageChatWindow = this.discuss.chatWindows.find(({ thread }) => !thread);
         newMessageChatWindow?.close();
+    }
+
+    messagePostMutex = new Mutex();
+
+    /**
+     * @param {Object} params post message data
+     * @param {import("models").Message} tmpMessage the associated temporary message
+     */
+    async doMessagePost(params, tmpMessage) {
+        return this.messagePostMutex.exec(async () => {
+            let res;
+            try {
+                res = await rpc("/mail/message/post", params, { silent: true });
+            } catch (err) {
+                if (!tmpMessage) {
+                    throw err;
+                }
+                tmpMessage.postFailRedo = () => {
+                    tmpMessage.postFailRedo = undefined;
+                    tmpMessage.thread.messages.delete(tmpMessage);
+                    tmpMessage.thread.messages.add(tmpMessage);
+                    this.doMessagePost(params, tmpMessage);
+                };
+            }
+            return res;
+        });
     }
 
     /**
@@ -503,7 +532,14 @@ export class Store extends BaseStore {
     }
 
     getNextTemporaryId() {
-        return this.getLastMessageId() + 0.01;
+        const lastMessageId = this.getLastMessageId();
+        if (prevLastMessageId === lastMessageId) {
+            temporaryIdOffset += 0.01;
+        } else {
+            prevLastMessageId = lastMessageId;
+            temporaryIdOffset = 0.01;
+        }
+        return lastMessageId + temporaryIdOffset;
     }
 
     /**

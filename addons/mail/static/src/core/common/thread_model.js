@@ -1025,6 +1025,7 @@ export class Thread extends Record {
         } = {}
     ) {
         let tmpMsg;
+        attachments = [...attachments]; // to not lose them on composer clear
         const params = await this.store.getMessagePostParams({
             attachments,
             body,
@@ -1064,6 +1065,7 @@ export class Thread extends Record {
                 {
                     ...tmpData,
                     body: prettyContent,
+                    isPending: true,
                     thread: this,
                     temporary_id: tmpId,
                 },
@@ -1075,9 +1077,8 @@ export class Thread extends Record {
                 this.selfMember.localNewMessageSeparator = tmpMsg + 1;
             }
         }
-        const data = await rpc("/mail/message/post", params);
+        const data = await this.store.doMessagePost(params, tmpMsg);
         if (!data) {
-            tmpMsg?.delete();
             return;
         }
         if (data.id in this.store.Message.records) {
