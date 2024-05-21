@@ -1,5 +1,6 @@
 import { CallContextMenu } from "@mail/discuss/call/common/call_context_menu";
 import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant_video";
+import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
 import { useHover } from "@mail/utils/common/hooks";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
@@ -16,7 +17,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 
-const HIDDEN_CONNECTION_STATES = new Set(["connected", "completed"]);
+const HIDDEN_CONNECTION_STATES = new Set([undefined, "connected", "completed"]);
 
 export class CallParticipantCard extends Component {
     static props = ["className", "cardData", "thread", "minimized?", "inset?"];
@@ -56,10 +57,10 @@ export class CallParticipantCard extends Component {
         if (!this.rtcSession) {
             return false;
         }
-        if (this.env.debug) {
-            return true;
-        }
-        return !this.rtcSession?.eq(this.rtc.selfSession);
+        return (
+            !this.rtcSession.eq(this.rtc.selfSession) ||
+            (this.env.debug && this.rtc.state.connectionType === CONNECTION_TYPES.SERVER)
+        );
     }
 
     get rtcSession() {
@@ -76,9 +77,7 @@ export class CallParticipantCard extends Component {
 
     get showConnectionState() {
         return Boolean(
-            this.isOfActiveCall &&
-                this.rtcSession?.peerConnection &&
-                !HIDDEN_CONNECTION_STATES.has(this.rtcSession.connectionState)
+            this.isOfActiveCall && !HIDDEN_CONNECTION_STATES.has(this.rtcSession.connectionState)
         );
     }
 
