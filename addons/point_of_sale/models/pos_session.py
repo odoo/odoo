@@ -1619,7 +1619,7 @@ class PosSession(models.Model):
         for key, group in groupby(sorted(product_template_attribute_values, key=key), key=key):
             attribute_line_id, attribute_id = key
             values = [{**ptav.product_attribute_value_id.read(['name', 'is_custom', 'html_color'])[0],
-                       'price_extra': ptav.price_extra} for ptav in list(group)]
+                       'price_extra': ptav.price_extra} for ptav in list(group) if ptav.ptav_active]
             res[attribute_line_id] = {
                 'id': attribute_line_id,
                 'name': product_attributes_by_id[attribute_id].name,
