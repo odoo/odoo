@@ -66,7 +66,7 @@ export class TimeOffCard extends Component {
         const excess = Math.max(data.exceeding_duration, -data.virtual_remaining_leaves);
         const exceeding_duration = data.allows_negative
             ? excess > data.max_allowed_negative
-            : excess > 0;
+            : Math.abs(excess) > 0;
         const errorLeavesSignificant = data.allows_negative
             ? this.errorLeavesDuration > data.max_allowed_negative
             : this.errorLeavesDuration > 0;
