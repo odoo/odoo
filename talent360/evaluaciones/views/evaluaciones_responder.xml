@@ -280,7 +280,7 @@
         <t t-elif="format == 'caritas'">
             <t t-set="opciones" t-value="[
                 '/evaluaciones/static/src/img/very_mad.png',
-                '/evaluaciones/static/src/img/mid_angry.png',
+                '/evaluaciones/static/src/img/mid_angry_.png',
                 '/evaluaciones/static/src/img/medium.png',
                 '/evaluaciones/static/src/img/normal.png',
                 '/evaluaciones/static/src/img/content.png'
@@ -311,8 +311,8 @@
                         <t t-if="format == 'caritas'">
                             <img t-att-src="col_label" alt="icono" style="width: 25px; height: 25px; background: transparent;"/>
                         </t>
-                        <t t-if="format == 'estrellas'">
-                            <img t-att-src="col_label" alt="estrella" style="width: 100px; height: 30px; background: transparent;"/>
+                        <t t-elif="format == 'estrellas'">
+                            <img t-att-src="col_label" alt="estrella" style="width: 120px; height: 25px; background: transparent;"/>
                         </t>
                         <t t-else="">
                             <span t-esc="col_label"/>
