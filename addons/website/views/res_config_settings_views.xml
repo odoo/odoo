@@ -94,7 +94,11 @@
                         </setting>
                     </block>
                     <block title="SEO" id="website_settings" invisible="not website_id">
-                        <setting id="google_analytics_setting" help="Track visits using Google Analytics">
+                        <setting
+                            id="google_analytics_setting"
+                            help="Track visits using Google Analytics"
+                            documentation="/applications/websites/website/reporting/analytics.html#analytics-google-analytics"
+                        >
                             <field name="has_google_analytics"/>
                             <div class="content-group" invisible="not has_google_analytics">
                                 <div class="row mt16">
@@ -104,10 +108,22 @@
                                 </div>
                             </div>
                             <div invisible="not has_google_analytics">
-                                <widget class="oe_link" name="documentation_link" path="/applications/websites/website/optimize/google_analytics.html" label=" How to get my Measurement ID" icon="oi oi-arrow-right"/>
+                                <widget
+                                    class="oe_link"
+                                    name="documentation_link"
+                                    path="/applications/websites/website/reporting/analytics.html#analytics-google-analytics"
+                                    label=" How to get my Measurement ID"
+                                    icon="oi oi-arrow-right"
+                                />
                             </div>
                         </setting>
-                        <setting id="cdn_setting" title="A CDN helps you serve your website’s content with high availability and high performance to any visitor wherever they are located." groups="base.group_no_one" help="Use a CDN to optimize the availability of your website's content">
+                        <setting
+                            id="cdn_setting"
+                            title="A CDN helps you serve your website’s content with high availability and high performance to any visitor wherever they are located."
+                            groups="base.group_no_one"
+                            help="Use a CDN to optimize the availability of your website's content"
+                            documentation="/applications/websites/website/configuration/cdn.html"
+                        >
                             <field name="cdn_activated"/>
                             <div class="content-group" invisible="not cdn_activated">
                                 <div class="row mt16">
@@ -133,7 +149,11 @@
                             <field name="has_default_share_image"/>
                             <field name="social_default_image" widget="image" class="w-25 mt-2" invisible="not has_default_share_image"/>
                         </setting>
-                        <setting id="google_console_setting" help="Monitor Google Search results data">
+                        <setting
+                            id="google_console_setting"
+                            help="Monitor Google Search results data"
+                            documentation="/applications/websites/website/configuration/google_search_console.html"
+                        >
                             <field name="has_google_search_console"/>
                             <div class="content-group" invisible="not has_google_search_console">
                                 <div class="row mt16">
@@ -148,7 +168,11 @@
                                 </small>
                             </div>
                         </setting>
-                        <setting id="plausbile_setting" help="Use Plausible.io, Simple and privacy-friendly Google Analytics alternative">
+                        <setting
+                            id="plausbile_setting"
+                            help="Use Plausible.io, Simple and privacy-friendly Google Analytics alternative"
+                            documentation="/applications/websites/website/reporting/analytics.html#analytics-plausible"
+                        >
                             <field name="has_plausible_shared_key"/>
                             <div class="content-group" invisible="not has_plausible_shared_key">
                                 <div class="row mt16">
@@ -163,7 +187,13 @@
                                 </div>
                             </div>
                             <div invisible="not has_plausible_shared_key">
-                                <widget class="oe_link" name="documentation_link" path="/applications/websites/website/reporting/plausible.html" label=" How to create my Plausible Shared Link" icon="oi oi-arrow-right"/>
+                                <widget
+                                    class="oe_link"
+                                    name="documentation_link"
+                                    path="/applications/websites/website/reporting/analytics.html#analytics-plausible"
+                                    label=" How to create my Plausible Shared Link"
+                                    icon="oi oi-arrow-right"
+                                />
                             </div>
                         </setting>
                     </block>
