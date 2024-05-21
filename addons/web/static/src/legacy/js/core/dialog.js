@@ -1,8 +1,8 @@
-import dom from "@web/legacy/js/core/dom";
 import Widget from "@web/legacy/js/core/widget";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { uniqueId } from "@web/core/utils/functions";
+import { renderButton } from "@web/core/utils/ui";
 
 /**
  * A useful class to handle dialogs.
@@ -293,7 +293,7 @@ var Dialog = Widget.extend({
         var self = this;
         $target.empty();
         buttons.forEach((buttonData) => {
-            var $button = dom.renderButton({
+            var button = renderButton({
                 attrs: {
                     class: buttonData.classes || (buttons.length > 1 ? 'btn-secondary' : 'btn-primary'),
                     disabled: buttonData.disabled,
@@ -302,7 +302,7 @@ var Dialog = Widget.extend({
                 icon: buttonData.icon,
                 text: buttonData.text,
             });
-            $button.on('click', function (e) {
+            button.addEventListener('click', function (e) {
                 var def;
                 if (buttonData.click) {
                     def = buttonData.click.call(self, e);
@@ -313,9 +313,9 @@ var Dialog = Widget.extend({
                 }
             });
             if (self.technical) {
-                $target.append($button);
+                $target.append(button);
             } else {
-                $target.prepend($button);
+                $target.prepend(button);
             }
         });
     },

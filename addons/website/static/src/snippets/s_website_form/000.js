@@ -3,7 +3,6 @@
     import {ReCaptcha} from "@google_recaptcha/js/recaptcha";
     import { session } from "@web/session";
     import publicWidget from "@web/legacy/js/public/public_widget";
-    import dom from "@web/legacy/js/core/dom";
     import { delay } from "@web/core/utils/concurrency";
     import { debounce } from "@web/core/utils/timing";
     import { _t } from "@web/core/l10n/translation";
@@ -18,7 +17,8 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
-import { addLoadingEffect } from "@web/core/utils/ui";
+import { addLoadingEffect, scrollTo } from "@web/core/utils/ui";
+const DEBOUNCE = 400;
 const { DateTime } = luxon;
 import wUtils from '@website/js/utils';
 
@@ -424,7 +424,7 @@ import wUtils from '@website/js/utils';
                                         // popup.
                                         window.location.href = successPage;
                                     } else {
-                                        await dom.scrollTo(successAnchorEl, {
+                                        await scrollTo(successAnchorEl, {
                                             duration: 500,
                                             extraOffset: 0,
                                         });
@@ -439,7 +439,7 @@ import wUtils from '@website/js/utils';
                             // Prevent double-clicking on the send button and
                             // add a upload loading effect (delay before success
                             // message)
-                            await delay(dom.DEBOUNCE);
+                            await delay(DEBOUNCE);
 
                             self.el.classList.add('d-none');
                             self.el.parentElement.querySelector('.s_website_form_end_message').classList.remove('d-none');
@@ -449,7 +449,7 @@ import wUtils from '@website/js/utils';
                             // Prevent double-clicking on the send button and
                             // add a upload loading effect (delay before success
                             // message)
-                            await delay(dom.DEBOUNCE);
+                            await delay(DEBOUNCE);
 
                             self.update_status('success');
                             break;
