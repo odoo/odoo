@@ -10,7 +10,7 @@ from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.osv import expression
-from odoo.tools import sql
+from odoo.tools import sql, SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ class Post(models.Model):
     plain_content = fields.Text(
         'Plain Content',
         compute='_compute_plain_content', store=True)
-    tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
+    tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_post_id', 'forum_tag_id', string='Tags')
     state = fields.Selection(
         [
             ('active', 'Active'), ('pending', 'Waiting Validation'),
@@ -868,3 +868,38 @@ class Post(models.Model):
             if with_date:
                 data['date'] = self.env['ir.qweb.field.date'].record_to_html(post, 'write_date', {})
         return results_data
+
+    def _get_related_posts(self, limit=5):
+        """Return at most a list of {limit} posts related to the main post, based on tag
+        Jaccard similarity. It computes similarity of sets based on ratio of sets
+        intersection divided by sets union (and thus varies from 0 to 1, 1 being
+        identical sets)."""
+
+        self.ensure_one()
+
+        if not self.tag_ids:
+            return self.env['forum.post']
+
+        self.env.cr.execute(SQL("""
+            SELECT forum_post.id,
+              -- Jaccard similarity
+                   (COUNT(DISTINCT intersection_tag_rel.forum_tag_id))::DECIMAL
+                   / COUNT(DISTINCT union_tag_rel.forum_tag_id)::DECIMAL AS similarity
+              FROM forum_post
+              -- common tags (intersection)
+              JOIN forum_tag_rel AS intersection_tag_rel
+                ON intersection_tag_rel.forum_post_id = forum_post.id
+               AND intersection_tag_rel.forum_tag_id = ANY(%(tag_ids)s)
+              -- union tags
+        RIGHT JOIN forum_tag_rel AS union_tag_rel
+                ON union_tag_rel.forum_post_id = forum_post.id
+                OR union_tag_rel.forum_post_id = %(current_post_id)s
+             WHERE id != %(current_post_id)s
+          GROUP BY forum_post.id
+          ORDER BY similarity DESC,
+                   forum_post.last_activity_date DESC
+             LIMIT %(limit)s
+        """, current_post_id=self.id, tag_ids=self.tag_ids.ids, limit=limit))
+
+        result = self.env.cr.dictfetchall()
+        return self.browse([r["id"] for r in result])
