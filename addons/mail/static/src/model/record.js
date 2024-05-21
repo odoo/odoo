@@ -437,6 +437,7 @@ export class Record {
             }
         }
         delete data._;
+        delete data._fieldsValue;
         delete data._proxy;
         delete data._proxyInternal;
         delete data._raw;
