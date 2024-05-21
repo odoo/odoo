@@ -156,6 +156,7 @@ export class Message extends Record {
     subject;
     /** @type {string} */
     subtype_description;
+    threadAsFirstUnread = Record.one("Thread", { inverse: "firstUnreadMessage" });
     /** @type {Object[]} */
     trackingValues = [];
     /** @type {string|undefined} */
@@ -306,12 +307,16 @@ export class Message extends Record {
             }
         },
     });
-    get isBodyEmpty() {
-        return (
-            !this.body ||
-            ["", "<p></p>", "<p><br></p>", "<p><br/></p>"].includes(this.body.replace(/\s/g, ""))
-        );
-    }
+    isBodyEmpty = Record.attr(undefined, {
+        compute() {
+            return (
+                !this.body ||
+                ["", "<p></p>", "<p><br></p>", "<p><br/></p>"].includes(
+                    this.body.replace(/\s/g, "")
+                )
+            );
+        },
+    });
 
     /**
      * Determines if the link preview is actually the main content of the

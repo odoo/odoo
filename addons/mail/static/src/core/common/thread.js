@@ -455,25 +455,4 @@ export class Thread extends Component {
         }
         return msg.datetime.ts - prevMsg.datetime.ts < 60 * 1000;
     }
-
-    /**
-     * Determine if the new message separator should be shown before current
-     * message.
-     *
-     * @param {import("models").Message} current
-     * @param {import("models").Message?} previous
-     */
-    isNewMessageSeparatorVisible(current, previous) {
-        if (!this.props.thread.selfMember) {
-            return false;
-        }
-        const separator = this.props.thread.selfMember.localNewMessageSeparator;
-        if (current.id === separator) {
-            return true;
-        }
-        if (current.id < separator) {
-            return false;
-        }
-        return (!previous && !this.props.thread.loadOlder) || previous?.id < separator;
-    }
 }
