@@ -70,6 +70,15 @@ export function clickDisplayedProduct(
 
     return step;
 }
+export function clickInfoProduct(name) {
+    return [
+        {
+            content: `click product '${name}'`,
+            trigger: `article.product:contains("${name}") .product-information-tag`,
+            run: "click",
+        },
+    ];
+}
 export function clickOrderline(productName, quantity = "1.0") {
     return [
         ...clickLine(productName, quantity),
