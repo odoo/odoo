@@ -31,7 +31,7 @@
                 </div>
                 <div style="padding:20px; margin:0px; text-align:center;">
                     <span style="background-color:#999999; display:inline-block; width:auto; border-radius:5px;">
-                        <a t-attf-href="{{ object.get_base_url() }}/shop" target="_blank" style="text-decoration:none; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:22px; color:#FFFFFF; border-style:solid; border-color:#999999; border-width:20px 30px; display:inline-block; background-color:#999999; border-radius:5px; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center">Use it right now!</a>
+                        <a t-attf-href="{{ object.get_base_url() }}/shop" target="_blank" t-attf-style="text-decoration:none; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:22px; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; border-style:solid; border-width:20px 30px; display:inline-block; background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:5px; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center">Use it right now!</a>
                     </span>
                 </div>
             </div>
@@ -61,7 +61,7 @@
 
         <t t-foreach="object.program_id.reward_ids" t-as="reward">
             <t t-if="reward.required_points &lt;= object.points">
-                <span style="font-size: 50px; color: #875A7B; font-weight: bold;" t-esc="reward.description">Reward Description</span>
+                <span t-attf-style="font-size: 50px; color: {{object.program_id.company_id.email_secondary_color or '#875A7B'}}; font-weight: bold;" t-esc="reward.description">Reward Description</span>
                 <br/>
             </t>
         </t>
