@@ -31,7 +31,7 @@
                         <input class="form-check-input d-none" type="radio" t-model="state.attribute_value_ids" t-att-name="attribute.id"
                             t-attf-id="{{ attribute.id }}_{{ value.id }}" t-att-value="value.id"/>
                         <label
-                            t-attf-class="btn d-flex {{ value.id == state.attribute_value_ids ? 'btn-primary' : 'btn-secondary' }}"
+                            t-attf-class="btn btn-lg d-flex {{ value.id == state.attribute_value_ids ? 'btn-primary' : 'btn-secondary' }}"
                             t-att-name="value.name"
                             t-attf-for="{{ attribute.id }}_{{ value.id }}">
                             <span t-esc="value.name"/>

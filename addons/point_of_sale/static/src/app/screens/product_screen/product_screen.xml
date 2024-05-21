@@ -38,15 +38,6 @@
                     <div t-else="" class="flex-grow-1 text-center mt-5">
                         <p t-if="searchWord">No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>
                         <p t-elif="pos.posHasValidProduct()">There are no products in this category.</p>
-                        <p t-elif="!state.loadingDemo" class="text-large">No products available. Explore <a role="button" class="button-no-demo fw-bolder" t-on-click="loadDemoDataProducts">demo data</a> or <a role="button" class="button-no-demo fw-bolder" t-on-click="createNewProducts">create your own</a>.</p>
-                        <div t-else="" class="block-top-header position-absolute top-0 start-0 bg-black opacity-50 w-100 h-100 z-1000">
-                            <div class="d-flex h-100 w-100 text-white flex-row align-items-center justify-content-center">
-                                <div class="o_spinner d-flex flex-column mb-4">
-                                    <img src="/web/static/img/spin.svg" alt="Loading..."/>
-                                    Loading...
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div t-if="searchWord" class="search-more-button d-flex justify-content-center m-2">
                         <button class="btn btn-primary btn-lg" t-on-click="onPressEnterKey">Search more</button>

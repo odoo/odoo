@@ -50,7 +50,7 @@
         'views/customer_display_index.xml',
     ],
     'demo': [
-        'data/point_of_sale_demo.xml',
+        'data/demo_data.xml',
     ],
     'installable': True,
     'application': True,
@@ -73,6 +73,8 @@
             'point_of_sale/static/src/scss/pos_monetary_field.scss',
             'point_of_sale/static/src/backend/tours/point_of_sale.js',
             'point_of_sale/static/src/backend/debug_manager.js',
+            'point_of_sale/static/src/backend/pos_kanban_view/*',
+            'point_of_sale/static/src/app/utils/hooks.js',
         ],
         'web.assets_tests': [
             'point_of_sale/static/tests/tours/**/*',

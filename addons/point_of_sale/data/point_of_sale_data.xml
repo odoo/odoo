@@ -32,10 +32,6 @@
             <field name="taxes_id" eval="[(5,)]"/>
         </record>
 
-        <record model="pos.config" id="pos_config_main" forcecreate="0">
-            <field name="name">Shop</field>
-        </record>
-
         <record id="uom.product_uom_categ_unit" model="uom.category">
             <field name="is_pos_groupable">True</field>
         </record>
@@ -104,7 +100,5 @@
             <field name="name">200.00</field>
             <field name="value">200.00</field>
         </record>
-
-        <function model="pos.config" name="post_install_pos_localisation" />
     </data>
 </odoo>

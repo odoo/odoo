@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, useState, reactive } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/generic_components/category_selector/category_selector";
@@ -53,7 +52,6 @@ export class ProductScreen extends Component {
         this.notification = useService("notification");
         this.numberBuffer = useService("number_buffer");
         this.state = useState({
-            loadingDemo: false,
             previousSearchWord: "",
             currentOffset: 0,
         });
@@ -320,50 +318,6 @@ export class ProductScreen extends Component {
         ].filter((id) => !this.pos.models["product.product"].get(id)?.available_in_pos);
     }
 
-    async loadDemoDataProducts() {
-        this.state.loadingDemo = true;
-        try {
-            const result = await this.pos.data.callRelated(
-                "pos.session",
-                "load_product_frontend",
-                [odoo.pos_session_id],
-                {},
-                false
-            );
-
-            const posOrder = result["pos.order"];
-
-            if (!result["pos.category"] && !result["product.product"]) {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Demo products are no longer available"),
-                    body: _t(
-                        "A valid product already exists for Point of Sale. Therefore, demonstration products cannot be loaded."
-                    ),
-                });
-            }
-
-            for (const dataName of ["pos.category", "product.product", "pos.order"]) {
-                if (!result[dataName] && Object.keys(posOrder).length === 0) {
-                    this._showLoadDemoDataMissingDataError(dataName);
-                }
-            }
-
-            if (this.pos.models["product.product"].length > 5) {
-                this.pos.session._has_available_products = true;
-            }
-
-            this.pos.loadOpenOrders(posOrder);
-        } finally {
-            this.state.loadingDemo = false;
-        }
-    }
-
-    _showLoadDemoDataMissingDataError(missingData) {
-        console.error(
-            `Missing '${missingData}' in pos.session:load_product_frontend server answer.`
-        );
-    }
-
     async onPressEnterKey() {
         const { searchProductWord } = this.pos;
         if (!searchProductWord) {
@@ -414,10 +368,6 @@ export class ProductScreen extends Component {
             }
         );
         return product;
-    }
-
-    createNewProducts() {
-        window.open("/web#action=point_of_sale.action_client_product_menu", "_self");
     }
 
     async addProductToOrder(product) {
