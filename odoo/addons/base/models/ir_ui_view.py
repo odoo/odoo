@@ -1290,11 +1290,18 @@ actual arch.
 
         collect(arch, model)
 
+        # TODO: Keep ? add a test for it ?
+        all_fields = set(field_nodes)
+        # All form view use the display_name in the controller panel
+        # See form_controller.js
+        if self.type == 'form' and not model._transient:
+            all_fields.add('display_name')
+
         for field, nodes in field_nodes.items():
             # if field should trigger an onchange, add on_change="1" on the
             # nodes referring to field
             model = self.env[field.model_name]
-            if model._has_onchange(field, field_nodes):
+            if model._has_onchange(field, all_fields):
                 for node in nodes:
                     if not node.get('on_change'):
                         node.set('on_change', '1')
