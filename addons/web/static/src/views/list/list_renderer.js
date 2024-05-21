@@ -1189,14 +1189,10 @@ export class ListRenderer extends Component {
         const isDirty = record.isDirty || this.lastIsDirty;
         const isEnterBehavior = hotkey === "enter" && (!record.canBeAbandoned || isDirty);
         const isTabBehavior = hotkey === "tab" && !record.canBeAbandoned && isDirty;
-        if (isEnterBehavior && !record.checkValidity()) {
-            return true;
-        }
         if (
             isLastOfGroup &&
             this.canCreate &&
             editable === "bottom" &&
-            record.checkValidity() &&
             (isEnterBehavior || isTabBehavior)
         ) {
             this.add({ group });
@@ -1268,10 +1264,8 @@ export class ListRenderer extends Component {
                             return false;
                         }
                         // add a line
-                        if (record.checkValidity()) {
-                            const { context } = this.creates[0];
-                            this.add({ context });
-                        }
+                        const { context } = this.creates[0];
+                        this.add({ context });
                     } else if (
                         this.canCreate &&
                         !record.canBeAbandoned &&

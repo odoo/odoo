@@ -2182,7 +2182,7 @@ export class OdooEditor extends EventTarget {
                         ancestor = ancestor.parentElement;
                     }
                     if (!hiliteColor) {
-                        hiliteColor = computedStyle.backgroundColor;
+                        hiliteColor = this.document.queryCommandValue('backColor');
                     }
                 }
             }
@@ -2443,8 +2443,11 @@ export class OdooEditor extends EventTarget {
      * @param {Range} range
      */
     _selectTableCells(range) {
-        this.observerUnactive('_selectTableCells');
         const table = closestElement(range.commonAncestorContainer, 'table');
+        if (!table) {
+            return;
+        }
+        this.observerUnactive('_selectTableCells');
         const alreadyHadSelection = table.classList.contains('o_selected_table');
         this.deselectTable(); // Undo previous selection.
         table.classList.toggle('o_selected_table', true);
@@ -4328,7 +4331,6 @@ export class OdooEditor extends EventTarget {
 
             if (isMouseInsideCheckboxBox) {
                 toggleClass(node, 'o_checked');
-                ev.preventDefault();
                 this.historyStep();
                 if (!document.getSelection().isCollapsed) {
                     this._updateToolbar(true);
