@@ -1,7 +1,11 @@
 import { expect, test } from "@odoo/hoot";
-import { queryAll, queryOne, scroll } from "@odoo/hoot-dom";
+import { edit, press, queryAll, queryOne, scroll } from "@odoo/hoot-dom";
 import { animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
-import { getPickerCell, zoomOut } from "@web/../tests/core/datetime/datetime_test_helpers";
+import {
+    assertDateTimePicker,
+    getPickerCell,
+    zoomOut,
+} from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickSave,
     contains,
@@ -57,6 +61,52 @@ test("toggle datepicker", async () => {
     expect(".o_datetime_picker").toHaveCount(0);
 });
 
+test.tags("desktop")("open datepicker on Control+Enter", async () => {
+    defineParams({
+        lang_parameters: {
+            date_format: "%d/%m/%Y",
+            time_format: "%H:%M:%S",
+        },
+    });
+    await mountView({
+        resModel: "res.partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="date"/>
+            </form>
+        `,
+    });
+
+    expect(".o_field_date input").toHaveCount(1);
+
+    press(["ctrl", "enter"]);
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(1);
+
+    //edit the input and open the datepicker again with ctrl+enter
+    await contains(".o_field_date .o_input").click();
+    edit("09/01/1997");
+    press(["ctrl", "enter"]);
+    await animationFrame();
+    assertDateTimePicker({
+        title: "January 1997",
+        date: [
+            {
+                cells: [
+                    [-29, -30, -31, 1, 2, 3, 4],
+                    [5, 6, 7, 8, [9], 10, 11],
+                    [12, 13, 14, 15, 16, 17, 18],
+                    [19, 20, 21, 22, 23, 24, 25],
+                    [26, 27, 28, 29, 30, 31, -1],
+                    [-2, -3, -4, -5, -6, -7, -8],
+                ],
+                daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                weekNumbers: [1, 2, 3, 4, 5, 6],
+            },
+        ],
+    });
+});
 test("toggle datepicker far in the future", async () => {
     Partner._records[0].date = "9999-12-31";
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
