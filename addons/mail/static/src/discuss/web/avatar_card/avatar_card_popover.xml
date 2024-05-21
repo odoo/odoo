@@ -23,7 +23,7 @@
                         <a t-if="email" t-att-href="'mailto:'+email">
                             <i class="fa fa-fw fa-envelope me-1"/><t t-esc="email"/>
                         </a>
-                        <a t-if="phone" t-att-href="'tel:'+phone">
+                        <a t-if="phone" class="o-mail-avatar-card-tel" t-att-href="'tel:'+phone">
                             <i class="fa fa-fw fa-phone me-1"/><t t-esc="phone"/>
                         </a>
                     </div>

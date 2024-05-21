@@ -30,16 +30,13 @@ export class ChannelMemberList extends Component {
         if (this.store.inPublicPage) {
             return false;
         }
-        if (member.persona?.eq(this.store.self)) {
-            return false;
-        }
         if (member.persona.type === "guest") {
             return false;
         }
         return true;
     }
 
-    openChatAvatar(member) {
+    onClickAvatar(ev, member) {
         if (!this.canOpenChatWith(member)) {
             return;
         }
