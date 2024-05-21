@@ -32,8 +32,7 @@
         'web.assets_tests': [
             'project_todo/static/tests/tours/**/*',
         ],
-        'web.qunit_suite_tests': [
-            'project_todo/static/tests/helpers/**/*',
+        'web.assets_unit_tests': [
             'project_todo/static/tests/**/*',
         ],
     },
