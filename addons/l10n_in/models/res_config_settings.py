@@ -20,6 +20,7 @@ class ResConfigSettings(models.TransientModel):
     module_l10n_in_gstin_status = fields.Boolean('Check GST Number Status')
     module_l10n_in_withholding = fields.Boolean('Indian TDS and TCS')
     l10n_in_hsn_code_digit = fields.Selection(related='company_id.l10n_in_hsn_code_digit', readonly=False)
+    module_l10n_in_enet_batch_payment = fields.Boolean(string="Vendor Payment")
 
     def l10n_in_edi_buy_iap(self):
         if not self.l10n_in_edi_production_env or not (self.module_l10n_in_edi or self.module_l10n_in_gstin_status):
