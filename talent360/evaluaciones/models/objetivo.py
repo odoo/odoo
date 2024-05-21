@@ -191,3 +191,5 @@ class Objetivo(models.Model):
         for registro in self:
             if not registro.usuario_ids:
                 raise ValidationError(_("Debe asignar al menos un usuario al objetivo"))
+            
+    

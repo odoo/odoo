@@ -1,13 +1,24 @@
 <?xml version="1.0"?>
 <odoo>
+    <!-- Acción para abrir la vista en tree y mis objetivos -->
     <record id="mis_objetivos_action" model="ir.actions.act_window">
         <field name="name">Mis Objetivos</field>
         <field name="res_model">objetivo</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('usuario_ids', 'in', [uid])]</field>
         <field name="context">{'form_view_ref': 'evaluaciones.objetivo_form_mis_objetivos', 'create': False, 'edit': False, 'delete': False, 'duplicate': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                Actualmente no tienes objetivos asignados.
+            </p>
+            <p>
+                Los objetivos que se te asignen aparecerán aquí.
+            </p>
+        </field>
     </record>
 
+
+    <!-- Vista en árbol para objetivo.tree -->
     <record id="objetivo_tree" model="ir.ui.view">
         <field name="name">objetivo.tree</field>
         <field name="model">objetivo</field>
@@ -24,7 +35,7 @@
         </field>
     </record>
 
-
+    <!-- Vista para mis.objetivos.views -->
     <record id="objetivo_form_mis_objetivos" model="ir.ui.view">
         <field name="name">objetivo.form.mis_objetivos</field>
         <field name="model">objetivo</field>
