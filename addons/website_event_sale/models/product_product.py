@@ -15,3 +15,6 @@ class ProductProduct(models.Model):
         return super()._is_add_to_cart_allowed(event_ticket_id=event_ticket_id, **kwargs) or (
             line_id and any(event.website_published for event in self.event_ticket_ids.event_id)
         )
+
+    def _is_allow_zero_price(self):
+        return super()._is_allow_zero_price() or self.is_slide_channel

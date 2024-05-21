@@ -20,7 +20,7 @@ class EventTemplateTicket(models.Model):
     # product
     product_id = fields.Many2one(
         'product.product', string='Product', required=True,
-        domain=[("detailed_type", "=", "service")], default=_default_product_id)
+        domain=[("detailed_type", "=", "service"), ('sale_ok', '=', True)], default=_default_product_id)
     currency_id = fields.Many2one(related="product_id.currency_id", string="Currency")
     price = fields.Float(
         string='Price', compute='_compute_price',

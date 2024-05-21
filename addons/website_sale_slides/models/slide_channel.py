@@ -13,7 +13,7 @@ class Channel(models.Model):
     ], ondelete={'payment': lambda recs: recs.write({'enroll': 'invite'})})
     product_id = fields.Many2one('product.product',
         'Product',
-        domain=[('detailed_type', '=', 'service')],
+        domain=[('detailed_type', '=', 'service'), ('sale_ok', '=', True)],
         default=_default_product_id
     )
     product_sale_revenues = fields.Monetary(
