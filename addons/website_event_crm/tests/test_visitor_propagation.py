@@ -20,25 +20,32 @@ class TestWebsiteEventCrmFlow(TestEventCrmCommon):
             'user_id': self.env.ref('base.user_admin').id,
             'language_ids': [self.env.ref('base.lang_en').id, self.env.ref('base.lang_fr').id]
         })
-        test_lang_visitor = self.env['website.visitor'].sudo().create({
+        test_lang_visitor_en = self.env['website.visitor'].sudo().create({
             'name': 'test visitor language',
             'lang_id': self.env.ref('base.lang_en').id,
             'access_token': 'f9d2ffa0427d4e4b1d740cf5eb3cdc20',
+            'website_id': test_lang_website.id,
+        })
+        test_lang_visitor_fr = self.env['website.visitor'].sudo().create({
+            'name': 'test visitor language',
+            'lang_id': self.env.ref('base.lang_fr').id,
+            'access_token': 'f9d2ffa0427d4e4b1d740cf5eb3cdc21',
             'website_id': test_lang_website.id,
         })
         # 3 leads created w/ Lead Generation rules in TestEventCrmCommon: 1 per attendee and 1 per order
         test_lang_registration1, test_lang_registration2 = self.env['event.registration'].create([
             {
                 'event_id': self.event_0.id,
-                'visitor_id': test_lang_visitor.id,
+                'visitor_id': test_lang_visitor_en.id,
                 'email': 'test@test.example.com',
             },
             {
                 'event_id': self.event_0.id,
-                'visitor_id': test_lang_visitor.id,
+                'visitor_id': test_lang_visitor_fr.id,
                 'email': 'test2@test.example.com',
             },
         ])
         leads = test_lang_registration1.lead_ids | test_lang_registration2.lead_ids
-        self.assertEqual(leads.visitor_ids, test_lang_visitor)
-        self.assertEqual(leads.lang_id, test_lang_visitor.lang_id)
+        self.assertEqual(leads.visitor_ids, test_lang_visitor_en + test_lang_visitor_fr)
+        self.assertEqual(test_lang_registration1.lead_ids.lang_id, test_lang_visitor_en.lang_id)
+        self.assertEqual(test_lang_registration2.lead_ids.lang_id, test_lang_visitor_fr.lang_id)
