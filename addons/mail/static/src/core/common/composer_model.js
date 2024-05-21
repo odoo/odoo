@@ -23,8 +23,7 @@ export class Composer extends Record {
 
     attachments = Record.many("Attachment");
     message = Record.one("Message");
-    mentionedPartners = Record.many("Persona");
-    mentionedChannels = Record.many("Thread");
+    mentions = Record.many("Mention");
     cannedResponses = Record.many("CannedResponse");
     text = "";
     thread = Record.one("Thread");

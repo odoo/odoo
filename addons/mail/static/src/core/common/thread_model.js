@@ -992,14 +992,7 @@ export class Thread extends Record {
     /** @param {string} body */
     async post(
         body,
-        {
-            attachments = [],
-            isNote = false,
-            parentId,
-            mentionedChannels = [],
-            mentionedPartners = [],
-            cannedResponseIds,
-        } = {}
+        { attachments = [], isNote = false, parentId, mentions = [], cannedResponseIds } = {}
     ) {
         let tmpMsg;
         const params = await this.store.getMessagePostParams({
@@ -1007,8 +1000,7 @@ export class Thread extends Record {
             body,
             cannedResponseIds,
             isNote,
-            mentionedChannels,
-            mentionedPartners,
+            mentions,
             thread: this,
         });
         const tmpId = this.store.getNextTemporaryId();
@@ -1032,10 +1024,7 @@ export class Thread extends Record {
             }
             const prettyContent = await prettifyMessageContent(
                 body,
-                this.store.getMentionsFromText(body, {
-                    mentionedChannels,
-                    mentionedPartners,
-                })
+                this.store.getMentionsFromText(body, mentions)
             );
             tmpMsg = this.store.Message.insert(
                 {

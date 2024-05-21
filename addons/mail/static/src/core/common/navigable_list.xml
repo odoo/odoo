@@ -12,16 +12,19 @@
                 </div>
                 <t t-else="">
                     <div
-                        t-foreach="props.options" t-as="option" t-key="option_index"
+                        t-foreach="sortedOptions" t-as="option" t-key="option_index"
                         class="o-mail-NavigableList-item"
                         t-att-class="option.classList"
                         t-on-mouseenter="() => this.onOptionMouseEnter(option_index)"
                         t-on-click="(ev) => this.selectOption(ev, option_index)"
                     >
+                        <hr class="my-2" t-if="option.group != lastGroup and option_index != 0"/>
                         <a href="#" class="d-flex align-items-center w-100 py-2 px-4" t-att-class="{ 'o-mail-NavigableList-active bg-300': state.activeIndex === option_index }">
-                            <t t-if="props.optionTemplate" t-call="{{ props.optionTemplate }}"/>
+                            <t t-if="option.optionTemplate" t-call="{{ option.optionTemplate }}"/>
+                            <t t-elif="props.optionTemplate" t-call="{{ props.optionTemplate }}"/>
                             <t t-else="" t-esc="option.label"/>
                         </a>
+                        <t t-set="lastGroup" t-value="option.group"/>
                     </div>
                 </t>
             </div>
