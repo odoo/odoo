@@ -510,6 +510,26 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             self.action.with_context(self.context).run()
         self.assertEqual(num_requests, 2)
 
+    def test_101_recursion_run(self):
+        self.action.write({
+            'state': 'code',
+            'code': ("partner_name = record.name + '_code'\n"
+                     "record.env['res.partner'].create({'name': partner_name})"),
+        })
+        action2 = self.action.create({
+            'name': 'ParentAction',
+            'model_id': self.res_partner_model.id,
+            'state': 'code',
+            'code': f'action = {{"id": "{self.action.id}", "type": "ir.actions.server"}}',
+        })
+
+        run_res = action2.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: code server action correctly finished should return False')
+
+        partners = self.test_partner.search([('name', 'ilike', 'TestingPartner_code')])
+        self.assertEqual(len(partners), 1, 'ir_actions_server: 1 new partner should have been created')
+
+
 class TestCommonCustomFields(common.TransactionCase):
     MODEL = 'res.partner'
     COMODEL = 'res.users'

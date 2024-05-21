@@ -989,6 +989,11 @@ class IrActionsServer(models.Model):
                     "`_run_action_<type>` or `_run_action_<type>_multi`.",
                     action.name, action.state
                 )
+        if res and "type" in res and res["type"] == 'ir.actions.server':
+            if "id" in res:
+                return self.sudo().browse([int(res["id"])]).run()
+            else:
+                return False
         return res or False
 
     @api.depends('evaluation_type', 'update_field_id')
@@ -1108,6 +1113,14 @@ class IrActionsTodo(models.Model):
         action = self.env[action_type].browse(self.action_id.id)
 
         result = action.read()[0]
+
+        # If the action is a server action, run it, and return the result
+        if action_type == 'ir.actions.server':
+            result = action.run()
+            if not result or 'type' not in result:
+                result = {'type': 'ir.actions.act_window_close'}
+            action_type = result["type"]
+
         if action_type != 'ir.actions.act_window':
             return result
         result.setdefault('context', '{}')
