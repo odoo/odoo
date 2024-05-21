@@ -12,7 +12,7 @@ import Widget from "@web/legacy/js/core/widget";
 import { ColorPalette } from "@web_editor/js/wysiwyg/widgets/color_palette";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
-import {ColumnLayoutMixin} from "@web_editor/js/common/column_layout_mixin";
+import { ColumnLayoutMixin, ColumnLayoutUtils } from "@web_editor/js/common/column_layout_mixin";
 const {
     normalizeColor,
     getBgImageURL,
@@ -367,6 +367,8 @@ export class UserValue {
         this.id = id;
         this.option = option;
         this.env = env;
+        // TODO: @owl-option maybe we should take the opportunity to remove this.
+        this.$target = env.$target;
         /** @type {UserValue[]} */
         this._subValues = {};
         this.mounted = false;
@@ -888,7 +890,6 @@ class UserValueComponent extends Component {
             this.env.unregisterUserValue(this.state);
         });
     }
-
     /**
      * Returns an object containing the classes defined in the props
      *
@@ -3604,6 +3605,7 @@ export class SnippetOptionComponent extends Component {
             registerLayoutElement: (layoutElement) => {
                 return this.props.snippetOption.instance.registerLayoutElement(layoutElement);
             },
+            $target: this.props.snippetOption.instance.$target,
         });
 
         onMounted(() => {
@@ -4165,7 +4167,15 @@ export class SnippetOption {
     }
     getMethodsNames() {
         // TODO: @owl-options either add all possible method or find a way to compute it.
-        return ["selectClass", "selectStyle", "selectDataAttribute"];
+        function getMethods(obj) {
+            if (!obj || obj === Object) {
+                return [];
+            }
+            const properties = Object.getOwnPropertyNames(obj);
+            const methods = properties.filter(name => typeof obj[name] === "function");
+            return [...methods, ...getMethods(Object.getPrototypeOf(obj))];
+        }
+        return getMethods(this);
     }
     /**
      * Updates the UI. For widget update, @see _computeWidgetState.
@@ -5671,13 +5681,13 @@ legacyRegistry.Box = SnippetOptionWidget.extend({
 
 
 
-legacyRegistry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
+export class LayoutColumn extends ColumnLayoutMixin(SnippetOption) {
     /**
      * @override
      */
     cleanUI() {
         this._removeGridPreview();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -5688,7 +5698,7 @@ legacyRegistry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
      *
      * @see this.selectClass for parameters
      */
-    selectCount: async function (previewMode, widgetValue, params) {
+    async selectCount(previewMode, widgetValue, params) {
         // Make sure the "Custom" option is read-only.
         if (widgetValue === "custom") {
             return;
@@ -5713,15 +5723,16 @@ legacyRegistry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             resetOuids($row[0]);
             $row.contents().unwrap().contents().unwrap();
             restoreCursor();
-            this.trigger_up('activate_snippet', {$snippet: this.$target});
+            this.env.activateSnippet(this.$target);
         } else if (previousNbColumns === 0) {
-            this.trigger_up('activate_snippet', {$snippet: this.$('> .row').children().first()});
+            this.env.activateSnippet(this.$('> .row').children().first());
         }
-        this.trigger_up('option_update', {
-            optionName: 'StepsConnector',
-            name: 'change_columns',
-        });
-    },
+        // TODO: @owl-options
+        // this.trigger_up('option_update', {
+        //     optionName: 'StepsConnector',
+        //     name: 'change_columns',
+        // });
+    }
     /**
      * Changes the layout (columns or grid).
      *
@@ -5732,7 +5743,7 @@ legacyRegistry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             const rowEl = this.$target[0].querySelector('.row');
             if (!rowEl || !rowEl.classList.contains('o_grid_mode')) { // Prevent toggling grid mode twice.
                 gridUtils._toggleGridMode(this.$target[0]);
-                this.trigger_up('activate_snippet', {$snippet: this.$target});
+                this.env.activateSnippet(this.$target);
             }
         } else {
             // Toggle normal mode only if grid mode was activated (as it's in
@@ -5740,14 +5751,15 @@ legacyRegistry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             const rowEl = this.$target[0].querySelector('.row');
             if (rowEl && rowEl.classList.contains('o_grid_mode')) {
                 this._toggleNormalMode(rowEl);
-                this.trigger_up('activate_snippet', {$snippet: this.$target});
+                this.env.activateSnippet(this.$target);
             }
         }
-        this.trigger_up('option_update', {
-            optionName: 'StepsConnector',
-            name: 'change_columns',
-        });
-    },
+        // TODO: @owl-options
+        // this.trigger_up('option_update', {
+        //     optionName: 'StepsConnector',
+        //     name: 'change_columns',
+        // });
+    }
     /**
      * Adds an image, some text or a button in the grid.
      *
@@ -5783,7 +5795,7 @@ legacyRegistry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             // Choose an image with the media dialog.
             let isImageSaved = false;
             await new Promise(resolve => {
-                this.call("dialog", "add", MediaDialog, {
+                this.env.services.dialog.add(MediaDialog, {
                     onlyImages: true,
                     save: imageEl => {
                         isImageSaved = true;
@@ -5856,13 +5868,13 @@ legacyRegistry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         if (!sameCoordinatesEl || !newColumnEl.contains(sameCoordinatesEl)) {
             newColumnEl.scrollIntoView({behavior: "smooth", block: "center"});
         }
-        this.trigger_up('activate_snippet', {$snippet: $(newColumnEl)});
-    },
+        this.env.activateSnippet($(newColumnEl));
+    }
     /**
      * @override
      */
     async selectStyle(previewMode, widgetValue, params) {
-        await this._super(previewMode, widgetValue, params);
+        await super.selectStyle(previewMode, widgetValue, params);
 
         const rowEl = this.$target[0];
         const isMobileView = weUtils.isMobileView(rowEl);
@@ -5880,7 +5892,7 @@ legacyRegistry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             this.removeGridPreview = this._removeGridPreview.bind(this);
             rowEl.addEventListener("animationend", this.removeGridPreview);
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -5889,7 +5901,7 @@ legacyRegistry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         if (methodName === 'selectCount') {
             const isMobile = this._isMobile();
             const columnEls = this.$target[0].querySelector(":scope > .row")?.children;
@@ -5902,8 +5914,8 @@ legacyRegistry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
                 return 'normal';
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -5928,8 +5940,8 @@ legacyRegistry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
                 this._areColsCustomized(this.$target[0].querySelector(":scope > .row").children,
                 isMobile);
         }
-        return this._super(...arguments);
-    },
+        return super._computeVisibility(...arguments);
+    }
     /**
      * If the number of columns requested is greater than the number of items,
      * adds new columns which are clones of the last one. If there are less
@@ -5956,14 +5968,14 @@ legacyRegistry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             for (let i = 0; i < itemsDelta; i++) {
                 const lastEl = rowEl.lastElementChild;
                 newItems.push(new Promise(resolve => {
-                    this.trigger_up("clone_snippet", {$snippet: $(lastEl), onSuccess: resolve});
+                    this.env.cloneSnippet($(lastEl)).then(resolve);
                 }));
             }
             await Promise.all(newItems);
         }
 
-        this.trigger_up('cover_update');
-    },
+        this.callbacks.cover();
+    }
     /**
      * Resizes the columns for the mobile or desktop view.
      *
@@ -5993,7 +6005,7 @@ legacyRegistry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             const hasDesktopOffset = columnEl.className.match(/(^|\s+)offset-lg-[1-9][0-1]?(?!\S)/);
             columnEl.classList.toggle("offset-lg-0", hasMobileOffset && !hasDesktopOffset);
         }
-    },
+    }
     /**
      * Toggles the normal mode.
      *
@@ -6005,12 +6017,7 @@ legacyRegistry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         rowEl.classList.remove('o_grid_mode');
         const columnEls = rowEl.children;
         // Removing the grid previews (if any).
-        await new Promise(resolve => {
-            this.trigger_up("clean_ui_request", {
-                targetEl: this.$target[0].closest("section"),
-                onSuccess: resolve,
-            });
-        });
+        await this.env.cleanUI(this.$target[0].closest("section"))
 
         for (const columnEl of columnEls) {
             // Reloading the images.
@@ -6024,7 +6031,7 @@ legacyRegistry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         rowEl.style.removeProperty('--grid-item-padding-x');
         rowEl.style.removeProperty('--grid-item-padding-y');
         rowEl.style.removeProperty("gap");
-    },
+    }
     /**
      * Removes the grid preview that was added when changing the grid gaps.
      *
@@ -6039,14 +6046,14 @@ legacyRegistry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         }
         delete this.removeGridPreview;
         this.options.wysiwyg.odooEditor.observerActive("removeGridPreview");
-    },
+    }
     /**
      * @returns {boolean}
      */
     _isMobile() {
         return weUtils.isMobileView(this.$target[0]);
-    },
-});
+    }
+}
 
 legacyRegistry.GridColumns = SnippetOptionWidget.extend({
     /**
@@ -6128,7 +6135,7 @@ legacyRegistry.vAlignment = SnippetOptionWidget.extend({
 /**
  * Allows snippets to be moved before the preceding element or after the following.
  */
-legacyRegistry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
+legacyRegistry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutUtils, {
     displayOverlayOptions: true,
 
     /**
@@ -10117,7 +10124,6 @@ const oldExport = {
     addTitleAndAllowedAttributes: _addTitleAndAllowedAttributes,
     buildElement: _buildElement,
     buildTitleElement: _buildTitleElement,
-    buildRowElement: _buildRowElement,
     buildCollapseElement: _buildCollapseElement,
 
     addAnimatedShapeLabel: _addAnimatedShapeLabel,

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="website.column_count_option">
+    <WeSelect class="with_grid and 'o_grid'" noPreview="'true'" name="'column_count_opt'" dependencies="with_grid and 'normal_mode'">
+        <!-- TODO: @owl-options
+            This should be working but slots cannot be conditional so instead
+            make the caller define the title.
+            <t t-set-slot="title"><t t-if="!with_grid">Columns</t></t>
+        -->
+        <t t-raw="0"/>
+        <WeButton selectCount="'0'" name="'zero_cols_opt'">None</WeButton>
+        <WeButton selectCount="'1'">1</WeButton>
+        <WeButton selectCount="'2'">2</WeButton>
+        <WeButton selectCount="'3'">3</WeButton>
+        <WeButton selectCount="'4'">4</WeButton>
+        <WeButton selectCount="'5'">5</WeButton>
+        <WeButton selectCount="'6'">6</WeButton>
+        <WeButton selectCount="'custom'" name="'custom_cols_opt'">Custom</WeButton>
+    </WeSelect>
+</t>
+<t t-name="website.grid_layout_options">
+    <WeButtonGroup class="indent and 'o_we_sublevel_1'" noPreview="'true'" dependencies="'grid_mode'">
+        <t t-set-slot="title">Add Elements</t>
+        <WeButton class="'o_we_bg_brand_primary o_grid'" addElement="'image'" title="'Image'" name="'image'">Image</WeButton>
+        <WeButton class="'o_we_bg_brand_primary o_grid'" addElement="'text'" title="'Text'" name="'text'">Text</WeButton>
+        <WeButton class="'o_we_bg_brand_primary o_grid'" addElement="'button'" title="'Button'" name="'button'">Button</WeButton>
+    </WeButtonGroup>
+    <WeRow class="indent and 'o_we_sublevel_1'">
+        <t t-set-slot="title">Spacing (Y, X)</t>
+        <WeInput dependencies="'grid_mode'" selectStyle="''" cssProperty="'row-gap'" unit="'px'" preventImportant="'true'" applyTo="'.row'"/>
+        <WeInput dependencies="'grid_mode'" selectStyle="''" cssProperty="'column-gap'" unit="'px'" max="'60'" preventImportant="'true'" applyTo="'.row'"/>
+    </WeRow>
+</t>
+<t t-name="website.layout_column">
+    <WeRow>
+        <WeButtonGroup noPreview="'true'">
+            <t t-set-slot="title">Layout</t>
+            <WeButton selectLayout="'grid'" name="'grid_mode'">Grid</WeButton>
+            <WeButton selectLayout="'normal'" name="'normal_mode'">Cols</WeButton>
+        </WeButtonGroup>
+        <t t-call="website.column_count_option"/>
+    </WeRow>
+    <t t-call="website.grid_layout_options">
+        <t t-set="indent" t-value="true"/>
+    </t>
+</t>
+</templates>

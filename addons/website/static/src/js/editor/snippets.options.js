@@ -5,6 +5,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { Dialog } from "@web/core/dialog/dialog";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
+import { registry } from "@web/core/registry";
 import { useChildRef } from "@web/core/utils/hooks";
 import weUtils from "@web_editor/js/common/utils";
 import options from "@web_editor/js/editor/snippets.options.legacy";
@@ -37,9 +38,7 @@ import {
 import { Component, markup, useRef, useState } from "@odoo/owl";
 
 import {
-    legacyRegistry,
-    owlRegistry,
-    UnitUserValue,
+    LayoutColumn,
 } from '@web_editor/js/editor/snippets.options'; 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
@@ -4204,13 +4203,20 @@ options.registry.Button = options.Class.extend({
     },
 });
 
-options.registry.layout_column.include({
+class WebsiteLayoutColumn extends LayoutColumn {
     /**
      * @override
      */
     _isMobile() {
-        return wUtils.isMobile(this);
-    },
+        return this.env.services.website.context.isMobile;
+    }
+}
+registry.category("snippet_options").add("WebsiteLayoutColumns", {
+    Class: WebsiteLayoutColumn,
+    template: "website.layout_column",
+    selector: "section, section.s_carousel_wrapper .carousel-item",
+    target: "> *:has(> .row), > .s_allow_columns",
+    exclude: ".s_masonry_block, .s_features_grid, .s_media_list, .s_showcase, .s_table_of_content, .s_process_steps, .s_image_gallery"
 });
 
 options.registry.SnippetMove.include({
