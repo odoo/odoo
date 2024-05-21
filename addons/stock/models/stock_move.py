@@ -927,7 +927,6 @@ Please change the quantity done or the rounding precision of your unit of measur
             if key.startswith('default_') and key != 'default_company_id':
                 default_vals[remove_prefix(key, 'default_')] = context[key]
 
-        vals_list = []
         if default_vals['tracking'] == 'lot' and mode == 'generate':
             lot_qties = generate_lot_qty(default_vals['quantity'], count)
         else:
@@ -937,7 +936,9 @@ Please change the quantity done or the rounding precision of your unit of measur
             lot_names = self.env['stock.lot'].generate_lot_names(first_lot, len(lot_qties))
         elif mode == 'import':
             lot_names = self.split_lots(lot_text)
+            lot_qties = [1] * len(lot_names)
 
+        vals_list = []
         for lot, qty in zip(lot_names, lot_qties):
             if not lot.get('quantity'):
                 lot['quantity'] = qty
