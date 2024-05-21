@@ -259,7 +259,7 @@ class ProductTemplateAttributeValue(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('attribute_id', 'in', [attr['id'] for attr in data['product.attribute']['data']])]
+        return AND([[('ptav_active', '=', True)], [('attribute_id', 'in', [attr['id'] for attr in data['product.attribute']['data']])]])
 
     @api.model
     def _load_pos_data_fields(self, config_id):
