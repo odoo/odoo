@@ -79,6 +79,14 @@ registry
                 "1.0",
                 "10.0"
             );
+
+            // Inactive variant attributes should not be displayed
+            ProductScreen.do.clickHomeCategory();
+            ProductScreen.do.clickDisplayedProduct('Configurable Chair');
+            ProductConfigurator.check.isShown();
+            // Active: Other and Leather, Inactive: Wool
+            ProductConfigurator.check.numberRadioOptions(2);
+            ProductConfigurator.do.confirmAttributes();
             return getSteps(); 
         }
     });
