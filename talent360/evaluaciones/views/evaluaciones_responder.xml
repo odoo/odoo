@@ -226,6 +226,29 @@
         </div>
     </template>
 
+    <!-- Simple choice question -->
+    <template id="question_simple_choice" name="Pregunta: Opcion multiple">
+        <div t-att-id="question.id">
+            <div class="o_survey_question_title mb-3" style="font-size: 20px;">
+                <span t-esc="str(numero_pregunta) + '.- '" class="o_survey_question_number"/>
+                <span t-field="question.pregunta_texto"/>
+            </div>
+            <div class="row g-2 o_survey_answer_wrapper o_survey_form_choice"
+                t-att-data-name="question.id"
+                data-question-type="simple_choice_radio">
+                <t t-foreach='question.opcion_ids' t-as='label'>
+                    <label t-att-for="str(question.id) + '_' + str(label.id)" t-attf-class="o_survey_choice_btn py-1 px-3 w-100 h-100 rounded mx-1">
+                        <input t-att-id="str(question.id) + '_' + str(label.id)" type="radio" t-att-value='label.id'
+                            t-attf-class="o_survey_form_choice_item position-absolute"
+                            t-att-name='question.id'
+                            required="required"/>
+                        <span class="text-break mx-3" t-field='label.opcion_texto'/>
+                    </label>
+                </t>
+            </div>
+        </div>
+    </template>
+
     <!-- Matrix question -->
     <template id="question_matrix" name="Pregunta: Opcion multiple">
         <div t-att-id="question.id">
@@ -265,8 +288,47 @@
         </div>
     </template>
 
-    <!-- Scale question -->
+    <!-- scale question -->
     <template id="question_scale" name="Pregunta: escala">
+        <div t-att-id="question.id">
+            <t t-set="opciones" t-value="['Nunca', 'Casi nunca', 'A veces', 'Casi siempre', 'Siempre']"/>
+            <t t-set="desc" t-value="['4', '3', '2', '1', '0']"/>
+            <t t-set="asc" t-value="['0', '1', '2', '3', '4']"/>
+
+            <div class="o_survey_question_title mb-3" style="font-size: 20px;">
+                <span t-esc="str(numero_pregunta) + '.- '" class="o_survey_question_number"/>
+                <span t-field="question.pregunta_texto"/>
+            </div>
+            <div class="row g-2 o_survey_answer_wrapper o_survey_form_choice"
+                t-att-data-name="question.id"
+                data-question-type="simple_choice_radio">
+                <t t-set="iterador" t-value="0"/>
+                <t t-foreach='opciones' t-as='label'>
+                    <t t-if="question.ponderacion == 'descendente'">
+                        <label t-att-for="str(question.id)" t-attf-class="o_survey_choice_btn py-1 px-3 w-100 h-100 rounded mx-1">
+                            <input t-att-id="str(question.id) + '_' + desc[iterador]" type="radio" t-att-value="desc[iterador]"
+                                t-attf-class="o_survey_form_choice_item position-absolute"
+                                t-att-name='question.id'
+                                required="required"/>
+                            <span class="text-break mx-3" t-esc='opciones[iterador]'/>
+                        </label>
+                    </t>
+                    <t t-else="">
+                        <label t-att-for="str(question.id)" t-attf-class="o_survey_choice_btn py-1 px-3 w-100 h-100 rounded mx-1">
+                            <input t-att-id="str(question.id) + '_' + asc[iterador]" type="radio" t-att-value="asc[iterador]"
+                                t-attf-class="o_survey_form_choice_item position-absolute"
+                                t-att-name='question.id'/>
+                            <span class="text-break mx-3" t-esc='opciones[iterador]'/>
+                        </label>
+                    </t>
+                    <t t-set="iterador" t-value="iterador + 1"/>
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <!-- Scale question -->
+    <template id="question_scales" name="Pregunta: escala">
         <div t-att-id="question.id">
             <t t-set="opciones" t-value="['Nunca', 'Casi nunca', 'A veces', 'Casi siempre', 'Siempre']"/>
             <t t-set="desc" t-value="['4', '3', '2', '1', '0']"/>
@@ -368,29 +430,6 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
-    </template>
-
-    <template id="question_simple_choice" name="Question: simple choice">
-        <div class="row g-2 o_survey_answer_wrapper o_survey_form_choice"
-            t-att-data-name="question.id"
-            data-question-type="simple_choice_radio">
-            <t t-set="item_idx" t-value="0"/>
-            <t t-foreach='question.opcion_ids' t-as='label'>
-                <t t-set="item_idx" t-value="label_index"/>
-                <div t-attf-class="col-sm-12 #{use_half_col_lg}">
-                    <label t-att-for="str(question.id) + '_' + str(label.id)"
-                        t-attf-class="o_survey_choice_btn py-1 px-3 w-100 h-100 rounded #{answer_class} #{'o_survey_selected' if answer_selected else ''}">
-                        <!-- <i class="fa fa-check-circle float-end mt-1 ms-1 position-relative"/>
-                        <i class="fa fa-circle-thin float-end mt-1 ms-1 position-relative"/> -->
-                        <input t-att-id="str(question.id) + '_' + str(label.id)" type="radio" t-att-value='label.id'
-                            t-attf-class="o_survey_form_choice_item position-absolute #{'o_survey_form_choice_item_selected' if answer_selected else ''}"
-                            t-att-name='question.id'
-                            t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
-                        <span class="ms-2 text-break" t-field='label.opcion_texto'/>
-                    </label>
-                </div>
-            </t>
         </div>
     </template>
 </data>
