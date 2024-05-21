@@ -10,7 +10,8 @@ class AccountMove(models.Model):
     pos_order_ids = fields.One2many('pos.order', 'account_move')
     pos_payment_ids = fields.One2many('pos.payment', 'account_move_id')
     pos_refunded_invoice_ids = fields.Many2many('account.move', 'refunded_invoices', 'refund_account_move', 'original_account_move')
-    reversed_pos_order_id = fields.Many2one('pos.order', string="Reversed POS Order")
+    reversed_pos_order_id = fields.Many2one('pos.order', string="Reversed POS Order",
+        help="The pos order that was reverted after closing the session to create an invoice for it.")
 
     def _stock_account_get_last_step_stock_moves(self):
         stock_moves = super(AccountMove, self)._stock_account_get_last_step_stock_moves()
@@ -59,6 +60,12 @@ class AccountMove(models.Model):
                         move.invoice_payments_widget['content'][i].update({
                             'pos_payment_name': pos_payment.payment_method_id.name,
                         })
+
+    def _compute_amount(self):
+        super()._compute_amount()
+        for move in self:
+            if move.move_type == 'entry' and move.reversed_pos_order_id:
+                move.amount_total_signed = move.amount_total_signed * -1
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
