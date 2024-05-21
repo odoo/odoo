@@ -35,11 +35,12 @@ export class FollowerList extends Component {
             res_model: "mail.wizard.invite",
             view_mode: "form",
             views: [[false, "form"]],
-            name: _t("Invite Follower"),
+            name: _t("Add followers to this document"),
             target: "new",
             context: {
                 default_res_model: this.props.thread.model,
                 default_res_id: this.props.thread.id,
+                dialog_size: "medium",
             },
         };
         this.action.doAction(action, {
