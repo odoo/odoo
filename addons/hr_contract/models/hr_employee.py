@@ -3,9 +3,10 @@
 from pytz import timezone, UTC
 from datetime import date, datetime, time
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.osv import expression
 from odoo.addons.resource.models.utils import Intervals
+from odoo.exceptions import UserError
 
 
 class EmployeePublic(models.Model):
@@ -232,6 +233,11 @@ class Employee(models.Model):
                 if employee.resource_calendar_id:
                     employee.resource_calendar_id = employee.contract_id.resource_calendar_id
         return res
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_open_contract(self):
+        if any(contract.state == 'open' for contract in self.contract_ids):
+            raise UserError(_('You cannot delete an employee with a running contract.'))
 
     def action_open_contract(self):
         self.ensure_one()
