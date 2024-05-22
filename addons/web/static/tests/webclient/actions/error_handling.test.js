@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, mockFetch } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
     contains,
@@ -10,6 +10,7 @@ import {
     models,
     mountWithCleanup,
     onRpc,
+    stepAllNetworkCalls,
     webModels,
 } from "@web/../tests/web_test_helpers";
 
@@ -38,6 +39,7 @@ class Partner extends models.Model {
                     </t>
                 </templates>
             </kanban>`,
+        "form,false": `<form><field name="display_name"/></form>`,
         "search,false": `<search/>`,
     };
 }
@@ -51,7 +53,10 @@ defineActions([
         name: "Partners Action 1",
         res_model: "partner",
         type: "ir.actions.act_window",
-        views: [[1, "kanban"]],
+        views: [
+            [1, "kanban"],
+            [false, "form"],
+        ],
     },
 ]);
 
@@ -118,4 +123,34 @@ test("error in a client action (after the first rendering)", async () => {
     expect(".my_button").toHaveCount(1);
     expect(".o_error_dialog").toHaveCount(1);
     expect(["Cannot read properties of undefined (reading 'b')"]).toVerifyErrors();
+});
+
+test("connection lost when opening form view from kanban", async () => {
+    expect.errors(2);
+
+    stepAllNetworkCalls();
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(".o_kanban_view").toHaveCount(1);
+
+    mockFetch((input) => {
+        expect.step(input);
+        throw Error(); // simulate a ConnectionLost error
+    });
+    await contains(".o_kanban_record").click();
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_notification").toHaveCount(1);
+    expect(".o_notification").toHaveText("Connection lost. Trying to reconnect...");
+    expect([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "/web/action/load",
+        "get_views",
+        "web_search_read",
+        "/web/dataset/call_kw/partner/web_read", // from mockFetch
+        "/web/dataset/call_kw/partner/web_search_read", // from mockFetch
+    ]).toVerifySteps();
+    await animationFrame();
+    expect([]).toVerifySteps(); // doesn't indefinitely try to reload the list
 });
