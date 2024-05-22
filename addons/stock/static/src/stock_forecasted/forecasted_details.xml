@@ -81,6 +81,16 @@
                     <td t-out="line.delivery_date or ''"
                         t-attf-class="#{! line.replenishment_filled and 'o_grid_warning'}"/>
                 </tr>
+                <tr t-if="this.props.docs.qty_to_order">
+                    <td>To Order at Forecasted Date</td>
+                    <td t-out="this.props.docs.lead_days_date"/>
+                    <td t-out="_formatFloat(this.props.docs.qty_to_order)" class="text-end"/>
+                </tr>
+                <tr t-if="this.props.docs.qty_to_order_computed and this.props.docs.visibility !== this.props.docs.lead_days_date">
+                    <td>To Order + Visibility Days</td>
+                    <td t-out="this.props.docs.visibility"/>
+                    <td t-out="_formatFloat(this.props.docs.qty_to_order_computed)" class="text-end"/>
+                </tr>
             </tbody>
             <thead>
                 <tr class="o_forecasted_row bg-200">
