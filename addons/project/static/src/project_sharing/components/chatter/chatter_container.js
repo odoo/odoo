@@ -83,7 +83,11 @@ export class ChatterContainer extends Component {
             projectSharingId: this.props.projectSharingId,
             postProcessMessageSent: async () => {
                 this.state.currentPage = 1;
-                await this.fetchMessages();
+                const prom = [this.fetchMessages()];
+                if (!this.options.is_follower) {
+                    prom.push(this.toggleIsFollower());
+                }
+                await Promise.all(prom);
             },
             attachments: this.state.options.default_attachment_ids,
         };
