@@ -195,6 +195,7 @@ Odoo Web Editor widget.
             # widgets & plugins
             'web_editor/static/src/js/wysiwyg/widgets/**/*',
             'web_editor/static/src/js/editor/toolbar.js',
+            'web_editor/static/src/js/editor/add_snippet_dialog.js',
 
             # Launcher
             'web_editor/static/src/js/wysiwyg/wysiwyg_jquery_extention.js',
@@ -206,6 +207,7 @@ Odoo Web Editor widget.
             'web_editor/static/src/xml/snippets.xml',
             'web_editor/static/src/xml/wysiwyg.xml',
             'web_editor/static/src/xml/wysiwyg_colorpicker.xml',
+            'web_editor/static/src/xml/add_snippet_dialog.xml',
         ],
         'web_editor.backend_assets_wysiwyg': [
             ('include', 'web_editor.assets_wysiwyg'),

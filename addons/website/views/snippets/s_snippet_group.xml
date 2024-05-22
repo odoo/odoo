@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_snippet_group" name="Snippet Group">
+    <section class="s_snippet_group"/>
+</template>
+
+<template id="s_snippet_group_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js="SnippetGroup" data-selector=".s_snippet_group"/>
+    </xpath>
+</template>
+
+</odoo>

@@ -41,6 +41,7 @@
         'views/snippets/s_image_text.xml',
         'views/snippets/s_instagram_page.xml',
         'views/snippets/s_banner.xml',
+        'views/snippets/s_snippet_group.xml',
         'views/snippets/s_text_block.xml',
         'views/snippets/s_features.xml',
         'views/snippets/s_three_columns.xml',
@@ -289,6 +290,7 @@
             'website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js',
             'website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.xml',
             'website/static/src/snippets/s_embed_code/options.js',
+            'website/static/src/snippets/s_snippet_group/options.js',
         ],
         'web_editor.assets_media_dialog': [
             'website/static/src/components/media_dialog/image_selector.js',

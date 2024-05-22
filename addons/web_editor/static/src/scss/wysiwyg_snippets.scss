@@ -58,6 +58,27 @@
     }
 }
 
+#snippet_groups {
+    .oe_snippet {
+        .oe_snippet_thumbnail {
+
+            &:after {
+                content: "\f013";
+                font-size: 1.1em;
+                font-family: fontAwesome;
+                @include o-position-absolute(6px, 6px);
+                color: #3ee1f5;
+            }
+        }
+        &.o_disabled, &.o_snippet_install {
+            .oe_snippet_thumbnail:after {
+                opacity: .4;
+                filter: saturate(0) blur(1px);
+            }
+        }
+    }
+}
+
 @mixin we-svg-icon(
         $graphic: $o-we-sidebar-content-field-color,
         $subdle: $o-we-sidebar-content-field-color,
@@ -391,6 +412,7 @@
 
                 &.o_snippet_install {
                     .btn.o_install_btn {
+                        z-index: 1;
                         @include o-position-absolute($top: 10px);
                     }
 
@@ -2194,6 +2216,10 @@ we-select.o_we_border_preview_aligned_select {
         outline-offset: -$o-we-dropzone-border-width;
         z-index: $o-we-overlay-zindex;
     }
+    &.o_dropzone_highlighted {
+        filter: brightness(1.2);
+        transition: 200ms;
+    }
 }
 
 .oe_drop_zone:not(.oe_grid_zone) {
@@ -2785,5 +2811,104 @@ we-select.o_grid we-toggler {
         @include o-position-absolute(0, 0, 0, 0);
         animation: highlightPadding 2s;
         pointer-events: none;
+    }
+}
+
+// Add snippets dialog.
+.o_add_snippet_dialog {
+    max-height: $modal-lg !important;
+
+    .modal-body {
+        display: flex;
+        padding: 0;
+
+        .nav {
+            min-width: 200px;
+        }
+    }
+}
+
+// Add snippets dialog iframe.
+.o_add_snippets_preview {
+    overflow-y: auto;
+    width: 30%;
+    height: 30%;
+    background-color: unset;
+
+    .o_snippets_preview_row {
+        transform: scale(0.3);
+        transform-origin: top left;
+        width: 333%;
+        height: 100%;
+
+        .o_snippet_preview_wrap {
+            min-height: 100px;
+            transition: all 150ms cubic-bezier(0.65, 0.05, 0.36, 1);
+            box-shadow: 0 0.5rem 6rem rgba(0, 0, 0, 0.2);
+            margin-bottom: 96px !important;
+            background-color: var(--body-bg);
+            cursor: pointer;
+
+            [data-snippet="s_carousel"],
+            [data-snippet="s_quotes_carousel"] {
+                height: 550px;
+            }
+            [data-snippet="s_three_columns"] .figure-img[style*="height:50vh"] {
+                /* In Travel theme. */
+                height: 500px !important;
+            }
+            .o_full_screen_height, .o_half_screen_height {
+                height: unset !important;
+                min-height: unset !important;
+            }
+            .o_full_screen_height {
+                aspect-ratio: 4 / 3;
+            }
+            .o_half_screen_height {
+                aspect-ratio: 8 / 3;
+            }
+            > [data-snippet] {
+                isolation: isolate;
+                pointer-events: none;
+                user-select: none;
+
+                &.s_popup {
+                    min-height: 660px;
+
+                    > .modal {
+                        --black-50: rgba(0, 0, 0, 0.25) !important;
+                        display: block;
+                        opacity: 1;
+                        position: absolute;
+
+                        .modal-dialog {
+                            transform: none;
+                        }
+                        .modal-content {
+                            box-shadow: 0rem 3.5rem 12rem rgba(0, 0, 0, 0.6);
+                        }
+                    }
+                }
+            }
+            &:hover {
+                transform: translate(0px, -5px) scale(1.005);
+                box-shadow: 0 1rem 6rem rgba(0, 0, 0, 0.25);
+            }
+            > .o_snippet_preview_install_btn {
+                z-index: 1;
+                @include o-position-absolute(auto, 0, 0, 0);
+                opacity: 0;
+                transform: scale(3.33);
+                transition: opacity 150ms;
+                width: 15%;
+            }
+            &:hover > .o_snippet_preview_install_btn {
+                opacity: 1;
+            }
+            > [module-id] { // Installable snippet
+                opacity: .4;
+                filter: saturate(0) blur(3px);
+            }
+        }
     }
 }
