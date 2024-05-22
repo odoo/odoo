@@ -113,7 +113,6 @@ class UsuarioEvaluacionRel(models.Model):
 
         length = 32
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        print("base_url: ", base_url)
         extension_url = "evaluacion/responder"
 
         usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
@@ -137,7 +136,6 @@ class UsuarioEvaluacionRel(models.Model):
 
                 usuario.write({"token": token, "contestada": "pendiente"})
                 evaluacion_url = f"{base_url}/{extension_url}/{evaluacion_id}/{token}"
-                print("evaluacion_url: ", evaluacion_url)
                 contenido_adicional = f"""<hr>{evaluacion.contenido_correo}<hr>""" if evaluacion.contenido_correo else ""
                 mail = {
                     "subject": "Invitación para completar la evaluación",
