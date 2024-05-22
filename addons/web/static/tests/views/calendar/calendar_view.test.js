@@ -837,11 +837,12 @@ test(`create event with timezone in week mode European locale`, async () => {
 
 test(`default week start (US)`, async () => {
     // if not given any option, default week start is on Sunday
+    mockTimeZone(-7);
     onRpc("event", "search_read", ({ kwargs }) => {
         expect.step("event.search_read");
         expect(kwargs.domain).toEqual([
-            ["start", "<=", "2016-12-17 22:59:59"],
-            ["stop", ">=", "2016-12-10 23:00:00"],
+            ["start", "<=", "2016-12-18 06:59:59"],
+            ["stop", ">=", "2016-12-11 07:00:00"],
         ]);
     });
     await mountView({
@@ -2828,13 +2829,13 @@ test(`initial_date given in the context`, async () => {
 
 test(`default week start (US) month mode`, async () => {
     // if not given any option, default week start is on Sunday
-    mockDate("2019-09-12 08:00:00");
+    mockDate("2019-09-12 08:00:00", -7);
 
     onRpc("event", "search_read", ({ kwargs }) => {
         expect.step("event.search_read");
         expect(kwargs.domain).toEqual([
-            ["start", "<=", "2019-10-12 22:59:59"],
-            ["stop", ">=", "2019-08-31 23:00:00"],
+            ["start", "<=", "2019-10-13 06:59:59"],
+            ["stop", ">=", "2019-09-01 07:00:00"],
         ]);
     });
     await mountView({

@@ -358,7 +358,10 @@ export class CalendarCommonRenderer extends Component {
 
     headerTemplateProps(date) {
         const scale = this.props.model.scale;
-        const { weekdayShort, weekdayLong, day } = DateTime.fromJSDate(date);
+        // when rendering months, FullCalendar uses a date w/out tz
+        // so use UTC instead of local tz when converting to DateTime
+        const options = scale === "month" ? { zone: "UTC" } : {};
+        const { weekdayShort, weekdayLong, day } = DateTime.fromJSDate(date, options);
         return {
             weekdayShort,
             weekdayLong,
