@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { nextTick, patchDate } from "@web/../tests/helpers/utils";
+import { nextTick, patchDate, patchTimeZone } from "@web/../tests/helpers/utils";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { Model, DispatchResult, helpers, tokenize } from "@odoo/o-spreadsheet";
 import {
@@ -1723,7 +1723,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         });
     });
 
-    QUnit.test("from_to date filter domain value", async function (assert) {
+    QUnit.test("from_to date filter domain value on a date field", async function (assert) {
         const { model } = await createSpreadsheetWithPivot();
         /**@type GlobalFilter */
         const filter = {
@@ -1741,6 +1741,68 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const computedDomain = model.getters.getPivotComputedDomain("1");
         assertDateDomainEqual(assert, "date", "2022-01-01", "2022-05-16", computedDomain);
     });
+
+    QUnit.test(
+        "from_to date filter domain value on a datetime field UTC+2",
+        async function (assert) {
+            patchTimeZone(120); // UTC+2
+            const { model } = await createSpreadsheetWithPivot();
+            /**@type GlobalFilter */
+            const filter = {
+                id: "42",
+                type: "date",
+                label: "From To",
+                rangeType: "from_to",
+            };
+            const value = {
+                from: "2022-01-01",
+                to: "2022-05-16",
+            };
+            await addGlobalFilter(model, filter, {
+                pivot: { 1: { chain: "date", type: "datetime" } },
+            });
+            await setGlobalFilterValue(model, { id: "42", value });
+            const computedDomain = model.getters.getPivotComputedDomain("1");
+            assertDateDomainEqual(
+                assert,
+                "date",
+                "2021-12-31 22:00:00",
+                "2022-05-16 21:59:59",
+                computedDomain
+            );
+        }
+    );
+
+    QUnit.test(
+        "from_to date filter domain value on a datetime field UTC-2",
+        async function (assert) {
+            patchTimeZone(-120); // UTC-2
+            const { model } = await createSpreadsheetWithPivot();
+            /**@type GlobalFilter */
+            const filter = {
+                id: "42",
+                type: "date",
+                label: "From To",
+                rangeType: "from_to",
+            };
+            const value = {
+                from: "2022-01-01",
+                to: "2022-05-16",
+            };
+            await addGlobalFilter(model, filter, {
+                pivot: { 1: { chain: "date", type: "datetime" } },
+            });
+            await setGlobalFilterValue(model, { id: "42", value });
+            const computedDomain = model.getters.getPivotComputedDomain("1");
+            assertDateDomainEqual(
+                assert,
+                "date",
+                "2022-01-01 02:00:00",
+                "2022-05-17 01:59:59",
+                computedDomain
+            );
+        }
+    );
 
     QUnit.test(
         "set 'from_to' date filter domain value from specific date --> to specific date",
