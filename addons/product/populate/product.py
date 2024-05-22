@@ -6,6 +6,7 @@ import collections
 from odoo import models
 from odoo.tools import populate
 from odoo.addons.stock.populate.stock import COMPANY_NB_WITH_STOCK
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -70,11 +71,26 @@ class ProductProduct(models.Model):
         ]
 
     def _populate_factories(self):
+        # Generate a unique `barcode` prefix so consecutive populate runs don't
+        # raise a unique constraint error on `barcode`.
+        barcode_prefix = 'BARCODE-PP-'
+        query = SQL("""
+            SELECT barcode
+              FROM product_product
+             WHERE barcode LIKE %s
+          ORDER BY id DESC
+             LIMIT 1
+        """, barcode_prefix + '%')
+        self.env.cr.execute(query)
+        barcode = self.env.cr.fetchone()
+        if barcode:
+            barcode_prefix = barcode[0] + '-'
+
         return [
             ("name", populate.constant('product_product_name_{counter}')),
             ("description", populate.constant('product_product_description_{counter}')),
             ("default_code", populate.constant('PP-{counter}')),
-            ("barcode", populate.constant('BARCODE-PP-{counter}')),
+            ("barcode", populate.constant(barcode_prefix + '{counter}')),
         ] + self._populate_get_product_factories()
 
 
