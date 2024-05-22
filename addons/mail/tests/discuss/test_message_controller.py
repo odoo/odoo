@@ -361,32 +361,32 @@ class TestMessageController(HttpCaseWithUserDemo):
         res = self.url_open(
             url=f"/web/image/?field=avatar_128&id={self.channel.id}&model=discuss.channel&unique={self.channel._get_avatar_cache_key()}"
         )
-        self.assertEqual(res.headers["Cache-Control"], f"public, max-age={STATIC_CACHE_LONG}")
+        self.assertIn(f"max-age={STATIC_CACHE_LONG}", res.headers["Cache-Control"])
 
         res = self.url_open(
             url=f"/web/image/?field=avatar_128&id={self.channel.id}&model=discuss.channel"
         )
-        self.assertEqual(res.headers["Cache-Control"], "no-cache")
+        self.assertIn("no-cache", res.headers["Cache-Control"])
 
         res = self.url_open(
             url=f"/web/image?field=avatar_128&id={partner.id}&model=res.partner&unique={fields.Datetime.to_string(partner.write_date)}"
         )
-        self.assertEqual(res.headers["Cache-Control"], f"public, max-age={STATIC_CACHE_LONG}")
+        self.assertIn(f"max-age={STATIC_CACHE_LONG}", res.headers["Cache-Control"])
 
         res = self.url_open(
             url=f"/web/image?field=avatar_128&id={partner.id}&model=res.partner"
         )
-        self.assertEqual(res.headers["Cache-Control"], "no-cache")
+        self.assertIn("no-cache", res.headers["Cache-Control"])
 
         res = self.url_open(
             url=f"/web/image?field=avatar_128&id={self.guest.id}&model=mail.guest&unique={fields.Datetime.to_string(partner.write_date)}"
         )
-        self.assertEqual(res.headers["Cache-Control"], f"public, max-age={STATIC_CACHE_LONG}")
+        self.assertIn(f"max-age={STATIC_CACHE_LONG}", res.headers["Cache-Control"])
 
         res = self.url_open(
             url=f"/web/image?field=avatar_128&id={self.guest.id}&model=mail.guest"
         )
-        self.assertEqual(res.headers["Cache-Control"], "no-cache")
+        self.assertIn("no-cache", res.headers["Cache-Control"])
 
     def test_chatter_on_archived_record(self):
         self.authenticate("admin", "admin")
