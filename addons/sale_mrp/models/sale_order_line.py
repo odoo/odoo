@@ -36,14 +36,14 @@ class SaleOrderLine(models.Model):
             if order_line.qty_delivered_method == 'stock_move':
                 boms = order_line.move_ids.filtered(lambda m: m.state != 'cancel').mapped('bom_line_id.bom_id')
                 dropship = any(m._is_dropshipped() for m in order_line.move_ids)
-                if not boms and dropship:
-                    boms = boms._bom_find(order_line.product_id, company_id=order_line.company_id.id, bom_type='phantom')[order_line.product_id]
                 # We fetch the BoMs of type kits linked to the order_line,
                 # the we keep only the one related to the finished produst.
                 # This bom should be the only one since bom_line_id was written on the moves
                 relevant_bom = boms.filtered(lambda b: b.type == 'phantom' and
                         (b.product_id == order_line.product_id or
                         (b.product_tmpl_id == order_line.product_id.product_tmpl_id and not b.product_id)))
+                if not relevant_bom:
+                    relevant_bom = boms._bom_find(order_line.product_id, company_id=order_line.company_id.id, bom_type='phantom')[order_line.product_id]
                 if relevant_bom:
                     # not written on a move coming from a PO: all moves (to customer) must be done
                     # and the returns must be delivered back to the customer
@@ -119,10 +119,26 @@ class SaleOrderLine(models.Model):
         :return: Dictionary with incoming moves and outgoing moves
         :rtype: dict
         """
+        # The first move created was the one created from the intial rule that started it all.
+        sorted_moves = self.move_ids.sorted('id')
+        triggering_rule_ids = []
+        seen_wh_ids = set()
+        for move in sorted_moves:
+            if move.warehouse_id.id not in seen_wh_ids:
+                triggering_rule_ids.append(move.rule_id.id)
+                seen_wh_ids.add(move.warehouse_id.id)
+
         return {
-            'incoming_moves': lambda m: m.location_dest_id.usage == 'customer' and
-                        (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
-            'outgoing_moves': lambda m: m.location_dest_id.usage != 'customer' and m.to_refund
+            'incoming_moves': lambda m: (
+                m.state != 'cancel' and not m.scrapped
+                and m.rule_id.id in triggering_rule_ids
+                and m.location_final_id.usage == 'customer'
+                and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)
+            )),
+            'outgoing_moves': lambda m: (
+                m.state != 'cancel' and not m.scrapped
+                and m.location_dest_id.usage != 'customer' and m.to_refund
+            ),
         }
 
     def _get_qty_procurement(self, previous_product_uom_qty=False):
