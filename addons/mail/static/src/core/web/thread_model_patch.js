@@ -1,4 +1,5 @@
 import { Thread } from "@mail/core/common/thread_model";
+import { compareDatetime } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 import { Record } from "../common/record";
@@ -10,12 +11,7 @@ patch(Thread.prototype, {
         super.setup();
         this.recipients = Record.many("Follower");
         this.activities = Record.many("Activity", {
-            sort: (a, b) => {
-                if (a.date_deadline === b.date_deadline) {
-                    return a.id - b.id;
-                }
-                return a.date_deadline < b.date_deadline ? -1 : 1;
-            },
+            sort: (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id,
             onDelete(r) {
                 this._store.env.services["mail.activity"].delete(r);
             },
