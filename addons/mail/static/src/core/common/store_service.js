@@ -731,7 +731,7 @@ export const storeService = {
          */
         store.self ??= { id: -1, type: "guest" };
         store.settings ??= {};
-        const discussActionIds = ["mail.action_discuss"];
+        const discussActionIds = ["mail.action_discuss", "discuss"];
         if (store.action_discuss_id) {
             discussActionIds.push(store.action_discuss_id);
         }

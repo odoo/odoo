@@ -6,7 +6,8 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { mockDate } from "@odoo/hoot-mock";
+import { Deferred, mockDate } from "@odoo/hoot-mock";
+
 import {
     assertSteps,
     click,
@@ -70,6 +71,7 @@ test("Closing a category sends the updated user setting to the server.", async (
     });
     await start();
     await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory:contains('Channels') .oi"); // wait fully loaded
     await click(
         ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-icon"
     );
@@ -154,6 +156,7 @@ test("channel - states: open manually by clicking the title", async () => {
     });
     await start();
     await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory:contains('Channels') .oi"); // wait fully loaded
     await contains(".o-mail-DiscussSidebarCategory-channel", { text: "Channels" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "general" });
     await click(".o-mail-DiscussSidebarCategory-channel .btn", { text: "Channels" });
@@ -775,6 +778,7 @@ test("channel - states: close should update the value on the server", async () =
         },
     });
     await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory:contains('Channels') .oi.oi-chevron-down"); // wait fully loaded
     await click(".o-mail-DiscussSidebarCategory .btn", { text: "Channels" });
     await assertSteps(["set_res_users_settings - false"]);
 });
@@ -799,6 +803,7 @@ test("channel - states: open should update the value on the server", async () =>
         },
     });
     await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory:contains('Channels') .oi"); // wait fully loaded
     await click(".o-mail-DiscussSidebarCategory .btn", { text: "Channels" });
     await assertSteps(["set_res_users_settings - true"]);
 });
@@ -1240,4 +1245,33 @@ test("Update channel data via bus notification [REQUIRE FOCUS]", async () => {
     await insertText(".o-mail-Discuss-threadName", "test", { target: env1 });
     await triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Salestest", target: env2 });
+});
+
+test("sidebar: show loading on initial opening", async () => {
+    // This could load a lot of data (all pinned conversations)
+    const def = new Deferred();
+    onRpcBefore("/mail/action", async (args) => {
+        if (args.channels_as_member) {
+            await def;
+        }
+    });
+    onRpcBefore("/mail/data", async (args) => {
+        if (args.channels_as_member) {
+            await def;
+        }
+    });
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss();
+    await contains(
+        ".o-mail-DiscussSidebarCategory:contains('Channels') .fa.fa-circle-o-notch.fa-spin"
+    );
+    await contains(".o-mail-DiscussSidebarChannel", { text: "General", count: 0 });
+    def.resolve();
+    await contains(
+        ".o-mail-DiscussSidebarCategory:contains('Channels') .fa.fa-circle-o-notch.fa-spin",
+        { count: 0 }
+    );
+    await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
 });

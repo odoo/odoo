@@ -146,6 +146,9 @@ export class DiscussSidebarCategories extends Component {
      * @param {import("models").DiscussAppCategory} category
      */
     toggleCategory(category) {
+        if (this.store.channels.status === "fetching") {
+            return;
+        }
         category.open = !category.open;
         this.discussCoreWebService.broadcastCategoryState(category);
     }

@@ -958,6 +958,7 @@ export async function contains(selector, options) {
 
 const stepState = {
     expectedSteps: null,
+    /** @type {Promise} */
     deferred: null,
     timeout: null,
     currentSteps: [],

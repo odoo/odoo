@@ -71,3 +71,18 @@ a.o_mail_redirect, a.o_channel_redirect {
     top: $o-navbar-height !important;
     height: calc(100% - #{$o-navbar-height}); // no bottom-0 otherwise performance issue
 }
+
+.o-pointer-events-none {
+    pointer-events: none;
+}
+
+.o-visible-short-delay {
+    animation: o-visible-short-delay-animation 0s ease-in 0.25s forwards;
+    visibility: hidden;
+}
+
+@keyframes o-visible-short-delay-animation {
+    to {
+        visibility: visible;
+    }
+}
