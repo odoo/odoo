@@ -1,6 +1,5 @@
-import { fields, webModels } from "@web/../tests/web_test_helpers";
+import { fields, getKwArgs, webModels } from "@web/../tests/web_test_helpers";
 import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
-import { parseModelParams } from "../mail_mock_server";
 
 /** @typedef {import("@web/../tests/web_test_helpers").ModelRecord} ModelRecord */
 
@@ -29,7 +28,7 @@ export class ResPartner extends webModels.ResPartner {
      * @param {number} [limit]
      */
     get_mention_suggestions(search, limit = 8) {
-        const kwargs = parseModelParams(arguments, "search", "limit");
+        const kwargs = getKwArgs(arguments, "search", "limit");
         search = kwargs.search || "";
         limit = kwargs.limit || 8;
 
@@ -97,7 +96,7 @@ export class ResPartner extends webModels.ResPartner {
      * @param {number} [limit]
      */
     get_mention_suggestions_from_channel(channel_id, search, limit = 8) {
-        const kwargs = parseModelParams(arguments, "channel_id", "search", "limit");
+        const kwargs = getKwArgs(arguments, "channel_id", "search", "limit");
         channel_id = kwargs.channel_id;
         search = kwargs.search || "";
         limit = kwargs.limit || 8;
@@ -184,7 +183,7 @@ export class ResPartner extends webModels.ResPartner {
      * @param {number[]} [excluded_ids]
      */
     im_search(name, limit = 20, excluded_ids) {
-        const kwargs = parseModelParams(arguments, "name", "limit", "excluded_ids");
+        const kwargs = getKwArgs(arguments, "name", "limit", "excluded_ids");
         name = kwargs.name || "";
         limit = kwargs.limit || 20;
         excluded_ids = kwargs.excluded_ids || [];
@@ -275,7 +274,7 @@ export class ResPartner extends webModels.ResPartner {
      * @param {number} [limit]
      */
     search_for_channel_invite(search_term, channel_id, limit = 30) {
-        const kwargs = parseModelParams(arguments, "search_term", "channel_id", "limit");
+        const kwargs = getKwArgs(arguments, "search_term", "channel_id", "limit");
         search_term = kwargs.search_term || "";
         channel_id = kwargs.channel_id;
         limit = kwargs.limit || 30;

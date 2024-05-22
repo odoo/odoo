@@ -1,7 +1,11 @@
 import { parseEmail } from "@mail/utils/common/format";
-import { Command, models } from "@web/../tests/web_test_helpers";
-import { parseModelParams } from "../mail_mock_server";
-import { Kwargs } from "@web/../tests/_framework/mock_server/mock_server_utils";
+import {
+    Command,
+    getKwArgs,
+    makeKwArgs,
+    models,
+    unmakeKwArgs,
+} from "@web/../tests/web_test_helpers";
 
 export class MailThread extends models.ServerModel {
     _name = "mail.thread";
@@ -14,7 +18,7 @@ export class MailThread extends models.ServerModel {
      * @param {boolean} [filter_recipients]
      */
     message_get_followers(ids, after, limit = 100, filter_recipients) {
-        const kwargs = parseModelParams(arguments, "ids", "after", "limit");
+        const kwargs = getKwArgs(arguments, "ids", "after", "limit");
         ids = kwargs.ids;
         delete kwargs.ids;
         after = kwargs.after || 0;
@@ -44,7 +48,7 @@ export class MailThread extends models.ServerModel {
 
     /** @param {number[]} ids */
     message_post(ids) {
-        const kwargs = parseModelParams(arguments, "ids", "subtype_id", "tracking_value_ids");
+        const kwargs = getKwArgs(arguments, "ids", "subtype_id", "tracking_value_ids");
         ids = kwargs.ids;
         delete kwargs.ids;
 
@@ -91,7 +95,7 @@ export class MailThread extends models.ServerModel {
             );
         }
         email_from ||= false;
-        const values = {
+        const values = unmakeKwArgs({
             ...kwargs,
             author_id,
             author_guest_id,
@@ -100,7 +104,7 @@ export class MailThread extends models.ServerModel {
             is_note: subtype_xmlid === "mail.mt_note",
             model: this._name,
             res_id: id,
-        };
+        });
         delete values.context;
         delete values.subtype_xmlid;
         const messageId = MailMessage.create(values);
@@ -124,7 +128,7 @@ export class MailThread extends models.ServerModel {
      * @param {number[]} subtype_ids
      */
     message_subscribe(ids, partner_ids, subtype_ids) {
-        const kwargs = parseModelParams(arguments, "ids", "partner_ids", "subtype_ids");
+        const kwargs = getKwArgs(arguments, "ids", "partner_ids", "subtype_ids");
         ids = kwargs.ids;
         delete kwargs.ids;
         partner_ids = kwargs.partner_ids || [];
@@ -167,7 +171,7 @@ export class MailThread extends models.ServerModel {
      * @param {number[]} partner_ids
      */
     message_unsubscribe(ids, partner_ids) {
-        const kwargs = parseModelParams(arguments, "ids", "partner_ids");
+        const kwargs = getKwArgs(arguments, "ids", "partner_ids");
         ids = kwargs.ids;
         delete kwargs.ids;
         partner_ids = kwargs.partner_ids || [];
@@ -192,7 +196,7 @@ export class MailThread extends models.ServerModel {
      * @param {string} notification_type
      */
     notify_cancel_by_type(notification_type) {
-        const kwargs = parseModelParams(arguments, "notification_type");
+        const kwargs = getKwArgs(arguments, "notification_type");
         notification_type = kwargs.notification_type;
 
         /** @type {import("mock_models").BusBus} */
@@ -236,7 +240,7 @@ export class MailThread extends models.ServerModel {
      * @param {string} name
      */
     _message_add_suggested_recipient(id, result, partner, email, lang, reason = "", name) {
-        const kwargs = parseModelParams(
+        const kwargs = getKwArgs(
             arguments,
             "id",
             "result",
@@ -294,7 +298,7 @@ export class MailThread extends models.ServerModel {
      * @param {string} [email_from]
      */
     _message_compute_author(author_id, email_from) {
-        const kwargs = parseModelParams(arguments, "author_id", "email_from");
+        const kwargs = getKwArgs(arguments, "author_id", "email_from");
         author_id = kwargs.author_id;
         email_from = kwargs.email_from;
 
@@ -361,7 +365,7 @@ export class MailThread extends models.ServerModel {
                     MailThread._message_add_suggested_recipient.call(
                         this,
                         result,
-                        Kwargs({
+                        makeKwArgs({
                             email: partner.email,
                             partner: user.partner_id,
                             reason,
@@ -381,7 +385,7 @@ export class MailThread extends models.ServerModel {
      * @param {number} [temporary_id]
      */
     _notify_thread(ids, message_id, temporary_id) {
-        const kwargs = parseModelParams(arguments, "ids", "message_id", "temporary_id");
+        const kwargs = getKwArgs(arguments, "ids", "message_id", "temporary_id");
         ids = kwargs.ids;
         delete kwargs.ids;
         message_id = kwargs.message_id;
@@ -462,7 +466,7 @@ export class MailThread extends models.ServerModel {
      * @param {Object} initial_values_dict
      */
     _message_track(fields_iter, initial_values_dict) {
-        const kwargs = parseModelParams(arguments, "fields_iter", "initial_values_dict");
+        const kwargs = getKwArgs(arguments, "fields_iter", "initial_values_dict");
         fields_iter = kwargs.fields_iter;
         initial_values_dict = kwargs.initial_values_dict;
 
@@ -500,7 +504,7 @@ export class MailThread extends models.ServerModel {
 
     /** @param {Object} initial_values */
     _track_finalize(initial_values) {
-        const kwargs = parseModelParams(arguments, "initial_values");
+        const kwargs = getKwArgs(arguments, "initial_values");
         initial_values = kwargs.initial_values;
 
         /** @type {import("mock_models").MailThread} */
@@ -547,7 +551,7 @@ export class MailThread extends models.ServerModel {
     }
 
     _get_mail_thread_data(id, request_list) {
-        const kwargs = parseModelParams(arguments, "id", "request_list");
+        const kwargs = getKwArgs(arguments, "id", "request_list");
         id = kwargs.id;
         delete kwargs.id;
         request_list = kwargs.request_list;
@@ -613,7 +617,7 @@ export class MailThread extends models.ServerModel {
                 [id],
                 undefined,
                 100,
-                Kwargs({ filter_recipients: true })
+                makeKwArgs({ filter_recipients: true })
             );
         }
         if (request_list.includes("suggestedRecipients")) {

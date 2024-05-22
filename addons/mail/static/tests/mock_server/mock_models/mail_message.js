@@ -1,5 +1,4 @@
-import { Command, fields, models, serverState } from "@web/../tests/web_test_helpers";
-import { parseModelParams } from "../mail_mock_server";
+import { Command, fields, getKwArgs, models, serverState } from "@web/../tests/web_test_helpers";
 
 /** @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr */
 
@@ -13,8 +12,7 @@ export class MailMessage extends models.ServerModel {
 
     /** @param {DomainListRepr} [domain] */
     mark_all_as_read(domain) {
-        const kwargs = parseModelParams(arguments, "domain");
-        domain = kwargs.domain || [];
+        ({ domain } = getKwArgs(arguments, "domain"));
 
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
@@ -328,11 +326,7 @@ export class MailMessage extends models.ServerModel {
      * @param {string} action
      */
     _message_reaction(id, content, action) {
-        const kwargs = parseModelParams(arguments, "id", "content", "action");
-        id = kwargs.id;
-        delete kwargs.id;
-        content = kwargs.content;
-        action = kwargs.action;
+        ({ id, content, action } = getKwArgs(arguments, "id", "content", "action"));
 
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
@@ -404,21 +398,14 @@ export class MailMessage extends models.ServerModel {
      * @returns {Object[]}
      */
     _message_fetch(domain, search_term, before, after, around, limit) {
-        const kwargs = parseModelParams(
-            arguments,
-            "domain",
-            "search_term",
-            "before",
-            "after",
-            "around",
-            "limit"
-        );
-        domain = kwargs.domain;
-        search_term = kwargs.search_term;
-        before = kwargs.before;
-        after = kwargs.after;
-        around = kwargs.around;
-        limit = kwargs.limit || 30;
+        ({
+            domain,
+            search_term,
+            before,
+            after,
+            around,
+            limit = 30,
+        } = getKwArgs(arguments, "domain", "search_term", "before", "after", "around", "limit"));
 
         const res = {};
         if (search_term) {

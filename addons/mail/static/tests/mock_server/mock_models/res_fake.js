@@ -1,7 +1,6 @@
 import { parseEmail } from "@mail/utils/common/format";
-import { fields, models } from "@web/../tests/web_test_helpers";
+import { fields, makeKwArgs, models } from "@web/../tests/web_test_helpers";
 import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
-import { Kwargs } from "@web/../tests/_framework/mock_server/mock_server_utils";
 
 export class ResFake extends models.Model {
     _name = "res.fake";
@@ -55,7 +54,7 @@ export class ResFake extends models.Model {
                     this,
                     id,
                     result,
-                    Kwargs({
+                    makeKwArgs({
                         name: record.email_cc,
                         email: record.email_cc,
                         partner: undefined,
@@ -70,7 +69,7 @@ export class ResFake extends models.Model {
                         this,
                         id,
                         result,
-                        Kwargs({
+                        makeKwArgs({
                             email: partner.email,
                             partner,
                             reason: "Email partner",

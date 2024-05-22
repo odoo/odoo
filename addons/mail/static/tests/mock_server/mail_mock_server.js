@@ -1,9 +1,11 @@
+import { MockServerError } from "@web/../tests/_framework/mock_server/mock_server_utils";
 import {
-    isKwargs,
-    Kwargs,
-    MockServerError,
-} from "@web/../tests/_framework/mock_server/mock_server_utils";
-import { authenticate, logout, MockServer, serverState } from "@web/../tests/web_test_helpers";
+    MockServer,
+    authenticate,
+    logout,
+    makeKwArgs,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
@@ -16,35 +18,6 @@ export const DISCUSS_ACTION_ID = 104;
  */
 
 const { DateTime } = luxon;
-
-/**
- * @param {Array} param arguments of method
- * @param  {...string} argNames ordered names of positional arguments
- * @returns {Object} kwargs normalized params
- */
-export const parseModelParams = (params, ...argNames) => {
-    const params2 = [...params];
-    const last = params2[params2.length - 1];
-    let args;
-    let kwargs = Kwargs({});
-    if (isKwargs(last)) {
-        kwargs = last;
-        params2.pop();
-        args = [...params2];
-    } else {
-        args = [...params2];
-    }
-    if (args.length > argNames.length) {
-        throw "more positional args than there are defined arg names";
-    }
-    for (let i = 0; i < args.length; i++) {
-        if (argNames[i] in kwargs) {
-            continue;
-        }
-        kwargs[argNames[i]] = args[i];
-    }
-    return kwargs;
-};
 
 /** @param {import("./mock_model").MailGuest} guest */
 export const authenticateGuest = (guest) => {
@@ -605,16 +578,12 @@ export async function mail_message_post(request) {
             finalData[allowedField] = post_data[allowedField];
         }
     }
-    const kwargs = Kwargs({ ...finalData, context });
+    const kwargs = makeKwArgs({ ...finalData, context });
     if (thread_model === "discuss.channel") {
         return DiscussChannel.message_post(thread_id, kwargs);
     }
     const model = this.env[thread_model];
-    return MailThread.message_post.call(
-        model,
-        [thread_id],
-        Kwargs({ ...kwargs, model: thread_model })
-    );
+    return MailThread.message_post.call(model, [thread_id], { ...kwargs, model: thread_model });
 }
 
 registerRoute("/mail/message/reaction", mail_message_add_reaction);
@@ -915,9 +884,10 @@ async function processRequest(request) {
             ["group_ids", "in", this.env.user.groups_id.map((group) => group.id)],
         ];
         addToRes(res, {
-            CannedResponse: this.env["mail.canned.response"].search_read(domain, {
-                fields: ["source", "substitution"],
-            }),
+            CannedResponse: this.env["mail.canned.response"].search_read(domain, [
+                "source",
+                "substitution",
+            ]),
         });
     }
     return res;
