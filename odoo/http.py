@@ -458,13 +458,22 @@ class Stream:
     max_age = None
     immutable = False
     size = None
+    public = False
 
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
     @classmethod
-    def from_path(cls, path, filter_ext=('',)):
-        """ Create a :class:`~Stream`: from an addon resource. """
+    def from_path(cls, path, filter_ext=('',), public=False):
+        """
+        Create a :class:`~Stream`: from an addon resource.
+
+        :param path: See :func:`~odoo.tools.file_path`
+        :param filter_ext: See :func:`~odoo.tools.file_path`
+        :param bool public: Advertise the resource as being cachable by
+            intermediate proxies, otherwise only let the browser caches
+            it.
+        """
         path = file_path(path, filter_ext)
         check = adler32(path.encode())
         stat = os.stat(path)
@@ -475,6 +484,7 @@ class Stream:
             etag=f'{int(stat.st_mtime)}-{stat.st_size}-{check}',
             last_modified=stat.st_mtime,
             size=stat.st_size,
+            public=public,
         )
 
     @classmethod
@@ -485,8 +495,8 @@ class Stream:
         self = cls(
             mimetype=attachment.mimetype,
             download_name=attachment.name,
-            conditional=True,
             etag=attachment.checksum,
+            public=attachment.public,
         )
 
         if attachment.store_fname:
@@ -514,7 +524,7 @@ class Stream:
                 host=request.httprequest.environ.get('HTTP_HOST', '')
             )
             if static_path:
-                self = cls.from_path(static_path)
+                self = cls.from_path(static_path, public=True)
             else:
                 self.type = 'url'
                 self.url = attachment.url
@@ -537,6 +547,7 @@ class Stream:
             etag=request.env['ir.attachment']._compute_checksum(data),
             last_modified=record.write_date if record._log_access else None,
             size=len(data),
+            public=record.env.user._is_public()  # good enough
         )
 
     def read(self):
@@ -589,28 +600,33 @@ class Stream:
         }
 
         if self.type == 'data':
-            return _send_file(BytesIO(self.data), **send_file_kwargs)
+            res = _send_file(BytesIO(self.data), **send_file_kwargs)
+        else:  # self.type == 'path'
+            send_file_kwargs['use_x_sendfile'] = False
+            if config['x_sendfile']:
+                with contextlib.suppress(ValueError):  # outside of the filestore
+                    fspath = Path(self.path).relative_to(opj(config['data_dir'], 'filestore'))
+                    x_accel_redirect = f'/web/filestore/{fspath}'
+                    send_file_kwargs['use_x_sendfile'] = True
 
-        # self.type == 'path'
-        send_file_kwargs['use_x_sendfile'] = False
-        if config['x_sendfile']:
-            with contextlib.suppress(ValueError):  # outside of the filestore
-                fspath = Path(self.path).relative_to(opj(config['data_dir'], 'filestore'))
-                x_accel_redirect = f'/web/filestore/{fspath}'
-                send_file_kwargs['use_x_sendfile'] = True
+            res = _send_file(self.path, **send_file_kwargs)
 
-        res = _send_file(self.path, **send_file_kwargs)
+            if 'X-Sendfile' in res.headers:
+                res.headers['X-Accel-Redirect'] = x_accel_redirect
 
-        if immutable and res.cache_control:
-            res.cache_control["immutable"] = None  # None sets the directive
+                # In case of X-Sendfile/X-Accel-Redirect, the body is empty,
+                # yet werkzeug gives the length of the file. This makes
+                # NGINX wait for content that'll never arrive.
+                res.headers['Content-Length'] = '0'
 
-        if 'X-Sendfile' in res.headers:
-            res.headers['X-Accel-Redirect'] = x_accel_redirect
-
-            # In case of X-Sendfile/X-Accel-Redirect, the body is empty,
-            # yet werkzeug gives the length of the file. This makes
-            # NGINX wait for content that'll never arrive.
-            res.headers['Content-Length'] = '0'
+        if self.public:
+            if (res.cache_control.max_age or 0) > 0:
+                res.cache_control.public = True
+        else:
+            res.cache_control.pop('public', '')
+            res.cache_control.private = True
+        if immutable:
+            res.cache_control['immutable'] = None  # None sets the directive
 
         return res
 
@@ -1695,7 +1711,7 @@ class Request:
         try:
             directory = root.statics[module]
             filepath = werkzeug.security.safe_join(directory, path)
-            res = Stream.from_path(filepath).get_response(
+            res = Stream.from_path(filepath, public=True).get_response(
                 max_age=0 if 'assets' in self.session.debug else STATIC_CACHE,
             )
             root.set_csp(res)
