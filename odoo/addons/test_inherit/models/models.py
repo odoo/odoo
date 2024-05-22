@@ -1,0 +1,128 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import models, fields, api
+from odoo.addons.base.models import res_partner
+from odoo.addons.test_new_api.models import test_new_api
+
+
+# We inherit from the parent model, and we add some fields in the child model
+class TestInheritDaughter(models.Model):
+    _name = 'test_inherit_daughter'
+    _description = 'Test Inherit Daughter'
+
+    template_id = fields.Many2one('test_inherit_mother', 'Template',
+                                  delegate=True, required=True, ondelete='cascade')
+    field_in_daughter = fields.Char('Field1')
+
+
+# pylint: disable=E0102
+class TestInheritDaughter(TestInheritDaughter):
+    # simply redeclare the field without adding any option
+    template_id = fields.Many2one()
+
+    # change the default value of an inherited field
+    name = fields.Char(default='Baz')
+
+
+class Partner(res_partner.Partner):
+    _name = 'res.partner'
+
+    # define a one2many field based on the inherited field partner_id
+    daughter_ids = fields.One2many(TestInheritDaughter, 'partner_id', string="My daughter_ids")
+
+
+# Check the overriding of property fields by non-property fields.
+# Contribution by Adrien Peiffer (ACSONE).
+class test_inherit_property(models.Model):
+    _name = 'test_inherit_property'
+    _description = 'Test Inherit Property'
+
+    name = fields.Char('Name', required=True)
+    property_foo = fields.Integer(string='Foo', company_dependent=True)
+    property_bar = fields.Integer(string='Bar', company_dependent=True)
+
+
+class TestInheritProperty(test_inherit_property):
+    # override property_foo with a plain normal field
+    property_foo = fields.Integer(company_dependent=False)
+
+    # override property_bar with a new-api computed field
+    property_bar = fields.Integer(compute='_compute_bar', company_dependent=False)
+
+    def _compute_bar(self):
+        for record in self:
+            record.property_bar = 42
+
+
+#
+# Extend a parent model after is has been inherited in a child model
+#
+class TestInheritParent(models.AbstractModel):
+    _name = 'test_inherit_parent'
+    _description = 'Test Inherit Parent'
+
+    def stuff(self):
+        return 'P1'
+
+
+class TestInheritChild(TestInheritParent):
+    _name = 'test_inherit_child'
+    _description = 'Test Inherit Child'
+
+    bar = fields.Integer()
+
+    def stuff(self):
+        return super().stuff() + 'C1'
+
+
+# pylint: disable=E0102
+class TestInheritParent(TestInheritParent):
+    foo = fields.Integer()
+
+    _sql_constraints = [('unique_foo', 'UNIQUE(foo)', 'foo must be unique')]
+
+    def stuff(self):
+        return super().stuff() + 'P2'
+
+    @api.constrains('foo')
+    def _check_foo(self):
+        pass
+
+
+#
+# Extend a selection field
+#
+class Selection(test_new_api.Selection):
+    _name = 'test_new_api.selection'
+
+    state = fields.Selection(selection_add=[('bar', 'Bar'), ('baz', 'Baz')])
+    other = fields.Selection('_other_values')
+
+    def _other_values(self):
+        return [('baz', 'Baz')]
+
+
+#
+# Helper model used in test_inherit_depends
+#
+class TestInheritMixin(models.AbstractModel):
+    _name = 'test_inherit_mixin'
+    _description = "Test Inherit Mixin"
+
+    published = fields.Boolean()
+
+
+class Message(test_new_api.Message):
+    _name = 'test_new_api.message'
+
+    body = fields.Text(translate=True)  # Test conversion of char (with trigram indexed) to jsonb postgreSQL type
+
+    def bar(self):
+        return 1
+
+
+class MockMessage(Message):
+    _register = False               # not visible in real registry
+
+    def bar(self):
+        return super().bar() + 1

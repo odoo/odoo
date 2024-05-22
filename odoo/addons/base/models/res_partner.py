@@ -12,6 +12,10 @@ import requests
 from collections import defaultdict
 from random import randint
 from werkzeug import urls
+try:
+    from typing import Self
+except ImportError:
+    from typing_extensions import Self
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
@@ -733,7 +737,7 @@ class Partner(models.Model):
         return result
 
     @api.model_create_multi
-    def create(self, vals_list):
+    def create(self, vals_list) -> Self:
         if self.env.context.get('import_file'):
             self._check_import_consistency(vals_list)
         for vals in vals_list:

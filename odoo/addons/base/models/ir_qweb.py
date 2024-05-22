@@ -2719,6 +2719,7 @@ def render(template_name, values, load, **options):
     class MockEnv(dict):
         def __init__(self):
             super().__init__()
+            self.registry = {'ir.qweb': MockIrQWeb}
             self.context = {}
 
         def __call__(self, cr=None, user=None, context=None, su=None):

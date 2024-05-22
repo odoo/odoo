@@ -2,14 +2,14 @@
 
 from . import assetsbundle
 
-from . import ir_model
-from . import ir_sequence
+from .ir_model import IrModelData
+from .ir_sequence import IrSequence
 from . import ir_ui_menu
 from . import ir_ui_view
 from . import ir_asset
-from . import ir_actions
+from .ir_actions import IrActions
 from . import ir_embedded_actions
-from . import ir_actions_report
+from .ir_actions_report import IrActionsReport
 from . import ir_attachment
 from . import ir_binary
 from . import ir_cron
@@ -17,7 +17,7 @@ from . import ir_filters
 from . import ir_default
 from . import ir_exports
 from . import ir_rule
-from . import ir_config_parameter
+from .ir_config_parameter import IrConfigParameter
 from . import ir_autovacuum
 from . import ir_mail_server
 from . import ir_fields
@@ -36,15 +36,15 @@ from . import ir_profile
 from . import image_mixin
 from . import avatar_mixin
 
-from . import res_country
-from . import res_lang
-from . import res_partner
+from .res_country import Country
+from .res_lang import Lang
+from .res_partner import Partner
 from . import res_bank
-from . import res_config
-from . import res_currency
-from . import res_company
-from . import res_users
+from .res_config import ResConfigSettings
+from .res_currency import Currency
+from .res_company import Company
+from .res_users import Users
 from . import res_users_settings
 from . import res_users_deletion
 
-from . import decimal_precision
+from .decimal_precision import DecimalPrecision

@@ -141,7 +141,7 @@ def file_path(file_path, filter_ext=('',), env=None):
     :raise ValueError: if the file doesn't have one of the supported extensions (`filter_ext`)
     """
     root_path = os.path.abspath(config['root_path'])
-    addons_paths = odoo.addons.__path__ + [root_path]
+    addons_paths = list(odoo.addons.__path__) + [root_path]
     if env and hasattr(env.transaction, '__file_open_tmp_paths'):
         addons_paths += env.transaction.__file_open_tmp_paths
     is_abs = os.path.isabs(file_path)
