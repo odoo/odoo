@@ -209,3 +209,14 @@ test("Can undo the image padding", async () => {
     await animationFrame();
     expect("img").not.toHaveClass("p-1");
 });
+
+test("Can preview an image", async () => {
+    await setupEditor(`
+        <img class="img-fluid test-image" src="/web/static/img/logo.png">
+    `);
+    click("img.test-image");
+    await waitFor(".o-we-toolbar");
+    click(".o-we-toolbar button[name='image_preview']");
+    await animationFrame();
+    expect(".o-FileViewer").toHaveCount(1);
+});

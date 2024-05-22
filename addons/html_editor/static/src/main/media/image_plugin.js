@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { isImageUrl } from "@html_editor/utils/url";
 import { ImageDescription } from "./image_description";
 import { ImagePadding } from "./image_padding";
+import { createFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 
 function hasShape(imagePlugin, shapeName) {
     return () => imagePlugin.isSelectionShaped(shapeName);
@@ -18,6 +19,19 @@ export class ImagePlugin extends Plugin {
             handle_paste_url: p.handlePasteUrl.bind(p),
 
             toolbarGroup: [
+                {
+                    id: "image_preview",
+                    sequence: 23,
+                    namespace: "IMG",
+                    buttons: [
+                        {
+                            id: "image_preview",
+                            cmd: "PREVIEW_IMAGE",
+                            icon: "fa-search-plus",
+                            name: "Preview image",
+                        },
+                    ],
+                },
                 {
                     id: "image_description",
                     sequence: 24,
@@ -136,6 +150,7 @@ export class ImagePlugin extends Plugin {
                 });
             }
         });
+        this.fileViewer = createFileViewer();
     }
 
     handleCommand(command, payload) {
@@ -178,6 +193,19 @@ export class ImagePlugin extends Plugin {
                 }
                 selectedImg.classList.add(`p-${payload.padding}`);
                 this.dispatch("ADD_STEP");
+                break;
+            }
+            case "PREVIEW_IMAGE": {
+                const selectedImg = this.getSelectedImage();
+                const fileModel = {
+                    isImage: true,
+                    isViewable: true,
+                    displayName: selectedImg.src,
+                    defaultSource: selectedImg.src,
+                    downloadUrl: selectedImg.src,
+                };
+                this.document.getSelection().collapseToEnd();
+                this.fileViewer.open(fileModel);
                 break;
             }
         }
