@@ -14,6 +14,7 @@ Chart of accounts and taxes for Slovenia.
         'base_vat',
     ],
     'data': [
+        'data/account_account_tag.xml',
         'data/account_tax_report_data.xml',
     ],
     'demo': [
