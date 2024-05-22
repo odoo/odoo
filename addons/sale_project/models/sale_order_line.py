@@ -190,8 +190,7 @@ class SaleOrderLine(models.Model):
         values = self._timesheet_create_project_prepare_values()
         if self.product_id.project_template_id:
             values['name'] = "%s - %s" % (values['name'], self.product_id.project_template_id.name)
-            # The no_create_folder context key is used in documents_project
-            project = self.product_id.project_template_id.with_context(no_create_folder=True).copy(values)
+            project = self.product_id.project_template_id.copy(values)
             project.tasks.write({
                 'sale_line_id': self.id,
                 'partner_id': self.order_id.partner_id.id,
@@ -208,8 +207,7 @@ class SaleOrderLine(models.Model):
             ])
             if project_only_sol_count == 1:
                 values['name'] = "%s - [%s] %s" % (values['name'], self.product_id.default_code, self.product_id.name) if self.product_id.default_code else "%s - %s" % (values['name'], self.product_id.name)
-            # The no_create_folder context key is used in documents_project
-            project = self.env['project.project'].with_context(no_create_folder=True).create(values)
+            project = self.env['project.project'].create(values)
 
         # Avoid new tasks to go to 'Undefined Stage'
         if not project.type_ids:
