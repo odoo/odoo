@@ -13,7 +13,9 @@ class ImportQuestionsWizard(models.TransientModel):
     required_fields = [
         "Pregunta",
         "Tipo",
-        "Categoria"
+        "Ponderacion",
+        "Categoria",
+        "Opciones"
     ]
 
     tipo_valido = ["multiple_choice", "open_question", "escala"]
@@ -115,28 +117,26 @@ class ImportQuestionsWizard(models.TransientModel):
             raise exceptions.ValidationError(mensaje)
 
     def _validar_fila(self, row: dict):
-        campos = []
-        for campo in self.required_fields:
-            if not row.get(campo):
-                campos.append(campo)
+        # Validar campos requeridos
+        if not row.get("Pregunta"):
+            raise exceptions.ValidationError(_("El campo 'Pregunta' es requerido."))
+        if not row.get("Tipo"):
+            raise exceptions.ValidationError(_("El campo 'Tipo' es requerido."))
+        if not row.get("Categoria"):
+            raise exceptions.ValidationError(_("El campo 'Categoria' es requerido."))
 
-        if campos:
-            raise exceptions.ValidationError(
-                f"Los siguientes campos son requeridos: {', '.join(campos)}"
-            )
-        
         # Validar que el tipo de pregunta sea válido
         if row["Tipo"] not in self.tipo_valido:
             raise exceptions.ValidationError(
                 f"El tipo de pregunta '{row['Tipo']}' no es válido. Los tipos permitidos son: {', '.join(self.tipo_valido)}."
             )
-        
+
         # Validar que la categoría sea válida
         if row["Categoria"] not in self.categoria_valida:
             raise exceptions.ValidationError(
                 f"La categoría '{row['Categoria']}' no es válida. Las categorías permitidas son: {', '.join(self.categoria_valida)}."
             )
-        
+
         # Validar que la ponderación sea válida si el tipo es 'escala'
         if row["Tipo"] == "escala":
             if not row.get("Ponderacion"):
@@ -153,16 +153,19 @@ class ImportQuestionsWizard(models.TransientModel):
                 raise exceptions.ValidationError(
                     f"No se permite la ponderación para preguntas de tipo '{row['Tipo']}'."
                 )
-        
+
         # Validar que las opciones sean válidas solo para preguntas de tipo 'multiple_choice'
-        if row["Tipo"] != "multiple_choice" and row.get("Opciones"):
-            raise exceptions.ValidationError(
-                f"No se permiten opciones para preguntas de tipo '{row['Tipo']}'."
-            )
-        if row["Tipo"] == "multiple_choice" and not row.get("Opciones"):
-            raise exceptions.ValidationError(
-                "Las opciones son requeridas para preguntas de tipo 'multiple_choice'."
-            )
+        if row["Tipo"] == "multiple_choice":
+            if not row.get("Opciones"):
+                raise exceptions.ValidationError(
+                    "Las opciones son requeridas para preguntas de tipo 'multiple_choice'."
+                )
+        else:
+            # No permitir opciones para otros tipos de preguntas
+            if row.get("Opciones"):
+                raise exceptions.ValidationError(
+                    f"No se permiten opciones para preguntas de tipo '{row['Tipo']}'."
+                )
 
     def descargar_template(self):
         # Define el contenido del archivo CSV de la plantilla
