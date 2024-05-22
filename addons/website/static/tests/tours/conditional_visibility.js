@@ -6,14 +6,17 @@ const snippets = [
     {
         id: 's_text_image',
         name: 'Text - Image',
+        groupName: "Content",
     },
     {
         id: "s_banner",
         name: "Banner",
+        groupName: "Intro",
     },
     {
         id: "s_popup",
         name: "Popup",
+        groupName: "Content",
     },
 ];
 function checkEyeIcon(snippetName, visible) {
@@ -191,13 +194,15 @@ wTourUtils.registerWebsitePreviewTour("conditional_visibility_5", {
     url: "/",
 }, () => [
     {
-        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        content: "Toggle the visibility of the Footer",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Footer')",
+        run: "click",
     },
     {
-        trigger: `#oe_snippets .oe_snippet[name="Text - Image"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
-        content: "Drag the Text - Image building block and drop it at the bottom of the page.",
-        run: "drag_and_drop :iframe .oe_drop_zone:last",
+        content: "Check that the footer is visible",
+        trigger: ":iframe #wrapwrap footer",
     },
+    ...wTourUtils.dragNDrop(snippets[0]),
     {
         content: "Click on the image of the dragged snippet",
         trigger: ":iframe .s_text_image img",

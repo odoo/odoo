@@ -10,6 +10,7 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
     ...wTourUtils.dragNDrop({
         id: "s_cover",
         name: "Cover",
+        groupName: "Intro",
     }),
     {
         content: "Select the snippet title",

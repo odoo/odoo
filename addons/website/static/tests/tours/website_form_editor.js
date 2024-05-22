@@ -937,7 +937,7 @@ function editContactUs(steps) {
             trigger: ".o_we_add_snippet_btn",
             run: "click",
         },
-        ...wTourUtils.dragNDrop({id: "s_three_columns", name: "Columns"}),
+        ...wTourUtils.dragNDrop({id: "s_three_columns", name: "Columns", groupName: "Content"}),
         {
             content: "Select the first column",
             trigger: ":iframe .s_three_columns .row > :nth-child(1)",

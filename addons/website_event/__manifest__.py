@@ -19,6 +19,7 @@
         'data/website_snippet_data.xml',
         'views/event_snippets.xml',
         'views/snippets/s_events.xml',
+        'views/snippets/s_event_upcoming_snippet_preview_data.xml',
         'views/snippets/snippets.xml',
         'views/event_templates_list.xml',
         'views/event_templates_svg.xml',

@@ -2,7 +2,7 @@
 
 import wTourUtils from "@website/js/tours/tour_utils";
 
-const coverSnippet = {id: "s_cover", name: "Cover"};
+const coverSnippet = {id: "s_cover", name: "Cover", groupName: "Intro"};
 
 wTourUtils.registerWebsitePreviewTour("test_parallax", {
     test: true,

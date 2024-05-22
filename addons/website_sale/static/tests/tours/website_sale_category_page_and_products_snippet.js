@@ -14,10 +14,16 @@ wTourUtils.registerWebsitePreviewTour('category_page_and_products_snippet_editio
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     },
     {
-        content: "Drag and drop the product snippet inside the category area",
-        trigger: `#oe_snippets .oe_snippet[name="Products"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
+        content: "Drag and drop the Products snippet group inside the category area.",
+        trigger: '#oe_snippets .oe_snippet[name="Products"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
         run: "drag_and_drop :iframe #category_header",
     },
+    {
+        content: "Click on the s_dynamic_snippet_products snippet.",
+        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_dynamic_snippet_products"]',
+        run: "click",
+    },
+
     {
         content: "Click on the product snippet to show its options",
         trigger: ':iframe #category_header .s_dynamic_snippet_products',

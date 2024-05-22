@@ -10,6 +10,7 @@ wTourUtils.registerWebsitePreviewTour('website_image_quality', {
     ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
+        groupName: "Content",
     }),
     {
         content: "Select image",

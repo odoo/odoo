@@ -5,7 +5,7 @@ import wTourUtils from '@website/js/tours/tour_utils';
 import wSaleTourUtils from '@website_sale/js/tours/tour_utils';
 
 const optionBlock = 'dynamic_snippet_products';
-const productsSnippet = {id: 's_dynamic_snippet_products', name: 'Products'};
+const productsSnippet = {id: "s_dynamic_snippet_products", name: "Products", groupName: "Products"};
 const templates = [
     "dynamic_filter_template_product_product_add_to_cart",
     "dynamic_filter_template_product_product_view_detail",

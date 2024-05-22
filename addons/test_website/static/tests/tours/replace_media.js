@@ -35,7 +35,8 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     },
     ...wTourUtils.dragNDrop({
         name: 'Title - Image',
-        id: 's_picture'
+        id: 's_picture',
+        groupName: "Images",
     }),
     {
         content: "select image",

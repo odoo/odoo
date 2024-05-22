@@ -15,6 +15,7 @@ wTourUtils.registerWebsitePreviewTour('website_multi_edition', {
     ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
+        groupName: "Content",
     }),
     // Edit another part in the page, like the footer
     {

@@ -18,6 +18,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
+        groupName: "Content",
     }),
     {
         content: "Replace first paragraph, to insert a new link",
@@ -132,6 +133,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     ...wTourUtils.dragNDrop({
         id: 's_three_columns',
         name: 'Columns',
+        groupName: "Content",
     }),
     {
         content: "Click on the first image.",

@@ -7,7 +7,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_image_gallery', {
     url: '/',
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({id: 's_image_gallery', name: 'Images Wall'}),
+    ...wTourUtils.dragNDrop({id: 's_images_wall', name: 'Images Wall', groupName: "Images"}),
     ...wTourUtils.clickOnSave(),
     {
         content: 'Click on an image of the Image Wall',
@@ -28,6 +28,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_remove", {
     ...wTourUtils.dragNDrop({
         id: "s_image_gallery",
         name: "Image Gallery",
+        groupName: "Images",
 }), 
 ...wTourUtils.clickOnSnippet({
     id: 's_image_gallery',
@@ -74,6 +75,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     ...wTourUtils.dragNDrop({
         id: "s_image_gallery",
         name: "Image Gallery",
+        groupName: "Images",
     }),
 {
     content: "Click on the first image of the snippet",
@@ -130,6 +132,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", 
     ...wTourUtils.dragNDrop({
         id: "s_image_gallery",
         name: "Image Gallery",
+        groupName: "Images",
     }),
     ...wTourUtils.clickOnSnippet({
         id: "s_image_gallery",
