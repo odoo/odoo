@@ -1,88 +1,173 @@
 <?xml version="1.0"?>
 <odoo>
-  <!--OBJETIVOS-->
-  <record id="objetivo_action" model="ir.actions.act_window">
-    <field name="name">Objetivos</field>
-    <field name="res_model">objetivo</field>
-    <field name="view_mode">tree,form</field>
-  </record>
+    <!-- Vista en árbol para usuario.objetivo.rel -->
+    <record id="usuario_objetivo_rel_view_tree" model="ir.ui.view">
+        <field name="name">objetivo</field>
+        <field name="model">objetivo</field>
+        <field name="arch" type="xml">
+            <tree string="Objetivos de Usuarios">
+                <field name="titulo" string="Nombre del Objetivo"/>
+                <field name="fecha_fin" string="Fecha Fin"/>
+                <field name="tipo" string="Tipo"/>
+                <field name="estado" string="Estado"/>
+                <field name="peso" string="Peso"/>
+                <field name="piso_minimo" string="Piso Mínimo"/>
+                <field name="piso_maximo" string="Piso Máximo"/>
+            </tree>
+        </field>
+    </record>
 
-  <record id="objetivo_tree" model="ir.ui.view">
-    <field name="name">objetivo.tree</field>
-    <field name="model">objetivo</field>
-    <field name="arch" type="xml">
-      <tree string="Objetivos">
-        <field name="titulo" string="Nombre"/>
-        <field name="fecha_fin" />
-        <field name="tipo" />
-        <field name="estado" />
-        <field name="peso" />
-        <field name="piso_minimo" />
-        <field name="piso_maximo" />
-      </tree>
-    </field>
-  </record>
+    <!-- Vista Kanban para usuario.objetivo.rel -->
+    <record id="usuario_objetivo_rel_view_kanban" model="ir.ui.view">
+        <field name="name">usuario.objetivo.rel.kanban</field>
+        <field name="model">usuario.objetivo.rel</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" default_group_by="usuario_id" quick_create="false" create="false" group_edit="false" group_delete="false" records_draggable="false" group_create="false">
+                <field name="objetivo_id"/>
+                <field name="usuario_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <div class="oe_kanban_card">
+                                <div class="oe_kanban_card_header d-flex justify-content-between">
+                                    <div class="oe_kanban_card_header_title" style="overflow: hidden; text-overflow: ellipsis; width: 100%;">
+                                        <h3>
+                                            <field name="titulo_corto" class="d-block text-truncate"/>
+                                        </h3>
+                                    </div>
+                                    <div>
+                                        <strong>
+                                            <field name="resultado"/>%
+                                        </strong>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_card_content">
+                                    <div style="overflow: hidden; text-overflow: ellipsis; width: 100%;">
+                                        <field name="descripcion_corta"/>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-primary" name="abrir_objetivo_form" string="Detalles" type="object"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-name="kanban-box-empty">
+                        <t t-if="records.length > 0">
+                            <div class="o_kanban_view_nocontent">
+                                <p>Actualmente no hay objetivos asignados.</p>
+                            </div>
+                        </t>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
 
-  <record id="objetivo_form" model="ir.ui.view">
-    <field name="name">objetivo.form</field>
-    <field name="model">objetivo</field>
-
-    <field name="arch" type="xml">
-      <form string="Objetivo">
-        <header>
-          <field name="estado" widget="statusbar" statusbar_visible="rojo, amarillo, verde, azul" />
-        </header>
-        <sheet>
-          <div style="width: 100%;">
-            <h1>
-              <field name="titulo" placeholder="Nombre del objetivo" style="width: 100%;" />
-            </h1>
-
-            <br />
-            <label for="descripcion" string="Descripción" />
-            <field placeholder="¿Qué es lo que se espera lograr con este objetivo?" name="descripcion" />
-          </div>
-          <notebook>
-            <page string="Detalles">
-              <div style="display: flex; flex-direction: column;">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="metrica" string="Métrica" />
-                        <field name="metrica" />
-                        <br />
-                        <label for="orden" string="Orden" />
-                        <field name="orden" />
-                        <br />
-                        <label for="peso" string="Peso" />
-                        <field name="peso" />
-                    </div>
-                    <div class="col-md-6">
-                        <label for="fecha_fin" string="Fecha final" />
-                        <field name="fecha_fin" />
-                        <br />
-                        <label for="tipo" string="Tipo" />
-                        <field name="tipo" />
-                    </div>
-                </div>
-                <group col="2" style="margin-top: 20px;">
-                  <group>
-                    <field name="piso_minimo" string="Valor inicial"/>
-                  </group>
-                  <group>
-                    <field name="piso_maximo" string="Valor deseado"/>
-                  </group>
+    <!-- Vista en formulario para usuario.objetivo.rel -->
+    <record id="usuario_objetivo_rel_view_form" model="ir.ui.view">
+        <field name="name">usuario.objetivo.rel.form</field>
+        <field name="model">usuario.objetivo.rel</field>
+        <field name="arch" type="xml">
+            <form string="Objetivo de Usuario">
+                <group>
+                    <field name="objetivo_id" context="{'form_view_ref': 'objetivo_form'}"/>
                 </group>
-              </div>
-            </page>
-            <page string="Asignados">
-              <group>
-                <field name="usuario_ids" />
-              </group>
-            </page>
-          </notebook>
-        </sheet>
-      </form>
-    </field>
-  </record>
+            </form>
+        </field>
+    </record>
 
+    <!-- Formulario para el modelo objetivo -->
+    <record id="objetivo_view_form" model="ir.ui.view">
+        <field name="name">objetivo.form</field>
+        <field name="model">objetivo</field>
+        <field name="arch" type="xml">
+            <form string="Objetivo">
+                <header>
+                    <field name="estado" widget="statusbar" statusbar_visible="rojo, amarillo, verde, azul" />
+                </header>
+                <sheet>
+                    <div style="width: 100%;">
+                        <h1>
+                            <field name="titulo" placeholder="Nombre del objetivo" style="width: 100%;" />
+                        </h1>
+
+                        <br />
+                        <label for="descripcion" string="Descripción" />
+                        <field placeholder="¿Qué es lo que se espera lograr con este objetivo?" name="descripcion" />
+                    </div>
+                    <notebook>
+                        <page string="Detalles">
+                            <div style="display: flex; flex-direction: column;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="metrica" string="Métrica" />
+                                        <field name="metrica" />
+                                        <br />
+                                        <label for="orden" string="Orden" />
+                                        <field name="orden" />
+                                        <br />
+                                        <label for="peso" string="Peso" />
+                                        <field name="peso" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="fecha_fin" string="Fecha final" />
+                                        <field name="fecha_fin" />
+                                        <br />
+                                        <label for="tipo" string="Tipo" />
+                                        <field name="tipo" />
+                                    </div>
+                                </div>
+                                <group col="2" style="margin-top: 20px;">
+                                    <group>
+                                        <field name="piso_minimo" string="Piso mínimo"/>
+                                    </group>
+                                    <group>
+                                        <field name="piso_maximo" string="Piso máximo"/>
+                                    </group>
+                                </group>
+                            </div>
+                        </page>
+                        <page string="Asignados">
+                            <group>
+                                <field name="usuario_ids" />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción para abrir la vista en tree y formulario para objetivo -->
+    <record id="objetivo_action" model="ir.actions.act_window">
+        <field name="name">Objetivos</field>
+        <field name="res_model">objetivo</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                Actualmente no hay objetivos creados.
+            </p>
+            <p>
+                Los objetivos creados aparecerán aquí
+            </p>
+        </field>
+    </record>
+
+    <!-- Acción para abrir la vista en kanban y formulario para usuario.objetivo.rel -->
+    <record id="usuario_objetivo_rel_action" model="ir.actions.act_window"> 
+        <field name="name">Objetivos de Colaboradores</field>
+        <field name="res_model">usuario.objetivo.rel</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="usuario_objetivo_rel_view_kanban"/>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'kanban', 'view_id': ref('usuario_objetivo_rel_view_kanban')}), (0, 0, {'view_mode': 'form', 'view_id': ref('objetivo_view_form')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                Actualmente no hay objetivos asignados.
+            </p>
+            <p>
+                Los objetivos asignados aparecerán aquí
+            </p>
+        </field>
+    </record>
 </odoo>
