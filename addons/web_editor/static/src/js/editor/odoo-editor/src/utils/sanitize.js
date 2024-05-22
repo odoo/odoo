@@ -3,10 +3,8 @@ import {
     closestBlock,
     closestElement,
     endPos,
-    fillEmpty,
     getListMode,
     isBlock,
-    getAdjacentNextSiblings,
     isVisibleEmpty,
     moveNodes,
     preserveCursor,
@@ -23,6 +21,7 @@ import {
     getTraversedNodes,
     ZERO_WIDTH_CHARS_REGEX,
     setSelection,
+    isVisible,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -248,34 +247,31 @@ class Sanitize {
                 !node.parentElement.classList.contains('nav-item')
             ) {
                 const previous = node.previousSibling;
-                const nextSiblings = getAdjacentNextSiblings(node);
-                const classes = node.classList;
+                const attributes = node.attributes;
                 const parent = node.parentElement;
                 const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
-                if (previous) {
-                    const newLi = document.createElement('li');
-                    newLi.classList.add('oe-nested');
-                    parent.after(newLi);
-                    newLi.append(node, ...nextSiblings);
-                    if (classes.length) {
-                        const spanEl = document.createElement('span');
-                        spanEl.setAttribute('class', classes);
-                        spanEl.append(...node.childNodes);
-                        node.replaceWith(spanEl);
-                    } else {
-                        unwrapContents(node);
+                if (attributes.length) {
+                    const spanEl = document.createElement('span');
+                    for (const attribute of attributes) {
+                        spanEl.setAttribute(attribute.name, attribute.value);
                     }
+                    if (spanEl.style.textAlign) {
+                        // This is a tradeoff. Ideally, the state of the html
+                        // after this function should be reachable by standard
+                        // edition means and a span with display block is not.
+                        // However, this is required in order to not break the
+                        // design of already existing snippets.
+                        spanEl.style.display = 'block';
+                    }
+                    spanEl.append(...node.childNodes);
+                    node.replaceWith(spanEl);
                 } else {
-                    if (classes.length) {
-                        const spanEl = document.createElement('span');
-                        spanEl.setAttribute('class', classes);
-                        spanEl.append(...node.childNodes);
-                        node.replaceWith(spanEl);
-                    } else {
-                        unwrapContents(node);
-                    }
+                    unwrapContents(node);
                 }
-                fillEmpty(parent);
+                if (previous && isVisible(previous) && !isBlock(previous) && previous.nodeName !== 'BR') {
+                    const br = document.createElement('br');
+                    previous.after(br);
+                }
                 if (restoreCursor) {
                     restoreCursor(new Map([[node, parent]]));
                 }
