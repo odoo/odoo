@@ -4196,6 +4196,9 @@ export class OdooEditor extends EventTarget {
      */
     _resetLinkInSelection() {
         const selection = this.document.getSelection();
+        if (!selection) {
+            return;
+        }
         const [anchorLink, focusLink] = [selection.anchorNode, selection.focusNode]
             .map(node => closestElement(node, 'a:not(.btn)'));
         const singleLinkInSelection = anchorLink === focusLink && anchorLink && isLinkEligibleForZwnbsp(this.editable, anchorLink) && anchorLink;
