@@ -232,6 +232,26 @@
     padding: 0 40px;
 }
 
+@media (max-width: 768px) {
+    .o_survey_result {
+        display: none;
+    }
+
+    .movil {
+        display: block;
+    }
+}
+
+@media (min-width: 768px) {
+    .movil {
+        display: none;
+    }
+
+    .o_survey_result {
+        display: flex;
+    }
+}
+
 .o_survey_statistics_header{
     width: 100%;
     display: flex;

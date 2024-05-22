@@ -26,11 +26,23 @@
         <template id="encuestas_reporte_generico" name="Reporte: página de reporte genérico">
             <t t-call="evaluaciones.diseño">
                 <t t-set="limite_registros" t-value="10"/>
+
+                <div class="movil">
+                    <t t-call="evaluaciones.mensaje"/>
+                </div>
                 <div class="o_survey_result">
                     <t t-call="evaluaciones.portada_reporte_template"/>
                     <t t-call="evaluaciones.encuestas_reporte_generico_inner" />
                 </div>
             </t>
+        </template>
+
+        <template id="mensaje" name="Reporte: mensaje en movil">
+            <div class="d-flex flex-row justify-content-between">
+                <h1>
+                    Los reportes no están disponibles en dispositivos móviles.
+                </h1>
+            </div>
         </template>
 
         <!-- Componente wrapper de preguntas reporte -->
