@@ -52,8 +52,12 @@
             'hr/static/src/**/*',
         ],
         'web.qunit_suite_tests': [
+            'hr/static/tests/legacy/**/*',
+        ],
+        'web.assets_unit_tests': [
             'hr/static/tests/**/*',
             ('remove', 'hr/static/tests/tours/**/*'),
+            ('remove', 'hr/static/tests/legacy/**/*'),
         ],
         'web.assets_tests': [
             'hr/static/tests/tours/**/*',
