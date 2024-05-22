@@ -6,12 +6,6 @@
         </record>
     </data>
     <data>
-        <function model="account.chart.template" name="try_loading">
-            <value eval="[]"/>
-            <value>generic_coa</value>
-            <value model="res.company" search="[('partner_id.country_id.code', 'in', ['US', False])]"/>
-        </function>
-
         <!-- TAGS FOR RETRIEVING THE DEMO ACCOUNTS -->
         <record id="demo_capital_account" model="account.account.tag">
             <field name="name">Demo Capital Account</field>
@@ -28,6 +22,18 @@
         <record id="demo_office_furniture_account" model="account.account.tag">
             <field name="name">Office Furniture</field>
         </record>
+
+        <!-- Install the demo if demo installation is triggered manually after install without demo -->
+        <function model="account.chart.template" name="_install_demo">
+            <value model="res.company" search="[('chart_template', '!=', False)]"/>
+        </function>
+
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[]"/>
+            <value>generic_coa</value>
+            <value model="res.company" search="[('partner_id.country_id.code', 'in', ['US', False])]"/>
+        </function>
+
         <!-- Payment Terms -->
 
         <record id="account_payment_term_advance" model="account.payment.term">
