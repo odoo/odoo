@@ -26,6 +26,18 @@
                         = <t t-out="jsonValue.lead_days_date"/>
                     </td>
                 </tr>
+                <tr t-if="jsonValue.visibility > 0">
+                    <td>Visibility days</td>
+                    <td class="text-end text-nowrap">
+                        + <t t-out="jsonValue.visibility"/> Day(s)
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>To Order Date</b></td>
+                    <td class="text-end text-nowrap">
+                        <b>= <t t-out="jsonValue.to_order_date"/></b>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>

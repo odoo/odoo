@@ -12,7 +12,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models, registry
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import float_compare, float_is_zero, frozendict, split_every
+from odoo.tools import float_compare, float_is_zero, frozendict, split_every, format_date
 
 _logger = logging.getLogger(__name__)
 
@@ -81,6 +81,7 @@ class StockWarehouseOrderpoint(models.Model):
     qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', inverse='_inverse_qty_to_order', search='_search_qty_to_order', digits='Product Unit of Measure')
     qty_to_order_computed = fields.Float('To Order Computed', compute='_compute_qty_to_order_computed', digits='Product Unit of Measure')
     qty_to_order_manual = fields.Float('To Order Manual', digits='Product Unit of Measure')
+    qty_to_order_without_visibility = fields.Float('To Order Without Visibility', compute='_compute_qty_to_order_without_visibility', digits='Product Unit of Measure')
 
     days_to_order = fields.Float(compute='_compute_days_to_order', help="Numbers of days  in advance that replenishments demands are created.")
     visibility_days = fields.Float(
@@ -197,6 +198,10 @@ class StockWarehouseOrderpoint(models.Model):
         action['context'] = {
             'active_id': self.product_id.id,
             'active_model': 'product.product',
+            'lead_days_date': format_date(self.env, self.lead_days_date),
+            'qty_to_order': self.qty_to_order_without_visibility,
+            'qty_to_order_computed': self.qty_to_order_computed,
+            'visibility': format_date(self.env, fields.Date.add(self.lead_days_date, days=int(self.visibility_days)))
         }
         warehouse = self.warehouse_id
         if warehouse:
@@ -295,26 +300,33 @@ class StockWarehouseOrderpoint(models.Model):
     @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
     def _compute_qty_to_order_computed(self):
         for orderpoint in self:
-            if not orderpoint.product_id or not orderpoint.location_id:
-                orderpoint.qty_to_order_computed = False
-                continue
-            qty_to_order = 0.0
-            rounding = orderpoint.product_uom.rounding
-            # The check is on purpose. We only want to consider the visibility days if the forecast is negative and
-            # there is a already something to ressuply base on lead times.
-            if float_compare(orderpoint.qty_forecast, orderpoint.product_min_qty, precision_rounding=rounding) < 0:
-                # We want to know how much we should order to also satisfy the needs that gonna appear in the next (visibility) days
-                product_context = orderpoint._get_product_context(visibility_days=orderpoint.visibility_days)
-                qty_forecast_with_visibility = orderpoint.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + orderpoint._quantity_in_progress()[orderpoint.id]
-                qty_to_order = max(orderpoint.product_min_qty, orderpoint.product_max_qty) - qty_forecast_with_visibility
-                remainder = orderpoint.qty_multiple > 0.0 and qty_to_order % orderpoint.qty_multiple or 0.0
-                if (float_compare(remainder, 0.0, precision_rounding=rounding) > 0
-                        and float_compare(orderpoint.qty_multiple - remainder, 0.0, precision_rounding=rounding) > 0):
-                    if float_is_zero(orderpoint.product_max_qty, precision_rounding=rounding):
-                        qty_to_order += orderpoint.qty_multiple - remainder
-                    else:
-                        qty_to_order -= remainder
-            orderpoint.qty_to_order_computed = qty_to_order
+            orderpoint.qty_to_order_computed = self._compute_qty_for_visibility_days(orderpoint=orderpoint, visibility_days=orderpoint.visibility_days)
+
+    @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
+    def _compute_qty_to_order_without_visibility(self):
+        for orderpoint in self:
+            orderpoint.qty_to_order_without_visibility = self._compute_qty_for_visibility_days(orderpoint=orderpoint, visibility_days=0)
+
+    def _compute_qty_for_visibility_days(self, orderpoint, visibility_days):
+        if not orderpoint.product_id or not orderpoint.location_id:
+            return False
+        qty_to_order = 0.0
+        rounding = orderpoint.product_uom.rounding
+        # The check is on purpose. We only want to consider the visibility days if the forecast is negative and
+        # there is a already something to ressuply base on lead times.
+        if float_compare(orderpoint.qty_forecast, orderpoint.product_min_qty, precision_rounding=rounding) < 0:
+            # We want to know how much we should order to also satisfy the needs that gonna appear in the next (visibility) days
+            product_context = orderpoint._get_product_context(visibility_days=visibility_days)
+            qty_forecast_with_visibility = orderpoint.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + orderpoint._quantity_in_progress()[orderpoint.id]
+            qty_to_order = max(orderpoint.product_min_qty, orderpoint.product_max_qty) - qty_forecast_with_visibility
+            remainder = orderpoint.qty_multiple > 0.0 and qty_to_order % orderpoint.qty_multiple or 0.0
+            if (float_compare(remainder, 0.0, precision_rounding=rounding) > 0
+                    and float_compare(orderpoint.qty_multiple - remainder, 0.0, precision_rounding=rounding) > 0):
+                if float_is_zero(orderpoint.product_max_qty, precision_rounding=rounding):
+                    qty_to_order += orderpoint.qty_multiple - remainder
+                else:
+                    qty_to_order -= remainder
+        return qty_to_order
 
     def _get_qty_multiple_to_order(self):
         """ Calculates the minimum quantity that can be ordered according to the PO UoM or BoM

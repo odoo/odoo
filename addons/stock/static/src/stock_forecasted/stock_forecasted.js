@@ -54,7 +54,14 @@ export class StockForecasted extends Component {
             context: this.context,
             docids: [this.productId],
         });
-        this.docs = { ...reportValues.docs, ...reportValues.precision };
+        this.docs = {
+            ...reportValues.docs,
+            ...reportValues.precision,
+            qty_to_order: this.context.qty_to_order,
+            qty_to_order_computed: this.context.qty_to_order_computed,
+            lead_days_date: this.context.lead_days_date,
+            visibility: this.context.visibility
+        };
     }
 
     async _getResModel(){
