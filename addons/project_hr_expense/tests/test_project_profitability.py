@@ -87,9 +87,9 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
         self.assertEqual(expense_sheet_foreign.state, 'submit')
         expense_sheet_foreign.action_approve_expense_sheets()
         self.assertEqual(expense_sheet_foreign.state, 'approve')
-        expense_sheet_foreign.action_sheet_move_create()
+        expense_sheet_foreign.action_sheet_move_post()
         self.assertEqual(expense_sheet_foreign.state, 'post')
-        expense_sheet.action_sheet_move_create()
+        expense_sheet.action_sheet_move_post()
         self.assertEqual(expense_sheet.state, 'post')
 
         # Both costs should now be computed in the project profitability, since both expense sheets were posted
@@ -157,7 +157,7 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
 
         expense_sheet.action_submit_sheet()
         expense_sheet.action_approve_expense_sheets()
-        expense_sheet.action_sheet_move_create()
+        expense_sheet.action_sheet_move_post()
 
         self.assertDictEqual(
             self.project._get_profitability_items(False),

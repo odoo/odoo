@@ -81,13 +81,13 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
         expense_sheet_refuse.with_user(self.expense_user_manager)._do_refuse('failed')
         self.assertRecordValues(sheets, [{'state': 'approve'}, {'state': 'cancel'}])
 
-        # An expense manager is not able to create the journal entry.
+        # An expense manager is not able to post the journal entry.
         with self.assertRaises(AccessError):
-            expense_sheet_approve.with_user(self.expense_user_manager).action_sheet_move_create()
+            expense_sheet_approve.with_user(self.expense_user_manager).action_sheet_move_post()
         self.assertRecordValues(expense_sheet_approve, [{'state': 'approve'}])
 
-        # An expense manager having accounting access rights is able to create the journal entry.
-        expense_sheet_approve.with_user(self.env.user).action_sheet_move_create()
+        # An expense manager having accounting access rights is able to post the journal entry.
+        expense_sheet_approve.with_user(self.env.user).action_sheet_move_post()
         self.assertRecordValues(expense_sheet_approve, [{'state': 'post'}])
 
     def test_expense_sheet_access_rights_user(self):

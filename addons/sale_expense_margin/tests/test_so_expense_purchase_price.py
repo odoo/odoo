@@ -76,8 +76,9 @@ class TestExpenseMargin(TestExpenseCommon):
             ],
         })
 
+        expense_sheet.action_submit_sheet()
         expense_sheet.action_approve_expense_sheets()
-        expense_sheet.action_sheet_move_create()
+        expense_sheet.action_sheet_move_post()
 
         self.assertRecordValues(sale_order.order_line[1:], [
             # Expense lines:
