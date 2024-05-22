@@ -86,7 +86,7 @@ LETTERS_ARABIC = {
     # ARABIC LETTER GHAIN
     '\u063A': ('\uFECD', '\uFECF', '\uFED0', '\uFECE'),
     # ARABIC TATWEEL
-    TATWEEL:  (TATWEEL,   TATWEEL,  TATWEEL,  TATWEEL),
+    TATWEEL:  (TATWEEL, TATWEEL, TATWEEL, TATWEEL),
     # ARABIC LETTER FEH
     '\u0641': ('\uFED1', '\uFED3', '\uFED4', '\uFED2'),
     # ARABIC LETTER QAF
@@ -246,7 +246,7 @@ LETTERS_ARABIC_V2 = {
     # ARABIC LETTER GHAIN
     '\u063A': ('\u063A', '\uFECF', '\uFED0', '\uFECE'),
     # ARABIC TATWEEL
-    TATWEEL:  (TATWEEL,   TATWEEL,  TATWEEL,  TATWEEL),
+    TATWEEL:  (TATWEEL, TATWEEL, TATWEEL, TATWEEL),
     # ARABIC LETTER FEH
     '\u0641': ('\u0641', '\uFED3', '\uFED4', '\uFED2'),
     # ARABIC LETTER QAF
@@ -408,7 +408,7 @@ LETTERS_KURDISH = {
     # ARABIC LETTER GHAIN
     '\u063A': ('\u063A', '\uFECF', '\uFED0', '\uFECE'),
     # ARABIC TATWEEL
-    TATWEEL:  (TATWEEL,   TATWEEL,  TATWEEL,  TATWEEL),
+    TATWEEL:  (TATWEEL, TATWEEL, TATWEEL, TATWEEL),
     # ARABIC LETTER FEH
     '\u0641': ('\u0641', '\uFED3', '\uFED4', '\uFED2'),
     # ARABIC LETTER QAF
@@ -517,21 +517,22 @@ LETTERS_KURDISH = {
     ZWJ: (ZWJ, ZWJ, ZWJ, ZWJ),
 }
 
-def connects_with_letter_before(letter,LETTERS):
+
+def connects_with_letter_before(letter, LETTERS):
     if letter not in LETTERS:
         return False
     forms = LETTERS[letter]
     return forms[FINAL] or forms[MEDIAL]
 
 
-def connects_with_letter_after(letter,LETTERS):
+def connects_with_letter_after(letter, LETTERS):
     if letter not in LETTERS:
         return False
     forms = LETTERS[letter]
     return forms[INITIAL] or forms[MEDIAL]
 
 
-def connects_with_letters_before_and_after(letter,LETTERS):
+def connects_with_letters_before_and_after(letter, LETTERS):
     if letter not in LETTERS:
         return False
     forms = LETTERS[letter]

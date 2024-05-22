@@ -31,11 +31,11 @@ HARAKAT_RE = re.compile(
     '\u08e3-\u08ff'
     ']',
 
-    re.UNICODE | re.X
+    re.UNICODE | re.VERBOSE
 )
 
 
-class ArabicReshaper(object):
+class ArabicReshaper:
     """
     A class for Arabic reshaper, it allows for fine-tune configuration over the
     API.
@@ -56,7 +56,7 @@ class ArabicReshaper(object):
     """
 
     def __init__(self):
-        super(ArabicReshaper, self).__init__()
+        super().__init__()
         self.language = 'Arabic'
         self.letters = LETTERS_ARABIC
 
@@ -78,7 +78,7 @@ class ArabicReshaper(object):
                     "ARABIC LIGATURE LAM WITH ALEF WITH MADDA ABOVE",
                 ]:
                     re_group_index_to_ligature_forms[index] = replacement[FORMS]
-                    patterns.append('({})'.format(replacement[MATCH]))
+                    patterns.append(f"({replacement[MATCH]})")
                     index += 1
                 self._re_group_index_to_ligature_forms = (
                     re_group_index_to_ligature_forms
@@ -125,9 +125,7 @@ class ArabicReshaper(object):
                         positions_harakat[position].insert(0, letter)
                     else:
                         positions_harakat[position].append(letter)
-            elif letter == TATWEEL and delete_tatweel:
-                pass
-            elif letter == ZWJ and not support_zwj:
+            elif letter == TATWEEL and delete_tatweel or letter == ZWJ and not support_zwj:
                 pass
             elif letter not in self.letters:
                 output.append((letter, NOT_SUPPORTED))
@@ -135,17 +133,12 @@ class ArabicReshaper(object):
                 output.append((letter, isolated_form))
             else:
                 previous_letter = output[-1]
-                if previous_letter[FORM] == NOT_SUPPORTED:
-                    output.append((letter, isolated_form))
-                elif not connects_with_letter_before(letter, self.letters):
-                    output.append((letter, isolated_form))
-                elif not connects_with_letter_after(
-                        previous_letter[LETTER], self.letters):
-                    output.append((letter, isolated_form))
-                elif (previous_letter[FORM] == FINAL and not
-                      connects_with_letters_before_and_after(
-                          previous_letter[LETTER], self.letters
-                )):
+                if (
+                    previous_letter[FORM] == NOT_SUPPORTED or
+                    not connects_with_letter_before(letter, self.letters) or
+                    not connects_with_letter_after(previous_letter[LETTER], self.letters) or
+                    (previous_letter[FORM] == FINAL and not connects_with_letters_before_and_after(previous_letter[LETTER], self.letters))
+                ):
                     output.append((letter, isolated_form))
                 elif previous_letter[FORM] == isolated_form:
                     output[-1] = (
@@ -169,7 +162,6 @@ class ArabicReshaper(object):
         if support_zwj and output and output[-1][LETTER] == ZWJ:
             output.pop()
 
-    
         # Clean text from Harakat to be able to find ligatures
         text = HARAKAT_RE.sub('', text)
 
@@ -211,7 +203,7 @@ class ArabicReshaper(object):
             if not forms[ligature_form]:
                 continue
             output[a] = (forms[ligature_form], NOT_SUPPORTED)
-            output[a+1:b] = repeat(('', NOT_SUPPORTED), b - 1 - a)
+            output[a + 1:b] = repeat(('', NOT_SUPPORTED), b - 1 - a)
 
         result = []
         if not delete_harakat and -1 in positions_harakat:
