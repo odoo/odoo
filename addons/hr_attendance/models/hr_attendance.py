@@ -75,19 +75,31 @@ class HrAttendance(models.Model):
             self.env['hr.attendance'].flush_model(['worked_hours'])
             self.env['hr.attendance.overtime'].flush_model(['duration'])
             self.env.cr.execute('''
-                SELECT att.id as att_id,
-                       att.worked_hours as att_wh,
-                       ot.id as ot_id,
-                       ot.duration as ot_d,
-                       ot.date as od,
-                       att.check_in as ad
+                WITH employee_time_zones AS (
+                    SELECT employee.id AS employee_id,
+                           calendar.tz AS timezone
+                      FROM hr_employee employee
+                INNER JOIN resource_calendar calendar
+                        ON calendar.id = employee.resource_calendar_id
+                )
+                SELECT att.id AS att_id,
+                       att.worked_hours AS att_wh,
+                       ot.id AS ot_id,
+                       ot.duration AS ot_d,
+                       ot.date AS od,
+                       att.check_in AS ad
                   FROM hr_attendance att
-             INNER JOIN hr_attendance_overtime ot
-                    ON date_trunc('day',att.check_in) = date_trunc('day', ot.date)
-                    AND date_trunc('day',att.check_out) = date_trunc('day', ot.date)
-                    AND att.employee_id IN %s
-                    AND att.employee_id = ot.employee_id
-                    ORDER BY att.check_in DESC
+            INNER JOIN employee_time_zones etz
+                    ON att.employee_id = etz.employee_id
+            INNER JOIN hr_attendance_overtime ot
+                    ON date_trunc('day',
+                                  CAST(att.check_in
+                                           AT TIME ZONE 'utc'
+                                           AT TIME ZONE etz.timezone
+                                  as date)) = date_trunc('day', ot.date)
+                   AND att.employee_id = ot.employee_id
+                   AND att.employee_id IN %s
+              ORDER BY att.check_in DESC
             ''', (tuple(self.employee_id.ids),))
             a = self.env.cr.dictfetchall()
             grouped_dict = dict()
