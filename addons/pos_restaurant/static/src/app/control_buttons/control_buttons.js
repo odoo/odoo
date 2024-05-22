@@ -7,6 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { BillScreen } from "@pos_restaurant/app/bill_screen/bill_screen";
+import { roundDecimals } from "@web/core/utils/numbers";
 
 patch(ControlButtons.prototype, {
     setup() {
@@ -47,7 +48,33 @@ patch(ControlButtons.prototype, {
         const takeawayFp = this.pos.config.takeaway_fp_id;
 
         this.currentOrder.takeaway = isTakeAway;
-        this.currentOrder.set_fiscal_position(isTakeAway ? takeawayFp : defaultFp);
+        isTakeAway
+            ? (this.currentOrder.fiscal_position_id = takeawayFp)
+            : (this.currentOrder.fiscal_position_id = defaultFp);
+
+        if (isTakeAway && this.pos.config.iface_tax_included === "total") {
+            const takeawayFpTaxsrc =
+                this.pos.models["account.fiscal.position.tax"].getAll()[0].tax_src_id;
+            const takeawayFpTaxdest =
+                this.pos.models["account.fiscal.position.tax"].getAll()[0].tax_dest_id;
+            this.currentOrder.lines.forEach((line) => {
+                const line_takeawayFp = line.tax_ids.find((tax) => tax.id === takeawayFpTaxsrc.id);
+                if (
+                    line_takeawayFp &&
+                    !(takeawayFpTaxsrc.include_base_amount || takeawayFpTaxdest.include_base_amount)
+                ) {
+                    const base_amount = roundDecimals(
+                        line.price_unit * (1 + takeawayFpTaxsrc.amount / 100)
+                    );
+                    const new_price_unit = base_amount / (1 + takeawayFpTaxdest.amount / 100);
+                    line.set_unit_price(new_price_unit);
+                }
+            });
+        } else if (!isTakeAway && this.pos.config.iface_tax_included === "total") {
+            this.currentOrder.lines.forEach((line) => {
+                line.set_unit_price(line.product_id.lst_price);
+            });
+        }
     },
     async clickFiscalPosition() {
         await super.clickFiscalPosition(...arguments);
