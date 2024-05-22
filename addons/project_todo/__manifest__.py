@@ -35,6 +35,10 @@
         'web.qunit_suite_tests': [
             'project_todo/static/tests/helpers/**/*',
             'project_todo/static/tests/**/*',
+            ("remove", 'project_todo/static/tests/hoot/**/*')
+        ],
+        'web.assets_unit_tests': [
+            'project_todo/static/tests/hoot/**/*',
         ],
     },
     'license': 'LGPL-3',
