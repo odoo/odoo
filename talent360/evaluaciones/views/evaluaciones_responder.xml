@@ -248,11 +248,35 @@
             </div>
         </div>
     </template>
-
+    
     <!-- scale question -->
     <template id="question_scale" name="Pregunta: escala">
         <div t-att-id="question.id">
-            <t t-set="opciones" t-value="['Nunca', 'Casi nunca', 'A veces', 'Casi siempre', 'Siempre']"/>
+            <t t-set="format" t-value="evaluacion.escalar_format"/>
+            <t t-if="format == 'textuales'">
+                <t t-set="opciones" t-value="['Nunca', 'Casi nunca', 'A veces', 'Casi siempre', 'Siempre']"/>
+            </t>
+            <t t-elif="format == 'numericas'">
+                <t t-set="opciones" t-value="['1', '2', '3', '4', '5']"/>
+            </t>
+            <t t-elif="format == 'caritas'">
+                <t t-set="opciones" t-value="[
+                    '/evaluaciones/static/src/img/muy_enojado.png',
+                    '/evaluaciones/static/src/img/casi_enojado.png',
+                    '/evaluaciones/static/src/img/medio.png',
+                    '/evaluaciones/static/src/img/normal.png',
+                    '/evaluaciones/static/src/img/contento.png'
+                ]"/>
+            </t>
+            <t t-elif="format == 'estrellas'">
+                <t t-set="opciones" t-value="[
+                    '/evaluaciones/static/src/img/una_estrella.png',
+                    '/evaluaciones/static/src/img/dos_estrellas.png',
+                    '/evaluaciones/static/src/img/tres_estrellas.png',
+                    '/evaluaciones/static/src/img/cuatro_estrellas.png',
+                    '/evaluaciones/static/src/img/cinco_estrellas.png'
+                ]"/>
+            </t>
             <t t-set="desc" t-value="['4', '3', '2', '1', '0']"/>
             <t t-set="asc" t-value="['0', '1', '2', '3', '4']"/>
 
@@ -271,7 +295,17 @@
                                 t-attf-class="o_survey_form_choice_item position-absolute"
                                 t-att-name='question.id'
                                 required="required">
-                                <span class="text-break mx-3" t-esc='opciones[iterador]'/></input>
+
+                                <t t-if="format == 'caritas'">
+                                    <img t-att-src="opciones[iterador]" alt="icono" style="width: 25px; height: 25px; background: transparent;" class="mx-4"/>
+                                </t>
+                                <t t-elif="format == 'estrellas'">
+                                    <img t-att-src="opciones[iterador]" alt="estrella" style="width: 120px; height: 25px; background: transparent;" class="mx-4"/>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-break mx-3" t-esc='opciones[iterador]'/>
+                                </t>
+                            </input>
                         </label>
                     </t>
                     <t t-else="">
@@ -280,7 +314,17 @@
                                 t-attf-class="o_survey_form_choice_item position-absolute"
                                 t-att-name='question.id'
                                 required="required">
-                                <span class="text-break mx-3" t-esc='opciones[iterador]'/></input>
+
+                                <t t-if="format == 'caritas'">
+                                    <img t-att-src="opciones[iterador]" alt="icono" style="width: 25px; height: 25px; background: transparent;" class="mx-4"/>
+                                </t>
+                                <t t-elif="format == 'estrellas'">
+                                    <img t-att-src="opciones[iterador]" alt="estrella" style="width: 120px; height: 25px; background: transparent;" class="mx-4"/>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-break mx-3" t-esc='opciones[iterador]'/>
+                                </t>
+                            </input>
                         </label>
                     </t>
                     <t t-set="iterador" t-value="iterador + 1"/>
