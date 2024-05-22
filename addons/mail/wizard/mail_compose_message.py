@@ -612,6 +612,7 @@ class MailComposer(models.TransientModel):
             if values.get('attachment_ids', []) or attachment_ids:
                 values['attachment_ids'] = [Command.set(values.get('attachment_ids', []) + attachment_ids)]
         else:
+<<<<<<< HEAD
             default_values = self.with_context(
                 default_composition_mode=composition_mode,
                 default_model=model,
@@ -629,6 +630,21 @@ class MailComposer(models.TransientModel):
                             'partner_ids', 'reply_to',
                             'attachment_ids', 'mail_server_id'
                            ] if key in default_values)
+||||||| parent of 9cb2483f755d (temp)
+            default_values = self.with_context(default_composition_mode=composition_mode, default_model=model, default_res_id=res_id).default_get(['composition_mode', 'model', 'res_id', 'parent_id', 'partner_ids', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'])
+            values = dict((key, default_values[key]) for key in ['subject', 'body', 'partner_ids', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
+
+        if template_id:  # Restore default sender if not updated on template switch (for both "mass_mail" and "comment" modes)
+            if 'email_from' not in values:
+                values['email_from'] = self.default_get('email_from').get('email_from')
+=======
+            default_values = self.with_context(default_composition_mode=composition_mode, default_model=model, default_res_id=res_id).default_get(['composition_mode', 'model', 'res_id', 'parent_id', 'partner_ids', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'])
+            values = dict((key, default_values[key]) for key in ['subject', 'body', 'partner_ids', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
+
+        if template_id:  # Restore default sender if not updated on template switch (for both "mass_mail" and "comment" modes)
+            if 'email_from' not in values:
+                values['email_from'] = self.default_get(['email_from']).get('email_from')
+>>>>>>> 9cb2483f755d (temp)
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')
