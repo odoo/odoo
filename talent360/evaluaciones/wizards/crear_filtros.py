@@ -98,6 +98,6 @@ class CrearFiltrosWizard(models.TransientModel):
 
             selecciones = [f'"{seleccion}"' for seleccion in selecciones]
             filtro_str = ",".join(selecciones)
-            filtros.append(f'"{filtro.categoria_interna}":[{filtro_str}]')
+            filtros.append(f'"{filtro.categoria}":{"{"}"valores":[{filtro_str}],"categoria_interna":"{filtro.categoria_interna}"{"}"}')
 
         return "filtros={" + ",".join(filtros) + "}"

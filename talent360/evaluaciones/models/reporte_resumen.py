@@ -25,7 +25,7 @@ class ReporteResumen(models.Model):
         store="False",
     )
 
-    @api.depends("usuario_ids")
+    @api.depends("usuario_ids", "usuario_externo_ids")
     def _compute_conteo_asignados(self):
         """
         Función que calcula el número de usuarios asignados a una evaluación
@@ -35,7 +35,7 @@ class ReporteResumen(models.Model):
                 record.conteo_asignados = 0
                 continue
 
-            conteo = len(record.usuario_ids)
+            conteo = len(record.usuario_ids) + len(record.usuario_externo_ids)
             if conteo == 0:
                 record.conteo_asignados = "Sin asignados"
             elif conteo == 1:
