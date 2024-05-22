@@ -452,7 +452,7 @@ class Evaluacion(models.Model):
 
         return parametros
 
-    def generar_datos_reporte_NOM_035_action(self):
+    def generar_datos_reporte_NOM_035_action(self, filtros=None):
         """
         Genera los datos necesarios para el reporte genérico de la evaluación.
 
@@ -501,6 +501,9 @@ class Evaluacion(models.Model):
             )
 
             for respuesta in respuesta_ids:
+                if filtros and not self.validar_filtro(filtros, respuesta):
+                    continue
+
                 valor_respuesta = respuesta.valor_respuesta
                 valor_pregunta += valor_respuesta
                 final += valor_respuesta
@@ -718,8 +721,13 @@ class Evaluacion(models.Model):
             else:
                 return False
 
-        for categoria, valores in filtros.items():
-            if not datos_demograficos[categoria] in valores:
+        for _, filtro in filtros.items():
+            categoria = filtro["categoria_interna"]
+
+            if not (categoria in datos_demograficos.keys()):
+                continue
+
+            if not datos_demograficos[filtro["categoria_interna"]] in filtro["valores"]:
                 return False
 
         return True
