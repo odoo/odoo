@@ -23,4 +23,9 @@ class PosOrder(models.Model):
         if not bom:
             return super()._get_pos_anglo_saxon_price_unit(product, partner_id, quantity)
         dummy, components = bom.explode(product, quantity)
-        return sum(super(PosOrder, self)._get_pos_anglo_saxon_price_unit(comp[0].product_id, partner_id, comp[1]['qty']) for comp in components)
+        total_price_unit = 0
+        for comp in components:
+            price_unit = super()._get_pos_anglo_saxon_price_unit(comp[0].product_id, partner_id, comp[1]['qty'])
+            price_unit = comp[0].product_id.uom_id._compute_price(price_unit, comp[0].product_uom_id)
+            total_price_unit += price_unit
+        return total_price_unit
