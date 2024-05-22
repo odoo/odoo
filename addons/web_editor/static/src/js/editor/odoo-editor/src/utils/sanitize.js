@@ -3,7 +3,6 @@ import {
     closestBlock,
     closestElement,
     startPos,
-    fillEmpty,
     getListMode,
     isBlock,
     isEmptyBlock,
@@ -22,6 +21,17 @@ import {
     PHONE_REGEX,
     URL_REGEX,
     unwrapContents,
+<<<<<<< HEAD
+||||||| parent of 7d3fe0eeb43a (temp)
+    padLinkWithZws,
+    getTraversedNodes,
+    ZERO_WIDTH_CHARS_REGEX,
+=======
+    padLinkWithZws,
+    getTraversedNodes,
+    ZERO_WIDTH_CHARS_REGEX,
+    isVisible,
+>>>>>>> 7d3fe0eeb43a (temp)
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -189,20 +199,74 @@ function sanitizeNode(node, root) {
         !node.parentElement.classList.contains('nav-item')
     ) {
         // Remove empty paragraphs in <li>.
+<<<<<<< HEAD
         const classes = node.classList;
+||||||| parent of 7d3fe0eeb43a (temp)
+        const previous = node.previousSibling;
+        const nextSiblings = getAdjacentNextSiblings(node);
+        const classes = node.classList;
+=======
+        const previous = node.previousSibling;
+        const attributes = node.attributes;
+>>>>>>> 7d3fe0eeb43a (temp)
         const parent = node.parentElement;
         const restoreCursor = shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
+<<<<<<< HEAD
         if (isEmptyBlock(node)) {
             node.remove();
         } else if (classes.length) {
             const spanEl = document.createElement('span');
             spanEl.setAttribute('class', classes);
+||||||| parent of 7d3fe0eeb43a (temp)
+        if (previous) {
+            const newLi = document.createElement('li');
+            newLi.classList.add('oe-nested');
+            parent.after(newLi);
+            newLi.append(node, ...nextSiblings);
+            if (classes.length) {
+                const spanEl = document.createElement('span');
+                spanEl.setAttribute('class', classes);
+                spanEl.append(...node.childNodes);
+                node.replaceWith(spanEl);
+            } else {
+                unwrapContents(node);
+            }
+=======
+        if (attributes.length) {
+            const spanEl = document.createElement('span');
+            for (const attribute of attributes) {
+                spanEl.setAttribute(attribute.name, attribute.value);
+            }
+            if (spanEl.style.textAlign) {
+                // This is a tradeoff. Ideally, the state of the html
+                // after this function should be reachable by standard
+                // edition means and a span with display block is not.
+                // However, this is required in order to not break the
+                // design of already existing snippets.
+                spanEl.style.display = 'block';
+            }
+>>>>>>> 7d3fe0eeb43a (temp)
             spanEl.append(...node.childNodes);
             node.replaceWith(spanEl);
         } else {
             unwrapContents(node);
+<<<<<<< HEAD
+||||||| parent of 7d3fe0eeb43a (temp)
+            if (classes.length) {
+                const spanEl = document.createElement('span');
+                spanEl.setAttribute('class', classes);
+                spanEl.append(...node.childNodes);
+                node.replaceWith(spanEl);
+            } else {
+                unwrapContents(node);
+            }
+=======
         }
-        fillEmpty(parent);
+        if (previous && isVisible(previous) && !isBlock(previous) && previous.nodeName !== 'BR') {
+            const br = document.createElement('br');
+            previous.after(br);
+>>>>>>> 7d3fe0eeb43a (temp)
+        }
         restoreCursor && restoreCursor(new Map([[node, parent]]));
         node = parent; // The node has been removed, update the reference.
     } else if (node.nodeName === 'LI' && !node.closest('ul, ol')) {
