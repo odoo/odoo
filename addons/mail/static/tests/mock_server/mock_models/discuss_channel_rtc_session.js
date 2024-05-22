@@ -1,5 +1,4 @@
-import { models } from "@web/../tests/web_test_helpers";
-import { parseModelParams } from "../mail_mock_server";
+import { getKwArgs, models } from "@web/../tests/web_test_helpers";
 
 export class DiscussChannelRtcSession extends models.ServerModel {
     _name = "discuss.channel.rtc.session";
@@ -30,7 +29,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
      * @param {{ extra?; boolean }} options
      */
     _mail_rtc_session_format(id, { extra } = {}) {
-        const kwargs = parseModelParams(arguments, "id", "extra");
+        const kwargs = getKwArgs(arguments, "id", "extra");
         id = kwargs.id;
         delete kwargs.id;
         extra = kwargs.extra;
@@ -61,7 +60,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
      * @param {boolean} extra
      */
     _mail_rtc_session_format_by_channel(ids, extra) {
-        const kwargs = parseModelParams(arguments, "ids", "extra");
+        const kwargs = getKwArgs(arguments, "ids", "extra");
         ids = kwargs.ids;
         delete kwargs.ids;
         extra = kwargs.extra;
@@ -87,7 +86,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
      * @param {object} values
      */
     _update_and_broadcast(id, values) {
-        const kwargs = parseModelParams(arguments, "id", "values");
+        const kwargs = getKwArgs(arguments, "id", "values");
         id = kwargs.id;
         delete kwargs.id;
         values = kwargs.values;

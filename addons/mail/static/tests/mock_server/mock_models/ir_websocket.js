@@ -1,4 +1,5 @@
 import { busModels } from "@bus/../tests/bus_test_helpers";
+import { makeKwArgs } from "@web/../tests/web_test_helpers";
 import { isIterable } from "@web/core/utils/arrays";
 
 export class IrWebSocket extends busModels.IrWebSocket {
@@ -14,10 +15,13 @@ export class IrWebSocket extends busModels.IrWebSocket {
         const { "mail.guest": guestIds } = imStatusIdsByModel;
         if (guestIds) {
             imStatus["Persona"] = imStatus["Persona"].concat(
-                MailGuest.search_read([["id", "in", guestIds]], {
-                    context: { active_test: false },
-                    fields: ["im_status"],
-                }).map((g) => ({ ...g, type: "guest" }))
+                MailGuest.search_read(
+                    [["id", "in", guestIds]],
+                    makeKwArgs({
+                        context: { active_test: false },
+                        fields: ["im_status"],
+                    })
+                ).map((g) => ({ ...g, type: "guest" }))
             );
         }
         return imStatus;
@@ -41,9 +45,10 @@ export class IrWebSocket extends busModels.IrWebSocket {
         const guest = MailGuest._get_guest_from_context();
         const authenticatedUserId = this.env.cookie.get("authenticated_user_sid");
         const [authenticatedPartner] = authenticatedUserId
-            ? ResPartner.search_read([["user_ids", "in", [authenticatedUserId]]], {
-                  context: { active_test: false },
-              })
+            ? ResPartner.search_read(
+                  [["user_ids", "in", [authenticatedUserId]]],
+                  makeKwArgs({ context: { active_test: false } })
+              )
             : [];
         if (!authenticatedPartner && !guest) {
             return channels;

@@ -1,19 +1,18 @@
-import { models } from "@web/../tests/web_test_helpers";
+import { getKwArgs, models } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 import { capitalize } from "@web/core/utils/strings";
-import { parseModelParams } from "../mail_mock_server";
 
 patch(models.ServerModel.prototype, {
     /**
      * @override
      * @type {typeof models.Model["prototype"]["write"]}
      */
-    write(idOrIds, values, kwargs) {
+    write() {
         /** @type {import("mock_models").MailThread} */
         const MailThread = this.env["mail.thread"];
 
         const initialTrackedFieldValuesByRecordId = MailThread._track_prepare.call(this);
-        const result = super.write(idOrIds, values, kwargs);
+        const result = super.write(...arguments);
         if (initialTrackedFieldValuesByRecordId) {
             MailThread._track_finalize.call(this, initialTrackedFieldValuesByRecordId);
         }
@@ -35,7 +34,7 @@ export class MailTrackingValue extends models.ServerModel {
      * @param {models.ServerModel} record
      */
     _create_tracking_values(initial_value, new_value, col_name, col_info, record) {
-        const kwargs = parseModelParams(
+        const kwargs = getKwArgs(
             arguments,
             "initial_value",
             "new_value",
@@ -129,7 +128,7 @@ export class MailTrackingValue extends models.ServerModel {
      * @param {"new" | "old"} field_type
      */
     _format_display_value(record, field_type) {
-        const kwargs = parseModelParams(arguments, "record", "field_type");
+        const kwargs = getKwArgs(arguments, "record", "field_type");
         record = kwargs.record;
         field_type = kwargs.field_type;
 
