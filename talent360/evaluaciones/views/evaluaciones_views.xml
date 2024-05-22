@@ -290,6 +290,13 @@
                                     </tbody>
                                 </table>
                             </page>
+                            <page string="Notificaciones">
+                                <group>
+                                    <field name="mensaje_bienvenida" readonly="1"/>
+                                    <field name="mensaje_agradecimiento" readonly="1"/>
+                                    <field name="contenido_correo" readonly="1"/>
+                                </group>
+                            </page>
                         </notebook>
                     </group>
                 </sheet>
@@ -441,8 +448,8 @@
                         <page string="Notificaciones">
                             <group>
                                 <field name="mensaje_bienvenida" placeholder="Escribe aquí tu mensaje de bienvenida"/>
-                                <field name="contenido_correo" placeholder="Escribe el contenido del correo"/>
                                 <field name="mensaje_agradecimiento" placeholder="Escribe aquí tu mensaje de bienvenida"/>
+                                <field name="contenido_correo" placeholder="Escribe el contenido del correo"/>
                             </group>
                         </page>
                     </notebook>
