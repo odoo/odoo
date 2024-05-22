@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, useChildSubEnv, useSubEnv } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { TreeEditor } from "@web/core/tree_editor/tree_editor";
 import {
@@ -52,6 +52,21 @@ export class DomainSelector extends Component {
 
         onWillStart(() => this.onPropsUpdated(this.props));
         onWillUpdateProps((np) => this.onPropsUpdated(np));
+
+        const prefill = (() => {
+            let prefillHasBeenUsed = false;
+            return () => {
+                if (!prefillHasBeenUsed) {
+                    prefillHasBeenUsed = true;
+                    return this.props.prefill;
+                }
+                return undefined;
+            };
+        })();
+
+        useChildSubEnv({
+            getInputPrefill: prefill,
+        })
     }
 
     async onPropsUpdated(p) {

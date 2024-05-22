@@ -106,7 +106,6 @@ export class TreeEditor extends Component {
         isDebugMode: { type: Boolean, optional: true },
         defaultConnector: { type: [{ value: "&" }, { value: "|" }], optional: true },
         isSubTree: { type: Boolean, optional: true },
-        prefill: { type: String, optional: true },
     };
     static defaultProps = {
         defaultConnector: "&",
@@ -126,14 +125,6 @@ export class TreeEditor extends Component {
         );
         onWillStart(() => this.onPropsUpdated(this.props));
         onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
-        this.prefillHasBeenUsed = false;
-        this.prefill = () => {
-            if (this.prefillHasBeenUsed) {
-                return undefined;
-            }
-            this.prefillHasBeenUsed = true;
-            return this.props.prefill;
-        }
     }
 
     async onPropsUpdated(props) {
@@ -241,9 +232,7 @@ export class TreeEditor extends Component {
 
     getValueEditorInfo(node) {
         const fieldDef = this.getFieldDef(node.path);
-        const tmp =  getValueEditorInfo(fieldDef, node.operator, { prefill: this.prefill() });
-        console.log(fieldDef, node, tmp)
-        return tmp;
+        return getValueEditorInfo(fieldDef, node.operator);
     }
 
     async updatePath(node, path) {

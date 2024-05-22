@@ -53,7 +53,7 @@ function genericDeserializeDate(type, value) {
 function makeStringEditor(params = {}) {
     return {
         component: Input,
-        extractProps: ({ value, update }) => ({ value, update, prefill: params.prefill }),
+        extractProps: ({ value, update }) => ({ value, update }),
         isSupported: (value) => typeof value === "string",
         defaultValue: () => "",
     }
@@ -68,7 +68,7 @@ function makeSelectEditor(options, params = {}) {
             update,
             options,
             addBlankOption: params.addBlankOption,
-            prefill: params.prefill
+            type: "value",
         }),
         isSupported: (value) => Boolean(getOption(value)),
         defaultValue: () => options[0]?.[0] ?? false,
@@ -80,7 +80,7 @@ function makeSelectEditor(options, params = {}) {
     };
 }
 
-function makeAutoCompleteEditor(fieldDef, params = {}) {
+function makeAutoCompleteEditor(fieldDef) {
     return {
         component: DomainSelectorAutocomplete,
         extractProps: ({ value, update }) => {
@@ -89,7 +89,6 @@ function makeAutoCompleteEditor(fieldDef, params = {}) {
                 fieldString: fieldDef.string,
                 update: (value) => update(unique(value)),
                 resIds: unique(value),
-                prefill: params.prefill,
             };
         },
         isSupported: (value) => Array.isArray(value),
@@ -115,7 +114,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "not like":
         case "ilike":
         case "not ilike":
-            return makeStringEditor(params);
+            return makeStringEditor();
         case "between": {
             const editorInfo = getValueEditorInfo(fieldDef, "=");
             return {
@@ -136,11 +135,11 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "not in": {
             switch (fieldDef.type) {
                 case "tags":
-                    return makeStringEditor(params);
+                    return makeStringEditor();
                 case "many2one":
                 case "many2many":
                 case "one2many":
-                    return makeAutoCompleteEditor(fieldDef, params);
+                    return makeAutoCompleteEditor(fieldDef);
                 default: {
                     const editorInfo = getValueEditorInfo(fieldDef, "=", {
                         addBlankOption: true,
@@ -234,14 +233,14 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "char":
         case "html":
         case "text":
-            return makeStringEditor(params);
+            return makeStringEditor();
         case "boolean": {
             if (["is", "is_not"].includes(operator)) {
                 const options = [
                     [true, _t("set")],
                     [false, _t("not set")],
                 ];
-                return makeSelectEditor(options, params);
+                return makeSelectEditor(options, {...params});
             }
             const options = [
                 [true, _t("True")],

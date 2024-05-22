@@ -12,6 +12,7 @@ import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { useGetDefaultLeafDomain } from "@web/core/domain_selector/utils";
+import { MacroEngine } from "@web/core/macro";
 const parsers = registry.category("parsers");
 
 const CHAR_FIELDS = ["char", "html", "many2many", "many2one", "one2many", "text", "properties"];
@@ -434,6 +435,25 @@ export class SearchBar extends Component {
             discardButtonText: _t("Cancel"),
             isDebugMode: this.env.searchModel.isDebugMode,
         });
+        
+        /*
+        const engine = new MacroEngine({ defaultCheckDelay: 0 });
+        engine.activate({
+            name: "prefill input",
+            steps: [
+                {
+                    trigger: ".o_tree_editor_value input",
+                    action: "click"
+                },
+                {
+                    trigger: ".o_tree_editor_value input",
+                    action: "text",
+                    value: this.inputRef.el.value
+                }
+            ]
+        });
+        */
+        
     }
 
     /**

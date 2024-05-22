@@ -54,12 +54,14 @@ export class AutoComplete extends Component {
         this.inEdition = false;
         this.timeout = 250;
 
+        this.inputValuePrefill = this.env.getInputPrefill();
+
         this.state = useState({
             navigationRev: 0,
             optionsRev: 0,
             open: false,
             activeSourceOption: null,
-            value: this.props.value,
+            value: this.props.value || this.inputValuePrefill,
         });
 
         this.inputRef = useForwardRefToParent("input");
@@ -108,6 +110,11 @@ export class AutoComplete extends Component {
             usePosition("sourcesList", () => this.targetDropdown, this.dropdownOptions);
         } else {
             this.open(false);
+        }
+
+        if (this.inputValuePrefill) {
+            useAutofocus({ refName: "input" });
+            this.onInput();
         }
     }
 
