@@ -14,7 +14,7 @@
                 </div>
                 <svg class="wave-bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#fbb03c" fill-opacity="1" d="M0,32L120,58.7C240,85,480,139,720,170.7C960,203,1200,213,1320,218.7L1440,224L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path></svg>
                 <svg class="wave-bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#9b9b9b" fill-opacity="1" d="M0,256L120,261.3C240,267,480,277,720,256C960,235,1200,181,1320,154.7L1440,128L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path></svg>
-                    <t t-if="filtros != None" t-call="evaluaciones.encuestas_reporte_filtros"/>
+                <t t-if="filtros != None" t-call="evaluaciones.encuestas_reporte_filtros"/>
             </div>
             <style>
                 @page {
@@ -31,22 +31,22 @@
                     align-items: center;
                     text-align: center;
                     background-color: #f8f9fa; /* Ajusta el color de fondo según tus necesidades */
-                    height: 85vh; /* Para que ocupe toda la altura de la página */
-                    width: 90vw; /* Para que ocupe todo el ancho de la página */
+                    height: 100vh; /* Para que ocupe toda la altura de la página */
+                    width: 100vw; /* Para que ocupe todo el ancho de la página */
                     font-family: Arial, sans-serif;
                     overflow: hidden;
-                    padding-top: 20px;
-                    padding-bottom: 20px;
+                    padding: 0;
+                    margin: 0;
                 }
                 .company-logo {
                     position: absolute;
-                    top: 190px;
-                    left: 20px;
+                    top: 20px; /* Ajusta este valor según sea necesario */
+                    left: 20px; /* Ajusta este valor según sea necesario */
                     height: 100px;
                     width: auto;
                 }
                 .main-content {
-                    margin-top: 40px;
+                    margin-top: 100px; /* Ajusta este valor para centrar verticalmente el contenido */
                     width: 80%;
                 }
                 .main-content h1 {
@@ -83,6 +83,7 @@
                 @media screen {
                     .company-logo {
                         top: 100px; /* Ajusta este valor según sea necesario */
+                        margin-top: 200px;
                     }
                     .main-content {
                         margin-top: 80px; /* Ajusta este valor según sea necesario */
