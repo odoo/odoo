@@ -3,14 +3,17 @@
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests import common
+from ..models.models import Message, MockMessage
+from ..models.mother_inherit_4 import TestINHERITMother
+from odoo import models
 
 class test_inherits(common.TransactionCase):
 
     def test_00_inherits(self):
         """ Check that a many2one field with delegate=True adds an entry in _inherits """
-        daughter = self.env['test.inherit.daughter']
+        daughter = self.env['test_inherit_daughter']
 
-        self.assertEqual(daughter._inherits, {'test.inherit.mother': 'template_id'})
+        self.assertEqual(daughter._inherits, {'test_inherit_mother': 'template_id'})
 
         # the field supporting the inheritance should be auto_join
         field = daughter._fields['template_id']
@@ -23,16 +26,16 @@ class test_inherits(common.TransactionCase):
         # is accessible from the child model. This test has been written
         # to verify the purpose of the inheritance computing of the class
         # in the openerp.osv.orm._build_model.
-        mother = self.env['test.inherit.mother']
-        daughter = self.env['test.inherit.daughter']
+        mother = self.env['test_inherit_mother']
+        daughter = self.env['test_inherit_daughter']
 
         self.assertIn('field_in_mother', mother._fields)
         self.assertIn('field_in_mother', daughter._fields)
 
     def test_20_field_extension(self):
         """ check the extension of a field in an inherited model """
-        mother = self.env['test.inherit.mother']
-        daughter = self.env['test.inherit.daughter']
+        mother = self.env['test_inherit_mother']
+        daughter = self.env['test_inherit_daughter']
 
         # the field mother.name must have required=True and "Bar" as default
         field = mother._fields['name']
@@ -52,15 +55,15 @@ class test_inherits(common.TransactionCase):
         self.assertEqual(mother.default_get(['state']), {})
 
         # the field daughter.template_id should have
-        # comodel_name='test.inherit.mother', string='Template', required=True
+        # comodel_name='test_inherit_mother', string='Template', required=True
         field = daughter._fields['template_id']
-        self.assertEqual(field.comodel_name, 'test.inherit.mother')
+        self.assertEqual(field.comodel_name, 'test_inherit_mother')
         self.assertEqual(field.string, "Template")
         self.assertTrue(field.required)
 
     def test_30_depends_extension(self):
         """ check that @depends on overridden compute methods extends dependencies """
-        mother = self.env['test.inherit.mother']
+        mother = self.env['test_inherit_mother']
         field = mother._fields['surname']
 
         # the field dependencies are added
@@ -68,11 +71,11 @@ class test_inherits(common.TransactionCase):
 
     def test_40_selection_extension(self):
         """ check that attribute selection_add=... extends selection on fields. """
-        mother = self.env['test.inherit.mother']
+        mother = self.env['test_inherit_mother']
 
         # the extra values are added, both in the field and the column
         self.assertEqual(mother._fields['state'].selection,
-                         [('a', 'A'), ('d', 'D'), ('b', 'B'), ('c', 'C')])
+                         [('a', 'A'), ('d', 'D'), ('b', 'B'), ('c', 'C'), ('e', 'E')])
 
     def test_41_selection_extension(self):
         """ check that attribute selection_add=... extends selection on fields. """
@@ -81,6 +84,76 @@ class test_inherits(common.TransactionCase):
         self.assertIsInstance(field.selection, str)
         self.assertEqual(field._description_selection(self.env), [('baz', 'Baz')])
 
+    def test_51_define_model_inherit(self):
+        model = self.env['test.mother.dot']
+        self.assertEqual(bool(model._fields['foo']), True)
+
+    def test_50_define_model_with_mixin(self):
+        class MixinFoo:
+            def foo(self):
+                pass
+
+        class MixinBar:
+            def bar(self):
+                pass
+
+        class NewTestInheritModel(MixinFoo, models.AbstractModel, MixinBar):
+            pass
+
+        class NewTestInheritModel2(models.AbstractModel, MixinBar):
+            pass
+
+        with self.assertRaisesRegex(TypeError, r"must contains the Odoo model type \(AbstractModel, Model, TransientModel\)"):
+            class InheritOdooModelClass(NewTestInheritModel, NewTestInheritModel2):
+                pass
+
+        class InheritOdooModelClass2(models.Model, NewTestInheritModel, NewTestInheritModel2):
+            pass
+
+        with self.assertRaisesRegex(TypeError, r"Model 'Inherit2OdooModelClass' can only extend BaseModel classes."):
+            class Inherit2OdooModelClass(MixinFoo, NewTestInheritModel):
+                pass
+
+        with self.assertRaisesRegex(TypeError, r"Model 'Inherit3OdooModelClass' can only extend BaseModel classes."):
+            class Inherit3OdooModelClass(NewTestInheritModel, MixinBar):
+                pass
+
+        with self.assertRaisesRegex(TypeError, r"Model 'Inherit4OdooModelClass' can only extend BaseModel classes."):
+            class Inherit4OdooModelClass(MixinFoo, TestINHERITMother, MixinBar):
+                pass
+
+    def test_60_inherit_with_python(self):
+        self.assertEqual(self.env['test_inherit_mother'].foo(), 42)
+        self.assertEqual(self.env[TestINHERITMother._name].foo(), 42)
+        self.assertEqual(isinstance(TestINHERITMother(self.env), TestINHERITMother), True)
+        self.assertNotEqual(TestINHERITMother(self.env).__class__, TestINHERITMother)
+        self.assertEqual(issubclass(TestINHERITMother(self.env).__class__, TestINHERITMother), True)
+        self.assertEqual(TestINHERITMother(self.env).foo(), 42)
+        self.assertEqual(TestINHERITMother(self.env).browse(1).surname, 'Mother A')
+        self.assertEqual(TestINHERITMother(self.env, 1).surname, 'Mother A')
+
+    def test_70_mock_models_out_of_registry(self):
+        self.assertEqual(self.env['test_new_api.message'].bar(), 1)
+        self.assertEqual(self.env[MockMessage._name].bar(), 1)
+        self.assertEqual(isinstance(MockMessage(self.env), MockMessage), True)
+        self.assertEqual(isinstance(MockMessage(self.env), Message), True)
+        self.assertEqual(MockMessage(self.env).__class__, MockMessage)
+        self.assertEqual(MockMessage(self.env).bar(), 2)
+
+        class MockMessage2(MockMessage):
+            _register = False               # not visible in real registry
+
+            def bar(self):
+                return super().bar() + 3
+
+        self.assertEqual(self.env['test_new_api.message'].bar(), 1)
+        self.assertEqual(self.env[MockMessage2._name].bar(), 1)
+        self.assertEqual(isinstance(MockMessage2(self.env), MockMessage2), True)
+        self.assertEqual(isinstance(MockMessage2(self.env), MockMessage), True)
+        self.assertEqual(isinstance(MockMessage2(self.env), Message), True)
+        self.assertEqual(MockMessage2(self.env).__class__, MockMessage2)
+        self.assertEqual(MockMessage2(self.env).bar(), 5)
+
 
 class test_inherits_demo(TransactionCaseWithUserDemo):
 
@@ -88,7 +161,7 @@ class test_inherits_demo(TransactionCaseWithUserDemo):
         """ check search on one2many field based on inherited many2one field. """
         # create a daughter record attached to partner Demo
         partner_demo = self.partner_demo
-        daughter = self.env['test.inherit.daughter'].create({'partner_id': partner_demo.id})
+        daughter = self.env['test_inherit_daughter'].create({'partner_id': partner_demo.id})
         self.assertEqual(daughter.partner_id, partner_demo)
         self.assertIn(daughter, partner_demo.daughter_ids)
 
@@ -107,7 +180,7 @@ class test_override_property(common.TransactionCase):
 
     def test_override_with_normal_field(self):
         """ test overriding a property field by a function field """
-        record = self.env['test.inherit.property'].create({'name': "Stuff"})
+        record = self.env['test_inherit_property'].create({'name': "Stuff"})
         # record.property_foo is not a property field
         self.assertFalse(record.property_foo)
         self.assertFalse(type(record).property_foo.company_dependent)
@@ -115,7 +188,7 @@ class test_override_property(common.TransactionCase):
 
     def test_override_with_computed_field(self):
         """ test overriding a property field by a computed field """
-        record = self.env['test.inherit.property'].create({'name': "Stuff"})
+        record = self.env['test_inherit_property'].create({'name': "Stuff"})
         # record.property_bar is not a property field
         self.assertEqual(record.property_bar, 42)
         self.assertFalse(type(record).property_bar.company_dependent)
@@ -124,8 +197,8 @@ class test_override_property(common.TransactionCase):
 class TestInherit(common.TransactionCase):
     def test_extend_parent(self):
         """ test whether a model extension is visible in its children models. """
-        parent = self.env['test.inherit.parent']
-        child = self.env['test.inherit.child']
+        parent = self.env['test_inherit_parent']
+        child = self.env['test_inherit_child']
 
         # check fields
         self.assertIn('foo', parent.fields_get())
