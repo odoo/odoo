@@ -24,6 +24,7 @@ import {
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 import { getItemId } from "../../helpers/model";
+import { serializeDateTime, serializeDate } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 
@@ -439,14 +440,17 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
         const now = DateTime.local();
 
         if (filter.rangeType === "from_to") {
-            if (value.from && value.to) {
-                return new Domain(["&", [field, ">=", value.from], [field, "<=", value.to]]);
+            const serialize = type === "datetime" ? serializeDateTime : serializeDate;
+            const from = value.from && serialize(DateTime.fromISO(value.from).startOf("day"));
+            const to = value.to && serialize(DateTime.fromISO(value.to).endOf("day"));
+            if (from && to) {
+                return new Domain(["&", [field, ">=", from], [field, "<=", to]]);
             }
-            if (value.from) {
-                return new Domain([[field, ">=", value.from]]);
+            if (from) {
+                return new Domain([[field, ">=", from]]);
             }
-            if (value.to) {
-                return new Domain([[field, "<=", value.to]]);
+            if (to) {
+                return new Domain([[field, "<=", to]]);
             }
             return new Domain();
         }
