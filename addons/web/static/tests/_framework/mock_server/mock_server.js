@@ -19,9 +19,9 @@ import { fetchModelDefinitions, registerModelToFetch } from "../module_set.hoot"
 import { DEFAULT_FIELD_VALUES, FIELD_SYMBOL } from "./mock_fields";
 import {
     FIELD_NOT_FOUND,
-    Kwargs,
     MockServerError,
     getRecordQualifier,
+    makeKwArgs,
     makeServerError,
     safeSplit,
 } from "./mock_server_utils";
@@ -355,7 +355,7 @@ export class MockServer {
     callOrm(route, params) {
         const { method, model: modelName } = params;
         const args = params.args || [];
-        const kwargs = Kwargs(params.kwargs || {});
+        const kwargs = makeKwArgs(params.kwargs || {});
 
         // Try to find a model method
         if (modelName) {

@@ -1,11 +1,16 @@
 import { assignDefined } from "@mail/utils/common/misc";
-import { Command, fields, models, serverState } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    fields,
+    getKwArgs,
+    makeKwArgs,
+    models,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 import { serializeDateTime, today } from "@web/core/l10n/dates";
 import { ensureArray } from "@web/core/utils/arrays";
 import { uniqueId } from "@web/core/utils/functions";
 import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
-import { parseModelParams } from "../mail_mock_server";
-import { Kwargs } from "@web/../tests/_framework/mock_server/mock_server_utils";
 
 const { DateTime } = luxon;
 
@@ -41,7 +46,7 @@ export class DiscussChannel extends models.ServerModel {
 
     /** @param {number[]} ids */
     action_unfollow(ids) {
-        const kwargs = parseModelParams(arguments, "ids");
+        const kwargs = getKwArgs(arguments, "ids");
         ids = kwargs.ids;
         delete kwargs.ids;
 
@@ -65,7 +70,7 @@ export class DiscussChannel extends models.ServerModel {
         });
         this.message_post(
             channel.id,
-            Kwargs({
+            makeKwArgs({
                 author_id: serverState.partnerId,
                 body: '<div class="o_mail_notification">left the channel</div>',
                 subtype_xmlid: "mail.mt_comment",
@@ -89,7 +94,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {number[]} partner_ids
      */
     add_members(ids, partner_ids) {
-        const kwargs = parseModelParams(arguments, "ids", "partner_ids");
+        const kwargs = getKwArgs(arguments, "ids", "partner_ids");
         ids = kwargs.ids;
         delete kwargs.ids;
         partner_ids = kwargs.partner_ids || [];
@@ -110,7 +115,7 @@ export class DiscussChannel extends models.ServerModel {
             const body = `<div class="o_mail_notification">invited ${partner.name} to the channel</div>`;
             const message_type = "notification";
             const subtype_xmlid = "mail.mt_comment";
-            this.message_post(channel.id, Kwargs({ body, message_type, subtype_xmlid }));
+            this.message_post(channel.id, makeKwArgs({ body, message_type, subtype_xmlid }));
         }
         const insertedChannelMembers = [];
         for (const partner of partners) {
@@ -132,7 +137,7 @@ export class DiscussChannel extends models.ServerModel {
             const body = `<div class="o_mail_notification">${selfPartner.name} joined the channel</div>`;
             const message_type = "notification";
             const subtype_xmlid = "mail.mt_comment";
-            this.message_post(channel.id, Kwargs({ body, message_type, subtype_xmlid }));
+            this.message_post(channel.id, makeKwArgs({ body, message_type, subtype_xmlid }));
         }
         const isSelfMember =
             DiscussChannelMember.search_count([
@@ -165,7 +170,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {string} description
      */
     channel_change_description(ids, description) {
-        const kwargs = parseModelParams(arguments, "ids", "description");
+        const kwargs = getKwArgs(arguments, "ids", "description");
         ids = kwargs.ids;
         delete kwargs.ids;
         description = kwargs.description || "";
@@ -179,7 +184,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {string} [group_id]
      */
     channel_create(name, group_id) {
-        const kwargs = parseModelParams(arguments, "name", "group_id");
+        const kwargs = getKwArgs(arguments, "name", "group_id");
         name = kwargs.name;
         group_id = kwargs.group_id;
 
@@ -195,7 +200,7 @@ export class DiscussChannel extends models.ServerModel {
         this.write([id], { group_public_id: group_id });
         this.message_post(
             id,
-            Kwargs({
+            makeKwArgs({
                 body: `<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="${id}">#${name}</a></div>`,
                 message_type: "notification",
             })
@@ -207,7 +212,7 @@ export class DiscussChannel extends models.ServerModel {
 
     /** @param {number[]} ids */
     channel_basic_info(ids) {
-        const kwargs = parseModelParams(arguments, "ids");
+        const kwargs = getKwArgs(arguments, "ids");
         ids = kwargs.ids;
         delete kwargs.ids;
 
@@ -252,7 +257,7 @@ export class DiscussChannel extends models.ServerModel {
 
     /** @param {number[]} ids */
     channel_fetched(ids) {
-        const kwargs = parseModelParams(arguments, "ids");
+        const kwargs = getKwArgs(arguments, "ids");
         ids = kwargs.ids;
         delete kwargs.ids;
 
@@ -296,7 +301,7 @@ export class DiscussChannel extends models.ServerModel {
 
     /** @param {number[]} ids */
     channel_fetch_preview(ids) {
-        const kwargs = parseModelParams(arguments, "ids");
+        const kwargs = getKwArgs(arguments, "ids");
         ids = kwargs.ids;
         delete kwargs.ids;
 
@@ -331,7 +336,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {boolean} [pin=true]
      */
     channel_get(partners_to, pin) {
-        const kwargs = parseModelParams(arguments, "partners_to", "pin");
+        const kwargs = getKwArgs(arguments, "partners_to", "pin");
         partners_to = kwargs.partners_to || [];
         pin = kwargs.pin ?? true;
 
@@ -380,7 +385,7 @@ export class DiscussChannel extends models.ServerModel {
 
     /** @param {number[]} ids */
     _channel_info(ids) {
-        const kwargs = parseModelParams(arguments, "ids");
+        const kwargs = getKwArgs(arguments, "ids");
         ids = kwargs.ids;
         delete kwargs.ids;
 
@@ -461,7 +466,7 @@ export class DiscussChannel extends models.ServerModel {
                     (channel.rtc_session_ids || []).map((rtcSessionId) =>
                         DiscussChannelRtcSession._mail_rtc_session_format(
                             rtcSessionId,
-                            Kwargs({
+                            makeKwArgs({
                                 extra: true,
                             })
                         )
@@ -478,7 +483,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {boolean} [pinned=false]
      */
     channel_pin(ids, pinned) {
-        const kwargs = parseModelParams(arguments, "ids", "pinned");
+        const kwargs = getKwArgs(arguments, "ids", "pinned");
         ids = kwargs.ids;
         delete kwargs.ids;
         pinned = kwargs.pinned ?? false;
@@ -514,7 +519,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {string} name
      */
     channel_rename(ids, name) {
-        const kwargs = parseModelParams(arguments, "ids", "name");
+        const kwargs = getKwArgs(arguments, "ids", "name");
         ids = kwargs.ids;
         delete kwargs.ids;
         name = kwargs.name || "";
@@ -528,7 +533,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {string} name
      */
     channel_set_custom_name(ids, name) {
-        const kwargs = parseModelParams(arguments, "ids", "name");
+        const kwargs = getKwArgs(arguments, "ids", "name");
         ids = kwargs.ids;
         delete kwargs.ids;
         name = kwargs.name || "";
@@ -560,7 +565,7 @@ export class DiscussChannel extends models.ServerModel {
 
     /** @param {number[]} partners_to */
     create_group(partners_to) {
-        const kwargs = parseModelParams(arguments, "partners_to");
+        const kwargs = getKwArgs(arguments, "partners_to");
         partners_to = kwargs.partners_to || [];
 
         /** @type {import("mock_models").ResPartner} */
@@ -583,7 +588,7 @@ export class DiscussChannel extends models.ServerModel {
 
     /** @param {number} id */
     execute_command_help(ids) {
-        const kwargs = parseModelParams(arguments, "ids");
+        const kwargs = getKwArgs(arguments, "ids");
         ids = kwargs.ids;
         delete kwargs.ids;
 
@@ -622,7 +627,7 @@ export class DiscussChannel extends models.ServerModel {
 
     /** @param {number[]} ids */
     execute_command_leave(ids) {
-        const kwargs = parseModelParams(arguments, "ids");
+        const kwargs = getKwArgs(arguments, "ids");
         ids = kwargs.ids;
         delete kwargs.ids;
 
@@ -636,7 +641,7 @@ export class DiscussChannel extends models.ServerModel {
 
     /** @param {number[]} ids */
     execute_command_who(ids) {
-        const kwargs = parseModelParams(arguments, "ids");
+        const kwargs = getKwArgs(arguments, "ids");
         ids = kwargs.ids;
         delete kwargs.ids;
 
@@ -700,7 +705,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {limit} number
      */
     get_mention_suggestions(search, limit) {
-        const kwargs = parseModelParams(arguments, "search", "limit");
+        const kwargs = getKwArgs(arguments, "search", "limit");
         search = kwargs.search || "";
         limit = kwargs.limit || 8;
 
@@ -753,7 +758,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {number[]} known_member_ids
      */
     load_more_members(ids, known_member_ids) {
-        const kwargs = parseModelParams(arguments, "ids", "known_member_ids");
+        const kwargs = getKwArgs(arguments, "ids", "known_member_ids");
         ids = kwargs.ids;
         delete kwargs.ids;
         known_member_ids = kwargs.known_member_ids || [];
@@ -766,8 +771,7 @@ export class DiscussChannel extends models.ServerModel {
                 ["id", "not in", known_member_ids],
                 ["channel_id", "in", ids],
             ],
-            undefined,
-            100
+            makeKwArgs({ limit: 100 })
         );
         const memberCount = DiscussChannelMember.search_count([["channel_id", "in", ids]]);
         return {
@@ -783,7 +787,7 @@ export class DiscussChannel extends models.ServerModel {
 
     /** @param {number} id */
     message_post(id) {
-        const kwargs = parseModelParams(arguments, "id");
+        const kwargs = getKwArgs(arguments, "id");
         id = kwargs.id;
         delete kwargs.id;
 
@@ -818,7 +822,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {boolean} pinned
      */
     set_message_pin(id, message_id, pinned) {
-        const kwargs = parseModelParams(arguments, "id", "message_id", "pinned");
+        const kwargs = getKwArgs(arguments, "id", "message_id", "pinned");
         id = kwargs.id;
         delete kwargs.id;
         message_id = kwargs.message_id;
@@ -841,7 +845,7 @@ export class DiscussChannel extends models.ServerModel {
             </div>`;
         this.message_post(
             id,
-            Kwargs({
+            makeKwArgs({
                 body: notification,
                 message_type: "notification",
                 subtype_xmlid: "mail.mt_comment",
@@ -857,7 +861,10 @@ export class DiscussChannel extends models.ServerModel {
     }
 
     /** @type {typeof models.Model["prototype"]["write"]} */
-    write(idOrIds, values, kwargs) {
+    write(idOrIds, values) {
+        const kwargs = getKwArgs(arguments, "ids", "vals");
+        ({ ids: idOrIds, vals: values } = kwargs);
+
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
 
@@ -896,7 +903,7 @@ export class DiscussChannel extends models.ServerModel {
                 },
             ]);
         }
-        const result = super.write(idOrIds, values, kwargs);
+        const result = super.write(...arguments);
         if (notifications.length) {
             BusBus._sendmany(notifications);
         }
@@ -908,7 +915,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {number[]} partner_ids
      */
     _broadcast(ids, partner_ids) {
-        const kwargs = parseModelParams(arguments, "ids", "partner_ids");
+        const kwargs = getKwArgs(arguments, "ids", "partner_ids");
         ids = kwargs.ids;
         delete kwargs.ids;
         partner_ids = kwargs.partner_ids;
@@ -925,7 +932,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {number[]} partner_ids
      */
     _channel_channel_notifications(ids, partner_ids) {
-        const kwargs = parseModelParams(arguments, "ids", "partner_ids");
+        const kwargs = getKwArgs(arguments, "ids", "partner_ids");
         ids = kwargs.ids;
         delete kwargs.ids;
         partner_ids = kwargs.partner_ids;
@@ -997,7 +1004,7 @@ export class DiscussChannel extends models.ServerModel {
     }
 
     _find_or_create_persona_for_channel(id, guest_name) {
-        const kwargs = parseModelParams(arguments, "id", "guest_name");
+        const kwargs = getKwArgs(arguments, "id", "guest_name");
         id = kwargs.id;
         delete kwargs.id;
         guest_name = kwargs.guest_name;
