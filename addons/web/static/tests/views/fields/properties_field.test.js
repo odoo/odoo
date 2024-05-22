@@ -1121,7 +1121,7 @@ test.tags("desktop")("properties: many2one 'Search more...'", async () => {
 
     // Patch the Many2XAutocomplete default search limit options
     patchWithCleanup(Many2XAutocomplete.defaultProps, {
-        searchLimit: -1,
+        searchLimit: 0,
     });
 
     // Patch the SelectCreateDialog component

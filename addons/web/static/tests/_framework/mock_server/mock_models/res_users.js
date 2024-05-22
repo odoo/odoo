@@ -31,7 +31,11 @@ export class ResUsers extends ServerModel {
         return id === serverState.publicUserId;
     }
 
-    create(valuesList, kwargs = {}) {
+    /**
+     * @override
+     * @type {ServerModel["create"]}
+     */
+    create() {
         const userId = super.create(...arguments);
         const [user] = this.env["res.users"]._filter([["id", "=", userId]]);
         if (user && !user.partner_id) {
