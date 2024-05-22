@@ -128,10 +128,34 @@ describe('Editor', () => {
             });
         });
         describe('sanitize should modify p within li', () => {
-            it('should convert p into span if p has classes and split link items for each p', async () => {
+            it('should convert p into span if p has classes and add br between each span', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<ul><li><p class="class-1">abc</p><p class="class-2">def</p></li></ul>',
-                    contentAfter: '<ul><li><span class="class-1">abc</span></li><li class="oe-nested"><span class="class-2">def</span></li></ul>',
+                    contentAfter: '<ul><li><span class="class-1">abc</span><br><span class="class-2">def</span></li></ul>',
+                });
+            });
+            it('should convert p into span and add display block if p had text align style', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li><p style="text-align: center;">abc</p></li></ul>',
+                    contentAfter: '<ul><li><span style="text-align: center; display: block;">abc</span></li></ul>',
+                });
+            });
+            it('should convert two p into span and add display block if p had text align style without adding br', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li><p style="text-align: center;">abc</p><p style="text-align: center;">def</p></li></ul>',
+                    contentAfter: '<ul><li><span style="text-align: center; display: block;">abc</span><span style="text-align: center; display: block;">def</span></li></ul>',
+                });
+            });
+            it('should unwrap two p if they do not have any attributes', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li><p>abc</p><p>def</p></li></ul>',
+                    contentAfter: '<ul><li>abc<br>def</li></ul>',
+                });
+            });
+            it('should unwrap two p one containing br and other containing text', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li><p><br></p><p>a</p></li></ul>',
+                    contentAfter: '<ul><li><br>a</li></ul>',
                 });
             });
         });
