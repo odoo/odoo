@@ -1589,6 +1589,33 @@ class TestMrpOrder(TestMrpCommon):
         mo.action_confirm()
         self.assertEqual(len(mo.move_raw_ids), 2)
 
+    def test_change_sn_tracked_qty_produced(self):
+        """ Checks if qty_producing can be set to 0 after being set to non-zero value """
+        mo_with_serial, _, _, _, _ = self.generate_mo(tracking_final='serial')
+        mo_without_serial, _, _, _, _ = self.generate_mo()
+
+        self.assertEqual(mo_with_serial.qty_producing, 0)
+        self.assertEqual(mo_without_serial.qty_producing, 0)
+
+        mo_form_with_serial = Form(mo_with_serial)
+        mo_form_without_serial = Form(mo_without_serial)
+
+        mo_form_with_serial.qty_producing = 3
+        mo_form_without_serial.qty_producing = 3
+        mo_with_serial = mo_form_with_serial.save()
+        mo_without_serial = mo_form_without_serial.save()
+        self.assertEqual(mo_with_serial.qty_producing, 1)
+        self.assertEqual(mo_without_serial.qty_producing, 3)
+
+        mo_form_with_serial = Form(mo_with_serial)
+        mo_form_without_serial = Form(mo_without_serial)
+        mo_form_with_serial.qty_producing = 0
+        mo_form_without_serial.qty_producing = 0
+        mo_with_serial = mo_form_with_serial.save()
+        mo_without_serial = mo_form_without_serial.save()
+        self.assertEqual(mo_with_serial.qty_producing, 0)
+        self.assertEqual(mo_without_serial.qty_producing, 0)
+
     def test_product_produce_uom(self):
         """ Produce a finished product tracked by serial number. Set another
         UoM on the bom. The produce wizard should keep the UoM of the product (unit)

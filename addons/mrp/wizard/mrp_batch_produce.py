@@ -30,7 +30,9 @@ class MrpBatchProduct(models.TransientModel):
         for wizard in self:
             if wizard.lot_name:
                 continue
-            wizard.lot_name = self.env['stock.lot']._get_next_serial(self.production_id.company_id, self.production_id.product_id)
+            wizard.lot_name = self.production_id.lot_producing_id.name
+            if not wizard.lot_name:
+                wizard.lot_name = self.env['stock.lot']._get_next_serial(self.production_id.company_id, self.production_id.product_id)
 
     @api.depends('production_id')
     def _compute_lot_qty(self):
