@@ -646,7 +646,7 @@ export class MockSharedWorker extends EventTarget {
 
 export class MockURL extends URL {
     constructor(url, base) {
-        super(url, base || mockLocation.origin + mockLocation.pathname);
+        super(url, base || mockLocation);
     }
 }
 
