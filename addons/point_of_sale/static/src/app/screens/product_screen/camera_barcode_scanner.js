@@ -12,6 +12,7 @@ export class CameraBarcodeScanner extends BarcodeDialog {
     setup() {
         super.setup();
         this.barcodeScanner = useService("barcode_reader");
+        this.sound = useService("sound");
         this.props = {
             facingMode: "environment",
             onResult: (result) => this.barcodeScanner.scan(result),
@@ -21,6 +22,7 @@ export class CameraBarcodeScanner extends BarcodeDialog {
     }
     onResult(result) {
         super.onResult(result);
+        this.sound.play("beep");
         clearInterval(this.interval);
         setTimeout(() => {
             this.interval = setInterval(this.detectCode.bind(this), 100);
