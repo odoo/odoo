@@ -38,6 +38,10 @@
             <field name="sheet_id" ref="restaurant_expense_sheet"/>
         </record>
 
+        <function name="action_submit_sheet" model="hr.expense.sheet">
+            <value model="hr.expense.sheet" eval="[ref('transportation_expense_sheet'), ref('restaurant_expense_sheet')]"/>
+        </function>
+
         <function name="action_approve_expense_sheets" model="hr.expense.sheet">
             <value model="hr.expense.sheet" eval="[ref('transportation_expense_sheet'), ref('restaurant_expense_sheet')]"/>
         </function>

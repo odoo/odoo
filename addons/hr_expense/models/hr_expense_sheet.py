@@ -238,7 +238,7 @@ class HrExpenseSheet(models.Model):
     def _compute_from_account_move_ids(self):
         for sheet in self:
             if sheet.payment_mode == 'company_account':
-                if sheet.account_move_ids:
+                if sheet.account_move_ids.filtered(lambda move: move.state != 'draft'):
                     # when the sheet is paid by the company, the state/amount of the related account_move_ids are not relevant
                     # unless all moves have been reversed
                     sheet.amount_residual = 0.
@@ -257,7 +257,7 @@ class HrExpenseSheet(models.Model):
                         sheet.payment_state = 'not_paid'
             else:
                 # Only one move is created when the expenses are paid by the employee
-                if sheet.account_move_ids:
+                if sheet.account_move_ids.filtered(lambda move: move.state == 'posted'):
                     sheet.amount_residual = sum(sheet.account_move_ids.mapped('amount_residual'))
                     sheet.payment_state = sheet.account_move_ids[:1].payment_state
                 else:
@@ -292,14 +292,20 @@ class HrExpenseSheet(models.Model):
     @api.depends('account_move_ids', 'payment_state', 'approval_state')
     def _compute_state(self):
         for sheet in self:
-            if sheet.payment_state != 'not_paid':
-                sheet.state = 'done'
-            elif sheet.account_move_ids:
-                sheet.state = 'post'
-            elif sheet.approval_state:
-                sheet.state = sheet.approval_state
-            else:
+            move_ids = sheet.account_move_ids
+            if not sheet.approval_state:
                 sheet.state = 'draft'
+            elif sheet.approval_state == 'cancel':
+                sheet.state = 'cancel'
+            elif move_ids:
+                if sheet.payment_state != 'not_paid':
+                    sheet.state = 'done'
+                elif all(move_ids.mapped(lambda move: move.state == 'draft')):
+                    sheet.state = 'approve'
+                else:
+                    sheet.state = 'post'
+            else:
+                sheet.state = sheet.approval_state  # Submit & approved without a move case
 
     @api.depends('expense_line_ids.attachment_ids')
     def _compute_main_attachment(self):
@@ -385,7 +391,7 @@ class HrExpenseSheet(models.Model):
         )
         is_approver = self.env.user.has_group('hr_expense.group_hr_expense_user')
         for sheet in self:
-            if sheet.state not in {'draft', 'submit', 'approve'}:
+            if sheet.state not in {'draft', 'submit'}:
                 # Not editable
                 sheet.is_editable = False
                 continue
@@ -486,17 +492,23 @@ class HrExpenseSheet(models.Model):
 
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'state' in init_values and self.state == 'draft':
-            return self.env.ref('hr_expense.mt_expense_reset')
-        if 'state' in init_values and self.state == 'approve':
-            if init_values['state'] in {'post', 'done'}:
-                return self.env.ref('hr_expense.mt_expense_entry_delete')
-            return self.env.ref('hr_expense.mt_expense_approved')
-        if 'state' in init_values and self.state == 'cancel':
-            return self.env.ref('hr_expense.mt_expense_refused')
-        if 'state' in init_values and self.state == 'done':
-            return self.env.ref('hr_expense.mt_expense_paid')
-        return super()._track_subtype(init_values)
+        if 'state' not in init_values:
+            return super()._track_subtype(init_values)
+
+        match self.state:
+            case 'draft':
+                return self.env.ref('hr_expense.mt_expense_reset')
+            case 'cancel':
+                return self.env.ref('hr_expense.mt_expense_refused')
+            case 'done':
+                return self.env.ref('hr_expense.mt_expense_paid')
+            case 'approve':
+                if init_values['state'] in {'post', 'done'}:  # Reverting state
+                    subtype = 'hr_expense.mt_expense_entry_draft' if self.account_move_ids else 'hr_expense.mt_expense_entry_delete'
+                    return self.env.ref(subtype)
+                return self.env.ref('hr_expense.mt_expense_approved')
+            case _:
+                return super()._track_subtype(init_values)
 
     def _message_auto_subscribe_followers(self, updated_values, subtype_ids):
         res = super()._message_auto_subscribe_followers(updated_values, subtype_ids)
@@ -544,17 +556,16 @@ class HrExpenseSheet(models.Model):
         self._check_can_refuse()
         return self.env["ir.actions.act_window"]._for_xml_id('hr_expense.hr_expense_refuse_wizard_action')
 
-    def action_reset_approval_expense_sheets(self):
-        self._check_can_reset_approval()
-        self._do_reset_approval()
-
-    def action_sheet_move_create(self):
-        self._check_can_create_move()
-        self._do_create_moves()
+    def action_sheet_move_post(self):
+        # When a move has been deleted
+        self.filtered(lambda sheet: not sheet.account_move_ids).with_prefetch()._do_create_moves()
+        self.account_move_ids.action_post()
 
     def action_reset_expense_sheets(self):
+        self.filtered(lambda sheet: sheet.state not in {'draft', 'submit'})._check_can_reset_approval()
         self._do_reverse_moves()
         self._do_reset_approval()
+        self.account_move_ids = [Command.clear()]
 
     def action_register_payment(self):
         ''' Open the account.payment.register wizard to pay the selected journal entries.
@@ -640,8 +651,8 @@ class HrExpenseSheet(models.Model):
         if any(not sheet.expense_line_ids for sheet in self):
             raise UserError(_("You cannot create accounting entries for an expense report without expenses."))
 
-        if any(sheet.state != 'approve' for sheet in self):
-            raise UserError(_("You can only generate accounting entry for approved expense(s)."))
+        if any(sheet.state != 'submit' for sheet in self):
+            raise UserError(_("You can only generate an accounting entry for approved expense(s)."))
 
         if any(not sheet.journal_id for sheet in self):
             raise UserError(_("Specify expense journal to generate accounting entries."))
@@ -653,11 +664,14 @@ class HrExpenseSheet(models.Model):
             raise RedirectWarning(_("The work email of some employees is missing. Please add it on the employee form"), action, _("Show missing work email employees"))
 
     def _do_submit(self):
-        self.write({'approval_state': 'submit'})
+        self.approval_state = 'submit'
         self.sudo().activity_update()
 
     def _do_approve(self):
-        for sheet in self.filtered(lambda s: s.state in {'submit', 'draft'}):
+        sheets_to_approve = self.filtered(lambda s: s.state in {'submit', 'draft'})
+        sheets_to_approve._check_can_create_move()
+        sheets_to_approve._do_create_moves()
+        for sheet in sheets_to_approve:
             sheet.write({
                 'approval_state': 'approve',
                 'user_id': sheet.user_id.id or self.env.user.id,
@@ -666,12 +680,12 @@ class HrExpenseSheet(models.Model):
         self.activity_update()
 
     def _do_reset_approval(self):
-        self.sudo().write({'approval_state': False})
+        self.sudo().write({'approval_state': False, 'approval_date': False})
         self.accounting_date = False
         self.activity_update()
 
     def _do_refuse(self, reason):
-        self.write({'state': 'cancel'})
+        self.approval_state = 'cancel'
         subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         for sheet in self:
             sheet.message_post_with_source(
@@ -682,6 +696,13 @@ class HrExpenseSheet(models.Model):
         self.activity_update()
 
     def _do_create_moves(self):
+        """
+        Creation of the account moves for the expenses report. Sudo-ed as they are created in draft and the manager may not have
+        the accounting rights (and there is no reason to give them those rights).
+        There are two main flows at play:
+            - Expense paid by the company -> Create an account payment (we only "log" the already paid expense so it can be reconciled)
+            - Expense paid by he employee's own account -> As it should be reimbursed to them, it creates a vendor bill.
+        """
         self = self.with_context(clean_context(self.env.context))  # remove default_*
         skip_context = {
             'skip_invoice_sync': True,
@@ -693,19 +714,18 @@ class HrExpenseSheet(models.Model):
 
         for sheet in own_account_sheets:
             sheet.accounting_date = sheet.accounting_date or sheet._calculate_default_accounting_date()
-        moves = self.env['account.move'].create([sheet._prepare_bills_vals() for sheet in own_account_sheets])
+        moves_sudo = self.env['account.move'].sudo().create([sheet._prepare_bills_vals() for sheet in own_account_sheets])
         # Set the main attachment on the moves directly to avoid recomputing the
         # `register_as_main_attachment` on the moves which triggers the OCR again
-        for move in moves:
-            move.message_main_attachment_id = move.attachment_ids[0] if move.attachment_ids else None
-        payments = self.env['account.payment'].with_context(**skip_context).create([
+        for move_sudo in moves_sudo:
+            move_sudo.message_main_attachment_id = move_sudo.attachment_ids[0] if move_sudo.attachment_ids else None
+        payments_sudo = self.env['account.payment'].with_context(**skip_context).sudo().create([
             expense._prepare_payments_vals() for expense in company_account_sheets.expense_line_ids
         ])
-        moves |= payments.move_id
-        moves.action_post()
-        self.activity_update()
+        moves_sudo |= payments_sudo.move_id
 
-        return moves
+        # returning the move with the super user flag set back as it was at the origin of the call
+        return moves_sudo.sudo(self.env.su)
 
     def _do_reverse_moves(self):
         self = self.with_context(clean_context(self.env.context))
