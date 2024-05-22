@@ -317,7 +317,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                         _logger.warning(WARNING_MESSAGE, value, field, icp)
                         value = 0.0
                 elif field.type == 'boolean':
-                    value = bool(value)
+                    value = value.lower() != 'false' if isinstance(value, str) else bool(value)
             res[name] = value
 
         res.update(self.get_values())
@@ -368,10 +368,12 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 # bugs when users leave spaces around them
                 value = (value or "").strip() or False
             elif field.type in ('integer', 'float'):
-                value = repr(value) if value else False
+                value = repr(value) if isinstance(value, (int, float)) else False
+            elif field.type == 'boolean':
+                value = str(value) if isinstance(value, bool) else False
             elif field.type == 'many2one':
                 # value is a (possibly empty) recordset
-                value = value.id
+                value = str(value.id) if value else False
 
             if current_value == str(value) or current_value == value:
                 continue
