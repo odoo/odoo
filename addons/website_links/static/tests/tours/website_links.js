@@ -3,6 +3,33 @@
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 
+function fillSelect2(inputID, search) {
+    return [
+        {
+            content: "Click select2 form item",
+            trigger: `.o_website_links_utm_forms div.select2-container#s2id_${inputID} > .select2-choice`,
+        },
+        {
+            content: "Enter select2 search query",
+            trigger: '.select2-drop .select2-input',
+            run: `edit ${search}`,
+        },
+        {
+            content: "Select found select2 item",
+            trigger: `.select2-drop li:only-child .select2-match:contains("/^${search}$/")`,
+        },
+        {
+            content: "Check that select2 is properly filled",
+            trigger: `.o_website_links_utm_forms div.select2-container#s2id_${inputID} .select2-chosen:contains("/^${search}$/")`,
+            run: () => null,
+        },
+    ];
+}
+
+const campaignValue = 'Super Specific Campaign';
+const mediumValue = 'Super Specific Medium';
+const sourceValue = 'Super Specific Source';
+
 registry.category("web_tour.tours").add('website_links_tour', {
     test: true,
     url: '/r',
@@ -14,25 +41,20 @@ registry.category("web_tour.tours").add('website_links_tour', {
             run: function () {}, // it's a check
         },
         {
-            content: "fill the form and submit it",
+            content: "fill the URL form input",
             trigger: '#o_website_links_link_tracker_form input#url',
             run: function () {
                 var url = window.location.host + '/contactus';
                 document.querySelector("#o_website_links_link_tracker_form input#url").value = url;
-                const campaignId = Object.entries(document.querySelector("#s2id_campaign-select"))
-                    .find(([key, value]) => value.select2)[1]
-                    .select2.opts.data.find((d) => d.text === "Sale").id;
-                document.querySelector(".o_website_links_utm_forms input#campaign-select").value = campaignId;
-                const channelId = Object.entries(document.querySelector("#s2id_channel-select"))
-                    .find(([key, value]) => value.select2)[1]
-                    .select2.opts.data.find((d) => d.text === "Website").id;
-                document.querySelector(".o_website_links_utm_forms input#channel-select").value =
-                    channelId;
-                const sourceId = Object.entries(document.querySelector("#s2id_source-select"))
-                    .find(([key, value]) => value.select2)[1]
-                    .select2.opts.data.find((d) => d.text === "Search engine").id;
-                document.querySelector(".o_website_links_utm_forms input#source-select").value =
-                    sourceId;
+            },
+        },
+        ...fillSelect2('campaign-select', campaignValue),
+        ...fillSelect2('channel-select', mediumValue),
+        ...fillSelect2('source-select', sourceValue),
+        {
+            content: "Copy tracker link",
+            trigger: '#btn_shorten_url',
+            run: function () {
                 // Patch and ignore write on clipboard in tour as we don't have permissions
                 const oldWriteText = browser.navigator.clipboard.writeText;
                 browser.navigator.clipboard.writeText = () => {
@@ -55,7 +77,8 @@ registry.category("web_tour.tours").add('website_links_tour', {
             content: "check that we landed on correct page with correct query strings",
             trigger: ".s_title h1:contains(/^Contact us$/)",
             run: function () {
-                var expectedUrl = "/contactus?utm_campaign=Sale&utm_source=Search+engine&utm_medium=Website";
+                const enc = c => encodeURIComponent(c).replace(/%20/g, '+');
+                const expectedUrl = `/contactus?utm_campaign=${enc(campaignValue)}&utm_source=${enc(sourceValue)}&utm_medium=${enc(mediumValue)}`;
                 if (window.location.pathname + window.location.search !== expectedUrl) {
                     console.error("The link was not correctly created. " + window.location.search);
                 }
