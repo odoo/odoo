@@ -677,9 +677,6 @@ function makeActionManager(env) {
                 onError(this.onError);
             }
             onError(error) {
-                if (!this.isMounted) {
-                    reject(error);
-                }
                 if (this.isMounted) {
                     // the error occurred on the controller which is
                     // already in the DOM, so simply show the error
@@ -693,11 +690,13 @@ function makeActionManager(env) {
                     } else {
                         const lastCt = controllerStack[controllerStack.length - 1];
                         if (lastCt) {
-                            // the error occurred while rendering a new controller,
-                            // so go back to the last non faulty controller
-                            // (the error will be shown anyway as the promise
-                            // has been rejected)
-                            restore(lastCt.jsId);
+                            if (lastCt.jsId !== controller.jsId) {
+                                // the error occurred while rendering a new controller,
+                                // so go back to the last non faulty controller
+                                // (the error will be shown anyway as the promise
+                                // has been rejected)
+                                restore(lastCt.jsId);
+                            }
                         } else {
                             env.bus.trigger("ACTION_MANAGER:UPDATE", {});
                         }
