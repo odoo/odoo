@@ -17,7 +17,7 @@
         "views/evaluaciones_menus.xml",
         "views/evaluaciones_responder.xml",
         "views/wizards_views.xml",
-        "views/cron_jobs.xml",
+        "models/xml/cron_jobs.xml",
         "data/pregunta.csv",
         "data/competencia.csv",
         "data/opcion.csv",
