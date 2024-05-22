@@ -10,10 +10,12 @@ wTourUtils.registerWebsitePreviewTour("snippet_version_1", {
     ...wTourUtils.dragNDrop({
         id: 's_test_snip',
         name: 'Test snip',
+        groupName: "Content",
     }),
     ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
+        groupName: "Content",
     }),
     {
     content: "Test t-snippet and t-snippet-call: snippets have data-snippet set",

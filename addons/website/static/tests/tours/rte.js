@@ -117,7 +117,8 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
 },
 ...wTourUtils.dragNDrop({
     id: "s_cover",
-    name: "Cover"
+    name: "Cover",
+    groupName: "Intro",
 }), {
     content: "change content",
     trigger: ':iframe #wrap',

@@ -57,6 +57,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_images_wall", {
     ...wTourUtils.dragNDrop({
         id: "s_images_wall",
         name: "Images Wall",
+        groupName: "Images",
 }), 
 ...wTourUtils.clickOnSnippet({
     id: "s_image_gallery",

@@ -9,7 +9,8 @@ wTourUtils.registerWebsitePreviewTour('snippet_popup_add_remove', {
 }, () => [
     ...wTourUtils.dragNDrop({
         name: "Popup",
-        id: "s_popup"
+        id: "s_popup",
+        groupName: "Content",
 }), {
     content: 'Edit s_popup snippet',
     in_modal: false,
@@ -32,7 +33,8 @@ wTourUtils.registerWebsitePreviewTour('snippet_popup_add_remove', {
 // Test that undoing dropping the snippet removes the invisible elements panel.
 ...wTourUtils.dragNDrop({
     name: "Popup",
-    id: "s_popup"
+    id: "s_popup",
+    groupName: "Content",
 }), {
     content: "The popup should be in the invisible elements panel.",
     in_modal: false,

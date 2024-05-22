@@ -45,12 +45,12 @@
         content: markup(_t("Click <em>Continue</em> to create the event.")),
         position: "right",
         run: "click",
-    }, {
-        trigger: "#oe_snippets.o_loaded #snippet_structure .oe_snippet:eq(2) .oe_snippet_thumbnail",
-        content: _t("Drag this block and drop it in your page."),
-        position: "bottom",
-        run: `drag_and_drop(:iframe #wrapwrap > main)`,
-    }, {
+    },
+    ...wTourUtils.dragNDrop({
+        id: "s_image_text",
+        name: "Image - Text",
+        groupName: "Content",
+    }), {
         // Wait until the drag and drop is resolved (causing a history step)
         // before clicking save.
         trigger: ".o_we_external_history_buttons button.fa-undo:not([disabled])",

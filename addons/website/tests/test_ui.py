@@ -317,7 +317,7 @@ class TestUi(odoo.tests.HttpCase):
             'inherit_id': website_snippets.id,
             'arch': """
                 <xpath expr="//t[@t-snippet='website.s_parallax']" position="after">
-                    <t t-snippet="website.s_test_snip" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg"/>
+                    <t t-snippet="website.s_test_snip" group="content"/>
                 </xpath>
             """,
         }])
@@ -415,7 +415,7 @@ class TestUi(odoo.tests.HttpCase):
             'arch': """
                 <data>
                     <xpath expr="//*[@id='snippet_structure']//t[@t-snippet]" position="before">
-                        <t t-snippet="website.s_focusblur"/>
+                        <t t-snippet="website.s_focusblur" group="content"/>
                     </xpath>
                 </data>
             """,
@@ -479,7 +479,7 @@ class TestUi(odoo.tests.HttpCase):
         self.env['ir.ui.view'].with_context(website_id=default_website.id).save_snippet(
             name='custom_snippet_test',
             arch="""
-                <section class="s_text_block">
+                <section class="s_text_block" data-snippet="s_text_block">
                     <div class="custom_snippet_website_1">Custom Snippet Website 1</div>
                 </section>
             """,
@@ -596,8 +596,7 @@ class TestUi(odoo.tests.HttpCase):
             'inherit_id': website_snippets.id,
             'arch': """
                 <xpath expr="//t[@t-snippet='website.s_parallax']" position="after">
-                    <t t-snippet="website.s_404_snippet"
-                       t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg"/>
+                    <t t-snippet="website.s_404_snippet" group="images"/>
                 </xpath>
             """,
         }])
@@ -617,9 +616,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_mobile_order_with_drag_and_drop(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_mobile_order_with_drag_and_drop', login='admin')
-
-    def test_focus_on_input_search(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'focus_on_input_search', login='admin')
 
     def test_powerbox_snippet(self):
         self.start_tour('/', 'website_powerbox_snippet', login='admin')

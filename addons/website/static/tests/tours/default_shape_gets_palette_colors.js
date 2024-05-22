@@ -11,6 +11,7 @@ wTourUtils.registerWebsitePreviewTour("default_shape_gets_palette_colors", {
     ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
+        groupName: "Content",
     }),
     ...wTourUtils.clickOnSnippet({
         id: 's_text_image',

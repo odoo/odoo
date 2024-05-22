@@ -17,6 +17,7 @@ wTourUtils.registerWebsitePreviewTour("widget_lifecycle", {
     ...wTourUtils.dragNDrop({
         id: "s_countdown",
         name: "Countdown",
+        groupName: "Content",
     }),
     {
         content: "Wait for the widget to be started and empty the widgetAndWysiwygLifecycle list",

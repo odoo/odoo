@@ -10,6 +10,7 @@ wTourUtils.registerWebsitePreviewTour("carousel_content_removal", {
     ...wTourUtils.dragNDrop({
         id: 's_carousel',
         name: 'Carousel',
+        groupName: "Intro",
 }), {
     trigger: ":iframe .carousel .carousel-item.active .carousel-content",
     content: "Select the active carousel item.",

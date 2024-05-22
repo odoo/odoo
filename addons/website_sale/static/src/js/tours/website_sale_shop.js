@@ -67,12 +67,11 @@
         isActive: ["auto"],
         trigger: "body:not(.modal-open)",
     },
-    {
-        trigger: "#snippet_structure .oe_snippet:eq(3) .oe_snippet_thumbnail",
-        content: _t("Drag this website block and drop it in your page."),
-        position: "bottom",
-        run: "drag_and_drop :iframe #wrapwrap > main",
-    }, {
+    ...wTourUtils.dragNDrop({
+        id: "s_text_image",
+        name: "Text - Image",
+        groupName: "Content",
+    }), {
         // Wait until the drag and drop is resolved (causing a history step)
         // before clicking save.
         trigger: ".o_we_external_history_buttons button.fa-undo:not([disabled])",

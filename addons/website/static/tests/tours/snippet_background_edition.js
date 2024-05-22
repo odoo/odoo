@@ -7,6 +7,7 @@ const snippets = [
     {
         id: 's_text_image',
         name: 'Text - Image',
+        groupName: "Content",
     },
 ];
 const gradients = [

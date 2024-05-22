@@ -36,7 +36,7 @@ function checkComputedFontSize(fontSizeClass, stage) {
 
 function getFontSizeTestSteps(fontSizeClass) {
     return [
-        ...wTourUtils.dragNDrop({id: "s_text_block", name: "Text"}),
+        ...wTourUtils.dragNDrop({id: "s_text_block", name: "Text", groupName: "Text"}),
         {
             content: `[${fontSizeClass}] Click on the text block first paragraph (to auto select)`,
             trigger: ":iframe .s_text_block p",
