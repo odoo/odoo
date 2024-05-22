@@ -13,7 +13,7 @@ class ImportQuestionsWizard(models.TransientModel):
     required_fields = [
         "Pregunta",
         "Tipo",
-        "Categoria",
+        "Categoria"
     ]
 
     tipo_valido = ["multiple_choice", "open_question", "escala"]
@@ -71,13 +71,23 @@ class ImportQuestionsWizard(models.TransientModel):
             if fila["Tipo"] == "escala":
                 pregunta_data["ponderacion"] = fila["Ponderacion"]
 
-            preguntas.append(pregunta_data)
+            pregunta = self.env["pregunta"].create(pregunta_data)
 
-        preguntas_db = self.env["pregunta"].create(preguntas)
+            if fila["Tipo"] == "multiple_choice":
+                opciones = fila["Opciones"].split(",")
+                for opcion_texto in opciones:
+                    self.env["opcion"].create({
+                        "pregunta_id": pregunta.id,
+                        "opcion_texto": opcion_texto.strip(),
+                        "valor": opciones.index(opcion_texto) + 1
+                    })
+
+            preguntas.append(pregunta)
+
         evaluacion = self.env["evaluacion"].browse(self._context.get("active_id"))
         
         if evaluacion:
-            evaluacion.write({'pregunta_ids': [(4, pregunta.id) for pregunta in preguntas_db]})
+            evaluacion.write({'pregunta_ids': [(4, pregunta.id) for pregunta in preguntas]})
         else:
             raise exceptions.ValidationError(_("No se encontró la evaluación en el contexto."))
 
@@ -143,6 +153,16 @@ class ImportQuestionsWizard(models.TransientModel):
                 raise exceptions.ValidationError(
                     f"No se permite la ponderación para preguntas de tipo '{row['Tipo']}'."
                 )
+        
+        # Validar que las opciones sean válidas solo para preguntas de tipo 'multiple_choice'
+        if row["Tipo"] != "multiple_choice" and row.get("Opciones"):
+            raise exceptions.ValidationError(
+                f"No se permiten opciones para preguntas de tipo '{row['Tipo']}'."
+            )
+        if row["Tipo"] == "multiple_choice" and not row.get("Opciones"):
+            raise exceptions.ValidationError(
+                "Las opciones son requeridas para preguntas de tipo 'multiple_choice'."
+            )
 
     def descargar_template(self):
         # Define el contenido del archivo CSV de la plantilla
