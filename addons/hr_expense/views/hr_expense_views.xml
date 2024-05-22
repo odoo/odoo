@@ -762,7 +762,7 @@
                             context="{'validate_analytic': True}"
                             invisible="not can_approve or state != 'submit'"
                             class="oe_highlight o_expense_sheet_approve"/>
-                    <button name="action_sheet_move_create"
+                    <button name="action_sheet_move_post"
                             string="Post Journal Entries"
                             type="object"
                             data-hotkey="y"
@@ -783,16 +783,11 @@
                             type="object"
                             groups="hr_expense.group_hr_expense_team_approver"
                             data-hotkey="x"/>
-                    <button name="action_reset_approval_expense_sheets"
-                            string="Reset to Draft"
-                            type="object"
-                            invisible="not can_reset or state not in ('submit', 'cancel', 'approve')"
-                            data-hotkey="k"/>
                     <button name="action_reset_expense_sheets"
                             string="Reset to Draft"
                             type="object"
                             data-hotkey="c"
-                            invisible="state != 'post'"
+                            invisible="not can_reset or state  == 'draft'"
                             groups="account.group_account_readonly,account.group_account_invoice"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done"
                            force_save="1" invisible="state == 'cancel'"/>
@@ -806,7 +801,7 @@
                             class="oe_stat_button"
                             icon="fa-file-text-o"
                             type="object"
-                            invisible="state not in ['post', 'done'] or nb_account_move == 0"
+                            invisible="state not in ['approve', 'post', 'done'] or nb_account_move == 0"
                             groups="account.group_account_invoice">
                             <div class="o_stat_info">
                                 <field name="nb_account_move" class="o_stat_value"/>

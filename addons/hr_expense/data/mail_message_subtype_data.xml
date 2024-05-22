@@ -6,7 +6,7 @@
             <field name="name">Approved</field>
             <field name="res_model">hr.expense.sheet</field>
             <field name="default" eval="True"/>
-            <field name="description">Expense report approved</field>
+            <field name="description">Expense report approved, entry created for accountant</field>
         </record>
         <record id="mt_expense_refused" model="mail.message.subtype">
             <field name="name">Refused</field>
@@ -31,6 +31,12 @@
             <field name="res_model">hr.expense.sheet</field>
             <field name="default" eval="True"/>
             <field name="description">Journal entry deleted</field>
+        </record>
+        <record id="mt_expense_entry_draft" model="mail.message.subtype">
+            <field name="name">Journal Entry Reset to Draft</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="default" eval="True"/>
+            <field name="description">Journal entry reset to draft</field>
         </record>
     </data>
 </odoo>

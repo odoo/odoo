@@ -13,7 +13,7 @@ class TestAccountJournalDashboard(TestExpenseCommon):
         expense_sheet = self.create_expense_report()
         expense_sheet.action_submit_sheet()
         expense_sheet.action_approve_expense_sheets()
-        expense_sheet.action_sheet_move_create()
+        expense_sheet.action_sheet_move_post()
 
         expense_sheet.flush_recordset()
         dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]

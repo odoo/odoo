@@ -95,7 +95,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
             'No costs should be found since the sheets are not posted or done.',
         )
 
-        expense_sheet.action_sheet_move_create()
+        expense_sheet.action_sheet_move_post()
         self.assertEqual(expense_sheet.state, 'post')
         self.assertRecordValues(self.sale_order.order_line, [
             # Original SO line:
@@ -138,7 +138,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
             }
         )
 
-        expense_sheet_foreign.action_sheet_move_create()
+        expense_sheet_foreign.action_sheet_move_post()
         self.assertEqual(expense_sheet_foreign.state, 'post')
         expense_sol_foreign = so_foreign.order_line[0]
         expense_profitability = project._get_expenses_profitability_items(False)
