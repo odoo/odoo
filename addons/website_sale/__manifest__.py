@@ -96,7 +96,6 @@
             'website_sale/static/src/js/website_sale_tracking.js',
             'website/static/lib/multirange/multirange_custom.js',
             'website/static/lib/multirange/multirange_instance.js',
-            'website_sale/static/src/js/website_sale_category_link.js',
             'website_sale/static/src/xml/website_sale_image_viewer.xml',
             'website_sale/static/src/js/components/website_sale_image_viewer.js',
             'website_sale/static/src/xml/website_sale_reorder_modal.xml',

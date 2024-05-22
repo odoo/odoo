@@ -780,18 +780,37 @@
                     <t t-if="category.parent_id" t-set="backUrl" t-value="keep('/shop/category/' + slug(category.parent_id), category=0)"/>
                     <t t-else="" t-set="backUrl" t-value="'/shop'"/>
 
-                    <li t-foreach="entries" t-as="c"
+                    <li
+                        t-foreach="entries"
+                        t-as="c"
                         t-attf-class="d-flex {{'pe-3' if not c_last else ''}}"
-                        t-att-data-link-href="keep('/shop/category/' + slug(c), category=0)">
-                        <input type="radio" t-attf-name="wsale_categories_top_radios_{{parentCategoryId}}" class="btn-check pe-none" t-att-id="c.id" t-att-value="c.id" t-att-checked="'true' if c.id == category.id else None"/>
-
-                        <div t-attf-class=" btn btn-{{navClass}} d-flex align-items-center {{'ps-2 pe-3' if c.image_128 else 'px-4'}} fs-6 fw-normal {{ 'border-primary' if c.id == category.id else '' }}" t-att-for="c.id">
-                            <div t-if="c.image_128"
-                                 t-attf-style="background-image:url('data:image/png;base64,#{c.image_128}')"
-                                 class="o_image_40_cover oe_img_bg o_bg_img_center rounded-3 me-3"
-                                 t-att-alt="c.name "/>
-                            <span t-field="c.name"/>
-                        </div>
+                    >
+                        <a
+                            t-att-href="keep('/shop/category/' + slug(c), category=0)"
+                            class="text-decoration-none"
+                        >
+                            <input
+                                type="radio"
+                                t-attf-name="wsale_categories_top_radios_{{parentCategoryId}}"
+                                class="btn-check pe-none"
+                                t-att-id="c.id"
+                                t-att-value="c.id"
+                                t-att-checked="'true' if c.id == category.id else None"/>
+                            <div
+                                t-attf-class="d-flex align-items-center fs-6 fw-normal
+                                    btn btn-{{navClass}} {{'ps-2 pe-3' if c.image_128 else 'px-4'}}
+                                    {{ 'border-primary' if c.id == category.id else '' }}"
+                            >
+                                <div
+                                    t-if="c.image_128"
+                                    t-attf-style="background-image:url('data:image/png;base64,
+                                        #{c.image_128}')"
+                                    class="o_image_40_cover oe_img_bg o_bg_img_center
+                                        rounded-3 me-3"
+                                    t-att-alt="c.name "/>
+                                <span t-field="c.name"/>
+                            </div>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -815,10 +834,21 @@
     <template id="categorie_link" name="Category Link">
         <t t-if="isOffcanvas" t-set="parentCategoryId" t-valuef="offcanvas"/>
 
-        <div t-att-data-link-href="keep('/shop/category/' + slug(c), category=0)" class="form-check d-inline-block">
-            <input type="radio" t-attf-name="wsale_categories_radios_{{parentCategoryId}}" class="form-check-input pe-none" t-att-id="c.id" t-att-value="c.id" t-att-checked="'true' if c.id == category.id else None"/>
-            <label class="form-check-label fw-normal" t-att-for="c.id" t-field="c.name"/>
-        </div>
+        <a
+            t-att-href="keep('/shop/category/' + slug(c), category=0)"
+            class="text-decoration-none p-0 text-900"
+        >
+            <div class="form-check d-inline-block">
+                <input
+                    type="radio"
+                    t-attf-name="wsale_categories_radios_{{parentCategoryId}}"
+                    class="form-check-input pe-none "
+                    t-att-id="c.id"
+                    t-att-value="c.id"
+                    t-att-checked="'true' if c.id == category.id else None"/>
+                <label class="form-check-label fw-normal" t-field="c.name"/>
+            </div>
+        </a>
     </template>
 
     <template id="website_sale.products_categories_list" active="True" name="eCommerce Categories">
@@ -827,10 +857,23 @@
         <div class="wsale_products_categories_list">
             <ul class="nav d-flex flex-column my-2">
                 <li class="nav-item mb-1">
-                    <div t-att-data-link-href="keep('/shop', category=0)" class="form-check d-inline-block">
-                        <input type="radio" t-attf-name="wsale_categories_radios{{_radioGroup}}" class="form-check-input pe-none o_not_editable" t-att-id="all_products" t-att-value="all_products" t-att-checked="'true' if not category else None"/>
-                        <label class="form-check-label fw-normal" t-att-for="all_products">All Products</label>
-                    </div>
+                    <a
+                        t-att-href="keep('/shop', category=0)"
+                        class="text-decoration-none p-0 text-900"
+                    >
+                        <div class="form-check d-inline-block">
+                            <input
+                                type="radio"
+                                t-attf-name="wsale_categories_radios{{_radioGroup}}"
+                                class="form-check-input pe-none o_not_editable"
+                                t-att-id="all_products"
+                                t-att-value="all_products"
+                                t-att-checked="'true' if not category else None"/>
+                            <label class="form-check-label fw-normal" t-att-for="all_products">
+                                All Products
+                            </label>
+                        </div>
+                    </a>
                 </li>
                 <t t-foreach="categories" t-as="c">
                     <t t-call="website_sale.categories_recursive"/>
