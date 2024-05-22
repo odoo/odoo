@@ -57,6 +57,25 @@
             </field>
         </record>
 
+        <record id="product_view_search_catalog" model="ir.ui.view">
+            <field name="name">product.view.search.catalog.inherit.mrp</field>
+            <field name="inherit_id" ref="product.product_view_search_catalog"/>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <filter name="goods" position="after">
+                    <filter string="In the BoM"
+                            invisible="context.get('active_model') != 'mrp.bom.line'"
+                            name="products_in_bom"
+                            domain="[('product_catalog_product_is_in_bom', '=', True)]"/>
+                    <filter string="In the MO"
+                            invisible="context.get('active_model') != 'stock.move' or
+                                       context.get('product_catalog_order_model') != 'mrp.production'"
+                            name="products_in_mo"
+                            domain="[('product_catalog_product_is_in_mo', '=', True)]"/>
+                </filter>
+            </field>
+        </record>
+
         <menuitem id="menu_mrp_product_form"
             name="Products"
             action="product_template_action"
