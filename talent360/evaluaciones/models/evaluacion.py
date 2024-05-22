@@ -1150,4 +1150,18 @@ class Evaluacion(models.Model):
             "view_mode": "form",
             "target": "new",
         }
+    def action_importar_preguntas_clima(self):
+        """
+        Abre la ventana para importar preguntas de clima laboral.
+
+        :return: Una acción para abrir la ventana de importación de preguntas
+        """
+        return {
+            "name": "Importar preguntas de clima laboral",
+            "type": "ir.actions.act_window",
+            "res_model": "importar.preguntas.wizard",
+            "view_mode": "form",
+            "target": "new",
+        }
+    
     

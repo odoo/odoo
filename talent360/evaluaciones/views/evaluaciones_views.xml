@@ -109,6 +109,7 @@
                     <button class="btn btn-primary" name="reporte_generico_action" string="Reporte Genérico" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
                     <button class="btn btn-primary" name="filtros_reporte_action" string="Reporte Personalizado" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
                     <button class="btn btn-primary" name="action_asignar_usuarios_externos" string="Asignar usuarios externos" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
+                    <button invisible="tipo != 'CLIMA'" class=" btn btn-primary" name="action_importar_preguntas_clima" string="Agregar preguntas clima" type="object" />
                 </header>
                 <sheet string="Evaluacion de personal">
                     <h1 invisible="tipo != 'CLIMA'">Editar evaluación Clima Laboral</h1>
