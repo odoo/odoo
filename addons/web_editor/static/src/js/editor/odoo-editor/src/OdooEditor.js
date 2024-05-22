@@ -4465,7 +4465,8 @@ export class OdooEditor extends EventTarget {
         }
     }
 
-    _onDocumentMouseup() {
+    _onDocumentMouseup(ev) {
+        this._currentMouseState = ev.type;
         if (this.toolbar) {
             this.toolbar.style.pointerEvents = 'auto';
         }
