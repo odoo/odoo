@@ -18,7 +18,7 @@ class TestReportsCommon(TransactionCase):
         cls.supplier_location = cls.env['stock.location'].browse(cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_suppliers'))
         cls.stock_location = cls.env['stock.location'].browse(cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_stock'))
 
-        cls.category = cls.env.ref('product.product_category_services').id,
+        cls.category = cls.env.ref('product.product_category_services')
         cls.product1 = cls.env['product.product'].create({
             'name': 'Mellohi"',
             'type': 'product',

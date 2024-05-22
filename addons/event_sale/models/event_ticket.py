@@ -80,7 +80,7 @@ class EventTemplateTicket(models.Model):
                 'list_price': 0,
                 'standard_price': 0,
                 'type': 'service',
-                'categ_id': self.env.ref('event_sale.product_category_events').id,
+                'categ_id': self.env.ref('product.product_category_services').id,
             }).id
             self.env['ir.model.data'].create({
                 'name': 'product_product_event',

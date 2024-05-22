@@ -37,10 +37,12 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
         cls.product3 = cls.env['product.product'].create({
             'name': 'Product 3',
             'list_price': 450,
+            'categ_id': cls.env.ref('product.product_category_office').id,
         })
         cls.product4 = cls.env['product.product'].create({
             'name': 'Product 4',
             'list_price': 750,
+            'categ_id': cls.env.ref('product.product_category_office').id,
         })
         cls.partner1 = cls.env['res.partner'].create({'name': 'Partner 1'})
         cls.partner4 = cls.env['res.partner'].create({'name': 'Partner 4'})
@@ -53,16 +55,19 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
             'name': 'LED Lamp',
             'available_in_pos': True,
             'list_price': 0.90,
+            'categ_id': cls.env.ref('product.product_category_office').id,
         })
         cls.whiteboard_pen = cls.env['product.product'].create({
             'name': 'Whiteboard Pen',
             'available_in_pos': True,
             'list_price': 1.20,
+            'categ_id': cls.env.ref('product.product_category_office').id,
         })
         cls.newspaper_rack = cls.env['product.product'].create({
             'name': 'Newspaper Rack',
             'available_in_pos': True,
             'list_price': 1.28,
+            'categ_id': cls.env.ref('product.product_category_office').id,
         })
         cls.company_data['default_journal_cash'].pos_payment_method_ids.unlink()
         cls.cash_payment_method = cls.env['pos.payment.method'].create({

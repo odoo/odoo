@@ -672,10 +672,12 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'type': 'product',
             'tracking': 'lot',
             'available_in_pos': True,
+            'categ_id': self.env.ref('product.product_category_services').id,
         }, {
             'name': 'SuperProduct Untracked',
             'type': 'product',
             'available_in_pos': True,
+            'categ_id': self.env.ref('product.product_category_services').id,
         }])
         wh_location = self.company_data['default_warehouse'].lot_stock_id
         shelf1_location = self.env['stock.location'].create({
@@ -1242,13 +1244,15 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'name': 'SuperProduct Tracked',
             'type': 'product',
             'tracking': 'lot',
-            'available_in_pos': True
+            'available_in_pos': True,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
         tracked_product_2 = self.env['product.product'].create({
             'name': 'SuperProduct Tracked 2',
             'type': 'product',
             'tracking': 'lot',
-            'available_in_pos': True
+            'available_in_pos': True,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
         tracked_product_2_lot = self.env['stock.lot'].create({
             'name': '80085',
@@ -1911,6 +1915,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'available_in_pos': True,
             'list_price': 49.99,
             'taxes_id': False,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
         self.pos_config.write({
@@ -1971,6 +1976,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'name': 'Product A',
             'type': 'product',
             'tracking': 'lot',
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
         lot1 = self.env['stock.lot'].create({
@@ -2111,6 +2117,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'name': 'Product A',
             'type': 'product',
             'tracking': 'lot',
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
         order = self.PosOrder.create({

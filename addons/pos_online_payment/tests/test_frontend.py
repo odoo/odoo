@@ -126,6 +126,7 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
             'list_price': 4.8,
             'taxes_id': False,
             'pos_categ_ids': [(4, pos_categ_misc.id)],
+            'categ_id': cls.env.ref('product.product_category_office').id,
         })
 
     # Code from addons/account_payment/tests/common.py

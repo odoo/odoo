@@ -22,6 +22,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'type': 'product',
             'list_price': 10.0,
             'taxes_id': False,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
         self.main_pos_config.open_ui()
         self.pos_order = self.env['pos.order'].create({
@@ -83,6 +84,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'type': 'product',
             'list_price': 10.0,
             'taxes_id': False,
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
         self.main_pos_config.open_ui()
         self.pos_order = self.env['pos.order'].create({

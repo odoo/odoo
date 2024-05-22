@@ -526,6 +526,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             'available_in_pos': True,
             'list_price': 0,
             'taxes_id': [(6, 0, [fixed_tax.id])],
+            'categ_id': self.env.ref('product.product_category_services').id,
         })
 
         self.open_new_session()
