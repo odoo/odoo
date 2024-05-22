@@ -30,11 +30,11 @@ class Evaluacion(models.Model):
     nombre = fields.Char(string="Título de la evaluación", required=True)
     
     escalar_format = fields.Selection([
-        ('numericas', 'Numéricas'),
-        ('textuales', 'Textuales'),
-        ('caritas', 'Caritas'),
-        ('estrellas', 'Estrellas')
-    ], string="Formato para las preguntas escalares", required=True, default='numericas')
+        ("numericas", "Numéricas"),
+        ("textuales", "Textuales"),
+        ("caritas", "Caritas"),
+        ("estrellas", "Estrellas")
+    ], string="Formato para las preguntas escalares", required=True, default="numericas")
 
     tipo = fields.Selection(
         [
