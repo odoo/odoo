@@ -175,17 +175,11 @@ export const accountTaxHelpers = {
     prepare_taxes_computation(
         taxes_data,
         {
-            force_price_include = null,
             is_refund = false,
             include_caba_tags = false,
             special_mode = false,
         } = {}
     ) {
-        // Backward-compatibility in stable version:
-        if (!special_mode && force_price_include) {
-            special_mode = "total_included";
-        }
-
         // Flatten the taxes and order them.
         const sorted_taxes_data = taxes_data.sort(
             (v1, v2) => v1.sequence - v2.sequence || v1.id - v2.id
@@ -349,7 +343,7 @@ export const accountTaxHelpers = {
         price_unit,
         quantity,
         product_values,
-        { rounding_method = "round_per_line", precision_rounding = 0.01, reverse = false } = {}
+        { rounding_method = "round_per_line", precision_rounding = 0.01 } = {}
     ) {
         return {
             product: product_values,

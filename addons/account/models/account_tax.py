@@ -842,7 +842,6 @@ class AccountTax(models.Model):
     def _prepare_taxes_computation(
         self,
         taxes_data,
-        force_price_include=None,
         is_refund=False,
         include_caba_tags=False,
         special_mode=False,
@@ -855,8 +854,6 @@ class AccountTax(models.Model):
         PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
 
         :param taxes_data:          A list of dictionaries, each one corresponding to one tax.
-        :param force_price_include: If provided, forces all taxes to act as price_included=force_price_include.
-                                    This parameter is DEPRECATED. Use "special_mode='total_included'" instead.
         :param is_refund:           It comes from a refund document or not.
         :param include_caba_tags:   Include the tags for the cash basis or not.
         :param special_mode:        Indicate a special mode for the taxes computation.
@@ -873,10 +870,6 @@ class AccountTax(models.Model):
             'eval_order_indexes':   A list of tuple <key, index> where key is 'tax' or 'base'.
                                     This say in which order 'taxes_data' needs to be evaluated.
         """
-        # Backward-compatibility in stable version:
-        if not special_mode and force_price_include:
-            special_mode = 'total_included'
-
         # Flatten the taxes and order them.
         sorted_taxes_data = sorted(
             taxes_data,
@@ -1077,7 +1070,6 @@ class AccountTax(models.Model):
         product_values,
         rounding_method='round_per_line',
         precision_rounding=None,
-        reverse=False,
     ):
         """ Prepare a dictionary that can be used to evaluate the prepared taxes computation (see '_prepare_taxes_computation').
 
@@ -1089,10 +1081,6 @@ class AccountTax(models.Model):
         :param product_values:      The values representing the product.
         :param rounding_method:     'round_per_line' or 'round_globally'.
         :param precision_rounding:  The rounding of the currency in case of 'round_per_line'.
-        :param reverse:             TO BE REMOVED IN MASTER
-                                    Flag indicating if we want a reverse computation.
-                                    You can only expect accurate symmetrical taxes computation with not rounded price_unit
-                                    as input and 'round_globally' computation. Otherwise, it's not guaranteed.
         :return:                    A python dictionary.
         """
         return {
