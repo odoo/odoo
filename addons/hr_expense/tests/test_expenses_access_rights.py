@@ -35,6 +35,11 @@ class TestExpensesAccessRights(TestExpenseCommon):
             'employee_id': self.expense_employee.id,
         })
 
+        # The expense employee shouldn't be able to bypass the submit state.
+        with self.assertRaises(UserError):
+            expense.with_user(self.expense_user_employee).write({'state': 'approve'})
+        self.assertEqual(expense['state'], 'draft')
+
         # Employee can report & submit their expense
         expense_sheet = self.env['hr.expense.sheet'].with_user(self.expense_user_employee).create({
             'name': 'expense sheet for employee',
@@ -42,11 +47,9 @@ class TestExpensesAccessRights(TestExpenseCommon):
             'payment_mode': expense.payment_mode,
         })
         expense_sheet.with_user(self.expense_user_employee).action_submit_sheet()
-
-        # The expense employee shouldn't be able to bypass the submit state.
-        with self.assertRaises(UserError):
-            expense.with_user(self.expense_user_employee).write({'state': 'approve'})
-        self.assertRecordValues(expense, [{'state': 'draft'}])
+        
+        # Expense state should be impacted by Sheet state change
+        self.assertEqual(expense['state'], 'reported')
 
     def test_expense_sheet_access_rights_approve(self):
 
@@ -73,7 +76,7 @@ class TestExpensesAccessRights(TestExpenseCommon):
         # The expense employee shouldn't be able to bypass the submit state.
         with self.assertRaises(UserError):
             expense_sheet.with_user(self.expense_user_employee).write({'state': 'approve'})
-        self.assertRecordValues(expense_sheet, [{'state': 'draft'}])
+        self.assertEqual(expense_sheet['state'], 'draft')
 
         # The expense employee is able to submit the expense sheet.
 

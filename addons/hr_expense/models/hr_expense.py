@@ -376,9 +376,9 @@ class HrExpense(models.Model):
         if 'reference' in vals:
             if any(not expense.is_ref_editable for expense in self):
                 raise UserError(_('You are not authorized to edit the reference of this expense report.'))
-        if (not self.user_has_groups('hr_expense.group_hr_expense_manager') and vals.get('state') != 'submit' and
+        if 'state' in vals and (not self.user_has_groups('hr_expense.group_hr_expense_manager') and vals['state'] != 'submit' and
             any(expense.state == 'draft' for expense in self)):
-                raise UserError(_("You are not authorized to bypass the expense validation process."))
+                raise UserError(_("You don't have the rights to bypass the validation process of this expense."))
         return super(HrExpense, self).write(vals)
 
     @api.model
@@ -1035,12 +1035,12 @@ class HrExpenseSheet(models.Model):
         if 'state' in vals:
             # Avoid user with write access on expense sheet in draft state to bypass the validation process
             if  not self.user_has_groups('hr_expense.group_hr_expense_manager') and self.state == 'draft' and vals['state'] != 'submit':
-                raise UserError(_("You are not authorized to bypass the expense sheet validation process."))
+                raise UserError(_("You don't have the rights to bypass the validation process of this expense report."))
             if vals['state'] == 'approve':
                 self._check_can_approve()
             if vals['state'] == 'cancel':
                 self._check_can_refuse()
-        return super(HrExpenseSheet, self).write(vals)
+        return super().write(vals)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_posted_or_paid(self):
