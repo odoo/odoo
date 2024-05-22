@@ -8,7 +8,7 @@ import re
 
 from werkzeug import urls
 
-from odoo import http, tools, _, SUPERUSER_ID
+from odoo import http, tools, _
 from odoo.exceptions import AccessDenied, AccessError, MissingError, UserError, ValidationError
 from odoo.http import content_disposition, Controller, request, route
 from odoo.tools import consteq
@@ -437,7 +437,7 @@ class CustomerPortal(Controller):
         :raise AccessError: current user isn't allowed to read requested document (and no valid token was given)
         """
         document = request.env[model_name].browse([document_id])
-        document_sudo = document.with_user(SUPERUSER_ID).exists()
+        document_sudo = document.sudo().exists()
         if not document_sudo:
             raise MissingError(_("This document does not exist."))
         try:
