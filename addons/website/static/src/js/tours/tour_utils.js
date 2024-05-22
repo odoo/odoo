@@ -291,24 +291,38 @@ function clickOnText(snippet, element, position = "bottom") {
 
 /**
  * Drag a snippet from the Blocks area and drop it in the Edit area
- * @param {*} snippet contain the id and the name of the targeted snippet
+ * @param {*} snippet contain the id and the name of the targeted snippet. If it
+ * contains a group it means that the snippet is shown in the "add snippets"
+ * dialog.
  * @param {*} position Where the purple arrow will show up
  */
 function dragNDrop(snippet, position = "bottom") {
-    return [
-        {
-            trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+    const blockEl = snippet.groupName || snippet.name;
+    let dragNDropSteps = [{
+        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        noPrepend: true,
+    },
+    {
+        trigger: `#oe_snippets .oe_snippet[name="${blockEl}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
+        content: markup(_t("Drag the <b>%s</b> block and drop it at the bottom of the page.", blockEl)),
+        position: position,
+        // Normally no main snippet can be dropped in the default footer but
+        // targeting it allows to force "dropping at the end of the page".
+        run: "drag_and_drop :iframe #wrapwrap > footer",
+    }];
+    if (snippet.groupName) {
+        dragNDropSteps.push({
+            content: markup(_t("Click on the <b>%s</b> building block.", snippet.name)),
+            trigger: `:iframe .o_snippet_preview_wrap[data-snippet-id="${snippet.id}"]`,
             noPrepend: true,
+            position: position,
+            run: "click",
         },
         {
-            trigger: `#oe_snippets .oe_snippet[name="${snippet.name}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
-        content: markup(_t("Drag the <b>%s</b> building block and drop it at the bottom of the page.", snippet.name)),
-            position: position,
-            // Normally no main snippet can be dropped in the default footer but
-            // targeting it allows to force "dropping at the end of the page".
-            run: "drag_and_drop :iframe #wrapwrap > footer",
-        },
-    ];
+            trigger: `#oe_snippets .oe_snippet[name="${blockEl}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
+        });
+    }
+    return dragNDropSteps;
 }
 
 function goBackToBlocks(position = "bottom") {

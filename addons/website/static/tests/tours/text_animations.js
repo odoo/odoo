@@ -10,6 +10,7 @@ wTourUtils.registerWebsitePreviewTour("text_animations", {
     ...wTourUtils.dragNDrop({
         id: "s_cover",
         name: "Cover",
+        groupName: "Intro",
     }),
     {
         content: "Click on the snippet title",

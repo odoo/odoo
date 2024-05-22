@@ -10,6 +10,7 @@ wTourUtils.registerWebsitePreviewTour("test_drag_and_drop_on_non_editable", {
     ...wTourUtils.dragNDrop({
         id: "s_company_team",
         name: "Team",
+        groupName: "People",
     }),
     {
         content: "Click on an editable media in non editable env.",

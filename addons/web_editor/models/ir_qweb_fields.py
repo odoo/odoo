@@ -79,16 +79,22 @@ class IrQWeb(models.AbstractModel):
         view = self.env['ir.ui.view']._get(key).sudo()
         name = el.attrib.pop('string', view.name)
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
+        image_preview = el.attrib.pop('t-image-preview', None)
         # Forbid sanitize contains the specific reason:
         # - "true": always forbid
         # - "form": forbid if forms are sanitized
         forbid_sanitize = el.attrib.pop('t-forbid-sanitize', None)
-        div = '<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-keywords="%s" %s>' % (
+        snippet_group = el.attrib.pop('snippet-group', None)
+        group = el.attrib.pop('group', None)
+        div = '<div name="%s" data-oe-type="snippet" data-o-image-preview="%s" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-keywords="%s" %s %s %s>' % (
             escape(pycompat.to_text(name)),
+            escape(pycompat.to_text(image_preview)),
             escape(pycompat.to_text(thumbnail)),
             escape(pycompat.to_text(view.id)),
             escape(pycompat.to_text(el.findtext('keywords'))),
             f'data-oe-forbid-sanitize="{forbid_sanitize}"' if forbid_sanitize else '',
+            f'data-o-snippet-group="{snippet_group}"' if snippet_group else '',
+            f'data-o-group="{group}"' if group else '',
         )
         self._append_text(div, compile_context)
         code = self._compile_node(el, compile_context, indent)
@@ -104,15 +110,19 @@ class IrQWeb(models.AbstractModel):
     def _compile_directive_install(self, el, compile_context, indent):
         key = el.attrib.pop('t-install')
         thumbnail = el.attrib.pop('t-thumbnail', 'oe-thumbnail')
+        image_preview = el.attrib.pop('t-image-preview', None)
+        group = el.attrib.pop('group', None)
         if self.env.user.has_group('base.group_system'):
             module = self.env['ir.module.module'].search([('name', '=', key)])
             if not module or module.state == 'installed':
                 return []
             name = el.attrib.get('string') or 'Snippet'
-            div = '<div name="%s" data-oe-type="snippet" data-module-id="%s" data-oe-thumbnail="%s"><section/></div>' % (
+            div = '<div name="%s" data-oe-type="snippet" data-module-id="%s" data-o-image-preview="%s" data-oe-thumbnail="%s" %s><section/></div>' % (
                 escape(pycompat.to_text(name)),
                 module.id,
-                escape(pycompat.to_text(thumbnail))
+                escape(pycompat.to_text(image_preview)),
+                escape(pycompat.to_text(thumbnail)),
+                f'data-o-group="{group}"' if group else '',
             )
             self._append_text(div, compile_context)
         return []

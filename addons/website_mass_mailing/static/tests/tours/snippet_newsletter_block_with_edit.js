@@ -11,6 +11,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     ...wTourUtils.dragNDrop({
         id: 's_newsletter_block',
         name: 'Newsletter Block',
+        groupName: "Contact &amp; Forms",
     }),
     {
         content: 'Wait for the list id to be set.',

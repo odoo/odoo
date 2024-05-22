@@ -10,6 +10,7 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_undraw", {
 ...wTourUtils.dragNDrop({
     id: 's_text_image',
     name: 'Text - Image',
+    groupName: "Content",
 }),
 {
     content: "Open the media dialog from the snippet",
@@ -33,6 +34,7 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_external_library", {
     ...wTourUtils.dragNDrop({
         id: "s_text_image",
         name: "Text - Image",
+        groupName: "Content",
     }),
     {
         content: "Open the media dialog from the snippet",
@@ -82,6 +84,7 @@ wTourUtils.registerWebsitePreviewTour('website_media_dialog_icons', {
     ...wTourUtils.dragNDrop({
         id: 's_process_steps',
         name: 'Steps',
+        groupName: "Content",
     }),
     {
         content: "Open MediaDialog from a snippet icon",
@@ -124,6 +127,7 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_image_shape", {
     ...wTourUtils.dragNDrop({
         id: "s_text_image",
         name: "Text - Image",
+        groupName: "Content",
     }),
     {
         content: "Click on the image",

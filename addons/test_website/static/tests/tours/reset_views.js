@@ -21,10 +21,15 @@ wTourUtils.registerWebsitePreviewTour(
     },
     () => [
         {
-            content: "drop a snippet",
-            trigger: ".oe_snippet .oe_snippet_thumbnail[data-snippet=s_cover]",
+            content: "Drag the Intro snippet group and drop it in #oe_structure_test_website_page.",
+            trigger: '#oe_snippets .oe_snippet[name="Intro"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
             // id starting by 'oe_structure..' will actually create an inherited view
             run: "drag_and_drop :iframe #oe_structure_test_website_page",
+        },
+        {
+            content: "Click on the s_cover snippet.",
+            trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_cover"]',
+            run: "click",
         },
         ...wTourUtils.clickOnSave(),
         // 2. Edit that COW'd view in the HTML editor to break it.

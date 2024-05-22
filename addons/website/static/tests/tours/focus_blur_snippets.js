@@ -11,12 +11,12 @@ const blockIDToData = {
     child1: {
         selector: ':iframe .s_focusblur_child1',
         name: 'first child',
-        overlayIndex: 1,
+        overlayIndex: 0,
     },
     child2: {
         selector: ':iframe .s_focusblur_child2',
         name: 'second child',
-        overlayIndex: 0,
+        overlayIndex: 1,
     },
 };
 
@@ -54,11 +54,11 @@ wTourUtils.registerWebsitePreviewTour("focus_blur_snippets", {
     url: "/",
     edition: true,
 }, () => [
-    {
-        content: 'Drag the custom block into the page',
-        trigger: '#snippet_structure .oe_snippet[name="s_focusblur"] .oe_snippet_thumbnail',
-        run: 'drag_and_drop :iframe #wrap',
-    },
+    ...wTourUtils.dragNDrop({
+        id: "s_focusblur",
+        name: "s_focusblur",
+        groupName: "Content",
+    }),
     ...clickAndCheck('parent', ['focus parent']),
     ...clickAndCheck(null, ['blur parent']),
     ...clickAndCheck('child1', ['focus parent', 'focus child1']),

@@ -5,6 +5,7 @@ import EventAdditionalTourSteps from "@event/js/tours/event_steps";
 
 import { markup } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
+import wTourUtils from "@website/js/tours/tour_utils";
 
 patch(EventAdditionalTourSteps.prototype, {
 
@@ -20,12 +21,13 @@ patch(EventAdditionalTourSteps.prototype, {
                 content: markup(_t("With the Edit button, you can <b>customize</b> the web page visitors will see when registering.")),
                 position: 'bottom',
                 run: "click",
-            }, {
-                trigger: '#oe_snippets.o_loaded div[name="Image - Text"] .oe_snippet_thumbnail',
-                content: markup(_t("<b>Drag and Drop</b> this snippet below the event title.")),
-                position: 'bottom',
-                run: 'drag_and_drop :iframe #o_wevent_event_main_col',
-            }, {
+            },
+            ...wTourUtils.dragNDrop({
+                id: "s_image_text",
+                name: "Image - Text",
+                groupName: "Content",
+            }),
+            {
                 trigger: 'button[data-action="save"]',
                 content: markup(_t("Don't forget to click <b>save</b> when you're done.")),
                 position: 'bottom',

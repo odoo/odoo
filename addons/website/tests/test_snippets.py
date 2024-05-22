@@ -23,14 +23,19 @@ class TestSnippets(HttpCase):
         with MockRequest(self.env, website=self.env['website'].browse(1)):
             snippets_template = self.env['ir.ui.view'].render_public_asset('website.snippets')
         html_template = html.fromstring(snippets_template)
-        data_snippet_els = html_template.xpath("//*[snippets and not(contains(@class, 'd-none'))]//*[@data-snippet]")
+        data_snippet_els = html_template.xpath("//*[snippets and not(contains(@class, 'd-none'))]//*[@data-oe-type='snippet']/*[@data-snippet]")
         blacklist = [
             's_facebook_page',  # avoid call to external services (facebook.com)
             's_map',  # avoid call to maps.google.com
             's_instagram_page',  # avoid call to instagram.com
             's_image',  # Avoid specific case where the media dialog opens on drop
+            's_snippet_group',  # Snippet groups are not snippets
         ]
-        snippets_names = ','.join(set(el.attrib['data-snippet'] for el in data_snippet_els if el.attrib['data-snippet'] not in blacklist))
+        snippets_names = ','.join({
+            f"{el.attrib['data-snippet']}:{el.getparent().attrib.get('data-o-group', '')}"
+            for el in data_snippet_els
+            if el.attrib['data-snippet'] not in blacklist
+        })
         snippets_names_encoded = url_encode({'snippets_names': snippets_names})
         path = url_encode({
             'path': '/?' + snippets_names_encoded

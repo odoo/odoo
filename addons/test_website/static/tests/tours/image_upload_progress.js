@@ -38,25 +38,27 @@ const patchMediaDialog = () => patch(FileSelectorControlPanel.prototype, {
 
 let unpatchMediaDialog = null;
 
-const setupSteps = [{
-    content: "reload to load patch",
-    trigger: ".o_website_preview",
-    run: () => {
-        unpatchMediaDialog = patchMediaDialog();
-    },
-}, {
-    content: "drop a snippet",
-    trigger: "#oe_snippets .oe_snippet[name='Text - Image'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
-    run: "drag_and_drop :iframe #wrap",
-}, 
-{
-    trigger: "body.editor_has_snippets",
-},
-{
-    content: "drop a snippet",
-    trigger: "#oe_snippets .oe_snippet[name='Image Gallery'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
-    run: "drag_and_drop :iframe #wrap",
-}];
+const setupSteps = function () {
+    return [
+        {
+            content: "reload to load patch",
+            trigger: ".o_website_preview",
+            run: () => {
+                unpatchMediaDialog = patchMediaDialog();
+            },
+        },
+        ...wTourUtils.dragNDrop({
+            id: "s_text_image",
+            name: "Text - Image",
+            groupName: "Content",
+        }),
+        ...wTourUtils.dragNDrop({
+            id: "s_image_gallery",
+            name: "Image Gallery",
+            groupName: "Images",
+        })
+    ];
+};
 
 const formatErrorMsg = "format is not supported. Try with: .gif, .jpe, .jpeg, .jpg, .png, .svg, .webp";
 
@@ -65,7 +67,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     test: true,
     edition: true,
 }, () => [
-    ...setupSteps,
+    ...setupSteps(),
     // 1. Check multi image upload
     {
         content: "click on dropped snippet",
@@ -207,7 +209,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
     test: true,
     edition: true,
 }, () => [
-    ...setupSteps,
+    ...setupSteps(),
     // 1. Check multi image upload
     {
         content: "click on dropped snippet",

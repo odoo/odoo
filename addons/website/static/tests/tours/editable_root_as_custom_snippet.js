@@ -15,8 +15,8 @@ wTourUtils.registerWebsitePreviewTour("editable_root_as_custom_snippet", {
         run: "click",
     },
     {
-        content: "Wait for the custom snippet to appear in the panel",
-        trigger: '.oe_snippet[name="Custom Title"]',
+        content: "Wait for the custom category to appear in the panel",
+        trigger: '.oe_snippet[name="Custom"]',
     },
     ...wTourUtils.clickOnSave(),
     {
@@ -29,7 +29,7 @@ wTourUtils.registerWebsitePreviewTour("editable_root_as_custom_snippet", {
         trigger: ':iframe a[href="/"].nav-link.active',
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
-    ...wTourUtils.dragNDrop({id: 's_title', name: 'Custom Title'}),
+    ...wTourUtils.dragNDrop({id: "s_title", name: "Custom Title", groupName: "Custom"}),
     {
         content: "Check that the custom snippet does not have branding",
         trigger: ':iframe #wrap .s_title.custom:not([data-oe-model]):not([data-oe-id]):not([data-oe-field]):not([data-oe-xpath])',

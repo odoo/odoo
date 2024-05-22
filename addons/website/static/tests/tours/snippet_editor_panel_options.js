@@ -11,6 +11,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_editor_panel_options', {
 ...wTourUtils.dragNDrop({
     id: 's_text_image',
     name: 'Text - Image',
+    groupName: "Content",
 }),
 // Test keeping the text selection when using the width option.
 {
@@ -82,6 +83,7 @@ wTourUtils.goBackToBlocks(),
 ...wTourUtils.dragNDrop({
     id: 's_text_block',
     name: 'Text',
+    groupName: "Text",
 }),
 {
     content: "Click on the first paragraph.",

@@ -9317,6 +9317,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                 cancel: () => resolve(false),
                 confirmLabel: _t("Save and Reload"),
                 confirm: () => {
+                    let targetCopyEl = null;
                     const isButton = this.$target[0].matches("a.btn");
                     const snippetKey = !isButton ? this.$target[0].dataset.snippet : "s_button";
                     let thumbnailURL;
@@ -9328,6 +9329,12 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                     this.trigger_up('context_get', {
                         callback: ctx => context = ctx,
                     });
+                    if (this.$target[0].matches("[data-snippet=s_popup]")) {
+                        // Do not "cleanForSave" the popup before copying the
+                        // HTML, otherwise the popup will be saved invisible and
+                        // therefore not visible in the "add snippet" dialog.
+                        targetCopyEl = this.$target[0].cloneNode(true);
+                    }
                     this.trigger_up('request_save', {
                         reloadEditor: true,
                         invalidateSnippetCache: true,
@@ -9335,7 +9342,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                             const defaultSnippetName = !isButton
                                 ? _t("Custom %s", this.data.snippetName)
                                 : _t("Custom Button");
-                            const targetCopyEl = this.$target[0].cloneNode(true);
+                            targetCopyEl = targetCopyEl || this.$target[0].cloneNode(true);
                             targetCopyEl.classList.add('s_custom_snippet');
                             delete targetCopyEl.dataset.name;
                             if (isButton) {

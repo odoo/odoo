@@ -11,6 +11,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_newsletter_popup_edition", {
     ...wTourUtils.dragNDrop({
         id: 's_newsletter_subscribe_popup',
         name: 'Newsletter Popup',
+        groupName: "Contact &amp; Forms",
     }),
     {
         content: "Check the modal is opened for edition",
