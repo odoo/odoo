@@ -1,5 +1,4 @@
-import { webModels } from "@web/../tests/web_test_helpers";
-import { parseModelParams } from "../mail_mock_server";
+import { getKwArgs, webModels } from "@web/../tests/web_test_helpers";
 
 export class IrAttachment extends webModels.IrAttachment {
     /**
@@ -7,7 +6,7 @@ export class IrAttachment extends webModels.IrAttachment {
      * @param {boolean} [force]
      */
     register_as_main_attachment(ids, force) {
-        const kwargs = parseModelParams(arguments, "ids", "force");
+        const kwargs = getKwArgs(arguments, "ids", "force");
         ids = kwargs.ids;
         delete kwargs.ids;
         force = kwargs.force ?? true;

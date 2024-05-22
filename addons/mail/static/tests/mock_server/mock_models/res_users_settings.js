@@ -1,6 +1,5 @@
-import { fields, models } from "@web/../tests/web_test_helpers";
+import { fields, getKwArgs, models } from "@web/../tests/web_test_helpers";
 import { ensureArray } from "@web/core/utils/arrays";
-import { parseModelParams } from "../mail_mock_server";
 
 /**
  * @template T
@@ -38,7 +37,7 @@ export class ResUsersSettings extends models.ServerModel {
      * @param {string[]} [fields_to_format]
      */
     res_users_settings_format(id, fields_to_format) {
-        const kwargs = parseModelParams(arguments, "id", "fields_to_format");
+        const kwargs = getKwArgs(arguments, "id", "fields_to_format");
         id = kwargs.id;
         delete kwargs.id;
         fields_to_format = kwargs.fields_to_format;
@@ -69,7 +68,7 @@ export class ResUsersSettings extends models.ServerModel {
      * @param {KwArgs<{ new_settings }>} [kwargs]
      */
     set_res_users_settings(idOrIds, new_settings) {
-        const kwargs = parseModelParams(arguments, "idOrIds", "new_settings");
+        const kwargs = getKwArgs(arguments, "idOrIds", "new_settings");
         idOrIds = kwargs.idOrIds;
         delete kwargs.idOrIds;
         new_settings = kwargs.new_settings || {};
