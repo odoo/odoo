@@ -1291,10 +1291,10 @@ export function isBlock(node) {
     // We won't call `getComputedStyle` more than once per node.
     let style = computedStyles.get(node);
     if (!style) {
-        style = node.ownerDocument.defaultView.getComputedStyle(node);
+        style = node.ownerDocument.defaultView?.getComputedStyle(node);
         computedStyles.set(node, style);
     }
-    if (style.display) {
+    if (style?.display) {
         return !style.display.includes('inline') && style.display !== 'contents';
     }
     return blockTagNames.includes(tagName);
