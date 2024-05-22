@@ -194,7 +194,7 @@
                         <t t-elif="p.tipo == 'open_question'" t-call="evaluaciones.question_text_box">
                             <t t-set="question" t-value="p"/>
                         </t>
-                        <t t-elif="p.tipo == 'multiple_choice'" t-call="evaluaciones.question_matrix">
+                        <t t-elif="p.tipo == 'multiple_choice'" t-call="evaluaciones.question_simple_choice">
                             <t t-set="question" t-value="p"/>
                         </t>
                         <t t-elif="p.tipo == 'escala'" t-call="evaluaciones.question_scale">
@@ -226,149 +226,92 @@
         </div>
     </template>
 
-    
-<!-- Matrix question -->
-<template id="question_matrix" name="Pregunta: Opcion multiple">
-    <div t-att-id="question.id">
-        <div class="o_survey_question_title mb-3"  style="font-size: 20px;">
-            <span t-esc="str(numero_pregunta) + '.- '" class="o_survey_question_number"/>
-            <span t-field="question.pregunta_texto"/>
+    <!-- Simple choice question -->
+    <template id="question_simple_choice" name="Pregunta: Opcion multiple">
+        <div t-att-id="question.id">
+            <div class="o_survey_question_title mb-3" style="font-size: 20px;">
+                <span t-esc="str(numero_pregunta) + '.- '" class="o_survey_question_number"/>
+                <span t-field="question.pregunta_texto"/>
+            </div>
+            <div class="row g-2 o_survey_answer_wrapper o_survey_form_choice"
+                t-att-data-name="question.id"
+                t-att-data-question-type="question.tipo">
+                <t t-foreach='question.opcion_ids' t-as='label'>
+                    <label t-att-for="str(question.id) + '_' + str(label.id)" t-attf-class="o_survey_choice_btn py-1 px-3 w-100 h-100 rounded mx-1">
+                        <input t-att-id="str(question.id) + '_' + str(label.id)" type="radio" t-att-value='label.id'
+                            t-attf-class="o_survey_form_choice_item position-absolute"
+                            t-att-name='question.id'
+                            required="required"/>
+                        <span class="text-break mx-3" t-field='label.opcion_texto'/>
+                    </label>
+                </t>
+            </div>
         </div>
-        <table class="table table-borderless o_survey_question_matrix text-white text-center mb-0"
-            t-att-data-name="question.id"
-            t-att-data-question-type="question.tipo"
-            t-att-data-sub-questions="question.pregunta_texto">
-            <thead>
-                <tr>
-                    <th class="fw-normal" t-foreach="question.opcion_ids" t-as="col_label"><span t-field="col_label.opcion_texto" /></th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- For matrix, we have an extra check because we have rows * columns total options -->
-                <tr class="bg-white text-white" t-foreach="question" t-as="row_label" t-att-id="row_label">
-                    <t t-foreach="question.opcion_ids" t-as="col_label">
-                        <td style="padding:0px; cursor:pointer;" t-att-class="'o_survey_matrix_btn text-primary position-relative %s'% ('o_survey_selected' if answer else '')">
-                            <label style="display: block; width: 100%; height: 100%; padding:8px; cursor:pointer;">
-                                <input t-att-type="'radio'"
-                                    t-att-name="'%s_%s' % (question.id, row_label.id)" 
-                                    t-att-value="col_label.id"
-                                    t-att-data-row-id="row_label.id"
-                                    t-att-data-col-id="col_label"
-                                    class="o_survey_form_choice_item "
-                                    required="required"
-                                    style=" width: 100%; height: 100%; cursor:pointer;"/>
-                            </label>
-                        </td>
-                    </t>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</template>
+    </template>
 
-    <!-- Scale question -->
+    <!-- scale question -->
     <template id="question_scale" name="Pregunta: escala">
         <div t-att-id="question.id">
             <t t-set="opciones" t-value="['Nunca', 'Casi nunca', 'A veces', 'Casi siempre', 'Siempre']"/>
             <t t-set="desc" t-value="['4', '3', '2', '1', '0']"/>
             <t t-set="asc" t-value="['0', '1', '2', '3', '4']"/>
 
-            <div class="o_survey_question_title mb-3"  style="font-size: 20px;">
+            <div class="o_survey_question_title mb-3" style="font-size: 20px;">
                 <span t-esc="str(numero_pregunta) + '.- '" class="o_survey_question_number"/>
                 <span t-field="question.pregunta_texto"/>
             </div>
-            <table class="table table-borderless o_survey_question_matrix text-white text-center mb-0"
+            <div class="row g-2 o_survey_answer_wrapper o_survey_form_choice"
                 t-att-data-name="question.id"
-                t-att-data-question-type="question.tipo"
-                t-att-data-sub-questions="question.pregunta_texto">
-                <thead>
-                    <tr>
-                        <th class="fw-normal" t-foreach="opciones" t-as="col_label"><span t-esc="col_label" /></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- For matrix, we have an extra check because we have rows * columns total options -->
-                    <tr class="bg-white text-white" t-foreach="question" t-as="row_label" t-att-id="row_label">
-                        <!-- iterador -->
-                        <t t-set="iterador" t-value="0"/>
-                        <t t-foreach="opciones" t-as="col_label">
-                            <td style="padding:0px; cursor:pointer;" t-att-class="'o_survey_matrix_btn text-primary position-relative %s'% ('o_survey_selected' if answer else '')">
-                                <t t-if="row_label.ponderacion == 'descendente'">
-                                    <label  style="display: block; width: 100%; height: 100%; padding:8px; cursor:pointer;">
-                                    <input t-att-type="'radio'"
-                                        t-att-name="'%s_%s' % (question.id, row_label.id)" 
-                                        t-att-value="desc[iterador]"
-                                        t-att-data-row-id="row_label.id"
-                                        t-att-data-col-id="col_label"
-                                        class="o_survey_form_choice_item"
-                                        required="required"
-                                        style=" width: 100%; height: 100%; cursor:pointer;"
-                                        />
-                                    </label>
-                                </t>
-                                <t t-else="">
-                                <label  style="display: block; width: 100%; height: 100%; padding:8px; cursor:pointer;">
-                                    <input t-att-type="'radio'"
-                                        t-att-name="'%s_%s' % (question.id, row_label.id)" 
-                                        t-att-value="asc[iterador]"
-                                        t-att-data-row-id="row_label.id"
-                                        t-att-data-col-id="col_label"
-                                        class="o_survey_form_choice_item"
-                                        required="required"
-                                        style=" width: 100%; height: 100%; cursor:pointer;"
-                                        />
-                                </label>
-                                </t>
-                            </td>
-                            <t t-set="iterador" t-value="iterador + 1"/>
-                        </t>
-                    </tr>
-                </tbody>
-            </table>
+                t-att-data-question-type="question.tipo">
+                <t t-set="iterador" t-value="0"/>
+                <t t-foreach='opciones' t-as='label'>
+                    <t t-if="question.ponderacion == 'descendente'">
+                        <label t-att-for="str(question.id) + '_' + desc[iterador]" t-attf-class="o_survey_choice_btn py-1 px-3 w-100 h-100 rounded mx-1">
+                            <input t-att-id="str(question.id) + '_' + desc[iterador]" type="radio" t-att-value="desc[iterador]"
+                                t-attf-class="o_survey_form_choice_item position-absolute"
+                                t-att-name='question.id'
+                                required="required">
+                                <span class="text-break mx-3" t-esc='opciones[iterador]'/></input>
+                        </label>
+                    </t>
+                    <t t-else="">
+                        <label t-att-for="str(question.id) + '_' + asc[iterador]" t-attf-class="o_survey_choice_btn py-1 px-3 w-100 h-100 rounded mx-1">
+                            <input t-att-id="str(question.id) + '_' + asc[iterador]" type="radio" t-att-value="asc[iterador]"
+                                t-attf-class="o_survey_form_choice_item position-absolute"
+                                t-att-name='question.id'
+                                required="required">
+                                <span class="text-break mx-3" t-esc='opciones[iterador]'/></input>
+                        </label>
+                    </t>
+                    <t t-set="iterador" t-value="iterador + 1"/>
+                </t>
+            </div>
         </div>
     </template>
 
-    <!-- conditional question -->
-    <template id="conditional_question" name="Pregunta: pregunta condicional">
+    <!-- Conditional question -->
+    <template id="conditional_question" name="Pregunta: Condicional">
         <div t-att-id="question.id" t-att-data-pregunta-id="question.id" t-att-data-respuesta-trigger="question.respuesta_trigger.id" t-att-data-preguntas-desbloqueadas="question.preguntas_desbloqueadas.ids">
-            <div class="o_survey_question_title mb-3">
+            <div class="o_survey_question_title mb-3" style="font-size: 20px;">
                 <span t-esc="str(numero_pregunta) + '.- '" class="o_survey_question_number"/>
                 <span t-field="question.pregunta_texto"/>
             </div>
-            
+
             <input type="hidden" name="respuesta_trigger" t-att-value="question.respuesta_trigger.id"/>
             <input type="hidden" name="preguntas_desbloqueadas" t-att-value="question.preguntas_desbloqueadas.ids"/>
-            <table class="table table-borderless o_survey_question_matrix text-white text-center mb-0"
+            <div class="row g-2 o_survey_answer_wrapper o_survey_form_choice"
                 t-att-data-name="question.id"
-                t-att-data-question-type="question.tipo"
-                t-att-data-sub-questions="question.pregunta_texto">
-                <thead>
-                    <tr>
-                        <th class="fw-normal" t-foreach="question.opcion_ids" t-as="col_label"><span t-field="col_label.opcion_texto" /></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- For matrix, we have an extra check because we have rows * columns total options -->
-                    <tr class="bg-white text-white" t-foreach="question" t-as="row_label" t-att-id="row_label">
-                        <t t-foreach="question.opcion_ids" t-as="col_label">
-                            <td style="padding:0px;" t-att-class="'o_survey_matrix_btn text-primary position-relative %s'% ('o_survey_selected' if answer else '')">
-                            <label style="display: block; width: 100%; height: 100%; padding:8px; cursor:pointer;">
-
-                                <input t-att-type="'radio'"
-                                    t-att-name="'%s_%s' % (question.id, row_label.id)" 
-                                    t-att-value="col_label.id"
-                                    t-att-data-row-id="row_label.id"
-                                    t-att-data-col-id="col_label"
-                                    class="o_survey_form_choice_item"
-                                    required="required"
-                                    style=" width: 100%; height: 100%; cursor:pointer;"
-                                    />
-                            </label>
-                            </td>
-                        </t>
-                    </tr>
-                </tbody>
-            </table>
+                t-att-data-question-type="condicional">
+                <t t-foreach='question.opcion_ids' t-as='label'>
+                    <label t-att-for="str(question.id) + '_' + str(label.id)" t-attf-class="o_survey_choice_btn py-1 px-3 w-100 h-100 rounded mx-1">
+                        <input t-att-id="str(question.id) + '_' + str(label.id)" type="radio" t-att-value='label.id'
+                            t-attf-class="o_survey_form_choice_item position-absolute"
+                            t-att-name='question.id'
+                            required="required"/>
+                        <span class="text-break mx-3" t-field='label.opcion_texto'/>
+                    </label>
+                </t>
+            </div>
         </div>
     </template>
 </data>
