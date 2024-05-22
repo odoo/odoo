@@ -26,3 +26,11 @@ class TestHttpStaticWebServer(test_static.TestHttpStatic, test_static.TestHttpSt
             x_sendfile=False,
             assert_filename=assert_filename
         )
+
+    def test_static_cache3_private(self):
+        super().test_static_cache3_private()
+
+        # Extra step: verify that there is no cache leak. Run this test
+        # with squid, a web server with http caching capabilities.
+        self.authenticate(None, None)
+        self.assertDownloadPlaceholder('/web/image/test_http.gizeh_png')
