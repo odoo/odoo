@@ -93,7 +93,7 @@ class SaleOrder(models.Model):
     create_date = fields.Datetime(  # Override of default create_date field from ORM
         string="Creation Date", index=True, readonly=True)
     commitment_date = fields.Datetime(
-        string="Delivery Date", copy=False,
+        string="Delivery Date", copy=False, tracking=True,
         help="This is the delivery date promised to the customer. "
              "If set, the delivery order will be scheduled based on "
              "this date rather than product lead times.")
