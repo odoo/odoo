@@ -868,13 +868,16 @@ export function makeActionManager(env, router = _router) {
                 }
                 const lastController = controllerStack.at(-1);
                 if (lastController) {
-                    // the error occurred while rendering a new controller,
-                    // so go back to the last non faulty controller
-                    // (the error will be shown anyway as the promise
-                    // has been rejected)
-                    return restore(lastController.jsId);
+                    if (lastController.jsId !== controller.jsId) {
+                        // the error occurred while rendering a new controller,
+                        // so go back to the last non faulty controller
+                        // (the error will be shown anyway as the promise
+                        // has been rejected)
+                        return restore(lastController.jsId);
+                    }
+                } else {
+                    env.bus.trigger("ACTION_MANAGER:UPDATE", {});
                 }
-                env.bus.trigger("ACTION_MANAGER:UPDATE", {});
             }
             onMounted() {
                 if (action.target === "new") {
