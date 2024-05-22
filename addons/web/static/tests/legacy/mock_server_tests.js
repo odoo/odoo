@@ -242,6 +242,21 @@ QUnit.module("MockServer", (hooks) => {
         assert.deepEqual(result, 2);
     });
 
+    QUnit.test("performRPC: read_group, no group", async function (assert) {
+        const server = new MockServer(data, {});
+        const result = await server.performRPC("", {
+            model: "bar",
+            method: "read_group",
+            args: [[]],
+            kwargs: {
+                fields: ["foo:count"],
+                domain: [["foo", "=", -10]],
+                groupby: [],
+            },
+        });
+        assert.deepEqual(result, [{ __count: 0, foo: false, __domain: [["foo", "=", -10]] }]);
+    });
+
     QUnit.test("performRPC: read_group, group by char", async function (assert) {
         const server = new MockServer(data, {});
         const result = await server.performRPC("", {
@@ -1234,6 +1249,7 @@ QUnit.module("MockServer", (hooks) => {
         assert.deepEqual(result1, [
             {
                 __count: 6,
+                __domain: [],
                 aggregateLabel: aggregateValue,
             },
         ]);
@@ -1250,6 +1266,7 @@ QUnit.module("MockServer", (hooks) => {
         assert.deepEqual(result2, [
             {
                 __count: 6,
+                __domain: [],
                 partner_id: aggregateValue,
             },
         ]);
@@ -1270,6 +1287,7 @@ QUnit.module("MockServer", (hooks) => {
         assert.deepEqual(result1, [
             {
                 __count: 6,
+                __domain: [],
                 aggregateLabel: [1, 2, 3, 4, 5, 6],
             },
         ]);
@@ -1286,6 +1304,7 @@ QUnit.module("MockServer", (hooks) => {
         assert.deepEqual(result2, [
             {
                 __count: 3,
+                __domain: [["id", "in", [2, 3, 5]]],
                 id: [2, 3, 5],
             },
         ]);
@@ -1309,6 +1328,7 @@ QUnit.module("MockServer", (hooks) => {
             assert.deepEqual(result1, [
                 {
                     __count: 6,
+                    __domain: [],
                     aggregateLabel: aggregateValue,
                 },
             ]);
@@ -1325,6 +1345,7 @@ QUnit.module("MockServer", (hooks) => {
             assert.deepEqual(result2, [
                 {
                     __count: 6,
+                    __domain: [],
                     foo: aggregateValue,
                 },
             ]);
@@ -1346,6 +1367,7 @@ QUnit.module("MockServer", (hooks) => {
         assert.deepEqual(result1, [
             {
                 __count: 6,
+                __domain: [],
                 aggregateLabel: 2,
             },
         ]);
@@ -1362,6 +1384,7 @@ QUnit.module("MockServer", (hooks) => {
         assert.deepEqual(result2, [
             {
                 __count: 6,
+                __domain: [],
                 partner_id: 2,
             },
         ]);
@@ -1379,6 +1402,7 @@ QUnit.module("MockServer", (hooks) => {
         assert.deepEqual(result3, [
             {
                 __count: 0,
+                __domain: [[0, "=", 1]],
                 partner_id: 0,
             },
         ]);
@@ -1396,6 +1420,7 @@ QUnit.module("MockServer", (hooks) => {
         assert.deepEqual(result4, [
             {
                 __count: 6,
+                __domain: [],
                 partner_ref: 2,
             },
         ]);
