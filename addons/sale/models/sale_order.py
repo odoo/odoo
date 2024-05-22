@@ -644,7 +644,7 @@ class SaleOrder(models.Model):
             # If the invoice status is 'Fully Invoiced' force the amount to invoice to equal zero and return early.
             if order.invoice_status == 'invoiced':
                 order.amount_to_invoice = 0.0
-                return
+                continue
 
             invoices = order.invoice_ids.filtered(lambda x: x.state == 'posted')
             # Note: A negative amount can happen, since we can invoice more than the sales order amount.
